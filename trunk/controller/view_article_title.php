@@ -2,7 +2,7 @@
 
 // $Id$
 
-if ($sysRoot == null) {
+if (!isset($sysRoot)) {
 	require_once '../config/config.conf';
 	require_once '../config/db_connect.inc';
 	require_once '../controller/Controller.inc';
