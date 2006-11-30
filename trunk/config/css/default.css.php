@@ -33,7 +33,6 @@ body {
 	background-color:#20557C;	
 }
 
-div {position:absolute; top:0px; left:0px; width:0px; height:0px; visibility:hidden; overflow:hidden;}
 span {overflow:hidden;}
 
 .boxout, pre.php, pre.xml, pre.javascript, pre.perl, pre.html4strict, pre.css {padding:5px; margin:8px; background-color:white; border:2px dashed #20557C;}
