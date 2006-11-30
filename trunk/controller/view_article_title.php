@@ -2,11 +2,13 @@
 
 // $Id$
 
-require_once '../config/config.conf';
-require_once '../config/db_connect.inc';
-require_once '../controller/Controller.inc';
-require_once '../view/article.inc';
-require_once '../model/article_object.inc';
+if ($sysRoot == null) {
+	require_once '../config/config.conf';
+	require_once '../config/db_connect.inc';
+	require_once '../controller/Controller.inc';
+	require_once '../view/article.inc';
+	require_once '../model/article_object.inc';
+}
 
 // ensure that a title is provided
 if (isset($_GET["title"])) {
@@ -63,6 +65,7 @@ class view_article_title extends Controller
 		global $sysTheme;
 		global $sysUseWidgets;
 		global $sysRoot;
+		global $sysForceFrame;
 		
 		echo '<html>';
 		echo '<head>';
@@ -82,7 +85,7 @@ class view_article_title extends Controller
 		echo '<meta http-equiv="imagetoolbar" content="no">';			
 		
 		echo '<link rel="StyleSheet" type="text/css" href="'.$sysURL.'/config/css/'.$sysTheme.'.css.php">';
-		if(!isset($_GET["no-forceframe"]))
+		if(!isset($_GET["no-forceframe"]) && $sysForceFrame)
 			echo '<script language="JavaScript" src="'.$sysURL.'/scripts/force-frame.js"></script>';
 		
 		if ($sysUseWidgets) {
