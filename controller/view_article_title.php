@@ -66,6 +66,7 @@ class view_article_title extends Controller
 		global $sysUseWidgets;
 		global $sysRoot;
 		global $sysForceFrame;
+		global $sysTitle;
 		
 		echo '<html>';
 		echo '<head>';
@@ -98,7 +99,7 @@ class view_article_title extends Controller
 		
 		echo '</head>';
 		echo '<body'.(!empty($this->article->body_onload) ? ' onload="'.$this->article->body_onload->get_value().'"' : '').'>';
-		echo '<p><a href="'.$sysURL.'">Design-Ireland.net</a> &nbsp; &nbsp;';
+		echo '<p><a href="'.$sysURL.'">'.$sysTitle.'</a> &nbsp; &nbsp;';
 		$prop_obj = $this->article->get_prop_object("section");
 		echo 'Site Section: <em>'.$prop_obj->get_value().'</em> &nbsp; &nbsp;';
 		$prop_obj = $this->article->get_prop_object("date_added");
