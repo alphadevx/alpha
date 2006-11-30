@@ -63,6 +63,7 @@ class view_article extends Controller
 		global $sysTheme;
 		global $sysUseWidgets;
 		global $sysRoot;
+		global $sysForceFrame;
 		global $sysTitle;
 		
 		echo '<html>';
@@ -83,7 +84,7 @@ class view_article extends Controller
 		echo '<meta http-equiv="imagetoolbar" content="no">';			
 		
 		echo '<link rel="StyleSheet" type="text/css" href="'.$sysURL.'/config/css/'.$sysTheme.'.css.php">';
-		if(!isset($_GET["no-forceframe"]))
+		if(!isset($_GET["no-forceframe"]) && $sysForceFrame)
 			echo '<script language="JavaScript" src="'.$sysURL.'/scripts/force-frame.js"></script>';
 		
 		if ($sysUseWidgets) {
