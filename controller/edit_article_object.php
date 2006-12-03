@@ -7,20 +7,7 @@ require_once $sysRoot.'alpha/controller/Controller.inc';
 require_once $sysRoot.'alpha/model/article_object.inc';
 
 // load the business object (BO) definition
-if (isset($_GET["bo"])) {
-	$BO_name = $_GET["bo"];
-	if (file_exists($sysRoot.'alpha/model/'.$BO_name.'.inc')) {
-		require_once $sysRoot.'alpha/model/'.$BO_name.'.inc';
-	}elseif (file_exists($sysRoot.'model/'.$BO_name.'.inc')) {
-		require_once $sysRoot.'model/'.$BO_name.'.inc';
-	}else{
-		$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the defination for the BO class '.$BO_name,'GET');
-		exit;
-	}
-}else{
-	$error = new handle_error($_SERVER["PHP_SELF"],'No article available to edit!','GET');
-	exit;
-}
+require_once $sysRoot.'alpha/model/'.$BO_name.'.inc';
 
 // ensure that a OID is also provided
 if (isset($_GET["oid"])) {
