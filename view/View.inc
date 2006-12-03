@@ -3,15 +3,15 @@
 
 // $Id$
 
-require_once $sysRoot.'util/catch_error.inc';
+require_once $sysRoot.'alpha/util/catch_error.inc';
 
-require_once $sysRoot."model/types/Date.inc";
-require_once $sysRoot."model/types/Double.inc";
-require_once $sysRoot."model/types/Integer.inc";
-require_once $sysRoot."model/types/String.inc";
-require_once $sysRoot."model/types/Text.inc";
-require_once $sysRoot."model/types/Enum.inc";
-require_once $sysRoot."model/types/Boolean.inc";
+require_once $sysRoot."alpha/model/types/Date.inc";
+require_once $sysRoot."alpha/model/types/Double.inc";
+require_once $sysRoot."alpha/model/types/Integer.inc";
+require_once $sysRoot."alpha/model/types/String.inc";
+require_once $sysRoot."alpha/model/types/Text.inc";
+require_once $sysRoot."alpha/model/types/Enum.inc";
+require_once $sysRoot."alpha/model/types/Boolean.inc";
 
 /**
  *
