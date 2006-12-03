@@ -220,7 +220,7 @@ EOS;
 if (isset($_GET["render_javascript"]))
 	form_validator::render_javascript();
 else
-	echo '<script type="text/javascript" src="'.$sysURL.'/view/widgets/form_validator.js.php?render_javascript"></script>';
+	echo '<script type="text/javascript" src="'.$sysURL.'/alpha/view/widgets/form_validator.js.php?render_javascript"></script>';
 
 
 ?>

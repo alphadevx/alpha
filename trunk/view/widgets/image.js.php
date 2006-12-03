@@ -258,7 +258,7 @@ if (isset($_GET["source"])) {
 	if (isset($_GET["render_javascript"]))
 		image::render_javascript();
 	else
-		echo '<script language="JavaScript" src="'.$sysURL.'/view/widgets/image.js.php?render_javascript"></script>';
+		echo '<script language="JavaScript" src="'.$sysURL.'/alpha/view/widgets/image.js.php?render_javascript"></script>';
 }
 	
 ?>
