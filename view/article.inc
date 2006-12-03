@@ -191,13 +191,21 @@ class article extends View
 						}
 						break;
 					case "TEXT" :
-						echo '<tr><td colspan="2">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td></tr>';
-
-						echo '<tr><td colspan="2">';
-						echo '<textarea cols="115" rows="18" name="'.$prop.'">'. (isset ($_POST[$prop]) ? $_POST[$prop] : '').'</textarea><br>';
-						echo '</td></tr>';
+						// use a text widget if defined
+						if (class_exists("text_box")) {
+							$rows = 18;
+							if ($prop == "header_content")
+								$rows = 5;
+							$temp = new text_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "", $rows);
+						} else {
+							echo '<tr><td colspan="2">';
+							echo $this->BO->data_labels[$prop];
+							echo '</td></tr>';
+	
+							echo '<tr><td colspan="2">';
+							echo '<textarea cols="115" rows="18" name="'.$prop.'">'. (isset ($_POST[$prop]) ? $_POST[$prop] : '').'</textarea><br>';
+							echo '</td></tr>';
+						}
 						break;
 					case "BOOLEAN" :
 						echo '<tr><td style="width:25%;">';
@@ -315,13 +323,21 @@ class article extends View
 						}
 					break;
 					case "TEXT" :
-						echo '<tr><td colspan="2">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td></tr>';
-
-						echo '<tr><td colspan="2">';
-						echo '<textarea cols="115" rows="18" name="'.$prop.'">'.$this->BO->get($prop).'</textarea><br>';
-						echo '</td></tr>';
+						// use a text widget if defined
+						if (class_exists("text_box")) {
+							$rows = 18;
+							if ($prop == "header_content")
+								$rows = 5;
+							$temp = new text_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "", $rows);
+						} else {
+							echo '<tr><td colspan="2">';
+							echo $this->BO->data_labels[$prop];
+							echo '</td></tr>';
+	
+							echo '<tr><td colspan="2">';
+							echo '<textarea cols="115" rows="18" name="'.$prop.'">'.$this->BO->get($prop).'</textarea><br>';
+							echo '</td></tr>';
+						}
 					break;
 					case "BOOLEAN":
 						echo '<tr><td>';
