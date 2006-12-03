@@ -32,5 +32,5 @@ function insertImage(source, width, height, sourceType, quality) {
 	var new_width = parseInt(width*xu);
 	var new_height = parseInt(height*xu);
 	
-	document.write('<img src="util/drawImage.php?source='+source+'&width='+new_width+'&height='+new_height+'&sourceType='+sourceType+'&quality='+quality+'" width="'+new_width+'" height="'+new_height+'" border="0"/>');
+	document.write('<img src="alpha/util/drawImage.php?source='+source+'&width='+new_width+'&height='+new_height+'&sourceType='+sourceType+'&quality='+quality+'" width="'+new_width+'" height="'+new_height+'" border="0"/>');
 }
