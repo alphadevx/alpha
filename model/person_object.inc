@@ -2,7 +2,7 @@
 
 // $Id$
 
-require_once $sysRoot.'model/mysql_DAO.inc';
+require_once $sysRoot.'alpha/model/mysql_DAO.inc';
 
 /**
  *
