@@ -63,6 +63,9 @@ class View {
 			if (file_exists($sysRoot.'/view/'.$filename.'.inc')) {
 				require_once $sysRoot.'/view/'.$filename.'.inc';			
 				return new $filename($BO);
+			}elseif (file_exists($sysRoot.'/alpha/view/'.$filename.'.inc')) {
+				require_once $sysRoot.'/alpha/view/'.$filename.'.inc';			
+				return new $filename($BO);
 			}else{
 				return new View($BO, true);
 			}

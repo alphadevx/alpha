@@ -107,7 +107,7 @@ class article extends View
 		
 		echo '<tr><td colspan="'.$col_count.'" align="center">';
 		if (class_exists("button")) {
-			$temp = new button("document.location.replace('".$sysURL."/controller/view_article.php?oid=".$this->BO->get_ID().(isset($_GET["no-forceframe"]) ? "&no-forceframe=true" : "")."')","Open","openBut");
+			$temp = new button("document.location.replace('".$sysURL."/alpha/controller/view_article.php?oid=".$this->BO->get_ID().(isset($_GET["no-forceframe"]) ? "&no-forceframe=true" : "")."')","Open","openBut");
 			// render edit and delete buttons for admins only
 			if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_access_level() == "Administrator") {
 				echo '&nbsp;&nbsp;';
