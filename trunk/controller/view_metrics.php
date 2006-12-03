@@ -85,7 +85,7 @@ class view_metrics extends Controller
 			echo '<p>You are not logged in</p>';
 		}
 		
-		echo '<p align="center"><a href="'.$sysURL.'/controller/ListBusinessObjects.php">Administration Home Page</a></p><br>';
+		echo '<p align="center"><a href="'.$sysURL.'/alpha/controller/ListBusinessObjects.php">Administration Home Page</a></p><br>';
 	}
 }
 
