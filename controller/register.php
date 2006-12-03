@@ -1,10 +1,10 @@
 <?php
 
-require_once '../config/config.conf';
-require_once '../model/person_object.inc';
-require_once '../view/person.inc';
-require_once '../config/db_connect.inc';
-require_once '../controller/Controller.inc';
+require_once '../../config/config.conf';
+require_once $sysRoot.'alpha/model/person_object.inc';
+require_once $sysRoot.'alpha/view/person.inc';
+require_once $sysRoot.'config/db_connect.inc';
+require_once $sysRoot.'alpha/controller/Controller.inc';
 
 /**
  *

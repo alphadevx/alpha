@@ -2,10 +2,10 @@
 
 // $Id$
 
-require_once '../config/config.conf';
-require_once '../config/db_connect.inc';
-require_once '../controller/Controller.inc';
-require_once '../view/View.inc';
+require_once '../../config/config.conf';
+require_once $sysRoot.'config/db_connect.inc';
+require_once $sysRoot.'alpha/controller/Controller.inc';
+require_once $sysRoot.'alpha/view/View.inc';
 
 /**
 * 

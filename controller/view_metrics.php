@@ -2,9 +2,9 @@
 
 // $Id$
 
-require_once '../config/config.conf';
-require_once '../controller/Controller.inc';
-require_once '../util/LOC/metrics.inc';
+require_once '../../config/config.conf';
+require_once $sysRoot.'alpha/controller/Controller.inc';
+require_once $sysRoot.'alpha/util/LOC/metrics.inc';
 
 /**
 * 
