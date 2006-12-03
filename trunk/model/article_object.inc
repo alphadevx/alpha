@@ -1,8 +1,8 @@
 <?php
 // $Id$
 
-require_once $sysRoot.'model/mysql_DAO.inc';
-require_once $sysRoot.'util/handle_error.inc';
+require_once $sysRoot.'alpha/model/mysql_DAO.inc';
+require_once $sysRoot.'alpha/util/handle_error.inc';
 
 /**
  *
