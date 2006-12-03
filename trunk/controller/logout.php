@@ -3,7 +3,7 @@
 require_once '../../config/config.conf';
 require_once $sysRoot.'alpha/model/person_object.inc';
 require_once $sysRoot.'alpha/view/person.inc';
-require_once $sysRoot.'alpha/config/db_connect.inc';
+require_once $sysRoot.'config/db_connect.inc';
 require_once $sysRoot.'alpha/controller/Controller.inc';
 
 /**
