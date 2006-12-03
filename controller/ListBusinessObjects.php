@@ -56,7 +56,25 @@ class ListBusinessObjects extends Controller
 				$BO_View = new View($BO);
 				$BO_View->admin_view();	
 	    	}
-	    }		
+	    }
+	    
+	    // now loop over the core BOs provided with Alpha
+	    
+	    $handle = opendir($sysRoot.'alpha/model');
+   		
+        // loop over the business object directory
+	    while (false !== ($file = readdir($handle))) {
+	    	if (preg_match("/_object.inc/", $file)) {
+	    		$classname = substr($file, 0, -4);	    		
+	    		
+	    		require_once $sysRoot.'alpha/model/'.$classname.'.inc';
+	    		
+	    		$BO = new $classname();				
+		
+				$BO_View = new View($BO);
+				$BO_View->admin_view();	
+	    	}
+	    }	
 		
 		$this->display_page_foot();
 	}
@@ -76,7 +94,10 @@ class ListBusinessObjects extends Controller
 		if(isset($_POST["createTableBut"])) {
 				
 			$classname = $_POST["createTableClass"];
-			require_once $sysRoot.'model/'.$classname.'.inc';
+			if (file_exists($sysRoot.'model/'.$classname.'.inc'))
+				require_once $sysRoot.'model/'.$classname.'.inc';
+			if (file_exists($sysRoot.'alpha/model/'.$classname.'.inc'))
+				require_once $sysRoot.'alpha/model/'.$classname.'.inc';
 	    		
 	    	$BO = new $classname();	
 			$success = $BO->make_table();
@@ -88,7 +109,10 @@ class ListBusinessObjects extends Controller
 		if(isset($_POST["updateTableClass"]) && empty($_POST["createTableBut"])) {
 				
 			$classname = $_POST["updateTableClass"];
-			require_once $sysRoot.'model/'.$classname.'.inc';
+			if (file_exists($sysRoot.'model/'.$classname.'.inc'))
+				require_once $sysRoot.'model/'.$classname.'.inc';
+			if (file_exists($sysRoot.'alpha/model/'.$classname.'.inc'))
+				require_once $sysRoot.'alpha/model/'.$classname.'.inc';
 	    		
 	    	$BO = new $classname();	
 			$success = $BO->rebuild_table();
@@ -128,7 +152,7 @@ class ListBusinessObjects extends Controller
 		
 		if ($sysUseWidgets) {
 			echo '<script language="JavaScript" src="'.$sysURL.'/scripts/addOnloadEvent.js"></script>';
-			require_once $sysRoot.'view/widgets/button.js.php';			
+			require_once $sysRoot.'alpha/view/widgets/button.js.php';			
 		}
 		
 		echo '</head>';
