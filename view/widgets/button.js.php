@@ -260,6 +260,6 @@ EOS;
 if (isset($_GET["render_javascript"]))
 	button::render_javascript();
 else
-	echo '<script language="JavaScript" src="'.$sysURL.'/view/widgets/button.js.php?render_javascript"></script>';
+	echo '<script language="JavaScript" src="'.$sysURL.'/alpha/view/widgets/button.js.php?render_javascript"></script>';
 
 ?>
