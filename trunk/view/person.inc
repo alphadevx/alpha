@@ -239,6 +239,7 @@ class person extends View
 			if ($prop == "password") {
 				$temp = new String();
 				$temp->is_password();
+				$temp->is_required(false);
 				$temp = new string_box($temp, "New password (leave blank for no change)", "new_password", "");
 				echo '<input type="hidden" name="password" value="'.$this->BO->get_password().'"/>';
 			}
@@ -260,6 +261,8 @@ class person extends View
 				}
 				echo '</select><br>';
 				echo '</td></tr>';
+			}else{
+				echo '<input type="hidden" name="access_level" value="'.$this->BO->get("access_level").'"/>';
 			}
 		}
 
