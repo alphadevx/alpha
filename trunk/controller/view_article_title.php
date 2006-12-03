@@ -90,7 +90,7 @@ class view_article_title extends Controller
 			echo '<script language="JavaScript" src="'.$sysURL.'/scripts/force-frame.js"></script>';
 		
 		if ($sysUseWidgets) {
-			echo '<script language="JavaScript" src="'.$sysURL.'/scripts/addOnloadEvent.js"></script>';
+			echo '<script language="JavaScript" src="'.$sysURL.'/alpha/scripts/addOnloadEvent.js"></script>';
 			require_once $sysRoot.'alpha/view/widgets/button.js.php';			
 		}
 		
