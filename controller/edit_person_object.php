@@ -112,7 +112,7 @@ class edit_person_object extends Controller
 			$this->BO->load_object($this->BO->get_ID());			
 			
 			if($success) {
-				echo '<p class="success">'.get_class($this->BO).' '.$this->BO->get_ID().' saved successfully.</p>';
+				echo '<p class="success">User profile updated successfully.</p>';
 			}
 			
 			$this->BO_View->set_BO($this->BO);
