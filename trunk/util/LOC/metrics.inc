@@ -1,6 +1,6 @@
 <?php
 
-include $sysRoot."lib/PEAR/File_Find/Find.php";
+require_once $sysRoot."alpha/lib/PEAR/File_Find/Find.php";
 
 /**
  *	utility class for calcualting some software metics related to a project

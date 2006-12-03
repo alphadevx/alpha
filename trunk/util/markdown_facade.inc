@@ -2,8 +2,8 @@
 
 // $Id$
 
-require_once $sysRoot.'lib/markdown.php';
-require_once $sysRoot.'lib/geshi.php';
+require_once $sysRoot.'alpha/lib/markdown.php';
+require_once $sysRoot.'alpha/lib/geshi.php';
 
 /**
  *

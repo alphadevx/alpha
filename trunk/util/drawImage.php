@@ -12,7 +12,7 @@
  */
 
 // include the config file
-require_once '../config/config.conf';
+require_once '../../config/config.conf';
 
 // first get the variables from get vars, then call the function to return the image
 $source = $_GET["source"];
