@@ -475,10 +475,10 @@ class Controller
 		
 		if ($sysUseWidgets && isset($this->BO)) {
 			echo '<script language="JavaScript" src="'.$sysURL.'/scripts/addOnloadEvent.js"></script>';
-			require_once $sysRoot.'view/widgets/button.js.php';
-			require_once $sysRoot.'view/widgets/string_box.js.php';
+			require_once $sysRoot.'alpha/view/widgets/button.js.php';
+			require_once $sysRoot.'alpha/view/widgets/string_box.js.php';
 		
-			require_once $sysRoot.'view/widgets/form_validator.js.php';
+			require_once $sysRoot.'alpha/view/widgets/form_validator.js.php';
 		
 			echo '<script type="text/javascript">';
 			$validator = new form_validator($this->BO);

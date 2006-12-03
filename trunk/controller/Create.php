@@ -11,8 +11,10 @@ require_once $sysRoot.'alpha/view/View.inc';
 // load the business object (BO) definition
 if (isset($_GET["bo"])) {
 	$BO_name = $_GET["bo"];
-	if (file_exists('../model/'.$BO_name.'.inc')) {
-		require_once '../model/'.$BO_name.'.inc';
+	if (file_exists($sysRoot.'model/'.$BO_name.'.inc')) {
+		require_once $sysRoot.'model/'.$BO_name.'.inc';
+	} elseif (file_exists($sysRoot.'alpha/model/'.$BO_name.'.inc')) {
+		require_once $sysRoot.'alpha/model/'.$BO_name.'.inc';
 	}else{
 		$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the defination for the BO class '.$BO_name,'GET');
 		exit;
@@ -146,10 +148,10 @@ class Create extends Controller
 		
 		if ($sysUseWidgets) {
 			echo '<script language="JavaScript" src="'.$sysURL.'/scripts/addOnloadEvent.js"></script>';
-			require_once $sysRoot.'view/widgets/button.js.php';
-			require_once $sysRoot.'view/widgets/string_box.js.php';
+			require_once $sysRoot.'alpha/view/widgets/button.js.php';
+			require_once $sysRoot.'alpha/view/widgets/string_box.js.php';
 		
-			require_once $sysRoot.'view/widgets/form_validator.js.php';
+			require_once $sysRoot.'alpha/view/widgets/form_validator.js.php';
 		
 			echo '<script type="text/javascript">';
 			$validator = new form_validator($this->BO);
