@@ -3,17 +3,17 @@
 // $Id$
 
 if (!isset($sysRoot))
-	$sysRoot = '../../';
+	$sysRoot = '../../../';
 
 require_once $sysRoot.'config/config.conf';
 
-require_once $sysRoot.'util/handle_error.inc';
+require_once $sysRoot.'alpha/util/handle_error.inc';
 
-require_once $sysRoot.'model/types/String.inc';
-require_once $sysRoot.'model/types/Integer.inc';
-require_once $sysRoot.'model/types/Double.inc';
-require_once $sysRoot.'model/types/Enum.inc';
-require_once $sysRoot.'model/types/Boolean.inc';
+require_once $sysRoot.'alpha/model/types/String.inc';
+require_once $sysRoot.'alpha/model/types/Integer.inc';
+require_once $sysRoot.'alpha/model/types/Double.inc';
+require_once $sysRoot.'alpha/model/types/Enum.inc';
+require_once $sysRoot.'alpha/model/types/Boolean.inc';
 
 /**
 * Scalable image custom widget

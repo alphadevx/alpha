@@ -2,9 +2,9 @@
 
 // $Id$
 
-require_once $sysRoot.'model/person_object.inc';
-require_once $sysRoot.'view/View.inc';
-require_once $sysRoot.'util/markdown_facade.inc';
+require_once $sysRoot.'alpha/model/person_object.inc';
+require_once $sysRoot.'alpha/view/View.inc';
+require_once $sysRoot.'alpha/util/markdown_facade.inc';
 
 /**
  *

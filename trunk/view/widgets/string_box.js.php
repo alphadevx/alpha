@@ -2,9 +2,9 @@
 
 // $Id$
 
-require_once $sysRoot.'util/handle_error.inc';
+require_once $sysRoot.'alpha/util/handle_error.inc';
 
-require_once $sysRoot.'model/types/String.inc';
+require_once $sysRoot.'alpha/model/types/String.inc';
 
 /**
 * String HTML input box custom widget

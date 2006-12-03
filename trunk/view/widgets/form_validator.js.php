@@ -3,15 +3,15 @@
 // $Id$
 
 if (!isset($sysRoot))
-	$sysRoot = '../../';
+	$sysRoot = '../../../';
 
 if (!isset($sysURL))
-	$sysURL = '../../';
+	$sysURL = '../../../';
 
-require_once $sysRoot.'util/handle_error.inc';
+require_once $sysRoot.'alpha/util/handle_error.inc';
 
-require_once $sysRoot.'model/types/String.inc';
-require_once $sysRoot.'model/types/Text.inc';
+require_once $sysRoot.'alpha/model/types/String.inc';
+require_once $sysRoot.'alpha/model/types/Text.inc';
 
 /**
  *
