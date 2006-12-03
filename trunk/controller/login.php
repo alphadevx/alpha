@@ -83,8 +83,8 @@ class login extends Controller
 					$_SESSION["current_user"] = $this->person_object;
 					if ($this->get_next_job() != '')
 						header('Location: '.$sysURL.'/alpha/controller/'.$this->get_next_job());
-					//else
-					//	header('Location: '.$sysURL.'/controller/whats_new.php');
+					else
+						header('Location: '.$sysURL.'/controller/whats_new.php');
 				}else{								
 					$error = new handle_error($_SERVER["PHP_SELF"],'Failed to login user '.$_POST["email"].', the password is incorrect!' ,'handle_post()','validation');
 				}
