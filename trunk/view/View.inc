@@ -321,7 +321,7 @@ class View {
 			echo '&nbsp;&nbsp;';
 			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".$sysURL."/controller/ListAll.php?bo=".get_class($this->BO)."'", "Back to List", "cancelBut");
+			$temp = new button("document.location = '".$sysURL."/alpha/controller/ListAll.php?bo=".get_class($this->BO)."'", "Back to List", "cancelBut");
 		} else {
 			echo '<input type="submit" name="saveBut" value="Save"/>';
 			echo '<input type="button" name="deleteBut" value="Delete" onclick="if(confirm(\'Are you sure you wish to delete this item?\')) {document.getElementById(\'delete_oid\').value = \''.$this->BO->get_ID().'\'; document.getElementById(\'delete_form\').submit();}"/>';
