@@ -12,9 +12,9 @@ require_once $sysRoot.'alpha/view/View.inc';
 if (isset($_GET["bo"])) {
 	$BO_name = $_GET["bo"];
 	
-	if (file_exists($sysRoot.'alpha/model/'.$BO_name.'.inc')) {
+	if (file_exists($sysRoot.'alpha/model/'.$BO_name.'.inc')) {		
 		require_once $sysRoot.'alpha/model/'.$BO_name.'.inc';
-	}elseif (file_exists($sysRoot.'model/'.$BO_name.'.inc')) {
+	}elseif (file_exists($sysRoot.'model/'.$BO_name.'.inc')) {		
 		require_once $sysRoot.'model/'.$BO_name.'.inc';
 	}else{
 		$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the defination for the BO class '.$BO_name,'GET');
@@ -418,7 +418,7 @@ class Search extends Controller
 			echo '<p align="center">Displaying &nbsp;'.($this->start_point+1).' to '.$end.' of <strong>'.$this->result_count.'</strong>.&nbsp;&nbsp;';		
 				
 		if ($this->start_point > 0) {
-			echo '<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BO_name.'&start='.($this->start_point-$sysListPageAmount).'&var1='.$_REQUEST["var1"].'&var2='.$_REQUEST["var2"].(isset($_REQUEST["section"]) ? '&section='.$_REQUEST["section"]: '&search_string='.$this->query).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
+			echo '<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BO_name.'&start='.($this->start_point-$sysListPageAmount).'&var1='.$_REQUEST["var1"].'&var2='.$_REQUEST["var2"].(isset($_REQUEST["section"]) ? '&section='.$_REQUEST["section"]: '&search_string='.$this->query).(isset($_GET["BO_search_attributes"]) ? "&BO_search_attributes=".$_GET["BO_search_attributes"]: "").'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
 		}else{
 			echo '&lt;&lt;-Previous&nbsp;&nbsp;';
 		}
@@ -431,7 +431,7 @@ class Search extends Controller
 			$page++;
 		}
 		if ($this->result_count > $end) {
-			echo '&nbsp;&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BO_name.'&start='.($this->start_point+$sysListPageAmount).'&var1='.$_REQUEST["var1"].'&var2='.$_REQUEST["var2"].(isset($_REQUEST["section"]) ? '&section='.$_REQUEST["section"]: '&search_string='.$this->query).'">Next-&gt;&gt;</a>';
+			echo '&nbsp;&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BO_name.'&start='.($this->start_point+$sysListPageAmount).'&var1='.$_REQUEST["var1"].'&var2='.$_REQUEST["var2"].(isset($_REQUEST["section"]) ? '&section='.$_REQUEST["section"]: '&search_string='.$this->query).(isset($_GET["BO_search_attributes"]) ? "&BO_search_attributes=".$_GET["BO_search_attributes"]: "").'">Next-&gt;&gt;</a>';
 		}else{
 			echo '&nbsp;&nbsp;Next-&gt;&gt;';
 		}
