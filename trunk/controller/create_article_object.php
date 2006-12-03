@@ -82,7 +82,7 @@ class create_article_object extends Controller
 		}
 		if (isset($_POST["cancelBut"])) {			
 			$this->abort();			
-			header('Location: '.$sysURL.'/controller/ListBusinessObjects.php');
+			header('Location: '.$sysURL.'/alpha/controller/ListBusinessObjects.php');
 		}
 	}
 	

@@ -33,8 +33,11 @@ if (isset($_GET["oid"])) {
 }
 
 // check and see if a custom edit_*.php controller exists for this BO, and if it does use it otherwise continue
-if (file_exists('../controller/edit_'.$BO_name.'.php')) {
-	header('Location: ../controller/edit_'.$BO_name.'.php?'.$_SERVER['QUERY_STRING']);	
+if (file_exists($sysRoot.'controller/edit_'.$BO_name.'.php')) {
+	header('Location: '.$sysURL.'/controller/edit_'.$BO_name.'.php?'.$_SERVER['QUERY_STRING']);	
+}
+if (file_exists($sysRoot.'alpha/controller/edit_'.$BO_name.'.php')) {
+	header('Location: '.$sysURL.'/alpha/controller/edit_'.$BO_name.'.php?'.$_SERVER['QUERY_STRING']);	
 }
 
 /**
