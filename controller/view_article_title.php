@@ -91,7 +91,7 @@ class view_article_title extends Controller
 		
 		if ($sysUseWidgets) {
 			echo '<script language="JavaScript" src="'.$sysURL.'/scripts/addOnloadEvent.js"></script>';
-			require_once $sysRoot.'view/widgets/button.js.php';			
+			require_once $sysRoot.'alpha/view/widgets/button.js.php';			
 		}
 		
 		if (!empty($this->article->header_content))
