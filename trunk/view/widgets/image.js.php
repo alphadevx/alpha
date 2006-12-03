@@ -225,7 +225,7 @@ EOS;
 // end of javascript
 // -----------------
 			
-		echo 'document.write(\'<img src="'.$sysURL.'/view/widgets/image.js.php?source=\'+source+\'&width=\'+new_width+\'&height=\'+new_height+\'&sourceType=\'+sourceType+\'&quality=\'+quality+\'" width="\'+new_width+\'" height="\'+new_height+\'" border="0"/>\')';
+		echo 'document.write(\'<img src="'.$sysURL.'/alpha/view/widgets/image.js.php?source=\'+source+\'&width=\'+new_width+\'&height=\'+new_height+\'&sourceType=\'+sourceType+\'&quality=\'+quality+\'" width="\'+new_width+\'" height="\'+new_height+\'" border="0"/>\')';
 		echo '}';
 
 	} 
