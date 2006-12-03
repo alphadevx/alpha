@@ -14,7 +14,7 @@ require_once $sysRoot.'alpha/model/types/String.inc';
 * @copyright 2006 John Collins
 *  
 */
-class string_box
+class text_box
 {
 	/**
 	 * the string object that will be edited by this text box
@@ -32,10 +32,10 @@ class string_box
 	 */
 	var $name;
 	/**
-	 * the display size of the input box
+	 * the amount of rows to display by default
 	 * @var int
 	 */
-	var $size;
+	var $rows;
 	
 	/**
 	 * the constructor
@@ -43,10 +43,10 @@ class string_box
 	 * @param string $label the data label for the text object
 	 * @param string $name the name of the HTML input box
 	 * @param string $form_id the id of the form that contains this text box
-	 * @param int $size the display size (characters)
+	 * @param int $rows the display size (rows)
 	 * @param bool $table_tags determines if table tags are also rendered for the text_box
 	 */
-	function text_box($text, $label, $name, $form_id, $size=90, $table_tags=true) {
+	function text_box($text, $label, $name, $form_id, $rows=5, $table_tags=true) {
 		$this->set_text_object($text);
 		$this->set_label($label);
 		$this->set_name($name);
@@ -54,7 +54,7 @@ class string_box
 			$this->set_form_id($form_id);
 		else
 			$this->render_javascript();
-		$this->set_size($size);
+		$this->set_rows($rows);
 		
 		$this->render($table_tags);
 	}
@@ -64,14 +64,20 @@ class string_box
 	 */
 	function render() {
 		$text_obj = $this->get_text_object(); 
-		
+			
 		echo '<tr><td colspan="2">';
-		echo "groovey".$this->get_label();
+		echo $this->get_label();
 		echo '</td></tr>';
 	
 		echo '<tr><td colspan="2">';
-		echo '<textarea cols="90" rows="5" name="'.$this->get_name().'">'.htmlspecialchars(((isset($_POST[$this->get_name()]) && $text_obj->get_value() == "")? $_POST[$this->get_name()] : $text_obj->get_value())).'</textarea><br>';
-		echo '</td></tr>';		
+		echo '<textarea id="text_field_'.$this->get_name().'" style="width:100%;" rows="5" name="'.$this->get_name().'">'.htmlspecialchars(((isset($_POST[$this->get_name()]) && $text_obj->get_value() == "")? $_POST[$this->get_name()] : $text_obj->get_value())).'</textarea><br>';
+		echo '</td></tr>';
+		echo '<tr><td colspan="2">';
+		echo '<a href="#" onclick="document.getElementById(\'text_field_'.$this->get_name().'\').rows = (parseInt(document.getElementById(\'text_field_'.$this->get_name().'\').rows) + 10);" title="Increase display size">[+]</a>';
+		echo '&nbsp;&nbsp;&nbsp;';
+		echo '<a href="#" onclick="if(document.getElementById(\'text_field_'.$this->get_name().'\').rows > 10) {document.getElementById(\'text_field_'.$this->get_name().'\').rows = (parseInt(document.getElementById(\'text_field_'.$this->get_name().'\').rows) - 10)};" title="Decrease display size">[-]</a>';
+		echo '</td></tr>';
+		
 	}
 	
 	/**
@@ -84,6 +90,7 @@ class string_box
 		
 		echo " validation_rules[\"".$this->get_name()."\"] = ".$this->text_object->get_rule().";\n";
 		echo " validation_rules[\"".$this->get_name()."_msg\"] = \"".$this->text_object->get_helper()."\";\n";
+		
 		echo '</script>';
 	}
 	
@@ -156,20 +163,20 @@ class string_box
 	}
 	
 	/**
-	 * setter for size
-	 * @param string $size
+	 * setter for rows
+	 * @param string $rows
 	 */
-	function set_size($size)
+	function set_rows($rows)
 	{
-		$this->size = $size;
+		$this->rows = $rows;
 	}
 
 	/**
-	 * getter for size
-	 * @return string size
+	 * getter for rows
+	 * @return string rows
 	 */
-	function get_size() {
-		return $this->size;
+	function get_rows() {
+		return $this->rows;
 	}
 }
 
