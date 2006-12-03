@@ -89,7 +89,7 @@ class view_article extends Controller
 		
 		if ($sysUseWidgets) {
 			echo '<script language="JavaScript" src="'.$sysURL.'/scripts/addOnloadEvent.js"></script>';
-			require_once $sysRoot.'view/widgets/button.js.php';			
+			require_once $sysRoot.'alpha/view/widgets/button.js.php';			
 		}
 		
 		if (!empty($this->article->header_content))
@@ -112,7 +112,7 @@ class view_article extends Controller
 	 */
 	function display_page_foot() {
 		global $sysURL;
-		echo '<p>Article URL: <a href="'.$sysURL.'/controller/view_article.php?oid='.$this->article->get_Id().'">'.$sysURL.'/controller/view_article.php?oid='.$this->article->get_Id().'</a><br>';
+		echo '<p>Article URL: <a href="'.$sysURL.'alpha/controller/view_article.php?oid='.$this->article->get_Id().'">'.$sysURL.'/controller/view_article.php?oid='.$this->article->get_Id().'</a><br>';
 		echo 'Title: '.$this->article->get("title").'<br>';
 		echo 'Author: '.$this->article->get("author").'</p>';
 		echo '</body>';
