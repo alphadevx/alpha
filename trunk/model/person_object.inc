@@ -274,9 +274,8 @@ class person_object extends mysql_DAO
 			$new_password.= $alphabet[rand(0,25)];
 		}
 		$new_password.= rand(0,100);
-		$new_password.= rand(0,100);
+		$new_password.= rand(0,100);		
 		
-		echo $new_password;
 		return $new_password;
 	}
 }
