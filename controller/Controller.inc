@@ -474,7 +474,7 @@ class Controller
 		echo '<link rel="StyleSheet" type="text/css" href="'.$sysURL.'/config/css/'.$sysTheme.'.css.php">';
 		
 		if ($sysUseWidgets && isset($this->BO)) {
-			echo '<script language="JavaScript" src="'.$sysURL.'/scripts/addOnloadEvent.js"></script>';
+			echo '<script language="JavaScript" src="'.$sysURL.'/alpha/scripts/addOnloadEvent.js"></script>';
 			require_once $sysRoot.'alpha/view/widgets/button.js.php';
 			require_once $sysRoot.'alpha/view/widgets/string_box.js.php';
 		

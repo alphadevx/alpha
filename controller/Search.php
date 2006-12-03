@@ -338,7 +338,7 @@ class Search extends Controller
 		echo '<link rel="StyleSheet" type="text/css" href="'.$sysURL.'/config/css/'.$sysTheme.'.css.php">';
 		
 		if ($sysUseWidgets) {
-			echo '<script language="JavaScript" src="'.$sysURL.'/scripts/addOnloadEvent.js"></script>';
+			echo '<script language="JavaScript" src="'.$sysURL.'/alpha/scripts/addOnloadEvent.js"></script>';
 			
 			require_once $sysRoot.'alpha/view/widgets/form_validator.js.php';			
 			require_once $sysRoot.'alpha/view/widgets/button.js.php';			
