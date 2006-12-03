@@ -236,8 +236,12 @@ class person extends View
 			}
 			if ($prop == "version_num")
 				echo '<input type="hidden" name="version_num" value="'.$this->BO->get_version().'"/>';
-			if ($prop == "password")
-				$temp = new string_box(new String(), "New password (leave blank for no change)", $prop, "");
+			if ($prop == "password") {
+				$temp = new String();
+				$temp->is_password();
+				$temp = new string_box($temp, "New password (leave blank for no change)", "new_password", "");
+				echo '<input type="hidden" name="password" value="'.$this->BO->get_password().'"/>';
+			}
 		}
 
 		echo '<tr><td colspan="2">';
