@@ -7,7 +7,7 @@ require_once $sysRoot.'alpha/controller/Controller.inc';
 require_once $sysRoot.'alpha/model/article_object.inc';
 
 // load the business object (BO) definition
-require_once $sysRoot.'alpha/model/'.$BO_name.'.inc';
+require_once $sysRoot.'alpha/model/article_object.inc';
 
 // ensure that a OID is also provided
 if (isset($_GET["oid"])) {
