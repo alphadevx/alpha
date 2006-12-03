@@ -148,7 +148,7 @@
 		}
 		
 		//sets the name of the back-up file
-		$backName = $sysRoot."util/logs/error_log_bak_".date("d-m-y").".log";		
+		$backName = $sysRoot."alpha/util/logs/error_log_bak_".date("d-m-y").".log";		
 		
 		//checks to see if the maximum entries amount has been met
 		if ($numOfRecords >= $maxEntries) {			
