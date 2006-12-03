@@ -75,7 +75,7 @@ class article extends View
 		echo '<td align="center">Site Section: <em>'.$prop_obj->get_value().'</em></td>';
 		echo '<td align="right">';
 		if (class_exists("button")) {			
-			$temp = new button("document.location.replace('".$sysURL."/controller/view_article.php?oid=".$this->BO->get_ID()."')","Open","openBut");
+			$temp = new button("document.location.replace('".$sysURL."/alpha/controller/view_article.php?oid=".$this->BO->get_ID()."')","Open","openBut");
 		}else{			
 			echo '<input type="button" name="openBut" value="Open" onclick="document.location.replace(\''.$sysURL.'\'/controller/view_article.php?oid='.$this->BO->get_ID().'\')"/>';
 		}
