@@ -582,9 +582,12 @@ class Controller
 		if ($this->get_visibility() == 'public') {
 			return true;
 		}else{
-			// the person is logged int
+			// the person is logged in
 			if (isset($_SESSION["current_user"])) {				
 				if ($_SESSION["current_user"]->get_access_level() == $this->get_visibility()) {
+					return true;
+				// the person is editing their own profile which is allowed
+				} elseif (get_class($this->BO) == "person_object" && $_SESSION["current_user"]->get_displayname() == $this->BO->get_displayname()) {
 					return true;
 				}else{
 					$this->access_error();
