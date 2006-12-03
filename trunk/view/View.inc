@@ -138,14 +138,19 @@ class View {
 							echo '</td></tr>';
 						}
 						break;
-					case "TEXT" :
-						echo '<tr><td colspan="2">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td></tr>';
-
-						echo '<tr><td colspan="2">';
-						echo '<textarea cols="90" rows="5" name="'.$prop.'">'. (isset ($_POST[$prop]) ? $_POST[$prop] : '').'</textarea><br>';
-						echo '</td></tr>';
+					case "TEXT" :					
+						// use a text widget if defined
+						if (class_exists("text_box")) {
+							$temp = new text_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "");
+						} else {
+							echo '<tr><td colspan="2">';
+							echo $this->BO->data_labels[$prop];
+							echo '</td></tr>';
+	
+							echo '<tr><td colspan="2">';
+							echo '<textarea cols="90" rows="5" name="'.$prop.'">'. (isset ($_POST[$prop]) ? $_POST[$prop] : '').'</textarea><br>';
+							echo '</td></tr>';
+						}
 						break;
 					case "BOOLEAN" :
 						echo '<tr><td style="width:25%;">';
