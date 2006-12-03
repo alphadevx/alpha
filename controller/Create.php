@@ -153,7 +153,8 @@ class Create extends Controller
 			echo '<script language="JavaScript" src="'.$sysURL.'/alpha/scripts/addOnloadEvent.js"></script>';
 			require_once $sysRoot.'alpha/view/widgets/button.js.php';
 			require_once $sysRoot.'alpha/view/widgets/string_box.js.php';
-		
+			require_once $sysRoot.'alpha/view/widgets/text_box.js.php';
+			
 			require_once $sysRoot.'alpha/view/widgets/form_validator.js.php';
 		
 			echo '<script type="text/javascript">';
