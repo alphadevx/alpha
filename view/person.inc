@@ -125,6 +125,139 @@ class person extends View
 		echo '</form>';
 		echo '</table>';	
 	}
+	
+	/**
+	 * custom edit view to enable the reseting of passwords
+	 */
+	function edit_view() {
+		global $sysURL;
+
+		$properties = get_object_vars($this->BO);
+		$obj_type = '';
+
+		echo '<table cols="2" class="edit_view">';
+		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
+		foreach (array_keys($properties) as $prop) {
+			if ($prop != "TABLE_NAME" && $prop != "last_query" && $prop != "OID" && $prop != "render_mode" && $prop != "data_labels" && $prop != "version_num" && $prop != "password") {
+
+				$obj_type = get_class($properties[$prop]);
+
+				switch (strtoupper($obj_type)) {
+					case "INTERGER" :
+						echo '<tr><td style="width:25%;">';
+						echo $this->BO->data_labels[$prop];
+						echo '</td>';
+
+						echo '<td>';
+						echo '<input type="text" size="11" name="'.$prop.'" value="'.$this->BO->get($prop).'"/><br>';
+						echo '</td></tr>';
+					break;
+					case "DOUBLE" :
+						echo '<tr><td style="width:25%;">';
+						echo $this->BO->data_labels[$prop];
+						echo '</td>';
+
+						echo '<td>';
+						echo '<input type="text" size="13" name="'.$prop.'" value="'.$this->BO->get($prop).'"/><br>';
+						echo '</td></tr>';
+					break;
+					case "DATE" :
+						echo '<tr><td style="width:25%;">';
+						echo $this->BO->data_labels[$prop];
+						echo '</td>';
+
+						echo '<td>';
+						echo '<input type="text" size="16" name="'.$prop.'" value="'.$this->BO->get($prop).'"/><br>';
+						echo '</td></tr>';
+					break;
+					case "STRING" :
+						// use a string widget if defined
+						if (class_exists("string_box")) {
+							$temp = new string_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "");
+						} else {
+							echo '<tr><td style="width:25%;">';
+							echo $this->BO->data_labels[$prop];
+							echo '</td>';
+
+							echo '<td>';
+							echo '<input type="text" size="'.$this->BO-> $prop->get_size().'" name="'.$prop.'" value="'.$this->BO->get($prop).'"/><br>';
+							echo '</td></tr>';
+						}
+					break;
+					case "TEXT" :
+						echo '<tr><td colspan="2">';
+						echo $this->BO->data_labels[$prop];
+						echo '</td></tr>';
+
+						echo '<tr><td colspan="2">';
+						echo '<textarea cols="90" rows="5" name="'.$prop.'">'.htmlspecialchars($this->BO->get($prop)).'</textarea><br>';
+						echo '</td></tr>';
+					break;					
+					case "BOOLEAN":
+						echo '<tr><td>';
+						echo $this->BO->data_labels[$prop];
+						echo '</td>';
+
+						echo '<td>';
+						echo '<select size="1" name="'.$prop.'"/>';
+						echo '<option value="0" '.($this->BO->$prop->get_value() == '0'? 'selected':'').'>N</option>';
+						echo '<option value="1" '.($this->BO->$prop->get_value() == '1'? 'selected':'').'>Y</option>';
+						echo '</select><br>';
+						echo '</td></tr>';
+					break;
+					case "ENUM" :
+						echo '<tr><td style="width:25%;">';
+						echo $this->BO->data_labels[$prop];
+						echo '</td>';
+						echo '<td>';
+						echo '<select name="'.$prop.'"/>';
+						$enum = $this->BO->get_prop_object($prop);
+						$enum_vals = $enum->get_options();
+						asort($enum_vals);
+						foreach ($enum_vals as $enum_val) {
+							if ($enum->get_value() == $enum_val)
+								echo '<option value="'.$enum_val.'" selected>'.$enum_val.'</option>';
+							else
+								echo '<option value="'.$enum_val.'">'.$enum_val.'</option>';
+						}
+						echo '</select><br>';
+						echo '</td></tr>';
+					break;
+					default :
+						echo '<tr><td colspan="2">';
+						echo $this->BO->data_labels[$prop];
+						echo '</td></tr>';
+
+						echo '<tr><td colspan="2">';
+						echo '<textarea cols="100" rows="3" name="'.$prop.'">'.$this->BO->get($prop).'</textarea><br>';
+						echo '</td></tr>';
+					break;
+				}
+			}
+			if ($prop == "version_num")
+				echo '<input type="hidden" name="version_num" value="'.$this->BO->get_version().'"/>';
+			if ($prop == "password")
+				$temp = new string_box(new String(), "New password (leave blank for no change)", $prop, "");
+		}
+
+		echo '<tr><td colspan="2">';
+		if (class_exists("button")) {
+			$temp = new button("submit", "Save", "saveBut");
+			echo '&nbsp;&nbsp;';
+			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
+			echo '&nbsp;&nbsp;';
+			$temp = new button("document.location = '".$sysURL."/alpha/controller/ListAll.php?bo=".get_class($this->BO)."'", "Back to List", "cancelBut");
+		} else {
+			echo '<input type="submit" name="saveBut" value="Save"/>';
+			echo '<input type="button" name="deleteBut" value="Delete" onclick="if(confirm(\'Are you sure you wish to delete this item?\')) {document.getElementById(\'delete_oid\').value = \''.$this->BO->get_ID().'\'; document.getElementById(\'delete_form\').submit();}"/>';
+			echo '<input type="button" name="cancelBut" value="Back to List" onclick="document.location = "'.$sysURL.'/controller/ListAll.php?bo='.get_class($this->BO).'"/>';
+		}
+		echo '</td></tr>';
+
+		$this->render_security_fields();
+		
+		echo '</form></table>';
+	}
 }
 
 ?>
