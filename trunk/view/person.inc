@@ -138,7 +138,7 @@ class person extends View
 		echo '<table cols="2" class="edit_view">';
 		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
 		foreach (array_keys($properties) as $prop) {
-			if ($prop != "TABLE_NAME" && $prop != "last_query" && $prop != "OID" && $prop != "render_mode" && $prop != "data_labels" && $prop != "version_num" && $prop != "password") {
+			if ($prop != "TABLE_NAME" && $prop != "last_query" && $prop != "OID" && $prop != "render_mode" && $prop != "data_labels" && $prop != "version_num" && $prop != "password" && $prop != "access_level") {
 
 				$obj_type = get_class($properties[$prop]);
 
@@ -205,7 +205,7 @@ class person extends View
 						echo '</select><br>';
 						echo '</td></tr>';
 					break;
-					case "ENUM" :
+					case "ENUM" :						
 						echo '<tr><td style="width:25%;">';
 						echo $this->BO->data_labels[$prop];
 						echo '</td>';
@@ -242,15 +242,36 @@ class person extends View
 				$temp = new string_box($temp, "New password (leave blank for no change)", "new_password", "");
 				echo '<input type="hidden" name="password" value="'.$this->BO->get_password().'"/>';
 			}
+			// need to ensure that only admins get the privileages enum drop-down
+			if ($prop == "access_level" && $_SESSION["current_user"]->get_access_level() == "Administrator") {
+				echo '<tr><td style="width:25%;">';
+				echo $this->BO->data_labels[$prop];
+				echo '</td>';
+				echo '<td>';
+				echo '<select name="'.$prop.'"/>';
+				$enum = $this->BO->get_prop_object($prop);
+				$enum_vals = $enum->get_options();
+				asort($enum_vals);
+				foreach ($enum_vals as $enum_val) {
+					if ($enum->get_value() == $enum_val)
+						echo '<option value="'.$enum_val.'" selected>'.$enum_val.'</option>';
+					else
+						echo '<option value="'.$enum_val.'">'.$enum_val.'</option>';
+				}
+				echo '</select><br>';
+				echo '</td></tr>';
+			}
 		}
 
 		echo '<tr><td colspan="2">';
 		if (class_exists("button")) {
 			$temp = new button("submit", "Save", "saveBut");
-			echo '&nbsp;&nbsp;';
-			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
-			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".$sysURL."/alpha/controller/ListAll.php?bo=".get_class($this->BO)."'", "Back to List", "cancelBut");
+			if ($_SESSION["current_user"]->get_access_level() == "Administrator") {
+				echo '&nbsp;&nbsp;';
+				$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
+				echo '&nbsp;&nbsp;';
+				$temp = new button("document.location = '".$sysURL."/alpha/controller/ListAll.php?bo=".get_class($this->BO)."'", "Back to List", "cancelBut");
+			}
 		} else {
 			echo '<input type="submit" name="saveBut" value="Save"/>';
 			echo '<input type="button" name="deleteBut" value="Delete" onclick="if(confirm(\'Are you sure you wish to delete this item?\')) {document.getElementById(\'delete_oid\').value = \''.$this->BO->get_ID().'\'; document.getElementById(\'delete_form\').submit();}"/>';
@@ -261,6 +282,70 @@ class person extends View
 		$this->render_security_fields();
 		
 		echo '</form></table>';
+	}
+	
+	/**
+	 * Custom list view with no password field present.
+	 */
+	function list_view() {
+		global $sysURL;
+
+		$properties = get_object_vars($this->BO);
+		$obj_type = '';
+
+		$col_count = 1;
+
+		echo '<table class="list_view">';
+		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
+		// first render all of the table headers
+		echo '<tr>';
+		foreach (array_keys($properties) as $prop) {
+			if ($prop != "TABLE_NAME" && $prop != "last_query" && $prop != "OID" && $prop != "render_mode" && $prop != "data_labels" && $prop != "version_num" && $prop != "password") {
+				if (get_class($properties[$prop]) != "Text") {
+					$col_count ++;
+					echo '	<th>'.$this->BO->data_labels[$prop].'</th>';
+				}
+			}
+			if ($prop == "OID")
+				echo '	<th>'.$this->BO->data_labels[$prop].'</th>';
+		}
+		echo '</tr><tr>';
+
+		// and now the values
+		foreach (array_keys($properties) as $prop) {
+			if ($prop != "TABLE_NAME" && $prop != "last_query" && $prop != "OID" && $prop != "render_mode" && $prop != "data_labels" && $prop != "version_num" && $prop != "password") {
+				if (get_class($properties[$prop]) != "Text") {
+					echo '	<td>&nbsp;'.$this->BO-> $prop->get_value().'</td>';
+				}
+			}
+			if ($prop == "OID")
+				echo '	<td>&nbsp;'.$this->BO->get_ID().'</td>';
+		}
+		echo '</tr>';
+
+		echo '<tr><td colspan="'.$col_count.'" align="center">';
+		if (class_exists("button")) {
+			$temp = new button("document.location = '".$sysURL."/alpha/controller/Detail.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "View", "viewBut");
+			// render edit and delete buttons for admins only
+			if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_access_level() == "Administrator") {
+				echo '&nbsp;&nbsp;';
+				$temp = new button("document.location = '".$sysURL."/alpha/controller/Edit.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "Edit", "editBut");
+				echo '&nbsp;&nbsp;';
+				$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
+			}
+		} else {
+			echo '<input type="button" name="viewBut" value="View" onclick="document.location.replace(\''.$sysURL.'/controller/Detail.php?bo='.get_class($this->BO).'&oid='.$this->BO->get_ID().'\')"/>';
+			echo '&nbsp;&nbsp;';
+			echo '<input type="submit" name="editBut" value="Edit"/>';
+			echo '&nbsp;&nbsp;';
+			echo '<input type="button" name="deleteBut" value="Delete" onclick="if(confirm(\'Are you sure you wish to delete this item?\')) {document.getElementById(\'delete_oid\').value = \''.$this->BO->get_ID().'\'; document.getElementById(\'delete_form\').submit();}"/>';
+		}
+		echo '</td></tr>';
+
+		$this->render_security_fields();
+		
+		echo '</form>';
+		echo '</table>';
 	}
 }
 
