@@ -2,17 +2,19 @@
 
 // $Id$
 
-require_once '../config/config.conf';
-require_once '../config/db_connect.inc';
-require_once '../controller/Controller.inc';
-require_once '../view/View.inc';
+require_once '../../config/config.conf';
+require_once $sysRoot.'config/db_connect.inc';
+require_once $sysRoot.'alpha/controller/Controller.inc';
+require_once $sysRoot.'alpha/view/View.inc';
 
 
 // load the business object (BO) definition
 if (isset($_GET["bo"])) {
 	$BO_name = $_GET["bo"];
-	if (file_exists('../model/'.$BO_name.'.inc')) {
-		require_once '../model/'.$BO_name.'.inc';
+	if (file_exists($sysRoot.'alpha/model/'.$BO_name.'.inc')) {
+		require_once $sysRoot.'alpha/model/'.$BO_name.'.inc';
+	}elseif (file_exists($sysRoot.'model/'.$BO_name.'.inc')) {
+		require_once $sysRoot.'model/'.$BO_name.'.inc';
 	}else{
 		$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the defination for the BO class '.$BO_name,'GET');
 		exit;

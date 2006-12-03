@@ -3,11 +3,11 @@
 // $Id$
 
 if (!isset($sysRoot)) {
-	require_once '../config/config.conf';
-	require_once '../config/db_connect.inc';
-	require_once '../controller/Controller.inc';
-	require_once '../view/article.inc';
-	require_once '../model/article_object.inc';
+	require_once '../../config/config.conf';
+	require_once $sysRoot.'config/db_connect.inc';
+	require_once $sysRoot.'alpha/controller/Controller.inc';
+	require_once $sysRoot.'alpha/view/article.inc';
+	require_once $sysRoot.'alpha/model/article_object.inc';
 }
 
 // ensure that a title is provided
