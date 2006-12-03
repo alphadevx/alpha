@@ -112,7 +112,7 @@ class view_article extends Controller
 	 */
 	function display_page_foot() {
 		global $sysURL;
-		echo '<p>Article URL: <a href="'.$sysURL.'alpha/controller/view_article.php?oid='.$this->article->get_Id().'">'.$sysURL.'/controller/view_article.php?oid='.$this->article->get_Id().'</a><br>';
+		echo '<p>Article URL: <a href="'.$sysURL.'/alpha/controller/view_article.php?oid='.$this->article->get_Id().'">'.$sysURL.'/controller/view_article.php?oid='.$this->article->get_Id().'</a><br>';
 		echo 'Title: '.$this->article->get("title").'<br>';
 		echo 'Author: '.$this->article->get("author").'</p>';
 		echo '</body>';
