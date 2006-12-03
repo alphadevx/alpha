@@ -187,7 +187,7 @@ class View {
 		if (class_exists("button")) {
 			$temp = new button("submit", "Create", "createBut");
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location.replace('".$sysURL."/controller/ListBusinessObjects.php')", "Cancel", "cancelBut");
+			$temp = new button("document.location.replace('".$sysURL."/alpha/controller/ListBusinessObjects.php')", "Cancel", "cancelBut");
 		} else {
 			echo '<input type="submit" name="createBut" value="Create"/>';
 			echo '&nbsp;&nbsp;';
@@ -403,11 +403,11 @@ class View {
 
 		echo '<tr><td colspan="'.$col_count.'" align="center">';
 		if (class_exists("button")) {
-			$temp = new button("document.location = '".$sysURL."/controller/Detail.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "View", "viewBut");
+			$temp = new button("document.location = '".$sysURL."/alpha/controller/Detail.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "View", "viewBut");
 			// render edit and delete buttons for admins only
 			if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_access_level() == "Administrator") {
 				echo '&nbsp;&nbsp;';
-				$temp = new button("document.location = '".$sysURL."/controller/Edit.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "Edit", "editBut");
+				$temp = new button("document.location = '".$sysURL."/alpha/controller/Edit.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "Edit", "editBut");
 				echo '&nbsp;&nbsp;';
 				$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
 			}
@@ -484,7 +484,7 @@ class View {
 		if (class_exists("button")) {
 			$temp = new button("history.back()", "Back", "backBut");
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".$sysURL."/controller/Edit.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "Edit", "editBut");
+			$temp = new button("document.location = '".$sysURL."/alpha/controller/Edit.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "Edit", "editBut");
 			echo '&nbsp;&nbsp;';
 			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
 		} else {
@@ -527,9 +527,9 @@ class View {
 
 		echo '<tr><td colspan="5" align="center">';
 		if (class_exists("button")) {
-			$temp = new button("document.location = '".$sysURL."/controller/Create.php?bo=".get_class($this->BO)."'", "Create New", "createBut");
+			$temp = new button("document.location = '".$sysURL."/alpha/controller/Create.php?bo=".get_class($this->BO)."'", "Create New", "createBut");
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".$sysURL."/controller/ListAll.php?bo=".get_class($this->BO)."&no-forceframe=true'", "List All", "listBut");
+			$temp = new button("document.location = '".$sysURL."/alpha/controller/ListAll.php?bo=".get_class($this->BO)."&no-forceframe=true'", "List All", "listBut");
 			if (!$this->BO->check_table_exists()) {
 				echo '&nbsp;&nbsp;';
 				$temp = new button("submit", "Create Table", "createTableBut");
@@ -544,7 +544,7 @@ class View {
 			}
 		} else {
 			// !! this section needs updating !!
-			echo '<input type="button" name="viewBut" value="View" onclick="document.location.replace(\''.$sysURL.'/controller/Detail.php?bo='.get_class($this->BO).'&oid='.$this->BO->get_ID().'\')"/>';
+			echo '<input type="button" name="viewBut" value="View" onclick="document.location.replace(\''.$sysURL.'/alpha/controller/Detail.php?bo='.get_class($this->BO).'&oid='.$this->BO->get_ID().'\')"/>';
 			echo '&nbsp;&nbsp;';
 			echo '<input type="submit" name="editBut" value="Edit"/>';
 			echo '&nbsp;&nbsp;';

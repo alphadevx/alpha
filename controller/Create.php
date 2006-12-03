@@ -25,8 +25,11 @@ if (isset($_GET["bo"])) {
 }
 
 // check and see if a custom create_*.php controller exists for this BO, and if it does use it otherwise continue
-if (file_exists('../controller/create_'.$BO_name.'.php')) {
-	header('Location: ../controller/create_'.$BO_name.'.php');	
+if (file_exists($sysRoot.'controller/create_'.$BO_name.'.php')) {
+	header('Location: '.$sysURL.'/controller/create_'.$BO_name.'.php');	
+}
+if (file_exists($sysRoot.'alpha/controller/create_'.$BO_name.'.php')) {
+	header('Location: '.$sysURL.'/alpha/controller/create_'.$BO_name.'.php');	
 }
 
 /**
@@ -114,7 +117,7 @@ class Create extends Controller
 		}
 		
 		if (isset($_POST["cancelBut"])) {
-			header('Location: '.$sysURL.'/controller/ListBusinessObjects.php');
+			header('Location: '.$sysURL.'/alpha/controller/ListBusinessObjects.php');
 		}	
 	}
 	
