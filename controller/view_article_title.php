@@ -67,6 +67,7 @@ class view_article_title extends Controller
 		global $sysRoot;
 		global $sysForceFrame;
 		global $sysTitle;
+		global $sysCMSHeader;
 		
 		echo '<html>';
 		echo '<head>';
@@ -107,6 +108,7 @@ class view_article_title extends Controller
 		$prop_obj = $this->article->get_prop_object("date_updated");
 		echo 'Last Updated: <em>'.$prop_obj->get_date().'</em> &nbsp; &nbsp;';
 		echo 'Revision: <em>'.$this->article->get_version().'</em></p>';
+		echo $sysCMSHeader;
 	}
 	
 	/**
@@ -114,9 +116,12 @@ class view_article_title extends Controller
 	 */
 	function display_page_foot() {
 		global $sysURL;
-		echo '<p>Article URL: <a href="'.$sysURL.'/alpha/controller/view_article_title.php?title='.$this->article->get("title").'">'.$sysURL.'/controller/view_article_title.php?title='.$this->article->get("title").'</a><br>';
+		global $sysCMSFooter;
+		
+		echo '<p>Article URL: <a href="'.$sysURL.'/alpha/controller/view_article_title.php?title='.$this->article->get("title").'">'.$sysURL.'/alpha/controller/view_article_title.php?title='.$this->article->get("title").'</a><br>';
 		echo 'Title: '.$this->article->get("title").'<br>';
-		echo 'Author: '.$this->article->get("author").'</p>';
+		echo 'Author: '.$this->article->get("author").'<br>';
+		echo $sysCMSFooter.'</p>';
 		echo '</body>';
 		echo '</html>';
 	}
