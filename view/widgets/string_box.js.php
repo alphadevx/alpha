@@ -46,7 +46,7 @@ class string_box
 	 * @param int $size the display size (characters)
 	 * @param bool $table_tags determines if table tags are also rendered for the string_box
 	 */
-	function string_box($string, $label, $name, $form_id, $size=70, $table_tags=true) {
+	function string_box($string, $label, $name, $form_id, $size=0, $table_tags=true) {
 		$this->set_string_object($string);
 		$this->set_label($label);
 		$this->set_name($name);
@@ -71,10 +71,10 @@ class string_box
 			echo '</td>';
 	
 			echo '<td>';
-			echo '<input '.($string_obj->check_is_password()? 'type="password"':'type="text"').' style="width:100%;" maxlength="'.$string_obj->get_MAX_SIZE().'" name="'.$this->get_name().'" id="'.$this->get_name().'" value="'.((isset($_POST[$this->get_name()]) && $string_obj->get_value() == "")? $_POST[$this->get_name()] : $string_obj->get_value()).'"/>';
+			echo '<input '.($string_obj->check_is_password()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : '').' maxlength="'.$string_obj->get_MAX_SIZE().'" name="'.$this->get_name().'" id="'.$this->get_name().'" value="'.((isset($_POST[$this->get_name()]) && $string_obj->get_value() == "")? $_POST[$this->get_name()] : $string_obj->get_value()).'"/>';
 			echo '</td></tr>';
 		}else{
-			echo '<input '.($string_obj->check_is_password()? 'type="password"':'type="text"').' style="width:100%;" maxlength="'.$string_obj->get_MAX_SIZE().'" name="'.$this->get_name().'" id="'.$this->get_name().'" value="'.((isset($_POST[$this->get_name()]) && $string_obj->get_value() == "")? $_POST[$this->get_name()] : $string_obj->get_value()).'"/>';
+			echo '<input '.($string_obj->check_is_password()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : '').' maxlength="'.$string_obj->get_MAX_SIZE().'" name="'.$this->get_name().'" id="'.$this->get_name().'" value="'.((isset($_POST[$this->get_name()]) && $string_obj->get_value() == "")? $_POST[$this->get_name()] : $string_obj->get_value()).'"/>';
 		}
 	}
 	
