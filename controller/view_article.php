@@ -86,7 +86,7 @@ class view_article extends Controller
 		
 		echo '<link rel="StyleSheet" type="text/css" href="'.$sysURL.'/config/css/'.$sysTheme.'.css.php">';
 		if(!isset($_GET["no-forceframe"]) && $sysForceFrame)
-			echo '<script language="JavaScript" src="'.$sysURL.'/scripts/force-frame.js"></script>';
+			echo '<script language="JavaScript" src="'.$sysURL.'/alpha/scripts/force-frame.js"></script>';
 		
 		if ($sysUseWidgets) {
 			echo '<script language="JavaScript" src="'.$sysURL.'/alpha/scripts/addOnloadEvent.js"></script>';
