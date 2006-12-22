@@ -1,18 +1,17 @@
 <?php
 
 require_once '../model/types/Enum.inc';
-require_once '../config/config.conf';
-require_once '../view/photo.inc';
-require_once '../config/db_connect.inc';
+require_once '../model/person_object.inc';
+require_once '../../config/db_connect.inc';
 require_once 'PHPUnit.php';
 
 /**
  *
  * Group of unit tests for the complex type classes
  * 
- * @package SimpleMVC_Tests
+ * @package Alpha Core Unit Tests
  * @author John Collins <john@design-ireland.net>
- * @copyright 2005 John Collins
+ * @copyright 2006 John Collins
  * 
  * 
  */
@@ -25,10 +24,10 @@ class Type_Tests extends PHPUnit_TestCase
 	var $enum1;
 	
 	/**
-	 * a photo for testing
-	 * @var photo
+	 * a person for testing
+	 * @var person_object
 	 */
-	var $photo1;
+	var $person;
 	
 	/**
 	 * constructor of the test suite
@@ -45,7 +44,7 @@ class Type_Tests extends PHPUnit_TestCase
      */
     function setUp() {        
         $this->enum1 = new Enum();
-        $this->photo1 = new photo();
+        $this->person = new person_object();
     }
     
     /** 
@@ -55,7 +54,7 @@ class Type_Tests extends PHPUnit_TestCase
      */    
     function tearDown() {        
         unset($this->enum1);
-        unset($this->photo1);
+        unset($this->person);
     }
     
     /**
@@ -84,11 +83,11 @@ class Type_Tests extends PHPUnit_TestCase
      * testing that enum options are loaded correctly from the database
      */
     function test_load_enum_options() {
-    	$this->photo1->load('1');
+    	// here we are assuming that the first user in the DB
+    	// table is an administrator
+    	$this->person->load_object('1');
     	
-    	$this->photo1->set_location('Dublin');
-    	
-    	$this->assertEquals('Dublin', $this->photo1->get_location());
+    	$this->assertEquals('Administrator', $this->person->get_access_level());
     }
     
     /**
