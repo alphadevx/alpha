@@ -266,7 +266,7 @@ class person extends View
 				}
 				echo '</select><br>';
 				echo '</td></tr>';
-			}else{
+			}elseif ($prop == "access_level" && $_SESSION["current_user"]->get_access_level() != "Administrator"){
 				echo '<input type="hidden" name="access_level" value="'.$this->BO->get("access_level").'"/>';
 			}
 		}
