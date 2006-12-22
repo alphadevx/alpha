@@ -1,5 +1,7 @@
 <?php
 
+// $Id$
+
 require_once '../../config/config.conf';
 require_once $sysRoot.'alpha/model/person_object.inc';
 require_once $sysRoot.'alpha/view/person.inc';
