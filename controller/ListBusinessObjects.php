@@ -166,7 +166,7 @@ class ListBusinessObjects extends Controller
 			echo '<p>You are not logged in</p>';
 		}
 		
-		echo '<p align="center"><a href="'.$sysURL.'">Application Home Page</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="'.$sysURL.'/alpha/controller/view_metrics.php">Application Software Metrics</a></p>';
+		echo '<p align="center"><a href="'.$sysURL.'">Application Home Page</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="'.$sysURL.'/alpha/controller/view_metrics.php">Application Software Metrics</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="'.$sysURL.'/alpha/tests/view_test_results.php">Application Unit Tests</a></p>';
 	}
 }
 
