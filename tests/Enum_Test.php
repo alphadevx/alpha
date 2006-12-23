@@ -67,7 +67,7 @@ class Enum_Test extends PHPUnit_TestCase
     	
     	$result = $this->enum1->set_value('b');
     	
-    	$this->assertTrue($result);
+    	$this->assertTrue($result, "testing the enum select option methods for pass");
     }
     
     /**
@@ -78,7 +78,7 @@ class Enum_Test extends PHPUnit_TestCase
     	
     	$result = $this->enum1->set_value('x');
     	
-    	$this->assertFalse($result);
+    	$this->assertFalse($result, "testing the enum select option methods for fail");
     }
     
     /**
@@ -89,7 +89,7 @@ class Enum_Test extends PHPUnit_TestCase
     	// table is an administrator
     	$this->person->load_object('1');
     	
-    	$this->assertEquals('Administrator', $this->person->get_access_level());
+    	$this->assertEquals('Administrator', $this->person->get_access_level(), "testing that enum options are loaded correctly from the database");
     }
     
     /**
@@ -98,7 +98,7 @@ class Enum_Test extends PHPUnit_TestCase
     function test_set_enum_options() {
     	$this->enum1->set_options(array('a','b','c'));
     	
-    	$this->assertEquals($this->enum1->get_options(), array('a','b','c'));
+    	$this->assertEquals($this->enum1->get_options(), array('a','b','c'), "testing the set/get enum option methods");
     }
     
     /**
@@ -109,7 +109,7 @@ class Enum_Test extends PHPUnit_TestCase
     	
     	$options = $this->enum1->get_options();
     	 
-    	$this->assertEquals($options[1], "beta");
+    	$this->assertEquals($options[1], "beta", "testing the default (alphabetical) sort order on the enum");
     }
 }
 
