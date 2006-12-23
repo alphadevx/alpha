@@ -20,7 +20,7 @@ class Boolean {
 	var $size = 1;
 	var $MAX_SIZE = 1;
 	
-	function Boolean($val='') {
+	function Boolean($val=1) {
 		if (strlen($val) <= $this->size) {			
 			if (preg_match($this->validation_rule, $val)) {				
 				$this->value = $val;
