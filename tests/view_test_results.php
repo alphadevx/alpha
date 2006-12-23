@@ -8,6 +8,7 @@ require_once $sysRoot.'alpha/view/person.inc';
 require_once $sysRoot.'config/db_connect.inc';
 require_once $sysRoot.'alpha/controller/Controller.inc';
 require_once $sysRoot.'alpha/tests/Enum_Test.php';
+require_once $sysRoot.'alpha/tests/Boolean_Test.php';
 require_once 'PHPUnit.php';
 
 /**
@@ -46,6 +47,16 @@ class view_test_results extends Controller
 		else
 			echo '<span class="warning">'.$result->toHTML().'</span>';
 		
+		//------------------------------------------------
+		echo "<h3>Boolean:</h3>";
+		
+		$suite  = new PHPUnit_TestSuite("Boolean_Test");
+		$result = PHPUnit::run($suite);
+
+		if($result->wasSuccessful())
+			echo '<span class="success">'.$result->toHTML().'</span>';
+		else
+			echo '<span class="warning">'.$result->toHTML().'</span>';
 		
 		$this->display_page_foot();
 	}	
