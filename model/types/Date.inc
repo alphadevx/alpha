@@ -79,9 +79,9 @@ class Date {
  		
  		if (!preg_match('/^[0-9]{4}$/', $year))
  			$valid = 'Error: the year value '.$year.' provided is invalid!';
- 		if (!preg_match('/^[0-9]{2}$/', $month))
+ 		if (!preg_match('/^[0-9]{1,2}$/', $month))
  			$valid = 'Error: the month value '.$month.' provided is invalid!';
- 		if (!preg_match('/^[0-9]{2}$/', $day))
+ 		if (!preg_match('/^[0-9]{1,2}$/', $day))
  			$valid = 'Error: the day value '.$day.' provided is invalid!';
  		if (!checkdate($month, $day, $year))
  			$valid = 'Error: the day value '.$year.'/'.$month.'/'.$day.' provided is invalid!';
@@ -90,8 +90,8 @@ class Date {
  			return $valid;
  		}else{
  			$this->year = $year;
- 			$this->month = $month;
- 			$this->day = $day;
+ 			$this->month = str_pad($month, 2, '0', STR_PAD_LEFT);
+ 			$this->day = str_pad($day, 2, '0', STR_PAD_LEFT);
  			return true;
  		}
  	}
@@ -139,10 +139,9 @@ class Date {
  		if ($valid != 1) {
  			return $valid;
  		}else{
- 			$this->hour = $hour;
- 			$this->minute = $minute;
- 			$this->second = $second;
- 			
+ 			$this->hour = str_pad($hour, 2, '0', STR_PAD_LEFT);
+ 			$this->minute = str_pad($minute, 2, '0', STR_PAD_LEFT);
+ 			$this->second = str_pad($second, 2, '0', STR_PAD_LEFT); 			
  			return true;
  		}
  	}
