@@ -7,6 +7,7 @@ require_once $sysRoot.'config/db_connect.inc';
 require_once $sysRoot.'alpha/controller/Controller.inc';
 require_once $sysRoot.'alpha/util/handle_error.inc';
 require_once $sysRoot.'alpha/view/View.inc';
+require_once $sysRoot.'alpha/util/log_file.inc';
 
 // load the business object (BO) definition
 if (isset($_GET["bo"])) {
@@ -163,6 +164,7 @@ class Search extends Controller
 	 * the main search and sort method for the search
 	 */
 	function do_search() {
+		global $sysRoot;
 		
 		$BO = new $this->BO_name();
 	
@@ -226,14 +228,10 @@ class Search extends Controller
 			}
 		}	
 	
-		// log the user's search query in the database
-		//$sql_query = 'INSERT INTO search_queries (user_query, date_time, user_agent, IP) VALUES (\''.$query.'\',\''.date("y-m-d H:i:s").'\',\''.$_SERVER["HTTP_USER_AGENT"].'\',\''.$_SERVER["REMOTE_ADDR"].'\');';
-	
-		//$result = mysql_query($sql_query)
-		//	or die("Invalid query: " . mysql_error());
-	
-		//mysql_close($db_link);
-	
+		// log the user's search query in a log file
+		$search_log = new log_file($sysRoot.'alpha/util/logs/search_log.log');		
+		$search_log->write_line(array($this->query, date("y-m-d H:i:s"), $_SERVER["HTTP_USER_AGENT"], $_SERVER["REMOTE_ADDR"]));
+		
 		// now we will peform a sort on the parallel arrays, sorted by matching word count!	
 	
 		array_multisort($word_count_match, SORT_DESC, SORT_NUMERIC, $ID_result_array, $result_keywords_array);
