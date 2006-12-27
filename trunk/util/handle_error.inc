@@ -2,6 +2,8 @@
 
 // $Id$
 
+require_once $sysRoot.'alpha/util/log_file.inc';
+
 /**
  *
  * Generic error handling class used to display error messages and log errors
@@ -108,12 +110,7 @@
 	 */
 	function log_error_to_file() {
 		global $sysErrorLogFile;
-		global $sysErrorLogFileMaxEntires;
-		global $sysRoot;
-		
-		$logfile = $sysErrorLogFile;
-
-		$maxEntries = $sysErrorLogFileMaxEntires;
+		global $sysErrorLogFileMaxEntires;		
 
 		//sets up the date and time variables		
 		$dateTime = date("d/m/y H:i:s");		
@@ -121,45 +118,9 @@
 		$host = gethostbyaddr($ip);
 		$browser = $_SERVER["HTTP_USER_AGENT"];
 		
-		
-		//searches the $browser variable for extra comas, and removes them.
-		$browser = str_replace(",","",$browser);
-		
-		//writes in the data to the log file
-		$fp=fopen("$logfile","a+");
-		  flock($fp,2); // locks the file for writting		    
-		    fwrite($fp,'"'.$dateTime.'",'); // date and time
-		    fwrite($fp,'"'.$this->sys_file.'",'); // error type
-		    fwrite($fp,'"'.$this->method.'",'); // method causing the error
-		    fwrite($fp,'"'.$this->message.'",'); // error message
-			fwrite($fp,'"'.$this->type.'",'); // error type			
-			fwrite($fp,'"'.$ip.'",'); // IP
-		    fwrite($fp,'"'.$host.'",');// server!
-			fwrite($fp,'"'.$browser.'"'."\r\n");  // browser			
-		  flock($fp,3); // unlocks the file
-		fclose($fp); //closes the file
-		
-		//counts the number of entries in the logfile
-		$numOfRecords = 0;
-		
-		$fileArray = file("$logfile");
-		for ($k = 0; $k < count($fileArray); $k++) {
-			$numOfRecords++;
-		}
-		
-		//sets the name of the back-up file
-		$backName = $sysRoot."alpha/util/logs/error_log_bak_".date("d-m-y").".log";		
-		
-		//checks to see if the maximum entries amount has been met
-		if ($numOfRecords >= $maxEntries) {			
-			//renames the logfile as the value of $backName
-			rename("$logfile", "$backName");
-			//creates a new log file, and sets it's permission for writting!
-			$fp = fopen($logfile, "a+"); // set directory permissons to allow creation!
-			fclose($fp);
-			//sets the new permission to rw+:rw+:rw+
-			chmod($logfile, 0666);
-		}
+		$error_log = new log_file($sysErrorLogFile);
+		$error_log->set_max_size($sysErrorLogFileMaxEntires);	
+		$error_log->write_line(array($dateTime, $this->sys_file, $this->method, $this->message, $this->type, $ip, $host, $browser));
 	}	
 }
  
