@@ -138,7 +138,7 @@ class person extends View
 		echo '<table cols="2" class="edit_view">';
 		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
 		foreach (array_keys($properties) as $prop) {
-			if ($prop != "TABLE_NAME" && $prop != "last_query" && $prop != "OID" && $prop != "render_mode" && $prop != "data_labels" && $prop != "version_num" && $prop != "password" && $prop != "access_level") {
+			if ($prop != "TABLE_NAME" && $prop != "last_query" && $prop != "OID" && $prop != "render_mode" && $prop != "data_labels" && $prop != "version_num" && $prop != "password" && $prop != "access_level" && $prop != "state") {
 
 				$obj_type = get_class($properties[$prop]);
 
@@ -268,6 +268,27 @@ class person extends View
 				echo '</td></tr>';
 			}elseif ($prop == "access_level" && $_SESSION["current_user"]->get_access_level() != "Administrator"){
 				echo '<input type="hidden" name="access_level" value="'.$this->BO->get("access_level").'"/>';
+			}
+			// need to ensure that only admins get the state enum drop-down
+			if ($prop == "state" && $_SESSION["current_user"]->get_access_level() == "Administrator") {
+				echo '<tr><td style="width:25%;">';
+				echo $this->BO->data_labels[$prop];
+				echo '</td>';
+				echo '<td>';
+				echo '<select name="'.$prop.'"/>';
+				$enum = $this->BO->get_prop_object($prop);
+				$enum_vals = $enum->get_options();
+				asort($enum_vals);
+				foreach ($enum_vals as $enum_val) {
+					if ($enum->get_value() == $enum_val)
+						echo '<option value="'.$enum_val.'" selected>'.$enum_val.'</option>';
+					else
+						echo '<option value="'.$enum_val.'">'.$enum_val.'</option>';
+				}
+				echo '</select><br>';
+				echo '</td></tr>';
+			}elseif ($prop == "state" && $_SESSION["current_user"]->get_access_level() != "Administrator"){
+				echo '<input type="hidden" name="state" value="'.$this->BO->get("state").'"/>';
 			}
 		}
 
