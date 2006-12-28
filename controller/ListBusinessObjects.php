@@ -106,7 +106,7 @@ class ListBusinessObjects extends Controller
 				echo '<p class="success">The table for the class '.$classname.' has been successfully created.</p>';
 		}
 		
-		if($_POST['admin_'.$_POST["recreateTableClass"].'_button_pressed'] == "recreateTableBut") {
+		if(isset($_POST['admin_'.$_POST["recreateTableClass"].'_button_pressed']) && $_POST['admin_'.$_POST["recreateTableClass"].'_button_pressed'] == "recreateTableBut") {
 				
 			$classname = $_POST["recreateTableClass"];
 			if (file_exists($sysRoot.'model/'.$classname.'.inc'))
@@ -121,7 +121,7 @@ class ListBusinessObjects extends Controller
 				echo '<p class="success">The table for the class '.$classname.' has been successfully recreated.</p>';
 		}
 		
-		if($_POST['admin_'.$_POST["updateTableClass"].'_button_pressed'] == "updateTableBut") {
+		if(isset($_POST['admin_'.$_POST["updateTableClass"].'_button_pressed']) && $_POST['admin_'.$_POST["updateTableClass"].'_button_pressed'] == "updateTableBut") {
 			
 			$classname = $_POST["updateTableClass"];
 			if (file_exists($sysRoot.'model/'.$classname.'.inc'))
