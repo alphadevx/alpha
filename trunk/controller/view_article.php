@@ -116,10 +116,32 @@ class view_article extends Controller
 		global $sysURL;
 		global $sysCMSFooter;
 		
+		if(!empty($_POST))
+			$this->handle_post();
+		
 		$rating = $this->article->get_score();
 		$votes = $this->article->get_votes();
 		
-		echo '<p>Article User Rating: <strong>'.$rating.'</strong> (based on <strong>'.count($votes).'</strong> votes)</p>';
+		echo '<p>Average Article User Rating: <strong>'.$rating.'</strong> (based on <strong>'.count($votes).'</strong> votes)</p>';
+		
+		if(!$this->article->check_user_voted()) {
+			echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="post">';
+			echo '<p>Please rate this article from 1-10 (10 being the best):' .
+					'<select name="user_vote">' .
+					'<option value="1">1' .
+					'<option value="2">2' .
+					'<option value="3">3' .
+					'<option value="4">4' .
+					'<option value="5">5' .
+					'<option value="6">6' .
+					'<option value="7">7' .
+					'<option value="8">8' .
+					'<option value="9">9' .
+					'<option value="10">10' .
+					'</select></p>&nbsp;&nbsp;';
+			$temp = new button("submit","Vote!","voteBut");
+			echo "<form>";
+		}
 		
 		echo '<p>Article URL: <a href="'.$sysURL.'/alpha/controller/view_article_title.php?title='.$this->article->get("title").'">'.$sysURL.'/alpha/controller/view_article_title.php?title='.$this->article->get("title").'</a><br>';
 		echo 'Title: '.$this->article->get("title").'<br>';
@@ -127,6 +149,21 @@ class view_article extends Controller
 		echo $sysCMSFooter.'</p>';
 		echo '</body>';
 		echo '</html>';
+	}
+	
+	/**
+	 * handles the user posting article ratings
+	 */
+	function handle_post() {		
+		if(isset($_POST["voteBut"])) {
+			$vote = new article_vote_object();
+			$vote->set("article_oid", $this->article->get_ID());
+			$vote->set("person_oid", $_SESSION["current_user"]->get_ID());
+			$vote->set("score", $_POST["user_vote"]);
+			$success = $vote->save_object();
+			if($success)
+				echo '<p class="success">Thank you for rating this article!</p>';
+		}
 	}
 }
 
