@@ -46,7 +46,8 @@ class person_object extends mysql_DAO
 		"email"=>"E-mail Address",
 		"password"=>"Password",		
 		"access_level"=>"Page Access Privileage Level",
-		"state"=>"Account state"
+		"state"=>"Account state",
+		"URL"=>"Your site address"
 	);
 	/**
 	 * the name of the database table for the class
@@ -58,6 +59,11 @@ class person_object extends mysql_DAO
 	 * @var Enum
 	 */
 	var $state;
+	/**
+	 * the site URL of the person
+	 * @var String
+	 */
+	var $URL;
 	
 	/**
 	 * constructor for the class that populates all of the complex types with default values
@@ -84,6 +90,9 @@ class person_object extends mysql_DAO
 										"Active",
 										"Disabled"));
 		$this->state->set_value("Active");
+		$this->URL = new String();
+		$this->URL->set_rule(RULE_URL_BLANK);
+		$this->URL->set_helper("URLs must be in the format http://some_domain/ or left blank!");
 	}
 	
 	/**
