@@ -25,7 +25,7 @@ class Enum {
 	 * the message to display to the user when validation fails
 	 * @var string
 	 */
-	var $validation_helper = 'Error: not a valid string value!';	
+	var $validation_helper = 'Error: not a valid enum option!';	
 	
 	/**
 	 * constructor that sets up the enum options
