@@ -131,7 +131,6 @@ class ListBusinessObjects extends Controller
 	    		
 	    	$BO = new $classname();
 	    	$missing_fields = $BO->find_missing_fields();
-	    	print_r($missing_fields);
 	    	$success = false;
 	    	
 	    	for($i = 0; $i < count($missing_fields); $i++)
