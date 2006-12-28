@@ -55,7 +55,7 @@ class View {
 		global $sysRoot;
 		
 		$filename = get_class($BO);
-		$underscore_pos = strpos($filename, '_');
+		$underscore_pos = strrpos($filename, '_');
 		$filename = substr($filename, 0, $underscore_pos);		
 
 		// Check to see if a custom view exists for this BO, and if it does return that view instead		
