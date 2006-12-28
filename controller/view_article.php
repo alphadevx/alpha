@@ -116,6 +116,11 @@ class view_article extends Controller
 		global $sysURL;
 		global $sysCMSFooter;
 		
+		$rating = $this->article->get_score();
+		$votes = $this->article->get_votes();
+		
+		echo '<p>Article User Rating: <strong>'.$rating.'</strong> (based on <strong>'.count($votes).'</strong> votes)</p>';
+		
 		echo '<p>Article URL: <a href="'.$sysURL.'/alpha/controller/view_article_title.php?title='.$this->article->get("title").'">'.$sysURL.'/alpha/controller/view_article_title.php?title='.$this->article->get("title").'</a><br>';
 		echo 'Title: '.$this->article->get("title").'<br>';
 		echo 'Author: '.$this->article->get("author").'<br>';
