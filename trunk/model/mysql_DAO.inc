@@ -389,19 +389,19 @@ class mysql_DAO
 
 			switch (strtoupper($obj_type)) {
 					case "INTEGER":
-						$sql_query .= "$prop INT(".$properties[$prop]->get_size()."),";
+						$sql_query .= "$prop INT(".$this->$prop->get_size()."),";
 					break;
 					case "DOUBLE":
-						$sql_query .= "$prop DOUBLE(".$properties[$prop]->get_size()."),";
+						$sql_query .= "$prop DOUBLE(".$this->$prop->get_size()."),";
 					break;
 					case "STRING":
-						$sql_query .= "$prop VARCHAR(".$properties[$prop]->get_size()."),";
+						$sql_query .= "$prop VARCHAR(".$this->$prop->get_size()."),";
 					break;
 					case "TEXT":
 						$sql_query .= "$prop TEXT,";
 					break;
 					case "BOOLEAN":
-						$sql_query .= "$prop CHAR(".$properties[$prop]->get_size().") DEFAULT '0',";
+						$sql_query .= "$prop CHAR(".$this->$prop->get_size().") DEFAULT '0',";
 					break;
 					case "DATE":
 						$sql_query .= "$prop DATETIME,";
@@ -703,8 +703,7 @@ class mysql_DAO
 				$match_count++;
 			}
 			
-			if($match_count==0) {
-				echo "adding : ".$prop."<br><br>";			
+			if($match_count==0) {					
 				array_push($missing_fields, $prop);
 			}else{
 				$match_count = 0;
