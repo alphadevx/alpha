@@ -335,6 +335,36 @@ class article_object extends mysql_DAO
 		
 		return $votes;
 	}
+	
+	/**
+	 * method to determine if the logged-in user has already voted for this article
+	 * @return boolean true if they have voted already, false otherwise
+	 */
+	function check_user_voted() {
+		// just going to return true if nobody is logged in
+		if (!isset($_SESSION["current_user"]))
+			return true;
+		
+		$userID = $_SESSION["current_user"]->get_ID();
+		
+		$sql_query = "SELECT COUNT(*) AS users_vote FROM article_vote WHERE article_oid='".$this->OID."' AND person_oid='".$userID."';";		
+
+		$this->last_query = $sql_query;
+
+		$result = mysql_query($sql_query);
+		
+		if(mysql_error() != '') {
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to check if the current user voted for the article '.$this->OID.', MySql error is: '.mysql_error().', query: '.$sql_query ,'check_user_voted()');
+			return false;
+		}
+		
+		$row = mysql_fetch_assoc($result);
+		
+		if($row["users_vote"] == "0")
+			return false;
+		else
+			return true;			
+	}
 }
 
 ?>
