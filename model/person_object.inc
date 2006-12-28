@@ -45,13 +45,19 @@ class person_object extends mysql_DAO
 		"displayname"=>"Forum Name",		
 		"email"=>"E-mail Address",
 		"password"=>"Password",		
-		"access_level"=>"Page Access Privileage Level"	
+		"access_level"=>"Page Access Privileage Level",
+		"state"=>"Account state"
 	);
 	/**
 	 * the name of the database table for the class
 	 * @var string
 	 */
 	var $TABLE_NAME = "person";
+	/**
+	 * the state of the person
+	 * @var Enum
+	 */
+	var $state;
 	
 	/**
 	 * constructor for the class that populates all of the complex types with default values
@@ -73,7 +79,11 @@ class person_object extends mysql_DAO
 											"Standard",
 											"Moderator",
 											"Administrator"));
-		$this->access_level->set_value('Standard');
+		$this->access_level->set_value("Standard");
+		$this->state = new Enum(array(
+										"Active",
+										"Disabled"));
+		$this->state->set_value("Active");
 	}
 	
 	/**
