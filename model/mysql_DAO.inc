@@ -670,6 +670,47 @@ class mysql_DAO
 	}
 	
 	/**
+	 * returns an array containing any properties on the class which have not been created on the database table yet
+	 * @return array an array of class properties (may be empty)
+	 */
+	function find_missing_fields() {
+		global $sysDB;
+		
+		$missing_fields = array();
+			
+		$match_count = 0;
+			
+		$result = mysql_query("SHOW COLUMNS FROM ".$this->TABLE_NAME);
+			
+		$properties = get_class_vars(get_class($this));			
+			
+		foreach(array_keys($properties) as $prop) {
+			if ($prop != "TABLE_NAME" && $prop != "data_labels" && $prop != "last_query") {
+				
+				$found_match = false;	
+					
+				while ($row = mysql_fetch_assoc($result)) {						
+		    		if ($prop == $row["Field"]) {
+		    			$found_match = true;
+		    			break;
+		    		}else{
+		    			$missing_fields[$match_count] = $properties[$prop];
+		    			$match_count++;
+		    		}
+				}					
+				mysql_data_seek($result, 0);					
+			}
+		}			
+			
+		if (mysql_error() != '') {			
+			$this->last_query .= " Error: ".mysql_error();
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to access the system database correctly','check_table_needs_update()','framework');
+		}
+			
+		return $missing_fields;		
+	}
+	
+	/**
 	 * getter for the TABLE_NAME, which should be set by a child of this class
 	 * @return string $TABLE_NAME
 	 */
