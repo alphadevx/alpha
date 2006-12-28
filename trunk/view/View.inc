@@ -170,10 +170,14 @@ class View {
 						echo '</td>';
 						echo '<td>';
 						echo '<select name="'.$prop.'"/>';
+						$enum = $this->BO->get_prop_object($prop);
 						$enum_vals = $this->BO-> $prop->get_options();
 						asort($enum_vals);
 						foreach ($enum_vals as $enum_val) {
-							echo '<option value="'.$enum_val.'">'.$enum_val.'</option>';
+							if ($enum->get_value() == $enum_val)
+								echo '<option value="'.$enum_val.'" selected>'.$enum_val.'</option>';
+							else
+								echo '<option value="'.$enum_val.'">'.$enum_val.'</option>';
 						}
 						echo '</select><br>';
 						echo '</td></tr>';
