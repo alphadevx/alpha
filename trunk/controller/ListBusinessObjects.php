@@ -83,7 +83,7 @@ class ListBusinessObjects extends Controller
 	 * method to handle POST requests
 	 */
 	function handle_post() {
-		global $sysRoot;
+		global $sysRoot;		
 		
 		// check the hidden security fields before accepting the form POST data
 		if(!$this->check_security_fields()) {
@@ -106,9 +106,9 @@ class ListBusinessObjects extends Controller
 				echo '<p class="success">The table for the class '.$classname.' has been successfully created.</p>';
 		}
 		
-		if(isset($_POST["updateTableClass"]) && empty($_POST["createTableBut"])) {
+		if($_POST['admin_'.$_POST["recreateTableClass"].'_button_pressed'] == "recreateTableBut") {
 				
-			$classname = $_POST["updateTableClass"];
+			$classname = $_POST["recreateTableClass"];
 			if (file_exists($sysRoot.'model/'.$classname.'.inc'))
 				require_once $sysRoot.'model/'.$classname.'.inc';
 			if (file_exists($sysRoot.'alpha/model/'.$classname.'.inc'))
@@ -116,6 +116,26 @@ class ListBusinessObjects extends Controller
 	    		
 	    	$BO = new $classname();	
 			$success = $BO->rebuild_table();
+			
+			if ($success)
+				echo '<p class="success">The table for the class '.$classname.' has been successfully recreated.</p>';
+		}
+		
+		if($_POST['admin_'.$_POST["updateTableClass"].'_button_pressed'] == "updateTableBut") {
+			
+			$classname = $_POST["updateTableClass"];
+			if (file_exists($sysRoot.'model/'.$classname.'.inc'))
+				require_once $sysRoot.'model/'.$classname.'.inc';
+			if (file_exists($sysRoot.'alpha/model/'.$classname.'.inc'))
+				require_once $sysRoot.'alpha/model/'.$classname.'.inc';
+	    		
+	    	$BO = new $classname();
+	    	$missing_fields = $BO->find_missing_fields();
+	    	print_r($missing_fields);
+	    	$success = false;
+	    	
+	    	for($i = 0; $i < count($missing_fields); $i++)
+				$success = $BO->add_property($missing_fields[$i]);
 			
 			if ($success)
 				echo '<p class="success">The table for the class '.$classname.' has been successfully updated.</p>';
