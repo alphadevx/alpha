@@ -8,20 +8,12 @@ require_once $sysRoot.'alpha/controller/Controller.inc';
 require_once $sysRoot.'alpha/view/article.inc';
 require_once $sysRoot.'alpha/model/article_object.inc';
 
-// ensure that a OID is provided
-if (isset($_GET["oid"])) {
-	$article_oid = $_GET["oid"];
-}else{
-	$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the article as an oid was not supplied!','GET');
-	exit;
-}
-
 /**
 * 
 * Controller used to display a Markdown version of an article
 * 
 * @author John Collins <john@design-ireland.net>
-* @package Design-Ireland
+* @package Alpha CMS
 * @copyright 2006 John Collins
 *
 */
@@ -34,13 +26,20 @@ class view_article extends Controller
 	var $article;	
 								
 	/**
-	 * constructor that renders the page
-	 * @param int $article_oid the ID of the article to display
+	 * constructor that renders the page	
 	 */
-	function view_article($article_oid) {		
+	function view_article() {
+		
+		// ensure that a OID is provided
+		if (isset($_GET["oid"])) {
+			$article_oid = $_GET["oid"];
+		}else{
+			$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the article as an oid was not supplied!','GET');
+			exit;
+		}
 		
 		// ensure that the super class constructor is called
-		$this->Controller();		
+		$this->Controller();	
 		
 		$this->article = new article_object();
 		$this->article->load_object($article_oid);
@@ -168,6 +167,7 @@ class view_article extends Controller
 }
 
 // now build the new controller
-$controller = new view_article($article_oid);
+if(basename($_SERVER["PHP_SELF"]) == "view_article.php")
+	$controller = new view_article();
 
 ?>
