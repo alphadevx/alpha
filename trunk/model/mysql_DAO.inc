@@ -330,7 +330,7 @@ class mysql_DAO
 					default:
 						$sql_query .= "";
 					break;
-				}				
+				}
 			}
 			if ($prop == "version_num") {					
 				$sql_query .= "version_num INT(11) DEFAULT '1',";
@@ -383,40 +383,45 @@ class mysql_DAO
 	{
 		$sql_query = "ALTER TABLE ".$this->TABLE_NAME." ADD ";
 
-		if($prop != "OID" && $prop != "TABLE_NAME" && $prop != "render_mode" && $prop != "data_labels" && $prop != "version_num") {
-			//$db_type = substr($prop, 0, 3);
-			$obj_type = get_class($prop);
+		if($prop != "OID" && $prop != "TABLE_NAME" && $prop != "render_mode" && $prop != "data_labels" && $prop != "last_query" && $prop != "version_num") {
+			
+			$obj_type = get_class($this->$prop);
 
-			switch ($obj_type) {
-				case "Integer":
-					$sql_query .= "$prop INT(11),";
-				break;
-				case "Double":
-					$sql_query .= "$prop DOUBLE(13,5),";
-				break;
-				case "String":
-					$sql_query .= "$prop VARCHAR(100),";
-				break;
-				case "Text":
-					$sql_query .= "$prop VARCHAR(255),";
-				break;
-				case "Boolean":
-					$sql_query .= "$prop CHAR(1) DEFAULT 'N',";
-				break;
-				case "Enum":
-					$sql_query .= "$prop ENUM(";
-					$enum_vals = $this->$prop->get_options();
-					foreach($enum_vals as $enum_val) {
-						$sql_query .= "'".$enum_val."',";
-					}
-					$sql_query = rtrim($sql_query, ",");
-					$sql_query .= "),";
-				break;
-				default:
-					$sql_query .= ",";
-				break;
-			}
+			switch (strtoupper($obj_type)) {
+					case "INTEGER":
+						$sql_query .= "$prop INT(".$properties[$prop]->get_size()."),";
+					break;
+					case "DOUBLE":
+						$sql_query .= "$prop DOUBLE(".$properties[$prop]->get_size()."),";
+					break;
+					case "STRING":
+						$sql_query .= "$prop VARCHAR(".$properties[$prop]->get_size()."),";
+					break;
+					case "TEXT":
+						$sql_query .= "$prop TEXT,";
+					break;
+					case "BOOLEAN":
+						$sql_query .= "$prop CHAR(".$properties[$prop]->get_size().") DEFAULT '0',";
+					break;
+					case "DATE":
+						$sql_query .= "$prop DATETIME,";
+					break;
+					case "ENUM":
+						$sql_query .= "$prop ENUM(";
+						$enum_vals = $this->$prop->get_options();
+						foreach($enum_vals as $enum_val) {
+							$sql_query .= "'".$enum_val."',";
+						}
+						$sql_query = rtrim($sql_query, ",");
+						$sql_query .= "),";
+					break;
+					default:
+						$sql_query .= "";
+					break;
+				}
 		}
+		
+		$sql_query = rtrim($sql_query, ",");
 
 		$this->last_query = $sql_query;
 
@@ -426,7 +431,7 @@ class mysql_DAO
 			return true;
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to add the new attribute to the table '.$this->TABLE_NAME,'add_property($prop)','framework');
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to add the new attribute ['.$prop.'] to the table '.$this->TABLE_NAME,'add_property($prop), database error: '.$this->last_query,'framework');
 			return false;
 		}
 	}
@@ -677,32 +682,36 @@ class mysql_DAO
 		global $sysDB;
 		
 		$missing_fields = array();
+		$found_fields = array();
 			
 		$match_count = 0;
 			
 		$result = mysql_query("SHOW COLUMNS FROM ".$this->TABLE_NAME);
 			
-		$properties = get_class_vars(get_class($this));			
+		$properties = get_class_vars(get_class($this));		
 			
-		foreach(array_keys($properties) as $prop) {
+		foreach(array_keys($properties) as $prop) {			
 			if ($prop != "TABLE_NAME" && $prop != "data_labels" && $prop != "last_query") {
-				
-				$found_match = false;	
-					
-				while ($row = mysql_fetch_assoc($result)) {						
-		    		if ($prop == $row["Field"]) {
-		    			$found_match = true;
+				while ($row = mysql_fetch_assoc($result)) {				
+		    		if ($prop == $row["Field"]) {		    			
+		    			$match_count++;		    			
 		    			break;
-		    		}else{
-		    			$missing_fields[$match_count] = $properties[$prop];
-		    			$match_count++;
-		    		}
-				}					
+		    		}	    		
+				}				
 				mysql_data_seek($result, 0);					
+			}else{
+				$match_count++;
 			}
-		}			
 			
-		if (mysql_error() != '') {			
+			if($match_count==0) {
+				echo "adding : ".$prop."<br><br>";			
+				array_push($missing_fields, $prop);
+			}else{
+				$match_count = 0;
+			}
+		}
+		
+		if (mysql_error() != '') {
 			$this->last_query .= " Error: ".mysql_error();
 			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to access the system database correctly','check_table_needs_update()','framework');
 		}
