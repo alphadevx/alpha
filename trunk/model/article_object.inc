@@ -1,4 +1,5 @@
 <?php
+
 // $Id$
 
 require_once $sysRoot.'alpha/model/mysql_DAO.inc';
@@ -99,7 +100,7 @@ class article_object extends mysql_DAO
 		"author"=>"Author",
 		"date_added"=>"Date Added",
 		"date_updated"=>"Date of last Update",
-		"published"=>"Published"
+		"published"=>"Published"		
 	);
 	
 	/**
