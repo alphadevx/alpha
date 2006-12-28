@@ -273,12 +273,7 @@ class person_object extends mysql_DAO
 		
 		$body .= '\n\nKind regards,\n\nDesign-Ireland.net Administrator\n--\n'.$sysURL;
 		
-		//echo 'To: '.$this->get_email();
-		//echo 'Subject: '.$subject;
-		//echo 'Message: '.$body;		
-		
-		return mail($this->get_email(), $subject, $body);
-		//return true;
+		return mail($this->get_email(), $subject, $body);		
 	}
 	
 	/**
