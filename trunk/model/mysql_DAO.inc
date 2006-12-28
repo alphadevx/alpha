@@ -514,7 +514,7 @@ class mysql_DAO
 	 * @return integer The OID of the object
 	 */
 	function get_ID() {
-		return str_pad($this->OID, 11, "0", STR_PAD_LEFT);  ;
+		return str_pad($this->OID, 11, "0", STR_PAD_LEFT);
 	}
 	
 	/**
