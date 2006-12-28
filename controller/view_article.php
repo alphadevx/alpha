@@ -154,7 +154,7 @@ class view_article extends Controller
 	 * handles the user posting article ratings
 	 */
 	function handle_post() {		
-		if(isset($_POST["voteBut"])) {
+		if(isset($_POST["voteBut"]) && !$this->article->check_user_voted()) {
 			$vote = new article_vote_object();
 			$vote->set("article_oid", $this->article->get_ID());
 			$vote->set("person_oid", $_SESSION["current_user"]->get_ID());
