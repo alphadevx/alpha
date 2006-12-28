@@ -4,6 +4,7 @@
 
 require_once $sysRoot.'alpha/model/mysql_DAO.inc';
 require_once $sysRoot.'alpha/util/handle_error.inc';
+require_once $sysRoot.'alpha/model/article_vote_object.inc';
 
 /**
  *
@@ -245,7 +246,7 @@ class article_object extends mysql_DAO
 	 */
 	function load_by_title($title)
 	{		
-		$sql_query = "SELECT * FROM ".$this->TABLE_NAME." WHERE title = '$title';";		
+		$sql_query = "SELECT * FROM ".$this->TABLE_NAME." WHERE title = '$title';";
 
 		$this->last_query = $sql_query;
 		
@@ -283,7 +284,57 @@ class article_object extends mysql_DAO
 			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load article, MySql error is: '.mysql_error().', query: '.$this->last_query,'load_by_title($title)','framework');
 			return false;
 		}		
-	}	
+	}
+	
+	/**
+	 * method for returning the calculated score for this article
+	 * @return double the average score
+	 */
+	function get_score() {
+		$votes = $this->get_votes();
+		
+		$score = 0;
+		$total_score = 0;
+		$vote_count = count($votes);
+		
+		for($i = 0; $i < $vote_count; $i++){
+			$total_score += $votes[$i]->get("score");
+		}
+		
+		if($vote_count > 0)
+		$score = $total_score/$vote_count;
+		
+		return sprintf("%01.2f", $score);
+	}
+	
+	/**
+	 * method for fetching all of the votes for this article
+	 * @return array an array of article_vote_object objects
+	 */
+	function get_votes() {
+		$sql_query = "SELECT OID FROM article_vote WHERE article_oid='".$this->OID."';";		
+
+		$this->last_query = $sql_query;
+
+		$result = mysql_query($sql_query);
+		
+		if(mysql_error() != '') {
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load the votes for the article '.$this->OID.', MySql error is: '.mysql_error().', query: '.$sql_query ,'get_votes()');
+			return false;
+		}
+		
+		$votes = array();
+		
+		$i = 0;
+		while ($row = mysql_fetch_assoc($result)) {
+			$temp = new article_vote_object();
+			$temp->load_object($row["OID"]);
+			$votes[$i] = $temp;
+			$i++;
+		}
+		
+		return $votes;
+	}
 }
 
 ?>
