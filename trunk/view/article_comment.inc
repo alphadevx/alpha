@@ -246,7 +246,7 @@ class article_comment extends View
 							$text = $this->BO->get_prop_object($prop);
 							$filter = new input_filter($text);
 							$text->set_value($filter->decode());
-							$temp = new text_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop."_".$this->BO->get_ID(), "");
+							$temp = new text_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "", 5, true, $this->BO->get_ID());
 						} else {
 							echo '<tr><td colspan="2">';
 							echo $this->BO->data_labels[$prop];
@@ -302,24 +302,38 @@ class article_comment extends View
 				echo '<input type="hidden" name="version_num" value="'.$this->BO->get_version().'"/>';
 			if($prop == "article_oid")
 				echo '<input type="hidden" name="article_oid" value="'.$this->BO->get("article_oid").'"/>';
+			if($prop == "OID")
+				echo '<input type="hidden" name="OID" value="'.$this->BO->get_ID().'"/>';
 		}
 
-		echo '<tr><td colspan="2">';
-		
-		$temp = new button("submit", "Update Your Comment", "saveBut");
-		echo '&nbsp;&nbsp;';
-		
 		// render special buttons for admins only
 		if ($_SESSION["current_user"]->get_access_level() == "Administrator") {
+			echo '<tr><td colspan="2">';
+			
+			$temp = new button("submit", "Save", "saveBut");
+			echo '&nbsp;&nbsp;';
 			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
 			echo '&nbsp;&nbsp;';
 			$temp = new button("document.location = '".$sysURL."/alpha/controller/ListAll.php?bo=".get_class($this->BO)."'", "Back to List", "cancelBut");
+			
 			echo '</td></tr>';
+			
+			$this->render_security_fields();
+		
+			echo '</form></table>';
+		}else{
+			echo '</table>';
+			
+			echo "<center>";
+			$temp = new button("submit", "Update Your Comment", "saveBut");
+			echo "</center>";
+			
+			$this->render_security_fields();
+			
+			echo '</form>';
 		}
 
-		$this->render_security_fields();
 		
-		echo '</form></table>';
 	}
 }
 
