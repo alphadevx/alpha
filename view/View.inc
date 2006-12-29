@@ -229,7 +229,7 @@ class View {
 				$obj_type = get_class($properties[$prop]);
 
 				switch (strtoupper($obj_type)) {
-					case "INTERGER" :
+					case "INTEGER" :
 						echo '<tr><td style="width:25%;">';
 						echo $this->BO->data_labels[$prop];
 						echo '</td>';
