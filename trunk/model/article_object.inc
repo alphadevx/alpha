@@ -374,7 +374,7 @@ class article_object extends mysql_DAO
 	 * @return array an array of article_comment_object objects
 	 */
 	function get_comments() {
-		$sql_query = "SELECT OID FROM article_comment WHERE article_oid='".$this->OID."';";		
+		$sql_query = "SELECT OID FROM article_comment WHERE article_oid='".$this->OID."' ORDER BY created_ts;";		
 
 		$this->last_query = $sql_query;
 
