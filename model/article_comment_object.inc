@@ -24,10 +24,10 @@ class article_comment_object extends mysql_DAO
 	var $article_oid;	
 	
 	/**
-	 * the comment posted by the user
+	 * the content of the comment posted by the user
 	 * @var Text
 	 */	
-	var $comment;
+	var $content;
 	
 	/**
 	 * an array of data display labels for the class properties
@@ -36,7 +36,7 @@ class article_comment_object extends mysql_DAO
 	var $data_labels = array(
 		"OID"=>"Article Vote ID#",
 		"article_oid"=>"Article ID#",		
-		"comment"=>"User Comment"
+		"content"=>"User Comment"
 	);
 	
 	/**
@@ -52,7 +52,7 @@ class article_comment_object extends mysql_DAO
 		// ensure to call the parent constructor
 		$this->mysql_DAO();
 		$this->article_oid = new Integer();		
-		$this->comment = new Text();
+		$this->content = new Text();
 	}	
 }
 
