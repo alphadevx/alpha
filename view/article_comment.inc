@@ -42,7 +42,7 @@ class article_comment extends View
 		$author = new person_object();
 		$author->load_object($this->BO->get_creator_ID()->get_value());
 		
-		echo '<blockquote class="boxout">';
+		echo '<blockquote class="usercomment">';
 		
 		echo '<p>Posted by '.$author->get("displayname").' at '.$this->BO->get_create_TS()->get_value().'</p>';
 		echo $markdown->get_content();
