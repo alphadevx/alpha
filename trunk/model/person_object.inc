@@ -236,16 +236,13 @@ class person_object extends mysql_DAO
 		$properties = get_class_vars(get_class($this));
 
 		foreach(array_keys($properties) as $prop) {
-			if($prop != "TABLE_NAME" && $prop != "last_query" && $prop != "OID" && $prop != "render_mode" && $prop != "data_labels" && $prop != "version_num") {						
+			if(!in_array($prop, $this->transient_attributes) && $prop != "OID") {						
 				if (get_class($this->$prop) != 'Date') {
 					$this->$prop->set_value($row[$prop]);
 				}else{
 					$this->$prop->populate_from_string($row[$prop]);
 				}
-			}
-			if($prop == "version_num"){
-				$this->version_num = $row[$prop];
-			}
+			}			
 			if($prop == "OID"){
 				$this->OID = $row[$prop];
 			}
