@@ -215,6 +215,24 @@ class view_article extends Controller
 				echo '<p class="success">Thank you for your comment!</p>';
 			}
 		}
+		
+		if(isset($_POST["saveBut"])) {			
+			$comment = new article_comment_object();
+			$comment->load_object($_POST["OID"]);
+			
+			// re-populates the old object from post data
+			$comment->populate_from_post();			
+			
+			// filter the comment before saving
+			$filter = new input_filter($comment->get_prop_object("content"));
+			$comment->set("content", $filter->encode());
+			
+			$success = $comment->save_object();			
+			
+			if($success) {
+				echo '<p class="success">Your comment has been updated.</p>';
+			}
+		}
 	}
 	
 	/**
