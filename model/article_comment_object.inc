@@ -1,0 +1,57 @@
+<?php
+
+// $Id$
+
+require_once $sysRoot.'alpha/model/mysql_DAO.inc';
+require_once $sysRoot.'alpha/util/handle_error.inc';
+
+/**
+ *
+ * an article comment class for user comments
+ * 
+ * @package Alpha CMS
+ * @author John Collins <john@design-ireland.net>
+ * @copyright 2006 John Collins
+ * 
+ * 
+ */ 
+class article_comment_object extends mysql_DAO
+{
+	/**
+	 * the OID of the parent article
+	 * @var Integer
+	 */
+	var $article_oid;	
+	
+	/**
+	 * the comment posted by the user
+	 * @var Text
+	 */	
+	var $comment;
+	
+	/**
+	 * an array of data display labels for the class properties
+	 * @var array
+	 */
+	var $data_labels = array(
+		"OID"=>"Article Vote ID#",
+		"article_oid"=>"Article ID#",		
+		"comment"=>"User Comment"
+	);
+	
+	/**
+	 * the name of the database table for the class
+	 * @var string
+	 */
+	var $TABLE_NAME = "article_comment";
+	
+	/**
+	 * constructor for the class
+	 */
+	function article_comment_object(){
+		$this->article_oid = new Integer();		
+		$this->comment = new Text();
+	}	
+}
+
+?>
