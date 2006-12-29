@@ -7,6 +7,8 @@ require_once $sysRoot.'config/db_connect.inc';
 require_once $sysRoot.'alpha/controller/Controller.inc';
 require_once $sysRoot.'alpha/view/article.inc';
 require_once $sysRoot.'alpha/model/article_object.inc';
+require_once $sysRoot.'alpha/view/widgets/text_box.js.php';
+require_once $sysRoot.'alpha/view/widgets/string_box.js.php';
 
 /**
 * 
@@ -70,6 +72,7 @@ class view_article extends Controller
 		$article_view->markdown_view();		
 		
 		$this->display_page_foot();
+		$this->display_comments();
 	}
 	
 	/**
@@ -182,6 +185,28 @@ class view_article extends Controller
 			$success = $vote->save_object();
 			if($success)
 				echo '<p class="success">Thank you for rating this article!</p>';
+		}
+	}
+	
+	/**
+	 * method for displaying the user comments for the article
+	 */
+	function display_comments() {
+		$comments = $this->article->get_comments();
+		$comment_count = count($comments);
+		
+		if($comment_count > 0) {
+			echo "<h2>There are [".$comment_count."] user comments for this article</h2>";
+			
+			for($i = 0; $i < $comment_count; $i++) {
+				$view = View::get_instance($comments[$i]);
+				$view->markdown_view();
+			}
+		}
+		
+		if(isset($_SESSION["current_user"])) {
+			$view = View::get_instance(new article_comment_object());
+			$view->create_view();
 		}
 	}
 }
