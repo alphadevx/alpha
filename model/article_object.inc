@@ -5,6 +5,7 @@
 require_once $sysRoot.'alpha/model/mysql_DAO.inc';
 require_once $sysRoot.'alpha/util/handle_error.inc';
 require_once $sysRoot.'alpha/model/article_vote_object.inc';
+require_once $sysRoot.'alpha/model/article_comment_object.inc';
 
 /**
  *
@@ -366,6 +367,35 @@ class article_object extends mysql_DAO
 			return false;
 		else
 			return true;			
+	}
+	
+	/**
+	 * method for fetching all of the comments for this article
+	 * @return array an array of article_comment_object objects
+	 */
+	function get_comments() {
+		$sql_query = "SELECT OID FROM article_comment WHERE article_oid='".$this->OID."';";		
+
+		$this->last_query = $sql_query;
+
+		$result = mysql_query($sql_query);
+		
+		if(mysql_error() != '') {
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load the comments for the article '.$this->OID.', MySql error is: '.mysql_error().', query: '.$sql_query ,'get_comments()');
+			return false;
+		}
+		
+		$comments = array();
+		
+		$i = 0;
+		while ($row = mysql_fetch_assoc($result)) {
+			$temp = new article_comment_object();
+			$temp->load_object($row["OID"]);
+			$comments[$i] = $temp;
+			$i++;
+		}
+		
+		return $comments;
 	}
 }
 
