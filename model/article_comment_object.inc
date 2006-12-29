@@ -48,7 +48,9 @@ class article_comment_object extends mysql_DAO
 	/**
 	 * constructor for the class
 	 */
-	function article_comment_object(){
+	function article_comment_object() {
+		// ensure to call the parent constructor
+		$this->mysql_DAO();
 		$this->article_oid = new Integer();		
 		$this->comment = new Text();
 	}	

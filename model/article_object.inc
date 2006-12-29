@@ -113,7 +113,9 @@ class article_object extends mysql_DAO
 	/**
 	 * constructor for the class
 	 */
-	function article_object(){
+	function article_object() {
+		// ensure to call the parent constructor
+		$this->mysql_DAO();
 		$this->title = new String();
 		$this->title->set_helper("Please provide a title for the article.");
 		$this->title->set_size(100);

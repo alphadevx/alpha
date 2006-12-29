@@ -55,7 +55,9 @@ class article_vote_object extends mysql_DAO
 	/**
 	 * constructor for the class
 	 */
-	function article_vote_object(){
+	function article_vote_object() {
+		// ensure to call the parent constructor
+		$this->mysql_DAO();
 		$this->article_oid = new Integer();
 		$this->person_oid = new Integer();
 		$this->score = new Integer();

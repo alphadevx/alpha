@@ -69,6 +69,8 @@ class person_object extends mysql_DAO
 	 * constructor for the class that populates all of the complex types with default values
 	 */
 	function person_object() {
+		// ensure to call the parent constructor
+		$this->mysql_DAO();
 		$this->displayname = new String();
 		$this->displayname->set_rule(RULE_USERNAME);
 		$this->displayname->set_helper("Please provide a name for display on the website (only letters & numbers are allowed!).");
