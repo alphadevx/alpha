@@ -47,7 +47,7 @@ class article_comment extends View
 		echo '<p>Posted by '.$author->get("displayname").' at '.$this->BO->get_create_TS()->get_value().'</p>';
 		echo $markdown->get_content();
 		
-		echo '</blockquote><br><br>';
+		echo '</blockquote>';
 	}
 	
 	/**
@@ -162,6 +162,8 @@ class article_comment extends View
 						break;
 				}
 			}
+			if($prop == "article_oid")
+				echo '<input type="hidden" name="article_oid" value="'.$this->BO->get("article_oid").'"/>';
 		}
 		
 		echo '<tr><td colspan="2">';
