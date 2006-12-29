@@ -77,9 +77,10 @@ class mysql_DAO
 	function mysql_DAO() {
 		$this->version_num = new Integer();
 		$this->created_ts = new Date();
-		$this->created_by = new Integer($_SESSION["current_user"]->get_ID());
+		$person_ID = (isset($_SESSION["current_user"])? $_SESSION["current_user"]->get_ID(): 0);
+		$this->created_by = new Integer($person_ID);
 		$this->updated_ts = new Date();
-		$this->updated_by = new Integer($_SESSION["current_user"]->get_ID());
+		$this->updated_by = new Integer($person_ID);
 	}
 	
 	/**
