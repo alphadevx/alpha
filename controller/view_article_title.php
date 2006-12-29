@@ -19,7 +19,8 @@ class view_article_title extends view_article
 	/**
 	 * constructor that renders the page	
 	 */
-	function view_article_title() {		
+	function view_article_title() {
+		global $sysTheme;
 		
 		// ensure that a title is provided
 		if (isset($_GET["title"])) {
@@ -30,7 +31,14 @@ class view_article_title extends view_article
 		}
 		
 		// ensure that the super class constructor is called
-		$this->Controller();		
+		$this->Controller();
+		
+		if(isset($_GET["no-forceframe"]))
+			$this->force_frame = false;
+		else
+			$this->force_frame = true;
+			
+		$this->style_sheet = $sysTheme;
 		
 		$this->article = new article_object();
 		$this->article->load_by_title($title);
