@@ -768,6 +768,38 @@ class mysql_DAO
 		else
 			return "unset";
 	}
+	
+	/**
+	 * method for getting the OID of the person who created this BO
+	 * @return Integer
+	 */
+	function get_creator_ID() {
+		return $this->created_by;
+	}
+	
+	/**
+	 * method for getting the OID of the person who updated this BO
+	 * @return Integer
+	 */
+	function get_updator_ID() {
+		return $this->updated_by;
+	}
+	
+	/**
+	 * method for getting the date/time of when the BO was created
+	 * @return Date
+	 */
+	function get_create_TS() {
+		return $this->created_ts;
+	}
+	
+	/**
+	 * method for getting the date/time of when the BO was last updated
+	 * @return Date
+	 */
+	function get_update_TS() {
+		return $this->updated_ts;
+	}
 }
 
 ?>
