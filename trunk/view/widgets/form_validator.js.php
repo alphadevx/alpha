@@ -44,7 +44,7 @@ class form_validator
 		$properties = get_object_vars($this->BO);		
 		
 		foreach(array_keys($properties) as $prop) {
-			if($prop != "TABLE_NAME" && $prop != "last_query" && $prop != "OID" && $prop != "render_mode" && $prop != "data_labels" && $prop != "version_num" && $prop != "access_level") {
+			if(!in_array($prop, $this->BO->default_attributes)) {
 				if (strtoupper(get_class($properties[$prop])) != "ENUM") {
 					echo " validation_rules[\"".$prop."\"] = ".$this->BO->$prop->get_rule().";\n";
 					echo " validation_rules[\"".$prop."_msg\"] = \"".$this->BO->$prop->get_helper()."\";\n";
