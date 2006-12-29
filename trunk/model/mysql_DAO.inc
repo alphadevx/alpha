@@ -18,10 +18,8 @@ require_once $sysRoot.'alpha/model/types/Boolean.inc';
 * @package Alpha Core
 * @author John Collins <john@design-ireland.net>
 * @copyright 2006 John Collins
-* @todo Re-write add property method!
 * @todo Write increment_version method
 * @todo Write set_last_query method
-* @todo booleans not being set/saved correctly to db!
 * @todo clone_object has bug due to complex attributes not being cloned (referenced instead!)
 *  
 */
@@ -39,10 +37,40 @@ class mysql_DAO
 	var $last_query = "";
 	/**
 	 * the version number of the object, used for locking mechanism
-	 * @var integer
+	 * @var Integer
 	 */
-	var $version_num = 0;
-
+	var $version_num;
+	/**
+	 * the timestamp of creation
+	 * @var Date
+	 */
+	var $created_ts;
+	/**
+	 * the OID of the person who created this BO
+	 * @var Integer 
+	 */
+	var $created_by;
+	/**
+	 * the timestamp of the last update
+	 * @var Date
+	 */
+	var $updated_ts;
+	/**
+	 * the OID of the person who last updated this BO
+	 * @var Integer 
+	 */
+	var $updated_by;
+	/**
+	 * an array of the names of all of the default attributes of a persistent BO defined in this class
+	 * @var array
+	 */
+	var $default_attributes = array("OID","last_query","version_num","data_labels","render_mode","created_ts","created_by","updated_ts","updated_by","default_attributes","transient_attributes","TABLE_NAME");
+	/**
+	 * an array of the names of all of the transient attributes of a persistent BO which are not saved to the DB
+	 * @var array
+	 */
+	var $transient_attributes = array("last_query","data_labels","render_mode","default_attributes","transient_attributes","TABLE_NAME");
+	
 	/**
 	 * populates the child object with the properties retrived from the database for the object $id
 	 * @param integer $OID The id of the object to load
@@ -150,9 +178,9 @@ class mysql_DAO
 				if (get_class($this->$prop) != false) {
 					$sql_query .= "$prop,";
 				}
-				if ($prop == "version_num") {
-					$sql_query .= "$prop,";
-				}			
+				//if ($prop == "version_num") {
+					//$sql_query .= "$prop,";
+				//}			
 			}
 
 			$sql_query = rtrim($sql_query, ",");
@@ -164,8 +192,10 @@ class mysql_DAO
 					$sql_query .= "'".$this->$prop->get_value()."',";
 				}
 				if ($prop == "version_num") {
-					$this->version_num++;
-					$sql_query .= "'".$this->version_num."',";
+					//$this->version_num++;
+					$temp = $this->version_num->get_value();
+					$this->version_num->set_value($temp++);
+					$sql_query .= "'".$this->version_num->get_value()."',";
 				}
 			}
 
@@ -180,8 +210,10 @@ class mysql_DAO
 					$sql_query .= "$prop = '".$this->$prop->get_value()."',";
 				}
 				if ($prop == "version_num") {
-					$this->version_num++;
-					$sql_query .= "version_num = '".$this->version_num."',";
+					//$this->version_num++;
+					$temp = $this->version_num->get_value();
+					$this->version_num->set_value($temp++);
+					$sql_query .= "version_num = '".$this->get_value()."',";
 				}
 			}
 
@@ -213,7 +245,7 @@ class mysql_DAO
 		$properties = get_object_vars($this);		
 		
 		foreach(array_keys($properties) as $prop) {
-			if($prop != "TABLE_NAME" && $prop != "last_query" && $prop != "OID" && $prop != "render_mode" && $prop != "data_labels" && $prop != "version_num" && $prop != "access_level") {
+			if(!in_array($prop, $this->default_attributes)) {
 				if (strtoupper(get_class($properties[$prop])) != "ENUM") {
 					if (!preg_match($this->$prop->get_rule(), $this->$prop->get_value())) {
 						$error = new handle_error($_SERVER["PHP_SELF"],'Failed to save, validation error is: '.$this->$prop->get_helper(),'validate()','validation');
@@ -274,7 +306,7 @@ class mysql_DAO
 	}
 
 	/**
-	 * builds new database table for the photo class
+	 * builds new database table for the BO class
 	 * @return bool True if the table was created, false otherwise
 	 */	
 	function make_table()
@@ -296,7 +328,7 @@ class mysql_DAO
 		$sql_query = "CREATE TABLE ".$this->TABLE_NAME." (OID INT(11) ZEROFILL NOT NULL AUTO_INCREMENT,";
 
 		foreach(array_keys($properties) as $prop) {			
-			if($prop != "OID" && $prop != "TABLE_NAME" && $prop != "render_mode" && $prop != "data_labels" && $prop != "last_query" && $prop != "version_num") {				
+			if(!in_array($prop, $this->transient_attributes) && $prop != "OID") {				
 				$obj_type = get_class($properties[$prop]);
 				
 				switch (strtoupper($obj_type)) {
@@ -332,9 +364,9 @@ class mysql_DAO
 					break;
 				}
 			}
-			if ($prop == "version_num") {					
-				$sql_query .= "version_num INT(11) DEFAULT '1',";
-			}
+			//if ($prop == "version_num") {					
+				//$sql_query .= "version_num INT(11) DEFAULT '1',";
+			//}
 		}
 
 		$sql_query .= "PRIMARY KEY (OID)) TYPE=InnoDB;";
@@ -383,7 +415,7 @@ class mysql_DAO
 	{
 		$sql_query = "ALTER TABLE ".$this->TABLE_NAME." ADD ";
 
-		if($prop != "OID" && $prop != "TABLE_NAME" && $prop != "render_mode" && $prop != "data_labels" && $prop != "last_query" && $prop != "version_num") {
+		if(!in_array($prop, $this->default_attributes)) {
 			
 			$obj_type = get_class($this->$prop);
 
@@ -444,7 +476,7 @@ class mysql_DAO
 		$properties = get_class_vars(get_class($this));
 		
 		foreach(array_keys($properties) as $prop) {
-			if($prop != "OID" && $prop != "TABLE_NAME" && $prop != "render_mode" && $prop != "data_labels" && $prop != "last_query" && $prop != "version_num") {
+			if(!in_array($prop, $this->default_attributes)) {
 				// checking to see if we need to use addslashes() on the posted data
 				if(!get_magic_quotes_gpc()) {
 					if (strtoupper(get_class($this->$prop)) != 'DATE') {
@@ -461,7 +493,7 @@ class mysql_DAO
 				}
 			}
 			if ($prop == "version_num" && isset($_POST["version_num"]))
-				$this->version_num = $_POST["version_num"];
+				$this->version_num->set_value($_POST["version_num"]);
 		}		
 	}
 
@@ -518,7 +550,7 @@ class mysql_DAO
 	}
 	
 	/**
-	 * populate all of the enum options for this oject from the database
+	 * populate all of the enum options for this object from the database
 	 * @return bool true on success, false otherwise
 	 */
 	function set_enum_options() {
@@ -526,7 +558,7 @@ class mysql_DAO
 		$obj_type = '';
 
 		foreach(array_keys($properties) as $prop) {
-			if($prop != "TABLE_NAME" && $prop != "last_query" && $prop != "OID" && $prop != "render_mode" && $prop != "data_labels" && $prop != "version_num") {
+			if(!in_array($prop, $this->default_attributes)) {
 
 				$obj_type = get_class($properties[$prop]);				
 
@@ -643,7 +675,7 @@ class mysql_DAO
 			$properties = get_class_vars(get_class($this));			
 			
 			foreach(array_keys($properties) as $prop) {
-				if ($prop != "TABLE_NAME" && $prop != "data_labels" && $prop != "last_query") {
+				if (!in_array($prop, $this->transient_attributes)) {
 				
 					$found_match = false;	
 					
@@ -691,7 +723,7 @@ class mysql_DAO
 		$properties = get_class_vars(get_class($this));		
 			
 		foreach(array_keys($properties) as $prop) {			
-			if ($prop != "TABLE_NAME" && $prop != "data_labels" && $prop != "last_query") {
+			if (!in_array($prop, $this->transient_attributes)) {
 				while ($row = mysql_fetch_assoc($result)) {				
 		    		if ($prop == $row["Field"]) {		    			
 		    			$match_count++;		    			
