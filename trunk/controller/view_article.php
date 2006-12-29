@@ -7,8 +7,6 @@ require_once $sysRoot.'config/db_connect.inc';
 require_once $sysRoot.'alpha/controller/Controller.inc';
 require_once $sysRoot.'alpha/view/article.inc';
 require_once $sysRoot.'alpha/model/article_object.inc';
-require_once $sysRoot.'alpha/view/widgets/text_box.js.php';
-require_once $sysRoot.'alpha/view/widgets/string_box.js.php';
 
 /**
 * 
@@ -71,8 +69,8 @@ class view_article extends Controller
 		$article_view = new article($this->article);
 		$article_view->markdown_view();		
 		
-		$this->display_page_foot();
 		$this->display_comments();
+		$this->display_page_foot();
 	}
 	
 	/**
@@ -109,7 +107,15 @@ class view_article extends Controller
 		
 		if ($sysUseWidgets) {
 			echo '<script language="JavaScript" src="'.$sysURL.'/alpha/scripts/addOnloadEvent.js"></script>';
-			require_once $sysRoot.'alpha/view/widgets/button.js.php';			
+			require_once $sysRoot.'alpha/view/widgets/button.js.php';
+			require_once $sysRoot.'alpha/view/widgets/string_box.js.php';
+			require_once $sysRoot.'alpha/view/widgets/text_box.js.php';
+		
+			require_once $sysRoot.'alpha/view/widgets/form_validator.js.php';
+		
+			echo '<script type="text/javascript">';
+			$validator = new form_validator(new article_comment_object());
+			echo '</script>';
 		}
 		
 		if (!empty($this->article->header_content))
@@ -126,6 +132,9 @@ class view_article extends Controller
 		echo 'Last Updated: <em>'.$prop_obj->get_date().'</em> &nbsp; &nbsp;';
 		echo 'Revision: <em>'.$this->article->get_version().'</em></p>';
 		echo $sysCMSHeader;
+		
+		if(!empty($_POST))
+			$this->handle_post();
 	}
 	
 	/**
@@ -134,9 +143,6 @@ class view_article extends Controller
 	function display_page_foot() {
 		global $sysURL;
 		global $sysCMSFooter;
-		
-		if(!empty($_POST))
-			$this->handle_post();
 		
 		$rating = $this->article->get_score();
 		$votes = $this->article->get_votes();
@@ -174,9 +180,14 @@ class view_article extends Controller
 	}
 	
 	/**
-	 * handles the user posting article ratings
+	 * handles the user posting article ratings or comments
 	 */
-	function handle_post() {		
+	function handle_post() {
+		if(!$this->check_security_fields()) {
+			$error = new handle_error($_SERVER["PHP_SELF"],'This page cannot accept post data from remote servers!','handle_post()','validation');
+			exit;
+		}
+			
 		if(isset($_POST["voteBut"]) && !$this->article->check_user_voted()) {
 			$vote = new article_vote_object();
 			$vote->set("article_oid", $this->article->get_ID());
@@ -185,6 +196,19 @@ class view_article extends Controller
 			$success = $vote->save_object();
 			if($success)
 				echo '<p class="success">Thank you for rating this article!</p>';
+		}
+		
+		if(isset($_POST["createBut"])) {
+			$comment = new article_comment_object();
+			
+			// populate the transient object from post data
+			$comment->populate_from_post();
+						
+			$success = $comment->save_object();			
+			
+			if($success) {
+				echo '<p class="success">Thank you for your comment!</p>';
+			}
 		}
 	}
 	
@@ -205,7 +229,10 @@ class view_article extends Controller
 		}
 		
 		if(isset($_SESSION["current_user"])) {
-			$view = View::get_instance(new article_comment_object());
+			$comment = new article_comment_object();
+			$comment->set("article_oid", $this->article->get_ID());
+			
+			$view = View::get_instance($comment);
 			$view->create_view();
 		}
 	}
