@@ -121,7 +121,7 @@ class view_article extends Controller
 		$rating = $this->article->get_score();
 		$votes = $this->article->get_votes();
 		
-		echo '<p>Average Article User Rating: <strong>'.$rating.'</strong> (based on <strong>'.count($votes).'</strong> votes)</p>';
+		echo '<p>Average Article User Rating: <strong>'.$rating.'</strong> out of 10 (based on <strong>'.count($votes).'</strong> votes)</p>';
 		
 		if(!$this->article->check_user_voted()) {
 			echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="post">';
