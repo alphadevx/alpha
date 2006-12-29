@@ -44,7 +44,7 @@ class article_comment extends View
 		
 		echo '<blockquote class="usercomment">';
 		
-		echo '<p>Posted by '.$author->get("displayname").' at '.$this->BO->get_create_TS()->get_value().'</p>';
+		echo '<p>Posted by '.($author->get("URL") == ""? $author->get("displayname") : '<a href="'.$author->get("URL").'" target="new window">'.$author->get("displayname").'</a>').' at '.$this->BO->get_create_TS()->get_value().'</p>';
 		echo $markdown->get_content();
 		
 		echo '</blockquote>';
