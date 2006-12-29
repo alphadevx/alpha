@@ -29,7 +29,7 @@ class mysql_DAO
 	 * the object ID
 	 * @var integer
 	 */
-	var $OID = 0;
+	var $OID;
 	/**
 	 * the last database query run by this object.  Useful for tracing an error.
 	 * @var string
@@ -112,10 +112,7 @@ class mysql_DAO
 				}else{
 					$this->$prop->populate_from_string($row[$prop]);
 				}
-			}		
-			if($prop == "version_num"){
-				$this->version_num = $row[$prop];
-			}				
+			}			
 		}		
 		
 		if(mysql_error() == '' && $this->set_enum_options()) {	
@@ -177,7 +174,7 @@ class mysql_DAO
 		$properties = get_class_vars(get_class($this));
 		$sql_query = "";		
 		
-		if($this->get_version() != $this->version_num){
+		if($this->get_version() != $this->version_num->get_value()){
 			$error = new handle_error($_SERVER["PHP_SELF"],'Could not save the object as it has been updated by another user.  Please try saving again.','save_object()','warning');
 			return false;
 		}
@@ -188,10 +185,7 @@ class mysql_DAO
 			foreach(array_keys($properties) as $prop) {
 				if (get_class($this->$prop) != false) {
 					$sql_query .= "$prop,";
-				}
-				//if ($prop == "version_num") {
-					//$sql_query .= "$prop,";
-				//}			
+				}				
 			}
 
 			$sql_query = rtrim($sql_query, ",");
@@ -199,11 +193,10 @@ class mysql_DAO
 			$sql_query .= ") VALUES (";
 
 			foreach(array_keys($properties) as $prop) {				
-				if (get_class($this->$prop) != false) {
+				if (get_class($this->$prop) != false && $prop != "version_num") {
 					$sql_query .= "'".$this->$prop->get_value()."',";
 				}
-				if ($prop == "version_num") {
-					//$this->version_num++;
+				if ($prop == "version_num") {					
 					$temp = $this->version_num->get_value();
 					$this->version_num->set_value($temp++);
 					$sql_query .= "'".$this->version_num->get_value()."',";
@@ -220,11 +213,10 @@ class mysql_DAO
 				if (get_class($this->$prop) != false) {
 					$sql_query .= "$prop = '".$this->$prop->get_value()."',";
 				}
-				if ($prop == "version_num") {
-					//$this->version_num++;
+				if ($prop == "version_num") {					
 					$temp = $this->version_num->get_value();
 					$this->version_num->set_value($temp++);
-					$sql_query .= "version_num = '".$this->get_value()."',";
+					$sql_query .= "version_num = '".$this->version_num->get_value()."',";
 				}
 			}
 
