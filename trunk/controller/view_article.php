@@ -23,12 +23,23 @@ class view_article extends Controller
 	 * the article to be rendered
 	 * @var article_object
 	 */
-	var $article;	
+	var $article;
+	/**
+	 * the force-frame status for the article
+	 * @var boolean 
+	 */
+	var $force_frame;
+	/**
+	 * the style-sheet to use for the article
+	 * @var string
+	 */
+	var $style_sheet;
 								
 	/**
 	 * constructor that renders the page	
 	 */
 	function view_article() {
+		global $sysTheme;
 		
 		// ensure that a OID is provided
 		if (isset($_GET["oid"])) {
@@ -39,7 +50,14 @@ class view_article extends Controller
 		}
 		
 		// ensure that the super class constructor is called
-		$this->Controller();	
+		$this->Controller();
+		
+		if(isset($_GET["no-forceframe"]))
+			$this->force_frame = false;
+		else
+			$this->force_frame = true;
+			
+		$this->style_sheet = $sysTheme;
 		
 		$this->article = new article_object();
 		$this->article->load_object($article_oid);
@@ -58,8 +76,7 @@ class view_article extends Controller
 	 * method to render the header mark-up
 	 */
 	function display_page_head() {
-		global $sysURL;
-		global $sysTheme;
+		global $sysURL;		
 		global $sysUseWidgets;
 		global $sysRoot;
 		global $sysForceFrame;
@@ -83,8 +100,8 @@ class view_article extends Controller
 		echo '<meta name="robots" content="index,follow">';
 		echo '<meta http-equiv="imagetoolbar" content="no">';			
 		
-		echo '<link rel="StyleSheet" type="text/css" href="'.$sysURL.'/config/css/'.$sysTheme.'.css.php">';
-		if(!isset($_GET["no-forceframe"]) && $sysForceFrame)
+		echo '<link rel="StyleSheet" type="text/css" href="'.$sysURL.'/config/css/'.$this->style_sheet.'.css.php">';
+		if($this->force_frame && $sysForceFrame)
 			echo '<script language="JavaScript" src="'.$sysURL.'/alpha/scripts/force-frame.js"></script>';
 		
 		if ($sysUseWidgets) {
@@ -141,6 +158,9 @@ class view_article extends Controller
 			$temp = new button("submit","Vote!","voteBut");
 			echo "<form>";
 		}
+		
+		echo "&nbsp;&nbsp;";
+		$temp = new button("window.open('".$sysURL."/alpha/controller/view_article_print.php?title=".$this->article->get("title")."')","Open Printer Version","printBut");
 		
 		echo '<p>Article URL: <a href="'.$sysURL.'/alpha/controller/view_article_title.php?title='.$this->article->get("title").'">'.$sysURL.'/alpha/controller/view_article_title.php?title='.$this->article->get("title").'</a><br>';
 		echo 'Title: '.$this->article->get("title").'<br>';
