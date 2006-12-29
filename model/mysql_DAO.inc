@@ -72,6 +72,17 @@ class mysql_DAO
 	var $transient_attributes = array("last_query","data_labels","render_mode","default_attributes","transient_attributes","TABLE_NAME");
 	
 	/**
+	 * the constructor which sets up some housekeeping attributes
+	 */
+	function mysql_DAO() {
+		$this->version_num = new Integer();
+		$this->created_ts = new Date();
+		$this->created_by = new Integer($_SESSION["current_user"]->get_ID());
+		$this->updated_ts = new Date();
+		$this->updated_by = new Integer($_SESSION["current_user"]->get_ID());
+	}
+	
+	/**
 	 * populates the child object with the properties retrived from the database for the object $id
 	 * @param integer $OID The id of the object to load
 	 * @return bool True if no database error occured, else false and error is stored in $this->last_query
