@@ -7,6 +7,7 @@ require_once $sysRoot.'config/db_connect.inc';
 require_once $sysRoot.'alpha/controller/Controller.inc';
 require_once $sysRoot.'alpha/view/article.inc';
 require_once $sysRoot.'alpha/model/article_object.inc';
+require_once $sysRoot.'alpha/util/input_filter.inc';
 
 /**
 * 
@@ -203,7 +204,11 @@ class view_article extends Controller
 			
 			// populate the transient object from post data
 			$comment->populate_from_post();
-						
+			
+			// filter the comment before saving
+			$filter = new input_filter($comment->get_prop_object("content"));
+			$comment->set("content", $filter->encode());
+			
 			$success = $comment->save_object();			
 			
 			if($success) {
