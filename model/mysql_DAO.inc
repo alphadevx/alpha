@@ -75,7 +75,7 @@ class mysql_DAO
 	 * the constructor which sets up some housekeeping attributes
 	 */
 	function mysql_DAO() {
-		$this->version_num = new Integer();
+		$this->version_num = new Integer(0);
 		$this->created_ts = new Date();
 		$person_ID = (isset($_SESSION["current_user"])? $_SESSION["current_user"]->get_ID(): 0);
 		$this->created_by = new Integer($person_ID);
@@ -179,6 +179,10 @@ class mysql_DAO
 			$error = new handle_error($_SERVER["PHP_SELF"],'Could not save the object as it has been updated by another user.  Please try saving again.','save_object()','warning');
 			return false;
 		}
+		
+		// set the "updated by" fields
+		$this->updated_by->set_value($_SESSION["current_user"]->get_ID());
+		$this->updated_ts = new Date();
 
 		if(empty($this->OID) || !isset($this->OID)) {
 			$sql_query = "INSERT INTO ".$this->TABLE_NAME." (";
@@ -199,7 +203,7 @@ class mysql_DAO
 				}
 				if ($prop == "version_num") {					
 					$temp = $this->version_num->get_value();
-					$this->version_num->set_value($temp++);
+					$this->version_num->set_value($temp+1);
 					$sql_query .= "'".$this->version_num->get_value()."',";
 				}
 			}
@@ -211,12 +215,12 @@ class mysql_DAO
 			$sql_query = "UPDATE ".$this->TABLE_NAME." SET ";
 
 			foreach(array_keys($properties) as $prop) {
-				if (get_class($this->$prop) != false) {
+				if (get_class($this->$prop) != false && $prop != "version_num") {
 					$sql_query .= "$prop = '".$this->$prop->get_value()."',";
 				}
 				if ($prop == "version_num") {					
-					$temp = $this->version_num->get_value();
-					$this->version_num->set_value($temp++);
+					$temp = $this->version_num->get_value();					
+					$this->version_num->set_value($temp+1);					
 					$sql_query .= "version_num = '".$this->version_num->get_value()."',";
 				}
 			}
