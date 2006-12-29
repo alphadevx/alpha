@@ -51,6 +51,7 @@ class view_article_title extends view_article
 		$article_view->markdown_view();		
 		
 		$this->display_page_foot();
+		$this->display_comments();
 	}	
 }
 
