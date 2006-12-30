@@ -119,5 +119,56 @@ class log_file {
 		//sets the new permission to rw+:rw+:rw+
 		chmod($this->path, 0666);		
  	}
+ 	
+ 	/**
+ 	 * renders a log file as a HTML table
+ 	 * $param array $cols the headings to use when rendering the log file
+ 	 */
+ 	function render_log($cols) {
+ 		// render the start of the table
+ 		echo '<table class="log_file">';
+ 		echo '<tr>';
+ 		foreach($cols as $heading)
+ 			echo '<th>'.$heading.'</th>';
+ 		echo '</tr>';
+ 		
+ 		// now read the file and render the data
+ 		$log_file = file($this->path);
+ 		
+ 		foreach($log_file as $line) {
+ 			echo '<tr>';
+ 			$fields = split($this->seperator, $line);
+ 			for($i = 0; $i < count($fields); $i++) {
+ 				// if it is an error log, render the error types field in different colours
+ 				if($i == 4 && preg_match("/error_log.*/", basename($this->path))){
+ 					switch($fields[$i]) {
+ 						case "validation":
+ 							echo '<td class="validation">'.$fields[$i].'</td>';
+ 						break;
+ 						case "warning":
+ 							echo '<td class="warning">'.$fields[$i].'</td>';
+ 						break;
+ 						case "php":
+ 							echo '<td class="php">'.$fields[$i].'</td>';
+ 						break;
+ 						case "framework":
+ 							echo '<td class="framework">'.$fields[$i].'</td>';
+ 						break;
+ 						case "other":
+ 							echo '<td class="other">'.$fields[$i].'</td>';
+ 						break;
+ 						default:
+ 							echo '<td>'.$fields[$i].'</td>';
+ 						break;
+ 					}
+ 				}else{
+ 					echo '<td>'.$fields[$i].'</td>';
+ 				}
+ 			}
+ 			echo '</tr>';
+ 		}
+ 		
+ 		echo '</table>';
+ 	}
 }
 ?>
