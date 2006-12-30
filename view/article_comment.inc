@@ -6,6 +6,7 @@ require_once $sysRoot.'alpha/model/article_comment_object.inc';
 require_once $sysRoot.'alpha/model/person_object.inc';
 require_once $sysRoot.'alpha/view/View.inc';
 require_once $sysRoot.'alpha/util/markdown_facade.inc';
+require_once $sysRoot.'alpha/util/input_filter.inc';
 
 /**
  *
@@ -44,12 +45,19 @@ class article_comment extends View
 		
 		echo '<center><blockquote class="usercomment">';
 		
-		echo '<p>Posted by '.($author->get("URL") == ""? $author->get("displayname") : '<a href="'.$author->get("URL").'" target="new window">'.$author->get("displayname").'</a>').' at '.$this->BO->get_create_TS()->get_value().'</p>';
+		echo '<p>Posted by '.($author->get("URL") == ""? $author->get("displayname") : '<a href="'.$author->get("URL").'" target="new window">'.$author->get("displayname").'</a>').' at '.$this->BO->get_create_TS()->get_value().'.';
+		echo '&nbsp;'.$author->get("displayname").' has posted ['.$author->get_comment_count().'] comments on articles since joining.';
+		echo '</p>';
 		if(isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_ID() == $author->get_ID())
 			$this->edit_view();
 		else
 			echo $markdown->get_content();
 		
+		if($this->BO->get_create_TS()->get_value() != $this->BO->get_update_TS()->get_value()) {
+			$updator = new person_object();
+			$updator->load_object($this->BO->get_updator_ID()->get_value());
+			echo '<p>Updated by '.($updator->get("URL") == ""? $updator->get("displayname") : '<a href="'.$updator->get("URL").'" target="new window">'.$updator->get("displayname").'</a>').' at '.$this->BO->get_update_TS()->get_value().'.</p>';
+		}
 		echo '</blockquote></center>';
 	}
 	
