@@ -36,6 +36,7 @@ body {
 span {overflow:hidden;}
 
 .boxout, pre.php, pre.xml, pre.javascript, pre.perl, pre.html4strict, pre.css {padding:5px; margin:8px; background-color:white; border:2px dashed #20557C;}
+.usercomment {padding:5px; margin:5px; background-color:white; border:1px solid #20557C; width:97%; text-align:left;}
 
 .norButton {background-color:#82AEC6; border: 2px solid white; text-align:center; overflow:hidden; font-family:arial; font-weight:bold; color:white; font-size:8pt;}
 .oveButton {background-color:#A5CDDA; border: 2px solid white; text-align:center; overflow:hidden; font-family:arial; font-weight:bold; color:white; font-size:8pt;}
@@ -92,8 +93,14 @@ table.edit_view td {border:1px solid #20557C;}
 
 .articleDetails{background-color:#E1E5EE;}
 
-#subDiv {background-color:#E1E5EE;}
-#newsDiv {background-color:#E1E5EE;}
+table.log_file {width:95%; margin:10px; border:1px solid #20557C; overflow:scroll;}
+table.log_file th {background-color:#20557C; color:white; width:50%; text-align:right;}
+table.log_file td {border:1px solid #20557C;}
+table.log_file td.validation {background-color:white;}
+table.log_file td.warning {background-color:yellow;}
+table.log_file td.php {background-color:orange;}
+table.log_file td.framework {background-color:red; color:white;}
+table.log_file td.other {background-color:black; color:white;}
 
 EOCSS;
 
