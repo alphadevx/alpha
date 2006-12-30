@@ -56,11 +56,13 @@ class view_article_print extends view_article
 	function display_page_foot() {
 		global $sysURL;
 		global $sysCMSFooter;		
+		global $sysCMSDisplayVotes;
 		
 		$rating = $this->article->get_score();
 		$votes = $this->article->get_votes();
 		
-		echo '<p>Average Article User Rating: <strong>'.$rating.'</strong> out of 10 (based on <strong>'.count($votes).'</strong> votes)</p>';
+		if($sysCMSDisplayVotes)
+			echo '<p>Average Article User Rating: <strong>'.$rating.'</strong> out of 10 (based on <strong>'.count($votes).'</strong> votes)</p>';
 		
 		echo '<p>Article URL: <a href="'.$sysURL.'/alpha/controller/view_article_title.php?title='.$this->article->get("title").'">'.$sysURL.'/alpha/controller/view_article_title.php?title='.$this->article->get("title").'</a><br>';
 		echo 'Title: '.$this->article->get("title").'<br>';

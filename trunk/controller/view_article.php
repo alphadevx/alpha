@@ -144,13 +144,16 @@ class view_article extends Controller
 	function display_page_foot() {
 		global $sysURL;
 		global $sysCMSFooter;
+		global $sysCMSVotingAllowed;
+		global $sysCMSDisplayVotes;
 		
 		$rating = $this->article->get_score();
 		$votes = $this->article->get_votes();
 		
-		echo '<p>Average Article User Rating: <strong>'.$rating.'</strong> out of 10 (based on <strong>'.count($votes).'</strong> votes)</p>';
+		if($sysCMSDisplayVotes)
+			echo '<p>Average Article User Rating: <strong>'.$rating.'</strong> out of 10 (based on <strong>'.count($votes).'</strong> votes)</p>';
 		
-		if(!$this->article->check_user_voted()) {
+		if(!$this->article->check_user_voted() && $sysCMSVotingAllowed) {
 			echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="post">';
 			echo '<p>Please rate this article from 1-10 (10 being the best):' .
 					'<select name="user_vote">' .
@@ -166,6 +169,7 @@ class view_article extends Controller
 					'<option value="10">10' .
 					'</select></p>&nbsp;&nbsp;';
 			$temp = new button("submit","Vote!","voteBut");
+			View::render_security_fields();
 			echo "<form>";
 		}
 		
@@ -239,10 +243,13 @@ class view_article extends Controller
 	 * method for displaying the user comments for the article
 	 */
 	function display_comments() {
+		global $sysCMSCommentsAllowed;
+		global $sysCMSDisplayComments;
+		
 		$comments = $this->article->get_comments();
 		$comment_count = count($comments);
 		
-		if($comment_count > 0) {
+		if($sysCMSDisplayComments && $comment_count > 0) {
 			echo "<h2>There are [".$comment_count."] user comments for this article</h2>";
 			
 			for($i = 0; $i < $comment_count; $i++) {
@@ -251,7 +258,7 @@ class view_article extends Controller
 			}
 		}
 		
-		if(isset($_SESSION["current_user"])) {
+		if(isset($_SESSION["current_user"]) && $sysCMSCommentsAllowed) {
 			$comment = new article_comment_object();
 			$comment->set("article_oid", $this->article->get_ID());
 			
