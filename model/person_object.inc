@@ -3,6 +3,7 @@
 // $Id$
 
 require_once $sysRoot.'alpha/model/mysql_DAO.inc';
+require_once $sysRoot.'alpha/model/article_comment_object.inc';
 
 /**
  *
@@ -290,6 +291,30 @@ class person_object extends mysql_DAO
 		$new_password.= rand(0,100);		
 		
 		return $new_password;
+	}
+	
+	/**
+	 * method for getting a count of the amount of article comments posted by the user
+	 * @return int the comment count
+	 */
+	function get_comment_count() {
+		$temp = new article_comment_object();
+		
+		$sql_query = "SELECT COUNT(OID) AS post_count FROM ".$temp->TABLE_NAME." WHERE created_by='".$this->OID."';";
+
+		$this->last_query = $sql_query;
+
+		$result = mysql_query($sql_query);		
+
+		$row = mysql_fetch_assoc($result);
+
+		if (mysql_error() == '') {			
+			return $row["post_count"];
+		}else{			
+			$this->last_query .= " Error: ".mysql_error();
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to get the count of the comments posted for the person, query: '.$this->last_query,'get_comment_count()','framework');
+			return 0;
+		}
 	}
 }
 
