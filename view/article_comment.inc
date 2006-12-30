@@ -39,6 +39,8 @@ class article_comment extends View
 	 * method to generate the markdown HTML render of the article_comment content
 	 */
 	function markdown_view() {
+		global $sysCMSCommentsAllowed;
+		
 		$markdown = new markdown_facade($this->BO);
 		$author = new person_object();
 		$author->load_object($this->BO->get_creator_ID()->get_value());
@@ -48,7 +50,7 @@ class article_comment extends View
 		echo '<p>Posted by '.($author->get("URL") == ""? $author->get("displayname") : '<a href="'.$author->get("URL").'" target="new window">'.$author->get("displayname").'</a>').' at '.$this->BO->get_create_TS()->get_value().'.';
 		echo '&nbsp;'.$author->get("displayname").' has posted ['.$author->get_comment_count().'] comments on articles since joining.';
 		echo '</p>';
-		if(isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_ID() == $author->get_ID())
+		if($sysCMSCommentsAllowed && isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_ID() == $author->get_ID())
 			$this->edit_view();
 		else
 			echo $markdown->get_content();
