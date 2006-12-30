@@ -99,8 +99,8 @@ class person extends View
 	function register_view() {
 		global $sysURL;
 		
-		echo '<p>In order to make comments on the articles on this web site, and to post comments on the forum, you will need to create a user account.  In order to do so, please provide a valid email address below and a password will be sent to your inbox shortly.</p>';
-		echo '<p class="warning">Please note: the user comments and forum are currently not available, but will be made available in the coming weeks!</p>';
+		echo '<p>In order to post comments on the articles on this web site, and to post comments on the forum, you will need to create a user account.  In order to do so, please provide a valid email address below and a password will be sent to your inbox shortly (you can change your password once you log in).</p>';
+		echo '<p class="warning">Please note: the forum is currently not available, but will be made available in the coming weeks!</p>';
 		echo '<table cols="2">';
 		echo '<form action="'.$_SERVER["PHP_SELF"].'?reset=true" method="POST">';
 		echo '<tr>';
