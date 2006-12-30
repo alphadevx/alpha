@@ -94,7 +94,7 @@ table.edit_view td {border:1px solid #20557C;}
 .articleDetails{background-color:#E1E5EE;}
 
 table.log_file {width:95%; margin:10px; border:1px solid #20557C; overflow:scroll;}
-table.log_file th {background-color:#20557C; color:white; width:50%; text-align:right;}
+table.log_file th {background-color:#20557C; color:white; width:50%; text-align:center;}
 table.log_file td {border:1px solid #20557C;}
 table.log_file td.validation {background-color:white;}
 table.log_file td.warning {background-color:yellow;}
