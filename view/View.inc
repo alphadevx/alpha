@@ -396,10 +396,8 @@ class View {
 		echo '<tr>';
 		foreach (array_keys($properties) as $prop) {
 			if (!in_array($prop, $this->BO->default_attributes)) {
-				if (get_class($properties[$prop]) != "Text") {
-					$col_count ++;
-					echo '	<th>'.$this->BO->data_labels[$prop].'</th>';
-				}
+				$col_count ++;
+				echo '	<th>'.$this->BO->data_labels[$prop].'</th>';				
 			}
 			if ($prop == "OID")
 				echo '	<th>'.$this->BO->data_labels[$prop].'</th>';
@@ -410,7 +408,13 @@ class View {
 		foreach (array_keys($properties) as $prop) {
 			if (!in_array($prop, $this->BO->default_attributes)) {
 				if (get_class($properties[$prop]) != "Text") {
-					echo '	<td>&nbsp;'.$this->BO-> $prop->get_value().'</td>';
+					echo '	<td>&nbsp;'.$this->BO->$prop->get_value().'</td>';
+				}else{
+					$text = htmlentities($this->BO->$prop->get_value());
+					if(strlen($text) > 70)
+						echo '	<td>&nbsp;'.substr($text, 0, 70).'...</td>';
+					else
+						echo '	<td>&nbsp;'.$text.'</td>';
 				}
 			}
 			if ($prop == "OID")
