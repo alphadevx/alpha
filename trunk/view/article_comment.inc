@@ -43,11 +43,15 @@ class article_comment extends View
 		
 		$markdown = new markdown_facade($this->BO);
 		$author = new person_object();
-		$author->load_object($this->BO->get_creator_ID()->get_value());
+		$id = $this->BO->get_creator_ID();
+		$author->load_object($id->get_value());
 		
 		echo '<center><blockquote class="usercomment">';
 		
-		echo '<p>Posted by '.($author->get("URL") == ""? $author->get("displayname") : '<a href="'.$author->get("URL").'" target="new window">'.$author->get("displayname").'</a>').' at '.$this->BO->get_create_TS()->get_value().'.';
+		$create_TS = $this->BO->get_create_TS();
+		$update_TS = $this->BO->get_update_TS();
+
+		echo '<p>Posted by '.($author->get("URL") == ""? $author->get("displayname") : '<a href="'.$author->get("URL").'" target="new window">'.$author->get("displayname").'</a>').' at '.$create_TS->get_value().'.';
 		echo '&nbsp;'.$author->get("displayname").' has posted ['.$author->get_comment_count().'] comments on articles since joining.';
 		echo '</p>';
 		if($sysCMSCommentsAllowed && isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_ID() == $author->get_ID())
@@ -55,10 +59,11 @@ class article_comment extends View
 		else
 			echo $markdown->get_content();
 		
-		if($this->BO->get_create_TS()->get_value() != $this->BO->get_update_TS()->get_value()) {
+		if($create_TS->get_value() != $update_TS->get_value()) {
 			$updator = new person_object();
-			$updator->load_object($this->BO->get_updator_ID()->get_value());
-			echo '<p>Updated by '.($updator->get("URL") == ""? $updator->get("displayname") : '<a href="'.$updator->get("URL").'" target="new window">'.$updator->get("displayname").'</a>').' at '.$this->BO->get_update_TS()->get_value().'.</p>';
+			$id = $this->BO->get_creator_ID();
+			$updator->load_object($id->get_value());
+			echo '<p>Updated by '.($updator->get("URL") == ""? $updator->get("displayname") : '<a href="'.$updator->get("URL").'" target="new window">'.$updator->get("displayname").'</a>').' at '.$update_TS->get_value().'.</p>';
 		}
 		echo '</blockquote></center>';
 	}
@@ -256,7 +261,7 @@ class article_comment extends View
 							$text = $this->BO->get_prop_object($prop);
 							$filter = new input_filter($text);
 							$text->set_value($filter->decode());
-							$temp = new text_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "", 5, true, $this->BO->get_ID());
+							$temp = new text_box($text, $this->BO->data_labels[$prop], $prop, "", 5, true, $this->BO->get_ID());
 						} else {
 							echo '<tr><td colspan="2">';
 							echo $this->BO->data_labels[$prop];
