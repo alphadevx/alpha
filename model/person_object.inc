@@ -237,8 +237,8 @@ class person_object extends mysql_DAO
 		$properties = get_class_vars(get_class($this));
 
 		foreach(array_keys($properties) as $prop) {
-			if(!in_array($prop, $this->transient_attributes) && $prop != "OID") {						
-				if (get_class($this->$prop) != 'Date') {
+			if (get_class($this->$prop) != false) {	
+				if (strtoupper(get_class($this->$prop)) != 'DATE') {
 					$this->$prop->set_value($row[$prop]);
 				}else{
 					$this->$prop->populate_from_string($row[$prop]);
