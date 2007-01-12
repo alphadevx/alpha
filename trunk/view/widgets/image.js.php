@@ -215,8 +215,8 @@ class image
 			quality = (quality == null || quality == "") ? 0.75 : quality;
 
 			// first make the scalable image units (based on the current resolution, compared to a default of 1024x768)
-			var xu = screen.width/1024;
-			var yu = screen.height/768;
+			var xu = 1;//screen.width/1024;
+			var yu = 1;//screen.height/768;
 
 			// now we determine the size of that the image will be scaled to
 			var new_width = parseInt(width*xu);
