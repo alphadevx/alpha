@@ -20,8 +20,7 @@ require_once $sysRoot.'alpha/model/types/Boolean.inc';
 * 
 * @package Alpha Widgets
 * @author John Collins <john@design-ireland.net>
-* @copyright 2006 John Collins
-* @todo cache, check_cache and load_cache methods
+* @copyright 2007 John Collins
 *
 */
 class image
@@ -57,10 +56,17 @@ class image
 	var $sourceType;
 	
 	/**
-	 * the quality of the image generated (0.00 to 1.00)
+	 * the quality of the image generated (0.00 to 1.00, 0.75 by default)
 	 * @var Double
 	 */
-	var $quality;	
+	var $quality;
+	
+	/**
+	 * flag to determine if the image will scale to match resolution (0 by default)
+	 * a default resoultion of 1024x768 is assumed for scalable images.
+	 * @var Boolean 
+	 */
+	var $scale;
 	
 	/**
 	 * the auto-generated name of the cache file for the image
@@ -76,7 +82,7 @@ class image
 	 * @param string $sourceType
 	 * @param double $quality
 	 */
-	function image($source="", $width=0, $height=0, $sourceType="png", $quality=0.50) {
+	function image($source="", $width=0, $height=0, $sourceType="png", $quality=0.75, $scale=0) {
 		global $sysRoot;
 		
 		$this->source = $source;
@@ -86,7 +92,8 @@ class image
 										"jpg",
 										"png"));
 		$this->sourceType->set_value($sourceType);
-		$this->quality = new Double($quality);		
+		$this->quality = new Double($quality);
+		$this->scale = new Boolean($scale);	
 					
 		if (isset($_GET["source"])) $this->source = $_GET["source"];
 		if (isset($_GET["width"])) $this->width->set_value($_GET["width"]);
@@ -200,7 +207,7 @@ class image
 		// ----------------------
 		echo <<<EOS
 				
-		function insertImage(source, width, height, sourceType, quality) {
+		function insertImage(source, width, height, sourceType, quality, scale) {
 			/* returns a HTML image tag to the PHP file that draws in a PNG image of the resulting re-scaled image
 			
 			Parameters:
@@ -208,15 +215,20 @@ class image
 			width: the width of the outputted image
 			height: the height of the images
 			sourceType: the type of image that that source is (options are "jpeg","gif", and "png")
-
+			quality: the quality of the jpeg to be returned
+			scale: flag to determine if the image will scale to match resolution (0 by default)
+			
 			*/
 			
 			// default quality setting if not provided
 			quality = (quality == null || quality == "") ? 0.75 : quality;
-
+			
+			// default scale setting if not provided
+			scale = (scale == null || scale == "") ? 0 : scale;
+			
 			// first make the scalable image units (based on the current resolution, compared to a default of 1024x768)
-			var xu = 1;//screen.width/1024;
-			var yu = 1;//screen.height/768;
+			var xu = (scale == 1) ? screen.width/1024 : 1;
+			var yu = (scale == 1) ? screen.height/768 : 1;
 
 			// now we determine the size of that the image will be scaled to
 			var new_width = parseInt(width*xu);
@@ -225,7 +237,7 @@ EOS;
 // end of javascript
 // -----------------
 			
-		echo 'document.write(\'<img src="'.$sysURL.'/alpha/view/widgets/image.js.php?source=\'+source+\'&width=\'+new_width+\'&height=\'+new_height+\'&sourceType=\'+sourceType+\'&quality=\'+quality+\'" width="\'+new_width+\'" height="\'+new_height+\'" border="0"/>\')';
+		echo 'document.write(\'<img src="'.$sysURL.'/alpha/view/widgets/image.js.php?source=\'+source+\'&width=\'+new_width+\'&height=\'+new_height+\'&sourceType=\'+sourceType+\'&quality=\'+quality+\'&scale=\'+scale+\'" width="\'+new_width+\'" height="\'+new_height+\'" border="0"/>\')';
 		echo '}';
 
 	} 
