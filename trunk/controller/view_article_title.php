@@ -2,7 +2,8 @@
 
 // $Id$
 
-require_once '../../config/config.conf';
+if(empty($sysRoot))
+	require_once '../../config/config.conf';
 require_once $sysRoot.'alpha/controller/view_article.php';
 
 /**
