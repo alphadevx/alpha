@@ -128,13 +128,17 @@ class mysql_DAO
 	/**
 	 * loads all of the objects of this class into an array, which is returned
 	 * @param integer $start The start of the SQL LIMIT clause
+	 * @param integer $limit The amount (limit) of objects to load
 	 * @return array an array containing objects of this type of business object.
 	 */
-	function load_all($start=0)
+	function load_all($start=0, $limit=0)
 	{
 		global $sysListPageAmount;
 		
-		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." ORDER BY OID LIMIT ".$start.", ".$sysListPageAmount.";";
+		if ($limit == 0)
+			$limit = $sysListPageAmount;
+		
+		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." ORDER BY OID LIMIT ".$start.", ".$limit.";";
 		
 		$this->last_query = $sql_query;
 
