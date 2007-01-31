@@ -3,6 +3,7 @@
 // $Id$
 
 require_once '../../../config/config.conf';
+require_once $sysRoot.'alpha/util/catch_error.inc';
 require_once $sysRoot.'config/db_connect.inc';
 require_once $sysRoot.'alpha/util/handle_error.inc';
 require_once $sysRoot.'alpha/view/View.inc';
@@ -51,16 +52,28 @@ class feed {
 	 */
 	var $tag_map = array('item'=>'item','feeddesc'=>'description','itemdesc'=>'description');
 	
+	/**
+	 * the BO which we will serve up in this feed
+	 * @var BO
+	 */
+	var $BO;
+	
+	/**
+	 * an array containing BO field names -> RSS field name mappings
+	 */
+	var $field_name_mappings;
+	
 	var $ITEM = 0;
 	var $FEED = 1;
 	
 	/**
 	 * the constructor method
 	 */
-	function feed($title, $url, $description, $publish_date=null, $id=null) {
+	function feed($BO_name, $title, $url, $description, $publish_date=null, $id=null, $limit = 10) {
 		$this->rss_doc = new DOMDocument();
 		$this->rss_doc->loadXML($this->SHELL);
 		$this->doc_element = $this->rss_doc->documentElement;
+		$this->BO = $this->load_BO_class($BO_name);		
 		
 		if ($this->has_channel) {
 			$root = $this->create_feed_element($this->NS, 'channel');
@@ -71,7 +84,80 @@ class feed {
 		
 		$this->create_RSS_node($this->FEED, $this->root, $title, $url, $description, $publish_date, $id);
 		
+		//$this->add_items($limit);
+		
 		return;
+	}
+	
+	/**
+	 * method to add all of the BO items to the feed, from the newest to the $limit provided 
+	 */
+	function add_items($limit) {
+		global $sysURL;
+		
+		$BOs = $this->BO->load_all(0, $limit);
+		
+		foreach($BOs as $BO) {
+			$this->add_item(
+				$BO->get($this->field_name_mappings["title"]),
+				$BO->get($this->field_name_mappings["link"]),
+				$BO->get($this->field_name_mappings["description"]),
+				$BO->get($this->field_name_mappings["publish_date"]),
+				$BO->get($this->field_name_mappings["id"])
+			);
+		}
+	}
+	
+	/**
+	 * method for mapping BO fieldnames to RSS field names
+	 */
+	function set_field_mappings($title, $link, $description=null, $publish_date=null, $id=null) {
+		$this->field_name_mappings = array(
+			"title" => $title,
+			"link" => $link,
+			"description" => $description,
+			"publish_date" => $title,
+			"id" => $title
+		);
+	}
+	
+	/**
+	 * method to return a transient instance of a class provided by name
+	 */
+	function load_BO_class($BO_name) {
+		global $sysRoot;
+		
+		$handle = opendir($sysRoot.'model');
+   		
+        // loop over the business object directory
+	    while (false !== ($file = readdir($handle))) {
+	    	if (preg_match("/".$BO_name.".inc/", $file)) {	    		
+	    		
+	    		require_once $sysRoot.'model/'.$BO_name.'.inc';
+	    		
+	    		$BO = new $BO_name();				
+		
+				return $BO;
+	    	}
+	    }
+	    
+	    // now loop over the core BOs provided with Alpha
+	    
+	    $handle = opendir($sysRoot.'alpha/model');
+   		
+        // loop over the business object directory
+	    while (false !== ($file = readdir($handle))) {
+	    	if (preg_match("/".$BO_name.".inc/", $file)) {	    		
+	    		
+	    		require_once $sysRoot.'alpha/model/'.$BO_name.'.inc';
+	    		
+	    		$BO = new $BO_name();				
+		
+				return $BO;
+	    	}
+	    }
+	    
+	    $error = new handle_error($_SERVER["PHP_SELF"],'Failed to find the definition for the class :-'.$BO_name,'load_BO_class()','framework');
 	}
 	
 	/**
