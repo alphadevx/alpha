@@ -10,6 +10,7 @@ require_once $sysRoot.'alpha/controller/Controller.inc';
 require_once $sysRoot.'alpha/tests/Enum_Test.php';
 require_once $sysRoot.'alpha/tests/Boolean_Test.php';
 require_once $sysRoot.'alpha/tests/Date_Test.php';
+require_once $sysRoot.'alpha/tests/Integer_Test.php';
 require_once 'PHPUnit.php';
 
 /**
@@ -62,14 +63,23 @@ class view_test_results extends Controller
 		if($result->wasSuccessful())
 			echo '<span class="success">'.$result->toHTML().'</span>';
 		else
-			echo '<span class="warning">'.$result->toHTML().'</span>';
-		
-		$this->display_page_foot();
+			echo '<span class="warning">'.$result->toHTML().'</span>';		
 		
 		//------------------------------------------------
 		echo "<h3>Date:</h3>";
 		
 		$suite  = new PHPUnit_TestSuite("Date_Test");
+		$result = PHPUnit::run($suite);
+
+		if($result->wasSuccessful())
+			echo '<span class="success">'.$result->toHTML().'</span>';
+		else
+			echo '<span class="warning">'.$result->toHTML().'</span>';		
+		
+		//------------------------------------------------
+		echo "<h3>Integer:</h3>";
+		
+		$suite  = new PHPUnit_TestSuite("Integer_Test");
 		$result = PHPUnit::run($suite);
 
 		if($result->wasSuccessful())
@@ -81,7 +91,7 @@ class view_test_results extends Controller
 	}
 	
 	/**
-	 * method to display the page head with pageination links
+	 * method to display the page head
 	 */
 	function display_page_head() {
 		global $sysURL;
