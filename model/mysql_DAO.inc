@@ -89,7 +89,10 @@ class mysql_DAO
 	 * @return bool True if no database error occured, else false and error is stored in $this->last_query
 	 */
 	function load_object($OID)
-	{		
+	{
+		if(method_exists($this, 'before_load_callback'))
+			$this->before_load_callback();
+		
 		$this->OID = $OID;
 		$sql_query = "SELECT * FROM ".$this->TABLE_NAME." WHERE OID = '$OID';";		
 
@@ -117,6 +120,8 @@ class mysql_DAO
 		}		
 		
 		if(mysql_error() == '' && $this->set_enum_options()) {	
+			if(method_exists($this, 'after_load_callback'))
+				$this->after_load_callback();
 			return true;
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
