@@ -604,14 +604,15 @@ class mysql_DAO
 	}
 	
 	/**
-	 * Generic getter method for accessing class properties.  A get_value() method must exist on the attribute to use
-	 * this method.
+	 * Generic getter method for accessing class properties.
 	 * @param string $prop the name of the property to get
 	 * @return <variable> the value of the property
 	 */
 	function get($prop) {
 		if(isset($this->$prop) && method_exists($this->$prop, "get_value")) {
 			return $this->$prop->get_value();
+		}elseif(isset($this->$prop)) {
+			return $this->$prop;
 		}else{
 			$error = new handle_error($_SERVER["PHP_SELF"],'Could not access the property '.$prop.' on the object '.get_class($this).'.','get()','framework');
 			return false;
@@ -619,14 +620,15 @@ class mysql_DAO
 	}
 	
 	/**
-	 * Generic setter method for setting class properties.  A set_value() method must exist on the attribute to use
-	 * this method.
+	 * Generic setter method for setting class properties.
 	 * @param string $prop the name of the property to set
 	 * @param string $value value to attribute to the object property
 	 */
 	function set($prop, $value) {
 		if(isset($this->$prop) && method_exists($this->$prop, "set_value")) {
 			$this->$prop->set_value($value);
+		}elseif(isset($this->$prop)) {
+			$this->$prop = $value;
 		}else{
 			$error = new handle_error($_SERVER["PHP_SELF"],'Could not set the property '.$prop.' on the object '.get_class($this).'.  Property may not exist, or else does not have a set_value() method.','set()','framework');
 		}
