@@ -257,7 +257,7 @@ class mysql_DAO
 		$properties = get_object_vars($this);		
 		
 		foreach(array_keys($properties) as $prop) {
-			if(!in_array($prop, $this->default_attributes)) {
+			if(!in_array($prop, $this->default_attributes) && !in_array($prop, $this->transient_attributes)) {
 				if (strtoupper(get_class($properties[$prop])) != "ENUM") {
 					if (!preg_match($this->$prop->get_rule(), $this->$prop->get_value())) {
 						$error = new handle_error($_SERVER["PHP_SELF"],'Failed to save, validation error is: '.$this->$prop->get_helper(),'validate()','validation');
@@ -488,7 +488,7 @@ class mysql_DAO
 		$properties = get_class_vars(get_class($this));
 		
 		foreach(array_keys($properties) as $prop) {
-			if(!in_array($prop, $this->default_attributes)) {
+			if(!in_array($prop, $this->default_attributes) && !in_array($prop, $this->transient_attributes)) {
 				// checking to see if we need to use addslashes() on the posted data
 				if(!get_magic_quotes_gpc()) {
 					if (strtoupper(get_class($this->$prop)) != 'DATE') {
@@ -803,6 +803,14 @@ class mysql_DAO
 	 */
 	function get_update_TS() {
 		return $this->updated_ts;
+	}
+	
+	/**
+	 * adds the name of the atribute provided to the list of transient (non-saved) attributes for this BO
+	 * @param string attribute_name the name of the attribute to mark as transient
+	 */
+	function mark_transient($attribute_name) {
+		array_push($this->transient_attributes, $attribute_name);		
 	}
 }
 
