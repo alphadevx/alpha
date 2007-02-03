@@ -177,7 +177,7 @@ class view_article extends Controller
 		echo "&nbsp;&nbsp;";
 		$temp = new button("window.open('".$sysURL."/alpha/controller/view_article_print.php?title=".$this->article->get("title")."')","Open Printer Version","printBut");
 		
-		echo '<p>Article URL: <a href="'.$sysURL.'/alpha/controller/view_article_title.php?title='.$this->article->get("title").'">'.$sysURL.'/alpha/controller/view_article_title.php?title='.$this->article->get("title").'</a><br>';
+		echo '<p>Article URL: <a href="'.$this->article->URL.'">'.$this->article->URL.'</a><br>';
 		echo 'Title: '.$this->article->get("title").'<br>';
 		echo 'Author: '.$this->article->get("author").'<br>';
 		echo $sysCMSFooter.'</p>';

@@ -112,6 +112,12 @@ class article_object extends mysql_DAO
 	var $TABLE_NAME = "article";
 	
 	/**
+	 * the URL for this article (transient)
+	 * @var string
+	 */
+	var $URL;
+	
+	/**
 	 * constructor for the class
 	 */
 	function article_object() {
@@ -146,6 +152,18 @@ class article_object extends mysql_DAO
 		$this->date_added = new Date();
 		$this->date_updated = new Date();
 		$this->published = new Boolean(0);
+		
+		// mark the URL attribute as transient
+		$this->mark_transient("URL");
+	}
+	
+	/**
+	 * set up the transient URL attribute for the artcile after it has loaded
+	 */
+	function after_load_callback() {
+		global $sysURL;
+		
+		$this->URL = $sysURL.'/alpha/controller/view_article.php?oid='.$this->get_ID();
 	}
 	
 	/**
@@ -248,7 +266,10 @@ class article_object extends mysql_DAO
 	 * @return bool True if no database error occured, else false and error is stored in $this->last_query
 	 */
 	function load_by_title($title)
-	{		
+	{
+		if(method_exists($this, 'after_load_callback'))
+				$this->after_load_callback();
+		
 		$sql_query = "SELECT * FROM ".$this->TABLE_NAME." WHERE title = '$title';";
 
 		$this->last_query = $sql_query;
@@ -280,7 +301,9 @@ class article_object extends mysql_DAO
 			}
 		}		
 		
-		if(mysql_error() == '' && $this->set_enum_options()) {	
+		if(mysql_error() == '' && $this->set_enum_options()) {
+			if(method_exists($this, 'after_load_callback'))
+				$this->after_load_callback();
 			return true;
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();

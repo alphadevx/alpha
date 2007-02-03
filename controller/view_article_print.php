@@ -64,7 +64,7 @@ class view_article_print extends view_article
 		if($sysCMSDisplayVotes)
 			echo '<p>Average Article User Rating: <strong>'.$rating.'</strong> out of 10 (based on <strong>'.count($votes).'</strong> votes)</p>';
 		
-		echo '<p>Article URL: <a href="'.$sysURL.'/alpha/controller/view_article_title.php?title='.$this->article->get("title").'">'.$sysURL.'/alpha/controller/view_article_title.php?title='.$this->article->get("title").'</a><br>';
+		echo '<p>Article URL: <a href="'.$this->article->URL.'">'.$this->article->URL.'</a><br>';
 		echo 'Title: '.$this->article->get("title").'<br>';
 		echo 'Author: '.$this->article->get("author").'<br>';
 		echo $sysCMSFooter.'</p>';
