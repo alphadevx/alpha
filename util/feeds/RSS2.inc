@@ -2,7 +2,6 @@
 
 // $Id$
 
-require_once '../../../config/config.conf';
 require_once $sysRoot.'config/db_connect.inc';
 require_once $sysRoot.'alpha/util/handle_error.inc';
 require_once $sysRoot.'alpha/view/View.inc';
