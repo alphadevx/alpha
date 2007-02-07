@@ -57,7 +57,14 @@ class Integer_Test extends PHPUnit_TestCase
     	$this->int1 = new Integer(25);    	
     	
     	$this->assertEquals($this->int1->get_value(), 25, "testing the Integer constructor for pass");
-    }    
+    }
+    
+    /**
+     * testing passing invalid data to set_value
+     */
+    function test_set_value_invalid() {
+    	$this->assertEquals($this->int1->get_helper(), $this->int1->set_value("blah"), "testing passing invalid data to set_value");
+    }
 }
 
 ?>
