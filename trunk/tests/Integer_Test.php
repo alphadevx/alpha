@@ -54,7 +54,7 @@ class Integer_Test extends PHPUnit_TestCase
      * testing the int constructor for acceptance of correct data
      */
     function test_constructor_pass() {
-    	$this->int1 = new Integer(25);    	
+    	$this->int1 = new Integer(25);
     	
     	$this->assertEquals($this->int1->get_value(), 25, "testing the Integer constructor for pass");
     }
@@ -64,6 +64,16 @@ class Integer_Test extends PHPUnit_TestCase
      */
     function test_set_value_invalid() {
     	$this->assertEquals($this->int1->get_helper(), $this->int1->set_value("blah"), "testing passing invalid data to set_value");
+    }
+    
+    /**
+     * testing the set_size method to see if validation fails
+     */
+    function test_set_size_invalid() {
+    	$this->int1 = new Integer();
+    	$this->int1->set_size(2);
+    	
+    	$this->assertEquals($this->int1->set_value(5000), 'Error: the value 5000 provided by set_value is greater than the size '.$this->int1->get_size().' of this data type.',"testing setting the size of the integer type");
     }
 }
 
