@@ -75,7 +75,7 @@ class view_feed extends Controller
 		
 		switch($type) {
 			case 'RSS2':
-				$feed = new RSS2($BO_name, $this->title, urlencode($_SERVER["REQUEST_URI"]), $this->description);
+				$feed = new RSS2($BO_name, $this->title, str_replace('&', '&amp;', $_SERVER["REQUEST_URI"]), $this->description);
 				$feed->set_field_mappings($this->field_mappings[0], $this->field_mappings[1], $this->field_mappings[2]);
 			break;
 		}
