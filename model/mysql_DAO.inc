@@ -189,8 +189,9 @@ class mysql_DAO
 			return false;
 		}
 		
-		// set the "updated by" fields
-		$this->updated_by->set_value($_SESSION["current_user"]->get_ID());
+		// set the "updated by" fields, we can only set the user id if someone is logged in
+		if(isset($_SESSION["current_user"]))
+			$this->updated_by->set_value($_SESSION["current_user"]->get_ID());
 		$this->updated_ts = new Date();
 
 		if(empty($this->OID) || !isset($this->OID)) {
