@@ -2,7 +2,6 @@
 
 // $Id$
 
-require_once '../../../config/config.conf';
 require_once $sysRoot.'alpha/util/catch_error.inc';
 require_once $sysRoot.'config/db_connect.inc';
 require_once $sysRoot.'alpha/util/handle_error.inc';
@@ -164,7 +163,7 @@ class feed {
 	 * method for creating namespace for feeds
 	 */
 	function create_feed_element($namespace, $name, $value=null) {
-		if(is_null($namespace)) {
+		if(is_null($namespace)) {			
 			return $this->rss_doc->createElement($name, $value);
 		}else{
 			return $this->rss_doc->createElementNS($namespace, $name, $value);
