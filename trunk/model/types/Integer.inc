@@ -22,24 +22,26 @@ class Integer {
 	function Integer($val='') {
 		if (strlen($val) <= $this->size) {			
 			if (preg_match($this->validation_rule, $val)) {				
-				$this->value = $val;				
+				$this->value = $val;
+				return true;			
 			}else{
-				$error = new handle_error($_SERVER["PHP_SELF"], $this->validation_helper.' :- '.$val,'Integer','framework');
+				return $this->validation_helper;
 			}
 		}else{
-			$error = new handle_error($_SERVER["PHP_SELF"], $this->validation_helper.' :- '.$val,'Integer','framework');
+			return 'Error: the value '.$val.' provided by Integer is greater than the size '.$this->size.' of this data type.';
 		}
 	}
 	
 	function set_value($val) {		
 		if (strlen($val) <= $this->size) {			
 			if (preg_match($this->validation_rule, $val)) {				
-				$this->value = $val;				
+				$this->value = $val;
+				return true;				
 			}else{
-				$error = new handle_error($_SERVER["PHP_SELF"], $this->validation_helper.' :- '.$val,'Integer','framework');
+				return $this->validation_helper;
 			}
 		}else{
-			$error = new handle_error($_SERVER["PHP_SELF"], $this->validation_helper.' :- '.$val,'Integer','framework');
+			return 'Error: the value '.$val.' provided by set_value is greater than the size '.$this->size.' of this data type.';
 		}
 	}
 	
