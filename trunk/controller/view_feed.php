@@ -3,6 +3,7 @@
 require_once '../../config/config.conf';
 require_once $sysRoot.'alpha/controller/Controller.inc';
 require_once $sysRoot.'alpha/util/feeds/RSS2.inc';
+require_once $sysRoot.'alpha/util/log_file.inc';
 
 if (isset($_GET["bo"])) {
 	$BO_name = $_GET["bo"];	
@@ -65,6 +66,8 @@ class view_feed extends Controller
 	 * 
 	 */
 	function view_feed($BO_name, $type) {
+		global $sysRoot;
+		
 		// ensure that the super class constructor is called
 		$this->Controller();
 		
@@ -83,6 +86,10 @@ class view_feed extends Controller
 		// now add the twenty last items (from newest to oldest) to the feed, and render
 		$feed->add_items(20);
 		echo $feed->dump();
+		
+		// log the request for this news feed
+		$feed_log = new log_file($sysRoot.'alpha/util/logs/feed_log.log');		
+		$feed_log->write_line(array($this->BO_name, $this->type, date("y-m-d H:i:s"), $_SERVER["HTTP_USER_AGENT"], $_SERVER["REMOTE_ADDR"]));
 	}
 	
 	/**
