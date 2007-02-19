@@ -102,11 +102,19 @@ class Search extends Controller
 	var $start_point;
 	
 	/**
-	 * constructor to render the page
-	 * @param string $BO_name the name of the BO that we are creating
-	 * @param array $BO_search_attributes the list of BO attributes to include in the search
+	 * an array mapping BO class names to "fancy" display names
+	 * @var array
 	 */
-	function search($BO_name, $BO_search_attributes = array("keywords")) {
+	var $BO_display_names = array(
+					"article_object" => "Articles",
+					"news_object" => "News Items"
+					);
+	
+	/**
+	 * constructor to render the page
+	 * @param string $BO_name the name of the BO that we are creating	 
+	 */
+	function search($BO_name) {
 		global $sysBenchMark;
 		
 		// check the hidden security fields before accepting the form POST data
@@ -119,7 +127,15 @@ class Search extends Controller
 		$this->Controller();
 		
 		$this->BO_name = $BO_name;
-		$this->BO_search_attributes = $BO_search_attributes;
+		
+		switch($this->BO_name) {
+			case "article_object":
+				$this->BO_search_attributes = array("keywords","title","description");
+			break;
+			case "news_object":
+				$this->BO_search_attributes = array("title","content");
+			break;
+		}		
 		
 		// set the start point for the list pagination
 		if (isset($_GET["start"]) ? $this->start_point = $_GET["start"]: $this->start_point = 0);
@@ -168,7 +184,10 @@ class Search extends Controller
 		
 		$BO = new $this->BO_name();
 	
-		$sql_query = 'SELECT * FROM '.$BO->TABLE_NAME.' WHERE published=\'1\';';
+		if($this->BO_name == "article_object")
+			$sql_query = 'SELECT * FROM '.$BO->TABLE_NAME.' WHERE published=\'1\';';
+		else
+			$sql_query = 'SELECT * FROM '.$BO->TABLE_NAME.';';
 	
 		// now run the query, and store the result
 		$result = mysql_query($sql_query);
@@ -204,11 +223,11 @@ class Search extends Controller
 				// loop through each $BO_search_attributes value
 				for ($j = 0; $j < count($this->BO_search_attributes); $j++) {
 					// if it is the keywords attribute the seperator is a coma, otherwise a blank space.					
-					if ($this->BO_search_attributes[$j] != "keywords")
-						$BO_attribute_array = preg_split("/[\s,.]+/", $row[$this->BO_search_attributes[$j]]);
+					if ($this->BO_search_attributes[$j] == "keywords")
+						$BO_attribute_array = explode(",", $row["keywords"]);
 					else
-						$BO_attribute_array = explode(",", $row["keywords"]);					
-					
+						$BO_attribute_array = preg_split("/[\s,.]+/", $row[$this->BO_search_attributes[$j]]);
+										
 					// loop through the attribute values from the database and do the comparison
 					for ($k = 0; $k < count($BO_attribute_array); $k++) {
 						if (trim($keyword) == trim(strtoupper($BO_attribute_array[$k]))) {
@@ -287,7 +306,7 @@ class Search extends Controller
 		
 		$this->render_page_links();
 		
-		echo '<h2>There are '.$this->result_count.' result(s) in total</h2>';	
+		echo '<h2>There were '.$this->result_count.' result(s) in total found in <em>'.$this->BO_display_names[$this->BO_name].'</em></h2>';	
 		
 		$BO = new $this->BO_name();				
 		
@@ -365,14 +384,18 @@ class Search extends Controller
 		$this->render_page_links();
 		
 		echo '<center>';
+		echo '<p>Try searching other content by choosing from the drop-down below:</p>';
 		echo '<form action="Search.php" method="GET">';
-		echo '<input type="hidden" name="bo" value="'.$this->BO_name.'"/>';
-		if(isset($_GET["BO_search_attributes"]))
-			echo '<input type="hidden" name="BO_search_attributes" value="'.$_GET["BO_search_attributes"].'"/>';
+		echo 'Search: <select name="bo" value="'.$this->BO_name.'"/>';
+		foreach(array_keys($this->BO_display_names) as $key)
+			echo '<option value="'.$key.'"'.($this->BO_name == $key ? " selected" : "").'>'.$this->BO_display_names[$key].'</option>';
+		echo '</select>';
+		
 		if ($sysUseWidgets){
-			$query = new String();
+			$query = new String($this->query);
 			$query->set_helper("Please enter a term to search for!");
 			
+			echo " for: ";
 			$temp = new string_box($query, "", "search_string", "", 20, false);
 			$temp = new button("submit", "Search", "");
 		}else{
@@ -465,11 +488,6 @@ class Search extends Controller
 }
 
 // now build the new controller
-if(isset($_GET["BO_search_attributes"])) {
-	$BO_search_attributes = explode("|", $_GET["BO_search_attributes"]);
-	$controller = new Search($BO_name, $BO_search_attributes);	
-}else{
-	$controller = new Search($BO_name);
-}
+$controller = new Search($BO_name);
 
 ?>
