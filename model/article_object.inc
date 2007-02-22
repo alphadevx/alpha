@@ -436,7 +436,7 @@ class article_object extends mysql_DAO
 		if ($limit == 0)
 			$limit = $sysListPageAmount;
 		
-		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE published='1' ORDER BY OID LIMIT ".$start.", ".$limit.";";
+		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE published='1' AND section!='General' ORDER BY OID DESC LIMIT ".$start.", ".$limit.";";
 		
 		$this->last_query = $sql_query;
 
