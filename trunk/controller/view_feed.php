@@ -1,6 +1,7 @@
 <?php
 
-require_once '../../config/config.conf';
+if(!isset($sysRoot))
+	require_once '../../config/config.conf';
 require_once $sysRoot.'alpha/controller/Controller.inc';
 require_once $sysRoot.'alpha/util/feeds/RSS2.inc';
 require_once $sysRoot.'alpha/util/log_file.inc';
@@ -115,6 +116,7 @@ class view_feed extends Controller
 }
 
 // now build the new controller
-$controller = new view_feed($BO_name, $type);
+if(basename($_SERVER["PHP_SELF"]) == "view_feed.php")
+	$controller = new view_feed($BO_name, $type);
 
 ?>
