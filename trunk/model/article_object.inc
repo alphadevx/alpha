@@ -420,6 +420,47 @@ class article_object extends mysql_DAO
 		
 		return $comments;
 	}
+	
+	/**
+	 * loads all of the objects of this class into an array, which is returned
+	 * this custom version for an article only returns published articles
+	 * 
+	 * @param integer $start The start of the SQL LIMIT clause
+	 * @param integer $limit The amount (limit) of objects to load
+	 * @return array an array containing objects of this type of business object.
+	 */
+	function load_all($start=0, $limit=0)
+	{
+		global $sysListPageAmount;
+		
+		if ($limit == 0)
+			$limit = $sysListPageAmount;
+		
+		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE published='1' ORDER BY OID LIMIT ".$start.", ".$limit.";";
+		
+		$this->last_query = $sql_query;
+
+		$result = mysql_query($sql_query);
+		
+		if(mysql_error() != '') {
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load objects, query: '.$this->last_query.'.' ,'load_all()','framework');
+			return false;
+		}
+		
+		// now build an array of objects to be returned
+		$objects = array();
+		$count = 0;
+		$BO_Class = get_class($this);
+		
+		while($row = mysql_fetch_assoc($result)) {
+			$obj = new $BO_Class();
+			$obj->load_object($row["OID"]);
+			$objects[$count] = $obj;
+			$count++;			
+		}
+		
+		return $objects;	
+	}
 }
 
 ?>
