@@ -83,27 +83,24 @@ class feed {
 		
 		$this->create_RSS_node($this->FEED, $this->root, $title, $url, $description, $publish_date, $id);
 		
-		//$this->add_items($limit);
-		
 		return;
 	}
 	
 	/**
 	 * method to add all of the BO items to the feed, from the newest to the $limit provided 
 	 */
-	function add_items($limit) {
-		global $sysURL;
+	function add_items($limit, $sort_by) {		
 		
-		$BOs = $this->BO->load_all(0, $limit);
+		$BOs = $this->BO->load_all(0, $limit, $sort_by, "DESC");
 		
 		foreach($BOs as $BO) {
-			$this->add_item(
-				str_replace('&', '&amp;', $BO->get($this->field_name_mappings["title"])),
-				$BO->get($this->field_name_mappings["link"]),
-				str_replace('&', '&amp;', $BO->get($this->field_name_mappings["description"])),
-				$BO->get($this->field_name_mappings["publish_date"]),
-				$BO->get($this->field_name_mappings["id"])
-			);
+			$title = $BO->get($this->field_name_mappings["title"]);			
+			$link = $BO->get($this->field_name_mappings["link"]);
+			$description = $BO->get($this->field_name_mappings["description"]);			
+			$publish_date = $BO->get($this->field_name_mappings["publish_date"]);
+			$id = $BO->get($this->field_name_mappings["id"]);			
+			
+			$this->add_item($title, $link, $description, $publish_date,	$id);
 		}
 	}
 	
@@ -163,6 +160,7 @@ class feed {
 	 * method for creating namespace for feeds
 	 */
 	function create_feed_element($namespace, $name, $value=null) {
+		$value = str_replace('&', '&amp;', $value); 
 		if(is_null($namespace)) {			
 			return $this->rss_doc->createElement($name, $value);
 		}else{
@@ -182,8 +180,8 @@ class feed {
 	 * method for creating an RSS node with a title, link and description
 	 */
 	function create_RSS_node($type, $parent, $title, $url, $description, $publish_date=null, $id = null) {
-		$this->create_link($parent, $url);
-		$title = $this->create_feed_element($this->NS, 'title', $title);
+		$this->create_link($parent, $url);		
+		$title = $this->create_feed_element($this->NS, 'title', $title);		
 		$parent->appendChild($title);
 		
 		if ($type == $this->ITEM) {
@@ -210,10 +208,10 @@ class feed {
 	/**
 	 * method for adding an item to a feed
 	 */
-	function add_item($title, $link, $description=null, $publish_date=null, $id=null) {
+	function add_item($title, $link, $description=null, $publish_date=null, $id=null) {		
 		$item = $this->create_feed_element($this->NS, $this->tag_map['item']);
 		
-		if ($this->doc_element->appendChild($item)) {
+		if ($this->doc_element->appendChild($item)) {			
 			$this->create_RSS_node($this->ITEM, $item, $title, $link, $description, $publish_date, $id);
 			return true;
 		}
