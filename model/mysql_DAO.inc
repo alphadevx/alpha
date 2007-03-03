@@ -132,18 +132,21 @@ class mysql_DAO
 	
 	/**
 	 * loads all of the objects of this class into an array, which is returned
+	 * 
 	 * @param integer $start The start of the SQL LIMIT clause
 	 * @param integer $limit The amount (limit) of objects to load
+	 * @param string $order_by the name of the field to sort the BOs by
+	 * @param string $order the order to sort the BOs by, default is ASC
 	 * @return array an array containing objects of this type of business object.
 	 */
-	function load_all($start=0, $limit=0)
+	function load_all($start=0, $limit=0, $order_by="OID", $order="ASC")
 	{
 		global $sysListPageAmount;
 		
 		if ($limit == 0)
 			$limit = $sysListPageAmount;
 		
-		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." ORDER BY OID LIMIT ".$start.", ".$limit.";";
+		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
 		
 		$this->last_query = $sql_query;
 
@@ -605,33 +608,47 @@ class mysql_DAO
 	}
 	
 	/**
-	 * Generic getter method for accessing class properties.
+	 * Generic getter method for accessing class properties.  Will use the method get_$prop instead if that
+	 * method exists at a child level (by default)
+	 * 
 	 * @param string $prop the name of the property to get
+	 * @param boolean $no_child_methods true if you don't want to use any get_$prop method even if it exists, false otherwise (default)
 	 * @return <variable> the value of the property
 	 */
-	function get($prop) {
-		if(isset($this->$prop) && method_exists($this->$prop, "get_value")) {
-			return $this->$prop->get_value();
-		}elseif(isset($this->$prop)) {
-			return $this->$prop;
+	function get($prop, $no_child_methods = false) {
+		if(!$no_child_methods && method_exists($this, "get_".$prop)) {			
+			return eval('return $this->get_'.$prop.'();');
 		}else{
-			$error = new handle_error($_SERVER["PHP_SELF"],'Could not access the property '.$prop.' on the object '.get_class($this).'.','get()','framework');
-			return false;
+			if(isset($this->$prop) && method_exists($this->$prop, "get_value")) {
+				return $this->$prop->get_value();
+			}elseif(isset($this->$prop)) {
+				return $this->$prop;
+			}else{
+				$error = new handle_error($_SERVER["PHP_SELF"],'Could not access the property '.$prop.' on the object '.get_class($this).'.','get()','framework');
+				return false;
+			}
 		}
 	}
 	
 	/**
-	 * Generic setter method for setting class properties.
+	 * Generic setter method for setting class properties.  Will use the method set_$prop instead if that
+	 * method exists at a child level (by default)
+	 * 
 	 * @param string $prop the name of the property to set
 	 * @param string $value value to attribute to the object property
+	 * @param boolean $no_child_methods true if you don't want to use any get_$prop method even if it exists, false otherwise (default)
 	 */
-	function set($prop, $value) {
-		if(isset($this->$prop) && method_exists($this->$prop, "set_value")) {
-			$this->$prop->set_value($value);
-		}elseif(isset($this->$prop)) {
-			$this->$prop = $value;
+	function set($prop, $value, $no_child_methods = false) {
+		if(!$no_child_methods && method_exists($this, "set_".$prop)) {
+			return eval("return $this->set_".$prop."($value)");
 		}else{
-			$error = new handle_error($_SERVER["PHP_SELF"],'Could not set the property '.$prop.' on the object '.get_class($this).'.  Property may not exist, or else does not have a set_value() method.','set()','framework');
+			if(isset($this->$prop) && method_exists($this->$prop, "set_value")) {
+				$this->$prop->set_value($value);
+			}elseif(isset($this->$prop)) {
+				$this->$prop = $value;
+			}else{
+				$error = new handle_error($_SERVER["PHP_SELF"],'Could not set the property '.$prop.' on the object '.get_class($this).'.  Property may not exist, or else does not have a set_value() method.','set()','framework');
+			}
 		}
 	}
 	
