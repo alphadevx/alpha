@@ -44,7 +44,7 @@ class feed {
 	/**
 	 * 
 	 */
-	var $has_channel;
+	var $has_channel = true;
 	
 	/**
 	 * 
