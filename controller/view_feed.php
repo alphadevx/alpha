@@ -54,11 +54,18 @@ class view_feed extends Controller
 	 * @var string
 	 */
 	var $description;
+	
 	/**
 	 * the BO to feed field mappings
 	 * @var array
 	 */
 	var $field_mappings;
+	
+	/**
+	 * the BO field name to sort the feed by (descending)
+	 * @var string
+	 */
+	var $sort_by = "OID";
 	
 	/**
 	 * constructor to set up the object
@@ -85,7 +92,7 @@ class view_feed extends Controller
 		}
 		
 		// now add the twenty last items (from newest to oldest) to the feed, and render
-		$feed->add_items(20);
+		$feed->add_items(20, $this->sort_by);
 		echo $feed->dump();
 		
 		// log the request for this news feed
@@ -105,6 +112,7 @@ class view_feed extends Controller
 				$this->title = "Latest articles from ".$sysTitle;
 				$this->description = "News feed containing all of the details on the latest articles published on ".$sysTitle.".";
 				$this->field_mappings = array("title", "URL", "description");
+				$this->sort_by = "date_added";
 			break;
 			case 'news_object':
 				$this->title = "Latest news from ".$sysTitle;
