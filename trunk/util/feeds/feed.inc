@@ -98,9 +98,9 @@ class feed {
 		
 		foreach($BOs as $BO) {
 			$this->add_item(
-				$BO->get($this->field_name_mappings["title"]),
+				str_replace('&', '&amp;', $BO->get($this->field_name_mappings["title"])),
 				$BO->get($this->field_name_mappings["link"]),
-				$BO->get($this->field_name_mappings["description"]),
+				str_replace('&', '&amp;', $BO->get($this->field_name_mappings["description"])),
 				$BO->get($this->field_name_mappings["publish_date"]),
 				$BO->get($this->field_name_mappings["id"])
 			);
