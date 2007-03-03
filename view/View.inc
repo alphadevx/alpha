@@ -92,7 +92,7 @@ class View {
 		echo '<table cols="2" class="create_view">';
 		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
 		foreach (array_keys($properties) as $prop) {
-			if (!in_array($prop, $this->BO->default_attributes)) {
+			if (!in_array($prop, $this->BO->default_attributes) && !in_array($prop, $this->BO->transient_attributes)) {
 
 				$obj_type = get_class($properties[$prop]);
 
@@ -224,7 +224,7 @@ class View {
 		echo '<table cols="2" class="edit_view">';
 		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
 		foreach (array_keys($properties) as $prop) {
-			if (!in_array($prop, $this->BO->default_attributes)) {
+			if (!in_array($prop, $this->BO->default_attributes) && !in_array($prop, $this->BO->transient_attributes)) {
 
 				$obj_type = get_class($properties[$prop]);
 
@@ -395,7 +395,7 @@ class View {
 		// first render all of the table headers
 		echo '<tr>';
 		foreach (array_keys($properties) as $prop) {
-			if (!in_array($prop, $this->BO->default_attributes)) {
+			if (!in_array($prop, $this->BO->default_attributes) && !in_array($prop, $this->BO->transient_attributes)) {
 				$col_count ++;
 				echo '	<th>'.$this->BO->data_labels[$prop].'</th>';				
 			}
@@ -406,7 +406,7 @@ class View {
 
 		// and now the values
 		foreach (array_keys($properties) as $prop) {
-			if (!in_array($prop, $this->BO->default_attributes)) {
+			if (!in_array($prop, $this->BO->default_attributes) && !in_array($prop, $this->BO->transient_attributes)) {
 				if (get_class($properties[$prop]) != "Text") {
 					echo '	<td>&nbsp;'.$this->BO->$prop->get_value().'</td>';
 				}else{
@@ -465,7 +465,7 @@ class View {
 
 		foreach (array_keys($properties) as $prop) {
 
-			if (!in_array($prop, $this->BO->default_attributes)) {
+			if (!in_array($prop, $this->BO->default_attributes) && !in_array($prop, $this->BO->transient_attributes)) {
 
 				$obj_type = get_class($properties[$prop]);
 
