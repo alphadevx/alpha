@@ -102,7 +102,8 @@ class article_object extends mysql_DAO
 		"author"=>"Author",
 		"date_added"=>"Date Added",
 		"date_updated"=>"Date of last Update",
-		"published"=>"Published"		
+		"published"=>"Published",
+		"URL"=>"URL"
 	);
 	
 	/**
@@ -427,16 +428,22 @@ class article_object extends mysql_DAO
 	 * 
 	 * @param integer $start The start of the SQL LIMIT clause
 	 * @param integer $limit The amount (limit) of objects to load
+	 * @param string $order_by the name of the field to sort the BOs by
+	 * @param string $order the order to sort the BOs by, default is DESC
 	 * @return array an array containing objects of this type of business object.
 	 */
-	function load_all($start=0, $limit=0)
+	function load_all($start=0, $limit=0, $order_by="OID", $order="DESC")
 	{
 		global $sysListPageAmount;
+		
+		// in the person is an administrator, use the parent method instead which will list all articles
+		if(isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_access_level())
+			return parent::load_all($start, $limit, $order_by, $order);
 		
 		if ($limit == 0)
 			$limit = $sysListPageAmount;
 		
-		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE published='1' AND section!='General' ORDER BY OID DESC LIMIT ".$start.", ".$limit.";";
+		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE published='1' AND section!='General' ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
 		
 		$this->last_query = $sql_query;
 
