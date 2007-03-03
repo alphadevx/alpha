@@ -51,7 +51,7 @@ class markdown_facade
 		if ($this->check_cache()) {
 			$this->load_cache();
 		}else{
-			$this->content = Markdown($this->BO->get("content"), $attachURL);
+			$this->content = Markdown($this->BO->get("content", true), $attachURL);
 			$this->cache();
 		}
 	}
