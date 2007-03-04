@@ -5,6 +5,7 @@ if(!isset($sysRoot))
 require_once $sysRoot.'alpha/controller/Controller.inc';
 require_once $sysRoot.'alpha/util/feeds/RSS2.inc';
 require_once $sysRoot.'alpha/util/feeds/RSS.inc';
+require_once $sysRoot.'alpha/util/feeds/Atom.inc';
 require_once $sysRoot.'alpha/util/log_file.inc';
 
 if (isset($_GET["bo"])) {
@@ -93,6 +94,11 @@ class view_feed extends Controller
 			case 'RSS':
 				$feed = new RSS($BO_name, $this->title, str_replace('&', '&amp;', $_SERVER["REQUEST_URI"]), $this->description);
 				$feed->set_field_mappings($this->field_mappings[0], $this->field_mappings[1], $this->field_mappings[2]);
+			break;
+			case 'Atom':
+				$feed = new Atom($BO_name, $this->title, str_replace('&', '&amp;', $_SERVER["REQUEST_URI"]), $this->description);
+				$feed->set_field_mappings($this->field_mappings[0], $this->field_mappings[1], $this->field_mappings[2]);
+				$feed->add_author("John Collins");
 			break;
 		}
 		
