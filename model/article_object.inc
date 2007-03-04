@@ -436,14 +436,18 @@ class article_object extends mysql_DAO
 	{
 		global $sysListPageAmount;
 		
-		// in the person is an administrator, use the parent method instead which will list all articles
-		if(isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_access_level())
+		// if accessing from the adin backend, use the parent method which includes all articles
+		if(basename($_SERVER["PHP_SELF"]) == "ListAll.php")
 			return parent::load_all($start, $limit, $order_by, $order);
 		
 		if ($limit == 0)
 			$limit = $sysListPageAmount;
 		
-		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE published='1' AND section!='General' ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
+		// exclude 'General' articles when we are accessing from a news feed
+		if(basename($_SERVER["PHP_SELF"]) == "view_feed.php")
+			$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE published='1' AND section!='General' ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
+		else
+			$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE published='1' ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
 		
 		$this->last_query = $sql_query;
 
