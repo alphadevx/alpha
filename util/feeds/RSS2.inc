@@ -25,7 +25,7 @@ class RSS2 extends feed {
 	 * constructor
 	 */
 	function RSS2($title, $url, $description, $publish_date=null, $id=null) {
-		parent::feed($title, $url, $description, $publish_date=null, $id=null);
+		parent::feed($title, $url, $description, $publish_date, $id);
 		$this->doc_element = $this->root;
 	}
 }
