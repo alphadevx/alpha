@@ -188,6 +188,8 @@ class ListBusinessObjects extends Controller
 		echo '<p align="center"><a href="'.$sysURL.'">Application Home Page</a>&nbsp;&nbsp;&nbsp;&nbsp;';
 		echo '<a href="'.$sysURL.'/alpha/controller/view_log.php?log_path='.$sysRoot.'alpha/util/logs/error_log.log'.'">View Error Log</a>&nbsp;&nbsp;&nbsp;&nbsp;';
 		echo '<a href="'.$sysURL.'/alpha/controller/view_log.php?log_path='.$sysRoot.'alpha/util/logs/search_log.log'.'">View Search Log</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+		echo '<a href="'.$sysURL.'/alpha/controller/view_log.php?log_path='.$sysRoot.'alpha/util/logs/feed_log.log'.'">View Feed Log</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+		echo '<a href="'.$sysURL.'/alpha/controller/gen_secure_query_strings.php">Generate Secure URL</a>&nbsp;&nbsp;&nbsp;&nbsp;';
 		echo '<a href="'.$sysURL.'/alpha/controller/view_metrics.php">Application Software Metrics</a>&nbsp;&nbsp;&nbsp;&nbsp;';
 		echo '<a href="'.$sysURL.'/alpha/tests/view_test_results.php">Application Unit Tests</a></p>';
 	}
