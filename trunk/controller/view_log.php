@@ -49,7 +49,7 @@ class view_log extends Controller
 			exit;
 		}
 		
-		$this->set_title("Displaying the latest Error Log");
+		$this->set_title("Displaying the requested log");
 		
 		$this->display_page_head();
 		
@@ -57,7 +57,9 @@ class view_log extends Controller
 		if(preg_match("/error_log.*/", basename($this->log_path)))
 			$log->render_log(array("Date of error","Error file","Error method","Error message","Error type","Client IP","Client Server","Client Application"));
 		if(preg_match("/search_log.*/", basename($this->log_path)))
-			$log->render_log(array("Search query","Search date","Client Application","Client IP"));		
+			$log->render_log(array("Search query","Search date","Client Application","Client IP"));
+		if(preg_match("/feed_log.*/", basename($this->log_path)))
+			$log->render_log(array("Business object","Feed type","Request date","Client Application","Client IP"));		
 		
 		$this->display_page_foot();
 	}
