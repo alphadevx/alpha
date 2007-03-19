@@ -444,7 +444,7 @@ class article_object extends mysql_DAO
 			$limit = $sysListPageAmount;
 		
 		// exclude 'General' articles when we are accessing from a news feed
-		if(basename($_SERVER["PHP_SELF"]) == "view_feed.php")
+		if(basename($_SERVER["PHP_SELF"]) == "view_feed.php" || (isset($_GET["act"]) && $_GET["act"] == "view_feed"))
 			$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE published='1' AND section!='General' ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
 		else
 			$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE published='1' ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
