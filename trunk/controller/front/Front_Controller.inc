@@ -17,40 +17,72 @@ require_once $sysRoot.'alpha/util/handle_error.inc';
 class Front_Controller {
 	
 	
-	var $get_array = array();
+	var $get_string;
 	var $page_controller;
+	var $encrypted_query = false;
 	
 	/**
 	 * the constructor method
 	 */
 	function Front_Controller() {
-		$this->decode_query();
-		// need error checking!
-		$this->page_controller = $this->get_array["action"];
-		$this->populate_get_vars();		
-		$this->load_controller();
+		if (isset($_GET["act"])) {
+			$this->page_controller = $_GET["act"];
+		}else{
+			if (!isset($_GET["tk"])) {
+				$error = new handle_error($_SERVER["PHP_SELF"],'No controller action set for the front controller!','Front_Controller()');
+				exit;
+			}
+		}
+	}
+	
+	function set_encrypt($encrypted_query) {
+		$this->encrypted_query = $encrypted_query;
 	}
 	
 	/**
 	 * method to populate the global _GET array with the decoded query string
 	 */
 	function populate_get_vars() {
-		foreach(array_keys($this->get_array) as $var)
-			$_GET[$var] = $this->get_array[$var];
+				
+		$pairs = explode("&", $this->get_string);		
+		
+		foreach($pairs as $pair) {
+			$key_value = explode("=", $pair);
+			$_GET[$key_value[0]] = $key_value[1];
+		}
 	}
 	
 	/**
 	 * static method for encoding a query string
 	 */
-	function encode_query($get_array) {
-		return base64_encode(serialize($get_array));
+	function encode_query($query_string) {
+		global $sysQSKey;
+   
+		$td = mcrypt_module_open ('tripledes', '', 'ecb', ''); 
+		$iv = mcrypt_create_iv (mcrypt_enc_get_iv_size ($td), MCRYPT_RAND); 
+		mcrypt_generic_init ($td, $sysQSKey, $iv); 
+		$encrypted_data = mcrypt_generic ($td, $query_string); 
+		mcrypt_generic_deinit ($td); 
+		mcrypt_module_close ($td);
+	   
+		return base64_encode($encrypted_data);		
 	}
 	
 	/**
 	 * method to decode the current query string
 	 */
 	function decode_query() {
-		$this->get_array = unserialize(base64_decode($_SERVER["QUERY_STRING"]));
+		global $sysQSKey;
+		
+		if (!isset($_GET["tk"])) {
+			$error = new handle_error($_SERVER["PHP_SELF"],'No token provided for the front controller!','decode_query()');
+			exit;
+		}else{
+			//$this->get_array = unserialize(base64_decode($_GET["tk"]));
+			$td = mcrypt_module_open ('tripledes', '', 'ecb', '');
+			$iv = mcrypt_create_iv (mcrypt_enc_get_iv_size ($td), MCRYPT_RAND);
+			$this->get_string = trim(mcrypt_decrypt('tripledes', $sysQSKey, base64_decode($_GET["tk"]), 'ecb', $iv));
+		}
 	}
 	
 	/**
@@ -59,6 +91,12 @@ class Front_Controller {
 	function load_controller() {
 		global $sysRoot;
 		global $sysDB;
+		
+		if($this->encrypted_query) {
+			$this->decode_query();			
+			$this->populate_get_vars();
+			$this->page_controller = $_GET["act"];
+		}
 		
 		$handle = opendir($sysRoot.'controller');
    		
