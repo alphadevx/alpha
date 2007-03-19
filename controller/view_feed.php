@@ -8,20 +8,6 @@ require_once $sysRoot.'alpha/util/feeds/RSS.inc';
 require_once $sysRoot.'alpha/util/feeds/Atom.inc';
 require_once $sysRoot.'alpha/util/log_file.inc';
 
-if (isset($_GET["bo"])) {
-	$BO_name = $_GET["bo"];	
-}else{
-	$error = new handle_error($_SERVER["PHP_SELF"],'No BO available to generate feed!','GET');
-	exit;
-}
-
-if (isset($_GET["type"])) {
-	$type = $_GET["type"];	
-}else{
-	$error = new handle_error($_SERVER["PHP_SELF"],'No feed type specified to generate feed!','GET');
-	exit;
-}
-
 /**
  *
  * Controller for viewing news feeds
@@ -75,8 +61,22 @@ class view_feed extends Controller
 	 * @param string $type the type of feed to render (RSS, RSS2 or Atom)	 
 	 * 
 	 */
-	function view_feed($BO_name, $type) {
+	function view_feed() {
 		global $sysRoot;
+		
+		if (isset($_GET["bo"])) {
+			$BO_name = $_GET["bo"];	
+		}else{
+			$error = new handle_error($_SERVER["PHP_SELF"],'No BO available to generate feed!','view_feed()');
+			exit;
+		}
+		
+		if (isset($_GET["type"])) {
+			$type = $_GET["type"];	
+		}else{
+			$error = new handle_error($_SERVER["PHP_SELF"],'No feed type specified to generate feed!','view_feed()');
+			exit;
+		}
 		
 		// ensure that the super class constructor is called
 		$this->Controller();
@@ -136,6 +136,6 @@ class view_feed extends Controller
 
 // now build the new controller
 if(basename($_SERVER["PHP_SELF"]) == "view_feed.php")
-	$controller = new view_feed($BO_name, $type);
+	$controller = new view_feed();
 
 ?>
