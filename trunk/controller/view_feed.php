@@ -108,7 +108,7 @@ class view_feed extends Controller
 		
 		// log the request for this news feed
 		$feed_log = new log_file($sysRoot.'alpha/util/logs/feed_log.log');		
-		$feed_log->write_line(array($this->BO_name, $this->type, date("y-m-d H:i:s"), $_SERVER["HTTP_USER_AGENT"], $_SERVER["REMOTE_ADDR"]));
+		$feed_log->write_line(array($this->BO_name, $this->type, date("Y-m-d H:i:s"), $_SERVER["HTTP_USER_AGENT"], $_SERVER["REMOTE_ADDR"]));
 	}
 	
 	/**
