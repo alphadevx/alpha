@@ -197,14 +197,7 @@ class form_validator
 			
 			for(j=0; j<no_page_forms; j++) {
 				// add the submit listener per form
-				addFormEvent(document.forms[j], "submit", validate_form);
-				// and now a blur listener per form field
-				for(i=0; i<document.forms[j].elements.length; i++){
-					var form_type = document.forms[j].elements[i].type;
-					if (form_type == "text" || form_type == "password" || form_type == "textarea") {			   			
-			   			addFormEvent(document.forms[j].elements[i], "blur", check_field);
-					}
-			   	}
+				addFormEvent(document.forms[j], "submit", validate_form);				
 			}
 		}
 		
