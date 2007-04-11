@@ -618,6 +618,7 @@ class Controller
 	 * method to check the validity of the two hidden form security
 	 * fields which aim to ensure that a post to the controller is being sent from 
 	 * the same server as hosting it.
+	 * 
 	 * @return bool True if the fields are valid, false otherwise 
 	 */
 	function check_security_fields() {
@@ -626,10 +627,25 @@ class Controller
 		// the server's IP plus $var1
 		$var2 = md5($_SERVER['REMOTE_ADDR'].$var1);
 		
-		if ($var1 == $_REQUEST["var1"] || $var2 == $_REQUEST["var2"])
+		if ($var1 == $_REQUEST["var1"] || $var2 == $_REQUEST["var2"]) {			
 			return true;
-		else
-			return false;
+		}else{
+			/*
+			 * Here we are implementing a "grace period" of one hour if the time is < 1:00AM, we will accept
+			 * a match for yesterday's date in the security fields
+			 * 
+			 */			
+			
+			// the server hostname + today's date less 1 hour (i.e. yesterday where time is < 1:00AM)
+			$var1 = md5($_SERVER["HTTP_HOST"].date("Ymd", (time()-3600)));
+			// the server's IP plus $var1
+			$var2 = md5($_SERVER['REMOTE_ADDR'].$var1);
+			
+			if ($var1 == $_REQUEST["var1"] || $var2 == $_REQUEST["var2"])
+				return true;
+			else
+				return false;
+		}
 	}
 }
 
