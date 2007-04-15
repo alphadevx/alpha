@@ -72,8 +72,13 @@ class Date {
  	 * accepts a full date string in YYYY-mm-dd format
  	 * @param string date to be parsed
  	 */
- 	function populate_from_string($date) {
- 		$valid = 1; 		
+ 	function populate_from_string($date) { 		
+ 		$valid = 1;
+ 		
+ 		// this is just here for legacy to ensure that any old time value from a Date object is ignored
+ 		$spilt_by_space = explode(" ", $date);
+ 		
+ 		$date = $spilt_by_space[0];	
  		
  		$split_by_dash = explode("-", $date);
  		$year = $split_by_dash[0];
