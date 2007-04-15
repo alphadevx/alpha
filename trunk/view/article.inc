@@ -102,7 +102,7 @@ class article extends View
 		echo '<th>'.$this->BO->get("title").'</th>';
 		echo '</tr><tr>';
 		$prop_obj = $this->BO->get_prop_object("date_added");
-		echo '<td>'.$this->BO->get("description").'<br><br>'.$this->BO->data_labels["section"].': <em>'.$this->BO->get("section").'</em>&nbsp;&nbsp;&nbsp;'.$this->BO->data_labels["date_added"].': <em>'.$prop_obj->get_date().'</em></td>';	
+		echo '<td>'.$this->BO->get("description").'<br><br>'.$this->BO->data_labels["section"].': <em>'.$this->BO->get("section").'</em>&nbsp;&nbsp;&nbsp;'.$this->BO->data_labels["date_added"].': <em>'.$prop_obj->get_value().'</em></td>';	
 		echo '</tr>';
 		
 		echo '<tr><td colspan="'.$col_count.'" align="center">';
