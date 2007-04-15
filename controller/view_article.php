@@ -129,9 +129,9 @@ class view_article extends Controller
 		$prop_obj = $this->article->get_prop_object("section");
 		echo 'Site Section: <em>'.$prop_obj->get_value().'</em> &nbsp; &nbsp;';
 		$prop_obj = $this->article->get_prop_object("date_added");
-		echo 'Date Added: <em>'.$prop_obj->get_date().'</em> &nbsp; &nbsp;';
+		echo 'Date Added: <em>'.$prop_obj->get_value().'</em> &nbsp; &nbsp;';
 		$prop_obj = $this->article->get_prop_object("date_updated");
-		echo 'Last Updated: <em>'.$prop_obj->get_date().'</em> &nbsp; &nbsp;';
+		echo 'Last Updated: <em>'.$prop_obj->get_value().'</em> &nbsp; &nbsp;';
 		echo 'Revision: <em>'.$this->article->get_version().'</em></p>';
 		echo $sysCMSHeader;
 		
