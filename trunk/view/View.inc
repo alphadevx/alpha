@@ -6,6 +6,7 @@
 require_once $sysRoot.'alpha/util/catch_error.inc';
 
 require_once $sysRoot."alpha/model/types/Date.inc";
+require_once $sysRoot."alpha/model/types/Timestamp.inc";
 require_once $sysRoot."alpha/model/types/Double.inc";
 require_once $sysRoot."alpha/model/types/Integer.inc";
 require_once $sysRoot."alpha/model/types/String.inc";
