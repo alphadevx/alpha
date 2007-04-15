@@ -125,6 +125,15 @@ class View {
 						echo '<input type="text" size="16" name="'.$prop.'" value="'. (isset ($_POST[$prop]) ? $_POST[$prop] : date("Y-m-d H:i:s")).'"/><br>';
 						echo '</td></tr>';
 						break;
+					case "TIMESTAMP" :
+						echo '<tr><td style="width:25%;">';
+						echo $this->BO->data_labels[$prop];
+						echo '</td>';
+
+						echo '<td>';
+						echo '<input type="text" size="16" name="'.$prop.'" value="'. (isset ($_POST[$prop]) ? $_POST[$prop] : date("Y-m-d H:i:s")).'"/><br>';
+						echo '</td></tr>';
+						break;
 					case "STRING" :
 						// use a string widget if defined
 						if (class_exists("string_box")) {
@@ -249,6 +258,15 @@ class View {
 						echo '</td></tr>';
 					break;
 					case "DATE" :
+						echo '<tr><td style="width:25%;">';
+						echo $this->BO->data_labels[$prop];
+						echo '</td>';
+
+						echo '<td>';
+						echo '<input type="text" size="16" name="'.$prop.'" value="'.$this->BO->get($prop).'"/><br>';
+						echo '</td></tr>';
+					break;
+					case "TIMESTAMP" :
 						echo '<tr><td style="width:25%;">';
 						echo $this->BO->data_labels[$prop];
 						echo '</td>';
