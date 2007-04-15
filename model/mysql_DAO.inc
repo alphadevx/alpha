@@ -43,7 +43,7 @@ class mysql_DAO
 	var $version_num;
 	/**
 	 * the timestamp of creation
-	 * @var Date
+	 * @var Timestamp
 	 */
 	var $created_ts;
 	/**
@@ -53,7 +53,7 @@ class mysql_DAO
 	var $created_by;
 	/**
 	 * the timestamp of the last update
-	 * @var Date
+	 * @var Timestamp
 	 */
 	var $updated_ts;
 	/**
@@ -77,10 +77,10 @@ class mysql_DAO
 	 */
 	function mysql_DAO() {
 		$this->version_num = new Integer(0);
-		$this->created_ts = new Date();
+		$this->created_ts = new Timestamp();
 		$person_ID = (isset($_SESSION["current_user"])? $_SESSION["current_user"]->get_ID(): 0);
 		$this->created_by = new Integer($person_ID);
-		$this->updated_ts = new Date();
+		$this->updated_ts = new Timestamp();
 		$this->updated_by = new Integer($person_ID);
 	}
 	
@@ -196,7 +196,7 @@ class mysql_DAO
 		// set the "updated by" fields, we can only set the user id if someone is logged in
 		if(isset($_SESSION["current_user"]))
 			$this->updated_by->set_value($_SESSION["current_user"]->get_ID());
-		$this->updated_ts = new Date();
+		$this->updated_ts = new Timestamp();
 
 		if(empty($this->OID) || !isset($this->OID)) {
 			$sql_query = "INSERT INTO ".$this->TABLE_NAME." (";
@@ -823,7 +823,7 @@ class mysql_DAO
 	
 	/**
 	 * method for getting the date/time of when the BO was created
-	 * @return Date
+	 * @return Timestamp
 	 */
 	function get_create_TS() {
 		return $this->created_ts;
@@ -831,7 +831,7 @@ class mysql_DAO
 	
 	/**
 	 * method for getting the date/time of when the BO was last updated
-	 * @return Date
+	 * @return Timestamp
 	 */
 	function get_update_TS() {
 		return $this->updated_ts;
