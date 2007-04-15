@@ -111,8 +111,8 @@ class mysql_DAO
 		$properties = get_class_vars(get_class($this));
 
 		foreach(array_keys($properties) as $prop) {
-			if (get_class($this->$prop) != false) {	
-				if (strtoupper(get_class($this->$prop)) != 'DATE' || strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {					
+			if (get_class($this->$prop) != false) {				
+				if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {					
 					$this->$prop->set_value($row[$prop]);
 				}else{
 					$this->$prop->populate_from_string($row[$prop]);
@@ -507,13 +507,13 @@ class mysql_DAO
 			if(!in_array($prop, $this->default_attributes) && !in_array($prop, $this->transient_attributes)) {
 				// checking to see if we need to use addslashes() on the posted data
 				if(!get_magic_quotes_gpc()) {
-					if (strtoupper(get_class($this->$prop)) != 'DATE' || strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
+					if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
 						$this->$prop->set_value(addslashes($_POST[$prop]));					
 					}else{						
 						$this->$prop->populate_from_string(addslashes($_POST[$prop]));
 					}
 				}else{
-					if (strtoupper(get_class($this->$prop)) != 'DATE' || strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
+					if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
 						$this->$prop->set_value($_POST[$prop]);					
 					}else{						
 						$this->$prop->populate_from_string($_POST[$prop]);
