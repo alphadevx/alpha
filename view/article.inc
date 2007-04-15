@@ -70,7 +70,7 @@ class article extends View
 		echo '<table style="border: 1px solid white; width:98%; table-layout:fixed; margin:1%; position:absolute; bottom:0px;" cols="3">';
 		echo '<tr>';
 		$prop_obj = $this->BO->get_prop_object("date_added");
-		echo '<td>Date Added: <em>'.$prop_obj->get_date().'</em></td>';
+		echo '<td>Date Added: <em>'.$prop_obj->get_value().'</em></td>';
 		$prop_obj = $this->BO->get_prop_object("section");
 		echo '<td align="center">Site Section: <em>'.$prop_obj->get_value().'</em></td>';
 		echo '<td align="right">';
