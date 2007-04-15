@@ -7,6 +7,7 @@ require_once $sysRoot.'alpha/util/catch_error.inc';
 require_once $sysRoot.'alpha/view/person.inc';
 
 require_once $sysRoot."alpha/model/types/Date.inc";
+require_once $sysRoot."alpha/model/types/Timestamp.inc";
 require_once $sysRoot."alpha/model/types/Double.inc";
 require_once $sysRoot."alpha/model/types/Integer.inc";
 require_once $sysRoot."alpha/model/types/String.inc";
@@ -53,13 +54,13 @@ class Controller
 	
 	/**
 	 * stores the start time of a unit of work transaction
-	 * @var Date
+	 * @var Timestamp
 	 */
 	var $unit_start_time;
 	
 	/**
 	 * stores the end time of a unit of work transaction
-	 * @var Date
+	 * @var Timestamp
 	 */
 	var $unit_end_time;
 	
@@ -128,7 +129,7 @@ class Controller
 	 * and gets any business objects stored in the session
 	 */
 	 function Controller() {
-	 	$this->unit_start_time = new Date();
+	 	$this->unit_start_time = new Timestamp();
 	 	
 	 	if(!isset($_SESSION))
 	 		session_start();	 	
@@ -256,7 +257,7 @@ class Controller
 	 
 	 /**
 	  * getter for the unit start time
-	  * @return Date $unit_start_time
+	  * @return Timestamp $unit_start_time
 	  */
 	 function get_start_time() {
 	 	return $this->unit_start_time->get_value();
@@ -277,7 +278,7 @@ class Controller
 	 
 	 /**
 	  * getter for the unit end time
-	  * @return Date $unit_end_time
+	  * @return Timestamp $unit_end_time
 	  */
 	 function get_end_time() {
 	 	return $this->unit_end_time->get_value();
@@ -293,7 +294,7 @@ class Controller
 	  * @param int $second
 	  */
 	 function set_unit_end_time($year, $month, $day, $hour, $minute, $second) {
-	 	$this->unit_end_time = new Date();
+	 	$this->unit_end_time = new Timestamp();
 	 	$this->unit_end_time->set_value($year, $month, $day, $hour, $minute, $second);
 	 }
 	 
