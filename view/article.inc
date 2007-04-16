@@ -6,6 +6,9 @@ require_once $sysRoot.'alpha/model/person_object.inc';
 require_once $sysRoot.'alpha/view/View.inc';
 require_once $sysRoot.'alpha/util/markdown_facade.inc';
 
+// temp!
+require_once $sysRoot.'alpha/view/widgets/calendar.php';
+
 /**
  *
  * The rendering class for the article_object class
@@ -167,7 +170,10 @@ class article extends View
 						echo '<input type="text" size="13" name="'.$prop.'" value="'. (isset ($_POST[$prop]) ? $_POST[$prop] : '').'"/><br>';
 						echo '</td></tr>';
 						break;
-					case "DATE" :
+					case "DATE" :						
+						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);						
+					break;
+					case "TIMESTAMP" :
 						echo '<tr><td style="width:25%;">';
 						echo $this->BO->data_labels[$prop];
 						echo '</td>';
@@ -299,7 +305,10 @@ class article extends View
 						echo '<input type="text" size="13" name="'.$prop.'" value="'.$this->BO->get($prop).'"/><br>';
 						echo '</td></tr>';
 					break;
-					case "DATE" :
+					case "DATE" :						
+						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);						
+					break;
+					case "TIMESTAMP" :
 						echo '<tr><td style="width:25%;">';
 						echo $this->BO->data_labels[$prop];
 						echo '</td>';
