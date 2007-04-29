@@ -238,7 +238,7 @@ class person_object extends mysql_DAO
 
 		foreach(array_keys($properties) as $prop) {
 			if (get_class($this->$prop) != false) {	
-				if (strtoupper(get_class($this->$prop)) != 'DATE') {
+				if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
 					$this->$prop->set_value($row[$prop]);
 				}else{
 					$this->$prop->populate_from_string($row[$prop]);
