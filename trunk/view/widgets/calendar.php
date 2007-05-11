@@ -8,6 +8,7 @@ if (!isset($sysRoot))
 require_once $sysRoot.'alpha/util/handle_error.inc';
 
 require_once $sysRoot.'alpha/model/types/Date.inc';
+require_once $sysRoot.'alpha/model/types/Timestamp.inc';
 
 /**
 * Calendar HTML custom widget
@@ -21,15 +22,17 @@ require_once $sysRoot.'alpha/model/types/Date.inc';
 class calendar{
 	
 	/**
-	 * the date object for the widget
-	 * @var date
+	 * the date or timestamp object for the widget
+	 * @var Date/Timestamp
 	 */
 	var $date_object = null;	
+	
 	/**
 	 * the data label for the string object
 	 * @var string
 	 */
 	var $label;
+	
 	/**
 	 * the name of the HTML input box
 	 * @var string
@@ -38,13 +41,20 @@ class calendar{
 	
 	/**
 	 * the constructor
-	 * @param Date $date_object the date object that will be edited by this calender
+	 * @param object $object the date or timestamp object that will be edited by this calender
 	 * @param string $label the data label for the date object
 	 * @param string $name the name of the HTML input box	 
 	 * @param bool $table_tags determines if table tags are also rendered for the calender
 	 */
-	function calendar($date_object, $label="", $name="", $table_tags=true) {
-		$this->date_object = $date_object;
+	function calendar($object, $label="", $name="", $table_tags=true) {
+		
+		// check the type of the object passed
+		if(strtoupper(get_class($object)) == "DATE" || strtoupper(get_class($object)) == "TIMESTAMP"){
+			$this->date_object = $object;
+		}else{
+			$error = new handle_error($_SERVER["PHP_SELF"],'Calendar widget can only accept a Date or Timestamp object!','calendar()','framework');
+			exit;
+		}
 		$this->label = $label;
 		$this->name = $name;
 				
@@ -61,18 +71,30 @@ class calendar{
 	function render($table_tags) {
 		global $sysURL;
 		
+		/*
+		 * decide on the size of the text box and the height of the widget pop-up, 
+		 * depending on the date_object type
+		 */
+		if(strtoupper(get_class($this->date_object)) == "TIMESTAMP") {
+			$size = 18;
+			$cal_height = 200;
+		}else{
+			$size = 10;
+			$cal_height = 200;
+		}
+		
 		if($table_tags) {
 			echo '<tr><td style="width:25%;">';
 			echo $this->label;
 			echo '</td>';
 
 			echo '<td>';
-			echo '<input type="text" size="10" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->get_value().'" readonly/>';
-			$temp = new button("window.open('".$sysURL."/alpha/view/widgets/calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=200,height=200,left='+event.pageX+',top='+event.pageY+'');", "...", "calBut");
+			echo '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->get_value().'" readonly/>';
+			$temp = new button("window.open('".$sysURL."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=200,height=".$cal_height.",left='+event.pageX+',top='+event.pageY+'');", "...", "calBut");
 			echo '</td></tr>';
 		}else{
-			echo '<input type="text" size="10" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->get_value().'" readonly/>';
-			$temp = new button("window.open('".$sysURL."/alpha/view/widgets/calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=200,height=200,left='+event.pageX+',top='+event.pageY+'');", "...", "calBut");
+			echo '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->get_value().'" readonly/>';
+			$temp = new button("window.open('".$sysURL."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=200,height=".$cal_height.",left='+event.pageX+',top='+event.pageY+'');", "...", "calBut");
 		}
 	}
 	
@@ -147,7 +169,7 @@ class calendar{
 			}
 			$firstweek = false;
 			}
-			if ($wday==0) {
+			if ($wday == 0) {
 				echo "<tr>";
 			}
 						
@@ -163,12 +185,21 @@ class calendar{
 			}
 			$link_date = "$year-$new_month_num-$new_day";
 			
-			if ($year == $this->date_object->year && $month == $this->date_object->month && $day == $this->date_object->day)
-				echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."');\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\"><strong>$day</strong></td>";
-			else
-				echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."');\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\">$day</td>";
+			if ($year == $this->date_object->year && $month == $this->date_object->month && $day == $this->date_object->day) {
+				// today's date
+				if(strtoupper(get_class($this->date_object)) == "TIMESTAMP")
+					echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', true);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\"><strong>$day</strong></td>";
+				else
+					echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', false);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\"><strong>$day</strong></td>";
+			}else{
+				// other dates
+				if(strtoupper(get_class($this->date_object)) == "TIMESTAMP")
+					echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', true);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\">$day</td>";
+				else
+					echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', false);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\">$day</td>";
+			}
 			
-			if ($wday==6) {
+			if ($wday == 6) {
 				echo "</tr>\n";
 			}
 			
@@ -177,9 +208,20 @@ class calendar{
 			$day++;
 		}
 		
-		while ($day > $lastday && $wday!=7) {
+		while ($day > $lastday && $wday != 7) {
 			echo "<td>&nbsp;</td>";
 			$wday++;
+		}
+		
+		// if it is a timestamp that was passed, we need to render the hours:minutes:seconds		
+		if(strtoupper(get_class($this->date_object)) == "TIMESTAMP"){
+			echo '<tr>';
+			echo '<td colspan="7" class="calendar" align="center">';
+			echo '<input id="hours" value="'.$this->date_object->get_hour().'" size="2"/>';
+			echo '<input id="minutes" value="'.$this->date_object->get_minute().'" size="2"/>';
+			echo '<input id="seconds" value="'.$this->date_object->get_second().'" size="2"/>';
+			echo '</td>';
+			echo '</tr>';
 		}
 		
 		echo '<tr>';
@@ -211,8 +253,15 @@ class calendar{
 		echo '<link rel="StyleSheet" type="text/css" href="'.$sysURL.'/config/css/'.$sysTheme.'.css.php">';
 		
 		echo '<script language="javascript">';
-		echo 'function selectDate(date) {';
-		echo '	window.opener.document.getElementById("'.$this->name.'").value = date;';
+		echo 'function selectDate(date, include_time_fields) {';
+		echo '	if(include_time_fields){';
+		echo '		window.opener.document.getElementById("'.$this->name.'").value = date+" "+';
+		echo '			document.getElementById("hours").value+":"+';
+		echo '			document.getElementById("minutes").value+":"+';
+		echo '			document.getElementById("seconds").value;';
+		echo '	}else{';
+		echo '		window.opener.document.getElementById("'.$this->name.'").value = date;';
+		echo '	}';
 		echo '	window.close();';
 		echo '}';
 		echo '</script>';
@@ -228,14 +277,24 @@ class calendar{
 }
 
 // checking to see if the calendar has been accessed directly via a pop-up
-if(basename($_SERVER["PHP_SELF"]) == "calendar.php" && isset($_GET["date"])) {
-	$date = new Date();
-	$date->populate_from_string($_GET["date"]);
-	// check to see if a form field name is provided
-	if(!empty($_GET["name"]))
-		$cal = new calendar($date, "", $_GET["name"]);
-	else
-		$cal = new calendar($date);
+if(basename($_SERVER["PHP_SELF"]) == "calendar.php") {
+	if(isset($_GET["date"])) {
+		// check for the presence of colons to indicate a timestamp rather than a date
+		if(strpos($_GET["date"], ':') === false)
+			$date = new Date();
+		else
+			$date = new Timestamp();
+		
+		$date->populate_from_string($_GET["date"]);
+		// check to see if a form field name is provided
+		if(!empty($_GET["name"]))
+			$cal = new calendar($date, "", $_GET["name"]);
+		else
+			$cal = new calendar($date);
+	}else{
+		$error = new handle_error($_SERVER["PHP_SELF"],'No date/timestamp provided on the query string!','GET','other');
+		exit;
+	}
 }
 
 ?>
