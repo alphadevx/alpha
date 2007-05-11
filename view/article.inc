@@ -6,8 +6,6 @@ require_once $sysRoot.'alpha/model/person_object.inc';
 require_once $sysRoot.'alpha/view/View.inc';
 require_once $sysRoot.'alpha/util/markdown_facade.inc';
 
-// temp!
-require_once $sysRoot.'alpha/view/widgets/calendar.php';
 
 /**
  *
@@ -171,16 +169,10 @@ class article extends View
 						echo '</td></tr>';
 						break;
 					case "DATE" :						
-						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);						
+						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
 					break;
 					case "TIMESTAMP" :
-						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td>';
-
-						echo '<td>';
-						echo '<input type="text" size="16" name="'.$prop.'" value="'. (isset ($_POST[$prop]) ? $_POST[$prop] : date("Y-m-d H:i:s")).'"/><br>';
-						echo '</td></tr>';
+						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
 						break;
 					case "STRING" :
 						// use a string widget if defined
@@ -309,13 +301,7 @@ class article extends View
 						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);						
 					break;
 					case "TIMESTAMP" :
-						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td>';
-
-						echo '<td>';
-						echo '<input type="text" size="16" name="'.$prop.'" value="'.$this->BO->get($prop).'"/><br>';
-						echo '</td></tr>';
+						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
 					break;
 					case "STRING" :
 						// use a string widget if defined
