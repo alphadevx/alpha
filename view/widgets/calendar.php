@@ -164,9 +164,9 @@ class calendar{
 			$link_date = "$year-$new_month_num-$new_day";
 			
 			if ($year == $this->date_object->year && $month == $this->date_object->month && $day == $this->date_object->day)
-				echo "<td class=\"calendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."');\"><strong>$day</strong></td>";
+				echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."');\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\"><strong>$day</strong></td>";
 			else
-				echo "<td class=\"calendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."');\">$day</td>";
+				echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."');\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\">$day</td>";
 			
 			if ($wday==6) {
 				echo "</tr>\n";
