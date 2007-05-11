@@ -14,6 +14,8 @@ require_once $sysRoot."alpha/model/types/Text.inc";
 require_once $sysRoot."alpha/model/types/Enum.inc";
 require_once $sysRoot."alpha/model/types/Boolean.inc";
 
+require_once $sysRoot.'alpha/view/widgets/calendar.php';
+
 /**
  *
  * The master rendering view class for the framework
@@ -117,22 +119,10 @@ class View {
 						echo '</td></tr>';
 						break;
 					case "DATE" :
-						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td>';
-
-						echo '<td>';
-						echo '<input type="text" size="16" name="'.$prop.'" value="'. (isset ($_POST[$prop]) ? $_POST[$prop] : date("Y-m-d H:i:s")).'"/><br>';
-						echo '</td></tr>';
+						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
 						break;
 					case "TIMESTAMP" :
-						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td>';
-
-						echo '<td>';
-						echo '<input type="text" size="16" name="'.$prop.'" value="'. (isset ($_POST[$prop]) ? $_POST[$prop] : date("Y-m-d H:i:s")).'"/><br>';
-						echo '</td></tr>';
+						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
 						break;
 					case "STRING" :
 						// use a string widget if defined
@@ -258,22 +248,10 @@ class View {
 						echo '</td></tr>';
 					break;
 					case "DATE" :
-						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td>';
-
-						echo '<td>';
-						echo '<input type="text" size="16" name="'.$prop.'" value="'.$this->BO->get($prop).'"/><br>';
-						echo '</td></tr>';
+						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
 					break;
 					case "TIMESTAMP" :
-						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td>';
-
-						echo '<td>';
-						echo '<input type="text" size="16" name="'.$prop.'" value="'.$this->BO->get($prop).'"/><br>';
-						echo '</td></tr>';
+						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
 					break;
 					case "STRING" :
 						// use a string widget if defined
