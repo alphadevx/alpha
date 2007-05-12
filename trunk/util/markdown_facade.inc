@@ -2,7 +2,7 @@
 
 // $Id$
 
-require_once $sysRoot.'alpha/util/alpha_markdown.php';
+require_once $sysRoot.'alpha/util/alpha_markdown.inc';
 
 /**
  *
