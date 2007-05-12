@@ -2,8 +2,7 @@
 
 // $Id$
 
-require_once $sysRoot.'alpha/lib/markdown.php';
-require_once $sysRoot.'alpha/lib/geshi.php';
+require_once $sysRoot.'alpha/util/alpha_markdown.php';
 
 /**
  *
@@ -11,7 +10,7 @@ require_once $sysRoot.'alpha/lib/geshi.php';
  * 
  * @package Alpha Util
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins 
+ * @copyright 2007 John Collins 
  * 
  */
  
@@ -51,9 +50,34 @@ class markdown_facade
 		if ($this->check_cache()) {
 			$this->load_cache();
 		}else{
-			$this->content = Markdown($this->BO->get("content", true), $attachURL);
+			$this->content = $this->markdown($this->BO->get("content", true), $attachURL);
 			$this->cache();
 		}
+	}
+	
+	/**
+	 * facade method which will invoke our custom markdown class rather than the standard one
+	 */
+	 function markdown($text, $attachURL="") {
+		/*
+		 * Initialize the parser and return the result of its transform method.
+		 * 
+		 */		
+		static $parser;
+		if (!isset($parser)) {
+			$parser_class = "alpha_markdown";
+			$parser = new $parser_class;
+		}
+		
+		/*
+		 * Replace all instances of $attachURL in the text with the actual URL for the article's 
+		 * attachment directory
+		 * 
+		 */
+		$text = str_replace('$attachURL', $attachURL, $text);
+		
+		// transform text using parser.
+		return $parser->transform($text);
 	}
 	
 	/**
