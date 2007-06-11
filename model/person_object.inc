@@ -266,14 +266,16 @@ class person_object extends mysql_DAO
 	 */
 	function send_mail($message, $subject) {
 		global $sysURL;
+		global $sysReplyTo;
 		
 		$body = "Dear ".$this->get_displayname()."\n\n";
 		
 		$body .= $message;
 		
-		$body .= "\n\nKind regards,\n\nDesign-Ireland.net Administrator\n--\n".$sysURL;
+		$body .= "\n\nKind regards,\n\nAdministrator\n--\n".$sysURL;
 		
-		return mail($this->get_email(), $subject, $body);		
+		return mail($this->get_email(), $subject, $body, "From: $sysReplyTo\r\nReply-To: $sysReplyTo\r\nX-Mailer: PHP/" . phpversion()); 
+		
 	}
 	
 	/**
