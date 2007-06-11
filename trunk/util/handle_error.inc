@@ -45,7 +45,7 @@ require_once $sysRoot.'alpha/util/log_file.inc';
 	 */
 	function handle_error($sys_file, $message, $method, $type="other") {
 		$this->sys_file = $sys_file;
-		$this->message = $message;
+		$this->message = $message;		
 		$this->method = $method;
 		$this->type = $type;
 		
@@ -117,6 +117,9 @@ require_once $sysRoot.'alpha/util/log_file.inc';
 		$ip = $_SERVER["REMOTE_ADDR"];
 		$host = gethostbyaddr($ip);
 		$browser = $_SERVER["HTTP_USER_AGENT"];
+		
+		// before writting the error to the log file, will will strip out any line returns from the message
+		$this->message = str_replace("\n", "", $this->message);
 		
 		$error_log = new log_file($sysErrorLogFile);
 		$error_log->set_max_size($sysErrorLogFileMaxEntires);	
