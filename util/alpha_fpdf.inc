@@ -37,19 +37,19 @@ class alpha_fpdf extends FPDF {
 	function WriteHTML($html)
 	{
 	    //HTML parser
-	    $html=str_replace("\n",' ',$html);
-	    $a=preg_split('/<(.*)>/U',$html,-1,PREG_SPLIT_DELIM_CAPTURE);
+	    $html=str_replace("\n", ' ', $html);
+	    $a = preg_split('/<(.*)>/U', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
 	    foreach($a as $i=>$e)
 	    {
 	        if($i%2==0)
 	        {
 	            //Text
 	            if($this->HREF)
-	                $this->PutLink($this->HREF,$e);
+	                $this->PutLink($this->HREF, $e);
 	            elseif($this->H1)
-	            	$this->Cell(0,10,$e,1,0,'C');
+	            	$this->Cell(0, 10, $e, 1, 0, 'C');
 	            else
-	                $this->Write(5,$e);
+	                $this->Write(5, $e);
 	        }
 	        else
 	        {
@@ -59,9 +59,9 @@ class alpha_fpdf extends FPDF {
 	            else
 	            {
 	                //Extract attributes
-	                $a2=explode(' ',$e);
-	                $tag=strtoupper(array_shift($a2));
-	                $attr=array();
+	                $a2 = explode(' ', $e);
+	                $tag = strtoupper(array_shift($a2));
+	                $attr= array();
 	                foreach($a2 as $v)
 	                    if(ereg('^([^=]*)=["\']?([^"\']*)["\']?$',$v,$a3))
 	                        $attr[strtoupper($a3[1])]=$a3[2];
@@ -86,7 +86,13 @@ class alpha_fpdf extends FPDF {
 	    if($tag=='H2')
 	    	$this->SetFont('Arial','B',12);
 	    if($tag=='P')
-	    	$this->SetFont('Arial','',10);	   
+	    	$this->SetFont('Arial','',10);
+	    if($tag=='IMG') {
+	    	// will use GD to find the dimensions of the image
+	    	$image_details = getimagesize($attr["SRC"]);
+	    	$this->Image($attr["SRC"], $this->GetX(), $this->GetY());
+	    	$this->SetY($this->GetY()+$image_details[1]);
+	    } 
 	}
 
 	function CloseTag($tag)
@@ -101,7 +107,7 @@ class alpha_fpdf extends FPDF {
 	    if($tag=='H2')
 	    	$this->Ln(10);	    
 	    if($tag=='P')	
-	    	$this->Ln(10);
+	    	$this->Ln(10);	    
 	}
 	
 	function SetStyle($tag,$enable)
