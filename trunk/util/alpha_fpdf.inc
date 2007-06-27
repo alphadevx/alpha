@@ -90,7 +90,10 @@ class alpha_fpdf extends FPDF {
 	    if($tag=='IMG') {
 	    	// will use GD to find the dimensions of the image
 	    	$image_details = getimagesize($attr["SRC"]);
+	    	// just making sure that the image will be on a new line
+	    	$this->Ln(1);
 	    	$this->Image($attr["SRC"], $this->GetX(), $this->GetY());
+	    	// set the internal pointer position for the document to be past the height of the image
 	    	$this->SetY($this->GetY()+$image_details[1]);
 	    } 
 	}
