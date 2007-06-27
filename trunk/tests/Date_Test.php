@@ -13,7 +13,8 @@ require_once 'PHPUnit.php';
  * 
  * @package Alpha Core Unit Tests
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins 
+ * @copyright 2007 John Collins
+ * 
  * 
  */
 class Date_Test extends PHPUnit_TestCase
@@ -22,13 +23,7 @@ class Date_Test extends PHPUnit_TestCase
 	 * an Date for testing
 	 * @var Date
 	 */
-	var $date1;
-	
-	/**
-	 * a person for testing
-	 * @var person_object
-	 */
-	var $person;
+	var $date1;	
 	
 	/**
 	 * constructor of the test suite
@@ -44,8 +39,7 @@ class Date_Test extends PHPUnit_TestCase
      * here
      */
     function setUp() {        
-        $this->date1 = new Date();
-        $this->person = new person_object();
+        $this->date1 = new Date();        
     }
     
     /** 
@@ -54,8 +48,7 @@ class Date_Test extends PHPUnit_TestCase
      * here
      */    
     function tearDown() {        
-        unset($this->date1);
-        unset($this->person);
+        unset($this->date1);        
     }
     
     /**
@@ -81,6 +74,14 @@ class Date_Test extends PHPUnit_TestCase
     	$this->date1->populate_from_string("2007-08-13");
     	
     	$this->assertEquals("2007-08-13", $this->date1->get_value(), "testing the populate_from_string method");
+    }
+    
+    /**
+     * testing that the validation will cause an invalid date to fail on the constructor
+     */
+    function test_validation_on_constructor() {
+    	$date = new Date("blah");    	
+    	$this->assertFalse($date->get_year());
     }
 }
 
