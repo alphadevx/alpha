@@ -9,7 +9,7 @@ require_once $sysRoot."config/validation_rules.inc";
  * 
  * @package Alpha Core Datatype
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins
+ * @copyright 2007 John Collins
  * @todo move all of the validation logic to the set_day, set_hour etc. methods.
  * 
  */
@@ -21,13 +21,17 @@ class Date {
  	var $validation_rule;
 	var $validation_helper;
  	
- 	function Date() {
+ 	function Date($date="") {
  		$this->validation_rule = DEFAULT_DATE;
 		$this->validation_helper = 'Error: not a valid date value!  A date should be in the format YYYY-MM-DD HH:MM:SS.';
 		
- 		$this->year=date('Y');
- 		$this->month=date('m');
- 		$this->day=date('d'); 		
+		if(empty($date)) {
+	 		$this->year=date('Y');
+	 		$this->month=date('m');
+	 		$this->day=date('d');	 		
+		}else{
+			$this->populate_from_string($date);
+		}
  	}
  	
  	function set_value($year, $month, $day) {
@@ -78,12 +82,23 @@ class Date {
  		// this is just here for legacy to ensure that any old time value from a Date object is ignored
  		$spilt_by_space = explode(" ", $date);
  		
- 		$date = $spilt_by_space[0];	
+ 		if(isset($spilt_by_space[0])) {
+ 			$date = $spilt_by_space[0];
+ 		}else{
+ 			$error = new handle_error($_SERVER["PHP_SELF"],'Invalid Date value ['.$date.'] provided!' ,'populate_from_string($date)','framework');
+ 			return false; 			
+ 		}
  		
  		$split_by_dash = explode("-", $date);
- 		$year = $split_by_dash[0];
- 		$month = $split_by_dash[1];
- 		$day = $split_by_dash[2]; 		
+ 		
+ 		if(isset($split_by_dash[0]) && isset($split_by_dash[1]) && isset($split_by_dash[2])) {
+	 		$year = $split_by_dash[0];
+	 		$month = $split_by_dash[1];
+	 		$day = $split_by_dash[2];
+ 		}else{
+ 			$error = new handle_error($_SERVER["PHP_SELF"],'Invalid Date value ['.$date.'] provided!' ,'populate_from_string($date)','framework');
+ 			return false; 			
+ 		}
  		
  		if (!preg_match('/^[0-9]{4}$/', $year))
  			$valid = 'Error: the year value '.$year.' provided is invalid!';
