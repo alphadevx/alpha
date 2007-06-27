@@ -13,6 +13,22 @@ require_once $sysRoot.'alpha/tests/Date_Test.php';
 require_once $sysRoot.'alpha/tests/Integer_Test.php';
 require_once 'PHPUnit.php';
 
+/*
+ * we are supressing the display and logging of errors on this page, as we 
+ * are only interested in tests that fail and the reasons given for failing
+ * 
+ */
+$sysErrorValidationDisplay = false;
+$sysErrorValidationLog = false;
+$sysErrorWarningDisplay = false;
+$sysErrorWarningLog = false;
+$sysErrorPhpDisplay = false;
+$sysErrorPhpLog = false;
+$sysErrorFrameworkDisplay = false;
+$sysErrorFrameworkLog = false;
+$sysErrorOtherDisplay = false;
+$sysErrorOtherLog = false;
+
 /**
  *
  * Controller which displays all of the unit test results
