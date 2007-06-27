@@ -249,7 +249,7 @@ class Search extends Controller
 	
 		// log the user's search query in a log file
 		$search_log = new log_file($sysRoot.'alpha/util/logs/search_log.log');		
-		$search_log->write_line(array($this->query, date("y-m-d H:i:s"), $_SERVER["HTTP_USER_AGENT"], $_SERVER["REMOTE_ADDR"]));
+		$search_log->write_line(array($this->query, date("Y-m-d H:i:s"), $_SERVER["HTTP_USER_AGENT"], $_SERVER["REMOTE_ADDR"]));
 		
 		// now we will peform a sort on the parallel arrays, sorted by matching word count!	
 	

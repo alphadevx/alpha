@@ -113,7 +113,7 @@ require_once $sysRoot.'alpha/util/log_file.inc';
 		global $sysErrorLogFileMaxEntires;		
 
 		//sets up the date and time variables		
-		$dateTime = date("d/m/y H:i:s");		
+		$dateTime = date("Y-m-d H:i:s");		
 		$ip = $_SERVER["REMOTE_ADDR"];
 		$host = gethostbyaddr($ip);
 		$browser = $_SERVER["HTTP_USER_AGENT"];
