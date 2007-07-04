@@ -21,6 +21,8 @@ class alpha_fpdf extends FPDF {
 	var $U;
 	var $HREF;
 	var $H1;
+	var $CODE;
+	var $SPAN;
 	
 	function alpha_fpdf($orientation='P',$unit='mm',$format='A4')
 	{
@@ -32,6 +34,8 @@ class alpha_fpdf extends FPDF {
 	    $this->U=0;
 	    $this->HREF='';
 	    $this->H1=0;
+	    $this->CODE=0;
+	    $this->SPAN=0;
 	}
 
 	function WriteHTML($html)
@@ -47,7 +51,9 @@ class alpha_fpdf extends FPDF {
 	            if($this->HREF)
 	                $this->PutLink($this->HREF, $e);
 	            elseif($this->H1)
-	            	$this->Cell(0, 10, $e, 1, 0, 'C');
+	            	$this->Cell(0, 10, $e, 1, 0, 'C');	            
+	            elseif($this->CODE && $this->SPAN)
+	            	$this->Write(5, html_entity_decode($e));
 	            else
 	                $this->Write(5, $e);
 	        }
@@ -74,7 +80,7 @@ class alpha_fpdf extends FPDF {
 	function OpenTag($tag,$attr)
 	{
 	    //Opening tag
-	    if($tag=='B' or $tag=='I' or $tag=='U' or $tag=='H1')
+	    if($tag=='B' or $tag=='STRONG' or $tag=='I' or $tag=='U' or $tag=='H1')
 	        $this->SetStyle($tag,true);
 	    if($tag=='A')
 	        $this->HREF=$attr['HREF'];
@@ -95,13 +101,22 @@ class alpha_fpdf extends FPDF {
 	    	$this->Image($attr["SRC"], $this->GetX(), $this->GetY());
 	    	// set the internal pointer position for the document to be past the height of the image
 	    	$this->SetY($this->GetY()+$image_details[1]);
-	    } 
+	    }
+	    if($tag=='CODE') {
+	    	$this->SetFont('Arial','',10);
+	    	$this->SetTextColor(0,0,255);
+	    	$this->Ln(10);
+	    	$this->CODE = 1;
+	    }
+	    if($tag=='SPAN') {	    	
+	    	$this->SPAN = 1;
+	    }
 	}
 
 	function CloseTag($tag)
 	{
 	    //Closing tag
-	    if($tag=='B' or $tag=='I' or $tag=='U' or $tag=='H1')
+	    if($tag=='B' or $tag=='STRONG' or $tag=='I' or $tag=='U' or $tag=='H1')
 	        $this->SetStyle($tag,false);
 	    if($tag=='A')
 	        $this->HREF='';
@@ -110,11 +125,18 @@ class alpha_fpdf extends FPDF {
 	    if($tag=='H2')
 	    	$this->Ln(10);	    
 	    if($tag=='P')	
-	    	$this->Ln(10);	    
+	    	$this->Ln(10);
+	    if($tag=='CODE') {
+	    	$this->Ln(10);
+	    	$this->CODE=0;
+	    	$this->SetTextColor(0,0,0);
+	    }	    
 	}
 	
 	function SetStyle($tag,$enable)
 	{
+		if($tag=="STRONG")
+			$tag = "B";
 	    //Modify style and select corresponding font
 	    $this->$tag+=($enable ? 1 : -1);
 	    $style='';
