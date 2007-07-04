@@ -58,7 +58,11 @@ class Date {
  	
  	function get_value() {
  		return $this->year.'-'.$this->month.'-'.$this->day;
- 	} 	
+ 	}
+ 	
+ 	function get_euro_value() {
+ 		return $this->day.'/'.$this->month.'/'.substr($this->year, 2, 2);
+ 	}
  	 	
  	function get_year() {
  		return $this->year;	

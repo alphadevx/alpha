@@ -83,6 +83,13 @@ class Date_Test extends PHPUnit_TestCase
     	$date = new Date("blah");    	
     	$this->assertFalse($date->get_year());
     }
+    
+    /**
+     * testing the get_euro_value method for converting to European date format
+     */
+    function test_get_euro_value() {
+    	$this->assertEquals(date("d/m/y"), $this->date1->get_euro_value(), "testing the get_euro_value method for converting to European date format");
+    }
 }
 
 ?>
