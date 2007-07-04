@@ -46,6 +46,10 @@ class view_article extends Controller
 		// ensure that a OID is provided
 		if (isset($_GET["oid"])) {
 			$article_oid = $_GET["oid"];
+			if(!is_numeric($article_oid)) {
+				$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the article as the oid ['.$article_oid.'] supplied is not valid!','GET');
+				exit;
+			}
 		}else{
 			$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the article as an oid was not supplied!','GET');
 			exit;
