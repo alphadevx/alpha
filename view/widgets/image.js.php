@@ -69,6 +69,12 @@ class image
 	var $scale;
 	
 	/**
+	 * flag if you want only create the image in the cache but not render it to the browser
+	 * @var Boolean
+	 */
+	var $cache_only;
+	
+	/**
 	 * the auto-generated name of the cache file for the image
 	 * @var string
 	 */
@@ -81,8 +87,10 @@ class image
 	 * @param string $height
 	 * @param string $sourceType
 	 * @param double $quality
+	 * @param Boolean $scale;
+	 * @param Boolean $render_image;
 	 */
-	function image($source="", $width=0, $height=0, $sourceType="png", $quality=0.75, $scale=0) {
+	function image($source="", $width=0, $height=0, $sourceType="png", $quality=0.75, $scale=0, $cache_only=0) {
 		global $sysRoot;
 		
 		$this->source = $source;
@@ -94,6 +102,7 @@ class image
 		$this->sourceType->set_value($sourceType);
 		$this->quality = new Double($quality);
 		$this->scale = new Boolean($scale);	
+		$this->cache_only = new Boolean($cache_only);
 					
 		if (isset($_GET["source"])) $this->source = $_GET["source"];
 		if (isset($_GET["width"])) $this->width->set_value($_GET["width"]);
@@ -104,7 +113,7 @@ class image
 		$this->filename = $sysRoot.'cache/images/'.basename($this->source, ".".$this->sourceType->get_value()).'_'.$this->width->get_value().'x'.$this->height->get_value().'.jpg';
 	
 		// if GET vars where provided, then render the image, otherwise render the JavaScript call for the image creation
-		if (isset($_GET["source"]))
+		if (isset($_GET["source"]) || $this->cache_only->get_value())
 			$this->render_image();
 		else
 			$this->render();
@@ -153,9 +162,12 @@ class image
 			
 				// copy the old image to the new image (in memory, not the file!)	
 				imagecopyresampled($new_image, $old_image, 0, 0, 0, 0, $this->width->get_value(), $this->height->get_value(), $oldWidth, $oldHeight);	
-					
-				header("Content-Type: image/jpeg");
-				imagejpeg($new_image, '', 100*$this->quality->get_value());
+				
+				// just making sure that we are not running in cache-only mode before sending output
+				if(!$this->cache_only->get_value()) {
+					header("Content-Type: image/jpeg");
+					imagejpeg($new_image, '', 100*$this->quality->get_value());
+				}
 				$this->cache($new_image);
 				imagedestroy($old_image);
 				imagedestroy($new_image);
@@ -182,8 +194,10 @@ class image
 	/**
 	 * method to load the content of the image cache file to the standard output stream (the browser)	 
 	 */
-	function load_cache() {		
-		readfile($this->filename);		
+	function load_cache() {
+		// just making sure that we are not running in cache-only mode
+		if(!$this->cache_only->get_value())
+			readfile($this->filename);		
 	}
 	
 	/**
@@ -257,7 +271,21 @@ EOS;
 	 */
 	function get_title() {
 		return $this->title->get_value();
-	}	
+	}
+	
+	/**
+	 * converts a URL for an image to a relative path for the image, assuming it is
+	 * hosted on the same server as the application
+	 * @param string $imgURL
+	 * @return string the path of the image
+	 */
+	function convertImageURLToPath($imgURL) {
+		global $sysURL;
+		
+		$imgPath = str_replace($sysURL, '', $imgURL);
+		
+		return $imgPath;
+	}
 }
 
 // if the GET variables are set for the image, then we can construct a new image object safe in the knowledge that the constructor will pick up on all of the
@@ -265,12 +293,15 @@ EOS;
 if (isset($_GET["source"])) {
 	$temp = new image();
 }else{
-	// if called from a Javascript link, render the Javascript code, else render the HTML
-	// link to the Javascript code contained here.
-	if (isset($_GET["render_javascript"]))
-		image::render_javascript();
-	else
-		echo '<script language="JavaScript" src="'.$sysURL.'/alpha/view/widgets/image.js.php?render_javascript"></script>';
+	// check to make sure that this file is not being included from the PDF controller	
+	if(basename($_SERVER["PHP_SELF"]) != 'view_article_pdf.php') {
+		// if called from a Javascript link, render the Javascript code, else render the HTML
+		// link to the Javascript code contained here.
+		if (isset($_GET["render_javascript"]))
+			image::render_javascript();
+		else
+			echo '<script language="JavaScript" src="'.$sysURL.'/alpha/view/widgets/image.js.php?render_javascript"></script>';
+	}
 }
 	
 ?>
