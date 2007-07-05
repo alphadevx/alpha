@@ -3,6 +3,7 @@
 // $Id: markdown_facade.inc 259 2007-03-03 20:47:13Z john $
 
 require_once $sysRoot.'alpha/lib/fpdf/fpdf.php';
+require_once $sysRoot.'alpha/view/widgets/image.js.php';
 
 /**
  *
@@ -94,11 +95,25 @@ class alpha_fpdf extends FPDF {
 	    if($tag=='P')
 	    	$this->SetFont('Arial','',10);
 	    if($tag=='IMG') {
+	    	$imgSrc = $attr["SRC"];
 	    	// will use GD to find the dimensions of the image
-	    	$image_details = getimagesize($attr["SRC"]);
+	    	$image_details = getimagesize($imgSrc);
+	    	// if the image is a gif or png, use the custom image widget to convert the image to a jpg
+	    	$imgType = $image_details[2];
+	    	if($imgType == 1 || $imgType == 3) {
+	    		if($imgType == 1)
+	    			$type = 'gif';
+	    		elseif($imgType == 3)
+	    			$type = 'png';
+	    			
+	    		$imgPath = image::convertImageURLToPath($imgSrc);
+	    		
+	    		$img = new image($imgPath, $image_details[0], $image_details[1], $type, 0.95, 0, 1);
+	    		$imgSrc = $img->filename;
+	    	}
 	    	// just making sure that the image will be on a new line
 	    	$this->Ln(1);
-	    	$this->Image($attr["SRC"], $this->GetX(), $this->GetY());
+	    	$this->Image($imgSrc, $this->GetX(), $this->GetY());
 	    	// set the internal pointer position for the document to be past the height of the image
 	    	$this->SetY($this->GetY()+$image_details[1]);
 	    }
