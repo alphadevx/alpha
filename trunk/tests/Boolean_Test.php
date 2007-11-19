@@ -5,7 +5,6 @@
 require_once '../model/types/Boolean.inc';
 require_once '../model/person_object.inc';
 require_once '../../config/db_connect.inc';
-require_once 'PHPUnit.php';
 
 /**
  *

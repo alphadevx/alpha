@@ -4,7 +4,6 @@ require_once '../controller/Controller.inc';
 require_once '../view/photo.inc';
 require_once '../config/config.conf';
 require_once '../config/db_connect.inc';
-require_once 'PHPUnit.php';
 
 /**
  *

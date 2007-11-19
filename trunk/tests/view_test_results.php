@@ -7,11 +7,11 @@ require_once $sysRoot.'alpha/model/person_object.inc';
 require_once $sysRoot.'alpha/view/person.inc';
 require_once $sysRoot.'config/db_connect.inc';
 require_once $sysRoot.'alpha/controller/Controller.inc';
+require_once $sysRoot.'alpha/lib/PEAR/PHPUnit/PHPUnit-1.0.0/PHPUnit.php';
 require_once $sysRoot.'alpha/tests/Enum_Test.php';
 require_once $sysRoot.'alpha/tests/Boolean_Test.php';
 require_once $sysRoot.'alpha/tests/Date_Test.php';
 require_once $sysRoot.'alpha/tests/Integer_Test.php';
-require_once 'PHPUnit.php';
 
 /*
  * we are supressing the display and logging of errors on this page, as we 

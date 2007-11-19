@@ -16,7 +16,6 @@ require_once '../../config/config.conf';
 //require_once 'Controller_Tests.php';
 //require_once 'DAO_Tests.php';
 require_once 'Type_Tests.php';
-require_once 'PHPUnit.php';
 
 ?>
 <html>
