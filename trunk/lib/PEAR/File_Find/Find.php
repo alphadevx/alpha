@@ -19,7 +19,7 @@
 // $Id$
 //
 
-require_once 'PEAR.php';
+require_once $sysRoot.'alpha/lib/PEAR/PEAR.php';
 
 define('FILE_FIND_VERSION', '@package_version@');
 
