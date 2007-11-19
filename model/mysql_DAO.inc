@@ -646,8 +646,8 @@ class mysql_DAO
 	 * @param boolean $no_child_methods true if you don't want to use any get_$prop method even if it exists, false otherwise (default)
 	 */
 	function set($prop, $value, $no_child_methods = false) {
-		if(!$no_child_methods && method_exists($this, "set_".$prop)) {
-			return eval("return $this->set_".$prop."($value)");
+		if(!$no_child_methods && method_exists($this, "set_".$prop)) {			
+			return eval("return \$this->set_".$prop."('$value')");
 		}else{
 			if(isset($this->$prop) && method_exists($this->$prop, "set_value")) {
 				$this->$prop->set_value($value);
