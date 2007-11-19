@@ -13,10 +13,10 @@
 */
 
 // include the config file
-include("../../config/config.conf");
+include("../../../config/config.conf");
 
 // include the database connection file
-include("../../config/db_connect.inc");
+include("../../../config/db_connect.inc");
 
 // include the person class file
 include("../../model/person_object.inc");
@@ -25,7 +25,7 @@ include("../../model/person_object.inc");
 include("../../model/article_object.inc");
 
 // include the news class file
-include("../../model/news_object.inc");
+include("../../../model/news_object.inc");
 
 $tmpPerson = new person_object();
 
