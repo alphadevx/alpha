@@ -647,7 +647,7 @@ class mysql_DAO
 	 */
 	function set($prop, $value, $no_child_methods = false) {
 		if(!$no_child_methods && method_exists($this, "set_".$prop)) {			
-			return eval("return \$this->set_".$prop."('$value')");
+			return eval("return \$this->set_".$prop."('$value');");
 		}else{
 			if(isset($this->$prop) && method_exists($this->$prop, "set_value")) {
 				$this->$prop->set_value($value);
