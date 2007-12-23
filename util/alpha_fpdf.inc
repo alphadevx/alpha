@@ -30,19 +30,22 @@ class alpha_fpdf extends FPDF {
 	    //Call parent constructor
 	    $this->FPDF($orientation,$unit,$format);
 	    //Initialization
-	    $this->B=0;
-	    $this->I=0;
-	    $this->U=0;
-	    $this->HREF='';
-	    $this->H1=0;
-	    $this->CODE=0;
-	    $this->SPAN=0;
+	    $this->B = 0;
+	    $this->I = 0;
+	    $this->U = 0;
+	    $this->HREF = '';
+	    $this->H1 = 0;
+	    $this->CODE = 0;
+	    $this->SPAN = 0;
+	    $this->OL = 0;
+	    $this->OLCount = 1;
+	    $this->UL = 0;
+	    $this->LI = 0;
 	}
 
 	function WriteHTML($html)
 	{
-	    //HTML parser
-	    $html=str_replace("\n", ' ', $html);
+	    //HTML parser	   
 	    $a = preg_split('/<(.*)>/U', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
 	    foreach($a as $i=>$e)
 	    {
@@ -119,12 +122,29 @@ class alpha_fpdf extends FPDF {
 	    }
 	    if($tag=='CODE') {
 	    	$this->SetFont('Arial','',10);
-	    	$this->SetTextColor(0,0,255);
-	    	$this->Ln(10);
+	    	$this->SetTextColor(0,0,255);	    	
 	    	$this->CODE = 1;
 	    }
 	    if($tag=='SPAN') {	    	
 	    	$this->SPAN = 1;
+	    }
+	    // handle lists
+	    if($tag=='OL') {
+	    	$this->SetFont('Arial','',10);
+	    	$this->OL = 1;
+	    }
+	    if($tag=='UL') {
+	    	$this->SetFont('Arial','',10);
+	    	$this->UL = 1;
+	    }
+	    if($tag=='LI' && $this->OL) {
+	    	$this->LI = 1;
+	    	$this->Write(5, $this->OLCount.'. ');
+	    	$this->OLCount++;
+	    }
+	    if($tag=='LI' && $this->UL) {
+	    	$this->LI = 1;
+	    	$this->Write(5, 'o ');	    	
 	    }
 	}
 
@@ -142,10 +162,21 @@ class alpha_fpdf extends FPDF {
 	    if($tag=='P')	
 	    	$this->Ln(10);
 	    if($tag=='CODE') {
-	    	$this->Ln(10);
+	    	//$this->Ln(10);
 	    	$this->CODE=0;
 	    	$this->SetTextColor(0,0,0);
 	    }	    
+	    if($tag=='OL') {	    	
+	    	$this->OL = 0;
+	    	// reset the OL counter to 1
+	    	$this->OLCount = 1;
+	    }
+	    if($tag=='UL') {	    	
+	    	$this->UL = 0;
+	    }
+	    if($tag=='LI') {
+	    	$this->LI = 0;	    	
+	    }
 	}
 	
 	function SetStyle($tag,$enable)
