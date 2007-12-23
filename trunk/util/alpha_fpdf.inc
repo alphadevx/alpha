@@ -29,10 +29,7 @@ class alpha_fpdf extends FPDF {
 	{
 	    //Call parent constructor
 	    $this->FPDF($orientation,$unit,$format);
-	    //Initialization
-	    //$this->B = 0;
-	    //$this->I = 0;
-	    //$this->U = 0;
+	    //Initialization	    
 	    $this->HREF = '';
 	    $this->H1 = 0;
 	    $this->CODE = 0;
@@ -121,10 +118,18 @@ class alpha_fpdf extends FPDF {
 	    	}
 	    	// just making sure that the image will be on a new line
 	    	$this->Ln(1);
-	    	$this->Write(5,$image_details[0]);
+	    	/*
+	    	 * check to ensure that there is enough room on the current page to render the image, if
+	    	 * not then insert a page break
+	    	 */
+	    	$remainingY = $this->fh - $this->GetY();	    	
+	    	if($remainingY < ($image_details[1]/$this->k))
+	    		$this->AddPage('P');	    	
 	    	$this->Image($imgSrc, $this->GetX(), $this->GetY());
-	    	// set the internal pointer position for the document to be past the height of the image
-	    	// ($this->k is the scaling factor from the parent class)
+	    	/*
+	    	 * set the internal pointer position for the document to be past the height of the image
+	    	 * ($this->k is the scaling factor from the parent class)
+	    	 */ 
 	    	$this->SetY($this->GetY()+($image_details[1]/$this->k));	    	
 	    }
 	    if($tag=='CODE') {
