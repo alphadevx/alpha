@@ -121,9 +121,11 @@ class alpha_fpdf extends FPDF {
 	    	}
 	    	// just making sure that the image will be on a new line
 	    	$this->Ln(1);
+	    	$this->Write(5,$image_details[0]);
 	    	$this->Image($imgSrc, $this->GetX(), $this->GetY());
 	    	// set the internal pointer position for the document to be past the height of the image
-	    	$this->SetY($this->GetY()+$image_details[1]);
+	    	// ($this->k is the scaling factor from the parent class)
+	    	$this->SetY($this->GetY()+($image_details[1]/$this->k));	    	
 	    }
 	    if($tag=='CODE') {
 	    	$this->SetFont('Arial','',10);
