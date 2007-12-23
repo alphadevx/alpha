@@ -90,11 +90,11 @@ class calendar{
 
 			echo '<td>';
 			echo '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->get_value().'" readonly/>';
-			$temp = new button("window.open('".$sysURL."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=200,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $sysURL."/alpha/images/icons/calendar.png");
+			$tmp = new button("window.open('".$sysURL."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=200,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $sysURL."/alpha/images/icons/calendar.png");
 			echo '</td></tr>';
 		}else{
 			echo '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->get_value().'" readonly/>';
-			$temp = new button("window.open('".$sysURL."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=200,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $sysURL."/alpha/images/icons/calendar.png");
+			$tmp = new button("window.open('".$sysURL."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=200,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $sysURL."/alpha/images/icons/calendar.png");
 		}
 	}
 	
@@ -102,6 +102,8 @@ class calendar{
 	 * renders the HTML for the current month
 	 */
 	function render_month() {
+		global $sysURL;
+		
 		if(isset($_GET["display_month"]))
 			$month = $_GET["display_month"];
 		else
@@ -143,18 +145,18 @@ class calendar{
 			$today++;
 		}
 		
-		echo '<table border="1" cols="7" style="table-layout:fixed; width:200px; height:200px">';
+		echo '<table cols="7" style="table-layout:fixed; width:200px; height:200px">';
 		echo '<tr>';
 		echo '<th colspan="7">'.$month_name.' '.$year.'</th>';
 		echo '</tr>';
 		echo '<tr>';
-		echo '<th class="calendar">Sun</th>';
-		echo '<th class="calendar">Mon</th>';
-		echo '<th class="calendar">Tue</th>';
-		echo '<th class="calendar">Wed</th>';
-		echo '<th class="calendar">Thu</th>';
-		echo '<th class="calendar">Fri</th>';
-		echo '<th class="calendar">Sat</th>';		
+		echo '<th class="headCalendar">Sun</th>';
+		echo '<th class="headCalendar">Mon</th>';
+		echo '<th class="headCalendar">Tue</th>';
+		echo '<th class="headCalendar">Wed</th>';
+		echo '<th class="headCalendar">Thu</th>';
+		echo '<th class="headCalendar">Fri</th>';
+		echo '<th class="headCalendar">Sat</th>';		
 		echo '</tr>';	
 		
 		$day = 1;
@@ -217,24 +219,24 @@ class calendar{
 		if(strtoupper(get_class($this->date_object)) == "TIMESTAMP"){
 			echo '<tr>';
 			echo '<td colspan="7" class="calendar" align="center">';
-			echo '<input id="hours" value="'.$this->date_object->get_hour().'" size="2"/>';
-			echo '<input id="minutes" value="'.$this->date_object->get_minute().'" size="2"/>';
-			echo '<input id="seconds" value="'.$this->date_object->get_second().'" size="2"/>';
+			echo '<input id="hours" value="'.$this->date_object->get_hour().'" size="1"/>:';
+			echo '<input id="minutes" value="'.$this->date_object->get_minute().'" size="1"/>:';
+			echo '<input id="seconds" value="'.$this->date_object->get_second().'" size="1"/>';
 			echo '</td>';
 			echo '</tr>';
 		}
 		
 		echo '<tr>';
 		echo '<td colspan="3" class="calendar">';
-		echo '<a href="calendar.php?date='.$this->date_object->get_value().'&name='.$this->name.'&display_year='.($year-1).'&display_month='.$month.'" class="calendar"><<-</a>';
+		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".($year-1)."&display_month=".$month."';", "Previous year", "yearPreBut", $sysURL."/alpha/images/icons/arrow_left.png");
 		echo 'Year';
-		echo '<a href="calendar.php?date='.$this->date_object->get_value().'&name='.$this->name.'&display_year='.($year+1).'&display_month='.$month.'" class="calendar">->></a>';
+		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".($year+1)."&display_month=".$month."';", "Next year", "yearNextBut", $sysURL."/alpha/images/icons/arrow_right.png");
 		echo '</td>';
 		echo '<td>&nbsp;</td>';
 		echo '<td colspan="3" class="calendar">';
-		echo '<a href="calendar.php?date='.$this->date_object->get_value().'&name='.$this->name.'&display_year='.$year.'&display_month='.($month-1).'" class="calendar"><<-</a>';
+		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".$year."&display_month=".($month-1)."';", "Previous month", "monthPreBut", $sysURL."/alpha/images/icons/arrow_left.png");
 		echo 'Month';
-		echo '<a href="calendar.php?date='.$this->date_object->get_value().'&name='.$this->name.'&display_year='.$year.'&display_month='.($month+1).'" class="calendar">->></a>';
+		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".$year."&display_month=".($month+1)."';", "Next month", "monthNextBut", $sysURL."/alpha/images/icons/arrow_right.png");
 		echo '</td>';
 		echo '</tr>';
 		
@@ -243,7 +245,8 @@ class calendar{
 	
 	function display_page_head() {
 		global $sysURL;
-		global $sysTheme;		
+		global $sysTheme;
+		global $sysRoot;
 		
 		echo '<html>';
 		echo '<head>';
@@ -265,6 +268,8 @@ class calendar{
 		echo '	window.close();';
 		echo '}';
 		echo '</script>';
+		
+		require_once $sysRoot.'alpha/view/widgets/button.js.php';
 		
 		echo '</head>';
 		echo '<body>';		
