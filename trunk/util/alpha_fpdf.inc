@@ -156,13 +156,12 @@ class alpha_fpdf extends FPDF {
 	    if($tag=='A')
 	        $this->HREF='';
 	    if($tag=='H1')    	
-	    	$this->Ln(20);
+	    	$this->Ln(5);
 	    if($tag=='H2')
-	    	$this->Ln(10);	    
+	    	$this->Ln(1);	    
 	    if($tag=='P')	
-	    	$this->Ln(10);
-	    if($tag=='CODE') {
-	    	//$this->Ln(10);
+	    	$this->Ln(1);
+	    if($tag=='CODE') {	    	
 	    	$this->CODE=0;
 	    	$this->SetTextColor(0,0,0);
 	    }	    
