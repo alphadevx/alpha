@@ -30,9 +30,9 @@ class alpha_fpdf extends FPDF {
 	    //Call parent constructor
 	    $this->FPDF($orientation,$unit,$format);
 	    //Initialization
-	    $this->B = 0;
-	    $this->I = 0;
-	    $this->U = 0;
+	    //$this->B = 0;
+	    //$this->I = 0;
+	    //$this->U = 0;
 	    $this->HREF = '';
 	    $this->H1 = 0;
 	    $this->CODE = 0;
@@ -81,9 +81,14 @@ class alpha_fpdf extends FPDF {
 	    }
 	}
 
+	/**
+	 * Open tag
+	 */
 	function OpenTag($tag,$attr)
 	{
-	    //Opening tag
+	    // handle em tags as i tags
+	    if($tag=='EM')
+	    	$tag = 'I';
 	    if($tag=='B' or $tag=='STRONG' or $tag=='I' or $tag=='U' or $tag=='H1')
 	        $this->SetStyle($tag,true);
 	    if($tag=='A')
@@ -148,9 +153,14 @@ class alpha_fpdf extends FPDF {
 	    }
 	}
 
+	/**
+	 * Closing tag
+	 */
 	function CloseTag($tag)
 	{
-	    //Closing tag
+	    // handle em tags as i tags
+	    if($tag=='EM')
+	    	$tag = 'I';
 	    if($tag=='B' or $tag=='STRONG' or $tag=='I' or $tag=='U' or $tag=='H1')
 	        $this->SetStyle($tag,false);
 	    if($tag=='A')
