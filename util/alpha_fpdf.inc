@@ -1,6 +1,6 @@
 <?php
 
-// $Id: markdown_facade.inc 259 2007-03-03 20:47:13Z john $
+// $Id$
 
 require_once $sysRoot.'alpha/lib/fpdf/fpdf.php';
 require_once $sysRoot.'alpha/view/widgets/image.js.php';
@@ -69,9 +69,20 @@ class alpha_fpdf extends FPDF {
 	                $a2 = explode(' ', $e);
 	                $tag = strtoupper(array_shift($a2));
 	                $attr= array();
-	                foreach($a2 as $v)
-	                    if(ereg('^([^=]*)=["\']?([^"\']*)["\']?$',$v,$a3))
-	                        $attr[strtoupper($a3[1])]=$a3[2];
+	                foreach($a2 as $v) {
+	                	// checking for font colours in span elements
+	                	if(substr($v, 0, 1) == '#' && $this->SPAN) {
+	                		// clean the colour value
+	                		$v = str_replace(';','',$v);
+	                		$v = str_replace('"','',$v);
+	                		$v = str_replace('#','',$v);
+			                $RGB = $this->html2rgb($v);
+			                $this->SetTextColor($RGB[0],$RGB[1],$RGB[2]);
+	                	}
+	                    if(ereg('^([^=]*)=["\']?([^"\']*)["\']?$',$v,$a3)) {
+	                        $attr[strtoupper($a3[1])]=$a3[2];	                    	
+	                    }
+	                }
 	                $this->OpenTag($tag,$attr);
 	            }
 	        }
@@ -93,12 +104,17 @@ class alpha_fpdf extends FPDF {
 	    if($tag=='BR')
 	        $this->Ln(5);
 	    if($tag=='H1') {
-	    	$this->SetFont('Arial','B',15);	    	
+	    	$this->SetFont('Arial','B',15);
+	    	$this->SetTextColor(0,0,0);    	
 	    }
-	    if($tag=='H2')
+	    if($tag=='H2') {
 	    	$this->SetFont('Arial','B',12);
-	    if($tag=='P')
+	    	$this->SetTextColor(0,0,0);
+	    }
+	    if($tag=='P') {
 	    	$this->SetFont('Arial','',10);
+	    	$this->SetTextColor(0,0,0);
+	    }
 	    if($tag=='IMG') {
 	    	$imgSrc = $attr["SRC"];
 	    	// will use GD to find the dimensions of the image
@@ -133,8 +149,7 @@ class alpha_fpdf extends FPDF {
 	    	$this->SetY($this->GetY()+($image_details[1]/$this->k));	    	
 	    }
 	    if($tag=='CODE') {
-	    	$this->SetFont('Arial','',10);
-	    	$this->SetTextColor(0,0,255);	    	
+	    	$this->SetFont('Arial','',10);	    	
 	    	$this->CODE = 1;
 	    }
 	    if($tag=='SPAN') {	    	
@@ -179,8 +194,7 @@ class alpha_fpdf extends FPDF {
 	    if($tag=='P')	
 	    	$this->Ln(1);
 	    if($tag=='CODE') {	    	
-	    	$this->CODE=0;
-	    	$this->SetTextColor(0,0,0);
+	    	$this->CODE=0;	    	
 	    }	    
 	    if($tag=='OL') {	    	
 	    	$this->OL = 0;
@@ -216,7 +230,40 @@ class alpha_fpdf extends FPDF {
 	    $this->Write(5,$txt,$URL);
 	    $this->SetStyle('U',false);
 	    $this->SetTextColor(0);
-	}	
+	}
+	
+	function Footer()
+	{
+		$this->SetTextColor(0,0,0);
+	    //Go to 1.5 cm from bottom
+	    $this->SetY(-15);
+	    //Select Arial italic 8
+	    $this->SetFont('Arial','I',8);
+	    //Print centered page number
+	    $this->Cell(0,10,'Page '.$this->PageNo(),0,0,'C');
+	}
+	
+	/**
+	 * Accepts a hexidecimal colour and returns the RGB equivlent in an array
+	 */
+	function html2rgb($colour)
+	{
+	    if ($colour[0] == '#')
+	        $colour = substr($colour, 1);
+	
+	    if (strlen($colour) == 6)
+	        list($r, $g, $b) = array($colour[0].$colour[1],
+	                                 $colour[2].$colour[3],
+	                                 $colour[4].$colour[5]);
+	    elseif (strlen($colour) == 3)
+	        list($r, $g, $b) = array($colour[0], $colour[1], $colour[2]);
+	    else
+	        return false;
+	
+	    $r = hexdec($r); $g = hexdec($g); $b = hexdec($b);
+	
+	    return array($r, $g, $b);
+	}
 }
 
 ?>
