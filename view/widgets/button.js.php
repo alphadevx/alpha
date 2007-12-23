@@ -38,20 +38,28 @@ class button
 	 * @var string
 	 */
 	var $id;
+	/**
+	 * when provided, the button will be a clickable image using this image
+	 * @var string
+	 */
+	var $imgURL;
 	
 	/**
 	 * the constructor
 	 * @param text $action the javascript action to be carried out (set to "submit" to make a submit button, "file" for file uploads)
 	 * @param string $title the title to appear on the button
-	 * @param string $id the javascript id for the button layer	 
+	 * @param string $id the javascript id for the button layer
+	 * @param string $imgURL when provided, the button will be a clickable image using this image
 	 */
-	function button($action, $title, $id) {
+	function button($action, $title, $id, $imgURL='') {
 		$this->action = new Text();
 		$this->action->set_rule("/.*/i");
 		$this->title = new String();
 		$this->title->set_rule("/.*/i");
 		$this->id = new String();
 		$this->id->set_rule("/.*/i");
+		if(!empty($imgURL))
+			$this->imgURL = $imgURL;
 		
 		if (isset($action) && $action != "")
 			$this->action->set_value($action);
@@ -68,16 +76,21 @@ class button
 	 * renders the HTML and javascript for the button	 *
 	 */
 	function render() {
-		switch ($this->action->get_value()) {
-			case "submit":
-				echo '<input type="submit" id="'.$this->get_id().'" name="'.$this->get_id().'" class="norButton" value="'.$this->get_title().'"/>';
-			break;
-			case "file":
-				echo '<input type="file" id="'.$this->get_id().'" name="'.$this->get_id().'" class="norButton" value="'.$this->get_title().'"/>';
-			break;
-			default:
-				echo '<input type="button" id="'.$this->get_id().'" name="'.$this->get_id().'" class="norButton" onClick="'.$this->get_action().';" value="'.$this->get_title().'"/>';
-			break;
+		if(empty($this->imgURL)) {
+			switch ($this->action->get_value()) {
+				case "submit":
+					echo '<input type="submit" id="'.$this->get_id().'" name="'.$this->get_id().'" class="norButton" value="'.$this->get_title().'"/>';
+				break;
+				case "file":
+					echo '<input type="file" id="'.$this->get_id().'" name="'.$this->get_id().'" class="norButton" value="'.$this->get_title().'"/>';
+				break;
+				default:
+					echo '<input type="button" id="'.$this->get_id().'" name="'.$this->get_id().'" class="norButton" onClick="'.$this->get_action().';" value="'.$this->get_title().'"/>';
+				break;
+			}
+		}else{
+			// in the special case where a clickable image is being used
+			echo '<img src="'.$this->imgURL.'" alt="'.$this->title.'" onClick="'.$this->get_action().'" style="cursor:pointer;"/>';
 		}
 	}
 	
