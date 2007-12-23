@@ -75,7 +75,11 @@ class fpdf_facade
 		$this->pdf = new alpha_fpdf();		
 		$this->pdf->AddPage();
 		$this->pdf->SetFont('Arial','',10);
-		$this->pdf->writeHTML($this->content);		
+		// add some custom footer info about the article
+		$footer = '<br><p>Article URL: <a href="'.$this->BO->URL.'">'.$this->BO->URL.'</a><br>Title: '.$this->BO->get("title").'<br>Author: '.$this->BO->get("author").'</p>';
+		$this->pdf->writeHTML($this->content);
+		// write the article footer
+		$this->pdf->writeHTML($footer);
 		
 		$pdf_download_name = str_replace(' ', '_', $this->BO->get("title"));
 		$this->pdf->Output($pdf_download_name.".pdf", "D");		
