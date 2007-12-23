@@ -57,7 +57,12 @@ class fpdf_facade
 		
 		$this->BO = $BO;
 		$this->pdf_filename = $sysRoot.'cache/pdf/'.get_class($this->BO).'_'.$this->BO->get_ID().'_'.$this->BO->get_version().'.pdf';
+		$pdf_download_name = str_replace(' ', '_', $this->BO->get("title").'.pdf');
 		$this->html_filename = $sysRoot.'cache/html/'.get_class($this->BO).'_'.$this->BO->get_ID().'_'.$this->BO->get_version().'.html';
+		
+		// first check the PDF cache, and if its there then re-direct to the file
+		if($this->check_pdf_cache())
+			$this->serve_cached_pdf($pdf_download_name);
 		
 		if(get_class($this->BO) == "article_object")
 			$attachURL = $this->BO->get_attachments_URL();
@@ -79,10 +84,11 @@ class fpdf_facade
 		$footer = '<br><p>Article URL: <a href="'.$this->BO->URL.'">'.$this->BO->URL.'</a><br>Title: '.$this->BO->get("title").'<br>Author: '.$this->BO->get("author").'</p>';
 		$this->pdf->writeHTML($this->content);
 		// write the article footer
-		$this->pdf->writeHTML($footer);
+		$this->pdf->writeHTML($footer);		
 		
-		$pdf_download_name = str_replace(' ', '_', $this->BO->get("title"));
-		$this->pdf->Output($pdf_download_name.".pdf", "D");		
+		// save this PDF to the cache
+		$this->pdf->Output($this->pdf_filename, "F");
+		$this->serve_cached_pdf($pdf_download_name);
 	}
 	
 	/**
@@ -155,6 +161,41 @@ class fpdf_facade
 			$this->content = fread($fp, filesize($this->html_filename));			
 			fclose($fp); //closes the file			
 		}
+	}
+	
+	/**
+	 * used to check the PDF cache for the BO cache file	 
+	 * @return bool true if the file exists, false otherwise
+	 */
+	function check_pdf_cache() {
+		return file_exists($this->pdf_filename);
+	}
+	
+	/**
+	 * used to serve the cached PDF file as a download
+	 */
+	function serve_cached_pdf($name) {
+		// first load the file
+		$handle = fopen ($this->pdf_filename, 'r'); 
+		$data = fread($handle, filesize($this->pdf_filename));
+		fclose($handle);
+		
+		$filesize = strlen($data);
+	    $mimetype = 'application/octet-stream';
+	    	
+	    // Start sending headers
+	    header("Pragma: public"); // required
+	    header("Expires: 0");
+	    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+	    header("Cache-Control: private",false); // required for certain browsers
+	    header("Content-Transfer-Encoding: binary");
+	    header("Content-Type: " . $mimetype);
+	    header("Content-Length: " . $filesize);
+	    header("Content-Disposition: attachment; filename=\"" . $name . "\";" );
+	
+	    // Send data
+	    echo $data;
+	    die();
 	}
 }
 ?>
