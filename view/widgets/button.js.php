@@ -89,8 +89,8 @@ class button
 				break;
 			}
 		}else{
-			// in the special case where a clickable image is being used
-			echo '<img src="'.$this->imgURL.'" alt="'.$this->title.'" onClick="'.$this->get_action().'" style="cursor:pointer;"/>';
+			// in the special case where a clickable image is being used			
+			echo '<img src="'.$this->imgURL.'" alt="'.$this->get_title().'" onClick="'.$this->get_action().'" style="cursor:pointer; vertical-align:bottom;"/>';
 		}
 	}
 	
