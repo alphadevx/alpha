@@ -90,11 +90,11 @@ class calendar{
 
 			echo '<td>';
 			echo '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->get_value().'" readonly/>';
-			$temp = new button("window.open('".$sysURL."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=200,height=".$cal_height.",left='+event.pageX+',top='+event.pageY+'');", "...", "calBut");
+			$temp = new button("window.open('".$sysURL."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=200,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $sysURL."/alpha/images/icons/calendar.png");
 			echo '</td></tr>';
 		}else{
 			echo '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->get_value().'" readonly/>';
-			$temp = new button("window.open('".$sysURL."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=200,height=".$cal_height.",left='+event.pageX+',top='+event.pageY+'');", "...", "calBut");
+			$temp = new button("window.open('".$sysURL."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=200,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $sysURL."/alpha/images/icons/calendar.png");
 		}
 	}
 	
