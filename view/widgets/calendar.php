@@ -167,7 +167,7 @@ class calendar{
 				echo "<tr>";
 				for ($i=1; $i<=$first_week_day; $i++) {
 				
-				echo "<td>&nbsp;</td>";
+				echo "<td class=\"headCalendar\">&nbsp;</td>";
 			}
 			$firstweek = false;
 			}
@@ -211,7 +211,7 @@ class calendar{
 		}
 		
 		while ($day > $lastday && $wday != 7) {
-			echo "<td>&nbsp;</td>";
+			echo "<td class=\"headCalendar\">&nbsp;</td>";
 			$wday++;
 		}
 		
@@ -227,13 +227,13 @@ class calendar{
 		}
 		
 		echo '<tr>';
-		echo '<td colspan="3" class="calendar">';
+		echo '<td colspan="3" align="center">';
 		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".($year-1)."&display_month=".$month."';", "Previous year", "yearPreBut", $sysURL."/alpha/images/icons/arrow_left.png");
 		echo 'Year';
 		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".($year+1)."&display_month=".$month."';", "Next year", "yearNextBut", $sysURL."/alpha/images/icons/arrow_right.png");
 		echo '</td>';
 		echo '<td>&nbsp;</td>';
-		echo '<td colspan="3" class="calendar">';
+		echo '<td colspan="3" align="center">';
 		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".$year."&display_month=".($month-1)."';", "Previous month", "monthPreBut", $sysURL."/alpha/images/icons/arrow_left.png");
 		echo 'Month';
 		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".$year."&display_month=".($month+1)."';", "Next month", "monthNextBut", $sysURL."/alpha/images/icons/arrow_right.png");
@@ -241,7 +241,7 @@ class calendar{
 		echo '</tr>';
 		
 		echo '<tr>';
-		echo '<td colspan="7" align="center">';
+		echo '<td colspan="7" align="center" class="headCalendar">';
 		$tmp = new button("window.close();", "Cancel", "cancelBut", $sysURL."/alpha/images/icons/cancel.png");
 		echo '&nbsp;&nbsp;&nbsp;';		
 		$tmp = new button("window.opener.document.getElementById('".$this->name."').value = date_selected; window.close();", "Accept", "acceptBut", $sysURL."/alpha/images/icons/accept.png");
