@@ -77,10 +77,10 @@ class calendar{
 		 */
 		if(strtoupper(get_class($this->date_object)) == "TIMESTAMP") {
 			$size = 18;
-			$cal_height = 200;
+			$cal_height = 230;
 		}else{
 			$size = 10;
-			$cal_height = 200;
+			$cal_height = 230;
 		}
 		
 		if($table_tags) {
@@ -90,11 +90,11 @@ class calendar{
 
 			echo '<td>';
 			echo '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->get_value().'" readonly/>';
-			$tmp = new button("window.open('".$sysURL."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=200,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $sysURL."/alpha/images/icons/calendar.png");
+			$tmp = new button("window.open('".$sysURL."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=205,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $sysURL."/alpha/images/icons/calendar.png");
 			echo '</td></tr>';
 		}else{
 			echo '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->get_value().'" readonly/>';
-			$tmp = new button("window.open('".$sysURL."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=200,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $sysURL."/alpha/images/icons/calendar.png");
+			$tmp = new button("window.open('".$sysURL."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=205,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $sysURL."/alpha/images/icons/calendar.png");
 		}
 	}
 	
@@ -190,15 +190,15 @@ class calendar{
 			if ($year == $this->date_object->year && $month == $this->date_object->month && $day == $this->date_object->day) {
 				// today's date
 				if(strtoupper(get_class($this->date_object)) == "TIMESTAMP")
-					echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', true);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\"><strong>$day</strong></td>";
+					echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', true, this);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\" style=\"color:white; font-weight:bold;\">$day</td>";
 				else
-					echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', false);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\"><strong>$day</strong></td>";
+					echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', false, this);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\" style=\"color:white; font-weight:bold;\">$day</td>";
 			}else{
 				// other dates
 				if(strtoupper(get_class($this->date_object)) == "TIMESTAMP")
-					echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', true);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\">$day</td>";
+					echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', true, this);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\">$day</td>";
 				else
-					echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', false);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\">$day</td>";
+					echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', false, this);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\">$day</td>";
 			}
 			
 			if ($wday == 6) {
@@ -240,6 +240,14 @@ class calendar{
 		echo '</td>';
 		echo '</tr>';
 		
+		echo '<tr>';
+		echo '<td colspan="7" align="center">';
+		$tmp = new button("window.close();", "Cancel", "cancelBut", $sysURL."/alpha/images/icons/cancel.png");
+		echo '&nbsp;&nbsp;&nbsp;';		
+		$tmp = new button("window.opener.document.getElementById('".$this->name."').value = date_selected; window.close();", "Accept", "acceptBut", $sysURL."/alpha/images/icons/accept.png");
+		echo '</td>';
+		echo '</tr>';
+		
 		echo '</table>';
 	}
 	
@@ -255,17 +263,26 @@ class calendar{
 		
 		echo '<link rel="StyleSheet" type="text/css" href="'.$sysURL.'/config/css/'.$sysTheme.'.css.php">';
 		
+		echo '<script language="JavaScript" src="'.$sysURL.'/alpha/scripts/addOnloadEvent.js"></script>';
+		
 		echo '<script language="javascript">';
-		echo 'function selectDate(date, include_time_fields) {';
-		echo '	if(include_time_fields){';
-		echo '		window.opener.document.getElementById("'.$this->name.'").value = date+" "+';
-		echo '			document.getElementById("hours").value+":"+';
-		echo '			document.getElementById("minutes").value+":"+';
-		echo '			document.getElementById("seconds").value;';
-		echo '	}else{';
-		echo '		window.opener.document.getElementById("'.$this->name.'").value = date;';
+		echo 'var date_selected = "'.$this->date_object->get_value().'";';
+		echo 'function selectDate(date, include_time_fields, clicked_cell) {';		
+		echo '	var cells = document.getElementsByTagName("td");';
+		echo '	for(var i = 0; i < cells.length; i++) {';
+		echo '		cells[i].style.color = "black";';
+		echo '		cells[i].style.fontWeight = "normal";';
 		echo '	}';
-		echo '	window.close();';
+		echo '	clicked_cell.style.color = "white";';
+		echo '	clicked_cell.style.fontWeight = "bold";';
+		echo '	if(include_time_fields){';
+		echo '		date_selected = date+" "+';
+		echo '		document.getElementById("hours").value+":"+';
+		echo '		document.getElementById("minutes").value+":"+';
+		echo '		document.getElementById("seconds").value;';
+		echo '	}else{';
+		echo '		date_selected = date;';
+		echo '	}';
 		echo '}';
 		echo '</script>';
 		
