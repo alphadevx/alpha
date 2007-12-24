@@ -51,8 +51,9 @@ class text_box
 	 * @param int $rows the display size (rows)
 	 * @param bool $table_tags determines if table tags are also rendered for the text_box
 	 * @param int $identifier an additional idenitfier to append to the id of the text box
+	 * @param bool $markdown set to true if you want to render additional buttons for Markdown content
 	 */
-	function text_box($text, $label, $name, $form_id, $rows=5, $table_tags=true, $identifier=0) {
+	function text_box($text, $label, $name, $form_id, $rows=5, $table_tags=true, $identifier=0, $markdown=false) {
 		$this->set_text_object($text);
 		$this->set_label($label);
 		$this->set_name($name);
@@ -63,28 +64,31 @@ class text_box
 			$this->render_javascript();
 		$this->set_rows($rows);
 		
-		$this->render($table_tags);
+		$this->render($table_tags, $markdown);
 	}
 	
 	/**
 	 * renders the HTML and javascript for the text box	 
 	 */
-	function render() {
+	function render($table_tags, $markdown) {
 		global $sysURL;
 		
 		$text_obj = $this->get_text_object(); 
 			
 		echo '<tr><td colspan="2">';
 		echo $this->get_label();
-		echo '</td></tr>';
-	
-		//echo '<a name="text_field_'.$this->get_name().'_'.$this->identifier.'" />';
+		echo '</td></tr>';	
+		
 		echo '<tr><td colspan="2">';
 		echo '<textarea id="text_field_'.$this->get_name().'_'.$this->identifier.'" style="width:100%;" rows="'.$this->get_rows().'" name="'.$this->get_name().'">'.htmlspecialchars(((isset($_POST[$this->get_name()]) && $text_obj->get_value() == "")? $_POST[$this->get_name()] : $text_obj->get_value())).'</textarea><br>';
 		echo '</td></tr>';
 		echo '<tr><td colspan="2">';
 		$tmp = new button("document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows = (parseInt(document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows) + 10);", "Increase text area", $this->get_name()."IncBut", $sysURL."/alpha/images/icons/arrow_down.png");
 		$tmp = new button("if(document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows > 10) {document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows = (parseInt(document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows) - 10)};", "Decrease text area", $this->get_name()."DecBut", $sysURL."/alpha/images/icons/arrow_up.png");
+		// additional buttons for Markdown content fields
+		if($markdown) {
+			$tmp = new button("window.open('".$sysURL."/alpha/controller/view_article_title.php?title=Markdown: Syntax&no-forceframe=true','helpWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=700,height=400,left=20,top=20');", "Syntax help", "helpBut", $sysURL."/alpha/images/icons/help.png");
+		}
 		echo '</td></tr>';
 		
 	}
