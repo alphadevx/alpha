@@ -194,7 +194,10 @@ class article extends View
 							$rows = 18;
 							if ($prop == "header_content")
 								$rows = 5;
-							$temp = new text_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "", $rows);
+							$markdown_content = false;
+							if ($prop == "content")
+								$markdown_content = true;
+							$temp = new text_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "", $rows, true, 0, $markdown_content);
 						} else {
 							echo '<tr><td colspan="2">';
 							echo $this->BO->data_labels[$prop];
@@ -323,7 +326,10 @@ class article extends View
 							$rows = 18;
 							if ($prop == "header_content")
 								$rows = 5;
-							$temp = new text_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "", $rows);
+							$markdown_content = false;
+							if ($prop == "content")
+								$markdown_content = true;
+							$temp = new text_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "", $rows, true, 0, $markdown_content);
 						} else {
 							echo '<tr><td colspan="2">';
 							echo $this->BO->data_labels[$prop];
