@@ -49,7 +49,7 @@ class Front_Controller {
 		foreach($pairs as $pair) {
 			$key_value = explode("=", $pair);
 			$_GET[$key_value[0]] = $key_value[1];
-		}
+		}		
 	}
 	
 	/**
@@ -65,7 +65,10 @@ class Front_Controller {
 		mcrypt_generic_deinit ($td); 
 		mcrypt_module_close ($td);
 	   
-		return base64_encode($encrypted_data);		
+		$return = base64_encode($encrypted_data);
+		// remove any characters that are likely to cause trouble on a URL		
+		$return = strtr($return, '+/', '-_');
+		return $return;
 	}
 	
 	/**
@@ -77,11 +80,13 @@ class Front_Controller {
 		if (!isset($_GET["tk"])) {
 			$error = new handle_error($_SERVER["PHP_SELF"],'No token provided for the front controller!','decode_query()');
 			exit;
-		}else{
-			//$this->get_array = unserialize(base64_decode($_GET["tk"]));
-			$td = mcrypt_module_open ('tripledes', '', 'ecb', '');
-			$iv = mcrypt_create_iv (mcrypt_enc_get_iv_size ($td), MCRYPT_RAND);
-			$this->get_string = trim(mcrypt_decrypt('tripledes', $sysQSKey, base64_decode($_GET["tk"]), 'ecb', $iv));
+		}else{			
+			$td = mcrypt_module_open('tripledes', '', 'ecb', '');
+			$iv = mcrypt_create_iv(mcrypt_enc_get_iv_size ($td), MCRYPT_RAND);
+			// replace any troublesome characters from the URL with the original values
+			$token = strtr($_GET["tk"], '-_', '+/');
+			$token = base64_decode($token);			
+			$this->get_string = trim(mcrypt_decrypt('tripledes', $sysQSKey, $token, 'ecb', $iv));
 		}
 	}
 	
