@@ -70,19 +70,21 @@ class text_box
 	 * renders the HTML and javascript for the text box	 
 	 */
 	function render() {
+		global $sysURL;
+		
 		$text_obj = $this->get_text_object(); 
 			
 		echo '<tr><td colspan="2">';
 		echo $this->get_label();
 		echo '</td></tr>';
 	
+		//echo '<a name="text_field_'.$this->get_name().'_'.$this->identifier.'" />';
 		echo '<tr><td colspan="2">';
 		echo '<textarea id="text_field_'.$this->get_name().'_'.$this->identifier.'" style="width:100%;" rows="'.$this->get_rows().'" name="'.$this->get_name().'">'.htmlspecialchars(((isset($_POST[$this->get_name()]) && $text_obj->get_value() == "")? $_POST[$this->get_name()] : $text_obj->get_value())).'</textarea><br>';
 		echo '</td></tr>';
 		echo '<tr><td colspan="2">';
-		echo '<a href="#text_field_'.$this->get_name().'_'.$this->identifier.'" onclick="document.getElementById(\'text_field_'.$this->get_name().'_'.$this->identifier.'\').rows = (parseInt(document.getElementById(\'text_field_'.$this->get_name().'_'.$this->identifier.'\').rows) + 10);" title="Increase display size">[+]</a>';
-		echo '&nbsp;&nbsp;&nbsp;<a href="text_field_'.$this->get_name().'_'.$this->identifier.'"/>';
-		echo '<a href="#text_field_'.$this->get_name().'_'.$this->identifier.'" onclick="if(document.getElementById(\'text_field_'.$this->get_name().'_'.$this->identifier.'\').rows > 10) {document.getElementById(\'text_field_'.$this->get_name().'_'.$this->identifier.'\').rows = (parseInt(document.getElementById(\'text_field_'.$this->get_name().'_'.$this->identifier.'\').rows) - 10)};" title="Decrease display size">[-]</a>';
+		$tmp = new button("document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows = (parseInt(document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows) + 10);", "Increase text area", $this->get_name()."IncBut", $sysURL."/alpha/images/icons/arrow_down.png");
+		$tmp = new button("if(document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows > 10) {document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows = (parseInt(document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows) - 10)};", "Decrease text area", $this->get_name()."DecBut", $sysURL."/alpha/images/icons/arrow_up.png");
 		echo '</td></tr>';
 		
 	}
