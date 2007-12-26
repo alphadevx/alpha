@@ -219,9 +219,9 @@ class calendar{
 		if(strtoupper(get_class($this->date_object)) == "TIMESTAMP"){
 			echo '<tr>';
 			echo '<td colspan="7" class="calendar" align="center">';
-			echo '<input id="hours" value="'.$this->date_object->get_hour().'" size="1"/>:';
-			echo '<input id="minutes" value="'.$this->date_object->get_minute().'" size="1"/>:';
-			echo '<input id="seconds" value="'.$this->date_object->get_second().'" size="1"/>';
+			echo '<input id="hours" value="'.$this->date_object->get_hour().'" onblur="updateTime()" size="1"/>:';
+			echo '<input id="minutes" value="'.$this->date_object->get_minute().'" onblur="updateTime()" size="1"/>:';
+			echo '<input id="seconds" value="'.$this->date_object->get_second().'" onblur="updateTime()" size="1"/>';
 			echo '</td>';
 			echo '</tr>';
 		}
@@ -283,6 +283,56 @@ class calendar{
 		echo '	}else{';
 		echo '		date_selected = date;';
 		echo '	}';
+		echo '}';
+		echo 'function updateTime() {';
+		// the second param "10" in parseInt prevents a "bug" with values like 08 and 09 being mistaken as hex
+		echo '	var hours = parseInt(document.getElementById("hours").value, 10);';
+		echo '	var minutes = parseInt(document.getElementById("minutes").value, 10);';
+		echo '	var seconds = parseInt(document.getElementById("seconds").value, 10);';
+		
+		// validate hours
+		echo '	if(isNaN(hours) || hours < 0 || hours > 23) {';
+		echo '		document.getElementById("hours").value = "00";';
+		echo '		document.getElementById("hours").style.backgroundColor = "yellow";';
+		echo '		return false;';
+		echo '	}else{';
+		echo '		document.getElementById("hours").style.backgroundColor = "white";';		
+		// zero-padding
+		echo '		if(hours < 10)';
+		echo '			hours = "0"+hours;';
+		echo '		document.getElementById("hours").value = hours;';
+		echo '	}';
+		
+		// validate minutes
+		echo '	if(isNaN(minutes) || minutes < 0 || minutes > 59) {';
+		echo '		document.getElementById("minutes").value = "00";';
+		echo '		document.getElementById("minutes").style.backgroundColor = "yellow";';
+		echo '		return false;';
+		echo '	}else{';
+		echo '		document.getElementById("minutes").style.backgroundColor = "white";';		
+		// zero-padding
+		echo '		if(minutes < 10)';
+		echo '			minutes = "0"+minutes;';
+		echo '		document.getElementById("minutes").value = minutes;';
+		echo '	}';
+		
+		// validate seconds
+		echo '	if(isNaN(seconds) || seconds < 0 || seconds > 59) {';
+		echo '		document.getElementById("seconds").value = "00";';
+		echo '		document.getElementById("seconds").style.backgroundColor = "yellow";';
+		echo '		return false;';
+		echo '	}else{';
+		echo '		document.getElementById("seconds").style.backgroundColor = "white";';		
+		// zero-padding
+		echo '		if(seconds < 10)';
+		echo '			seconds = "0"+seconds;';
+		echo '		document.getElementById("seconds").value = seconds;';
+		echo '	}';
+		
+		// replace the old time with the new value
+		echo '	date_selected = date_selected.substring(0, 10);';
+		echo '	date_selected = date_selected+" "+hours+":"+minutes+":"+seconds;';
+		echo '	return true;';		
 		echo '}';
 		echo '</script>';
 		
