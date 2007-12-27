@@ -267,6 +267,9 @@ class mysql_DAO
 	 * @return boolean true if the object is valid, false otherwise
 	 */
 	function validate() {
+		if(method_exists($this, 'before_validate_callback'))
+				$this->before_validate_callback();
+		
 		$valid = true;
 		
 		$properties = get_object_vars($this);		
@@ -281,6 +284,10 @@ class mysql_DAO
 				}
 			}
 		}
+		
+		if(method_exists($this, 'after_validate_callback'))
+				$this->after_validate_callback();
+		
 		return $valid;
 	}
 	
