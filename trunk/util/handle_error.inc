@@ -2,7 +2,11 @@
 
 // $Id$
 
-require_once $sysRoot.'alpha/util/log_file.inc';
+// load config
+require_once 'configLoader.inc';
+$config =&configLoader::getInstance();
+
+require_once $config->get('sysRoot').'alpha/util/log_file.inc';
 
 /**
  *
@@ -109,8 +113,7 @@ require_once $sysRoot.'alpha/util/log_file.inc';
 	 * method to log an error to a text file
 	 */
 	function log_error_to_file() {
-		global $sysErrorLogFile;
-		global $sysErrorLogFileMaxEntires;		
+		global $config;		
 
 		//sets up the date and time variables		
 		$dateTime = date("Y-m-d H:i:s");		
@@ -121,8 +124,8 @@ require_once $sysRoot.'alpha/util/log_file.inc';
 		// before writting the error to the log file, will will strip out any line returns from the message
 		$this->message = str_replace("\n", "", $this->message);
 		
-		$error_log = new log_file($sysErrorLogFile);
-		$error_log->set_max_size($sysErrorLogFileMaxEntires);	
+		$error_log = new log_file($config->get('sysErrorLogFile'));
+		$error_log->set_max_size($config->get('sysErrorLogFileMaxEntires'));	
 		$error_log->write_line(array($dateTime, $this->sys_file, $this->method, $this->message, $this->type, $ip, $host, $browser));
 	}	
 }

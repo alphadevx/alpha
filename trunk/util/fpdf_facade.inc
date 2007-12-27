@@ -2,7 +2,7 @@
 
 // $Id: markdown_facade.inc 302 2007-05-12 16:07:15Z john $
 
-require_once $sysRoot.'alpha/util/alpha_fpdf.inc';
+require_once $config->get('sysRoot').'alpha/util/alpha_fpdf.inc';
 
 /**
  *
@@ -53,12 +53,12 @@ class fpdf_facade
 	 * @param object $BO the business object that stores the content will be rendered to Markdown
 	 */
 	function fpdf_facade($BO) {
-		global $sysRoot;
+		global $config;
 		
 		$this->BO = $BO;
-		$this->pdf_filename = $sysRoot.'cache/pdf/'.get_class($this->BO).'_'.$this->BO->get_ID().'_'.$this->BO->get_version().'.pdf';
+		$this->pdf_filename = $config->get('sysRoot').'cache/pdf/'.get_class($this->BO).'_'.$this->BO->get_ID().'_'.$this->BO->get_version().'.pdf';
 		$pdf_download_name = str_replace(' ', '_', $this->BO->get("title").'.pdf');
-		$this->html_filename = $sysRoot.'cache/html/'.get_class($this->BO).'_'.$this->BO->get_ID().'_'.$this->BO->get_version().'.html';
+		$this->html_filename = $config->get('sysRoot').'cache/html/'.get_class($this->BO).'_'.$this->BO->get_ID().'_'.$this->BO->get_version().'.html';
 		
 		// first check the PDF cache, and if its there then re-direct to the file
 		if($this->check_pdf_cache())

@@ -2,7 +2,7 @@
 
 // $Id$
 
-require_once $sysRoot.'alpha/util/alpha_markdown.inc';
+require_once $config->get('sysRoot').'alpha/util/alpha_markdown.inc';
 
 /**
  *
@@ -37,10 +37,10 @@ class markdown_facade
 	 * @param object $BO the business object that stores the content will be rendered to Markdown
 	 */
 	function markdown_facade($BO) {
-		global $sysRoot;
+		global $config;
 		
 		$this->BO = $BO;
-		$this->filename = $sysRoot.'cache/html/'.get_class($this->BO).'_'.$this->BO->get_ID().'_'.$this->BO->get_version().'.html';
+		$this->filename = $config->get('sysRoot').'cache/html/'.get_class($this->BO).'_'.$this->BO->get_ID().'_'.$this->BO->get_version().'.html';
 		
 		if(get_class($this->BO) == "article_object")
 			$attachURL = $this->BO->get_attachments_URL();

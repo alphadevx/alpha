@@ -2,11 +2,11 @@
 
 // $Id$
 
-require_once $sysRoot.'alpha/util/catch_error.inc';
-require_once $sysRoot.'config/db_connect.inc';
-require_once $sysRoot.'alpha/util/handle_error.inc';
-require_once $sysRoot.'alpha/view/View.inc';
-require_once $sysRoot.'alpha/util/log_file.inc';
+require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
+require_once $config->get('sysRoot').'config/db_connect.inc';
+require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
+require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/util/log_file.inc';
 
 /**
 * 
@@ -121,15 +121,15 @@ class feed {
 	 * method to return a transient instance of a class provided by name
 	 */
 	function load_BO_class($BO_name) {
-		global $sysRoot;
+		global $config;
 		
-		$handle = opendir($sysRoot.'model');
+		$handle = opendir($config->get('sysRoot').'model');
    		
         // loop over the business object directory
 	    while (false !== ($file = readdir($handle))) {
 	    	if (preg_match("/".$BO_name.".inc/", $file)) {	    		
 	    		
-	    		require_once $sysRoot.'model/'.$BO_name.'.inc';
+	    		require_once $config->get('sysRoot').'model/'.$BO_name.'.inc';
 	    		
 	    		$BO = new $BO_name();				
 		
@@ -139,13 +139,13 @@ class feed {
 	    
 	    // now loop over the core BOs provided with Alpha
 	    
-	    $handle = opendir($sysRoot.'alpha/model');
+	    $handle = opendir($config->get('sysRoot').'alpha/model');
    		
         // loop over the business object directory
 	    while (false !== ($file = readdir($handle))) {
 	    	if (preg_match("/".$BO_name.".inc/", $file)) {	    		
 	    		
-	    		require_once $sysRoot.'alpha/model/'.$BO_name.'.inc';
+	    		require_once $config->get('sysRoot').'alpha/model/'.$BO_name.'.inc';
 	    		
 	    		$BO = new $BO_name();				
 		
