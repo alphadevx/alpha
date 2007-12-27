@@ -2,8 +2,8 @@
 
 // $Id$
 
-require_once $sysRoot.'alpha/model/mysql_DAO.inc';
-require_once $sysRoot.'alpha/model/article_comment_object.inc';
+require_once $config->get('sysRoot').'alpha/model/mysql_DAO.inc';
+require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
 
 /**
  *
@@ -265,17 +265,15 @@ class person_object extends mysql_DAO
 	 * @return boolean true if succeeded in sending the e-mail, false otherwise
 	 */
 	function send_mail($message, $subject) {
-		global $sysURL;
-		global $sysReplyTo;
+		global $config;
 		
 		$body = "Dear ".$this->get_displayname()."\n\n";
 		
 		$body .= $message;
 		
-		$body .= "\n\nKind regards,\n\nAdministrator\n--\n".$sysURL;
+		$body .= "\n\nKind regards,\n\nAdministrator\n--\n".$config->get('sysURL');
 		
-		return mail($this->get_email(), $subject, $body, "From: $sysReplyTo\r\nReply-To: $sysReplyTo\r\nX-Mailer: PHP/" . phpversion()); 
-		
+		return mail($this->get_email(), $subject, $body, "From: $sysReplyTo\r\nReply-To: $sysReplyTo\r\nX-Mailer: PHP/" . phpversion());
 	}
 	
 	/**

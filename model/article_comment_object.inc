@@ -2,8 +2,8 @@
 
 // $Id$
 
-require_once $sysRoot.'alpha/model/mysql_DAO.inc';
-require_once $sysRoot.'alpha/util/handle_error.inc';
+require_once $config->get('sysRoot').'alpha/model/mysql_DAO.inc';
+require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 
 /**
  *

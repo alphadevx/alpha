@@ -2,10 +2,10 @@
 
 // $Id$
 
-require_once $sysRoot.'alpha/model/mysql_DAO.inc';
-require_once $sysRoot.'alpha/util/handle_error.inc';
-require_once $sysRoot.'alpha/model/article_vote_object.inc';
-require_once $sysRoot.'alpha/model/article_comment_object.inc';
+require_once $config->get('sysRoot').'alpha/model/mysql_DAO.inc';
+require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
+require_once $config->get('sysRoot').'alpha/model/article_vote_object.inc';
+require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
 
 /**
  *
@@ -162,9 +162,9 @@ class article_object extends mysql_DAO
 	 * set up the transient URL attribute for the artcile after it has loaded
 	 */
 	function after_load_callback() {
-		global $sysURL;
+		global $config;
 		
-		$this->URL = $sysURL.'/alpha/controller/view_article.php?oid='.$this->get_ID();
+		$this->URL = $config->get('sysURL').'/alpha/controller/view_article.php?oid='.$this->get_ID();
 	}
 	
 	/**
@@ -227,9 +227,9 @@ class article_object extends mysql_DAO
 	 * @return string returns the location of the attachments folder
 	 */
 	function get_attachments_location() {
-		global $sysRoot;
+		global $config;
 		
-		return $sysRoot."attachments/article_".$this->get_Id();
+		return $config->get('sysRoot')."attachments/article_".$this->get_Id();
 	}
 	
 	/**
@@ -237,9 +237,9 @@ class article_object extends mysql_DAO
 	 * @return string returns the URL of the attachments folder
 	 */
 	function get_attachments_URL() {
-		global $sysURL;
+		global $config;
 		
-		return $sysURL."/attachments/article_".$this->get_Id();
+		return $config->get('sysURL')."/attachments/article_".$this->get_Id();
 	}
 	
 	/**
@@ -434,14 +434,14 @@ class article_object extends mysql_DAO
 	 */
 	function load_all($start=0, $limit=0, $order_by="OID", $order="DESC")
 	{
-		global $sysListPageAmount;
+		global $config;
 		
 		// if accessing from the adin backend, use the parent method which includes all articles
 		if(basename($_SERVER["PHP_SELF"]) == "ListAll.php")
 			return parent::load_all($start, $limit, $order_by, $order);
 		
 		if ($limit == 0)
-			$limit = $sysListPageAmount;
+			$limit = $config->get('sysListPageAmount');
 		
 		// exclude 'General' articles when we are accessing from a news feed
 		if(basename($_SERVER["PHP_SELF"]) == "view_feed.php" || (isset($_GET["act"]) && $_GET["act"] == "view_feed"))
