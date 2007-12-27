@@ -16,7 +16,7 @@ class metrics {
 	// the file extensions of the file types to include in the calculations
 	var $include_file_types = array(".php", ".conf", ".html", ".inc", ".js", ".css",".schema",".before");
 	// any sub-directories which you might want to exclude from the calculations
-	var $exclude_sub_directories = array("cache","lib","docs");
+	var $exclude_sub_directories = array("cache","lib","docs","attachments");
 	// the Total Lines of Code (TLOC) for the project
 	var $TLOC = 0;
 	// the Total Lines of Code (TLOC) for the project, less comments defined in $comments
