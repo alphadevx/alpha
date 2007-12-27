@@ -2,13 +2,16 @@
 
 // $Id$
 
-if(empty($sysRoot))
-	require_once '../../config/config.conf';
-require_once $sysRoot.'config/db_connect.inc';
-require_once $sysRoot.'alpha/controller/Controller.inc';
-require_once $sysRoot.'alpha/view/article.inc';
-require_once $sysRoot.'alpha/model/article_object.inc';
-require_once $sysRoot.'alpha/util/input_filter.inc';
+// include the config file
+if(!isset($config))
+	require_once '../util/configLoader.inc';
+$config =&configLoader::getInstance();
+
+require_once $config->get('sysRoot').'config/db_connect.inc';
+require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/view/article.inc';
+require_once $config->get('sysRoot').'alpha/model/article_object.inc';
+require_once $config->get('sysRoot').'alpha/util/input_filter.inc';
 
 /**
 * 
@@ -41,7 +44,7 @@ class view_article extends Controller
 	 * constructor that renders the page	
 	 */
 	function view_article() {
-		global $sysTheme;
+		global $config;
 		
 		// ensure that a OID is provided
 		if (isset($_GET["oid"])) {
@@ -63,7 +66,7 @@ class view_article extends Controller
 		else
 			$this->force_frame = true;
 			
-		$this->style_sheet = $sysTheme;
+		$this->style_sheet = $config->get('sysTheme');
 		
 		$this->article = new article_object();
 		$this->article->load_object($article_oid);
@@ -83,12 +86,7 @@ class view_article extends Controller
 	 * method to render the header mark-up
 	 */
 	function display_page_head() {
-		global $sysURL;		
-		global $sysUseWidgets;
-		global $sysRoot;
-		global $sysForceFrame;
-		global $sysTitle;
-		global $sysCMSHeader;
+		global $config;
 		
 		echo '<html>';
 		echo '<head>';
@@ -98,7 +96,7 @@ class view_article extends Controller
 		echo '<meta name="Description" content="'.$this->get_description().'">';
 		echo '<meta name="Author" content="john collins">';
 		echo '<meta name="copyright" content="copyright ">';
-		echo '<meta name="identifier" content="http://'.$sysURL.'/">';
+		echo '<meta name="identifier" content="http://'.$config->get('sysURL').'/">';
 		echo '<meta name="revisit-after" content="7 days">';
 		echo '<meta name="expires" content="never">';
 		echo '<meta name="language" content="en">';
@@ -107,17 +105,17 @@ class view_article extends Controller
 		echo '<meta name="robots" content="index,follow">';
 		echo '<meta http-equiv="imagetoolbar" content="no">';			
 		
-		echo '<link rel="StyleSheet" type="text/css" href="'.$sysURL.'/config/css/'.$this->style_sheet.'.css.php">';
-		if($this->force_frame && $sysForceFrame)
-			echo '<script language="JavaScript" src="'.$sysURL.'/alpha/scripts/force-frame.js"></script>';
+		echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$this->style_sheet.'.css.php">';
+		if($this->force_frame && $config->get('sysForceFrame'))
+			echo '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/force-frame.js"></script>';
 		
-		if ($sysUseWidgets) {
-			echo '<script language="JavaScript" src="'.$sysURL.'/alpha/scripts/addOnloadEvent.js"></script>';
-			require_once $sysRoot.'alpha/view/widgets/button.js.php';
-			require_once $sysRoot.'alpha/view/widgets/string_box.js.php';
-			require_once $sysRoot.'alpha/view/widgets/text_box.js.php';
+		if ($config->get('sysUseWidgets')) {
+			echo '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
+			require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
+			require_once $config->get('sysRoot').'alpha/view/widgets/string_box.js.php';
+			require_once $config->get('sysRoot').'alpha/view/widgets/text_box.js.php';
 		
-			require_once $sysRoot.'alpha/view/widgets/form_validator.js.php';
+			require_once $config->get('sysRoot').'alpha/view/widgets/form_validator.js.php';
 		
 			echo '<script type="text/javascript">';
 			$validator = new form_validator(new article_comment_object());
@@ -129,7 +127,7 @@ class view_article extends Controller
 		
 		echo '</head>';
 		echo '<body'.(!empty($this->article->body_onload) ? ' onload="'.$this->article->body_onload->get_value().'"' : '').'>';
-		echo '<p><a href="'.$sysURL.'">'.$sysTitle.'</a> &nbsp; &nbsp;';
+		echo '<p><a href="'.$config->get('sysURL').'">'.$config->get('sysTitle').'</a> &nbsp; &nbsp;';
 		$prop_obj = $this->article->get_prop_object("section");
 		echo 'Site Section: <em>'.$prop_obj->get_value().'</em> &nbsp; &nbsp;';
 		$prop_obj = $this->article->get_prop_object("date_added");
@@ -137,7 +135,7 @@ class view_article extends Controller
 		$prop_obj = $this->article->get_prop_object("date_updated");
 		echo 'Last Updated: <em>'.$prop_obj->get_value().'</em> &nbsp; &nbsp;';
 		echo 'Revision: <em>'.$this->article->get_version().'</em></p>';
-		echo $sysCMSHeader;
+		echo $config->get('sysCMSHeader');
 		
 		if(!empty($_POST))
 			$this->handle_post();
@@ -147,18 +145,15 @@ class view_article extends Controller
 	 * method to display the page footer
 	 */
 	function display_page_foot() {
-		global $sysURL;
-		global $sysCMSFooter;
-		global $sysCMSVotingAllowed;
-		global $sysCMSDisplayVotes;
+		global $config;
 		
 		$rating = $this->article->get_score();
 		$votes = $this->article->get_votes();
 		
-		if($sysCMSDisplayVotes)
+		if($config->get('sysCMSDisplayVotes'))
 			echo '<p>Average Article User Rating: <strong>'.$rating.'</strong> out of 10 (based on <strong>'.count($votes).'</strong> votes)</p>';
 		
-		if(!$this->article->check_user_voted() && $sysCMSVotingAllowed) {
+		if(!$this->article->check_user_voted() && $config->get('sysCMSVotingAllowed')) {
 			echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="post">';
 			echo '<p>Please rate this article from 1-10 (10 being the best):' .
 					'<select name="user_vote">' .
@@ -179,15 +174,15 @@ class view_article extends Controller
 		}
 		
 		echo "&nbsp;&nbsp;";
-		$temp = new button("window.open('".$sysURL."/alpha/controller/view_article_print.php?title=".$this->article->get("title")."')","Open Printer Version","printBut");
+		$temp = new button("window.open('".$config->get('sysURL')."/alpha/controller/view_article_print.php?title=".$this->article->get("title")."')","Open Printer Version","printBut");
 		
 		echo "&nbsp;&nbsp;";
-		$temp = new button("document.location = '".$sysURL."/alpha/controller/view_article_pdf.php?title=".$this->article->get("title")."';","Open PDF Version","pdfBut");
+		$temp = new button("document.location = '".$config->get('sysTitle')."/alpha/controller/view_article_pdf.php?title=".$this->article->get("title")."';","Open PDF Version","pdfBut");
 		
 		echo '<p>Article URL: <a href="'.$this->article->URL.'">'.$this->article->URL.'</a><br>';
 		echo 'Title: '.$this->article->get("title").'<br>';
 		echo 'Author: '.$this->article->get("author").'<br>';
-		echo $sysCMSFooter.'</p>';
+		echo $config->get('sysCMSFooter').'</p>';
 		echo '</body>';
 		echo '</html>';
 	}
@@ -251,13 +246,12 @@ class view_article extends Controller
 	 * method for displaying the user comments for the article
 	 */
 	function display_comments() {
-		global $sysCMSCommentsAllowed;
-		global $sysCMSDisplayComments;
+		global $config;
 		
 		$comments = $this->article->get_comments();
 		$comment_count = count($comments);
 		
-		if($sysCMSDisplayComments && $comment_count > 0) {
+		if($config->get('sysCMSDisplayComments') && $comment_count > 0) {
 			echo "<h2>There are [".$comment_count."] user comments for this article</h2>";
 			
 			for($i = 0; $i < $comment_count; $i++) {
@@ -266,7 +260,7 @@ class view_article extends Controller
 			}
 		}
 		
-		if(isset($_SESSION["current_user"]) && $sysCMSCommentsAllowed) {
+		if(isset($_SESSION["current_user"]) && $config->get('sysCMSCommentsAllowed')) {
 			$comment = new article_comment_object();
 			$comment->set("article_oid", $this->article->get_ID());
 			

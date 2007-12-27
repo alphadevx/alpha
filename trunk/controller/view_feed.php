@@ -1,12 +1,15 @@
 <?php
 
-if(!isset($sysRoot))
-	require_once '../../config/config.conf';
-require_once $sysRoot.'alpha/controller/Controller.inc';
-require_once $sysRoot.'alpha/util/feeds/RSS2.inc';
-require_once $sysRoot.'alpha/util/feeds/RSS.inc';
-require_once $sysRoot.'alpha/util/feeds/Atom.inc';
-require_once $sysRoot.'alpha/util/log_file.inc';
+// include the config file
+if(!isset($config))
+	require_once '../util/configLoader.inc';
+$config =&configLoader::getInstance();
+
+require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/util/feeds/RSS2.inc';
+require_once $config->get('sysRoot').'alpha/util/feeds/RSS.inc';
+require_once $config->get('sysRoot').'alpha/util/feeds/Atom.inc';
+require_once $config->get('sysRoot').'alpha/util/log_file.inc';
 
 /**
  *
@@ -62,7 +65,7 @@ class view_feed extends Controller
 	 * 
 	 */
 	function view_feed() {
-		global $sysRoot;
+		global $config;		
 		
 		if (isset($_GET["bo"])) {
 			$BO_name = $_GET["bo"];	
@@ -107,7 +110,7 @@ class view_feed extends Controller
 		echo $feed->dump();
 		
 		// log the request for this news feed
-		$feed_log = new log_file($sysRoot.'alpha/util/logs/feed_log.log');		
+		$feed_log = new log_file($config->get('sysRoot').'alpha/util/logs/feed_log.log');		
 		$feed_log->write_line(array($this->BO_name, $this->type, date("Y-m-d H:i:s"), $_SERVER["HTTP_USER_AGENT"], $_SERVER["REMOTE_ADDR"]));
 	}
 	
@@ -115,19 +118,19 @@ class view_feed extends Controller
 	 * setup the feed title, field mappings and description based on common BO types 
 	 */
 	function setup() {
-		global $sysTitle;
+		global $config;		
 		
 		// set up some BO to feed fields mappings based on common BO types
 		switch($this->BO_name) {
 			case 'article_object':
-				$this->title = "Latest articles from ".$sysTitle;
-				$this->description = "News feed containing all of the details on the latest articles published on ".$sysTitle.".";
+				$this->title = "Latest articles from ".$config->get('sysTitle');
+				$this->description = "News feed containing all of the details on the latest articles published on ".$config->get('sysTitle').".";
 				$this->field_mappings = array("title", "URL", "description");
 				$this->sort_by = "date_added";
 			break;
 			case 'news_object':
-				$this->title = "Latest news from ".$sysTitle;
-				$this->description = "News feed containing all of the latest news items from ".$sysTitle.".";
+				$this->title = "Latest news from ".$config->get('sysTitle');
+				$this->description = "News feed containing all of the latest news items from ".$config->get('sysTitle').".";
 				$this->field_mappings = array("title", "URL", "content");
 			break;
 		}

@@ -2,8 +2,12 @@
 
 // $Id$
 
-require_once '../../config/config.conf';
-require_once $sysRoot.'alpha/controller/view_article.php';
+// include the config file
+if(!isset($config))
+	require_once '../util/configLoader.inc';
+$config =&configLoader::getInstance();
+
+require_once $config->get('sysRoot').'alpha/controller/view_article.php';
 
 /**
 * 
@@ -19,8 +23,7 @@ class view_article_print extends view_article
 	/**
 	 * constructor that renders the page	
 	 */
-	function view_article_print() {
-		global $sysTheme;
+	function view_article_print() {		
 		
 		// ensure that a title is provided
 		if (isset($_GET["title"])) {
@@ -54,20 +57,18 @@ class view_article_print extends view_article
 	 * method to display the page footer
 	 */
 	function display_page_foot() {
-		global $sysURL;
-		global $sysCMSFooter;		
-		global $sysCMSDisplayVotes;
+		global $config;
 		
 		$rating = $this->article->get_score();
 		$votes = $this->article->get_votes();
 		
-		if($sysCMSDisplayVotes)
+		if($config->get('sysCMSDisplayVotes'))
 			echo '<p>Average Article User Rating: <strong>'.$rating.'</strong> out of 10 (based on <strong>'.count($votes).'</strong> votes)</p>';
 		
 		echo '<p>Article URL: <a href="'.$this->article->URL.'">'.$this->article->URL.'</a><br>';
 		echo 'Title: '.$this->article->get("title").'<br>';
 		echo 'Author: '.$this->article->get("author").'<br>';
-		echo $sysCMSFooter.'</p>';
+		echo $config->get('sysCMSFooter').'</p>';
 		echo '</body>';
 		echo '</html>';
 	}

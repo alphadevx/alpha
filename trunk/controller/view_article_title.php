@@ -2,9 +2,12 @@
 
 // $Id$
 
-if(empty($sysRoot))
-	require_once '../../config/config.conf';
-require_once $sysRoot.'alpha/controller/view_article.php';
+// include the config file
+if(!isset($config))
+	require_once '../util/configLoader.inc';
+$config =&configLoader::getInstance();
+
+require_once $config->get('sysRoot').'alpha/controller/view_article.php';
 
 /**
 * 
@@ -21,7 +24,7 @@ class view_article_title extends view_article
 	 * constructor that renders the page	
 	 */
 	function view_article_title() {
-		global $sysTheme;
+		global $config;
 		
 		// ensure that a title is provided
 		if (isset($_GET["title"])) {
@@ -39,7 +42,7 @@ class view_article_title extends view_article
 		else
 			$this->force_frame = true;
 			
-		$this->style_sheet = $sysTheme;
+		$this->style_sheet = $config->get('sysTheme');
 		
 		$this->article = new article_object();
 		$this->article->load_by_title($title);

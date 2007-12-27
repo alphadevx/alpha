@@ -2,11 +2,15 @@
 
 // $Id: view_article_pdf.php 238 2007-02-03 22:36:54Z john $
 
-require_once '../../config/config.conf';
-require_once $sysRoot.'alpha/util/fpdf_facade.inc';
-require_once $sysRoot.'config/db_connect.inc';
-require_once $sysRoot.'alpha/controller/Controller.inc';
-require_once $sysRoot.'alpha/model/article_object.inc';
+// include the config file
+if(!isset($config))
+	require_once '../util/configLoader.inc';
+$config =&configLoader::getInstance();
+
+require_once $config->get('sysRoot').'alpha/util/fpdf_facade.inc';
+require_once $config->get('sysRoot').'config/db_connect.inc';
+require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/model/article_object.inc';
 
 /**
 * 
@@ -22,8 +26,7 @@ class view_article_pdf extends Controller
 	/**
 	 * constructor that renders the page	
 	 */
-	function view_article_pdf() {
-		global $sysTheme;
+	function view_article_pdf() {		
 		
 		// ensure that a title is provided
 		if (isset($_GET["title"])) {

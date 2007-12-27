@@ -1,13 +1,17 @@
 <?php
 
-require_once '../../config/config.conf';
-require_once $sysRoot.'alpha/view/View.inc';
-require_once $sysRoot.'config/db_connect.inc';
-require_once $sysRoot.'alpha/controller/Controller.inc';
-require_once $sysRoot.'alpha/model/article_object.inc';
+// include the config file
+if(!isset($config))
+	require_once '../util/configLoader.inc';
+$config =&configLoader::getInstance();
+
+require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'config/db_connect.inc';
+require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/model/article_object.inc';
 
 // load the business object (BO) definition
-require_once $sysRoot.'alpha/model/article_object.inc';
+require_once $config->get('sysRoot').'alpha/model/article_object.inc';
 
 // ensure that a OID is also provided
 if (isset($_GET["oid"])) {
@@ -71,8 +75,7 @@ class edit_article_object extends Controller
 	 * method to handle POST requests
 	 */
 	function handle_post() {
-		global $sysRoot;
-		global $sysURL;
+		global $config;
 		
 		// check the hidden security fields before accepting the form POST data
 		if(!$this->check_security_fields()) {
@@ -159,9 +162,8 @@ class edit_article_object extends Controller
 		}
 		
 		if (isset($_POST["cancelBut"])) {
-			$this->abort();
-			//unlink($sysRoot.'photos/'.$this->new_photo->get_title().'_temp.jpg');
-			header('Location: '.$sysURL);
+			$this->abort();			
+			header('Location: '.$config->get('sysURL'));
 		}
 	}	
 }

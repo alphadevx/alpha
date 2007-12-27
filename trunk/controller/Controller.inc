@@ -2,18 +2,18 @@
 
 // $Id$
 
-require_once $sysRoot.'alpha/util/catch_error.inc';
+require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
 
-require_once $sysRoot.'alpha/view/person.inc';
+require_once $config->get('sysRoot').'alpha/view/person.inc';
 
-require_once $sysRoot."alpha/model/types/Date.inc";
-require_once $sysRoot."alpha/model/types/Timestamp.inc";
-require_once $sysRoot."alpha/model/types/Double.inc";
-require_once $sysRoot."alpha/model/types/Integer.inc";
-require_once $sysRoot."alpha/model/types/String.inc";
-require_once $sysRoot."alpha/model/types/Text.inc";
-require_once $sysRoot."alpha/model/types/Enum.inc";
-require_once $sysRoot."alpha/model/types/Boolean.inc";
+require_once $config->get('sysRoot')."alpha/model/types/Date.inc";
+require_once $config->get('sysRoot')."alpha/model/types/Timestamp.inc";
+require_once $config->get('sysRoot')."alpha/model/types/Double.inc";
+require_once $config->get('sysRoot')."alpha/model/types/Integer.inc";
+require_once $config->get('sysRoot')."alpha/model/types/String.inc";
+require_once $config->get('sysRoot')."alpha/model/types/Text.inc";
+require_once $config->get('sysRoot')."alpha/model/types/Enum.inc";
+require_once $config->get('sysRoot')."alpha/model/types/Boolean.inc";
 
 /**
  *
@@ -450,10 +450,7 @@ class Controller
 	 * method to display the page head
 	 */
 	function display_page_head() {
-		global $sysURL;
-		global $sysTheme;
-		global $sysUseWidgets;
-		global $sysRoot;
+		global $config;		
 		
 		echo '<html>';
 		echo '<head>';
@@ -463,7 +460,7 @@ class Controller
 		echo '<meta name="Description" content="'.$this->get_description().'">';
 		echo '<meta name="Author" content="john collins">';
 		echo '<meta name="copyright" content="copyright ">';
-		echo '<meta name="identifier" content="http://'.$sysURL.'/">';
+		echo '<meta name="identifier" content="http://'.$config->get('sysURL').'/">';
 		echo '<meta name="revisit-after" content="7 days">';
 		echo '<meta name="expires" content="never">';
 		echo '<meta name="language" content="en">';
@@ -472,15 +469,15 @@ class Controller
 		echo '<meta name="robots" content="index,follow">';
 		echo '<meta http-equiv="imagetoolbar" content="no">';			
 		
-		echo '<link rel="StyleSheet" type="text/css" href="'.$sysURL.'/config/css/'.$sysTheme.'.css.php">';
+		echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$config->get('sysTheme').'.css.php">';
 		
-		if ($sysUseWidgets && isset($this->BO)) {
-			echo '<script language="JavaScript" src="'.$sysURL.'/alpha/scripts/addOnloadEvent.js"></script>';
-			require_once $sysRoot.'alpha/view/widgets/button.js.php';
-			require_once $sysRoot.'alpha/view/widgets/string_box.js.php';
-			require_once $sysRoot.'alpha/view/widgets/text_box.js.php';
+		if ($config->get('sysUseWidgets') && isset($this->BO)) {
+			echo '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
+			require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
+			require_once $config->get('sysRoot').'alpha/view/widgets/string_box.js.php';
+			require_once $config->get('sysRoot').'alpha/view/widgets/text_box.js.php';
 		
-			require_once $sysRoot.'alpha/view/widgets/form_validator.js.php';
+			require_once $config->get('sysRoot').'alpha/view/widgets/form_validator.js.php';
 		
 			echo '<script type="text/javascript">';
 			$validator = new form_validator($this->BO);
@@ -493,7 +490,7 @@ class Controller
 		echo '<h1>'.$this->get_title().'</h1>';
 		
 		if (isset($_SESSION["current_user"])) {	
-			echo '<p>You are logged in as '.$_SESSION["current_user"]->get_displayname().'.  <a href="'.$sysURL.'/alpha/controller/logout.php">Logout</a></p>';
+			echo '<p>You are logged in as '.$_SESSION["current_user"]->get_displayname().'.  <a href="'.$config->get('sysURL').'/alpha/controller/logout.php">Logout</a></p>';
 		}else{
 			echo '<p>You are not logged in</p>';
 		}
@@ -559,7 +556,7 @@ class Controller
 	 * method to display an access error for trespassing users
 	 */
 	function access_error() {
-		global $sysURL;		
+		global $config;		
 		
 		// set up the title and meta details
 		$this->set_title("Access Error: You Cannot View This Page");
@@ -570,7 +567,7 @@ class Controller
 		$this->display_page_head();
 		
 		$error = new handle_error($_SERVER["PHP_SELF"],'You do not have the correct access rights to view this page.  If you have not logged in yet, try going back to the home page and logging in from there.' ,'access_error()','validation');
-		echo '<p align="center"><a href="'.$sysURL.'">Home Page</a></p>';
+		echo '<p align="center"><a href="'.$config->get('sysURL').'">Home Page</a></p>';
 		
 		$this->display_page_foot();
 	}

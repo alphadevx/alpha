@@ -2,12 +2,15 @@
 
 // $Id$
 
-if(empty($sysRoot))
-	require_once '../../config/config.conf';
-require_once $sysRoot.'config/db_connect.inc';
-require_once $sysRoot.'alpha/controller/Controller.inc';
-require_once $sysRoot.'alpha/model/article_object.inc';
-require_once $sysRoot.'model/news_object.inc';
+// include the config file
+if(!isset($config))
+	require_once '../util/configLoader.inc';
+$config =&configLoader::getInstance();
+
+require_once $config->get('sysRoot').'config/db_connect.inc';
+require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/model/article_object.inc';
+require_once $config->get('sysRoot').'model/news_object.inc';
 
 /**
 * 
@@ -24,7 +27,6 @@ class site_map extends Controller
 	 * constructor that renders the page	
 	 */
 	function site_map() {
-		global $sysURL;
 		
 		// ensure that the super class constructor is called
 		$this->Controller();

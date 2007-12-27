@@ -1,10 +1,16 @@
 <?php
 
-require_once '../../config/config.conf';
-require_once $sysRoot.'alpha/model/person_object.inc';
-require_once $sysRoot.'alpha/view/person.inc';
-require_once $sysRoot.'config/db_connect.inc';
-require_once $sysRoot.'alpha/controller/Controller.inc';
+// $Id$
+
+// include the config file
+if(!isset($config))
+	require_once '../util/configLoader.inc';
+$config =&configLoader::getInstance();
+
+require_once $config->get('sysRoot').'alpha/model/person_object.inc';
+require_once $config->get('sysRoot').'alpha/view/person.inc';
+require_once $config->get('sysRoot').'config/db_connect.inc';
+require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 
 /**
  *
@@ -65,7 +71,7 @@ class login extends Controller
 	 * method to handle the post (adds $current_user person object to the session)
 	 */
 	function handle_post() {		
-		global $sysURL;
+		global $config;
 		
 		// check the hidden security fields before accepting the form POST data
 		if(!$this->check_security_fields()) {
@@ -88,9 +94,9 @@ class login extends Controller
 				if (crypt($_POST["password"], $this->person_object->get_password()) == $this->person_object->get_password()) {				
 					$_SESSION["current_user"] = $this->person_object;
 					if ($this->get_next_job() != '')
-						header('Location: '.$sysURL.'/alpha/controller/'.$this->get_next_job());
+						header('Location: '.$config->get('sysURL').'/alpha/controller/'.$this->get_next_job());
 					else
-						header('Location: '.$sysURL.'/controller/whats_new.php');
+						header('Location: '.$config->get('sysURL').'/controller/whats_new.php');
 				}else{								
 					$error = new handle_error($_SERVER["PHP_SELF"],'Failed to login user '.$_POST["email"].', the password is incorrect!' ,'handle_post()','validation');
 				}
@@ -123,10 +129,10 @@ class login extends Controller
 				
 				if ($success) {
 					echo '<p class="success">The password for the user <strong>'.$_POST["email"].'</strong> has been reset, and the new password has been sent to that e-mail address.</p>';
-					echo '<a href="'.$sysURL.'">Home Page</a>';
+					echo '<a href="'.$config->get('sysURL').'">Home Page</a>';
 				}else{
 					$error = new handle_error($_SERVER["PHP_SELF"],'Server error: unable to send new password, e-mail server may be down!' ,'handle_post()', 'warning');
-					echo '<a href="'.$sysURL.'">Home Page</a>';
+					echo '<a href="'.$config->get('sysURL').'">Home Page</a>';
 				}
 				
 				$this->display_page_foot();
