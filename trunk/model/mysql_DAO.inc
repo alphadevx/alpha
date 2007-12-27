@@ -350,6 +350,9 @@ class mysql_DAO
 	 */	
 	function make_table()
 	{
+		if(method_exists($this, 'before_make_table_callback'))
+				$this->before_make_table_callback();
+		
 		$properties = get_object_vars($this);
 		$obj_type = '';
 		
@@ -405,10 +408,7 @@ class mysql_DAO
 						$sql_query .= "";
 					break;
 				}
-			}
-			//if ($prop == "version_num") {					
-				//$sql_query .= "version_num INT(11) DEFAULT '1',";
-			//}
+			}			
 		}
 
 		$sql_query .= "PRIMARY KEY (OID)) TYPE=InnoDB;";
@@ -418,6 +418,8 @@ class mysql_DAO
 		$result = mysql_query($sql_query);
 
 		if (mysql_error() == '') {
+			if(method_exists($this, 'after_make_table_callback'))
+				$this->after_make_table_callback();
 			return true;
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
