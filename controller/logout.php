@@ -1,10 +1,16 @@
 <?php
 
-require_once '../../config/config.conf';
-require_once $sysRoot.'alpha/model/person_object.inc';
-require_once $sysRoot.'alpha/view/person.inc';
-require_once $sysRoot.'config/db_connect.inc';
-require_once $sysRoot.'alpha/controller/Controller.inc';
+// $Id$
+
+// include the config file
+if(!isset($config))
+	require_once '../util/configLoader.inc';
+$config =&configLoader::getInstance();
+
+require_once $config->get('sysRoot').'alpha/model/person_object.inc';
+require_once $config->get('sysRoot').'alpha/view/person.inc';
+require_once $config->get('sysRoot').'config/db_connect.inc';
+require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 
 /**
  *
@@ -22,7 +28,7 @@ class logout extends Controller
 	 * constructor to set up the object
 	 */
 	function logout() {
-		global $sysURL;
+		global $config;
 		
 		// ensure that the super class constructor is called
 		$this->Controller();
@@ -44,7 +50,7 @@ class logout extends Controller
 		
 		echo '<center><p class="success">You have successfully logged out of the system.</p><br>';
 		
-		echo '<a href="'.$sysURL.'">Home Page</a></center>';
+		echo '<a href="'.$config->get('sysURL').'">Home Page</a></center>';
 		
 		$this->display_page_foot();
 	}	

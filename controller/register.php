@@ -1,10 +1,14 @@
 <?php
 
-require_once '../../config/config.conf';
-require_once $sysRoot.'alpha/model/person_object.inc';
-require_once $sysRoot.'alpha/view/person.inc';
-require_once $sysRoot.'config/db_connect.inc';
-require_once $sysRoot.'alpha/controller/Controller.inc';
+// include the config file
+if(!isset($config))
+	require_once '../util/configLoader.inc';
+$config =&configLoader::getInstance();
+
+require_once $config->get('sysRoot').'alpha/model/person_object.inc';
+require_once $config->get('sysRoot').'alpha/view/person.inc';
+require_once $config->get('sysRoot').'config/db_connect.inc';
+require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 
 /**
  *
@@ -60,7 +64,7 @@ class register extends Controller
 	 * method to handle the post
 	 */
 	function handle_post() {		
-		global $sysURL;
+		global $config;
 		
 		// check the hidden security fields before accepting the form POST data
 		if(!$this->check_security_fields()) {
@@ -88,10 +92,10 @@ class register extends Controller
 					
 				if ($success) {
 					echo '<p class="success">Your new account has been created successfully, and the login details have been sent to the email address provided.</p>';
-					echo '<a href="'.$sysURL.'">Home Page</a>';
+					echo '<a href="'.$config->get('sysURL').'">Home Page</a>';
 				}else{
 					$error = new handle_error($_SERVER["PHP_SELF"],'Server error: unable to send new account details, e-mail server may be down!' ,'handle_post()', 'warning');
-					echo '<a href="'.$sysURL.'">Home Page</a>';
+					echo '<a href="'.$config->get('sysURL').'">Home Page</a>';
 				}
 			}else{
 				$this->person_view->register_view();

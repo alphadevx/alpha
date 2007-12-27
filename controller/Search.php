@@ -2,21 +2,25 @@
 
 // $Id$
 
-require_once '../../config/config.conf';
-require_once $sysRoot.'config/db_connect.inc';
-require_once $sysRoot.'alpha/controller/Controller.inc';
-require_once $sysRoot.'alpha/util/handle_error.inc';
-require_once $sysRoot.'alpha/view/View.inc';
-require_once $sysRoot.'alpha/util/log_file.inc';
+// include the config file
+if(!isset($config))
+	require_once '../util/configLoader.inc';
+$config =&configLoader::getInstance();
+
+require_once $config->get('sysRoot').'config/db_connect.inc';
+require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
+require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/util/log_file.inc';
 
 // load the business object (BO) definition
 if (isset($_GET["bo"])) {
 	$BO_name = $_GET["bo"];
 	
-	if (file_exists($sysRoot.'alpha/model/'.$BO_name.'.inc')) {		
-		require_once $sysRoot.'alpha/model/'.$BO_name.'.inc';
-	}elseif (file_exists($sysRoot.'model/'.$BO_name.'.inc')) {		
-		require_once $sysRoot.'model/'.$BO_name.'.inc';
+	if (file_exists($config->get('sysRoot').'alpha/model/'.$BO_name.'.inc')) {		
+		require_once $config->get('sysRoot').'alpha/model/'.$BO_name.'.inc';
+	}elseif (file_exists($config->get('sysRoot').'model/'.$BO_name.'.inc')) {		
+		require_once $config->get('sysRoot').'model/'.$BO_name.'.inc';
 	}else{
 		$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the defination for the BO class '.$BO_name,'GET');
 		exit;
@@ -115,7 +119,7 @@ class Search extends Controller
 	 * @param string $BO_name the name of the BO that we are creating	 
 	 */
 	function search($BO_name) {
-		global $sysBenchMark;
+		global $config;
 		
 		// check the hidden security fields before accepting the form POST data
 		if(!$this->check_security_fields()) {
@@ -140,7 +144,7 @@ class Search extends Controller
 		// set the start point for the list pagination
 		if (isset($_GET["start"]) ? $this->start_point = $_GET["start"]: $this->start_point = 0);
 		
-		if ($sysBenchMark) {
+		if ($config->get('sysBenchMark')) {
 			require_once('Timer.php');
 		
 			$this->timer = new Benchmark_Timer();
@@ -180,7 +184,7 @@ class Search extends Controller
 	 * the main search and sort method for the search
 	 */
 	function do_search() {
-		global $sysRoot;
+		global $config;
 		
 		$BO = new $this->BO_name();
 	
@@ -248,7 +252,7 @@ class Search extends Controller
 		}	
 	
 		// log the user's search query in a log file
-		$search_log = new log_file($sysRoot.'alpha/util/logs/search_log.log');		
+		$search_log = new log_file($config->get('sysRoot').'alpha/util/logs/search_log.log');		
 		$search_log->write_line(array($this->query, date("Y-m-d H:i:s"), $_SERVER["HTTP_USER_AGENT"], $_SERVER["REMOTE_ADDR"]));
 		
 		// now we will peform a sort on the parallel arrays, sorted by matching word count!	
@@ -302,7 +306,7 @@ class Search extends Controller
 	 * method to display the HTML output from the search
 	 */
 	function display_results() {
-		global $sysListPageAmount;
+		global $config;
 		
 		$this->render_page_links();
 		
@@ -310,7 +314,7 @@ class Search extends Controller
 		
 		$BO = new $this->BO_name();				
 		
-		if(($this->result_count - $this->start_point < 10) ? $end_loop_i = $this->result_count : $end_loop_i = $this->start_point+$sysListPageAmount);
+		if(($this->result_count - $this->start_point < 10) ? $end_loop_i = $this->result_count : $end_loop_i = $this->start_point+$config->get('sysListPageAmount'));
 				
 		for ($i = $this->start_point; $i < $end_loop_i; $i++) {
 			if ($this->word_count_match[$i] != 0) {
@@ -330,10 +334,7 @@ class Search extends Controller
 	 * method to display the page head
 	 */
 	function display_page_head() {
-		global $sysURL;
-		global $sysTheme;
-		global $sysUseWidgets;
-		global $sysRoot;
+		global $config;
 		
 		echo '<html>';
 		echo '<head>';
@@ -343,7 +344,7 @@ class Search extends Controller
 		echo '<meta name="Description" content="'.$this->get_description().'">';
 		echo '<meta name="Author" content="john collins">';
 		echo '<meta name="copyright" content="copyright ">';
-		echo '<meta name="identifier" content="http://'.$sysURL.'/">';
+		echo '<meta name="identifier" content="http://'.$config->get('sysURL').'/">';
 		echo '<meta name="revisit-after" content="7 days">';
 		echo '<meta name="expires" content="never">';
 		echo '<meta name="language" content="en">';
@@ -352,14 +353,14 @@ class Search extends Controller
 		echo '<meta name="robots" content="index,follow">';
 		echo '<meta http-equiv="imagetoolbar" content="no">';			
 		
-		echo '<link rel="StyleSheet" type="text/css" href="'.$sysURL.'/config/css/'.$sysTheme.'.css.php">';
+		echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$config->get('sysTheme').'.css.php">';
 		
-		if ($sysUseWidgets) {
-			echo '<script language="JavaScript" src="'.$sysURL.'/alpha/scripts/addOnloadEvent.js"></script>';
+		if ($config->get('sysUseWidgets')) {
+			echo '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
 			
-			require_once $sysRoot.'alpha/view/widgets/form_validator.js.php';			
-			require_once $sysRoot.'alpha/view/widgets/button.js.php';			
-			require_once $sysRoot.'alpha/view/widgets/string_box.js.php';			
+			require_once $config->get('sysRoot').'alpha/view/widgets/form_validator.js.php';			
+			require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';			
+			require_once $config->get('sysRoot').'alpha/view/widgets/string_box.js.php';			
 		}
 		
 		echo '</head>';
@@ -368,7 +369,7 @@ class Search extends Controller
 		echo '<h1>'.$this->get_title().'</h1>';		
 		
 		if (isset($_SESSION["current_user"])) {	
-			echo '<p>You are logged in as '.$_SESSION["current_user"]->get_displayname().'.  <a href="'.$sysURL.'/logout/controller/logout.php">Logout</a></p>';
+			echo '<p>You are logged in as '.$_SESSION["current_user"]->get_displayname().'.  <a href="'.$config->get('sysURL').'/logout/controller/logout.php">Logout</a></p>';
 		}else{
 			echo '<p>You are not logged in</p>';
 		}
@@ -378,8 +379,7 @@ class Search extends Controller
 	 * overrides the Controller display_page_foot method to display addition content, such as a search box
 	 */
 	function display_page_foot() {
-		global $sysBenchMark;
-		global $sysUseWidgets;
+		global $config;
 		
 		$this->render_page_links();
 		
@@ -391,7 +391,7 @@ class Search extends Controller
 			echo '<option value="'.$key.'"'.($this->BO_name == $key ? " selected" : "").'>'.$this->BO_display_names[$key].'</option>';
 		echo '</select>';
 		
-		if ($sysUseWidgets){
+		if ($config->get('sysUseWidgets')){
 			$query = new String($this->query);
 			$query->set_helper("Please enter a term to search for!");
 			
@@ -409,7 +409,7 @@ class Search extends Controller
 		echo '</form>';
 		echo '</center>';
 		
-		if ($sysBenchMark && !empty($this->query)) {
+		if ($config->get('sysBenchMark') && !empty($this->query)) {
 			$this->timer->stop();
 			echo '<br><p align="center"><small>Time taken: <strong>'.$this->timer->TimeElapsed().'</strong> secs.</small></p>';
 		}	
@@ -426,9 +426,9 @@ class Search extends Controller
 	 * method for rendering the pagination links 
 	 */
 	function render_page_links() {
-		global $sysListPageAmount;
+		global $config;
 		
-		$end = ($this->start_point+$sysListPageAmount);
+		$end = ($this->start_point+$config->get('sysListPageAmount'));
 		
 		if($end > $this->result_count)
 			$end = $this->result_count;
@@ -439,12 +439,12 @@ class Search extends Controller
 			echo '<p align="center">Displaying &nbsp;'.($this->start_point+1).' to '.$end.' of <strong>'.$this->result_count.'</strong>.&nbsp;&nbsp;';		
 				
 		if ($this->start_point > 0) {
-			echo '<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BO_name.'&start='.($this->start_point-$sysListPageAmount).'&var1='.$_REQUEST["var1"].'&var2='.$_REQUEST["var2"].(isset($_REQUEST["section"]) ? '&section='.$_REQUEST["section"]: '&search_string='.$this->query).(isset($_GET["BO_search_attributes"]) ? "&BO_search_attributes=".$_GET["BO_search_attributes"]: "").'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
+			echo '<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BO_name.'&start='.($this->start_point-$config->get('sysListPageAmount')).'&var1='.$_REQUEST["var1"].'&var2='.$_REQUEST["var2"].(isset($_REQUEST["section"]) ? '&section='.$_REQUEST["section"]: '&search_string='.$this->query).(isset($_GET["BO_search_attributes"]) ? "&BO_search_attributes=".$_GET["BO_search_attributes"]: "").'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
 		}else{
 			echo '&lt;&lt;-Previous&nbsp;&nbsp;';
 		}
 		$page = 1;
-		for ($i = 0; $i < $this->result_count; $i+=$sysListPageAmount) {
+		for ($i = 0; $i < $this->result_count; $i+=$config->get('sysListPageAmount')) {
 			if($i != $this->start_point)
 				echo '&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BO_name.'&start='.$i.'&var1='.$_REQUEST["var1"].'&var2='.$_REQUEST["var2"].(isset($_REQUEST["section"]) ? '&section='.$_REQUEST["section"]: '&search_string='.$this->query).'">'.$page.'</a>&nbsp;';
 			else
@@ -452,7 +452,7 @@ class Search extends Controller
 			$page++;
 		}
 		if ($this->result_count > $end) {
-			echo '&nbsp;&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BO_name.'&start='.($this->start_point+$sysListPageAmount).'&var1='.$_REQUEST["var1"].'&var2='.$_REQUEST["var2"].(isset($_REQUEST["section"]) ? '&section='.$_REQUEST["section"]: '&search_string='.$this->query).(isset($_GET["BO_search_attributes"]) ? "&BO_search_attributes=".$_GET["BO_search_attributes"]: "").'">Next-&gt;&gt;</a>';
+			echo '&nbsp;&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BO_name.'&start='.($this->start_point+$config->get('sysListPageAmount')).'&var1='.$_REQUEST["var1"].'&var2='.$_REQUEST["var2"].(isset($_REQUEST["section"]) ? '&section='.$_REQUEST["section"]: '&search_string='.$this->query).(isset($_GET["BO_search_attributes"]) ? "&BO_search_attributes=".$_GET["BO_search_attributes"]: "").'">Next-&gt;&gt;</a>';
 		}else{
 			echo '&nbsp;&nbsp;Next-&gt;&gt;';
 		}
@@ -462,9 +462,7 @@ class Search extends Controller
 	/**
 	 * method to handle POST requests
 	 */
-	function handle_post() {
-		global $sysRoot;
-		global $sysURL;
+	function handle_post() {		
 		
 		// check the hidden security fields before accepting the form POST data
 		if(!$this->check_security_fields()) {

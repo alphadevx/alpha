@@ -2,19 +2,23 @@
 
 // $Id$
 
-require_once '../../config/config.conf';
-require_once $sysRoot.'config/db_connect.inc';
-require_once $sysRoot.'alpha/controller/Controller.inc';
-require_once $sysRoot.'alpha/view/View.inc';
+// include the config file
+if(!isset($config))
+	require_once '../util/configLoader.inc';
+$config =&configLoader::getInstance();
+
+require_once $config->get('sysRoot').'config/db_connect.inc';
+require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/view/View.inc';
 
 
 // load the business object (BO) definition
 if (isset($_GET["bo"])) {
 	$BO_name = $_GET["bo"];
-	if (file_exists($sysRoot.'model/'.$BO_name.'.inc')) {
-		require_once $sysRoot.'model/'.$BO_name.'.inc';
-	} elseif (file_exists($sysRoot.'alpha/model/'.$BO_name.'.inc')) {
-		require_once $sysRoot.'alpha/model/'.$BO_name.'.inc';
+	if (file_exists($config->get('sysRoot').'model/'.$BO_name.'.inc')) {
+		require_once $config->get('sysRoot').'model/'.$BO_name.'.inc';
+	} elseif (file_exists($config->get('sysRoot').'alpha/model/'.$BO_name.'.inc')) {
+		require_once $config->get('sysRoot').'alpha/model/'.$BO_name.'.inc';
 	}else{
 		$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the defination for the BO class '.$BO_name,'GET');
 		exit;
@@ -25,11 +29,11 @@ if (isset($_GET["bo"])) {
 }
 
 // check and see if a custom create_*.php controller exists for this BO, and if it does use it otherwise continue
-if (file_exists($sysRoot.'controller/create_'.$BO_name.'.php')) {
-	header('Location: '.$sysURL.'/controller/create_'.$BO_name.'.php');	
+if (file_exists($config->get('sysRoot').'controller/create_'.$BO_name.'.php')) {
+	header('Location: '.$config->get('sysURL').'/controller/create_'.$BO_name.'.php');	
 }
-if (file_exists($sysRoot.'alpha/controller/create_'.$BO_name.'.php')) {
-	header('Location: '.$sysURL.'/alpha/controller/create_'.$BO_name.'.php');	
+if (file_exists($config->get('sysRoot').'alpha/controller/create_'.$BO_name.'.php')) {
+	header('Location: '.$config->get('sysURL').'/alpha/controller/create_'.$BO_name.'.php');	
 }
 
 /**
@@ -92,8 +96,7 @@ class Create extends Controller
 	 * method to handle POST requests
 	 */
 	function handle_post() {
-		global $sysRoot;
-		global $sysURL;
+		global $config;
 		
 		// check the hidden security fields before accepting the form POST data
 		if(!$this->check_security_fields()) {
@@ -117,7 +120,7 @@ class Create extends Controller
 		}
 		
 		if (isset($_POST["cancelBut"])) {
-			header('Location: '.$sysURL.'/alpha/controller/ListBusinessObjects.php');
+			header('Location: '.$config->get('sysURL').'/alpha/controller/ListBusinessObjects.php');
 		}	
 	}
 	
@@ -125,10 +128,7 @@ class Create extends Controller
 	 * method to display the page head
 	 */
 	function display_page_head() {
-		global $sysURL;
-		global $sysTheme;
-		global $sysUseWidgets;
-		global $sysRoot;
+		global $config;
 		
 		echo '<html>';
 		echo '<head>';
@@ -138,7 +138,7 @@ class Create extends Controller
 		echo '<meta name="Description" content="'.$this->get_description().'">';
 		echo '<meta name="Author" content="john collins">';
 		echo '<meta name="copyright" content="copyright ">';
-		echo '<meta name="identifier" content="http://'.$sysURL.'/">';
+		echo '<meta name="identifier" content="http://'.$config->get('sysURL').'/">';
 		echo '<meta name="revisit-after" content="7 days">';
 		echo '<meta name="expires" content="never">';
 		echo '<meta name="language" content="en">';
@@ -147,15 +147,15 @@ class Create extends Controller
 		echo '<meta name="robots" content="index,follow">';
 		echo '<meta http-equiv="imagetoolbar" content="no">';			
 		
-		echo '<link rel="StyleSheet" type="text/css" href="'.$sysURL.'/config/css/'.$sysTheme.'.css.php">';
+		echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$config->get('sysTheme').'.css.php">';
 		
-		if ($sysUseWidgets) {
-			echo '<script language="JavaScript" src="'.$sysURL.'/alpha/scripts/addOnloadEvent.js"></script>';
-			require_once $sysRoot.'alpha/view/widgets/button.js.php';
-			require_once $sysRoot.'alpha/view/widgets/string_box.js.php';
-			require_once $sysRoot.'alpha/view/widgets/text_box.js.php';
+		if ($config->get('sysUseWidgets')) {
+			echo '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
+			require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
+			require_once $config->get('sysRoot').'alpha/view/widgets/string_box.js.php';
+			require_once $config->get('sysRoot').'alpha/view/widgets/text_box.js.php';
 			
-			require_once $sysRoot.'alpha/view/widgets/form_validator.js.php';
+			require_once $config->get('sysRoot').'alpha/view/widgets/form_validator.js.php';
 		
 			echo '<script type="text/javascript">';
 			$validator = new form_validator($this->BO);
@@ -168,7 +168,7 @@ class Create extends Controller
 		echo '<h1>'.$this->get_title().'</h1>';
 		
 		if (isset($_SESSION["current_user"])) {	
-			echo '<p>You are logged in as '.$_SESSION["current_user"]->get_displayname().'.  <a href="'.$sysURL.'/logout/controller/logout.php">Logout</a></p>';
+			echo '<p>You are logged in as '.$_SESSION["current_user"]->get_displayname().'.  <a href="'.$config->get('sysURL').'/logout/controller/logout.php">Logout</a></p>';
 		}else{
 			echo '<p>You are not logged in</p>';
 		}

@@ -2,10 +2,13 @@
 
 // $Id$
 
-if(empty($sysRoot))
-	require_once '../../config/config.conf';
-require_once $sysRoot.'alpha/controller/Controller.inc';
-require_once $sysRoot.'alpha/controller/front/Front_Controller.inc';
+// include the config file
+if(!isset($config))
+	require_once '../util/configLoader.inc';
+$config =&configLoader::getInstance();
+
+require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/controller/front/Front_Controller.inc';
 
 /**
 * 
@@ -20,7 +23,7 @@ class gen_secure_query_strings extends Controller
 {
 	
 	function gen_secure_query_strings() {
-		global $sysURL;
+		global $config;
 		
 		// ensure that the super class constructor is called
 		$this->Controller();
@@ -34,7 +37,7 @@ class gen_secure_query_strings extends Controller
 <em>act=view_article&oid=00000000001</em></p>';
 		echo '<p>Example 2: to generate a secure URL for viewing an Atom news feed of the articles, enter 
 <em>act=view_feed&bo=article_object&type=Atom</em</p>';
-		echo '<p align="center"><a href="'.$sysURL.'/alpha/controller/ListBusinessObjects.php">Administration Home Page</a></p>';
+		echo '<p align="center"><a href="'.$config->get('sysURL').'/alpha/controller/ListBusinessObjects.php">Administration Home Page</a></p>';
 				
 		$this->set_visibility('Administrator');
 		if(!$this->check_rights()) {
@@ -52,11 +55,11 @@ class gen_secure_query_strings extends Controller
 	}
 	
 	function handle_post() {
-		global $sysURL;		
+		global $config;		
 		
 		echo '<p style="width:90%; overflow:scroll;">';
 		if(isset($_POST["QS"]))
-			echo $sysURL."/FC.php?tk=".Front_Controller::encode_query($_POST["QS"]);
+			echo $config->get('sysURL')."/FC.php?tk=".Front_Controller::encode_query($_POST["QS"]);
 		echo '</p>';
 	}
 	

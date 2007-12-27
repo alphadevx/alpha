@@ -2,8 +2,8 @@
 
 // $Id$
 
-require_once $sysRoot.'alpha/util/catch_error.inc';
-require_once $sysRoot.'alpha/util/handle_error.inc';
+require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
+require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 
 /**
 * 
@@ -56,11 +56,11 @@ class Front_Controller {
 	 * static method for encoding a query string
 	 */
 	function encode_query($query_string) {
-		global $sysQSKey;
+		global $config;
    
 		$td = mcrypt_module_open ('tripledes', '', 'ecb', ''); 
 		$iv = mcrypt_create_iv (mcrypt_enc_get_iv_size ($td), MCRYPT_RAND); 
-		mcrypt_generic_init ($td, $sysQSKey, $iv); 
+		mcrypt_generic_init ($td, $config->get('sysQSKey'), $iv); 
 		$encrypted_data = mcrypt_generic ($td, $query_string); 
 		mcrypt_generic_deinit ($td); 
 		mcrypt_module_close ($td);
@@ -75,7 +75,7 @@ class Front_Controller {
 	 * method to decode the current query string
 	 */
 	function decode_query() {
-		global $sysQSKey;
+		global $config;		
 		
 		if (!isset($_GET["tk"])) {
 			$error = new handle_error($_SERVER["PHP_SELF"],'No token provided for the front controller!','decode_query()');
@@ -86,7 +86,7 @@ class Front_Controller {
 			// replace any troublesome characters from the URL with the original values
 			$token = strtr($_GET["tk"], '-_', '+/');
 			$token = base64_decode($token);			
-			$this->get_string = trim(mcrypt_decrypt('tripledes', $sysQSKey, $token, 'ecb', $iv));
+			$this->get_string = trim(mcrypt_decrypt('tripledes', $config->get('sysQSKey'), $token, 'ecb', $iv));
 		}
 	}
 	
@@ -94,8 +94,7 @@ class Front_Controller {
 	 * method to load the page controller
 	 */
 	function load_controller() {
-		global $sysRoot;
-		global $sysDB;
+		global $config;		
 		
 		if($this->encrypted_query) {
 			$this->decode_query();			
@@ -103,13 +102,13 @@ class Front_Controller {
 			$this->page_controller = $_GET["act"];
 		}
 		
-		$handle = opendir($sysRoot.'controller');
+		$handle = opendir($config->get('sysRoot').'controller');
    		
         // loop over the business object directory
 	    while (false !== ($file = readdir($handle))) {
 	    	if (preg_match("/".$this->page_controller.".php/", $file)) {	    		
 	    		
-	    		require_once $sysRoot.'controller/'.$this->page_controller.'.php';
+	    		require_once $config->get('sysRoot').'controller/'.$this->page_controller.'.php';
 	    		
 	    		$page_controller = new $this->page_controller();
 	    		return true;
@@ -118,13 +117,13 @@ class Front_Controller {
 	    
 	    // now loop over the core controller provided with Alpha
 	    
-	    $handle = opendir($sysRoot.'alpha/controller');
+	    $handle = opendir($config->get('sysRoot').'alpha/controller');
    		
         // loop over the default controller directory
 	    while (false !== ($file = readdir($handle))) {
 	    	if (preg_match("/".$this->page_controller.".php/", $file)) {	    		
 	    		
-	    		require_once $sysRoot.'alpha/controller/'.$this->page_controller.'.php';
+	    		require_once $config->get('sysRoot').'alpha/controller/'.$this->page_controller.'.php';
 	    		
 	    		$page_controller = new $this->page_controller();
 	    		return true;

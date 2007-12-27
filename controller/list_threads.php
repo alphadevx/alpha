@@ -2,10 +2,14 @@
 
 // $Id$
 
-require_once '../../config/config.conf';
-require_once $sysRoot.'config/db_connect.inc';
-require_once $sysRoot.'alpha/controller/Controller.inc';
-require_once $sysRoot.'alpha/view/View.inc';
+// include the config file
+if(!isset($config))
+	require_once '../util/configLoader.inc';
+$config =&configLoader::getInstance();
+
+require_once $config->get('sysRoot').'config/db_connect.inc';
+require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/view/View.inc';
 
 /**
 * 
@@ -21,9 +25,7 @@ class list_threads extends Controller
 	/**
 	 * the constructor
 	 */
-	function list_threads() {
-		global $sysRoot;
-		
+	function list_threads() {		
 		// ensure that the super class constructor is called
 		$this->Controller();
 		

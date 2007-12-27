@@ -2,10 +2,14 @@
 
 // $Id$
 
-require_once '../../config/config.conf';
-require_once $sysRoot.'config/db_connect.inc';
-require_once $sysRoot.'alpha/controller/Controller.inc';
-require_once $sysRoot.'alpha/view/View.inc';
+// include the config file
+if(!isset($config))
+	require_once '../util/configLoader.inc';
+$config =&configLoader::getInstance();
+
+require_once $config->get('sysRoot').'config/db_connect.inc';
+require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/view/View.inc';
 
 /**
 * 
@@ -22,7 +26,7 @@ class ListBusinessObjects extends Controller
 	 * the constructor
 	 */
 	function ListBusinessObjects() {
-		global $sysRoot;
+		global $config;
 		
 		// ensure that the super class constructor is called
 		$this->Controller();
@@ -42,14 +46,14 @@ class ListBusinessObjects extends Controller
 		if(!empty($_POST))
 			$this->handle_post();		
 		
-		$handle = opendir($sysRoot.'model');
+		$handle = opendir($config->get('sysRoot').'model');
    		
         // loop over the business object directory
 	    while (false !== ($file = readdir($handle))) {
 	    	if (preg_match("/_object.inc/", $file)) {
 	    		$classname = substr($file, 0, -4);	    		
 	    		
-	    		require_once $sysRoot.'model/'.$classname.'.inc';
+	    		require_once $config->get('sysRoot').'model/'.$classname.'.inc';
 	    		
 	    		$BO = new $classname();				
 		
@@ -60,14 +64,14 @@ class ListBusinessObjects extends Controller
 	    
 	    // now loop over the core BOs provided with Alpha
 	    
-	    $handle = opendir($sysRoot.'alpha/model');
+	    $handle = opendir($config->get('sysRoot').'alpha/model');
    		
         // loop over the business object directory
 	    while (false !== ($file = readdir($handle))) {
 	    	if (preg_match("/_object.inc/", $file)) {
 	    		$classname = substr($file, 0, -4);	    		
 	    		
-	    		require_once $sysRoot.'alpha/model/'.$classname.'.inc';
+	    		require_once $config->get('sysRoot').'alpha/model/'.$classname.'.inc';
 	    		
 	    		$BO = new $classname();				
 		
@@ -83,7 +87,7 @@ class ListBusinessObjects extends Controller
 	 * method to handle POST requests
 	 */
 	function handle_post() {
-		global $sysRoot;		
+		global $config;		
 		
 		// check the hidden security fields before accepting the form POST data
 		if(!$this->check_security_fields()) {
@@ -94,10 +98,10 @@ class ListBusinessObjects extends Controller
 		if(isset($_POST["createTableBut"])) {
 				
 			$classname = $_POST["createTableClass"];
-			if (file_exists($sysRoot.'model/'.$classname.'.inc'))
-				require_once $sysRoot.'model/'.$classname.'.inc';
-			if (file_exists($sysRoot.'alpha/model/'.$classname.'.inc'))
-				require_once $sysRoot.'alpha/model/'.$classname.'.inc';
+			if (file_exists($config->get('sysRoot').'model/'.$classname.'.inc'))
+				require_once $config->get('sysRoot').'model/'.$classname.'.inc';
+			if (file_exists($config->get('sysRoot').'alpha/model/'.$classname.'.inc'))
+				require_once $config->get('sysRoot').'alpha/model/'.$classname.'.inc';
 	    		
 	    	$BO = new $classname();	
 			$success = $BO->make_table();
@@ -109,10 +113,10 @@ class ListBusinessObjects extends Controller
 		if(isset($_POST["recreateTableClass"]) && $_POST['admin_'.$_POST["recreateTableClass"].'_button_pressed'] == "recreateTableBut") {
 				
 			$classname = $_POST["recreateTableClass"];
-			if (file_exists($sysRoot.'model/'.$classname.'.inc'))
-				require_once $sysRoot.'model/'.$classname.'.inc';
-			if (file_exists($sysRoot.'alpha/model/'.$classname.'.inc'))
-				require_once $sysRoot.'alpha/model/'.$classname.'.inc';
+			if (file_exists($config->get('sysRoot').'model/'.$classname.'.inc'))
+				require_once $config->get('sysRoot').'model/'.$classname.'.inc';
+			if (file_exists($config->get('sysRoot').'alpha/model/'.$classname.'.inc'))
+				require_once $config->get('sysRoot').'alpha/model/'.$classname.'.inc';
 	    		
 	    	$BO = new $classname();	
 			$success = $BO->rebuild_table();
@@ -124,10 +128,10 @@ class ListBusinessObjects extends Controller
 		if(isset($_POST["updateTableClass"]) && $_POST['admin_'.$_POST["updateTableClass"].'_button_pressed'] == "updateTableBut") {
 			
 			$classname = $_POST["updateTableClass"];
-			if (file_exists($sysRoot.'model/'.$classname.'.inc'))
-				require_once $sysRoot.'model/'.$classname.'.inc';
-			if (file_exists($sysRoot.'alpha/model/'.$classname.'.inc'))
-				require_once $sysRoot.'alpha/model/'.$classname.'.inc';
+			if (file_exists($config->get('sysRoot').'model/'.$classname.'.inc'))
+				require_once $config->get('sysRoot').'model/'.$classname.'.inc';
+			if (file_exists($config->get('sysRoot').'alpha/model/'.$classname.'.inc'))
+				require_once $config->get('sysRoot').'alpha/model/'.$classname.'.inc';
 	    		
 	    	$BO = new $classname();
 	    	$missing_fields = $BO->find_missing_fields();
@@ -145,10 +149,7 @@ class ListBusinessObjects extends Controller
 	 * method to display the page head
 	 */
 	function display_page_head() {
-		global $sysURL;
-		global $sysTheme;
-		global $sysUseWidgets;
-		global $sysRoot;
+		global $config;
 		
 		echo '<html>';
 		echo '<head>';
@@ -158,7 +159,7 @@ class ListBusinessObjects extends Controller
 		echo '<meta name="Description" content="'.$this->get_description().'">';
 		echo '<meta name="Author" content="john collins">';
 		echo '<meta name="copyright" content="copyright ">';
-		echo '<meta name="identifier" content="http://'.$sysURL.'/">';
+		echo '<meta name="identifier" content="http://'.$config->get('sysURL').'/">';
 		echo '<meta name="revisit-after" content="7 days">';
 		echo '<meta name="expires" content="never">';
 		echo '<meta name="language" content="en">';
@@ -167,11 +168,11 @@ class ListBusinessObjects extends Controller
 		echo '<meta name="robots" content="index,follow">';
 		echo '<meta http-equiv="imagetoolbar" content="no">';			
 		
-		echo '<link rel="StyleSheet" type="text/css" href="'.$sysURL.'/config/css/'.$sysTheme.'.css.php">';
+		echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$config->get('sysTheme').'.css.php">';
 		
-		if ($sysUseWidgets) {
-			echo '<script language="JavaScript" src="'.$sysURL.'/alpha/scripts/addOnloadEvent.js"></script>';
-			require_once $sysRoot.'alpha/view/widgets/button.js.php';			
+		if ($config->get('sysUseWidgets')) {
+			echo '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
+			require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';			
 		}
 		
 		echo '</head>';
@@ -180,18 +181,18 @@ class ListBusinessObjects extends Controller
 		echo '<h1>'.$this->get_title().'</h1>';
 		
 		if (isset($_SESSION["current_user"])) {	
-			echo '<p>You are logged in as '.$_SESSION["current_user"]->get_displayname().'.  <a href="'.$sysURL.'/alpha/controller/logout.php">Logout</a></p>';
+			echo '<p>You are logged in as '.$_SESSION["current_user"]->get_displayname().'.  <a href="'.$config->get('sysURL').'/alpha/controller/logout.php">Logout</a></p>';
 		}else{
 			echo '<p>You are not logged in</p>';
 		}
 		
-		echo '<p align="center"><a href="'.$sysURL.'">Application Home Page</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-		echo '<a href="'.$sysURL.'/alpha/controller/view_log.php?log_path='.$sysRoot.'alpha/util/logs/error_log.log'.'">View Error Log</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-		echo '<a href="'.$sysURL.'/alpha/controller/view_log.php?log_path='.$sysRoot.'alpha/util/logs/search_log.log'.'">View Search Log</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-		echo '<a href="'.$sysURL.'/alpha/controller/view_log.php?log_path='.$sysRoot.'alpha/util/logs/feed_log.log'.'">View Feed Log</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-		echo '<a href="'.$sysURL.'/alpha/controller/gen_secure_query_strings.php">Generate Secure URL</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-		echo '<a href="'.$sysURL.'/alpha/controller/view_metrics.php">Application Software Metrics</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-		echo '<a href="'.$sysURL.'/alpha/tests/view_test_results.php">Application Unit Tests</a></p>';
+		echo '<p align="center"><a href="'.$config->get('sysURL').'">Application Home Page</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+		echo '<a href="'.$config->get('sysURL').'/alpha/controller/view_log.php?log_path='.$config->get('sysRoot').'alpha/util/logs/error_log.log'.'">View Error Log</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+		echo '<a href="'.$config->get('sysURL').'/alpha/controller/view_log.php?log_path='.$config->get('sysRoot').'alpha/util/logs/search_log.log'.'">View Search Log</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+		echo '<a href="'.$config->get('sysURL').'/alpha/controller/view_log.php?log_path='.$config->get('sysRoot').'alpha/util/logs/feed_log.log'.'">View Feed Log</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+		echo '<a href="'.$config->get('sysURL').'/alpha/controller/gen_secure_query_strings.php">Generate Secure URL</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+		echo '<a href="'.$config->get('sysURL').'/alpha/controller/view_metrics.php">Application Software Metrics</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+		echo '<a href="'.$config->get('sysURL').'/alpha/tests/view_test_results.php">Application Unit Tests</a></p>';
 	}
 }
 

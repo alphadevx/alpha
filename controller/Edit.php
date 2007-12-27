@@ -2,19 +2,22 @@
 
 // $Id$
 
-require_once '../../config/config.conf';
-require_once $sysRoot.'config/db_connect.inc';
-require_once $sysRoot.'alpha/controller/Controller.inc';
-require_once $sysRoot.'alpha/view/View.inc';
+// include the config file
+if(!isset($config))
+	require_once '../util/configLoader.inc';
+$config =&configLoader::getInstance();
 
+require_once $config->get('sysRoot').'config/db_connect.inc';
+require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/view/View.inc';
 
 // load the business object (BO) definition
 if (isset($_GET["bo"])) {
 	$BO_name = $_GET["bo"];
-	if (file_exists($sysRoot.'alpha/model/'.$BO_name.'.inc')) {
-		require_once $sysRoot.'alpha/model/'.$BO_name.'.inc';
-	}elseif (file_exists($sysRoot.'model/'.$BO_name.'.inc')) {
-		require_once $sysRoot.'model/'.$BO_name.'.inc';
+	if (file_exists($config->get('sysRoot').'alpha/model/'.$BO_name.'.inc')) {
+		require_once $config->get('sysRoot').'alpha/model/'.$BO_name.'.inc';
+	}elseif (file_exists($config->get('sysRoot').'model/'.$BO_name.'.inc')) {
+		require_once $config->get('sysRoot').'model/'.$BO_name.'.inc';
 	}else{
 		$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the defination for the BO class '.$BO_name,'GET');
 		exit;
@@ -33,11 +36,11 @@ if (isset($_GET["oid"])) {
 }
 
 // check and see if a custom edit_*.php controller exists for this BO, and if it does use it otherwise continue
-if (file_exists($sysRoot.'controller/edit_'.$BO_name.'.php')) {
-	header('Location: '.$sysURL.'/controller/edit_'.$BO_name.'.php?'.$_SERVER['QUERY_STRING']);	
+if (file_exists($config->get('sysRoot').'controller/edit_'.$BO_name.'.php')) {
+	header('Location: '.$config->get('sysURL').'/controller/edit_'.$BO_name.'.php?'.$_SERVER['QUERY_STRING']);	
 }
-if (file_exists($sysRoot.'alpha/controller/edit_'.$BO_name.'.php')) {
-	header('Location: '.$sysURL.'/alpha/controller/edit_'.$BO_name.'.php?'.$_SERVER['QUERY_STRING']);	
+if (file_exists($config->get('sysRoot').'alpha/controller/edit_'.$BO_name.'.php')) {
+	header('Location: '.$config->get('sysURL').'/alpha/controller/edit_'.$BO_name.'.php?'.$_SERVER['QUERY_STRING']);	
 }
 
 /**
@@ -120,8 +123,7 @@ class Edit extends Controller
 	 * method to handle POST requests
 	 */
 	function handle_post() {
-		global $sysRoot;
-		global $sysURL;
+		global $config;
 		
 		// check the hidden security fields before accepting the form POST data
 		if(!$this->check_security_fields()) {
@@ -163,9 +165,9 @@ class Edit extends Controller
 			
 			echo '<center>';
 			if (class_exists("button")) {
-				$temp = new button("document.location = '".$sysURL."/controller/ListAll.php?bo=".get_class($this->BO)."'","Back to List","cancelBut");
+				$temp = new button("document.location = '".$config->get('sysURL')."/controller/ListAll.php?bo=".get_class($this->BO)."'","Back to List","cancelBut");
 			}else{
-				echo '<input type="button" name="cancelBut" value="Back to List" onclick="document.location = \''.$sysURL.'/controller/ListAll.php?bo='.get_class($this->BO).'\'"/>';
+				echo '<input type="button" name="cancelBut" value="Back to List" onclick="document.location = \''.$config->get('sysURL').'/controller/ListAll.php?bo='.get_class($this->BO).'\'"/>';
 			}
 			echo '</center>';
 			exit;
