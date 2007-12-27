@@ -60,50 +60,37 @@ require_once $config->get('sysRoot').'alpha/util/log_file.inc';
 	 * displays the error message in HTML format
 	 */
 	function display_error() {
-		global $sysErrorValidationDisplay;
-		global $sysErrorValidationLog;
-		
-		global $sysErrorWarningDisplay;
-		global $sysErrorWarningLog;
-		
-		global $sysErrorPhpDisplay;
-		global $sysErrorPhpLog;
-		
-		global $sysErrorFrameworkDisplay;
-		global $sysErrorFrameworkLog;
-		
-		global $sysErrorOtherDisplay;
-		global $sysErrorOtherLog;
+		global $config;
 		
 		switch ($this->type) {
 			case "validation":
-				if($sysErrorValidationDisplay)
+				if($config->get('sysErrorValidationDisplay'))
 					echo '<p class="error"><br>Validation error: '.$this->message.'</p>';
-				if($sysErrorValidationLog)
+				if($config->get('sysErrorValidationLog'))
 					$this->log_error_to_file();
 			break;
 			case "warning":
-				if($sysErrorWarningDisplay)
+				if($config->get('sysErrorWarningDisplay'))
 					echo '<p class="error"><br>Warning: '.$this->message.'</p>';
-				if($sysErrorWarningLog)
+				if($config->get('sysErrorWarningLog'))
 					$this->log_error_to_file();
 			break;
 			case "php":
-				if($sysErrorPhpDisplay)
+				if($config->get('sysErrorPhpDisplay'))
 					echo '<p class="error">An error has occured in file: ['.$this->sys_file.'], message: <br>The method ['.$this->method.'] has generated the following error message: ['.$this->message.']</p>';	
-				if($sysErrorPhpLog)
+				if($config->get('sysErrorPhpLog'))
 					$this->log_error_to_file();
 			break;
 			case "framework":
-				if($sysErrorFrameworkDisplay)
+				if($config->get('sysErrorFrameworkDisplay'))
 					echo '<p class="error">An error has occured in file: ['.$this->sys_file.'], message: <br>The method ['.$this->method.'] has generated the following error message: ['.$this->message.']</p>';	
-				if($sysErrorFrameworkLog)
+				if($config->get('sysErrorFrameworkLog'))
 					$this->log_error_to_file();
 			break;
 			case "other":
-				if($sysErrorOtherDisplay)
+				if($config->get('sysErrorOtherDisplay'))
 					echo '<p class="error">An error has occured in file: ['.$this->sys_file.'], message: <br>The method ['.$this->method.'] has generated the following error message: ['.$this->message.']</p>';	
-				if($sysErrorOtherLog)
+				if($config->get('sysErrorOtherLog'))
 					$this->log_error_to_file();
 			break;
 		}
