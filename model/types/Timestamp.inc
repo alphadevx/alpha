@@ -2,7 +2,7 @@
 
 // $Id: Timestamp.inc 141 2006-12-24 23:07:44Z john $
 
-require_once $sysRoot."config/validation_rules.inc";
+require_once $config->get('sysRoot')."config/validation_rules.inc";
 
 /**
  * The Timestamp complex data type

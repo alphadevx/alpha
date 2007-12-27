@@ -2,7 +2,7 @@
 
 // $Id$
 
-require_once $sysRoot."config/validation_rules.inc";
+require_once $config->get('sysRoot')."config/validation_rules.inc";
 
 /**
  * The Integer complex data type
