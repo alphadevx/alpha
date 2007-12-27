@@ -530,6 +530,9 @@ class mysql_DAO
 	 * @requires POST data from a web form
 	 */	
 	function populate_from_post() {
+		if(method_exists($this, 'before_populate_from_post_callback'))
+			$this->before_populate_from_post_callback();
+		
 		$properties = get_class_vars(get_class($this));
 		
 		foreach(array_keys($properties) as $prop) {
@@ -551,7 +554,9 @@ class mysql_DAO
 			}
 			if ($prop == "version_num" && isset($_POST["version_num"]))
 				$this->version_num->set_value($_POST["version_num"]);
-		}		
+		}
+		if(method_exists($this, 'after_populate_from_post_callback'))
+			$this->after_populate_from_post_callback();	
 	}
 
 	/**
