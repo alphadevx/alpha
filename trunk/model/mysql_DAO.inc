@@ -434,6 +434,9 @@ class mysql_DAO
 	 */	
 	function rebuild_table()
 	{
+		if(method_exists($this, 'before_rebuild_table_callback'))
+			$this->before_rebuild_table_callback();
+		
 		$sql_query = "DROP TABLE IF EXISTS ".$this->TABLE_NAME.";";
 
 		$this->last_query = $sql_query;
@@ -441,7 +444,9 @@ class mysql_DAO
 		$result = mysql_query($sql_query);		
 
 		if (mysql_error() == '') {
-			$this->make_table();	
+			$this->make_table();
+			if(method_exists($this, 'after_rebuild_table_callback'))
+				$this->after_rebuild_table_callback();
 			return true;
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
