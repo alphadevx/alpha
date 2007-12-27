@@ -30,6 +30,7 @@ class configLoader{
 		if (!$instance) {
 			$instance = array(new configLoader());
 			$instance[0]->setConfigPath();
+			$instance[0]->setIncludePath();
 			$instance[0]->loadConfig();
 		}
 		return $instance[0];
@@ -71,6 +72,13 @@ class configLoader{
   		if(!strrpos($currentScript, 'alpha/') && strrpos($currentScript, 'controller/') != false) {
   			$this->configPath = substr($currentScript, 0, strrpos($currentScript, 'controller/'));
   		}
+  	}
+  	
+  	/**
+  	 * attempt to set the include_path to include the alpha/lib directory
+  	 */
+  	function setIncludePath() {  		
+  		ini_set('include_path', ini_get('include_path').':'.$this->configPath.'alpha/lib');
   	}
   	
   	/**
