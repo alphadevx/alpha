@@ -2,18 +2,17 @@
 
 // $Id$
 
-if (!isset($sysRoot))
-	$sysRoot = '../../../';
+if(!isset($config))
+	require_once '../../util/configLoader.inc';
+$config =&configLoader::getInstance();
 
-require_once $sysRoot.'config/config.conf';
+require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 
-require_once $sysRoot.'alpha/util/handle_error.inc';
-
-require_once $sysRoot.'alpha/model/types/String.inc';
-require_once $sysRoot.'alpha/model/types/Integer.inc';
-require_once $sysRoot.'alpha/model/types/Double.inc';
-require_once $sysRoot.'alpha/model/types/Enum.inc';
-require_once $sysRoot.'alpha/model/types/Boolean.inc';
+require_once $config->get('sysRoot').'alpha/model/types/String.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Integer.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Double.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
 
 /**
 * Scalable image custom widget
@@ -91,7 +90,7 @@ class image
 	 * @param Boolean $render_image;
 	 */
 	function image($source="", $width=0, $height=0, $sourceType="png", $quality=0.75, $scale=0, $cache_only=0) {
-		global $sysRoot;
+		global $config;
 		
 		$this->source = $source;
 		$this->width = new String($width);
@@ -110,7 +109,7 @@ class image
 		if (isset($_GET["sourceType"])) $this->sourceType->set_value($_GET["sourceType"]);
 		if (isset($_GET["quality"])) $this->quality->set_value($_GET["quality"]);
 		
-		$this->filename = $sysRoot.'cache/images/'.basename($this->source, ".".$this->sourceType->get_value()).'_'.$this->width->get_value().'x'.$this->height->get_value().'.jpg';
+		$this->filename = $config->get('sysRoot').'cache/images/'.basename($this->source, ".".$this->sourceType->get_value()).'_'.$this->width->get_value().'x'.$this->height->get_value().'.jpg';
 	
 		// if GET vars where provided, then render the image, otherwise render the JavaScript call for the image creation
 		if (isset($_GET["source"]) || $this->cache_only->get_value())
@@ -123,7 +122,7 @@ class image
 	 * renders the actual image using GD library calls	 
 	 */
 	function render_image() {
-		global $sysRoot;
+		global $config;
 		
 		// check the image cache first before we proceed
 		if ($this->check_cache()) {
@@ -132,13 +131,13 @@ class image
 			// now get the old image
 			switch ($this->sourceType->get_value()) {
 				case "gif":
-					$old_image = imagecreatefromgif($sysRoot.$this->source);
+					$old_image = imagecreatefromgif($config->get('sysRoot').$this->source);
 				break;
 				case "jpg":
-					$old_image = imagecreatefromjpeg($sysRoot.$this->source);
+					$old_image = imagecreatefromjpeg($config->get('sysRoot').$this->source);
 				break;
 				case "png":
-					$old_image = imagecreatefrompng($sysRoot.$this->source);
+					$old_image = imagecreatefrompng($config->get('sysRoot').$this->source);
 				break;
 			}
 			
@@ -213,7 +212,7 @@ class image
 	 * renders the Javascript to control the behaviour of the button
 	 */
 	function render_javascript() {
-		global $sysURL;
+		global $config;
 		
 		header("Content-type: application/x-javascript");
 		
@@ -251,7 +250,7 @@ EOS;
 // end of javascript
 // -----------------
 			
-		echo 'document.write(\'<img src="'.$sysURL.'/alpha/view/widgets/image.js.php?source=\'+source+\'&width=\'+new_width+\'&height=\'+new_height+\'&sourceType=\'+sourceType+\'&quality=\'+quality+\'&scale=\'+scale+\'" width="\'+new_width+\'" height="\'+new_height+\'" border="0"/>\')';
+		echo 'document.write(\'<img src="'.$config->get('sysURL').'/alpha/view/widgets/image.js.php?source=\'+source+\'&width=\'+new_width+\'&height=\'+new_height+\'&sourceType=\'+sourceType+\'&quality=\'+quality+\'&scale=\'+scale+\'" width="\'+new_width+\'" height="\'+new_height+\'" border="0"/>\')';
 		echo '}';
 
 	} 
@@ -280,9 +279,9 @@ EOS;
 	 * @return string the path of the image
 	 */
 	function convertImageURLToPath($imgURL) {
-		global $sysURL;
+		global $config;
 		
-		$imgPath = str_replace($sysURL, '', $imgURL);
+		$imgPath = str_replace($config->get('sysURL'), '', $imgURL);
 		
 		return $imgPath;
 	}
@@ -300,7 +299,7 @@ if (isset($_GET["source"])) {
 		if (isset($_GET["render_javascript"]))
 			image::render_javascript();
 		else
-			echo '<script language="JavaScript" src="'.$sysURL.'/alpha/view/widgets/image.js.php?render_javascript"></script>';
+			echo '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/view/widgets/image.js.php?render_javascript"></script>';
 	}
 }
 	

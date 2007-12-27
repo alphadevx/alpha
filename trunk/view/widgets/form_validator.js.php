@@ -2,16 +2,14 @@
 
 // $Id$
 
-if (!isset($sysRoot))
-	$sysRoot = '../../../';
+if(!isset($config))
+	require_once '../../util/configLoader.inc';
+$config =&configLoader::getInstance();
 
-if (!isset($sysURL))
-	$sysURL = '../../../';
+require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 
-require_once $sysRoot.'alpha/util/handle_error.inc';
-
-require_once $sysRoot.'alpha/model/types/String.inc';
-require_once $sysRoot.'alpha/model/types/Text.inc';
+require_once $config->get('sysRoot').'alpha/model/types/String.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
 
 /**
  *
@@ -213,7 +211,7 @@ EOS;
 if (isset($_GET["render_javascript"]))
 	form_validator::render_javascript();
 else
-	echo '<script type="text/javascript" src="'.$sysURL.'/alpha/view/widgets/form_validator.js.php?render_javascript"></script>';
+	echo '<script type="text/javascript" src="'.$config->get('sysURL').'/alpha/view/widgets/form_validator.js.php?render_javascript"></script>';
 
 
 ?>

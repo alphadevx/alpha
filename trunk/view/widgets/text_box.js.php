@@ -2,9 +2,9 @@
 
 // $Id$
 
-require_once $sysRoot.'alpha/util/handle_error.inc';
+require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 
-require_once $sysRoot.'alpha/model/types/String.inc';
+require_once $config->get('sysRoot').'alpha/model/types/String.inc';
 
 /**
 * Text HTML input box custom widget
@@ -71,7 +71,7 @@ class text_box
 	 * renders the HTML and javascript for the text box	 
 	 */
 	function render($table_tags, $markdown) {
-		global $sysURL;
+		global $config;
 		
 		$text_obj = $this->get_text_object(); 
 			
@@ -83,11 +83,11 @@ class text_box
 		echo '<textarea id="text_field_'.$this->get_name().'_'.$this->identifier.'" style="width:100%;" rows="'.$this->get_rows().'" name="'.$this->get_name().'">'.htmlspecialchars(((isset($_POST[$this->get_name()]) && $text_obj->get_value() == "")? $_POST[$this->get_name()] : $text_obj->get_value())).'</textarea><br>';
 		echo '</td></tr>';
 		echo '<tr><td colspan="2">';
-		$tmp = new button("document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows = (parseInt(document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows) + 10);", "Increase text area", $this->get_name()."IncBut", $sysURL."/alpha/images/icons/arrow_down.png");
-		$tmp = new button("if(document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows > 10) {document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows = (parseInt(document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows) - 10)};", "Decrease text area", $this->get_name()."DecBut", $sysURL."/alpha/images/icons/arrow_up.png");
+		$tmp = new button("document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows = (parseInt(document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows) + 10);", "Increase text area", $this->get_name()."IncBut", $config->get('sysURL')."/alpha/images/icons/arrow_down.png");
+		$tmp = new button("if(document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows > 10) {document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows = (parseInt(document.getElementById('text_field_".$this->get_name()."_".$this->identifier."').rows) - 10)};", "Decrease text area", $this->get_name()."DecBut", $config->get('sysURL')."/alpha/images/icons/arrow_up.png");
 		// additional buttons for Markdown content fields
 		if($markdown) {
-			$tmp = new button("window.open('".$sysURL."/alpha/controller/view_article_title.php?title=Markdown: Syntax&no-forceframe=true','helpWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=700,height=400,left=20,top=20');", "Syntax help", "helpBut", $sysURL."/alpha/images/icons/help.png");
+			$tmp = new button("window.open('".$config->get('sysURL')."/alpha/controller/view_article_title.php?title=Markdown: Syntax&no-forceframe=true','helpWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=700,height=400,left=20,top=20');", "Syntax help", "helpBut", $config->get('sysURL')."/alpha/images/icons/help.png");
 		}
 		echo '</td></tr>';
 		
