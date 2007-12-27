@@ -26,6 +26,16 @@ class configLoader{
 			$instance = array(new configLoader());
 			$instance[0]->setRootPath();
 			$instance[0]->setIncludePath();
+						
+			// check to see if a child class with callbacks has been implemented
+			if(file_exists($instance[0]->get('rootPath').'config/configCallbacks.inc')) {
+				require_once $instance[0]->get('rootPath').'config/configCallbacks.inc';
+				$instance = array(new configCallbacks());
+				$instance[0]->setRootPath();
+				$instance[0]->setIncludePath();
+			}
+			
+			// populate the config from the ini file
 			$instance[0]->loadConfig();
 		}
 		return $instance[0];
@@ -52,6 +62,12 @@ class configLoader{
 	 *
 	 */
 	function set($key, $val) {
+		/*
+		 * If you need to alter a config option after it has been set in the .ini
+		 * files, you can override this class and implement this callback method
+		 */
+		if(method_exists($this, 'before_set_callback'))
+			$val = $this->before_set_callback($key, $val);
 		$this->configVars[$key] = $val;		
   	}
   	
