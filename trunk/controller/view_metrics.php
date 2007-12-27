@@ -91,6 +91,6 @@ class view_metrics extends Controller
 }
 
 // now build the new controller
-$controller = new view_metrics($sysRoot);
+$controller = new view_metrics($config->get('sysRoot'));
 
 ?>
