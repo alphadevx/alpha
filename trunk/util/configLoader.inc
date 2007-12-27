@@ -16,6 +16,11 @@ class configLoader{
 	 * Array to store the config variables
 	 */
 	var $configVars = array();
+	
+	/**
+	 * The path to the config dir with the ini files
+	 */
+	var $configPath;
   
 	/**
 	 * Create a new config object
@@ -24,6 +29,7 @@ class configLoader{
 		static $instance;
 		if (!$instance) {
 			$instance = array(new configLoader());
+			$instance[0]->setConfigPath();
 			$instance[0]->loadConfig();
 		}
 		return $instance[0];
@@ -50,8 +56,21 @@ class configLoader{
 	 *
 	 */
 	function set($key, $val) {
-		$this->configVars[$key] = $val;
-		//return true;
+		$this->configVars[$key] = $val;		
+  	}
+  	
+  	function setConfigPath() {
+  		$currentScript = $_SERVER["SCRIPT_FILENAME"];  		
+  		
+  		// first check to see if it is a controller under /alpha
+  		if(strrpos($currentScript, 'alpha/') != false) {
+  			$this->configPath = substr($currentScript, 0, strrpos($currentScript, 'alpha/'));
+  		}
+  		
+  		// handle custom controllers at a lower level
+  		if(!strrpos($currentScript, 'alpha/') && strrpos($currentScript, 'controller/') != false) {
+  			$this->configPath = substr($currentScript, 0, strrpos($currentScript, 'controller/'));
+  		}
   	}
   	
   	/**
@@ -62,24 +81,20 @@ class configLoader{
   	function loadConfig() {
   		// first we need to see if we are in dev, pro or test environment
   		$server = $_SERVER["SERVER_NAME"];
-  		// load the servers to see which environment the current server is set as
-  		$serverIni = 'config/servers.ini';
+  		// load the servers to see which environment the current server is set as  		
+  		$serverIni = $this->configPath.'config/servers.ini';
   		if(file_exists($serverIni)) {
 	  		$envs = parse_ini_file($serverIni);
 	  		if(in_array($server, $envs)) {	
 	  			$environment = array_search($server, $envs);
-	  		}else{
-	  			//$error = new handle_error($_SERVER["PHP_SELF"],'No environment configured for the server '.$server,'loadConfig()','framework');
-	  			//exit;
+	  		}else{	  			
 	  			die('No environment configured for the server '.$server);
 	  		}
-  		}else{
-  			//$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load the config file '.$serverIni,'loadConfig()','framework');
-  			//exit;
+  		}else{  			
   			die('Failed to load the config file '.$serverIni);
   		}
   		
-  		$envIni = 'config/'.$environment.'.ini';
+  		$envIni = $this->configPath.'config/'.$environment.'.ini';
   		$configArray = parse_ini_file($envIni);
   		
   		$config =&configLoader::getInstance();
