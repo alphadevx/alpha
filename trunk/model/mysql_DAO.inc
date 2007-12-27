@@ -179,6 +179,9 @@ class mysql_DAO
 	 */
 	function save_object()
 	{
+		if(method_exists($this, 'before_save_callback'))
+			$this->before_save_callback();
+		
 		// firstly we will validate the object before we try to save it
 		$validate = $this->validate();
 		
@@ -249,6 +252,8 @@ class mysql_DAO
 		$result = mysql_query($sql_query);
 
 		if (mysql_error() == '') {
+			if(method_exists($this, 'after_save_callback'))
+				$this->after_save_callback();
 			return true;
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
