@@ -16,11 +16,6 @@ class configLoader{
 	 * Array to store the config variables
 	 */
 	var $configVars = array();
-	
-	/**
-	 * The path to the config dir with the ini files
-	 */
-	var $configPath;
   
 	/**
 	 * Create a new config object
@@ -29,7 +24,7 @@ class configLoader{
 		static $instance;
 		if (!$instance) {
 			$instance = array(new configLoader());
-			$instance[0]->setConfigPath();
+			$instance[0]->setRootPath();
 			$instance[0]->setIncludePath();
 			$instance[0]->loadConfig();
 		}
@@ -60,25 +55,35 @@ class configLoader{
 		$this->configVars[$key] = $val;		
   	}
   	
-  	function setConfigPath() {
-  		$currentScript = $_SERVER["SCRIPT_FILENAME"];  		
+  	/**
+  	 * Sets the root directory of the application
+  	 */
+  	function setRootPath() {
+  		$currentScript = $_SERVER["SCRIPT_FILENAME"];
+  		
+  		$rootPath = '';		
   		
   		// first check to see if it is a controller under /alpha
   		if(strrpos($currentScript, 'alpha/') != false) {
-  			$this->configPath = substr($currentScript, 0, strrpos($currentScript, 'alpha/'));
+  			$rootPath = substr($currentScript, 0, strrpos($currentScript, 'alpha/'));
   		}
   		
   		// handle custom controllers at a lower level
   		if(!strrpos($currentScript, 'alpha/') && strrpos($currentScript, 'controller/') != false) {
-  			$this->configPath = substr($currentScript, 0, strrpos($currentScript, 'controller/'));
+  			$rootPath = substr($currentScript, 0, strrpos($currentScript, 'controller/'));
   		}
+  		$config =&configLoader::getInstance();
+  		$config->set('rootPath', $rootPath);
   	}
   	
   	/**
   	 * attempt to set the include_path to include the alpha/lib directory
   	 */
-  	function setIncludePath() {  		
-  		ini_set('include_path', ini_get('include_path').':'.$this->configPath.'alpha/lib');
+  	function setIncludePath() {
+  		$config =&configLoader::getInstance();
+  		$rootPath = $config->get('rootPath');
+  		
+  		ini_set('include_path', ini_get('include_path').':'.$rootPath.'alpha/lib');
   	}
   	
   	/**
@@ -87,10 +92,13 @@ class configLoader{
   	 * 
   	 */
   	function loadConfig() {
+  		$config =&configLoader::getInstance();
+  		$rootPath = $config->get('rootPath');
+  		
   		// first we need to see if we are in dev, pro or test environment
   		$server = $_SERVER["SERVER_NAME"];
   		// load the servers to see which environment the current server is set as  		
-  		$serverIni = $this->configPath.'config/servers.ini';
+  		$serverIni = $rootPath.'config/servers.ini';
   		if(file_exists($serverIni)) {
 	  		$envs = parse_ini_file($serverIni);
 	  		if(in_array($server, $envs)) {	
@@ -102,7 +110,7 @@ class configLoader{
   			die('Failed to load the config file '.$serverIni);
   		}
   		
-  		$envIni = $this->configPath.'config/'.$environment.'.ini';
+  		$envIni = $rootPath.'config/'.$environment.'.ini';
   		$configArray = parse_ini_file($envIni);
   		
   		$config =&configLoader::getInstance();
