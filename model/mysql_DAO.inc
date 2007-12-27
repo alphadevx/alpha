@@ -295,7 +295,9 @@ class mysql_DAO
 	 * delete the object specified from the database
 	 * @return bool True if no database error occured, else false and error is stored in $this->last_query
 	 */
-	function delete_object() {
+	function delete_object() {		
+		if(method_exists($this, 'before_delete_callback'))
+				$this->before_delete_callback();
 			
 		$sql_query = "DELETE FROM ".$this->TABLE_NAME." WHERE OID = '".$this->OID."';";		
 		
@@ -304,6 +306,9 @@ class mysql_DAO
 		$result = mysql_query($sql_query);		
 		
 		if(mysql_error() == '') {
+			if(method_exists($this, 'after_delete_callback'))
+				$this->after_delete_callback();
+			
 			return true;
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
