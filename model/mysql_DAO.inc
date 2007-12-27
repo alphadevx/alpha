@@ -462,6 +462,9 @@ class mysql_DAO
 	 */
 	function add_property($prop)
 	{
+		if(method_exists($this, 'before_add_property_callback'))
+			$this->before_add_property_callback();
+		
 		$sql_query = "ALTER TABLE ".$this->TABLE_NAME." ADD ";
 
 		if(!in_array($prop, $this->default_attributes)) {
@@ -511,7 +514,9 @@ class mysql_DAO
 
 		$result = mysql_query($sql_query);
 
-		if (mysql_error() == '') {			
+		if (mysql_error() == '') {
+			if(method_exists($this, 'after_add_property_callback'))
+				$this->after_add_property_callback();		
 			return true;
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
