@@ -2,16 +2,16 @@
 
 // $Id$
 
-require_once $sysRoot.'alpha/util/catch_error.inc';
+require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
 
-require_once $sysRoot.'alpha/model/types/Date.inc';
-require_once $sysRoot.'alpha/model/types/Timestamp.inc';
-require_once $sysRoot.'alpha/model/types/Double.inc';
-require_once $sysRoot.'alpha/model/types/Integer.inc';
-require_once $sysRoot.'alpha/model/types/String.inc';
-require_once $sysRoot.'alpha/model/types/Text.inc';
-require_once $sysRoot.'alpha/model/types/Enum.inc';
-require_once $sysRoot.'alpha/model/types/Boolean.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Date.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Timestamp.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Double.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Integer.inc';
+require_once $config->get('sysRoot').'alpha/model/types/String.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
 
 /**
 * Base business object class definition
@@ -142,10 +142,10 @@ class mysql_DAO
 	 */
 	function load_all($start=0, $limit=0, $order_by="OID", $order="ASC")
 	{
-		global $sysListPageAmount;
+		global $config;
 		
 		if ($limit == 0)
-			$limit = $sysListPageAmount;
+			$limit = $config->get('sysListPageAmount');
 		
 		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
 		
@@ -678,11 +678,11 @@ class mysql_DAO
 	 * @return boolean true if the table exists, false otherwise 
 	 */
 	function check_table_exists() {
-		global $sysDB;
+		global $config;
 		
 		$table_exists = false;
 		
-		$result = mysql_list_tables($sysDB);
+		$result = mysql_list_tables($config->get('sysDB'));
 		
 		while ($row = mysql_fetch_row($result)) {    		
     		if ($row[0] == $this->TABLE_NAME)
@@ -702,8 +702,7 @@ class mysql_DAO
 	 * checks to see if the table in the database matches (for fields) the business class definition
 	 * @return boolean true if the table needs updating, false otherwise 
 	 */
-	function check_table_needs_update() {
-		global $sysDB;
+	function check_table_needs_update() {		
 		
 		$table_exists = $this->check_table_exists();
 		
@@ -754,8 +753,7 @@ class mysql_DAO
 	 * returns an array containing any properties on the class which have not been created on the database table yet
 	 * @return array an array of class properties (may be empty)
 	 */
-	function find_missing_fields() {
-		global $sysDB;
+	function find_missing_fields() {		
 		
 		$missing_fields = array();
 		$found_fields = array();
