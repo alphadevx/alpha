@@ -2,7 +2,7 @@
 
 // $Id$
 
-require_once $sysRoot.'alpha/model/types/Text.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
 
 /**
  *

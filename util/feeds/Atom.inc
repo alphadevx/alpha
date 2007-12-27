@@ -2,11 +2,11 @@
 
 // $Id$
 
-require_once $sysRoot.'config/db_connect.inc';
-require_once $sysRoot.'alpha/util/handle_error.inc';
-require_once $sysRoot.'alpha/view/View.inc';
-require_once $sysRoot.'alpha/util/log_file.inc';
-require_once $sysRoot.'alpha/util/feeds/feed.inc';
+require_once $config->get('sysRoot').'config/db_connect.inc';
+require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
+require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/util/log_file.inc';
+require_once $config->get('sysRoot').'alpha/util/feeds/feed.inc';
 
 /**
 * 

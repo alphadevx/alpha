@@ -2,8 +2,8 @@
 
 // $Id: markdown_facade.inc 259 2007-03-03 20:47:13Z john $
 
-require_once $sysRoot.'alpha/lib/markdown/markdown.php';
-require_once $sysRoot.'alpha/lib/geshi.php';
+require_once $config->get('sysRoot').'alpha/lib/markdown/markdown.php';
+require_once $config->get('sysRoot').'alpha/lib/geshi.php';
 
 /**
  *

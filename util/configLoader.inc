@@ -1,6 +1,6 @@
 <?php
 
-// $Id: markdown_facade.inc 305 2007-05-12 17:06:48Z john $
+// $Id$
 
 /**
  *
@@ -63,21 +63,23 @@ class configLoader{
   		// first we need to see if we are in dev, pro or test environment
   		$server = $_SERVER["SERVER_NAME"];
   		// load the servers to see which environment the current server is set as
-  		$serverIni = '../../config/servers.ini';
+  		$serverIni = 'config/servers.ini';
   		if(file_exists($serverIni)) {
 	  		$envs = parse_ini_file($serverIni);
 	  		if(in_array($server, $envs)) {	
 	  			$environment = array_search($server, $envs);
 	  		}else{
-	  			$error = new handle_error($_SERVER["PHP_SELF"],'No environment configured for the server '.$server,'loadConfig()','framework');
-	  			exit;
+	  			//$error = new handle_error($_SERVER["PHP_SELF"],'No environment configured for the server '.$server,'loadConfig()','framework');
+	  			//exit;
+	  			die('No environment configured for the server '.$server);
 	  		}
   		}else{
-  			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load the config file '.$serverIni,'loadConfig()','framework');
-  			exit;
+  			//$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load the config file '.$serverIni,'loadConfig()','framework');
+  			//exit;
+  			die('Failed to load the config file '.$serverIni);
   		}
   		
-  		$envIni = '../../config/'.$environment.'.ini';
+  		$envIni = 'config/'.$environment.'.ini';
   		$configArray = parse_ini_file($envIni);
   		
   		$config =&configLoader::getInstance();

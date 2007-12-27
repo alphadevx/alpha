@@ -2,8 +2,8 @@
 
 // $Id$
 
-require_once $sysRoot.'alpha/lib/fpdf/fpdf.php';
-require_once $sysRoot.'alpha/view/widgets/image.js.php';
+require_once $config->get('sysRoot').'alpha/lib/fpdf/fpdf.php';
+require_once $config->get('sysRoot').'alpha/view/widgets/image.js.php';
 
 /**
  *

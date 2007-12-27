@@ -12,7 +12,9 @@
  */
 
 // include the config file
-require_once '../../config/config.conf';
+if(!isset($config))
+	require_once '../util/configLoader.inc';
+$config =&configLoader::getInstance();
 
 // first get the variables from get vars, then call the function to return the image
 $source = $_GET["source"];
@@ -31,18 +33,18 @@ function drawImage($source, $width, $height, $sourceType, $quality) {
 
 	*/
 
-	global $sysRoot;	
+	global $config;	
 
 	// now get the old image
 	switch ($sourceType) {
 		case "gif":
-			$old_image = imagecreatefromgif($sysRoot.$source);
+			$old_image = imagecreatefromgif($config->get('sysRoot').$source);
 		break;
 		case "jpg":
-			$old_image = imagecreatefromjpeg($sysRoot.$source);
+			$old_image = imagecreatefromjpeg($config->get('sysRoot').$source);
 		break;
 		case "png":
-			$old_image = imagecreatefrompng($sysRoot.$source);
+			$old_image = imagecreatefrompng($config->get('sysRoot').$source);
 		break;
 	}
 	

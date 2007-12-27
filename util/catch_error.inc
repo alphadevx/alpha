@@ -16,11 +16,10 @@
 // set the error reporting level for this script 
 error_reporting(E_ALL); 
 
-require_once $sysRoot.'alpha/util/handle_error.inc';
+require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 
 function catch_error($error_no, $msg, $file, $line) {
-	global $set_sys_root;	
-	
+		
 	switch ($error_no) {		
 		case E_ERROR:
 			$type = "ERROR";
