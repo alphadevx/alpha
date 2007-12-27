@@ -177,7 +177,7 @@ class view_article extends Controller
 		$temp = new button("window.open('".$config->get('sysURL')."/alpha/controller/view_article_print.php?title=".$this->article->get("title")."')","Open Printer Version","printBut");
 		
 		echo "&nbsp;&nbsp;";
-		$temp = new button("document.location = '".$config->get('sysTitle')."/alpha/controller/view_article_pdf.php?title=".$this->article->get("title")."';","Open PDF Version","pdfBut");
+		$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/view_article_pdf.php?title=".$this->article->get("title")."';","Open PDF Version","pdfBut");
 		
 		echo '<p>Article URL: <a href="'.$this->article->URL.'">'.$this->article->URL.'</a><br>';
 		echo 'Title: '.$this->article->get("title").'<br>';
