@@ -2,11 +2,11 @@
 
 // $Id$
 
-require_once $sysRoot.'alpha/model/article_comment_object.inc';
-require_once $sysRoot.'alpha/model/person_object.inc';
-require_once $sysRoot.'alpha/view/View.inc';
-require_once $sysRoot.'alpha/util/markdown_facade.inc';
-require_once $sysRoot.'alpha/util/input_filter.inc';
+require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
+require_once $config->get('sysRoot').'alpha/model/person_object.inc';
+require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/util/markdown_facade.inc';
+require_once $config->get('sysRoot').'alpha/util/input_filter.inc';
 
 /**
  *
@@ -39,7 +39,7 @@ class article_comment extends View
 	 * method to generate the markdown HTML render of the article_comment content
 	 */
 	function markdown_view() {
-		global $sysCMSCommentsAllowed;
+		global $config;
 		
 		$markdown = new markdown_facade($this->BO);
 		$author = new person_object();
@@ -54,7 +54,7 @@ class article_comment extends View
 		echo '<p>Posted by '.($author->get("URL") == ""? $author->get("displayname") : '<a href="'.$author->get("URL").'" target="new window">'.$author->get("displayname").'</a>').' at '.$create_TS->get_value().'.';
 		echo '&nbsp;'.$author->get("displayname").' has posted ['.$author->get_comment_count().'] comments on articles since joining.';
 		echo '</p>';
-		if($sysCMSCommentsAllowed && isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_ID() == $author->get_ID())
+		if($config->get('sysCMSCommentsAllowed') && isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_ID() == $author->get_ID())
 			$this->edit_view();
 		else
 			echo $markdown->get_content();
@@ -71,8 +71,7 @@ class article_comment extends View
 	/**
 	 * renders the custom create view
 	 */
-	function create_view() {
-		global $sysURL;
+	function create_view() {		
 
 		$properties = get_object_vars($this->BO);
 		$obj_type = '';
@@ -200,7 +199,7 @@ class article_comment extends View
 	 * custom edit view
 	 */
 	function edit_view() {
-		global $sysURL;
+		global $config;
 
 		$properties = get_object_vars($this->BO);
 		$obj_type = '';
@@ -329,7 +328,7 @@ class article_comment extends View
 			echo '&nbsp;&nbsp;';
 			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".$sysURL."/alpha/controller/ListAll.php?bo=".get_class($this->BO)."'", "Back to List", "cancelBut");
+			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/ListAll.php?bo=".get_class($this->BO)."'", "Back to List", "cancelBut");
 			
 			echo '</td></tr>';
 			

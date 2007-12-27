@@ -2,8 +2,8 @@
 
 // $Id$
 
-require_once $sysRoot.'alpha/model/person_object.inc';
-require_once $sysRoot.'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/model/person_object.inc';
+require_once $config->get('sysRoot').'alpha/view/View.inc';
 
 /**
  *
@@ -36,7 +36,7 @@ class person extends View
 	 * method to render the login HTML form
 	 */
 	function display_login_form() {
-		global $sysURL;
+		global $config;
 		
 		echo '<table cols="2">';
 		echo '<form action="'.$_SERVER["PHP_SELF"].'" method="POST">';
@@ -50,10 +50,10 @@ class person extends View
 		if (class_exists("button")) {			
 			$temp = new button("submit","Login","loginBut");
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location.replace('".$sysURL."')","Cancel","cancelBut");
+			$temp = new button("document.location.replace('".$config->get('sysURL')."')","Cancel","cancelBut");
 		}else{
 			echo '	<input type="submit" name="loginBut" value="Login"/>';
-			$temp = new button("document.location.replace('".$sysURL."')","Cancel","cancelBut");
+			$temp = new button("document.location.replace('".$config->get('sysURL')."')","Cancel","cancelBut");
 		}
 		echo '</td></tr>';
 		
@@ -68,7 +68,7 @@ class person extends View
 	 * method to render the reset password HTML form
 	 */
 	function display_reset_form() {
-		global $sysURL;
+		global $config;
 		
 		echo '<p>If you have forgotten your password, you can use this form to have a new password automatically generated and sent to your e-mail address.</p>';
 		echo '<table cols="2">';
@@ -80,10 +80,10 @@ class person extends View
 		if (class_exists("button")) {			
 			$temp = new button("submit","Reset Password","resetBut");
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location.replace('".$sysURL."')","Cancel","cancelBut");
+			$temp = new button("document.location.replace('".$config->get('sysURL')."')","Cancel","cancelBut");
 		}else{
 			echo '	<input type="submit" name="resetBut" value="Reset Password"/>';
-			echo '	<input type="button" name="cancel" value="Cancel" onclick="document.location.replace(\''.$sysURL.'\')"/>';
+			echo '	<input type="button" name="cancel" value="Cancel" onclick="document.location.replace(\''.$config->get('sysURL').'\')"/>';
 		}
 		echo '</td></tr>';
 		
@@ -97,7 +97,7 @@ class person extends View
 	 * method to render the user registration form
 	 */
 	function register_view() {
-		global $sysURL;
+		global $config;
 		
 		echo '<p>In order to post comments on the articles on this web site, and to post comments on the forum, you will need to create a user account.  In order to do so, please provide a valid email address below and a password will be sent to your inbox shortly (you can change your password once you log in).</p>';
 		echo '<p class="warning">Please note: the forum is currently not available, but will be made available in the coming weeks!</p>';
@@ -113,10 +113,10 @@ class person extends View
 		if (class_exists("button")) {			
 			$temp = new button("submit","Register","registerBut");
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location.replace('".$sysURL."')","Cancel","cancelBut");
+			$temp = new button("document.location.replace('".$config->get('sysURL')."')","Cancel","cancelBut");
 		}else{
 			echo '	<input type="submit" name="registerBut" value="Register"/>';
-			echo '	<input type="button" name="cancel" value="Cancel" onclick="document.location.replace(\''.$sysURL.'\')"/>';
+			echo '	<input type="button" name="cancel" value="Cancel" onclick="document.location.replace(\''.$config->get('sysURL').'\')"/>';
 		}
 		echo '</td></tr>';
 		
@@ -130,7 +130,7 @@ class person extends View
 	 * custom edit view to enable the reseting of passwords
 	 */
 	function edit_view() {
-		global $sysURL;
+		global $config;
 
 		$properties = get_object_vars($this->BO);
 		$obj_type = '';
@@ -299,12 +299,12 @@ class person extends View
 				echo '&nbsp;&nbsp;';
 				$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
 				echo '&nbsp;&nbsp;';
-				$temp = new button("document.location = '".$sysURL."/alpha/controller/ListAll.php?bo=".get_class($this->BO)."'", "Back to List", "cancelBut");
+				$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/ListAll.php?bo=".get_class($this->BO)."'", "Back to List", "cancelBut");
 			}
 		} else {
 			echo '<input type="submit" name="saveBut" value="Save"/>';
 			echo '<input type="button" name="deleteBut" value="Delete" onclick="if(confirm(\'Are you sure you wish to delete this item?\')) {document.getElementById(\'delete_oid\').value = \''.$this->BO->get_ID().'\'; document.getElementById(\'delete_form\').submit();}"/>';
-			echo '<input type="button" name="cancelBut" value="Back to List" onclick="document.location = "'.$sysURL.'/controller/ListAll.php?bo='.get_class($this->BO).'"/>';
+			echo '<input type="button" name="cancelBut" value="Back to List" onclick="document.location = "'.$config->get('sysURL').'/controller/ListAll.php?bo='.get_class($this->BO).'"/>';
 		}
 		echo '</td></tr>';
 
@@ -317,7 +317,7 @@ class person extends View
 	 * Custom list view with no password field present.
 	 */
 	function list_view() {
-		global $sysURL;
+		global $config;
 
 		$properties = get_object_vars($this->BO);
 		$obj_type = '';
@@ -354,16 +354,16 @@ class person extends View
 
 		echo '<tr><td colspan="'.$col_count.'" align="center">';
 		if (class_exists("button")) {
-			$temp = new button("document.location = '".$sysURL."/alpha/controller/Detail.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "View", "viewBut");
+			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/Detail.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "View", "viewBut");
 			// render edit and delete buttons for admins only
 			if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_access_level() == "Administrator") {
 				echo '&nbsp;&nbsp;';
-				$temp = new button("document.location = '".$sysURL."/alpha/controller/Edit.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "Edit", "editBut");
+				$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/Edit.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "Edit", "editBut");
 				echo '&nbsp;&nbsp;';
 				$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
 			}
 		} else {
-			echo '<input type="button" name="viewBut" value="View" onclick="document.location.replace(\''.$sysURL.'/controller/Detail.php?bo='.get_class($this->BO).'&oid='.$this->BO->get_ID().'\')"/>';
+			echo '<input type="button" name="viewBut" value="View" onclick="document.location.replace(\''.$config->get('sysURL').'/controller/Detail.php?bo='.get_class($this->BO).'&oid='.$this->BO->get_ID().'\')"/>';
 			echo '&nbsp;&nbsp;';
 			echo '<input type="submit" name="editBut" value="Edit"/>';
 			echo '&nbsp;&nbsp;';
