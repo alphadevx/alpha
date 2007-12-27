@@ -3,18 +3,18 @@
 
 // $Id$
 
-require_once $sysRoot.'alpha/util/catch_error.inc';
+require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
 
-require_once $sysRoot."alpha/model/types/Date.inc";
-require_once $sysRoot."alpha/model/types/Timestamp.inc";
-require_once $sysRoot."alpha/model/types/Double.inc";
-require_once $sysRoot."alpha/model/types/Integer.inc";
-require_once $sysRoot."alpha/model/types/String.inc";
-require_once $sysRoot."alpha/model/types/Text.inc";
-require_once $sysRoot."alpha/model/types/Enum.inc";
-require_once $sysRoot."alpha/model/types/Boolean.inc";
+require_once $config->get('sysRoot')."alpha/model/types/Date.inc";
+require_once $config->get('sysRoot')."alpha/model/types/Timestamp.inc";
+require_once $config->get('sysRoot')."alpha/model/types/Double.inc";
+require_once $config->get('sysRoot')."alpha/model/types/Integer.inc";
+require_once $config->get('sysRoot')."alpha/model/types/String.inc";
+require_once $config->get('sysRoot')."alpha/model/types/Text.inc";
+require_once $config->get('sysRoot')."alpha/model/types/Enum.inc";
+require_once $config->get('sysRoot')."alpha/model/types/Boolean.inc";
 
-require_once $sysRoot.'alpha/view/widgets/calendar.php';
+require_once $config->get('sysRoot').'alpha/view/widgets/calendar.php';
 
 /**
  *
@@ -55,7 +55,7 @@ class View {
 	 * @return object returns a View object, or a child view object from the /view directory if one exists for this BO 
 	 */
 	function get_instance($BO, $return_parent=false) {
-		global $sysRoot;
+		global $config;
 		
 		$filename = get_class($BO);
 		$underscore_pos = strrpos($filename, '_');
@@ -63,11 +63,11 @@ class View {
 
 		// Check to see if a custom view exists for this BO, and if it does return that view instead		
 		if (!$return_parent) {
-			if (file_exists($sysRoot.'/view/'.$filename.'.inc')) {
-				require_once $sysRoot.'/view/'.$filename.'.inc';			
+			if (file_exists($config->get('sysRoot').'/view/'.$filename.'.inc')) {
+				require_once $config->get('sysRoot').'/view/'.$filename.'.inc';			
 				return new $filename($BO);
-			}elseif (file_exists($sysRoot.'/alpha/view/'.$filename.'.inc')) {
-				require_once $sysRoot.'/alpha/view/'.$filename.'.inc';			
+			}elseif (file_exists($config->get('sysRoot').'/alpha/view/'.$filename.'.inc')) {
+				require_once $config->get('sysRoot').'/alpha/view/'.$filename.'.inc';			
 				return new $filename($BO);
 			}else{
 				return new View($BO, true);
@@ -87,7 +87,7 @@ class View {
 	 * renders the default create view
 	 */
 	function create_view() {
-		global $sysURL;
+		global $config;
 
 		$properties = get_object_vars($this->BO);
 		$obj_type = '';
@@ -199,7 +199,7 @@ class View {
 		if (class_exists("button")) {
 			$temp = new button("submit", "Create", "createBut");
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location.replace('".$sysURL."/alpha/controller/ListBusinessObjects.php')", "Cancel", "cancelBut");
+			$temp = new button("document.location.replace('".$config->get('sysURL')."/alpha/controller/ListBusinessObjects.php')", "Cancel", "cancelBut");
 		} else {
 			echo '<input type="submit" name="createBut" value="Create"/>';
 			echo '&nbsp;&nbsp;';
@@ -216,7 +216,7 @@ class View {
 	 * draws a form to enable object editing
 	 */
 	function edit_view() {
-		global $sysURL;
+		global $config;
 
 		$properties = get_object_vars($this->BO);
 		$obj_type = '';
@@ -332,11 +332,11 @@ class View {
 			echo '&nbsp;&nbsp;';
 			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".$sysURL."/alpha/controller/ListAll.php?bo=".get_class($this->BO)."'", "Back to List", "cancelBut");
+			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/ListAll.php?bo=".get_class($this->BO)."'", "Back to List", "cancelBut");
 		} else {
 			echo '<input type="submit" name="saveBut" value="Save"/>';
 			echo '<input type="button" name="deleteBut" value="Delete" onclick="if(confirm(\'Are you sure you wish to delete this item?\')) {document.getElementById(\'delete_oid\').value = \''.$this->BO->get_ID().'\'; document.getElementById(\'delete_form\').submit();}"/>';
-			echo '<input type="button" name="cancelBut" value="Back to List" onclick="document.location = "'.$sysURL.'/controller/ListAll.php?bo='.get_class($this->BO).'"/>';
+			echo '<input type="button" name="cancelBut" value="Back to List" onclick="document.location = "'.$config->get('sysURL').'/controller/ListAll.php?bo='.get_class($this->BO).'"/>';
 		}
 		echo '</td></tr>';
 
@@ -380,7 +380,7 @@ class View {
 	 * Renders the list view.
 	 */
 	function list_view() {
-		global $sysURL;
+		global $config;
 
 		$properties = get_object_vars($this->BO);
 		$obj_type = '';
@@ -421,16 +421,16 @@ class View {
 
 		echo '<tr><td colspan="'.$col_count.'" align="center">';
 		if (class_exists("button")) {
-			$temp = new button("document.location = '".$sysURL."/alpha/controller/Detail.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "View", "viewBut");
+			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/Detail.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "View", "viewBut");
 			// render edit and delete buttons for admins only
 			if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_access_level() == "Administrator") {
 				echo '&nbsp;&nbsp;';
-				$temp = new button("document.location = '".$sysURL."/alpha/controller/Edit.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "Edit", "editBut");
+				$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/Edit.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "Edit", "editBut");
 				echo '&nbsp;&nbsp;';
 				$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
 			}
 		} else {
-			echo '<input type="button" name="viewBut" value="View" onclick="document.location.replace(\''.$sysURL.'/controller/Detail.php?bo='.get_class($this->BO).'&oid='.$this->BO->get_ID().'\')"/>';
+			echo '<input type="button" name="viewBut" value="View" onclick="document.location.replace(\''.$config->get('sysURL').'/controller/Detail.php?bo='.get_class($this->BO).'&oid='.$this->BO->get_ID().'\')"/>';
 			echo '&nbsp;&nbsp;';
 			echo '<input type="submit" name="editBut" value="Edit"/>';
 			echo '&nbsp;&nbsp;';
@@ -448,7 +448,7 @@ class View {
 	 * displays a detailed view of the object
 	 */
 	function detailed_view() {
-		global $sysURL;
+		global $config;
 
 		$properties = get_object_vars($this->BO);
 		$obj_type = '';
@@ -502,7 +502,7 @@ class View {
 		if (class_exists("button")) {
 			$temp = new button("history.back()", "Back", "backBut");
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".$sysURL."/alpha/controller/Edit.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "Edit", "editBut");
+			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/Edit.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "Edit", "editBut");
 			echo '&nbsp;&nbsp;';
 			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
 		} else {
@@ -519,7 +519,7 @@ class View {
 	 * Renders the admin view for the business object screen.
 	 */
 	function admin_view() {
-		global $sysURL;
+		global $config;
 
 		$properties = get_object_vars($this->BO);
 		$obj_type = '';
@@ -545,9 +545,9 @@ class View {
 
 		echo '<tr><td colspan="5" align="center">';
 		if (class_exists("button")) {
-			$temp = new button("document.location = '".$sysURL."/alpha/controller/Create.php?bo=".get_class($this->BO)."'", "Create New", "createBut");
+			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/Create.php?bo=".get_class($this->BO)."'", "Create New", "createBut");
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".$sysURL."/alpha/controller/ListAll.php?bo=".get_class($this->BO)."&no-forceframe=true'", "List All", "listBut");
+			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/ListAll.php?bo=".get_class($this->BO)."&no-forceframe=true'", "List All", "listBut");
 			if (!$this->BO->check_table_exists()) {
 				echo '&nbsp;&nbsp;';
 				$temp = new button("submit", "Create Table", "createTableBut");
@@ -568,7 +568,7 @@ class View {
 			}
 		} else {
 			// !! this section needs updating !!
-			echo '<input type="button" name="viewBut" value="View" onclick="document.location.replace(\''.$sysURL.'/alpha/controller/Detail.php?bo='.get_class($this->BO).'&oid='.$this->BO->get_ID().'\')"/>';
+			echo '<input type="button" name="viewBut" value="View" onclick="document.location.replace(\''.$config->get('sysURL').'/alpha/controller/Detail.php?bo='.get_class($this->BO).'&oid='.$this->BO->get_ID().'\')"/>';
 			echo '&nbsp;&nbsp;';
 			echo '<input type="submit" name="editBut" value="Edit"/>';
 			echo '&nbsp;&nbsp;';
