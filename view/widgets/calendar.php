@@ -2,13 +2,14 @@
 
 // $Id$
 
-if (!isset($sysRoot))
-	require_once '../../../config/config.conf';
+if(!isset($config))
+	require_once '../../util/configLoader.inc';
+$config =&configLoader::getInstance();
 
-require_once $sysRoot.'alpha/util/handle_error.inc';
+require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 
-require_once $sysRoot.'alpha/model/types/Date.inc';
-require_once $sysRoot.'alpha/model/types/Timestamp.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Date.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Timestamp.inc';
 
 /**
 * Calendar HTML custom widget
@@ -69,7 +70,7 @@ class calendar{
 	}
 	
 	function render($table_tags) {
-		global $sysURL;
+		global $config;		
 		
 		/*
 		 * decide on the size of the text box and the height of the widget pop-up, 
@@ -90,11 +91,11 @@ class calendar{
 
 			echo '<td>';
 			echo '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->get_value().'" readonly/>';
-			$tmp = new button("window.open('".$sysURL."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=205,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $sysURL."/alpha/images/icons/calendar.png");
+			$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=205,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $config->get('sysURL')."/alpha/images/icons/calendar.png");
 			echo '</td></tr>';
 		}else{
 			echo '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->get_value().'" readonly/>';
-			$tmp = new button("window.open('".$sysURL."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=205,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $sysURL."/alpha/images/icons/calendar.png");
+			$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=205,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $config->get('sysURL')."/alpha/images/icons/calendar.png");
 		}
 	}
 	
@@ -102,7 +103,8 @@ class calendar{
 	 * renders the HTML for the current month
 	 */
 	function render_month() {
-		global $sysURL;
+		global $config;
+		//global $sysURL;
 		
 		if(isset($_GET["display_month"]))
 			$month = $_GET["display_month"];
@@ -228,23 +230,23 @@ class calendar{
 		
 		echo '<tr>';
 		echo '<td colspan="3" align="center">';
-		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".($year-1)."&display_month=".$month."';", "Previous year", "yearPreBut", $sysURL."/alpha/images/icons/arrow_left.png");
+		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".($year-1)."&display_month=".$month."';", "Previous year", "yearPreBut", $config->get('sysURL')."/alpha/images/icons/arrow_left.png");
 		echo 'Year';
-		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".($year+1)."&display_month=".$month."';", "Next year", "yearNextBut", $sysURL."/alpha/images/icons/arrow_right.png");
+		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".($year+1)."&display_month=".$month."';", "Next year", "yearNextBut", $config->get('sysURL')."/alpha/images/icons/arrow_right.png");
 		echo '</td>';
 		echo '<td>&nbsp;</td>';
 		echo '<td colspan="3" align="center">';
-		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".$year."&display_month=".($month-1)."';", "Previous month", "monthPreBut", $sysURL."/alpha/images/icons/arrow_left.png");
+		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".$year."&display_month=".($month-1)."';", "Previous month", "monthPreBut", $config->get('sysURL')."/alpha/images/icons/arrow_left.png");
 		echo 'Month';
-		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".$year."&display_month=".($month+1)."';", "Next month", "monthNextBut", $sysURL."/alpha/images/icons/arrow_right.png");
+		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".$year."&display_month=".($month+1)."';", "Next month", "monthNextBut", $config->get('sysURL')."/alpha/images/icons/arrow_right.png");
 		echo '</td>';
 		echo '</tr>';
 		
 		echo '<tr>';
 		echo '<td colspan="7" align="center" class="headCalendar">';
-		$tmp = new button("window.close();", "Cancel", "cancelBut", $sysURL."/alpha/images/icons/cancel.png");
+		$tmp = new button("window.close();", "Cancel", "cancelBut", $config->get('sysURL')."/alpha/images/icons/cancel.png");
 		echo '&nbsp;&nbsp;&nbsp;';		
-		$tmp = new button("window.opener.document.getElementById('".$this->name."').value = date_selected; window.close();", "Accept", "acceptBut", $sysURL."/alpha/images/icons/accept.png");
+		$tmp = new button("window.opener.document.getElementById('".$this->name."').value = date_selected; window.close();", "Accept", "acceptBut", $config->get('sysURL')."/alpha/images/icons/accept.png");
 		echo '</td>';
 		echo '</tr>';
 		
@@ -252,18 +254,16 @@ class calendar{
 	}
 	
 	function display_page_head() {
-		global $sysURL;
-		global $sysTheme;
-		global $sysRoot;
+		global $config;		
 		
 		echo '<html>';
 		echo '<head>';
 		echo '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">';
 		echo '<title>Calendar</title>';		
 		
-		echo '<link rel="StyleSheet" type="text/css" href="'.$sysURL.'/config/css/'.$sysTheme.'.css.php">';
+		echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$config->get('sysTheme').'.css.php">';
 		
-		echo '<script language="JavaScript" src="'.$sysURL.'/alpha/scripts/addOnloadEvent.js"></script>';
+		echo '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
 		
 		echo '<script language="javascript">';
 		echo 'var date_selected = "'.$this->date_object->get_value().'";';
@@ -336,7 +336,7 @@ class calendar{
 		echo '}';
 		echo '</script>';
 		
-		require_once $sysRoot.'alpha/view/widgets/button.js.php';
+		require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
 		
 		echo '</head>';
 		echo '<body>';		

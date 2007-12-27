@@ -2,16 +2,14 @@
 
 // $Id$
 
-if (!isset($sysRoot))
-	$sysRoot = '../../../';
+if(!isset($config))
+	require_once '../../util/configLoader.inc';
+$config =&configLoader::getInstance();
 
-if (!isset($sysURL))
-	$sysURL = '../../../';
+require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 
-require_once $sysRoot.'alpha/util/handle_error.inc';
-
-require_once $sysRoot.'alpha/model/types/String.inc';
-require_once $sysRoot.'alpha/model/types/Text.inc';
+require_once $config->get('sysRoot').'alpha/model/types/String.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
 
 /**
 * Button HTML custom widget
@@ -273,6 +271,6 @@ EOS;
 if (isset($_GET["render_javascript"]))
 	button::render_javascript();
 else
-	echo '<script language="JavaScript" src="'.$sysURL.'/alpha/view/widgets/button.js.php?render_javascript"></script>';
+	echo '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/view/widgets/button.js.php?render_javascript"></script>';
 
 ?>
