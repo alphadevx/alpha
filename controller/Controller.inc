@@ -229,6 +229,9 @@ class Controller
 	  * @param array $jobs An array of file names that make up the unit of work
 	  */
 	 function set_unit_of_work($jobs) {
+	 	if(method_exists($this, 'before_set_unit_of_work_callback'))
+			$this->before_set_unit_of_work_callback();
+		
 	 	$num_of_jobs = count($jobs);
 	 	
 	 	for($i=0; $i<$num_of_jobs; $i++) {
@@ -251,8 +254,11 @@ class Controller
 	 		if($i==($num_of_jobs-1)) {
 	 			$this->last_job = $jobs[$i];
 	 		}	
-	 	}	 	
-	 	$_SESSION["unit_of_work"] = $jobs;	 	
+	 	}
+	 	$_SESSION["unit_of_work"] = $jobs;
+	 	
+	 	if(method_exists($this, 'after_set_unit_of_work_callback'))
+			$this->after_set_unit_of_work_callback();
 	 }
 	 
 	 /**
@@ -343,9 +349,15 @@ class Controller
 	  * @param business_object $object
 	  */
 	 function mark_dirty($object) {
+	 	if(method_exists($this, 'before_mark_dirty_callback'))
+			$this->before_mark_dirty_callback();
+		
 	 	$this->dirty_objects[count($this->dirty_objects)] = $object;
 	 	
 	 	$_SESSION["dirty_objects"] = $this->dirty_objects;
+	 	
+	 	if(method_exists($this, 'after_mark_dirty_callback'))
+			$this->after_mark_dirty_callback();
 	 }
 	 
 	 /**
@@ -361,9 +373,15 @@ class Controller
 	  * @param business_object $object
 	  */
 	 function mark_new($object) {
+	 	if(method_exists($this, 'before_mark_new_callback'))
+			$this->before_mark_new_callback();
+		
 	 	$this->new_objects[count($this->new_objects)] = $object;
 	 	
 	 	$_SESSION["new_objects"] = $this->new_objects;
+	 	
+	 	if(method_exists($this, 'after_mark_new_callback'))
+			$this->after_mark_new_callback();
 	 }
 	 
 	 /**
@@ -379,6 +397,9 @@ class Controller
 	 * @return bool True on success, false otherwise
 	 */
 	function commit() {
+		if(method_exists($this, 'before_commit_callback'))
+			$this->before_commit_callback();
+		
 		$sql_query = 'BEGIN;';		
 
 		$result = mysql_query($sql_query);		
@@ -416,6 +437,9 @@ class Controller
 		$_SESSION["new_objects"] = null;
 		
 		if (mysql_error() == '') {
+			if(method_exists($this, 'after_commit_callback'))
+				$this->after_commit_callback();
+			
 			return true;
 		}else{					
 			$this->last_query .= " Error: ".mysql_error();
@@ -429,6 +453,9 @@ class Controller
 	 * @return bool True on success, false otherwise
 	 */
 	function abort() {
+		if(method_exists($this, 'before_abort_callback'))
+			$this->before_abort_callback();
+		
 		$_SESSION["unit_of_work"] = null;
 		$_SESSION["dirty_objects"] = null;
 		$_SESSION["new_objects"] = null;
@@ -438,6 +465,9 @@ class Controller
 		$result = mysql_query($sql_query);
 		
 		if (mysql_error() == '') {
+			if(method_exists($this, 'after_abort_callback'))
+				$this->after_abort_callback();
+			
 			return true;
 		}else{					
 			$this->last_query .= " Error: ".mysql_error();
@@ -450,6 +480,9 @@ class Controller
 	 * method to display the page head
 	 */
 	function display_page_head() {
+		if(method_exists($this, 'before_display_page_head_callback'))
+			$this->before_display_page_head_callback();
+		
 		global $config;		
 		
 		echo '<html>';
@@ -494,14 +527,23 @@ class Controller
 		}else{
 			echo '<p>You are not logged in</p>';
 		}
+		
+		if(method_exists($this, 'after_display_page_head_callback'))
+			$this->after_display_page_head_callback();
 	}
 	
 	/**
 	 * method to display the page footer
 	 */
 	function display_page_foot() {
+		if(method_exists($this, 'before_display_page_foot_callback'))
+			$this->before_display_page_foot_callback();
+		
 		echo '</body>';
 		echo '</html>';
+		
+		if(method_exists($this, 'after_display_page_foot_callback'))
+			$this->after_display_page_foot_callback();
 	}
 	
 	/**
@@ -556,6 +598,9 @@ class Controller
 	 * method to display an access error for trespassing users
 	 */
 	function access_error() {
+		if(method_exists($this, 'before_access_error_callback'))
+			$this->before_access_error_callback();
+		
 		global $config;		
 		
 		// set up the title and meta details
@@ -570,6 +615,9 @@ class Controller
 		echo '<p align="center"><a href="'.$config->get('sysURL').'">Home Page</a></p>';
 		
 		$this->display_page_foot();
+		
+		if(method_exists($this, 'after_access_error_callback'))
+			$this->after_access_error_callback();
 	}
 	
 	/**
@@ -577,16 +625,28 @@ class Controller
 	 * @return boolean true if valid user, false otherwise
 	 */
 	function check_rights() {
+		if(method_exists($this, 'before_check_rights_callback'))
+			$this->before_check_rights_callback();
+		
 		// firstly if the page is public then there is no issue
 		if ($this->get_visibility() == 'public') {
+			if(method_exists($this, 'after_check_rights_callback'))
+				$this->after_check_rights_callback();
+		
 			return true;
 		}else{
 			// the person is logged in
 			if (isset($_SESSION["current_user"])) {				
 				if ($_SESSION["current_user"]->get_access_level() == $this->get_visibility()) {
+					if(method_exists($this, 'after_check_rights_callback'))
+						$this->after_check_rights_callback();
+					
 					return true;
 				// the person is editing their own profile which is allowed
 				} elseif (get_class($this->BO) == "person_object" && $_SESSION["current_user"]->get_displayname() == $this->BO->get_displayname()) {
+					if(method_exists($this, 'after_check_rights_callback'))
+						$this->after_check_rights_callback();
+					
 					return true;
 				}else{
 					$this->access_error();
@@ -604,12 +664,18 @@ class Controller
 	 * method to render a hidden form for posting the OID of an object to be deleted
 	 */
 	function render_delete_form() {
+		if(method_exists($this, 'before_render_delete_form_callback'))
+			$this->before_render_delete_form_callback();
+		
 		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST" id="delete_form">';
 		echo '<input type="hidden" name="delete_oid" id="delete_oid" value=""/>';
 		if(class_exists("View")) {
 			View::render_security_fields();
 		}
 		echo '</form>';
+		
+		if(method_exists($this, 'after_render_delete_form_callback'))
+			$this->after_render_delete_form_callback();
 	}
 	
 	/**
@@ -620,12 +686,18 @@ class Controller
 	 * @return bool True if the fields are valid, false otherwise 
 	 */
 	function check_security_fields() {
+		if(method_exists($this, 'before_check_security_fields_callback'))
+			$this->before_check_security_fields_callback();
+		
 		// the server hostname + today's date
 		$var1 = md5($_SERVER["HTTP_HOST"].date("Ymd"));
 		// the server's IP plus $var1
 		$var2 = md5($_SERVER['REMOTE_ADDR'].$var1);
 		
-		if ($var1 == $_REQUEST["var1"] || $var2 == $_REQUEST["var2"]) {			
+		if ($var1 == $_REQUEST["var1"] || $var2 == $_REQUEST["var2"]) {
+			if(method_exists($this, 'after_check_security_fields_callback'))
+				$this->after_check_security_fields_callback();
+				
 			return true;
 		}else{
 			/*
@@ -639,10 +711,14 @@ class Controller
 			// the server's IP plus $var1
 			$var2 = md5($_SERVER['REMOTE_ADDR'].$var1);
 			
-			if ($var1 == $_REQUEST["var1"] || $var2 == $_REQUEST["var2"])
+			if ($var1 == $_REQUEST["var1"] || $var2 == $_REQUEST["var2"]) {
+				if(method_exists($this, 'after_check_security_fields_callback'))
+					$this->after_check_security_fields_callback();
+				
 				return true;
-			else
+			}else{
 				return false;
+			}
 		}
 	}
 }
