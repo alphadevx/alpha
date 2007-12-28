@@ -16,7 +16,7 @@
 include("../../../config/config.conf");
 
 // include the database connection file
-include("../../../config/db_connect.inc");
+include("../../../alpha/util/db_connect.inc");
 
 // include the person class file
 include("../../model/person_object.inc");

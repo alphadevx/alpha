@@ -7,7 +7,7 @@ $config =&configLoader::getInstance();
 
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 require_once $config->get('sysRoot').'alpha/view/person.inc';
-require_once $config->get('sysRoot').'config/db_connect.inc';
+require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 
 /**

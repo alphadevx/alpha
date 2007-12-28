@@ -9,7 +9,7 @@ $config =&configLoader::getInstance();
 
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 require_once $config->get('sysRoot').'alpha/view/person.inc';
-require_once $config->get('sysRoot').'config/db_connect.inc';
+require_once $config->get('sysRoot').'config/alpha/util.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/lib/PEAR/PHPUnit/PHPUnit-1.0.0/PHPUnit.php';
 require_once $config->get('sysRoot').'alpha/tests/Enum_Test.php';

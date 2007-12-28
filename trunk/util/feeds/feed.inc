@@ -3,7 +3,7 @@
 // $Id$
 
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
-require_once $config->get('sysRoot').'config/db_connect.inc';
+require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 require_once $config->get('sysRoot').'alpha/view/View.inc';
 require_once $config->get('sysRoot').'alpha/util/log_file.inc';
