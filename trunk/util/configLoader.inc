@@ -67,7 +67,7 @@ class configLoader{
 		 * files, you can override this class and implement this callback method
 		 */
 		if(method_exists($this, 'before_set_callback'))
-			$val = $this->before_set_callback($key, $val);
+			$val = $this->before_set_callback($key, $val, $this->configVars);
 		$this->configVars[$key] = $val;		
   	}
   	
