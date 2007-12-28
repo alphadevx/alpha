@@ -49,7 +49,7 @@ class View {
 	}
 	
 	/**
-	 * static methid which returns a View object or a custom child view for the BO specified if one exists
+	 * static method which returns a View object or a custom child view for the BO specified if one exists
 	 * @param object $BO the main business object that this view is going to render
 	 * @param bool $return_parent flag to enforce the return of this object instead of a child (defaults to false)
 	 * @return object returns a View object, or a child view object from the /view directory if one exists for this BO 
@@ -87,6 +87,9 @@ class View {
 	 * renders the default create view
 	 */
 	function create_view() {
+		if(method_exists($this, 'before_create_view_callback'))
+			$this->before_create_view_callback();
+		
 		global $config;
 
 		$properties = get_object_vars($this->BO);
@@ -210,12 +213,18 @@ class View {
 		$this->render_security_fields();
 
 		echo '</form></table>';
+		
+		if(method_exists($this, 'after_create_view_callback'))
+			$this->after_create_view_callback();
 	}
 
 	/**
 	 * draws a form to enable object editing
 	 */
 	function edit_view() {
+		if(method_exists($this, 'before_edit_view_callback'))
+			$this->before_edit_view_callback();
+		
 		global $config;
 
 		$properties = get_object_vars($this->BO);
@@ -343,6 +352,9 @@ class View {
 		$this->render_security_fields();
 		
 		echo '</form></table>';
+		
+		if(method_exists($this, 'after_edit_view_callback'))
+			$this->after_edit_view_callback();
 	}
 
 	/**
@@ -352,34 +364,14 @@ class View {
 	function set_render_mode($mode) {
 		$this->render_mode = $mode;
 	}
-
-	/**
-	 * echo out the object properties
-	 */
-	function print_contents() {
-		print_r($this);
-	}
-
-	/**
-	 * maps to the save_object method
-	 * @return boolean true if save suceeded, false otherwise
-	 */
-	function save($OID = "") {
-		return $this->save_object($OID);
-	}
-
-	/**
-	 * maps to the load_object method
-	 * @return boolean true if load suceeded, false otherwise
-	 */
-	function load($OID) {
-		return $this->load_object($OID);
-	}
-
+	
 	/**
 	 * Renders the list view.
 	 */
 	function list_view() {
+		if(method_exists($this, 'before_list_view_callback'))
+			$this->before_list_view_callback();
+		
 		global $config;
 
 		$properties = get_object_vars($this->BO);
@@ -442,12 +434,18 @@ class View {
 		
 		echo '</form>';
 		echo '</table>';
+		
+		if(method_exists($this, 'after_list_view_callback'))
+			$this->after_list_view_callback();
 	}
 
 	/**
 	 * displays a detailed view of the object
 	 */
 	function detailed_view() {
+		if(method_exists($this, 'before_detailed_view_callback'))
+			$this->before_detailed_view_callback();
+		
 		global $config;
 
 		$properties = get_object_vars($this->BO);
@@ -513,12 +511,18 @@ class View {
 		echo '</td></tr>';
 
 		echo '</table>';
+		
+		if(method_exists($this, 'after_detailed_view_callback'))
+			$this->after_detailed_view_callback();
 	}
 
 	/**
 	 * Renders the admin view for the business object screen.
 	 */
 	function admin_view() {
+		if(method_exists($this, 'before_admin_view_callback'))
+			$this->before_admin_view_callback();
+		
 		global $config;
 
 		$properties = get_object_vars($this->BO);
@@ -580,6 +584,9 @@ class View {
 		
 		echo '</form>';
 		echo '</table>';
+		
+		if(method_exists($this, 'after_admin_view_callback'))
+			$this->after_admin_view_callback();
 	}
 	
 	/**
