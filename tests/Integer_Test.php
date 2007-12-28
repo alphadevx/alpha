@@ -3,7 +3,7 @@
 // $Id$
 
 require_once '../model/types/Integer.inc';
-require_once '../../config/db_connect.inc';
+require_once '../../alpha/util/db_connect.inc';
 
 /**
  *
