@@ -273,7 +273,7 @@ class person_object extends mysql_DAO
 		
 		$body .= "\n\nKind regards,\n\nAdministrator\n--\n".$config->get('sysURL');
 		
-		return mail($this->get_email(), $subject, $body, "From: $sysReplyTo\r\nReply-To: $sysReplyTo\r\nX-Mailer: PHP/" . phpversion());
+		return mail($this->get_email(), $subject, $body, "From: ".$config->get('sysReplyTo')."\r\nReply-To: ".$config->get('sysReplyTo')."\r\nX-Mailer: PHP/" . phpversion());
 	}
 	
 	/**
