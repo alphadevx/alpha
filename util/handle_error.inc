@@ -35,7 +35,7 @@ require_once $config->get('sysRoot').'alpha/util/log_file.inc';
 	 */
 	var $method;
 	/**
-	 * the error type
+	 * the error type (validation, warning, php, framework, other)
 	 * @var string
 	 */
 	var $type;
@@ -80,18 +80,24 @@ require_once $config->get('sysRoot').'alpha/util/log_file.inc';
 					echo '<p class="error">An error has occured in file: ['.$this->sys_file.'], message: <br>The method ['.$this->method.'] has generated the following error message: ['.$this->message.']</p>';	
 				if($config->get('sysErrorPhpLog'))
 					$this->log_error_to_file();
+				if($config->get('sysErrorMailSysAdmin'))
+					$this->notify_admin();
 			break;
 			case "framework":
 				if($config->get('sysErrorFrameworkDisplay'))
 					echo '<p class="error">An error has occured in file: ['.$this->sys_file.'], message: <br>The method ['.$this->method.'] has generated the following error message: ['.$this->message.']</p>';	
 				if($config->get('sysErrorFrameworkLog'))
 					$this->log_error_to_file();
+				if($config->get('sysErrorMailSysAdmin'))
+					$this->notify_admin();
 			break;
 			case "other":
 				if($config->get('sysErrorOtherDisplay'))
 					echo '<p class="error">An error has occured in file: ['.$this->sys_file.'], message: <br>The method ['.$this->method.'] has generated the following error message: ['.$this->message.']</p>';	
 				if($config->get('sysErrorOtherLog'))
 					$this->log_error_to_file();
+				if($config->get('sysErrorMailSysAdmin'))
+					$this->notify_admin();
 			break;
 		}
 	}
@@ -100,7 +106,7 @@ require_once $config->get('sysRoot').'alpha/util/log_file.inc';
 	 * method to log an error to a text file
 	 */
 	function log_error_to_file() {
-		global $config;		
+		global $config;
 
 		//sets up the date and time variables		
 		$dateTime = date("Y-m-d H:i:s");		
@@ -114,7 +120,28 @@ require_once $config->get('sysRoot').'alpha/util/log_file.inc';
 		$error_log = new log_file($config->get('sysErrorLogFile'));
 		$error_log->set_max_size($config->get('sysErrorLogFileMaxEntires'));	
 		$error_log->write_line(array($dateTime, $this->sys_file, $this->method, $this->message, $this->type, $ip, $host, $browser));
-	}	
+	}
+	
+	/**
+	 * Notify the sys admin when a serious error occurs
+	 */
+	function notify_admin() {
+		global $config;
+		
+		// just making sure an email address has been set in the .ini file
+		if($config->get('sysErrorMailAddress') != "") {
+			$body = "The following error has occured:\n\n";
+		
+			$body .= "File:-> ".$this->sys_file."\n\n";
+			$body .= "Message:-> ".$this->message."\n\n";
+			$body .= "Method:-> ".$this->method."\n\n";
+			$body .= "Type:-> ".$this->type."\n\n";
+			
+			$body .= "\n\nKind regards,\n\nAdministrator\n--\n".$config->get('sysURL');
+			
+			mail($config->get('sysErrorMailAddress'), "Error in file ".$this->sys_file." on site .".$config->get('sysTitle'), $body, "From: ".$config->get('sysReplyTo')."\r\nReply-To: ".$config->get('sysReplyTo')."\r\nX-Mailer: PHP/" . phpversion());
+		}
+	}
 }
  
 ?>
