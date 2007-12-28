@@ -142,6 +142,9 @@ class mysql_DAO
 	 */
 	function load_all($start=0, $limit=0, $order_by="OID", $order="ASC")
 	{
+		if(method_exists($this, 'before_load_all_callback'))
+			$this->before_load_all_callback();
+		
 		global $config;
 		
 		if ($limit == 0)
@@ -169,6 +172,9 @@ class mysql_DAO
 			$objects[$count] = $obj;
 			$count++;			
 		}
+		
+		if(method_exists($this, 'after_load_all_callback'))
+			$this->after_load_all_callback();
 		
 		return $objects;	
 	}
@@ -322,6 +328,9 @@ class mysql_DAO
 	 * @return integer version_num
 	 */
 	function get_version() {
+		if(method_exists($this, 'before_get_version_callback'))
+			$this->before_load_callback();
+		
 		$sql_query = 'SELECT version_num FROM '.$this->TABLE_NAME.' WHERE OID = \''.$this->OID.'\';';
 		
 		$this->last_query = $sql_query;
@@ -336,6 +345,9 @@ class mysql_DAO
 			$version_num = 0;
 		
 		if (mysql_error() == '') {
+			if(method_exists($this, 'after_get_version_callback'))
+				$this->after_get_version_callback();
+			
 			return $version_num;
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
@@ -564,6 +576,9 @@ class mysql_DAO
 	 * @return integer The MAX ID
 	 */
 	function get_MAX() {
+		if(method_exists($this, 'before_get_MAX_callback'))
+			$this->before_get_MAX_callback();
+		
 		$sql_query = "SELECT MAX(OID) AS max_ID FROM ".$this->TABLE_NAME;
 
 		$this->last_query = $sql_query;
@@ -572,7 +587,10 @@ class mysql_DAO
 
 		$row = mysql_fetch_assoc($result);
 
-		if (mysql_error() == '') {			
+		if (mysql_error() == '') {
+			if(method_exists($this, 'after_get_MAX_callback'))
+				$this->after_get_MAX_callback();
+					
 			return $row["max_ID"];
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
@@ -586,6 +604,9 @@ class mysql_DAO
 	 * @return integer The count
 	 */
 	function get_count() {
+		if(method_exists($this, 'before_get_count_callback'))
+			$this->before_get_count_callback();
+		
 		$sql_query = "SELECT COUNT(OID) AS class_count FROM ".$this->TABLE_NAME;
 
 		$this->last_query = $sql_query;
@@ -594,7 +615,10 @@ class mysql_DAO
 
 		$row = mysql_fetch_assoc($result);
 
-		if (mysql_error() == '') {			
+		if (mysql_error() == '') {
+			if(method_exists($this, 'after_get_count_callback'))
+				$this->after_get_count_callback();
+				
 			return $row["class_count"];
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
@@ -616,6 +640,9 @@ class mysql_DAO
 	 * @return bool true on success, false otherwise
 	 */
 	function set_enum_options() {
+		if(method_exists($this, 'before_set_enum_options_callback'))
+			$this->before_set_enum_options_callback();
+		
 		$properties = get_object_vars($this);		
 		$obj_type = '';
 
@@ -639,7 +666,10 @@ class mysql_DAO
 			}
 		}
 		
-		if (mysql_error() == '') {			
+		if (mysql_error() == '') {
+			if(method_exists($this, 'after_set_enum_options_callback'))
+				$this->after_set_enum_options_callback();
+				
 			return true;
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
@@ -657,12 +687,24 @@ class mysql_DAO
 	 * @return <variable> the value of the property
 	 */
 	function get($prop, $no_child_methods = false) {
-		if(!$no_child_methods && method_exists($this, "get_".$prop)) {			
+		if(method_exists($this, 'before_get_callback'))
+			$this->before_get_callback();
+		
+		if(!$no_child_methods && method_exists($this, "get_".$prop)) {
+			if(method_exists($this, 'after_get_callback'))
+				$this->after_get_callback();
+				
 			return eval('return $this->get_'.$prop.'();');
 		}else{
 			if(isset($this->$prop) && method_exists($this->$prop, "get_value")) {
+				if(method_exists($this, 'after_get_callback'))
+					$this->after_get_callback();
+				
 				return $this->$prop->get_value();
 			}elseif(isset($this->$prop)) {
+				if(method_exists($this, 'after_get_callback'))
+					$this->after_get_callback();
+					
 				return $this->$prop;
 			}else{
 				$error = new handle_error($_SERVER["PHP_SELF"],'Could not access the property '.$prop.' on the object '.get_class($this).'.','get()','framework');
@@ -680,12 +722,24 @@ class mysql_DAO
 	 * @param boolean $no_child_methods true if you don't want to use any get_$prop method even if it exists, false otherwise (default)
 	 */
 	function set($prop, $value, $no_child_methods = false) {
-		if(!$no_child_methods && method_exists($this, "set_".$prop)) {			
+		if(method_exists($this, 'before_set_callback'))
+			$this->before_set_callback();
+		
+		if(!$no_child_methods && method_exists($this, "set_".$prop)) {
+			if(method_exists($this, 'after_set_callback'))
+				$this->after_set_callback();
+			
 			return eval("return \$this->set_".$prop."('$value');");
 		}else{
 			if(isset($this->$prop) && method_exists($this->$prop, "set_value")) {
+				if(method_exists($this, 'after_set_callback'))
+					$this->after_set_callback();
+				
 				$this->$prop->set_value($value);
 			}elseif(isset($this->$prop)) {
+				if(method_exists($this, 'after_set_callback'))
+					$this->after_set_callback();
+				
 				$this->$prop = $value;
 			}else{
 				$error = new handle_error($_SERVER["PHP_SELF"],'Could not set the property '.$prop.' on the object '.get_class($this).'.  Property may not exist, or else does not have a set_value() method.','set()','framework');
@@ -699,7 +753,13 @@ class mysql_DAO
 	 * @return <object> the property object
 	 */
 	function get_prop_object($prop) {
+		if(method_exists($this, 'before_get_prop_object_callback'))
+			$this->before_get_prop_object_callback();
+		
 		if(isset($this->$prop)) {
+			if(method_exists($this, 'after_get_prop_object_callback'))
+				$this->after_get_prop_object_callback();
+			
 			return $this->$prop;
 		}else{
 			$error = new handle_error($_SERVER["PHP_SELF"],'Could not access the property '.$prop.' on the object '.get_class($this).'.','get_prop_object()','framework');
@@ -712,6 +772,9 @@ class mysql_DAO
 	 * @return boolean true if the table exists, false otherwise 
 	 */
 	function check_table_exists() {
+		if(method_exists($this, 'before_check_table_exists_callback'))
+			$this->before_check_table_exists_callback();
+		
 		global $config;
 		
 		$table_exists = false;
@@ -723,7 +786,10 @@ class mysql_DAO
     			$table_exists = true;
 		}		
 		
-		if (mysql_error() == '') {			
+		if (mysql_error() == '') {
+			if(method_exists($this, 'after_check_table_exists_callback'))
+				$this->after_check_table_exists_callback();
+			
 			return $table_exists;
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
@@ -736,7 +802,9 @@ class mysql_DAO
 	 * checks to see if the table in the database matches (for fields) the business class definition
 	 * @return boolean true if the table needs updating, false otherwise 
 	 */
-	function check_table_needs_update() {		
+	function check_table_needs_update() {
+		if(method_exists($this, 'before_check_table_needs_update_callback'))
+			$this->before_check_table_needs_update_callback();
 		
 		$table_exists = $this->check_table_exists();
 		
@@ -773,7 +841,10 @@ class mysql_DAO
 			if ($match_count != 0)
 				$update_required = true;
 			
-			if (mysql_error() == '') {			
+			if (mysql_error() == '') {
+				if(method_exists($this, 'before_check_table_needs_update_callback'))
+					$this->before_check_table_needs_update_callback();
+					
 				return $update_required;
 			}else{			
 				$this->last_query .= " Error: ".mysql_error();
@@ -787,7 +858,9 @@ class mysql_DAO
 	 * returns an array containing any properties on the class which have not been created on the database table yet
 	 * @return array an array of class properties (may be empty)
 	 */
-	function find_missing_fields() {		
+	function find_missing_fields() {
+		if(method_exists($this, 'before_find_missing_fields_callback'))
+			$this->before_find_missing_fields_callback();
 		
 		$missing_fields = array();
 		$found_fields = array();
@@ -822,8 +895,11 @@ class mysql_DAO
 			$this->last_query .= " Error: ".mysql_error();
 			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to access the system database correctly','check_table_needs_update()','framework');
 		}
-			
-		return $missing_fields;		
+		
+		if(method_exists($this, 'after_find_missing_fields_callback'))
+			$this->after_find_missing_fields_callback();
+		
+		return $missing_fields;	
 	}
 	
 	/**
