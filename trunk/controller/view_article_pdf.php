@@ -8,6 +8,7 @@ if(!isset($config))
 $config =&configLoader::getInstance();
 
 require_once $config->get('sysRoot').'alpha/util/fpdf_facade.inc';
+require_once $config->get('sysRoot').'alpha/util/alpha_markdown.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/model/article_object.inc';
