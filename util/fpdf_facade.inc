@@ -1,6 +1,6 @@
 <?php
 
-// $Id: markdown_facade.inc 302 2007-05-12 16:07:15Z john $
+// $Id$
 
 require_once $config->get('sysRoot').'alpha/util/alpha_fpdf.inc';
 
@@ -147,7 +147,14 @@ class fpdf_facade
 	 * @return bool true if the file exists, false otherwise
 	 */
 	function check_html_cache() {
-		return file_exists($this->html_filename);
+		global $config;
+		
+		/*
+		 * we can't use the HTML cahce contents if sysCMSImagesWidget is set to true, because images will
+		 * be Javascript calls to insertImage rather than regular HTML tags that the PDF parser understands
+		 */
+		if(!$config->get('sysCMSImagesWidget'))
+			return file_exists($this->html_filename);
 	}
 	
 	/**
