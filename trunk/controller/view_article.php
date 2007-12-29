@@ -114,7 +114,7 @@ class view_article extends Controller
 			require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
 			require_once $config->get('sysRoot').'alpha/view/widgets/string_box.js.php';
 			require_once $config->get('sysRoot').'alpha/view/widgets/text_box.js.php';
-		
+			require_once $config->get('sysRoot').'alpha/view/widgets/image.js.php';
 			require_once $config->get('sysRoot').'alpha/view/widgets/form_validator.js.php';
 		
 			echo '<script type="text/javascript">';
