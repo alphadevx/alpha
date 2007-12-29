@@ -125,7 +125,10 @@ class image
 		global $config;
 		
 		if(!strpos($source, 'attachments/article_')) {
-			$this->filename = $config->get('sysRoot').'cache/images/'.basename($this->source, ".".$this->sourceType->get_value()).'_'.$this->width->get_value().'x'.$this->height->get_value().'.jpg';
+			if($this->sourceType->get_value() == 'png' && $config->get('sysImagesPerservePNG'))
+				$this->filename = $config->get('sysRoot').'cache/images/'.basename($this->source, ".".$this->sourceType->get_value()).'_'.$this->width->get_value().'x'.$this->height->get_value().'.png';
+			else
+				$this->filename = $config->get('sysRoot').'cache/images/'.basename($this->source, ".".$this->sourceType->get_value()).'_'.$this->width->get_value().'x'.$this->height->get_value().'.jpg';
 		}else{
 			// make a cache dir for the article
 			$cache_dir = $config->get('sysRoot').'cache/images/article_'.substr($source, strpos($source, 'attachments/article_')+20, 11);
@@ -145,7 +148,10 @@ class image
 			}
 			
 			// now set the filename to include the new cache directory
-			$this->filename = $cache_dir.'/'.basename($this->source, ".".$this->sourceType->get_value()).'_'.$this->width->get_value().'x'.$this->height->get_value().'.jpg';
+			if($this->sourceType->get_value() == 'png' && $config->get('sysImagesPerservePNG'))
+				$this->filename = $cache_dir.'/'.basename($this->source, ".".$this->sourceType->get_value()).'_'.$this->width->get_value().'x'.$this->height->get_value().'.png';
+			else
+				$this->filename = $cache_dir.'/'.basename($this->source, ".".$this->sourceType->get_value()).'_'.$this->width->get_value().'x'.$this->height->get_value().'.jpg';
 		}
 	}
 	
@@ -179,8 +185,13 @@ class image
 			    imagefilledrectangle($im, 0, 0, $this->width->get_value(), $this->height->get_value(), $bgc); 
 			    
 			    imagestring($im, 1, 5, 5, "Error loading $this->source", $tc);
-			    header("Content-Type: image/jpeg");
-				imagejpeg($im);
+			    if($this->sourceType->get_value() == 'png' && $config->get('sysImagesPerservePNG')) {
+			    	header("Content-Type: image/png");
+					imagepng($im);
+			    }else{
+				    header("Content-Type: image/jpeg");
+					imagejpeg($im);
+			    }
 				imagedestroy($im);
 		    }else{
 				// the dimensions of the source image
@@ -190,13 +201,32 @@ class image
 				// now create the new image
 				$new_image = imagecreatetruecolor($this->width->get_value(), $this->height->get_value());
 			
-				// copy the old image to the new image (in memory, not the file!)	
-				imagecopyresampled($new_image, $old_image, 0, 0, 0, 0, $this->width->get_value(), $this->height->get_value(), $oldWidth, $oldHeight);	
+				// set a transparent background for PNGs
+				if($this->sourceType->get_value() == 'png' && $config->get('sysImagesPerservePNG')) {
+					// Turn off transparency blending (temporarily)
+			        imagealphablending($new_image, false);
+			
+			        // Create a new transparent color for image
+			        $color = imagecolorallocatealpha($new_image, 255, 0, 0, 0);
+			
+			        // Completely fill the background of the new image with allocated color.
+			        imagefill($new_image, 0, 0, $color);
+			
+			        // Restore transparency blending
+			        imagesavealpha($new_image, true);
+				}
+		        // copy the old image to the new image (in memory, not the file!)
+		        imagecopyresampled($new_image, $old_image, 0, 0, 0, 0, $this->width->get_value(), $this->height->get_value(), $oldWidth, $oldHeight);	
 				
 				// just making sure that we are not running in cache-only mode before sending output
 				if(!$this->cache_only->get_value()) {
-					header("Content-Type: image/jpeg");
-					imagejpeg($new_image, '', 100*$this->quality->get_value());
+					if($this->sourceType->get_value() == 'png' && $config->get('sysImagesPerservePNG')) {
+						header("Content-Type: image/png");
+						imagepng($new_image);
+					}else{
+						header("Content-Type: image/jpeg");
+						imagejpeg($new_image, '', 100*$this->quality->get_value());
+					}
 				}
 				$this->cache($new_image);
 				imagedestroy($old_image);
@@ -209,8 +239,13 @@ class image
 	 * caches the image to the cache directory
 	 * @param image $image the binary GD image stream to save
 	 */
-	function cache($image) {		
-		imagejpeg($image, $this->filename, 100*$this->quality->get_value());
+	function cache($image) {
+		global $config;
+		
+		if($this->sourceType->get_value() == 'png' && $config->get('sysImagesPerservePNG'))
+			imagepng($image, $this->filename);
+		else
+			imagejpeg($image, $this->filename, 100*$this->quality->get_value());
 	}
 	
 	/**
