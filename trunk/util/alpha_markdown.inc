@@ -1,6 +1,6 @@
 <?php
 
-// $Id: markdown_facade.inc 259 2007-03-03 20:47:13Z john $
+// $Id$
 
 require_once $config->get('sysRoot').'alpha/lib/markdown/markdown.php';
 require_once $config->get('sysRoot').'alpha/lib/geshi.php';
@@ -55,6 +55,47 @@ class alpha_markdown extends MarkdownExtra_Parser {
 		$result = "\n\n".$this->hashBlock("<pre><code>" . $codeblock . "\n</code></pre>")."\n\n";	
 		
 		return $result;		
+	}
+	
+	/**
+	 * Custom _doImages_inline_callback() method that returns the Javascript for insertImage() when the 
+	 * system is configured to do so, via sysCMSImagesWidget in the .ini, otherwise reverts to normal Markdown
+	 * behaviour for handling images.
+	 * 
+	 */	
+	function _doImages_inline_callback($matches) {
+		global $config;
+		
+		// just making sure that the option is configured, and that the controller is not the PDF one
+		if($config->get('sysCMSImagesWidget') && basename($_SERVER["PHP_SELF"]) != 'view_article_pdf.php') {			
+			// get the details of the source image
+			$url			= image::convertImageURLToPath($matches[3]);
+			$image_details = getimagesize($config->get('sysRoot').$url);
+			$imgType = $image_details[2];
+	    	if($imgType == 1)
+	    		$type = 'gif';
+	    	elseif($imgType == 2)
+	    		$type = 'jpg';
+	    	elseif($imgType == 3)
+	    		$type = 'png';
+			
+			$result = "<script language=\"javascript\">insertImage('$url', ".$image_details[0].", ".$image_details[1].", '$type', 0.95, 0, 1);</script>";
+		}else{ // normal Markdown behaviour
+			$whole_match	= $matches[1];
+			$alt_text		= $matches[2];
+			$url			= $matches[3];
+			$title			=& $matches[6];
+	
+			$alt_text = str_replace('"', '&quot;', $alt_text);
+			$result = "<img src=\"$url\" alt=\"$alt_text\"";
+			if (isset($title)) {
+				$title = str_replace('"', '&quot;', $title);
+				$result .=  " title=\"$title\""; # $title already quoted
+			}
+			$result .= $this->empty_element_suffix;			
+		}
+
+		return $this->hashSpan($result);
 	}
 }
 
