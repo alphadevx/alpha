@@ -109,13 +109,44 @@ class image
 		if (isset($_GET["sourceType"])) $this->sourceType->set_value($_GET["sourceType"]);
 		if (isset($_GET["quality"])) $this->quality->set_value($_GET["quality"]);
 		
-		$this->filename = $config->get('sysRoot').'cache/images/'.basename($this->source, ".".$this->sourceType->get_value()).'_'.$this->width->get_value().'x'.$this->height->get_value().'.jpg';
-	
+		$this->set_filename($this->source);
+		
 		// if GET vars where provided, then render the image, otherwise render the JavaScript call for the image creation
 		if (isset($_GET["source"]) || $this->cache_only->get_value())
 			$this->render_image();
 		else
 			$this->render();
+	}
+	
+	/**
+	 * setter for the file name, creates a sub-directory under /cache for attachment images when required
+	 */
+	function set_filename($source) {
+		global $config;
+		
+		if(!strpos($source, 'attachments/article_')) {
+			$this->filename = $config->get('sysRoot').'cache/images/'.basename($this->source, ".".$this->sourceType->get_value()).'_'.$this->width->get_value().'x'.$this->height->get_value().'.jpg';
+		}else{
+			// make a cache dir for the article
+			$cache_dir = $config->get('sysRoot').'cache/images/article_'.substr($source, strpos($source, 'attachments/article_')+20, 11);
+			if(!file_exists($cache_dir)) {
+				$success = mkdir($cache_dir);
+			
+				if (!$success) {
+					$error = new handle_error($_SERVER["PHP_SELF"],'Unable to create the folder '.$cache_dir.' for the cache image, source file is '.$source.'.' ,'set_filename()','framework');
+				}
+				
+				// ...and set write permissions on the folder
+				$success = chmod($cache_dir, 0777);
+					
+				if (!$success) {
+					$error = new handle_error($_SERVER["PHP_SELF"],'Unable to set write permissions on the folder '.$cache_dir.'.','set_filename()','framework');
+				}
+			}
+			
+			// now set the filename to include the new cache directory
+			$this->filename = $cache_dir.'/'.basename($this->source, ".".$this->sourceType->get_value()).'_'.$this->width->get_value().'x'.$this->height->get_value().'.jpg';
+		}
 	}
 	
 	/**
