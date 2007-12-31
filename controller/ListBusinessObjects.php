@@ -192,6 +192,7 @@ class ListBusinessObjects extends Controller
 		echo '<a href="'.$config->get('sysURL').'/alpha/controller/view_log.php?log_path='.$config->get('sysRoot').'alpha/util/logs/feed_log.log'.'">View Feed Log</a>&nbsp;&nbsp;&nbsp;&nbsp;';
 		echo '<a href="'.$config->get('sysURL').'/alpha/controller/gen_secure_query_strings.php">Generate Secure URL</a>&nbsp;&nbsp;&nbsp;&nbsp;';
 		echo '<a href="'.$config->get('sysURL').'/alpha/controller/view_metrics.php">Application Software Metrics</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+		echo '<a href="'.$config->get('sysURL').'/alpha/controller/cache_manager.php">Manage Cache</a>&nbsp;&nbsp;&nbsp;&nbsp;';
 		echo '<a href="'.$config->get('sysURL').'/alpha/tests/view_test_results.php">Application Unit Tests</a></p>';
 	}
 }
