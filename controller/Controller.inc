@@ -685,7 +685,7 @@ class Controller
 	 * 
 	 * @return bool True if the fields are valid, false otherwise 
 	 */
-	function check_security_fields() {
+	function check_security_fields() {		
 		if(method_exists($this, 'before_check_security_fields_callback'))
 			$this->before_check_security_fields_callback();
 		
@@ -694,7 +694,10 @@ class Controller
 		// the server's IP plus $var1
 		$var2 = md5($_SERVER['REMOTE_ADDR'].$var1);
 		
-		if ($var1 == $_REQUEST["var1"] || $var2 == $_REQUEST["var2"]) {
+		if(empty($_REQUEST["var1"]) || empty($_REQUEST["var2"]))
+			return false;
+		
+		if ($var1 == $_REQUEST["var1"] && $var2 == $_REQUEST["var2"]) {			
 			if(method_exists($this, 'after_check_security_fields_callback'))
 				$this->after_check_security_fields_callback();
 				
@@ -711,7 +714,7 @@ class Controller
 			// the server's IP plus $var1
 			$var2 = md5($_SERVER['REMOTE_ADDR'].$var1);
 			
-			if ($var1 == $_REQUEST["var1"] || $var2 == $_REQUEST["var2"]) {
+			if ($var1 == $_REQUEST["var1"] && $var2 == $_REQUEST["var2"]) {				
 				if(method_exists($this, 'after_check_security_fields_callback'))
 					$this->after_check_security_fields_callback();
 				
