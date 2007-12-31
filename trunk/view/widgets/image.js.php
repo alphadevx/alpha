@@ -7,12 +7,16 @@ if(!isset($config))
 $config =&configLoader::getInstance();
 
 require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
-
 require_once $config->get('sysRoot').'alpha/model/types/String.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Integer.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Double.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
+
+if($config->get('sysCMSImagesWidgetSecure')) {
+	require_once $config->get('sysRoot').'alpha/view/View.inc';
+	require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+}
 
 /**
 * Scalable image custom widget
@@ -160,6 +164,32 @@ class image
 	 */
 	function render_image() {
 		global $config;
+		
+		/*
+		 * Handle secure image validation (if enabled in config).
+		 * Not required for the view_article_pdf.php controller.
+		 */
+		if($config->get('sysCMSImagesWidgetSecure') && basename($_SERVER["PHP_SELF"]) != 'view_article_pdf.php') {
+			$valid = Controller::check_security_fields();			
+			
+			// if not valid, just return a blank black image of the same dimensions
+			if(!$valid) {
+				$im  = imagecreatetruecolor($this->width->get_value(), $this->height->get_value()); /* Create a blank image */ 
+			    $bgc = imagecolorallocate($im, 0, 0, 0); 
+			    //$tc  = imagecolorallocate($im, 0, 0, 0); 
+			    imagefilledrectangle($im, 0, 0, $this->width->get_value(), $this->height->get_value(), $bgc); 
+			    
+			    //imagestring($im, 5, 5, 5, "Error loading $this->source", $tc);
+			    if($this->sourceType->get_value() == 'png' && $config->get('sysImagesPerservePNG')) {
+			    	header("Content-Type: image/png");
+					imagepng($im);
+			    }else{
+				    header("Content-Type: image/jpeg");
+					imagejpeg($im);
+			    }
+				imagedestroy($im);
+			}
+		}
 		
 		// check the image cache first before we proceed
 		if ($this->check_cache()) {
@@ -315,8 +345,12 @@ class image
 EOS;
 // end of javascript
 // -----------------
-			
-		echo 'document.write(\'<img src="'.$config->get('sysURL').'/alpha/view/widgets/image.js.php?source=\'+source+\'&width=\'+new_width+\'&height=\'+new_height+\'&sourceType=\'+sourceType+\'&quality=\'+quality+\'&scale=\'+scale+\'" width="\'+new_width+\'" height="\'+new_height+\'" border="0"/>\')';
+		if($config->get('sysCMSImagesWidgetSecure')) {
+			$secureFields = View::generate_security_fields();
+			echo 'document.write(\'<img src="'.$config->get('sysURL').'/alpha/view/widgets/image.js.php?source=\'+source+\'&width=\'+new_width+\'&height=\'+new_height+\'&sourceType=\'+sourceType+\'&quality=\'+quality+\'&scale=\'+scale+\'&var1='.$secureFields[0].'&var2='.$secureFields[1].'" width="\'+new_width+\'" height="\'+new_height+\'" border="0"/>\')';
+		}else{
+			echo 'document.write(\'<img src="'.$config->get('sysURL').'/alpha/view/widgets/image.js.php?source=\'+source+\'&width=\'+new_width+\'&height=\'+new_height+\'&sourceType=\'+sourceType+\'&quality=\'+quality+\'&scale=\'+scale+\'" width="\'+new_width+\'" height="\'+new_height+\'" border="0"/>\')';
+		}
 		echo '}';
 
 	} 
