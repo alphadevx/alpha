@@ -40,6 +40,8 @@ class login extends Controller
 	 * constructor to set up the object
 	 */
 	function login() {
+		$this->set_name('/alpha/controller/login.php');
+		
 		// ensure that the super class constructor is called
 		$this->Controller();
 		
@@ -92,9 +94,9 @@ class login extends Controller
 			// check the password
 			if ($success && $this->person_object->get("state") == "Active") {
 				if (crypt($_POST["password"], $this->person_object->get_password()) == $this->person_object->get_password()) {				
-					$_SESSION["current_user"] = $this->person_object;
+					$_SESSION["current_user"] = $this->person_object;					
 					if ($this->get_next_job() != '')
-						header('Location: '.$config->get('sysURL').'/alpha/controller/'.$this->get_next_job());
+						header('Location: '.$config->get('sysURL').$this->get_next_job());
 					else
 						header('Location: '.$config->get('sysURL').'/controller/whats_new.php');
 				}else{								
