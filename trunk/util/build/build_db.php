@@ -13,7 +13,9 @@
 */
 
 // include the config file
-include("../../../config/config.conf");
+if(!isset($config))
+	require_once '../../util/configLoader.inc';
+$config =&configLoader::getInstance();
 
 // include the database connection file
 include("../../../alpha/util/db_connect.inc");
@@ -23,9 +25,6 @@ include("../../model/person_object.inc");
 
 // include the article class file
 include("../../model/article_object.inc");
-
-// include the news class file
-include("../../../model/news_object.inc");
 
 $tmpPerson = new person_object();
 
@@ -53,17 +52,6 @@ $result = $tmpArticle->make_table();
 if($result)
 	echo "Successfully re-created the database table ".$tmpArticle->TABLE_NAME."\n";
 else
-	echo "QUERY FAILED : ".$tmpArticle->last_query."\n";
-	
-$tmpNews = new news_object();
+	echo "QUERY FAILED : ".$tmpArticle->last_query."\n";	
 
-echo "Attempting to build table ".$tmpNews->TABLE_NAME." for class article : \n";
-
-$result = $tmpNews->make_table();
-
-if($result)
-	echo "Successfully re-created the database table ".$tmpNews->TABLE_NAME."\n";
-else
-	echo "QUERY FAILED : ".$tmpNews->last_query."\n";
-	
 ?>
