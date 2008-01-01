@@ -82,11 +82,14 @@ class configLoader{
   		// first check to see if it is a controller under /alpha
   		if(strrpos($currentScript, 'alpha/') != false) {
   			$rootPath = substr($currentScript, 0, strrpos($currentScript, 'alpha/'));
-  		}
-  		
-  		// handle custom controllers at a lower level
-  		if(!strrpos($currentScript, 'alpha/') && strrpos($currentScript, 'controller/') != false) {
+  		}elseif(!strrpos($currentScript, 'alpha/') && strrpos($currentScript, 'controller/') != false) {
+  			// handle custom controllers at a lower level
   			$rootPath = substr($currentScript, 0, strrpos($currentScript, 'controller/'));
+  		}elseif(strrpos($currentScript, 'config/css/') != false) {
+  			// set path for CSS files
+  			$rootPath = substr($currentScript, 0, strrpos($currentScript, 'config/css/'));
+  		}else{
+  			$rootPath = dirname($currentScript);
   		}
   		$config =&configLoader::getInstance();
   		$config->set('rootPath', $rootPath);
@@ -109,7 +112,7 @@ class configLoader{
   	 */
   	function loadConfig() {
   		$config =&configLoader::getInstance();
-  		$rootPath = $config->get('rootPath');
+  		$rootPath = $config->get('rootPath');  		
   		
   		// first we need to see if we are in dev, pro or test environment
   		$server = $_SERVER["SERVER_NAME"];
