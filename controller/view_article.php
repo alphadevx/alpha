@@ -127,14 +127,18 @@ class view_article extends Controller
 		
 		echo '</head>';
 		echo '<body'.(!empty($this->article->body_onload) ? ' onload="'.$this->article->body_onload->get_value().'"' : '').'>';
-		echo '<p><a href="'.$config->get('sysURL').'">'.$config->get('sysTitle').'</a> &nbsp; &nbsp;';
-		$prop_obj = $this->article->get_prop_object("section");
-		echo 'Site Section: <em>'.$prop_obj->get_value().'</em> &nbsp; &nbsp;';
-		$prop_obj = $this->article->get_prop_object("date_added");
-		echo 'Date Added: <em>'.$prop_obj->get_value().'</em> &nbsp; &nbsp;';
-		$prop_obj = $this->article->get_prop_object("date_updated");
-		echo 'Last Updated: <em>'.$prop_obj->get_value().'</em> &nbsp; &nbsp;';
-		echo 'Revision: <em>'.$this->article->get_version().'</em></p>';
+		
+		if($config->get('sysCMSDisplayStandardHeader')) {
+			echo '<p><a href="'.$config->get('sysURL').'">'.$config->get('sysTitle').'</a> &nbsp; &nbsp;';
+			$prop_obj = $this->article->get_prop_object("section");
+			echo 'Site Section: <em>'.$prop_obj->get_value().'</em> &nbsp; &nbsp;';
+			$prop_obj = $this->article->get_prop_object("date_added");
+			echo 'Date Added: <em>'.$prop_obj->get_value().'</em> &nbsp; &nbsp;';
+			$prop_obj = $this->article->get_prop_object("date_updated");
+			echo 'Last Updated: <em>'.$prop_obj->get_value().'</em> &nbsp; &nbsp;';
+			echo 'Revision: <em>'.$this->article->get_version().'</em></p>';
+		}
+		
 		echo $config->get('sysCMSHeader');
 		
 		if(!empty($_POST))
@@ -179,9 +183,11 @@ class view_article extends Controller
 		echo "&nbsp;&nbsp;";
 		$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/view_article_pdf.php?title=".$this->article->get("title")."';","Open PDF Version","pdfBut");
 		
-		echo '<p>Article URL: <a href="'.$this->article->URL.'">'.$this->article->URL.'</a><br>';
-		echo 'Title: '.$this->article->get("title").'<br>';
-		echo 'Author: '.$this->article->get("author").'<br>';
+		if($config->get('sysCMSDisplayStandardFooter')) {
+			echo '<p>Article URL: <a href="'.$this->article->URL.'">'.$this->article->URL.'</a><br>';
+			echo 'Title: '.$this->article->get("title").'<br>';
+			echo 'Author: '.$this->article->get("author").'<br>';
+		}
 		echo $config->get('sysCMSFooter').'</p>';
 		echo '</body>';
 		echo '</html>';
