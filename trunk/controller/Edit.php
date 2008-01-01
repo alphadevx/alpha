@@ -176,6 +176,7 @@ class Edit extends Controller
 }
 
 // now build the new controller
-$controller = new Edit($BO_name, $BO_oid);
+if(basename($_SERVER["PHP_SELF"]) == "Edit.php")
+	$controller = new Edit($BO_name, $BO_oid);
 
 ?>
