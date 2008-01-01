@@ -89,7 +89,7 @@ class configLoader{
   			// set path for CSS files
   			$rootPath = substr($currentScript, 0, strrpos($currentScript, 'config/css/'));
   		}else{
-  			$rootPath = dirname($currentScript);
+  			$rootPath = '';
   		}
   		$config =&configLoader::getInstance();
   		$config->set('rootPath', $rootPath);
