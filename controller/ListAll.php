@@ -259,6 +259,7 @@ class ListAll extends Controller
 }
 
 // now build the new controller
-$controller = new ListAll($BO_name);
+if(basename($_SERVER["PHP_SELF"]) == "ListAll.php")
+	$controller = new ListAll($BO_name);
 
 ?>
