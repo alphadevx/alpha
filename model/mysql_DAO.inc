@@ -532,7 +532,7 @@ class mysql_DAO
 			return true;
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to add the new attribute ['.$prop.'] to the table '.$this->TABLE_NAME,'add_property($prop), database error: '.$this->last_query,'framework');
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to add the new attribute ['.$prop.'] to the table '.$this->TABLE_NAME.', database error: '.$this->last_query, 'add_property()', 'framework');
 			return false;
 		}
 	}
