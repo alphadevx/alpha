@@ -548,24 +548,26 @@ class mysql_DAO
 		$properties = get_class_vars(get_class($this));
 		
 		foreach(array_keys($properties) as $prop) {
-			if(!in_array($prop, $this->default_attributes) && !in_array($prop, $this->transient_attributes)) {
-				// checking to see if we need to use addslashes() on the posted data
-				if(!get_magic_quotes_gpc()) {
-					if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
-						$this->$prop->set_value(addslashes($_POST[$prop]));					
-					}else{						
-						$this->$prop->populate_from_string(addslashes($_POST[$prop]));
-					}
-				}else{
-					if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
-						$this->$prop->set_value($_POST[$prop]);					
-					}else{						
-						$this->$prop->populate_from_string($_POST[$prop]);
+			if(isset($_POST[$prop])) {
+				if(!in_array($prop, $this->default_attributes) && !in_array($prop, $this->transient_attributes)) {
+					// checking to see if we need to use addslashes() on the posted data
+					if(!get_magic_quotes_gpc()) {
+						if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
+							$this->$prop->set_value(addslashes($_POST[$prop]));					
+						}else{						
+							$this->$prop->populate_from_string(addslashes($_POST[$prop]));
+						}
+					}else{
+						if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
+							$this->$prop->set_value($_POST[$prop]);					
+						}else{						
+							$this->$prop->populate_from_string($_POST[$prop]);
+						}
 					}
 				}
+				if ($prop == "version_num" && isset($_POST["version_num"]))
+					$this->version_num->set_value($_POST["version_num"]);
 			}
-			if ($prop == "version_num" && isset($_POST["version_num"]))
-				$this->version_num->set_value($_POST["version_num"]);
 		}
 		if(method_exists($this, 'after_populate_from_post_callback'))
 			$this->after_populate_from_post_callback();	
