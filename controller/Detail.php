@@ -142,10 +142,11 @@ class Detail extends Controller
 		if (isset($_POST["homeBut"])) {
 			header('Location: '.$config->get('sysURL'));
 		}
-	}	
+	}
 }
 
 // now build the new controller
-$controller = new Detail($BO_name, $BO_oid);
+if(basename($_SERVER["PHP_SELF"]) == "Detail.php")
+	$controller = new Detail($BO_name, $BO_oid);
 
 ?>
