@@ -128,6 +128,9 @@ class Create extends Controller
 	 * method to display the page head
 	 */
 	function display_page_head() {
+		if(method_exists($this, 'before_display_page_head_callback'))
+			$this->before_display_page_head_callback();
+		
 		global $config;
 		
 		echo '<html>';
@@ -172,10 +175,14 @@ class Create extends Controller
 		}else{
 			echo '<p>You are not logged in</p>';
 		}
+		
+		if(method_exists($this, 'after_display_page_head_callback'))
+			$this->after_display_page_head_callback();
 	}
 }
 
 // now build the new controller
-$controller = new Create($BO_name);
+if(basename($_SERVER["PHP_SELF"]) == "Create.php")
+	$controller = new Create($BO_name);
 
 ?>
