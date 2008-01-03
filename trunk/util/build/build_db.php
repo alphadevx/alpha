@@ -34,7 +34,7 @@ $result = $tmpPerson->make_table();
 
 $tmpPerson->set("email", "john@design-ireland.net");
 $tmpPerson->set("displayname", "Admin");
-$tmpPerson->set("password", crypt("password","xy"));
+$tmpPerson->set_password("password");
 $tmpPerson->set_access_level("Administrator");
 $tmpPerson->save_object();
 
