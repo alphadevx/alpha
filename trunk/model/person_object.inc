@@ -171,12 +171,12 @@ class person_object extends mysql_DAO
 	}
 	
 	/**
-	 * setter for password
+	 * setter for password, encrypts provided value using crypt()
 	 * @param string $password
 	 */
 	function set_password($password)
 	{
-		$this->password->set_value($password);
+		$this->password->set_value(crypt($password, 'xy'));
 	}
 
 	/**
