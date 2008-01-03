@@ -636,8 +636,14 @@ class Controller
 			return true;
 		}else{
 			// the person is logged in
-			if (isset($_SESSION["current_user"])) {				
-				if ($_SESSION["current_user"]->get_access_level() == $this->get_visibility()) {
+			if (isset($_SESSION["current_user"])) {
+				// checking for admins (can access everything)
+				if ($_SESSION["current_user"]->get_access_level() == 'Administrator') {
+					if(method_exists($this, 'after_check_rights_callback'))
+						$this->after_check_rights_callback();
+					
+					return true;
+				} elseif ($_SESSION["current_user"]->get_access_level() == $this->get_visibility()) {
 					if(method_exists($this, 'after_check_rights_callback'))
 						$this->after_check_rights_callback();
 					
