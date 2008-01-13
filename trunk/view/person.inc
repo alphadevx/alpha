@@ -217,8 +217,7 @@ class person extends View
 						echo '<td>';
 						echo '<select name="'.$prop.'"/>';
 						$enum = $this->BO->get_prop_object($prop);
-						$enum_vals = $enum->get_options();
-						asort($enum_vals);
+						$enum_vals = $enum->get_options();						
 						foreach ($enum_vals as $enum_val) {
 							if ($enum->get_value() == $enum_val)
 								echo '<option value="'.$enum_val.'" selected>'.$enum_val.'</option>';
@@ -256,8 +255,7 @@ class person extends View
 				echo '<td>';
 				echo '<select name="'.$prop.'"/>';
 				$enum = $this->BO->get_prop_object($prop);
-				$enum_vals = $enum->get_options();
-				asort($enum_vals);
+				$enum_vals = $enum->get_options();				
 				foreach ($enum_vals as $enum_val) {
 					if ($enum->get_value() == $enum_val)
 						echo '<option value="'.$enum_val.'" selected>'.$enum_val.'</option>';
@@ -277,8 +275,7 @@ class person extends View
 				echo '<td>';
 				echo '<select name="'.$prop.'"/>';
 				$enum = $this->BO->get_prop_object($prop);
-				$enum_vals = $enum->get_options();
-				asort($enum_vals);
+				$enum_vals = $enum->get_options();				
 				foreach ($enum_vals as $enum_val) {
 					if ($enum->get_value() == $enum_val)
 						echo '<option value="'.$enum_val.'" selected>'.$enum_val.'</option>';
