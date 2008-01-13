@@ -44,11 +44,13 @@ class Enum {
 	}
 	
 	/**
-	 * get the array of enum options, sorted in alphabetical order
+	 * get the array of enum options
+	 * @param bool $alphaSort set to true if you want the Enum options in alphabetical order (default false)
 	 * @return array enum options
 	 */
-	function get_options() {
-		sort($this->options, SORT_STRING);		
+	function get_options($alphaSort = false) {
+		if($alphaSort)
+			sort($this->options, SORT_STRING);		
 		return $this->options;
 	}
 	

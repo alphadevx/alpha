@@ -221,8 +221,7 @@ class article extends View
 						echo '</td>';
 						echo '<td>';
 						echo '<select name="'.$prop.'"/>';
-						$enum_vals = $this->BO-> $prop->get_options();
-						asort($enum_vals);
+						$enum_vals = $this->BO-> $prop->get_options();						
 						foreach ($enum_vals as $enum_val) {
 							echo '<option value="'.$enum_val.'">'.$enum_val.'</option>';
 						}
@@ -354,8 +353,7 @@ class article extends View
 						echo '<td>';
 						echo '<select name="'.$prop.'"/>';
 						$prop_obj = $this->BO->get_prop_object($prop);
-						$enum_vals = $prop_obj->get_options();
-						asort($enum_vals);
+						$enum_vals = $prop_obj->get_options();						
 						foreach ($enum_vals as $enum_val) {
 							if ($prop_obj->get_value() == $enum_val)
 								echo '<option value="'.$enum_val.'" selected>'.$enum_val.'</option>';
