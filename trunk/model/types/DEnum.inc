@@ -1,0 +1,147 @@
+<?php
+
+// $Id$
+
+/**
+ * The DEnum (Dynamic Enum) complex data type.  Similiar to Enum, 
+ * except list items are stored in a database table and are editable.
+ * 
+ * @package Alpha Core Datatype
+ * @author John Collins <john@design-ireland.net>
+ * @copyright 2008 John Collins
+ * 
+ */
+class DEnum extends mysql_DAO {
+	/**
+	 * an array of valid DEnum options
+	 * @var array
+	 */
+	var $options;
+	
+	/**
+	 * the currently selected DEnum option
+	 * @var int
+	 */
+	var $value;
+	
+	/**
+	 * The name of the DEnum used in the database
+	 * @var String
+	 */
+	var $name;	
+	
+	/**
+	 * the name of the database table for the class
+	 * @var string
+	 */
+	var $TABLE_NAME = "DEnum";
+	
+	/**
+	 * constructor that sets up the DEnum options
+	 * @param String $name The name of the DEnum used in the database
+	 */
+	function DEnum($name) {
+		// ensure to call the parent constructor
+		$this->mysql_DAO();
+		
+		$this->mark_transient("options");
+		$this->mark_transient("value");
+		
+		$this->name = new String($name);
+		
+		if(isset($name))
+			$this->get_options();
+	}
+	
+	/**
+	 * setter for the name
+	 * @param String $name The name of the DEnum used in the database
+	 */
+	function set_name($name) {		
+		$this->name->set_value($name);	
+	}
+	
+	/**
+	 * Get the array of DEnum options from the database
+	 * @param bool $alphaSort set to true if you want the DEnum options in alphabetical order (default false)
+	 * @return array enum options
+	 */
+	function get_options($alphaSort = false) {
+		
+		$sql_query = "SELECT * FROM ".$this->TABLE_NAME." WHERE name = '".$this->name->get_value()."';";
+
+		$this->last_query = $sql_query;
+		
+		$result = mysql_query($sql_query);
+		
+		if(mysql_num_rows($result) == 0) {
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load DEnum '.$this->name.', not found in database.' ,'get_options()','framework');
+			return false;
+		}
+		
+		// now build an array of item indexes to be returned		
+		$row = mysql_fetch_assoc($result);
+		$count = 0;
+		$this->options = array();
+		
+		$tmp = new DEnumItem();		
+		
+		foreach($tmp->load_items($row["OID"]) as $DEnumItem) {			
+			$this->options[$DEnumItem->get_ID()] = $DEnumItem->get_value();
+			$count++;			
+		}
+		
+		if($alphaSort)
+			asort($this->options, SORT_STRING);
+		return $this->options;
+	}
+	
+	/**
+	 * getter for the validation helper string
+	 * @return string validation_helper
+	 */	
+	function get_helper() {
+		return $this->validation_helper;
+	}
+	
+	/**
+	 * used to get the current DEnum item selected index value
+	 * @return int selected
+	 */
+	function get_value() {		
+		return $this->value;		
+	}
+	
+	/**
+	 * used to get the current DEnum item string value
+	 * @return string selected
+	 */
+	function get_display_value() {
+		// check to see if the options have already been loaded from the DB
+		if(empty($this->options))
+			$this->get_options();		
+		
+		return $this->options[$this->value];		
+	}
+	
+	/**
+	 * used to select the current DEnum item
+	 * @param string $item
+	 * @return bool success status
+	 */
+	function set_value($item) {
+		// check to see if the options have already been loaded from the DB
+		if(empty($this->options))
+			$this->get_options();
+		
+		// confirm that the item ID provided is a valid key for the options array
+		if (in_array($item, array_keys($this->options))) {
+			$this->value = $item;
+			return true;
+		}else{
+			return false;
+		}
+	}
+}
+
+?>
