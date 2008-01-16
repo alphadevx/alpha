@@ -43,7 +43,7 @@ class form_validator
 		
 		foreach(array_keys($properties) as $prop) {
 			if(!in_array($prop, $this->BO->default_attributes) && !in_array($prop, $this->BO->transient_attributes)) {
-				if (strtoupper(get_class($properties[$prop])) != "ENUM") {
+				if (strtoupper(get_class($properties[$prop])) != "ENUM" && strtoupper(get_class($properties[$prop])) != "DENUM") {
 					echo " validation_rules[\"".$prop."\"] = ".$this->BO->$prop->get_rule().";\n";
 					echo " validation_rules[\"".$prop."_msg\"] = \"".$this->BO->$prop->get_helper()."\";\n";
 				}
