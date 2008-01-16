@@ -54,4 +54,26 @@ if($result)
 else
 	echo "QUERY FAILED : ".$tmpArticle->last_query."\n";	
 
+$tmpDEnum = new DEnum();
+
+echo "Attempting to build table ".$tmpDEnum->TABLE_NAME." for class article : \n";
+
+$result = $tmpDEnum->make_table();
+
+if($result)
+	echo "Successfully re-created the database table ".$tmpDEnum->TABLE_NAME."\n";
+else
+	echo "QUERY FAILED : ".$tmpDEnum->last_query."\n";	
+
+$tmpDEnumItem = new DEnumItem();
+
+echo "Attempting to build table ".$tmpDEnumItem->TABLE_NAME." for class DEnumItem : \n";
+
+$result = $tmpDEnumItem->make_table();
+
+if($result)
+	echo "Successfully re-created the database table ".$tmpDEnumItem->TABLE_NAME."\n";
+else
+	echo "QUERY FAILED : ".$tmpDEnumItem->last_query."\n";	
+
 ?>
