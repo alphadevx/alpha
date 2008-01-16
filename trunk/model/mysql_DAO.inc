@@ -11,6 +11,8 @@ require_once $config->get('sysRoot').'alpha/model/types/Integer.inc';
 require_once $config->get('sysRoot').'alpha/model/types/String.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
+require_once $config->get('sysRoot').'alpha/model/types/DEnum.inc';
+require_once $config->get('sysRoot').'alpha/model/types/DEnumItem.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
 
 /**
@@ -282,7 +284,9 @@ class mysql_DAO
 		
 		foreach(array_keys($properties) as $prop) {
 			if(!in_array($prop, $this->default_attributes) && !in_array($prop, $this->transient_attributes)) {
-				if (strtoupper(get_class($properties[$prop])) != "ENUM") {
+				if (strtoupper(get_class($properties[$prop])) != "ENUM" &&
+				strtoupper(get_class($properties[$prop])) != "DENUM" &&
+				strtoupper(get_class($properties[$prop])) != "DENUMITEM") {
 					if (!preg_match($this->$prop->get_rule(), $this->$prop->get_value())) {
 						$error = new handle_error($_SERVER["PHP_SELF"],'Failed to save, validation error is: '.$this->$prop->get_helper(),'validate()','validation');
 						$valid = false;
@@ -415,6 +419,12 @@ class mysql_DAO
 						}
 						$sql_query = rtrim($sql_query, ",");
 						$sql_query .= "),";
+					break;
+					case "DENUM":
+						$tmp = new DEnum(get_class($this).'::'.$prop);
+						//$tmp->set_name(get_class($this).'::'.$prop);
+						$tmp->save_object();
+						$sql_query .= "$prop INT(11) ZEROFILL, ";
 					break;
 					default:
 						$sql_query .= "";
