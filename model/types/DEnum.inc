@@ -37,10 +37,19 @@ class DEnum extends mysql_DAO {
 	var $TABLE_NAME = "DEnum";
 	
 	/**
+	 * an array of data display labels for the class properties
+	 * @var array
+	 */
+	var $data_labels = array(
+		"OID"=>"DEnum ID#",
+		"name"=>"Name"		
+	);
+	
+	/**
 	 * constructor that sets up the DEnum options
 	 * @param String $name The name of the DEnum used in the database
 	 */
-	function DEnum($name) {
+	function DEnum($name=null) {
 		// ensure to call the parent constructor
 		$this->mysql_DAO();
 		
