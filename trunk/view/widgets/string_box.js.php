@@ -11,7 +11,7 @@ require_once $config->get('sysRoot').'alpha/model/types/String.inc';
 * 
 * @package Alpha Widgets
 * @author John Collins <john@design-ireland.net>
-* @copyright 2006 John Collins
+* @copyright 2008 John Collins
 *  
 */
 class string_box
@@ -45,8 +45,9 @@ class string_box
 	 * @param string $form_id the id of the form that contains this string box
 	 * @param int $size the display size (characters)
 	 * @param bool $table_tags determines if table tags are also rendered for the string_box
+	 * @param bool $read_only set to true to make the text box readonly (defaults to false)
 	 */
-	function string_box($string, $label, $name, $form_id, $size=0, $table_tags=true) {
+	function string_box($string, $label, $name, $form_id, $size=0, $table_tags=true, $read_only=false) {
 		$this->set_string_object($string);
 		$this->set_label($label);
 		$this->set_name($name);
@@ -56,14 +57,15 @@ class string_box
 			$this->render_javascript();
 		$this->set_size($size);
 		
-		$this->render($table_tags);
+		$this->render($table_tags, $read_only);
 	}
 	
 	/**
 	 * renders the HTML and javascript for the string box
 	 * @param bool $table_tags determines if table tags are also rendered for the string_box
+	 * @param bool $read_only set to true to make the text box readonly (defaults to false)
 	 */
-	function render($table_tags=true) {
+	function render($table_tags=true, $read_only=false) {
 		$string_obj = $this->get_string_object(); 
 		if ($table_tags) {
 			echo '<tr><td style="width:25%;">';
@@ -71,10 +73,10 @@ class string_box
 			echo '</td>';
 	
 			echo '<td>';
-			echo '<input '.($string_obj->check_is_password()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.$string_obj->get_MAX_SIZE().'" name="'.$this->get_name().'" id="'.$this->get_name().'" value="'.((isset($_POST[$this->get_name()]) && $string_obj->get_value() == "")? $_POST[$this->get_name()] : $string_obj->get_value()).'"/>';
+			echo '<input '.($string_obj->check_is_password()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.$string_obj->get_MAX_SIZE().'" name="'.$this->get_name().'" id="'.$this->get_name().'" value="'.((isset($_POST[$this->get_name()]) && $string_obj->get_value() == "")? $_POST[$this->get_name()] : $string_obj->get_value()).'"'.($read_only ? 'readonly class="readonly"' : '').'/>';
 			echo '</td></tr>';
 		}else{
-			echo '<input '.($string_obj->check_is_password()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.$string_obj->get_MAX_SIZE().'" name="'.$this->get_name().'" id="'.$this->get_name().'" value="'.((isset($_POST[$this->get_name()]) && $string_obj->get_value() == "")? $_POST[$this->get_name()] : $string_obj->get_value()).'"/>';
+			echo '<input '.($string_obj->check_is_password()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.$string_obj->get_MAX_SIZE().'" name="'.$this->get_name().'" id="'.$this->get_name().'" value="'.((isset($_POST[$this->get_name()]) && $string_obj->get_value() == "")? $_POST[$this->get_name()] : $string_obj->get_value()).'"'.($read_only ? 'readonly class="readonly"' : '').'/>';
 		}
 	}
 	
