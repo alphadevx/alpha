@@ -31,6 +31,15 @@ class DEnumItem extends mysql_DAO {
 	var $TABLE_NAME = "DEnumItem";
 	
 	/**
+	 * an array of data display labels for the class properties
+	 * @var array
+	 */
+	var $data_labels = array(
+		"OID"=>"DEnumItem ID#",
+		"value"=>"Dropdown value"		
+	);
+	
+	/**
 	 * The constructor
 	 */
 	function DEnumItem() {
