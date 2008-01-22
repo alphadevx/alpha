@@ -11,30 +11,13 @@ require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/view/View.inc';
 
-
-// load the business object (BO) definition
-if (isset($_GET["bo"])) {
-	$BO_name = $_GET["bo"];
-	if (file_exists($config->get('sysRoot').'alpha/model/'.$BO_name.'.inc')) {
-		require_once $config->get('sysRoot').'alpha/model/'.$BO_name.'.inc';
-	}elseif (file_exists($config->get('sysRoot').'model/'.$BO_name.'.inc')) {
-		require_once $config->get('sysRoot').'model/'.$BO_name.'.inc';
-	}else{
-		$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the defination for the BO class '.$BO_name,'GET');
-		exit;
-	}
-}else{
-	$error = new handle_error($_SERVER["PHP_SELF"],'No BO available to list!','GET');
-	exit;
-}
-
 /**
 * 
 * Controller used to list a BO, which must be supplied in GET vars
 * 
 * @package Alpha Core Scaffolding
 * @author John Collins <john@design-ireland.net>
-* @copyright 2006 John Collins
+* @copyright 2008 John Collins
 *
 */
 class ListAll extends Controller
@@ -70,12 +53,29 @@ class ListAll extends Controller
 	var $BO_count = 0;
 								
 	/**
-	 * constructor that renders the page
-	 * @param string $BO_name the name of the BO that we are listing
+	 * constructor that renders the page	
 	 */
-	function ListAll($BO_name) {		
+	function ListAll() {
+		global $config;
+				
 		// ensure that the super class constructor is called
 		$this->Controller();
+		
+		// load the business object (BO) definition
+		if (isset($_GET["bo"])) {
+			$BO_name = $_GET["bo"];
+			if (file_exists($config->get('sysRoot').'alpha/model/'.$BO_name.'.inc')) {
+				require_once $config->get('sysRoot').'alpha/model/'.$BO_name.'.inc';
+			}elseif (file_exists($config->get('sysRoot').'model/'.$BO_name.'.inc')) {
+				require_once $config->get('sysRoot').'model/'.$BO_name.'.inc';
+			}else{
+				$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the defination for the BO class '.$BO_name,'GET');
+				exit;
+			}
+		}else{
+			$error = new handle_error($_SERVER["PHP_SELF"],'No BO available to list!','GET');
+			exit;
+		}
 		
 		$this->BO = new $BO_name();
 		
@@ -223,6 +223,6 @@ class ListAll extends Controller
 
 // now build the new controller
 if(basename($_SERVER["PHP_SELF"]) == "ListAll.php")
-	$controller = new ListAll($BO_name);
+	$controller = new ListAll();
 
 ?>
