@@ -407,7 +407,7 @@ class Controller
 		$new_objects = $this->get_new_objects();
 
 		for ($i=0; $i<count($new_objects); $i++) {
-			$new_objects[0]->save_object();
+			$new_objects[$i]->save_object();
 			
 			if (mysql_error() != '') {						
 				$this->last_query .= " Error: ".mysql_error();
@@ -419,7 +419,7 @@ class Controller
 		$dirty_objects = $this->get_dirty_objects();
 
 		for ($i=0; $i<count($dirty_objects); $i++) {
-			$dirty_objects[0]->save_object();
+			$dirty_objects[$i]->save_object();
 			
 			if (mysql_error() != '') {						
 				$this->last_query .= " Error: ".mysql_error();
