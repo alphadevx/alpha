@@ -83,6 +83,52 @@ class DEnumView extends View
 		echo '</form>';
 		echo '</table>';
 	}
+	
+	/**
+	 * draws a form to enable object editing
+	 */
+	function edit_view() {
+		if(method_exists($this, 'before_edit_view_callback'))
+			$this->before_edit_view_callback();
+		
+		global $config;
+
+		$properties = get_object_vars($this->BO);
+		$obj_type = '';
+
+		echo '<table cols="2" class="edit_view">';
+		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
+		
+		$temp = new string_box($this->BO->get_prop_object("name"), $this->BO->data_labels["name"], "name", "", 0, true, true);
+		
+		echo '<tr><td colspan="2"><h3>DEnum display values:</h3></td></tr>';
+		
+		// now get all of the options for the enum and render
+		$denum = $this->BO;
+		$tmp = new DEnumItem();
+		$denumItems = $tmp->load_items($denum->get_ID());						
+		
+		foreach ($denumItems as $item) {
+			$temp = new string_box($item->get_prop_object("value"), $item->data_labels["value"], "value_".$item->get_ID(), "");
+		}
+		
+		echo '<input type="hidden" name="version_num" value="'.$this->BO->get_version().'"/>';
+		
+		echo '<tr><td colspan="2">';
+		
+		$temp = new button("submit", "Save", "saveBut");
+		echo '&nbsp;&nbsp;';
+		$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/ListDEnums.php'", "Back to List", "cancelBut");
+		
+		echo '</td></tr>';
+
+		$this->render_security_fields();
+		
+		echo '</form></table>';
+		
+		if(method_exists($this, 'after_edit_view_callback'))
+			$this->after_edit_view_callback();
+	}
 }
 
 ?>
