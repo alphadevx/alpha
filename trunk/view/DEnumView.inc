@@ -56,8 +56,11 @@ class DEnumView extends View
 				}
 			}
 			if ($prop == "OID")
-				echo '	<th>'.$this->BO->data_labels[$prop].'</th>';
+				echo '	<th>'.$this->BO->data_labels[$prop].'</th>';			
 		}
+		// render the count
+		echo '	<th>Item count</th>';
+		
 		echo '</tr><tr>';
 
 		// and now the values
@@ -70,9 +73,12 @@ class DEnumView extends View
 			if ($prop == "OID")
 				echo '	<td>&nbsp;'.$this->BO->get_ID().'</td>';
 		}
+		// render the count
+		echo '	<td>&nbsp;'.$this->BO->get_item_count().'</td>';
+		
 		echo '</tr>';
 
-		echo '<tr><td colspan="'.$col_count.'" align="center">';
+		echo '<tr><td colspan="'.($col_count+1).'" align="center">';
 		// render edit buttons for admins only
 		if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_access_level() == "Administrator") {
 			echo '&nbsp;&nbsp;';
@@ -113,6 +119,10 @@ class DEnumView extends View
 		}
 		
 		echo '<input type="hidden" name="version_num" value="'.$this->BO->get_version().'"/>';
+		
+		echo '<tr><td colspan="2"><h3>Add a new value to the DEnum dropdown list:</h3></td></tr>';
+		
+		$temp = new string_box(new String(), $tmp->data_labels["value"], "new_value", "");
 		
 		echo '<tr><td colspan="2">';
 		
