@@ -20,9 +20,15 @@ require_once $config->get('sysRoot').'alpha/util/file_util.inc';
 *
 */
 class cache_manager extends Controller
-{								
+{
 	/**
-	 * constructor that renders the page	 * 
+	 * The root of the cache directory
+	 * @var string
+	 */
+	var $dataDir;
+	
+	/**
+	 * constructor that renders the page
 	 */
 	function cache_manager() {
 		global $config;
@@ -39,13 +45,22 @@ class cache_manager extends Controller
 		
 		$this->display_page_head();
 		
-		$dataDir  = $config->get('sysRoot').'cache/';
+		$this->dataDir  = $config->get('sysRoot').'cache/';
 		
-		echo '<h1>Listing contents of cache directory: '.$dataDir.'</h1>';
+		echo '<h1>Listing contents of cache directory: '.$this->dataDir.'</h1>';
+		
+		if(!empty($_POST))
+			$this->handle_post();
    
-   		$fileCount = file_util::list_directory_contents($dataDir);
+   		$fileCount = file_util::list_directory_contents($this->dataDir);
    		
-   		echo '<h2>Total of '.$fileCount.' files in the cache.</h2>';	
+   		echo '<h2>Total of '.$fileCount.' files in the cache.</h2>';
+   		
+   		echo '<form action="'.$_SERVER["PHP_SELF"].'" method="POST" name="clearForm">';
+   		echo '<input type="hidden" name="clearCache" value="false"/>';
+   		$temp = new button("if (confirm('Are you sure you want to delete all files in the cache?')) {document.forms['clearForm']['clearCache'].value = 'true'; document.forms['clearForm'].submit();}", "Clear cache", "clearBut");
+   		View::render_security_fields();
+   		echo '</form>';			
 		
 		$this->display_page_foot();
 	}
@@ -92,6 +107,22 @@ class cache_manager extends Controller
 		}
 		
 		echo '<p align="center"><a href="'.$config->get('sysURL').'/alpha/controller/ListBusinessObjects.php">Administration Home Page</a></p><br>';
+	}
+	
+	function handle_post() {
+		// check the hidden security fields before accepting the form POST data
+		if(!$this->check_security_fields()) {
+			$error = new handle_error($_SERVER["PHP_SELF"],'This page cannot accept post data from remote servers!','handle_post()','validation');
+			exit;
+		}		
+		
+		if (isset($_POST["clearCache"]) && $_POST["clearCache"] == "true") {
+			$success = file_util::delete_directory_contents($this->dataDir);
+					
+			if($success) {
+				echo '<p class="success">Cache contents deleted successfully.</p>';
+			}
+		}
 	}
 }
 
