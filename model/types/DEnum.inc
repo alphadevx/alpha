@@ -151,6 +151,29 @@ class DEnum extends mysql_DAO {
 			return false;
 		}
 	}
+	
+	/**
+	 * gets the count from the database of the DEnumItems associated with this object
+	 * @return integer The count
+	 */
+	function get_item_count() {		
+		
+		$sql_query = "SELECT COUNT(OID) AS item_count FROM DEnumItem WHERE DEnumID = '".$this->get_ID()."'";
+
+		$this->last_query = $sql_query;
+
+		$result = mysql_query($sql_query);		
+
+		$row = mysql_fetch_assoc($result);
+
+		if (mysql_error() == '') {				
+			return $row["item_count"];
+		}else{			
+			$this->last_query .= " Error: ".mysql_error();
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to get the item count for the DEnum','get_item_count()','framework');
+			return 0;
+		}
+	}
 }
 
 ?>
