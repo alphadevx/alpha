@@ -517,6 +517,9 @@ class Controller
 			echo '</script>';
 		}
 		
+		if(method_exists($this, 'during_display_page_head_callback'))
+			$this->during_display_page_head_callback();
+		
 		echo '</head>';
 		echo '<body>';
 			
