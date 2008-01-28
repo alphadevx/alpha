@@ -99,6 +99,14 @@ class EditDEnum extends Edit
 			foreach ($denumItems as $item) {
 				$item->set("value", $_POST["value_".$item->get_ID()]);
 				$this->mark_dirty($item);
+			}
+			
+			// handle new DEnumItem if posted
+			if(isset($_POST["new_value"]) && trim($_POST["new_value"]) != "") {
+				$newItem = new DEnumItem();
+				$newItem->set("value", $_POST["new_value"]);
+				$newItem->set("DEnumID", $this->BO->get_ID());
+				$this->mark_new($newItem);
 			}			
 					
 			$this->commit();
@@ -113,6 +121,18 @@ class EditDEnum extends Edit
 		
 			$this->display_page_foot();
 		}		
+	}
+	
+	/**
+	 * Using this callback to blank the new_value field when the page loads, regardless of anything being posted
+	 */
+	function during_display_page_head_callback() {
+		echo '<script language="javascript">';
+		echo 'function clearNewField() {';
+		echo '	document.getElementById("new_value").value = "";';
+		echo '}';
+		echo 'addOnloadEvent(clearNewField);';
+		echo '</script>';	
 	}
 }
 
