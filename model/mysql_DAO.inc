@@ -421,10 +421,9 @@ class mysql_DAO
 						$sql_query .= "),";
 					break;
 					case "DENUM":
-						$tmp = new DEnum(get_class($this).'::'.$prop);
-						//$tmp->set_name(get_class($this).'::'.$prop);
+						$tmp = new DEnum(get_class($this).'::'.$prop);						
 						$tmp->save_object();
-						$sql_query .= "$prop INT(11) ZEROFILL, ";
+						$sql_query .= "$prop INT(11) ZEROFILL,";
 					break;
 					default:
 						$sql_query .= "";
@@ -523,6 +522,11 @@ class mysql_DAO
 						}
 						$sql_query = rtrim($sql_query, ",");
 						$sql_query .= "),";
+					break;
+					case "DENUM":
+						$tmp = new DEnum(get_class($this).'::'.$prop);						
+						$tmp->save_object();
+						$sql_query .= "$prop INT(11) ZEROFILL,";
 					break;
 					default:
 						$sql_query .= "";
