@@ -25,12 +25,32 @@ class Front_Controller {
 	 * the constructor method
 	 */
 	function Front_Controller() {
+		global $config;
+		
+		// direct calls to the front controller
 		if (isset($_GET["act"])) {
 			$this->page_controller = $_GET["act"];
+		// calls to the front controller via mod_rewrite
+		}elseif($config->get("sysUseModRewrite") && !isset($_GET["tk"])) {
+			// strip off the system URL from the request URL
+			$request = str_replace($config->get('sysURL'), '', 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+			$params = explode('/', $request);
+			
+			// second param will always be the controller
+			$this->page_controller = $params[1];
+			
+			// now populate the _GET vars
+			for($i = 2; $i < count($params); $i++) {
+				if(isset($params[$i+1]))				
+					$_GET[$params[$i]] = $params[$i+1];
+			}
+		// direct calls to the front controller with an encrypted query string
 		}else{
 			if (!isset($_GET["tk"])) {
 				$error = new handle_error($_SERVER["PHP_SELF"],'No controller action set for the front controller!','Front_Controller()');
 				exit;
+			}else{
+				$this->set_encrypt(true);
 			}
 		}
 	}
@@ -49,7 +69,7 @@ class Front_Controller {
 		foreach($pairs as $pair) {
 			$key_value = explode("=", $pair);
 			$_GET[$key_value[0]] = $key_value[1];
-		}		
+		}
 	}
 	
 	/**
