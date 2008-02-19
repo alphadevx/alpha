@@ -164,7 +164,12 @@ class article_object extends mysql_DAO
 	function after_load_callback() {
 		global $config;
 		
-		$this->URL = $config->get('sysURL').'/alpha/controller/view_article.php?oid='.$this->get_ID();
+		// check the config to see if we are using mod_rewrite
+		if($config->get("sysUseModRewrite")) {
+			$this->URL = $config->get('sysURL').'/view_article_title/title/'.str_replace(' ', '_', $this->title->get_value());
+		}else{
+			$this->URL = $config->get('sysURL').'/alpha/controller/view_article.php?oid='.$this->get_ID();
+		}
 	}
 	
 	/**
