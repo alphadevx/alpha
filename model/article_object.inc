@@ -163,10 +163,18 @@ class article_object extends mysql_DAO
 	 */
 	function after_load_callback() {
 		global $config;
+		global $front;
 		
 		// check the config to see if we are using mod_rewrite
 		if($config->get("sysUseModRewrite")) {
-			$this->URL = $config->get('sysURL').'/view_article_title/title/'.str_replace(' ', '_', $this->title->get_value());
+			// check to see if an alias is registered for the view_article_title controller, otherwise use the long URL version
+			if(isset($front) && $front->has_alias('view_article_title')) {
+				$alias = $front->get_controller_alias('view_article_title');
+				
+				$this->URL = $config->get('sysURL').'/'.$alias.'/'.str_replace(' ', '_', $this->title->get_value());
+			}else{
+				$this->URL = $config->get('sysURL').'/view_article_title/title/'.str_replace(' ', '_', $this->title->get_value());
+			}
 		}else{
 			$this->URL = $config->get('sysURL').'/alpha/controller/view_article.php?oid='.$this->get_ID();
 		}
@@ -439,9 +447,9 @@ class article_object extends mysql_DAO
 	 */
 	function load_all($start=0, $limit=0, $order_by="OID", $order="DESC")
 	{
-		global $config;
+		global $config;		
 		
-		// if accessing from the adin backend, use the parent method which includes all articles
+		// if accessing from the admin backend, use the parent method which includes all articles
 		if(basename($_SERVER["PHP_SELF"]) == "ListAll.php")
 			return parent::load_all($start, $limit, $order_by, $order);
 		

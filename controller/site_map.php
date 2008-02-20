@@ -12,6 +12,14 @@ require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/model/article_object.inc';
 require_once $config->get('sysRoot').'model/news_object.inc';
 
+if($config->get("sysUseModRewrite")) {
+	// we need a front controller here to handle our alias registration
+	require_once $config->get('sysRoot').'alpha/controller/front/Front_Controller.inc';
+	$front = new Front_Controller();
+	// register the article load by title alias
+	$front->register_alias('view_article_title','article','title');
+}
+
 /**
 * 
 * Controller used to generate a site map of all of the articles in the database
@@ -27,6 +35,7 @@ class site_map extends Controller
 	 * constructor that renders the page	
 	 */
 	function site_map() {
+		global $config;
 		
 		// ensure that the super class constructor is called
 		$this->Controller();
@@ -46,7 +55,7 @@ class site_map extends Controller
 			echo '<ul>';
 			foreach($article_objects as $article) {
 				if($article->section->get_value() == $section && $article->published->get_value() == 1)
-					echo '<li><a href="'.$article->URL.'">'.$article->get("title").'</a></li>';
+					echo '<li><a href="'.$article->URL.'">'.$article->get("title").'</a></li>';				
 			}
 			echo '</ul>';
 		}
