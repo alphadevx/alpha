@@ -75,6 +75,7 @@ class view_article_print extends view_article
 }
 
 // now build the new controller
-$controller = new view_article_print();
+if(basename($_SERVER["PHP_SELF"]) == "view_article_print.php")
+	$controller = new view_article_print();
 
 ?>

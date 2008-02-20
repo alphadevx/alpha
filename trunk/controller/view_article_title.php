@@ -60,6 +60,7 @@ class view_article_title extends view_article
 }
 
 // now build the new controller
-$controller = new view_article_title();
+if(basename($_SERVER["PHP_SELF"]) == "view_article_title.php")
+	$controller = new view_article_title();
 
 ?>

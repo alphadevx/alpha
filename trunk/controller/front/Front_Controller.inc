@@ -20,6 +20,7 @@ class Front_Controller {
 	var $get_string;
 	var $page_controller;
 	var $encrypted_query = false;
+	var $controller_alias = array();
 	
 	/**
 	 * the constructor method
@@ -32,18 +33,7 @@ class Front_Controller {
 			$this->page_controller = $_GET["act"];
 		// calls to the front controller via mod_rewrite
 		}elseif($config->get("sysUseModRewrite") && !isset($_GET["tk"])) {
-			// strip off the system URL from the request URL
-			$request = str_replace($config->get('sysURL'), '', 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
-			$params = explode('/', $request);
-			
-			// second param will always be the controller
-			$this->page_controller = $params[1];
-			
-			// now populate the _GET vars
-			for($i = 2; $i < count($params); $i++) {
-				if(isset($params[$i+1]))				
-					$_GET[$params[$i]] = $params[$i+1];
-			}
+			$this->handle_mod_rewrite_requests();			
 		// direct calls to the front controller with an encrypted query string
 		}else{
 			if (!isset($_GET["tk"])) {
@@ -152,7 +142,92 @@ class Front_Controller {
 	    
 	    $error = new handle_error($_SERVER["PHP_SELF"],'Failed to find the definition for the class :-'.$this->page_controller,'load_controller()','framework');
 		return false;
-	}	
+	}
+	
+	/**
+	 * Used to register a controller alias to enable shorter URLs with mod_rewrite support enabled.  Note that
+	 * only controllers with a single parameter are supported.
+	 */
+	function register_alias($controller, $alias, $param) {
+		$this->controller_alias[$alias] = $controller;
+		$this->controller_alias[$alias.'_param'] = $param;
+		
+		// set up the page controller 
+		$this->handle_mod_rewrite_requests();
+	}
+	
+	/**
+	 * Check to see if an alias exists for the given alias name
+	 */
+	function check_alias($alias) {		
+		if(array_key_exists($alias, $this->controller_alias))
+			return true;
+		else
+			return false;
+	}
+	
+	/**
+	 * Check to see if an alias exists for the given controller name
+	 */
+	function has_alias($controller) {
+		if(in_array($controller, $this->controller_alias))
+			return true;
+		else
+			return false;
+	}
+	
+	/**
+	 * Gets the full name of the controller for the given alias
+	 */
+	function get_alias_controller($alias) {
+		if(array_key_exists($alias, $this->controller_alias))
+			return $this->controller_alias[$alias];
+	}
+	
+	/**
+	 * Gets the name of the alias for the given controller
+	 */
+	function get_controller_alias($controller) {
+		if(in_array($controller, $this->controller_alias)) {
+			$keys = array_keys($this->controller_alias, $controller);
+			// there should only ever be one key per controller
+			return $keys[0];
+		}
+	}
+	
+	/**
+	 * Gets the parameter name expected in requests to the controller with the given alias
+	 */
+	function get_alias_param($alias) {
+		if(array_key_exists($alias.'_param', $this->controller_alias))
+			return $this->controller_alias[$alias.'_param'];
+	}
+	
+	/**
+	 * Handles all of the rules for mod_rewrite style URL parsing
+	 */
+	function handle_mod_rewrite_requests() {
+		global $config;
+		
+		// strip off the system URL from the request URL
+		$request = str_replace($config->get('sysURL'), '', 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+		$params = explode('/', $request);
+			
+		// second param will always be the controller
+		$this->page_controller = $params[1];
+			
+		// check to see if the controller is an alias for something
+		if($this->check_alias($params[1])) {
+			$this->page_controller = $this->get_alias_controller($params[1]);
+			$_GET[$this->get_alias_param($params[1])] = $params[2];
+		}else{			
+			// now populate the _GET vars
+			for($i = 2; $i < count($params); $i++) {
+				if(isset($params[$i+1]))				
+					$_GET[$params[$i]] = $params[$i+1];
+			}
+		}
+	}
 }
 
 ?>
