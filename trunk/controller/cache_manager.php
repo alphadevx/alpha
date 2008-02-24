@@ -1,6 +1,6 @@
 <?php
 
-// $Id: view_metrics.php 369 2007-12-27 14:53:32Z johnc $
+// $Id$
 
 // include the config file
 if(!isset($config))
@@ -47,7 +47,7 @@ class cache_manager extends Controller
 		
 		$this->dataDir  = $config->get('sysRoot').'cache/';
 		
-		echo '<h1>Listing contents of cache directory: '.$this->dataDir.'</h1>';
+		echo '<h2>Listing contents of cache directory: '.$this->dataDir.'</h2>';
 		
 		if(!empty($_POST))
 			$this->handle_post();
