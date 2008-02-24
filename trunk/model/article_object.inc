@@ -162,7 +162,7 @@ class article_object extends mysql_DAO
 		
 		// mark the URL attributes as transient
 		$this->mark_transient("URL");
-		$this->mark_transient("printerURL");
+		$this->mark_transient("printURL");
 	}
 	
 	/**
