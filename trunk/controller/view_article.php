@@ -178,10 +178,11 @@ class view_article extends Controller
 		}
 		
 		echo "&nbsp;&nbsp;";
-		$temp = new button("window.open('".$config->get('sysURL')."/alpha/controller/view_article_print.php?title=".$this->article->get("title")."')","Open Printer Version","printBut");
+		$temp = new button("window.open('".$this->article->printURL."')","Open Printer Version","printBut");
 		
 		echo "&nbsp;&nbsp;";
-		$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/view_article_pdf.php?title=".$this->article->get("title")."';","Open PDF Version","pdfBut");
+		if($config->get('sysAllowPDFVersions'))
+			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/view_article_pdf.php?title=".$this->article->get("title")."';","Open PDF Version","pdfBut");
 		
 		if($config->get('sysCMSDisplayStandardFooter')) {
 			echo '<p>Article URL: <a href="'.$this->article->URL.'">'.$this->article->URL.'</a><br>';
