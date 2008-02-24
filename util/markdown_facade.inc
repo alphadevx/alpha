@@ -59,6 +59,8 @@ class markdown_facade
 	 * facade method which will invoke our custom markdown class rather than the standard one
 	 */
 	 function markdown($text, $attachURL="") {
+	 	global $config;
+	 	
 		/*
 		 * Initialize the parser and return the result of its transform method.
 		 * 
@@ -75,6 +77,12 @@ class markdown_facade
 		 * 
 		 */
 		$text = str_replace('$attachURL', $attachURL, $text);
+		
+		/*
+		 * Replace all instances of $sysURL in the text with the sysURL setting from config
+		 * 
+		 */
+		$text = str_replace('$sysURL', $config->get('sysURL'), $text);
 		
 		// transform text using parser.
 		return $parser->transform($text);
