@@ -103,7 +103,8 @@ class article_object extends mysql_DAO
 		"date_added"=>"Date Added",
 		"date_updated"=>"Date of last Update",
 		"published"=>"Published",
-		"URL"=>"URL"
+		"URL"=>"URL",
+		"printURL"=>"Printer version URL"
 	);
 	
 	/**
@@ -117,6 +118,11 @@ class article_object extends mysql_DAO
 	 * @var string
 	 */
 	var $URL;
+	
+	/**
+	 * the print URL for this article (transient)
+	 */
+	var $printURL;
 	
 	/**
 	 * constructor for the class
@@ -154,12 +160,13 @@ class article_object extends mysql_DAO
 		$this->date_updated = new Date();
 		$this->published = new Boolean(0);
 		
-		// mark the URL attribute as transient
+		// mark the URL attributes as transient
 		$this->mark_transient("URL");
+		$this->mark_transient("printerURL");
 	}
 	
 	/**
-	 * set up the transient URL attribute for the artcile after it has loaded
+	 * set up the transient URL attributes for the artcile after it has loaded
 	 */
 	function after_load_callback() {
 		global $config;
@@ -177,6 +184,20 @@ class article_object extends mysql_DAO
 			}
 		}else{
 			$this->URL = $config->get('sysURL').'/alpha/controller/view_article.php?oid='.$this->get_ID();
+		}
+		
+		// now set up the print version URL
+		if($config->get("sysUseModRewrite")) {
+			// check to see if an alias is registered for the view_article_title controller, otherwise use the long URL version
+			if(isset($front) && $front->has_alias('view_article_print')) {
+				$alias = $front->get_controller_alias('view_article_print');
+				
+				$this->printURL = $config->get('sysURL').'/'.$alias.'/'.str_replace(' ', '_', $this->title->get_value());
+			}else{
+				$this->printURL = $config->get('sysURL').'/view_article_print/title/'.str_replace(' ', '_', $this->title->get_value());
+			}
+		}else{
+			$this->printURL = $config->get('sysURL').'/alpha/controller/view_article_print.php?title='.$this->title->get_value();
 		}
 	}
 	
