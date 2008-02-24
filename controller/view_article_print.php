@@ -27,7 +27,7 @@ class view_article_print extends view_article
 		
 		// ensure that a title is provided
 		if (isset($_GET["title"])) {
-			$title = $_GET["title"];
+			$title = str_replace('_', ' ', $_GET["title"]);
 		}else{
 			$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the article as a title was not supplied!','GET');
 			exit;
