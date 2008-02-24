@@ -104,7 +104,7 @@ class Front_Controller {
 	 * method to load the page controller
 	 */
 	function load_controller() {
-		global $config;		
+		global $config;
 		
 		if($this->encrypted_query) {
 			$this->decode_query();			
@@ -214,7 +214,8 @@ class Front_Controller {
 		$params = explode('/', $request);
 			
 		// second param will always be the controller
-		$this->page_controller = $params[1];
+		if(empty($this->page_controller))
+			$this->page_controller = $params[1];
 			
 		// check to see if the controller is an alias for something
 		if($this->check_alias($params[1])) {
