@@ -21,6 +21,7 @@ class Front_Controller {
 	var $page_controller;
 	var $encrypted_query = false;
 	var $controller_alias = array();
+	var $current_alias;
 	
 	/**
 	 * the constructor method
@@ -102,10 +103,41 @@ class Front_Controller {
 	
 	/**
 	 * method to load the page controller
+	 * @param bool $allowRedirects Defaults to true, set to false if you want to prevent the front controller from redirecting the request
 	 */
-	function load_controller() {
+	function load_controller($allowRedirects = true) {
 		global $config;
 		
+		if($allowRedirects) {
+			// if there is an alias configured for the above page controller, redirect there
+			if($config->get('sysForceFC') && $this->has_alias($this->page_controller)) {
+				// make sure that it is not already an alias-based request to prevent re-direct loop			
+				if(empty($this->current_alias)) {
+					// set the correct HTTP header for the response
+			    	header('HTTP/1.1 301 Moved Permanently');
+			    	
+			    	// see if there are any other GET params appart from the controller name
+			    	if (count($_GET) > 1) {
+			    		$keys = array_keys($_GET);
+			    		$param = $_GET[$keys[1]];
+			    		// if its a title then replace spaces with underscores in the URL
+			    		if($keys[1] == 'title')
+			    			$param = str_replace(' ','_',$param);
+			    		
+			    		$URL = $config->get('sysURL').'/'.$this->get_controller_alias($this->page_controller).'/'.$this->get_controller_param($this->page_controller).$param;
+			    	}else{
+			    		$URL = $config->get('sysURL').'/'.$this->get_controller_alias($this->page_controller).'/'.$this->get_controller_param($this->page_controller);
+			    	}
+			    	
+			    	header('Location: '.$URL);
+			 
+				    // we're done here
+			    	exit();
+				}
+			}
+		}
+		
+		// handle encrypted query strings
 		if($this->encrypted_query) {
 			$this->decode_query();			
 			$this->populate_get_vars();
@@ -204,6 +236,14 @@ class Front_Controller {
 	}
 	
 	/**
+	 * Gets the parameter name expected in requests to the controller with the given controller name
+	 */
+	function get_controller_param($controller) {
+		if(in_array($controller.'_param', $this->controller_alias))
+			return $this->controller_alias[$controller.'_param'];
+	}
+	
+	/**
 	 * Handles all of the rules for mod_rewrite style URL parsing
 	 */
 	function handle_mod_rewrite_requests() {
@@ -220,6 +260,7 @@ class Front_Controller {
 		// check to see if the controller is an alias for something
 		if($this->check_alias($params[1])) {
 			$this->page_controller = $this->get_alias_controller($params[1]);
+			$this->current_alias = $params[1];
 			$_GET[$this->get_alias_param($params[1])] = $params[2];
 		}else{			
 			// now populate the _GET vars
