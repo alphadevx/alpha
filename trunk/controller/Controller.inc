@@ -129,6 +129,22 @@ class Controller
 	 * and gets any business objects stored in the session
 	 */
 	 function Controller() {
+	 	global $config;
+	 	
+	 	// if configured to do so, force redirect to the front controller
+	 	if($config->get('sysForceFC') && basename($_SERVER['PHP_SELF']) != 'FC.php' && basename($_SERVER['PHP_SELF']) != 'index.php') {
+	 		// set the correct HTTP header for the response
+    		header('HTTP/1.1 301 Moved Permanently');
+    		
+    		if(empty($_SERVER["QUERY_STRING"]))
+    			header('Location: '.$config->get('sysURL').'/FC.php?act='.get_class($this));
+    		else
+    			header('Location: '.$config->get('sysURL').'/FC.php?act='.get_class($this).'&'.$_SERVER["QUERY_STRING"]);
+ 
+		    // we're done here
+    		exit();
+	 	}
+	 	
 	 	$this->unit_start_time = new Timestamp();
 	 	
 	 	if(!isset($_SESSION))
