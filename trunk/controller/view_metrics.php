@@ -23,9 +23,10 @@ class view_metrics extends Controller
 {								
 	/**
 	 * constructor that renders the page
-	 * @param string $dir the root directory of the application to base the metrics from
 	 */
-	function view_metrics($dir) {		
+	function view_metrics() {
+		global $config;
+			
 		// ensure that the super class constructor is called
 		$this->Controller();
 		
@@ -37,6 +38,8 @@ class view_metrics extends Controller
 		$this->set_title("Application Metrics");
 		
 		$this->display_page_head();
+		
+		$dir = $config->get('sysRoot');
 		
 		$metrics = new metrics($dir);
 		$metrics->calculate_LOC();
@@ -91,6 +94,7 @@ class view_metrics extends Controller
 }
 
 // now build the new controller
-$controller = new view_metrics($config->get('sysRoot'));
+if(basename($_SERVER["PHP_SELF"]) == "view_metrics.php")
+	$controller = new view_metrics();
 
 ?>

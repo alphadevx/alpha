@@ -141,6 +141,7 @@ class create_article_object extends Controller
 }
 
 // now build the new controller
-$controller = new create_article_object();
+if(basename($_SERVER["PHP_SELF"]) == "create_article_object.php")
+	$controller = new create_article_object();
 
 ?>

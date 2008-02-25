@@ -199,6 +199,7 @@ class ListBusinessObjects extends Controller
 }
 
 // now build the new controller
-$controller = new ListBusinessObjects();
+if(basename($_SERVER["PHP_SELF"]) == "ListBusinessObjects.php")
+	$controller = new ListBusinessObjects();
 
 ?>

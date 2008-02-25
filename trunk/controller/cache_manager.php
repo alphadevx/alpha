@@ -56,7 +56,7 @@ class cache_manager extends Controller
    		
    		echo '<h2>Total of '.$fileCount.' files in the cache.</h2>';
    		
-   		echo '<form action="'.$_SERVER["PHP_SELF"].'" method="POST" name="clearForm">';
+   		echo '<form action="'.$_SERVER["PHP_SELF"].(empty($_SERVER["QUERY_STRING"])? '':'?'.$_SERVER["QUERY_STRING"]).'" method="POST" name="clearForm">';
    		echo '<input type="hidden" name="clearCache" value="false"/>';
    		$temp = new button("if (confirm('Are you sure you want to delete all files in the cache?')) {document.forms['clearForm']['clearCache'].value = 'true'; document.forms['clearForm'].submit();}", "Clear cache", "clearBut");
    		View::render_security_fields();
@@ -127,6 +127,7 @@ class cache_manager extends Controller
 }
 
 // now build the new controller
-$controller = new cache_manager();
+if(basename($_SERVER["PHP_SELF"]) == "cache_manager.php")
+	$controller = new cache_manager();
 
 ?>
