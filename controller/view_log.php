@@ -11,15 +11,6 @@ require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/util/log_file.inc';
 
-
-// load the business object (BO) definition
-if (isset($_GET["log_path"])) {
-	$log_path = $_GET["log_path"];	
-}else{
-	$error = new handle_error($_SERVER["PHP_SELF"],'No log file path available to view!','GET');
-	exit;
-}
-
 /**
 * 
 * Controller used to display a log file, the path for which must be supplied in GET vars
@@ -39,15 +30,12 @@ class view_log extends Controller
 	
 	/**
 	 * constructor that renders the page
-	 * @param string $log_path the path to the log that we are displaying
 	 */
-	function view_log($log_path) {
+	function view_log() {
 				
 		// ensure that the super class constructor is called
 		$this->Controller();
 		
-		$this->log_path = $log_path;
-				
 		$this->set_visibility('Administrator');
 		if(!$this->check_rights()) {
 			exit;
@@ -56,6 +44,16 @@ class view_log extends Controller
 		$this->set_title("Displaying the requested log");
 		
 		$this->display_page_head();
+
+		// load the business object (BO) definition
+		if (isset($_GET["log_path"])) {
+			$log_path = $_GET["log_path"];	
+		}else{
+			$error = new handle_error($_SERVER["PHP_SELF"],'No log file path available to view!','GET');
+			exit;
+		}
+		
+		$this->log_path = $log_path;
 		
 		$log = new log_file($this->log_path);
 		if(preg_match("/error_log.*/", basename($this->log_path)))
@@ -114,6 +112,7 @@ class view_log extends Controller
 }
 
 // now build the new controller
-$controller = new view_log($log_path);
+if(basename($_SERVER["PHP_SELF"]) == "view_log.php")
+	$controller = new view_log();
 
 ?>

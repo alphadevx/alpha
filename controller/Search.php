@@ -486,6 +486,7 @@ class Search extends Controller
 }
 
 // now build the new controller
-$controller = new Search($BO_name);
+if(basename($_SERVER["PHP_SELF"]) == "Search.php")
+	$controller = new Search($BO_name);
 
 ?>

@@ -71,6 +71,17 @@ class view_article extends Controller
 		$this->article = new article_object();
 		$this->article->load_object($article_oid);
 		
+		// check to see if we need to force a re-direct to the article URL
+		if($config->get('sysForceModRewriteURLs') && (basename($_SERVER["PHP_SELF"]) == "view_article.php" || basename($_SERVER["PHP_SELF"]) == "FC.php")) {
+			// set the correct HTTP header for the response
+    		header('HTTP/1.1 301 Moved Permanently');
+    		
+    		header('Location: '.$this->article->URL);
+ 
+		    // we're done here
+    		exit();
+		}
+		
 		$this->set_title($this->article->get("title"));
 		
 		$this->display_page_head();

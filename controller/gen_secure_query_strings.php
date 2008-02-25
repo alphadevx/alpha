@@ -64,7 +64,7 @@ class gen_secure_query_strings extends Controller
 	}
 	
 	function render_form() {
-		echo '<form action="'.$_SERVER["PHP_SELF"].'" method="post">';
+		echo '<form action="'.$_SERVER["PHP_SELF"].(empty($_SERVER["QUERY_STRING"])? '':'?'.$_SERVER["QUERY_STRING"]).'" method="post">';
 		echo '<input type="text" name="QS" size="100"/>';
 		echo '<input type="submit" value="Generate"/>';
 		echo '</form>';
