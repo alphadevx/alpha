@@ -11,38 +11,13 @@ require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/view/View.inc';
 
-
-// load the business object (BO) definition
-if (isset($_GET["bo"])) {
-	$BO_name = $_GET["bo"];
-	if (file_exists($config->get('sysRoot').'model/'.$BO_name.'.inc')) {
-		require_once $config->get('sysRoot').'model/'.$BO_name.'.inc';
-	} elseif (file_exists($config->get('sysRoot').'alpha/model/'.$BO_name.'.inc')) {
-		require_once $config->get('sysRoot').'alpha/model/'.$BO_name.'.inc';
-	}else{
-		$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the defination for the BO class '.$BO_name,'GET');
-		exit;
-	}
-}else{
-	$error = new handle_error($_SERVER["PHP_SELF"],'No BO available to list!','GET');
-	exit;
-}
-
-// ensure that a OID is also provided
-if (isset($_GET["oid"])) {
-	$BO_oid = $_GET["oid"];
-}else{
-	$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the BO object '.$BO_name.' as an oid was not supplied!','GET');
-	exit;
-}
-
 /**
 * 
 * Controller used to display the details of a BO, which must be supplied in GET vars
 * 
 * @package Alpha Core Scaffolding
 * @author John Collins <john@design-ireland.net>
-* @copyright 2006 John Collins
+* @copyright 2008 John Collins
 *
 */
 class Detail extends Controller
@@ -72,12 +47,35 @@ class Detail extends Controller
 	var $BO_View;
 	
 	/**
-	 * constructor that renders the page
-	 * @param string $BO_name the name of the BO that we are displaying
-	 * @param string $BO_oid the id of the object to display
+	 * constructor that renders the page	 
 	 */
-	function Detail($BO_name, $BO_oid) {
-				
+	function Detail() {
+		global $config;
+			
+		// load the business object (BO) definition
+		if (isset($_GET["bo"])) {
+			$BO_name = $_GET["bo"];
+			if (file_exists($config->get('sysRoot').'model/'.$BO_name.'.inc')) {
+				require_once $config->get('sysRoot').'model/'.$BO_name.'.inc';
+			} elseif (file_exists($config->get('sysRoot').'alpha/model/'.$BO_name.'.inc')) {
+				require_once $config->get('sysRoot').'alpha/model/'.$BO_name.'.inc';
+			}else{
+				$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the defination for the BO class '.$BO_name,'GET');
+				exit;
+			}
+		}else{
+			$error = new handle_error($_SERVER["PHP_SELF"],'No BO available to list!','GET');
+			exit;
+		}
+		
+		// ensure that a OID is also provided
+		if (isset($_GET["oid"])) {
+			$BO_oid = $_GET["oid"];
+		}else{
+			$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the BO object '.$BO_name.' as an oid was not supplied!','GET');
+			exit;
+		}
+		
 		// ensure that the super class constructor is called
 		$this->Controller();
 		
@@ -147,6 +145,6 @@ class Detail extends Controller
 
 // now build the new controller
 if(basename($_SERVER["PHP_SELF"]) == "Detail.php")
-	$controller = new Detail($BO_name, $BO_oid);
+	$controller = new Detail();
 
 ?>
