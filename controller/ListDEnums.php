@@ -34,6 +34,12 @@ class ListDEnums extends ListAll
 		
 		$this->BO = new DEnum();
 		
+		// make sure that the DEnum tables exist
+		if(!$this->BO->check_table_exists()) {
+			echo '<p class="warning">Warning! The DEnum tables do not exist, attempting to create them now...</p>';
+			$this->create_DEnum_tables();
+		}
+		
 		$this->BO_name = "DEnum";
 		
 		$this->BO_View = new View($this->BO);		
@@ -72,6 +78,29 @@ class ListDEnums extends ListAll
 		}
 		
 		$this->display_page_foot();
+	}
+	
+	/**
+	 * Method to create the DEnum tables if they don't exist
+	 */
+	function create_DEnum_tables() {
+		$tmpDEnum = new DEnum();
+
+		echo '<p>Attempting to build table '.$tmpDEnum->TABLE_NAME.' for class DEnum : </p>';
+		
+		$result = $tmpDEnum->make_table();
+		
+		if($result)
+			echo '<p class="success">Successfully re-created the database table '.$tmpDEnum->TABLE_NAME.'</p>';
+				
+		$tmpDEnumItem = new DEnumItem();
+		
+		echo '<p>Attempting to build table '.$tmpDEnumItem->TABLE_NAME.' for class DEnumItem : </p>';
+		
+		$result = $tmpDEnumItem->make_table();
+		
+		if($result)
+			echo '<p class="success">Successfully re-created the database table '.$tmpDEnumItem->TABLE_NAME.'</p>';		
 	}
 }
 
