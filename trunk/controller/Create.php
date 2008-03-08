@@ -11,38 +11,13 @@ require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/view/View.inc';
 
-
-// load the business object (BO) definition
-if (isset($_GET["bo"])) {
-	$BO_name = $_GET["bo"];
-	if (file_exists($config->get('sysRoot').'model/'.$BO_name.'.inc')) {
-		require_once $config->get('sysRoot').'model/'.$BO_name.'.inc';
-	} elseif (file_exists($config->get('sysRoot').'alpha/model/'.$BO_name.'.inc')) {
-		require_once $config->get('sysRoot').'alpha/model/'.$BO_name.'.inc';
-	}else{
-		$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the defination for the BO class '.$BO_name,'GET');
-		exit;
-	}
-}else{
-	$error = new handle_error($_SERVER["PHP_SELF"],'No BO available to create!','GET');
-	exit;
-}
-
-// check and see if a custom create_*.php controller exists for this BO, and if it does use it otherwise continue
-if (file_exists($config->get('sysRoot').'controller/create_'.$BO_name.'.php')) {
-	header('Location: '.$config->get('sysURL').'/controller/create_'.$BO_name.'.php');	
-}
-if (file_exists($config->get('sysRoot').'alpha/controller/create_'.$BO_name.'.php')) {
-	header('Location: '.$config->get('sysURL').'/alpha/controller/create_'.$BO_name.'.php');	
-}
-
 /**
 * 
 * Controller used to create a new BO, which must be supplied in GET vars
 * 
 * @package Alpha Core Scaffolding
 * @author John Collins <john@design-ireland.net>
-* @copyright 2006 John Collins
+* @copyright 2008 John Collins
 *
 */
 class Create extends Controller
@@ -61,12 +36,36 @@ class Create extends Controller
 								
 	/**
 	 * constructor that renders the page
-	 * @param string $BO_name the name of the BO that we are creating
 	 */
-	function Create($BO_name) {
+	function Create() {
+		global $config;
 		
 		// ensure that the super class constructor is called
 		$this->Controller();
+		
+		// load the business object (BO) definition
+		if (isset($_GET["bo"])) {
+			$BO_name = $_GET["bo"];
+			if (file_exists($config->get('sysRoot').'model/'.$BO_name.'.inc')) {
+				require_once $config->get('sysRoot').'model/'.$BO_name.'.inc';
+			} elseif (file_exists($config->get('sysRoot').'alpha/model/'.$BO_name.'.inc')) {
+				require_once $config->get('sysRoot').'alpha/model/'.$BO_name.'.inc';
+			}else{
+				$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the defination for the BO class '.$BO_name,'GET');
+				exit;
+			}
+		}else{
+			$error = new handle_error($_SERVER["PHP_SELF"],'No BO available to create!','GET');
+			exit;
+		}
+		
+		// check and see if a custom create_*.php controller exists for this BO, and if it does use it otherwise continue
+		if (file_exists($config->get('sysRoot').'controller/create_'.$BO_name.'.php')) {
+			header('Location: '.$config->get('sysURL').'/controller/create_'.$BO_name.'.php');	
+		}
+		if (file_exists($config->get('sysRoot').'alpha/controller/create_'.$BO_name.'.php')) {
+			header('Location: '.$config->get('sysURL').'/alpha/controller/create_'.$BO_name.'.php');	
+		}
 		
 		$this->BO = new $BO_name();
 		
@@ -187,6 +186,6 @@ class Create extends Controller
 
 // now build the new controller
 if(basename($_SERVER["PHP_SELF"]) == "Create.php")
-	$controller = new Create($BO_name);
+	$controller = new Create();
 
 ?>
