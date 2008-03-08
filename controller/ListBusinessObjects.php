@@ -184,17 +184,17 @@ class ListBusinessObjects extends Controller
 			echo '<p>You are logged in as '.$_SESSION["current_user"]->get_displayname().'.  <a href="'.$config->get('sysURL').'/alpha/controller/logout.php">Logout</a></p>';
 		}else{
 			echo '<p>You are not logged in</p>';
-		}
-		
-		echo '<p align="center"><a href="'.$config->get('sysURL').'">Application Home Page</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-		echo '<a href="'.$config->get('sysURL').'/alpha/controller/view_log.php?log_path='.$config->get('sysRoot').'alpha/util/logs/error_log.log'.'">View Error Log</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-		echo '<a href="'.$config->get('sysURL').'/alpha/controller/view_log.php?log_path='.$config->get('sysRoot').'alpha/util/logs/search_log.log'.'">View Search Log</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-		echo '<a href="'.$config->get('sysURL').'/alpha/controller/view_log.php?log_path='.$config->get('sysRoot').'alpha/util/logs/feed_log.log'.'">View Feed Log</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-		echo '<a href="'.$config->get('sysURL').'/alpha/controller/gen_secure_query_strings.php">Generate Secure URL</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-		echo '<a href="'.$config->get('sysURL').'/alpha/controller/view_metrics.php">Application Software Metrics</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-		echo '<a href="'.$config->get('sysURL').'/alpha/controller/cache_manager.php">Manage Cache</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-		echo '<a href="'.$config->get('sysURL').'/alpha/controller/ListDEnums.php">Manage DEnums</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-		echo '<a href="'.$config->get('sysURL').'/alpha/tests/view_test_results.php">Application Unit Tests</a></p>';
+		}		
+				
+		echo '<p align="center"><a href="'.$config->get('sysURL').'">Home Page</a>&nbsp;-';
+		echo '<a href="'.Front_Controller::generate_secure_URL('act=view_log&log_path='.$config->get('sysRoot').'alpha/util/logs/error_log.log').'">Error Log</a>&nbsp;-&nbsp;';
+		echo '<a href="'.Front_Controller::generate_secure_URL('act=view_log&log_path='.$config->get('sysRoot').'alpha/util/logs/search_log.log').'">Search Log</a>&nbsp;-&nbsp;';
+		echo '<a href="'.Front_Controller::generate_secure_URL('act=view_log&log_path='.$config->get('sysRoot').'alpha/util/logs/feed_log.log').'">Feed Log</a>&nbsp;-&nbsp;';
+		echo '<a href="'.Front_Controller::generate_secure_URL('act=gen_secure_query_strings').'">Generate Secure URL</a>&nbsp;-&nbsp;';
+		echo '<a href="'.Front_Controller::generate_secure_URL('act=view_metrics').'">Software Metrics</a>&nbsp;-&nbsp;';
+		echo '<a href="'.Front_Controller::generate_secure_URL('act=cache_manager').'">Manage Cache</a>&nbsp;-&nbsp;';
+		echo '<a href="'.Front_Controller::generate_secure_URL('act=ListDEnums').'">Manage DEnums</a>&nbsp;-&nbsp;';
+		echo '<a href="'.Front_Controller::generate_secure_URL('act=view_test_results').'">Application Unit Tests</a></p>';
 	}
 }
 
