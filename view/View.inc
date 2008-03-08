@@ -588,36 +588,27 @@ class View {
 		echo '</tr>';
 
 		echo '<tr><td colspan="5" align="center">';
-		if (class_exists("button")) {
-			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/Create.php?bo=".get_class($this->BO)."'", "Create New", "createBut");
+		$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=Create&bo='.get_class($this->BO))."'", "Create New", "createBut");
+		echo '&nbsp;&nbsp;';
+		$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=ListAll&bo='.get_class($this->BO).'&no-forceframe=true')."'", "List All", "listBut");
+		if (!$this->BO->check_table_exists()) {
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/ListAll.php?bo=".get_class($this->BO)."&no-forceframe=true'", "List All", "listBut");
-			if (!$this->BO->check_table_exists()) {
-				echo '&nbsp;&nbsp;';
-				$temp = new button("submit", "Create Table", "createTableBut");
-				// hidden field so that we know which class to create the table for
-				echo '<input type="hidden" name="createTableClass" value="'.get_class($this->BO).'"/>';
-			}
-			if ($this->BO->check_table_needs_update() && $this->BO->check_table_exists()) {
-				echo '&nbsp;&nbsp;';
-				$temp = new button("if(confirm('Are you sure you wish to recreate this class table (all data will be lost)?')) {document.getElementById('admin_".get_class($this->BO)."_button_pressed').value = 'recreateTableBut'; document.getElementById('admin_".get_class($this->BO)."').submit();}" , "Recreate Table", "recreateTableBut");
-				// hidden field so that we know which class to recreate the table for
-				echo '<input type="hidden" name="recreateTableClass" value="'.get_class($this->BO).'"/>';
-				echo '&nbsp;&nbsp;';
-				$temp = new button("if(confirm('Are you sure you wish to attempt to modify this class table by adding new attributes?')) {document.getElementById('admin_".get_class($this->BO)."_button_pressed').value = 'updateTableBut'; document.getElementById('admin_".get_class($this->BO)."').submit();}" , "Update Table", "updateTableBut");
-				// hidden field so that we know which class to update the table for
-				echo '<input type="hidden" name="updateTableClass" value="'.get_class($this->BO).'"/>';
-				
-				echo '<input type="hidden" id="admin_'.get_class($this->BO).'_button_pressed" name="admin_'.get_class($this->BO).'_button_pressed" value=""/>';
-			}
-		} else {
-			// !! this section needs updating !!
-			echo '<input type="button" name="viewBut" value="View" onclick="document.location.replace(\''.$config->get('sysURL').'/alpha/controller/Detail.php?bo='.get_class($this->BO).'&oid='.$this->BO->get_ID().'\')"/>';
-			echo '&nbsp;&nbsp;';
-			echo '<input type="submit" name="editBut" value="Edit"/>';
-			echo '&nbsp;&nbsp;';
-			echo '<input type="button" name="deleteBut" value="Delete" onclick="if(confirm(\'Are you sure you wish to delete this item?\')) {document.getElementById(\'delete_oid\').value = \''.$this->BO->get_ID().'\'; document.getElementById(\'delete_form\').submit();}"/>';
+			$temp = new button("submit", "Create Table", "createTableBut");
+			// hidden field so that we know which class to create the table for
+			echo '<input type="hidden" name="createTableClass" value="'.get_class($this->BO).'"/>';
 		}
+		if ($this->BO->check_table_needs_update() && $this->BO->check_table_exists()) {
+			echo '&nbsp;&nbsp;';
+			$temp = new button("if(confirm('Are you sure you wish to recreate this class table (all data will be lost)?')) {document.getElementById('admin_".get_class($this->BO)."_button_pressed').value = 'recreateTableBut'; document.getElementById('admin_".get_class($this->BO)."').submit();}" , "Recreate Table", "recreateTableBut");
+			// hidden field so that we know which class to recreate the table for
+			echo '<input type="hidden" name="recreateTableClass" value="'.get_class($this->BO).'"/>';
+			echo '&nbsp;&nbsp;';
+			$temp = new button("if(confirm('Are you sure you wish to attempt to modify this class table by adding new attributes?')) {document.getElementById('admin_".get_class($this->BO)."_button_pressed').value = 'updateTableBut'; document.getElementById('admin_".get_class($this->BO)."').submit();}" , "Update Table", "updateTableBut");
+			// hidden field so that we know which class to update the table for
+			echo '<input type="hidden" name="updateTableClass" value="'.get_class($this->BO).'"/>';
+				
+			echo '<input type="hidden" id="admin_'.get_class($this->BO).'_button_pressed" name="admin_'.get_class($this->BO).'_button_pressed" value=""/>';
+		}		
 		echo '</td></tr>';
 
 		$this->render_security_fields();
