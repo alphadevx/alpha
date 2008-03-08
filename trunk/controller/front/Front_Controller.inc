@@ -64,6 +64,15 @@ class Front_Controller {
 	}
 	
 	/**
+	 * Static method for generating an absolute, secure URL for a page controller
+	 */
+	function generate_secure_URL($controller) {
+		global $config;
+		
+		return $config->get('sysURL').'/FC.php?tk='.Front_Controller::encode_query($controller);
+	}
+	
+	/**
 	 * static method for encoding a query string
 	 */
 	function encode_query($query_string) {
