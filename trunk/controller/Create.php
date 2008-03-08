@@ -117,13 +117,13 @@ class Create extends Controller
 			if($success) {
 				if ($this->get_next_job() != "")					
 					header('Location: '.$this->get_next_job());
-				else
-					header('Location: Detail.php?bo='.get_class($this->BO).'&oid='.$this->BO->get_ID());
+				else					
+					header('Location: '.Front_Controller::generate_secure_URL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->get_ID()));
 			}	
 		}
 		
 		if (isset($_POST["cancelBut"])) {
-			header('Location: '.$config->get('sysURL').'/alpha/controller/ListBusinessObjects.php');
+			header('Location: '.Front_Controller::generate_secure_URL('act=ListBusinessObjects'));
 		}	
 	}
 	
