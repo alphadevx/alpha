@@ -169,7 +169,7 @@ class ListAll extends Controller
 	function after_display_page_head_callback() {
 		global $config;
 		
-		echo '<p align="center"><a href="'.$config->get('sysURL').'/alpha/controller/ListBusinessObjects.php">Administration Home Page</a></p>';
+		echo '<p align="center"><a href="'.Front_Controller::generate_secure_URL('act=ListBusinessObjects').'">Administration Home Page</a></p>';
 	}
 	
 	/**

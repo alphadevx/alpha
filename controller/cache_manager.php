@@ -106,7 +106,7 @@ class cache_manager extends Controller
 			echo '<p>You are not logged in</p>';
 		}
 		
-		echo '<p align="center"><a href="'.$config->get('sysURL').'/alpha/controller/ListBusinessObjects.php">Administration Home Page</a></p><br>';
+		echo '<p align="center"><a href="'.Front_Controller::generate_secure_URL('act=ListBusinessObjects').'">Administration Home Page</a></p>';
 	}
 	
 	function handle_post() {
