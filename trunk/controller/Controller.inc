@@ -5,15 +5,15 @@
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
 
 require_once $config->get('sysRoot').'alpha/view/person.inc';
-
-require_once $config->get('sysRoot')."alpha/model/types/Date.inc";
-require_once $config->get('sysRoot')."alpha/model/types/Timestamp.inc";
-require_once $config->get('sysRoot')."alpha/model/types/Double.inc";
-require_once $config->get('sysRoot')."alpha/model/types/Integer.inc";
-require_once $config->get('sysRoot')."alpha/model/types/String.inc";
-require_once $config->get('sysRoot')."alpha/model/types/Text.inc";
-require_once $config->get('sysRoot')."alpha/model/types/Enum.inc";
-require_once $config->get('sysRoot')."alpha/model/types/Boolean.inc";
+require_once $config->get('sysRoot').'alpha/controller/front/Front_Controller.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Date.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Timestamp.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Double.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Integer.inc';
+require_once $config->get('sysRoot').'alpha/model/types/String.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
 
 /**
  *
