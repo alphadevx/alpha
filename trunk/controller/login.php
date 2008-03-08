@@ -40,7 +40,7 @@ class login extends Controller
 	 * constructor to set up the object
 	 */
 	function login() {
-		$this->set_name('/alpha/controller/login.php');
+		$this->set_name(Front_Controller::encode_query('act=login'));
 		
 		// ensure that the super class constructor is called
 		$this->Controller();
@@ -96,9 +96,9 @@ class login extends Controller
 				if (crypt($_POST["password"], $this->person_object->get_password()) == $this->person_object->get_password()) {				
 					$_SESSION["current_user"] = $this->person_object;					
 					if ($this->get_next_job() != '')
-						header('Location: '.$config->get('sysURL').$this->get_next_job());
+						header('Location: '.$this->get_next_job());
 					else
-						header('Location: '.$config->get('sysURL').'/controller/whats_new.php');
+						header('Location: '.$config->get('sysURL'));
 				}else{								
 					$error = new handle_error($_SERVER["PHP_SELF"],'Failed to login user '.$_POST["email"].', the password is incorrect!' ,'handle_post()','validation');
 				}
