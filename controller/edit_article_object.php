@@ -10,17 +10,6 @@ require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/model/article_object.inc';
 
-// load the business object (BO) definition
-require_once $config->get('sysRoot').'alpha/model/article_object.inc';
-
-// ensure that a OID is also provided
-if (isset($_GET["oid"])) {
-	$BO_oid = $_GET["oid"];
-}else{
-	$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the article as an oid was not supplied!','GET');
-	exit;
-}
-
 /**
 * 
 * Controller used to edit an existing article
@@ -38,10 +27,21 @@ class edit_article_object extends Controller
 	var $BO;
 				
 	/**
-	 * constructor that renders the page and intercepts POST messages
-	 * @param string $BO_oid the id of the article that we editing
+	 * constructor that renders the page and intercepts POST messages	 
 	 */
-	function edit_article_object($BO_oid) {
+	function edit_article_object() {
+		global $config;
+		
+		// load the business object (BO) definition
+		require_once $config->get('sysRoot').'alpha/model/article_object.inc';
+		
+		// ensure that a OID is also provided
+		if (isset($_GET["oid"])) {
+			$BO_oid = $_GET["oid"];
+		}else{
+			$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the article as an oid was not supplied!','GET');
+			exit;
+		}
 		
 		// ensure that the super class constructor is called
 		$this->Controller();
@@ -169,6 +169,7 @@ class edit_article_object extends Controller
 }
 
 // now build the new controller
-$controller = new edit_article_object($BO_oid);
+if(basename($_SERVER["PHP_SELF"]) == "edit_article_object.php")
+	$controller = new edit_article_object();
 
 ?>
