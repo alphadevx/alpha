@@ -301,6 +301,13 @@ class Front_Controller {
 			}
 		}
 	}
+	
+	/**
+	 * Getter for the page controller
+	 */
+	function get_page_controller() {
+		return $this->page_controller;
+	}
 }
 
 ?>
