@@ -88,7 +88,7 @@ class preview_article_object extends Controller
 			$this->BO->create_attachments_folder();
 				
 			// redirect to the detailed display page			
-			header('Location: Detail.php?bo='.get_class($this->BO).'&oid='.$this->BO->get_ID());
+			header('Location: '.Front_Controller::generate_secure_URL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->get_ID()));
 		}elseif (isset($_POST["cancelBut"])) {
 			$this->abort();			
 			header('Location: '.$config->get('sysURL'));
@@ -100,7 +100,7 @@ class preview_article_object extends Controller
 	 */
 	function display_page_foot() {		
 		
-		echo '<form action="'.$_SERVER['PHP_SELF'].'" method="POST">';
+		echo '<form action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
 		if (class_exists("button")) {
 			$temp = new button("submit", "Save New Article", "saveBut");
 			echo '&nbsp;&nbsp;';
@@ -118,6 +118,7 @@ class preview_article_object extends Controller
 }
 
 // now build the new controller
-$controller = new preview_article_object();
+if(basename($_SERVER["PHP_SELF"]) == "preview_article_object.php")
+	$controller = new preview_article_object();
 
 ?>
