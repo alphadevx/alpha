@@ -200,21 +200,34 @@ class ListAll extends Controller
 			echo '<p align="center">Displaying &nbsp;'.($this->start_point+1).' to '.$end.' of <strong>'.$this->BO_count.'</strong>.&nbsp;&nbsp;';		
 				
 		if ($this->start_point > 0) {
-			echo '<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BO_name."&start=".($this->start_point-$config->get('sysListPageAmount')).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
-		}else{
+			// handle secure URLs
+			if(isset($_GET['tk']))
+				echo '<a href="'.Front_Controller::generate_secure_URL('act=ListAll&bo='.$this->BO_name.'&start='.($this->start_point-$config->get('sysListPageAmount'))).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
+			else
+				echo '<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BO_name."&start=".($this->start_point-$config->get('sysListPageAmount')).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
+		}elseif($this->BO_count > $config->get('sysListPageAmount')){
 			echo '&lt;&lt;-Previous&nbsp;&nbsp;';
 		}
 		$page = 1;
 		for ($i = 0; $i < $this->BO_count; $i+=$config->get('sysListPageAmount')) {
-			if($i != $this->start_point)
-				echo '&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BO_name."&start=".$i.'">'.$page.'</a>&nbsp;';
-			else
+			if($i != $this->start_point) {
+				// handle secure URLs
+				if(isset($_GET['tk']))
+					echo '&nbsp;<a href="'.Front_Controller::generate_secure_URL('act=ListAll&bo='.$this->BO_name.'&start='.$i).'">'.$page.'</a>&nbsp;';
+				else
+					echo '&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BO_name."&start=".$i.'">'.$page.'</a>&nbsp;';
+			}elseif($this->BO_count > $config->get('sysListPageAmount')){
 				echo '&nbsp;'.$page.'&nbsp;';
+			}
 			$page++;
 		}
 		if ($this->BO_count > $end) {
-			echo '&nbsp;&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BO_name."&start=".($this->start_point+$config->get('sysListPageAmount')).'">Next-&gt;&gt;</a>';
-		}else{
+			// handle secure URLs
+			if(isset($_GET['tk']))
+				echo '&nbsp;&nbsp;<a href="'.Front_Controller::generate_secure_URL('act=ListAll&bo='.$this->BO_name.'&start='.($this->start_point+$config->get('sysListPageAmount'))).'">Next-&gt;&gt;</a>';
+			else
+				echo '&nbsp;&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BO_name."&start=".($this->start_point+$config->get('sysListPageAmount')).'">Next-&gt;&gt;</a>';
+		}elseif($this->BO_count > $config->get('sysListPageAmount')){
 			echo '&nbsp;&nbsp;Next-&gt;&gt;';
 		}
 		echo '</p>';
