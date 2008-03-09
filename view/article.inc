@@ -107,7 +107,6 @@ class article extends View
 		// render edit and delete buttons for admins only
 		if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_access_level() == "Administrator") {
 			echo '&nbsp;&nbsp;';
-			//$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/Edit.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'","Edit","editBut");
 			$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=edit_article_object&bo='.get_class($this->BO).'&oid='.$this->BO->get_ID())."'","Edit","editBut");
 			echo '&nbsp;&nbsp;';
 			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}","Delete","deleteBut");
