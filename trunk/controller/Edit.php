@@ -78,10 +78,18 @@ class Edit extends Controller
 		
 		// check and see if a custom edit_*.php controller exists for this BO, and if it does use it otherwise continue
 		if (file_exists($config->get('sysRoot').'controller/edit_'.$BO_name.'.php')) {
-			header('Location: '.$config->get('sysURL').'/controller/edit_'.$BO_name.'.php?'.$_SERVER['QUERY_STRING']);	
+			// handle secure URLs
+			if(isset($_GET['tk']))
+				header('Location: '.Front_Controller::generate_secure_URL('act=edit_'.$BO_name.'&'.Front_Controller::decode_query_params($_SERVER['QUERY_STRING'])));
+			else
+				header('Location: '.$config->get('sysURL').'/controller/edit_'.$BO_name.'.php?'.$_SERVER['QUERY_STRING']);
 		}
 		if (file_exists($config->get('sysRoot').'alpha/controller/edit_'.$BO_name.'.php')) {
-			header('Location: '.$config->get('sysURL').'/alpha/controller/edit_'.$BO_name.'.php?'.$_SERVER['QUERY_STRING']);	
+			// handle secure URLs
+			if(isset($_GET['tk']))
+				header('Location: '.Front_Controller::generate_secure_URL('act=edit_'.$BO_name.'&'.Front_Controller::decode_query_params($_SERVER['QUERY_STRING'])));
+			else
+				header('Location: '.$config->get('sysURL').'/alpha/controller/edit_'.$BO_name.'.php?'.$_SERVER['QUERY_STRING']);	
 		}
 		
 		// ensure that the super class constructor is called
