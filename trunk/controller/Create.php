@@ -61,10 +61,18 @@ class Create extends Controller
 		
 		// check and see if a custom create_*.php controller exists for this BO, and if it does use it otherwise continue
 		if (file_exists($config->get('sysRoot').'controller/create_'.$BO_name.'.php')) {
-			header('Location: '.$config->get('sysURL').'/controller/create_'.$BO_name.'.php');	
+			// handle secure URLs
+			if(isset($_GET['tk']))
+				header('Location: '.Front_Controller::generate_secure_URL('act=create_'.$BO_name));
+			else
+				header('Location: '.$config->get('sysURL').'/controller/create_'.$BO_name.'.php');
 		}
 		if (file_exists($config->get('sysRoot').'alpha/controller/create_'.$BO_name.'.php')) {
-			header('Location: '.$config->get('sysURL').'/alpha/controller/create_'.$BO_name.'.php');	
+			// handle secure URLs
+			if(isset($_GET['tk']))
+				header('Location: '.Front_Controller::generate_secure_URL('act=create_'.$BO_name));
+			else
+				header('Location: '.$config->get('sysURL').'/alpha/controller/create_'.$BO_name.'.php');	
 		}
 		
 		$this->BO = new $BO_name();
