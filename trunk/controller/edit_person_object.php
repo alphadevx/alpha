@@ -10,18 +10,8 @@ $config =&configLoader::getInstance();
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/view/View.inc';
-
-
 // load the business object (BO) definition
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
-
-// ensure that a OID is also provided
-if (isset($_GET["oid"])) {
-	$BO_oid = $_GET["oid"];
-}else{
-	$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the person object '.$BO_name.' as an oid was not supplied!','GET');
-	exit;
-}
 
 /**
 * 
@@ -54,9 +44,17 @@ class edit_person_object extends Controller
 								
 	/**
 	 * constructor that renders the page	 
-	 * @param string $BO_oid the id of the object that we editing
 	 */
-	function edit_person_object($BO_oid) {
+	function edit_person_object() {
+		global $config;
+		
+		// ensure that a OID is also provided
+		if (isset($_GET["oid"])) {
+			$BO_oid = $_GET["oid"];
+		}else{
+			$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the person object as an oid was not supplied!','GET');
+			exit;
+		}
 		
 		// ensure that the super class constructor is called
 		$this->Controller();
@@ -127,7 +125,7 @@ class edit_person_object extends Controller
 		
 		if (!empty($_POST["delete_oid"])) {
 			
-			$temp = new $this->BO_name();
+			$temp = new person_object();
 			
 			$temp->load_object($_POST["delete_oid"]);			
 					
@@ -150,6 +148,7 @@ class edit_person_object extends Controller
 }
 
 // now build the new controller
-$controller = new edit_person_object($BO_oid);
+if(basename($_SERVER["PHP_SELF"]) == "edit_person_object.php")
+	$controller = new edit_person_object();
 
 ?>
