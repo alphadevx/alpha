@@ -569,7 +569,7 @@ class View {
 		$obj_type = '';
 
 		echo '<table class="admin_view" cols="5">';
-		echo '<form action="'.$_SERVER["PHP_SELF"].'" id="admin_'.get_class($this->BO).'" method="POST">';
+		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" id="admin_'.get_class($this->BO).'" method="POST">';
 		// first render all of the table headers
 		echo '<tr>';
 		echo '	<th>Class name</th>';
