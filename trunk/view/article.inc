@@ -46,9 +46,9 @@ class article extends View
 		
 		if (class_exists("button")) {
 			// render edit buttons for admins only
-			if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_access_level() == "Administrator") {
+			if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_access_level() == "Administrator" && $this->BO->get_ID() != 0) {
 				echo '&nbsp;&nbsp;';
-				$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/Edit.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'","Edit","editBut");
+				$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=Edit&bo='.get_class($this->BO).'&oid='.$this->BO->get_ID())."'","Edit","editBut");
 			}
 		}
 	}
@@ -68,7 +68,7 @@ class article extends View
 		$prop_obj = $this->BO->get_prop_object("date_added");
 		echo '<td>Date Added: <em>'.$prop_obj->get_value().'</em></td>';
 		$prop_obj = $this->BO->get_prop_object("section");
-		echo '<td align="center">Site Section: <em>'.$prop_obj->get_value().'</em></td>';
+		echo '<td align="center">Site Section: <em>'.$prop_obj->get_display_value().'</em></td>';
 		echo '<td align="right">';
 		if (class_exists("button")) {			
 			$temp = new button("document.location.replace('".$config->get('sysURL')."/alpha/controller/view_article.php?oid=".$this->BO->get_ID()."')","Open","openBut");
@@ -98,7 +98,7 @@ class article extends View
 		echo '<th>'.$this->BO->get("title").'</th>';
 		echo '</tr><tr>';
 		$prop_obj = $this->BO->get_prop_object("date_added");
-		echo '<td>'.$this->BO->get("description").'<br><br>'.$this->BO->data_labels["section"].': <em>'.$this->BO->get("section").'</em>&nbsp;&nbsp;&nbsp;'.$this->BO->data_labels["date_added"].': <em>'.$prop_obj->get_value().'</em></td>';	
+		echo '<td>'.$this->BO->get("description").'<br><br>'.$this->BO->data_labels["section"].': <em>'.$this->BO->section->get_display_value().'</em>&nbsp;&nbsp;&nbsp;'.$this->BO->data_labels["date_added"].': <em>'.$prop_obj->get_value().'</em></td>';	
 		echo '</tr>';
 		
 		echo '<tr><td colspan="'.$col_count.'" align="center">';
