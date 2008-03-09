@@ -146,7 +146,7 @@ class article extends View
 						echo '<td>';
 						echo '<input type="text" size="11" name="'.$prop.'" value="'. (isset ($_POST[$prop]) ? $_POST[$prop] : '').'"/><br>';
 						echo '</td></tr>';
-						break;
+					break;
 					case "DOUBLE" :
 						echo '<tr><td style="width:25%;">';
 						echo $this->BO->data_labels[$prop];
@@ -155,13 +155,13 @@ class article extends View
 						echo '<td>';
 						echo '<input type="text" size="13" name="'.$prop.'" value="'. (isset ($_POST[$prop]) ? $_POST[$prop] : '').'"/><br>';
 						echo '</td></tr>';
-						break;
+					break;
 					case "DATE" :						
 						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
 					break;
 					case "TIMESTAMP" :
 						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
-						break;
+					break;
 					case "STRING" :
 						// use a string widget if defined
 						if (class_exists("string_box")) {
@@ -175,7 +175,7 @@ class article extends View
 							echo '<input type="text" size="'.$this->BO-> $prop->get_size().'" name="'.$prop.'" value="'. (isset ($_POST[$prop]) ? $_POST[$prop] : '').'"/><br>';
 							echo '</td></tr>';
 						}
-						break;
+					break;
 					case "TEXT" :
 						// use a text widget if defined
 						if (class_exists("text_box")) {
@@ -195,7 +195,7 @@ class article extends View
 							echo '<textarea cols="115" rows="18" name="'.$prop.'">'. (isset ($_POST[$prop]) ? $_POST[$prop] : '').'</textarea><br>';
 							echo '</td></tr>';
 						}
-						break;
+					break;
 					case "BOOLEAN" :
 						echo '<tr><td style="width:25%;">';
 						echo $this->BO->data_labels[$prop];
@@ -207,7 +207,7 @@ class article extends View
 						echo '<option value="1">Y</option>';
 						echo '</select><br>';
 						echo '</td></tr>';
-						break;
+					break;
 					case "ENUM" :
 						echo '<tr><td style="width:25%;">';
 						echo $this->BO->data_labels[$prop];
@@ -220,7 +220,24 @@ class article extends View
 						}
 						echo '</select><br>';
 						echo '</td></tr>';
-						break;
+					break;
+					case "DENUM" :
+						echo '<tr><td style="width:25%;">';
+						echo $this->BO->data_labels[$prop];
+						echo '</td>';
+						echo '<td>';
+						echo '<select name="'.$prop.'"/>';
+						$denum = $this->BO->get_prop_object($prop);
+						$denum_vals = $denum->get_options();						
+						foreach (array_keys($denum_vals) as $denum_index) {
+							if ($denum->get_value() == $denum_index)
+								echo '<option value="'.$denum_index.'" selected>'.$denum_vals[$denum_index].'</option>';
+							else
+								echo '<option value="'.$denum_index.'">'.$denum_vals[$denum_index].'</option>';
+						}
+						echo '</select><br>';
+						echo '</td></tr>';
+					break;
 					default :
 						echo '<tr><td colspan="2">';
 						echo $this->BO->data_labels[$prop];
@@ -229,7 +246,7 @@ class article extends View
 						echo '<tr><td colspan="2">';
 						echo '<textarea cols="100" rows="3" name="'.$prop.'">'. (isset ($_POST[$prop]) ? $_POST[$prop] : '').'</textarea><br>';
 						echo '</td></tr>';
-						break;
+					break;
 				}
 			}
 		}
@@ -352,6 +369,23 @@ class article extends View
 								echo '<option value="'.$enum_val.'" selected>'.$enum_val.'</option>';
 							else
 								echo '<option value="'.$enum_val.'">'.$enum_val.'</option>';
+						}
+						echo '</select><br>';
+						echo '</td></tr>';
+					break;
+					case "DENUM" :
+						echo '<tr><td style="width:25%;">';
+						echo $this->BO->data_labels[$prop];
+						echo '</td>';
+						echo '<td>';
+						echo '<select name="'.$prop.'"/>';
+						$denum = $this->BO->get_prop_object($prop);
+						$denum_vals = $denum->get_options();						
+						foreach (array_keys($denum_vals) as $denum_index) {
+							if ($denum->get_value() == $denum_index)
+								echo '<option value="'.$denum_index.'" selected>'.$denum_vals[$denum_index].'</option>';
+							else
+								echo '<option value="'.$denum_index.'">'.$denum_vals[$denum_index].'</option>';
 						}
 						echo '</select><br>';
 						echo '</td></tr>';
