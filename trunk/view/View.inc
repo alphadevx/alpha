@@ -443,22 +443,16 @@ class View {
 		echo '</tr>';
 
 		echo '<tr><td colspan="'.$col_count.'" align="center">';
-		if (class_exists("button")) {
-			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/Detail.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "View", "viewBut");
-			// render edit and delete buttons for admins only
-			if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_access_level() == "Administrator") {
-				echo '&nbsp;&nbsp;';
-				$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/Edit.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "Edit", "editBut");
-				echo '&nbsp;&nbsp;';
-				$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
-			}
-		} else {
-			echo '<input type="button" name="viewBut" value="View" onclick="document.location.replace(\''.$config->get('sysURL').'/controller/Detail.php?bo='.get_class($this->BO).'&oid='.$this->BO->get_ID().'\')"/>';
+		
+		$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->get_ID())."'", "View", "viewBut");
+		// render edit and delete buttons for admins only
+		if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_access_level() == "Administrator") {
 			echo '&nbsp;&nbsp;';
-			echo '<input type="submit" name="editBut" value="Edit"/>';
+			$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->get_ID())."'", "Edit", "editBut");
 			echo '&nbsp;&nbsp;';
-			echo '<input type="button" name="deleteBut" value="Delete" onclick="if(confirm(\'Are you sure you wish to delete this item?\')) {document.getElementById(\'delete_oid\').value = \''.$this->BO->get_ID().'\'; document.getElementById(\'delete_form\').submit();}"/>';
+			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
 		}
+		
 		echo '</td></tr>';
 
 		$this->render_security_fields();
@@ -537,17 +531,11 @@ class View {
 		}
 
 		echo '<tr><td colspan="2" style="text-align:center;">';
-		if (class_exists("button")) {
-			$temp = new button("history.back()", "Back", "backBut");
-			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/Edit.php?bo=".get_class($this->BO)."&oid=".$this->BO->get_ID()."'", "Edit", "editBut");
-			echo '&nbsp;&nbsp;';
-			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
-		} else {
-			echo '<input type="button" name="backBut" value="Back" onclick="history.back()"/>';
-			echo '<input type="submit" name="editBut" value="Edit"/>';
-			echo '<input type="button" name="deleteBut" value="Delete" onclick="if(confirm(\'Are you sure you wish to delete this item?\')) {document.getElementById(\'delete_oid\').value = \''.$this->BO->get_ID().'\'; document.getElementById(\'delete_form\').submit();}"/>';
-		}
+		$temp = new button("history.back()", "Back", "backBut");
+		echo '&nbsp;&nbsp;';
+		$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=Edit&bo='.get_class($this->BO).'&oid='.$this->BO->get_ID())."'", "Edit", "editBut");
+		echo '&nbsp;&nbsp;';
+		$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
 		echo '</td></tr>';
 
 		echo '</table>';
