@@ -128,11 +128,9 @@ class Detail extends Controller
 			}
 			
 			echo '<center>';
-			if (class_exists("button")) {
-				$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/ListAll.php?bo=".get_class($this->BO)."'","Back to List","cancelBut");
-			}else{
-				echo '<input type="button" name="cancelBut" value="Back to List" onclick="document.location = \''.$config->get('sysURL').'/alpha/controller/ListAll.php?bo='.get_class($this->BO).'\'"/>';
-			}
+			
+			$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=ListAll&bo='.get_class($this->BO))."'","Back to List","cancelBut");
+			
 			echo '</center>';
 			exit;
 		}
