@@ -37,8 +37,8 @@ class create_article_object extends Controller
 		
 		$this->new_article = new article_object();
 		
-		$this->set_name('create_article_object.php');
-		$this->set_unit_of_work(array('create_article_object.php','preview_article_object.php'));
+		$this->set_name(Front_Controller::generate_secure_URL('act=create_article_object'));		
+		$this->set_unit_of_work(array(Front_Controller::generate_secure_URL('act=create_article_object'), Front_Controller::generate_secure_URL('act=preview_article_object')));
 		
 		// set up the title and meta details
 		$this->set_title("Create a new Article");
