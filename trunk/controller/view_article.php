@@ -142,7 +142,7 @@ class view_article extends Controller
 		if($config->get('sysCMSDisplayStandardHeader')) {
 			echo '<p><a href="'.$config->get('sysURL').'">'.$config->get('sysTitle').'</a> &nbsp; &nbsp;';
 			$prop_obj = $this->article->get_prop_object("section");
-			echo 'Site Section: <em>'.$prop_obj->get_value().'</em> &nbsp; &nbsp;';
+			echo 'Site Section: <em>'.$prop_obj->get_display_value().'</em> &nbsp; &nbsp;';
 			$prop_obj = $this->article->get_prop_object("date_added");
 			echo 'Date Added: <em>'.$prop_obj->get_value().'</em> &nbsp; &nbsp;';
 			$prop_obj = $this->article->get_prop_object("date_updated");
