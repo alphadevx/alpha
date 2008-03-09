@@ -466,10 +466,11 @@ class article_object extends mysql_DAO
 	 */
 	function load_all($start=0, $limit=0, $order_by="OID", $order="DESC")
 	{
-		global $config;		
+		global $config;
+		global $front;
 		
 		// if accessing from the admin backend, use the parent method which includes all articles
-		if(basename($_SERVER["PHP_SELF"]) == "ListAll.php")
+		if(basename($_SERVER["PHP_SELF"]) == "ListAll.php" || (isset($front) && $front->get_page_controller() == 'ListAll'))
 			return parent::load_all($start, $limit, $order_by, $order);
 		
 		if ($limit == 0)
