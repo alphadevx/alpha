@@ -126,8 +126,8 @@ class Front_Controller {
 			$token = strtr($_GET["tk"], '-_', '+/');
 			$token = base64_decode($token);
 			$params = trim(mcrypt_decrypt('tripledes', $config->get('sysQSKey'), $token, 'ecb', $iv));
-			// now remove the first param ("act" the page controller action)
-			$params = substr($params, strpos($params,'&'));
+			// now remove the first param ("act" the page controller action)			
+			$params = substr($params, strpos($params,'&')+1);
 			return $params;
 		}
 	}
