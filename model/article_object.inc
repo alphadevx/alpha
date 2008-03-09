@@ -27,7 +27,7 @@ class article_object extends mysql_DAO
 	
 	/**
 	 * the article site section
-	 * @var Enum
+	 * @var DEnum
 	 */
 	var $section;
 	
@@ -134,11 +134,9 @@ class article_object extends mysql_DAO
 		$this->title->set_helper("Please provide a title for the article.");
 		$this->title->set_size(100);
 		$this->title->set_rule("/\w+/");
-		$this->section = new Enum(array("Business",
-										"Design",
-										"Imagery",
-										"Browsing",
-										"General"));
+		
+		$this->section = new DEnum('article_object::section');
+		
 		$this->keywords = new String();
 		$this->keywords->set_helper("Please provide some coma-seperated search engine keywords for the article.");
 		$this->keywords->set_size(150);
