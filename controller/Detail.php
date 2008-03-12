@@ -49,22 +49,23 @@ class Detail extends Controller
 	/**
 	 * constructor that renders the page	 
 	 */
-	function Detail() {
+	function Detail($BO_name=null) {
 		global $config;
 			
 		// load the business object (BO) definition
 		if (isset($_GET["bo"])) {
-			$BO_name = $_GET["bo"];
-			if (file_exists($config->get('sysRoot').'model/'.$BO_name.'.inc')) {
-				require_once $config->get('sysRoot').'model/'.$BO_name.'.inc';
-			} elseif (file_exists($config->get('sysRoot').'alpha/model/'.$BO_name.'.inc')) {
-				require_once $config->get('sysRoot').'alpha/model/'.$BO_name.'.inc';
-			}else{
-				$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the defination for the BO class '.$BO_name,'GET');
-				exit;
-			}
-		}else{
+			$BO_name = $_GET["bo"];			
+		}elseif($BO_name==null) {
 			$error = new handle_error($_SERVER["PHP_SELF"],'No BO available to list!','GET');
+			exit;
+		}
+		
+		if (file_exists($config->get('sysRoot').'model/'.$BO_name.'.inc')) {
+			require_once $config->get('sysRoot').'model/'.$BO_name.'.inc';
+		} elseif (file_exists($config->get('sysRoot').'alpha/model/'.$BO_name.'.inc')) {
+			require_once $config->get('sysRoot').'alpha/model/'.$BO_name.'.inc';
+		}else{
+			$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the defination for the BO class '.$BO_name,'GET');
 			exit;
 		}
 		
