@@ -84,7 +84,7 @@ class DEnum extends mysql_DAO {
 		$result = mysql_query($sql_query);
 		
 		if(mysql_num_rows($result) == 0) {
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load DEnum '.$this->name.', not found in database.' ,'get_options()','framework');
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load DEnum '.$this->name->get_value().', not found in database.' ,'get_options()','framework');
 			return false;
 		}
 		
