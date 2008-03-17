@@ -4,16 +4,17 @@
 
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
 
-require_once $config->get('sysRoot')."alpha/model/types/Date.inc";
-require_once $config->get('sysRoot')."alpha/model/types/Timestamp.inc";
-require_once $config->get('sysRoot')."alpha/model/types/Double.inc";
-require_once $config->get('sysRoot')."alpha/model/types/Integer.inc";
-require_once $config->get('sysRoot')."alpha/model/types/String.inc";
-require_once $config->get('sysRoot')."alpha/model/types/Text.inc";
-require_once $config->get('sysRoot')."alpha/model/types/Enum.inc";
-require_once $config->get('sysRoot')."alpha/model/types/Boolean.inc";
+require_once $config->get('sysRoot').'alpha/model/types/Date.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Timestamp.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Double.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Integer.inc';
+require_once $config->get('sysRoot').'alpha/model/types/String.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
 
 require_once $config->get('sysRoot').'alpha/view/widgets/calendar.php';
+require_once $config->get('sysRoot').'alpha/view/widgets/record_selector.php';
 
 /**
  *
@@ -273,9 +274,12 @@ class View {
 					break;
 					case "DATE" :
 						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
-					break;
+					break;					
 					case "TIMESTAMP" :
 						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
+					break;
+					case "RELATION" :
+						$temp = new record_selector($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
 					break;
 					case "STRING" :
 						// use a string widget if defined
@@ -515,6 +519,15 @@ class View {
 
 						echo '<td>&nbsp;';
 						echo $this->BO->$prop->get_display_value();
+						echo '</td></tr>';
+					break;
+					case "RELATION":					
+						echo '<tr><th>';
+						echo $this->BO->data_labels[$prop];
+						echo '</th>';
+
+						echo '<td>&nbsp;';
+						echo $this->BO->$prop->getRelatedClassDisplayFieldValue();
 						echo '</td></tr>';
 					break;
 					default :
