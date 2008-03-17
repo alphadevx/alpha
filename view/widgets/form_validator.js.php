@@ -43,7 +43,9 @@ class form_validator
 		
 		foreach(array_keys($properties) as $prop) {
 			if(!in_array($prop, $this->BO->default_attributes) && !in_array($prop, $this->BO->transient_attributes)) {
-				if (strtoupper(get_class($properties[$prop])) != "ENUM" && strtoupper(get_class($properties[$prop])) != "DENUM") {
+				if (strtoupper(get_class($properties[$prop])) != "ENUM" 
+				&& strtoupper(get_class($properties[$prop])) != "DENUM"
+				&& strtoupper(get_class($properties[$prop])) != "RELATION") {
 					echo " validation_rules[\"".$prop."\"] = ".$this->BO->$prop->get_rule().";\n";
 					echo " validation_rules[\"".$prop."_msg\"] = \"".$this->BO->$prop->get_helper()."\";\n";
 				}
@@ -140,6 +142,10 @@ class form_validator
 		function check_text_field(field) {
 			// get the validation rule for this field
 			var rule = validation_rules[field.getAttribute("name")];
+			
+			// if no rule is defined for the field, return true
+				if(!rule)
+					return true;
 						
 			// now use the rule regular expression to validate the field
 			if (!field.value.match(rule)) {				
@@ -147,7 +153,8 @@ class form_validator
 				field.style.backgroundColor = 'yellow';
 				return false;
 			}else{
-				field.style.backgroundColor = 'white';
+				if(field.style.className != "readonly")
+					field.style.backgroundColor = 'white';
 				return true;
 			}
 		}
