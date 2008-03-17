@@ -14,6 +14,7 @@ require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
 require_once $config->get('sysRoot').'alpha/model/types/DEnum.inc';
 require_once $config->get('sysRoot').'alpha/model/types/DEnumItem.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Relation.inc';
 
 /**
 * Base business object class definition
