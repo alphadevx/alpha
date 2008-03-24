@@ -115,6 +115,27 @@ class Relation {
 			return $obj->get($this->relatedClassDisplayField);
 		}
 	}
+	
+	/**
+	 * for one-to-many relations, get the objects on the many side
+	 */
+	function getRelatedObjects() {
+		global $config;
+		
+		if (file_exists($config->get('sysRoot').'alpha/model/'.$this->relatedClass.'.inc')) {
+			require_once $config->get('sysRoot').'alpha/model/'.$this->relatedClass.'.inc';
+		}elseif (file_exists($config->get('sysRoot').'model/'.$this->relatedClass.'.inc')) {
+			require_once $config->get('sysRoot').'model/'.$this->relatedClass.'.inc';
+		}else{
+			$error = new handle_error('Relation.inc','Could not load the defination for the BO class '.$this->relatedClass,'framework');
+			exit;
+		}
+					
+		$obj = new $this->relatedClass;
+		$objects = $obj->load_all_by_attribute($this->getRelatedClassField(), $this->get_value());
+		
+		return $objects;
+	}
 }
 
 ?>
