@@ -114,7 +114,7 @@ class mysql_DAO
 		$properties = get_class_vars(get_class($this));
 
 		foreach(array_keys($properties) as $prop) {
-			if (get_class($this->$prop) != false) {				
+			if (get_class($this->$prop) != false && !in_array($prop, $this->transient_attributes)) {				
 				if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {					
 					$this->$prop->set_value($row[$prop]);
 				}else{
@@ -130,6 +130,59 @@ class mysql_DAO
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
 			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load object, MySql error is: '.mysql_error().', query: '.$this->last_query,'load_object($OID)','framework');
+			return false;
+		}		
+	}
+	
+	/**
+	 * populates the child object from the database table by the given attribute
+	 * @param string $atribute The attribute to load the object by
+	 * @param string $value The value of the attribute to load the object by
+	 * @return bool True if no database error occured, else false and error is stored in $this->last_query
+	 */
+	function load_by_attribute($attribute, $value)
+	{
+		if(method_exists($this, 'before_load_by_attribute_callback'))
+				$this->before_load_by_attribute_callback();
+		
+		$sql_query = "SELECT * FROM ".$this->TABLE_NAME." WHERE $attribute = '$value';";
+
+		$this->last_query = $sql_query;
+		
+		$result = mysql_query($sql_query);
+		
+		if(mysql_num_rows($result) == 0) {
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load object, MySql error is: '.mysql_error().', query: '.$this->last_query,"load_by_attribute([$attribute], [$value])",'framework');
+			return false;
+		}
+		
+		$row = mysql_fetch_assoc($result);
+		
+		$properties = get_class_vars(get_class($this));
+
+		foreach(array_keys($properties) as $prop) {
+			if (get_class($this->$prop) != false) {	
+				if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {					
+					$this->$prop->set_value(stripslashes($row[$prop]));
+				}else{
+					$this->$prop->populate_from_string(stripslashes($row[$prop]));
+				}
+			}
+			if($prop == "OID"){				
+				$this->OID = $row[$prop];
+			}	
+			if($prop == "version_num"){				
+				$this->version_num = $row[$prop];
+			}
+		}		
+		
+		if(mysql_error() == '' && $this->set_enum_options()) {
+			if(method_exists($this, 'after_load_by_attribute_callback'))
+				$this->after_load_by_attribute_callback();
+			return true;
+		}else{			
+			$this->last_query .= " Error: ".mysql_error();
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load object, MySql error is: '.mysql_error().', query: '.$this->last_query,"load_by_attribute([$attribute], [$value])",'framework');
 			return false;
 		}		
 	}
@@ -181,6 +234,56 @@ class mysql_DAO
 		
 		return $objects;	
 	}
+	
+	/**
+	 * loads all of the objects of this class by the specified attribute into an array, which is returned
+	 * 
+	 * @param string $atribute The attribute to load the object by
+	 * @param string $value The value of the attribute to load the object by
+	 * @param integer $start The start of the SQL LIMIT clause
+	 * @param integer $limit The amount (limit) of objects to load
+	 * @param string $order_by the name of the field to sort the BOs by
+	 * @param string $order the order to sort the BOs by, default is ASC
+	 * @return array an array containing objects of this type of business object.
+	 */
+	function load_all_by_attribute($attribute, $value, $start=0, $limit=0, $order_by="OID", $order="ASC")
+	{
+		if(method_exists($this, 'before_load_all_by_attribute_callback'))
+			$this->before_load_all_by_attribute_callback();
+		
+		global $config;
+		
+		if ($limit == 0)
+			$limit = $config->get('sysListPageAmount');
+		
+		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE $attribute = '$value' ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
+		
+		$this->last_query = $sql_query;
+
+		$result = mysql_query($sql_query);
+		
+		if(mysql_error() != '') {
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load objects, query: '.$this->last_query.'.' ,'load_all_by_attribute()','framework');
+			return false;
+		}
+		
+		// now build an array of objects to be returned
+		$objects = array();
+		$count = 0;
+		$BO_Class = get_class($this);
+		
+		while($row = mysql_fetch_assoc($result)) {
+			$obj = new $BO_Class();
+			$obj->load_object($row["OID"]);
+			$objects[$count] = $obj;
+			$count++;
+		}
+		
+		if(method_exists($this, 'after_load_all_by_attribute_callback'))
+			$this->after_load_all_by_attribute_callback();
+		
+		return $objects;	
+	}
 
 	/**
 	 * saves the object.  If $this->OID is blank it will INSERT, otherwise UPDATE
@@ -214,7 +317,7 @@ class mysql_DAO
 			$sql_query = "INSERT INTO ".$this->TABLE_NAME." (";
 
 			foreach(array_keys($properties) as $prop) {
-				if (get_class($this->$prop) != false) {
+				if (get_class($this->$prop) != false && !in_array($prop, $this->transient_attributes)) {
 					$sql_query .= "$prop,";
 				}				
 			}
@@ -224,7 +327,7 @@ class mysql_DAO
 			$sql_query .= ") VALUES (";
 
 			foreach(array_keys($properties) as $prop) {				
-				if (get_class($this->$prop) != false && $prop != "version_num") {
+				if (get_class($this->$prop) != false && $prop != "version_num" && !in_array($prop, $this->transient_attributes)) {
 					$sql_query .= "'".$this->$prop->get_value()."',";
 				}
 				if ($prop == "version_num") {					
@@ -241,7 +344,7 @@ class mysql_DAO
 			$sql_query = "UPDATE ".$this->TABLE_NAME." SET ";
 
 			foreach(array_keys($properties) as $prop) {
-				if (get_class($this->$prop) != false && $prop != "version_num") {
+				if (get_class($this->$prop) != false && $prop != "version_num" && !in_array($prop, $this->transient_attributes)) {
 					$sql_query .= "$prop = '".$this->$prop->get_value()."',";
 				}
 				if ($prop == "version_num") {					
