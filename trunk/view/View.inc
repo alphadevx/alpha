@@ -368,6 +368,11 @@ class View {
 			}
 			if ($prop == "version_num")
 				echo '<input type="hidden" name="version_num" value="'.$this->BO->get_version().'"/>';
+				
+			// if the property is transient but a one-to-many relationship, will will render it read-only
+			if(in_array($prop, $this->BO->transient_attributes) && strtoupper(get_class($properties[$prop])) == 'RELATION' && $properties[$prop]->getRelationType() == 'ONE-TO-MANY') {
+				$temp = new record_selector($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
+			}
 		}
 
 		echo '<tr><td colspan="2">';
@@ -540,6 +545,11 @@ class View {
 						echo '</td></tr>';
 						break;
 				}
+			}
+			
+			// if the property is transient but a one-to-many relationship, will will render it read-only
+			if(in_array($prop, $this->BO->transient_attributes) && strtoupper(get_class($properties[$prop])) == 'RELATION' && $properties[$prop]->getRelationType() == 'ONE-TO-MANY') {
+				$temp = new record_selector($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
 			}
 		}
 
