@@ -54,30 +54,58 @@ class record_selector
 	}
 	
 	function render($table_tags) {
-		global $config;		
+		global $config;
 		
-		// value to appear in the text-box
-		$inputBoxValue = $this->relation_object->getRelatedClassDisplayFieldValue();
-
-		//if(strlen($inputBoxValue) > 70)
-		//	$inputBoxValue = substr($inputBoxValue, 0, 75).'...';
-		
-		if($table_tags) {
-			echo '<tr><td style="width:25%;">';
-			echo $this->label;
-			echo '</td>';
+		// render text-box for many-to-one relations
+		if($this->relation_object->getRelationType() == 'MANY-TO-ONE') {
+			// value to appear in the text-box
+			$inputBoxValue = $this->relation_object->getRelatedClassDisplayFieldValue();		
 			
-			echo '<td>';			
-			echo '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
-			$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/record_selector.php?value='+document.getElementById('".$this->name."').value+'&field=".$this->name."&relatedClass=".$this->relation_object->getRelatedClass()."&relatedClassField=".$this->relation_object->getRelatedClassField()."&relatedClassDisplayField=".$this->relation_object->getRelatedClassDisplayField()."&relationType=".$this->relation_object->getRelationType()."','relWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=500,height=50,left='+(event.screenX-250)+',top='+event.screenY+'');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
-			echo '</td></tr>';
-		}else{
-			echo '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
-			$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/record_selector.php?value=".$this->relation_object->get_value()."&relatedClass=".$this->relation_object->getRelatedClass()."&relatedClassField=".$this->relation_object->getRelatedClassField()."&relatedClassDisplayField=".$this->relation_object->getRelatedClassDisplayField()."&relationType=".$this->relation_object->getRelationType()."','relWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=500,height=50,left='+(event.screenX-250)+',top='+event.screenY+'');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
+			if($table_tags) {
+				echo '<tr><td style="width:25%;">';
+				echo $this->label;
+				echo '</td>';
+				
+				echo '<td>';			
+				echo '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
+				$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/record_selector.php?value='+document.getElementById('".$this->name."').value+'&field=".$this->name."&relatedClass=".$this->relation_object->getRelatedClass()."&relatedClassField=".$this->relation_object->getRelatedClassField()."&relatedClassDisplayField=".$this->relation_object->getRelatedClassDisplayField()."&relationType=".$this->relation_object->getRelationType()."','relWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=500,height=50,left='+(event.screenX-250)+',top='+event.screenY+'');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
+				echo '</td></tr>';
+			}else{
+				echo '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
+				$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/record_selector.php?value=".$this->relation_object->get_value()."&relatedClass=".$this->relation_object->getRelatedClass()."&relatedClassField=".$this->relation_object->getRelatedClassField()."&relatedClassDisplayField=".$this->relation_object->getRelatedClassDisplayField()."&relationType=".$this->relation_object->getRelationType()."','relWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=500,height=50,left='+(event.screenX-250)+',top='+event.screenY+'');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
+			}
+			
+			// hidden field to store the actual value of the relation
+			echo '<input type="hidden" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->relation_object->get_value().'"/>';
 		}
 		
-		// hidden field to store the actual value of the relation
-		echo '<input type="hidden" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->relation_object->get_value().'"/>';
+		// render read-only list for one-to-many relations
+		if($this->relation_object->getRelationType() == 'ONE-TO-MANY') {
+			$objects = $this->relation_object->getRelatedObjects();			
+			
+			if(count($objects) > 0 && $table_tags) {
+				echo '<tr><td colspan="2">';
+				echo '<table cols="1" width="100%">';
+				echo '<tr><td style="text-align:center;">';
+				echo $this->label;
+				$tmp = new button("document.getElementById('relation_field_".$this->name."').style.display = 'block';", "Display related objects", $this->name."DisBut", $config->get('sysURL')."/alpha/images/icons/arrow_down.png");
+				$tmp = new button("document.getElementById('relation_field_".$this->name."').style.display = 'none';", "Hide related objects", $this->name."HidBut", $config->get('sysURL')."/alpha/images/icons/arrow_up.png");
+				echo '</td></tr>';
+				
+				echo '<tr><td colspan="2">';
+				echo '<div id="relation_field_'.$this->name.'" style="display:none;">';
+				foreach($objects as $obj) {
+					echo '<div class="bordered" style="margin:5px;">';
+					echo '<p>'.$obj->data_labels['OID'].': <em>'.$obj->get_ID().'</em></p>';
+					echo '<p>'.$obj->data_labels[$this->relation_object->getRelatedClassDisplayField()].': <em>'.$obj->get($this->relation_object->getRelatedClassDisplayField()).'</em></p>';
+					echo '</div>';
+				}
+				echo '</div>';
+				echo '</td></tr>';
+				echo '</table>';
+				echo '</td></tr>';				
+			}
+		}
 	}
 	
 	/**
@@ -153,25 +181,7 @@ class record_selector
 }
 
 // checking to see if the record_selector has been accessed directly via a pop-up
-if(basename($_SERVER["PHP_SELF"]) == "record_selector.php") {
-	/*if(isset($_GET["date"])) {
-		// check for the presence of colons to indicate a timestamp rather than a date
-		if(strpos($_GET["date"], ':') === false)
-			$date = new Date();
-		else
-			$date = new Timestamp();
-		
-		$date->populate_from_string($_GET["date"]);
-		// check to see if a form field name is provided
-		if(!empty($_GET["name"]))
-			$cal = new record_selector($date, "", $_GET["name"]);
-		else
-			$cal = new record_selector($date);
-	}else{
-		$error = new handle_error($_SERVER["PHP_SELF"],'No date/timestamp provided on the query string!','GET','other');
-		exit;
-	}*/
-	
+if(basename($_SERVER["PHP_SELF"]) == "record_selector.php") {	
 	$relation_object = new Relation();
 	$relation_object->setRelatedClass($_GET['relatedClass']);
 	$relation_object->setRelatedClassField($_GET['relatedClassField']);
