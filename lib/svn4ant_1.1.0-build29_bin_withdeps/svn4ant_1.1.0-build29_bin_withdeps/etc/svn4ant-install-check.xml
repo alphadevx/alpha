@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
+   | Do-nothing project that ensures Ant can locate and load JWare/Svn4Ant. |
+   |                                                                        |
+   | (c) 2007-2008 Sandbox Software MC. All rights reserved.                |
+   |________________________________________________________________________|
+   -->
+
+<project name="first-install" basedir="." default="success">
+  <description>Verify a -withdeps Svn4Ant installation</description>
+
+  <!-- The Svn4Ant distribution .jar files must be in Ant's classpath -->
+
+  <dirname property="root.d" file="${basedir}"/>
+
+  <property name="antxtras.d" value="${root.d}/dependencies/antx/lib"/>
+  <property name="svnkit.d"   value="${root.d}/dependencies/svnkit/lib"/>
+  <property name="svn4ant.d"  value="${root.d}/lib"/>
+
+  <path id="tools.path">
+    <fileset dir="${antxtras.d}">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${svnkit.d}">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${svn4ant.d}">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <taskdef resource="com/idaremedia/antx/install/antlib.xml"
+       classpathref="tools.path" loaderref="ant.loader.tools.path"/>
+
+  <taskdef resource="com/idaremedia/svn4ant/client/antlib.xml"
+        classpathref="tools.path" loaderref="ant.loader.tools.path"/>
+
+  <vendorinfo name="antx"/>
+  <svn-libcheck/>
+
+  <!-- Need a default target, so why not celebrate -->
+  <target name="success">
+      <echo message="AntXtras: ${antx.build.label}"/>
+      <echo message="SVNKit: ${svnkit.label}"/>
+      <echo message="Svn4Ant: ${svn4ant.label}"/>
+  </target>
+
+</project>
+
+<!-- $Id: svn4ant-install-check.xml 317 2008-02-09 21:02:50Z ssmc $ -->

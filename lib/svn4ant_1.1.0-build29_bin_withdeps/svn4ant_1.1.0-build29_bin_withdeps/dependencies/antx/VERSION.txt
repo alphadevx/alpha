@@ -1,0 +1,10 @@
+#-----------------------------------------------------------------------
+# Summary distribution information.
+#
+# Copyright (c) 2002-2007 iDare Media, Inc.
+# All Rights Reserved.
+#-----------------------------------------------------------------------
+Release: iDare Media's AntXtras/Foundation v0.5.2, Oct-07-2007
+Build Number: 3
+Build Time: Oct082007_244805GMT
+Builder: ssmc

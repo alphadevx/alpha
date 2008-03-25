@@ -1,0 +1,9 @@
+#-----------------------------------------------------------------------
+# Summary distribution information.
+#
+# Copyright (c) 2005-2008 Sandbox Software MC. All Rights Reserved.
+#-----------------------------------------------------------------------
+Release: JWare AntXtras/Svn4Ant v1.1.0, Feb-09-2008
+Build Number: 29
+Build Time: Feb102008_245642GMT
+Builder: ssmc
