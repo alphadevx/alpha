@@ -1,0 +1,69 @@
+<project name="Alpha" default="dist" basedir=".">
+
+	<description>Simple build for for making distributions and tags.</description>
+	
+	<!-- some global properties -->
+	<property name="app-root" location="../../../."/>	
+	<property name="dist-target" location="dist"/>
+	<property name="app-version" value="0.5.3"/>
+	<property name="app-name" value="BARS"/>
+	<property name="app-repo" value="file:///R:/Repositories/BARS"/>
+	
+	<!-- The Svn4Ant distribution .jar files must be in Ant's classpath -->	  
+
+	<property name="jars.d"  value="${app-root}/alpha/lib/jars"/>
+
+	<path id="tools.path">
+		<fileset dir="${jars.d}">
+	    	<include name="**/*.jar"/>
+	    </fileset>	    
+	</path>
+
+	<taskdef resource="com/idaremedia/antx/install/antlib.xml"
+		classpathref="tools.path" loaderref="ant.loader.tools.path"/>
+
+	<taskdef resource="com/idaremedia/svn4ant/client/antlib.xml"
+		classpathref="tools.path" loaderref="ant.loader.tools.path"/>
+
+	<vendorinfo name="antx"/>
+	<svn-libcheck/>
+	
+	<target name="dist" depends="clean">
+		<!-- make a dist folder and copy all of the application files there -->
+		<mkdir dir="${dist-target}"/>
+		<!-- now copy the files, less the SVN directories! -->
+		<copy todir="${dist-target}">
+			<fileset dir="${app-root}">
+				<exclude name="**/*.svn"/>
+				<exclude name="dist/"/>
+				<exclude name="docs/"/>
+				<exclude name="**/*.project"/>
+				<exclude name="**/build.xml"/>
+				<exclude name="alpha/config-dist/"/>
+				<exclude name="alpha/cache/"/>
+				<exclude name="alpha/attachments/"/>
+				<exclude name="cache/"/>
+				<exclude name="attachments/"/>
+			</fileset>
+		</copy>	
+	</target>
+	
+	<target name="clean">
+		<!-- delete the distribution folder -->
+		<delete dir="${dist-target}"/>
+	</target>
+	
+	<target name="tag">
+		<svncredential id="login" username="john" passphrase="password"/>
+		
+		<svnserver id="localhost" isdefault="yes" authcache="no">
+			<credential refid="login"/>
+			<url value="${app-repo}"/>
+		</svnserver>
+		
+		<svnbranch credential="localhost" externals="pin"
+		from="${app-repo}/trunk" to="${app-repo}/tags/${app-version}"
+		message="Test release for ${app-name} (${app-version})"/>		
+	</target>
+	
+</project>
