@@ -5,7 +5,7 @@
 	<!-- some global properties -->
 	<property name="app-root" location="../../../."/>	
 	<property name="dist-target" location="dist"/>
-	<property name="app-version" value="0.5.3"/>
+	<property name="app-version" value="0.6"/>
 	<property name="app-name" value="BARS"/>
 	<property name="app-repo" value="file:///R:/Repositories/BARS"/>
 	
