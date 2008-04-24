@@ -2,10 +2,6 @@
 
 // $Id$
 
-require_once '../model/types/Enum.inc';
-require_once '../model/person_object.inc';
-require_once '../../alpha/util/db_connect.inc';
-
 /**
  *
  * Test case for the Enum data type
@@ -106,7 +102,7 @@ class Enum_Test extends PHPUnit_TestCase
     function test_default_sort_order() {
     	$this->enum1 = new Enum(array("alpha","gamma","beta"));
     	
-    	$options = $this->enum1->get_options();
+    	$options = $this->enum1->get_options(true);
     	 
     	$this->assertEquals($options[1], "beta", "testing the default (alphabetical) sort order on the enum");
     }
