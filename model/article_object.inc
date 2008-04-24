@@ -204,7 +204,10 @@ class article_object extends mysql_DAO
 	 * @return array an array of the two OIDs, or boolean false on failure
 	 */
 	function get_two_most_recent(){
-		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE published='1' AND section!='General' ORDER BY date_added DESC LIMIT 0, 2;";		
+		$denum = new DEnum('article_object::section');
+		$excludeID = $denum->getOptionID('Main');
+		
+		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE published='1' AND section!='$excludeID' ORDER BY date_added DESC LIMIT 0, 2;";		
 
 		$this->last_query = $sql_query;
 
