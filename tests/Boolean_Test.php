@@ -2,10 +2,6 @@
 
 // $Id$
 
-require_once '../model/types/Boolean.inc';
-require_once '../model/person_object.inc';
-require_once '../../alpha/util/db_connect.inc';
-
 /**
  *
  * Test case for the Boolean data type
