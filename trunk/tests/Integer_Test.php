@@ -2,9 +2,6 @@
 
 // $Id$
 
-require_once '../model/types/Integer.inc';
-require_once '../../alpha/util/db_connect.inc';
-
 /**
  *
  * Test case for the Integer data type
