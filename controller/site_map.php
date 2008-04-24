@@ -43,8 +43,8 @@ class site_map extends Controller
 		$article = new article_object();
 		$article_objects = $article->load_all(0, $article->get_count(), "date_added");
 				
-		$sections_enum = $article->get_prop_object("section");
-		$sections = $sections_enum->get_options();
+		$sections_denum = $article->get_prop_object("section");
+		$sections = $sections_denum->get_options();
 		
 		$this->set_title("Site Map");
 		
@@ -53,8 +53,8 @@ class site_map extends Controller
 		foreach ($sections as $section) {
 			echo "<h2>$section</h2>";
 			echo '<ul>';
-			foreach($article_objects as $article) {
-				if($article->section->get_value() == $section && $article->published->get_value() == 1)
+			foreach($article_objects as $article) {				
+				if($article->section->get_display_value() == $section && $article->published->get_value() == 1)
 					echo '<li><a href="'.$article->URL.'">'.$article->get("title").'</a></li>';				
 			}
 			echo '</ul>';
