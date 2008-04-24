@@ -130,7 +130,10 @@ class DEnum extends mysql_DAO {
 		if(empty($this->options))
 			$this->get_options();		
 		
-		return $this->options[$this->value];		
+		if(isset($this->options[$this->value]))
+			return $this->options[$this->value];
+		else
+			return 'Unknown';		
 	}
 	
 	/**
@@ -173,6 +176,20 @@ class DEnum extends mysql_DAO {
 			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to get the item count for the DEnum','get_item_count()','framework');
 			return 0;
 		}
+	}
+
+	/**
+	 * used to get the DenumItem ID for the given option name
+	 */
+	function getOptionID($optionName) {
+		$denumItem = new DEnumItem();
+		$denumItem->load_by_attribute('value', $optionName);
+		$id = $denumItem->get_ID();
+		
+		if(!empty($id))
+			return $id;
+		else
+			return 0;
 	}
 }
 
