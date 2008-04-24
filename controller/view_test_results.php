@@ -156,6 +156,7 @@ class view_test_results extends Controller
 	}
 }
 
-$controller = new view_test_results();
+if(basename($_SERVER["PHP_SELF"]) == 'view_test_results.php')
+	$controller = new view_test_results();
 
 ?>
