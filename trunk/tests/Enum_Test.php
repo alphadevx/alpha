@@ -96,6 +96,16 @@ class Enum_Test extends PHPUnit_TestCase
     	$this->assertEquals($this->enum1->get_options(), array('a','b','c'), "testing the set/get enum option methods");
     }
     
+	/**
+     * testing the set_value method with good and bad values
+     */
+    function test_set_value() {
+    	$this->enum1->set_options(array('a','b','c'));
+    	
+    	$this->assertTrue($this->enum1->set_value('a'), "testing the set_value method with a good value");
+    	$this->assertFalse($this->enum1->set_value('x'), "testing the set_value method with a bad value");
+    }
+    
     /**
      * testing the default (alphabetical) sort order on the enum
      */
