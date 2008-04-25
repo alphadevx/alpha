@@ -28,7 +28,8 @@ class Date {
 		if(empty($date)) {
 	 		$this->year=date('Y');
 	 		$this->month=date('m');
-	 		$this->day=date('d');	 		
+	 		$this->day=date('d');
+	 		$this->weekday=date('l');	 		
 		}else{
 			$this->populate_from_string($date);
 		}
@@ -74,6 +75,10 @@ class Date {
  	
  	function get_day() {
  		return $this->day;	
+ 	}
+ 	
+ 	function get_weekday() {
+ 		return $this->weekday;
  	}
  	 	
  	/**
