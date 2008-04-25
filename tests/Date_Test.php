@@ -85,6 +85,13 @@ class Date_Test extends PHPUnit_TestCase
     function test_get_euro_value() {
     	$this->assertEquals(date("d/m/y"), $this->date1->get_euro_value(), "testing the get_euro_value method for converting to European date format");
     }
+    
+    /**
+     * testing the get_weekday() method when the default constructor is used
+     */
+    function test_get_weekday() {
+    	$this->assertEquals(date('l'),$this->date1->get_weekday(), "testing the get_weekday() method when the default constructor is used");
+    }
 }
 
 ?>
