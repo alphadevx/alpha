@@ -68,12 +68,17 @@ class mysql_DAO
 	 * an array of the names of all of the default attributes of a persistent BO defined in this class
 	 * @var array
 	 */
-	var $default_attributes = array("OID","last_query","version_num","data_labels","render_mode","created_ts","created_by","updated_ts","updated_by","default_attributes","transient_attributes","TABLE_NAME");
+	var $default_attributes = array("OID","last_query","version_num","data_labels","render_mode","created_ts","created_by","updated_ts","updated_by","default_attributes","transient_attributes","unique_attributes","TABLE_NAME");
 	/**
 	 * an array of the names of all of the transient attributes of a persistent BO which are not saved to the DB
 	 * @var array
 	 */
-	var $transient_attributes = array("last_query","data_labels","render_mode","default_attributes","transient_attributes","TABLE_NAME");
+	var $transient_attributes = array("last_query","data_labels","render_mode","default_attributes","transient_attributes","unique_attributes","TABLE_NAME");
+	/**
+	 * an array of the uniquely-constained attributes of this persistent BO
+	 * @var array
+	 */
+	var $unique_attributes = array();
 	
 	/**
 	 * the constructor which sets up some housekeeping attributes
@@ -964,7 +969,10 @@ class mysql_DAO
 			if (mysql_error() == '') {
 				if(method_exists($this, 'before_check_table_needs_update_callback'))
 					$this->before_check_table_needs_update_callback();
-					
+				
+				// check the table indexes
+				$this->checkIndexes();
+				
 				return $update_required;
 			}else{			
 				$this->last_query .= " Error: ".mysql_error();
@@ -1071,6 +1079,67 @@ class mysql_DAO
 	 */
 	function mark_transient($attribute_name) {
 		array_push($this->transient_attributes, $attribute_name);		
+	}
+	
+	/**
+	 * adds the name of the atribute provided to the list of unique (constrained) attributes for this BO
+	 * @param string attribute_name the name of the attribute to mark as unique
+	 */
+	function mark_unique($attribute_name) {
+		array_push($this->unique_attributes, $attribute_name);		
+	}
+	
+	/**
+	 * checks to see if all of the idexes are in place for the BO's table, creates those that are missing
+	 */
+	function checkIndexes() {
+		if(method_exists($this, 'before_check_indexes_callback'))
+			$this->before_check_indexes_callback();
+		
+		$result = mysql_query("SHOW INDEX FROM ".$this->TABLE_NAME);
+		
+		// process unique keys
+		foreach($this->unique_attributes as $prop) {
+			$index_exists = false;
+			while ($row = mysql_fetch_assoc($result)) {					
+				if ($prop.'_unq_idx' == $row["Key_name"]) {
+			    	$index_exists = true;
+				}
+			}
+
+			if(!$index_exists)
+				$this->createUniqueIndex($prop);
+		}
+		
+		if (mysql_error() == '') {
+			if(method_exists($this, 'after_check_indexes_callback'))
+				$this->after_check_indexes_callback();
+		}else{
+			$this->last_query .= " Error: ".mysql_error();
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to access the system database correctly','check_indexes()','framework');	
+		}
+	}
+	
+	/**
+	 * creates a unique index in the database on the given property
+	 */
+	function createUniqueIndex($prop) {
+		if(method_exists($this, 'before_create_unique_index_callback'))
+			$this->before_create_unique_index_callback();
+		
+		$sql_query = 'CREATE UNIQUE INDEX '.$prop.'_unq_idx ON '.$this->TABLE_NAME.' ('.$prop.');';
+		
+		$this->last_query = $sql_query;
+
+		$result = mysql_query($sql_query);
+
+		if (mysql_error() == '') {
+			if(method_exists($this, 'after_create_unique_index_callback'))
+				$this->after_create_unique_index_callback();
+		}else{
+			$this->last_query .= " Error: ".mysql_error();
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to create the index '.$prop.'_unq_idx on '.$this->TABLE_NAME.', query is : '.$this->last_query,'createUniqueIndex()','framework');
+		}
 	}
 }
 
