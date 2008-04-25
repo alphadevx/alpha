@@ -159,8 +159,11 @@ class article_object extends mysql_DAO
 		$this->published = new Boolean(0);
 		
 		// mark the URL attributes as transient
-		$this->mark_transient("URL");
-		$this->mark_transient("printURL");
+		$this->mark_transient('URL');
+		$this->mark_transient('printURL');
+		
+		// mark title as unique
+		$this->mark_unique('title');
 	}
 	
 	/**
