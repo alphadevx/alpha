@@ -91,7 +91,6 @@ class article_object extends mysql_DAO
 	 */
 	var $data_labels = array(
 		"OID"=>"Article ID#",		
-		"revision_num"=>"Revision Number",		
 		"title"=>"Title",
 		"section"=>"Site Section",
 		"keywords"=>"Keywords",		
