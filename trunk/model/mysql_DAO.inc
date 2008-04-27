@@ -318,7 +318,7 @@ class mysql_DAO
 			$this->updated_by->set_value($_SESSION["current_user"]->get_ID());
 		$this->updated_ts = new Timestamp();
 
-		if(empty($this->OID) || !isset($this->OID)) {
+		if(empty($this->OID) || !isset($this->OID) || $this->OID == '00000000000') {
 			$sql_query = "INSERT INTO ".$this->TABLE_NAME." (";
 
 			foreach(array_keys($properties) as $prop) {
@@ -373,6 +373,10 @@ class mysql_DAO
 				$this->after_save_callback();
 			return true;
 		}else{
+			// there has been an error, so decrement the version number back
+			$temp = $this->version_num->get_value();					
+			$this->version_num->set_value($temp-1);	
+			
 			// check for unique violations			
 			if(mysql_errno() == '1062') {
 				$this->last_query .= " Error: ".mysql_error();
