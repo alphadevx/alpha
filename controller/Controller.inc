@@ -247,6 +247,11 @@ class Controller
 	 function set_unit_of_work($jobs) {
 	 	if(method_exists($this, 'before_set_unit_of_work_callback'))
 			$this->before_set_unit_of_work_callback();
+			
+		// clear out any previous unit of work from the session
+		$_SESSION["unit_of_work"] = null;		
+		$this->dirty_objects = array();
+		$this->new_objects = array();
 		
 	 	$num_of_jobs = count($jobs);
 	 	
@@ -423,9 +428,9 @@ class Controller
 		$new_objects = $this->get_new_objects();
 
 		for ($i=0; $i<count($new_objects); $i++) {
-			$new_objects[$i]->save_object();
+			$success = $new_objects[$i]->save_object();
 			
-			if (mysql_error() != '') {						
+			if (!$success) {
 				$this->last_query .= " Error: ".mysql_error();
 				$error = new handle_error($_SERVER["PHP_SELF"],'Failed to commit the transaction','commit()','framework');
 				return false;
@@ -435,9 +440,9 @@ class Controller
 		$dirty_objects = $this->get_dirty_objects();
 
 		for ($i=0; $i<count($dirty_objects); $i++) {
-			$dirty_objects[$i]->save_object();
+			$success = $dirty_objects[$i]->save_object();
 			
-			if (mysql_error() != '') {						
+			if (!$success) {
 				$this->last_query .= " Error: ".mysql_error();
 				$error = new handle_error($_SERVER["PHP_SELF"],'Failed to commit the transaction','commit()','framework');
 				return false;
