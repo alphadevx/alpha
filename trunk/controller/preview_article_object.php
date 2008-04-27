@@ -82,16 +82,22 @@ class preview_article_object extends Controller
 		
 		if(isset($_POST["saveBut"])) {
 			// save the new photo and load it back from the DB
-			$this->commit();
-			$this->BO->load_object($this->BO->get_MAX());
-			
-			$this->BO->create_attachments_folder();
+			$success = $this->commit();
+			if($success) {
+				$this->BO->load_object($this->BO->get_MAX());
 				
-			// redirect to the detailed display page			
-			header('Location: '.Front_Controller::generate_secure_URL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->get_ID()));
-		}elseif (isset($_POST["cancelBut"])) {
+				$this->BO->create_attachments_folder();
+					
+				// redirect to the detailed display page			
+				header('Location: '.Front_Controller::generate_secure_URL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->get_ID()));
+			}
+		}
+		if (isset($_POST["cancelBut"])) {
 			$this->abort();			
 			header('Location: '.$config->get('sysURL'));
+		}
+		if (isset($_POST["editBut"])) {				
+			header('Location: '.Front_Controller::generate_secure_URL('act=create_article_object&newObjectIndex=0'));
 		}
 	}
 	
@@ -101,15 +107,13 @@ class preview_article_object extends Controller
 	function display_page_foot() {		
 		
 		echo '<form action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
-		if (class_exists("button")) {
-			$temp = new button("submit", "Save New Article", "saveBut");
-			echo '&nbsp;&nbsp;';
-			$temp = new button("submit", "Cancel", "cancelBut");
-		} else {
-			echo '<input type="submit" name="saveBut" value="Save New Article"/>';
-			echo '&nbsp;&nbsp;';
-			echo '<input type="submit" name="cancelBut" value="Cancel"/>';
-		}
+		
+		$temp = new button("submit", "Save New Article", "saveBut");
+		echo '&nbsp;&nbsp;';
+		$temp = new button("submit", "Edit", "editBut");
+		echo '&nbsp;&nbsp;';
+		$temp = new button("submit", "Cancel", "cancelBut");
+		
 		View::render_security_fields();
 		echo '</form>';
 		echo '</body>';
