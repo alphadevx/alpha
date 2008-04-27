@@ -37,7 +37,17 @@ class create_article_object extends Controller
 		
 		$this->new_article = new article_object();
 		
-		$this->set_name(Front_Controller::generate_secure_URL('act=create_article_object'));		
+		if(isset($_GET["newObjectIndex"])) {			
+			$newObjects = $this->get_new_objects();
+			if(isset($newObjects[$_GET["newObjectIndex"]])) {
+				$this->new_article = $newObjects[$_GET["newObjectIndex"]];
+			}else{
+				$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the article as an invalid new array index was supplied!','GET');
+				exit;
+			}
+		}
+		
+		$this->set_name(Front_Controller::generate_secure_URL('act=create_article_object'));
 		$this->set_unit_of_work(array(Front_Controller::generate_secure_URL('act=create_article_object'), Front_Controller::generate_secure_URL('act=preview_article_object')));
 		
 		// set up the title and meta details
