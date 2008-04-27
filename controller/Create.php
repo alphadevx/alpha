@@ -120,8 +120,7 @@ class Create extends Controller
 			if (get_class($this->BO) == 'person_object' && isset($_POST["password"]))
 				$this->BO->set_password($_POST["password"]);
 					
-			$success = $this->BO->save_object();
-			$this->BO->load_object($this->BO->get_MAX());
+			$success = $this->BO->save_object();			
 					
 			if($success) {
 				if ($this->get_next_job() != "")					
