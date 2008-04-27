@@ -372,10 +372,17 @@ class mysql_DAO
 			if(method_exists($this, 'after_save_callback'))
 				$this->after_save_callback();
 			return true;
-		}else{			
-			$this->last_query .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to save object, MySql error is: '.mysql_error().', query: '.$this->last_query,'save_object()','framework');
-			return false;
+		}else{
+			// check for unique violations			
+			if(mysql_errno() == '1062') {
+				$this->last_query .= " Error: ".mysql_error();
+				$error = new handle_error($_SERVER["PHP_SELF"],'Failed to save, the value '.$this->findOffendingValue(mysql_error()).' is already in use!','save_object()','validation');
+				return false;
+			}else{
+				$this->last_query .= " Error: ".mysql_error();
+				$error = new handle_error($_SERVER["PHP_SELF"],'Failed to save object, MySql error is: '.mysql_error().', query: '.$this->last_query,'save_object()','framework');
+				return false;
+			}
 		}
 	}
 	
@@ -1140,6 +1147,16 @@ class mysql_DAO
 			$this->last_query .= " Error: ".mysql_error();
 			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to create the index '.$prop.'_unq_idx on '.$this->TABLE_NAME.', query is : '.$this->last_query,'createUniqueIndex()','framework');
 		}
+	}
+	
+	/**
+	 * parces a MySQL error for the value that violated a unique constraint
+	 */
+	function findOffendingValue($error) {		
+		$singleQuote1 = strpos($error,"'");
+		$singleQuote2 = strrpos($error,"'");
+		
+		return substr($error, $singleQuote1, ($singleQuote2-$singleQuote1)+1);
 	}
 }
 
