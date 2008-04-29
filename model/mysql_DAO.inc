@@ -121,7 +121,7 @@ class mysql_DAO
 		foreach(array_keys($properties) as $prop) {
 			if (get_class($this->$prop) != false && !in_array($prop, $this->transient_attributes)) {				
 				if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {					
-					$this->$prop->set_value($row[$prop]);
+					$this->$prop->setValue($row[$prop]);
 				}else{
 					$this->$prop->populate_from_string($row[$prop]);
 				}
@@ -168,7 +168,7 @@ class mysql_DAO
 		foreach(array_keys($properties) as $prop) {
 			if (get_class($this->$prop) != false) {	
 				if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {					
-					$this->$prop->set_value(stripslashes($row[$prop]));
+					$this->$prop->setValue(stripslashes($row[$prop]));
 				}else{
 					$this->$prop->populate_from_string(stripslashes($row[$prop]));
 				}
@@ -308,14 +308,14 @@ class mysql_DAO
 		$properties = get_class_vars(get_class($this));
 		$sql_query = "";		
 		
-		if($this->get_version() != $this->version_num->get_value()){
+		if($this->get_version() != $this->version_num->getValue()){
 			$error = new handle_error($_SERVER["PHP_SELF"],'Could not save the object as it has been updated by another user.  Please try saving again.','save_object()','warning');
 			return false;
 		}
 		
 		// set the "updated by" fields, we can only set the user id if someone is logged in
 		if(isset($_SESSION["current_user"]))
-			$this->updated_by->set_value($_SESSION["current_user"]->get_ID());
+			$this->updated_by->setValue($_SESSION["current_user"]->get_ID());
 		$this->updated_ts = new Timestamp();
 
 		if(empty($this->OID) || !isset($this->OID) || $this->OID == '00000000000') {
@@ -333,12 +333,12 @@ class mysql_DAO
 
 			foreach(array_keys($properties) as $prop) {				
 				if (get_class($this->$prop) != false && $prop != "version_num" && !in_array($prop, $this->transient_attributes)) {
-					$sql_query .= "'".$this->$prop->get_value()."',";
+					$sql_query .= "'".$this->$prop->getValue()."',";
 				}
 				if ($prop == "version_num") {					
-					$temp = $this->version_num->get_value();
-					$this->version_num->set_value($temp+1);
-					$sql_query .= "'".$this->version_num->get_value()."',";
+					$temp = $this->version_num->getValue();
+					$this->version_num->setValue($temp+1);
+					$sql_query .= "'".$this->version_num->getValue()."',";
 				}
 			}
 
@@ -350,12 +350,12 @@ class mysql_DAO
 
 			foreach(array_keys($properties) as $prop) {
 				if (get_class($this->$prop) != false && $prop != "version_num" && !in_array($prop, $this->transient_attributes)) {
-					$sql_query .= "$prop = '".$this->$prop->get_value()."',";
+					$sql_query .= "$prop = '".$this->$prop->getValue()."',";
 				}
 				if ($prop == "version_num") {					
-					$temp = $this->version_num->get_value();					
-					$this->version_num->set_value($temp+1);					
-					$sql_query .= "version_num = '".$this->version_num->get_value()."',";
+					$temp = $this->version_num->getValue();					
+					$this->version_num->setValue($temp+1);					
+					$sql_query .= "version_num = '".$this->version_num->getValue()."',";
 				}
 			}
 
@@ -374,8 +374,8 @@ class mysql_DAO
 			return true;
 		}else{
 			// there has been an error, so decrement the version number back
-			$temp = $this->version_num->get_value();					
-			$this->version_num->set_value($temp-1);	
+			$temp = $this->version_num->getValue();					
+			$this->version_num->setValue($temp-1);	
 			
 			// check for unique violations			
 			if(mysql_errno() == '1062') {
@@ -406,8 +406,9 @@ class mysql_DAO
 			if(!in_array($prop, $this->default_attributes) && !in_array($prop, $this->transient_attributes)) {
 				if (strtoupper(get_class($properties[$prop])) != "ENUM" &&
 				strtoupper(get_class($properties[$prop])) != "DENUM" &&
-				strtoupper(get_class($properties[$prop])) != "DENUMITEM") {
-					if (!preg_match($this->$prop->get_rule(), $this->$prop->get_value())) {
+				strtoupper(get_class($properties[$prop])) != "DENUMITEM" && 
+				strtoupper(get_class($properties[$prop])) != "BOOLEAN") {
+					if (!preg_match($this->$prop->get_rule(), $this->$prop->getValue())) {
 						$error = new handle_error($_SERVER["PHP_SELF"],'Failed to save, validation error is: '.$this->$prop->get_helper(),'validate()','validation');
 						$valid = false;
 					}
@@ -523,7 +524,7 @@ class mysql_DAO
 						$sql_query .= "$prop TEXT,";
 					break;
 					case "BOOLEAN":
-						$sql_query .= "$prop CHAR(".$properties[$prop]->get_size().") DEFAULT '0',";
+						$sql_query .= "$prop CHAR(1) DEFAULT '0',";
 					break;
 					case "DATE":
 						$sql_query .= "$prop DATE,";
@@ -626,7 +627,7 @@ class mysql_DAO
 						$sql_query .= "$prop TEXT,";
 					break;
 					case "BOOLEAN":
-						$sql_query .= "$prop CHAR(".$this->$prop->get_size().") DEFAULT '0',";
+						$sql_query .= "$prop CHAR(1) DEFAULT '0',";
 					break;
 					case "DATE":
 						$sql_query .= "$prop DATE,";
@@ -687,20 +688,20 @@ class mysql_DAO
 					// checking to see if we need to use addslashes() on the posted data
 					if(!get_magic_quotes_gpc()) {
 						if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
-							$this->$prop->set_value(addslashes($_POST[$prop]));					
+							$this->$prop->setValue(addslashes($_POST[$prop]));					
 						}else{						
 							$this->$prop->populate_from_string(addslashes($_POST[$prop]));
 						}
 					}else{
 						if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
-							$this->$prop->set_value($_POST[$prop]);					
+							$this->$prop->setValue($_POST[$prop]);					
 						}else{						
 							$this->$prop->populate_from_string($_POST[$prop]);
 						}
 					}
 				}
 				if ($prop == "version_num" && isset($_POST["version_num"]))
-					$this->version_num->set_value($_POST["version_num"]);
+					$this->version_num->setValue($_POST["version_num"]);
 			}
 		}
 		if(method_exists($this, 'after_populate_from_post_callback'))
@@ -832,11 +833,11 @@ class mysql_DAO
 				
 			return eval('return $this->get_'.$prop.'();');
 		}else{
-			if(isset($this->$prop) && method_exists($this->$prop, "get_value")) {
+			if(isset($this->$prop) && method_exists($this->$prop, "getValue")) {
 				if(method_exists($this, 'after_get_callback'))
 					$this->after_get_callback();
 				
-				return $this->$prop->get_value();
+				return $this->$prop->getValue();
 			}elseif(isset($this->$prop)) {
 				if(method_exists($this, 'after_get_callback'))
 					$this->after_get_callback();
@@ -867,18 +868,18 @@ class mysql_DAO
 			
 			return eval("return \$this->set_".$prop."('$value');");
 		}else{
-			if(isset($this->$prop) && method_exists($this->$prop, "set_value")) {
+			if(isset($this->$prop) && method_exists($this->$prop, "setValue")) {
 				if(method_exists($this, 'after_set_callback'))
 					$this->after_set_callback();
 				
-				$this->$prop->set_value($value);
+				$this->$prop->setValue($value);
 			}elseif(isset($this->$prop)) {
 				if(method_exists($this, 'after_set_callback'))
 					$this->after_set_callback();
 				
 				$this->$prop = $value;
 			}else{
-				$error = new handle_error($_SERVER["PHP_SELF"],'Could not set the property '.$prop.' on the object '.get_class($this).'.  Property may not exist, or else does not have a set_value() method.','set()','framework');
+				$error = new handle_error($_SERVER["PHP_SELF"],'Could not set the property '.$prop.' on the object '.get_class($this).'.  Property may not exist, or else does not have a setValue() method.','set()','framework');
 			}
 		}
 	}

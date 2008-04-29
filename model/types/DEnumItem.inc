@@ -61,7 +61,7 @@ class DEnumItem extends mysql_DAO {
 	{		
 		global $config;
 		
-		$this->DEnumID->set_value($EnumID);
+		$this->DEnumID->setValue($EnumID);
 		
 		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE DEnumID = '".$EnumID."';";
 		
@@ -92,7 +92,7 @@ class DEnumItem extends mysql_DAO {
 	 * used to get the current DEnum item
 	 * @return string selected
 	 */
-	function get_value() {
-		return $this->value->get_value();
+	function getValue() {
+		return $this->value->getValue();
 	}
 }

@@ -88,11 +88,11 @@ class person_object extends mysql_DAO
 											"Standard",
 											"Moderator",
 											"Administrator"));
-		$this->access_level->set_value("Standard");
+		$this->access_level->setValue("Standard");
 		$this->state = new Enum(array(
 										"Active",
 										"Disabled"));
-		$this->state->set_value("Active");
+		$this->state->setValue("Active");
 		$this->URL = new String();
 		$this->URL->set_rule(RULE_URL_BLANK);
 		$this->URL->set_helper("URLs must be in the format http://some_domain/ or left blank!");
@@ -105,7 +105,7 @@ class person_object extends mysql_DAO
 	 */
 	function set_displayname($displayname)
 	{
-		$this->displayname->set_value($displayname);
+		$this->displayname->setValue($displayname);
 		
 		$sql_query = "SELECT oid FROM ".$this->TABLE_NAME." WHERE displayname = '$displayname';";		
 
@@ -131,7 +131,7 @@ class person_object extends mysql_DAO
 	 * @return string displayname
 	 */
 	function get_displayname() {
-		return $this->displayname->get_value();
+		return $this->displayname->getValue();
 	}	
 	
 	/**
@@ -141,7 +141,7 @@ class person_object extends mysql_DAO
 	 */
 	function set_email($email)
 	{
-		$this->email->set_value($email);
+		$this->email->setValue($email);
 		
 		$sql_query = "SELECT oid FROM ".$this->TABLE_NAME." WHERE email = '$email';";		
 
@@ -167,7 +167,7 @@ class person_object extends mysql_DAO
 	 * @return string email
 	 */
 	function get_email() {
-		return $this->email->get_value();
+		return $this->email->getValue();
 	}
 	
 	/**
@@ -176,7 +176,7 @@ class person_object extends mysql_DAO
 	 */
 	function set_password($password)
 	{
-		$this->password->set_value(crypt($password, 'xy'));
+		$this->password->setValue(crypt($password, 'xy'));
 	}
 
 	/**
@@ -184,7 +184,7 @@ class person_object extends mysql_DAO
 	 * @return string password
 	 */
 	function get_password() {
-		return $this->password->get_value();
+		return $this->password->getValue();
 	}	
 	 
 	/**
@@ -193,7 +193,7 @@ class person_object extends mysql_DAO
 	 */
 	function set_access_level($access_level)
 	{
-		$this->access_level->set_value($access_level);
+		$this->access_level->setValue($access_level);
 	}
 
 	/**
@@ -202,7 +202,7 @@ class person_object extends mysql_DAO
 	 */
 	function get_access_level()
 	{
-		return $this->access_level->get_value();
+		return $this->access_level->getValue();
 	}	
 	
 	/**
@@ -239,7 +239,7 @@ class person_object extends mysql_DAO
 		foreach(array_keys($properties) as $prop) {
 			if (get_class($this->$prop) != false) {	
 				if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
-					$this->$prop->set_value($row[$prop]);
+					$this->$prop->setValue($row[$prop]);
 				}else{
 					$this->$prop->populate_from_string($row[$prop]);
 				}

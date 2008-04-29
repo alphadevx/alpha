@@ -73,10 +73,10 @@ class string_box
 			echo '</td>';
 	
 			echo '<td>';
-			echo '<input '.($string_obj->check_is_password()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.$string_obj->get_MAX_SIZE().'" name="'.$this->get_name().'" id="'.$this->get_name().'" value="'.((isset($_POST[$this->get_name()]) && $string_obj->get_value() == "")? $_POST[$this->get_name()] : $string_obj->get_value()).'"'.($read_only ? 'readonly class="readonly"' : '').'/>';
+			echo '<input '.($string_obj->check_is_password()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.$string_obj->get_MAX_SIZE().'" name="'.$this->get_name().'" id="'.$this->get_name().'" value="'.((isset($_POST[$this->get_name()]) && $string_obj->getValue() == "")? $_POST[$this->get_name()] : $string_obj->getValue()).'"'.($read_only ? 'readonly class="readonly"' : '').'/>';
 			echo '</td></tr>';
 		}else{
-			echo '<input '.($string_obj->check_is_password()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.$string_obj->get_MAX_SIZE().'" name="'.$this->get_name().'" id="'.$this->get_name().'" value="'.((isset($_POST[$this->get_name()]) && $string_obj->get_value() == "")? $_POST[$this->get_name()] : $string_obj->get_value()).'"'.($read_only ? 'readonly class="readonly"' : '').'/>';
+			echo '<input '.($string_obj->check_is_password()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.$string_obj->get_MAX_SIZE().'" name="'.$this->get_name().'" id="'.$this->get_name().'" value="'.((isset($_POST[$this->get_name()]) && $string_obj->getValue() == "")? $_POST[$this->get_name()] : $string_obj->getValue()).'"'.($read_only ? 'readonly class="readonly"' : '').'/>';
 		}
 	}
 	

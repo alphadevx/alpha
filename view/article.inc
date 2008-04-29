@@ -66,7 +66,7 @@ class article extends View
 		echo '<table style="border: 1px solid white; width:98%; table-layout:fixed; margin:1%; position:absolute; bottom:0px;" cols="3">';
 		echo '<tr>';
 		$prop_obj = $this->BO->get_prop_object("date_added");
-		echo '<td>Date Added: <em>'.$prop_obj->get_value().'</em></td>';
+		echo '<td>Date Added: <em>'.$prop_obj->getValue().'</em></td>';
 		$prop_obj = $this->BO->get_prop_object("section");
 		echo '<td align="center">Site Section: <em>'.$prop_obj->get_display_value().'</em></td>';
 		echo '<td align="right">';
@@ -98,7 +98,7 @@ class article extends View
 		echo '<th>'.$this->BO->get("title").'</th>';
 		echo '</tr><tr>';
 		$prop_obj = $this->BO->get_prop_object("date_added");
-		echo '<td>'.$this->BO->get("description").'<br><br>'.$this->BO->data_labels["section"].': <em>'.$this->BO->section->get_display_value().'</em>&nbsp;&nbsp;&nbsp;'.$this->BO->data_labels["date_added"].': <em>'.$prop_obj->get_value().'</em></td>';	
+		echo '<td>'.$this->BO->get("description").'<br><br>'.$this->BO->data_labels["section"].': <em>'.$this->BO->section->get_display_value().'</em>&nbsp;&nbsp;&nbsp;'.$this->BO->data_labels["date_added"].': <em>'.$prop_obj->getValue().'</em></td>';	
 		echo '</tr>';
 		
 		echo '<tr><td colspan="'.$col_count.'" align="center">';
@@ -229,7 +229,7 @@ class article extends View
 						$denum = $this->BO->get_prop_object($prop);
 						$denum_vals = $denum->get_options();						
 						foreach (array_keys($denum_vals) as $denum_index) {
-							if ($denum->get_value() == $denum_index)
+							if ($denum->getValue() == $denum_index)
 								echo '<option value="'.$denum_index.'" selected>'.$denum_vals[$denum_index].'</option>';
 							else
 								echo '<option value="'.$denum_index.'">'.$denum_vals[$denum_index].'</option>';
@@ -350,8 +350,8 @@ class article extends View
 
 						echo '<td>';
 						echo '<select size="1" name="'.$prop.'"/>';
-						echo '<option value="0" '.($this->BO->$prop->get_value() == '0'? 'selected':'').'>N</option>';
-						echo '<option value="1" '.($this->BO->$prop->get_value() == '1'? 'selected':'').'>Y</option>';
+						echo '<option value="0" '.($this->BO->$prop->getValue() == '0'? 'selected':'').'>N</option>';
+						echo '<option value="1" '.($this->BO->$prop->getValue() == '1'? 'selected':'').'>Y</option>';
 						echo '</select><br>';
 						echo '</td></tr>';
 					break;
@@ -364,7 +364,7 @@ class article extends View
 						$prop_obj = $this->BO->get_prop_object($prop);
 						$enum_vals = $prop_obj->get_options();						
 						foreach ($enum_vals as $enum_val) {
-							if ($prop_obj->get_value() == $enum_val)
+							if ($prop_obj->getValue() == $enum_val)
 								echo '<option value="'.$enum_val.'" selected>'.$enum_val.'</option>';
 							else
 								echo '<option value="'.$enum_val.'">'.$enum_val.'</option>';
@@ -381,7 +381,7 @@ class article extends View
 						$denum = $this->BO->get_prop_object($prop);
 						$denum_vals = $denum->get_options();						
 						foreach (array_keys($denum_vals) as $denum_index) {
-							if ($denum->get_value() == $denum_index)
+							if ($denum->getValue() == $denum_index)
 								echo '<option value="'.$denum_index.'" selected>'.$denum_vals[$denum_index].'</option>';
 							else
 								echo '<option value="'.$denum_index.'">'.$denum_vals[$denum_index].'</option>';

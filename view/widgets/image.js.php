@@ -102,21 +102,21 @@ class image
 		$this->sourceType = new Enum(array("gif",
 										"jpg",
 										"png"));
-		$this->sourceType->set_value($sourceType);
+		$this->sourceType->setValue($sourceType);
 		$this->quality = new Double($quality);
 		$this->scale = new Boolean($scale);	
 		$this->cache_only = new Boolean($cache_only);
 					
 		if (isset($_GET["source"])) $this->source = $_GET["source"];
-		if (isset($_GET["width"])) $this->width->set_value($_GET["width"]);
-		if (isset($_GET["height"])) $this->height->set_value($_GET["height"]);
-		if (isset($_GET["sourceType"])) $this->sourceType->set_value($_GET["sourceType"]);
-		if (isset($_GET["quality"])) $this->quality->set_value($_GET["quality"]);
+		if (isset($_GET["width"])) $this->width->setValue($_GET["width"]);
+		if (isset($_GET["height"])) $this->height->setValue($_GET["height"]);
+		if (isset($_GET["sourceType"])) $this->sourceType->setValue($_GET["sourceType"]);
+		if (isset($_GET["quality"])) $this->quality->setValue($_GET["quality"]);
 		
 		$this->set_filename($this->source);
 		
 		// if GET vars where provided, then render the image, otherwise render the JavaScript call for the image creation
-		if (isset($_GET["source"]) || $this->cache_only->get_value())
+		if (isset($_GET["source"]) || $this->cache_only->getValue())
 			$this->render_image();
 		else
 			$this->render();
@@ -129,10 +129,10 @@ class image
 		global $config;
 		
 		if(!strpos($source, 'attachments/article_')) {
-			if($this->sourceType->get_value() == 'png' && $config->get('sysImagesPerservePNG'))
-				$this->filename = $config->get('sysRoot').'cache/images/'.basename($this->source, ".".$this->sourceType->get_value()).'_'.$this->width->get_value().'x'.$this->height->get_value().'.png';
+			if($this->sourceType->getValue() == 'png' && $config->get('sysImagesPerservePNG'))
+				$this->filename = $config->get('sysRoot').'cache/images/'.basename($this->source, ".".$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.png';
 			else
-				$this->filename = $config->get('sysRoot').'cache/images/'.basename($this->source, ".".$this->sourceType->get_value()).'_'.$this->width->get_value().'x'.$this->height->get_value().'.jpg';
+				$this->filename = $config->get('sysRoot').'cache/images/'.basename($this->source, ".".$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.jpg';
 		}else{
 			// make a cache dir for the article
 			$cache_dir = $config->get('sysRoot').'cache/images/article_'.substr($source, strpos($source, 'attachments/article_')+20, 11);
@@ -152,10 +152,10 @@ class image
 			}
 			
 			// now set the filename to include the new cache directory
-			if($this->sourceType->get_value() == 'png' && $config->get('sysImagesPerservePNG'))
-				$this->filename = $cache_dir.'/'.basename($this->source, ".".$this->sourceType->get_value()).'_'.$this->width->get_value().'x'.$this->height->get_value().'.png';
+			if($this->sourceType->getValue() == 'png' && $config->get('sysImagesPerservePNG'))
+				$this->filename = $cache_dir.'/'.basename($this->source, ".".$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.png';
 			else
-				$this->filename = $cache_dir.'/'.basename($this->source, ".".$this->sourceType->get_value()).'_'.$this->width->get_value().'x'.$this->height->get_value().'.jpg';
+				$this->filename = $cache_dir.'/'.basename($this->source, ".".$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.jpg';
 		}
 	}
 	
@@ -174,13 +174,13 @@ class image
 			
 			// if not valid, just return a blank black image of the same dimensions
 			if(!$valid) {
-				$im  = imagecreatetruecolor($this->width->get_value(), $this->height->get_value()); /* Create a blank image */ 
+				$im  = imagecreatetruecolor($this->width->getValue(), $this->height->getValue()); /* Create a blank image */ 
 			    $bgc = imagecolorallocate($im, 0, 0, 0); 
 			    //$tc  = imagecolorallocate($im, 0, 0, 0); 
-			    imagefilledrectangle($im, 0, 0, $this->width->get_value(), $this->height->get_value(), $bgc); 
+			    imagefilledrectangle($im, 0, 0, $this->width->getValue(), $this->height->getValue(), $bgc); 
 			    
 			    //imagestring($im, 5, 5, 5, "Error loading $this->source", $tc);
-			    if($this->sourceType->get_value() == 'png' && $config->get('sysImagesPerservePNG')) {
+			    if($this->sourceType->getValue() == 'png' && $config->get('sysImagesPerservePNG')) {
 			    	header("Content-Type: image/png");
 					imagepng($im);
 			    }else{
@@ -196,7 +196,7 @@ class image
 			$this->load_cache();			
 		}else{
 			// now get the old image
-			switch ($this->sourceType->get_value()) {
+			switch ($this->sourceType->getValue()) {
 				case "gif":
 					$old_image = imagecreatefromgif($config->get('sysRoot').$this->source);
 				break;
@@ -209,13 +209,13 @@ class image
 			}
 			
 			if (!$old_image) { /* See if it failed */ 
-			    $im  = imagecreatetruecolor($this->width->get_value(), $this->height->get_value()); /* Create a blank image */ 
+			    $im  = imagecreatetruecolor($this->width->getValue(), $this->height->getValue()); /* Create a blank image */ 
 			    $bgc = imagecolorallocate($im, 255, 255, 255); 
 			    $tc  = imagecolorallocate($im, 0, 0, 0); 
-			    imagefilledrectangle($im, 0, 0, $this->width->get_value(), $this->height->get_value(), $bgc); 
+			    imagefilledrectangle($im, 0, 0, $this->width->getValue(), $this->height->getValue(), $bgc); 
 			    
 			    imagestring($im, 1, 5, 5, "Error loading $this->source", $tc);
-			    if($this->sourceType->get_value() == 'png' && $config->get('sysImagesPerservePNG')) {
+			    if($this->sourceType->getValue() == 'png' && $config->get('sysImagesPerservePNG')) {
 			    	header("Content-Type: image/png");
 					imagepng($im);
 			    }else{
@@ -229,10 +229,10 @@ class image
 				$oldHeight = imagesy($old_image);
 			
 				// now create the new image
-				$new_image = imagecreatetruecolor($this->width->get_value(), $this->height->get_value());
+				$new_image = imagecreatetruecolor($this->width->getValue(), $this->height->getValue());
 			
 				// set a transparent background for PNGs
-				if($this->sourceType->get_value() == 'png' && $config->get('sysImagesPerservePNG')) {
+				if($this->sourceType->getValue() == 'png' && $config->get('sysImagesPerservePNG')) {
 					// Turn off transparency blending (temporarily)
 			        imagealphablending($new_image, false);
 			
@@ -246,16 +246,16 @@ class image
 			        imagesavealpha($new_image, true);
 				}
 		        // copy the old image to the new image (in memory, not the file!)
-		        imagecopyresampled($new_image, $old_image, 0, 0, 0, 0, $this->width->get_value(), $this->height->get_value(), $oldWidth, $oldHeight);	
+		        imagecopyresampled($new_image, $old_image, 0, 0, 0, 0, $this->width->getValue(), $this->height->getValue(), $oldWidth, $oldHeight);	
 				
 				// just making sure that we are not running in cache-only mode before sending output
-				if(!$this->cache_only->get_value()) {
-					if($this->sourceType->get_value() == 'png' && $config->get('sysImagesPerservePNG')) {
+				if(!$this->cache_only->getValue()) {
+					if($this->sourceType->getValue() == 'png' && $config->get('sysImagesPerservePNG')) {
 						header("Content-Type: image/png");
 						imagepng($new_image);
 					}else{
 						header("Content-Type: image/jpeg");
-						imagejpeg($new_image, '', 100*$this->quality->get_value());
+						imagejpeg($new_image, '', 100*$this->quality->getValue());
 					}
 				}
 				$this->cache($new_image);
@@ -272,10 +272,10 @@ class image
 	function cache($image) {
 		global $config;
 		
-		if($this->sourceType->get_value() == 'png' && $config->get('sysImagesPerservePNG'))
+		if($this->sourceType->getValue() == 'png' && $config->get('sysImagesPerservePNG'))
 			imagepng($image, $this->filename);
 		else
-			imagejpeg($image, $this->filename, 100*$this->quality->get_value());
+			imagejpeg($image, $this->filename, 100*$this->quality->getValue());
 	}
 	
 	/**
@@ -291,7 +291,7 @@ class image
 	 */
 	function load_cache() {
 		// just making sure that we are not running in cache-only mode
-		if(!$this->cache_only->get_value())
+		if(!$this->cache_only->getValue())
 			readfile($this->filename);		
 	}
 	
@@ -300,7 +300,7 @@ class image
 	 */
 	function render() {
 		echo '<script language="javascript">';
-		echo 'insertImage(\''.$this->source.'\','.$this->width->get_value().','.$this->height->get_value().',\''.$this->sourceType->get_value().'\', '.$this->quality->get_value().');';
+		echo 'insertImage(\''.$this->source.'\','.$this->width->getValue().','.$this->height->getValue().',\''.$this->sourceType->getValue().'\', '.$this->quality->getValue().');';
 		echo '</script>';
 	}
 	
@@ -361,7 +361,7 @@ EOS;
 	 */
 	function set_title($title)
 	{
-		$this->title->set_value($title);
+		$this->title->setValue($title);
 	}
 
 	/**
@@ -369,7 +369,7 @@ EOS;
 	 * @return string title
 	 */
 	function get_title() {
-		return $this->title->get_value();
+		return $this->title->getValue();
 	}
 	
 	/**

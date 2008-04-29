@@ -40,16 +40,16 @@ class Date_Test extends PHPUnit_Framework_TestCase
      * testing the constructor has set the Date to today by default
      */
     public function testDefaultDateValue() {
-    	$this->assertEquals(date("Y-m-d"), $this->date1->get_value(), "testing the constructor has set the Date to today by default");
+    	$this->assertEquals(date("Y-m-d"), $this->date1->getValue(), "testing the constructor has set the Date to today by default");
     }
     
     /**
-     * testing the set_value method
+     * testing the setValue method
      */
     public function testSetValue() {
-    	$this->date1->set_value(2000, 1, 1);
+    	$this->date1->setValue(2000, 1, 1);
     	
-    	$this->assertEquals("2000-01-01", $this->date1->get_value(), "testing the set_value method");
+    	$this->assertEquals("2000-01-01", $this->date1->getValue(), "testing the setValue method");
     }    
     
     /**
@@ -58,7 +58,7 @@ class Date_Test extends PHPUnit_Framework_TestCase
     public function testPopulateFromString() {
     	$this->date1->populate_from_string("2007-08-13");
     	
-    	$this->assertEquals("2007-08-13", $this->date1->get_value(), "testing the populate_from_string method");
+    	$this->assertEquals("2007-08-13", $this->date1->getValue(), "testing the populate_from_string method");
     }
     
     /**

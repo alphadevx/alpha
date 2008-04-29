@@ -54,7 +54,7 @@ class site_map extends Controller
 			echo "<h2>$section</h2>";
 			echo '<ul>';
 			foreach($article_objects as $article) {				
-				if($article->section->get_display_value() == $section && $article->published->get_value() == 1)
+				if($article->section->get_display_value() == $section && $article->published->getValue() == 1)
 					echo '<li><a href="'.$article->URL.'">'.$article->get("title").'</a></li>';				
 			}
 			echo '</ul>';

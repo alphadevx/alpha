@@ -35,7 +35,7 @@ class Timestamp {
  		$this->second=date('s'); 		
  	}
  	
- 	function set_value($year, $month, $day, $hour, $minute, $second) {
+ 	function setValue($year, $month, $day, $hour, $minute, $second) {
  		$valid = 1;
  		
  		if (!preg_match('/^[0-9]{4}$/', $year))
@@ -66,7 +66,7 @@ class Timestamp {
  		}
  	}
  	
- 	function get_value() {
+ 	function getValue() {
  		return $this->year.'-'.$this->month.'-'.$this->day.' '.$this->hour.':'.$this->minute.':'.$this->second;
  	}
  	

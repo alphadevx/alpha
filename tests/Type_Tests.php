@@ -62,7 +62,7 @@ class Type_Tests extends PHPUnit_TestCase
     function test_set_select_pass() {
     	$this->enum1->set_options(array('a','b','c'));
     	
-    	$result = $this->enum1->set_value('b');
+    	$result = $this->enum1->setValue('b');
     	
     	$this->assertTrue($result);
     }
@@ -73,7 +73,7 @@ class Type_Tests extends PHPUnit_TestCase
     function test_set_select_fail() {
     	$this->enum1->set_options(array('a','b','c'));
     	
-    	$result = $this->enum1->set_value('x');
+    	$result = $this->enum1->setValue('x');
     	
     	$this->assertFalse($result);
     }

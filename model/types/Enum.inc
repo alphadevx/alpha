@@ -66,7 +66,7 @@ class Enum {
 	 * used to get the current enum item
 	 * @return string selected
 	 */
-	function get_value() {
+	function getValue() {
 		return $this->value;
 	}
 	
@@ -75,7 +75,7 @@ class Enum {
 	 * @param string $item
 	 * @return bool success status
 	 */
-	function set_value($item) {
+	function setValue($item) {
 		if (in_array($item, $this->options)) {
 			$this->value = $item;
 			return true;

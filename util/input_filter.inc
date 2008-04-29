@@ -35,7 +35,7 @@ class input_filter
 	 * @return string the text with the filters applied
 	 */
 	function encode() {		
-		return htmlentities($this->text->get_value());
+		return htmlentities($this->text->getValue());
 	}
 	
 	/**
@@ -43,7 +43,7 @@ class input_filter
 	 * @return string the text with the filters reversed
 	 */
 	function decode() {		
-		return html_entity_decode($this->text->get_value());
+		return html_entity_decode($this->text->getValue());
 	}
 }
 ?>

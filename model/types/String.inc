@@ -63,7 +63,7 @@ class String {
 		}
 	}
 	
-	function set_value($val) {		
+	function setValue($val) {		
 		if (strlen($val) <= $this->size) {			
 			if (preg_match($this->validation_rule, $val)) {				
 				$this->value = $val;
@@ -75,7 +75,7 @@ class String {
 		}
 	}
 	
-	function get_value() {
+	function getValue() {
 		return $this->value;
 	}
 	

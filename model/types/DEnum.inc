@@ -67,7 +67,7 @@ class DEnum extends mysql_DAO {
 	 * @param String $name The name of the DEnum used in the database
 	 */
 	function set_name($name) {		
-		$this->name->set_value($name);	
+		$this->name->setValue($name);	
 	}
 	
 	/**
@@ -77,14 +77,14 @@ class DEnum extends mysql_DAO {
 	 */
 	function get_options($alphaSort = false) {
 		
-		$sql_query = "SELECT * FROM ".$this->TABLE_NAME." WHERE name = '".$this->name->get_value()."';";
+		$sql_query = "SELECT * FROM ".$this->TABLE_NAME." WHERE name = '".$this->name->getValue()."';";
 
 		$this->last_query = $sql_query;
 		
 		$result = mysql_query($sql_query);
 		
 		if(mysql_num_rows($result) == 0) {
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load DEnum '.$this->name->get_value().', not found in database.' ,'get_options()','framework');
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load DEnum '.$this->name->getValue().', not found in database.' ,'get_options()','framework');
 			return false;
 		}
 		
@@ -96,7 +96,7 @@ class DEnum extends mysql_DAO {
 		$tmp = new DEnumItem();		
 		
 		foreach($tmp->load_items($row["OID"]) as $DEnumItem) {			
-			$this->options[$DEnumItem->get_ID()] = $DEnumItem->get_value();
+			$this->options[$DEnumItem->get_ID()] = $DEnumItem->getValue();
 			$count++;			
 		}
 		
@@ -117,7 +117,7 @@ class DEnum extends mysql_DAO {
 	 * used to get the current DEnum item selected index value
 	 * @return int selected
 	 */
-	function get_value() {		
+	function getValue() {		
 		return $this->value;		
 	}
 	
@@ -141,7 +141,7 @@ class DEnum extends mysql_DAO {
 	 * @param string $item
 	 * @return bool success status
 	 */
-	function set_value($item) {
+	function setValue($item) {
 		// check to see if the options have already been loaded from the DB
 		if(empty($this->options))
 			$this->get_options();

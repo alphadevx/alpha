@@ -72,11 +72,11 @@ class record_selector
 				echo '</td></tr>';
 			}else{
 				echo '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
-				$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/record_selector.php?value=".$this->relation_object->get_value()."&relatedClass=".$this->relation_object->getRelatedClass()."&relatedClassField=".$this->relation_object->getRelatedClassField()."&relatedClassDisplayField=".$this->relation_object->getRelatedClassDisplayField()."&relationType=".$this->relation_object->getRelationType()."','relWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=500,height=50,left='+(event.screenX-250)+',top='+event.screenY+'');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
+				$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/record_selector.php?value=".$this->relation_object->getValue()."&relatedClass=".$this->relation_object->getRelatedClass()."&relatedClassField=".$this->relation_object->getRelatedClassField()."&relatedClassDisplayField=".$this->relation_object->getRelatedClassDisplayField()."&relationType=".$this->relation_object->getRelationType()."','relWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=500,height=50,left='+(event.screenX-250)+',top='+event.screenY+'');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
 			}
 			
 			// hidden field to store the actual value of the relation
-			echo '<input type="hidden" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->relation_object->get_value().'"/>';
+			echo '<input type="hidden" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->relation_object->getValue().'"/>';
 		}
 		
 		// render read-only list for one-to-many relations
@@ -147,7 +147,7 @@ class record_selector
 			echo $obj->get($this->relation_object->getRelatedClassDisplayField());
 			echo '</td>';			
 			echo '<td width="20%">';
-			if($obj->get_ID() == $this->relation_object->get_value())
+			if($obj->get_ID() == $this->relation_object->getValue())
 				echo '<img src="'.$config->get('sysURL').'/alpha/images/icons/accept_ghost.png"/>';
 			else
 				$tmp = new button("window.opener.document.getElementById('".$_GET['field']."').value = '".$obj->get_ID()."'; window.opener.document.getElementById('".$_GET['field']."_display').value = '".$obj->get($this->relation_object->getRelatedClassDisplayField())."'; window.close();", "", "selBut", $config->get('sysURL')."/alpha/images/icons/accept.png");
@@ -187,7 +187,7 @@ if(basename($_SERVER["PHP_SELF"]) == "record_selector.php") {
 	$relation_object->setRelatedClassField($_GET['relatedClassField']);
 	$relation_object->setRelatedClassDisplayField($_GET['relatedClassDisplayField']);
 	$relation_object->setRelationType($_GET['relationType']);
-	$relation_object->set_value($_GET['value']);
+	$relation_object->setValue($_GET['value']);
 	
 	$recSelector = new record_selector($relation_object);
 }

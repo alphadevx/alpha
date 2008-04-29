@@ -287,7 +287,7 @@ class Controller
 	  * @return Timestamp $unit_start_time
 	  */
 	 function get_start_time() {
-	 	return $this->unit_start_time->get_value();
+	 	return $this->unit_start_time->getValue();
 	 }
 	 
 	 /**
@@ -300,7 +300,7 @@ class Controller
 	  * @param int $second
 	  */
 	 function set_unit_start_time($year, $month, $day, $hour, $minute, $second) {
-	 	$this->unit_start_time = set_value($year, $month, $day, $hour, $minute, $second);
+	 	$this->unit_start_time = setValue($year, $month, $day, $hour, $minute, $second);
 	 }
 	 
 	 /**
@@ -308,7 +308,7 @@ class Controller
 	  * @return Timestamp $unit_end_time
 	  */
 	 function get_end_time() {
-	 	return $this->unit_end_time->get_value();
+	 	return $this->unit_end_time->getValue();
 	 }
 	 
 	 /**
@@ -322,7 +322,7 @@ class Controller
 	  */
 	 function set_unit_end_time($year, $month, $day, $hour, $minute, $second) {
 	 	$this->unit_end_time = new Timestamp();
-	 	$this->unit_end_time->set_value($year, $month, $day, $hour, $minute, $second);
+	 	$this->unit_end_time->setValue($year, $month, $day, $hour, $minute, $second);
 	 }
 	 
 	 /**
@@ -330,7 +330,7 @@ class Controller
 	  * @return integer $unit_MAX_duration
 	  */
 	 function get_MAX_duration() {
-	 	return $this->unit_MAX_duration->get_value();
+	 	return $this->unit_MAX_duration->getValue();
 	 }
 	 
 	 /**

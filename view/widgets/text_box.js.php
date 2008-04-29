@@ -82,7 +82,7 @@ class text_box
 			
 			echo '<tr><td colspan="2">';
 		}
-		echo '<textarea id="text_field_'.$this->get_name().'_'.$this->identifier.'" style="width:100%;" rows="'.$this->get_rows().'" name="'.$this->get_name().'">'.htmlspecialchars(((isset($_POST[$this->get_name()]) && $text_obj->get_value() == "")? $_POST[$this->get_name()] : $text_obj->get_value())).'</textarea><br>';
+		echo '<textarea id="text_field_'.$this->get_name().'_'.$this->identifier.'" style="width:100%;" rows="'.$this->get_rows().'" name="'.$this->get_name().'">'.htmlspecialchars(((isset($_POST[$this->get_name()]) && $text_obj->getValue() == "")? $_POST[$this->get_name()] : $text_obj->getValue())).'</textarea><br>';
 		if($table_tags) {
 			echo '</td></tr>';
 			echo '<tr><td colspan="2">';

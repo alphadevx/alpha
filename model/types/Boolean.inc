@@ -1,7 +1,5 @@
 <?php
 
-// $Id$
-
 require_once $config->get('sysRoot')."config/validation_rules.inc";
 
 /**
@@ -9,70 +7,98 @@ require_once $config->get('sysRoot')."config/validation_rules.inc";
  * 
  * @package Alpha Core Datatype
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins
+ * @copyright 2008 John Collins
+ * @version $Id$
  * 
  */
 class Boolean {
-
-	var $value;
-	var $validation_rule = DEFAULT_BOOLEAN; // only allows 1 or 0
-	var $validation_helper = 'Error: not a valid boolean value!';
-	var $size = 1;
-	var $MAX_SIZE = 1;
+	/**
+	 * The value of the Boolean
+	 *
+	 * @var bool
+	 */
+	private $booleanValue;
 	
-	function Boolean($val=1) {
-		if (strlen($val) <= $this->size) {			
-			if (preg_match($this->validation_rule, $val)) {				
-				$this->value = $val;
-				return true;			
-			}else{
-				return $this->validation_helper;
-			}
+	/**
+	 * The binary (1/0) value of the Boolean.  This is the value stored in the database.
+	 *
+	 * @var int
+	 */
+	private $value;
+	
+	/**
+	 * The error message returned for invalid values
+	 *
+	 * @var string
+	 */
+	private $validation_helper = 'Error: not a valid Boolean value!';
+	
+	/**
+	 * Constructor
+	 *
+	 * @param boolean $val
+	 * @return mixed True if the value provided is valid, otherwise a string containing the error message
+	 */
+	public function __construct($val=true) {
+		if ($val === true || $val == 1) {
+			$this->value = 1;
+			$this->booleanValue = true;
+			return true;
+		}elseif ($val === false || $val == 0) {
+			$this->value = 0;
+			$this->booleanValue = false;
+			return true;			
 		}else{
-			return 'Error: the value '.$val.' provided by Boolean is greater than the size '.$this->size.' of this data type.';
+			return $this->validation_helper;
 		}
 	}
 	
-	function set_value($val) {		
-		if (strlen($val) <= $this->size) {			
-			if (preg_match($this->validation_rule, $val)) {				
-				$this->value = $val;
-				return true;				
-			}else{
-				return $this->validation_helper;
-			}
+	/**
+	 * Used to set the Boolean value
+	 *
+	 * @param boolean $val
+	 * @return mixed True if the value provided is valid, otherwise a string containing the error message
+	 */
+	public function setValue($val) {		
+	if ($val === true || $val == 1) {
+			$this->value = 1;
+			$this->booleanValue = true;
+			return true;
+		}elseif ($val === false || $val == 0) {
+			$this->value = 0;
+			$this->booleanValue = false;
+			return true;			
 		}else{
-			return 'Error: the value '.$val.' provided by set_value is greater than the size '.$this->size.' of this data type.';
+			return $this->validation_helper;
 		}
 	}
 	
-	function get_value() {
+	/**
+	 * Used to get the binary (1/0) value of the Boolean.  This is the value stored in the database.
+	 *
+	 * @return int
+	 */
+	public function getValue() {
 		return $this->value;
 	}
 	
-	function set_validation($rule, $helper='Error: validation rule not met!') {
-		$this->validation_rule = $rule;
-		$this->validation_helper = $helper;
+	/**
+	 * Used to get the boolean value of the Boolean
+	 *
+	 * @return boolean
+	 */
+	public function getBooleanValue() {
+		return $this->booleanValue;
 	}
 	
-	function get_rule() {
-		return $this->validation_rule;
-	}
-	
-	function get_helper() {
+	/**
+	 * Used to get the validation helper message string
+	 *
+	 * @return string
+	 */
+	function getHelper() {
 		return $this->validation_helper;
 	}
-	
-	function set_size($size) {
-		if ($size <= $this->MAX_SIZE)
-			$this->size = $size;
-		else
-			return 'Error: the value '.$size.' provided by set_size is greater than the MAX_SIZE '.$this->MAX_SIZE.' of this data type.';	
-	}
-	
-	function get_size(){
-		return $this->size;
-	}	
 }
 
 ?>
