@@ -44,14 +44,14 @@ class article_comment extends View
 		$markdown = new markdown_facade($this->BO);
 		$author = new person_object();
 		$id = $this->BO->get_creator_ID();
-		$author->load_object($id->get_value());
+		$author->load_object($id->getValue());
 		
 		echo '<center><blockquote class="usercomment">';
 		
 		$create_TS = $this->BO->get_create_TS();
 		$update_TS = $this->BO->get_update_TS();
 
-		echo '<p>Posted by '.($author->get("URL") == ""? $author->get("displayname") : '<a href="'.$author->get("URL").'" target="new window">'.$author->get("displayname").'</a>').' at '.$create_TS->get_value().'.';
+		echo '<p>Posted by '.($author->get("URL") == ""? $author->get("displayname") : '<a href="'.$author->get("URL").'" target="new window">'.$author->get("displayname").'</a>').' at '.$create_TS->getValue().'.';
 		echo '&nbsp;'.$author->get("displayname").' has posted ['.$author->get_comment_count().'] comments on articles since joining.';
 		echo '</p>';
 		if($config->get('sysCMSCommentsAllowed') && isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_ID() == $author->get_ID())
@@ -59,11 +59,11 @@ class article_comment extends View
 		else
 			echo $markdown->get_content();
 		
-		if($create_TS->get_value() != $update_TS->get_value()) {
+		if($create_TS->getValue() != $update_TS->getValue()) {
 			$updator = new person_object();
 			$id = $this->BO->get_creator_ID();
-			$updator->load_object($id->get_value());
-			echo '<p>Updated by '.($updator->get("URL") == ""? $updator->get("displayname") : '<a href="'.$updator->get("URL").'" target="new window">'.$updator->get("displayname").'</a>').' at '.$update_TS->get_value().'.</p>';
+			$updator->load_object($id->getValue());
+			echo '<p>Updated by '.($updator->get("URL") == ""? $updator->get("displayname") : '<a href="'.$updator->get("URL").'" target="new window">'.$updator->get("displayname").'</a>').' at '.$update_TS->getValue().'.</p>';
 		}
 		echo '</blockquote></center>';
 	}
@@ -258,7 +258,7 @@ class article_comment extends View
 							// need to decode the text for the comment
 							$text = $this->BO->get_prop_object($prop);
 							$filter = new input_filter($text);
-							$text->set_value($filter->decode());
+							$text->setValue($filter->decode());
 							$temp = new text_box($text, $this->BO->data_labels[$prop], $prop, "", 5, true, $this->BO->get_ID());
 						} else {
 							echo '<tr><td colspan="2">';
@@ -277,8 +277,8 @@ class article_comment extends View
 
 						echo '<td>';
 						echo '<select size="1" name="'.$prop.'"/>';
-						echo '<option value="0" '.($this->BO->$prop->get_value() == '0'? 'selected':'').'>N</option>';
-						echo '<option value="1" '.($this->BO->$prop->get_value() == '1'? 'selected':'').'>Y</option>';
+						echo '<option value="0" '.($this->BO->$prop->getValue() == '0'? 'selected':'').'>N</option>';
+						echo '<option value="1" '.($this->BO->$prop->getValue() == '1'? 'selected':'').'>Y</option>';
 						echo '</select><br>';
 						echo '</td></tr>';
 					break;
@@ -291,7 +291,7 @@ class article_comment extends View
 						$enum = $this->BO->get_prop_object($prop);
 						$enum_vals = $enum->get_options();						
 						foreach ($enum_vals as $enum_val) {
-							if ($enum->get_value() == $enum_val)
+							if ($enum->getValue() == $enum_val)
 								echo '<option value="'.$enum_val.'" selected>'.$enum_val.'</option>';
 							else
 								echo '<option value="'.$enum_val.'">'.$enum_val.'</option>';

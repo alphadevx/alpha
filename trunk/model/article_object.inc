@@ -178,9 +178,9 @@ class article_object extends mysql_DAO
 			if(isset($front) && $front->has_alias('view_article_title')) {
 				$alias = $front->get_controller_alias('view_article_title');
 				
-				$this->URL = $config->get('sysURL').'/'.$alias.'/'.str_replace(' ', '_', $this->title->get_value());
+				$this->URL = $config->get('sysURL').'/'.$alias.'/'.str_replace(' ', '_', $this->title->getValue());
 			}else{
-				$this->URL = $config->get('sysURL').'/view_article_title/title/'.str_replace(' ', '_', $this->title->get_value());
+				$this->URL = $config->get('sysURL').'/view_article_title/title/'.str_replace(' ', '_', $this->title->getValue());
 			}
 		}else{
 			$this->URL = $config->get('sysURL').'/alpha/controller/view_article.php?oid='.$this->get_ID();
@@ -192,12 +192,12 @@ class article_object extends mysql_DAO
 			if(isset($front) && $front->has_alias('view_article_print')) {
 				$alias = $front->get_controller_alias('view_article_print');
 				
-				$this->printURL = $config->get('sysURL').'/'.$alias.'/'.str_replace(' ', '_', $this->title->get_value());
+				$this->printURL = $config->get('sysURL').'/'.$alias.'/'.str_replace(' ', '_', $this->title->getValue());
 			}else{
-				$this->printURL = $config->get('sysURL').'/view_article_print/title/'.str_replace(' ', '_', $this->title->get_value());
+				$this->printURL = $config->get('sysURL').'/view_article_print/title/'.str_replace(' ', '_', $this->title->getValue());
 			}
 		}else{
-			$this->printURL = $config->get('sysURL').'/alpha/controller/view_article_print.php?title='.$this->title->get_value();
+			$this->printURL = $config->get('sysURL').'/alpha/controller/view_article_print.php?title='.$this->title->getValue();
 		}
 	}
 	
@@ -326,7 +326,7 @@ class article_object extends mysql_DAO
 		foreach(array_keys($properties) as $prop) {
 			if (get_class($this->$prop) != false) {	
 				if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {					
-					$this->$prop->set_value(stripslashes($row[$prop]));
+					$this->$prop->setValue(stripslashes($row[$prop]));
 				}else{
 					$this->$prop->populate_from_string(stripslashes($row[$prop]));
 				}

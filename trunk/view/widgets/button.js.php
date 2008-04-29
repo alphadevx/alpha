@@ -60,9 +60,9 @@ class button
 			$this->imgURL = $imgURL;
 		
 		if (isset($action) && $action != "")
-			$this->action->set_value($action);
+			$this->action->setValue($action);
 		else
-			$this->action->set_value("alert('Please set an action for this button!')");
+			$this->action->setValue("alert('Please set an action for this button!')");
 			
 		$this->set_title($title);
 		$this->set_id($id);
@@ -75,7 +75,7 @@ class button
 	 */
 	function render() {
 		if(empty($this->imgURL)) {
-			switch ($this->action->get_value()) {
+			switch ($this->action->getValue()) {
 				case "submit":
 					echo '<input type="submit" id="'.$this->get_id().'" name="'.$this->get_id().'" class="norButton" value="'.$this->get_title().'"/>';
 				break;
@@ -220,7 +220,7 @@ EOS;
 	 */
 	function set_action($action)
 	{
-		$this->action->set_value($action);
+		$this->action->setValue($action);
 	}
 
 	/**
@@ -228,7 +228,7 @@ EOS;
 	 * @return string action
 	 */
 	function get_action() {
-		return $this->action->get_value();
+		return $this->action->getValue();
 	}
 	
 	/**
@@ -237,7 +237,7 @@ EOS;
 	 */
 	function set_title($title)
 	{
-		$this->title->set_value($title);
+		$this->title->setValue($title);
 	}
 
 	/**
@@ -245,7 +245,7 @@ EOS;
 	 * @return string title
 	 */
 	function get_title() {
-		return $this->title->get_value();
+		return $this->title->getValue();
 	}
 	
 	/**
@@ -254,7 +254,7 @@ EOS;
 	 */
 	function set_id($id)
 	{
-		$this->id->set_value($id);
+		$this->id->setValue($id);
 	}
 
 	/**
@@ -262,7 +262,7 @@ EOS;
 	 * @return string id
 	 */
 	function get_id() {
-		return $this->id->get_value();
+		return $this->id->getValue();
 	}
 }
 

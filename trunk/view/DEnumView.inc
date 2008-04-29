@@ -67,7 +67,7 @@ class DEnumView extends View
 		foreach (array_keys($properties) as $prop) {
 			if (!in_array($prop, $this->BO->default_attributes) && !in_array($prop, $this->BO->transient_attributes)) {
 				if (get_class($properties[$prop]) != "Text") {
-					echo '	<td>&nbsp;'.$this->BO->$prop->get_value().'</td>';
+					echo '	<td>&nbsp;'.$this->BO->$prop->getValue().'</td>';
 				}
 			}
 			if ($prop == "OID")

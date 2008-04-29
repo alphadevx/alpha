@@ -134,19 +134,19 @@ class view_article extends Controller
 		}
 		
 		if (!empty($this->article->header_content))
-			echo $this->article->header_content->get_value();
+			echo $this->article->header_content->getValue();
 		
 		echo '</head>';
-		echo '<body'.(!empty($this->article->body_onload) ? ' onload="'.$this->article->body_onload->get_value().'"' : '').'>';
+		echo '<body'.(!empty($this->article->body_onload) ? ' onload="'.$this->article->body_onload->getValue().'"' : '').'>';
 		
 		if($config->get('sysCMSDisplayStandardHeader')) {
 			echo '<p><a href="'.$config->get('sysURL').'">'.$config->get('sysTitle').'</a> &nbsp; &nbsp;';
 			$prop_obj = $this->article->get_prop_object("section");
 			echo 'Site Section: <em>'.$prop_obj->get_display_value().'</em> &nbsp; &nbsp;';
 			$prop_obj = $this->article->get_prop_object("date_added");
-			echo 'Date Added: <em>'.$prop_obj->get_value().'</em> &nbsp; &nbsp;';
+			echo 'Date Added: <em>'.$prop_obj->getValue().'</em> &nbsp; &nbsp;';
 			$prop_obj = $this->article->get_prop_object("date_updated");
-			echo 'Last Updated: <em>'.$prop_obj->get_value().'</em> &nbsp; &nbsp;';
+			echo 'Last Updated: <em>'.$prop_obj->getValue().'</em> &nbsp; &nbsp;';
 			echo 'Revision: <em>'.$this->article->get_version().'</em></p>';
 		}
 		

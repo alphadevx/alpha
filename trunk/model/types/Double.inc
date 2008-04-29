@@ -60,7 +60,7 @@ class Double {
 		}
 	}
 	
-	function set_value($val) {		
+	function setValue($val) {		
 		if (strlen($val) <= $this->size) {			
 			if (preg_match($this->validation_rule, $val)) {				
 				$this->value = $val;				
@@ -72,7 +72,7 @@ class Double {
 		}
 	}
 	
-	function get_value() {
+	function getValue() {
 		return $this->value;
 	}
 	

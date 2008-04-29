@@ -50,7 +50,7 @@ class Enum_Test extends PHPUnit_Framework_TestCase
     public function testSetSelectPass() {
     	$this->enum1->set_options(array('a','b','c'));
     	
-    	$result = $this->enum1->set_value('b');
+    	$result = $this->enum1->setValue('b');
     	
     	$this->assertTrue($result, "testing the enum select option methods for pass");
     }
@@ -61,7 +61,7 @@ class Enum_Test extends PHPUnit_Framework_TestCase
     public function testSetSelectFail() {
     	$this->enum1->set_options(array('a','b','c'));
     	
-    	$result = $this->enum1->set_value('x');
+    	$result = $this->enum1->setValue('x');
     	
     	$this->assertFalse($result, "testing the enum select option methods for fail");
     }
@@ -87,13 +87,13 @@ class Enum_Test extends PHPUnit_Framework_TestCase
     }
     
 	/**
-     * testing the set_value method with good and bad values
+     * testing the setValue method with good and bad values
      */
     public function testSetValue() {
     	$this->enum1->set_options(array('a','b','c'));
     	
-    	$this->assertTrue($this->enum1->set_value('a'), "testing the set_value method with a good value");
-    	$this->assertFalse($this->enum1->set_value('x'), "testing the set_value method with a bad value");
+    	$this->assertTrue($this->enum1->setValue('a'), "testing the setValue method with a good value");
+    	$this->assertFalse($this->enum1->setValue('x'), "testing the setValue method with a bad value");
     }
     
     /**

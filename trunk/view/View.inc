@@ -176,7 +176,7 @@ class View {
 						$enum = $this->BO->get_prop_object($prop);
 						$enum_vals = $this->BO->$prop->get_options();						
 						foreach ($enum_vals as $enum_val) {
-							if ($enum->get_value() == $enum_val)
+							if ($enum->getValue() == $enum_val)
 								echo '<option value="'.$enum_val.'" selected>'.$enum_val.'</option>';
 							else
 								echo '<option value="'.$enum_val.'">'.$enum_val.'</option>';
@@ -193,7 +193,7 @@ class View {
 						$denum = $this->BO->get_prop_object($prop);
 						$denum_vals = $denum->get_options();						
 						foreach (array_keys($denum_vals) as $denum_index) {
-							if ($denum->get_value() == $denum_index)
+							if ($denum->getValue() == $denum_index)
 								echo '<option value="'.$denum_index.'" selected>'.$denum_vals[$denum_index].'</option>';
 							else
 								echo '<option value="'.$denum_index.'">'.$denum_vals[$denum_index].'</option>';
@@ -316,8 +316,8 @@ class View {
 
 						echo '<td>';
 						echo '<select size="1" name="'.$prop.'"/>';
-						echo '<option value="0" '.($this->BO->$prop->get_value() == '0'? 'selected':'').'>N</option>';
-						echo '<option value="1" '.($this->BO->$prop->get_value() == '1'? 'selected':'').'>Y</option>';
+						echo '<option value="0" '.($this->BO->$prop->getValue() == '0'? 'selected':'').'>N</option>';
+						echo '<option value="1" '.($this->BO->$prop->getValue() == '1'? 'selected':'').'>Y</option>';
 						echo '</select><br>';
 						echo '</td></tr>';
 					break;
@@ -330,7 +330,7 @@ class View {
 						$enum = $this->BO->get_prop_object($prop);
 						$enum_vals = $enum->get_options();						
 						foreach ($enum_vals as $enum_val) {
-							if ($enum->get_value() == $enum_val)
+							if ($enum->getValue() == $enum_val)
 								echo '<option value="'.$enum_val.'" selected>'.$enum_val.'</option>';
 							else
 								echo '<option value="'.$enum_val.'">'.$enum_val.'</option>';
@@ -347,7 +347,7 @@ class View {
 						$denum = $this->BO->get_prop_object($prop);
 						$denum_vals = $denum->get_options();						
 						foreach (array_keys($denum_vals) as $denum_index) {
-							if ($denum->get_value() == $denum_index)
+							if ($denum->getValue() == $denum_index)
 								echo '<option value="'.$denum_index.'" selected>'.$denum_vals[$denum_index].'</option>';
 							else
 								echo '<option value="'.$denum_index.'">'.$denum_vals[$denum_index].'</option>';
@@ -437,9 +437,9 @@ class View {
 		foreach (array_keys($properties) as $prop) {
 			if (!in_array($prop, $this->BO->default_attributes) && !in_array($prop, $this->BO->transient_attributes)) {
 				if (get_class($properties[$prop]) != "Text") {
-					echo '	<td>&nbsp;'.$this->BO->$prop->get_value().'</td>';
+					echo '	<td>&nbsp;'.$this->BO->$prop->getValue().'</td>';
 				}else{
-					$text = htmlentities($this->BO->$prop->get_value());
+					$text = htmlentities($this->BO->$prop->getValue());
 					if(strlen($text) > 70)
 						echo '	<td>&nbsp;'.substr($text, 0, 70).'...</td>';
 					else

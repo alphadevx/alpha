@@ -64,7 +64,7 @@ class Relation {
 		return $this->relationType;
 	}
 	
-	function set_value($val) {		
+	function setValue($val) {		
 		if (strlen($val) <= $this->size) {			
 			if (preg_match($this->validation_rule, $val)) {				
 				$this->value = str_pad($val, 11, "0", STR_PAD_LEFT);
@@ -73,11 +73,11 @@ class Relation {
 				return $this->validation_helper;
 			}
 		}else{
-			return 'Error: the value '.$val.' provided by set_value is greater than the size '.$this->size.' of this data type.';
+			return 'Error: the value '.$val.' provided by setValue is greater than the size '.$this->size.' of this data type.';
 		}
 	}
 	
-	function get_value() {
+	function getValue() {
 		return $this->value;
 	}
 	
@@ -132,7 +132,7 @@ class Relation {
 		}
 					
 		$obj = new $this->relatedClass;
-		$objects = $obj->load_all_by_attribute($this->getRelatedClassField(), $this->get_value());
+		$objects = $obj->load_all_by_attribute($this->getRelatedClassField(), $this->getValue());
 		
 		return $objects;
 	}

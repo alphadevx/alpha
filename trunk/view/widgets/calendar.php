@@ -90,11 +90,11 @@ class calendar{
 			echo '</td>';
 
 			echo '<td>';
-			echo '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->get_value().'" readonly/>';
+			echo '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->getValue().'" readonly/>';
 			$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=205,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $config->get('sysURL')."/alpha/images/icons/calendar.png");
 			echo '</td></tr>';
 		}else{
-			echo '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->get_value().'" readonly/>';
+			echo '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->getValue().'" readonly/>';
 			$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=205,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $config->get('sysURL')."/alpha/images/icons/calendar.png");
 		}
 	}
@@ -230,15 +230,15 @@ class calendar{
 		
 		echo '<tr>';
 		echo '<td colspan="3" align="center">';
-		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".($year-1)."&display_month=".$month."';", "Previous year", "yearPreBut", $config->get('sysURL')."/alpha/images/icons/arrow_left.png");
+		$tmp = new button("document.location='calendar.php?date=".$this->date_object->getValue()."&name=".$this->name."&display_year=".($year-1)."&display_month=".$month."';", "Previous year", "yearPreBut", $config->get('sysURL')."/alpha/images/icons/arrow_left.png");
 		echo 'Year';
-		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".($year+1)."&display_month=".$month."';", "Next year", "yearNextBut", $config->get('sysURL')."/alpha/images/icons/arrow_right.png");
+		$tmp = new button("document.location='calendar.php?date=".$this->date_object->getValue()."&name=".$this->name."&display_year=".($year+1)."&display_month=".$month."';", "Next year", "yearNextBut", $config->get('sysURL')."/alpha/images/icons/arrow_right.png");
 		echo '</td>';
 		echo '<td>&nbsp;</td>';
 		echo '<td colspan="3" align="center">';
-		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".$year."&display_month=".($month-1)."';", "Previous month", "monthPreBut", $config->get('sysURL')."/alpha/images/icons/arrow_left.png");
+		$tmp = new button("document.location='calendar.php?date=".$this->date_object->getValue()."&name=".$this->name."&display_year=".$year."&display_month=".($month-1)."';", "Previous month", "monthPreBut", $config->get('sysURL')."/alpha/images/icons/arrow_left.png");
 		echo 'Month';
-		$tmp = new button("document.location='calendar.php?date=".$this->date_object->get_value()."&name=".$this->name."&display_year=".$year."&display_month=".($month+1)."';", "Next month", "monthNextBut", $config->get('sysURL')."/alpha/images/icons/arrow_right.png");
+		$tmp = new button("document.location='calendar.php?date=".$this->date_object->getValue()."&name=".$this->name."&display_year=".$year."&display_month=".($month+1)."';", "Next month", "monthNextBut", $config->get('sysURL')."/alpha/images/icons/arrow_right.png");
 		echo '</td>';
 		echo '</tr>';
 		
@@ -266,7 +266,7 @@ class calendar{
 		echo '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
 		
 		echo '<script language="javascript">';
-		echo 'var date_selected = "'.$this->date_object->get_value().'";';
+		echo 'var date_selected = "'.$this->date_object->getValue().'";';
 		echo 'function selectDate(date, include_time_fields, clicked_cell) {';		
 		echo '	var cells = document.getElementsByTagName("td");';
 		echo '	for(var i = 0; i < cells.length; i++) {';

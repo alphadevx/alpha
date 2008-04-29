@@ -205,8 +205,8 @@ class person extends View
 
 						echo '<td>';
 						echo '<select size="1" name="'.$prop.'"/>';
-						echo '<option value="0" '.($this->BO->$prop->get_value() == '0'? 'selected':'').'>N</option>';
-						echo '<option value="1" '.($this->BO->$prop->get_value() == '1'? 'selected':'').'>Y</option>';
+						echo '<option value="0" '.($this->BO->$prop->getValue() == '0'? 'selected':'').'>N</option>';
+						echo '<option value="1" '.($this->BO->$prop->getValue() == '1'? 'selected':'').'>Y</option>';
 						echo '</select><br>';
 						echo '</td></tr>';
 					break;
@@ -219,7 +219,7 @@ class person extends View
 						$enum = $this->BO->get_prop_object($prop);
 						$enum_vals = $enum->get_options();						
 						foreach ($enum_vals as $enum_val) {
-							if ($enum->get_value() == $enum_val)
+							if ($enum->getValue() == $enum_val)
 								echo '<option value="'.$enum_val.'" selected>'.$enum_val.'</option>';
 							else
 								echo '<option value="'.$enum_val.'">'.$enum_val.'</option>';
@@ -257,7 +257,7 @@ class person extends View
 				$enum = $this->BO->get_prop_object($prop);
 				$enum_vals = $enum->get_options();				
 				foreach ($enum_vals as $enum_val) {
-					if ($enum->get_value() == $enum_val)
+					if ($enum->getValue() == $enum_val)
 						echo '<option value="'.$enum_val.'" selected>'.$enum_val.'</option>';
 					else
 						echo '<option value="'.$enum_val.'">'.$enum_val.'</option>';
@@ -277,7 +277,7 @@ class person extends View
 				$enum = $this->BO->get_prop_object($prop);
 				$enum_vals = $enum->get_options();				
 				foreach ($enum_vals as $enum_val) {
-					if ($enum->get_value() == $enum_val)
+					if ($enum->getValue() == $enum_val)
 						echo '<option value="'.$enum_val.'" selected>'.$enum_val.'</option>';
 					else
 						echo '<option value="'.$enum_val.'">'.$enum_val.'</option>';
@@ -336,7 +336,7 @@ class person extends View
 		foreach (array_keys($properties) as $prop) {
 			if (!in_array($prop, $this->BO->default_attributes) && $prop != "password") {
 				if (get_class($properties[$prop]) != "Text") {
-					echo '	<td>&nbsp;'.$this->BO-> $prop->get_value().'</td>';
+					echo '	<td>&nbsp;'.$this->BO-> $prop->getValue().'</td>';
 				}
 			}
 			if ($prop == "OID")

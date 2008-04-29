@@ -35,7 +35,7 @@ class Date {
 		}
  	}
  	
- 	function set_value($year, $month, $day) {
+ 	function setValue($year, $month, $day) {
  		$valid = 1;
  		
  		if (!preg_match('/^[0-9]{4}$/', $year))
@@ -57,7 +57,7 @@ class Date {
  		}
  	}
  	
- 	function get_value() {
+ 	function getValue() {
  		return $this->year.'-'.$this->month.'-'.$this->day;
  	}
  	
