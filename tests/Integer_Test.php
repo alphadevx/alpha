@@ -1,34 +1,24 @@
 <?php
 
-// $Id$
-
 /**
  *
  * Test case for the Integer data type
  * 
  * @package Alpha Core Unit Tests
  * @author John Collins <john@design-ireland.net>
- * @copyright 2007 John Collins
- * 
+ * @copyright 2008 John Collins
+ * @version $Id$ 
  * 
  */
-class Integer_Test extends PHPUnit_TestCase
+class Integer_Test extends PHPUnit_Framework_TestCase
 {
 	/**
 	 * an Integer for testing
 	 * @var Integer
 	 */
-	var $int1;
+	private $int1;
 		
 	/**
-	 * constructor of the test suite
-	 * @param string $name the name of the test cases
-	 */
-    function Integer_Test($name) {
-       $this->PHPUnit_TestCase($name);
-    }
-    
-    /**
      * called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
@@ -49,7 +39,7 @@ class Integer_Test extends PHPUnit_TestCase
     /**
      * testing the int constructor for acceptance of correct data
      */
-    function test_constructor_pass() {
+    public function testConstructorPass() {
     	$this->int1 = new Integer(25);
     	
     	$this->assertEquals(25, $this->int1->get_value(), "testing the Integer constructor for pass");
@@ -58,14 +48,14 @@ class Integer_Test extends PHPUnit_TestCase
     /**
      * testing passing invalid data to set_value
      */
-    function test_set_value_invalid() {
+    public function testSetValueInvalid() {
     	$this->assertEquals($this->int1->get_helper(), $this->int1->set_value("blah"), "testing passing invalid data to set_value");
     }
     
     /**
      * testing the set_size method to see if validation fails
      */
-    function test_set_size_invalid() {
+    public function testSetSizeInvalid() {
     	$this->int1 = new Integer();
     	$this->int1->set_size(2);
     	
@@ -75,7 +65,7 @@ class Integer_Test extends PHPUnit_TestCase
     /**
      * testing that the overide of the default validation rule is working
      */
-    function test_set_validation() {
+    public function testSetValidation() {
     	$this->int1 = new Integer();
     	$this->int1->set_validation("/5/", "Only 5 is acceptable!");
     	

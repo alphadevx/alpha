@@ -1,17 +1,19 @@
 <?php
 
-// $Id$
-
 // include the config file
 if(!isset($config))
 	require_once '../util/configLoader.inc';
 $config =&configLoader::getInstance();
 
+// add PHPUnit to the include_path
+ini_set('include_path', ini_get('include_path').':'.$config->get('sysRoot').'alpha/lib/PEAR/PHPUnit-3.2.9/');
+require_once 'PHPUnit/Framework.php';
+require_once 'PHPUnit/TextUI/TestRunner.php';
+
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 require_once $config->get('sysRoot').'alpha/view/person.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
-require_once $config->get('sysRoot').'alpha/lib/PEAR/PHPUnit/PHPUnit-1.0.0/PHPUnit.php';
 require_once $config->get('sysRoot').'alpha/tests/Enum_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Boolean_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Date_Test.php';
@@ -40,7 +42,8 @@ $config->set('sysErrorOtherLog', false);
  * 
  * @package Alpha Core Unit Tests
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins 
+ * @copyright 2008 John Collins 
+ * @version $Id$
  * 
  */
 class view_test_results extends Controller
@@ -62,51 +65,79 @@ class view_test_results extends Controller
 		
 		$this->display_page_head();
 		
+		$runningTime = 0;
+		
 		echo "<h2>Core Complex Data Types</h2>";
 		
 		//------------------------------------------------
 		echo "<h3>Enum:</h3>";
 		
-		$suite  = new PHPUnit_TestSuite("Enum_Test");
-		$result = PHPUnit::run($suite);
-
+		$suite = new PHPUnit_Framework_TestSuite();
+		$suite->addTestSuite('Enum_Test');
+		$result = $suite->run();
+		$runningTime+=$result->time();
+				
 		if($result->wasSuccessful())
-			echo '<span class="success">'.$result->toHTML().'</span>';
+			echo '<pre class="success">';
 		else
-			echo '<span class="warning">'.$result->toHTML().'</span>';
+			echo '<pre class="warning">';
+			
+		$report = new PHPUnit_TextUI_ResultPrinter();		
+		$report->printResult($result);
+		echo '</pre>';
 		
 		//------------------------------------------------
 		echo "<h3>Boolean:</h3>";
 		
-		$suite  = new PHPUnit_TestSuite("Boolean_Test");
-		$result = PHPUnit::run($suite);
-
+		$suite = new PHPUnit_Framework_TestSuite();
+		$suite->addTestSuite('Boolean_Test');
+		$result = $suite->run();
+		$runningTime+=$result->time();
+				
 		if($result->wasSuccessful())
-			echo '<span class="success">'.$result->toHTML().'</span>';
+			echo '<pre class="success">';
 		else
-			echo '<span class="warning">'.$result->toHTML().'</span>';		
+			echo '<pre class="warning">';
+			
+		$report = new PHPUnit_TextUI_ResultPrinter();		
+		$report->printResult($result);
+		echo '</pre>';
 		
 		//------------------------------------------------
 		echo "<h3>Date:</h3>";
 		
-		$suite  = new PHPUnit_TestSuite("Date_Test");
-		$result = PHPUnit::run($suite);
-
+		$suite = new PHPUnit_Framework_TestSuite();
+		$suite->addTestSuite('Date_Test');
+		$result = $suite->run();
+		$runningTime+=$result->time();
+				
 		if($result->wasSuccessful())
-			echo '<span class="success">'.$result->toHTML().'</span>';
+			echo '<pre class="success">';
 		else
-			echo '<span class="warning">'.$result->toHTML().'</span>';		
+			echo '<pre class="warning">';
+			
+		$report = new PHPUnit_TextUI_ResultPrinter();		
+		$report->printResult($result);
+		echo '</pre>';
 		
 		//------------------------------------------------
 		echo "<h3>Integer:</h3>";
 		
-		$suite  = new PHPUnit_TestSuite("Integer_Test");
-		$result = PHPUnit::run($suite);
-
+		$suite = new PHPUnit_Framework_TestSuite();
+		$suite->addTestSuite('Integer_Test');
+		$result = $suite->run();
+		$runningTime+=$result->time();
+				
 		if($result->wasSuccessful())
-			echo '<span class="success">'.$result->toHTML().'</span>';
+			echo '<pre class="success">';
 		else
-			echo '<span class="warning">'.$result->toHTML().'</span>';
+			echo '<pre class="warning">';
+			
+		$report = new PHPUnit_TextUI_ResultPrinter();		
+		$report->printResult($result);
+		echo '</pre>';
+		
+		echo '<h3>Total running time: '.$runningTime.'</h3>';
 		
 		$this->display_page_foot();
 	}
