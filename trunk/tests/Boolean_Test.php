@@ -1,45 +1,35 @@
 <?php
 
-// $Id$
-
 /**
  *
  * Test case for the Boolean data type
  * 
  * @package Alpha Core Unit Tests
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins
- * 
+ * @copyright 2008 John Collins
+ * @version $Id$
  * 
  */
-class Boolean_Test extends PHPUnit_TestCase
+class Boolean_Test extends PHPUnit_Framework_TestCase
 {
 	/**
 	 * an Boolean for testing
 	 * @var Boolean
 	 */
-	var $boolean1;
+	private $boolean1;
 	
 	/**
 	 * a person for testing
 	 * @var person_object
 	 */
-	var $person;
+	private $person;
 	
 	/**
-	 * constructor of the test suite
-	 * @param string $name the name of the test cases
-	 */
-    function Boolean_Test($name) {
-       $this->PHPUnit_TestCase($name);
-    }
-    
-    /**
      * called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
      */
-    function setUp() {        
+    protected function setUp() {        
         $this->boolean1 = new Boolean();
         $this->person = new person_object();
     }
@@ -49,7 +39,7 @@ class Boolean_Test extends PHPUnit_TestCase
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
      */    
-    function tearDown() {        
+    protected function tearDown() {        
         unset($this->boolean1);
         unset($this->person);
     }
@@ -57,14 +47,14 @@ class Boolean_Test extends PHPUnit_TestCase
     /**
      * testing the constructor has set the Boolean to true by default
      */
-    function test_default_boolean_value() {
+    public function testDefaultBooleanValue() {
     	$this->assertTrue($this->boolean1->get_value(), "testing the constructor has set the Boolean to true by default");
     }
     
     /**
      * testing the constructor default can be overridden
      */
-    function test_override_default_boolean_value() {
+    public function testOverrideDefaultBooleanValue() {
     	$this->boolean1 = new Boolean(0);
     	
     	$this->assertFalse($this->boolean1->get_value(), "testing the constructor default can be overridden");
@@ -73,7 +63,7 @@ class Boolean_Test extends PHPUnit_TestCase
     /**
      * testing passing valid data to set_value
      */
-    function test_set_value_valid() {
+    public function testSetValueValid() {
     	$this->boolean1->set_value(1);
     	
     	$this->assertTrue($this->boolean1->get_value(), "testing passing valid data to set_value");
@@ -82,14 +72,14 @@ class Boolean_Test extends PHPUnit_TestCase
     /**
      * testing passing invalid data to set_value
      */
-    function test_set_value_invalid() {
+    public function testSetValueInvalid() {
     	$this->assertEquals($this->boolean1->get_helper(), $this->boolean1->set_value(3), "testing passing invalid data to set_value");
     }
     
     /**
      * testing that the validation rule can be changed
      */
-    function test_change_validation_rule() {
+    public function testChangeValidationRule() {
     	$this->boolean1->set_validation("/[x|y]/");    	
     	
     	$this->assertEquals($this->boolean1->get_helper(), $this->boolean1->set_value("g"), "testing that the validation rule can be changed");

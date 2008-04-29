@@ -1,45 +1,35 @@
 <?php
 
-// $Id$
-
 /**
  *
  * Test case for the Enum data type
  * 
  * @package Alpha Core Unit Tests
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins
- * 
+ * @copyright 2008 John Collins
+ * @version $Id$
  * 
  */
-class Enum_Test extends PHPUnit_TestCase
+class Enum_Test extends PHPUnit_Framework_TestCase
 {
 	/**
 	 * an Enum for testing
 	 * @var Enum
 	 */
-	var $enum1;
+	private $enum1;
 	
 	/**
 	 * a person for testing
 	 * @var person_object
 	 */
-	var $person;
+	private $person;
 	
 	/**
-	 * constructor of the test suite
-	 * @param string $name the name of the test cases
-	 */
-    function Enum_Test($name) {
-       $this->PHPUnit_TestCase($name);
-    }
-    
-    /**
      * called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
      */
-    function setUp() {        
+    protected function setUp() {        
         $this->enum1 = new Enum();
         $this->person = new person_object();
     }
@@ -49,7 +39,7 @@ class Enum_Test extends PHPUnit_TestCase
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
      */    
-    function tearDown() {        
+    protected function tearDown() {        
         unset($this->enum1);
         unset($this->person);
     }
@@ -57,7 +47,7 @@ class Enum_Test extends PHPUnit_TestCase
     /**
      * testing the enum select option methods for pass
      */
-    function test_set_select_pass() {
+    public function testSetSelectPass() {
     	$this->enum1->set_options(array('a','b','c'));
     	
     	$result = $this->enum1->set_value('b');
@@ -68,7 +58,7 @@ class Enum_Test extends PHPUnit_TestCase
     /**
      * testing the enum select option methods for fail
      */
-    function test_set_select_fail() {
+    public function testSetSelectFail() {
     	$this->enum1->set_options(array('a','b','c'));
     	
     	$result = $this->enum1->set_value('x');
@@ -79,7 +69,7 @@ class Enum_Test extends PHPUnit_TestCase
     /**
      * testing that enum options are loaded correctly from the database
      */
-    function test_load_enum_options() {
+    public function testLoadEnumOptions() {
     	// here we are assuming that the first user in the DB
     	// table is an administrator
     	$this->person->load_object('1');
@@ -90,7 +80,7 @@ class Enum_Test extends PHPUnit_TestCase
     /**
      * testing the set/get enum option methods
      */
-    function test_set_enum_options() {
+    public function testSetEnumOptions() {
     	$this->enum1->set_options(array('a','b','c'));
     	
     	$this->assertEquals($this->enum1->get_options(), array('a','b','c'), "testing the set/get enum option methods");
@@ -99,7 +89,7 @@ class Enum_Test extends PHPUnit_TestCase
 	/**
      * testing the set_value method with good and bad values
      */
-    function test_set_value() {
+    public function testSetValue() {
     	$this->enum1->set_options(array('a','b','c'));
     	
     	$this->assertTrue($this->enum1->set_value('a'), "testing the set_value method with a good value");
@@ -109,7 +99,7 @@ class Enum_Test extends PHPUnit_TestCase
     /**
      * testing the default (alphabetical) sort order on the enum
      */
-    function test_default_sort_order() {
+    public function testDefaultSortOrder() {
     	$this->enum1 = new Enum(array("alpha","gamma","beta"));
     	
     	$options = $this->enum1->get_options(true);
