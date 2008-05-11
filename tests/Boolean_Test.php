@@ -69,7 +69,11 @@ class Boolean_Test extends PHPUnit_Framework_TestCase
      * testing passing invalid data to setValue
      */
     public function testSetValueInvalid() {
-    	$this->assertEquals($this->boolean1->getHelper(), $this->boolean1->setValue(3), "testing passing invalid data to setValue");
+    	try {
+    		$this->boolean1->setValue(3);
+    	}catch (AlphaFrameworkException $e) {
+    		$this->assertTrue(true, "testing passing invalid data to setValue");
+    	}
     }    
 }
 
