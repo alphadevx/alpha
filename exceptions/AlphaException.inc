@@ -35,13 +35,13 @@ class AlphaException extends Exception {
 		parent::__construct($message);
 		
 		$this->type = $type;
-		$this->display_error();
+		$this->displayError();
 	}
 	
 	/**
 	 * Displays the error message in HTML format
 	 */
-	protected function display_error() {
+	protected function displayError() {
 		global $config;
 		
 		switch (get_class($this)) {
@@ -49,37 +49,37 @@ class AlphaException extends Exception {
 				if($config->get('sysErrorValidationDisplay'))
 					echo '<p class="error"><br>Validation error: '.$this->getMessage().'</p>';
 				if($config->get('sysErrorValidationLog'))
-					$this->log_error_to_file();
+					$this->logErrorToFile();
 			break;
 			case "AlphaWarningException":
 				if($config->get('sysErrorWarningDisplay'))
 					echo '<p class="error"><br>Warning: '.$this->getMessage().'</p>';
 				if($config->get('sysErrorWarningLog'))
-					$this->log_error_to_file();
+					$this->logErrorToFile();
 			break;
 			case "AlphaPHPException":
 				if($config->get('sysErrorPhpDisplay'))
 					echo '<p class="error">An error has occured in file: ['.$this->getFile().'], message: <br>The exception generated the following error message: ['.$this->getMessage().']</p>';	
 				if($config->get('sysErrorPhpLog'))
-					$this->log_error_to_file();
+					$this->logErrorToFile();
 				if($config->get('sysErrorMailSysAdmin'))
-					$this->notify_admin();
+					$this->notifyAdmin();
 			break;
 			case "AlphaFrameworkException":
 				if($config->get('sysErrorFrameworkDisplay'))
 					echo '<p class="error">An error has occured in file: ['.$this->getFile().'], message: <br>The exception generated the following error message: ['.$this->getMessage().']</p>';	
 				if($config->get('sysErrorFrameworkLog'))
-					$this->log_error_to_file();
+					$this->logErrorToFile();
 				if($config->get('sysErrorMailSysAdmin'))
-					$this->notify_admin();
+					$this->notifyAdmin();
 			break;
 			case "other":
 				if($config->get('sysErrorOtherDisplay'))
 					echo '<p class="error">An error has occured in file: ['.$this->getFile().'], message: <br>The exception generated the following error message: ['.$this->getMessage().']</p>';	
 				if($config->get('sysErrorOtherLog'))
-					$this->log_error_to_file();
+					$this->logErrorToFile();
 				if($config->get('sysErrorMailSysAdmin'))
-					$this->notify_admin();
+					$this->notifyAdmin();
 			break;
 		}
 	}
@@ -87,7 +87,7 @@ class AlphaException extends Exception {
 	/**
 	 * Method to log an error to a text file
 	 */
-	protected function log_error_to_file() {
+	protected function logErrorToFile() {
 		global $config;
 
 		//sets up the date and time variables		
@@ -110,21 +110,21 @@ class AlphaException extends Exception {
 	/**
 	 * Notify the sys admin when a serious error occurs
 	 */
-	protected function notify_admin() {
+	protected function notifyAdmin() {
 		global $config;
 		
 		// just making sure an email address has been set in the .ini file
 		if($config->get('sysErrorMailAddress') != "") {
 			$body = "The following error has occured:\n\n";
 		
-			$body .= "File:-> ".$this->sys_file."\n\n";
-			$body .= "Message:-> ".$this->message."\n\n";
-			$body .= "Method:-> ".$this->method."\n\n";
-			$body .= "Type:-> ".$this->type."\n\n";
+			$body .= "File:-> ".$this->getFile()."\n\n";
+			$body .= "Message:-> ".$this->getMessage()."\n\n";
+			$body .= "Stack trace:-> ".$this->getTraceAsString()."\n\n";
+			$body .= "Type:-> ".get_class($this)."\n\n";
 			
 			$body .= "\n\nKind regards,\n\nAdministrator\n--\n".$config->get('sysURL');
 			
-			mail($config->get('sysErrorMailAddress'), "Error in file ".$this->sys_file." on site .".$config->get('sysTitle'), $body, "From: ".$config->get('sysReplyTo')."\r\nReply-To: ".$config->get('sysReplyTo')."\r\nX-Mailer: PHP/" . phpversion());
+			mail($config->get('sysErrorMailAddress'), "Error in file ".$this->getFile()." on site .".$config->get('sysTitle'), $body, "From: ".$config->get('sysReplyTo')."\r\nReply-To: ".$config->get('sysReplyTo')."\r\nX-Mailer: PHP/" . phpversion());
 		}
 	}
 }
