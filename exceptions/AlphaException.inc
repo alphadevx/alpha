@@ -16,25 +16,15 @@ require_once $config->get('sysRoot').'alpha/util/log_file.inc';
  * @version $Id$
  * 
  */
-class AlphaException extends Exception {
-	/**
-	 * The error type (validation, warning, php, framework, other)
-	 * The error type (AlphaValidationException, AlphaWarningException, AlphaPHPException,
-	 * AlphaFrameworkException, AlphaException)
-	 * 
-	 * @var string
-	 */
-	private $type;
-	
+class AlphaException extends Exception {		
 	/**
 	 * The constructor
 	 *
 	 * @param string $message	 
 	 */
 	public function __construct($message) {
-		parent::__construct($message);
+		parent::__construct($message);		
 		
-		$this->type = $type;
 		$this->displayError();
 	}
 	
