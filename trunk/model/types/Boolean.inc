@@ -1,6 +1,7 @@
 <?php
 
-require_once $config->get('sysRoot')."config/validation_rules.inc";
+require_once $config->get('sysRoot').'config/validation_rules.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
 
 /**
  * The Boolean complex data type
@@ -36,20 +37,17 @@ class Boolean {
 	/**
 	 * Constructor
 	 *
-	 * @param boolean $val
-	 * @return mixed True if the value provided is valid, otherwise a string containing the error message
+	 * @param boolean $val	
 	 */
 	public function __construct($val=true) {
 		if ($val === true || $val == 1) {
 			$this->value = 1;
 			$this->booleanValue = true;
-			return true;
 		}elseif ($val === false || $val == 0) {
 			$this->value = 0;
 			$this->booleanValue = false;
-			return true;			
 		}else{
-			return $this->validation_helper;
+			throw new AlphaFrameworkException($this->validation_helper);
 		}
 	}
 	
@@ -57,19 +55,16 @@ class Boolean {
 	 * Used to set the Boolean value
 	 *
 	 * @param boolean $val
-	 * @return mixed True if the value provided is valid, otherwise a string containing the error message
 	 */
 	public function setValue($val) {		
-	if ($val === true || $val == 1) {
+		if ($val === true || $val == 1) {
 			$this->value = 1;
-			$this->booleanValue = true;
-			return true;
+			$this->booleanValue = true;			
 		}elseif ($val === false || $val == 0) {
 			$this->value = 0;
-			$this->booleanValue = false;
-			return true;			
+			$this->booleanValue = false;					
 		}else{
-			return $this->validation_helper;
+			throw new AlphaFrameworkException($this->validation_helper);
 		}
 	}
 	
