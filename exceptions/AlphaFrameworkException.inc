@@ -3,7 +3,7 @@
 require_once 'AlphaException.inc';
 
 /**
- * The exception class for handling generic PHP errors
+ * The exception class for handling Alpha-specific errors
  * 
  * @package Alpha Core Exceptions
  * @author John Collins <john@design-ireland.net>
@@ -11,7 +11,7 @@ require_once 'AlphaException.inc';
  * @version $Id$
  * 
  */
-class AlphaPHPException extends AlphaException {
+class AlphaFrameworkException extends AlphaException {
 	
 }
 
