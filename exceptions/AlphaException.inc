@@ -31,7 +31,7 @@ class AlphaException extends Exception {
 	/**
 	 * Displays the error message in HTML format
 	 */
-	protected function displayError() {
+	public function displayError() {
 		global $config;
 		
 		switch (get_class($this)) {
@@ -116,6 +116,24 @@ class AlphaException extends Exception {
 			
 			mail($config->get('sysErrorMailAddress'), "Error in file ".$this->getFile()." on site .".$config->get('sysTitle'), $body, "From: ".$config->get('sysReplyTo')."\r\nReply-To: ".$config->get('sysReplyTo')."\r\nX-Mailer: PHP/" . phpversion());
 		}
+	}
+	
+	/**
+	 * Set the message for the exception
+	 *
+	 * @param string $message
+	 */
+	public function setMessage($message) {
+		$this->message = $message;
+	}
+	
+	/**
+	 * Set the filename for the exception
+	 *
+	 * @param string $file
+	 */
+	public function setFile($file) {
+		$this->file = $file;
 	}
 }
 
