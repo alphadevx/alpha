@@ -1,53 +1,36 @@
 <?php
 
-// $Id$
+// load config
+if(!isset($config))
+	require_once 'configLoader.inc';
+$config =&configLoader::getInstance();
+
+require_once $config->get('sysRoot').'alpha/exceptions/AlphaPHPException.inc';
 
 /**
  *
- * A static funtion for capturing normal PHP errors
+ * A pair of static functions for capturing normal PHP errors as a AlphaPHPException
  * 
- * @package Alpha Core Error
+ * @package Alpha Core Util
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins
- * 
+ * @copyright 2008 John Collins
+ * @version $Id$
  * 
  */
- 
-// set the error reporting level for this script 
-error_reporting(E_ALL); 
-
-require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
-
-function catch_error($error_no, $msg, $file, $line) {
-		
-	switch ($error_no) {		
-		case E_ERROR:
-			$type = "ERROR";
-		break;
-		case E_WARNING:
-			$type = "WARNING";
-		break;
-		case E_NOTICE:
-			$type = "NOTICE";
-		break;
-		case E_USER_ERROR:
-			$type = "ERROR";
-		break;
-		case E_USER_WARNING:
-			$type = "WARNING";
-		break;
-		case E_USER_NOTICE:
-			$type = "NOTICE";
-		break;	
-		default:
-			$type = "OTHER";
-		break;
-	}	
+function catchException($e) {	
+	$e->displayError();
+}
 	
-	if ($type != "OTHER")
-		$error = new handle_error($file, 'PHP error of type '.$type.' on line '.$line.': '.$msg ,'unknown','php');
+function catchError($error_no, $msg, $file, $line) {
+	$e = new AlphaPHPException();
+	$e->setMessage('PHP error: '.$msg);
+	$e->setFile($file);
+	 
+	throw $e;
 }
 
-set_error_handler('catch_error');
+set_exception_handler('catchException');
+set_error_handler('catchError', $config->get('sysPHPErrorLogLevel'));
+
 
 ?>
