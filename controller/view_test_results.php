@@ -67,6 +67,7 @@ class view_test_results extends Controller
 		$this->display_page_head();
 		
 		$runningTime = 0;
+		$testCount = 0;
 		
 		echo "<h2>Core Complex Data Types</h2>";
 		
@@ -77,6 +78,7 @@ class view_test_results extends Controller
 		$suite->addTestSuite('Enum_Test');
 		$result = $suite->run();
 		$runningTime+=$result->time();
+		$testCount+=$result->count();
 				
 		if($result->wasSuccessful())
 			echo '<pre class="success">';
@@ -94,6 +96,7 @@ class view_test_results extends Controller
 		$suite->addTestSuite('Boolean_Test');
 		$result = $suite->run();
 		$runningTime+=$result->time();
+		$testCount+=$result->count();
 				
 		if($result->wasSuccessful())
 			echo '<pre class="success">';
@@ -111,6 +114,7 @@ class view_test_results extends Controller
 		$suite->addTestSuite('Date_Test');
 		$result = $suite->run();
 		$runningTime+=$result->time();
+		$testCount+=$result->count();
 				
 		if($result->wasSuccessful())
 			echo '<pre class="success">';
@@ -128,6 +132,7 @@ class view_test_results extends Controller
 		$suite->addTestSuite('Integer_Test');
 		$result = $suite->run();
 		$runningTime+=$result->time();
+		$testCount+=$result->count();
 				
 		if($result->wasSuccessful())
 			echo '<pre class="success">';
@@ -145,6 +150,7 @@ class view_test_results extends Controller
 		$suite->addTestSuite('Exceptions_Test');
 		$result = $suite->run();
 		$runningTime+=$result->time();
+		$testCount+=$result->count();
 				
 		if($result->wasSuccessful())
 			echo '<pre class="success">';
@@ -155,6 +161,7 @@ class view_test_results extends Controller
 		$report->printResult($result);
 		echo '</pre>';
 		
+		echo '<h3>Total tests ran: '.$testCount.'</h3>';
 		echo '<h3>Total running time: '.$runningTime.'</h3>';
 		
 		$this->display_page_foot();
