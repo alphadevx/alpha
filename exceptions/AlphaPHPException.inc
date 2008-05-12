@@ -12,7 +12,11 @@ require_once 'AlphaException.inc';
  * 
  */
 class AlphaPHPException extends AlphaException {
-	
+	/**
+	 * The constructor
+	 */
+	public function __construct() {		
+	}
 }
 
 ?>
