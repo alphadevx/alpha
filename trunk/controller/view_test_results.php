@@ -18,6 +18,7 @@ require_once $config->get('sysRoot').'alpha/tests/Enum_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Boolean_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Date_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Integer_Test.php';
+require_once $config->get('sysRoot').'alpha/tests/Exceptions_Test.php';
 
 /*
  * we are supressing the display and logging of errors on this page, as we 
@@ -125,6 +126,23 @@ class view_test_results extends Controller
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('Integer_Test');
+		$result = $suite->run();
+		$runningTime+=$result->time();
+				
+		if($result->wasSuccessful())
+			echo '<pre class="success">';
+		else
+			echo '<pre class="warning">';
+			
+		$report = new PHPUnit_TextUI_ResultPrinter();		
+		$report->printResult($result);
+		echo '</pre>';
+		
+		//------------------------------------------------
+		echo "<h3>Exception Handling:</h3>";
+		
+		$suite = new PHPUnit_Framework_TestSuite();
+		$suite->addTestSuite('Exceptions_Test');
 		$result = $suite->run();
 		$runningTime+=$result->time();
 				
