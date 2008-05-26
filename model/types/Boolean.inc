@@ -32,7 +32,7 @@ class Boolean {
 	 *
 	 * @var string
 	 */
-	private $validation_helper = 'Error: not a valid Boolean value!';
+	private $validationHelper = 'Error: not a valid Boolean value!';
 	
 	/**
 	 * Constructor
@@ -47,7 +47,7 @@ class Boolean {
 			$this->value = 0;
 			$this->booleanValue = false;
 		}else{
-			throw new AlphaFrameworkException($this->validation_helper);
+			throw new AlphaFrameworkException($this->validationHelper);
 		}
 	}
 	
@@ -64,7 +64,7 @@ class Boolean {
 			$this->value = 0;
 			$this->booleanValue = false;					
 		}else{
-			throw new AlphaFrameworkException($this->validation_helper);
+			throw new AlphaFrameworkException($this->validationHelper);
 		}
 	}
 	
@@ -92,7 +92,7 @@ class Boolean {
 	 * @return string
 	 */
 	function getHelper() {
-		return $this->validation_helper;
+		return $this->validationHelper;
 	}
 }
 
