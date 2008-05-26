@@ -46,41 +46,70 @@ class Date_Test extends PHPUnit_Framework_TestCase
     /**
      * testing the setValue method
      */
-    public function testSetValue() {
+    public function testSetValuePass() {
     	$this->date1->setValue(2000, 1, 1);
     	
     	$this->assertEquals("2000-01-01", $this->date1->getValue(), "testing the setValue method");
-    }    
+    }
+    
+    /**
+     * testing the setValue method with a bad month
+     */
+    public function testSetValueInvalidMonth() {
+    	try {    	
+    		$this->date1->setValue(2000, 'blah', 1);
+    	}catch (AlphaFrameworkException $e) {
+    		$this->assertEquals('Error: the month value blah provided is invalid!'
+    			, $e->getMessage()
+    			, "testing the setValue method with a bad month");
+    	}    	
+    }
+    
+	/**
+     * testing the setValue method with a bad date value (out of range)
+     */
+    public function testSetValueInvalidValue() {
+    	try {    	
+    		$this->date1->setValue(2000, 13, 1);
+    	}catch (AlphaFrameworkException $e) {
+    		$this->assertEquals('Error: the day value 2000-13-1 provided is invalid!'
+    			, $e->getMessage()
+    			, "testing the setValue method with a bad date value (out of range)");
+    	}    	
+    }
     
     /**
      * testing the populate_from_string method
      */
     public function testPopulateFromString() {
-    	$this->date1->populate_from_string("2007-08-13");
+    	$this->date1->populateFromString("2007-08-13");
     	
-    	$this->assertEquals("2007-08-13", $this->date1->getValue(), "testing the populate_from_string method");
+    	$this->assertEquals("2007-08-13", $this->date1->getValue(), "testing the populateFromString method");
     }
     
     /**
      * testing that the validation will cause an invalid date to fail on the constructor
      */
     public function testValidationOnConstructor() {
-    	$date = new Date("blah");    	
-    	$this->assertNull($date->get_year());
+    	try {
+    		$date = new Date("blah");    	
+    	}catch (AlphaFrameworkException $e) {
+    		$this->assertTrue(true, "testing that the validation will cause an invalid date to fail on the constructor");
+    	}
     }
     
     /**
      * testing the get_euro_value method for converting to European date format
      */
     public function testGetEuroValue() {
-    	$this->assertEquals(date("d/m/y"), $this->date1->get_euro_value(), "testing the get_euro_value method for converting to European date format");
+    	$this->assertEquals(date("d/m/y"), $this->date1->getEuroValue(), "testing the get_euro_value method for converting to European date format");
     }
     
     /**
-     * testing the get_weekday() method when the default constructor is used
+     * testing the getWeekday() method when the default constructor is used
      */
     public function testGetWeekday() {
-    	$this->assertEquals(date('l'),$this->date1->get_weekday(), "testing the get_weekday() method when the default constructor is used");
+    	$this->assertEquals(date('l'), $this->date1->getWeekday(), "testing the getWeekday() method when the default constructor is used");
     }
 }
 
