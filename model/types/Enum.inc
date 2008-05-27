@@ -1,86 +1,101 @@
 <?php
 
-// $Id$
+require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
 
 /**
  * The Enum complex data type
- * 
+ *
  * @package Alpha Core Datatype
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins
- * 
+ * @copyright 2008 John Collins
+ * @version $Id$
+ *
  */
 class Enum {
 	/**
-	 * an array of valid enum options
+	 * An array of valid enum options
 	 * @var array
 	 */
-	var $options;
+	private $options;
+
 	/**
-	 * the currently selected enum option
+	 * The currently selected enum option
+	 *
 	 * @var string
 	 */
-	var $value = '';
+	private $value = '';
+
 	/**
-	 * the message to display to the user when validation fails
+	 * The message to display to the user when validation fails
+	 *
 	 * @var string
 	 */
-	var $validation_helper = 'Error: not a valid enum option!';	
-	
+	private $validation_helper = 'Error: not a valid enum option!';
+
 	/**
-	 * constructor that sets up the enum options
+	 * Constructor that sets up the enum options
+	 *
 	 * @param array $opts
 	 */
-	function Enum($opts=array('')) {
-		$this->options = $opts;
+	public function __construct($opts=array('')) {
+		if(is_array($opts))
+			$this->options = $opts;
+		else
+			throw new AlphaFrameworkException('Error: not a valid enum option array!');
 	}
-	
+
 	/**
-	 * setter for the enum options
-	 * @param array $val
+	 * Setter for the enum options
+	 *
+	 * @param array $opts
 	 */
-	function set_options($opts=array('')) {		
-		$this->options = $opts;	
+	public function setOptions($opts) {
+		if(is_array($opts))
+			$this->options = $opts;
+		else
+			throw new AlphaFrameworkException('Error: not a valid enum option array!');
 	}
-	
+
 	/**
-	 * get the array of enum options
+	 * Get the array of enum options
+	 *
 	 * @param bool $alphaSort set to true if you want the Enum options in alphabetical order (default false)
-	 * @return array enum options
+	 * @return array
 	 */
-	function get_options($alphaSort = false) {
+	public function getOptions($alphaSort = false) {
 		if($alphaSort)
-			sort($this->options, SORT_STRING);		
+			sort($this->options, SORT_STRING);
 		return $this->options;
 	}
-	
+
 	/**
-	 * getter for the validation helper string
-	 * @return string validation_helper
-	 */	
-	function get_helper() {
+	 * Getter for the validation helper string
+	 *
+	 * @return string
+	 */
+	public function getHelper() {
 		return $this->validation_helper;
 	}
-	
+
 	/**
-	 * used to get the current enum item
-	 * @return string selected
+	 * Used to get the current enum item
+	 *
+	 * @return string
 	 */
-	function getValue() {
+	public function getValue() {
 		return $this->value;
 	}
-	
+
 	/**
-	 * used to select the current enum item
-	 * @param string $item
-	 * @return bool success status
+	 * Used to select the current enum item
+	 *
+	 * @param string $item The item to set as selected in the Enum
 	 */
-	function setValue($item) {
+	public function setValue($item) {
 		if (in_array($item, $this->options)) {
 			$this->value = $item;
-			return true;
 		}else{
-			return false;
+			throw new AlphaFrameworkException($this->getHelper());
 		}
 	}
 }

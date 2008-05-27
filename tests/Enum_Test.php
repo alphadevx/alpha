@@ -42,29 +42,7 @@ class Enum_Test extends PHPUnit_Framework_TestCase
     protected function tearDown() {        
         unset($this->enum1);
         unset($this->person);
-    }
-    
-    /**
-     * testing the enum select option methods for pass
-     */
-    public function testSetSelectPass() {
-    	$this->enum1->set_options(array('a','b','c'));
-    	
-    	$result = $this->enum1->setValue('b');
-    	
-    	$this->assertTrue($result, "testing the enum select option methods for pass");
-    }
-    
-    /**
-     * testing the enum select option methods for fail
-     */
-    public function testSetSelectFail() {
-    	$this->enum1->set_options(array('a','b','c'));
-    	
-    	$result = $this->enum1->setValue('x');
-    	
-    	$this->assertFalse($result, "testing the enum select option methods for fail");
-    }
+    }    
     
     /**
      * testing that enum options are loaded correctly from the database
@@ -81,30 +59,80 @@ class Enum_Test extends PHPUnit_Framework_TestCase
      * testing the set/get enum option methods
      */
     public function testSetEnumOptions() {
-    	$this->enum1->set_options(array('a','b','c'));
+    	$this->enum1->setOptions(array('a','b','c'));
     	
-    	$this->assertEquals($this->enum1->get_options(), array('a','b','c'), "testing the set/get enum option methods");
+    	$this->assertEquals($this->enum1->getOptions(), array('a','b','c'), "testing the set/get enum option methods");
     }
     
 	/**
      * testing the setValue method with good and bad values
      */
     public function testSetValue() {
-    	$this->enum1->set_options(array('a','b','c'));
+    	$this->enum1->setOptions(array('a','b','c'));
     	
-    	$this->assertTrue($this->enum1->setValue('a'), "testing the setValue method with a good value");
-    	$this->assertFalse($this->enum1->setValue('x'), "testing the setValue method with a bad value");
+    	try {    	
+    		$this->enum1->setValue('b');
+    	}catch (AlphaFrameworkException $e) {
+    		$this->fail('testing the setValue method with a good value');
+    	}
+    	
+    	try {    	
+    		$this->enum1->setValue('z');
+    	}catch (AlphaFrameworkException $e) {
+    		$this->assertEquals('Error: not a valid enum option!'
+    			, $e->getMessage()
+    			, 'testing the setValue method with a bad value');
+    	}
+    }
+    
+	/**
+     * testing the getValue method
+     */
+    public function testGetValue() {
+    	$this->enum1->setOptions(array('a','b','c'));
+    	
+    	try {    	
+    		$this->enum1->setValue('b');
+    	}catch (AlphaFrameworkException $e) {
+    		$this->fail('testing the getValue method');
+    	}
+    	
+    	$this->assertEquals('b', $this->enum1->getValue(), 'testing the getValue method');
     }
     
     /**
-     * testing the default (alphabetical) sort order on the enum
+     * test the constructor failing when a bad array is provided
+     */
+    public function testConstructorFail() {
+    	try {    	
+    		$enum = new Enum('blah');
+    	}catch (AlphaFrameworkException $e) {
+    		$this->assertEquals('Error: not a valid enum option array!'
+    			, $e->getMessage()
+    			, 'test the constructor failing when a bad array is provided');
+    	}
+    }
+    
+    /**
+     * testing the default (non-alphabetical) sort order on the enum
      */
     public function testDefaultSortOrder() {
     	$this->enum1 = new Enum(array("alpha","gamma","beta"));
     	
-    	$options = $this->enum1->get_options(true);
+    	$options = $this->enum1->getOptions();
     	 
-    	$this->assertEquals($options[1], "beta", "testing the default (alphabetical) sort order on the enum");
+    	$this->assertEquals($options[1], 'gamma', 'testing the default (non-alphabetical) sort order on the enum');
+    }
+    
+	/**
+     * testing the alphabetical sort order on the enum
+     */
+    public function testAlphaSortOrder() {
+    	$this->enum1 = new Enum(array("alpha","gamma","beta"));
+    	
+    	$options = $this->enum1->getOptions(true);
+    	 
+    	$this->assertEquals($options[1], 'beta', 'testing the alphabetical sort order on the enum');
     }
 }
 

@@ -798,7 +798,7 @@ class mysql_DAO
 					$row = mysql_fetch_row($result);
 					$options = explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2",$row[1]));
 					
-					$properties[$prop]->set_options($options);
+					$properties[$prop]->setOptions($options);
 				}
 			}
 		}
