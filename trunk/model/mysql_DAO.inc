@@ -145,10 +145,10 @@ class mysql_DAO
 	 * @param string $value The value of the attribute to load the object by
 	 * @return bool True if no database error occured, else false and error is stored in $this->last_query
 	 */
-	function load_by_attribute($attribute, $value)
+	function loadByAttribute($attribute, $value)
 	{
-		if(method_exists($this, 'before_load_by_attribute_callback'))
-				$this->before_load_by_attribute_callback();
+		if(method_exists($this, 'before_loadByAttribute_callback'))
+				$this->before_loadByAttribute_callback();
 		
 		$sql_query = "SELECT * FROM ".$this->getTableName()." WHERE $attribute = '$value';";
 
@@ -157,7 +157,7 @@ class mysql_DAO
 		$result = mysql_query($sql_query);
 		
 		if(mysql_num_rows($result) == 0) {
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load object, MySql error is: '.mysql_error().', query: '.$this->last_query,"load_by_attribute([$attribute], [$value])",'framework');
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load object, MySql error is: '.mysql_error().', query: '.$this->last_query,"loadByAttribute([$attribute], [$value])",'framework');
 			return false;
 		}
 		
@@ -182,12 +182,12 @@ class mysql_DAO
 		}		
 		
 		if(mysql_error() == '' && $this->set_enum_options()) {
-			if(method_exists($this, 'after_load_by_attribute_callback'))
-				$this->after_load_by_attribute_callback();
+			if(method_exists($this, 'after_loadByAttribute_callback'))
+				$this->after_loadByAttribute_callback();
 			return true;
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load object, MySql error is: '.mysql_error().', query: '.$this->last_query,"load_by_attribute([$attribute], [$value])",'framework');
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load object, MySql error is: '.mysql_error().', query: '.$this->last_query,"loadByAttribute([$attribute], [$value])",'framework');
 			return false;
 		}		
 	}
