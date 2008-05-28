@@ -103,7 +103,7 @@ class mysql_DAO
 			$this->before_load_callback();
 		
 		$this->OID = $OID;
-		$sql_query = "SELECT * FROM ".$this->TABLE_NAME." WHERE OID = '$OID';";		
+		$sql_query = "SELECT * FROM ".$this->getTableName()." WHERE OID = '$OID';";		
 
 		$this->last_query = $sql_query;
 
@@ -150,7 +150,7 @@ class mysql_DAO
 		if(method_exists($this, 'before_load_by_attribute_callback'))
 				$this->before_load_by_attribute_callback();
 		
-		$sql_query = "SELECT * FROM ".$this->TABLE_NAME." WHERE $attribute = '$value';";
+		$sql_query = "SELECT * FROM ".$this->getTableName()." WHERE $attribute = '$value';";
 
 		$this->last_query = $sql_query;
 		
@@ -211,7 +211,7 @@ class mysql_DAO
 		if ($limit == 0)
 			$limit = $config->get('sysListPageAmount');
 		
-		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
+		$sql_query = "SELECT OID FROM ".$this->getTableName()." ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
 		
 		$this->last_query = $sql_query;
 
@@ -261,7 +261,7 @@ class mysql_DAO
 		if ($limit == 0)
 			$limit = $config->get('sysListPageAmount');
 		
-		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE $attribute = '$value' ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
+		$sql_query = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = '$value' ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
 		
 		$this->last_query = $sql_query;
 
@@ -319,7 +319,7 @@ class mysql_DAO
 		$this->updated_ts = new Timestamp();
 
 		if(empty($this->OID) || !isset($this->OID) || $this->OID == '00000000000') {
-			$sql_query = "INSERT INTO ".$this->TABLE_NAME." (";
+			$sql_query = "INSERT INTO ".$this->getTableName()." (";
 
 			foreach(array_keys($properties) as $prop) {
 				if (get_class($this->$prop) != false && !in_array($prop, $this->transient_attributes)) {
@@ -346,7 +346,7 @@ class mysql_DAO
 
 			$sql_query .= ");";
 		}else{
-			$sql_query = "UPDATE ".$this->TABLE_NAME." SET ";
+			$sql_query = "UPDATE ".$this->getTableName()." SET ";
 
 			foreach(array_keys($properties) as $prop) {
 				if (get_class($this->$prop) != false && $prop != "version_num" && !in_array($prop, $this->transient_attributes)) {
@@ -430,7 +430,7 @@ class mysql_DAO
 		if(method_exists($this, 'before_delete_callback'))
 				$this->before_delete_callback();
 			
-		$sql_query = "DELETE FROM ".$this->TABLE_NAME." WHERE OID = '".$this->OID."';";		
+		$sql_query = "DELETE FROM ".$this->getTableName()." WHERE OID = '".$this->OID."';";		
 		
 		$this->last_query = $sql_query;
 
@@ -456,7 +456,7 @@ class mysql_DAO
 		if(method_exists($this, 'before_get_version_callback'))
 			$this->before_load_callback();
 		
-		$sql_query = 'SELECT version_num FROM '.$this->TABLE_NAME.' WHERE OID = \''.$this->OID.'\';';
+		$sql_query = 'SELECT version_num FROM '.$this->getTableName().' WHERE OID = \''.$this->OID.'\';';
 		
 		$this->last_query = $sql_query;
 
@@ -493,7 +493,7 @@ class mysql_DAO
 		$properties = get_object_vars($this);
 		$obj_type = '';
 		
-		$sql_query = "DROP TABLE IF EXISTS ".$this->TABLE_NAME.";";
+		$sql_query = "DROP TABLE IF EXISTS ".$this->getTableName().";";
 		
 		$this->last_query = $sql_query;
 
@@ -501,10 +501,10 @@ class mysql_DAO
 
 		if (mysql_error() != '') {
 			$this->last_query .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to create the table for this class: '.$this->TABLE_NAME.', query is : '.$this->last_query,'make_table()','framework');
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to create the table for this class: '.$this->getTableName().', query is : '.$this->last_query,'make_table()','framework');
 		}
 
-		$sql_query = "CREATE TABLE ".$this->TABLE_NAME." (OID INT(11) ZEROFILL NOT NULL AUTO_INCREMENT,";
+		$sql_query = "CREATE TABLE ".$this->getTableName()." (OID INT(11) ZEROFILL NOT NULL AUTO_INCREMENT,";
 
 		foreach(array_keys($properties) as $prop) {			
 			if(!in_array($prop, $this->transient_attributes) && $prop != "OID") {				
@@ -565,7 +565,7 @@ class mysql_DAO
 			return true;
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to create the table for this class: '.$this->TABLE_NAME.', query is : '.$this->last_query,'make_table()','framework');
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to create the table for this class: '.$this->getTableName().', query is : '.$this->last_query,'make_table()','framework');
 			return false;
 		}
 	}
@@ -579,7 +579,7 @@ class mysql_DAO
 		if(method_exists($this, 'before_rebuild_table_callback'))
 			$this->before_rebuild_table_callback();
 		
-		$sql_query = "DROP TABLE IF EXISTS ".$this->TABLE_NAME.";";
+		$sql_query = "DROP TABLE IF EXISTS ".$this->getTableName().";";
 
 		$this->last_query = $sql_query;
 
@@ -607,7 +607,7 @@ class mysql_DAO
 		if(method_exists($this, 'before_add_property_callback'))
 			$this->before_add_property_callback();
 		
-		$sql_query = "ALTER TABLE ".$this->TABLE_NAME." ADD ";
+		$sql_query = "ALTER TABLE ".$this->getTableName()." ADD ";
 
 		if(!in_array($prop, $this->default_attributes)) {
 			
@@ -667,7 +667,7 @@ class mysql_DAO
 			return true;
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to add the new attribute ['.$prop.'] to the table '.$this->TABLE_NAME.', database error: '.$this->last_query, 'add_property()', 'framework');
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to add the new attribute ['.$prop.'] to the table '.$this->getTableName().', database error: '.$this->last_query, 'add_property()', 'framework');
 			return false;
 		}
 	}
@@ -716,7 +716,7 @@ class mysql_DAO
 		if(method_exists($this, 'before_get_MAX_callback'))
 			$this->before_get_MAX_callback();
 		
-		$sql_query = "SELECT MAX(OID) AS max_ID FROM ".$this->TABLE_NAME;
+		$sql_query = "SELECT MAX(OID) AS max_ID FROM ".$this->getTableName();
 
 		$this->last_query = $sql_query;
 
@@ -744,7 +744,7 @@ class mysql_DAO
 		if(method_exists($this, 'before_get_count_callback'))
 			$this->before_get_count_callback();
 		
-		$sql_query = "SELECT COUNT(OID) AS class_count FROM ".$this->TABLE_NAME;
+		$sql_query = "SELECT COUNT(OID) AS class_count FROM ".$this->getTableName();
 
 		$this->last_query = $sql_query;
 
@@ -789,7 +789,7 @@ class mysql_DAO
 				$obj_type = get_class($properties[$prop]);				
 
 				if ($obj_type == 'Enum') {
-					$sql_query = "SHOW COLUMNS FROM ".$this->TABLE_NAME." LIKE '".$prop."'";
+					$sql_query = "SHOW COLUMNS FROM ".$this->getTableName()." LIKE '".$prop."'";
 					
 					$this->last_query = $sql_query;
 					
@@ -919,7 +919,7 @@ class mysql_DAO
 		$result = mysql_list_tables($config->get('sysDB'));
 		
 		while ($row = mysql_fetch_row($result)) {    		
-    		if ($row[0] == $this->TABLE_NAME)
+    		if ($row[0] == $this->getTableName())
     			$table_exists = true;
 		}		
 		
@@ -952,7 +952,7 @@ class mysql_DAO
 			
 			$match_count = 0;
 			
-			$result = mysql_query("SHOW COLUMNS FROM ".$this->TABLE_NAME);
+			$result = mysql_query("SHOW COLUMNS FROM ".$this->getTableName());
 			
 			$properties = get_class_vars(get_class($this));			
 			
@@ -1007,7 +1007,7 @@ class mysql_DAO
 			
 		$match_count = 0;
 			
-		$result = mysql_query("SHOW COLUMNS FROM ".$this->TABLE_NAME);
+		$result = mysql_query("SHOW COLUMNS FROM ".$this->getTableName());
 			
 		$properties = get_class_vars(get_class($this));		
 			
@@ -1043,14 +1043,18 @@ class mysql_DAO
 	}
 	
 	/**
-	 * getter for the TABLE_NAME, which should be set by a child of this class
-	 * @return string $TABLE_NAME
+	 * Getter for the TABLE_NAME, which should be set by a child of this class
+	 * 
+	 * @return string
 	 */
-	function get_table_name() {
-		if (isset($this->TABLE_NAME))
-			return $this->TABLE_NAME;
-		else
-			return "unset";
+	function getTableName() {
+		eval('$TABLE_NAME = '.get_class($this).'::TABLE_NAME;');
+		
+		if(!empty($TABLE_NAME)) {
+    		return $TABLE_NAME;        
+    	}else{
+    		throw new AlphaFrameworkException('Error: no TABLE_NAME constant set for the class '.get_class($this));		
+    	}
 	}
 	
 	/**
@@ -1089,7 +1093,7 @@ class mysql_DAO
 	 * adds the name of the atribute provided to the list of transient (non-saved) attributes for this BO
 	 * @param string attribute_name the name of the attribute to mark as transient
 	 */
-	function mark_transient($attribute_name) {
+	function markTransient($attribute_name) {
 		array_push($this->transient_attributes, $attribute_name);		
 	}
 	
@@ -1108,7 +1112,7 @@ class mysql_DAO
 		if(method_exists($this, 'before_check_indexes_callback'))
 			$this->before_check_indexes_callback();
 		
-		$result = mysql_query("SHOW INDEX FROM ".$this->TABLE_NAME);
+		$result = mysql_query("SHOW INDEX FROM ".$this->getTableName());
 		
 		// process unique keys
 		foreach($this->unique_attributes as $prop) {
@@ -1139,7 +1143,7 @@ class mysql_DAO
 		if(method_exists($this, 'before_create_unique_index_callback'))
 			$this->before_create_unique_index_callback();
 		
-		$sql_query = 'CREATE UNIQUE INDEX '.$prop.'_unq_idx ON '.$this->TABLE_NAME.' ('.$prop.');';
+		$sql_query = 'CREATE UNIQUE INDEX '.$prop.'_unq_idx ON '.$this->getTableName().' ('.$prop.');';
 		
 		$this->last_query = $sql_query;
 
@@ -1150,7 +1154,7 @@ class mysql_DAO
 				$this->after_create_unique_index_callback();
 		}else{
 			$this->last_query .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to create the index '.$prop.'_unq_idx on '.$this->TABLE_NAME.', query is : '.$this->last_query,'createUniqueIndex()','framework');
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to create the index '.$prop.'_unq_idx on '.$this->getTableName().', query is : '.$this->last_query,'createUniqueIndex()','framework');
 		}
 	}
 	

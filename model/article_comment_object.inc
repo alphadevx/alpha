@@ -43,7 +43,7 @@ class article_comment_object extends mysql_DAO
 	 * the name of the database table for the class
 	 * @var string
 	 */
-	var $TABLE_NAME = "article_comment";
+	const TABLE_NAME = 'article_comment';
 	
 	/**
 	 * constructor for the class

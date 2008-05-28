@@ -54,7 +54,8 @@ class person_object extends mysql_DAO
 	 * the name of the database table for the class
 	 * @var string
 	 */
-	var $TABLE_NAME = "person";
+	const TABLE_NAME = 'person';
+	
 	/**
 	 * the state of the person
 	 * @var Enum
@@ -107,7 +108,7 @@ class person_object extends mysql_DAO
 	{
 		$this->displayname->setValue($displayname);
 		
-		$sql_query = "SELECT oid FROM ".$this->TABLE_NAME." WHERE displayname = '$displayname';";		
+		$sql_query = "SELECT oid FROM ".self::TABLE_NAME." WHERE displayname = '$displayname';";		
 
 		$this->last_query = $sql_query;
 
@@ -143,7 +144,7 @@ class person_object extends mysql_DAO
 	{
 		$this->email->setValue($email);
 		
-		$sql_query = "SELECT oid FROM ".$this->TABLE_NAME." WHERE email = '$email';";		
+		$sql_query = "SELECT oid FROM ".self::TABLE_NAME." WHERE email = '$email';";		
 
 		$this->last_query = $sql_query;
 
@@ -221,7 +222,7 @@ class person_object extends mysql_DAO
 	 */
 	function load_from_email($email)
 	{		
-		$sql_query = "SELECT * FROM ".$this->TABLE_NAME." WHERE email = '$email';";		
+		$sql_query = "SELECT * FROM ".self::TABLE_NAME." WHERE email = '$email';";		
 
 		$this->last_query = $sql_query;
 
@@ -300,7 +301,7 @@ class person_object extends mysql_DAO
 	function get_comment_count() {
 		$temp = new article_comment_object();
 		
-		$sql_query = "SELECT COUNT(OID) AS post_count FROM ".$temp->TABLE_NAME." WHERE created_by='".$this->OID."';";
+		$sql_query = "SELECT COUNT(OID) AS post_count FROM ".self::TABLE_NAME." WHERE created_by='".$this->OID."';";
 
 		$this->last_query = $sql_query;
 

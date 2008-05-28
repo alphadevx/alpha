@@ -592,7 +592,7 @@ class View {
 
 		// and now the values
 		echo '	<td>&nbsp;'.get_class($this->BO).'</td>';
-		echo '	<td>&nbsp;'.$this->BO->get_table_name().'</td>';
+		echo '	<td>&nbsp;'.$this->BO->getTableName().'</td>';
 		echo '	<td>&nbsp;'. ($this->BO->check_table_exists() ? $this->BO->get_count() : '<span class="warning">unavailable</span>').'</td>';
 		echo '	<td>&nbsp;'. ($this->BO->check_table_exists() ? '<span class="success">Yes</span>' : '<span class="warning">No</span>').'</td>';
 		echo '	<td>&nbsp;'. ($this->BO->check_table_needs_update() ? '<span class="warning">Yes</span>' : '<span class="success">No</span>').'</td>';

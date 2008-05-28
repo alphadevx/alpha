@@ -28,7 +28,7 @@ class DEnumItem extends mysql_DAO {
 	 * The name of the database table for the class
 	 * @var string
 	 */
-	var $TABLE_NAME = "DEnumItem";
+	const TABLE_NAME = 'DEnumItem';
 	
 	/**
 	 * an array of data display labels for the class properties
@@ -63,7 +63,7 @@ class DEnumItem extends mysql_DAO {
 		
 		$this->DEnumID->setValue($EnumID);
 		
-		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE DEnumID = '".$EnumID."';";
+		$sql_query = "SELECT OID FROM ".self::TABLE_NAME." WHERE DEnumID = '".$EnumID."';";
 		
 		$this->last_query = $sql_query;
 
