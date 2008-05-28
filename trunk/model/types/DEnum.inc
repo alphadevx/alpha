@@ -1,7 +1,5 @@
 <?php
 
-// $Id$
-
 /**
  * The DEnum (Dynamic Enum) complex data type.  Similiar to Enum, 
  * except list items are stored in a database table and are editable.
@@ -9,83 +7,100 @@
  * @package Alpha Core Datatype
  * @author John Collins <john@design-ireland.net>
  * @copyright 2008 John Collins
+ * @version $Id$
  * 
  */
 class DEnum extends mysql_DAO {
 	/**
-	 * an array of valid DEnum options
+	 * An array of valid DEnum options
+	 * 
 	 * @var array
 	 */
-	var $options;
+	private $options;
 	
 	/**
-	 * the currently selected DEnum option
+	 * The currently selected DEnum option
+	 * 
 	 * @var int
 	 */
-	var $value;
+	private $value;
 	
 	/**
 	 * The name of the DEnum used in the database
+	 * 
 	 * @var String
 	 */
-	var $name;	
+	private $name;	
 	
 	/**
-	 * the name of the database table for the class
+	 * The name of the database table for the class
+	 * 
 	 * @var string
 	 */
-	var $TABLE_NAME = "DEnum";
+	const TABLE_NAME = 'DEnum';
 	
 	/**
-	 * an array of data display labels for the class properties
+	 * An array of data display labels for the class properties
+	 * 
 	 * @var array
 	 */
-	var $data_labels = array(
+	protected $dataLabels = array(
 		"OID"=>"DEnum ID#",
 		"name"=>"Name"		
 	);
 	
 	/**
-	 * constructor that sets up the DEnum options
-	 * @param String $name The name of the DEnum used in the database
+	 * The message to display to the user when validation fails
+	 *
+	 * @var string
 	 */
-	function DEnum($name=null) {
+	private $validationHelper = 'Error: not a valid denum option!';
+	
+	/**
+	 * Constructor that sets up the DEnum options
+	 * 
+	 * @param String $name
+	 */
+	public function __construct($name=null) {
 		// ensure to call the parent constructor
-		$this->mysql_DAO();
+		parent::__construct();
 		
-		$this->mark_transient("options");
-		$this->mark_transient("value");
+		$this->markTransient('options');
+		$this->markTransient('value');
 		
 		$this->name = new String($name);
 		
-		if(isset($name))
-			$this->get_options();
+		if(isset($name)) {
+			$this->loadByAttribute('name',$name);
+			$this->getOptions();
+		}
 	}
 	
 	/**
-	 * setter for the name
-	 * @param String $name The name of the DEnum used in the database
+	 * Setter for the name of the DEnum used in the database
+	 * 
+	 * @param String $name
 	 */
-	function set_name($name) {		
+	public function setName($name) {		
 		$this->name->setValue($name);	
 	}
 	
 	/**
 	 * Get the array of DEnum options from the database
-	 * @param bool $alphaSort set to true if you want the DEnum options in alphabetical order (default false)
-	 * @return array enum options
+	 * 
+	 * @param bool $alphaSort
+	 * @return array
 	 */
-	function get_options($alphaSort = false) {
+	public function getOptions($alphaSort = false) {
 		
-		$sql_query = "SELECT * FROM ".$this->TABLE_NAME." WHERE name = '".$this->name->getValue()."';";
+		$sql_query = 'SELECT * FROM '.self::TABLE_NAME.' WHERE name = \''.$this->name->getValue().'\';';
 
-		$this->last_query = $sql_query;
+		$this->lastQuery = $sql_query;
 		
 		$result = mysql_query($sql_query);
 		
 		if(mysql_num_rows($result) == 0) {
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load DEnum '.$this->name->getValue().', not found in database.' ,'get_options()','framework');
-			return false;
+			throw new AlphaFrameworkException('Failed to load DEnum '.$this->name->getValue().', not found in database.');
 		}
 		
 		// now build an array of item indexes to be returned		
@@ -106,29 +121,32 @@ class DEnum extends mysql_DAO {
 	}
 	
 	/**
-	 * getter for the validation helper string
-	 * @return string validation_helper
+	 * Getter for the validation helper string
+	 * 
+	 * @return string
 	 */	
-	function get_helper() {
-		return $this->validation_helper;
+	public function getHelper() {
+		return $this->validationHelper;
 	}
 	
 	/**
-	 * used to get the current DEnum item selected index value
-	 * @return int selected
+	 * Used to get the current DEnum item selected index value
+	 * 
+	 * @return int
 	 */
-	function getValue() {		
+	public function getValue() {		
 		return $this->value;		
 	}
 	
 	/**
-	 * used to get the current DEnum item string value
-	 * @return string selected
+	 * Used to get the current DEnum item string value
+	 * 
+	 * @return string
 	 */
-	function get_display_value() {
+	public function getDisplayValue() {
 		// check to see if the options have already been loaded from the DB
 		if(empty($this->options))
-			$this->get_options();		
+			$this->getOptions();		
 		
 		if(isset($this->options[$this->value]))
 			return $this->options[$this->value];
@@ -137,31 +155,32 @@ class DEnum extends mysql_DAO {
 	}
 	
 	/**
-	 * used to select the current DEnum item
+	 * Used to select the current DEnum item
+	 * 
 	 * @param string $item
-	 * @return bool success status
+	 * @return bool
 	 */
-	function setValue($item) {
+	public function setValue($item) {
 		// check to see if the options have already been loaded from the DB
 		if(empty($this->options))
-			$this->get_options();
+			$this->getOptions();
 		
 		// confirm that the item ID provided is a valid key for the options array
 		if (in_array($item, array_keys($this->options))) {
-			$this->value = $item;
-			return true;
+			$this->value = $item;			
 		}else{
-			return false;
+			throw new AlphaFrameworkException($this->getHelper());			
 		}
 	}
 	
 	/**
-	 * gets the count from the database of the DEnumItems associated with this object
-	 * @return integer The count
+	 * Gets the count from the database of the DEnumItems associated with this object
+	 * 
+	 * @return integer
 	 */
-	function get_item_count() {		
+	public function getItemCount() {		
 		
-		$sql_query = "SELECT COUNT(OID) AS item_count FROM DEnumItem WHERE DEnumID = '".$this->get_ID()."'";
+		$sql_query = 'SELECT COUNT(OID) AS item_count FROM DEnumItem WHERE DEnumID = \''.$this->get_ID().'\';';
 
 		$this->last_query = $sql_query;
 
@@ -173,17 +192,18 @@ class DEnum extends mysql_DAO {
 			return $row["item_count"];
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to get the item count for the DEnum','get_item_count()','framework');
-			return 0;
+			throw new AlphaFrameworkException('Failed to get the item count for the DEnum.');			
 		}
 	}
 
 	/**
-	 * used to get the DenumItem ID for the given option name
+	 * Used to get the DenumItem ID for the given option name
+	 * 
+	 * @param string $optionName
 	 */
-	function getOptionID($optionName) {
+	public function getOptionID($optionName) {
 		$denumItem = new DEnumItem();
-		$denumItem->load_by_attribute('value', $optionName);
+		$denumItem->loadByAttribute('value', $optionName);
 		$id = $denumItem->get_ID();
 		
 		if(!empty($id))
