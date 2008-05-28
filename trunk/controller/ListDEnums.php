@@ -86,21 +86,21 @@ class ListDEnums extends ListAll
 	function create_DEnum_tables() {
 		$tmpDEnum = new DEnum();
 
-		echo '<p>Attempting to build table '.$tmpDEnum->TABLE_NAME.' for class DEnum : </p>';
+		echo '<p>Attempting to build table '.DEnum::TABLE_NAME.' for class DEnum : </p>';
 		
 		$result = $tmpDEnum->make_table();
 		
 		if($result)
-			echo '<p class="success">Successfully re-created the database table '.$tmpDEnum->TABLE_NAME.'</p>';
+			echo '<p class="success">Successfully re-created the database table '.DEnum::TABLE_NAME.'</p>';
 				
 		$tmpDEnumItem = new DEnumItem();
 		
-		echo '<p>Attempting to build table '.$tmpDEnumItem->TABLE_NAME.' for class DEnumItem : </p>';
+		echo '<p>Attempting to build table '.DEnumItem::TABLE_NAME.' for class DEnumItem : </p>';
 		
 		$result = $tmpDEnumItem->make_table();
 		
 		if($result)
-			echo '<p class="success">Successfully re-created the database table '.$tmpDEnumItem->TABLE_NAME.'</p>';		
+			echo '<p class="success">Successfully re-created the database table '.DEnumItem::TABLE_NAME.'</p>';		
 	}
 }
 

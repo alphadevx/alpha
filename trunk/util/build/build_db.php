@@ -28,7 +28,7 @@ include("../../model/article_object.inc");
 
 $tmpPerson = new person_object();
 
-echo "Attempting to build table ".$tmpPerson->TABLE_NAME." for class person : \n";
+echo "Attempting to build table ".$tmpPerson->getTableName()." for class person : \n";
 
 $result = $tmpPerson->make_table();
 
@@ -39,40 +39,40 @@ $tmpPerson->set_access_level("Administrator");
 $tmpPerson->save_object();
 
 if($result)
-	echo "Successfully re-created the database table ".$tmpPerson->TABLE_NAME."\n";
+	echo "Successfully re-created the database table ".$tmpPerson->getTableName()."\n";
 else
 	echo "QUERY FAILED : ".$tmpPerson->last_query."\n";
 	
 $tmpArticle = new article_object();
 
-echo "Attempting to build table ".$tmpArticle->TABLE_NAME." for class article : \n";
+echo "Attempting to build table ".$tmpArticle->getTableName()." for class article : \n";
 
 $result = $tmpArticle->make_table();
 
 if($result)
-	echo "Successfully re-created the database table ".$tmpArticle->TABLE_NAME."\n";
+	echo "Successfully re-created the database table ".$tmpArticle->getTableName()."\n";
 else
 	echo "QUERY FAILED : ".$tmpArticle->last_query."\n";	
 
 $tmpDEnum = new DEnum();
 
-echo "Attempting to build table ".$tmpDEnum->TABLE_NAME." for class article : \n";
+echo "Attempting to build table ".$tmpDEnum->getTableName()." for class article : \n";
 
 $result = $tmpDEnum->make_table();
 
 if($result)
-	echo "Successfully re-created the database table ".$tmpDEnum->TABLE_NAME."\n";
+	echo "Successfully re-created the database table ".$tmpDEnum->getTableName()."\n";
 else
 	echo "QUERY FAILED : ".$tmpDEnum->last_query."\n";	
 
 $tmpDEnumItem = new DEnumItem();
 
-echo "Attempting to build table ".$tmpDEnumItem->TABLE_NAME." for class DEnumItem : \n";
+echo "Attempting to build table ".$tmpDEnumItem->getTableName()." for class DEnumItem : \n";
 
 $result = $tmpDEnumItem->make_table();
 
 if($result)
-	echo "Successfully re-created the database table ".$tmpDEnumItem->TABLE_NAME."\n";
+	echo "Successfully re-created the database table ".$tmpDEnumItem->getTableName()."\n";
 else
 	echo "QUERY FAILED : ".$tmpDEnumItem->last_query."\n";	
 

@@ -189,9 +189,9 @@ class Search extends Controller
 		$BO = new $this->BO_name();
 	
 		if($this->BO_name == "article_object")
-			$sql_query = 'SELECT * FROM '.$BO->TABLE_NAME.' WHERE published=\'1\';';
+			$sql_query = 'SELECT * FROM '.$BO->getTableName().' WHERE published=\'1\';';
 		else
-			$sql_query = 'SELECT * FROM '.$BO->TABLE_NAME.';';
+			$sql_query = 'SELECT * FROM '.$BO->getTableName().';';
 	
 		// now run the query, and store the result
 		$result = mysql_query($sql_query);
@@ -275,7 +275,7 @@ class Search extends Controller
 		
 		$BO = new $this->BO_name();
 	
-		$sql_query = 'SELECT * FROM '.$BO->TABLE_NAME.' WHERE section=\''.$section.'\' AND published=\'1\' ORDER BY date_added DESC;';
+		$sql_query = 'SELECT * FROM '.$BO->getTableName().' WHERE section=\''.$section.'\' AND published=\'1\' ORDER BY date_added DESC;';
 	
 		// now run the query, and store the result
 		$result = mysql_query($sql_query);

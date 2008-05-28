@@ -50,7 +50,7 @@ class article_vote_object extends mysql_DAO
 	 * the name of the database table for the class
 	 * @var string
 	 */
-	var $TABLE_NAME = "article_vote";
+	const TABLE_NAME = 'article_vote';
 	
 	/**
 	 * constructor for the class

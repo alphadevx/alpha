@@ -110,7 +110,7 @@ class article_object extends mysql_DAO
 	 * the name of the database table for the class
 	 * @var string
 	 */
-	var $TABLE_NAME = "article";
+	const TABLE_NAME = 'article';
 	
 	/**
 	 * the URL for this article (transient)
@@ -158,8 +158,8 @@ class article_object extends mysql_DAO
 		$this->published = new Boolean(0);
 		
 		// mark the URL attributes as transient
-		$this->mark_transient('URL');
-		$this->mark_transient('printURL');
+		$this->markTransient('URL');
+		$this->markTransient('printURL');
 		
 		// mark title as unique
 		$this->mark_unique('title');
@@ -209,7 +209,7 @@ class article_object extends mysql_DAO
 		$denum = new DEnum('article_object::section');
 		$excludeID = $denum->getOptionID('Main');
 		
-		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE published='1' AND section!='$excludeID' ORDER BY date_added DESC LIMIT 0, 2;";		
+		$sql_query = "SELECT OID FROM ".self::TABLE_NAME." WHERE published='1' AND section!='$excludeID' ORDER BY date_added DESC LIMIT 0, 2;";		
 
 		$this->last_query = $sql_query;
 
@@ -237,7 +237,7 @@ class article_object extends mysql_DAO
 	 * @param string $section the article category section to fetch the ten articles from 
 	 */
 	function get_ten_most_recent($section){
-		$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE published='1' AND section='".$section."' ORDER BY date_added DESC LIMIT 0, 10;";		
+		$sql_query = "SELECT OID FROM ".self::TABLE_NAME." WHERE published='1' AND section='".$section."' ORDER BY date_added DESC LIMIT 0, 10;";		
 
 		$this->last_query = $sql_query;
 
@@ -308,7 +308,7 @@ class article_object extends mysql_DAO
 		if(method_exists($this, 'after_load_callback'))
 				$this->after_load_callback();
 		
-		$sql_query = "SELECT * FROM ".$this->TABLE_NAME." WHERE title = '$title';";
+		$sql_query = "SELECT * FROM ".self::TABLE_NAME." WHERE title = '$title';";
 
 		$this->last_query = $sql_query;
 		
@@ -483,9 +483,9 @@ class article_object extends mysql_DAO
 		
 		// exclude 'General' articles when we are accessing from a news feed
 		if(basename($_SERVER["PHP_SELF"]) == "view_feed.php" || (isset($_GET["act"]) && $_GET["act"] == "view_feed"))
-			$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE published='1' AND section!='General' ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
+			$sql_query = "SELECT OID FROM ".self::TABLE_NAME." WHERE published='1' AND section!='General' ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
 		else
-			$sql_query = "SELECT OID FROM ".$this->TABLE_NAME." WHERE published='1' ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
+			$sql_query = "SELECT OID FROM ".self::TABLE_NAME." WHERE published='1' ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
 		
 		$this->last_query = $sql_query;
 
