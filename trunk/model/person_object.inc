@@ -41,7 +41,7 @@ class person_object extends mysql_DAO
 	 * an array of data display labels for the class properties
 	 * @var array
 	 */
-	var $data_labels = array(
+	var $dataLabels = array(
 		"OID"=>"Member ID#",		
 		"displayname"=>"Forum Name",		
 		"email"=>"E-mail Address",
