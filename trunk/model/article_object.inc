@@ -89,7 +89,7 @@ class article_object extends mysql_DAO
 	 * an array of data display labels for the class properties
 	 * @var array
 	 */
-	var $data_labels = array(
+	var $dataLabels = array(
 		"OID"=>"Article ID#",		
 		"title"=>"Title",
 		"section"=>"Site Section",

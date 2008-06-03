@@ -39,7 +39,7 @@ class article_vote_object extends mysql_DAO
 	 * an array of data display labels for the class properties
 	 * @var array
 	 */
-	var $data_labels = array(
+	var $dataLabels = array(
 		"OID"=>"Article Vote ID#",
 		"article_oid"=>"Article ID#",
 		"person_oid"=>"Person ID#",

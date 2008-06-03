@@ -33,7 +33,7 @@ class article_comment_object extends mysql_DAO
 	 * an array of data display labels for the class properties
 	 * @var array
 	 */
-	var $data_labels = array(
+	var $dataLabels = array(
 		"OID"=>"Article Comment ID#",
 		"article_oid"=>"Article ID#",		
 		"content"=>"Your Comment"
