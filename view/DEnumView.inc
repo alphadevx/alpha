@@ -40,6 +40,7 @@ class DEnumView extends View
 		global $config;
 
 		$properties = get_object_vars($this->BO);
+		$labels = $this->BO->getDataLabels();
 		$obj_type = '';
 
 		$col_count = 1;
@@ -51,12 +52,12 @@ class DEnumView extends View
 		foreach (array_keys($properties) as $prop) {
 			if (!in_array($prop, $this->BO->default_attributes) && !in_array($prop, $this->BO->transient_attributes)) {
 				if (get_class($properties[$prop]) != "Text") {
-					$col_count ++;
-					echo '	<th>'.$this->BO->data_labels[$prop].'</th>';
+					$col_count ++;					
+					echo '	<th>'.$labels[$prop].'</th>';
 				}
 			}
 			if ($prop == "OID")
-				echo '	<th>'.$this->BO->data_labels[$prop].'</th>';			
+				echo '	<th>'.$labels[$prop].'</th>';			
 		}
 		// render the count
 		echo '	<th>Item count</th>';
@@ -74,7 +75,7 @@ class DEnumView extends View
 				echo '	<td>&nbsp;'.$this->BO->get_ID().'</td>';
 		}
 		// render the count
-		echo '	<td>&nbsp;'.$this->BO->get_item_count().'</td>';
+		echo '	<td>&nbsp;'.$this->BO->getItemCount().'</td>';
 		
 		echo '</tr>';
 
@@ -100,12 +101,13 @@ class DEnumView extends View
 		global $config;
 
 		$properties = get_object_vars($this->BO);
+		$labels = $this->BO->getDataLabels();
 		$obj_type = '';
 
 		echo '<table cols="2" class="edit_view">';
 		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
 		
-		$temp = new string_box($this->BO->get_prop_object("name"), $this->BO->data_labels["name"], "name", "", 0, true, true);
+		$temp = new string_box($this->BO->get_prop_object("name"), $labels["name"], "name", "", 0, true, true);
 		
 		echo '<tr><td colspan="2"><h3>DEnum display values:</h3></td></tr>';
 		
@@ -115,14 +117,15 @@ class DEnumView extends View
 		$denumItems = $tmp->load_items($denum->get_ID());						
 		
 		foreach ($denumItems as $item) {
-			$temp = new string_box($item->get_prop_object("value"), $item->data_labels["value"], "value_".$item->get_ID(), "");
+			$labels = $item->getDataLabels();
+			$temp = new string_box($item->get_prop_object("value"), $labels["value"], "value_".$item->get_ID(), "");
 		}
 		
 		echo '<input type="hidden" name="version_num" value="'.$this->BO->get_version().'"/>';
 		
 		echo '<tr><td colspan="2"><h3>Add a new value to the DEnum dropdown list:</h3></td></tr>';
 		
-		$temp = new string_box(new String(), $tmp->data_labels["value"], "new_value", "");
+		$temp = new string_box(new String(), $labels["value"], "new_value", "");
 		
 		echo '<tr><td colspan="2">';
 		
