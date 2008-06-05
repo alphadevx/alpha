@@ -68,7 +68,7 @@ class article extends View
 		$prop_obj = $this->BO->get_prop_object("date_added");
 		echo '<td>Date Added: <em>'.$prop_obj->getValue().'</em></td>';
 		$prop_obj = $this->BO->get_prop_object("section");
-		echo '<td align="center">Site Section: <em>'.$prop_obj->get_display_value().'</em></td>';
+		echo '<td align="center">Site Section: <em>'.$prop_obj->getDisplayValue().'</em></td>';
 		echo '<td align="right">';
 		if (class_exists("button")) {			
 			$temp = new button("document.location.replace('".$config->get('sysURL')."/alpha/controller/view_article.php?oid=".$this->BO->get_ID()."')","Open","openBut");
