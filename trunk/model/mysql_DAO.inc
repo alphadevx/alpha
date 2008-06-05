@@ -68,17 +68,22 @@ class mysql_DAO
 	 * an array of the names of all of the default attributes of a persistent BO defined in this class
 	 * @var array
 	 */
-	var $default_attributes = array("OID","last_query","version_num","data_labels","render_mode","created_ts","created_by","updated_ts","updated_by","default_attributes","transient_attributes","unique_attributes","TABLE_NAME");
+	var $default_attributes = array("OID","last_query","version_num","dataLabels","render_mode","created_ts","created_by","updated_ts","updated_by","default_attributes","transient_attributes","unique_attributes","TABLE_NAME");
 	/**
 	 * an array of the names of all of the transient attributes of a persistent BO which are not saved to the DB
 	 * @var array
 	 */
-	var $transient_attributes = array("last_query","data_labels","render_mode","default_attributes","transient_attributes","unique_attributes","TABLE_NAME");
+	var $transient_attributes = array("last_query","dataLabels","render_mode","default_attributes","transient_attributes","unique_attributes","TABLE_NAME");
 	/**
 	 * an array of the uniquely-constained attributes of this persistent BO
 	 * @var array
 	 */
 	var $unique_attributes = array();
+	/**
+	 * an array of the data labels used for displaying class attributes
+	 * @var array
+	 */
+	protected $dataLabels = array();
 	
 	/**
 	 * the constructor which sets up some housekeeping attributes
@@ -116,15 +121,14 @@ class mysql_DAO
 		
 		$row = mysql_fetch_assoc($result);
 		
-		$properties = get_class_vars(get_class($this));
+		// get the protected and public attributes
+		$reflection = new ReflectionClass(get_class($this));
+		$properties = $reflection->getProperties();		
 
-		foreach(array_keys($properties) as $prop) {
-			if (get_class($this->$prop) != false && !in_array($prop, $this->transient_attributes)) {				
-				if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {					
-					$this->$prop->setValue($row[$prop]);
-				}else{
-					$this->$prop->populate_from_string($row[$prop]);
-				}
+		foreach($properties as $propObj) {
+			// filter transient attributes
+			if(!in_array($propObj->name, $this->transient_attributes)) {				
+				$this->set($propObj->name, $row[$propObj->name]);
 			}			
 		}		
 		
@@ -170,7 +174,7 @@ class mysql_DAO
 				if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {					
 					$this->$prop->setValue(stripslashes($row[$prop]));
 				}else{
-					$this->$prop->populate_from_string(stripslashes($row[$prop]));
+					$this->$prop->populateFromString(stripslashes($row[$prop]));
 				}
 			}
 			if($prop == "OID"){				
@@ -690,13 +694,13 @@ class mysql_DAO
 						if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
 							$this->$prop->setValue(addslashes($_POST[$prop]));					
 						}else{						
-							$this->$prop->populate_from_string(addslashes($_POST[$prop]));
+							$this->$prop->populateFromString(addslashes($_POST[$prop]));
 						}
 					}else{
 						if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
 							$this->$prop->setValue($_POST[$prop]);					
 						}else{						
-							$this->$prop->populate_from_string($_POST[$prop]);
+							$this->$prop->populateFromString($_POST[$prop]);
 						}
 					}
 				}
@@ -862,22 +866,27 @@ class mysql_DAO
 		if(method_exists($this, 'before_set_callback'))
 			$this->before_set_callback();
 		
-		if(!$no_child_methods && method_exists($this, "set_".$prop)) {
+		// handle private and protected attributes (should always have a setter)
+		if(!$no_child_methods && method_exists($this, "set".ucfirst($prop))) {
 			if(method_exists($this, 'after_set_callback'))
 				$this->after_set_callback();
 			
-			return eval("return \$this->set_".$prop."('$value');");
+			return eval("return \$this->set".ucfirst($prop)."('$value');");
 		}else{
-			if(isset($this->$prop) && method_exists($this->$prop, "setValue")) {
+			// handle public attributes
+			if(isset($this->$prop)) { // && method_exists($this->$prop, "setValue")) {
 				if(method_exists($this, 'after_set_callback'))
 					$this->after_set_callback();
-				
-				$this->$prop->setValue($value);
-			}elseif(isset($this->$prop)) {
-				if(method_exists($this, 'after_set_callback'))
-					$this->after_set_callback();
-				
-				$this->$prop = $value;
+					
+				if (get_class($this->$prop) != false) {				
+					if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {					
+						$this->$prop->setValue($value);
+					}else{
+						$this->$prop->populateFromString($value);
+					}
+				}else{
+					$this->$prop = $value;
+				}				
 			}else{
 				$error = new handle_error($_SERVER["PHP_SELF"],'Could not set the property '.$prop.' on the object '.get_class($this).'.  Property may not exist, or else does not have a setValue() method.','set()','framework');
 			}
@@ -893,11 +902,17 @@ class mysql_DAO
 		if(method_exists($this, 'before_get_prop_object_callback'))
 			$this->before_get_prop_object_callback();
 		
-		if(isset($this->$prop)) {
+		if(isset($this->$prop) || method_exists($this, 'get'.ucfirst($prop))) {
 			if(method_exists($this, 'after_get_prop_object_callback'))
 				$this->after_get_prop_object_callback();
 			
-			return $this->$prop;
+			if(method_exists($this, 'get'.ucfirst($prop))) {
+				eval('$obj = $this->get'.ucfirst($prop).'();');
+				
+				return $obj;
+			}else{
+				return $this->$prop;
+			}
 		}else{
 			$error = new handle_error($_SERVER["PHP_SELF"],'Could not access the property '.$prop.' on the object '.get_class($this).'.','get_prop_object()','framework');
 			return false;
@@ -1166,6 +1181,15 @@ class mysql_DAO
 		$singleQuote2 = strrpos($error,"'");
 		
 		return substr($error, $singleQuote1, ($singleQuote2-$singleQuote1)+1);
+	}
+	
+	/**
+	 * gets the data labels array
+	 * 
+	 * @return array
+	 */
+	function getDataLabels() {		
+		return $this->dataLabels;
 	}
 }
 
