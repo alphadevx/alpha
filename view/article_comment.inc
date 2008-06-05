@@ -88,7 +88,7 @@ class article_comment extends View
 				switch (strtoupper($obj_type)) {
 					case "INTEGER" :
 						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->dataLabels[$prop];
 						echo '</td>';
 
 						echo '<td>';
@@ -97,7 +97,7 @@ class article_comment extends View
 						break;
 					case "DOUBLE" :
 						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->dataLabels[$prop];
 						echo '</td>';
 
 						echo '<td>';
@@ -106,7 +106,7 @@ class article_comment extends View
 						break;
 					case "DATE" :
 						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->dataLabels[$prop];
 						echo '</td>';
 
 						echo '<td>';
@@ -116,10 +116,10 @@ class article_comment extends View
 					case "STRING" :
 						// use a string widget if defined
 						if (class_exists("string_box")) {
-							$temp = new string_box($this->BO-> $prop, $this->BO->data_labels[$prop], $prop, "");
+							$temp = new string_box($this->BO-> $prop, $this->BO->dataLabels[$prop], $prop, "");
 						} else {
 							echo '<tr><td style="width:25%;">';
-							echo $this->BO->data_labels[$prop];
+							echo $this->BO->dataLabels[$prop];
 							echo '</td>';
 
 							echo '<td>';
@@ -131,10 +131,10 @@ class article_comment extends View
 						// use a text widget if defined
 						if (class_exists("text_box")) {
 							$rows = 10;							
-							$temp = new text_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "", $rows);
+							$temp = new text_box($this->BO->get_prop_object($prop), $this->BO->dataLabels[$prop], $prop, "", $rows);
 						} else {
 							echo '<tr><td colspan="2">';
-							echo $this->BO->data_labels[$prop];
+							echo $this->BO->dataLabels[$prop];
 							echo '</td></tr>';
 	
 							echo '<tr><td colspan="2">';
@@ -144,7 +144,7 @@ class article_comment extends View
 						break;
 					case "BOOLEAN" :
 						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->dataLabels[$prop];
 						echo '</td>';
 
 						echo '<td>';
@@ -156,7 +156,7 @@ class article_comment extends View
 						break;
 					case "ENUM" :
 						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->dataLabels[$prop];
 						echo '</td>';
 						echo '<td>';
 						echo '<select name="'.$prop.'"/>';
@@ -169,7 +169,7 @@ class article_comment extends View
 						break;
 					default :
 						echo '<tr><td colspan="2">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->dataLabels[$prop];
 						echo '</td></tr>';
 
 						echo '<tr><td colspan="2">';
@@ -213,7 +213,7 @@ class article_comment extends View
 				switch (strtoupper($obj_type)) {
 					case "INTEGER" :
 						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->dataLabels[$prop];
 						echo '</td>';
 
 						echo '<td>';
@@ -222,7 +222,7 @@ class article_comment extends View
 					break;
 					case "DOUBLE" :
 						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->dataLabels[$prop];
 						echo '</td>';
 
 						echo '<td>';
@@ -231,7 +231,7 @@ class article_comment extends View
 					break;
 					case "DATE" :
 						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->dataLabels[$prop];
 						echo '</td>';
 
 						echo '<td>';
@@ -241,10 +241,10 @@ class article_comment extends View
 					case "STRING" :
 						// use a string widget if defined
 						if (class_exists("string_box")) {
-							$temp = new string_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "");
+							$temp = new string_box($this->BO->get_prop_object($prop), $this->BO->dataLabels[$prop], $prop, "");
 						} else {
 							echo '<tr><td style="width:25%;">';
-							echo $this->BO->data_labels[$prop];
+							echo $this->BO->dataLabels[$prop];
 							echo '</td>';
 
 							echo '<td>';
@@ -259,10 +259,10 @@ class article_comment extends View
 							$text = $this->BO->get_prop_object($prop);
 							$filter = new input_filter($text);
 							$text->setValue($filter->decode());
-							$temp = new text_box($text, $this->BO->data_labels[$prop], $prop, "", 5, true, $this->BO->get_ID());
+							$temp = new text_box($text, $this->BO->dataLabels[$prop], $prop, "", 5, true, $this->BO->get_ID());
 						} else {
 							echo '<tr><td colspan="2">';
-							echo $this->BO->data_labels[$prop];
+							echo $this->BO->dataLabels[$prop];
 							echo '</td></tr>';
 	
 							echo '<tr><td colspan="2">';
@@ -272,7 +272,7 @@ class article_comment extends View
 					break;					
 					case "BOOLEAN":
 						echo '<tr><td>';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->dataLabels[$prop];
 						echo '</td>';
 
 						echo '<td>';
@@ -284,7 +284,7 @@ class article_comment extends View
 					break;
 					case "ENUM" :
 						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->dataLabels[$prop];
 						echo '</td>';
 						echo '<td>';
 						echo '<select name="'.$prop.'"/>';
@@ -301,7 +301,7 @@ class article_comment extends View
 					break;
 					default :
 						echo '<tr><td colspan="2">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->dataLabels[$prop];
 						echo '</td></tr>';
 
 						echo '<tr><td colspan="2">';
