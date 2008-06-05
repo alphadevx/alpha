@@ -242,7 +242,7 @@ class person_object extends mysql_DAO
 				if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
 					$this->$prop->setValue($row[$prop]);
 				}else{
-					$this->$prop->populate_from_string($row[$prop]);
+					$this->$prop->populateFromString($row[$prop]);
 				}
 			}			
 			if($prop == "OID"){
