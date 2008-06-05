@@ -34,7 +34,7 @@ class DEnumItem extends mysql_DAO {
 	 * an array of data display labels for the class properties
 	 * @var array
 	 */
-	var $data_labels = array(
+	var $dataLabels = array(
 		"OID"=>"DEnumItem ID#",
 		"value"=>"Dropdown value"		
 	);
@@ -90,9 +90,10 @@ class DEnumItem extends mysql_DAO {
 	
 	/**
 	 * used to get the current DEnum item
-	 * @return string selected
+	 * 
+	 * @return String
 	 */
-	function getValue() {
-		return $this->value->getValue();
+	public function getValue() {
+		return $this->value;
 	}
 }
