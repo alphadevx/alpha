@@ -150,7 +150,7 @@ class Timestamp {
  	 * accepts a full date/time string in YYYY-mm-dd hh:ii:ss format
  	 * @param string date/time to be parsed
  	 */
- 	function populate_from_string($date_time) {
+ 	function populateFromString($date_time) {
  		$valid = 1;
  			
  		$spilt_by_space = explode(" ", $date_time);
