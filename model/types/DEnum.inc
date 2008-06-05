@@ -16,21 +16,21 @@ class DEnum extends mysql_DAO {
 	 * 
 	 * @var array
 	 */
-	private $options;
+	protected $options;
 	
 	/**
 	 * The currently selected DEnum option
 	 * 
 	 * @var int
 	 */
-	private $value;
+	protected $value;
 	
 	/**
 	 * The name of the DEnum used in the database
 	 * 
 	 * @var String
 	 */
-	private $name;	
+	protected $name;	
 	
 	/**
 	 * The name of the database table for the class
@@ -67,6 +67,7 @@ class DEnum extends mysql_DAO {
 		
 		$this->markTransient('options');
 		$this->markTransient('value');
+		$this->markTransient('validationHelper');
 		
 		$this->name = new String($name);
 		
@@ -127,6 +128,15 @@ class DEnum extends mysql_DAO {
 	 */	
 	public function getHelper() {
 		return $this->validationHelper;
+	}
+	
+	/**
+	 * Getter for the name
+	 * 
+	 * @return String
+	 */	
+	public function getName() {
+		return $this->name;
 	}
 	
 	/**
