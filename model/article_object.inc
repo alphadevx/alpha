@@ -328,7 +328,7 @@ class article_object extends mysql_DAO
 				if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {					
 					$this->$prop->setValue(stripslashes($row[$prop]));
 				}else{
-					$this->$prop->populate_from_string(stripslashes($row[$prop]));
+					$this->$prop->populateFromString(stripslashes($row[$prop]));
 				}
 			}
 			if($prop == "OID"){				
