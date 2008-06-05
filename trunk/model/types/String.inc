@@ -144,6 +144,10 @@ class String {
 	function check_is_password() {
 		return $this->password;
 	}
+	
+	public function __toString() {
+		return $this->getValue();
+	}
 }
 
 ?>
