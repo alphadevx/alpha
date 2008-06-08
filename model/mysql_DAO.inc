@@ -121,9 +121,9 @@ class mysql_DAO
 		
 		$row = mysql_fetch_assoc($result);
 		
-		// get the protected and public attributes
+		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this));
-		$properties = $reflection->getProperties();		
+		$properties = $reflection->getProperties();
 
 		foreach($properties as $propObj) {
 			// filter transient attributes
@@ -307,9 +307,11 @@ class mysql_DAO
 		$validate = $this->validate();
 		
 		if(!$validate)
-			return $validate;
+			return $validate;		
 		
-		$properties = get_class_vars(get_class($this));
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this));
+		$properties = $reflection->getProperties();
 		$sql_query = "";		
 		
 		if($this->get_version() != $this->version_num->getValue()){
@@ -325,21 +327,27 @@ class mysql_DAO
 		if(empty($this->OID) || !isset($this->OID) || $this->OID == '00000000000') {
 			$sql_query = "INSERT INTO ".$this->getTableName()." (";
 
-			foreach(array_keys($properties) as $prop) {
-				if (get_class($this->$prop) != false && !in_array($prop, $this->transient_attributes)) {
-					$sql_query .= "$prop,";
+			foreach($properties as $propObj) {
+				$propName = $propObj->name;				
+				if (!in_array($propName, $this->transient_attributes)) {
+					$sql_query .= "$propName,";
 				}				
 			}
 
 			$sql_query = rtrim($sql_query, ",");
 
 			$sql_query .= ") VALUES (";
-
-			foreach(array_keys($properties) as $prop) {				
-				if (get_class($this->$prop) != false && $prop != "version_num" && !in_array($prop, $this->transient_attributes)) {
-					$sql_query .= "'".$this->$prop->getValue()."',";
+			
+			foreach($properties as $propObj) {
+				$propName = $propObj->name;
+				$propClass = get_class($this->get($propName));				
+				if ($propName != "version_num" && !in_array($propName, $this->transient_attributes)) {
+					if(empty($propClass))
+						$sql_query .= "'".$this->get($propName)."',";
+					else
+						$sql_query .= "'".$this->get($propName)->getValue()."',";
 				}
-				if ($prop == "version_num") {					
+				if ($propName == "version_num") {					
 					$temp = $this->version_num->getValue();
 					$this->version_num->setValue($temp+1);
 					$sql_query .= "'".$this->version_num->getValue()."',";
@@ -351,12 +359,17 @@ class mysql_DAO
 			$sql_query .= ");";
 		}else{
 			$sql_query = "UPDATE ".$this->getTableName()." SET ";
-
-			foreach(array_keys($properties) as $prop) {
-				if (get_class($this->$prop) != false && $prop != "version_num" && !in_array($prop, $this->transient_attributes)) {
-					$sql_query .= "$prop = '".$this->$prop->getValue()."',";
+			
+			foreach($properties as $propObj) {
+				$propName = $propObj->name;
+				$propClass = get_class($this->get($propName));
+				if ($propName != "version_num" && !in_array($propName, $this->transient_attributes)) {
+					if(empty($propClass))
+						$sql_query .= "$propName = '".$this->get($propName)."',";
+					else
+						$sql_query .= "$propName = '".$this->get($propName)->getValue()."',";
 				}
-				if ($prop == "version_num") {					
+				if ($propName == "version_num") {					
 					$temp = $this->version_num->getValue();					
 					$this->version_num->setValue($temp+1);					
 					$sql_query .= "version_num = '".$this->version_num->getValue()."',";
@@ -403,17 +416,21 @@ class mysql_DAO
 				$this->before_validate_callback();
 		
 		$valid = true;
+				
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this));
+		$properties = $reflection->getProperties();		
 		
-		$properties = get_object_vars($this);		
-		
-		foreach(array_keys($properties) as $prop) {
-			if(!in_array($prop, $this->default_attributes) && !in_array($prop, $this->transient_attributes)) {
-				if (strtoupper(get_class($properties[$prop])) != "ENUM" &&
-				strtoupper(get_class($properties[$prop])) != "DENUM" &&
-				strtoupper(get_class($properties[$prop])) != "DENUMITEM" && 
-				strtoupper(get_class($properties[$prop])) != "BOOLEAN") {
-					if (!preg_match($this->$prop->get_rule(), $this->$prop->getValue())) {
-						$error = new handle_error($_SERVER["PHP_SELF"],'Failed to save, validation error is: '.$this->$prop->get_helper(),'validate()','validation');
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			$propClass = $propObj->class;
+			if(!in_array($propName, $this->default_attributes) && !in_array($propName, $this->transient_attributes)) {
+				if (strtoupper($propClass) != "ENUM" &&
+				strtoupper($propClass) != "DENUM" &&
+				strtoupper($propClass) != "DENUMITEM" && 
+				strtoupper($propClass) != "BOOLEAN") {
+					if (!preg_match($this->get($propName)->get_rule(), $this->get($propName)->getValue())) {
+						$error = new handle_error($_SERVER["PHP_SELF"],'Failed to save, validation error is: '.$this->get($propName)->get_helper(),'validate()','validation');
 						$valid = false;
 					}
 				}
@@ -831,12 +848,14 @@ class mysql_DAO
 		if(method_exists($this, 'before_get_callback'))
 			$this->before_get_callback();
 		
-		if(!$no_child_methods && method_exists($this, "get_".$prop)) {
+		// handle private and protected attributes (should always have a getter)
+		if(!$no_child_methods && method_exists($this, "get".ucfirst($prop))) {
 			if(method_exists($this, 'after_get_callback'))
 				$this->after_get_callback();
 				
-			return eval('return $this->get_'.$prop.'();');
+			return eval('return $this->get'.ucfirst($prop).'();');
 		}else{
+			// handle public attributes
 			if(isset($this->$prop) && method_exists($this->$prop, "getValue")) {
 				if(method_exists($this, 'after_get_callback'))
 					$this->after_get_callback();
@@ -874,7 +893,7 @@ class mysql_DAO
 			return eval("return \$this->set".ucfirst($prop)."('$value');");
 		}else{
 			// handle public attributes
-			if(isset($this->$prop)) { // && method_exists($this->$prop, "setValue")) {
+			if(isset($this->$prop)) {
 				if(method_exists($this, 'after_set_callback'))
 					$this->after_set_callback();
 					
