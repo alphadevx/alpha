@@ -1,7 +1,5 @@
 <?php
 
-// $Id$
-
 /**
  * The DEnumItem (Dynamic Enum Item) complex data type.  Has a one-to-many
  * relationship with the DEnum type. 
@@ -9,32 +7,37 @@
  * @package Alpha Core Datatype
  * @author John Collins <john@design-ireland.net>
  * @copyright 2008 John Collins
+ * @version $Id$
  * 
  */
 class DEnumItem extends mysql_DAO {
 	/**
 	 * The value that will appear in the drop-down.
+	 * 
 	 * @var String
 	 */
-	var $value;
+	protected $value;
 	
 	/**
 	 * The ID of the parent DEnum object.
+	 * 
 	 * @var Integer
 	 */
-	var $DEnumID;
+	protected $DEnumID;
 	
 	/**
 	 * The name of the database table for the class
+	 * 
 	 * @var string
 	 */
 	const TABLE_NAME = 'DEnumItem';
 	
 	/**
 	 * an array of data display labels for the class properties
+	 * 
 	 * @var array
 	 */
-	var $dataLabels = array(
+	protected $dataLabels = array(
 		"OID"=>"DEnumItem ID#",
 		"value"=>"Dropdown value"		
 	);
@@ -42,12 +45,13 @@ class DEnumItem extends mysql_DAO {
 	/**
 	 * The constructor
 	 */
-	function DEnumItem() {
+	public function __construct() {
 		// ensure to call the parent constructor
-		$this->mysql_DAO();
+		parent::__construct();
+		
 		$this->value = new String();
 		$this->value->set_rule(REQUIRED_TEXT);
-		$this->value->set_helper("A blank dropwdown value is not allowed!");
+		$this->value->set_helper("A blank dropdown value is not allowed!");
 		$this->DEnumID = new Integer();		
 	}
 	
@@ -55,9 +59,9 @@ class DEnumItem extends mysql_DAO {
 	 * Loads all of the items for the given parent DEnum ID.
 	 * 
 	 * @param integer $EnumID The ID of the parent DEnum object.
-	 * @return array An array containing DEnumItem objects related to the parent DEnum.
+	 * @return array
 	 */
-	function load_items($EnumID)
+	public function loadItems($EnumID)
 	{		
 		global $config;
 		
@@ -95,5 +99,14 @@ class DEnumItem extends mysql_DAO {
 	 */
 	public function getValue() {
 		return $this->value;
+	}
+	
+	/**
+	 * used to set the current DEnum item
+	 * 
+	 * @param string $item
+	 */
+	public function setValue($item) {
+		$this->value->setValue($item);		
 	}
 }
