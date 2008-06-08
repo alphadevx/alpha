@@ -1,103 +1,146 @@
 <?php
 
-// $Id$
-
 require_once $config->get('sysRoot')."config/validation_rules.inc";
+require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
 
 /**
  * The Double complex data type
  * 
  * @package Alpha Core Datatype
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins
+ * @copyright 2008 John Collins
+ * @version $Id$
  * 
  */
 class Double {
-
 	/**
-	 * the value of the string
-	 * @var string
+	 * the value of the Double
+	 * 
+	 * @var double
 	 */
- 	var $value;
-	
-	/**
-	 * the validation rule for the double type
-	 * @var string
-	 */
-	var $validation_rule ; 
+ 	private $value;
 	
 	/**
-	 * the error message for the double type when validation fails
+	 * The validation rule (reg-ex) applied to Double values
+	 *
 	 * @var string
 	 */
-	var $validation_helper = 'Error: not a valid Double value!';
+ 	private $validationRule;
 	
 	/**
-	 * the size of the value for the double
+	 * The error message for the Double type when validation fails
+	 * 
 	 * @var string
 	 */
-	var $size = 13;
+	private $helper = 'Error: not a valid Double value!';
 	
 	/**
-	 * the absolute maximum size of the value for the this double
-	 * @var string
+	 * The size of the value for the Double
+	 * 
+	 * @var int
 	 */
-	var $MAX_SIZE = 13;
+	private $size = 13;
 	
-	function Double($val=0.0) {
+	/**
+	 * The absolute maximum size of the value for the this double
+	 * 
+	 * @var int
+	 */
+	const MAX_SIZE = 13;
 	
-		$this->validation_rule = DEFAULT_DOUBLE;
-		$this->validation_helper = 'Error: not a valid double value!  A maximum of '.$this->size.' characters is allowed, in the format 0.00';
+	/**
+	 * Constructor
+	 *
+	 * @param double $val
+	 */
+	public function __construct($val=0.0) {
+		$val = floatval($val);
+	
+		$this->validationRule = DEFAULT_DOUBLE;
+		$this->helper = 'Error: not a valid double value!  A maximum of '.$this->size.' characters is allowed, in the format 0.00';
 		
 		if (strlen($val) <= $this->size) {
-			if (preg_match($this->validation_rule, $val)) {				
+			if ($val == 0 || preg_match($this->validationRule, strval($val))) {				
 				$this->value = $val;					
 			}else{
-				$error = new handle_error($_SERVER["PHP_SELF"], $this->validation_helper.' :- '.$val,'Double','framework');	
+				throw new AlphaFrameworkException($this->helper);
 			}
 		}else{
-			$error = new handle_error($_SERVER["PHP_SELF"], $this->validation_helper.' :- '.$val,'Double','framework');	
+			throw new AlphaFrameworkException($this->helper);
 		}
 	}
 	
-	function setValue($val) {		
+	/**
+	 * Setter for the Double value
+	 *
+	 * @param double $val
+	 */
+	public function setValue($val) {
+		$val = floatval($val);
+				
 		if (strlen($val) <= $this->size) {			
-			if (preg_match($this->validation_rule, $val)) {				
+			if ($val == 0 || preg_match($this->validation_rule, $val)) {				
 				$this->value = $val;				
 			}else{
-				$error = new handle_error($_SERVER["PHP_SELF"], $this->validation_helper.' :- '.$this->val,'Double','framework');	
+				throw new AlphaFrameworkException($this->helper);
 			}
 		}else{
-			$error = new handle_error($_SERVER["PHP_SELF"], $this->validation_helper.' :- '.$this->val,'Double','framework');	
+			throw new AlphaFrameworkException($this->helper);
 		}
 	}
 	
+	/**
+	 * Getter for the Double value
+	 *
+	 * @return double
+	 */
 	function getValue() {
 		return $this->value;
 	}
 	
-	function set_validation($rule, $helper='Error: validation rule not met!') {
-		$this->validation_rule = $rule;
-		$this->validation_helper = $helper;
+	/**
+ 	 * Get the validation rule
+ 	 *
+ 	 * @return string
+ 	 */
+ 	public function getRule() {
+		return $this->validationRule;
 	}
 	
-	function get_rule() {
-		return $this->validation_rule;
+	/**
+	 * Used to get the validation helper message string
+	 *
+	 * @return string
+	 */
+	public function getHelper() {
+		return $this->helper;
 	}
 	
-	function get_helper() {
-		return $this->validation_helper;
-	}
-	
-	function set_size($size) {
-		if ($size <= $this->MAX_SIZE)
+	/**
+	 * Used to set the allowable size of the Double in the database field
+	 *
+	 * @param int $size	 
+	 */
+	public function setSize($size) {
+		if ($size <= self::MAX_SIZE) {
 			$this->size = $size;
-		else
-			return 'Error: the value '.$size.' provided by set_size is greater than the MAX_SIZE '.$this->MAX_SIZE.' of this data type.';	
+			$this->helper = 'Error: not a valid double value!  A maximum of '.$this->size.' characters is allowed, in the format 0.00';
+		}else{
+			throw new AlphaFrameworkException('Error: the value '.$size.' provided by set_size is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
+		}	
 	}
 	
-	function get_size(){
-		return $this->size.',2';
+	/**
+	 * Get the allowable size of the Double in the database field
+	 *
+	 * @param bool $databaseDimension
+	 * @return mixed
+	 */
+	public function getSize($databaseDimension=false){
+		if($databaseDimension)
+			return $this->size.',2';
+		else
+			return $this->size;
 	}	
 }
  
