@@ -53,7 +53,7 @@ class Date {
 	 *
 	 * @var string
 	 */
-	private $validationHelper= 'Error: not a valid date value!  A date should be in the format YYYY-MM-DD HH:MM:SS.';
+	private $helper= 'Error: not a valid date value!  A date should be in the format YYYY-MM-DD HH:MM:SS.';
  	
 	/**
 	 * Constructor.  Leave $date param empty to default to now.
@@ -72,7 +72,7 @@ class Date {
 			if (preg_match($this->validationRule, $date)) {
 				$this->populateFromString($date);
 			}else{
-				throw new AlphaFrameworkException($this->validationHelper);
+				throw new AlphaFrameworkException($this->helper);
 			}
 		}
  	}
@@ -229,7 +229,7 @@ class Date {
 	 * @return string
 	 */
 	public function getHelper() {
-		return $this->validationHelper;
+		return $this->helper;
 	}
 	
 	/**
@@ -238,7 +238,7 @@ class Date {
 	 * @param string $helper
 	 */
 	public function setHelper($helper) {
-		$this->validationHelper = $helper;
+		$this->helper = $helper;
 	}
 }
 

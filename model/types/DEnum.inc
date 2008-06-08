@@ -54,7 +54,7 @@ class DEnum extends mysql_DAO {
 	 *
 	 * @var string
 	 */
-	private $validationHelper = 'Error: not a valid denum option!';
+	private $helper = 'Error: not a valid denum option!';
 	
 	/**
 	 * Constructor that sets up the DEnum options
@@ -67,7 +67,7 @@ class DEnum extends mysql_DAO {
 		
 		$this->markTransient('options');
 		$this->markTransient('value');
-		$this->markTransient('validationHelper');
+		$this->markTransient('helper');
 		
 		$this->name = new String($name);
 		
@@ -111,7 +111,7 @@ class DEnum extends mysql_DAO {
 		
 		$tmp = new DEnumItem();		
 		
-		foreach($tmp->load_items($row["OID"]) as $DEnumItem) {			
+		foreach($tmp->loadItems($row["OID"]) as $DEnumItem) {			
 			$this->options[$DEnumItem->get_ID()] = $DEnumItem->getValue();
 			$count++;			
 		}
@@ -127,7 +127,7 @@ class DEnum extends mysql_DAO {
 	 * @return string
 	 */	
 	public function getHelper() {
-		return $this->validationHelper;
+		return $this->helper;
 	}
 	
 	/**
@@ -167,8 +167,7 @@ class DEnum extends mysql_DAO {
 	/**
 	 * Used to select the current DEnum item
 	 * 
-	 * @param string $item
-	 * @return bool
+	 * @param string $item 
 	 */
 	public function setValue($item) {
 		// check to see if the options have already been loaded from the DB
