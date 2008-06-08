@@ -94,7 +94,7 @@ class EditDEnum extends Edit
 			
 			// now save the DEnumItems			
 			$tmp = new DEnumItem();
-			$denumItems = $tmp->load_items($this->BO->get_ID());						
+			$denumItems = $tmp->loadItems($this->BO->get_ID());						
 			
 			foreach ($denumItems as $item) {
 				$item->set("value", $_POST["value_".$item->get_ID()]);
@@ -109,7 +109,7 @@ class EditDEnum extends Edit
 				$this->mark_new($newItem);
 			}			
 					
-			$this->commit();
+			$success = $this->commit();
 			
 			if($success) {
 				echo '<p class="success">'.get_class($this->BO).' '.$this->BO->get_ID().' saved successfully.</p>';
