@@ -114,7 +114,7 @@ class DEnumView extends View
 		// now get all of the options for the enum and render
 		$denum = $this->BO;
 		$tmp = new DEnumItem();
-		$denumItems = $tmp->load_items($denum->get_ID());						
+		$denumItems = $tmp->loadItems($denum->get_ID());						
 		
 		foreach ($denumItems as $item) {
 			$labels = $item->getDataLabels();
