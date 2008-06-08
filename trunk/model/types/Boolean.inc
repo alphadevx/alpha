@@ -91,7 +91,7 @@ class Boolean {
 	 *
 	 * @return string
 	 */
-	function getHelper() {
+	public function getHelper() {
 		return $this->helper;
 	}
 }
