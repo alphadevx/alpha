@@ -536,7 +536,7 @@ class mysql_DAO
 						$sql_query .= "$prop INT(".$properties[$prop]->get_size()."),";
 					break;
 					case "DOUBLE":
-						$sql_query .= "$prop DOUBLE(".$properties[$prop]->get_size()."),";
+						$sql_query .= "$prop DOUBLE(".$properties[$prop]->getSize(true)."),";
 					break;
 					case "STRING":
 						$sql_query .= "$prop VARCHAR(".$properties[$prop]->get_size()."),";
@@ -639,7 +639,7 @@ class mysql_DAO
 						$sql_query .= "$prop INT(".$this->$prop->get_size()."),";
 					break;
 					case "DOUBLE":
-						$sql_query .= "$prop DOUBLE(".$this->$prop->get_size()."),";
+						$sql_query .= "$prop DOUBLE(".$this->$prop->getSize(true)."),";
 					break;
 					case "STRING":
 						$sql_query .= "$prop VARCHAR(".$this->$prop->get_size()."),";
