@@ -54,7 +54,7 @@ class Double {
 	 * @param double $val
 	 */
 	public function __construct($val=0.0) {
-		$val = floatval($val);
+		$val = round(floatval($val), 2);
 	
 		$this->validationRule = DEFAULT_DOUBLE;
 		$this->helper = 'Error: not a valid double value!  A maximum of '.$this->size.' characters is allowed, in the format 0.00';
@@ -76,7 +76,7 @@ class Double {
 	 * @param double $val
 	 */
 	public function setValue($val) {
-		$val = floatval($val);
+		$val = round(floatval($val), 2);
 				
 		if (strlen($val) <= $this->size) {			
 			if ($val == 0 || preg_match($this->validationRule, $val)) {				
@@ -94,7 +94,7 @@ class Double {
 	 *
 	 * @return double
 	 */
-	function getValue() {
+	public function getValue() {
 		return $this->value;
 	}
 	
@@ -141,7 +141,16 @@ class Double {
 			return $this->size.',2';
 		else
 			return $this->size;
-	}	
+	}
+
+	/**
+	 * Used to convert the object to a printable string
+	 *
+	 * @return string
+	 */
+	public function __toString() {		
+		return strval(sprintf("%01.2f", $this->value));
+	}
 }
  
 ?>
