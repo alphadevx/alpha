@@ -79,7 +79,7 @@ class Double {
 		$val = floatval($val);
 				
 		if (strlen($val) <= $this->size) {			
-			if ($val == 0 || preg_match($this->validation_rule, $val)) {				
+			if ($val == 0 || preg_match($this->validationRule, $val)) {				
 				$this->value = $val;				
 			}else{
 				throw new AlphaFrameworkException($this->helper);

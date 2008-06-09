@@ -66,6 +66,15 @@ class Double_Test extends PHPUnit_Framework_TestCase
     	}
     }
     
+	/**
+     * testing passing valid data to setValue
+     */
+    public function testSetValueValid() {
+    	$this->dbl1->setValue(0.25);
+    	
+    	$this->assertEquals(0.25, $this->dbl1->getValue(), 'testing passing valid data to setValue');
+    }
+    
     /**
      * testing the setSize method to see if validation fails
      */
