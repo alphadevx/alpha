@@ -17,14 +17,21 @@ class Integer_Test extends PHPUnit_Framework_TestCase
 	 * @var Integer
 	 */
 	private $int1;
+	
+	/**
+	 * an Integer for testing
+	 * @var Integer
+	 */
+	private $int2;
 		
 	/**
      * called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
      */
-    function setUp() {        
+    protected function setUp() {        
         $this->int1 = new Integer();
+        $this->int2 = new Integer();
     }
     
     /** 
@@ -32,7 +39,7 @@ class Integer_Test extends PHPUnit_Framework_TestCase
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
      */    
-    function tearDown() {        
+    protected function tearDown() {        
         unset($this->int1);        
     }
     
@@ -49,27 +56,75 @@ class Integer_Test extends PHPUnit_Framework_TestCase
      * testing passing invalid data to setValue
      */
     public function testSetValueInvalid() {
-    	$this->assertEquals($this->int1->get_helper(), $this->int1->setValue("blah"), "testing passing invalid data to setValue");
+    	try {
+    		$this->int1->setValue("blah");
+    	}catch (AlphaFrameworkException $e) {
+    		$this->assertEquals('Error: not a valid Integer value!  A maximum of '.$this->int1->getSize().' characters is allowed'
+    			, $e->getMessage()
+    			, 'testing passing invalid data to setValue');
+    	}
+    }
+    
+	/**
+     * testing passing valid data to setValue
+     */
+    public function testSetValueValid() {
+    	$this->int1->setValue(7);
+    	
+    	$this->assertEquals(7, $this->int1->getValue(), 'testing passing valid data to setValue');
     }
     
     /**
-     * testing the set_size method to see if validation fails
+     * testing the setSize method to see if validation fails
      */
     public function testSetSizeInvalid() {
     	$this->int1 = new Integer();
-    	$this->int1->set_size(2);
+    	$this->int1->setSize(2);
     	
-    	$this->assertEquals('Error: the value 5000 provided by setValue is greater than the size '.$this->int1->get_size().' of this data type.', $this->int1->setValue(5000), "testing setting the size of the integer type");
+    	try {
+    		$this->int1->setValue(200);
+    	}catch (AlphaFrameworkException $e) {
+    		$this->assertEquals('Error: not a valid Integer value!  A maximum of '.$this->int1->getSize().' characters is allowed'
+    			, $e->getMessage()
+    			, 'testing passing invalid data to setValue');
+    	}
     }
     
-    /**
-     * testing that the overide of the default validation rule is working
+	/**
+     * testing addition of two Integer values
      */
-    public function testSetValidation() {
-    	$this->int1 = new Integer();
-    	$this->int1->set_validation("/5/", "Only 5 is acceptable!");
+    public function testAddIntegers() {
+    	$this->int1 = new Integer(1500);
+    	$this->int2 = new Integer(3577);
     	
-    	$this->assertEquals("Only 5 is acceptable!", $this->int1->setValue(2), "testing that the overide of the default validation rule is working");
+    	$this->assertEquals(5077, ($this->int1->getValue()+$this->int2->getValue()), 'testing addition of two Integer values');
+    }
+
+    /**
+     * testing to see that a numberic value is rounded by the Integer constructor
+     */
+    public function testConstructorRound() {
+    	$this->int1 = new Integer(5/2);
+    	
+    	$this->assertEquals(2, $this->int1->getValue(), 'testing addition of two Integer values');
+    }
+    
+	/**
+     * testing to see that a numberic value is rounded by setValue to an integer
+     */
+    public function testSetValueRound() {
+    	$this->int1->setValue(5/2);
+    	
+    	$this->assertEquals(2, $this->int1->getValue(), 'testing to see that a numberic value is rounded by setValue to an integer');
+    }
+    
+	/**
+     * testing the __toString method
+     */
+    public function testToString() {
+    	$this->int1 = new Integer(2008);    	
+    	
+    	$this->assertEquals('The year is 2008', 'The year is '.$this->int1, 'testing the __toString method');
     }
 }
 
