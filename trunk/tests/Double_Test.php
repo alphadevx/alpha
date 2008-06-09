@@ -100,6 +100,33 @@ class Double_Test extends PHPUnit_Framework_TestCase
     	
     	$this->assertEquals(4.75, ($this->dbl1->getValue()+$this->dbl2->getValue()), 'testing addition of two Double values');
     }
+    
+	/**
+     * testing to see that a numberic value is rounded by the Double constructor to two decimal places
+     */
+    public function testConstructorRound() {
+    	$this->dbl1 = new Double(1/3);
+    	
+    	$this->assertEquals(0.33, $this->dbl1->getValue(), 'testing to see that a numberic value is rounded by the Double constructor to two decimal places');
+    }
+    
+	/**
+     * testing to see that a numberic value is rounded by setValue to two decimal places
+     */
+    public function testSetValueRound() {
+    	$this->dbl1->setValue(1/3);
+    	
+    	$this->assertEquals(0.33, $this->dbl1->getValue(), 'testing to see that a numberic value is rounded by setValue to two decimal places');
+    }
+    
+	/**
+     * testing the __toString method
+     */
+    public function testToString() {
+    	$this->dbl1 = new Double(5.5);
+    	
+    	$this->assertEquals('The price is $5.50', 'The price is $'.$this->dbl1, 'testing the __toString method');
+    }
 }
 
 ?>
