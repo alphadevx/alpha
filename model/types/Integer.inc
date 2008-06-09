@@ -1,77 +1,152 @@
 <?php
 
-// $Id$
-
-require_once $config->get('sysRoot')."config/validation_rules.inc";
+require_once $config->get('sysRoot').'config/validation_rules.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
 
 /**
  * The Integer complex data type
  * 
  * @package Alpha Core Datatype
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins
+ * @copyright 2008 John Collins
+ * @version $Id$
  * 
  */
 class Integer {
- 	var $value;
-	var $validation_rule = DEFAULT_INTEGER; // allows only numbers
-	var $validation_helper = 'Error: not a valid Integer value!';
-	var $size = 11;
-	var $MAX_SIZE = 11;
+	/**
+	 * The value of the Integer
+	 *
+	 * @var int
+	 */
+ 	private $value;
+ 	
+	/**
+	 * The validation rule (reg-ex) applied to Integer values
+	 *
+	 * @var string
+	 */
+ 	private $validationRule;
+ 	
+	/**
+	 * The error message for the Integer type when validation fails
+	 * 
+	 * @var string
+	 */
+	private $helper = 'Error: not a valid Integer value!';
 	
-	function Integer($val='') {
+	/**
+	 * The size of the value for the Integer
+	 * 
+	 * @var int
+	 */
+	private $size = 11;
+	
+	/**
+	 * The absolute maximum size of the value for the this Integer
+	 * 
+	 * @var int
+	 */
+	const MAX_SIZE = 11;
+	
+	/**
+	 * Constructor
+	 *
+	 * @param int $val	
+	 */
+	public function __construct($val=0) {
+		$val = intval($val);
+		
+		$this->validationRule = DEFAULT_INTEGER;
+		$this->helper = 'Error: not a valid Integer value!  A maximum of '.$this->size.' characters is allowed';
+		
 		if (strlen($val) <= $this->size) {			
-			if (preg_match($this->validation_rule, $val)) {				
-				$this->value = $val;
-				return true;			
+			if (preg_match($this->validationRule, $val)) {				
+				$this->value = $val;				
 			}else{
-				return $this->validation_helper;
+				throw new AlphaFrameworkException($this->helper);
 			}
 		}else{
-			return 'Error: the value '.$val.' provided by Integer is greater than the size '.$this->size.' of this data type.';
+			throw new AlphaFrameworkException($this->helper);
 		}
 	}
 	
-	function setValue($val) {		
+	/**
+	 * Setter for the Integer value
+	 *
+	 * @param int $val	 
+	 */
+	public function setValue($val) {
+		$val = intval($val);
+				
 		if (strlen($val) <= $this->size) {			
-			if (preg_match($this->validation_rule, $val)) {				
-				$this->value = $val;
-				return true;				
+			if (preg_match($this->validationRule, $val)) {				
+				$this->value = $val;				
 			}else{
-				return $this->validation_helper;
+				throw new AlphaFrameworkException($this->helper);
 			}
 		}else{
-			return 'Error: the value '.$val.' provided by setValue is greater than the size '.$this->size.' of this data type.';
+			throw new AlphaFrameworkException($this->helper);
 		}
 	}
 	
-	function getValue() {
+	/**
+	 * Getter for the Integer value
+	 *
+	 * @return int
+	 */
+	public function getValue() {
 		return $this->value;
-	}
-	
-	function set_validation($rule, $helper='Error: validation rule not met!') {
-		$this->validation_rule = $rule;
-		$this->validation_helper = $helper;
-	}
-	
-	function get_rule() {
-		return $this->validation_rule;
-	}
-	
-	function get_helper() {
-		return $this->validation_helper;
-	}
-	
-	function set_size($size) {
-		if ($size <= $this->MAX_SIZE)
-			$this->size = $size;
-		else
-			return 'Error: the value '.$size.' provided by set_size is greater than the MAX_SIZE '.$this->MAX_SIZE.' of this data type.';	
-	}
-	
-	function get_size(){
-		return $this->size;
 	}	
+	
+	/**
+ 	 * Get the validation rule
+ 	 *
+ 	 * @return string
+ 	 */
+ 	public function getRule() {
+		return $this->validationRule;
+	}
+	
+	/**
+	 * Used to get the validation helper message string
+	 *
+	 * @return string
+	 */
+	public function getHelper() {
+		return $this->helper;
+	}
+	
+	/**
+	 * Used to set the allowable size of the Integer in the database field
+	 *
+	 * @param int $size	 
+	 */
+	public function setSize($size) {
+		if ($size <= self::MAX_SIZE) {
+			$this->size = $size;
+			$this->helper = 'Error: not a valid Integer value!  A maximum of '.$this->size.' characters is allowed';
+		}else{
+			throw new AlphaFrameworkException('Error: the value '.$size.' provided by set_size is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
+		}	
+	}
+	
+	/**
+	 * Get the allowable size of the Double in the database field
+	 *	
+	 * @return int
+	 */
+	public function getSize(){
+		return $this->size;
+	}
+
+	/**
+	 * Used to convert the object to a printable string
+	 *
+	 * @return string
+	 */
+	public function __toString() {		
+		return strval($this->value);
+	}
 }
  
 ?>
