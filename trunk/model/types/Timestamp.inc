@@ -1,60 +1,126 @@
 <?php
 
-// $Id: Timestamp.inc 141 2006-12-24 23:07:44Z john $
-
-require_once $config->get('sysRoot')."config/validation_rules.inc";
+require_once $config->get('sysRoot').'config/validation_rules.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
 
 /**
  * The Timestamp complex data type
  * 
  * @package Alpha Core Datatype
  * @author John Collins <john@design-ireland.net>
- * @copyright 2007 John Collins
+ * @copyright 2008 John Collins
+ * @version $Id: Timestamp.inc 141 2006-12-24 23:07:44Z john $
  * 
  */
 class Timestamp {
-	var $year;
-	var $month;
-	var $day;
-	var $hour;
-	var $minute;
- 	var $second;
- 	var $weekday;
- 	var $validation_rule;
-	var $validation_helper;
+	/**
+	 * The year part
+	 *
+	 * @var int
+	 */
+	private $year;
+	
+	/**
+	 * The month part
+	 *
+	 * @var int
+	 */
+	private $month;
+	
+	/**
+	 * The day part
+	 *
+	 * @var int
+	 */
+	private $day;
+	
+	/**
+	 * The hour part
+	 *
+	 * @var int
+	 */
+	private $hour;
+	
+	/**
+	 * The minute part
+	 *
+	 * @var int
+	 */
+	private $minute;
  	
- 	function Timestamp() {
- 		$this->validation_rule = DEFAULT_DATE;
-		$this->validation_helper = 'Error: not a valid date value!  A date should be in the format YYYY-MM-DD HH:MM:SS.';
+	/**
+	 * The second part
+	 *
+	 * @var int
+	 */
+	private $second;
+ 	
+ 	/**
+	 * The textual version of the day, e.g. Monday
+	 *
+	 * @var string
+	 */
+	private $weekday;
+	
+ 	/**
+	 * The validation rule (reg-ex) applied to Date values
+	 *
+	 * @var string
+	 */
+ 	private $validationRule;
+ 	
+	/**
+	 * The error message returned for invalid values
+	 *
+	 * @var string
+	 */
+	private $helper= 'Error: not a valid timestamp value!  A timestamp should be in the format YYYY-MM-DD HH:MM:SS.';
+ 	
+	/**
+	 * Constructor
+	 */
+ 	public function __construct() {
+ 		$this->validationRule = DEFAULT_DATE;
 		
  		$this->year=date('Y');
  		$this->month=date('m');
  		$this->day=date('d');
+ 		$this->weekday=date('l');
  		$this->hour=date('H');
  		$this->minute=date('i');
  		$this->second=date('s'); 		
  	}
  	
- 	function setValue($year, $month, $day, $hour, $minute, $second) {
- 		$valid = 1;
+ 	/**
+ 	 * Setter for the timestamp value
+ 	 *
+ 	 * @param int $year
+ 	 * @param int $month
+ 	 * @param int $day
+ 	 * @param int $hour
+ 	 * @param int $minute
+ 	 * @param int $second
+ 	 */
+ 	public function setValue($year, $month, $day, $hour, $minute, $second) {
+ 		$valid = null;
  		
  		if (!preg_match('/^[0-9]{4}$/', $year))
  			$valid = 'Error: the year value '.$year.' provided is invalid!';
- 		if (!preg_match('/^[0-9]{1,2}$/', $month))
+ 		if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $month))
  			$valid = 'Error: the month value '.$month.' provided is invalid!';
- 		if (!preg_match('/^[0-9]{1,2}$/', $day))
+ 		if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $day))
  			$valid = 'Error: the day value '.$day.' provided is invalid!';
- 		if (!checkdate($month, $day, $year))
- 			$valid = 'Error: the day value '.$year.'/'.$month.'/'.$day.' provided is invalid!';
- 		if(!preg_match('/^[0-9]{1,2}$/', $hour) || !($hour >= 0 && $hour < 24))
+ 		if (!isset($valid) && !checkdate($month, $day, $year))
+ 			$valid = 'Error: the day value '.$year.'-'.$month.'-'.$day.' provided is invalid!';
+ 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $hour) || !($hour >= 0 && $hour < 24))
  			$valid = 'Error: the hour value '.$hour.' provided is invalid!';
- 		if(!preg_match('/^[0-9]{1,2}$/', $minute) || !($minute >= 0 && $minute < 60))
+ 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $minute) || !($minute >= 0 && $minute < 60))
  			$valid = 'Error: the minute value '.$minute.' provided is invalid!';
- 		if(!preg_match('/^[0-9]{1,2}$/', $second) || !($second >= 0 && $second < 60))
+ 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $second) || !($second >= 0 && $second < 60))
  			$valid = 'Error: the second value '.$second.' provided is invalid!';
  		
- 		if ($valid != 1){
- 			return $valid;
+ 		if (isset($valid)){
+ 			throw new AlphaFrameworkException($valid);
  		}else{
  			$this->year = $year;
  			$this->month = str_pad($month, 2, '0', STR_PAD_LEFT);
@@ -62,98 +128,175 @@ class Timestamp {
  			$this->hour = str_pad($hour, 2, '0', STR_PAD_LEFT);
  			$this->minute = str_pad($minute, 2, '0', STR_PAD_LEFT);
  			$this->second = str_pad($second, 2, '0', STR_PAD_LEFT);
- 			return true;
- 		}
- 	}
- 	
- 	function getValue() {
- 		return $this->year.'-'.$this->month.'-'.$this->day.' '.$this->hour.':'.$this->minute.':'.$this->second;
- 	}
- 	
- 	function get_date() {
- 		return $this->year.'-'.$this->month.'-'.$this->day;
- 	}
- 	
- 	function set_date($year, $month, $day) {
- 		$valid = 1;
- 		
- 		if (!preg_match('/^[0-9]{4}$/', $year))
- 			$valid = 'Error: the year value '.$year.' provided is invalid!';
- 		if (!preg_match('/^[0-9]{1,2}$/', $month))
- 			$valid = 'Error: the month value '.$month.' provided is invalid!';
- 		if (!preg_match('/^[0-9]{1,2}$/', $day))
- 			$valid = 'Error: the day value '.$day.' provided is invalid!';
- 		if (!checkdate($month, $day, $year))
- 			$valid = 'Error: the day value '.$year.'/'.$month.'/'.$day.' provided is invalid!';
- 		
- 		if ($valid != 1){
- 			return $valid;
- 		}else{
- 			$this->year = $year;
- 			$this->month = str_pad($month, 2, '0', STR_PAD_LEFT);
- 			$this->day = str_pad($day, 2, '0', STR_PAD_LEFT);
- 			return true;
- 		}
- 	}
- 	
- 	
- 	function get_time() {
- 		return $this->hour.':'.$this->minute.':'.$this->second;
- 	}
- 	
- 	function get_year() {
- 		return $this->year;	
- 	}
- 	
- 	function get_month() {
- 		return $this->month;	
- 	}
- 	
- 	function get_day() {
- 		return $this->day;	
- 	}
- 	
- 	function get_hour() {
- 		return $this->hour;	
- 	}
- 	
- 	function get_minute() {
- 		return $this->minute;	
- 	}
- 	
- 	function get_second() {
- 		return $this->second;	
- 	}
- 	
- 	
- 	function set_time($hour, $minute, $second) {
- 		$valid = 1;
- 		
- 		if(!preg_match('/^[0-9]{2}$/', $hour) || !($hour >= 0 && $hour < 24))
- 			$valid = 'Error: the hour value '.$hour.' provided is invalid!';
- 		if(!preg_match('/^[0-9]{1,2}$/', $minute) || !($minute >= 0 && $minute < 60))
- 			$valid = 'Error: the minute value '.$minute.' provided is invalid!';
- 		if(!preg_match('/^[0-9]{1,2}$/', $second) || !($second >= 0 && $second < 60))
- 			$valid = 'Error: the second value '.$second.' provided is invalid!';
- 			
- 		if ($valid != 1) {
- 			return $valid;
- 		}else{
- 			$this->hour = str_pad($hour, 2, '0', STR_PAD_LEFT);
- 			$this->minute = str_pad($minute, 2, '0', STR_PAD_LEFT);
- 			$this->second = str_pad($second, 2, '0', STR_PAD_LEFT); 			
- 			return true;
+ 			$unixTime = mktime($this->hour, $this->minute, $this->second, $this->month, $this->day, $this->year); 			
+ 			$this->weekday=date('l', $unixTime);
  		}
  	}
  	
  	/**
- 	 * accepts a full date/time string in YYYY-mm-dd hh:ii:ss format
- 	 * @param string date/time to be parsed
+ 	 * Getter for the Timestamp value
+ 	 *
+ 	 * @return string
  	 */
- 	function populateFromString($date_time) {
- 		$valid = 1;
+ 	public function getValue() {
+ 		return $this->year.'-'.$this->month.'-'.$this->day.' '.$this->hour.':'.$this->minute.':'.$this->second;
+ 	}
+ 	
+ 	/**
+ 	 * Getter for the date part
+ 	 *
+ 	 * @return string
+ 	 */
+ 	public function getDate() {
+ 		return $this->year.'-'.$this->month.'-'.$this->day;
+ 	}
+ 	
+	/**
+ 	 * Get the date value as a string in the format "DD/MM/YYYY"
+ 	 *
+ 	 * @return string
+ 	 */
+ 	public function getEuroValue() {
+ 		return $this->day.'/'.$this->month.'/'.substr($this->year, 2, 2);
+ 	}
+ 	
+ 	/**
+ 	 * Setter for the date part
+ 	 *
+ 	 * @param int $year
+ 	 * @param int $month
+ 	 * @param int $day 	 
+ 	 */
+ 	public function setDate($year, $month, $day) {
+ 		$valid = null;
+ 		
+ 		if (!preg_match('/^[0-9]{4}$/', $year))
+ 			$valid = 'Error: the year value '.$year.' provided is invalid!';
+ 		if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $month))
+ 			$valid = 'Error: the month value '.$month.' provided is invalid!';
+ 		if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $day))
+ 			$valid = 'Error: the day value '.$day.' provided is invalid!';
+ 		if (!isset($valid) && !checkdate($month, $day, $year))
+ 			$valid = 'Error: the day value '.$year.'/'.$month.'/'.$day.' provided is invalid!';
+ 		
+ 		if (isset($valid)){
+ 			throw new AlphaFrameworkException($valid);
+ 		}else{
+ 			$this->year = $year;
+ 			$this->month = str_pad($month, 2, '0', STR_PAD_LEFT);
+ 			$this->day = str_pad($day, 2, '0', STR_PAD_LEFT);
+ 			$unixTime = mktime(0, 0, 0, $this->month, $this->day, $this->year); 			
+ 			$this->weekday=date('l', $unixTime);
+ 		}
+ 	}
+ 	
+ 	/**
+ 	 * Getter for the time part
+ 	 *
+ 	 * @return string
+ 	 */
+ 	public function getTime() {
+ 		return $this->hour.':'.$this->minute.':'.$this->second;
+ 	}
+ 	
+ 	/**
+ 	 * Getter for the year part
+ 	 *
+ 	 * @return string
+ 	 */
+ 	public function getYear() {
+ 		return $this->year;	
+ 	}
+ 	
+ 	/**
+ 	 * Getter for the month part
+ 	 *
+ 	 * @return string
+ 	 */
+ 	public function getMonth() {
+ 		return $this->month;	
+ 	}
+ 	
+ 	/**
+ 	 * Getter for the day part
+ 	 *
+ 	 * @return string
+ 	 */
+ 	public function getDay() {
+ 		return $this->day;	
+ 	}
+ 	
+	/**
+ 	 * Get the textual weekday part, e.g. Monday
+ 	 *
+ 	 * @return string
+ 	 */
+ 	public function getWeekday() {
+ 		return $this->weekday;
+ 	}
+ 	
+ 	/**
+ 	 * Getter for the hour part
+ 	 *
+ 	 * @return string
+ 	 */
+ 	public function getHour() {
+ 		return $this->hour;	
+ 	}
+ 	
+ 	/**
+ 	 * Getter for the minute part
+ 	 *
+ 	 * @return string
+ 	 */
+ 	public function getMinute() {
+ 		return $this->minute;	
+ 	}
+ 	
+ 	/**
+ 	 * Getter for the second part
+ 	 *
+ 	 * @return string
+ 	 */
+ 	public function getSecond() {
+ 		return $this->second;	
+ 	}
+ 	
+ 	/**
+ 	 * Setter for the time part
+ 	 *
+ 	 * @param int $hour
+ 	 * @param int $minute
+ 	 * @param int $second 	 
+ 	 */
+ 	function setTime($hour, $minute, $second) {
+ 		$valid = null;
+ 		
+ 		if(!isset($valid) && !preg_match('/^[0-9]{2}$/', $hour) || !($hour >= 0 && $hour < 24))
+ 			$valid = 'Error: the hour value '.$hour.' provided is invalid!';
+ 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $minute) || !($minute >= 0 && $minute < 60))
+ 			$valid = 'Error: the minute value '.$minute.' provided is invalid!';
+ 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $second) || !($second >= 0 && $second < 60))
+ 			$valid = 'Error: the second value '.$second.' provided is invalid!';
  			
- 		$spilt_by_space = explode(" ", $date_time);
+ 		if (isset($valid)) {
+ 			throw new AlphaFrameworkException($valid);
+ 		}else{
+ 			$this->hour = str_pad($hour, 2, '0', STR_PAD_LEFT);
+ 			$this->minute = str_pad($minute, 2, '0', STR_PAD_LEFT);
+ 			$this->second = str_pad($second, 2, '0', STR_PAD_LEFT); 			
+ 		}
+ 	}
+ 	
+ 	/**
+ 	 * Accepts a full date/time string in YYYY-mm-dd hh:ii:ss format
+ 	 * 
+ 	 * @param string $dateTime
+ 	 */
+ 	public function populateFromString($dateTime) {
+ 		$valid = null;
+ 			
+ 		$spilt_by_space = explode(" ", $dateTime);
  		
  		$date = $spilt_by_space[0];
  		$time = $spilt_by_space[1];
@@ -168,23 +311,23 @@ class Timestamp {
  		$minute = $split_by_colon[1];
  		$second = $split_by_colon[2];
  		
- 		if (!preg_match('/^[0-9]{4}$/', $year))
+ 		if(!preg_match('/^[0-9]{4}$/', $year))
  			$valid = 'Error: the year value '.$year.' provided is invalid!';
- 		if (!preg_match('/^[0-9]{1,2}$/', $month))
+ 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $month))
  			$valid = 'Error: the month value '.$month.' provided is invalid!';
- 		if (!preg_match('/^[0-9]{1,2}$/', $day))
+ 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $day))
  			$valid = 'Error: the day value '.$day.' provided is invalid!';
- 		if (!checkdate($month, $day, $year))
+ 		if(!isset($valid) && !checkdate($month, $day, $year))
  			$valid = 'Error: the day value '.$year.'/'.$month.'/'.$day.' provided is invalid!';
- 		if(!preg_match('/^[0-9]{1,2}$/', $hour) || !($hour >= 0 && $hour < 24))
+ 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $hour) || !($hour >= 0 && $hour < 24))
  			$valid = 'Error: the hour value '.$hour.' provided is invalid!';
- 		if(!preg_match('/^[0-9]{1,2}$/', $minute) || !($minute >= 0 && $minute < 60))
+ 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $minute) || !($minute >= 0 && $minute < 60))
  			$valid = 'Error: the minute value '.$minute.' provided is invalid!';
- 		if(!preg_match('/^[0-9]{1,2}$/', $second) || !($second >= 0 && $second < 60))
+ 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $second) || !($second >= 0 && $second < 60))
  			$valid = 'Error: the second value '.$second.' provided is invalid!';
  		
- 		if ($valid != 1){
- 			return $valid;
+ 		if (isset($valid)){
+ 			throw new AlphaFrameworkException($valid);
  		}else{
  			$this->year = $year;
  			$this->month = str_pad($month, 2, '0', STR_PAD_LEFT);
@@ -192,29 +335,45 @@ class Timestamp {
  			$this->hour = str_pad($hour, 2, '0', STR_PAD_LEFT);
  			$this->minute = str_pad($minute, 2, '0', STR_PAD_LEFT);
  			$this->second = str_pad($second, 2, '0', STR_PAD_LEFT);
- 			return true;
+ 			$unixTime = mktime($this->hour, $this->minute, $this->second, $this->month, $this->day, $this->year); 			
+ 			$this->weekday=date('l', $unixTime); 			
  		}
  	}
  	
- 	function set_validation($rule, $helper='Error: validation rule not met!') {
-		$this->validation_rule = $rule;
-		$this->validation_helper = $helper;
+	/**
+ 	 * Get the validation rule
+ 	 *
+ 	 * @return string
+ 	 */
+ 	public function getRule() {
+		return $this->validationRule;
 	}
 	
-	function get_rule() {
-		return $this->validation_rule;
+	/**
+	 * Set the validation rule
+	 *
+	 * @param string $rule
+	 */
+	public function setRule($rule) {
+		$this->validationRule = $rule;
 	}
 	
-	function set_rule($rule) {
-		$this->validation_rule = $rule;
+	/**
+	 * Get the validation helper text
+	 *
+	 * @return string
+	 */
+	public function getHelper() {
+		return $this->helper;
 	}
 	
-	function get_helper() {
-		return $this->validation_helper;
-	}
-	
-	function set_helper($helper) {
-		$this->validation_helper = $helper;
+	/**
+	 * Set the validation helper text
+	 *
+	 * @param string $helper
+	 */
+	public function setHelper($helper) {
+		$this->helper = $helper;
 	}
 }
 

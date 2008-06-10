@@ -67,7 +67,7 @@ class Date {
 			$this->year=date('Y');
 			$this->month=date('m');
 			$this->day=date('d');
-			$this->weekday=date('l');	 		
+			$this->weekday=date('l');
 		}else{
 			if (preg_match($this->validationRule, $date)) {
 				$this->populateFromString($date);
@@ -101,7 +101,9 @@ class Date {
  		}else{
  			$this->year = $year;
  			$this->month = str_pad($month, 2, '0', STR_PAD_LEFT);
- 			$this->day = str_pad($day, 2, '0', STR_PAD_LEFT); 			
+ 			$this->day = str_pad($day, 2, '0', STR_PAD_LEFT);
+ 			$unixTime = mktime(0, 0, 0, $this->month, $this->day, $this->year); 			
+ 			$this->weekday=date('l', $unixTime); 			
  		}
  	}
  	
@@ -201,7 +203,9 @@ class Date {
  		}else{
  			$this->year = $year;
  			$this->month = str_pad($month, 2, '0', STR_PAD_LEFT);
- 			$this->day = str_pad($day, 2, '0', STR_PAD_LEFT); 			
+ 			$this->day = str_pad($day, 2, '0', STR_PAD_LEFT);
+ 			$unixTime = mktime(0, 0, 0, $this->month, $this->day, $this->year); 			
+ 			$this->weekday=date('l', $unixTime); 			
  		}
  	}
  	

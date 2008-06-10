@@ -18,6 +18,7 @@ require_once $config->get('sysRoot').'alpha/tests/Enum_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/DEnum_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Boolean_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Date_Test.php';
+require_once $config->get('sysRoot').'alpha/tests/Timestamp_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Integer_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Double_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Exceptions_Test.php';
@@ -132,6 +133,24 @@ class view_test_results extends Controller
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('Date_Test');
+		$result = $suite->run();
+		$runningTime+=$result->time();
+		$testCount+=$result->count();
+				
+		if($result->wasSuccessful())
+			echo '<pre class="success">';
+		else
+			echo '<pre class="warning">';
+			
+		$report = new PHPUnit_TextUI_ResultPrinter();		
+		$report->printResult($result);
+		echo '</pre>';
+		
+		//------------------------------------------------
+		echo "<h3>Timestamp:</h3>";
+		
+		$suite = new PHPUnit_Framework_TestSuite();
+		$suite->addTestSuite('Timestamp_Test');
 		$result = $suite->run();
 		$runningTime+=$result->time();
 		$testCount+=$result->count();
