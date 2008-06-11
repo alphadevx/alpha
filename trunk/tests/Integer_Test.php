@@ -87,7 +87,7 @@ class Integer_Test extends PHPUnit_Framework_TestCase
     	}catch (AlphaFrameworkException $e) {
     		$this->assertEquals('Error: not a valid Integer value!  A maximum of '.$this->int1->getSize().' characters is allowed'
     			, $e->getMessage()
-    			, 'testing passing invalid data to setValue');
+    			, 'testing the setSize method to see if validation fails');
     	}
     }
     
