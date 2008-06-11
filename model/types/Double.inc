@@ -53,9 +53,7 @@ class Double {
 	 *
 	 * @param double $val
 	 */
-	public function __construct($val=0.0) {
-		$val = round(floatval($val), 2);
-	
+	public function __construct($val=0.0) {	
 		$this->validationRule = DEFAULT_DOUBLE;
 		$this->helper = 'Error: not a valid double value!  A maximum of '.$this->size.' characters is allowed, in the format 0.00';
 		
@@ -75,11 +73,9 @@ class Double {
 	 *
 	 * @param double $val
 	 */
-	public function setValue($val) {
-		$val = round(floatval($val), 2);
-				
+	public function setValue($val) {				
 		if (strlen($val) <= $this->size) {			
-			if ($val == 0 || preg_match($this->validationRule, $val)) {				
+			if (preg_match($this->validationRule, $val)) {				
 				$this->value = $val;				
 			}else{
 				throw new AlphaFrameworkException($this->helper);

@@ -49,6 +49,7 @@ class DEnum_Test extends PHPUnit_Framework_TestCase
     public function testSetValueInvalid() {
     	try {
     		$this->denum1->setValue('blah');
+    		$this->fail('testing the setValue method with a bad options array index value');
     	}catch (AlphaFrameworkException $e) {
     		$this->assertEquals('Error: not a valid denum option!'
     			, $e->getMessage()

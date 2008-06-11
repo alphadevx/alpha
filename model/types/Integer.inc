@@ -53,8 +53,7 @@ class Integer {
 	 *
 	 * @param int $val	
 	 */
-	public function __construct($val=0) {
-		$val = intval($val);
+	public function __construct($val=0) {		
 		
 		$this->validationRule = DEFAULT_INTEGER;
 		$this->helper = 'Error: not a valid Integer value!  A maximum of '.$this->size.' characters is allowed';
@@ -75,8 +74,7 @@ class Integer {
 	 *
 	 * @param int $val	 
 	 */
-	public function setValue($val) {
-		$val = intval($val);
+	public function setValue($val) {		
 				
 		if (strlen($val) <= $this->size) {			
 			if (preg_match($this->validationRule, $val)) {				

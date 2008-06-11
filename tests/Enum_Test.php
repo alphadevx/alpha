@@ -78,6 +78,7 @@ class Enum_Test extends PHPUnit_Framework_TestCase
     	
     	try {    	
     		$this->enum1->setValue('z');
+    		$this->fail('testing the setValue method with a good value');
     	}catch (AlphaFrameworkException $e) {
     		$this->assertEquals('Error: not a valid enum option!'
     			, $e->getMessage()
@@ -106,6 +107,7 @@ class Enum_Test extends PHPUnit_Framework_TestCase
     public function testConstructorFail() {
     	try {    	
     		$enum = new Enum('blah');
+    		$this->fail('test the constructor failing when a bad array is provided');
     	}catch (AlphaFrameworkException $e) {
     		$this->assertEquals('Error: not a valid enum option array!'
     			, $e->getMessage()

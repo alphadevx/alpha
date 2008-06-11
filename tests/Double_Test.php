@@ -59,6 +59,7 @@ class Double_Test extends PHPUnit_Framework_TestCase
     public function testSetValueInvalid() {
     	try {
     		$this->dbl1->setValue("blah");
+    		$this->fail('testing passing invalid data to setValue');
     	}catch (AlphaFrameworkException $e) {
     		$this->assertEquals('Error: not a valid double value!  A maximum of '.$this->dbl1->getSize().' characters is allowed, in the format 0.00'
     			, $e->getMessage()
@@ -84,6 +85,7 @@ class Double_Test extends PHPUnit_Framework_TestCase
     	
     	try {
     		$this->dbl1->setValue(200);
+    		$this->fail('testing passing invalid data to setValue');
     	}catch (AlphaFrameworkException $e) {
     		$this->assertEquals('Error: not a valid double value!  A maximum of '.$this->dbl1->getSize().' characters is allowed, in the format 0.00'
     			, $e->getMessage()
@@ -99,25 +101,7 @@ class Double_Test extends PHPUnit_Framework_TestCase
     	$this->dbl2 = new Double(3.50);
     	
     	$this->assertEquals(4.75, ($this->dbl1->getValue()+$this->dbl2->getValue()), 'testing addition of two Double values');
-    }
-    
-	/**
-     * testing to see that a numberic value is rounded by the Double constructor to two decimal places
-     */
-    public function testConstructorRound() {
-    	$this->dbl1 = new Double(1/3);
-    	
-    	$this->assertEquals(0.33, $this->dbl1->getValue(), 'testing to see that a numberic value is rounded by the Double constructor to two decimal places');
-    }
-    
-	/**
-     * testing to see that a numberic value is rounded by setValue to two decimal places
-     */
-    public function testSetValueRound() {
-    	$this->dbl1->setValue(1/3);
-    	
-    	$this->assertEquals(0.33, $this->dbl1->getValue(), 'testing to see that a numberic value is rounded by setValue to two decimal places');
-    }
+    }	
     
 	/**
      * testing the __toString method
