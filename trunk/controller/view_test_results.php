@@ -22,6 +22,7 @@ require_once $config->get('sysRoot').'alpha/tests/Timestamp_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Integer_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Double_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Exceptions_Test.php';
+require_once $config->get('sysRoot').'alpha/tests/String_Test.php';
 
 /*
  * we are supressing the display and logging of errors on this page, as we 
@@ -187,6 +188,24 @@ class view_test_results extends Controller
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('Double_Test');
+		$result = $suite->run();
+		$runningTime+=$result->time();
+		$testCount+=$result->count();
+				
+		if($result->wasSuccessful())
+			echo '<pre class="success">';
+		else
+			echo '<pre class="warning">';
+			
+		$report = new PHPUnit_TextUI_ResultPrinter();		
+		$report->printResult($result);
+		echo '</pre>';
+		
+		//------------------------------------------------
+		echo "<h3>String:</h3>";
+		
+		$suite = new PHPUnit_Framework_TestSuite();
+		$suite->addTestSuite('String_Test');
 		$result = $suite->run();
 		$runningTime+=$result->time();
 		$testCount+=$result->count();
