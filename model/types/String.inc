@@ -1,152 +1,211 @@
 <?php
 
-// $Id$
-
-require_once $config->get('sysRoot')."config/validation_rules.inc";
+require_once $config->get('sysRoot').'config/validation_rules.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
 
 /**
  * The String complex data type
  * 
  * @package Alpha Core Datatype
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins
+ * @copyright 2008 John Collins
+ * @version $Id$
  * 
  */
 class String {
 	/**
-	 * the value of the string
+	 * The value of the string
+	 * 
 	 * @var string
 	 */
-	var $value;
+	private $value;
 	
 	/**
-	 * the validation rule for the string type
+	 * The validation rule for the string type
+	 * 
 	 * @var string
 	 */
-	var $validation_rule;
+	private $validationRule;
 	
 	/**
-	 * the error message for the string type when validation fails
+	 * The error message for the string type when validation fails
+	 * 
 	 * @var string
 	 */
-	var $validation_helper;
+	private $helper;
 	
 	/**
-	 * the size of the value for the this string
+	 * The size of the value for the this String
+	 * 
 	 * @var int
 	 */
-	var $size = 255;
+	private $size = 255;
 	
 	/**
-	 * the absolute maximum size of the value for the this string
-	 * @var string
+	 * The absolute maximum size of the value for the this String
+	 * 
+	 * @var int
 	 */
-	var $MAX_SIZE = 255;
+	const MAX_SIZE = 255;
 	
 	/**
-	 * simple boolean to determine if the string is a password or not
+	 * Simple boolean to determine if the string is a password or not
+	 * 
 	 * @var bool
 	 */
-	var $password = false;
+	private $password = false;
 	
-	function String($val='') {
-		$this->validation_rule = DEFAULT_STRING;		
-		$this->validation_helper = 'Error: ['.$val.'] is not a valid string value!  A maximum of '.$this->size.' characters is allowed.';
+	/**
+	 * Constructor
+	 *
+	 * @param string $val
+	 */
+	public function __construct($val='') {
+		$val = strval($val);
+		
+		$this->validationRule = DEFAULT_STRING;		
+		$this->helper = 'Error: ['.$val.'] is not a valid string value!  A maximum of '.$this->size.' characters is allowed.';
+		
 		if (strlen($val) <= $this->size) {			
-			if (preg_match($this->validation_rule, $val)) {				
+			if (preg_match($this->validationRule, $val)) {				
 				$this->value = $val;
 			}else{
-				$error = new handle_error($_SERVER["PHP_SELF"], $this->validation_helper.' :- '.$val,'String','framework');	
+				throw new AlphaFrameworkException($this->helper);
 			}
 		}else{
-			$error = new handle_error($_SERVER["PHP_SELF"], $this->validation_helper.' :- '.$val,'String','framework');	
+			throw new AlphaFrameworkException($this->helper);
 		}
 	}
 	
-	function setValue($val) {		
+	/**
+	 * Setter for the value
+	 *
+	 * @param string $val
+	 */
+	public function setValue($val) {
+		$val = strval($val);
+		$this->helper = 'Error: ['.$val.'] is not a valid string value!  A maximum of '.$this->size.' characters is allowed.';
+				
 		if (strlen($val) <= $this->size) {			
-			if (preg_match($this->validation_rule, $val)) {				
+			if (preg_match($this->validationRule, $val)) {				
 				$this->value = $val;
 			}else{
-				$error = new handle_error($_SERVER["PHP_SELF"], $this->validation_helper.' :- '.$val,'String','framework');	
+				throw new AlphaFrameworkException($this->helper);
 			}
 		}else{
-			$error = new handle_error($_SERVER["PHP_SELF"], $this->validation_helper.' :- '.$val,'String','framework');	
+			throw new AlphaFrameworkException($this->helper);
 		}
 	}
 	
-	function getValue() {
+	/**
+	 * Getter for the value
+	 *
+	 * @return string
+	 */
+	public function getValue() {
 		return $this->value;
 	}
-	
-	function set_validation($rule, $helper='Error: validation rule not met!') {
-		$this->validation_rule = $rule;
-		$this->validation_helper = $helper;
+
+	/**
+	 * Setter to override the default validation rule
+	 *
+	 * @param string $rule
+	 */
+	public function setRule($rule) {
+		$this->validationRule = $rule;
 	}
 	
-	function get_rule() {
-		return $this->validation_rule;
+	/**
+ 	 * Get the validation rule
+ 	 *
+ 	 * @return string
+ 	 */
+ 	public function getRule() {
+		return $this->validationRule;
 	}
 	
-	function set_rule($rule) {
-		$this->validation_rule = $rule;
+	/**
+	 * Setter to override the default validation helper message
+	 *
+	 * @param string $helper
+	 */
+	public function setHelper($helper) {
+		$this->helper = $helper;
 	}
 	
-	function get_helper() {
-		return $this->validation_helper;
+	/**
+	 * Used to get the validation helper message string
+	 *
+	 * @return string
+	 */
+	public function getHelper() {
+		return $this->helper;
 	}
 	
-	function set_helper($helper) {
-		$this->validation_helper = $helper;
-	}
-	
-	function set_size($size) {
-		if ($size <= $this->MAX_SIZE)
+	/**
+	 * Used to set the allowable size of the String in the database field
+	 *
+	 * @param int $size
+	 */
+	public function setSize($size) {
+		if ($size <= self::MAX_SIZE) {
 			$this->size = $size;
-		else
-			return 'Error: the value '.$size.' provided by set_size is greater than the MAX_SIZE '.$this->MAX_SIZE.' of this data type.';	
+		}else{
+			throw new AlphaFrameworkException('Error: the value '.$size.' provided by setSize is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
+		}	
 	}
 	
-	function get_size(){
+	/**
+	 * Get the allowable size of the Double in the database field
+	 *	
+	 * @return int
+	 */
+	public function getSize(){
 		return $this->size;
 	}
 	
-	function get_MAX_SIZE(){
-		return $this->MAX_SIZE;
-	}
-	
 	/**
-	 * sets up an appropriate validation rule for a required field
+	 * Sets up an appropriate validation rule for a required field
+	 * 
+	 * @param bool $req
 	 */
-	function is_required($req=true) {
+	public function isRequired($req=true) {
 		if ($req) {
-			$this->set_validation("/^([a-zA-Z0-9]+)$/", "This string requires a value!");
+			$this->validationRule = "/^([a-zA-Z0-9]+)$/";
+			$this->helper = 'This string requires a value!';
 		}else{
-			$this->set_rule("/.*/i");
+			$this->validationRule = "/.*/i";
 		}
 	}
 	
 	/**
-	 * define the string as a password (making it required by validation rule)
-	 * @param bool $pass whether it is a password or not	 
+	 * Define the string as a password (making it required by validation rule)
+	 * 
+	 * @param bool $pass
 	 */
-	function is_password($pass=true) {
+	public function isPassword($pass=true) {
 		$this->password = $pass;
 		
 		if($pass)
-			$this->is_required();
+			$this->isRequired();
 	}
 	
 	/**
-	 * checks to see if the string is a password or not
-	 * @return bool whether it is a password or not
+	 * Checks to see if the string is a password or not
+	 * 
+	 * @return bool
 	 */
-	function check_is_password() {
+	public function checkIsPassword() {
 		return $this->password;
 	}
 	
-	public function __toString() {
-		return $this->getValue();
+	/**
+	 * Used to convert the object to a printable string
+	 *
+	 * @return string
+	 */
+	public function __toString() {		
+		return strval($this->value);
 	}
 }
 

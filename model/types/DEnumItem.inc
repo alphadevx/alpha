@@ -50,8 +50,8 @@ class DEnumItem extends mysql_DAO {
 		parent::__construct();
 		
 		$this->value = new String();
-		$this->value->set_rule(REQUIRED_TEXT);
-		$this->value->set_helper("A blank dropdown value is not allowed!");
+		$this->value->setRule(REQUIRED_TEXT);
+		$this->value->setHelper("A blank dropdown value is not allowed!");
 		$this->DEnumID = new Integer();		
 	}
 	
