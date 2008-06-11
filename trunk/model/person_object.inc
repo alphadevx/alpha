@@ -74,17 +74,17 @@ class person_object extends mysql_DAO
 		// ensure to call the parent constructor
 		$this->mysql_DAO();
 		$this->displayname = new String();
-		$this->displayname->set_rule(RULE_USERNAME);
-		$this->displayname->set_helper("Please provide a name for display on the website (only letters & numbers are allowed!).");
-		$this->displayname->set_size(70);		
+		$this->displayname->setRule(RULE_USERNAME);
+		$this->displayname->setHelper("Please provide a name for display on the website (only letters & numbers are allowed!).");
+		$this->displayname->setSize(70);		
 		$this->email = new String();
-		$this->email->set_rule(RULE_EMAIL);
-		$this->email->set_helper("Please provide a valid e-mail address as your username.");
-		$this->email->set_size(70);
+		$this->email->setRule(RULE_EMAIL);
+		$this->email->setHelper("Please provide a valid e-mail address as your username.");
+		$this->email->setSize(70);
 		$this->password = new String();
-		$this->password->set_helper("Please provide a password for logging in.");
-		$this->password->set_rule("/\w+/");
-		$this->password->set_size(70);
+		$this->password->setHelper("Please provide a password for logging in.");
+		$this->password->setRule("/\w+/");
+		$this->password->setSize(70);
 		$this->access_level = new Enum(array(
 											"Standard",
 											"Moderator",
@@ -95,8 +95,8 @@ class person_object extends mysql_DAO
 										"Disabled"));
 		$this->state->setValue("Active");
 		$this->URL = new String();
-		$this->URL->set_rule(RULE_URL_BLANK);
-		$this->URL->set_helper("URLs must be in the format http://some_domain/ or left blank!");
+		$this->URL->setRule(RULE_URL_BLANK);
+		$this->URL->setHelper("URLs must be in the format http://some_domain/ or left blank!");
 	}
 	
 	/**
