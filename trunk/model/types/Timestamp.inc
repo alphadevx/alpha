@@ -79,16 +79,24 @@ class Timestamp {
 	/**
 	 * Constructor
 	 */
- 	public function __construct() {
- 		$this->validationRule = DEFAULT_DATE;
+ 	public function __construct($timestamp='') {
+ 		$this->validationRule = DEFAULT_TIMESTAMP;
 		
- 		$this->year=date('Y');
- 		$this->month=date('m');
- 		$this->day=date('d');
- 		$this->weekday=date('l');
- 		$this->hour=date('H');
- 		$this->minute=date('i');
- 		$this->second=date('s'); 		
+ 		if(empty($timestamp)) {
+	 		$this->year=date('Y');
+	 		$this->month=date('m');
+	 		$this->day=date('d');
+	 		$this->weekday=date('l');
+	 		$this->hour=date('H');
+	 		$this->minute=date('i');
+	 		$this->second=date('s');
+ 		}else{
+			if (preg_match($this->validationRule, $timestamp)) {
+				$this->populateFromString($timestamp);
+			}else{
+				throw new AlphaFrameworkException($this->helper);
+			}
+		}
  	}
  	
  	/**
@@ -298,18 +306,57 @@ class Timestamp {
  			
  		$spilt_by_space = explode(" ", $dateTime);
  		
- 		$date = $spilt_by_space[0];
- 		$time = $spilt_by_space[1];
+ 		if(isset($spilt_by_space[0])) {
+ 			$date = $spilt_by_space[0];
+ 		}else{
+ 			throw new AlphaFrameworkException($this->helper);
+ 		}
+ 		
+ 		if(isset($spilt_by_space[1])) {
+ 			$time = $spilt_by_space[1];
+ 		}else{
+ 			throw new AlphaFrameworkException($this->helper);
+ 		}
  		
  		$split_by_dash = explode("-", $date);
- 		$year = $split_by_dash[0];
- 		$month = $split_by_dash[1];
- 		$day = $split_by_dash[2];
+ 		
+ 		if(isset($split_by_dash[0])) {
+ 			$year = $split_by_dash[0];
+ 		}else{
+ 			throw new AlphaFrameworkException($this->helper);
+ 		}
+ 		
+ 		if(isset($split_by_dash[1])) {
+ 			$month = $split_by_dash[1];
+ 		}else{
+ 			throw new AlphaFrameworkException($this->helper);
+ 		}
+ 		
+ 		if(isset($split_by_dash[2])) {
+ 			$day = $split_by_dash[2];
+ 		}else{
+ 			throw new AlphaFrameworkException($this->helper);
+ 		}
  		
  		$split_by_colon = explode(":", $time);
- 		$hour = $split_by_colon[0];
- 		$minute = $split_by_colon[1];
- 		$second = $split_by_colon[2];
+ 		
+ 		if(isset($split_by_colon[0])) {
+ 			$hour = $split_by_colon[0];
+ 		}else{
+ 			throw new AlphaFrameworkException($this->helper);
+ 		}
+ 		
+ 		if(isset($split_by_colon[1])) {
+ 			$minute = $split_by_colon[1];
+ 		}else{
+ 			throw new AlphaFrameworkException($this->helper);
+ 		}
+ 		
+ 		if(isset($split_by_colon[2])) {
+ 			$second = $split_by_colon[2];
+ 		}else{
+ 			throw new AlphaFrameworkException($this->helper);
+ 		}
  		
  		if(!preg_match('/^[0-9]{4}$/', $year))
  			$valid = 'Error: the year value '.$year.' provided is invalid!';
