@@ -126,7 +126,7 @@ class Double {
 			$this->size = $size;
 			$this->helper = 'Error: not a valid double value!  A maximum of '.$this->size.' characters is allowed, in the format 0.00';
 		}else{
-			throw new AlphaFrameworkException('Error: the value '.$size.' provided by set_size is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
+			throw new AlphaFrameworkException('Error: the value '.$size.' provided by setSize is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
 		}	
 	}
 	
