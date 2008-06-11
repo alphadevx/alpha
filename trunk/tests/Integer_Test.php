@@ -59,6 +59,7 @@ class Integer_Test extends PHPUnit_Framework_TestCase
     public function testSetValueInvalid() {
     	try {
     		$this->int1->setValue("blah");
+    		$this->fail('testing passing invalid data to setValue');
     	}catch (AlphaFrameworkException $e) {
     		$this->assertEquals('Error: not a valid Integer value!  A maximum of '.$this->int1->getSize().' characters is allowed'
     			, $e->getMessage()
@@ -102,24 +103,6 @@ class Integer_Test extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * testing to see that a numberic value is rounded by the Integer constructor
-     */
-    public function testConstructorRound() {
-    	$this->int1 = new Integer(5/2);
-    	
-    	$this->assertEquals(2, $this->int1->getValue(), 'testing addition of two Integer values');
-    }
-    
-	/**
-     * testing to see that a numberic value is rounded by setValue to an integer
-     */
-    public function testSetValueRound() {
-    	$this->int1->setValue(5/2);
-    	
-    	$this->assertEquals(2, $this->int1->getValue(), 'testing to see that a numberic value is rounded by setValue to an integer');
-    }
-    
-	/**
      * testing the __toString method
      */
     public function testToString() {

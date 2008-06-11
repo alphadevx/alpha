@@ -33,8 +33,7 @@ class Boolean_Test extends PHPUnit_Framework_TestCase
      * here
      */    
     protected function tearDown() {        
-        unset($this->boolean1);
-        unset($this->person);
+        unset($this->boolean1);        
     }
     
     /**
@@ -71,6 +70,7 @@ class Boolean_Test extends PHPUnit_Framework_TestCase
     public function testSetValueInvalid() {
     	try {
     		$this->boolean1->setValue(3);
+    		$this->fail("testing passing invalid data to setValue");
     	}catch (AlphaFrameworkException $e) {
     		$this->assertTrue(true, "testing passing invalid data to setValue");
     	}
