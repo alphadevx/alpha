@@ -131,7 +131,7 @@ class Integer {
 	}
 	
 	/**
-	 * Get the allowable size of the Double in the database field
+	 * Get the allowable size of the Integer in the database field
 	 *	
 	 * @return int
 	 */
