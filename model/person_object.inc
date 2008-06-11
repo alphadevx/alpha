@@ -76,7 +76,7 @@ class person_object extends mysql_DAO
 		$this->displayname = new String();
 		$this->displayname->setRule(RULE_USERNAME);
 		$this->displayname->setSize(70);
-		$this->displayname->setHelper("Please provide a name for display on the website (only letters & numbers are allowed!).");
+		$this->displayname->setHelper("Please provide a name for display on the website (only letters, numbers, and .-_ characters are allowed!).");
 		$this->email = new String();
 		$this->email->setRule(RULE_EMAIL);
 		$this->email->setSize(70);
