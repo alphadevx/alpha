@@ -75,16 +75,16 @@ class person_object extends mysql_DAO
 		$this->mysql_DAO();
 		$this->displayname = new String();
 		$this->displayname->setRule(RULE_USERNAME);
+		$this->displayname->setSize(70);
 		$this->displayname->setHelper("Please provide a name for display on the website (only letters & numbers are allowed!).");
-		$this->displayname->setSize(70);		
 		$this->email = new String();
 		$this->email->setRule(RULE_EMAIL);
-		$this->email->setHelper("Please provide a valid e-mail address as your username.");
 		$this->email->setSize(70);
+		$this->email->setHelper("Please provide a valid e-mail address as your username.");
 		$this->password = new String();
-		$this->password->setHelper("Please provide a password for logging in.");
-		$this->password->setRule("/\w+/");
 		$this->password->setSize(70);
+		$this->password->setHelper("Please provide a password for logging in.");
+		$this->password->setRule("/\w+/");		
 		$this->access_level = new Enum(array(
 											"Standard",
 											"Moderator",
