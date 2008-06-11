@@ -64,7 +64,7 @@ class String {
 		$val = strval($val);
 		
 		$this->validationRule = DEFAULT_STRING;		
-		$this->helper = 'Error: ['.$val.'] is not a valid string value!  A maximum of '.$this->size.' characters is allowed.';
+		$this->helper = 'Error: not a valid string value!  A maximum of '.$this->size.' characters is allowed.';
 		
 		if (strlen($val) <= $this->size) {			
 			if (preg_match($this->validationRule, $val)) {				
@@ -84,8 +84,7 @@ class String {
 	 */
 	public function setValue($val) {
 		$val = strval($val);
-		$this->helper = 'Error: ['.$val.'] is not a valid string value!  A maximum of '.$this->size.' characters is allowed.';
-				
+		
 		if (strlen($val) <= $this->size) {			
 			if (preg_match($this->validationRule, $val)) {				
 				$this->value = $val;
@@ -150,6 +149,7 @@ class String {
 	public function setSize($size) {
 		if ($size <= self::MAX_SIZE) {
 			$this->size = $size;
+			$this->helper = 'Error: not a valid string value!  A maximum of '.$this->size.' characters is allowed.';
 		}else{
 			throw new AlphaFrameworkException('Error: the value '.$size.' provided by setSize is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
 		}	
