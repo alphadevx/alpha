@@ -40,7 +40,8 @@ class Integer_Test extends PHPUnit_Framework_TestCase
      * here
      */    
     protected function tearDown() {        
-        unset($this->int1);        
+        unset($this->int1);
+        unset($this->int2);
     }
     
     /**
