@@ -1,88 +1,167 @@
 <?php
 
-// $Id$
-
-require_once $config->get('sysRoot')."config/validation_rules.inc";
+require_once $config->get('sysRoot').'config/validation_rules.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
 
 /**
  * The Text complex data type
  * 
  * @package Alpha Core Datatype
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins
+ * @copyright 2008 John Collins
+ * @version $Id$
  * 
  */
 class Text {
-
-	var $value;
-	var $validation_rule;
-	var $validation_helper;
-	var $size = 65535;
-	var $MAX_SIZE = 65535;
+	/**
+	 * The value of the Text object
+	 * 
+	 * @var string
+	 */
+	private $value;
 	
-	function Text($val='') {
-		$this->validation_rule = DEFAULT_TEXT;
-		$this->validation_helper = 'Error: ['.$val.'] is not a valid text value!  A maximum of '.$this->MAX_SIZE.' characters is allowed.';
-		if (strlen($val) <= $this->size) {			
-			if (preg_match($this->validation_rule, $val)) {				
-				$this->value = $val;
-				return true;				
-			}else{
-				$error = new handle_error($_SERVER["PHP_SELF"], $this->validation_helper.' :- '.$val,'Text','framework');
-			}
-		}else{
-			$error = new handle_error($_SERVER["PHP_SELF"], $this->validation_helper.' :- '.$val,'Text','framework');
-		}
-	}
+	/**
+	 * The validation rule for the Text type
+	 * 
+	 * @var string
+	 */
+	private $validationRule;
 	
-	function setValue($val) {	
+	/**
+	 * The error message for the string type when validation fails
+	 * 
+	 * @var string
+	 */
+	private $helper;
+	
+	/**
+	 * The size of the value for the this Text
+	 * 
+	 * @var int
+	 */
+	private $size = 65535;
+	
+	/**
+	 * The absolute maximum size of the value for the this Text
+	 * 
+	 * @var int
+	 */
+	const MAX_SIZE = 65535;
+	
+	/**
+	 * Constructor
+	 *
+	 * @param string $val	 
+	 */
+	public function __construct($val='') {
+		
+		$this->validationRule = DEFAULT_TEXT;
+		$this->helper = 'Error: not a valid text value!  A maximum of '.$this->size.' characters is allowed.';
+		
 		if (strlen($val) <= $this->size) {			
-			if (preg_match($this->validation_rule, $val)) {				
+			if (preg_match($this->validationRule, $val)) {				
 				$this->value = $val;				
-				return true;				
 			}else{
-				$error = new handle_error($_SERVER["PHP_SELF"], $this->validation_helper.' :- '.$val,'Text','framework');
+				throw new AlphaFrameworkException($this->helper);
 			}
 		}else{
-			$error = new handle_error($_SERVER["PHP_SELF"], $this->validation_helper.' :- '.$val,'Text','framework');
+			throw new AlphaFrameworkException($this->helper);
 		}
 	}
 	
-	function getValue() {		
+	/**
+	 * Setter for the value
+	 *
+	 * @param string $val
+	 */
+	public function setValue($val) {	
+		if (strlen($val) <= $this->size) {			
+			if (preg_match($this->validationRule, $val)) {				
+				$this->value = $val;				
+			}else{
+				throw new AlphaFrameworkException($this->helper);
+			}
+		}else{
+			throw new AlphaFrameworkException($this->helper);
+		}
+	}
+	
+	/**
+	 * Getter for the value
+	 *
+	 * @return string
+	 */
+	public function getValue() {		
 		return $this->value;
-	}
-	
-	function set_validation($rule, $helper='Error: validation rule not met!') {
-		$this->validation_rule = $rule;
-		$this->validation_helper = $helper;
-	}
-	
-	function get_rule() {
-		return $this->validation_rule;
-	}
-	
-	function set_rule($rule) {
-		$this->validation_rule = $rule;
-	}
-	
-	function get_helper() {
-		return $this->validation_helper;
-	}
-	
-	function set_helper($helper) {
-		$this->validation_helper = $helper;
-	}
-	
-	function set_size($size) {
-		if ($size <= $this->MAX_SIZE)
-			$this->size = $size;
-		else
-			return 'Error: the value '.$size.' provided by set_size is greater than the MAX_SIZE '.$this->MAX_SIZE.' of this data type.';	
-	}
-	
-	function get_size(){
-		return $this->size;
 	}	
+	
+	/**
+	 * Setter to override the default validation rule
+	 *
+	 * @param string $rule
+	 */
+	public function setRule($rule) {
+		$this->validationRule = $rule;
+	}
+	
+	/**
+ 	 * Get the validation rule
+ 	 *
+ 	 * @return string
+ 	 */
+ 	public function getRule() {
+		return $this->validationRule;
+	}
+	
+	/**
+	 * Setter to override the default validation helper message
+	 *
+	 * @param string $helper
+	 */
+	public function setHelper($helper) {
+		$this->helper = $helper;
+	}
+	
+	/**
+	 * Used to get the validation helper message string
+	 *
+	 * @return string
+	 */
+	public function getHelper() {
+		return $this->helper;
+	}
+	
+	/**
+	 * Used to set the allowable size of the Text in the database field
+	 *
+	 * @param int $size
+	 */
+	public function setSize($size) {
+		if ($size <= self::MAX_SIZE) {
+			$this->size = $size;
+			$this->helper = 'Error: not a valid text value!  A maximum of '.$this->size.' characters is allowed.';
+		}else{
+			throw new AlphaFrameworkException('Error: the value '.$size.' provided by setSize is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
+		}	
+	}
+	
+	/**
+	 * Get the allowable size of the Double in the database field
+	 *	
+	 * @return int
+	 */
+	public function getSize(){
+		return $this->size;
+	}
+	
+	/**
+	 * Used to convert the object to a printable string
+	 *
+	 * @return string
+	 */
+	public function __toString() {		
+		return strval($this->value);
+	}
 }
 
 ?>
