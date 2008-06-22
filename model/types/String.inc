@@ -60,8 +60,7 @@ class String {
 	 *
 	 * @param string $val
 	 */
-	public function __construct($val='') {
-		$val = strval($val);
+	public function __construct($val='') {		
 		
 		$this->validationRule = DEFAULT_STRING;		
 		$this->helper = 'Error: not a valid string value!  A maximum of '.$this->size.' characters is allowed.';
@@ -82,8 +81,7 @@ class String {
 	 *
 	 * @param string $val
 	 */
-	public function setValue($val) {
-		$val = strval($val);
+	public function setValue($val) {		
 		
 		if (strlen($val) <= $this->size) {			
 			if (preg_match($this->validationRule, $val)) {				
