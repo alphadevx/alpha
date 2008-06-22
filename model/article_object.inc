@@ -130,29 +130,29 @@ class article_object extends mysql_DAO
 		// ensure to call the parent constructor
 		$this->mysql_DAO();
 		$this->title = new String();
-		$this->title->set_helper("Please provide a title for the article.");
-		$this->title->set_size(100);
-		$this->title->set_rule("/\w+/");
+		$this->title->setHelper("Please provide a title for the article.");
+		$this->title->setSize(100);
+		$this->title->setRule("/\w+/");
 		
 		$this->section = new DEnum('article_object::section');
 		
 		$this->keywords = new String();
-		$this->keywords->set_helper("Please provide some coma-seperated search engine keywords for the article.");
-		$this->keywords->set_size(150);
-		$this->keywords->set_rule("/\w+/");
+		$this->keywords->setHelper("Please provide some coma-seperated search engine keywords for the article.");
+		$this->keywords->setSize(150);
+		$this->keywords->setRule("/\w+/");
 		$this->description = new String();
-		$this->description->set_helper("Please provide a brief description of the article.");
-		$this->description->set_size(200);
-		$this->description->set_rule("/\w+/");
+		$this->description->setHelper("Please provide a brief description of the article.");
+		$this->description->setSize(200);
+		$this->description->setRule("/\w+/");
 		$this->body_onload = new String();		
 		$this->content = new Text();
-		$this->content->set_helper("Please provide some content for the article.");
-		$this->content->set_rule("/\w+/");
+		$this->content->setHelper("Please provide some content for the article.");
+		$this->content->setRule("/\w+/");
 		$this->header_content = new Text();		
 		$this->author = new String();
-		$this->author->set_helper("Please state the name of the author of this article");
-		$this->author->set_size(70);
-		$this->author->set_rule("/\w+/");
+		$this->author->setHelper("Please state the name of the author of this article");
+		$this->author->setSize(70);
+		$this->author->setRule("/\w+/");
 		$this->date_added = new Date();
 		$this->date_updated = new Date();
 		$this->published = new Boolean(0);
