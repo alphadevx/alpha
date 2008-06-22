@@ -73,10 +73,10 @@ class string_box
 			echo '</td>';
 	
 			echo '<td>';
-			echo '<input '.($string_obj->check_is_password()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.$string_obj->get_MAX_SIZE().'" name="'.$this->get_name().'" id="'.$this->get_name().'" value="'.((isset($_POST[$this->get_name()]) && $string_obj->getValue() == "")? $_POST[$this->get_name()] : $string_obj->getValue()).'"'.($read_only ? 'readonly class="readonly"' : '').'/>';
+			echo '<input '.($string_obj->checkIsPassword()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.String::MAX_SIZE.'" name="'.$this->get_name().'" id="'.$this->get_name().'" value="'.((isset($_POST[$this->get_name()]) && $string_obj->getValue() == "")? $_POST[$this->get_name()] : $string_obj->getValue()).'"'.($read_only ? 'readonly class="readonly"' : '').'/>';
 			echo '</td></tr>';
 		}else{
-			echo '<input '.($string_obj->check_is_password()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.$string_obj->get_MAX_SIZE().'" name="'.$this->get_name().'" id="'.$this->get_name().'" value="'.((isset($_POST[$this->get_name()]) && $string_obj->getValue() == "")? $_POST[$this->get_name()] : $string_obj->getValue()).'"'.($read_only ? 'readonly class="readonly"' : '').'/>';
+			echo '<input '.($string_obj->checkIsPassword()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.String::MAX_SIZE.'" name="'.$this->get_name().'" id="'.$this->get_name().'" value="'.((isset($_POST[$this->get_name()]) && $string_obj->getValue() == "")? $_POST[$this->get_name()] : $string_obj->getValue()).'"'.($read_only ? 'readonly class="readonly"' : '').'/>';
 		}
 	}
 	
@@ -88,8 +88,8 @@ class string_box
 		// ----------------------
 		echo '<script language="javascript">';
 		
-		echo " validation_rules[\"".$this->get_name()."\"] = ".$this->string_object->get_rule().";\n";
-		echo " validation_rules[\"".$this->get_name()."_msg\"] = \"".$this->string_object->get_helper()."\";\n";
+		echo " validation_rules[\"".$this->get_name()."\"] = ".$this->string_object->getRule().";\n";
+		echo " validation_rules[\"".$this->get_name()."_msg\"] = \"".$this->string_object->getHelper()."\";\n";
 		echo '</script>';
 	}
 	
