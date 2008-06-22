@@ -47,8 +47,8 @@ class form_validator
 				&& strtoupper(get_class($properties[$prop])) != "DENUM"
 				&& strtoupper(get_class($properties[$prop])) != "RELATION"
 				&& strtoupper(get_class($properties[$prop])) != "BOOLEAN") {
-					echo " validation_rules[\"".$prop."\"] = ".$this->BO->$prop->get_rule().";\n";
-					echo " validation_rules[\"".$prop."_msg\"] = \"".$this->BO->$prop->get_helper()."\";\n";
+					echo " validation_rules[\"".$prop."\"] = ".$this->BO->$prop->getRule().";\n";
+					echo " validation_rules[\"".$prop."_msg\"] = \"".$this->BO->$prop->getHelper()."\";\n";
 				}
 			}
 		}	

@@ -51,11 +51,11 @@ class button
 	 */
 	function button($action, $title, $id, $imgURL='') {
 		$this->action = new Text();
-		$this->action->set_rule("/.*/i");
+		$this->action->setRule("/.*/i");
 		$this->title = new String();
-		$this->title->set_rule("/.*/i");
+		$this->title->setRule("/.*/i");
 		$this->id = new String();
-		$this->id->set_rule("/.*/i");
+		$this->id->setRule("/.*/i");
 		if(!empty($imgURL))
 			$this->imgURL = $imgURL;
 		
