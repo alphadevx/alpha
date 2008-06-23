@@ -44,41 +44,27 @@ class ListBusinessObjects extends Controller
 		$this->display_page_head();
 		
 		if(!empty($_POST))
-			$this->handle_post();		
+			$this->handle_post();
+
+		$classNames = mysql_DAO::getBOClassNames();
 		
-		$handle = opendir($config->get('sysRoot').'model');
-   		
-        // loop over the business object directory
-	    while (false !== ($file = readdir($handle))) {
-	    	if (preg_match("/_object.inc/", $file)) {
-	    		$classname = substr($file, 0, -4);	    		
-	    		
-	    		require_once $config->get('sysRoot').'model/'.$classname.'.inc';
-	    		
-	    		$BO = new $classname();				
-		
+		foreach($classNames as $classname) {
+			$foundFile = true;
+			
+			if(file_exists($config->get('sysRoot').'model/'.$classname.'.inc'))
+				require_once $config->get('sysRoot').'model/'.$classname.'.inc';
+			elseif(file_exists($config->get('sysRoot').'alpha/model/'.$classname.'.inc'))
+				require_once $config->get('sysRoot').'alpha/model/'.$classname.'.inc';
+			else
+				$foundFile = false;
+	    	
+			if($foundFile) {
+		    	$BO = new $classname();				
+			
 				$BO_View = new View($BO);
-				$BO_View->admin_view();	
-	    	}
-	    }
-	    
-	    // now loop over the core BOs provided with Alpha
-	    
-	    $handle = opendir($config->get('sysRoot').'alpha/model');
-   		
-        // loop over the business object directory
-	    while (false !== ($file = readdir($handle))) {
-	    	if (preg_match("/_object.inc/", $file)) {
-	    		$classname = substr($file, 0, -4);	    		
-	    		
-	    		require_once $config->get('sysRoot').'alpha/model/'.$classname.'.inc';
-	    		
-	    		$BO = new $classname();				
-		
-				$BO_View = new View($BO);
-				$BO_View->admin_view();	
-	    	}
-	    }	
+				$BO_View->admin_view();
+			}
+		}		
 		
 		$this->display_page_foot();
 	}
