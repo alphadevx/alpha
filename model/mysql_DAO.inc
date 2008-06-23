@@ -1193,7 +1193,7 @@ class mysql_DAO
 	}
 	
 	/**
-	 * parces a MySQL error for the value that violated a unique constraint
+	 * parses a MySQL error for the value that violated a unique constraint
 	 */
 	function findOffendingValue($error) {		
 		$singleQuote1 = strpos($error,"'");
@@ -1209,6 +1209,44 @@ class mysql_DAO
 	 */
 	function getDataLabels() {		
 		return $this->dataLabels;
+	}
+	
+	/**
+	 * Loops over the core and custom BO directories and builds an array of all of the BO class names in the system
+	 *
+	 * @return array
+	 */
+	function getBOClassNames() {
+		global $config;
+		
+		$classNameArray = array();
+		
+		// first get any custom BOs
+		$handle = opendir($config->get('sysRoot').'model');
+   		
+        // loop over the business object directory
+	    while (false !== ($file = readdir($handle))) {
+	    	if (preg_match("/_object.inc/", $file)) {
+	    		$classname = substr($file, 0, -4);	    		
+	    		
+	    		array_push($classNameArray, $classname);
+	    	}
+	    }
+	    
+	    // now loop over the core BOs provided with Alpha
+	    
+	    $handle = opendir($config->get('sysRoot').'alpha/model');
+   		
+        // loop over the business object directory
+	    while (false !== ($file = readdir($handle))) {
+	    	if (preg_match("/_object.inc/", $file)) {
+	    		$classname = substr($file, 0, -4);	    		
+	    		
+	    		array_push($classNameArray, $classname);
+	    	}
+	    }
+
+	    return $classNameArray;
 	}
 }
 
