@@ -1,8 +1,7 @@
 <?php
 
-// $Id$
-
-require_once $config->get('sysRoot')."config/validation_rules.inc";
+require_once $config->get('sysRoot').'config/validation_rules.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
 
 /**
  * The Relation complex data type
@@ -10,38 +9,143 @@ require_once $config->get('sysRoot')."config/validation_rules.inc";
  * @package Alpha Core Datatype
  * @author John Collins <john@design-ireland.net>
  * @copyright 2008 John Collins
+ * @version $Id$
  * 
  */
 class Relation {
-
-	var $relatedClass;
-	var $relatedClassField;
-	var $relatedClassDisplayField;
-	var $relationType;
-	var $allowableRelationTypes = array('MANY-TO-ONE','ONE-TO-MANY','ONE-TO-ONE','MANY-TO-MANY');
-	var $value;
-	var $validation_rule = DEFAULT_INTEGER; // allows only numbers
-	var $validation_helper = 'Error: not a valid Integer value!';
-	var $size = 11;
-	var $MAX_SIZE = 11;
+	/**
+	 * The name of the business object class which this class is related to
+	 *
+	 * @var string
+	 */
+	private $relatedClass;
 	
-	function Relation() {		
+	/**
+	 * The name of the fields of the business object class by which this class is related by
+	 *
+	 * @var string
+	 */
+	private $relatedClassField;
+	
+	/**
+	 * The name of the field from the related business object class which is displayed by the selection widget
+	 *
+	 * @var string
+	 */
+	private $relatedClassDisplayField;
+	
+	/**
+	 * The type of relation ('MANY-TO-ONE','ONE-TO-MANY','ONE-TO-ONE','MANY-TO-MANY')
+	 *
+	 * @var string
+	 */
+	private $relationType;
+	
+	/**
+	 * An array of the allowable relationship types ('MANY-TO-ONE','ONE-TO-MANY','ONE-TO-ONE','MANY-TO-MANY')
+	 *
+	 * @var array
+	 */
+	private $allowableRelationTypes = array('MANY-TO-ONE','ONE-TO-MANY','ONE-TO-ONE','MANY-TO-MANY');
+	
+	/**
+	 * The object ID (OID) value of the related object
+	 *
+	 * @var int
+	 */
+	private $value;
+	
+	/**
+	 * The validation rule for the Relation type
+	 * 
+	 * @var string
+	 */
+	private $validationRule;
+	
+	/**
+	 * The error message for the Relation type when validation fails
+	 * 
+	 * @var string
+	 */
+	private $helper;
+	
+	/**
+	 * The size of the value for the this Relation
+	 * 
+	 * @var int
+	 */
+	private $size = 255;
+	
+	/**
+	 * The absolute maximum size of the value for the this Relation
+	 * 
+	 * @var int
+	 */
+	const MAX_SIZE = 255;
+	
+	/**
+	 * Constructor
+	 */
+	public function __construct() {
+		$this->validationRule = DEFAULT_INTEGER;		
+		$this->helper = 'Error: not a valid Relation value!  A maximum of '.$this->size.' characters is allowed.';		
 	}
 	
-	function setRelatedClass($RC) {
-		// TODO: check to see if the related class is defined somewhere
-		$this->relatedClass = $RC;
+	/**
+	 * Set the name of the business object class that this class is related to
+	 *
+	 * @param string $RC
+	 */
+	public function setRelatedClass($RC) {		
+		if(in_array($RC, mysql_DAO::getBOClassNames()))
+			$this->relatedClass = $RC;
+		else
+			throw new AlphaFrameworkException('The class ['.$RC.'] is not defined anywhere!');
 	}
 	
-	function getRelatedClass() {
+	/**
+	 * Getter for the relatedClass
+	 *
+	 * @return string
+	 */
+	public function getRelatedClass() {
 		return $this->relatedClass;
 	}
 	
-	function setRelatedClassField($RCF) {		
-		$this->relatedClassField = $RCF;
+	/**
+	 * Setter for the field of the related class
+	 *
+	 * @param string $RCF
+	 */
+	public function setRelatedClassField($RCF) {
+		try{
+			// use reflection to sure the related class has the field $RCF
+			$reflection = new ReflectionClass($this->relatedClass);			
+			$properties = $reflection->getProperties();			
+			$fieldFound = false;
+		
+			foreach($properties as $propObj) {				
+				if($RCF == $propObj->name) {
+					$fieldFound = true;
+					break;
+				}
+			}
+
+			if($fieldFound)
+				$this->relatedClassField = $RCF;
+			else
+				throw new AlphaFrameworkException('The field ['.$RCF.'] was not found in the class ['.$this->relatedClass.']');
+		}catch (Exception $e) {
+			throw new AlphaFrameworkException($e->getMessage());
+		}
 	}
 	
-	function getRelatedClassField() {
+	/**
+	 * Getter for the field of the related class
+	 *
+	 * @return string
+	 */
+	public function getRelatedClassField() {
 		return $this->relatedClassField;
 	}
 	
