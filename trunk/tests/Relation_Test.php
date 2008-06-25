@@ -60,6 +60,33 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     			, 'Testing passing an invalid BO name to setRelatedClass');
     	}
     }
+    
+	/**
+     * Testing passing a valid field name to setRelatedClassField
+     */
+    public function testSetRelatedClassFieldPass() {
+    	try {
+    		$this->rel1->setRelatedClass('person_object');
+    		$this->rel1->setRelatedClassField('email');
+    	}catch (AlphaFrameworkException $e) {
+    		$this->fail('Testing passing a valid field name to setRelatedClassField');
+    	}
+    }
+    
+	/**
+     * Testing passing an invalid field name to setRelatedClassField
+     */
+    public function testSetRelatedClassFieldFail() {
+    	try {
+    		$this->rel1->setRelatedClass('person_object');
+    		$this->rel1->setRelatedClassField('doesNotExist');
+    		$this->fail('Testing passing an invalid field name to setRelatedClassField');
+    	}catch (AlphaFrameworkException $e) {
+    		$this->assertEquals('The field [doesNotExist] was not found in the class [person_object]'
+    			, $e->getMessage()
+    			, 'Testing passing an invalid field name to setRelatedClassField');
+    	}
+    }
 }
 
 ?>
