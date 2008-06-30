@@ -74,14 +74,14 @@ class Relation {
 	 * 
 	 * @var int
 	 */
-	private $size = 255;
+	private $size = 11;
 	
 	/**
 	 * The absolute maximum size of the value for the this Relation
 	 * 
 	 * @var int
 	 */
-	const MAX_SIZE = 255;
+	const MAX_SIZE = 11;
 	
 	/**
 	 * Constructor
@@ -149,56 +149,95 @@ class Relation {
 		return $this->relatedClassField;
 	}
 	
-	function setRelatedClassDisplayField($RCDF) {		
+	/**
+	 * Setter for the display field from the related class
+	 *
+	 * @param string $RCDF
+	 */
+	public function setRelatedClassDisplayField($RCDF) {		
 		$this->relatedClassDisplayField = $RCDF;
 	}
 	
-	function getRelatedClassDisplayField() {		
+	/**
+	 * Getter for the display field from the related class
+	 *
+	 * @return string
+	 */
+	public function getRelatedClassDisplayField() {		
 		return $this->relatedClassDisplayField;
 	}
 	
-	function setRelationType($RT) {
+	/**
+	 * Setter for the relation type
+	 *
+	 * @param string $RT
+	 */
+	public function setRelationType($RT) {
 		if(in_array($RT, $this->allowableRelationTypes))
 			$this->relationType = $RT;
 		else
-			$error = new handle_error('Relation.inc', 'Relation type of ['.$RT.'] is invalid!','setRelationType','framework');
+			throw new AlphaFrameworkException('Relation type of ['.$RT.'] is invalid!');
 	}
 	
-	function getRelationType() {
+	/**
+	 * Getter for the relation type
+	 *
+	 * @return string
+	 */
+	public function getRelationType() {
 		return $this->relationType;
 	}
 	
-	function setValue($val) {		
+	/**
+	 * Setter for the value (OID of related object) of this relation
+	 *
+	 * @param int $val	 
+	 */
+	public function setValue($val) {		
 		if (strlen($val) <= $this->size) {			
-			if (preg_match($this->validation_rule, $val)) {				
-				$this->value = str_pad($val, 11, "0", STR_PAD_LEFT);
-				return true;				
-			}else{
-				return $this->validation_helper;
+			if (preg_match($this->validationRule, $val)) {				
+				$this->value = str_pad($val, 11, "0", STR_PAD_LEFT);				
+			}else{			
+				throw new AlphaFrameworkException($this->helper);
 			}
 		}else{
-			return 'Error: the value '.$val.' provided by setValue is greater than the size '.$this->size.' of this data type.';
+			throw new AlphaFrameworkException($this->helper);
 		}
 	}
 	
-	function getValue() {
+	/**
+	 * Getter for the Integer value
+	 *
+	 * @return int
+	 */
+	public function getValue() {
 		return $this->value;
+	}	
+	
+	/**
+ 	 * Get the validation rule
+ 	 *
+ 	 * @return string
+ 	 */
+ 	public function getRule() {
+		return $this->validationRule;
 	}
 	
-	function set_validation($rule, $helper='Error: validation rule not met!') {
-		$this->validation_rule = $rule;
-		$this->validation_helper = $helper;
+	/**
+	 * Used to get the validation helper message string
+	 *
+	 * @return string
+	 */
+	public function getHelper() {
+		return $this->helper;
 	}
 	
-	function get_rule() {
-		return $this->validation_rule;
-	}
-	
-	function get_helper() {
-		return $this->validation_helper;
-	}
-	
-	function getRelatedClassDisplayFieldValue() {
+	/**
+	 * Getter for the display value of the related class field
+	 *
+	 * @return string
+	 */
+	public function getRelatedClassDisplayFieldValue() {
 		global $config;
 		
 		if (file_exists($config->get('sysRoot').'alpha/model/'.$this->relatedClass.'.inc')) {
@@ -206,8 +245,7 @@ class Relation {
 		}elseif (file_exists($config->get('sysRoot').'model/'.$this->relatedClass.'.inc')) {
 			require_once $config->get('sysRoot').'model/'.$this->relatedClass.'.inc';
 		}else{
-			$error = new handle_error('Relation.inc','Could not load the defination for the BO class '.$this->relatedClass,'framework');
-			exit;
+			throw new AlphaFrameworkException('Could not load the definition for the BO class ['.$this->relatedClass.']');
 		}
 					
 		$obj = new $this->relatedClass;
@@ -221,9 +259,11 @@ class Relation {
 	}
 	
 	/**
-	 * for one-to-many relations, get the objects on the many side
+	 * For one-to-many relations, get the objects on the many side
+	 * 
+	 * @return array
 	 */
-	function getRelatedObjects() {
+	public function getRelatedObjects() {
 		global $config;
 		
 		if (file_exists($config->get('sysRoot').'alpha/model/'.$this->relatedClass.'.inc')) {
@@ -231,14 +271,31 @@ class Relation {
 		}elseif (file_exists($config->get('sysRoot').'model/'.$this->relatedClass.'.inc')) {
 			require_once $config->get('sysRoot').'model/'.$this->relatedClass.'.inc';
 		}else{
-			$error = new handle_error('Relation.inc','Could not load the defination for the BO class '.$this->relatedClass,'framework');
-			exit;
+			throw new AlphaFrameworkException('Could not load the definition for the BO class ['.$this->relatedClass.']');
 		}
 					
 		$obj = new $this->relatedClass;
 		$objects = $obj->load_all_by_attribute($this->getRelatedClassField(), $this->getValue());
 		
 		return $objects;
+	}
+	
+	/**
+	 * Get the allowable size of the Relation in the database field
+	 *	
+	 * @return int
+	 */
+	public function getSize(){
+		return $this->size;
+	}
+
+	/**
+	 * Used to convert the object to a printable string
+	 *
+	 * @return string
+	 */
+	public function __toString() {		
+		return strval($this->value);
 	}
 }
 
