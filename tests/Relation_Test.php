@@ -87,6 +87,87 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     			, 'Testing passing an invalid field name to setRelatedClassField');
     	}
     }
+    
+    /**
+     * Testing passing a valid type name to setRelationType
+     */
+    public function testSetRelationTypePass() {
+    	try {
+    		$this->rel1->setRelationType('MANY-TO-ONE');
+    	}catch (AlphaFrameworkException $e) {
+    		$this->fail('Testing passing a valid type name to setRelationType');
+    	}
+    }
+    
+	/**
+     * Testing passing an invalid type name to setRelationType
+     */
+    public function testSetRelationTypeFail() {
+    	try {
+    		$this->rel1->setRelationType('blah');    		
+    		$this->fail('Testing passing an invalid type name to setRelationType');
+    	}catch (AlphaFrameworkException $e) {
+    		$this->assertEquals('Relation type of [blah] is invalid!'
+    			, $e->getMessage()
+    			, 'Testing passing an invalid type name to setRelationType');
+    	}
+    }
+    
+	/**
+     * Testing setValue method with a valid value
+     */
+    public function testSetValuePass() {
+    	try {
+    		$this->rel1->setValue(100);
+    		$this->rel1->setValue('2777');
+    	}catch (AlphaFrameworkException $e) {
+    		$this->fail('Testing setValue method with a valid value');
+    	}
+    }
+    
+	/**
+     * Testing setValue method with an invalid value
+     */
+    public function testSetValueFail() {
+    	try {
+    		$this->rel1->setValue('xyz');
+    		$this->fail('Testing setValue method with an invalid value');
+    	}catch (AlphaFrameworkException $e) {
+    		$this->assertEquals('Error: not a valid Relation value!  A maximum of '.$this->rel1->getSize().' characters is allowed.'
+    			, $e->getMessage()
+    			, 'Testing setValue method with an invalid value');
+    	}
+    }
+    
+    /**
+     * Testing that the display field value of the related class is accessed correctly
+     */
+    public function testSetRelatedClassDisplayFieldPass() {
+    	try {
+    		$this->rel1->setRelatedClass('person_object');
+    		// assuming here that user #1 is the default Administrator account
+    		$this->rel1->setValue(1);
+    		$this->rel1->setRelatedClassDisplayField('access_level');
+    		$this->assertEquals('Administrator', $this->rel1->getRelatedClassDisplayFieldValue(), 'Testing that the display field value of the related class is accessed correctly');    		
+    	}catch (AlphaFrameworkException $e) {
+    		$this->fail('Testing that the display field value of the related class is accessed correctly');
+    	}
+    }
+    
+	/**
+     * Testing that getRelatedClassDisplayFieldValue() will fail to load an invalid class definition
+     */
+    public function testGetRelatedClassDisplayFieldValueFail() {
+    	try {    		
+    		$this->rel1->setRelatedClassDisplayField('someField');
+    		$value = $this->rel1->getRelatedClassDisplayFieldValue();
+    		$this->fail('Testing that getRelatedClassDisplayFieldValue() will fail to load an invalid class definition');
+    	}catch (AlphaFrameworkException $e) {
+    		$this->assertEquals('Could not load the definition for the BO class []'
+    			, $e->getMessage()
+    			, 'Testing that getRelatedClassDisplayFieldValue() will fail to load an invalid class definition');
+    	}
+    }
 }
 
 ?>
