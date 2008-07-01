@@ -2,6 +2,8 @@
 
 require_once $config->get('sysRoot').'config/validation_rules.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
+require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
+require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
 
 /**
  * The Boolean complex data type
@@ -12,7 +14,7 @@ require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.i
  * @version $Id$
  * 
  */
-class Boolean {
+class Boolean extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * The value of the Boolean
 	 *
@@ -32,7 +34,7 @@ class Boolean {
 	 *
 	 * @var string
 	 */
-	private $helper = 'Error: not a valid Boolean value!';
+	protected $helper = 'Error: not a valid Boolean value!';
 	
 	/**
 	 * Constructor
@@ -56,7 +58,7 @@ class Boolean {
 	 *
 	 * @param boolean $val
 	 */
-	public function setValue($val) {		
+	public function setValue($val) {
 		if ($val === true || $val == 1) {
 			$this->value = 1;
 			$this->booleanValue = true;			
@@ -84,16 +86,7 @@ class Boolean {
 	 */
 	public function getBooleanValue() {
 		return $this->booleanValue;
-	}
-	
-	/**
-	 * Used to get the validation helper message string
-	 *
-	 * @return string
-	 */
-	public function getHelper() {
-		return $this->helper;
-	}
+	}	
 }
 
 ?>

@@ -2,6 +2,8 @@
 
 require_once $config->get('sysRoot').'config/validation_rules.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
+require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
+require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
 
 /**
  * The Relation complex data type
@@ -12,7 +14,7 @@ require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.i
  * @version $Id$
  * 
  */
-class Relation {
+class Relation extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * The name of the business object class which this class is related to
 	 *
@@ -67,7 +69,7 @@ class Relation {
 	 * 
 	 * @var string
 	 */
-	private $helper;
+	protected $helper;
 	
 	/**
 	 * The size of the value for the this Relation
@@ -221,16 +223,7 @@ class Relation {
  	 */
  	public function getRule() {
 		return $this->validationRule;
-	}
-	
-	/**
-	 * Used to get the validation helper message string
-	 *
-	 * @return string
-	 */
-	public function getHelper() {
-		return $this->helper;
-	}
+	}	
 	
 	/**
 	 * Getter for the display value of the related class field
@@ -287,16 +280,7 @@ class Relation {
 	 */
 	public function getSize(){
 		return $this->size;
-	}
-
-	/**
-	 * Used to convert the object to a printable string
-	 *
-	 * @return string
-	 */
-	public function __toString() {		
-		return strval($this->value);
-	}
+	}	
 }
 
 ?>

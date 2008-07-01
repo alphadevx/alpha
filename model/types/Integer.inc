@@ -2,6 +2,8 @@
 
 require_once $config->get('sysRoot').'config/validation_rules.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
+require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
+require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
 
 /**
  * The Integer complex data type
@@ -12,7 +14,7 @@ require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.i
  * @version $Id$
  * 
  */
-class Integer {
+class Integer extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * The value of the Integer
 	 *
@@ -32,7 +34,7 @@ class Integer {
 	 * 
 	 * @var string
 	 */
-	private $helper = 'Error: not a valid Integer value!';
+	protected $helper = 'Error: not a valid Integer value!';
 	
 	/**
 	 * The size of the value for the Integer
@@ -103,16 +105,7 @@ class Integer {
  	 */
  	public function getRule() {
 		return $this->validationRule;
-	}
-	
-	/**
-	 * Used to get the validation helper message string
-	 *
-	 * @return string
-	 */
-	public function getHelper() {
-		return $this->helper;
-	}
+	}	
 	
 	/**
 	 * Used to set the allowable size of the Integer in the database field
@@ -135,16 +128,7 @@ class Integer {
 	 */
 	public function getSize(){
 		return $this->size;
-	}
-
-	/**
-	 * Used to convert the object to a printable string
-	 *
-	 * @return string
-	 */
-	public function __toString() {		
-		return strval($this->value);
-	}
+	}	
 }
  
 ?>

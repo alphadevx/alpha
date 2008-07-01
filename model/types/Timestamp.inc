@@ -2,6 +2,8 @@
 
 require_once $config->get('sysRoot').'config/validation_rules.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
+require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
+require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
 
 /**
  * The Timestamp complex data type
@@ -12,7 +14,7 @@ require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.i
  * @version $Id: Timestamp.inc 141 2006-12-24 23:07:44Z john $
  * 
  */
-class Timestamp {
+class Timestamp extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * The year part
 	 *
@@ -99,6 +101,15 @@ class Timestamp {
 		}
  	}
  	
+	/**
+ 	 * Accepts a full date/time string in YYYY-mm-dd hh:ii:ss format
+ 	 * 
+ 	 * @param string $dateTime
+ 	 */
+ 	public function setValue($dateTime) {
+ 		$this->populateFromString($dateTime);
+ 	}
+ 	
  	/**
  	 * Setter for the timestamp value
  	 *
@@ -109,7 +120,7 @@ class Timestamp {
  	 * @param int $minute
  	 * @param int $second
  	 */
- 	public function setValue($year, $month, $day, $hour, $minute, $second) {
+ 	public function setTimestampValue($year, $month, $day, $hour, $minute, $second) {
  		$valid = null;
  		
  		if (!preg_match('/^[0-9]{4}$/', $year))

@@ -1,6 +1,8 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
+require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
+require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
 
 /**
  * The Enum complex data type
@@ -11,7 +13,7 @@ require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.i
  * @version $Id$
  *
  */
-class Enum {
+class Enum extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * An array of valid enum options
 	 * @var array
@@ -30,7 +32,7 @@ class Enum {
 	 *
 	 * @var string
 	 */
-	private $validation_helper = 'Error: not a valid enum option!';
+	protected $helper = 'Error: not a valid enum option!';
 
 	/**
 	 * Constructor that sets up the enum options
@@ -66,16 +68,7 @@ class Enum {
 		if($alphaSort)
 			sort($this->options, SORT_STRING);
 		return $this->options;
-	}
-
-	/**
-	 * Getter for the validation helper string
-	 *
-	 * @return string
-	 */
-	public function getHelper() {
-		return $this->validation_helper;
-	}
+	}	
 
 	/**
 	 * Used to get the current enum item
