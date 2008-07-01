@@ -1,7 +1,9 @@
 <?php
 
-require_once $config->get('sysRoot')."config/validation_rules.inc";
+require_once $config->get('sysRoot').'config/validation_rules.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
+require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
+require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
 
 /**
  * The Double complex data type
@@ -12,7 +14,7 @@ require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.i
  * @version $Id$
  * 
  */
-class Double {
+class Double extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * the value of the Double
 	 * 
@@ -32,7 +34,7 @@ class Double {
 	 * 
 	 * @var string
 	 */
-	private $helper = 'Error: not a valid Double value!';
+	protected $helper = 'Error: not a valid Double value!';
 	
 	/**
 	 * The size of the value for the Double
@@ -101,16 +103,7 @@ class Double {
  	 */
  	public function getRule() {
 		return $this->validationRule;
-	}
-	
-	/**
-	 * Used to get the validation helper message string
-	 *
-	 * @return string
-	 */
-	public function getHelper() {
-		return $this->helper;
-	}
+	}	
 	
 	/**
 	 * Used to set the allowable size of the Double in the database field

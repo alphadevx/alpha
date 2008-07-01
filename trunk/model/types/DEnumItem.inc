@@ -1,5 +1,7 @@
 <?php
 
+require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
+
 /**
  * The DEnumItem (Dynamic Enum Item) complex data type.  Has a one-to-many
  * relationship with the DEnum type. 
@@ -10,7 +12,7 @@
  * @version $Id$
  * 
  */
-class DEnumItem extends mysql_DAO {
+class DEnumItem extends mysql_DAO implements AlphaTypeInterface{
 	/**
 	 * The value that will appear in the drop-down.
 	 * 
@@ -43,6 +45,13 @@ class DEnumItem extends mysql_DAO {
 	);
 	
 	/**
+	 * The message to display to the user when validation fails
+	 *
+	 * @var string
+	 */
+	protected $helper = 'Error: not a valid DEnumItem value!';
+	
+	/**
 	 * The constructor
 	 */
 	public function __construct() {
@@ -52,7 +61,8 @@ class DEnumItem extends mysql_DAO {
 		$this->value = new String();
 		$this->value->setRule(REQUIRED_TEXT);
 		$this->value->setHelper("A blank dropdown value is not allowed!");
-		$this->DEnumID = new Integer();		
+		$this->DEnumID = new Integer();
+		$this->markTransient('helper');		
 	}
 	
 	/**
@@ -108,5 +118,32 @@ class DEnumItem extends mysql_DAO {
 	 */
 	public function setValue($item) {
 		$this->value->setValue($item);		
+	}
+	
+	/**
+	 * Getter for the validation helper string
+	 * 
+	 * @return string
+	 */	
+	public function getHelper() {
+		return $this->helper;
+	}
+	
+	/**
+	 * Set the validation helper text
+	 *
+	 * @param string $helper
+	 */
+	public function setHelper($helper) {
+		$this->helper = $helper;
+	}
+	
+	/**
+	 * Used to convert the object to a printable string
+	 *
+	 * @return string
+	 */
+	public function __toString() {		
+		return strval($this->value);
 	}
 }

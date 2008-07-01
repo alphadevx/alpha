@@ -47,7 +47,7 @@ class Timestamp_Test extends PHPUnit_Framework_TestCase
      * testing the setValue method
      */
     public function testSetValuePass() {
-    	$this->timestamp1->setValue(2000, 1, 1, 23, 33, 5);
+    	$this->timestamp1->setTimestampValue(2000, 1, 1, 23, 33, 5);
     	
     	$this->assertEquals("2000-01-01 23:33:05", $this->timestamp1->getValue(), "testing the setValue method");
     }
@@ -57,7 +57,7 @@ class Timestamp_Test extends PHPUnit_Framework_TestCase
      */
     public function testSetValueInvalidMonth() {
     	try {    	
-    		$this->timestamp1->setValue(2000, 'blah', 1, 0, 0, 0);
+    		$this->timestamp1->setTimestampValue(2000, 'blah', 1, 0, 0, 0);
     		$this->fail("testing the setValue method with a bad month");
     	}catch (AlphaFrameworkException $e) {
     		$this->assertEquals('Error: the month value blah provided is invalid!'
@@ -71,7 +71,7 @@ class Timestamp_Test extends PHPUnit_Framework_TestCase
      */
     public function testSetValueInvalidValue() {
     	try {    	
-    		$this->timestamp1->setValue(2000, 13, 1, 0, 0, 0);
+    		$this->timestamp1->setTimestampValue(2000, 13, 1, 0, 0, 0);
     		$this->fail("testing the setValue method with a bad timestamp value (out of range)");
     	}catch (AlphaFrameworkException $e) {
     		$this->assertEquals('Error: the day value 2000-13-1 provided is invalid!'

@@ -1,7 +1,9 @@
 <?php
 
-require_once $config->get('sysRoot')."config/validation_rules.inc";
+require_once $config->get('sysRoot').'config/validation_rules.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
+require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
+require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
 
 /**
  * The Date complex data type
@@ -12,7 +14,7 @@ require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.i
  * @version $Id$
  * 
  */
-class Date {
+class Date extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * The year part
 	 *
@@ -53,7 +55,7 @@ class Date {
 	 *
 	 * @var string
 	 */
-	private $helper= 'Error: not a valid date value!  A date should be in the format YYYY-MM-DD HH:MM:SS.';
+	protected $helper= 'Error: not a valid date value!  A date should be in the format YYYY-MM-DD HH:MM:SS.';
  	
 	/**
 	 * Constructor.  Leave $date param empty to default to now.
@@ -78,13 +80,22 @@ class Date {
  	}
  	
  	/**
+ 	 * Accepts a full date string in YYYY-mm-dd format and populates relevent Date attributes.
+ 	 * 
+ 	 * @param string $date
+ 	 */
+ 	public function setValue($date) {
+ 		$this->populateFromString($date);
+ 	}
+ 	
+ 	/**
  	 * Set the Date attributes to match the three values provided
  	 *
  	 * @param int $year
  	 * @param int $month
  	 * @param int $day
  	 */
- 	public function setValue($year, $month, $day) {
+ 	public function setDateValue($year, $month, $day) {
  		$valid = null;
  		
  		if (!preg_match('/^[0-9]{4}$/', $year))
@@ -225,25 +236,7 @@ class Date {
 	 */
 	public function setRule($rule) {
 		$this->validationRule = $rule;
-	}
-	
-	/**
-	 * Get the validation helper text
-	 *
-	 * @return string
-	 */
-	public function getHelper() {
-		return $this->helper;
-	}
-	
-	/**
-	 * Set the validation helper text
-	 *
-	 * @param string $helper
-	 */
-	public function setHelper($helper) {
-		$this->helper = $helper;
-	}
+	}	
 }
 
 ?>

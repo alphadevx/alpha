@@ -1,5 +1,7 @@
 <?php
 
+require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
+
 /**
  * The DEnum (Dynamic Enum) complex data type.  Similiar to Enum, 
  * except list items are stored in a database table and are editable.
@@ -10,7 +12,7 @@
  * @version $Id$
  * 
  */
-class DEnum extends mysql_DAO {
+class DEnum extends mysql_DAO implements AlphaTypeInterface{
 	/**
 	 * An array of valid DEnum options
 	 * 
@@ -54,7 +56,7 @@ class DEnum extends mysql_DAO {
 	 *
 	 * @var string
 	 */
-	private $helper = 'Error: not a valid denum option!';
+	protected $helper = 'Error: not a valid denum option!';
 	
 	/**
 	 * Constructor that sets up the DEnum options
@@ -128,6 +130,15 @@ class DEnum extends mysql_DAO {
 	 */	
 	public function getHelper() {
 		return $this->helper;
+	}
+	
+	/**
+	 * Set the validation helper text
+	 *
+	 * @param string $helper
+	 */
+	public function setHelper($helper) {
+		$this->helper = $helper;
 	}
 	
 	/**
@@ -219,6 +230,15 @@ class DEnum extends mysql_DAO {
 			return $id;
 		else
 			return 0;
+	}
+	
+	/**
+	 * Used to convert the object to a printable string
+	 *
+	 * @return string
+	 */
+	public function __toString() {		
+		return strval($this->value);
 	}
 }
 

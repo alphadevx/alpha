@@ -2,6 +2,8 @@
 
 require_once $config->get('sysRoot').'config/validation_rules.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
+require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
+require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
 
 /**
  * The String complex data type
@@ -12,7 +14,7 @@ require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.i
  * @version $Id$
  * 
  */
-class String {
+class String extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * The value of the string
 	 * 
@@ -32,7 +34,7 @@ class String {
 	 * 
 	 * @var string
 	 */
-	private $helper;
+	protected $helper;
 	
 	/**
 	 * The size of the value for the this String
@@ -119,25 +121,7 @@ class String {
  	 */
  	public function getRule() {
 		return $this->validationRule;
-	}
-	
-	/**
-	 * Setter to override the default validation helper message
-	 *
-	 * @param string $helper
-	 */
-	public function setHelper($helper) {
-		$this->helper = $helper;
-	}
-	
-	/**
-	 * Used to get the validation helper message string
-	 *
-	 * @return string
-	 */
-	public function getHelper() {
-		return $this->helper;
-	}
+	}	
 	
 	/**
 	 * Used to set the allowable size of the String in the database field
@@ -195,15 +179,6 @@ class String {
 	 */
 	public function checkIsPassword() {
 		return $this->password;
-	}
-	
-	/**
-	 * Used to convert the object to a printable string
-	 *
-	 * @return string
-	 */
-	public function __toString() {		
-		return strval($this->value);
 	}
 }
 
