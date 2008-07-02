@@ -1,9 +1,8 @@
 <?php
 
-// $Id$
-
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
-
+require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/BONotFoundException.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Date.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Timestamp.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Double.inc';
@@ -17,78 +16,96 @@ require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Relation.inc';
 
 /**
-* Base business object class definition
-* 
-* @package Alpha Core
-* @author John Collins <john@design-ireland.net>
-* @copyright 2006 John Collins
-* @todo Write increment_version method
-* @todo Write set_last_query method
-* @todo clone_object has bug due to complex attributes not being cloned (referenced instead!)
-*  
-*/
-class mysql_DAO
-{
+ * Base business object class definition
+ * 
+ * @package Alpha Core
+ * @author John Collins <john@design-ireland.net>
+ * @copyright 2008 John Collins
+ * @version $Id$
+ *  
+ */
+class mysql_DAO {
 	/**
-	 * the object ID
+	 * The object ID
+	 * 
 	 * @var integer
 	 */
-	var $OID;
+	protected $OID;
+	
 	/**
-	 * the last database query run by this object.  Useful for tracing an error.
+	 * The last database query run by this object.  Useful for tracing an error.
+	 * 
 	 * @var string
 	 */
-	var $last_query = "";
+	protected $lastQuery;
+	
 	/**
-	 * the version number of the object, used for locking mechanism
+	 * The version number of the object, used for locking mechanism
+	 * 
 	 * @var Integer
 	 */
-	var $version_num;
+	protected $version_num;
+	
 	/**
-	 * the timestamp of creation
+	 * The timestamp of creation
+	 * 
 	 * @var Timestamp
 	 */
-	var $created_ts;
+	protected $created_ts;
+	
 	/**
-	 * the OID of the person who created this BO
+	 * The OID of the person who created this BO
+	 * 
 	 * @var Integer 
 	 */
-	var $created_by;
+	protected $created_by;
+	
 	/**
-	 * the timestamp of the last update
+	 * The timestamp of the last update
+	 * 
 	 * @var Timestamp
 	 */
-	var $updated_ts;
+	protected $updated_ts;
+	
 	/**
-	 * the OID of the person who last updated this BO
+	 * The OID of the person who last updated this BO
+	 * 
 	 * @var Integer 
 	 */
-	var $updated_by;
+	protected $updated_by;
+	
 	/**
-	 * an array of the names of all of the default attributes of a persistent BO defined in this class
+	 * An array of the names of all of the default attributes of a persistent BO defined in this class
+	 * 
 	 * @var array
 	 */
-	var $default_attributes = array("OID","last_query","version_num","dataLabels","render_mode","created_ts","created_by","updated_ts","updated_by","default_attributes","transient_attributes","unique_attributes","TABLE_NAME");
+	protected $defaultAttributes = array("OID","lastQuery","version_num","dataLabels","render_mode","created_ts","created_by","updated_ts","updated_by","defaultAttributes","transientAttributes","uniqueAttributes","TABLE_NAME");
+	
 	/**
-	 * an array of the names of all of the transient attributes of a persistent BO which are not saved to the DB
+	 * An array of the names of all of the transient attributes of a persistent BO which are not saved to the DB
+	 * 
 	 * @var array
 	 */
-	var $transient_attributes = array("last_query","dataLabels","render_mode","default_attributes","transient_attributes","unique_attributes","TABLE_NAME");
+	protected $transientAttributes = array("lastQuery","dataLabels","render_mode","defaultAttributes","transientAttributes","uniqueAttributes","TABLE_NAME");
+	
 	/**
-	 * an array of the uniquely-constained attributes of this persistent BO
+	 * An array of the uniquely-constained attributes of this persistent BO
+	 * 
 	 * @var array
 	 */
-	var $unique_attributes = array();
+	protected $uniqueAttributes = array();
+	
 	/**
-	 * an array of the data labels used for displaying class attributes
+	 * An array of the data labels used for displaying class attributes
+	 * 
 	 * @var array
 	 */
 	protected $dataLabels = array();
 	
 	/**
-	 * the constructor which sets up some housekeeping attributes
+	 * The constructor which sets up some housekeeping attributes
 	 */
-	function mysql_DAO() {
+	public function __construct() {
 		$this->version_num = new Integer(0);
 		$this->created_ts = new Timestamp();
 		$person_ID = (isset($_SESSION["current_user"])? $_SESSION["current_user"]->get_ID(): 0);
@@ -98,25 +115,23 @@ class mysql_DAO
 	}
 	
 	/**
-	 * populates the child object with the properties retrived from the database for the object $id
-	 * @param integer $OID The id of the object to load
-	 * @return bool True if no database error occured, else false and error is stored in $this->last_query
+	 * Populates the child object with the properties retrived from the database for the object $OID
+	 * 
+	 * @param integer $OID	
 	 */
-	function load_object($OID)
-	{
+	public function load($OID) {
 		if(method_exists($this, 'before_load_callback'))
 			$this->before_load_callback();
 		
 		$this->OID = $OID;
-		$sql_query = "SELECT * FROM ".$this->getTableName()." WHERE OID = '$OID';";		
+		$sqlQuery = "SELECT * FROM ".$this->getTableName()." WHERE OID = '$OID';";		
 
-		$this->last_query = $sql_query;
+		$this->lastQuery = $sqlQuery;
 
-		$result = mysql_query($sql_query);
+		$result = mysql_query($sqlQuery);
 		
 		if(mysql_num_rows($result) == 0) {
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load object '.$OID.', not found in database.' ,'load_object($OID)','framework');
-			return false;
+			throw new BONotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');			
 		}
 		
 		$row = mysql_fetch_assoc($result);
@@ -127,103 +142,87 @@ class mysql_DAO
 
 		foreach($properties as $propObj) {
 			// filter transient attributes
-			if(!in_array($propObj->name, $this->transient_attributes)) {				
+			if(!in_array($propObj->name, $this->transientAttributes)) {
 				$this->set($propObj->name, $row[$propObj->name]);
-			}			
-		}		
+			}
+		}
 		
 		if(mysql_error() == '' && $this->set_enum_options()) {	
 			if(method_exists($this, 'after_load_callback'))
-				$this->after_load_callback();
-			return true;
+				$this->after_load_callback();			
 		}else{			
-			$this->last_query .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load object, MySql error is: '.mysql_error().', query: '.$this->last_query,'load_object($OID)','framework');
-			return false;
+			throw new AlphaFrameworkException('Failed to load object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
 		}		
 	}
 	
 	/**
-	 * populates the child object from the database table by the given attribute
-	 * @param string $atribute The attribute to load the object by
-	 * @param string $value The value of the attribute to load the object by
-	 * @return bool True if no database error occured, else false and error is stored in $this->last_query
+	 * Populates the child object from the database table by the given attribute value
+	 * 
+	 * @param string $atribute
+	 * @param string $value	 
 	 */
-	function loadByAttribute($attribute, $value)
-	{
+	public function loadByAttribute($attribute, $value)	{
 		if(method_exists($this, 'before_loadByAttribute_callback'))
 				$this->before_loadByAttribute_callback();
 		
-		$sql_query = "SELECT * FROM ".$this->getTableName()." WHERE $attribute = '$value';";
+		$sqlQuery = "SELECT * FROM ".$this->getTableName()." WHERE $attribute = '$value';";
 
-		$this->last_query = $sql_query;
+		$this->lastQuery = $sqlQuery;
 		
-		$result = mysql_query($sql_query);
+		$result = mysql_query($sqlQuery);
 		
 		if(mysql_num_rows($result) == 0) {
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load object, MySql error is: '.mysql_error().', query: '.$this->last_query,"loadByAttribute([$attribute], [$value])",'framework');
-			return false;
+			throw new BONotFoundException('Failed to load object where attribute ['.$attribute.'] equals ['.$value.'].');			
 		}
 		
 		$row = mysql_fetch_assoc($result);
 		
-		$properties = get_class_vars(get_class($this));
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this));
+		$properties = $reflection->getProperties();
 
-		foreach(array_keys($properties) as $prop) {
-			if (get_class($this->$prop) != false) {	
-				if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {					
-					$this->$prop->setValue(stripslashes($row[$prop]));
-				}else{
-					$this->$prop->populateFromString(stripslashes($row[$prop]));
-				}
+		foreach($properties as $propObj) {
+			// filter transient attributes
+			if(!in_array($propObj->name, $this->transientAttributes)) {
+				$this->set($propObj->name, $row[$propObj->name]);
 			}
-			if($prop == "OID"){				
-				$this->OID = $row[$prop];
-			}	
-			if($prop == "version_num"){				
-				$this->version_num = $row[$prop];
-			}
-		}		
+		}
 		
 		if(mysql_error() == '' && $this->set_enum_options()) {
 			if(method_exists($this, 'after_loadByAttribute_callback'))
-				$this->after_loadByAttribute_callback();
-			return true;
+				$this->after_loadByAttribute_callback();			
 		}else{			
-			$this->last_query .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load object, MySql error is: '.mysql_error().', query: '.$this->last_query,"loadByAttribute([$attribute], [$value])",'framework');
-			return false;
+			throw new AlphaFrameworkException('Failed to load object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
 		}		
 	}
 	
 	/**
-	 * loads all of the objects of this class into an array, which is returned
+	 * Loads all of the objects of this class into an array which is returned
 	 * 
 	 * @param integer $start The start of the SQL LIMIT clause
 	 * @param integer $limit The amount (limit) of objects to load
-	 * @param string $order_by the name of the field to sort the BOs by
+	 * @param string $orderBy the name of the field to sort the BOs by
 	 * @param string $order the order to sort the BOs by, default is ASC
 	 * @return array an array containing objects of this type of business object.
 	 */
-	function load_all($start=0, $limit=0, $order_by="OID", $order="ASC")
-	{
-		if(method_exists($this, 'before_load_all_callback'))
-			$this->before_load_all_callback();
-		
+	public function loadAll($start=0, $limit=0, $orderBy="OID", $order="ASC") {
 		global $config;
+		
+		if(method_exists($this, 'before_loadAll_callback'))
+			$this->before_loadAll_callback();
 		
 		if ($limit == 0)
 			$limit = $config->get('sysListPageAmount');
 		
-		$sql_query = "SELECT OID FROM ".$this->getTableName()." ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
+		$sqlQuery = "SELECT OID FROM ".$this->getTableName()." ORDER BY ".$orderBy." ".$order." LIMIT ".$start.", ".$limit.";";
 		
-		$this->last_query = $sql_query;
+		$this->lastQuery = $sqlQuery;
 
-		$result = mysql_query($sql_query);
+		$result = mysql_query($sqlQuery);
 		
 		if(mysql_error() != '') {
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load objects, query: '.$this->last_query.'.' ,'load_all()','framework');
-			return false;
+			throw new AlphaFrameworkException('Failed to load object OIDs, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+			return array();
 		}
 		
 		// now build an array of objects to be returned
@@ -233,47 +232,46 @@ class mysql_DAO
 		
 		while($row = mysql_fetch_assoc($result)) {
 			$obj = new $BO_Class();
-			$obj->load_object($row["OID"]);
+			$obj->load($row["OID"]);
 			$objects[$count] = $obj;
 			$count++;			
 		}
 		
-		if(method_exists($this, 'after_load_all_callback'))
-			$this->after_load_all_callback();
+		if(method_exists($this, 'after_loadAll_callback'))
+			$this->after_loadAll_callback();
 		
 		return $objects;	
 	}
 	
 	/**
-	 * loads all of the objects of this class by the specified attribute into an array, which is returned
+	 * Loads all of the objects of this class by the specified attribute into an array which is returned
 	 * 
 	 * @param string $atribute The attribute to load the object by
 	 * @param string $value The value of the attribute to load the object by
 	 * @param integer $start The start of the SQL LIMIT clause
 	 * @param integer $limit The amount (limit) of objects to load
-	 * @param string $order_by the name of the field to sort the BOs by
+	 * @param string $orderBy the name of the field to sort the BOs by
 	 * @param string $order the order to sort the BOs by, default is ASC
 	 * @return array an array containing objects of this type of business object.
 	 */
-	function load_all_by_attribute($attribute, $value, $start=0, $limit=0, $order_by="OID", $order="ASC")
-	{
-		if(method_exists($this, 'before_load_all_by_attribute_callback'))
-			$this->before_load_all_by_attribute_callback();
-		
+	function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC") {
 		global $config;
+		
+		if(method_exists($this, 'before_loadAllByAttribute_callback'))
+			$this->before_loadAllByAttribute_callback();
 		
 		if ($limit == 0)
 			$limit = $config->get('sysListPageAmount');
 		
-		$sql_query = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = '$value' ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
+		$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = '$value' ORDER BY ".$orderBy." ".$order." LIMIT ".$start.", ".$limit.";";
 		
-		$this->last_query = $sql_query;
+		$this->lastQuery = $sqlQuery;
 
-		$result = mysql_query($sql_query);
+		$result = mysql_query($sqlQuery);
 		
 		if(mysql_error() != '') {
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load objects, query: '.$this->last_query.'.' ,'load_all_by_attribute()','framework');
-			return false;
+			throw new AlphaFrameworkException('Failed to load object OIDs, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+			return array();
 		}
 		
 		// now build an array of objects to be returned
@@ -283,13 +281,13 @@ class mysql_DAO
 		
 		while($row = mysql_fetch_assoc($result)) {
 			$obj = new $BO_Class();
-			$obj->load_object($row["OID"]);
+			$obj->load($row["OID"]);
 			$objects[$count] = $obj;
 			$count++;
 		}
 		
-		if(method_exists($this, 'after_load_all_by_attribute_callback'))
-			$this->after_load_all_by_attribute_callback();
+		if(method_exists($this, 'after_loadAllByAttribute_callback'))
+			$this->after_loadAllByAttribute_callback();
 		
 		return $objects;	
 	}
@@ -312,7 +310,7 @@ class mysql_DAO
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this));
 		$properties = $reflection->getProperties();
-		$sql_query = "";		
+		$sqlQuery = "";		
 		
 		if($this->get_version() != $this->version_num->getValue()){
 			$error = new handle_error($_SERVER["PHP_SELF"],'Could not save the object as it has been updated by another user.  Please try saving again.','save_object()','warning');
@@ -325,65 +323,65 @@ class mysql_DAO
 		$this->updated_ts = new Timestamp();
 
 		if(empty($this->OID) || !isset($this->OID) || $this->OID == '00000000000') {
-			$sql_query = "INSERT INTO ".$this->getTableName()." (";
+			$sqlQuery = "INSERT INTO ".$this->getTableName()." (";
 
 			foreach($properties as $propObj) {
 				$propName = $propObj->name;				
-				if (!in_array($propName, $this->transient_attributes)) {
-					$sql_query .= "$propName,";
+				if (!in_array($propName, $this->transientAttributes)) {
+					$sqlQuery .= "$propName,";
 				}				
 			}
 
-			$sql_query = rtrim($sql_query, ",");
+			$sqlQuery = rtrim($sqlQuery, ",");
 
-			$sql_query .= ") VALUES (";
+			$sqlQuery .= ") VALUES (";
 			
 			foreach($properties as $propObj) {
 				$propName = $propObj->name;
 				$propClass = get_class($this->get($propName));				
-				if ($propName != "version_num" && !in_array($propName, $this->transient_attributes)) {
+				if ($propName != "version_num" && !in_array($propName, $this->transientAttributes)) {
 					if(empty($propClass))
-						$sql_query .= "'".$this->get($propName)."',";
+						$sqlQuery .= "'".$this->get($propName)."',";
 					else
-						$sql_query .= "'".$this->get($propName)->getValue()."',";
+						$sqlQuery .= "'".$this->get($propName)->getValue()."',";
 				}
 				if ($propName == "version_num") {					
 					$temp = $this->version_num->getValue();
 					$this->version_num->setValue($temp+1);
-					$sql_query .= "'".$this->version_num->getValue()."',";
+					$sqlQuery .= "'".$this->version_num->getValue()."',";
 				}
 			}
 
-			$sql_query = rtrim($sql_query, ",");
+			$sqlQuery = rtrim($sqlQuery, ",");
 
-			$sql_query .= ");";
+			$sqlQuery .= ");";
 		}else{
-			$sql_query = "UPDATE ".$this->getTableName()." SET ";
+			$sqlQuery = "UPDATE ".$this->getTableName()." SET ";
 			
 			foreach($properties as $propObj) {
 				$propName = $propObj->name;
 				$propClass = get_class($this->get($propName));
-				if ($propName != "version_num" && !in_array($propName, $this->transient_attributes)) {
+				if ($propName != "version_num" && !in_array($propName, $this->transientAttributes)) {
 					if(empty($propClass))
-						$sql_query .= "$propName = '".$this->get($propName)."',";
+						$sqlQuery .= "$propName = '".$this->get($propName)."',";
 					else
-						$sql_query .= "$propName = '".$this->get($propName)->getValue()."',";
+						$sqlQuery .= "$propName = '".$this->get($propName)->getValue()."',";
 				}
 				if ($propName == "version_num") {					
 					$temp = $this->version_num->getValue();					
 					$this->version_num->setValue($temp+1);					
-					$sql_query .= "version_num = '".$this->version_num->getValue()."',";
+					$sqlQuery .= "version_num = '".$this->version_num->getValue()."',";
 				}
 			}
 
-			$sql_query = rtrim($sql_query, ",");
+			$sqlQuery = rtrim($sqlQuery, ",");
 
-			$sql_query .= " WHERE OID=".$this->OID.";";
+			$sqlQuery .= " WHERE OID=".$this->OID.";";
 		}
 
-		$this->last_query = $sql_query;
+		$this->lastQuery = $sqlQuery;
 		
-		$result = mysql_query($sql_query);
+		$result = mysql_query($sqlQuery);
 
 		if (mysql_error() == '') {
 			if(method_exists($this, 'after_save_callback'))
@@ -396,12 +394,12 @@ class mysql_DAO
 			
 			// check for unique violations			
 			if(mysql_errno() == '1062') {
-				$this->last_query .= " Error: ".mysql_error();
+				$this->lastQuery .= " Error: ".mysql_error();
 				$error = new handle_error($_SERVER["PHP_SELF"],'Failed to save, the value '.$this->findOffendingValue(mysql_error()).' is already in use!','save_object()','validation');
 				return false;
 			}else{
-				$this->last_query .= " Error: ".mysql_error();
-				$error = new handle_error($_SERVER["PHP_SELF"],'Failed to save object, MySql error is: '.mysql_error().', query: '.$this->last_query,'save_object()','framework');
+				$this->lastQuery .= " Error: ".mysql_error();
+				$error = new handle_error($_SERVER["PHP_SELF"],'Failed to save object, MySql error is: '.mysql_error().', query: '.$this->lastQuery,'save_object()','framework');
 				return false;
 			}
 		}
@@ -424,7 +422,7 @@ class mysql_DAO
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
 			$propClass = $propObj->class;
-			if(!in_array($propName, $this->default_attributes) && !in_array($propName, $this->transient_attributes)) {
+			if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
 				if (strtoupper($propClass) != "ENUM" &&
 				strtoupper($propClass) != "DENUM" &&
 				strtoupper($propClass) != "DENUMITEM" && 
@@ -445,17 +443,17 @@ class mysql_DAO
 	
 	/**
 	 * delete the object specified from the database
-	 * @return bool True if no database error occured, else false and error is stored in $this->last_query
+	 * @return bool True if no database error occured, else false and error is stored in $this->lastQuery
 	 */
 	function delete_object() {		
 		if(method_exists($this, 'before_delete_callback'))
 				$this->before_delete_callback();
 			
-		$sql_query = "DELETE FROM ".$this->getTableName()." WHERE OID = '".$this->OID."';";		
+		$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE OID = '".$this->OID."';";		
 		
-		$this->last_query = $sql_query;
+		$this->lastQuery = $sqlQuery;
 
-		$result = mysql_query($sql_query);		
+		$result = mysql_query($sqlQuery);		
 		
 		if(mysql_error() == '') {
 			if(method_exists($this, 'after_delete_callback'))
@@ -463,7 +461,7 @@ class mysql_DAO
 			
 			return true;
 		}else{			
-			$this->last_query .= " Error: ".mysql_error();
+			$this->lastQuery .= " Error: ".mysql_error();
 			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to delete object, MySql error is: '.mysql_error(),'delete_object()','framework');
 			return false;
 		}
@@ -477,11 +475,11 @@ class mysql_DAO
 		if(method_exists($this, 'before_get_version_callback'))
 			$this->before_load_callback();
 		
-		$sql_query = 'SELECT version_num FROM '.$this->getTableName().' WHERE OID = \''.$this->OID.'\';';
+		$sqlQuery = 'SELECT version_num FROM '.$this->getTableName().' WHERE OID = \''.$this->OID.'\';';
 		
-		$this->last_query = $sql_query;
+		$this->lastQuery = $sqlQuery;
 
-		$result = mysql_query($sql_query);
+		$result = mysql_query($sqlQuery);
 
 		$row = mysql_fetch_assoc($result);
 		
@@ -496,7 +494,7 @@ class mysql_DAO
 			
 			return $version_num;
 		}else{			
-			$this->last_query .= " Error: ".mysql_error();
+			$this->lastQuery .= " Error: ".mysql_error();
 			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to get version number for object '.$this->OID.', MySql error is: '.mysql_error(),'get_version()','framework');
 			return 0;
 		}
@@ -514,79 +512,79 @@ class mysql_DAO
 		$properties = get_object_vars($this);
 		$obj_type = '';
 		
-		$sql_query = "DROP TABLE IF EXISTS ".$this->getTableName().";";
+		$sqlQuery = "DROP TABLE IF EXISTS ".$this->getTableName().";";
 		
-		$this->last_query = $sql_query;
+		$this->lastQuery = $sqlQuery;
 
-		$result = mysql_query($sql_query);
+		$result = mysql_query($sqlQuery);
 
 		if (mysql_error() != '') {
-			$this->last_query .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to create the table for this class: '.$this->getTableName().', query is : '.$this->last_query,'make_table()','framework');
+			$this->lastQuery .= " Error: ".mysql_error();
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to create the table for this class: '.$this->getTableName().', query is : '.$this->lastQuery,'make_table()','framework');
 		}
 
-		$sql_query = "CREATE TABLE ".$this->getTableName()." (OID INT(11) ZEROFILL NOT NULL AUTO_INCREMENT,";
+		$sqlQuery = "CREATE TABLE ".$this->getTableName()." (OID INT(11) ZEROFILL NOT NULL AUTO_INCREMENT,";
 
 		foreach(array_keys($properties) as $prop) {			
-			if(!in_array($prop, $this->transient_attributes) && $prop != "OID") {				
+			if(!in_array($prop, $this->transientAttributes) && $prop != "OID") {				
 				$obj_type = get_class($properties[$prop]);
 				
 				switch (strtoupper($obj_type)) {
 					case "INTEGER":
-						$sql_query .= "$prop INT(".$properties[$prop]->get_size()."),";
+						$sqlQuery .= "$prop INT(".$properties[$prop]->get_size()."),";
 					break;
 					case "DOUBLE":
-						$sql_query .= "$prop DOUBLE(".$properties[$prop]->getSize(true)."),";
+						$sqlQuery .= "$prop DOUBLE(".$properties[$prop]->getSize(true)."),";
 					break;
 					case "STRING":
-						$sql_query .= "$prop VARCHAR(".$properties[$prop]->get_size()."),";
+						$sqlQuery .= "$prop VARCHAR(".$properties[$prop]->get_size()."),";
 					break;
 					case "TEXT":
-						$sql_query .= "$prop TEXT,";
+						$sqlQuery .= "$prop TEXT,";
 					break;
 					case "BOOLEAN":
-						$sql_query .= "$prop CHAR(1) DEFAULT '0',";
+						$sqlQuery .= "$prop CHAR(1) DEFAULT '0',";
 					break;
 					case "DATE":
-						$sql_query .= "$prop DATE,";
+						$sqlQuery .= "$prop DATE,";
 					break;
 					case "TIMESTAMP":
-						$sql_query .= "$prop DATETIME,";
+						$sqlQuery .= "$prop DATETIME,";
 					break;
 					case "ENUM":
-						$sql_query .= "$prop ENUM(";
+						$sqlQuery .= "$prop ENUM(";
 						$enum_vals = $properties[$prop]->get_options();
 						foreach($enum_vals as $enum_val) {
-							$sql_query .= "'".$enum_val."',";
+							$sqlQuery .= "'".$enum_val."',";
 						}
-						$sql_query = rtrim($sql_query, ",");
-						$sql_query .= "),";
+						$sqlQuery = rtrim($sqlQuery, ",");
+						$sqlQuery .= "),";
 					break;
 					case "DENUM":
 						$tmp = new DEnum(get_class($this).'::'.$prop);						
 						$tmp->save_object();
-						$sql_query .= "$prop INT(11) ZEROFILL,";
+						$sqlQuery .= "$prop INT(11) ZEROFILL,";
 					break;
 					default:
-						$sql_query .= "";
+						$sqlQuery .= "";
 					break;
 				}
 			}			
 		}
 
-		$sql_query .= "PRIMARY KEY (OID)) TYPE=InnoDB;";
+		$sqlQuery .= "PRIMARY KEY (OID)) TYPE=InnoDB;";
 		
-		$this->last_query = $sql_query;
+		$this->lastQuery = $sqlQuery;
 		
-		$result = mysql_query($sql_query);
+		$result = mysql_query($sqlQuery);
 
 		if (mysql_error() == '') {
 			if(method_exists($this, 'after_make_table_callback'))
 				$this->after_make_table_callback();
 			return true;
 		}else{			
-			$this->last_query .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to create the table for this class: '.$this->getTableName().', query is : '.$this->last_query,'make_table()','framework');
+			$this->lastQuery .= " Error: ".mysql_error();
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to create the table for this class: '.$this->getTableName().', query is : '.$this->lastQuery,'make_table()','framework');
 			return false;
 		}
 	}
@@ -600,11 +598,11 @@ class mysql_DAO
 		if(method_exists($this, 'before_rebuild_table_callback'))
 			$this->before_rebuild_table_callback();
 		
-		$sql_query = "DROP TABLE IF EXISTS ".$this->getTableName().";";
+		$sqlQuery = "DROP TABLE IF EXISTS ".$this->getTableName().";";
 
-		$this->last_query = $sql_query;
+		$this->lastQuery = $sqlQuery;
 
-		$result = mysql_query($sql_query);		
+		$result = mysql_query($sqlQuery);		
 
 		if (mysql_error() == '') {
 			$this->make_table();
@@ -612,7 +610,7 @@ class mysql_DAO
 				$this->after_rebuild_table_callback();
 			return true;
 		}else{			
-			$this->last_query .= " Error: ".mysql_error();
+			$this->lastQuery .= " Error: ".mysql_error();
 			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to drop the table for this class','rebuild_table()','framework');
 			return false;
 		}		
@@ -628,67 +626,67 @@ class mysql_DAO
 		if(method_exists($this, 'before_add_property_callback'))
 			$this->before_add_property_callback();
 		
-		$sql_query = "ALTER TABLE ".$this->getTableName()." ADD ";
+		$sqlQuery = "ALTER TABLE ".$this->getTableName()." ADD ";
 
-		if(!in_array($prop, $this->default_attributes)) {
+		if(!in_array($prop, $this->defaultAttributes)) {
 			
 			$obj_type = get_class($this->$prop);
 
 			switch (strtoupper($obj_type)) {
 					case "INTEGER":
-						$sql_query .= "$prop INT(".$this->$prop->get_size()."),";
+						$sqlQuery .= "$prop INT(".$this->$prop->get_size()."),";
 					break;
 					case "DOUBLE":
-						$sql_query .= "$prop DOUBLE(".$this->$prop->getSize(true)."),";
+						$sqlQuery .= "$prop DOUBLE(".$this->$prop->getSize(true)."),";
 					break;
 					case "STRING":
-						$sql_query .= "$prop VARCHAR(".$this->$prop->get_size()."),";
+						$sqlQuery .= "$prop VARCHAR(".$this->$prop->get_size()."),";
 					break;
 					case "TEXT":
-						$sql_query .= "$prop TEXT,";
+						$sqlQuery .= "$prop TEXT,";
 					break;
 					case "BOOLEAN":
-						$sql_query .= "$prop CHAR(1) DEFAULT '0',";
+						$sqlQuery .= "$prop CHAR(1) DEFAULT '0',";
 					break;
 					case "DATE":
-						$sql_query .= "$prop DATE,";
+						$sqlQuery .= "$prop DATE,";
 					break;
 					case "TIMESTAMP":
-						$sql_query .= "$prop DATETIME,";
+						$sqlQuery .= "$prop DATETIME,";
 					break;
 					case "ENUM":
-						$sql_query .= "$prop ENUM(";
+						$sqlQuery .= "$prop ENUM(";
 						$enum_vals = $this->$prop->get_options();
 						foreach($enum_vals as $enum_val) {
-							$sql_query .= "'".$enum_val."',";
+							$sqlQuery .= "'".$enum_val."',";
 						}
-						$sql_query = rtrim($sql_query, ",");
-						$sql_query .= "),";
+						$sqlQuery = rtrim($sqlQuery, ",");
+						$sqlQuery .= "),";
 					break;
 					case "DENUM":
 						$tmp = new DEnum(get_class($this).'::'.$prop);						
 						$tmp->save_object();
-						$sql_query .= "$prop INT(11) ZEROFILL,";
+						$sqlQuery .= "$prop INT(11) ZEROFILL,";
 					break;
 					default:
-						$sql_query .= "";
+						$sqlQuery .= "";
 					break;
 				}
 		}
 		
-		$sql_query = rtrim($sql_query, ",");
+		$sqlQuery = rtrim($sqlQuery, ",");
 
-		$this->last_query = $sql_query;
+		$this->lastQuery = $sqlQuery;
 
-		$result = mysql_query($sql_query);
+		$result = mysql_query($sqlQuery);
 
 		if (mysql_error() == '') {
 			if(method_exists($this, 'after_add_property_callback'))
 				$this->after_add_property_callback();		
 			return true;
 		}else{			
-			$this->last_query .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to add the new attribute ['.$prop.'] to the table '.$this->getTableName().', database error: '.$this->last_query, 'add_property()', 'framework');
+			$this->lastQuery .= " Error: ".mysql_error();
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to add the new attribute ['.$prop.'] to the table '.$this->getTableName().', database error: '.$this->lastQuery, 'add_property()', 'framework');
 			return false;
 		}
 	}
@@ -705,7 +703,7 @@ class mysql_DAO
 		
 		foreach(array_keys($properties) as $prop) {
 			if(isset($_POST[$prop])) {
-				if(!in_array($prop, $this->default_attributes) && !in_array($prop, $this->transient_attributes)) {
+				if(!in_array($prop, $this->defaultAttributes) && !in_array($prop, $this->transientAttributes)) {
 					// checking to see if we need to use addslashes() on the posted data
 					if(!get_magic_quotes_gpc()) {
 						if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
@@ -737,11 +735,11 @@ class mysql_DAO
 		if(method_exists($this, 'before_get_MAX_callback'))
 			$this->before_get_MAX_callback();
 		
-		$sql_query = "SELECT MAX(OID) AS max_ID FROM ".$this->getTableName();
+		$sqlQuery = "SELECT MAX(OID) AS max_ID FROM ".$this->getTableName();
 
-		$this->last_query = $sql_query;
+		$this->lastQuery = $sqlQuery;
 
-		$result = mysql_query($sql_query);		
+		$result = mysql_query($sqlQuery);		
 
 		$row = mysql_fetch_assoc($result);
 
@@ -751,7 +749,7 @@ class mysql_DAO
 					
 			return $row["max_ID"];
 		}else{			
-			$this->last_query .= " Error: ".mysql_error();
+			$this->lastQuery .= " Error: ".mysql_error();
 			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to get the MAX ID for the class','get_MAX()','framework');
 			return 0;
 		}
@@ -765,11 +763,11 @@ class mysql_DAO
 		if(method_exists($this, 'before_get_count_callback'))
 			$this->before_get_count_callback();
 		
-		$sql_query = "SELECT COUNT(OID) AS class_count FROM ".$this->getTableName();
+		$sqlQuery = "SELECT COUNT(OID) AS class_count FROM ".$this->getTableName();
 
-		$this->last_query = $sql_query;
+		$this->lastQuery = $sqlQuery;
 
-		$result = mysql_query($sql_query);		
+		$result = mysql_query($sqlQuery);		
 
 		$row = mysql_fetch_assoc($result);
 
@@ -779,7 +777,7 @@ class mysql_DAO
 				
 			return $row["class_count"];
 		}else{			
-			$this->last_query .= " Error: ".mysql_error();
+			$this->lastQuery .= " Error: ".mysql_error();
 			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to get the count for the class','get_count()','framework');
 			return 0;
 		}
@@ -805,16 +803,16 @@ class mysql_DAO
 		$obj_type = '';
 
 		foreach(array_keys($properties) as $prop) {
-			if(!in_array($prop, $this->default_attributes)) {
+			if(!in_array($prop, $this->defaultAttributes)) {
 
 				$obj_type = get_class($properties[$prop]);				
 
 				if ($obj_type == 'Enum') {
-					$sql_query = "SHOW COLUMNS FROM ".$this->getTableName()." LIKE '".$prop."'";
+					$sqlQuery = "SHOW COLUMNS FROM ".$this->getTableName()." LIKE '".$prop."'";
 					
-					$this->last_query = $sql_query;
+					$this->lastQuery = $sqlQuery;
 					
-					$result = mysql_query($sql_query);
+					$result = mysql_query($sqlQuery);
 							
 					$row = mysql_fetch_row($result);
 					$options = explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2",$row[1]));
@@ -830,7 +828,7 @@ class mysql_DAO
 				
 			return true;
 		}else{			
-			$this->last_query .= " Error: ".mysql_error();
+			$this->lastQuery .= " Error: ".mysql_error();
 			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load enum options correctly','set_enum_options()','framework');
 			return false;
 		}
@@ -963,7 +961,7 @@ class mysql_DAO
 			
 			return $table_exists;
 		}else{			
-			$this->last_query .= " Error: ".mysql_error();
+			$this->lastQuery .= " Error: ".mysql_error();
 			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to access the system database correctly','check_table_exists()','framework');
 			return false;
 		}
@@ -991,7 +989,7 @@ class mysql_DAO
 			$properties = get_class_vars(get_class($this));			
 			
 			foreach(array_keys($properties) as $prop) {
-				if (!in_array($prop, $this->transient_attributes)) {
+				if (!in_array($prop, $this->transientAttributes)) {
 				
 					$found_match = false;	
 					
@@ -1021,7 +1019,7 @@ class mysql_DAO
 				
 				return $update_required;
 			}else{			
-				$this->last_query .= " Error: ".mysql_error();
+				$this->lastQuery .= " Error: ".mysql_error();
 				$error = new handle_error($_SERVER["PHP_SELF"],'Failed to access the system database correctly','check_table_needs_update()','framework');
 				return false;
 			}
@@ -1046,7 +1044,7 @@ class mysql_DAO
 		$properties = get_class_vars(get_class($this));		
 			
 		foreach(array_keys($properties) as $prop) {			
-			if (!in_array($prop, $this->transient_attributes)) {
+			if (!in_array($prop, $this->transientAttributes)) {
 				while ($row = mysql_fetch_assoc($result)) {				
 		    		if ($prop == $row["Field"]) {		    			
 		    			$match_count++;		    			
@@ -1066,7 +1064,7 @@ class mysql_DAO
 		}
 		
 		if (mysql_error() != '') {
-			$this->last_query .= " Error: ".mysql_error();
+			$this->lastQuery .= " Error: ".mysql_error();
 			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to access the system database correctly','check_table_needs_update()','framework');
 		}
 		
@@ -1128,7 +1126,7 @@ class mysql_DAO
 	 * @param string attribute_name the name of the attribute to mark as transient
 	 */
 	function markTransient($attribute_name) {
-		array_push($this->transient_attributes, $attribute_name);		
+		array_push($this->transientAttributes, $attribute_name);		
 	}
 	
 	/**
@@ -1136,7 +1134,7 @@ class mysql_DAO
 	 * @param string attribute_name the name of the attribute to mark as unique
 	 */
 	function mark_unique($attribute_name) {
-		array_push($this->unique_attributes, $attribute_name);		
+		array_push($this->uniqueAttributes, $attribute_name);		
 	}
 	
 	/**
@@ -1149,7 +1147,7 @@ class mysql_DAO
 		$result = mysql_query("SHOW INDEX FROM ".$this->getTableName());
 		
 		// process unique keys
-		foreach($this->unique_attributes as $prop) {
+		foreach($this->uniqueAttributes as $prop) {
 			$index_exists = false;
 			while ($row = mysql_fetch_assoc($result)) {					
 				if ($prop.'_unq_idx' == $row["Key_name"]) {
@@ -1165,7 +1163,7 @@ class mysql_DAO
 			if(method_exists($this, 'after_check_indexes_callback'))
 				$this->after_check_indexes_callback();
 		}else{
-			$this->last_query .= " Error: ".mysql_error();
+			$this->lastQuery .= " Error: ".mysql_error();
 			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to access the system database correctly','check_indexes()','framework');	
 		}
 	}
@@ -1177,18 +1175,18 @@ class mysql_DAO
 		if(method_exists($this, 'before_create_unique_index_callback'))
 			$this->before_create_unique_index_callback();
 		
-		$sql_query = 'CREATE UNIQUE INDEX '.$prop.'_unq_idx ON '.$this->getTableName().' ('.$prop.');';
+		$sqlQuery = 'CREATE UNIQUE INDEX '.$prop.'_unq_idx ON '.$this->getTableName().' ('.$prop.');';
 		
-		$this->last_query = $sql_query;
+		$this->lastQuery = $sqlQuery;
 
-		$result = mysql_query($sql_query);
+		$result = mysql_query($sqlQuery);
 
 		if (mysql_error() == '') {
 			if(method_exists($this, 'after_create_unique_index_callback'))
 				$this->after_create_unique_index_callback();
 		}else{
-			$this->last_query .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to create the index '.$prop.'_unq_idx on '.$this->getTableName().', query is : '.$this->last_query,'createUniqueIndex()','framework');
+			$this->lastQuery .= " Error: ".mysql_error();
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to create the index '.$prop.'_unq_idx on '.$this->getTableName().', query is : '.$this->lastQuery,'createUniqueIndex()','framework');
 		}
 	}
 	
