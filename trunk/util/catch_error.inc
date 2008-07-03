@@ -5,11 +5,11 @@ if(!isset($config))
 	require_once 'configLoader.inc';
 $config =&configLoader::getInstance();
 
-require_once $config->get('sysRoot').'alpha/exceptions/AlphaPHPException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/PHPException.inc';
 
 /**
  *
- * A pair of static functions for capturing normal PHP errors as a AlphaPHPException
+ * A pair of static functions for capturing normal PHP errors as a PHPException
  * 
  * @package Alpha Core Util
  * @author John Collins <john@design-ireland.net>
@@ -22,7 +22,7 @@ function catchException($e) {
 }
 	
 function catchError($error_no, $msg, $file, $line) {
-	$e = new AlphaPHPException();
+	$e = new PHPException();
 	$e->setMessage('PHP error: '.$msg);
 	$e->setFile($file);
 	 
