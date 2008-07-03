@@ -16,7 +16,15 @@ require_once $config->get('sysRoot').'alpha/util/log_file.inc';
  * @version $Id$
  * 
  */
-class AlphaException extends Exception {		
+class AlphaException extends Exception {
+	/**
+	 * The level of the error. Can be sysErrorValidation, sysErrorWarning, sysErrorPhp,
+	 * sysErrorFramework, sysErrorOther
+	 *
+	 * @var unknown_type
+	 */
+	protected $errorLevel;
+	
 	/**
 	 * The constructor
 	 *
@@ -34,20 +42,20 @@ class AlphaException extends Exception {
 	public function displayError() {
 		global $config;
 		
-		switch (get_class($this)) {
-			case "AlphaValidationException":
+		switch ($this->errorLevel) {
+			case 'sysErrorValidation':
 				if($config->get('sysErrorValidationDisplay'))
 					echo '<p class="error"><br>Validation error: '.$this->getMessage().'</p>';
 				if($config->get('sysErrorValidationLog'))
 					$this->logErrorToFile();
 			break;
-			case "AlphaWarningException":
+			case 'sysErrorWarning':
 				if($config->get('sysErrorWarningDisplay'))
 					echo '<p class="error"><br>Warning: '.$this->getMessage().'</p>';
 				if($config->get('sysErrorWarningLog'))
 					$this->logErrorToFile();
 			break;
-			case "AlphaPHPException":
+			case 'sysErrorPhp':
 				if($config->get('sysErrorPhpDisplay'))
 					echo '<p class="error">An error has occured in file: ['.$this->getFile().'], message: <br>The exception generated the following error message: ['.$this->getMessage().']</p>';	
 				if($config->get('sysErrorPhpLog'))
@@ -55,7 +63,7 @@ class AlphaException extends Exception {
 				if($config->get('sysErrorMailSysAdmin'))
 					$this->notifyAdmin();
 			break;
-			case "AlphaFrameworkException":
+			case 'sysErrorFramework':
 				if($config->get('sysErrorFrameworkDisplay'))
 					echo '<p class="error">An error has occured in file: ['.$this->getFile().'], message: <br>The exception generated the following error message: ['.$this->getMessage().']</p>';	
 				if($config->get('sysErrorFrameworkLog'))
@@ -63,7 +71,7 @@ class AlphaException extends Exception {
 				if($config->get('sysErrorMailSysAdmin'))
 					$this->notifyAdmin();
 			break;
-			case "other":
+			case 'sysErrorOther':
 				if($config->get('sysErrorOtherDisplay'))
 					echo '<p class="error">An error has occured in file: ['.$this->getFile().'], message: <br>The exception generated the following error message: ['.$this->getMessage().']</p>';	
 				if($config->get('sysErrorOtherLog'))

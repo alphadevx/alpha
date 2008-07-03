@@ -3,7 +3,7 @@
 require_once 'AlphaException.inc';
 
 /**
- * The exception class for BO (Business Object) failed save errors
+ * The exception class for BO (Business Object) object locking errors
  * 
  * @package Alpha Core Exceptions
  * @author John Collins <john@design-ireland.net>
@@ -11,7 +11,7 @@ require_once 'AlphaException.inc';
  * @version $Id$
  * 
  */
-class FailedSaveException extends AlphaException {
+class LockingException extends AlphaException {
 	/**
 	 * The constructor
 	 *
@@ -20,7 +20,7 @@ class FailedSaveException extends AlphaException {
 	public function __construct($message) {
 		$this->errorLevel = 'sysErrorValidation';
 		parent::__construct($message);
-	}
+	}	
 }
 
 ?>

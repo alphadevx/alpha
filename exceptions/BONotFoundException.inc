@@ -1,6 +1,6 @@
 <?php
 
-require_once 'AlphaFrameworkException.inc';
+require_once 'AlphaException.inc';
 
 /**
  * The exception class for BO (Business Object) not found in the database errors
@@ -11,8 +11,16 @@ require_once 'AlphaFrameworkException.inc';
  * @version $Id$
  * 
  */
-class BONotFoundException extends AlphaFrameworkException {
-	
+class BONotFoundException extends AlphaException {
+	/**
+	 * The constructor
+	 *
+	 * @param string $message	 
+	 */
+	public function __construct($message) {
+		$this->errorLevel = 'sysErrorFramework';
+		parent::__construct($message);
+	}
 }
 
 ?>

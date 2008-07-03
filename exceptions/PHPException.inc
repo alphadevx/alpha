@@ -3,7 +3,7 @@
 require_once 'AlphaException.inc';
 
 /**
- * The exception class for BO (Business Object) failed save errors
+ * The exception class for handling generic PHP errors
  * 
  * @package Alpha Core Exceptions
  * @author John Collins <john@design-ireland.net>
@@ -11,14 +11,14 @@ require_once 'AlphaException.inc';
  * @version $Id$
  * 
  */
-class FailedSaveException extends AlphaException {
+class PHPException extends AlphaException {
 	/**
 	 * The constructor
 	 *
 	 * @param string $message	 
 	 */
 	public function __construct($message) {
-		$this->errorLevel = 'sysErrorValidation';
+		$this->errorLevel = 'sysErrorPhp';
 		parent::__construct($message);
 	}
 }

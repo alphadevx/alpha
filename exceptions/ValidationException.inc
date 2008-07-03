@@ -1,6 +1,6 @@
 <?php
 
-require_once 'AlphaFrameworkException.inc';
+require_once 'AlphaException.inc';
 
 /**
  * The exception class for BO (Business Object) validation errors
@@ -11,8 +11,16 @@ require_once 'AlphaFrameworkException.inc';
  * @version $Id$
  * 
  */
-class ValidationException extends AlphaFrameworkException {
-	
+class ValidationException extends AlphaException {
+	/**
+	 * The constructor
+	 *
+	 * @param string $message	 
+	 */
+	public function __construct($message) {
+		$this->errorLevel = 'sysErrorValidation';
+		parent::__construct($message);
+	}	
 }
 
 ?>
