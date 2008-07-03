@@ -1,8 +1,10 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/BONotFoundException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/FailedSaveException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/LockingException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/ValidationException.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Date.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Timestamp.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Double.inc';
@@ -151,7 +153,7 @@ class mysqlDAO {
 			if(method_exists($this, 'after_load_callback'))
 				$this->after_load_callback();			
 		}else{			
-			throw new AlphaFrameworkException('Failed to load object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+			throw new BONotFoundException('Failed to load object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
 		}		
 	}
 	
@@ -192,7 +194,7 @@ class mysqlDAO {
 			if(method_exists($this, 'after_loadByAttribute_callback'))
 				$this->after_loadByAttribute_callback();			
 		}else{			
-			throw new AlphaFrameworkException('Failed to load object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+			throw new BONotFoundException('Failed to load object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
 		}		
 	}
 	
@@ -221,7 +223,7 @@ class mysqlDAO {
 		$result = mysql_query($sqlQuery);
 		
 		if(mysql_error() != '') {
-			throw new AlphaFrameworkException('Failed to load object OIDs, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
 			return array();
 		}
 		
@@ -270,7 +272,7 @@ class mysqlDAO {
 		$result = mysql_query($sqlQuery);
 		
 		if(mysql_error() != '') {
-			throw new AlphaFrameworkException('Failed to load object OIDs, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
 			return array();
 		}
 		
@@ -309,7 +311,7 @@ class mysqlDAO {
 			$sqlQuery = "";		
 			
 			if($this->get_version() != $this->version_num->getValue()){
-				throw new FailedSaveException('Could not save the object as it has been updated by another user.  Please try saving again.');
+				throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
 			}
 			
 			// set the "updated by" fields, we can only set the user id if someone is logged in
@@ -391,9 +393,9 @@ class mysqlDAO {
 				
 				// check for unique violations			
 				if(mysql_errno() == '1062') {					
-					throw new FailedSaveException('Failed to save, the value '.$this->findOffendingValue(mysql_error()).' is already in use!');
+					throw new ValidationException('Failed to save, the value '.$this->findOffendingValue(mysql_error()).' is already in use!');
 				}else{					
-					AlphaFrameworkException('Failed to save object, MySql error is ['.mysql_error().'] query ['.$this->lastQuery.']');					
+					throw new FailedSaveException('Failed to save object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');					
 				}
 			}
 		}
