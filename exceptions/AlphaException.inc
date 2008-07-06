@@ -23,7 +23,7 @@ class AlphaException extends Exception {
 	 *
 	 * @var unknown_type
 	 */
-	protected $errorLevel;
+	protected $errorLevel = 'sysErrorFramework';
 	
 	/**
 	 * The constructor
