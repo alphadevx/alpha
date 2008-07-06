@@ -414,7 +414,7 @@ class mysqlDAO {
 				
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this));
-		$properties = $reflection->getProperties();		
+		$properties = $reflection->getProperties();
 		
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
@@ -424,8 +424,8 @@ class mysqlDAO {
 				strtoupper($propClass) != "DENUM" &&
 				strtoupper($propClass) != "DENUMITEM" && 
 				strtoupper($propClass) != "BOOLEAN") {
-					if (!preg_match($this->get($propName)->get_rule(), $this->get($propName)->getValue())) {
-						throw new ValidationException('Failed to save, validation error is: '.$this->get($propName)->get_helper());
+					if (!preg_match($this->get($propName)->getRule(), $this->get($propName)->getValue())) {
+						throw new ValidationException('Failed to save, validation error is: '.$this->get($propName)->getHelper());
 						$valid = false;
 					}
 				}
@@ -496,16 +496,12 @@ class mysqlDAO {
 	}
 
 	/**
-	 * builds new database table for the BO class
-	 * @return bool True if the table was created, false otherwise
+	 * Builds a new database table for the BO class
 	 */	
-	function make_table()
+	protected function makeTable()
 	{
-		if(method_exists($this, 'before_make_table_callback'))
-				$this->before_make_table_callback();
-		
-		$properties = get_object_vars($this);
-		$obj_type = '';
+		if(method_exists($this, 'before_makeTable_callback'))
+			$this->before_makeTable_callback();
 		
 		$sqlQuery = "DROP TABLE IF EXISTS ".$this->getTableName().";";
 		
@@ -514,51 +510,56 @@ class mysqlDAO {
 		$result = mysql_query($sqlQuery);
 
 		if (mysql_error() != '') {
-			$this->lastQuery .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to create the table for this class: '.$this->getTableName().', query is : '.$this->lastQuery,'make_table()','framework');
+			throw new AlphaException('Failed to drop the table ['.$this->getTableName().'] for the class ['.get_class($this).'], query is ['.$this->lastQuery.']');
 		}
 
 		$sqlQuery = "CREATE TABLE ".$this->getTableName()." (OID INT(11) ZEROFILL NOT NULL AUTO_INCREMENT,";
+		
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this));
+		$properties = $reflection->getProperties();
+		
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			$propClass = $propObj->class;
+			
+			if(!in_array($propName, $this->transientAttributes) && $propName != "OID") {				
 
-		foreach(array_keys($properties) as $prop) {			
-			if(!in_array($prop, $this->transientAttributes) && $prop != "OID") {				
-				$obj_type = get_class($properties[$prop]);
-				
-				switch (strtoupper($obj_type)) {
+				switch (strtoupper($propClass)) {
 					case "INTEGER":
-						$sqlQuery .= "$prop INT(".$properties[$prop]->get_size()."),";
+						$sqlQuery .= "$propName INT(".$this->get($propName)->getSize()."),";
 					break;
 					case "DOUBLE":
-						$sqlQuery .= "$prop DOUBLE(".$properties[$prop]->getSize(true)."),";
+						$sqlQuery .= "$propName DOUBLE(".$this->get($propName)->getSize(true)."),";
 					break;
 					case "STRING":
-						$sqlQuery .= "$prop VARCHAR(".$properties[$prop]->get_size()."),";
+						$sqlQuery .= "$propName VARCHAR(".$this->get($propName)->getSize()."),";
 					break;
 					case "TEXT":
-						$sqlQuery .= "$prop TEXT,";
+						$sqlQuery .= "$propName TEXT,";
 					break;
 					case "BOOLEAN":
-						$sqlQuery .= "$prop CHAR(1) DEFAULT '0',";
+						$sqlQuery .= "$propName CHAR(1) DEFAULT '0',";
 					break;
 					case "DATE":
-						$sqlQuery .= "$prop DATE,";
+						$sqlQuery .= "$propName DATE,";
 					break;
 					case "TIMESTAMP":
-						$sqlQuery .= "$prop DATETIME,";
+						$sqlQuery .= "$propName DATETIME,";
 					break;
 					case "ENUM":
-						$sqlQuery .= "$prop ENUM(";
-						$enum_vals = $properties[$prop]->get_options();
-						foreach($enum_vals as $enum_val) {
-							$sqlQuery .= "'".$enum_val."',";
+						$sqlQuery .= "$propName ENUM(";
+						$enumVals = $this->get($propName)->getOptions();
+						foreach($enumVals as $val) {
+							$sqlQuery .= "'".$val."',";
 						}
 						$sqlQuery = rtrim($sqlQuery, ",");
 						$sqlQuery .= "),";
 					break;
 					case "DENUM":
-						$tmp = new DEnum(get_class($this).'::'.$prop);						
+						$tmp = new DEnum(get_class($this).'::'.$propName);						
 						$tmp->save();
-						$sqlQuery .= "$prop INT(11) ZEROFILL,";
+						$sqlQuery .= "$propName INT(11) ZEROFILL,";
 					break;
 					default:
 						$sqlQuery .= "";
@@ -574,13 +575,10 @@ class mysqlDAO {
 		$result = mysql_query($sqlQuery);
 
 		if (mysql_error() == '') {
-			if(method_exists($this, 'after_make_table_callback'))
-				$this->after_make_table_callback();
-			return true;
-		}else{			
-			$this->lastQuery .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to create the table for this class: '.$this->getTableName().', query is : '.$this->lastQuery,'make_table()','framework');
-			return false;
+			if(method_exists($this, 'after_makeTable_callback'))
+				$this->after_makeTable_callback();
+		}else{
+			throw new AlphaException('Failed to create the table ['.$this->getTableName().'] for the class ['.get_class($this).'], query is ['.$this->lastQuery.']');
 		}
 	}
 
@@ -600,7 +598,7 @@ class mysqlDAO {
 		$result = mysql_query($sqlQuery);		
 
 		if (mysql_error() == '') {
-			$this->make_table();
+			$this->makeTable();
 			if(method_exists($this, 'after_rebuild_table_callback'))
 				$this->after_rebuild_table_callback();
 			return true;
