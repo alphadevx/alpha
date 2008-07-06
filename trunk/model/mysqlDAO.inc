@@ -310,7 +310,7 @@ class mysqlDAO {
 			$properties = $reflection->getProperties();
 			$sqlQuery = "";		
 			
-			if($this->get_version() != $this->version_num->getValue()){
+			if($this->getVersion() != $this->version_num->getValue()){
 				throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
 			}
 			
@@ -395,7 +395,7 @@ class mysqlDAO {
 				if(mysql_errno() == '1062') {					
 					throw new ValidationException('Failed to save, the value '.$this->findOffendingValue(mysql_error()).' is already in use!');
 				}else{					
-					throw new FailedSaveException('Failed to save object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');					
+					throw new FailedSaveException('Failed to save object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');			
 				}
 			}
 		}
@@ -408,7 +408,7 @@ class mysqlDAO {
 	 */
 	protected function validate() {
 		if(method_exists($this, 'before_validate_callback'))
-				$this->before_validate_callback();
+			$this->before_validate_callback();
 		
 		$valid = true;
 				
@@ -433,44 +433,43 @@ class mysqlDAO {
 		}
 		
 		if(method_exists($this, 'after_validate_callback'))
-				$this->after_validate_callback();
+			$this->after_validate_callback();
 		
 		return $valid;
 	}
 	
 	/**
-	 * delete the object specified from the database
-	 * @return bool True if no database error occured, else false and error is stored in $this->lastQuery
+	 * Delete the current object from the database
 	 */
-	function delete_object() {		
+	protected function delete() {		
 		if(method_exists($this, 'before_delete_callback'))
 				$this->before_delete_callback();
-			
-		$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE OID = '".$this->OID."';";		
 		
+		if(!empty($this->OID))
+			$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE OID = '".$this->OID."';";		
+		else
+			throw new FailedDeleteException('Cannot delete transient business object!');
+			
 		$this->lastQuery = $sqlQuery;
 
 		$result = mysql_query($sqlQuery);		
 		
 		if(mysql_error() == '') {
 			if(method_exists($this, 'after_delete_callback'))
-				$this->after_delete_callback();
-			
-			return true;
+				$this->after_delete_callback();			
 		}else{			
-			$this->lastQuery .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to delete object, MySql error is: '.mysql_error(),'delete_object()','framework');
-			return false;
+			throw new FailedDeleteException('Failed to delete object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
 		}
 	}
 	
 	/**
 	 * Gets the version_num of the object from the database
-	 * @return integer version_num
+	 * 
+	 * @return integer
 	 */
-	function get_version() {
-		if(method_exists($this, 'before_get_version_callback'))
-			$this->before_load_callback();
+	protected function getVersion() {
+		if(method_exists($this, 'before_getVersion_callback'))
+			$this->before_getVersion_callback();
 		
 		$sqlQuery = 'SELECT version_num FROM '.$this->getTableName().' WHERE OID = \''.$this->OID.'\';';
 		
@@ -486,13 +485,12 @@ class mysqlDAO {
 			$version_num = 0;
 		
 		if (mysql_error() == '') {
-			if(method_exists($this, 'after_get_version_callback'))
-				$this->after_get_version_callback();
+			if(method_exists($this, 'after_getVersion_callback'))
+				$this->after_getVersion_callback();
 			
 			return $version_num;
 		}else{			
-			$this->lastQuery .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to get version number for object '.$this->OID.', MySql error is: '.mysql_error(),'get_version()','framework');
+			throw new AlphaException('Failed to get version number for object ['.$this->OID.'], MySql error is ['.mysql_error().']');
 			return 0;
 		}
 	}
