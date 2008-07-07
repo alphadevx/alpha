@@ -498,8 +498,7 @@ class mysqlDAO {
 	/**
 	 * Builds a new database table for the BO class
 	 */	
-	protected function makeTable()
-	{
+	protected function makeTable() {
 		if(method_exists($this, 'before_makeTable_callback'))
 			$this->before_makeTable_callback();
 		
@@ -575,8 +574,7 @@ class mysqlDAO {
 	/**
 	 * Re-builds the table if the model requirements have changed.  All data is lost!
 	 */	
-	protected function rebuildTable()
-	{
+	protected function rebuildTable() {
 		if(method_exists($this, 'before_rebuildTable_callback'))
 			$this->before_rebuildTable_callback();
 		
@@ -596,30 +594,29 @@ class mysqlDAO {
 	}
 
 	/**
-	 * adds in a new class property without loosing existing data
-	 * @param string $prop the name of the property to add
-	 * @return bool True if the table attribute was added, false otherwise
+	 * Adds in a new class property without loosing existing data
+	 * 
+	 * @param string $prop 	 
 	 */
-	function add_property($prop)
-	{
-		if(method_exists($this, 'before_add_property_callback'))
-			$this->before_add_property_callback();
+	protected function addProperty($prop) {
+		if(method_exists($this, 'before_addProperty_callback'))
+			$this->before_addProperty_callback();
 		
 		$sqlQuery = "ALTER TABLE ".$this->getTableName()." ADD ";
 
-		if(!in_array($prop, $this->defaultAttributes)) {
+		if(!in_array($prop, $this->defaultAttributes) && !in_array($prop, $this->transientAttributes)) {
 			
 			$obj_type = get_class($this->$prop);
 
 			switch (strtoupper($obj_type)) {
 					case "INTEGER":
-						$sqlQuery .= "$prop INT(".$this->$prop->get_size()."),";
+						$sqlQuery .= "$prop INT(".$this->get($prop)->getSize()."),";
 					break;
 					case "DOUBLE":
-						$sqlQuery .= "$prop DOUBLE(".$this->$prop->getSize(true)."),";
+						$sqlQuery .= "$prop DOUBLE(".$this->get($prop)->getSize(true)."),";
 					break;
 					case "STRING":
-						$sqlQuery .= "$prop VARCHAR(".$this->$prop->get_size()."),";
+						$sqlQuery .= "$prop VARCHAR(".$this->get($prop)->getSize()."),";
 					break;
 					case "TEXT":
 						$sqlQuery .= "$prop TEXT,";
@@ -635,9 +632,9 @@ class mysqlDAO {
 					break;
 					case "ENUM":
 						$sqlQuery .= "$prop ENUM(";
-						$enum_vals = $this->$prop->get_options();
-						foreach($enum_vals as $enum_val) {
-							$sqlQuery .= "'".$enum_val."',";
+						$enumVals = $this->get($prop)->getOptions();
+						foreach($enumVals as $val) {
+							$sqlQuery .= "'".$val."',";
 						}
 						$sqlQuery = rtrim($sqlQuery, ",");
 						$sqlQuery .= "),";
@@ -660,13 +657,10 @@ class mysqlDAO {
 		$result = mysql_query($sqlQuery);
 
 		if (mysql_error() == '') {
-			if(method_exists($this, 'after_add_property_callback'))
-				$this->after_add_property_callback();		
-			return true;
+			if(method_exists($this, 'after_addProperty_callback'))
+				$this->after_addProperty_callback();			
 		}else{			
-			$this->lastQuery .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to add the new attribute ['.$prop.'] to the table '.$this->getTableName().', database error: '.$this->lastQuery, 'add_property()', 'framework');
-			return false;
+			throw new AlphaException('Failed to add the new attribute ['.$prop.'] to the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');
 		}
 	}
 
