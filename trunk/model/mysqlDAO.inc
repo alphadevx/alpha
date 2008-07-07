@@ -665,39 +665,43 @@ class mysqlDAO {
 	}
 
 	/**
-	 * populates the object from global POST data
-	 * @requires POST data from a web form
+	 * Populates the current business object from global POST data
 	 */	
-	function populate_from_post() {
-		if(method_exists($this, 'before_populate_from_post_callback'))
-			$this->before_populate_from_post_callback();
+	protected function populateFromPost() {
+		if(method_exists($this, 'before_populateFromPost_callback'))
+			$this->before_populateFromPost_callback();
 		
-		$properties = get_class_vars(get_class($this));
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this));
+		$properties = $reflection->getProperties();
 		
-		foreach(array_keys($properties) as $prop) {
-			if(isset($_POST[$prop])) {
-				if(!in_array($prop, $this->defaultAttributes) && !in_array($prop, $this->transientAttributes)) {
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			$propClass = $propObj->class;		
+
+			if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
+				if(isset($_POST[$propName])) {
 					// checking to see if we need to use addslashes() on the posted data
 					if(!get_magic_quotes_gpc()) {
-						if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
-							$this->$prop->setValue(addslashes($_POST[$prop]));					
+						if (strtoupper(get_class($this->get($propName))) != 'DATE' && strtoupper(get_class($this->get($propName))) != 'TIMESTAMP') {
+							$this->get($propName)->setValue(addslashes($_POST[$propName]));					
 						}else{						
-							$this->$prop->populateFromString(addslashes($_POST[$prop]));
+							$this->get($propName)->populateFromString(addslashes($_POST[$propName]));
 						}
 					}else{
-						if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
-							$this->$prop->setValue($_POST[$prop]);					
+						if (strtoupper(get_class($this->get($propName))) != 'DATE' && strtoupper(get_class($this->get($propName))) != 'TIMESTAMP') {
+							$this->get($propName)->setValue($_POST[$propName]);					
 						}else{						
-							$this->$prop->populateFromString($_POST[$prop]);
+							$this->get($propName)->populateFromString($_POST[$propName]);
 						}
 					}
 				}
-				if ($prop == "version_num" && isset($_POST["version_num"]))
-					$this->version_num->setValue($_POST["version_num"]);
 			}
+			if ($propName == "version_num" && isset($_POST["version_num"]))
+				$this->version_num->setValue($_POST["version_num"]);
 		}
-		if(method_exists($this, 'after_populate_from_post_callback'))
-			$this->after_populate_from_post_callback();	
+		if(method_exists($this, 'after_populateFromPost_callback'))
+			$this->after_populateFromPost_callback();	
 	}
 
 	/**
