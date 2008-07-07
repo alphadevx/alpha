@@ -110,7 +110,7 @@ class mysqlDAO {
 	public function __construct() {
 		$this->version_num = new Integer(0);
 		$this->created_ts = new Timestamp();
-		$person_ID = (isset($_SESSION["current_user"])? $_SESSION["current_user"]->get_ID(): 0);
+		$person_ID = (isset($_SESSION["current_user"])? $_SESSION["current_user"]->getID(): 0);
 		$this->created_by = new Integer($person_ID);
 		$this->updated_ts = new Timestamp();
 		$this->updated_by = new Integer($person_ID);
@@ -316,7 +316,7 @@ class mysqlDAO {
 			
 			// set the "updated by" fields, we can only set the user id if someone is logged in
 			if(isset($_SESSION["current_user"]))
-				$this->updated_by->setValue($_SESSION["current_user"]->get_ID());
+				$this->updated_by->setValue($_SESSION["current_user"]->getID());
 			
 			$this->updated_ts = new Timestamp();
 			
@@ -705,14 +705,15 @@ class mysqlDAO {
 	}
 
 	/**
-	 * gets the maximum ID value from the database for this class
-	 * @return integer The MAX ID
+	 * Gets the maximum OID value from the database for this class
+	 * 
+	 * @return integer
 	 */
-	function get_MAX() {
-		if(method_exists($this, 'before_get_MAX_callback'))
-			$this->before_get_MAX_callback();
+	protected function getMAX() {
+		if(method_exists($this, 'before_getMAX_callback'))
+			$this->before_getMAX_callback();
 		
-		$sqlQuery = "SELECT MAX(OID) AS max_ID FROM ".$this->getTableName();
+		$sqlQuery = 'SELECT MAX(OID) AS max_OID FROM '.$this->getTableName();
 
 		$this->lastQuery = $sqlQuery;
 
@@ -721,26 +722,26 @@ class mysqlDAO {
 		$row = mysql_fetch_assoc($result);
 
 		if (mysql_error() == '') {
-			if(method_exists($this, 'after_get_MAX_callback'))
-				$this->after_get_MAX_callback();
+			if(method_exists($this, 'after_getMAX_callback'))
+				$this->after_getMAX_callback();
 					
-			return $row["max_ID"];
+			return $row['max_OID'];
 		}else{			
-			$this->lastQuery .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to get the MAX ID for the class','get_MAX()','framework');
+			throw new AlphaException('Failed to get the MAX ID for the class ['.get_class($this).'] from the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');
 			return 0;
 		}
 	}
 	
 	/**
-	 * gets the count from the database for the amount of objects of this class
-	 * @return integer The count
+	 * Gets the count from the database for the amount of objects of this class
+	 * 
+	 * @return integer
 	 */
-	function get_count() {
-		if(method_exists($this, 'before_get_count_callback'))
-			$this->before_get_count_callback();
+	protected function getCount() {
+		if(method_exists($this, 'before_getCount_callback'))
+			$this->before_getCount_callback();
 		
-		$sqlQuery = "SELECT COUNT(OID) AS class_count FROM ".$this->getTableName();
+		$sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->getTableName();
 
 		$this->lastQuery = $sqlQuery;
 
@@ -749,23 +750,23 @@ class mysqlDAO {
 		$row = mysql_fetch_assoc($result);
 
 		if (mysql_error() == '') {
-			if(method_exists($this, 'after_get_count_callback'))
-				$this->after_get_count_callback();
+			if(method_exists($this, 'after_getCount_callback'))
+				$this->after_getCount_callback();
 				
-			return $row["class_count"];
-		}else{			
-			$this->lastQuery .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to get the count for the class','get_count()','framework');
+			return $row['class_count'];
+		}else{
+			throw new AlphaException('Failed to get the count for the class ['.get_class($this).'] from the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');			
 			return 0;
 		}
 	}
 
 	/**
-	 * gets the OID for the object in zero-padded format
-	 * @return integer The OID of the object
+	 * Gets the OID for the object in zero-padded format
+	 * 
+	 * @return integer
 	 */
-	function get_ID() {
-		return str_pad($this->OID, 11, "0", STR_PAD_LEFT);
+	public function getID() {
+		return str_pad($this->OID, 11, '0', STR_PAD_LEFT);
 	}
 	
 	/**
