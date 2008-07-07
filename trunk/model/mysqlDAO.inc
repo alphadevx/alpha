@@ -503,16 +503,6 @@ class mysqlDAO {
 		if(method_exists($this, 'before_makeTable_callback'))
 			$this->before_makeTable_callback();
 		
-		$sqlQuery = "DROP TABLE IF EXISTS ".$this->getTableName().";";
-		
-		$this->lastQuery = $sqlQuery;
-
-		$result = mysql_query($sqlQuery);
-
-		if (mysql_error() != '') {
-			throw new AlphaException('Failed to drop the table ['.$this->getTableName().'] for the class ['.get_class($this).'], query is ['.$this->lastQuery.']');
-		}
-
 		$sqlQuery = "CREATE TABLE ".$this->getTableName()." (OID INT(11) ZEROFILL NOT NULL AUTO_INCREMENT,";
 		
 		// get the class attributes
@@ -583,13 +573,12 @@ class mysqlDAO {
 	}
 
 	/**
-	 * re-builds the table if the model requirements have changed.  all data is lost!
-	 * @return bool True if the table was re-created, false otherwise
+	 * Re-builds the table if the model requirements have changed.  All data is lost!
 	 */	
-	function rebuild_table()
+	protected function rebuildTable()
 	{
-		if(method_exists($this, 'before_rebuild_table_callback'))
-			$this->before_rebuild_table_callback();
+		if(method_exists($this, 'before_rebuildTable_callback'))
+			$this->before_rebuildTable_callback();
 		
 		$sqlQuery = "DROP TABLE IF EXISTS ".$this->getTableName().";";
 
@@ -599,13 +588,10 @@ class mysqlDAO {
 
 		if (mysql_error() == '') {
 			$this->makeTable();
-			if(method_exists($this, 'after_rebuild_table_callback'))
-				$this->after_rebuild_table_callback();
-			return true;
+			if(method_exists($this, 'after_rebuildTable_callback'))
+				$this->after_rebuildTable_callback();			
 		}else{			
-			$this->lastQuery .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to drop the table for this class','rebuild_table()','framework');
-			return false;
+			throw new AlphaException('Failed to drop the table ['.$this->getTableName().'] for the class ['.get_class($this).'], query is ['.$this->lastQuery.']');
 		}		
 	}
 
