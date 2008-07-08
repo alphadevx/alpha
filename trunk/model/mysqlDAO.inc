@@ -149,7 +149,8 @@ class mysqlDAO {
 			}
 		}
 		
-		if(mysql_error() == '' && $this->set_enum_options()) {	
+		if(mysql_error() == '') {
+			$this->setEnumOptions();	
 			if(method_exists($this, 'after_load_callback'))
 				$this->after_load_callback();			
 		}else{			
@@ -190,7 +191,8 @@ class mysqlDAO {
 			}
 		}
 		
-		if(mysql_error() == '' && $this->set_enum_options()) {
+		if(mysql_error() == '') {
+			$this->setEnumOptions();
 			if(method_exists($this, 'after_loadByAttribute_callback'))
 				$this->after_loadByAttribute_callback();			
 		}else{			
@@ -677,7 +679,7 @@ class mysqlDAO {
 		
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
-			$propClass = $propObj->class;		
+			$propClass = $propObj->class;
 
 			if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
 				if(isset($_POST[$propName])) {
@@ -770,69 +772,74 @@ class mysqlDAO {
 	}
 	
 	/**
-	 * populate all of the enum options for this object from the database
-	 * @return bool true on success, false otherwise
+	 * Populate all of the enum options for this object from the database
 	 */
-	function set_enum_options() {
-		if(method_exists($this, 'before_set_enum_options_callback'))
-			$this->before_set_enum_options_callback();
+	protected function setEnumOptions() {
+		if(method_exists($this, 'before_setEnumOptions_callback'))
+			$this->before_setEnumOptions_callback();
 		
-		$properties = get_object_vars($this);		
-		$obj_type = '';
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this));
+		$properties = $reflection->getProperties();
+		
+		// flag for any database errors
+		$dbError = false;
+		
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			$propClass = $propObj->class;
+			if(!in_array($propName, $this->defaultAttributes)) {
 
-		foreach(array_keys($properties) as $prop) {
-			if(!in_array($prop, $this->defaultAttributes)) {
-
-				$obj_type = get_class($properties[$prop]);				
-
-				if ($obj_type == 'Enum') {
-					$sqlQuery = "SHOW COLUMNS FROM ".$this->getTableName()." LIKE '".$prop."'";
+				if ($propClass == 'Enum') {
+					$sqlQuery = "SHOW COLUMNS FROM ".$this->getTableName()." LIKE '".$propName."'";
 					
 					$this->lastQuery = $sqlQuery;
 					
 					$result = mysql_query($sqlQuery);
-							
-					$row = mysql_fetch_row($result);
-					$options = explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2",$row[1]));
 					
-					$properties[$prop]->setOptions($options);
+					if (mysql_error() == '') {							
+						$row = mysql_fetch_row($result);
+						$options = explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2",$row[1]));
+						
+						$this->get($propName)->setOptions($options);
+					}else{
+						$dbError = true;
+						break;
+					}
 				}
 			}
 		}
 		
-		if (mysql_error() == '') {
-			if(method_exists($this, 'after_set_enum_options_callback'))
-				$this->after_set_enum_options_callback();
-				
-			return true;
+		if (!$dbError) {
+			if(method_exists($this, 'after_setEnumOptions_callback'))
+				$this->after_setEnumOptions_callback();
 		}else{			
-			$this->lastQuery .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load enum options correctly','set_enum_options()','framework');
-			return false;
+			throw new AlphaException('Failed to load enum options correctly for object instance of class ['.get_class($this).']');
 		}
 	}
 	
 	/**
 	 * Generic getter method for accessing class properties.  Will use the method get_$prop instead if that
-	 * method exists at a child level (by default)
+	 * method exists at a child level (by default).  Set $no_child_methods to true if you don't want to use any 
+	 * get_$prop method even if it exists, false otherwise (default).
 	 * 
-	 * @param string $prop the name of the property to get
-	 * @param boolean $no_child_methods true if you don't want to use any get_$prop method even if it exists, false otherwise (default)
-	 * @return <variable> the value of the property
+	 * @param string $prop
+	 * @param boolean $no_child_methods
+	 * @return mixed
 	 */
-	function get($prop, $no_child_methods = false) {
+	public function get($prop, $no_child_methods = false) {
 		if(method_exists($this, 'before_get_callback'))
 			$this->before_get_callback();
 		
 		// handle private and protected attributes (should always have a getter)
-		if(!$no_child_methods && method_exists($this, "get".ucfirst($prop))) {
+		if(!$no_child_methods && method_exists($this, 'get'.ucfirst($prop))) {
 			if(method_exists($this, 'after_get_callback'))
 				$this->after_get_callback();
 				
 			return eval('return $this->get'.ucfirst($prop).'();');
 		}else{
 			// handle public attributes
-			if(isset($this->$prop) && method_exists($this->$prop, "getValue")) {
+			if(isset($this->$prop) && method_exists($this->$prop, 'getValue')) {
 				if(method_exists($this, 'after_get_callback'))
 					$this->after_get_callback();
 				
@@ -843,7 +850,7 @@ class mysqlDAO {
 					
 				return $this->$prop;
 			}else{
-				$error = new handle_error($_SERVER["PHP_SELF"],'Could not access the property '.$prop.' on the object '.get_class($this).'.','get()','framework');
+				throw new AlphaException('Could not access the property ['.$prop.'] on the object of class ['.get_class($this).']');
 				return false;
 			}
 		}
@@ -851,22 +858,23 @@ class mysqlDAO {
 	
 	/**
 	 * Generic setter method for setting class properties.  Will use the method set_$prop instead if that
-	 * method exists at a child level (by default)
+	 * method exists at a child level (by default).  Set $no_child_methods to true if you don't want to use 
+	 * any get_$prop method even if it exists, false otherwise (default).
 	 * 
-	 * @param string $prop the name of the property to set
-	 * @param string $value value to attribute to the object property
-	 * @param boolean $no_child_methods true if you don't want to use any get_$prop method even if it exists, false otherwise (default)
+	 * @param string $prop
+	 * @param mixed $value
+	 * @param boolean $no_child_methods
 	 */
-	function set($prop, $value, $no_child_methods = false) {
+	public function set($prop, $value, $no_child_methods = false) {
 		if(method_exists($this, 'before_set_callback'))
 			$this->before_set_callback();
 		
 		// handle private and protected attributes (should always have a setter)
-		if(!$no_child_methods && method_exists($this, "set".ucfirst($prop))) {
+		if(!$no_child_methods && method_exists($this, 'set'.ucfirst($prop))) {
 			if(method_exists($this, 'after_set_callback'))
 				$this->after_set_callback();
 			
-			return eval("return \$this->set".ucfirst($prop)."('$value');");
+			return eval('return $this->set'.ucfirst($prop)."('$value');");
 		}else{
 			// handle public attributes
 			if(isset($this->$prop)) {
@@ -883,7 +891,7 @@ class mysqlDAO {
 					$this->$prop = $value;
 				}				
 			}else{
-				$error = new handle_error($_SERVER["PHP_SELF"],'Could not set the property '.$prop.' on the object '.get_class($this).'.  Property may not exist, or else does not have a setValue() method.','set()','framework');
+				throw new AlphaException('Could not set the property ['.$prop.'] on the object of the class ['.get_class($this).'].  Property may not exist, or else does not have a setValue() method and is private or protected.');
 			}
 		}
 	}
