@@ -897,17 +897,19 @@ class mysqlDAO {
 	}
 	
 	/**
-	 * gets the property object rather than the value
-	 * @param string $prop the name of the property to get
-	 * @return <object> the property object
+	 * Gets the property object rather than the value
+	 * 
+	 * @param string $prop
+	 * @return mixed
+	 * @deprecated use get() instead!
 	 */
-	function get_prop_object($prop) {
-		if(method_exists($this, 'before_get_prop_object_callback'))
-			$this->before_get_prop_object_callback();
+	public function getPropObject($prop) {
+		if(method_exists($this, 'before_getPropObject_callback'))
+			$this->before_getPropObject_callback();
 		
 		if(isset($this->$prop) || method_exists($this, 'get'.ucfirst($prop))) {
-			if(method_exists($this, 'after_get_prop_object_callback'))
-				$this->after_get_prop_object_callback();
+			if(method_exists($this, 'after_getPropObject_callback'))
+				$this->after_getPropObject_callback();
 			
 			if(method_exists($this, 'get'.ucfirst($prop))) {
 				eval('$obj = $this->get'.ucfirst($prop).'();');
@@ -917,147 +919,152 @@ class mysqlDAO {
 				return $this->$prop;
 			}
 		}else{
-			$error = new handle_error($_SERVER["PHP_SELF"],'Could not access the property '.$prop.' on the object '.get_class($this).'.','get_prop_object()','framework');
+			throw new AlphaException('Could not access the property ['.$prop.'] on the object of class ['.get_class($this).']');
 			return false;
 		}
 	}
 	
 	/**
-	 * checks to see if the table exists in the database for the current business class
-	 * @return boolean true if the table exists, false otherwise 
+	 * Checks to see if the table exists in the database for the current business class
+	 * 
+	 * @return boolean
 	 */
-	function check_table_exists() {
-		if(method_exists($this, 'before_check_table_exists_callback'))
-			$this->before_check_table_exists_callback();
-		
+	protected function checkTableExists() {
 		global $config;
 		
-		$table_exists = false;
+		if(method_exists($this, 'before_checkTableExists_callback'))
+			$this->before_checkTableExists_callback();
+				
+		$tableExists = false;
 		
 		$result = mysql_list_tables($config->get('sysDB'));
 		
 		while ($row = mysql_fetch_row($result)) {    		
     		if ($row[0] == $this->getTableName())
-    			$table_exists = true;
+    			$tableExists = true;
 		}		
 		
 		if (mysql_error() == '') {
-			if(method_exists($this, 'after_check_table_exists_callback'))
-				$this->after_check_table_exists_callback();
+			if(method_exists($this, 'after_checkTableExists_callback'))
+				$this->after_checkTableExists_callback();
 			
-			return $table_exists;
+			return $tableExists;
 		}else{			
-			$this->lastQuery .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to access the system database correctly','check_table_exists()','framework');
+			throw new AlphaException('Failed to access the system database correctly, error is ['.mysql_error().']');
 			return false;
 		}
 	}
 	
 	/**
-	 * checks to see if the table in the database matches (for fields) the business class definition
-	 * @return boolean true if the table needs updating, false otherwise 
+	 * Checks to see if the table in the database matches (for fields) the business class definition
+	 * 
+	 * @return boolean
 	 */
-	function check_table_needs_update() {
-		if(method_exists($this, 'before_check_table_needs_update_callback'))
-			$this->before_check_table_needs_update_callback();
+	protected function checkTableNeedsUpdate() {
+		if(method_exists($this, 'before_checkTableNeedsUpdate_callback'))
+			$this->before_checkTableNeedsUpdate_callback();
 		
-		$table_exists = $this->check_table_exists();
+		$tableExists = $this->checkTableExists();
 		
-		if (!$table_exists) {
+		if (!$tableExists) {
 			return true;
 		}else{
-			$update_required = false;
+			$updateRequired = false;
 			
-			$match_count = 0;
+			$matchCount = 0;
 			
-			$result = mysql_query("SHOW COLUMNS FROM ".$this->getTableName());
+			$result = mysql_query('SHOW COLUMNS FROM '.$this->getTableName());			
 			
-			$properties = get_class_vars(get_class($this));			
-			
-			foreach(array_keys($properties) as $prop) {
-				if (!in_array($prop, $this->transientAttributes)) {
+			// get the class attributes
+			$reflection = new ReflectionClass(get_class($this));
+			$properties = $reflection->getProperties();
+		
+			foreach($properties as $propObj) {
+				$propName = $propObj->name;
+				if (!in_array($propName, $this->transientAttributes)) {
 				
-					$found_match = false;	
+					$foundMatch = false;	
 					
 					while ($row = mysql_fetch_assoc($result)) {						
-			    		if ($prop == $row["Field"]) {
-			    			$found_match = true;
+			    		if ($propName == $row['Field']) {
+			    			$foundMatch = true;
 			    			break;
 			    		}
 					}
 					
-					if(!$found_match) {						
-						$match_count--;						
+					if(!$foundMatch) {						
+						$matchCount--;						
 					}
 					mysql_data_seek($result, 0);					
 				}
 			}		
 			
-			if ($match_count != 0)
-				$update_required = true;
+			if ($matchCount != 0)
+				$updateRequired = true;
 			
 			if (mysql_error() == '') {
-				if(method_exists($this, 'before_check_table_needs_update_callback'))
-					$this->before_check_table_needs_update_callback();
+				if(method_exists($this, 'before_checkTableNeedsUpdate_callback'))
+					$this->before_checkTableNeedsUpdate_callback();
 				
 				// check the table indexes
 				$this->checkIndexes();
 				
-				return $update_required;
-			}else{			
-				$this->lastQuery .= " Error: ".mysql_error();
-				$error = new handle_error($_SERVER["PHP_SELF"],'Failed to access the system database correctly','check_table_needs_update()','framework');
+				return $updateRequired;
+			}else{				
+				throw new AlphaException('Failed to access the system database correctly, error is ['.mysql_error().']');
 				return false;
 			}
 		}
 	}
 	
 	/**
-	 * returns an array containing any properties on the class which have not been created on the database table yet
-	 * @return array an array of class properties (may be empty)
+	 * Returns an array containing any properties on the class which have not been created on the database 
+	 * table yet
+	 * 
+	 * @return array
 	 */
-	function find_missing_fields() {
-		if(method_exists($this, 'before_find_missing_fields_callback'))
-			$this->before_find_missing_fields_callback();
+	protected function findMissingFields() {
+		if(method_exists($this, 'before_findMissingFields_callback'))
+			$this->before_findMissingFields_callback();
 		
-		$missing_fields = array();
-		$found_fields = array();
+		$missingFields = array();			
+		$matchCount = 0;
 			
-		$match_count = 0;
+		$result = mysql_query('SHOW COLUMNS FROM '.$this->getTableName());
 			
-		$result = mysql_query("SHOW COLUMNS FROM ".$this->getTableName());
-			
-		$properties = get_class_vars(get_class($this));		
-			
-		foreach(array_keys($properties) as $prop) {			
-			if (!in_array($prop, $this->transientAttributes)) {
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this));
+		$properties = $reflection->getProperties();
+		
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			if (!in_array($propName, $this->transientAttributes)) {
 				while ($row = mysql_fetch_assoc($result)) {				
-		    		if ($prop == $row["Field"]) {		    			
-		    			$match_count++;		    			
+		    		if ($propName == $row['Field']) {		    			
+		    			$matchCount++;		    			
 		    			break;
 		    		}	    		
 				}				
 				mysql_data_seek($result, 0);					
 			}else{
-				$match_count++;
+				$matchCount++;
 			}
 			
-			if($match_count==0) {					
-				array_push($missing_fields, $prop);
+			if($matchCount==0) {					
+				array_push($missingFields, $prop);
 			}else{
-				$match_count = 0;
+				$matchCount = 0;
 			}
 		}
 		
-		if (mysql_error() != '') {
-			$this->lastQuery .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to access the system database correctly','check_table_needs_update()','framework');
+		if (mysql_error() != '') {			
+			throw new AlphaException('Failed to access the system database correctly, error is ['.mysql_error().']');
 		}
 		
-		if(method_exists($this, 'after_find_missing_fields_callback'))
-			$this->after_find_missing_fields_callback();
+		if(method_exists($this, 'after_findMissingFields_callback'))
+			$this->after_findMissingFields_callback();
 		
-		return $missing_fields;	
+		return $missingFields;	
 	}
 	
 	/**
