@@ -50,7 +50,7 @@ class Enum_Test extends PHPUnit_Framework_TestCase
     public function testLoadEnumOptions() {
     	// here we are assuming that the first user in the DB
     	// table is an administrator
-    	$this->person->load_object('1');
+    	$this->person->load('1');
     	
     	$this->assertEquals('Administrator', $this->person->get_access_level(), "testing that enum options are loaded correctly from the database");
     }
@@ -79,7 +79,7 @@ class Enum_Test extends PHPUnit_Framework_TestCase
     	try {    	
     		$this->enum1->setValue('z');
     		$this->fail('testing the setValue method with a good value');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->assertEquals('Error: not a valid enum option!'
     			, $e->getMessage()
     			, 'testing the setValue method with a bad value');
@@ -108,7 +108,7 @@ class Enum_Test extends PHPUnit_Framework_TestCase
     	try {    	
     		$enum = new Enum('blah');
     		$this->fail('test the constructor failing when a bad array is provided');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->assertEquals('Error: not a valid enum option array!'
     			, $e->getMessage()
     			, 'test the constructor failing when a bad array is provided');

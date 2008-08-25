@@ -42,7 +42,7 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     public function testSetRelatedClassPass() {
     	try {
     		$this->rel1->setRelatedClass('article_object');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->fail('Testing passing a valid BO name to setRelatedClass');
     	}
     }
@@ -54,7 +54,7 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     	try {
     		$this->rel1->setRelatedClass('xyz_object');
     		$this->fail('Testing passing an invalid BO name to setRelatedClass');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->assertEquals('The class [xyz_object] is not defined anywhere!'
     			, $e->getMessage()
     			, 'Testing passing an invalid BO name to setRelatedClass');
@@ -68,7 +68,7 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     	try {
     		$this->rel1->setRelatedClass('person_object');
     		$this->rel1->setRelatedClassField('email');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->fail('Testing passing a valid field name to setRelatedClassField');
     	}
     }
@@ -81,7 +81,7 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     		$this->rel1->setRelatedClass('person_object');
     		$this->rel1->setRelatedClassField('doesNotExist');
     		$this->fail('Testing passing an invalid field name to setRelatedClassField');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->assertEquals('The field [doesNotExist] was not found in the class [person_object]'
     			, $e->getMessage()
     			, 'Testing passing an invalid field name to setRelatedClassField');
@@ -94,7 +94,7 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     public function testSetRelationTypePass() {
     	try {
     		$this->rel1->setRelationType('MANY-TO-ONE');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->fail('Testing passing a valid type name to setRelationType');
     	}
     }
@@ -106,7 +106,7 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     	try {
     		$this->rel1->setRelationType('blah');    		
     		$this->fail('Testing passing an invalid type name to setRelationType');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->assertEquals('Relation type of [blah] is invalid!'
     			, $e->getMessage()
     			, 'Testing passing an invalid type name to setRelationType');
@@ -120,7 +120,7 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     	try {
     		$this->rel1->setValue(100);
     		$this->rel1->setValue('2777');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->fail('Testing setValue method with a valid value');
     	}
     }
@@ -132,7 +132,7 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     	try {
     		$this->rel1->setValue('xyz');
     		$this->fail('Testing setValue method with an invalid value');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->assertEquals('Error: not a valid Relation value!  A maximum of '.$this->rel1->getSize().' characters is allowed.'
     			, $e->getMessage()
     			, 'Testing setValue method with an invalid value');
@@ -149,7 +149,7 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     		$this->rel1->setValue(1);
     		$this->rel1->setRelatedClassDisplayField('access_level');
     		$this->assertEquals('Administrator', $this->rel1->getRelatedClassDisplayFieldValue(), 'Testing that the display field value of the related class is accessed correctly');    		
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->fail('Testing that the display field value of the related class is accessed correctly');
     	}
     }
@@ -162,7 +162,7 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     		$this->rel1->setRelatedClassDisplayField('someField');
     		$value = $this->rel1->getRelatedClassDisplayFieldValue();
     		$this->fail('Testing that getRelatedClassDisplayFieldValue() will fail to load an invalid class definition');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->assertEquals('Could not load the definition for the BO class []'
     			, $e->getMessage()
     			, 'Testing that getRelatedClassDisplayFieldValue() will fail to load an invalid class definition');

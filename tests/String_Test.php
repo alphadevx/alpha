@@ -77,7 +77,7 @@ class String_Test extends PHPUnit_Framework_TestCase
 			
 			$this->str1->setValue('invalid user.');
 			$this->fail('testing passing an invalid username string');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->assertEquals($this->usernameHelper
     			, $e->getMessage()
     			, 'testing passing an invalid username string');
@@ -94,7 +94,7 @@ class String_Test extends PHPUnit_Framework_TestCase
 			$this->str1->setHelper($this->usernameHelper);
 			
 			$this->str1->setValue('user_name.-test123gg');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->fail('testing passing a valid username string: '.$e->getMessage());    		
     	}
     }
@@ -110,7 +110,7 @@ class String_Test extends PHPUnit_Framework_TestCase
 			
 			$this->str1->setValue('invalid email');
 			$this->fail('testing passing an invalid email string');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->assertEquals($this->emailHelper
     			, $e->getMessage()
     			, 'testing passing an invalid email string');
@@ -136,7 +136,7 @@ class String_Test extends PHPUnit_Framework_TestCase
 			$this->str1->setValue('some.user@somewhere.co.uk');
 			$this->str1->setValue('some.user@somewhere.net');
 			$this->str1->setValue('some.user@somewhere.org');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->fail('testing passing a valid email string: '.$e->getMessage());    		
     	}
     }
@@ -151,7 +151,7 @@ class String_Test extends PHPUnit_Framework_TestCase
 			
 			$this->str1->setValue('invalid url');
 			$this->fail('testing passing an invalid URL string');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->assertEquals($this->urlHelper
     			, $e->getMessage()
     			, 'testing passing an invalid URL string');
@@ -172,7 +172,7 @@ class String_Test extends PHPUnit_Framework_TestCase
 			$this->str1->setValue('http://www.design-ireland.net/');
 			$this->str1->setValue('http://www.theregister.co.uk/');
 			$this->str1->setValue('http://www.bbc.co.uk/');			
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->fail('testing passing a valid URL string: '.$e->getMessage());    		
     	}
     }
@@ -187,7 +187,7 @@ class String_Test extends PHPUnit_Framework_TestCase
     	try {
     		$this->str1->setValue('Too many characters!');
     		$this->fail('testing the setSize method to see if validation fails');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->assertEquals('Error: not a valid string value!  A maximum of 4 characters is allowed.'
     			, $e->getMessage()
     			, 'testing the setSize method to see if validation fails');
@@ -221,7 +221,7 @@ class String_Test extends PHPUnit_Framework_TestCase
     	try {
     		$this->str1->setValue('');
     		$this->fail('testing to see that isPassword makes the string required');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->assertEquals('This string requires a value!'
     			, $e->getMessage()
     			, 'testing to see that isPassword makes the string required');

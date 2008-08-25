@@ -60,7 +60,7 @@ class Double_Test extends PHPUnit_Framework_TestCase
     	try {
     		$this->dbl1->setValue("blah");
     		$this->fail('testing passing invalid data to setValue');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->assertEquals('Error: not a valid double value!  A maximum of '.$this->dbl1->getSize().' characters is allowed, in the format 0.00'
     			, $e->getMessage()
     			, 'testing passing invalid data to setValue');
@@ -86,7 +86,7 @@ class Double_Test extends PHPUnit_Framework_TestCase
     	try {
     		$this->dbl1->setValue(200);
     		$this->fail('testing passing invalid data to setValue');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->assertEquals('Error: not a valid double value!  A maximum of '.$this->dbl1->getSize().' characters is allowed, in the format 0.00'
     			, $e->getMessage()
     			, 'testing passing invalid data to setValue');

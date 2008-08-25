@@ -59,7 +59,7 @@ class Date_Test extends PHPUnit_Framework_TestCase
     	try {    	
     		$this->date1->setDateValue(2000, 'blah', 1);
     		$this->fail("testing the setValue method with a bad month");
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->assertEquals('Error: the month value blah provided is invalid!'
     			, $e->getMessage()
     			, "testing the setValue method with a bad month");
@@ -73,7 +73,7 @@ class Date_Test extends PHPUnit_Framework_TestCase
     	try {    	
     		$this->date1->setDateValue(2000, 13, 1);
     		$this->fail("testing the setValue method with a bad date value (out of range)");
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->assertEquals('Error: the day value 2000-13-1 provided is invalid!'
     			, $e->getMessage()
     			, "testing the setValue method with a bad date value (out of range)");
@@ -96,7 +96,7 @@ class Date_Test extends PHPUnit_Framework_TestCase
     	try {
     		$date = new Date("blah");
     		$this->fail("testing that the validation will cause an invalid date to fail on the constructor");    	
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->assertTrue(true, "testing that the validation will cause an invalid date to fail on the constructor");
     	}
     }

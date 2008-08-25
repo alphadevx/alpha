@@ -99,7 +99,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * @param string $RC
 	 */
 	public function setRelatedClass($RC) {		
-		if(in_array($RC, mysql_DAO::getBOClassNames()))
+		if(in_array($RC, mysqlDAO::getBOClassNames()))
 			$this->relatedClass = $RC;
 		else
 			throw new AlphaException('The class ['.$RC.'] is not defined anywhere!');
@@ -246,7 +246,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 		if(empty($this->value) || $this->value == '00000000000') {
 			return '[Please select]';
 		}else{
-			$obj->load_object($this->value);		
+			$obj->load($this->value);		
 			return $obj->get($this->relatedClassDisplayField);
 		}
 	}
