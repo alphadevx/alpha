@@ -2,7 +2,7 @@
 
 // $Id$
 
-require_once $config->get('sysRoot').'alpha/model/mysql_DAO.inc';
+require_once $config->get('sysRoot').'alpha/model/mysqlDAO.inc';
 require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 require_once $config->get('sysRoot').'alpha/model/article_vote_object.inc';
 require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
@@ -17,7 +17,7 @@ require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
  * 
  * 
  */ 
-class article_object extends mysql_DAO
+class article_object extends mysqlDAO
 {
 	/**
 	 * the article title
@@ -128,7 +128,7 @@ class article_object extends mysql_DAO
 	 */
 	function article_object() {
 		// ensure to call the parent constructor
-		$this->mysql_DAO();
+		parent::__construct();
 		$this->title = new String();
 		$this->title->setHelper("Please provide a title for the article.");
 		$this->title->setSize(100);

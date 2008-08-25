@@ -12,7 +12,7 @@ require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
  * @version $Id$
  * 
  */
-class DEnumItem extends mysql_DAO implements AlphaTypeInterface{
+class DEnumItem extends mysqlDAO implements AlphaTypeInterface{
 	/**
 	 * The value that will appear in the drop-down.
 	 * 
@@ -94,7 +94,7 @@ class DEnumItem extends mysql_DAO implements AlphaTypeInterface{
 		
 		while($row = mysql_fetch_assoc($result)) {
 			$obj = new DEnumItem();
-			$obj->load_object($row["OID"]);
+			$obj->load($row["OID"]);
 			$objects[$count] = $obj;
 			$count++;			
 		}		

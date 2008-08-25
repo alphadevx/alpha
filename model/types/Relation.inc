@@ -1,7 +1,7 @@
 <?php
 
 require_once $config->get('sysRoot').'config/validation_rules.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
 
@@ -102,7 +102,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 		if(in_array($RC, mysql_DAO::getBOClassNames()))
 			$this->relatedClass = $RC;
 		else
-			throw new AlphaFrameworkException('The class ['.$RC.'] is not defined anywhere!');
+			throw new AlphaException('The class ['.$RC.'] is not defined anywhere!');
 	}
 	
 	/**
@@ -136,9 +136,9 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 			if($fieldFound)
 				$this->relatedClassField = $RCF;
 			else
-				throw new AlphaFrameworkException('The field ['.$RCF.'] was not found in the class ['.$this->relatedClass.']');
+				throw new AlphaException('The field ['.$RCF.'] was not found in the class ['.$this->relatedClass.']');
 		}catch (Exception $e) {
-			throw new AlphaFrameworkException($e->getMessage());
+			throw new AlphaException($e->getMessage());
 		}
 	}
 	
@@ -178,7 +178,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 		if(in_array($RT, $this->allowableRelationTypes))
 			$this->relationType = $RT;
 		else
-			throw new AlphaFrameworkException('Relation type of ['.$RT.'] is invalid!');
+			throw new AlphaException('Relation type of ['.$RT.'] is invalid!');
 	}
 	
 	/**
@@ -200,10 +200,10 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 			if (preg_match($this->validationRule, $val)) {				
 				$this->value = str_pad($val, 11, "0", STR_PAD_LEFT);				
 			}else{			
-				throw new AlphaFrameworkException($this->helper);
+				throw new AlphaException($this->helper);
 			}
 		}else{
-			throw new AlphaFrameworkException($this->helper);
+			throw new AlphaException($this->helper);
 		}
 	}
 	
@@ -238,7 +238,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 		}elseif (file_exists($config->get('sysRoot').'model/'.$this->relatedClass.'.inc')) {
 			require_once $config->get('sysRoot').'model/'.$this->relatedClass.'.inc';
 		}else{
-			throw new AlphaFrameworkException('Could not load the definition for the BO class ['.$this->relatedClass.']');
+			throw new AlphaException('Could not load the definition for the BO class ['.$this->relatedClass.']');
 		}
 					
 		$obj = new $this->relatedClass;
@@ -264,7 +264,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 		}elseif (file_exists($config->get('sysRoot').'model/'.$this->relatedClass.'.inc')) {
 			require_once $config->get('sysRoot').'model/'.$this->relatedClass.'.inc';
 		}else{
-			throw new AlphaFrameworkException('Could not load the definition for the BO class ['.$this->relatedClass.']');
+			throw new AlphaException('Could not load the definition for the BO class ['.$this->relatedClass.']');
 		}
 					
 		$obj = new $this->relatedClass;

@@ -1,7 +1,7 @@
 <?php
 
 require_once $config->get('sysRoot').'config/validation_rules.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
 
@@ -96,7 +96,7 @@ class Timestamp extends AlphaType implements AlphaTypeInterface {
 			if (preg_match($this->validationRule, $timestamp)) {
 				$this->populateFromString($timestamp);
 			}else{
-				throw new AlphaFrameworkException($this->helper);
+				throw new AlphaException($this->helper);
 			}
 		}
  	}
@@ -139,7 +139,7 @@ class Timestamp extends AlphaType implements AlphaTypeInterface {
  			$valid = 'Error: the second value '.$second.' provided is invalid!';
  		
  		if (isset($valid)){
- 			throw new AlphaFrameworkException($valid);
+ 			throw new AlphaException($valid);
  		}else{
  			$this->year = $year;
  			$this->month = str_pad($month, 2, '0', STR_PAD_LEFT);
@@ -199,7 +199,7 @@ class Timestamp extends AlphaType implements AlphaTypeInterface {
  			$valid = 'Error: the day value '.$year.'/'.$month.'/'.$day.' provided is invalid!';
  		
  		if (isset($valid)){
- 			throw new AlphaFrameworkException($valid);
+ 			throw new AlphaException($valid);
  		}else{
  			$this->year = $year;
  			$this->month = str_pad($month, 2, '0', STR_PAD_LEFT);
@@ -299,7 +299,7 @@ class Timestamp extends AlphaType implements AlphaTypeInterface {
  			$valid = 'Error: the second value '.$second.' provided is invalid!';
  			
  		if (isset($valid)) {
- 			throw new AlphaFrameworkException($valid);
+ 			throw new AlphaException($valid);
  		}else{
  			$this->hour = str_pad($hour, 2, '0', STR_PAD_LEFT);
  			$this->minute = str_pad($minute, 2, '0', STR_PAD_LEFT);
@@ -320,13 +320,13 @@ class Timestamp extends AlphaType implements AlphaTypeInterface {
  		if(isset($spilt_by_space[0])) {
  			$date = $spilt_by_space[0];
  		}else{
- 			throw new AlphaFrameworkException($this->helper);
+ 			throw new AlphaException($this->helper);
  		}
  		
  		if(isset($spilt_by_space[1])) {
  			$time = $spilt_by_space[1];
  		}else{
- 			throw new AlphaFrameworkException($this->helper);
+ 			throw new AlphaException($this->helper);
  		}
  		
  		$split_by_dash = explode("-", $date);
@@ -334,19 +334,19 @@ class Timestamp extends AlphaType implements AlphaTypeInterface {
  		if(isset($split_by_dash[0])) {
  			$year = $split_by_dash[0];
  		}else{
- 			throw new AlphaFrameworkException($this->helper);
+ 			throw new AlphaException($this->helper);
  		}
  		
  		if(isset($split_by_dash[1])) {
  			$month = $split_by_dash[1];
  		}else{
- 			throw new AlphaFrameworkException($this->helper);
+ 			throw new AlphaException($this->helper);
  		}
  		
  		if(isset($split_by_dash[2])) {
  			$day = $split_by_dash[2];
  		}else{
- 			throw new AlphaFrameworkException($this->helper);
+ 			throw new AlphaException($this->helper);
  		}
  		
  		$split_by_colon = explode(":", $time);
@@ -354,19 +354,19 @@ class Timestamp extends AlphaType implements AlphaTypeInterface {
  		if(isset($split_by_colon[0])) {
  			$hour = $split_by_colon[0];
  		}else{
- 			throw new AlphaFrameworkException($this->helper);
+ 			throw new AlphaException($this->helper);
  		}
  		
  		if(isset($split_by_colon[1])) {
  			$minute = $split_by_colon[1];
  		}else{
- 			throw new AlphaFrameworkException($this->helper);
+ 			throw new AlphaException($this->helper);
  		}
  		
  		if(isset($split_by_colon[2])) {
  			$second = $split_by_colon[2];
  		}else{
- 			throw new AlphaFrameworkException($this->helper);
+ 			throw new AlphaException($this->helper);
  		}
  		
  		if(!preg_match('/^[0-9]{4}$/', $year))
@@ -385,7 +385,7 @@ class Timestamp extends AlphaType implements AlphaTypeInterface {
  			$valid = 'Error: the second value '.$second.' provided is invalid!';
  		
  		if (isset($valid)){
- 			throw new AlphaFrameworkException($valid);
+ 			throw new AlphaException($valid);
  		}else{
  			$this->year = $year;
  			$this->month = str_pad($month, 2, '0', STR_PAD_LEFT);
