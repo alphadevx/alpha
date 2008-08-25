@@ -55,7 +55,7 @@ class Text_Test extends PHPUnit_Framework_TestCase
     	try {
     		$this->txt1->setValue('Too many characters!');
     		$this->fail('testing the setSize method to see if validation fails');
-    	}catch (AlphaFrameworkException $e) {
+    	}catch (AlphaException $e) {
     		$this->assertEquals('Error: not a valid text value!  A maximum of 4 characters is allowed.'
     			, $e->getMessage()
     			, 'testing the setSize method to see if validation fails');

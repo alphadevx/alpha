@@ -200,7 +200,7 @@ class DEnum extends mysqlDAO implements AlphaTypeInterface{
 	 */
 	public function getItemCount() {		
 		
-		$sql_query = 'SELECT COUNT(OID) AS item_count FROM DEnumItem WHERE DEnumID = \''.$this->get_ID().'\';';
+		$sql_query = 'SELECT COUNT(OID) AS item_count FROM DEnumItem WHERE DEnumID = \''.$this->getID().'\';';
 
 		$this->last_query = $sql_query;
 
@@ -224,7 +224,7 @@ class DEnum extends mysqlDAO implements AlphaTypeInterface{
 	public function getOptionID($optionName) {
 		$denumItem = new DEnumItem();
 		$denumItem->loadByAttribute('value', $optionName);
-		$id = $denumItem->get_ID();
+		$id = $denumItem->getID();
 		
 		if(!empty($id))
 			return $id;

@@ -19,7 +19,7 @@ class Exceptions_Test extends PHPUnit_Framework_TestCase
     	$exceptionCaught = false;
     	try {
     		2/0;
-    	}catch (AlphaPHPException $e) {
+    	}catch (PHPException $e) {
     		$exceptionCaught = true;
     	}
     	
@@ -33,7 +33,7 @@ class Exceptions_Test extends PHPUnit_Framework_TestCase
     	$exceptionCaught = false;
     	try {
     		$e = $empty->test;
-    	}catch (AlphaPHPException $e) {
+    	}catch (PHPException $e) {
     		$exceptionCaught = true;
     	}
     	
