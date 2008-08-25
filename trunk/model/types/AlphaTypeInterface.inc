@@ -1,6 +1,6 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
 
 /**
  * The interface for all complex data types

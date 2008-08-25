@@ -39,16 +39,20 @@ class form_validator
 		
 		echo "// set up the validation rules used on the fields in this page\n";
 			
-		$properties = get_object_vars($this->BO);		
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = $reflection->getProperties();
 		
-		foreach(array_keys($properties) as $prop) {
-			if(!in_array($prop, $this->BO->default_attributes) && !in_array($prop, $this->BO->transient_attributes)) {
-				if (strtoupper(get_class($properties[$prop])) != "ENUM" 
-				&& strtoupper(get_class($properties[$prop])) != "DENUM"
-				&& strtoupper(get_class($properties[$prop])) != "RELATION"
-				&& strtoupper(get_class($properties[$prop])) != "BOOLEAN") {
-					echo " validation_rules[\"".$prop."\"] = ".$this->BO->$prop->getRule().";\n";
-					echo " validation_rules[\"".$prop."_msg\"] = \"".$this->BO->$prop->getHelper()."\";\n";
+		foreach($properties as $propObj) {			
+			$propName = $propObj->name;
+			$propClass = get_class($this->BO->getPropObject($propName));
+			if(!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
+				if (strtoupper($propClass) != "ENUM" &&
+				strtoupper($propClass) != "DENUM" &&
+				strtoupper($propClass) != "DENUMITEM" && 
+				strtoupper($propClass) != "BOOLEAN") {					
+					echo " validation_rules[\"".$propName."\"] = ".$this->BO->getPropObject($propName)->getRule().";\n";
+					echo " validation_rules[\"".$propName."_msg\"] = \"".$this->BO->getPropObject($propName)->getHelper()."\";\n";
 				}
 			}
 		}	

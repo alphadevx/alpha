@@ -186,7 +186,7 @@ class mysqlDAO {
 
 		foreach($properties as $propObj) {
 			// filter transient attributes
-			if(!in_array($propObj->name, $this->transientAttributes)) {
+			if(!in_array($propObj->name, $this->transientAttributes)) {				
 				$this->set($propObj->name, $row[$propObj->name]);
 			}
 		}
@@ -739,7 +739,7 @@ class mysqlDAO {
 	 * 
 	 * @return integer
 	 */
-	protected function getCount() {
+	public function getCount() {
 		if(method_exists($this, 'before_getCount_callback'))
 			$this->before_getCount_callback();
 		
@@ -787,7 +787,7 @@ class mysqlDAO {
 		
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
-			$propClass = $propObj->class;
+			$propClass = get_class($this->getPropObject($propName));
 			if(!in_array($propName, $this->defaultAttributes)) {
 
 				if ($propClass == 'Enum') {
@@ -801,7 +801,7 @@ class mysqlDAO {
 						$row = mysql_fetch_row($result);
 						$options = explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2",$row[1]));
 						
-						$this->get($propName)->setOptions($options);
+						$this->getPropObject($propName)->setOptions($options);						
 					}else{
 						$dbError = true;
 						break;
@@ -929,7 +929,7 @@ class mysqlDAO {
 	 * 
 	 * @return boolean
 	 */
-	protected function checkTableExists() {
+	public function checkTableExists() {
 		global $config;
 		
 		if(method_exists($this, 'before_checkTableExists_callback'))
@@ -960,7 +960,7 @@ class mysqlDAO {
 	 * 
 	 * @return boolean
 	 */
-	protected function checkTableNeedsUpdate() {
+	public function checkTableNeedsUpdate() {
 		if(method_exists($this, 'before_checkTableNeedsUpdate_callback'))
 			$this->before_checkTableNeedsUpdate_callback();
 		
@@ -1238,6 +1238,33 @@ class mysqlDAO {
 	    }
 
 	    return $classNameArray;
+	}
+	
+	/**
+	 * Get the array of default attribute names
+	 *
+	 * @return array
+	 */
+	public function getDefaultAttributes() {
+		return $this->defaultAttributes;
+	}
+	
+	/**
+	 * Get the array of transient attribute names
+	 *
+	 * @return array
+	 */
+	public function getTransientAttributes() {
+		return $this->transientAttributes;
+	}
+	
+	/**
+	 * Private setter for the object ID, used from load methods
+	 *
+	 * @param int $OID
+	 */
+	private function setOID($OID) {
+		$this->OID = $OID;
 	}
 }
 

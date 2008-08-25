@@ -1,7 +1,7 @@
 <?php
 
 require_once $config->get('sysRoot').'config/validation_rules.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
 
@@ -49,7 +49,7 @@ class Boolean extends AlphaType implements AlphaTypeInterface {
 			$this->value = 0;
 			$this->booleanValue = false;
 		}else{
-			throw new AlphaFrameworkException($this->helper);
+			throw new AlphaException($this->helper);
 		}
 	}
 	
@@ -66,7 +66,7 @@ class Boolean extends AlphaType implements AlphaTypeInterface {
 			$this->value = 0;
 			$this->booleanValue = false;					
 		}else{
-			throw new AlphaFrameworkException($this->helper);
+			throw new AlphaException($this->helper);
 		}
 	}
 	

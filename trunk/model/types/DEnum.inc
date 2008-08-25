@@ -12,7 +12,7 @@ require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
  * @version $Id$
  * 
  */
-class DEnum extends mysql_DAO implements AlphaTypeInterface{
+class DEnum extends mysqlDAO implements AlphaTypeInterface{
 	/**
 	 * An array of valid DEnum options
 	 * 
@@ -103,7 +103,7 @@ class DEnum extends mysql_DAO implements AlphaTypeInterface{
 		$result = mysql_query($sql_query);
 		
 		if(mysql_num_rows($result) == 0) {
-			throw new AlphaFrameworkException('Failed to load DEnum '.$this->name->getValue().', not found in database.');
+			throw new AlphaException('Failed to load DEnum '.$this->name->getValue().', not found in database.');
 		}
 		
 		// now build an array of item indexes to be returned		
@@ -114,7 +114,7 @@ class DEnum extends mysql_DAO implements AlphaTypeInterface{
 		$tmp = new DEnumItem();		
 		
 		foreach($tmp->loadItems($row["OID"]) as $DEnumItem) {			
-			$this->options[$DEnumItem->get_ID()] = $DEnumItem->getValue();
+			$this->options[$DEnumItem->getID()] = $DEnumItem->getValue();
 			$count++;			
 		}
 		
@@ -189,7 +189,7 @@ class DEnum extends mysql_DAO implements AlphaTypeInterface{
 		if (in_array($item, array_keys($this->options))) {
 			$this->value = $item;			
 		}else{
-			throw new AlphaFrameworkException($this->getHelper());			
+			throw new AlphaException($this->getHelper());			
 		}
 	}
 	
@@ -212,7 +212,7 @@ class DEnum extends mysql_DAO implements AlphaTypeInterface{
 			return $row["item_count"];
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
-			throw new AlphaFrameworkException('Failed to get the item count for the DEnum.');			
+			throw new AlphaException('Failed to get the item count for the DEnum.');			
 		}
 	}
 

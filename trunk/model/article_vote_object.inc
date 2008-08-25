@@ -2,7 +2,7 @@
 
 // $Id$
 
-require_once $config->get('sysRoot').'alpha/model/mysql_DAO.inc';
+require_once $config->get('sysRoot').'alpha/model/mysqlDAO.inc';
 require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 
 /**
@@ -15,7 +15,7 @@ require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
  * 
  * 
  */ 
-class article_vote_object extends mysql_DAO
+class article_vote_object extends mysqlDAO
 {
 	/**
 	 * the OID of the parent article
@@ -57,7 +57,7 @@ class article_vote_object extends mysql_DAO
 	 */
 	function article_vote_object() {
 		// ensure to call the parent constructor
-		$this->mysql_DAO();
+		parent::__construct();
 		$this->article_oid = new Integer();
 		$this->person_oid = new Integer();
 		$this->score = new Integer();

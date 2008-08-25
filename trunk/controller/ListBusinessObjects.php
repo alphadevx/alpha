@@ -46,7 +46,7 @@ class ListBusinessObjects extends Controller
 		if(!empty($_POST))
 			$this->handle_post();
 
-		$classNames = mysql_DAO::getBOClassNames();
+		$classNames = mysqlDAO::getBOClassNames();
 		
 		foreach($classNames as $classname) {
 			$foundFile = true;

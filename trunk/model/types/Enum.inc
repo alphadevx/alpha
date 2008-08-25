@@ -1,6 +1,6 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
 
@@ -43,7 +43,7 @@ class Enum extends AlphaType implements AlphaTypeInterface {
 		if(is_array($opts))
 			$this->options = $opts;
 		else
-			throw new AlphaFrameworkException('Error: not a valid enum option array!');
+			throw new AlphaException('Error: not a valid enum option array!');
 	}
 
 	/**
@@ -55,7 +55,7 @@ class Enum extends AlphaType implements AlphaTypeInterface {
 		if(is_array($opts))
 			$this->options = $opts;
 		else
-			throw new AlphaFrameworkException('Error: not a valid enum option array!');
+			throw new AlphaException('Error: not a valid enum option array!');
 	}
 
 	/**
@@ -88,7 +88,7 @@ class Enum extends AlphaType implements AlphaTypeInterface {
 		if (in_array($item, $this->options)) {
 			$this->value = $item;
 		}else{
-			throw new AlphaFrameworkException($this->getHelper());
+			throw new AlphaException($this->getHelper());
 		}
 	}
 }

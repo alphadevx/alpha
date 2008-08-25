@@ -1,7 +1,7 @@
 <?php
 
 require_once $config->get('sysRoot').'config/validation_rules.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/AlphaFrameworkException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
 
@@ -63,10 +63,10 @@ class Double extends AlphaType implements AlphaTypeInterface {
 			if ($val == 0 || preg_match($this->validationRule, strval($val))) {				
 				$this->value = $val;					
 			}else{
-				throw new AlphaFrameworkException($this->helper);
+				throw new AlphaException($this->helper);
 			}
 		}else{
-			throw new AlphaFrameworkException($this->helper);
+			throw new AlphaException($this->helper);
 		}
 	}
 	
@@ -80,10 +80,10 @@ class Double extends AlphaType implements AlphaTypeInterface {
 			if (preg_match($this->validationRule, $val)) {				
 				$this->value = $val;				
 			}else{
-				throw new AlphaFrameworkException($this->helper);
+				throw new AlphaException($this->helper);
 			}
 		}else{
-			throw new AlphaFrameworkException($this->helper);
+			throw new AlphaException($this->helper);
 		}
 	}
 	
@@ -115,7 +115,7 @@ class Double extends AlphaType implements AlphaTypeInterface {
 			$this->size = $size;
 			$this->helper = 'Error: not a valid double value!  A maximum of '.$this->size.' characters is allowed, in the format 0.00';
 		}else{
-			throw new AlphaFrameworkException('Error: the value '.$size.' provided by setSize is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
+			throw new AlphaException('Error: the value '.$size.' provided by setSize is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
 		}	
 	}
 	

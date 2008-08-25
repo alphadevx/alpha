@@ -2,7 +2,7 @@
 
 // $Id$
 
-require_once $config->get('sysRoot').'alpha/model/mysql_DAO.inc';
+require_once $config->get('sysRoot').'alpha/model/mysqlDAO.inc';
 require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
 
 /**
@@ -15,7 +15,7 @@ require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
  * 
  * 
  */ 
-class person_object extends mysql_DAO
+class person_object extends mysqlDAO
 {	
 	/**
 	 * the forum display name of the person
@@ -72,7 +72,7 @@ class person_object extends mysql_DAO
 	 */
 	function person_object() {
 		// ensure to call the parent constructor
-		$this->mysql_DAO();
+		parent::__construct();
 		$this->displayname = new String();
 		$this->displayname->setRule(RULE_USERNAME);
 		$this->displayname->setSize(70);
@@ -224,7 +224,7 @@ class person_object extends mysql_DAO
 	{		
 		$sql_query = "SELECT * FROM ".self::TABLE_NAME." WHERE email = '$email';";		
 
-		$this->last_query = $sql_query;
+		$this->lastQuery = $sql_query;
 
 		$result = mysql_query($sql_query);
 		
@@ -250,11 +250,12 @@ class person_object extends mysql_DAO
 			}
 		}
 		
-		if(mysql_error() == '' && $this->set_enum_options()) {	
+		if(mysql_error() == '') {
+			$this->setEnumOptions();				
 			return true;
 		}else{			
-			$this->last_query .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load user, MySql error is: '.mysql_error().', query: '.$this->last_query,'load_from_email($email)','framework');
+			$this->lastQuery .= " Error: ".mysql_error();
+			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load user, MySql error is: '.mysql_error().', query: '.$this->lastQuery,'load_from_email($email)','framework');
 			return false;
 		}		
 	}
