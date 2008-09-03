@@ -5,6 +5,7 @@ require_once $config->get('sysRoot').'alpha/exceptions/BONotFoundException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/FailedSaveException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/LockingException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/ValidationException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Date.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Timestamp.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Double.inc';
@@ -155,7 +156,7 @@ class mysqlDAO {
 				$this->after_load_callback();			
 		}else{			
 			throw new BONotFoundException('Failed to load object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
-		}		
+		}
 	}
 	
 	/**
@@ -787,9 +788,8 @@ class mysqlDAO {
 		
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
-			$propClass = get_class($this->getPropObject($propName));
-			if(!in_array($propName, $this->defaultAttributes)) {
-
+			if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
+				$propClass = get_class($this->getPropObject($propName));
 				if ($propClass == 'Enum') {
 					$sqlQuery = "SHOW COLUMNS FROM ".$this->getTableName()." LIKE '".$propName."'";
 					
@@ -1200,12 +1200,24 @@ class mysqlDAO {
 	}
 	
 	/**
-	 * gets the data labels array
+	 * Gets the data labels array
 	 * 
 	 * @return array
 	 */
-	function getDataLabels() {		
+	public function getDataLabels() {		
 		return $this->dataLabels;
+	}
+	
+	/**
+	 * Gets the data label for the given attribute name
+	 * 
+	 * @return array
+	 */
+	public function getDataLabel($att) {
+		if(in_array($att, array_keys($this->dataLabels)))		
+			return $this->dataLabels[$att];
+		else
+			throw new IllegalArguementException('Error: no data label found on the class ['.get_class($this).'] for the attribute ['.$att.']');
 	}
 	
 	/**
