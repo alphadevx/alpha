@@ -162,7 +162,7 @@ class article_object extends mysqlDAO
 		$this->markTransient('printURL');
 		
 		// mark title as unique
-		$this->mark_unique('title');
+		$this->markUnique('title');
 	}
 	
 	/**
