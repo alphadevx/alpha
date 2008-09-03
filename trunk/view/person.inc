@@ -138,14 +138,14 @@ class person extends View
 		echo '<table cols="2" class="edit_view">';
 		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
 		foreach (array_keys($properties) as $prop) {
-			if (!in_array($prop, $this->BO->default_attributes) && $prop != "password" && $prop != "access_level" && $prop != "state") {
+			if (!in_array($prop, $this->BO->getDefaultAttributes()) && $prop != "password" && $prop != "access_level" && $prop != "state") {
 
 				$obj_type = get_class($properties[$prop]);
 
 				switch (strtoupper($obj_type)) {
 					case "INTEGER" :
 						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->getDataLabel($prop);
 						echo '</td>';
 
 						echo '<td>';
@@ -154,7 +154,7 @@ class person extends View
 					break;
 					case "DOUBLE" :
 						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->getDataLabel($prop);
 						echo '</td>';
 
 						echo '<td>';
@@ -163,7 +163,7 @@ class person extends View
 					break;
 					case "DATE" :
 						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->getDataLabel($prop);
 						echo '</td>';
 
 						echo '<td>';
@@ -173,10 +173,10 @@ class person extends View
 					case "STRING" :
 						// use a string widget if defined
 						if (class_exists("string_box")) {
-							$temp = new string_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "");
+							$temp = new string_box($this->BO->get_prop_object($prop), $this->BO->getDataLabel($prop), $prop, "");
 						} else {
 							echo '<tr><td style="width:25%;">';
-							echo $this->BO->data_labels[$prop];
+							echo $this->BO->getDataLabel($prop);
 							echo '</td>';
 
 							echo '<td>';
@@ -187,10 +187,10 @@ class person extends View
 					case "TEXT" :
 						// use a text widget if defined
 						if (class_exists("text_box")) {
-							$temp = new text_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "");
+							$temp = new text_box($this->BO->get_prop_object($prop), $this->BO->getDataLabel($prop), $prop, "");
 						} else {
 							echo '<tr><td colspan="2">';
-							echo $this->BO->data_labels[$prop];
+							echo $this->BO->getDataLabel($prop);
 							echo '</td></tr>';
 	
 							echo '<tr><td colspan="2">';
@@ -200,7 +200,7 @@ class person extends View
 					break;					
 					case "BOOLEAN":
 						echo '<tr><td>';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->getDataLabel($prop);
 						echo '</td>';
 
 						echo '<td>';
@@ -212,7 +212,7 @@ class person extends View
 					break;
 					case "ENUM" :						
 						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->getDataLabel($prop);
 						echo '</td>';
 						echo '<td>';
 						echo '<select name="'.$prop.'"/>';
@@ -229,7 +229,7 @@ class person extends View
 					break;
 					default :
 						echo '<tr><td colspan="2">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->getDataLabel($prop);
 						echo '</td></tr>';
 
 						echo '<tr><td colspan="2">';
@@ -250,7 +250,7 @@ class person extends View
 			// need to ensure that only admins get the privileages enum drop-down
 			if ($prop == "access_level" && $_SESSION["current_user"]->get_access_level() == "Administrator") {
 				echo '<tr><td style="width:25%;">';
-				echo $this->BO->data_labels[$prop];
+				echo $this->BO->getDataLabel($prop);
 				echo '</td>';
 				echo '<td>';
 				echo '<select name="'.$prop.'"/>';
@@ -270,7 +270,7 @@ class person extends View
 			// need to ensure that only admins get the state enum drop-down
 			if ($prop == "state" && $_SESSION["current_user"]->get_access_level() == "Administrator") {
 				echo '<tr><td style="width:25%;">';
-				echo $this->BO->data_labels[$prop];
+				echo $this->BO->getDataLabel($prop);
 				echo '</td>';
 				echo '<td>';
 				echo '<select name="'.$prop.'"/>';
@@ -294,7 +294,7 @@ class person extends View
 		$temp = new button("submit", "Save", "saveBut");
 		if ($_SESSION["current_user"]->get_access_level() == "Administrator") {
 			echo '&nbsp;&nbsp;';
-			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
+			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
 			echo '&nbsp;&nbsp;';
 			$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
 		}		
@@ -311,8 +311,9 @@ class person extends View
 	function list_view() {
 		global $config;
 
-		$properties = get_object_vars($this->BO);
-		$obj_type = '';
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = $reflection->getProperties();
 
 		$col_count = 1;
 
@@ -320,39 +321,45 @@ class person extends View
 		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
 		// first render all of the table headers
 		echo '<tr>';
-		foreach (array_keys($properties) as $prop) {
-			if (!in_array($prop, $this->BO->default_attributes) && $prop != "password") {
-				if (get_class($properties[$prop]) != "Text") {
-					$col_count ++;
-					echo '	<th>'.$this->BO->data_labels[$prop].'</th>';
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			$propClass = get_class($this->BO->get($propName));				
+		
+			if (!in_array($propName, $this->BO->getDefaultAttributes()) && $propName != 'password') {
+				if ($propClass != 'Text') {
+					$col_count++;
+					echo '	<th>'.$this->BO->getDataLabel($propName).'</th>';
 				}
 			}
-			if ($prop == "OID")
-				echo '	<th>'.$this->BO->data_labels[$prop].'</th>';
+			if ($propName == 'OID')
+				echo '	<th>'.$this->BO->getDataLabel($propName).'</th>';
 		}
 		echo '</tr><tr>';
 
 		// and now the values
-		foreach (array_keys($properties) as $prop) {
-			if (!in_array($prop, $this->BO->default_attributes) && $prop != "password") {
-				if (get_class($properties[$prop]) != "Text") {
-					echo '	<td>&nbsp;'.$this->BO-> $prop->getValue().'</td>';
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			$propClass = get_class($this->BO->get($propName));
+		
+			if (!in_array($propName, $this->BO->getDefaultAttributes()) && $propName != 'password') {
+				if ($propClass != 'Text') {
+					echo '	<td>&nbsp;'.$this->BO->get($propName).'</td>';
 				}
 			}
-			if ($prop == "OID")
-				echo '	<td>&nbsp;'.$this->BO->get_ID().'</td>';
+			if ($propName == 'OID')
+				echo '	<td>&nbsp;'.$this->BO->getID().'</td>';
 		}
 		echo '</tr>';
 
 		echo '<tr><td colspan="'.$col_count.'" align="center">';
 		
-		$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->get_ID())."'", "View", "viewBut");
+		$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."'", "View", "viewBut");
 		// render edit and delete buttons for admins only
 		if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_access_level() == "Administrator") {
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=edit_person_object&oid='.$this->BO->get_ID())."'", "Edit", "editBut");
+			$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=edit_person_object&oid='.$this->BO->getID())."'", "Edit", "editBut");
 			echo '&nbsp;&nbsp;';
-			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
+			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
 		}		
 		echo '</td></tr>';
 
