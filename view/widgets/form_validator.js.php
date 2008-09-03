@@ -45,8 +45,8 @@ class form_validator
 		
 		foreach($properties as $propObj) {			
 			$propName = $propObj->name;
-			$propClass = get_class($this->BO->getPropObject($propName));
 			if(!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
+				$propClass = get_class($this->BO->getPropObject($propName));
 				if (strtoupper($propClass) != "ENUM" &&
 				strtoupper($propClass) != "DENUM" &&
 				strtoupper($propClass) != "DENUMITEM" && 
