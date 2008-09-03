@@ -1072,62 +1072,68 @@ class mysqlDAO {
 	 * 
 	 * @return string
 	 */
-	function getTableName() {
+	public function getTableName() {
 		eval('$TABLE_NAME = '.get_class($this).'::TABLE_NAME;');
 		
 		if(!empty($TABLE_NAME)) {
     		return $TABLE_NAME;        
     	}else{
-    		throw new AlphaFrameworkException('Error: no TABLE_NAME constant set for the class '.get_class($this));		
+    		throw new AlphaException('Error: no TABLE_NAME constant set for the class '.get_class($this));		
     	}
 	}
 	
 	/**
-	 * method for getting the OID of the person who created this BO
+	 * Method for getting the OID of the person who created this BO
+	 * 
 	 * @return Integer
 	 */
-	function get_creator_ID() {
+	protected function getCreatorId() {
 		return $this->created_by;
 	}
 	
 	/**
-	 * method for getting the OID of the person who updated this BO
+	 * Method for getting the OID of the person who updated this BO
+	 * 
 	 * @return Integer
 	 */
-	function get_updator_ID() {
+	protected function getUpdatorId() {
 		return $this->updated_by;
 	}
 	
 	/**
-	 * method for getting the date/time of when the BO was created
+	 * Method for getting the date/time of when the BO was created
+	 * 
 	 * @return Timestamp
 	 */
-	function get_create_TS() {
+	protected function getCreateTS() {
 		return $this->created_ts;
 	}
 	
 	/**
-	 * method for getting the date/time of when the BO was last updated
+	 * Method for getting the date/time of when the BO was last updated
+	 * 
 	 * @return Timestamp
 	 */
-	function get_update_TS() {
+	protected function getUpdateTS() {
 		return $this->updated_ts;
 	}
 	
 	/**
-	 * adds the name of the atribute provided to the list of transient (non-saved) attributes for this BO
-	 * @param string attribute_name the name of the attribute to mark as transient
+	 * Adds the name of the attribute provided to the list of transient (non-saved) attributes for this BO
+	 * 
+	 * @param string attributeName
 	 */
-	function markTransient($attribute_name) {
-		array_push($this->transientAttributes, $attribute_name);		
+	protected function markTransient($attributeName) {
+		array_push($this->transientAttributes, $attributeName);		
 	}
 	
 	/**
-	 * adds the name of the atribute provided to the list of unique (constrained) attributes for this BO
-	 * @param string attribute_name the name of the attribute to mark as unique
+	 * Adds the name of the atribute provided to the list of unique (constrained) attributes for this BO
+	 * 
+	 * @param string attributeName
 	 */
-	function mark_unique($attribute_name) {
-		array_push($this->uniqueAttributes, $attribute_name);		
+	protected function markUnique($attributeName) {
+		array_push($this->uniqueAttributes, $attributeName);		
 	}
 	
 	/**
