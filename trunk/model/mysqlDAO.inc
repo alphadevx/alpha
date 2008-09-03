@@ -259,7 +259,7 @@ class mysqlDAO {
 	 * @param string $order the order to sort the BOs by, default is ASC
 	 * @return array an array containing objects of this type of business object.
 	 */
-	function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC") {
+	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC") {
 		global $config;
 		
 		if(method_exists($this, 'before_loadAllByAttribute_callback'))
@@ -1137,19 +1137,20 @@ class mysqlDAO {
 	}
 	
 	/**
-	 * checks to see if all of the idexes are in place for the BO's table, creates those that are missing
+	 * Checks to see if all of the indexes are in place for the BO's table, creates those that are missing
 	 */
-	function checkIndexes() {
+	protected function checkIndexes() {
 		if(method_exists($this, 'before_check_indexes_callback'))
 			$this->before_check_indexes_callback();
 		
-		$result = mysql_query("SHOW INDEX FROM ".$this->getTableName());
+		$query = 'SHOW INDEX FROM '.$this->getTableName();
+		$result = mysql_query($query);
 		
 		// process unique keys
 		foreach($this->uniqueAttributes as $prop) {
 			$index_exists = false;
 			while ($row = mysql_fetch_assoc($result)) {					
-				if ($prop.'_unq_idx' == $row["Key_name"]) {
+				if ($prop.'_unq_idx' == $row['Key_name']) {
 			    	$index_exists = true;
 				}
 			}
@@ -1162,15 +1163,17 @@ class mysqlDAO {
 			if(method_exists($this, 'after_check_indexes_callback'))
 				$this->after_check_indexes_callback();
 		}else{
-			$this->lastQuery .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to access the system database correctly','check_indexes()','framework');	
+			$this->lastQuery = $query;
+			throw new AlphaException('Failed to access the system database correctly, error is ['.mysql_error().']');
 		}
 	}
 	
 	/**
-	 * creates a unique index in the database on the given property
+	 * Creates a unique index in the database on the given property
+	 * 
+	 * @param string $prop
 	 */
-	function createUniqueIndex($prop) {
+	protected function createUniqueIndex($prop) {
 		if(method_exists($this, 'before_create_unique_index_callback'))
 			$this->before_create_unique_index_callback();
 		
@@ -1184,15 +1187,17 @@ class mysqlDAO {
 			if(method_exists($this, 'after_create_unique_index_callback'))
 				$this->after_create_unique_index_callback();
 		}else{
-			$this->lastQuery .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to create the index '.$prop.'_unq_idx on '.$this->getTableName().', query is : '.$this->lastQuery,'createUniqueIndex()','framework');
+			$this->lastQuery = $query;
+			throw new AlphaException('Failed to create the index ['.$prop.'_unq_idx] on ['.$this->getTableName().'], error is ['.mysql_error().']');
 		}
 	}
 	
 	/**
-	 * parses a MySQL error for the value that violated a unique constraint
+	 * Parses a MySQL error for the value that violated a unique constraint
+	 * 
+	 * @param string $error
 	 */
-	function findOffendingValue($error) {		
+	protected function findOffendingValue($error) {		
 		$singleQuote1 = strpos($error,"'");
 		$singleQuote2 = strrpos($error,"'");
 		
@@ -1225,7 +1230,7 @@ class mysqlDAO {
 	 *
 	 * @return array
 	 */
-	function getBOClassNames() {
+	public function getBOClassNames() {
 		global $config;
 		
 		$classNameArray = array();
