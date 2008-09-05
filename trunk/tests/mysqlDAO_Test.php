@@ -44,8 +44,7 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
     
     /*
      * TODO: add test methods for the following:
-     *     
-     * - loadAll
+     *
      * - loadAllByAttribute
      */
     
@@ -87,6 +86,18 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
     	$this->assertEquals('unitTestUser@test.com', $this->person->get_email(), 'testing the loadByAttribute method');
     	$this->person->loadByAttribute('email','unitTestUser@test.com');
     	$this->assertEquals('unitTestUser', $this->person->get_displayname(), 'testing the loadByAttribute method');
+    }
+    
+    /**
+     * testing loadAll method
+     */
+    public function testLoadAll() {
+    	$peopleCount = $this->person->getCount();
+    	$people = $this->person->loadAll();
+    	$this->assertEquals($peopleCount, count($people), 'testing loadAll method');
+    	// only load 1
+    	$people = $this->person->loadAll(0, 1);
+    	$this->assertEquals(1, count($people), 'testing loadAll method');
     }
     
 }
