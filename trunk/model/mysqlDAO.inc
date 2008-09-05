@@ -216,10 +216,10 @@ class mysqlDAO {
 		if(method_exists($this, 'before_loadAll_callback'))
 			$this->before_loadAll_callback();
 		
-		if ($limit == 0)
-			$limit = $config->get('sysListPageAmount');
-		
-		$sqlQuery = "SELECT OID FROM ".$this->getTableName()." ORDER BY ".$orderBy." ".$order." LIMIT ".$start.", ".$limit.";";
+		if($limit == 0)
+			$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' ORDER BY '.$orderBy.' '.$order.';';
+		else
+			$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' ORDER BY '.$orderBy.' '.$order.' LIMIT '.$start.', '.$limit.';';
 		
 		$this->lastQuery = $sqlQuery;
 
