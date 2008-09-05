@@ -444,7 +444,7 @@ class mysqlDAO {
 	/**
 	 * Delete the current object from the database
 	 */
-	protected function delete() {		
+	public function delete() {		
 		if(method_exists($this, 'before_delete_callback'))
 				$this->before_delete_callback();
 		
@@ -773,6 +773,15 @@ class mysqlDAO {
 	}
 	
 	/**
+	 * Method for getting version number of the object
+	 * 
+	 * @return Integer
+	 */
+	public function getVersionNumber() {
+		return $this->version_num;
+	}
+	
+	/**
 	 * Populate all of the enum options for this object from the database
 	 */
 	protected function setEnumOptions() {
@@ -1087,7 +1096,7 @@ class mysqlDAO {
 	 * 
 	 * @return Integer
 	 */
-	protected function getCreatorId() {
+	public function getCreatorId() {
 		return $this->created_by;
 	}
 	
@@ -1096,7 +1105,7 @@ class mysqlDAO {
 	 * 
 	 * @return Integer
 	 */
-	protected function getUpdatorId() {
+	public function getUpdatorId() {
 		return $this->updated_by;
 	}
 	
@@ -1105,7 +1114,7 @@ class mysqlDAO {
 	 * 
 	 * @return Timestamp
 	 */
-	protected function getCreateTS() {
+	public function getCreateTS() {
 		return $this->created_ts;
 	}
 	
@@ -1114,7 +1123,7 @@ class mysqlDAO {
 	 * 
 	 * @return Timestamp
 	 */
-	protected function getUpdateTS() {
+	public function getUpdateTS() {
 		return $this->updated_ts;
 	}
 	
@@ -1288,6 +1297,18 @@ class mysqlDAO {
 	 */
 	private function setOID($OID) {
 		$this->OID = $OID;
+	}
+	
+	/**
+	 * Inspector to see if the business object is transient (not presently stored in the database)
+	 * 
+	 * @return boolean
+	 */
+	public function isTransient() {
+		if(empty($this->OID))
+			return true;
+		else
+			return false;
 	}
 }
 
