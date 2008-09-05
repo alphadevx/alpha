@@ -26,6 +26,9 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
      */
     protected function setUp() {        
         $this->person = new person_object();
+        $this->person->set_displayname('unitTestUser');
+        $this->person->set_email('unitTestUser@test.com');
+        $this->person->set_password('password');
     }
     
     /** 
@@ -41,9 +44,7 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
     
     /*
      * TODO: add test methods for the following:
-     * 
-     * - constructor
-     * - load
+     *      
      * - loadByAttribute
      * - loadAll
      * - loadAllByAttribute
@@ -66,6 +67,16 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
     
     	// make sure the object is transient
     	$this->assertTrue($this->person->isTransient(), 'test that the constructor sets the correct values of the "house keeping" attributes');
+    }
+    
+    /**
+     * testing the basic load/save functionality
+     */
+    public function testBasicLoadSave() {
+    	$this->person->save();
+    	$id = $this->person->getMAX();
+    	$this->person->load($id);
+    	$this->assertEquals('unitTestUser', $this->person->get_displayname(), 'testing the basic load/save functionality');
     }
     
 }

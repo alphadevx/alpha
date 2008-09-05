@@ -328,9 +328,12 @@ class mysqlDAO {
 				$sqlQuery = "INSERT INTO ".$this->getTableName()." (";
 	
 				foreach($properties as $propObj) {
-					$propName = $propObj->name;				
-					if (!in_array($propName, $this->transientAttributes)) {
-						$sqlQuery .= "$propName,";
+					$propName = $propObj->name;
+					// skip the OID, database auto number takes care of this 
+					if($propName != 'OID') {				
+						if (!in_array($propName, $this->transientAttributes)) {
+							$sqlQuery .= "$propName,";
+						}
 					}				
 				}
 	
@@ -340,17 +343,20 @@ class mysqlDAO {
 				
 				foreach($properties as $propObj) {
 					$propName = $propObj->name;
-					$propClass = get_class($this->get($propName));				
-					if ($propName != "version_num" && !in_array($propName, $this->transientAttributes)) {
-						if(empty($propClass))
-							$sqlQuery .= "'".$this->get($propName)."',";
-						else
-							$sqlQuery .= "'".$this->get($propName)->getValue()."',";
-					}
-					if ($propName == "version_num") {					
-						$temp = $this->version_num->getValue();
-						$this->version_num->setValue($temp+1);
-						$sqlQuery .= "'".$this->version_num->getValue()."',";
+					// skip the OID, database auto number takes care of this 
+					if($propName != 'OID') {
+						$propClass = get_class($this->get($propName));				
+						if ($propName != 'version_num' && !in_array($propName, $this->transientAttributes)) {
+							if(empty($propClass))
+								$sqlQuery .= "'".$this->get($propName)."',";
+							else
+								$sqlQuery .= "'".$this->get($propName)->getValue()."',";
+						}
+						if ($propName == 'version_num') {					
+							$temp = $this->version_num->getValue();
+							$this->version_num->setValue($temp+1);
+							$sqlQuery .= "'".$this->version_num->getValue()."',";
+						}
 					}
 				}
 	
@@ -363,17 +369,20 @@ class mysqlDAO {
 				
 				foreach($properties as $propObj) {
 					$propName = $propObj->name;
-					$propClass = get_class($this->get($propName));
-					if ($propName != "version_num" && !in_array($propName, $this->transientAttributes)) {
-						if(empty($propClass))
-							$sqlQuery .= "$propName = '".$this->get($propName)."',";
-						else
-							$sqlQuery .= "$propName = '".$this->get($propName)->getValue()."',";
-					}
-					if ($propName == "version_num") {					
-						$temp = $this->version_num->getValue();					
-						$this->version_num->setValue($temp+1);					
-						$sqlQuery .= "version_num = '".$this->version_num->getValue()."',";
+					// skip the OID, database auto number takes care of this 
+					if($propName != 'OID') {
+						$propClass = get_class($this->get($propName));
+						if ($propName != "version_num" && !in_array($propName, $this->transientAttributes)) {
+							if(empty($propClass))
+								$sqlQuery .= "$propName = '".$this->get($propName)."',";
+							else
+								$sqlQuery .= "$propName = '".$this->get($propName)->getValue()."',";
+						}
+						if ($propName == "version_num") {					
+							$temp = $this->version_num->getValue();					
+							$this->version_num->setValue($temp+1);					
+							$sqlQuery .= "version_num = '".$this->version_num->getValue()."',";
+						}
 					}
 				}
 	
@@ -420,15 +429,15 @@ class mysqlDAO {
 		$properties = $reflection->getProperties();
 		
 		foreach($properties as $propObj) {
-			$propName = $propObj->name;
-			$propClass = $propObj->class;
+			$propName = $propObj->name;			
 			if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
+				$propClass = get_class($this->getPropObject($propName));
 				if (strtoupper($propClass) != "ENUM" &&
 				strtoupper($propClass) != "DENUM" &&
 				strtoupper($propClass) != "DENUMITEM" && 
 				strtoupper($propClass) != "BOOLEAN") {
-					if (!preg_match($this->get($propName)->getRule(), $this->get($propName)->getValue())) {
-						throw new ValidationException('Failed to save, validation error is: '.$this->get($propName)->getHelper());
+					if (!preg_match($this->getPropObject($propName)->getRule(), $this->getPropObject($propName)->getValue())) {
+						throw new ValidationException('Failed to save, validation error is: '.$this->getPropObject($propName)->getHelper());
 						$valid = false;
 					}
 				}
@@ -712,7 +721,7 @@ class mysqlDAO {
 	 * 
 	 * @return integer
 	 */
-	protected function getMAX() {
+	public function getMAX() {
 		if(method_exists($this, 'before_getMAX_callback'))
 			$this->before_getMAX_callback();
 		
