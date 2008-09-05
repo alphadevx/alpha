@@ -42,12 +42,6 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
         unset($this->person);
     }
     
-    /*
-     * TODO: add test methods for the following:
-     *
-     * - loadAllByAttribute
-     */
-    
     /**
      * test that the constructor sets the correct values of the "house keeping" attributes
      */
@@ -100,6 +94,16 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
     	$this->assertEquals(1, count($people), 'testing loadAll method');
     }
     
+    /**
+     * testing the loadAllByAttribute method
+     */
+    public function testLoadAllByAttribute() {
+    	$this->person->save();
+    	$people = $this->person->loadAllByAttribute('email','unitTestUser@test.com');
+    	$this->assertEquals(1, count($people), 'testing the loadAllByAttribute method');
+    	$this->assertEquals('unitTestUser', $people[0]->get_displayname(), 'testing the loadAllByAttribute method');
+    	$people[0]->delete();
+    }    
 }
 
 ?>
