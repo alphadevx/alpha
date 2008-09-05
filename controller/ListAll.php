@@ -103,7 +103,7 @@ class ListAll extends Controller
 		// set the start point for the list pagination
 		if (isset($_GET["start"]) ? $this->start_point = $_GET["start"]: $this->start_point = 0);
 			
-		$objects = $temp->loadAll($this->start_point);
+		$objects = $temp->loadAll($this->start_point,$config->get('sysListPageAmount'));
 			
 		$this->BO_count = $this->BO->getCount();
 			
