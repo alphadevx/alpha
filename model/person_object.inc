@@ -108,6 +108,9 @@ class person_object extends mysqlDAO {
 		$this->URL = new String();
 		$this->URL->setRule(RULE_URL_BLANK);
 		$this->URL->setHelper('URLs must be in the format http://some_domain/ or left blank!');
+		// add unique keys to displayName and email (which is effectively the username in Alpha)
+		$this->markUnique('displayName');
+		$this->markUnique('email');
 	}
 	
 	/**
