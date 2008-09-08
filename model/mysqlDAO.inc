@@ -6,6 +6,7 @@ require_once $config->get('sysRoot').'alpha/exceptions/FailedSaveException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/LockingException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/ValidationException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/MailNotSentException.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Date.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Timestamp.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Double.inc';
@@ -187,7 +188,7 @@ class mysqlDAO {
 
 		foreach($properties as $propObj) {
 			// filter transient attributes
-			if(!in_array($propObj->name, $this->transientAttributes)) {				
+			if(!in_array($propObj->name, $this->transientAttributes)) {
 				$this->set($propObj->name, $row[$propObj->name]);
 			}
 		}

@@ -355,7 +355,7 @@ class person extends View
 		
 		$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."'", "View", "viewBut");
 		// render edit and delete buttons for admins only
-		if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_access_level() == "Administrator") {
+		if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->getAccessLevel() == "Administrator") {
 			echo '&nbsp;&nbsp;';
 			$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=edit_person_object&oid='.$this->BO->getID())."'", "Edit", "editBut");
 			echo '&nbsp;&nbsp;';
