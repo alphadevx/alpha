@@ -81,20 +81,20 @@ class login extends Controller
 			exit;
 		}
 		
-		if (isset($_POST["loginBut"])) {
+		if (isset($_POST['loginBut'])) {
 			// here we are attempting to load the person from the email address
-			$success = $this->person_object->load_from_email($_POST["email"]);
+			$this->person_object->loadByAttribute('email', $_POST['email']);
 			
 			// checking to see if the account has been disabled
-			if ($success && $this->person_object->get("state") == "Disabled") {
+			if (!$this->person_object->isTransient() && $this->person_object->get('state') == 'Disabled') {
 				$error = new handle_error($_SERVER["PHP_SELF"],'Failed to login user '.$_POST["email"].', that account has been disabled!' ,'handle_post()','validation');	
 				$success = false;
 			}
 			
 			// check the password
-			if ($success && $this->person_object->get("state") == "Active") {
-				if (crypt($_POST["password"], $this->person_object->get_password()) == $this->person_object->get_password()) {				
-					$_SESSION["current_user"] = $this->person_object;					
+			if (!$this->person_object->isTransient() && $this->person_object->get('state') == 'Active') {
+				if (crypt($_POST['password'], $this->person_object->get('password')) == $this->person_object->get('password')) {				
+					$_SESSION['current_user'] = $this->person_object;					
 					if ($this->get_next_job() != '')
 						header('Location: '.$this->get_next_job());
 					else

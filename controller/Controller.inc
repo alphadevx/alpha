@@ -547,7 +547,7 @@ class Controller
 		echo '<h1>'.$this->get_title().'</h1>';
 		
 		if (isset($_SESSION["current_user"])) {	
-			echo '<p>You are logged in as '.$_SESSION["current_user"]->get_displayname().'.  <a href="'.$config->get('sysURL').'/alpha/controller/logout.php">Logout</a></p>';
+			echo '<p>You are logged in as '.$_SESSION["current_user"]->getDisplayname().'.  <a href="'.$config->get('sysURL').'/alpha/controller/logout.php">Logout</a></p>';
 		}else{
 			echo '<p>You are not logged in</p>';
 		}
@@ -662,18 +662,18 @@ class Controller
 			// the person is logged in
 			if (isset($_SESSION["current_user"])) {
 				// checking for admins (can access everything)
-				if ($_SESSION["current_user"]->get_access_level() == 'Administrator') {
+				if ($_SESSION["current_user"]->getAccessLevel() == 'Administrator') {
 					if(method_exists($this, 'after_check_rights_callback'))
 						$this->after_check_rights_callback();
 					
 					return true;
-				} elseif ($_SESSION["current_user"]->get_access_level() == $this->get_visibility()) {
+				} elseif ($_SESSION["current_user"]->getAccessLevel() == $this->get_visibility()) {
 					if(method_exists($this, 'after_check_rights_callback'))
 						$this->after_check_rights_callback();
 					
 					return true;
 				// the person is editing their own profile which is allowed
-				} elseif (get_class($this->BO) == "person_object" && $_SESSION["current_user"]->get_displayname() == $this->BO->get_displayname()) {
+				} elseif (get_class($this->BO) == "person_object" && $_SESSION["current_user"]->getDisplayName() == $this->BO->getDisplayName()) {
 					if(method_exists($this, 'after_check_rights_callback'))
 						$this->after_check_rights_callback();
 					
