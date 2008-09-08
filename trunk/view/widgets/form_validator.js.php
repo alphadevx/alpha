@@ -50,7 +50,7 @@ class form_validator
 				if (strtoupper($propClass) != "ENUM" &&
 				strtoupper($propClass) != "DENUM" &&
 				strtoupper($propClass) != "DENUMITEM" && 
-				strtoupper($propClass) != "BOOLEAN") {					
+				strtoupper($propClass) != "BOOLEAN") {	echo $propName;				
 					echo " validation_rules[\"".$propName."\"] = ".$this->BO->getPropObject($propName)->getRule().";\n";
 					echo " validation_rules[\"".$propName."_msg\"] = \"".$this->BO->getPropObject($propName)->getHelper()."\";\n";
 				}

@@ -26,9 +26,9 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
      */
     protected function setUp() {        
         $this->person = new person_object();
-        $this->person->set_displayname('unitTestUser');
-        $this->person->set_email('unitTestUser@test.com');
-        $this->person->set_password('password');
+        $this->person->setDisplayname('unitTestUser');        
+        $this->person->set('email', 'unitTestUser@test.com');
+        $this->person->set('password', 'passwordTest');
     }
     
     /** 
@@ -68,7 +68,7 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
     	$this->person->save();
     	$id = $this->person->getMAX();
     	$this->person->load($id);
-    	$this->assertEquals('unitTestUser', $this->person->get_displayname(), 'testing the basic load/save functionality');
+    	$this->assertEquals('unitTestUser', $this->person->getDisplayname()->getValue(), 'testing the basic load/save functionality');
     }
     
     /**
@@ -77,9 +77,9 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
     public function testLoadByAttribute() {
     	$this->person->save();
     	$this->person->loadByAttribute('displayname','unitTestUser');
-    	$this->assertEquals('unitTestUser@test.com', $this->person->get_email(), 'testing the loadByAttribute method');
+    	$this->assertEquals('unitTestUser@test.com', $this->person->get('email'), 'testing the loadByAttribute method');
     	$this->person->loadByAttribute('email','unitTestUser@test.com');
-    	$this->assertEquals('unitTestUser', $this->person->get_displayname(), 'testing the loadByAttribute method');
+    	$this->assertEquals('unitTestUser', $this->person->getDisplayname()->getValue(), 'testing the loadByAttribute method');
     }
     
     /**
@@ -101,7 +101,7 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
     	$this->person->save();
     	$people = $this->person->loadAllByAttribute('email','unitTestUser@test.com');
     	$this->assertEquals(1, count($people), 'testing the loadAllByAttribute method');
-    	$this->assertEquals('unitTestUser', $people[0]->get_displayname(), 'testing the loadAllByAttribute method');
+    	$this->assertEquals('unitTestUser', $people[0]->getDisplayname()->getValue(), 'testing the loadAllByAttribute method');
     	$people[0]->delete();
     }    
 }
