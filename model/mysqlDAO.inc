@@ -1168,6 +1168,8 @@ class mysqlDAO {
 		// process unique keys
 		foreach($this->uniqueAttributes as $prop) {
 			$index_exists = false;
+			// reset the MySQL result set pointer
+			mysql_data_seek($result, 0);
 			while ($row = mysql_fetch_assoc($result)) {					
 				if ($prop.'_unq_idx' == $row['Key_name']) {
 			    	$index_exists = true;
@@ -1205,8 +1207,7 @@ class mysqlDAO {
 		if (mysql_error() == '') {
 			if(method_exists($this, 'after_create_unique_index_callback'))
 				$this->after_create_unique_index_callback();
-		}else{
-			$this->lastQuery = $query;
+		}else{			
 			throw new AlphaException('Failed to create the index ['.$prop.'_unq_idx] on ['.$this->getTableName().'], error is ['.mysql_error().']');
 		}
 	}
