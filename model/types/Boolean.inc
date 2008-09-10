@@ -49,7 +49,7 @@ class Boolean extends AlphaType implements AlphaTypeInterface {
 			$this->value = 0;
 			$this->booleanValue = false;
 		}else{
-			throw new AlphaException($this->helper);
+			throw new IllegalArguementException($this->helper);
 		}
 	}
 	
@@ -66,7 +66,7 @@ class Boolean extends AlphaType implements AlphaTypeInterface {
 			$this->value = 0;
 			$this->booleanValue = false;					
 		}else{
-			throw new AlphaException($this->helper);
+			throw new IllegalArguementException($this->helper);
 		}
 	}
 	

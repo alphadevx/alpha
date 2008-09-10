@@ -189,7 +189,7 @@ class DEnum extends mysqlDAO implements AlphaTypeInterface{
 		if (in_array($item, array_keys($this->options))) {
 			$this->value = $item;			
 		}else{
-			throw new AlphaException($this->getHelper());			
+			throw new IllegalArguementException($this->getHelper());			
 		}
 	}
 	
@@ -220,6 +220,7 @@ class DEnum extends mysqlDAO implements AlphaTypeInterface{
 	 * Used to get the DenumItem ID for the given option name
 	 * 
 	 * @param string $optionName
+	 * @return int
 	 */
 	public function getOptionID($optionName) {
 		$denumItem = new DEnumItem();
