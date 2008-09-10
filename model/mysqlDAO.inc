@@ -325,7 +325,7 @@ class mysqlDAO {
 			$this->updated_ts = new Timestamp();
 			
 			// check to see if it is a transient object that needs to be inserted
-			if(empty($this->OID) || !isset($this->OID) || $this->OID == '00000000000') {
+			if($this->isTransient()) {
 				$sqlQuery = "INSERT INTO ".$this->getTableName()." (";
 	
 				foreach($properties as $propObj) {
@@ -398,7 +398,10 @@ class mysqlDAO {
 	
 			if (mysql_error() == '') {
 				if(method_exists($this, 'after_save_callback'))
-					$this->after_save_callback();				
+					$this->after_save_callback();
+				// populate the updated OID in case we just done an insert
+				if($this->isTransient())
+					$this->setOID(mysql_insert_id());				
 			}else{
 				// there has been an error, so decrement the version number back
 				$temp = $this->version_num->getValue();					
@@ -456,12 +459,9 @@ class mysqlDAO {
 	 */
 	public function delete() {		
 		if(method_exists($this, 'before_delete_callback'))
-				$this->before_delete_callback();
+				$this->before_deleteAllByAttribute_callback();
 		
-		if(!empty($this->OID))
-			$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE OID = '".$this->OID."';";		
-		else
-			throw new FailedDeleteException('Cannot delete transient business object!');
+		$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE OID = '".$this->OID."';";		
 			
 		$this->lastQuery = $sqlQuery;
 
@@ -469,8 +469,35 @@ class mysqlDAO {
 		
 		if(mysql_error() == '') {
 			if(method_exists($this, 'after_delete_callback'))
-				$this->after_delete_callback();			
+				$this->after_deleteAllByAttribute_callback();			
 		}else{			
+			throw new FailedDeleteException('Failed to delete object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+		}
+	}
+	
+	/**
+	 * Delete all object instances from the database by the specified attribute matching the value provided
+	 *
+	 * @param string $attribute
+	 * @param mixed $value
+	 * @return int The number of rows deleted
+	 */
+	public function deleteAllByAttribute($attribute, $value) {		
+		if(method_exists($this, 'before_delete_callback'))
+				$this->before_delete_callback();
+		
+		$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE $attribute = '$value';";		
+			
+		$this->lastQuery = $sqlQuery;
+
+		$result = mysql_query($sqlQuery);		
+		
+		if(mysql_error() == '') {
+			if(method_exists($this, 'after_delete_callback'))
+				$this->after_delete_callback();
+			return mysql_affected_rows(); 			
+		}else{
+			return 0;			
 			throw new FailedDeleteException('Failed to delete object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
 		}
 	}
@@ -478,7 +505,7 @@ class mysqlDAO {
 	/**
 	 * Gets the version_num of the object from the database
 	 * 
-	 * @return integer
+	 * @return int
 	 */
 	protected function getVersion() {
 		if(method_exists($this, 'before_getVersion_callback'))
@@ -1316,10 +1343,19 @@ class mysqlDAO {
 	 * @return boolean
 	 */
 	public function isTransient() {
-		if(empty($this->OID))
+		if(empty($this->OID) || !isset($this->OID) || $this->OID == '00000000000')
 			return true;
 		else
 			return false;
+	}
+	
+	/**
+	 * Get the last database query run on this object
+	 *
+	 * @return string
+	 */
+	public function getLastQuery() {
+		return $this->lastQuery;
 	}
 }
 
