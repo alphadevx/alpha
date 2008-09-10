@@ -84,8 +84,8 @@ class DEnumItem extends mysqlDAO implements AlphaTypeInterface{
 		$result = mysql_query($sql_query);
 		
 		if(mysql_error() != '') {
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load objects, query: '.$this->last_query.'.' ,'load_items()','framework');
-			return false;
+			throw new AlphaException('Failed to load objects, query: ['.$this->lastQuery.']');
+			return array();
 		}
 		
 		// now build an array of objects to be returned

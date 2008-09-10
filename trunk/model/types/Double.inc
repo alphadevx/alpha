@@ -63,10 +63,10 @@ class Double extends AlphaType implements AlphaTypeInterface {
 			if ($val == 0 || preg_match($this->validationRule, strval($val))) {				
 				$this->value = $val;					
 			}else{
-				throw new AlphaException($this->helper);
+				throw new IllegalArguementException($this->helper);
 			}
 		}else{
-			throw new AlphaException($this->helper);
+			throw new IllegalArguementException($this->helper);
 		}
 	}
 	
@@ -80,10 +80,10 @@ class Double extends AlphaType implements AlphaTypeInterface {
 			if (preg_match($this->validationRule, $val)) {				
 				$this->value = $val;				
 			}else{
-				throw new AlphaException($this->helper);
+				throw new IllegalArguementException($this->helper);
 			}
 		}else{
-			throw new AlphaException($this->helper);
+			throw new IllegalArguementException($this->helper);
 		}
 	}
 	
@@ -115,7 +115,7 @@ class Double extends AlphaType implements AlphaTypeInterface {
 			$this->size = $size;
 			$this->helper = 'Error: not a valid double value!  A maximum of '.$this->size.' characters is allowed, in the format 0.00';
 		}else{
-			throw new AlphaException('Error: the value '.$size.' provided by setSize is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
+			throw new IllegalArguementException('Error: the value '.$size.' provided by setSize is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
 		}	
 	}
 	

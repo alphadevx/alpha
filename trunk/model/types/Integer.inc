@@ -64,10 +64,10 @@ class Integer extends AlphaType implements AlphaTypeInterface {
 			if (preg_match($this->validationRule, $val)) {				
 				$this->value = $val;				
 			}else{
-				throw new AlphaException($this->helper);
+				throw new IllegalArguementException($this->helper);
 			}
 		}else{
-			throw new AlphaException($this->helper);
+			throw new IllegalArguementException($this->helper);
 		}
 	}
 	
@@ -82,10 +82,10 @@ class Integer extends AlphaType implements AlphaTypeInterface {
 			if (preg_match($this->validationRule, $val)) {				
 				$this->value = $val;				
 			}else{
-				throw new AlphaException($this->helper);
+				throw new IllegalArguementException($this->helper);
 			}
 		}else{
-			throw new AlphaException($this->helper);
+			throw new IllegalArguementException($this->helper);
 		}
 	}
 	
@@ -117,7 +117,7 @@ class Integer extends AlphaType implements AlphaTypeInterface {
 			$this->size = $size;
 			$this->helper = 'Error: not a valid Integer value!  A maximum of '.$this->size.' characters is allowed';
 		}else{
-			throw new AlphaException('Error: the value '.$size.' provided by set_size is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
+			throw new IllegalArguementException('Error: the value '.$size.' provided by set_size is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
 		}	
 	}
 	

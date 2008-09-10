@@ -102,7 +102,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 		if(in_array($RC, mysqlDAO::getBOClassNames()))
 			$this->relatedClass = $RC;
 		else
-			throw new AlphaException('The class ['.$RC.'] is not defined anywhere!');
+			throw new IllegalArguementException('The class ['.$RC.'] is not defined anywhere!');
 	}
 	
 	/**
@@ -136,7 +136,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 			if($fieldFound)
 				$this->relatedClassField = $RCF;
 			else
-				throw new AlphaException('The field ['.$RCF.'] was not found in the class ['.$this->relatedClass.']');
+				throw new IllegalArguementException('The field ['.$RCF.'] was not found in the class ['.$this->relatedClass.']');
 		}catch (Exception $e) {
 			throw new AlphaException($e->getMessage());
 		}
@@ -178,7 +178,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 		if(in_array($RT, $this->allowableRelationTypes))
 			$this->relationType = $RT;
 		else
-			throw new AlphaException('Relation type of ['.$RT.'] is invalid!');
+			throw new IllegalArguementException('Relation type of ['.$RT.'] is invalid!');
 	}
 	
 	/**
@@ -200,10 +200,10 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 			if (preg_match($this->validationRule, $val)) {				
 				$this->value = str_pad($val, 11, "0", STR_PAD_LEFT);				
 			}else{			
-				throw new AlphaException($this->helper);
+				throw new IllegalArguementException($this->helper);
 			}
 		}else{
-			throw new AlphaException($this->helper);
+			throw new IllegalArguementException($this->helper);
 		}
 	}
 	

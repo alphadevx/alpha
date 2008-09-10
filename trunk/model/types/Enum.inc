@@ -43,7 +43,7 @@ class Enum extends AlphaType implements AlphaTypeInterface {
 		if(is_array($opts))
 			$this->options = $opts;
 		else
-			throw new AlphaException('Error: not a valid enum option array!');
+			throw new IllegalArguementException('Error: not a valid enum option array!');
 	}
 
 	/**
@@ -55,7 +55,7 @@ class Enum extends AlphaType implements AlphaTypeInterface {
 		if(is_array($opts))
 			$this->options = $opts;
 		else
-			throw new AlphaException('Error: not a valid enum option array!');
+			throw new IllegalArguementException('Error: not a valid enum option array!');
 	}
 
 	/**
@@ -88,7 +88,7 @@ class Enum extends AlphaType implements AlphaTypeInterface {
 		if (in_array($item, $this->options)) {
 			$this->value = $item;
 		}else{
-			throw new AlphaException($this->getHelper());
+			throw new IllegalArguementException($this->getHelper());
 		}
 	}
 }

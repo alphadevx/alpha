@@ -74,7 +74,7 @@ class Date extends AlphaType implements AlphaTypeInterface {
 			if (preg_match($this->validationRule, $date)) {
 				$this->populateFromString($date);
 			}else{
-				throw new AlphaException($this->helper);
+				throw new IllegalArguementException($this->helper);
 			}
 		}
  	}
@@ -108,7 +108,7 @@ class Date extends AlphaType implements AlphaTypeInterface {
  			$valid = 'Error: the day value '.$year.'-'.$month.'-'.$day.' provided is invalid!'; 		
  		
  		if (isset($valid)){
- 			throw new AlphaException($valid);
+ 			throw new IllegalArguementException($valid);
  		}else{
  			$this->year = $year;
  			$this->month = str_pad($month, 2, '0', STR_PAD_LEFT);
@@ -186,7 +186,7 @@ class Date extends AlphaType implements AlphaTypeInterface {
  		if(isset($spilt_by_space[0])) {
  			$date = $spilt_by_space[0];
  		}else{
- 			throw new AlphaException('Invalid Date value ['.$date.'] provided!');
+ 			throw new IllegalArguementException('Invalid Date value ['.$date.'] provided!');
  		}
  		
  		$split_by_dash = explode("-", $date);
@@ -197,7 +197,7 @@ class Date extends AlphaType implements AlphaTypeInterface {
 	 		$month = $split_by_dash[1];
 	 		$day = $split_by_dash[2];
  		}else{
- 			throw new AlphaException('Invalid Date value ['.$date.'] provided!');
+ 			throw new IllegalArguementException('Invalid Date value ['.$date.'] provided!');
  		}
  		
  		if (!preg_match('/^[0-9]{4}$/', $year))
@@ -210,7 +210,7 @@ class Date extends AlphaType implements AlphaTypeInterface {
  			$valid = 'Error: the day value '.$year.'/'.$month.'/'.$day.' provided is invalid!';
  		 		
  		if (isset($valid)){
- 			throw new AlphaException($valid);
+ 			throw new IllegalArguementException($valid);
  		}else{
  			$this->year = $year;
  			$this->month = str_pad($month, 2, '0', STR_PAD_LEFT);
