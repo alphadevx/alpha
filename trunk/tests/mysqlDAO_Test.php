@@ -29,8 +29,9 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
         $this->person->setDisplayname('unitTestUser');        
         $this->person->set('email', 'unitTestUser@test.com');
         $this->person->set('password', 'passwordTest');
+        $this->person->set('URL', 'http://unitTestUser/');
         // just making sure no previous test user is in the DB
-        $this->person->deleteAllByAttribute('displayName', 'unitTestUser');
+        $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/');
     }
     
     /** 
@@ -149,7 +150,71 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
     						$e->getMessage(),
     						'testing optimistic locking mechanism');
     	}
-    }    
+    }
+
+    /**
+     * testing the validation method
+     */
+    public function testValidation() {    	
+    	try {
+    		$person = new person_object();
+    		$person->save();
+    		$this->fail('testing the validation method');
+    	}catch (ValidationException $e) {
+    		$this->assertEquals('Failed to save, validation error is:',
+    						substr($e->getMessage(), 0, 36),
+    						'testing the validation method');    		
+    	}
+    }
+    
+    /**
+     * testing the delete method
+     */
+    public function testDelete() {
+    	$this->person->save();
+    	$this->assertFalse($this->person->isTransient(), 'testing the delete method');
+    	$id = $this->person->getID();
+    	$this->person->delete();
+    	// gone from memory (all attributes null)
+    	$this->assertEquals(0, count(get_object_vars($this->person)), 'testing the delete method');
+    	// gone from the database
+    	try {
+    		$this->person->load($id);
+    		$this->fail('testing the delete method');
+    	}catch (BONotFoundException $e) {
+    		$this->assertEquals('Failed to load object',
+    						substr($e->getMessage(), 0, 21),
+    						'testing the delete method');
+    	}
+    }
+    
+    /**
+     * testing the deleteAllByAttribute method
+     */
+    public function testDeleteAllByAttribute() {
+    	$person1 = new person_object();
+        $person1->setDisplayname('unitTestUser1');        
+        $person1->set('email', 'unitTestUser1@test.com');
+        $person1->set('password', 'passwordTest');
+        $person1->set('URL', 'http://unitTestUser/');
+    	
+        $person2 = new person_object();
+        $person2->setDisplayname('unitTestUser2');        
+        $person2->set('email', 'unitTestUser2@test.com');
+        $person2->set('password', 'passwordTest');
+        $person2->set('URL', 'http://unitTestUser/');
+        
+        $person3 = new person_object();
+        $person3->setDisplayname('unitTestUser3');        
+        $person3->set('email', 'unitTestUser3@test.com');
+        $person3->set('password', 'passwordTest');
+        $person3->set('URL', 'http://unitTestUser/');
+        
+        $person1->save();
+        $person2->save();
+        $person3->save();
+        $this->assertEquals(3, $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/'), 'testing the deleteAllByAttribute method');
+    }
 }
 
 ?>
