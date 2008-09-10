@@ -469,10 +469,11 @@ class mysqlDAO {
 		
 		if(mysql_error() == '') {
 			if(method_exists($this, 'after_delete_callback'))
-				$this->after_deleteAllByAttribute_callback();			
+				$this->after_deleteAllByAttribute_callback();
+			$this->clear();			
 		}else{			
 			throw new FailedDeleteException('Failed to delete object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
-		}
+		}		
 	}
 	
 	/**
@@ -1356,6 +1357,20 @@ class mysqlDAO {
 	 */
 	public function getLastQuery() {
 		return $this->lastQuery;
+	}
+	
+	/**
+	 * unsets all of the attributes of this object
+	 */
+	private function clear() {
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this));
+		$properties = $reflection->getProperties();
+		
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			unset($this->$propName);
+		}
 	}
 }
 
