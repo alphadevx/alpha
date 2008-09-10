@@ -24,11 +24,13 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
      */
-    protected function setUp() {        
-        $this->person = new person_object();
+    protected function setUp() {
+    	$this->person = new person_object();
         $this->person->setDisplayname('unitTestUser');        
         $this->person->set('email', 'unitTestUser@test.com');
         $this->person->set('password', 'passwordTest');
+        // just making sure no previous test user is in the DB
+        $this->person->deleteAllByAttribute('displayName', 'unitTestUser');
     }
     
     /** 
@@ -103,6 +105,50 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
     	$this->assertEquals(1, count($people), 'testing the loadAllByAttribute method');
     	$this->assertEquals('unitTestUser', $people[0]->getDisplayname()->getValue(), 'testing the loadAllByAttribute method');
     	$people[0]->delete();
+    }
+    
+    /**
+     * testing the save method on transient and non-transient objects
+     */
+    public function testSaveTransientOrPersistent() {
+    	// its transient, so query will insert
+    	$this->person->save();
+    	$this->assertEquals('INSERT', substr($this->person->getLastQuery(), 0, 6), 'testing the save method on transient and non-transient objects');
+    	// its now persistent, so query will update
+    	$this->person->save();
+    	$this->assertEquals('UPDATE', substr($this->person->getLastQuery(), 0, 6), 'testing the save method on transient and non-transient objects');
+    }
+    
+    /**
+     * testing to ensure that a transient object, once saved, will have an OID
+     */
+    public function testSaveTransientOID() {
+    	$this->assertTrue($this->person->isTransient(), 'testing to ensure that a transient object, once saved, will have an OID');
+    	$this->person->save();
+    	$this->assertGreaterThan(0, $this->person->getID(), 'testing to ensure that a transient object, once saved, will have an OID');
+    	$this->assertFalse($this->person->isTransient(), 'testing to ensure that a transient object, once saved, will have an OID');
+    }
+    
+    /**
+     * testing optimistic locking mechanism
+     */
+    public function testSaveObjectLocking() {
+    	try {
+    		$this->person->save();
+    		
+    		$personInstance1 = new person_object();
+    		$personInstance1->load($this->person->getID());
+    		$personInstance2 = new person_object();
+    		$personInstance2->load($this->person->getID());
+    		
+    		$personInstance1->save();
+    		$personInstance2->save();
+    		$this->fail('testing optimistic locking mechanism');
+    	}catch (LockingException $e) {
+    		$this->assertEquals('Could not save the object as it has been updated by another user.  Please try saving again.',
+    						$e->getMessage(),
+    						'testing optimistic locking mechanism');
+    	}
     }    
 }
 
