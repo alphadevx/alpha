@@ -498,8 +498,8 @@ class mysqlDAO {
 				$this->after_delete_callback();
 			return mysql_affected_rows(); 			
 		}else{
-			return 0;			
 			throw new FailedDeleteException('Failed to delete object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+			return 0;
 		}
 	}
 	
@@ -508,7 +508,7 @@ class mysqlDAO {
 	 * 
 	 * @return int
 	 */
-	protected function getVersion() {
+	public function getVersion() {
 		if(method_exists($this, 'before_getVersion_callback'))
 			$this->before_getVersion_callback();
 		
