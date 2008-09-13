@@ -25,11 +25,7 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
      * here
      */
     protected function setUp() {
-    	$this->person = new person_object();
-        $this->person->setDisplayname('unitTestUser');        
-        $this->person->set('email', 'unitTestUser@test.com');
-        $this->person->set('password', 'passwordTest');
-        $this->person->set('URL', 'http://unitTestUser/');
+    	$this->person = $this->createPersonObject('unitTestUser');
         // just making sure no previous test user is in the DB
         $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/');
     }
@@ -43,6 +39,21 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
     	if(!$this->person->isTransient())
     		$this->person->delete(); 
         unset($this->person);
+    }
+    
+    /**
+     * creates a person object for testing
+     * 
+     * @return person_object
+     */
+    private function createPersonObject($name) {
+    	$person = new person_object();
+        $person->setDisplayname($name);        
+        $person->set('email', $name.'@test.com');
+        $person->set('password', 'passwordTest');
+        $person->set('URL', 'http://unitTestUser/');
+        
+        return $person;
     }
     
     /**
@@ -214,6 +225,40 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
         $person2->save();
         $person3->save();
         $this->assertEquals(3, $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/'), 'testing the deleteAllByAttribute method');
+    }
+    
+    /**
+     * testing the version numbers of business objects
+     */
+    public function testGetVersion() {
+    	$this->assertEquals(0, $this->person->getVersion(), 'testing the version numbers of business objects');
+    	$this->assertEquals(0, $this->person->getVersionNumber()->getValue(), 'testing the version numbers of business objects');
+    	$this->person->save();
+    	$this->assertEquals(1, $this->person->getVersion(), 'testing the version numbers of business objects');
+    	$this->assertEquals(1, $this->person->getVersionNumber()->getValue(), 'testing the version numbers of business objects');
+    	$this->person->save();
+    	$this->assertEquals(2, $this->person->getVersion(), 'testing the version numbers of business objects');
+    	$this->assertEquals(2, $this->person->getVersionNumber()->getValue(), 'testing the version numbers of business objects');
+    }
+    
+    /**
+     * testing the getMAX method
+     */
+    public function testGetMAX() {
+    	$this->person->save();
+    	$max = $this->person->getMAX();
+    	$person2 = $this->createPersonObject('unitTestUser2');
+    	$person2->save();    	
+    	$this->assertEquals($max+1, $this->person->getMAX(), 'testing the getMAX method');
+    }
+    
+    /**
+     * testing the getCount method
+     */
+    public function testGetCount() {    	
+    	$count = $this->person->getCount();
+    	$this->person->save();    	
+    	$this->assertEquals($count+1, $this->person->getCount(), 'testing the getCount method');
     }
 }
 
