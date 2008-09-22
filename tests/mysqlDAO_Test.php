@@ -260,6 +260,44 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
     	$this->person->save();    	
     	$this->assertEquals($count+1, $this->person->getCount(), 'testing the getCount method');
     }
+    
+    /**
+     * testing the setEnumOptions method is loading enum options correctly
+     */
+    public function testSetEnumOptions() {
+    	$this->person->save();
+    	$id = $this->person->getMAX();
+    	$this->person->load($id);
+    	$this->assertTrue(in_array('Administrator', $this->person->getAccessLevel()->getOptions()), 'testing the setEnumOptions method is loading enum options correctly');
+    }
+    
+    /**
+     * testing that checkTableExists returns true for the person BO
+     */
+    public function testCheckTableExists() {
+    	$this->assertTrue($this->person->checkTableExists(), 'testing that checkTableExists returns true for the person BO');
+    }
+    
+	/**
+     * testing that checkTableNeedsUpdate returns false for the person BO
+     */
+    public function testCheckTableNeedsUpdate() {
+    	$this->assertFalse($this->person->checkTableNeedsUpdate(), 'testing that checkTableNeedsUpdate returns false for the person BO');
+    }
+    
+    /**
+     * testing to ensure that the getTableName method can read the TABLE_NAME constant declared in the child class
+     */
+    public function testGetTableName() {
+    	$this->assertEquals('person', $this->person->getTableName(), 'testing to ensure that the getTableName method can read the TABLE_NAME constant declared in the child class'); 
+    }
+    
+    /**
+     * testing the getDataLabel method
+     */
+    public function testGetDataLabel() {
+    	$this->assertEquals('E-mail Address', $this->person->getDataLabel('email'), 'testing the getDataLabel method');
+    }
 }
 
 ?>

@@ -1264,7 +1264,7 @@ class mysqlDAO {
 	/**
 	 * Gets the data label for the given attribute name
 	 * 
-	 * @return array
+	 * @return string
 	 */
 	public function getDataLabel($att) {
 		if(in_array($att, array_keys($this->dataLabels)))		
