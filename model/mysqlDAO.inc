@@ -866,35 +866,37 @@ class mysqlDAO {
 	}
 	
 	/**
-	 * Generic getter method for accessing class properties.  Will use the method get_$prop instead if that
-	 * method exists at a child level (by default).  Set $no_child_methods to true if you don't want to use any 
-	 * get_$prop method even if it exists, false otherwise (default).
+	 * Generic getter method for accessing class properties.  Will use the method get.ucfirst($prop) instead if that
+	 * method exists at a child level (by default).  Set $noChildMethods to true if you don't want to use any 
+	 * get.ucfirst($prop) method even if it exists, false otherwise (default).
 	 * 
 	 * @param string $prop
-	 * @param boolean $no_child_methods
+	 * @param boolean $noChildMethods
 	 * @return mixed
 	 */
-	public function get($prop, $no_child_methods = false) {
+	public function get($prop, $noChildMethods = false) {
 		if(method_exists($this, 'before_get_callback'))
 			$this->before_get_callback();
 		
-		// handle private and protected attributes (should always have a getter)
-		if(!$no_child_methods && method_exists($this, 'get'.ucfirst($prop))) {
+		// handle attributes with a get.ucfirst($prop) method
+		if(!$noChildMethods && method_exists($this, 'get'.ucfirst($prop))) {
 			if(method_exists($this, 'after_get_callback'))
 				$this->after_get_callback();
 				
 			return eval('return $this->get'.ucfirst($prop).'();');
 		}else{
-			// handle public attributes
+			// handle attributes with no dedicated child get.ucfirst($prop) method
 			if(isset($this->$prop) && method_exists($this->$prop, 'getValue')) {
 				if(method_exists($this, 'after_get_callback'))
 					$this->after_get_callback();
-				
+
+				// complex types will have a getValue() method, return the value of that
 				return $this->$prop->getValue();
 			}elseif(isset($this->$prop)) {
 				if(method_exists($this, 'after_get_callback'))
 					$this->after_get_callback();
-					
+
+				// simple types returned as-is
 				return $this->$prop;
 			}else{
 				throw new AlphaException('Could not access the property ['.$prop.'] on the object of class ['.get_class($this).']');
@@ -904,37 +906,40 @@ class mysqlDAO {
 	}
 	
 	/**
-	 * Generic setter method for setting class properties.  Will use the method set_$prop instead if that
-	 * method exists at a child level (by default).  Set $no_child_methods to true if you don't want to use 
-	 * any get_$prop method even if it exists, false otherwise (default).
+	 * Generic setter method for setting class properties.  Will use the method set.ucfirst($prop) instead if that
+	 * method exists at a child level (by default).  Set $noChildMethods to true if you don't want to use 
+	 * any get.ucfirst($prop) method even if it exists, false otherwise (default).
 	 * 
 	 * @param string $prop
 	 * @param mixed $value
-	 * @param boolean $no_child_methods
+	 * @param boolean $noChildMethods
 	 */
-	public function set($prop, $value, $no_child_methods = false) {
+	public function set($prop, $value, $noChildMethods = false) {
 		if(method_exists($this, 'before_set_callback'))
 			$this->before_set_callback();
 		
-		// handle private and protected attributes (should always have a setter)
-		if(!$no_child_methods && method_exists($this, 'set'.ucfirst($prop))) {
+		// handle attributes with a set.ucfirst($prop) method
+		if(!$noChildMethods && method_exists($this, 'set'.ucfirst($prop))) {
 			if(method_exists($this, 'after_set_callback'))
 				$this->after_set_callback();
 			
 			return eval('return $this->set'.ucfirst($prop)."('$value');");
 		}else{
-			// handle public attributes
+			// handle attributes with no dedicated child set.ucfirst($prop) method
 			if(isset($this->$prop)) {
 				if(method_exists($this, 'after_set_callback'))
 					$this->after_set_callback();
-					
+				
+				// complex types will have a setValue() method to call
 				if (get_class($this->$prop) != false) {				
 					if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {					
 						$this->$prop->setValue($value);
 					}else{
+						// Date and Timestamp objects have a special setter accepting a string
 						$this->$prop->populateFromString($value);
 					}
 				}else{
+					// simple types set directly
 					$this->$prop = $value;
 				}				
 			}else{
@@ -944,29 +949,22 @@ class mysqlDAO {
 	}
 	
 	/**
-	 * Gets the property object rather than the value
+	 * Gets the property object rather than the value for complex attributes
 	 * 
 	 * @param string $prop
 	 * @return mixed
-	 * @deprecated use get() instead!
 	 */
 	public function getPropObject($prop) {
 		if(method_exists($this, 'before_getPropObject_callback'))
 			$this->before_getPropObject_callback();
 		
-		if(isset($this->$prop) || method_exists($this, 'get'.ucfirst($prop))) {
+		if(isset($this->$prop)) {
 			if(method_exists($this, 'after_getPropObject_callback'))
 				$this->after_getPropObject_callback();
 			
-			if(method_exists($this, 'get'.ucfirst($prop))) {
-				eval('$obj = $this->get'.ucfirst($prop).'();');
-				
-				return $obj;
-			}else{
-				return $this->$prop;
-			}
+			return $this->$prop;			
 		}else{
-			throw new AlphaException('Could not access the property ['.$prop.'] on the object of class ['.get_class($this).']');
+			throw new AlphaException('Could not access the property object ['.$prop.'] on the object of class ['.get_class($this).']');
 			return false;
 		}
 	}
