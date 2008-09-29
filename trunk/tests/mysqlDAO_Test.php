@@ -298,6 +298,102 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
     public function testGetDataLabel() {
     	$this->assertEquals('E-mail Address', $this->person->getDataLabel('email'), 'testing the getDataLabel method');
     }
+    
+    /**
+     * testing get on a String attribute with no child get method available
+     */
+    public function testGetNoChildMethod() {
+    	$email = $this->person->get('email');
+    	
+    	$this->assertEquals('unitTestUser@test.com', $email, 'testing get on a String attribute with no child get method available');
+    }
+    
+	/**
+     * testing get on an Enum attribute with a child method available, with $noChildMethods disabled (default)
+     */
+    public function testGetNoChildMethodsDisabled() {
+    	$accessLevel = $this->person->get('accessLevel');
+    	
+    	$this->assertEquals('Enum', get_class($accessLevel), 'testing get on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
+    	$this->assertEquals('Standard', $accessLevel->getValue(), 'testing get on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
+    }
+    
+	/**
+     * testing get on an Enum attribute with a child method available, with $noChildMethods enabled
+     */
+    public function testGetNoChildMethodsEnabled() {
+    	$accessLevel = $this->person->get('accessLevel', true);
+    	
+    	$this->assertEquals('Standard', $accessLevel, 'testing get on an Enum attribute with a child method avaialble, with $noChildMethods enabled');
+    }
+    
+    /**
+     * testing get on a simple data type
+     */
+    public function testGetSimpleType() {
+    	$labels = $this->person->get('dataLabels');
+    	
+    	$this->assertTrue(is_array($labels), 'testing get on a simple data type');
+    }    
+    
+    /**
+     * testing set on a String attribute with no child get method available
+     */
+    public function testSetNoChildMethod() {
+    	$this->person->set('email','test@test.com');    	
+    	
+    	$this->assertEquals('test@test.com', $this->person->get('email'), 'testing set on a String attribute with no child get method available');
+    }
+    
+	/**
+     * testing set on an Enum attribute with a child method available, with $noChildMethods disabled (default)
+     */
+    public function testSetNoChildMethodsDisabled() {
+    	$this->person->set('accessLevel','Administrator');
+
+    	$this->assertEquals('Administrator', $this->person->get('accessLevel')->getValue(), 'testing set on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
+    }
+    
+	/**
+     * testing set on an Enum attribute with a child method available, with $noChildMethods enabled
+     */
+    public function testSetNoChildMethodsEnabled() {
+    	$this->person->set('accessLevel','Administrator', true);
+    	    	
+    	$this->assertEquals('Administrator', $this->person->get('accessLevel')->getValue(), 'testing set on an Enum attribute with a child method avaialble, with $noChildMethods enabled');
+    }
+    
+    /**
+     * testing set on a simple data type
+     */
+    public function testSetSimpleType() {
+    	$this->person->set('dataLabels', array('key'=>'value'));
+    	
+    	$labels = $this->person->get('dataLabels');
+    	
+    	$this->assertTrue(is_array($labels), 'testing set on a simple data type');
+    	$this->assertEquals('value', $labels['key'], 'testing set on a simple data type');
+    }
+    
+    /**
+     * testing getPropObject on a complex type
+     */
+    public function testGetPropObjectComplexType() {
+    	$accessLevel = $this->person->getPropObject('accessLevel');
+    	
+    	$this->assertEquals('Enum', get_class($accessLevel), 'testing getPropObject on a complex type');
+    	$this->assertEquals('Standard', $accessLevel->getValue(), 'testing getPropObject on a complex type');
+    }
+    
+	/**
+     * testing getPropObject on a simple type
+     */
+    public function testGetPropObjectSimpleType() {
+    	$labels = $this->person->getPropObject('dataLabels');
+    	
+    	$this->assertTrue(is_array($labels), 'testing getPropObject on a simple type');
+    	$this->assertEquals('E-mail Address', $labels['email'], 'testing getPropObject on a simple type');
+    }
 }
 
 ?>
