@@ -28,6 +28,7 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
     	$this->person = $this->createPersonObject('unitTestUser');
         // just making sure no previous test user is in the DB
         $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/');
+        $this->person->deleteAllByAttribute('displayName', 'unitTestUser');
     }
     
     /** 
@@ -394,6 +395,115 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
     	$this->assertTrue(is_array($labels), 'testing getPropObject on a simple type');
     	$this->assertEquals('E-mail Address', $labels['email'], 'testing getPropObject on a simple type');
     }
+    
+    /**
+     * testing that markTransient and markPersistent methods 
+     */
+    public function testMarkTransientPersistent() {
+    	// initial save
+    	$this->person->save();
+    	
+    	// now mark the URL transient, and save again (old URL value should not be overwritten)
+    	$this->person->markTransient('URL');
+    	$this->assertTrue(in_array('URL', $this->person->getTransientAttributes()), 'testing that markTransient and markPersistent methods');
+    	$this->person->set('URL','http://www.alphaframework.org/');
+    	$this->person->save();
+    	
+    	// used to ensure that we attempt to reload it from the DB
+    	$this->person->markPersistent('URL');
+    	$this->assertFalse(in_array('URL', $this->person->getTransientAttributes()), 'testing that markTransient and markPersistent methods');  	
+    	// reload from DB
+    	$this->person->reload();
+    	
+    	$this->assertEquals('http://unitTestUser/', $this->person->get('URL'), 'testing that markTransient and markPersistent methods');
+    }
+    
+    /**
+     * testing the getDataLabels method
+     */
+    public function testGetDataLabels() {
+    	$this->assertTrue(is_array($this->person->getDataLabels()), 'testing the getDataLabels method');
+    	$labels = $this->person->getDataLabels();
+    	$this->assertTrue(in_array('OID', array_keys($labels)), 'testing the getDataLabels method');
+    	$this->assertTrue(in_array('E-mail Address', $labels), 'testing the getDataLabels method');
+    }
+    
+    /**
+     * testing the getTransientAttributes method in conjunction with markTransient/markPersistent
+     */
+    public function testGetTransientAttributes() {
+    	$this->assertTrue(is_array($this->person->getTransientAttributes()), 'testing the getTransientAttributes method in conjunction with markTransient/markPersistent');
+    	$this->person->markTransient('URL');
+    	$this->assertTrue(in_array('URL', $this->person->getTransientAttributes()), 'testing the getTransientAttributes method in conjunction with markTransient/markPersistent');
+    	$this->person->markPersistent('URL');
+    	$this->assertFalse(in_array('URL', $this->person->getTransientAttributes()), 'testing the getTransientAttributes method in conjunction with markTransient/markPersistent');
+    }
+    
+    /**
+     * testing isTransient before and after save
+     */
+    public function testIsTransient() {
+    	$this->assertTrue($this->person->isTransient(), 'testing isTransient before and after save');
+    	$this->person->save();
+    	$this->assertFalse($this->person->isTransient(), 'testing isTransient before and after save');
+    }
+    
+    /**
+     * testing the getLastQuery method after various persistance calls
+     */
+    public function testGetLastQuery() {
+    	$this->person->save();
+    	$this->assertEquals('INSERT INTO person', substr($this->person->getLastQuery(), 0, 18), 'testing the getLastQuery method after various persistance calls');
+    	$this->person->checkTableNeedsUpdate();
+    	$this->assertEquals('SHOW INDEX FROM person', substr($this->person->getLastQuery(), 0, 22), 'testing the getLastQuery method after various persistance calls');
+    	$this->person->getCount();
+    	$this->assertEquals('SELECT COUNT(OID)', substr($this->person->getLastQuery(), 0, 17), 'testing the getLastQuery method after various persistance calls');
+    	$this->person->getMAX();
+    	$this->assertEquals('SELECT MAX(OID)', substr($this->person->getLastQuery(), 0, 15), 'testing the getLastQuery method after various persistance calls');
+    	$this->person->load($this->person->getID());
+    	$this->assertEquals('SHOW COLUMNS FROM person', substr($this->person->getLastQuery(), 0, 24), 'testing the getLastQuery method after various persistance calls');
+    }
+    
+    /**
+     * testing the clear method for unsetting the attributes of an object 
+     */
+    public function testClear() {
+    	$level = $this->person->getAccessLevel();
+    	$this->assertTrue(!empty($level), 'testing the clear method for unsetting the attributes of an object');
+    	
+    	$reflection = new ReflectionClass(get_class($this->person));
+    	$properties = $reflection->getProperties();
+
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;			
+			if(!in_array($propName, $this->person->getDefaultAttributes())) {
+				$this->assertNotNull($this->person->get($propName), 'testing the clear method for unsetting the attributes of an object');
+			}
+		}
+		
+		// delete will invoke clear(), which is private
+    	$this->person->delete();
+    	
+    	try {
+    		$level = $this->person->getAccessLevel();
+    		$this->fail('testing the clear method for unsetting the attributes of an object');
+    	} catch (PHPException $e) {
+	    	$reflection = new ReflectionClass(get_class($this->person));
+	    	$properties = $reflection->getProperties();
+	
+			foreach($properties as $propObj) {
+				$propName = $propObj->name;
+				
+				try {
+					$this->person->get($propName);
+				} catch (PHPException $e) {
+					$this->assertEquals('PHP error: Undefined property:  person_object::$'.$propName, $e->getMessage(), 'testing the clear method for unsetting the attributes of an object');
+				} catch (AlphaException $e) {
+					$this->assertEquals('Could not access the property ['.$propName.'] on the object of class [person_object]', $e->getMessage(), 'testing the clear method for unsetting the attributes of an object');
+				}
+			}
+    	}
+    }    
 }
 
 ?>
