@@ -399,7 +399,7 @@ class mysqlDAO {
 			if (mysql_error() == '') {
 				if(method_exists($this, 'after_save_callback'))
 					$this->after_save_callback();
-				// populate the updated OID in case we just done an insert
+				// populate the updated OID in case we just done an insert				
 				if($this->isTransient())
 					$this->setOID(mysql_insert_id());				
 			}else{
@@ -1018,7 +1018,9 @@ class mysqlDAO {
 			
 			$matchCount = 0;
 			
-			$result = mysql_query('SHOW COLUMNS FROM '.$this->getTableName());			
+			$query = 'SHOW COLUMNS FROM '.$this->getTableName();
+			$result = mysql_query($query);
+			$this->lastQuery = $query;			
 			
 			// get the class attributes
 			$reflection = new ReflectionClass(get_class($this));
@@ -1168,8 +1170,18 @@ class mysqlDAO {
 	 * 
 	 * @param string attributeName
 	 */
-	protected function markTransient($attributeName) {
+	public function markTransient($attributeName) {
 		array_push($this->transientAttributes, $attributeName);		
+	}
+	
+	/**
+	 * Removes the name of the attribute provided from the list of transient (non-saved) attributes for this BO, 
+	 * ensuring that it will be saved on the next attempt.
+	 * 
+	 * @param string attributeName
+	 */
+	public function markPersistent($attributeName) {
+		$this->transientAttributes = array_diff($this->transientAttributes, array($attributeName));
 	}
 	
 	/**
@@ -1190,6 +1202,7 @@ class mysqlDAO {
 		
 		$query = 'SHOW INDEX FROM '.$this->getTableName();
 		$result = mysql_query($query);
+		$this->lastQuery = $query;
 		
 		// process unique keys
 		foreach($this->uniqueAttributes as $prop) {
@@ -1368,6 +1381,17 @@ class mysqlDAO {
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
 			unset($this->$propName);
+		}
+	}
+	
+	/**
+	 * Reloads the object from the database, overwritting any attribute values in memory 
+	 */
+	public function reload() {
+		if(!$this->isTransient()) {
+			$this->load($this->getID());			
+		}else{
+			throw new AlphaException('Cannot reload transient object from database!');
 		}
 	}
 }
