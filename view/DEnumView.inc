@@ -108,21 +108,21 @@ class DEnumView extends View
 		echo '<table cols="2" class="edit_view">';
 		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
 		
-		$temp = new string_box($this->BO->get_prop_object("name"), $labels["name"], "name", "", 0, true, true);
+		$temp = new string_box($this->BO->getPropObject("name"), $labels["name"], "name", "", 0, true, true);
 		
 		echo '<tr><td colspan="2"><h3>DEnum display values:</h3></td></tr>';
 		
 		// now get all of the options for the enum and render
 		$denum = $this->BO;
 		$tmp = new DEnumItem();
-		$denumItems = $tmp->loadItems($denum->get_ID());						
+		$denumItems = $tmp->loadItems($denum->getID());						
 		
 		foreach ($denumItems as $item) {
 			$labels = $item->getDataLabels();
-			$temp = new string_box($item->get_prop_object("value"), $labels["value"], "value_".$item->get_ID(), "");
+			$temp = new string_box($item->getPropObject("value"), $labels["value"], "value_".$item->getID(), "");
 		}
 		
-		echo '<input type="hidden" name="version_num" value="'.$this->BO->get_version().'"/>';
+		echo '<input type="hidden" name="version_num" value="'.$this->BO->getVersion().'"/>';
 		
 		echo '<tr><td colspan="2"><h3>Add a new value to the DEnum dropdown list:</h3></td></tr>';
 		
