@@ -39,20 +39,20 @@ class DEnumView extends View
 	function list_view() {
 		global $config;
 
-		$properties = get_object_vars($this->BO);
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = $reflection->getProperties();
 		$labels = $this->BO->getDataLabels();
-		$obj_type = '';
-
 		$col_count = 1;
 
 		echo '<table class="list_view">';
 		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
 		// first render all of the table headers
 		echo '<tr>';
-		foreach (array_keys($properties) as $prop) {
-			if (!in_array($prop, $this->BO->default_attributes) && !in_array($prop, $this->BO->transient_attributes)) {
-				if (get_class($properties[$prop]) != "Text") {
-					$col_count ++;					
+		foreach($properties as $propObj) {
+			$prop = $propObj->name;
+			if (!in_array($prop, $this->BO->getDefaultAttributes()) && !in_array($prop, $this->BO->getTransientAttributes())) {
+				if (get_class($this->BO->getPropObject($prop)) != "Text") {
+					$col_count ++;
 					echo '	<th>'.$labels[$prop].'</th>';
 				}
 			}
@@ -65,14 +65,15 @@ class DEnumView extends View
 		echo '</tr><tr>';
 
 		// and now the values
-		foreach (array_keys($properties) as $prop) {
-			if (!in_array($prop, $this->BO->default_attributes) && !in_array($prop, $this->BO->transient_attributes)) {
-				if (get_class($properties[$prop]) != "Text") {
-					echo '	<td>&nbsp;'.$this->BO->$prop->getValue().'</td>';
+		foreach($properties as $propObj) {
+			$prop = $propObj->name;
+			if (!in_array($prop, $this->BO->getDefaultAttributes()) && !in_array($prop, $this->BO->getTransientAttributes())) {
+				if (get_class($this->BO->getPropObject($prop)) != "Text") {
+					echo '	<td>&nbsp;'.$this->BO->get($prop).'</td>';
 				}
 			}
 			if ($prop == "OID")
-				echo '	<td>&nbsp;'.$this->BO->get_ID().'</td>';
+				echo '	<td>&nbsp;'.$this->BO->getID().'</td>';
 		}
 		// render the count
 		echo '	<td>&nbsp;'.$this->BO->getItemCount().'</td>';
@@ -81,9 +82,9 @@ class DEnumView extends View
 
 		echo '<tr><td colspan="'.($col_count+1).'" align="center">';
 		// render edit buttons for admins only
-		if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_access_level() == "Administrator") {
+		if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->getAccessLevel() == "Administrator") {
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/EditDEnum.php?oid=".$this->BO->get_ID()."'", "Edit", "editBut");
+			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/EditDEnum.php?oid=".$this->BO->getID()."'", "Edit", "editBut");
 		}
 		echo '</td></tr>';
 
