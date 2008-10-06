@@ -428,11 +428,19 @@ class Controller
 		$new_objects = $this->get_new_objects();
 
 		for ($i=0; $i<count($new_objects); $i++) {
-			$success = $new_objects[$i]->save_object();
+			$success = true;
+			try {
+				$dirty_objects[$i]->save();
+			}catch (FailedSaveException $e) {
+				$success = false;
+			}catch (LockingException $e) {
+				$success = false;
+			}
 			
 			if (!$success) {
 				$this->last_query .= " Error: ".mysql_error();
 				$error = new handle_error($_SERVER["PHP_SELF"],'Failed to commit the transaction','commit()','framework');
+				$this->abort();
 				return false;
 			}
 		}
@@ -440,11 +448,19 @@ class Controller
 		$dirty_objects = $this->get_dirty_objects();
 
 		for ($i=0; $i<count($dirty_objects); $i++) {
-			$success = $dirty_objects[$i]->save_object();
+			$success = true;
+			try {
+				$dirty_objects[$i]->save();
+			}catch (FailedSaveException $e) {
+				$success = false;
+			}catch (LockingException $e) {
+				$success = false;
+			}
 			
 			if (!$success) {
 				$this->last_query .= " Error: ".mysql_error();
 				$error = new handle_error($_SERVER["PHP_SELF"],'Failed to commit the transaction','commit()','framework');
+				$this->abort();
 				return false;
 			}
 		}
