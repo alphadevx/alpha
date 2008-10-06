@@ -35,7 +35,7 @@ class ListDEnums extends ListAll
 		$this->BO = new DEnum();
 		
 		// make sure that the DEnum tables exist
-		if(!$this->BO->check_table_exists()) {
+		if(!$this->BO->checkTableExists()) {
 			echo '<p class="warning">Warning! The DEnum tables do not exist, attempting to create them now...</p>';
 			$this->create_DEnum_tables();
 		}
@@ -64,9 +64,9 @@ class ListDEnums extends ListAll
 		// set the start point for the list pagination
 		if (isset($_GET["start"]) ? $this->start_point = $_GET["start"]: $this->start_point = 0);
 			
-		$objects = $temp->load_all($this->start_point);
+		$objects = $temp->loadAll($this->start_point);
 			
-		$this->BO_count = $this->BO->get_count();
+		$this->BO_count = $this->BO->getCount();
 			
 		$this->display_page_head();
 		
