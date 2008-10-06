@@ -346,7 +346,7 @@ class mysqlDAO {
 					$propName = $propObj->name;
 					// skip the OID, database auto number takes care of this 
 					if($propName != 'OID') {
-						$propClass = get_class($this->get($propName));				
+						$propClass = get_class($this->getPropObject($propName));
 						if ($propName != 'version_num' && !in_array($propName, $this->transientAttributes)) {
 							if(empty($propClass))
 								$sqlQuery .= "'".$this->get($propName)."',";
@@ -372,7 +372,7 @@ class mysqlDAO {
 					$propName = $propObj->name;
 					// skip the OID, database auto number takes care of this 
 					if($propName != 'OID') {
-						$propClass = get_class($this->get($propName));
+						$propClass = get_class($this->getPropObject($propName));
 						if ($propName != "version_num" && !in_array($propName, $this->transientAttributes)) {
 							if(empty($propClass))
 								$sqlQuery .= "$propName = '".$this->get($propName)."',";
@@ -550,10 +550,10 @@ class mysqlDAO {
 		$properties = $reflection->getProperties();
 		
 		foreach($properties as $propObj) {
-			$propName = $propObj->name;
-			$propClass = $propObj->class;
+			$propName = $propObj->name;			
 			
-			if(!in_array($propName, $this->transientAttributes) && $propName != "OID") {				
+			if(!in_array($propName, $this->transientAttributes) && $propName != "OID") {
+				$propClass = get_class($this->getPropObject($propName));				
 
 				switch (strtoupper($propClass)) {
 					case "INTEGER":
@@ -718,9 +718,10 @@ class mysqlDAO {
 		
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
-			$propClass = $propObj->class;
 
 			if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
+				$propClass = get_class($this->getPropObject($propName));
+				
 				if(isset($_POST[$propName])) {
 					// checking to see if we need to use addslashes() on the posted data
 					if(!get_magic_quotes_gpc()) {
