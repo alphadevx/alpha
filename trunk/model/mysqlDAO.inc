@@ -346,12 +346,8 @@ class mysqlDAO {
 					$propName = $propObj->name;
 					// skip the OID, database auto number takes care of this 
 					if($propName != 'OID') {
-						$propClass = get_class($this->getPropObject($propName));
 						if ($propName != 'version_num' && !in_array($propName, $this->transientAttributes)) {
-							if(empty($propClass))
-								$sqlQuery .= "'".$this->get($propName)."',";
-							else
-								$sqlQuery .= "'".$this->get($propName)->getValue()."',";
+							$sqlQuery .= "'".$this->get($propName)."',";
 						}
 						if ($propName == 'version_num') {					
 							$temp = $this->version_num->getValue();
@@ -372,12 +368,8 @@ class mysqlDAO {
 					$propName = $propObj->name;
 					// skip the OID, database auto number takes care of this 
 					if($propName != 'OID') {
-						$propClass = get_class($this->getPropObject($propName));
 						if ($propName != "version_num" && !in_array($propName, $this->transientAttributes)) {
-							if(empty($propClass))
-								$sqlQuery .= "$propName = '".$this->get($propName)."',";
-							else
-								$sqlQuery .= "$propName = '".$this->get($propName)->getValue()."',";
+							$sqlQuery .= "$propName = '".$this->get($propName)."',";
 						}
 						if ($propName == "version_num") {					
 							$temp = $this->version_num->getValue();					
