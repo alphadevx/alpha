@@ -41,7 +41,7 @@ class EditDEnum extends Edit
 		$this->Controller();
 		
 		$this->BO = new DEnum();
-		$this->BO->load_object($BO_oid);
+		$this->BO->load($BO_oid);
 		
 		$this->BO_name = "DEnum";
 		
@@ -86,18 +86,18 @@ class EditDEnum extends Edit
 		if (isset($_POST["saveBut"])) {			
 			
 			// populate the transient object from post data
-			$this->BO->populate_from_post();
+			$this->BO->populateFromPost();
 			
-			$success = $this->BO->save_object();			
+			$success = $this->BO->save();			
 			
-			$this->BO->load_object($this->BO->get_ID());
+			$this->BO->load($this->BO->getID());
 			
 			// now save the DEnumItems			
 			$tmp = new DEnumItem();
-			$denumItems = $tmp->loadItems($this->BO->get_ID());						
+			$denumItems = $tmp->loadItems($this->BO->getID());						
 			
 			foreach ($denumItems as $item) {
-				$item->set("value", $_POST["value_".$item->get_ID()]);
+				$item->set("value", $_POST["value_".$item->getID()]);
 				$this->mark_dirty($item);
 			}
 			
@@ -105,14 +105,14 @@ class EditDEnum extends Edit
 			if(isset($_POST["new_value"]) && trim($_POST["new_value"]) != "") {
 				$newItem = new DEnumItem();
 				$newItem->set("value", $_POST["new_value"]);
-				$newItem->set("DEnumID", $this->BO->get_ID());
-				$this->mark_new($newItem);
+				$newItem->set("DEnumID", $this->BO->getID());
+				$this->markNew($newItem);
 			}			
 					
 			$success = $this->commit();
 			
 			if($success) {
-				echo '<p class="success">'.get_class($this->BO).' '.$this->BO->get_ID().' saved successfully.</p>';
+				echo '<p class="success">'.get_class($this->BO).' '.$this->BO->getID().' saved successfully.</p>';
 			}
 			
 			$this->BO_View->set_BO($this->BO);
