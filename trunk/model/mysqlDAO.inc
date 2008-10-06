@@ -708,7 +708,7 @@ class mysqlDAO {
 	/**
 	 * Populates the current business object from global POST data
 	 */	
-	protected function populateFromPost() {
+	public function populateFromPost() {
 		if(method_exists($this, 'before_populateFromPost_callback'))
 			$this->before_populateFromPost_callback();
 		
