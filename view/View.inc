@@ -92,143 +92,36 @@ class View {
 		
 		global $config;
 
-		$properties = get_object_vars($this->BO);
-		$obj_type = '';
-
-		echo '<table cols="2" class="create_view">';
-		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
-		foreach (array_keys($properties) as $prop) {
-			if (!in_array($prop, $this->BO->default_attributes) && !in_array($prop, $this->BO->transient_attributes)) {
-
-				$obj_type = get_class($properties[$prop]);
-
-				switch (strtoupper($obj_type)) {
-					case "INTEGER" :
-						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td>';
-
-						echo '<td>';
-						echo '<input type="text" size="11" name="'.$prop.'" value="'. (isset ($_POST[$prop]) ? $_POST[$prop] : '').'"/><br>';
-						echo '</td></tr>';
-					break;
-					case "DOUBLE" :
-						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td>';
-
-						echo '<td>';
-						echo '<input type="text" size="13" name="'.$prop.'" value="'. (isset ($_POST[$prop]) ? $_POST[$prop] : '').'"/><br>';
-						echo '</td></tr>';
-					break;
-					case "DATE" :
-						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
-					break;
-					case "TIMESTAMP" :
-						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
-					break;
-					case "STRING" :
-						// use a string widget if defined
-						if (class_exists("string_box")) {
-							$temp = new string_box($this->BO-> $prop, $this->BO->data_labels[$prop], $prop, "");
-						} else {
-							echo '<tr><td style="width:25%;">';
-							echo $this->BO->data_labels[$prop];
-							echo '</td>';
-
-							echo '<td>';
-							echo '<input type="text" size="'.$this->BO-> $prop->get_size().'" name="'.$prop.'" value="'. (isset ($_POST[$prop]) ? $_POST[$prop] : '').'"/><br>';
-							echo '</td></tr>';
-						}
-					break;
-					case "TEXT" :					
-						// use a text widget if defined
-						if (class_exists("text_box")) {
-							$temp = new text_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "");
-						} else {
-							echo '<tr><td colspan="2">';
-							echo $this->BO->data_labels[$prop];
-							echo '</td></tr>';
-	
-							echo '<tr><td colspan="2">';
-							echo '<textarea cols="90" rows="5" name="'.$prop.'">'. (isset ($_POST[$prop]) ? $_POST[$prop] : '').'</textarea><br>';
-							echo '</td></tr>';
-						}
-					break;
-					case "BOOLEAN" :
-						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td>';
-
-						echo '<td>';
-						echo '<select size="1" name="'.$prop.'"/>';
-						echo '<option value="0" selected>N</option>';
-						echo '<option value="1">Y</option>';
-						echo '</select><br>';
-						echo '</td></tr>';
-					break;
-					case "ENUM" :
-						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td>';
-						echo '<td>';
-						echo '<select name="'.$prop.'"/>';
-						$enum = $this->BO->get_prop_object($prop);
-						$enum_vals = $this->BO->$prop->get_options();						
-						foreach ($enum_vals as $enum_val) {
-							if ($enum->getValue() == $enum_val)
-								echo '<option value="'.$enum_val.'" selected>'.$enum_val.'</option>';
-							else
-								echo '<option value="'.$enum_val.'">'.$enum_val.'</option>';
-						}
-						echo '</select><br>';
-						echo '</td></tr>';
-					break;
-					case "DENUM" :
-						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td>';
-						echo '<td>';
-						echo '<select name="'.$prop.'"/>';
-						$denum = $this->BO->get_prop_object($prop);
-						$denum_vals = $denum->get_options();						
-						foreach (array_keys($denum_vals) as $denum_index) {
-							if ($denum->getValue() == $denum_index)
-								echo '<option value="'.$denum_index.'" selected>'.$denum_vals[$denum_index].'</option>';
-							else
-								echo '<option value="'.$denum_index.'">'.$denum_vals[$denum_index].'</option>';
-						}
-						echo '</select><br>';
-						echo '</td></tr>';
-					break;
-					default :
-						echo '<tr><td colspan="2">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td></tr>';
-
-						echo '<tr><td colspan="2">';
-						echo '<textarea cols="100" rows="3" name="'.$prop.'">'. (isset ($_POST[$prop]) ? $_POST[$prop] : '').'</textarea><br>';
-						echo '</td></tr>';
-						break;
-				}
-			}
-		}
-
-		echo '<tr><td colspan="2">';
-		if (class_exists("button")) {
-			$temp = new button("submit", "Create", "createBut");
-			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location.replace('".$config->get('sysURL')."/alpha/controller/ListBusinessObjects.php')", "Cancel", "cancelBut");
-		} else {
-			echo '<input type="submit" name="createBut" value="Create"/>';
-			echo '&nbsp;&nbsp;';
-			echo '<input type="submit" name="cancelBut" value="Cancel"/>';
-		}
-		echo '</td></tr>';
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = $reflection->getProperties();
 		
+		// the form action
+		$formAction = $_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"];
+		
+		// buffer standard output result of renderAllFields() to $formFields
+		ob_start();
+		$this->renderAllFields('create');		
+		$formFields = ob_get_contents();
+		ob_end_clean();
+		
+		// buffer standard output for Create and Cancel buttons
+		ob_start();
+		$button = new button("submit", "Create", "createBut");
+		$createButton = ob_get_contents();
+		ob_end_clean();
+		ob_start();
+		$button = new button("document.location.replace('".$config->get('sysURL')."/alpha/controller/ListBusinessObjects.php')", "Cancel", "cancelBut");
+		$cancelButton = ob_get_contents();
+		ob_end_clean();
+		
+		// buffer security fields to $formSecurityFields variable
+		ob_start();
 		$this->render_security_fields();
+		$formSecurityFields = ob_get_contents();
+		ob_end_clean();
 
-		echo '</form></table>';
+		require_once $config->get('sysRoot').'alpha/view/templates/create.phtml';
 		
 		if(method_exists($this, 'after_create_view_callback'))
 			$this->after_create_view_callback();
@@ -654,6 +547,210 @@ class View {
 		$var2 = md5($_SERVER['REMOTE_ADDR'].$var1);
 		
 		return array($var1, $var2);
+	}
+	
+	/**
+	 * Static method to render the default Integer HTML
+	 *
+	 * @param string $name The field name
+	 * @param string $label The label to apply to the field
+	 * @param string $mode The field mode (create/edit)
+	 * @param string $value The field value (optional)
+	 */
+	public static function renderIntegerField($name, $label, $mode, $value='') {
+		if ($mode == 'create') {
+			echo '<tr><td style="width:25%;">';
+			echo $label;
+			echo '</td>';
+	
+			echo '<td>';
+			echo '<input type="text" size="11" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
+			echo '</td></tr>';
+		}
+		
+		if ($mode == 'edit') {
+			
+		}
+	}
+	
+	/**
+	 * Static method to render the default Double HTML
+	 *
+	 * @param string $name The field name
+	 * @param string $label The label to apply to the field
+	 * @param string $mode The field mode (create/edit)
+	 * @param string $value The field value (optional)
+	 */
+	public static function renderDoubleField($name, $label, $mode, $value='') {
+		if ($mode == 'create') {
+			echo '<tr><td style="width:25%;">';
+			echo $label;
+			echo '</td>';
+	
+			echo '<td>';
+			echo '<input type="text" size="13" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
+			echo '</td></tr>';
+		}
+		
+		if ($mode == 'edit') {
+			
+		}
+	}
+	
+	/**
+	 * Static method to render the default Boolean HTML
+	 *
+	 * @param string $name The field name
+	 * @param string $label The label to apply to the field
+	 * @param string $mode The field mode (create/edit)
+	 * @param string $value The field value (optional)
+	 */
+	public static function renderBooleanField($name, $label, $mode, $value='') {
+		if ($mode == 'create') {
+			echo '<tr><td style="width:25%;">';
+			echo $label;
+			echo '</td>';
+	
+			echo '<td>';
+			echo '<select size="1" name="'.$name.'"/>';
+			echo '<option value="0" selected>N</option>';
+			echo '<option value="1">Y</option>';
+			echo '</select><br>';
+			echo '</td></tr>';
+		}
+		
+		if ($mode == 'edit') {
+			
+		}
+	}
+	
+	/**
+	 * Static method to render the default Enum HTML
+	 *
+	 * @param string $name The field name
+	 * @param string $label The label to apply to the field
+	 * @param string $mode The field mode (create/edit)
+	 * @param array $options The Enum options
+	 * @param string $value The field value (optional)
+	 */
+	public static function renderEnumField($name, $label, $mode, $options, $value='') {
+		if ($mode == 'create') {
+			echo '<tr><td style="width:25%;">';
+			echo $label;
+			echo '</td>';
+			echo '<td>';
+			echo '<select name="'.$name.'"/>';			
+			foreach ($options as $val) {
+				echo '<option value="'.$val.'">'.$val.'</option>';
+			}
+			echo '</select><br>';
+			echo '</td></tr>';
+		}
+		
+		if ($mode == 'edit') {
+			
+		}
+	}
+	
+	/**
+	 * Static method to render the default DEnum HTML
+	 *
+	 * @param string $name The field name
+	 * @param string $label The label to apply to the field
+	 * @param string $mode The field mode (create/edit)
+	 * @param array $options The DEnum options
+	 * @param string $value The field value (optional)
+	 */
+	public static function renderDEnumField($name, $label, $mode, $options, $value='') {
+		if ($mode == 'create') {
+			echo '<tr><td style="width:25%;">';
+			echo $label;
+			echo '</td>';
+			echo '<td>';
+			echo '<select name="'.$name.'"/>';
+			foreach (array_keys($options) as $index) {
+				echo '<option value="'.$index.'">'.$options[$index].'</option>';
+			}
+			echo '</select><br>';
+			echo '</td></tr>';
+		}
+		
+		if ($mode == 'edit') {
+			
+		}
+	}
+	
+	/**
+	 * Static method to render the default field HTML when type is not known
+	 *
+	 * @param string $name The field name
+	 * @param string $label The label to apply to the field
+	 * @param string $mode The field mode (create/edit)	 
+	 * @param string $value The field value (optional)
+	 */
+	public static function renderDefaultField($name, $label, $mode, $value='') {
+		if ($mode == 'create') {
+			echo '<tr><td colspan="2">';
+			echo $label;
+			echo '</td></tr>';
+	
+			echo '<tr><td colspan="2">';
+			echo '<textarea cols="100" rows="3" name="'.$name.'">'. (isset ($_POST[$name]) ? $_POST[$name] : '').'</textarea><br>';
+			echo '</td></tr>';
+		}
+		
+		if ($mode == 'edit') {
+			
+		}
+	}
+	
+	public function renderAllFields($mode) {		
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = $reflection->getProperties();
+		
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			
+			if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
+				$propClass = get_class($this->BO->getPropObject($propName));
+				
+				switch (strtoupper($propClass)) {
+					case "INTEGER" :
+						View::renderIntegerField($propName, $this->BO->getDataLabel($propName), 'create');				
+					break;
+					case "DOUBLE" :
+						View::renderDoubleField($propName, $this->BO->getDataLabel($propName), 'create');
+					break;
+					case "DATE" :
+						$date = new calendar($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
+					break;
+					case "TIMESTAMP" :
+						$timestamp = new calendar($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
+					break;
+					case "STRING" :
+						$string = new string_box($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName, "");
+					break;
+					case "TEXT" :					
+						$text = new text_box($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName, "");
+					break;
+					case "BOOLEAN" :
+						View::renderBooleanField($propName, $this->BO->getDataLabel($propName), 'create');
+					break;
+					case "ENUM" :
+						$enum = $this->BO->getPropObject($propName);
+						View::renderEnumField($propName, $this->BO->getDataLabel($propName), 'create', $enum->getOptions());
+					break;
+					case "DENUM" :
+						$denum = $this->BO->getPropObject($propName);
+						View::renderDEnumField($propName, $this->BO->getDataLabel($propName), 'create', $denum->getOptions());
+					break;
+					default :
+						View::renderDefaultField($propName, $this->BO->getDataLabel($propName), 'create');
+					break;
+				}
+			}
+		}
 	}
 }
 ?>
