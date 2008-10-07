@@ -109,12 +109,12 @@ class calendar{
 		if(isset($_GET["display_month"]))
 			$month = $_GET["display_month"];
 		else
-			$month = $this->date_object->month;
+			$month = $this->date_object->getMonth();
 			
 		if(isset($_GET["display_year"]))
 			$year = $_GET["display_year"];
 		else
-			$year = $this->date_object->year;
+			$year = $this->date_object->getYear();
 			
 		if ($month > 12){
 			$month = $month - 12;
@@ -189,7 +189,7 @@ class calendar{
 			}
 			$link_date = "$year-$new_month_num-$new_day";
 			
-			if ($year == $this->date_object->year && $month == $this->date_object->month && $day == $this->date_object->day) {
+			if ($year == $this->date_object->getYear() && $month == $this->date_object->getMonth() && $day == $this->date_object->getDay()) {
 				// today's date
 				if(strtoupper(get_class($this->date_object)) == "TIMESTAMP")
 					echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', true, this);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\" style=\"color:white; font-weight:bold;\">$day</td>";
@@ -221,9 +221,9 @@ class calendar{
 		if(strtoupper(get_class($this->date_object)) == "TIMESTAMP"){
 			echo '<tr>';
 			echo '<td colspan="7" class="calendar" align="center">';
-			echo '<input id="hours" value="'.$this->date_object->get_hour().'" onblur="updateTime()" size="1"/>:';
-			echo '<input id="minutes" value="'.$this->date_object->get_minute().'" onblur="updateTime()" size="1"/>:';
-			echo '<input id="seconds" value="'.$this->date_object->get_second().'" onblur="updateTime()" size="1"/>';
+			echo '<input id="hours" value="'.$this->date_object->getHour().'" onblur="updateTime()" size="1"/>:';
+			echo '<input id="minutes" value="'.$this->date_object->getMinute().'" onblur="updateTime()" size="1"/>:';
+			echo '<input id="seconds" value="'.$this->date_object->getSecond().'" onblur="updateTime()" size="1"/>';
 			echo '</td>';
 			echo '</tr>';
 		}
@@ -357,7 +357,7 @@ if(basename($_SERVER["PHP_SELF"]) == "calendar.php") {
 		else
 			$date = new Timestamp();
 		
-		$date->populate_from_string($_GET["date"]);
+		$date->populateFromString($_GET["date"]);
 		// check to see if a form field name is provided
 		if(!empty($_GET["name"]))
 			$cal = new calendar($date, "", $_GET["name"]);
