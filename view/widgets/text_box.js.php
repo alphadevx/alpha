@@ -105,8 +105,8 @@ class text_box
 		// ----------------------
 		echo '<script language="javascript">';
 		
-		echo " validation_rules[\"".$this->get_name()."\"] = ".$this->text_object->get_rule().";\n";
-		echo " validation_rules[\"".$this->get_name()."_msg\"] = \"".$this->text_object->get_helper()."\";\n";
+		echo " validation_rules[\"".$this->get_name()."\"] = ".$this->text_object->getRule().";\n";
+		echo " validation_rules[\"".$this->get_name()."_msg\"] = \"".$this->text_object->getHelper()."\";\n";
 		
 		echo '</script>';
 	}
