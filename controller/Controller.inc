@@ -544,8 +544,8 @@ class Controller
 		if ($config->get('sysUseWidgets') && isset($this->BO)) {
 			echo '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
 			require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
-			require_once $config->get('sysRoot').'alpha/view/widgets/string_box.js.php';
-			require_once $config->get('sysRoot').'alpha/view/widgets/text_box.js.php';
+			require_once $config->get('sysRoot').'alpha/view/widgets/StringBox.js.php';
+			require_once $config->get('sysRoot').'alpha/view/widgets/TextBox.js.php';
 		
 			require_once $config->get('sysRoot').'alpha/view/widgets/form_validator.js.php';
 		
