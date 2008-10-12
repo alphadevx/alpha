@@ -65,31 +65,35 @@ class button
 			$this->action->setValue("alert('Please set an action for this button!')");
 			
 		$this->set_title($title);
-		$this->set_id($id);
-		
-		$this->render();		
+		$this->set_id($id);		
 	}
 	
 	/**
-	 * renders the HTML and javascript for the button	 *
+	 * renders the HTML and javascript for the button
+	 * 
+	 * @return string
 	 */
 	function render() {
+		$html = '';
+		
 		if(empty($this->imgURL)) {
 			switch ($this->action->getValue()) {
 				case "submit":
-					echo '<input type="submit" id="'.$this->get_id().'" name="'.$this->get_id().'" class="norButton" value="'.$this->get_title().'"/>';
+					$html .= '<input type="submit" id="'.$this->get_id().'" name="'.$this->get_id().'" class="norButton" value="'.$this->get_title().'"/>';
 				break;
 				case "file":
-					echo '<input type="file" id="'.$this->get_id().'" name="'.$this->get_id().'" class="norButton" value="'.$this->get_title().'"/>';
+					$html .= '<input type="file" id="'.$this->get_id().'" name="'.$this->get_id().'" class="norButton" value="'.$this->get_title().'"/>';
 				break;
 				default:
-					echo '<input type="button" id="'.$this->get_id().'" name="'.$this->get_id().'" class="norButton" onClick="'.$this->get_action().';" value="'.$this->get_title().'"/>';
+					$html .= '<input type="button" id="'.$this->get_id().'" name="'.$this->get_id().'" class="norButton" onClick="'.$this->get_action().';" value="'.$this->get_title().'"/>';
 				break;
 			}
 		}else{
 			// in the special case where a clickable image is being used			
-			echo '<img src="'.$this->imgURL.'" alt="'.$this->get_title().'" onClick="'.$this->get_action().'" style="cursor:pointer; vertical-align:bottom;"/>';
+			$html .= '<img src="'.$this->imgURL.'" alt="'.$this->get_title().'" onClick="'.$this->get_action().'" style="cursor:pointer; vertical-align:bottom;"/>';
 		}
+		
+		return $html;
 	}
 	
 	/**
