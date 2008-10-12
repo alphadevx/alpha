@@ -44,10 +44,9 @@ class calendar{
 	 * the constructor
 	 * @param object $object the date or timestamp object that will be edited by this calender
 	 * @param string $label the data label for the date object
-	 * @param string $name the name of the HTML input box	 
-	 * @param bool $table_tags determines if table tags are also rendered for the calender
+	 * @param string $name the name of the HTML input box	
 	 */
-	function calendar($object, $label="", $name="", $table_tags=true) {
+	function calendar($object, $label="", $name="") {
 		
 		// check the type of the object passed
 		if(strtoupper(get_class($object)) == "DATE" || strtoupper(get_class($object)) == "TIMESTAMP"){
@@ -58,19 +57,17 @@ class calendar{
 		}
 		$this->label = $label;
 		$this->name = $name;
-				
-		// if its in a form render the input tags and calender button, else render the month for the pop-up window
-		if(!empty($label)) {
-			$this->render($table_tags);
-		}else{
-			$this->display_page_head();
-			$this->render_month();
-			$this->display_page_foot();
-		}
 	}
 	
-	function render($table_tags) {
-		global $config;		
+	/**
+	 * Renders the text box and icon to open the calendar pop-up
+	 *
+	 * @param bool $table_tags
+	 * @return string
+	 */
+	function render($table_tags=true) {
+		global $config;
+		$html = '';		
 		
 		/*
 		 * decide on the size of the text box and the height of the widget pop-up, 
@@ -85,26 +82,34 @@ class calendar{
 		}
 		
 		if($table_tags) {
-			echo '<tr><td style="width:25%;">';
-			echo $this->label;
-			echo '</td>';
+			$html .= '<tr><td style="width:25%;">';
+			$html .= $this->label;
+			$html .= '</td>';
 
-			echo '<td>';
-			echo '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->getValue().'" readonly/>';
+			$html .= '<td>';
+			$html .= '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->getValue().'" readonly/>';
 			$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=205,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $config->get('sysURL')."/alpha/images/icons/calendar.png");
-			echo '</td></tr>';
+			$html .= $tmp->render();
+			$html .= '</td></tr>';
 		}else{
-			echo '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->getValue().'" readonly/>';
+			$html .= '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->getValue().'" readonly/>';
 			$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=205,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $config->get('sysURL')."/alpha/images/icons/calendar.png");
+			$html .= $tmp->render();
 		}
+		
+		return $html;
 	}
 	
 	/**
 	 * renders the HTML for the current month
+	 * 
+	 * @return string
 	 */
 	function render_month() {
 		global $config;
-		//global $sysURL;
+		$html = '';
+		
+		$html .= $this->display_page_head();
 		
 		if(isset($_GET["display_month"]))
 			$month = $_GET["display_month"];
@@ -147,34 +152,33 @@ class calendar{
 			$today++;
 		}
 		
-		echo '<table cols="7" style="table-layout:fixed; width:200px; height:200px">';
-		echo '<tr>';
-		echo '<th colspan="7">'.$month_name.' '.$year.'</th>';
-		echo '</tr>';
-		echo '<tr>';
-		echo '<th class="headCalendar">Sun</th>';
-		echo '<th class="headCalendar">Mon</th>';
-		echo '<th class="headCalendar">Tue</th>';
-		echo '<th class="headCalendar">Wed</th>';
-		echo '<th class="headCalendar">Thu</th>';
-		echo '<th class="headCalendar">Fri</th>';
-		echo '<th class="headCalendar">Sat</th>';		
-		echo '</tr>';	
+		$html .= '<table cols="7" style="table-layout:fixed; width:200px; height:200px">';
+		$html .= '<tr>';
+		$html .= '<th colspan="7">'.$month_name.' '.$year.'</th>';
+		$html .= '</tr>';
+		$html .= '<tr>';
+		$html .= '<th class="headCalendar">Sun</th>';
+		$html .= '<th class="headCalendar">Mon</th>';
+		$html .= '<th class="headCalendar">Tue</th>';
+		$html .= '<th class="headCalendar">Wed</th>';
+		$html .= '<th class="headCalendar">Thu</th>';
+		$html .= '<th class="headCalendar">Fri</th>';
+		$html .= '<th class="headCalendar">Sat</th>';		
+		$html .= '</tr>';	
 		
 		$day = 1;
 		$wday = $first_week_day;
 		$firstweek = true;
 		while ( $day <= $lastday) {
 			if ($firstweek) {
-				echo "<tr>";
-				for ($i=1; $i<=$first_week_day; $i++) {
-				
-				echo "<td class=\"headCalendar\">&nbsp;</td>";
+				$html .= "<tr>";
+				for ($i=1; $i<=$first_week_day; $i++) {				
+					$html .= "<td class=\"headCalendar\">&nbsp;</td>";
 			}
 			$firstweek = false;
 			}
 			if ($wday == 0) {
-				echo "<tr>";
+				$html .= "<tr>";
 			}
 						
 			if (intval($month_num) < 10) {
@@ -192,19 +196,19 @@ class calendar{
 			if ($year == $this->date_object->getYear() && $month == $this->date_object->getMonth() && $day == $this->date_object->getDay()) {
 				// today's date
 				if(strtoupper(get_class($this->date_object)) == "TIMESTAMP")
-					echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', true, this);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\" style=\"color:white; font-weight:bold;\">$day</td>";
+					$html .= "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', true, this);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\" style=\"color:white; font-weight:bold;\">$day</td>";
 				else
-					echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', false, this);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\" style=\"color:white; font-weight:bold;\">$day</td>";
+					$html .= "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', false, this);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\" style=\"color:white; font-weight:bold;\">$day</td>";
 			}else{
 				// other dates
 				if(strtoupper(get_class($this->date_object)) == "TIMESTAMP")
-					echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', true, this);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\">$day</td>";
+					$html .= "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', true, this);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\">$day</td>";
 				else
-					echo "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', false, this);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\">$day</td>";
+					$html .= "<td class=\"norCalendar\" onclick=\"selectDate('".$year."-".$new_month_num."-".$new_day."', false, this);\" onmouseover=\"this.className = 'oveCalendar'\" onmouseout=\"this.className = 'norCalendar'\">$day</td>";
 			}
 			
 			if ($wday == 6) {
-				echo "</tr>\n";
+				$html .= "</tr>\n";
 			}
 			
 			$wday++;
@@ -213,138 +217,150 @@ class calendar{
 		}
 		
 		while ($day > $lastday && $wday != 7) {
-			echo "<td class=\"headCalendar\">&nbsp;</td>";
+			$html .= "<td class=\"headCalendar\">&nbsp;</td>";
 			$wday++;
 		}
 		
 		// if it is a timestamp that was passed, we need to render the hours:minutes:seconds		
 		if(strtoupper(get_class($this->date_object)) == "TIMESTAMP"){
-			echo '<tr>';
-			echo '<td colspan="7" class="calendar" align="center">';
-			echo '<input id="hours" value="'.$this->date_object->getHour().'" onblur="updateTime()" size="1"/>:';
-			echo '<input id="minutes" value="'.$this->date_object->getMinute().'" onblur="updateTime()" size="1"/>:';
-			echo '<input id="seconds" value="'.$this->date_object->getSecond().'" onblur="updateTime()" size="1"/>';
-			echo '</td>';
-			echo '</tr>';
+			$html .= '<tr>';
+			$html .= '<td colspan="7" class="calendar" align="center">';
+			$html .= '<input id="hours" value="'.$this->date_object->getHour().'" onblur="updateTime()" size="1"/>:';
+			$html .= '<input id="minutes" value="'.$this->date_object->getMinute().'" onblur="updateTime()" size="1"/>:';
+			$html .= '<input id="seconds" value="'.$this->date_object->getSecond().'" onblur="updateTime()" size="1"/>';
+			$html .= '</td>';
+			$html .= '</tr>';
 		}
 		
-		echo '<tr>';
-		echo '<td colspan="3" align="center">';
+		$html .= '<tr>';
+		$html .= '<td colspan="3" align="center">';
 		$tmp = new button("document.location='calendar.php?date=".$this->date_object->getValue()."&name=".$this->name."&display_year=".($year-1)."&display_month=".$month."';", "Previous year", "yearPreBut", $config->get('sysURL')."/alpha/images/icons/arrow_left.png");
-		echo 'Year';
+		$html .= $tmp->render();
+		$html .= 'Year';
 		$tmp = new button("document.location='calendar.php?date=".$this->date_object->getValue()."&name=".$this->name."&display_year=".($year+1)."&display_month=".$month."';", "Next year", "yearNextBut", $config->get('sysURL')."/alpha/images/icons/arrow_right.png");
-		echo '</td>';
-		echo '<td>&nbsp;</td>';
-		echo '<td colspan="3" align="center">';
+		$html .= $tmp->render();
+		$html .= '</td>';
+		$html .= '<td>&nbsp;</td>';
+		$html .= '<td colspan="3" align="center">';
 		$tmp = new button("document.location='calendar.php?date=".$this->date_object->getValue()."&name=".$this->name."&display_year=".$year."&display_month=".($month-1)."';", "Previous month", "monthPreBut", $config->get('sysURL')."/alpha/images/icons/arrow_left.png");
-		echo 'Month';
+		$html .= $tmp->render();
+		$html .= 'Month';
 		$tmp = new button("document.location='calendar.php?date=".$this->date_object->getValue()."&name=".$this->name."&display_year=".$year."&display_month=".($month+1)."';", "Next month", "monthNextBut", $config->get('sysURL')."/alpha/images/icons/arrow_right.png");
-		echo '</td>';
-		echo '</tr>';
+		$html .= $tmp->render();
+		$html .= '</td>';
+		$html .= '</tr>';
 		
-		echo '<tr>';
-		echo '<td colspan="7" align="center" class="headCalendar">';
+		$html .= '<tr>';
+		$html .= '<td colspan="7" align="center" class="headCalendar">';
 		$tmp = new button("window.close();", "Cancel", "cancelBut", $config->get('sysURL')."/alpha/images/icons/cancel.png");
-		echo '&nbsp;&nbsp;&nbsp;';		
+		$html .= $tmp->render();
+		$html .= '&nbsp;&nbsp;&nbsp;';		
 		$tmp = new button("window.opener.document.getElementById('".$this->name."').value = date_selected; window.close();", "Accept", "acceptBut", $config->get('sysURL')."/alpha/images/icons/accept.png");
-		echo '</td>';
-		echo '</tr>';
+		$html .= $tmp->render();
+		$html .= '</td>';
+		$html .= '</tr>';
 		
-		echo '</table>';
+		$html .= '</table>';
+		
+		$html .= $this->display_page_head();
+		
+		return $html;
 	}
 	
 	function display_page_head() {
-		global $config;		
+		global $config;
+		$html = '';		
 		
-		echo '<html>';
-		echo '<head>';
-		echo '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">';
-		echo '<title>Calendar</title>';		
+		$html .= '<html>';
+		$html .= '<head>';
+		$html .= '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">';
+		$html .= '<title>Calendar</title>';		
 		
-		echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$config->get('sysTheme').'.css.php">';
+		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$config->get('sysTheme').'.css.php">';
 		
-		echo '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
+		$html .= '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
 		
-		echo '<script language="javascript">';
-		echo 'var date_selected = "'.$this->date_object->getValue().'";';
-		echo 'function selectDate(date, include_time_fields, clicked_cell) {';		
-		echo '	var cells = document.getElementsByTagName("td");';
-		echo '	for(var i = 0; i < cells.length; i++) {';
-		echo '		cells[i].style.color = "black";';
-		echo '		cells[i].style.fontWeight = "normal";';
-		echo '	}';
-		echo '	clicked_cell.style.color = "white";';
-		echo '	clicked_cell.style.fontWeight = "bold";';
-		echo '	if(include_time_fields){';
-		echo '		date_selected = date+" "+';
-		echo '		document.getElementById("hours").value+":"+';
-		echo '		document.getElementById("minutes").value+":"+';
-		echo '		document.getElementById("seconds").value;';
-		echo '	}else{';
-		echo '		date_selected = date;';
-		echo '	}';
-		echo '}';
-		echo 'function updateTime() {';
+		$html .= '<script language="javascript">';
+		$html .= 'var date_selected = "'.$this->date_object->getValue().'";';
+		$html .= 'function selectDate(date, include_time_fields, clicked_cell) {';		
+		$html .= '	var cells = document.getElementsByTagName("td");';
+		$html .= '	for(var i = 0; i < cells.length; i++) {';
+		$html .= '		cells[i].style.color = "black";';
+		$html .= '		cells[i].style.fontWeight = "normal";';
+		$html .= '	}';
+		$html .= '	clicked_cell.style.color = "white";';
+		$html .= '	clicked_cell.style.fontWeight = "bold";';
+		$html .= '	if(include_time_fields){';
+		$html .= '		date_selected = date+" "+';
+		$html .= '		document.getElementById("hours").value+":"+';
+		$html .= '		document.getElementById("minutes").value+":"+';
+		$html .= '		document.getElementById("seconds").value;';
+		$html .= '	}else{';
+		$html .= '		date_selected = date;';
+		$html .= '	}';
+		$html .= '}';
+		$html .= 'function updateTime() {';
 		// the second param "10" in parseInt prevents a "bug" with values like 08 and 09 being mistaken as hex
-		echo '	var hours = parseInt(document.getElementById("hours").value, 10);';
-		echo '	var minutes = parseInt(document.getElementById("minutes").value, 10);';
-		echo '	var seconds = parseInt(document.getElementById("seconds").value, 10);';
+		$html .= '	var hours = parseInt(document.getElementById("hours").value, 10);';
+		$html .= '	var minutes = parseInt(document.getElementById("minutes").value, 10);';
+		$html .= '	var seconds = parseInt(document.getElementById("seconds").value, 10);';
 		
 		// validate hours
-		echo '	if(isNaN(hours) || hours < 0 || hours > 23) {';
-		echo '		document.getElementById("hours").value = "00";';
-		echo '		document.getElementById("hours").style.backgroundColor = "yellow";';
-		echo '		return false;';
-		echo '	}else{';
-		echo '		document.getElementById("hours").style.backgroundColor = "white";';		
+		$html .= '	if(isNaN(hours) || hours < 0 || hours > 23) {';
+		$html .= '		document.getElementById("hours").value = "00";';
+		$html .= '		document.getElementById("hours").style.backgroundColor = "yellow";';
+		$html .= '		return false;';
+		$html .= '	}else{';
+		$html .= '		document.getElementById("hours").style.backgroundColor = "white";';		
 		// zero-padding
-		echo '		if(hours < 10)';
-		echo '			hours = "0"+hours;';
-		echo '		document.getElementById("hours").value = hours;';
-		echo '	}';
+		$html .= '		if(hours < 10)';
+		$html .= '			hours = "0"+hours;';
+		$html .= '		document.getElementById("hours").value = hours;';
+		$html .= '	}';
 		
 		// validate minutes
-		echo '	if(isNaN(minutes) || minutes < 0 || minutes > 59) {';
-		echo '		document.getElementById("minutes").value = "00";';
-		echo '		document.getElementById("minutes").style.backgroundColor = "yellow";';
-		echo '		return false;';
-		echo '	}else{';
-		echo '		document.getElementById("minutes").style.backgroundColor = "white";';		
+		$html .= '	if(isNaN(minutes) || minutes < 0 || minutes > 59) {';
+		$html .= '		document.getElementById("minutes").value = "00";';
+		$html .= '		document.getElementById("minutes").style.backgroundColor = "yellow";';
+		$html .= '		return false;';
+		$html .= '	}else{';
+		$html .= '		document.getElementById("minutes").style.backgroundColor = "white";';		
 		// zero-padding
-		echo '		if(minutes < 10)';
-		echo '			minutes = "0"+minutes;';
-		echo '		document.getElementById("minutes").value = minutes;';
-		echo '	}';
+		$html .= '		if(minutes < 10)';
+		$html .= '			minutes = "0"+minutes;';
+		$html .= '		document.getElementById("minutes").value = minutes;';
+		$html .= '	}';
 		
 		// validate seconds
-		echo '	if(isNaN(seconds) || seconds < 0 || seconds > 59) {';
-		echo '		document.getElementById("seconds").value = "00";';
-		echo '		document.getElementById("seconds").style.backgroundColor = "yellow";';
-		echo '		return false;';
-		echo '	}else{';
-		echo '		document.getElementById("seconds").style.backgroundColor = "white";';		
+		$html .= '	if(isNaN(seconds) || seconds < 0 || seconds > 59) {';
+		$html .= '		document.getElementById("seconds").value = "00";';
+		$html .= '		document.getElementById("seconds").style.backgroundColor = "yellow";';
+		$html .= '		return false;';
+		$html .= '	}else{';
+		$html .= '		document.getElementById("seconds").style.backgroundColor = "white";';		
 		// zero-padding
-		echo '		if(seconds < 10)';
-		echo '			seconds = "0"+seconds;';
-		echo '		document.getElementById("seconds").value = seconds;';
-		echo '	}';
+		$html .= '		if(seconds < 10)';
+		$html .= '			seconds = "0"+seconds;';
+		$html .= '		document.getElementById("seconds").value = seconds;';
+		$html .= '	}';
 		
 		// replace the old time with the new value
-		echo '	date_selected = date_selected.substring(0, 10);';
-		echo '	date_selected = date_selected+" "+hours+":"+minutes+":"+seconds;';
-		echo '	return true;';		
-		echo '}';
-		echo '</script>';
+		$html .= '	date_selected = date_selected.substring(0, 10);';
+		$html .= '	date_selected = date_selected+" "+hours+":"+minutes+":"+seconds;';
+		$html .= '	return true;';		
+		$html .= '}';
+		$html .= '</script>';
 		
 		require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
 		
-		echo '</head>';
-		echo '<body>';		
+		$html .= '</head>';
+		$html .= '<body>';
+
+		return $html;
 	}
 	
 	function display_page_foot() {
-		echo '</body>';
-		echo '</html>';
+		return '</body></html>';
 	}
 }
 
@@ -359,10 +375,13 @@ if(basename($_SERVER["PHP_SELF"]) == "calendar.php") {
 		
 		$date->populateFromString($_GET["date"]);
 		// check to see if a form field name is provided
-		if(!empty($_GET["name"]))
+		if(!empty($_GET["name"])) {
 			$cal = new calendar($date, "", $_GET["name"]);
-		else
+			echo $cal->render_month();
+		}else{
 			$cal = new calendar($date);
+			echo $cal->render_month();
+		}
 	}else{
 		$error = new handle_error($_SERVER["PHP_SELF"],'No date/timestamp provided on the query string!','GET','other');
 		exit;
