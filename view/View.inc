@@ -63,11 +63,11 @@ class View {
 
 		// Check to see if a custom view exists for this BO, and if it does return that view instead		
 		if (!$return_parent) {
-			if (file_exists($config->get('sysRoot').'/view/'.$filename.'.inc')) {
-				require_once $config->get('sysRoot').'/view/'.$filename.'.inc';			
+			if (file_exists($config->get('sysRoot').'view/'.$filename.'.inc')) {
+				require_once $config->get('sysRoot').'view/'.$filename.'.inc';			
 				return new $filename($BO);
-			}elseif (file_exists($config->get('sysRoot').'/alpha/view/'.$filename.'.inc')) {
-				require_once $config->get('sysRoot').'/alpha/view/'.$filename.'.inc';			
+			}elseif (file_exists($config->get('sysRoot').'alpha/view/'.$filename.'.inc')) {
+				require_once $config->get('sysRoot').'alpha/view/'.$filename.'.inc';			
 				return new $filename($BO);
 			}else{
 				return new View($BO, true);
@@ -91,28 +91,31 @@ class View {
 			$this->before_create_view_callback();
 		
 		global $config;
+		
+		// hash array of HTML fields to pass to the template
+		$fields = array();
 
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this->BO));
 		$properties = $reflection->getProperties();
 		
 		// the form action
-		$formAction = $_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"];
+		$fields['formAction'] = $_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"];
 		
 		// buffer form fields to $formFields
-		$formFields = $this->renderAllFields('create');		
+		$fields['formFields'] = $this->renderAllFields('create');		
 		
 		// buffer HTML output for Create and Cancel buttons		
 		$button = new button('submit', 'Create', 'createBut');
-		$createButton = $button->render();
+		$fields['createButton'] = $button->render();
 		
 		$button = new button("document.location.replace('".$config->get('sysURL')."/alpha/controller/ListBusinessObjects.php')", 'Cancel', 'cancelBut');
-		$cancelButton = $button->render();		
+		$fields['cancelButton'] = $button->render();		
 		
 		// buffer security fields to $formSecurityFields variable		
-		$formSecurityFields = $this->renderSecurityFields();		
+		$fields['formSecurityFields'] = $this->renderSecurityFields();		
 
-		require_once $config->get('sysRoot').'alpha/view/templates/create.phtml';
+		$this->loadTemplate($this->BO, 'create', $fields);		
 		
 		if(method_exists($this, 'after_create_view_callback'))
 			$this->after_create_view_callback();
@@ -822,6 +825,31 @@ class View {
 		}
 		
 		return $html;
+	}
+	
+	/**
+	 * Loads a .phtml template for the BO specified if one exists.  Lower level custom templates
+	 * take precedence.
+	 * 
+	 * @param object $BO
+	 * @param string $mode
+	 * @param array $fields 
+	 */
+	public function loadTemplate($BO, $mode, $fields) {
+		global $config;
+		
+		$filename = $mode.'.phtml';
+		$classTemplateDir = get_class($BO);
+
+		$customPath = $config->get('sysRoot').'view/templates/'.$classTemplateDir.'/'.$filename;
+		$defaultPath = $config->get('sysRoot').'alpha/view/templates/'.$filename;
+
+		// Check to see if a custom template exists for this BO, and if it does load that		
+		if (file_exists($customPath)) {
+			require_once $customPath;				
+		}elseif (file_exists($defaultPath)) {
+			require_once $defaultPath;		
+		}
 	}
 }
 ?>
