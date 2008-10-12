@@ -99,27 +99,18 @@ class View {
 		// the form action
 		$formAction = $_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"];
 		
-		// buffer standard output result of renderAllFields() to $formFields
-		ob_start();
-		$this->renderAllFields('create');		
-		$formFields = ob_get_contents();
-		ob_end_clean();
+		// buffer form fields to $formFields
+		$formFields = $this->renderAllFields('create');		
 		
-		// buffer standard output for Create and Cancel buttons
-		ob_start();
-		$button = new button("submit", "Create", "createBut");
-		$createButton = ob_get_contents();
-		ob_end_clean();
-		ob_start();
-		$button = new button("document.location.replace('".$config->get('sysURL')."/alpha/controller/ListBusinessObjects.php')", "Cancel", "cancelBut");
-		$cancelButton = ob_get_contents();
-		ob_end_clean();
+		// buffer HTML output for Create and Cancel buttons		
+		$button = new button('submit', 'Create', 'createBut');
+		$createButton = $button->render();
 		
-		// buffer security fields to $formSecurityFields variable
-		ob_start();
-		$this->render_security_fields();
-		$formSecurityFields = ob_get_contents();
-		ob_end_clean();
+		$button = new button("document.location.replace('".$config->get('sysURL')."/alpha/controller/ListBusinessObjects.php')", 'Cancel', 'cancelBut');
+		$cancelButton = $button->render();		
+		
+		// buffer security fields to $formSecurityFields variable		
+		$formSecurityFields = $this->renderSecurityFields();		
 
 		require_once $config->get('sysRoot').'alpha/view/templates/create.phtml';
 		
@@ -176,8 +167,8 @@ class View {
 					break;
 					case "STRING" :
 						// use a string widget if defined
-						if (class_exists("string_box")) {
-							$temp = new string_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "");
+						if (class_exists("StringBox")) {
+							$temp = new StringBox($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "");
 						} else {
 							echo '<tr><td style="width:25%;">';
 							echo $this->BO->data_labels[$prop];
@@ -282,7 +273,7 @@ class View {
 		}
 		echo '</td></tr>';
 
-		$this->render_security_fields();
+		$this->renderSecurityFields();
 		
 		echo '</form></table>';
 		
@@ -357,7 +348,7 @@ class View {
 		
 		echo '</td></tr>';
 
-		$this->render_security_fields();
+		$this->renderSecurityFields();
 		
 		echo '</form>';
 		echo '</table>';
@@ -493,21 +484,26 @@ class View {
 
 		echo '<tr><td colspan="5" align="center">';
 		$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=Create&bo='.get_class($this->BO))."'", "Create New", "createBut");
+		echo $temp->render();
 		echo '&nbsp;&nbsp;';
 		$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=ListAll&bo='.get_class($this->BO).'&no-forceframe=true')."'", "List All", "listBut");
+		echo $temp->render();
 		if (!$this->BO->checkTableExists()) {
 			echo '&nbsp;&nbsp;';
 			$temp = new button("submit", "Create Table", "createTableBut");
+			echo $temp->render();
 			// hidden field so that we know which class to create the table for
 			echo '<input type="hidden" name="createTableClass" value="'.get_class($this->BO).'"/>';
 		}
 		if ($this->BO->checkTableNeedsUpdate() && $this->BO->checkTableExists()) {
 			echo '&nbsp;&nbsp;';
 			$temp = new button("if(confirm('Are you sure you wish to recreate this class table (all data will be lost)?')) {document.getElementById('admin_".get_class($this->BO)."_button_pressed').value = 'recreateTableBut'; document.getElementById('admin_".get_class($this->BO)."').submit();}" , "Recreate Table", "recreateTableBut");
+			echo $temp->render();
 			// hidden field so that we know which class to recreate the table for
 			echo '<input type="hidden" name="recreateTableClass" value="'.get_class($this->BO).'"/>';
 			echo '&nbsp;&nbsp;';
 			$temp = new button("if(confirm('Are you sure you wish to attempt to modify this class table by adding new attributes?')) {document.getElementById('admin_".get_class($this->BO)."_button_pressed').value = 'updateTableBut'; document.getElementById('admin_".get_class($this->BO)."').submit();}" , "Update Table", "updateTableBut");
+			echo $temp->render();
 			// hidden field so that we know which class to update the table for
 			echo '<input type="hidden" name="updateTableClass" value="'.get_class($this->BO).'"/>';
 				
@@ -515,7 +511,7 @@ class View {
 		}		
 		echo '</td></tr>';
 
-		$this->render_security_fields();
+		$this->renderSecurityFields();
 		
 		echo '</form>';
 		echo '</table>';
@@ -527,20 +523,27 @@ class View {
 	/**
 	 * method to render two hidden, encrypted form fields to be used as
 	 * a check to ensure that a post to the controller is being sent from 
-	 * the same server as hosting it. 
+	 * the same server as hosting it.
+	 * 
+	 * @return string 
 	 */
-	function render_security_fields() {
-		$fields = View::generate_security_fields();
+	public static function renderSecurityFields() {
+		$html = '';
 		
-		echo '<input type="hidden" name="var1" value="'.$fields[0].'"/>';
-		echo '<input type="hidden" name="var2" value="'.$fields[1].'"/>';
+		$fields = View::generateSecurityFields();
+		
+		$html .= '<input type="hidden" name="var1" value="'.$fields[0].'"/>';
+		$html .= '<input type="hidden" name="var2" value="'.$fields[1].'"/>';
+		
+		return $html;
 	}
 	
 	/**
 	 * generates the two security fields to prevent remote form processing
+	 * 
 	 * @return array an array containing the two fields
 	 */
-	function generate_security_fields() {
+	public static function generateSecurityFields() {
 		// the server hostname + today's date
 		$var1 = md5($_SERVER["HTTP_HOST"].date("Ymd"));
 		// the server's IP plus $var1
@@ -550,161 +553,223 @@ class View {
 	}
 	
 	/**
-	 * Static method to render the default Integer HTML
+	 * Method to render the default Integer HTML
 	 *
 	 * @param string $name The field name
 	 * @param string $label The label to apply to the field
-	 * @param string $mode The field mode (create/edit)
+	 * @param string $mode The field mode (create/edit/view)
 	 * @param string $value The field value (optional)
+	 * @return string
 	 */
-	public static function renderIntegerField($name, $label, $mode, $value='') {
+	public function renderIntegerField($name, $label, $mode, $value='') {
+		$html = '';
+		
 		if ($mode == 'create') {
-			echo '<tr><td style="width:25%;">';
-			echo $label;
-			echo '</td>';
+			$html .= '<tr><td style="width:25%;">';
+			$html .= $label;
+			$html .= '</td>';
 	
-			echo '<td>';
-			echo '<input type="text" size="11" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
-			echo '</td></tr>';
+			$html .= '<td>';
+			$html .= '<input type="text" size="11" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
+			$html .= '</td></tr>';
 		}
 		
 		if ($mode == 'edit') {
 			
 		}
+		
+		if ($mode == 'view') {
+			
+		}
+		
+		return $html;
 	}
 	
 	/**
-	 * Static method to render the default Double HTML
+	 * Method to render the default Double HTML
 	 *
 	 * @param string $name The field name
 	 * @param string $label The label to apply to the field
-	 * @param string $mode The field mode (create/edit)
+	 * @param string $mode The field mode (create/edit/view)
 	 * @param string $value The field value (optional)
+	 * @return string
 	 */
 	public static function renderDoubleField($name, $label, $mode, $value='') {
+		$html = '';
+		
 		if ($mode == 'create') {
-			echo '<tr><td style="width:25%;">';
-			echo $label;
-			echo '</td>';
+			$html .= '<tr><td style="width:25%;">';
+			$html .= $label;
+			$html .= '</td>';
 	
-			echo '<td>';
-			echo '<input type="text" size="13" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
-			echo '</td></tr>';
+			$html .= '<td>';
+			$html .= '<input type="text" size="13" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
+			$html .= '</td></tr>';
 		}
 		
 		if ($mode == 'edit') {
 			
 		}
+		
+		if ($mode == 'view') {
+			
+		}
+		
+		return $html;
 	}
 	
 	/**
-	 * Static method to render the default Boolean HTML
+	 * Method to render the default Boolean HTML
 	 *
 	 * @param string $name The field name
 	 * @param string $label The label to apply to the field
-	 * @param string $mode The field mode (create/edit)
+	 * @param string $mode The field mode (create/edit/view)
 	 * @param string $value The field value (optional)
+	 * @return string
 	 */
-	public static function renderBooleanField($name, $label, $mode, $value='') {
+	public function renderBooleanField($name, $label, $mode, $value='') {
+		$html = '';
+		
 		if ($mode == 'create') {
-			echo '<tr><td style="width:25%;">';
-			echo $label;
-			echo '</td>';
+			$html .= '<tr><td style="width:25%;">';
+			$html .= $label;
+			$html .= '</td>';
 	
-			echo '<td>';
-			echo '<select size="1" name="'.$name.'"/>';
-			echo '<option value="0" selected>N</option>';
-			echo '<option value="1">Y</option>';
-			echo '</select><br>';
-			echo '</td></tr>';
+			$html .= '<td>';
+			$html .= '<select size="1" name="'.$name.'"/>';
+			$html .= '<option value="0" selected>N</option>';
+			$html .= '<option value="1">Y</option>';
+			$html .= '</select><br>';
+			$html .= '</td></tr>';
 		}
 		
 		if ($mode == 'edit') {
 			
 		}
+		
+		if ($mode == 'view') {
+			
+		}
+		
+		return $html;
 	}
 	
 	/**
-	 * Static method to render the default Enum HTML
+	 * Method to render the default Enum HTML
 	 *
 	 * @param string $name The field name
 	 * @param string $label The label to apply to the field
-	 * @param string $mode The field mode (create/edit)
+	 * @param string $mode The field mode (create/edit/view)
 	 * @param array $options The Enum options
 	 * @param string $value The field value (optional)
+	 * @return string
 	 */
-	public static function renderEnumField($name, $label, $mode, $options, $value='') {
+	public function renderEnumField($name, $label, $mode, $options, $value='') {
+		$html = '';
+		
 		if ($mode == 'create') {
-			echo '<tr><td style="width:25%;">';
-			echo $label;
-			echo '</td>';
-			echo '<td>';
-			echo '<select name="'.$name.'"/>';			
+			$html .= '<tr><td style="width:25%;">';
+			$html .= $label;
+			$html .= '</td>';
+			$html .= '<td>';
+			$html .= '<select name="'.$name.'"/>';			
 			foreach ($options as $val) {
-				echo '<option value="'.$val.'">'.$val.'</option>';
+				$html .= '<option value="'.$val.'">'.$val.'</option>';
 			}
-			echo '</select><br>';
-			echo '</td></tr>';
+			$html .= '</select><br>';
+			$html .= '</td></tr>';
 		}
 		
 		if ($mode == 'edit') {
 			
 		}
+		
+		if ($mode == 'view') {
+			
+		}
+		
+		return $html;
 	}
 	
 	/**
-	 * Static method to render the default DEnum HTML
+	 * Method to render the default DEnum HTML
 	 *
 	 * @param string $name The field name
 	 * @param string $label The label to apply to the field
-	 * @param string $mode The field mode (create/edit)
+	 * @param string $mode The field mode (create/edit/view)
 	 * @param array $options The DEnum options
 	 * @param string $value The field value (optional)
+	 * @return string
 	 */
-	public static function renderDEnumField($name, $label, $mode, $options, $value='') {
+	public function renderDEnumField($name, $label, $mode, $options, $value='') {
+		$html = '';
+		
 		if ($mode == 'create') {
-			echo '<tr><td style="width:25%;">';
-			echo $label;
-			echo '</td>';
-			echo '<td>';
-			echo '<select name="'.$name.'"/>';
+			$html .= '<tr><td style="width:25%;">';
+			$html .= $label;
+			$html .= '</td>';
+			$html .= '<td>';
+			$html .= '<select name="'.$name.'"/>';
 			foreach (array_keys($options) as $index) {
-				echo '<option value="'.$index.'">'.$options[$index].'</option>';
+				$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
 			}
-			echo '</select><br>';
-			echo '</td></tr>';
+			$html .= '</select><br>';
+			$html .= '</td></tr>';
 		}
 		
 		if ($mode == 'edit') {
 			
 		}
+		
+		if ($mode == 'view') {
+			
+		}
+		
+		return $html;
 	}
 	
 	/**
-	 * Static method to render the default field HTML when type is not known
+	 * Method to render the default field HTML when type is not known
 	 *
 	 * @param string $name The field name
 	 * @param string $label The label to apply to the field
-	 * @param string $mode The field mode (create/edit)	 
+	 * @param string $mode The field mode (create/edit/view)	 
 	 * @param string $value The field value (optional)
+	 * @return string
 	 */
-	public static function renderDefaultField($name, $label, $mode, $value='') {
+	public function renderDefaultField($name, $label, $mode, $value='') {
+		$html = '';
+		
 		if ($mode == 'create') {
-			echo '<tr><td colspan="2">';
-			echo $label;
-			echo '</td></tr>';
+			$html .= '<tr><td colspan="2">';
+			$html .= $label;
+			$html .= '</td></tr>';
 	
-			echo '<tr><td colspan="2">';
-			echo '<textarea cols="100" rows="3" name="'.$name.'">'. (isset ($_POST[$name]) ? $_POST[$name] : '').'</textarea><br>';
-			echo '</td></tr>';
+			$html .= '<tr><td colspan="2">';
+			$html .= '<textarea cols="100" rows="3" name="'.$name.'">'. (isset ($_POST[$name]) ? $_POST[$name] : '').'</textarea><br>';
+			$html .= '</td></tr>';
 		}
 		
 		if ($mode == 'edit') {
 			
 		}
+		
+		if ($mode == 'view') {
+			
+		}
+		
+		return $html;
 	}
 	
-	public function renderAllFields($mode) {		
+	/**
+	 * Renders all fields for the current BO in edit/create/view mode
+	 *
+	 * @param string $mode
+	 * @return string
+	 */
+	public function renderAllFields($mode) {
+		$html = '';
+				
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this->BO));
 		$properties = $reflection->getProperties();
@@ -717,40 +782,46 @@ class View {
 				
 				switch (strtoupper($propClass)) {
 					case "INTEGER" :
-						View::renderIntegerField($propName, $this->BO->getDataLabel($propName), 'create');				
+						$html .= $this->renderIntegerField($propName, $this->BO->getDataLabel($propName), 'create');				
 					break;
 					case "DOUBLE" :
-						View::renderDoubleField($propName, $this->BO->getDataLabel($propName), 'create');
+						$html .= $this->renderDoubleField($propName, $this->BO->getDataLabel($propName), 'create');
 					break;
 					case "DATE" :
 						$date = new calendar($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
+						$html .= $date->render();
 					break;
 					case "TIMESTAMP" :
 						$timestamp = new calendar($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
+						$html .= $timestamp->render();
 					break;
 					case "STRING" :
-						$string = new string_box($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName, "");
+						$string = new StringBox($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName, '');
+						$html .= $string->render();
 					break;
 					case "TEXT" :					
-						$text = new text_box($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName, "");
+						$text = new TextBox($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName, '');
+						$html .= $text->render();
 					break;
 					case "BOOLEAN" :
-						View::renderBooleanField($propName, $this->BO->getDataLabel($propName), 'create');
+						$html .= $this->renderBooleanField($propName, $this->BO->getDataLabel($propName), 'create');
 					break;
 					case "ENUM" :
 						$enum = $this->BO->getPropObject($propName);
-						View::renderEnumField($propName, $this->BO->getDataLabel($propName), 'create', $enum->getOptions());
+						$html .= $this->renderEnumField($propName, $this->BO->getDataLabel($propName), 'create', $enum->getOptions());
 					break;
 					case "DENUM" :
 						$denum = $this->BO->getPropObject($propName);
-						View::renderDEnumField($propName, $this->BO->getDataLabel($propName), 'create', $denum->getOptions());
+						$html .= $this->renderDEnumField($propName, $this->BO->getDataLabel($propName), 'create', $denum->getOptions());
 					break;
 					default :
-						View::renderDefaultField($propName, $this->BO->getDataLabel($propName), 'create');
+						$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'create');
 					break;
 				}
 			}
 		}
+		
+		return $html;
 	}
 }
 ?>
