@@ -88,11 +88,7 @@ class View {
 		global $config;
 		
 		// hash array of HTML fields to pass to the template
-		$fields = array();
-
-		// get the class attributes
-		$reflection = new ReflectionClass(get_class($this->BO));
-		$properties = $reflection->getProperties();
+		$fields = array();		
 		
 		// the form action
 		$fields['formAction'] = $_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"];
@@ -110,7 +106,7 @@ class View {
 		// buffer security fields to $formSecurityFields variable		
 		$fields['formSecurityFields'] = $this->renderSecurityFields();		
 
-		$this->loadTemplate($this->BO, 'create', $fields);		
+		$this->loadTemplate($this->BO, 'create', $fields);
 		
 		if(method_exists($this, 'after_createView_callback'))
 			$this->after_createView_callback();
@@ -288,71 +284,93 @@ class View {
 	}
 	
 	/**
-	 * Renders the list view.
+	 * Renders the list view
 	 */
-	function list_view() {
-		if(method_exists($this, 'before_list_view_callback'))
-			$this->before_list_view_callback();
+	public function listView() {
+		if(method_exists($this, 'before_listView_callback'))
+			$this->before_listView_callback();
 		
 		global $config;
-
-		$properties = get_object_vars($this->BO);
-		$obj_type = '';
-
-		$col_count = 1;
-
-		echo '<table class="list_view">';
-		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
-		// first render all of the table headers
-		echo '<tr>';
-		foreach (array_keys($properties) as $prop) {
-			if (!in_array($prop, $this->BO->default_attributes) && !in_array($prop, $this->BO->transient_attributes)) {
-				$col_count ++;
-				echo '	<th>'.$this->BO->data_labels[$prop].'</th>';				
+		
+		// hash array of HTML fields to pass to the template
+		$fields = array();		
+		
+		// the form action
+		$fields['formAction'] = $_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"];
+		
+		// work out how many columns will be in the table
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = array_keys($reflection->getDefaultProperties());		
+		$fields['colCount'] = 1+count(array_diff($properties, $this->BO->getDefaultAttributes(), $this->BO->getTransientAttributes()));
+		
+		// get the class attributes
+		$properties = $reflection->getProperties();
+		
+		$html = '';
+		
+		$html .= '<tr>';
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			
+			if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
+				$html .= '	<th>'.$this->BO->getDataLabel($propName).'</th>';				
 			}
-			if ($prop == "OID")
-				echo '	<th>'.$this->BO->data_labels[$prop].'</th>';
+			if ($propName == 'OID')
+				$html .= '	<th>'.$this->BO->getDataLabel($propName).'</th>';
 		}
-		echo '</tr><tr>';
+		$html .= '</tr><tr>';
+		
+		$fields['formHeadings'] = $html;
+		
+		$html = '';
 
 		// and now the values
-		foreach (array_keys($properties) as $prop) {
-			if (!in_array($prop, $this->BO->default_attributes) && !in_array($prop, $this->BO->transient_attributes)) {
-				if (get_class($properties[$prop]) != "Text") {
-					echo '	<td>&nbsp;'.$this->BO->$prop->getValue().'</td>';
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			
+			if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
+				$propClass = get_class($this->BO->getPropObject($propName));
+				
+				if ($propClass != 'Text') {
+					$html .= '	<td>&nbsp;'.$this->BO->get($propName).'</td>';
 				}else{
-					$text = htmlentities($this->BO->$prop->getValue());
+					$text = htmlentities($this->BO->get($propName));
 					if(strlen($text) > 70)
-						echo '	<td>&nbsp;'.substr($text, 0, 70).'...</td>';
+						$html .= '	<td>&nbsp;'.substr($text, 0, 70).'...</td>';
 					else
-						echo '	<td>&nbsp;'.$text.'</td>';
+						$html .= '	<td>&nbsp;'.$text.'</td>';
 				}
 			}
-			if ($prop == "OID")
-				echo '	<td>&nbsp;'.$this->BO->get_ID().'</td>';
+			if ($propName == 'OID')
+				$html .= '	<td>&nbsp;'.$this->BO->getID().'</td>';
 		}
-		echo '</tr>';
-
-		echo '<tr><td colspan="'.$col_count.'" align="center">';
+		$html .= '</tr>';
 		
-		$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->get_ID())."'", "View", "viewBut");
+		$fields['formFields'] = $html;
+		
+		// View button
+		$button = new button("document.location = '".Front_Controller::generate_secure_URL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."'", 'View', 'viewBut');
+		$fields['viewButton'] = $button->render();
+
+		$html = '';
 		// render edit and delete buttons for admins only
-		if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_access_level() == "Administrator") {
-			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->get_ID())."'", "Edit", "editBut");
-			echo '&nbsp;&nbsp;';
-			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
+		if (isset($_SESSION['current_user']) && $_SESSION['current_user']->getAccessLevel() == 'Administrator') {
+			$html .= '&nbsp;&nbsp;';
+			$button = new button("document.location = '".Front_Controller::generate_secure_URL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getID())."'", "Edit", "editBut");
+			$html .= $button->render();
+			$html .= '&nbsp;&nbsp;';
+			$button = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
+			$html .= $button->render();
 		}
-		
-		echo '</td></tr>';
+		$fields['adminButtons'] = $html;		
 
-		$this->renderSecurityFields();
+		// buffer security fields to $formSecurityFields variable		
+		$fields['formSecurityFields'] = $this->renderSecurityFields();		
+
+		$this->loadTemplate($this->BO, 'list', $fields);
 		
-		echo '</form>';
-		echo '</table>';
-		
-		if(method_exists($this, 'after_list_view_callback'))
-			$this->after_list_view_callback();
+		if(method_exists($this, 'after_listView_callback'))
+			$this->after_listView_callback();
 	}
 
 	/**
@@ -841,9 +859,9 @@ class View {
 
 		// Check to see if a custom template exists for this BO, and if it does load that		
 		if (file_exists($customPath)) {
-			require_once $customPath;				
+			require $customPath;				
 		}elseif (file_exists($defaultPath)) {
-			require_once $defaultPath;		
+			require $defaultPath;		
 		}
 	}
 }

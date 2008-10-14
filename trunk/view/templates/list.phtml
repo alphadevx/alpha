@@ -1,0 +1,16 @@
+<?php
+
+echo <<<HTML
+<table cols="{$fields['colCount']}" class="list_view">
+<form action="{$fields['formAction']}" method="POST">
+{$fields['formHeadings']}
+{$fields['formFields']}
+<tr><td colspan="{$fields['colCount']}" align="center">
+{$fields['viewButton']}
+{$fields['adminButtons']}
+</td></tr>
+{$fields['formSecurityFields']}
+</form></table>
+HTML;
+
+?>
