@@ -276,14 +276,6 @@ class View {
 	}
 
 	/**
-	 * setter for the render mode
-	 * @param string mode
-	 */
-	function set_render_mode($mode) {
-		$this->render_mode = $mode;
-	}
-	
-	/**
 	 * Renders the list view
 	 */
 	public function listView() {

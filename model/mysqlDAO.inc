@@ -83,14 +83,14 @@ class mysqlDAO {
 	 * 
 	 * @var array
 	 */
-	protected $defaultAttributes = array("OID","lastQuery","version_num","dataLabels","render_mode","created_ts","created_by","updated_ts","updated_by","defaultAttributes","transientAttributes","uniqueAttributes","TABLE_NAME");
+	protected $defaultAttributes = array("OID","lastQuery","version_num","dataLabels","created_ts","created_by","updated_ts","updated_by","defaultAttributes","transientAttributes","uniqueAttributes","TABLE_NAME");
 	
 	/**
 	 * An array of the names of all of the transient attributes of a persistent BO which are not saved to the DB
 	 * 
 	 * @var array
 	 */
-	protected $transientAttributes = array("lastQuery","dataLabels","render_mode","defaultAttributes","transientAttributes","uniqueAttributes","TABLE_NAME");
+	protected $transientAttributes = array("lastQuery","dataLabels","defaultAttributes","transientAttributes","uniqueAttributes","TABLE_NAME");
 	
 	/**
 	 * An array of the uniquely-constained attributes of this persistent BO

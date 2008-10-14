@@ -19,24 +19,18 @@ require_once $config->get('sysRoot').'alpha/view/View.inc';
 class DEnumView extends View
 {
 	/**
-	 * the render mode for the object view, default is HTML
-	 * @var string
-	 */
-	var $render_mode = 'HTML';
-
-	/**
 	 * constructor for the DEnum	
 	 * @param DEnum $DEnum the DEnum object for rendering
 	 */
 	function DEnumView($DEnum)
 	{
-		$this->View($DEnum);
+		parent::__construct($DEnum);
 	}	
 	
 	/**
 	 * Custom list view with no password field present.
 	 */
-	function list_view() {
+	public function listView() {
 		global $config;
 
 		$reflection = new ReflectionClass(get_class($this->BO));
@@ -85,6 +79,7 @@ class DEnumView extends View
 		if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->getAccessLevel() == "Administrator") {
 			echo '&nbsp;&nbsp;';
 			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/EditDEnum.php?oid=".$this->BO->getID()."'", "Edit", "editBut");
+			echo $temp->render();
 		}
 		echo '</td></tr>';
 
@@ -108,7 +103,7 @@ class DEnumView extends View
 		echo '<table cols="2" class="edit_view">';
 		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
 		
-		$temp = new string_box($this->BO->getPropObject("name"), $labels["name"], "name", "", 0, true, true);
+		$temp = new stringBox($this->BO->getPropObject("name"), $labels["name"], "name", "", 0, true, true);
 		
 		echo '<tr><td colspan="2"><h3>DEnum display values:</h3></td></tr>';
 		
@@ -119,24 +114,27 @@ class DEnumView extends View
 		
 		foreach ($denumItems as $item) {
 			$labels = $item->getDataLabels();
-			$temp = new string_box($item->getPropObject("value"), $labels["value"], "value_".$item->getID(), "");
+			$temp = new stringBox($item->getPropObject("value"), $labels["value"], "value_".$item->getID(), "");
+			echo $temp->render();
 		}
 		
 		echo '<input type="hidden" name="version_num" value="'.$this->BO->getVersion().'"/>';
 		
 		echo '<tr><td colspan="2"><h3>Add a new value to the DEnum dropdown list:</h3></td></tr>';
 		
-		$temp = new string_box(new String(), $labels["value"], "new_value", "");
+		$temp = new stringBox(new String(), $labels["value"], "new_value", "");
+		echo $temp->render();
 		
 		echo '<tr><td colspan="2">';
 		
 		$temp = new button("submit", "Save", "saveBut");
+		echo $temp->render();
 		echo '&nbsp;&nbsp;';
 		$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/ListDEnums.php'", "Back to List", "cancelBut");
-		
+		echo $temp->render();
 		echo '</td></tr>';
 
-		$this->render_security_fields();
+		echo $this->renderSecurityFields();
 		
 		echo '</form></table>';
 		
