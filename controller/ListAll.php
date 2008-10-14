@@ -98,7 +98,7 @@ class ListAll extends Controller
 			return;
 		}
 		
-		// get all of the BOs and invoke the list_view on each one
+		// get all of the BOs and invoke the listView on each one
 		$temp = new $BO_name();
 		// set the start point for the list pagination
 		if (isset($_GET["start"]) ? $this->start_point = $_GET["start"]: $this->start_point = 0);
@@ -113,7 +113,7 @@ class ListAll extends Controller
 		
 		foreach($objects as $object) {
 			$temp = View::getInstance($object);
-			$temp->list_view();
+			$temp->listView();
 		}
 		
 		$this->display_page_foot();
@@ -137,7 +137,7 @@ class ListAll extends Controller
 					
 			$success = $temp->delete_object();
 			
-			// get all of the BOs and invoke the list_view on each one
+			// get all of the BOs and invoke the listView on each one
 			$temp = new $this->BO_name();
 			// set the start point for the list pagination
 			if (isset($_GET["start"]) ? $this->start_point = $_GET["start"]: $this->start_point = 0);
@@ -156,7 +156,7 @@ class ListAll extends Controller
 			
 			foreach($objects as $object) {
 				$temp = View::getInstance($object);
-				$temp->list_view();
+				$temp->listView();
 			}
 			
 			$this->display_page_foot();					
