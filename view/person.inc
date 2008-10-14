@@ -29,7 +29,8 @@ class person extends View
 	 */
 	function person($person_object)
 	{
-		$this->View($person_object);
+		// ensure to call the parent constructor
+		parent::__construct($person_object);		
 	}	
 	
 	/**
@@ -49,15 +50,18 @@ class person extends View
 		echo '<tr><td colspan="2">';
 		if (class_exists("button")) {			
 			$temp = new button("submit","Login","loginBut");
+			echo $temp->render();
 			echo '&nbsp;&nbsp;';
 			$temp = new button("document.location.replace('".$config->get('sysURL')."')","Cancel","cancelBut");
+			echo $temp->render();
 		}else{
 			echo '	<input type="submit" name="loginBut" value="Login"/>';
 			$temp = new button("document.location.replace('".$config->get('sysURL')."')","Cancel","cancelBut");
+			echo $temp->render();
 		}
 		echo '</td></tr>';
 		
-		$this->render_security_fields();
+		echo $this->renderSecurityFields();
 		
 		echo '</form>';
 		echo '</table>';
@@ -79,15 +83,17 @@ class person extends View
 		echo '<tr><td colspan="2">';
 		if (class_exists("button")) {			
 			$temp = new button("submit","Reset Password","resetBut");
+			echo $temp->render();
 			echo '&nbsp;&nbsp;';
 			$temp = new button("document.location.replace('".$config->get('sysURL')."')","Cancel","cancelBut");
+			echo $temp->render();
 		}else{
 			echo '	<input type="submit" name="resetBut" value="Reset Password"/>';
 			echo '	<input type="button" name="cancel" value="Cancel" onclick="document.location.replace(\''.$config->get('sysURL').'\')"/>';
 		}
 		echo '</td></tr>';
 		
-		$this->render_security_fields();
+		echo $this->renderSecurityFields();
 		
 		echo '</form>';
 		echo '</table>';	
@@ -112,15 +118,17 @@ class person extends View
 		echo '<tr><td colspan="2">';
 		if (class_exists("button")) {			
 			$temp = new button("submit","Register","registerBut");
+			echo $temp->render();
 			echo '&nbsp;&nbsp;';
 			$temp = new button("document.location.replace('".$config->get('sysURL')."')","Cancel","cancelBut");
+			echo $temp->render();
 		}else{
 			echo '	<input type="submit" name="registerBut" value="Register"/>';
 			echo '	<input type="button" name="cancel" value="Cancel" onclick="document.location.replace(\''.$config->get('sysURL').'\')"/>';
 		}
 		echo '</td></tr>';
 		
-		$this->render_security_fields();
+		echo $this->renderSecurityFields();
 		
 		echo '</form>';
 		echo '</table>';	

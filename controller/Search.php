@@ -323,7 +323,7 @@ class Search extends Controller
 				
 				$BO->load_object($this->ID_result_array[$i]);
 				
-				$BO_View = View::get_instance($BO);
+				$BO_View = View::getInstance($BO);
 				
 				$BO_View->list_view();			
 			}

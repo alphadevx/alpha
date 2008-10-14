@@ -62,7 +62,7 @@ class edit_person_object extends Controller
 		$this->BO = new person_object();
 		$this->BO->load_object($BO_oid);
 				
-		$this->BO_View = View::get_instance($this->BO);
+		$this->BO_View = View::getInstance($this->BO);
 		
 		// set up the title and meta details
 		$this->set_title("Editing the profile for ".$this->BO->get_displayname());

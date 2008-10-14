@@ -273,7 +273,7 @@ class view_article extends Controller
 			echo "<h2>There are [".$comment_count."] user comments for this article</h2>";
 			
 			for($i = 0; $i < $comment_count; $i++) {
-				$view = View::get_instance($comments[$i]);
+				$view = View::getInstance($comments[$i]);
 				$view->markdown_view();
 			}
 		}
@@ -282,7 +282,7 @@ class view_article extends Controller
 			$comment = new article_comment_object();
 			$comment->set("article_oid", $this->article->get_ID());
 			
-			$view = View::get_instance($comment);
+			$view = View::getInstance($comment);
 			$view->create_view();
 		}
 	}

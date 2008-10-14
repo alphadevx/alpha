@@ -65,7 +65,7 @@ class create_article_object extends Controller
 		
 		$this->display_page_head();
 		
-		$view = View::get_instance($this->new_article);
+		$view = View::getInstance($this->new_article);
 		
 		$view->create_view();		
 		

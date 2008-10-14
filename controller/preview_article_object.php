@@ -61,7 +61,7 @@ class preview_article_object extends Controller
 		
 		$this->display_page_head();
 		
-		$view = View::get_instance($this->BO);
+		$view = View::getInstance($this->BO);
 		
 		$view->markdown_view();
 		

@@ -64,7 +64,7 @@ class edit_article_object extends Controller
 		
 		$this->display_page_head();
 		
-		$view = View::get_instance($this->BO);
+		$view = View::getInstance($this->BO);
 		
 		$view->edit_view();
 		
@@ -101,7 +101,7 @@ class edit_article_object extends Controller
 				echo '<p class="success">Article '.$this->BO->get_ID().' saved successfully.</p>';
 			}
 			
-			$view = View::get_instance($this->BO);
+			$view = View::getInstance($this->BO);
 		
 			$view->edit_view();
 		
@@ -131,7 +131,7 @@ class edit_article_object extends Controller
 				echo '<p class="success">File uploaded successfully.</p>';
 			}
 			
-			$view = View::get_instance($this->BO);
+			$view = View::getInstance($this->BO);
 		
 			$view->edit_view();
 		
@@ -154,7 +154,7 @@ class edit_article_object extends Controller
 				echo '<p class="success">'.$_POST["file_to_delete"].' deleted successfully.</p>';
 			}
 			
-			$view = View::get_instance($this->BO);
+			$view = View::getInstance($this->BO);
 		
 			$view->edit_view();
 		
