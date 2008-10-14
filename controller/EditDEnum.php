@@ -115,7 +115,7 @@ class EditDEnum extends Edit
 				echo '<p class="success">'.get_class($this->BO).' '.$this->BO->getID().' saved successfully.</p>';
 			}
 			
-			$this->BO_View->set_BO($this->BO);
+			$this->BO_View->setBO($this->BO);
 			
 			$this->BO_View->edit_view();		
 		

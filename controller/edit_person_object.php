@@ -116,7 +116,7 @@ class edit_person_object extends Controller
 				echo '<p class="success">User profile updated successfully.</p>';
 			}
 			
-			$this->BO_View->set_BO($this->BO);
+			$this->BO_View->setBO($this->BO);
 			
 			$this->BO_View->edit_view();		
 		

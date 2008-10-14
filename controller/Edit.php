@@ -151,7 +151,7 @@ class Edit extends Controller
 				echo '<p class="success">'.get_class($this->BO).' '.$this->BO->get_ID().' saved successfully.</p>';
 			}
 			
-			$this->BO_View->set_BO($this->BO);
+			$this->BO_View->setBO($this->BO);
 			
 			$this->BO_View->edit_view();		
 		
