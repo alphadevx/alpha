@@ -39,13 +39,18 @@ class View {
 	}
 	
 	/**
-	 * static method which returns a View object or a custom child view for the BO specified if one exists
+	 * Static method which returns a View object or a custom child view for the BO specified
+	 * if one exists
+	 * 
 	 * @param object $BO the main business object that this view is going to render
 	 * @param bool $return_parent flag to enforce the return of this object instead of a child (defaults to false)
 	 * @return object returns a View object, or a child view object from the /view directory if one exists for this BO 
 	 */
-	public function getInstance($BO, $return_parent=false) {
+	public static function getInstance($BO, $return_parent=false) {
 		global $config;
+		
+		if(method_exists($this, 'before_getInstance_callback'))
+			$this->before_getInstance_callback();
 		
 		$filename = get_class($BO);
 		$underscore_pos = strrpos($filename, '_');
@@ -54,12 +59,23 @@ class View {
 		// Check to see if a custom view exists for this BO, and if it does return that view instead		
 		if (!$return_parent) {
 			if (file_exists($config->get('sysRoot').'view/'.$filename.'.inc')) {
-				require_once $config->get('sysRoot').'view/'.$filename.'.inc';			
+				require_once $config->get('sysRoot').'view/'.$filename.'.inc';
+
+				if(method_exists($this, 'after_getInstance_callback'))
+					$this->after_getInstance_callback();
+					
 				return new $filename($BO);
 			}elseif (file_exists($config->get('sysRoot').'alpha/view/'.$filename.'.inc')) {
-				require_once $config->get('sysRoot').'alpha/view/'.$filename.'.inc';			
+				require_once $config->get('sysRoot').'alpha/view/'.$filename.'.inc';
+
+				if(method_exists($this, 'after_getInstance_callback'))
+					$this->after_getInstance_callback();
+					
 				return new $filename($BO);
 			}else{
+				if(method_exists($this, 'after_getInstance_callback'))
+					$this->after_getInstance_callback();
+					
 				return new View($BO, true);
 			}
 		}
