@@ -283,7 +283,7 @@ class view_article extends Controller
 			$comment->set("article_oid", $this->article->get_ID());
 			
 			$view = View::getInstance($comment);
-			$view->create_view();
+			$view->createView();
 		}
 	}
 }
