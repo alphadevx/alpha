@@ -82,10 +82,11 @@ class View {
 	}
 
 	/**
-	 * simple setter for the view business object
-	 * @param object $BO the main business object that this view is going to render
+	 * Simple setter for the view business object
+	 * 
+	 * @param object $BO
 	 */
-	function set_BO($BO) {
+	public function setBO($BO) {
 		$this->BO = $BO;
 	}
 
