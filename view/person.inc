@@ -29,8 +29,7 @@ class person extends View
 	 */
 	function person($person_object)
 	{
-		// ensure to call the parent constructor
-		parent::__construct($person_object);		
+		$this->BO = $person_object;
 	}	
 	
 	/**
