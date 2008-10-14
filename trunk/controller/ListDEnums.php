@@ -74,7 +74,7 @@ class ListDEnums extends ListAll
 		
 		foreach($objects as $object) {
 			$temp = new DEnumView($object);
-			$temp->list_view();
+			$temp->listView();
 		}
 		
 		$this->display_page_foot();

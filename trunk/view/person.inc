@@ -18,12 +18,6 @@ require_once $config->get('sysRoot').'alpha/view/View.inc';
 class person extends View
 {
 	/**
-	 * the render mode for the object view, default is HTML
-	 * @var string
-	 */
-	var $render_mode = 'HTML';
-
-	/**
 	 * constructor for the person	
 	 * @param person_object $person_object the person business object for rendering
 	 */

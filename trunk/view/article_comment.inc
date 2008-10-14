@@ -21,12 +21,6 @@ require_once $config->get('sysRoot').'alpha/util/input_filter.inc';
 class article_comment extends View
 {
 	/**
-	 * the render mode for the object view, default is HTML
-	 * @var string
-	 */
-	var $render_mode = 'HTML';
-
-	/**
 	 * constructor for the article_comment	
 	 * @param article_comment_object $article_comment_object the article_comment business object for rendering
 	 */

@@ -20,12 +20,6 @@ require_once $config->get('sysRoot').'alpha/util/markdown_facade.inc';
 class article extends View
 {
 	/**
-	 * the render mode for the object view, default is HTML
-	 * @var string
-	 */
-	var $render_mode = 'HTML';
-
-	/**
 	 * constructor for the person	
 	 * @param article_object $article_object the article business object for rendering
 	 */
