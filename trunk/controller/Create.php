@@ -78,7 +78,7 @@ class Create extends Controller
 		
 		$this->BO = new $BO_name();
 		
-		$this->BO_View = View::get_instance($this->BO);
+		$this->BO_View = View::getInstance($this->BO);
 		
 		// set up the title and meta details
 		$this->set_title("Create a New ".$BO_name);

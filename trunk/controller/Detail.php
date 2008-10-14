@@ -85,7 +85,7 @@ class Detail extends Controller
 		
 		$this->BO_name = $BO_name;
 		
-		$this->BO_View = View::get_instance($this->BO);
+		$this->BO_View = View::getInstance($this->BO);
 		
 		// set up the title and meta details
 		$this->set_title("Displaying ".$BO_name." number ".$BO_oid);

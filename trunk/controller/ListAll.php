@@ -112,7 +112,7 @@ class ListAll extends Controller
 		$this->render_delete_form();
 		
 		foreach($objects as $object) {
-			$temp = View::get_instance($object);
+			$temp = View::getInstance($object);
 			$temp->list_view();
 		}
 		
@@ -155,7 +155,7 @@ class ListAll extends Controller
 			$this->render_delete_form();
 			
 			foreach($objects as $object) {
-				$temp = View::get_instance($object);
+				$temp = View::getInstance($object);
 				$temp->list_view();
 			}
 			

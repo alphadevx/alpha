@@ -1,9 +1,6 @@
 <?php
 
-// $Id$
-
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
-
 require_once $config->get('sysRoot').'alpha/model/types/Date.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Timestamp.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Double.inc';
@@ -12,39 +9,32 @@ require_once $config->get('sysRoot').'alpha/model/types/String.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
-
 require_once $config->get('sysRoot').'alpha/view/widgets/calendar.php';
 require_once $config->get('sysRoot').'alpha/view/widgets/record_selector.php';
 
 /**
- *
  * The master rendering view class for the framework
  * 
  * @package Alpha Core
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins
- * @todo ensure that all buttons are present when not using widgets
- * @todo move factory logic in constructor to a dedicated method (get_instance())
+ * @copyright 2008 John Collins
+ * @version $Id$
  * 
  */
 class View {
 	/**
-	 * the render mode for the object view, default is HTML
-	 * @var string
-	 */
-	var $render_mode = 'HTML';
-
-	/**
-	 * the business object that will be rendered
+	 * The business object that will be rendered
+	 * 
 	 * @var object
 	 */
-	var $BO = null;
+	protected $BO;
 
 	/**
-	 * constructor for the View
-	 * @param object $BO the main business object that this view is going to render
+	 * Constructor for the View
+	 * 
+	 * @param object $BO
 	 */
-	function View($BO) {		
+	public function __construct($BO) {		
 		$this->BO = $BO;
 	}
 	
@@ -54,7 +44,7 @@ class View {
 	 * @param bool $return_parent flag to enforce the return of this object instead of a child (defaults to false)
 	 * @return object returns a View object, or a child view object from the /view directory if one exists for this BO 
 	 */
-	function get_instance($BO, $return_parent=false) {
+	public function getInstance($BO, $return_parent=false) {
 		global $config;
 		
 		$filename = get_class($BO);
