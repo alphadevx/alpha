@@ -95,7 +95,7 @@ class Create extends Controller
 		
 		$this->display_page_head();
 		
-		$this->BO_View->create_view();		
+		$this->BO_View->createView();		
 		
 		$this->display_page_foot();
 	}	

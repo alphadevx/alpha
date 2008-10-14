@@ -79,11 +79,11 @@ class View {
 	}
 
 	/**
-	 * renders the default create view
+	 * Renders the default create view
 	 */
-	function create_view() {
-		if(method_exists($this, 'before_create_view_callback'))
-			$this->before_create_view_callback();
+	public function createView() {
+		if(method_exists($this, 'before_createView_callback'))
+			$this->before_createView_callback();
 		
 		global $config;
 		
@@ -112,8 +112,8 @@ class View {
 
 		$this->loadTemplate($this->BO, 'create', $fields);		
 		
-		if(method_exists($this, 'after_create_view_callback'))
-			$this->after_create_view_callback();
+		if(method_exists($this, 'after_createView_callback'))
+			$this->after_createView_callback();
 	}
 
 	/**
