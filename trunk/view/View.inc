@@ -46,7 +46,7 @@ class View {
 	 * @param bool $return_parent flag to enforce the return of this object instead of a child (defaults to false)
 	 * @return object returns a View object, or a child view object from the /view directory if one exists for this BO 
 	 */
-	public static function getInstance($BO, $return_parent=false) {
+	public static function getInstance($BO, $returnParent=false) {
 		global $config;
 		
 		$filename = get_class($BO);
@@ -54,7 +54,7 @@ class View {
 		$filename = substr($filename, 0, $underscore_pos);		
 
 		// Check to see if a custom view exists for this BO, and if it does return that view instead		
-		if (!$return_parent) {
+		if (!$returnParent) {
 			if (file_exists($config->get('sysRoot').'view/'.$filename.'.inc')) {
 				require_once $config->get('sysRoot').'view/'.$filename.'.inc';
 
@@ -66,6 +66,8 @@ class View {
 			}else{
 				return new View($BO, true);
 			}
+		}else{
+			return new View($BO, true);
 		}
 	}
 
