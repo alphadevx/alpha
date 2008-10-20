@@ -1,18 +1,12 @@
-<?php
-
-echo <<<HTML
-<table cols="2" class="detailed_view">
-<tr><th>
-{$OIDLabel}
-</th><td>&nbsp;
-{$OID}
-</td></tr>
-{$formFields}
-<tr><td colspan="2" align="center">
-{$backButton}
-{$adminButtons}
-</td></tr>
+<table class="detailed_view">
+	<tr><th>
+	<?= $OIDLabel ?>
+	</th><td>&nbsp;
+	<?= $OID ?>
+	</td></tr>
+	<?= $formFields ?>
+	<tr><td colspan="2" align="center">
+	<?= $backButton ?>
+	<?= $adminButtons ?>
+	</td></tr>
 </table>
-HTML;
-
-?>
