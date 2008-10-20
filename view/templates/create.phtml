@@ -2,14 +2,14 @@
 
 echo <<<HTML
 <table cols="2" class="create_view">
-<form action="{$fields['formAction']}" method="POST">
-{$fields['formFields']}
+<form action="{$formAction}" method="POST">
+{$formFields}
 <tr><td colspan="2">
-{$fields['createButton']}
+{$createButton}
 &nbsp;&nbsp;
-{$fields['cancelButton']}
+{$cancelButton}
 </td></tr>
-{$fields['formSecurityFields']}
+{$formSecurityFields}
 </form></table>
 HTML;
 

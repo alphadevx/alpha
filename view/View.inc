@@ -854,6 +854,10 @@ class View {
 	public function loadTemplate($BO, $mode, $fields) {
 		global $config;
 		
+		// loop over the $fields array and create a local variable for each key value
+		foreach (array_keys($fields) as $fieldName)
+			${$fieldName} = $fields[$fieldName];
+		
 		$filename = $mode.'.phtml';
 		$classTemplateDir = get_class($BO);
 
