@@ -81,7 +81,7 @@ class Detail extends Controller
 		$this->Controller();
 		
 		$this->BO = new $BO_name();
-		$this->BO->load_object($BO_oid);		
+		$this->BO->load($BO_oid);		
 		
 		$this->BO_name = $BO_name;
 		
@@ -99,7 +99,7 @@ class Detail extends Controller
 		
 		$this->render_delete_form();
 		
-		$this->BO_View->detailed_view();
+		$this->BO_View->detailedView();
 		
 		$this->display_page_foot();
 	}	

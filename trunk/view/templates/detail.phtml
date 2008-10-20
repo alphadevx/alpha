@@ -1,0 +1,18 @@
+<?php
+
+echo <<<HTML
+<table cols="2" class="detailed_view">
+<tr><th>
+{$fields['OIDLabel']}
+</th><td>&nbsp;
+{$fields['OID']}
+</td></tr>
+{$fields['formFields']}
+<tr><td colspan="2" align="center">
+{$fields['backButton']}
+{$fields['adminButtons']}
+</td></tr>
+</table>
+HTML;
+
+?>
