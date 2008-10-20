@@ -705,6 +705,43 @@ class View {
 	}
 	
 	/**
+	 * render the default Text HTML
+	 *
+	 * @param string $name The field name
+	 * @param string $label The label to apply to the field
+	 * @param string $mode The field mode (create/edit/view)	 
+	 * @param string $value The field value (optional)
+	 * @return string
+	 */
+	public function renderTextField($name, $label, $mode, $value='') {
+		$html = '';
+		
+		if ($mode == 'create') {
+			$text = new TextBox($this->BO->getPropObject($name), $label, $name, '');
+			$html .= $text->render();			
+		}
+		
+		if ($mode == 'edit') {
+			
+		}
+		
+		if ($mode == 'view') {
+			$html .= '<tr><th>';
+			$html .= $label;
+			$html .= '</th>';
+
+			// ensures that line returns are rendered
+			$value = str_replace("\n", '<br>', $value);
+			
+			$html .= '<td>';
+			$html .= $value;
+			$html .= '</td></tr>';
+		}
+		
+		return $html;
+	}
+	
+	/**
 	 * Renders all fields for the current BO in edit/create/view mode
 	 *
 	 * @param string $mode
@@ -763,12 +800,7 @@ class View {
 						}
 					break;
 					case 'TEXT' :
-						if($mode == 'view') {
-							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
-						}else{					
-							$text = new TextBox($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName, '');
-							$html .= $text->render();
-						}
+						$html .= $this->renderTextField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));						
 					break;
 					case 'BOOLEAN' :
 						if($mode == 'view') {
