@@ -1,15 +1,15 @@
 <?php
 
 echo <<<HTML
-<table cols="{$fields['colCount']}" class="list_view">
-<form action="{$fields['formAction']}" method="POST">
-{$fields['formHeadings']}
-{$fields['formFields']}
-<tr><td colspan="{$fields['colCount']}" align="center">
-{$fields['viewButton']}
-{$fields['adminButtons']}
+<table cols="{$colCount}" class="list_view">
+<form action="{$formAction}" method="POST">
+{$formHeadings}
+{$formFields}
+<tr><td colspan="{$colCount}" align="center">
+{$viewButton}
+{$adminButtons}
 </td></tr>
-{$fields['formSecurityFields']}
+{$formSecurityFields}
 </form></table>
 HTML;
 
