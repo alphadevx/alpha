@@ -1,16 +1,11 @@
-<?php
-
-echo <<<HTML
-<table cols="2" class="create_view">
-<form action="{$formAction}" method="POST">
-{$formFields}
-<tr><td colspan="2">
-{$createButton}
-&nbsp;&nbsp;
-{$cancelButton}
-</td></tr>
-{$formSecurityFields}
-</form></table>
-HTML;
-
-?>
+<form action="<?= $formAction ?>" method="POST">
+	<table class="create_view">	
+		<?= $formFields ?>
+		<tr><td colspan="2">
+		<?= $createButton ?>
+		&nbsp;&nbsp;
+		<?= $cancelButton ?>
+		</td></tr>
+		<?= $formSecurityFields ?>	
+	</table>
+</form>
