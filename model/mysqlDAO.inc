@@ -717,16 +717,16 @@ class mysqlDAO {
 				if(isset($_POST[$propName])) {
 					// checking to see if we need to use addslashes() on the posted data
 					if(!get_magic_quotes_gpc()) {
-						if (strtoupper(get_class($this->get($propName))) != 'DATE' && strtoupper(get_class($this->get($propName))) != 'TIMESTAMP') {
-							$this->get($propName)->setValue(addslashes($_POST[$propName]));					
+						if (strtoupper($propClass) != 'DATE' && strtoupper($propClass) != 'TIMESTAMP') {
+							$this->getPropObject($propName)->setValue(addslashes($_POST[$propName]));					
 						}else{						
-							$this->get($propName)->populateFromString(addslashes($_POST[$propName]));
+							$this->getPropObject($propName)->populateFromString(addslashes($_POST[$propName]));
 						}
 					}else{
-						if (strtoupper(get_class($this->get($propName))) != 'DATE' && strtoupper(get_class($this->get($propName))) != 'TIMESTAMP') {
-							$this->get($propName)->setValue($_POST[$propName]);					
+						if (strtoupper($propClass) != 'DATE' && strtoupper($propClass) != 'TIMESTAMP') {
+							$this->getPropObject($propName)->setValue($_POST[$propName]);					
 						}else{						
-							$this->get($propName)->populateFromString($_POST[$propName]);
+							$this->getPropObject($propName)->populateFromString($_POST[$propName]);
 						}
 					}
 				}
