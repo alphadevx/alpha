@@ -96,7 +96,7 @@ class Edit extends Controller
 		$this->Controller();
 		
 		$this->BO = new $BO_name();
-		$this->BO->load_object($BO_oid);
+		$this->BO->load($BO_oid);
 		
 		$this->BO_name = $BO_name;
 		
@@ -121,7 +121,7 @@ class Edit extends Controller
 			return;
 		}
 		
-		$this->BO_View->edit_view();		
+		$this->BO_View->editView();		
 		
 		$this->display_page_foot();
 	}
@@ -141,19 +141,18 @@ class Edit extends Controller
 		if (isset($_POST["saveBut"])) {			
 			
 			// populate the transient object from post data
-			$this->BO->populate_from_post();
+			$this->BO->populateFromPost();
 			
-			$success = $this->BO->save_object();			
-			
-			$this->BO->load_object($this->BO->get_ID());			
-			
-			if($success) {
-				echo '<p class="success">'.get_class($this->BO).' '.$this->BO->get_ID().' saved successfully.</p>';
+			try {
+				$success = $this->BO->save();			
+				echo '<p class="success">'.get_class($this->BO).' '.$this->BO->getID().' saved successfully.</p>';
+			}catch (LockingException $e) {
+				$this->BO->reload();
 			}
 			
 			$this->BO_View->setBO($this->BO);
 			
-			$this->BO_View->edit_view();		
+			$this->BO_View->editView();		
 		
 			$this->display_page_foot();
 		}

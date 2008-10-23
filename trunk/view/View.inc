@@ -102,7 +102,7 @@ class View {
 		$button = new button('submit', 'Create', 'createBut');
 		$fields['createButton'] = $button->render();
 		
-		$button = new button("document.location.replace('".$config->get('sysURL')."/alpha/controller/ListBusinessObjects.php')", 'Cancel', 'cancelBut');
+		$button = new button("document.location.replace('".Front_Controller::generate_secure_URL('act=ListBusinessObjects')."')", 'Cancel', 'cancelBut');
 		$fields['cancelButton'] = $button->render();		
 		
 		// buffer security fields to $formSecurityFields variable		
@@ -115,166 +115,43 @@ class View {
 	}
 
 	/**
-	 * draws a form to enable object editing
+	 * Renders a form to enable object editing
 	 */
-	function edit_view() {
-		if(method_exists($this, 'before_edit_view_callback'))
-			$this->before_edit_view_callback();
+	public function editView() {
+		if(method_exists($this, 'before_editView_callback'))
+			$this->before_editView_callback();
 		
 		global $config;
 
-		$properties = get_object_vars($this->BO);
-		$obj_type = '';
-
-		echo '<table cols="2" class="edit_view">';
-		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
-		foreach (array_keys($properties) as $prop) {
-			if (!in_array($prop, $this->BO->default_attributes) && !in_array($prop, $this->BO->transient_attributes)) {
-
-				$obj_type = get_class($properties[$prop]);
-
-				switch (strtoupper($obj_type)) {
-					case "INTEGER" :
-						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td>';
-
-						echo '<td>';
-						echo '<input type="text" size="11" name="'.$prop.'" value="'.$this->BO->get($prop).'"/><br>';
-						echo '</td></tr>';
-					break;
-					case "DOUBLE" :
-						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td>';
-
-						echo '<td>';
-						echo '<input type="text" size="13" name="'.$prop.'" value="'.$this->BO->get($prop).'"/><br>';
-						echo '</td></tr>';
-					break;
-					case "DATE" :
-						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
-					break;					
-					case "TIMESTAMP" :
-						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
-					break;
-					case "RELATION" :
-						$temp = new record_selector($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
-					break;
-					case "STRING" :
-						// use a string widget if defined
-						if (class_exists("StringBox")) {
-							$temp = new StringBox($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "");
-						} else {
-							echo '<tr><td style="width:25%;">';
-							echo $this->BO->data_labels[$prop];
-							echo '</td>';
-
-							echo '<td>';
-							echo '<input type="text" size="'.$this->BO-> $prop->get_size().'" name="'.$prop.'" value="'.$this->BO->get($prop).'"/><br>';
-							echo '</td></tr>';
-						}
-					break;
-					case "TEXT" :
-						// use a string widget if defined
-						if (class_exists("text_box")) {
-							$temp = new text_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "");
-						} else {
-							echo '<tr><td colspan="2">';
-							echo $this->BO->data_labels[$prop];
-							echo '</td></tr>';
-	
-							echo '<tr><td colspan="2">';
-							echo '<textarea cols="90" rows="5" name="'.$prop.'">'.htmlspecialchars($this->BO->get($prop)).'</textarea><br>';
-							echo '</td></tr>';
-						}
-					break;					
-					case "BOOLEAN":
-						echo '<tr><td>';
-						echo $this->BO->data_labels[$prop];
-						echo '</td>';
-
-						echo '<td>';
-						echo '<select size="1" name="'.$prop.'"/>';
-						echo '<option value="0" '.($this->BO->$prop->getValue() == '0'? 'selected':'').'>N</option>';
-						echo '<option value="1" '.($this->BO->$prop->getValue() == '1'? 'selected':'').'>Y</option>';
-						echo '</select><br>';
-						echo '</td></tr>';
-					break;
-					case "ENUM" :
-						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td>';
-						echo '<td>';
-						echo '<select name="'.$prop.'"/>';
-						$enum = $this->BO->get_prop_object($prop);
-						$enum_vals = $enum->get_options();						
-						foreach ($enum_vals as $enum_val) {
-							if ($enum->getValue() == $enum_val)
-								echo '<option value="'.$enum_val.'" selected>'.$enum_val.'</option>';
-							else
-								echo '<option value="'.$enum_val.'">'.$enum_val.'</option>';
-						}
-						echo '</select><br>';
-						echo '</td></tr>';
-					break;
-					case "DENUM" :
-						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td>';
-						echo '<td>';
-						echo '<select name="'.$prop.'"/>';
-						$denum = $this->BO->get_prop_object($prop);
-						$denum_vals = $denum->get_options();						
-						foreach (array_keys($denum_vals) as $denum_index) {
-							if ($denum->getValue() == $denum_index)
-								echo '<option value="'.$denum_index.'" selected>'.$denum_vals[$denum_index].'</option>';
-							else
-								echo '<option value="'.$denum_index.'">'.$denum_vals[$denum_index].'</option>';
-						}
-						echo '</select><br>';
-						echo '</td></tr>';
-					break;
-					default :
-						echo '<tr><td colspan="2">';
-						echo $this->BO->data_labels[$prop];
-						echo '</td></tr>';
-
-						echo '<tr><td colspan="2">';
-						echo '<textarea cols="100" rows="3" name="'.$prop.'">'.$this->BO->get($prop).'</textarea><br>';
-						echo '</td></tr>';
-					break;
-				}
-			}
-			if ($prop == "version_num")
-				echo '<input type="hidden" name="version_num" value="'.$this->BO->get_version().'"/>';
+		// hash array of HTML fields to pass to the template
+		$fields = array();		
+		
+		// the form action
+		$fields['formAction'] = $_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"];
+		
+		// buffer form fields to $formFields
+		$fields['formFields'] = $this->renderAllFields('edit');
+		
+		// buffer HTML output for Create and Cancel buttons		
+		$button = new button('submit', 'Save', 'saveBut');
+		$fields['saveButton'] = $button->render();
+		
+		$button = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
+		$fields['deleteButton'] = $button->render();
+		
+		$button = new button("document.location = '".Front_Controller::generate_secure_URL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
+		$fields['cancelButton'] = $button->render();		
 				
-			// if the property is transient but a one-to-many relationship, will will render it read-only
-			if(in_array($prop, $this->BO->transient_attributes) && strtoupper(get_class($properties[$prop])) == 'RELATION' && $properties[$prop]->getRelationType() == 'ONE-TO-MANY') {
-				$temp = new record_selector($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
-			}
-		}
+		// buffer security fields to $formSecurityFields variable		
+		$fields['formSecurityFields'] = $this->renderSecurityFields();
 
-		echo '<tr><td colspan="2">';
-		if (class_exists("button")) {
-			$temp = new button("submit", "Save", "saveBut");
-			echo '&nbsp;&nbsp;';
-			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
-			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/ListAll.php?bo=".get_class($this->BO)."'", "Back to List", "cancelBut");
-		} else {
-			echo '<input type="submit" name="saveBut" value="Save"/>';
-			echo '<input type="button" name="deleteBut" value="Delete" onclick="if(confirm(\'Are you sure you wish to delete this item?\')) {document.getElementById(\'delete_oid\').value = \''.$this->BO->get_ID().'\'; document.getElementById(\'delete_form\').submit();}"/>';
-			echo '<input type="button" name="cancelBut" value="Back to List" onclick="document.location = "'.$config->get('sysURL').'/controller/ListAll.php?bo='.get_class($this->BO).'"/>';
-		}
-		echo '</td></tr>';
+		// OID will need to be posted for optimistic lock checking
+		$fields['version_num'] = $this->BO->getVersionNumber();
 
-		$this->renderSecurityFields();
+		$this->loadTemplate($this->BO, 'edit', $fields);
 		
-		echo '</form></table>';
-		
-		if(method_exists($this, 'after_edit_view_callback'))
-			$this->after_edit_view_callback();
+		if(method_exists($this, 'after_editView_callback'))
+			$this->after_editView_callback();
 	}
 
 	/**
@@ -532,7 +409,13 @@ class View {
 		}
 		
 		if ($mode == 'edit') {
-			
+			$html .= '<tr><td style="width:25%;">';
+			$html .= $label;
+			$html .= '</td>';
+
+			$html .= '<td>';
+			$html .= '<input type="text" size="11" name="'.$name.'" value="'.$value.'"/><br>';
+			$html .= '</td></tr>';
 		}
 				
 		return $html;
@@ -561,7 +444,13 @@ class View {
 		}
 		
 		if ($mode == 'edit') {
-			
+			$html .= '<tr><td style="width:25%;">';
+			$html .= $label;
+			$html .= '</td>';
+
+			$html .= '<td>';
+			$html .= '<input type="text" size="13" name="'.$name.'" value="'.$value.'"/><br>';
+			$html .= '</td></tr>';
 		}
 				
 		return $html;
@@ -593,7 +482,16 @@ class View {
 		}
 		
 		if ($mode == 'edit') {
-			
+			$html .= '<tr><td>';
+			$html .= $label;
+			$html .= '</td>';
+
+			$html .= '<td>';
+			$html .= '<select size="1" name="'.$name.'"/>';
+			$html .= '<option value="0" '.($value == '0'? 'selected':'').'>N</option>';
+			$html .= '<option value="1" '.($value == '1'? 'selected':'').'>Y</option>';
+			$html .= '</select><br>';
+			$html .= '</td></tr>';
 		}
 				
 		return $html;
@@ -626,7 +524,19 @@ class View {
 		}
 		
 		if ($mode == 'edit') {
-			
+			$html .= '<tr><td style="width:25%;">';
+			$html .= $label;
+			$html .= '</td>';
+			$html .= '<td>';
+			$html .= '<select name="'.$name.'"/>';			
+			foreach ($options as $val) {
+				if ($value == $val)
+					$html .= '<option value="'.$val.'" selected>'.$val.'</option>';
+				else
+					$html .= '<option value="'.$val.'">'.$val.'</option>';
+			}
+			$html .= '</select><br>';
+			$html .= '</td></tr>';
 		}
 				
 		return $html;
@@ -659,7 +569,19 @@ class View {
 		}
 		
 		if ($mode == 'edit') {
-			
+			$html .= '<tr><td style="width:25%;">';
+			$html .= $label;
+			$html .= '</td>';
+			$html .= '<td>';
+			$html .= '<select name="'.$name.'"/>';			
+			foreach (array_keys($options) as $index) {
+				if ($value == $index)
+					$html .= '<option value="'.$index.'" selected>'.$options[$index].'</option>';
+				else
+					$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
+			}
+			$html .= '</select><br>';
+			$html .= '</td></tr>';
 		}		
 		
 		return $html;
@@ -688,7 +610,13 @@ class View {
 		}
 		
 		if ($mode == 'edit') {
-			
+			$html .= '<tr><td colspan="2">';
+			$html .= $label;
+			$html .= '</td></tr>';
+
+			$html .= '<tr><td colspan="2">';
+			$html .= '<textarea cols="100" rows="3" name="'.$name.'">'.$value.'</textarea><br>';
+			$html .= '</td></tr>';
 		}
 		
 		if ($mode == 'view') {
@@ -718,11 +646,12 @@ class View {
 		
 		if ($mode == 'create') {
 			$text = new TextBox($this->BO->getPropObject($name), $label, $name, '');
-			$html .= $text->render();			
+			$html .= $text->render();
 		}
 		
 		if ($mode == 'edit') {
-			
+			$text = new TextBox($this->BO->getPropObject($name), $label, $name, '');
+			$html .= $text->render();
 		}
 		
 		if ($mode == 'view') {
@@ -765,14 +694,14 @@ class View {
 						if($mode == 'view') {
 							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
 						}else{
-							$html .= $this->renderIntegerField($propName, $this->BO->getDataLabel($propName), 'create');
+							$html .= $this->renderIntegerField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
 						}				
 					break;
 					case 'DOUBLE' :
 						if($mode == 'view') {
 							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
 						}else{
-							$html .= $this->renderDoubleField($propName, $this->BO->getDataLabel($propName), 'create');
+							$html .= $this->renderDoubleField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
 						}
 					break;
 					case 'DATE' :
@@ -806,7 +735,7 @@ class View {
 						if($mode == 'view') {
 							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
 						}else{
-							$html .= $this->renderBooleanField($propName, $this->BO->getDataLabel($propName), 'create');
+							$html .= $this->renderBooleanField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
 						}
 					break;
 					case 'ENUM' :
@@ -814,7 +743,7 @@ class View {
 							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
 						}else{
 							$enum = $this->BO->getPropObject($propName);
-							$html .= $this->renderEnumField($propName, $this->BO->getDataLabel($propName), 'create', $enum->getOptions());
+							$html .= $this->renderEnumField($propName, $this->BO->getDataLabel($propName), $mode, $enum->getOptions(), $this->BO->get($propName));
 						}
 					break;
 					case 'DENUM' :
@@ -822,7 +751,7 @@ class View {
 							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->getPropObject($propName)->getDisplayValue());
 						}else{
 							$denum = $this->BO->getPropObject($propName);
-							$html .= $this->renderDEnumField($propName, $this->BO->getDataLabel($propName), 'create', $denum->getOptions());
+							$html .= $this->renderDEnumField($propName, $this->BO->getDataLabel($propName), $mode, $denum->getOptions(), $this->BO->get($propName));
 						}
 					break;
 					case 'RELATION' :
@@ -834,7 +763,7 @@ class View {
 						}
 					break;
 					default :
-						$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), $mode);
+						$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
 					break;
 				}
 			}
@@ -869,6 +798,8 @@ class View {
 			require $customPath;				
 		}elseif (file_exists($defaultPath)) {
 			require $defaultPath;		
+		}else{
+			throw new AlphaException('No ['.$mode.'] HTML template found for class ['.get_class($BO).']');
 		}
 	}
 }
