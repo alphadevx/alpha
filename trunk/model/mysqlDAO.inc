@@ -531,7 +531,7 @@ class mysqlDAO {
 	/**
 	 * Builds a new database table for the BO class
 	 */	
-	protected function makeTable() {
+	public function makeTable() {
 		if(method_exists($this, 'before_makeTable_callback'))
 			$this->before_makeTable_callback();
 		
@@ -542,20 +542,20 @@ class mysqlDAO {
 		$properties = $reflection->getProperties();
 		
 		foreach($properties as $propObj) {
-			$propName = $propObj->name;			
+			$propName = $propObj->name;
 			
 			if(!in_array($propName, $this->transientAttributes) && $propName != "OID") {
-				$propClass = get_class($this->getPropObject($propName));				
+				$propClass = get_class($this->getPropObject($propName));
 
 				switch (strtoupper($propClass)) {
 					case "INTEGER":
-						$sqlQuery .= "$propName INT(".$this->get($propName)->getSize()."),";
+						$sqlQuery .= "$propName INT(".$this->getPropObject($propName)->getSize()."),";
 					break;
 					case "DOUBLE":
-						$sqlQuery .= "$propName DOUBLE(".$this->get($propName)->getSize(true)."),";
+						$sqlQuery .= "$propName DOUBLE(".$this->getPropObject($propName)->getSize(true)."),";
 					break;
 					case "STRING":
-						$sqlQuery .= "$propName VARCHAR(".$this->get($propName)->getSize()."),";
+						$sqlQuery .= "$propName VARCHAR(".$this->getPropObject($propName)->getSize()."),";
 					break;
 					case "TEXT":
 						$sqlQuery .= "$propName TEXT,";
@@ -571,7 +571,7 @@ class mysqlDAO {
 					break;
 					case "ENUM":
 						$sqlQuery .= "$propName ENUM(";
-						$enumVals = $this->get($propName)->getOptions();
+						$enumVals = $this->getPropObject($propName)->getOptions();
 						foreach($enumVals as $val) {
 							$sqlQuery .= "'".$val."',";
 						}
@@ -607,7 +607,7 @@ class mysqlDAO {
 	/**
 	 * Re-builds the table if the model requirements have changed.  All data is lost!
 	 */	
-	protected function rebuildTable() {
+	public function rebuildTable() {
 		if(method_exists($this, 'before_rebuildTable_callback'))
 			$this->before_rebuildTable_callback();
 		
@@ -629,43 +629,42 @@ class mysqlDAO {
 	/**
 	 * Adds in a new class property without loosing existing data
 	 * 
-	 * @param string $prop 	 
+	 * @param string $propName 	 
 	 */
-	protected function addProperty($prop) {
+	public function addProperty($propName) {
 		if(method_exists($this, 'before_addProperty_callback'))
 			$this->before_addProperty_callback();
-		
+			
 		$sqlQuery = "ALTER TABLE ".$this->getTableName()." ADD ";
 
-		if(!in_array($prop, $this->defaultAttributes) && !in_array($prop, $this->transientAttributes)) {
-			
-			$obj_type = get_class($this->$prop);
+		if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
+				$propClass = get_class($this->getPropObject($propName));
 
-			switch (strtoupper($obj_type)) {
+				switch (strtoupper($propClass)) {
 					case "INTEGER":
-						$sqlQuery .= "$prop INT(".$this->get($prop)->getSize()."),";
+						$sqlQuery .= "$propName INT(".$this->getPropObject($propName)->getSize()."),";
 					break;
 					case "DOUBLE":
-						$sqlQuery .= "$prop DOUBLE(".$this->get($prop)->getSize(true)."),";
+						$sqlQuery .= "$propName DOUBLE(".$this->getPropObject($propName)->getSize(true)."),";
 					break;
 					case "STRING":
-						$sqlQuery .= "$prop VARCHAR(".$this->get($prop)->getSize()."),";
+						$sqlQuery .= "$propName VARCHAR(".$this->getPropObject($propName)->getSize()."),";
 					break;
 					case "TEXT":
-						$sqlQuery .= "$prop TEXT,";
+						$sqlQuery .= "$propName TEXT,";
 					break;
 					case "BOOLEAN":
-						$sqlQuery .= "$prop CHAR(1) DEFAULT '0',";
+						$sqlQuery .= "$propName CHAR(1) DEFAULT '0',";
 					break;
 					case "DATE":
-						$sqlQuery .= "$prop DATE,";
+						$sqlQuery .= "$propName DATE,";
 					break;
 					case "TIMESTAMP":
-						$sqlQuery .= "$prop DATETIME,";
+						$sqlQuery .= "$propName DATETIME,";
 					break;
 					case "ENUM":
-						$sqlQuery .= "$prop ENUM(";
-						$enumVals = $this->get($prop)->getOptions();
+						$sqlQuery .= "$propName ENUM(";
+						$enumVals = $this->getPropObject($propName)->getOptions();
 						foreach($enumVals as $val) {
 							$sqlQuery .= "'".$val."',";
 						}
@@ -673,9 +672,9 @@ class mysqlDAO {
 						$sqlQuery .= "),";
 					break;
 					case "DENUM":
-						$tmp = new DEnum(get_class($this).'::'.$prop);						
+						$tmp = new DEnum(get_class($this).'::'.$propName);						
 						$tmp->save();
-						$sqlQuery .= "$prop INT(11) ZEROFILL,";
+						$sqlQuery .= "$propName INT(11) ZEROFILL,";
 					break;
 					default:
 						$sqlQuery .= "";
@@ -1063,7 +1062,7 @@ class mysqlDAO {
 	 * 
 	 * @return array
 	 */
-	protected function findMissingFields() {
+	public function findMissingFields() {
 		if(method_exists($this, 'before_findMissingFields_callback'))
 			$this->before_findMissingFields_callback();
 		
@@ -1091,7 +1090,7 @@ class mysqlDAO {
 			}
 			
 			if($matchCount==0) {					
-				array_push($missingFields, $prop);
+				array_push($missingFields, $propName);
 			}else{
 				$matchCount = 0;
 			}
