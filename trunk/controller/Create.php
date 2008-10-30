@@ -114,13 +114,13 @@ class Create extends Controller
 		
 		if (isset($_POST["createBut"])) {			
 			// populate the transient object from post data
-			$this->BO->populate_from_post();
+			$this->BO->populateFromPost();
 			
 			// check to see if a person is being created, then encrypt the password
 			if (get_class($this->BO) == 'person_object' && isset($_POST["password"]))
 				$this->BO->set_password($_POST["password"]);
 					
-			$success = $this->BO->save_object();			
+			$success = $this->BO->save();			
 					
 			if($success) {
 				if ($this->get_next_job() != "")					
