@@ -62,7 +62,7 @@ class ListBusinessObjects extends Controller
 		    	$BO = new $classname();				
 			
 				$BO_View = new View($BO);
-				$BO_View->admin_view();
+				$BO_View->adminView();
 			}
 		}		
 		
@@ -90,7 +90,7 @@ class ListBusinessObjects extends Controller
 				require_once $config->get('sysRoot').'alpha/model/'.$classname.'.inc';
 	    		
 	    	$BO = new $classname();	
-			$success = $BO->make_table();
+			$success = $BO->makeTable();
 			
 			if ($success)
 				echo '<p class="success">The table for the class '.$classname.' has been successfully created.</p>';
@@ -105,7 +105,7 @@ class ListBusinessObjects extends Controller
 				require_once $config->get('sysRoot').'alpha/model/'.$classname.'.inc';
 	    		
 	    	$BO = new $classname();	
-			$success = $BO->rebuild_table();
+			$success = $BO->rebuildTable();
 			
 			if ($success)
 				echo '<p class="success">The table for the class '.$classname.' has been successfully recreated.</p>';
@@ -120,11 +120,11 @@ class ListBusinessObjects extends Controller
 				require_once $config->get('sysRoot').'alpha/model/'.$classname.'.inc';
 	    		
 	    	$BO = new $classname();
-	    	$missing_fields = $BO->find_missing_fields();
+	    	$missing_fields = $BO->findMissingFields();
 	    	$success = false;
 	    	
 	    	for($i = 0; $i < count($missing_fields); $i++)
-				$success = $BO->add_property($missing_fields[$i]);
+				$success = $BO->addProperty($missing_fields[$i]);
 			
 			if ($success)
 				echo '<p class="success">The table for the class '.$classname.' has been successfully updated.</p>';

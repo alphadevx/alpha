@@ -235,8 +235,8 @@ class View {
 		}
 		$fields['adminButtons'] = $html;
 
-		// buffer security fields to $formSecurityFields variable		
-		$fields['formSecurityFields'] = $this->renderSecurityFields();		
+		// buffer security fields to $formSecurityFields variable
+		$fields['formSecurityFields'] = $this->renderSecurityFields();
 
 		$this->loadTemplate($this->BO, 'list', $fields);
 		
@@ -288,70 +288,75 @@ class View {
 	/**
 	 * Renders the admin view for the business object screen.
 	 */
-	function admin_view() {
-		if(method_exists($this, 'before_admin_view_callback'))
-			$this->before_admin_view_callback();
+	public function adminView() {
+		if(method_exists($this, 'before_adminView_callback'))
+			$this->before_adminView_callback();
 		
 		global $config;
+		
+		// hash array of HTML fields to pass to the template
+		$fields = array();
+		
+		// the form action
+		$fields['formAction'] = $_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"];
+		
+		// the class name of the BO
+		$fields['className'] = get_class($this->BO);
+		
+		// the table name in the DB for the BO
+		$fields['tableName'] = $this->BO->getTableName();
+		
+		// record count for the BO in the DB
+		$fields['count'] = ($this->BO->checkTableExists() ? $this->BO->getCount() : '<span class="warning">unavailable</span>');
 
-		$properties = get_object_vars($this->BO);
-		$obj_type = '';
+		// table exists in the DB?
+		$fields['tableExists'] = ($this->BO->checkTableExists() ? '<span class="success">Yes</span>' : '<span class="warning">No</span>');
+		
+		// table schema needs to be updated in the DB?
+		$fields['tableNeedsUpdate'] = ($this->BO->checkTableNeedsUpdate() ? '<span class="warning">Yes</span>' : '<span class="success">No</span>');
 
-		echo '<table class="admin_view" cols="5">';
-		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" id="admin_'.get_class($this->BO).'" method="POST">';
-		// first render all of the table headers
-		echo '<tr>';
-		echo '	<th>Class name</th>';
-		echo '	<th>Table name</th>';
-		echo '	<th>Table row count</th>';
-		echo '	<th>Table exists?</th>';
-		echo '	<th>Table needs updating?</th>';
-		echo '</tr><tr>';
-
-		// and now the values
-		echo '	<td>&nbsp;'.get_class($this->BO).'</td>';
-		echo '	<td>&nbsp;'.$this->BO->getTableName().'</td>';
-		echo '	<td>&nbsp;'. ($this->BO->checkTableExists() ? $this->BO->getCount() : '<span class="warning">unavailable</span>').'</td>';
-		echo '	<td>&nbsp;'. ($this->BO->checkTableExists() ? '<span class="success">Yes</span>' : '<span class="warning">No</span>').'</td>';
-		echo '	<td>&nbsp;'. ($this->BO->checkTableNeedsUpdate() ? '<span class="warning">Yes</span>' : '<span class="success">No</span>').'</td>';
-		echo '</tr>';
-
-		echo '<tr><td colspan="5" align="center">';
-		$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=Create&bo='.get_class($this->BO))."'", "Create New", "createBut");
-		echo $temp->render();
-		echo '&nbsp;&nbsp;';
-		$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=ListAll&bo='.get_class($this->BO).'&no-forceframe=true')."'", "List All", "listBut");
-		echo $temp->render();
-		if (!$this->BO->checkTableExists()) {
-			echo '&nbsp;&nbsp;';
-			$temp = new button("submit", "Create Table", "createTableBut");
-			echo $temp->render();
+		// create button
+		$button = new button("document.location = '".Front_Controller::generate_secure_URL('act=Create&bo='.get_class($this->BO))."'", "Create New", "createBut");
+		$fields['createButton'] = $button->render();
+		
+		// list all button
+		$button = new button("document.location = '".Front_Controller::generate_secure_URL('act=ListAll&bo='.get_class($this->BO).'&no-forceframe=true')."'", "List All", "listBut");
+		$fields['listButton'] = $button->render();
+		
+		// the create table button (if required)
+		$html = '';
+		if (!$this->BO->checkTableExists()) {			
+			$button = new button("submit", "Create Table", "createTableBut");
+			$html .= $button->render();
 			// hidden field so that we know which class to create the table for
-			echo '<input type="hidden" name="createTableClass" value="'.get_class($this->BO).'"/>';
+			$html .= '<input type="hidden" name="createTableClass" value="'.get_class($this->BO).'"/>';
 		}
-		if ($this->BO->checkTableNeedsUpdate() && $this->BO->checkTableExists()) {
-			echo '&nbsp;&nbsp;';
-			$temp = new button("if(confirm('Are you sure you wish to recreate this class table (all data will be lost)?')) {document.getElementById('admin_".get_class($this->BO)."_button_pressed').value = 'recreateTableBut'; document.getElementById('admin_".get_class($this->BO)."').submit();}" , "Recreate Table", "recreateTableBut");
-			echo $temp->render();
+		$fields['createTableButton'] = $html;
+		
+		// recreate and update table buttons (if required)
+		$html = '';
+		if ($this->BO->checkTableNeedsUpdate() && $this->BO->checkTableExists()) {			
+			$button = new button("if(confirm('Are you sure you wish to recreate this class table (all data will be lost)?')) {document.getElementById('admin_".get_class($this->BO)."_button_pressed').value = 'recreateTableBut'; document.getElementById('admin_".get_class($this->BO)."').submit();}" , "Recreate Table", "recreateTableBut");
+			$html .= $button->render();
 			// hidden field so that we know which class to recreate the table for
-			echo '<input type="hidden" name="recreateTableClass" value="'.get_class($this->BO).'"/>';
-			echo '&nbsp;&nbsp;';
-			$temp = new button("if(confirm('Are you sure you wish to attempt to modify this class table by adding new attributes?')) {document.getElementById('admin_".get_class($this->BO)."_button_pressed').value = 'updateTableBut'; document.getElementById('admin_".get_class($this->BO)."').submit();}" , "Update Table", "updateTableBut");
-			echo $temp->render();
+			$html .= '<input type="hidden" name="recreateTableClass" value="'.get_class($this->BO).'"/>';
+			$html .= '&nbsp;&nbsp;';
+			$button = new button("if(confirm('Are you sure you wish to attempt to modify this class table by adding new attributes?')) {document.getElementById('admin_".get_class($this->BO)."_button_pressed').value = 'updateTableBut'; document.getElementById('admin_".get_class($this->BO)."').submit();}" , "Update Table", "updateTableBut");
+			$html .= $button->render();
 			// hidden field so that we know which class to update the table for
-			echo '<input type="hidden" name="updateTableClass" value="'.get_class($this->BO).'"/>';
-				
-			echo '<input type="hidden" id="admin_'.get_class($this->BO).'_button_pressed" name="admin_'.get_class($this->BO).'_button_pressed" value=""/>';
-		}		
-		echo '</td></tr>';
-
-		$this->renderSecurityFields();
+			$html .= '<input type="hidden" name="updateTableClass" value="'.get_class($this->BO).'"/>';
+			// hidden field to tell us which button was pressed
+			$html .= '<input type="hidden" id="admin_'.get_class($this->BO).'_button_pressed" name="admin_'.get_class($this->BO).'_button_pressed" value=""/>';
+		}
+		$fields['recreateOrUpdateButtons'] = $html;
 		
-		echo '</form>';
-		echo '</table>';
+		// buffer security fields to $formSecurityFields variable
+		$fields['formSecurityFields'] = $this->renderSecurityFields();
 		
-		if(method_exists($this, 'after_admin_view_callback'))
-			$this->after_admin_view_callback();
+		$this->loadTemplate($this->BO, 'admin', $fields);
+		
+		if(method_exists($this, 'after_adminView_callback'))
+			$this->after_adminView_callback();
 	}
 	
 	/**
