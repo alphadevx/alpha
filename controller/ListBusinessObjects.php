@@ -47,6 +47,7 @@ class ListBusinessObjects extends Controller
 			$this->handle_post();
 
 		$classNames = mysqlDAO::getBOClassNames();
+		$loadedClasses = array();
 		
 		foreach($classNames as $classname) {
 			$foundFile = true;
@@ -59,12 +60,16 @@ class ListBusinessObjects extends Controller
 				$foundFile = false;
 	    	
 			if($foundFile) {
-		    	$BO = new $classname();				
-			
-				$BO_View = new View($BO);
-				$BO_View->adminView();
+				array_push($loadedClasses, $classname);
 			}
-		}		
+		}
+		
+		foreach($loadedClasses as $classname) {
+			$BO = new $classname();				
+			
+			$BO_View = new View($BO);
+			$BO_View->adminView();
+		}
 		
 		$this->display_page_foot();
 	}
