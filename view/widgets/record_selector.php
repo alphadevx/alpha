@@ -8,6 +8,7 @@ $config =&configLoader::getInstance();
 
 require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
+require_once $config->get('sysRoot').'alpha/model/mysqlDAO.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Relation.inc';
 
 /**
@@ -44,17 +45,19 @@ class record_selector
 		$this->name = $name;
 				
 		// if its in a form render the input tags and calender button, else render the month for the pop-up window
-		if(!empty($label)) {
-			$this->render($table_tags);
-		}else{
+		if(empty($label)) {
+			//$this->render($table_tags);
+		//}else{
 			$this->display_page_head();
 			$this->render_selector();
 			$this->display_page_foot();
 		}
 	}
 	
-	function render($table_tags) {
+	function render($table_tags=true) {
 		global $config;
+		
+		$html = '';
 		
 		// render text-box for many-to-one relations
 		if($this->relation_object->getRelationType() == 'MANY-TO-ONE') {
@@ -62,21 +65,23 @@ class record_selector
 			$inputBoxValue = $this->relation_object->getRelatedClassDisplayFieldValue();		
 			
 			if($table_tags) {
-				echo '<tr><td style="width:25%;">';
-				echo $this->label;
-				echo '</td>';
+				$html .= '<tr><td style="width:25%;">';
+				$html .= $this->label;
+				$html .= '</td>';
 				
-				echo '<td>';			
-				echo '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
+				$html .= '<td>';			
+				$html .= '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
 				$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/record_selector.php?value='+document.getElementById('".$this->name."').value+'&field=".$this->name."&relatedClass=".$this->relation_object->getRelatedClass()."&relatedClassField=".$this->relation_object->getRelatedClassField()."&relatedClassDisplayField=".$this->relation_object->getRelatedClassDisplayField()."&relationType=".$this->relation_object->getRelationType()."','relWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=500,height=50,left='+(event.screenX-250)+',top='+event.screenY+'');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
-				echo '</td></tr>';
+				$html .= $tmp->render();
+				$html .= '</td></tr>';
 			}else{
-				echo '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
+				$html .= '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
 				$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/record_selector.php?value=".$this->relation_object->getValue()."&relatedClass=".$this->relation_object->getRelatedClass()."&relatedClassField=".$this->relation_object->getRelatedClassField()."&relatedClassDisplayField=".$this->relation_object->getRelatedClassDisplayField()."&relationType=".$this->relation_object->getRelationType()."','relWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=500,height=50,left='+(event.screenX-250)+',top='+event.screenY+'');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
+				$html .= $tmp->render();
 			}
 			
 			// hidden field to store the actual value of the relation
-			echo '<input type="hidden" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->relation_object->getValue().'"/>';
+			$html .= '<input type="hidden" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->relation_object->getValue().'"/>';
 		}
 		
 		// render read-only list for one-to-many relations
@@ -84,28 +89,32 @@ class record_selector
 			$objects = $this->relation_object->getRelatedObjects();			
 			
 			if(count($objects) > 0 && $table_tags) {
-				echo '<tr><td colspan="2">';
-				echo '<table cols="1" width="100%">';
-				echo '<tr><td style="text-align:center;">';
-				echo $this->label;
+				$html .= '<tr><td colspan="2">';
+				$html .= '<table cols="1" width="100%">';
+				$html .= '<tr><td style="text-align:center;">';
+				$html .= $this->label;
 				$tmp = new button("document.getElementById('relation_field_".$this->name."').style.display = 'block';", "Display related objects", $this->name."DisBut", $config->get('sysURL')."/alpha/images/icons/arrow_down.png");
+				$html .= $tmp->render();
 				$tmp = new button("document.getElementById('relation_field_".$this->name."').style.display = 'none';", "Hide related objects", $this->name."HidBut", $config->get('sysURL')."/alpha/images/icons/arrow_up.png");
-				echo '</td></tr>';
+				$html .= $tmp->render();
+				$html .= '</td></tr>';
 				
-				echo '<tr><td colspan="2">';
-				echo '<div id="relation_field_'.$this->name.'" style="display:none;">';
+				$html .= '<tr><td colspan="2">';
+				$html .= '<div id="relation_field_'.$this->name.'" style="display:none;">';
 				foreach($objects as $obj) {
-					echo '<div class="bordered" style="margin:5px;">';
-					echo '<p>'.$obj->data_labels['OID'].': <em>'.$obj->get_ID().'</em></p>';
-					echo '<p>'.$obj->data_labels[$this->relation_object->getRelatedClassDisplayField()].': <em>'.$obj->get($this->relation_object->getRelatedClassDisplayField()).'</em></p>';
-					echo '</div>';
+					$html .= '<div class="bordered" style="margin:5px;">';
+					$html .= '<p>'.$obj->getDataLabel('OID').': <em>'.$obj->getID().'</em></p>';
+					$html .= '<p>'.$obj->getDataLabel($this->relation_object->getRelatedClassDisplayField()).': <em>'.$obj->get($this->relation_object->getRelatedClassDisplayField()).'</em></p>';
+					$html .= '</div>';
 				}
-				echo '</div>';
-				echo '</td></tr>';
-				echo '</table>';
-				echo '</td></tr>';				
+				$html .= '</div>';
+				$html .= '</td></tr>';
+				$html .= '</table>';
+				$html .= '</td></tr>';				
 			}
 		}
+		
+		return $html;
 	}
 	
 	/**
@@ -126,10 +135,10 @@ class record_selector
 		}
 		
 		$tmpObject = new $className;		
-		$label = $tmpObject->data_labels[$this->relation_object->getRelatedClassDisplayField()];
-		$oidLabel = $tmpObject->data_labels['OID'];
+		$label = $tmpObject->getDataLabel($this->relation_object->getRelatedClassDisplayField());
+		$oidLabel = $tmpObject->getDataLabel('OID');
 		
-		$objects = $tmpObject->load_all();
+		$objects = $tmpObject->loadAll();
 		
 		echo '<table cols="3" width="100%" class="bordered">';
 		echo '<tr>';		
@@ -141,16 +150,18 @@ class record_selector
 		foreach($objects as $obj){
 			echo '<tr>';
 			echo '<td width="20%">';
-			echo $obj->get_ID();
+			echo $obj->getID();
 			echo '</td>';
 			echo '<td width="60%">';
 			echo $obj->get($this->relation_object->getRelatedClassDisplayField());
 			echo '</td>';			
 			echo '<td width="20%">';
-			if($obj->get_ID() == $this->relation_object->getValue())
+			if($obj->getID() == $this->relation_object->getValue()) {
 				echo '<img src="'.$config->get('sysURL').'/alpha/images/icons/accept_ghost.png"/>';
-			else
-				$tmp = new button("window.opener.document.getElementById('".$_GET['field']."').value = '".$obj->get_ID()."'; window.opener.document.getElementById('".$_GET['field']."_display').value = '".$obj->get($this->relation_object->getRelatedClassDisplayField())."'; window.close();", "", "selBut", $config->get('sysURL')."/alpha/images/icons/accept.png");
+			}else{
+				$tmp = new button("window.opener.document.getElementById('".$_GET['field']."').value = '".$obj->getID()."'; window.opener.document.getElementById('".$_GET['field']."_display').value = '".$obj->get($this->relation_object->getRelatedClassDisplayField())."'; window.close();", "", "selBut", $config->get('sysURL')."/alpha/images/icons/accept.png");
+				echo $tmp->render();
+			}
 			echo '</td>';
 			echo '</tr>';
 		}		
