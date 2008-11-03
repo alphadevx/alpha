@@ -691,7 +691,7 @@ class View {
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
 			
-			if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
+			if (!in_array($propName, $this->BO->getDefaultAttributes())) {
 				$propClass = get_class($this->BO->getPropObject($propName));
 				
 				switch (strtoupper($propClass)) {
@@ -760,7 +760,7 @@ class View {
 						}
 					break;
 					case 'RELATION' :
-						if($mode == 'view') {
+						if($mode == 'view' && $this->BO->getPropObject($propName)->getRelationType() == 'MANY-TO-ONE') {
 							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->getPropObject($propName)->getRelatedClassDisplayFieldValue());
 						}else{
 							$rel = new record_selector($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
