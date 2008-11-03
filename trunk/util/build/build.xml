@@ -63,7 +63,7 @@
 		
 		<svnbranch credential="localhost" externals="pin"
 		from="${app-repo}/trunk" to="${app-repo}/tags/${app-version}"
-		message="Test release for ${app-name} (${app-version})"/>		
+		message="Production release for ${app-name} (${app-version})"/>		
 	</target>
 	
 </project>
