@@ -99,10 +99,13 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * @param string $RC
 	 */
 	public function setRelatedClass($RC) {		
-		if(in_array($RC, mysqlDAO::getBOClassNames()))
+		if(in_array($RC, mysqlDAO::getBOClassNames())) {
+			// load the class definition if it has not been loaded already
+			mysqlDAO::loadClassDef($RC);		
 			$this->relatedClass = $RC;
-		else
+		}else{
 			throw new IllegalArguementException('The class ['.$RC.'] is not defined anywhere!');
+		}
 	}
 	
 	/**
@@ -268,7 +271,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 		}
 					
 		$obj = new $this->relatedClass;
-		$objects = $obj->load_all_by_attribute($this->getRelatedClassField(), $this->getValue());
+		$objects = $obj->loadAllByAttribute($this->getRelatedClassField(), $this->getValue());
 		
 		return $objects;
 	}
