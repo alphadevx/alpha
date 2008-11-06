@@ -17,8 +17,7 @@ class LockingException extends AlphaException {
 	 *
 	 * @param string $message	 
 	 */
-	public function __construct($message) {
-		$this->errorLevel = 'sysErrorValidation';
+	public function __construct($message) {		
 		parent::__construct($message);
 	}	
 }
