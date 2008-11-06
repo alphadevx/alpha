@@ -40,7 +40,7 @@ class markdown_facade
 		global $config;
 		
 		$this->BO = $BO;
-		$this->filename = $config->get('sysRoot').'cache/html/'.get_class($this->BO).'_'.$this->BO->get_ID().'_'.$this->BO->get_version().'.html';
+		$this->filename = $config->get('sysRoot').'cache/html/'.get_class($this->BO).'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.html';
 		
 		if(get_class($this->BO) == "article_object")
 			$attachURL = $this->BO->get_attachments_URL();

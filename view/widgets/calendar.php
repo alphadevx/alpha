@@ -81,18 +81,22 @@ class calendar{
 			$cal_height = 230;
 		}
 		
+		$value = $this->date_object->getValue();
+		if($value == '0000-00-00')
+			$value = 'Please select';
+		
 		if($table_tags) {
 			$html .= '<tr><td style="width:25%;">';
 			$html .= $this->label;
 			$html .= '</td>';
 
 			$html .= '<td>';
-			$html .= '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->getValue().'" readonly/>';
+			$html .= '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$value.'" readonly/>';
 			$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=205,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $config->get('sysURL')."/alpha/images/icons/calendar.png");
 			$html .= $tmp->render();
 			$html .= '</td></tr>';
 		}else{
-			$html .= '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->date_object->getValue().'" readonly/>';
+			$html .= '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$value.'" readonly/>';
 			$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/calendar.php?date='+document.getElementById('".$this->name."').value+'&name=".$this->name."','calWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=205,height=".$cal_height.",left='+event.screenX+',top='+event.screenY+'');", "Open Calendar", "calBut", $config->get('sysURL')."/alpha/images/icons/calendar.png");
 			$html .= $tmp->render();
 		}
@@ -110,6 +114,15 @@ class calendar{
 		$html = '';
 		
 		$html .= $this->display_page_head();
+		
+		$value = $this->date_object->getValue();
+		if($value == '0000-00-00') {
+			$this->date_object->populateFromString(date('Y-m-d'));			
+		}
+		
+		if($value == '0000-00-00 00:00:00') {
+			$this->date_object->populateFromString(date('Y-m-d'));			
+		}
 		
 		if(isset($_GET["display_month"]))
 			$month = $_GET["display_month"];

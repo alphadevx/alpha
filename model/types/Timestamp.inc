@@ -82,16 +82,27 @@ class Timestamp extends AlphaType implements AlphaTypeInterface {
 	 * Constructor
 	 */
  	public function __construct($timestamp='') {
+ 		global $config;
+ 		
  		$this->validationRule = DEFAULT_TIMESTAMP;
 		
  		if(empty($timestamp)) {
-	 		$this->year=date('Y');
-	 		$this->month=date('m');
-	 		$this->day=date('d');
-	 		$this->weekday=date('l');
-	 		$this->hour=date('H');
-	 		$this->minute=date('i');
-	 		$this->second=date('s');
+ 			if($config->get('sysDefaultDateTime') == 'now') {
+		 		$this->year=date('Y');
+		 		$this->month=date('m');
+		 		$this->day=date('d');
+		 		$this->weekday=date('l');
+		 		$this->hour=date('H');
+		 		$this->minute=date('i');
+		 		$this->second=date('s');
+ 			}else{
+ 				$this->year = '0000';
+	 			$this->month = '00';
+	 			$this->day = '00';
+	 			$this->hour = '00';
+	 			$this->minute = '00';
+	 			$this->second = '00';
+ 			}	 		
  		}else{
 			if (preg_match($this->validationRule, $timestamp)) {
 				$this->populateFromString($timestamp);
@@ -314,87 +325,96 @@ class Timestamp extends AlphaType implements AlphaTypeInterface {
  	 */
  	public function populateFromString($dateTime) {
  		$valid = null;
- 			
- 		$spilt_by_space = explode(" ", $dateTime);
  		
- 		if(isset($spilt_by_space[0])) {
- 			$date = $spilt_by_space[0];
+ 		if($dateTime == 'Please select' || $dateTime == '0000-00-00 00:00:00') {
+ 			$this->year = '0000';
+	 		$this->month = '00';
+	 		$this->day = '00';
+	 		$this->hour = '00';
+	 		$this->minute = '00';
+	 		$this->second = '00';
  		}else{
- 			throw new IllegalArguementException($this->helper);
- 		}
- 		
- 		if(isset($spilt_by_space[1])) {
- 			$time = $spilt_by_space[1];
- 		}else{
- 			throw new IllegalArguementException($this->helper);
- 		}
- 		
- 		$split_by_dash = explode("-", $date);
- 		
- 		if(isset($split_by_dash[0])) {
- 			$year = $split_by_dash[0];
- 		}else{
- 			throw new IllegalArguementException($this->helper);
- 		}
- 		
- 		if(isset($split_by_dash[1])) {
- 			$month = $split_by_dash[1];
- 		}else{
- 			throw new IllegalArguementException($this->helper);
- 		}
- 		
- 		if(isset($split_by_dash[2])) {
- 			$day = $split_by_dash[2];
- 		}else{
- 			throw new IllegalArguementException($this->helper);
- 		}
- 		
- 		$split_by_colon = explode(":", $time);
- 		
- 		if(isset($split_by_colon[0])) {
- 			$hour = $split_by_colon[0];
- 		}else{
- 			throw new IllegalArguementException($this->helper);
- 		}
- 		
- 		if(isset($split_by_colon[1])) {
- 			$minute = $split_by_colon[1];
- 		}else{
- 			throw new IllegalArguementException($this->helper);
- 		}
- 		
- 		if(isset($split_by_colon[2])) {
- 			$second = $split_by_colon[2];
- 		}else{
- 			throw new IllegalArguementException($this->helper);
- 		}
- 		
- 		if(!preg_match('/^[0-9]{4}$/', $year))
- 			$valid = 'Error: the year value '.$year.' provided is invalid!';
- 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $month))
- 			$valid = 'Error: the month value '.$month.' provided is invalid!';
- 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $day))
- 			$valid = 'Error: the day value '.$day.' provided is invalid!';
- 		if(!isset($valid) && !checkdate($month, $day, $year))
- 			$valid = 'Error: the day value '.$year.'/'.$month.'/'.$day.' provided is invalid!';
- 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $hour) || !($hour >= 0 && $hour < 24))
- 			$valid = 'Error: the hour value '.$hour.' provided is invalid!';
- 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $minute) || !($minute >= 0 && $minute < 60))
- 			$valid = 'Error: the minute value '.$minute.' provided is invalid!';
- 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $second) || !($second >= 0 && $second < 60))
- 			$valid = 'Error: the second value '.$second.' provided is invalid!';
- 		
- 		if (isset($valid)){
- 			throw new IllegalArguementException($valid);
- 		}else{
- 			$this->year = $year;
- 			$this->month = str_pad($month, 2, '0', STR_PAD_LEFT);
- 			$this->day = str_pad($day, 2, '0', STR_PAD_LEFT);
- 			$this->hour = str_pad($hour, 2, '0', STR_PAD_LEFT);
- 			$this->minute = str_pad($minute, 2, '0', STR_PAD_LEFT);
- 			$this->second = str_pad($second, 2, '0', STR_PAD_LEFT);
- 			$unixTime = mktime($this->hour, $this->minute, $this->second, $this->month, $this->day, $this->year); 			
- 			$this->weekday=date('l', $unixTime); 			
+	 		$spilt_by_space = explode(" ", $dateTime);
+	 		
+	 		if(isset($spilt_by_space[0])) {
+	 			$date = $spilt_by_space[0];
+	 		}else{
+	 			throw new IllegalArguementException($this->helper);
+	 		}
+	 		
+	 		if(isset($spilt_by_space[1])) {
+	 			$time = $spilt_by_space[1];
+	 		}else{
+	 			throw new IllegalArguementException($this->helper);
+	 		}
+	 		
+	 		$split_by_dash = explode("-", $date);
+	 		
+	 		if(isset($split_by_dash[0])) {
+	 			$year = $split_by_dash[0];
+	 		}else{
+	 			throw new IllegalArguementException($this->helper);
+	 		}
+	 		
+	 		if(isset($split_by_dash[1])) {
+	 			$month = $split_by_dash[1];
+	 		}else{
+	 			throw new IllegalArguementException($this->helper);
+	 		}
+	 		
+	 		if(isset($split_by_dash[2])) {
+	 			$day = $split_by_dash[2];
+	 		}else{
+	 			throw new IllegalArguementException($this->helper);
+	 		}
+	 		
+	 		$split_by_colon = explode(":", $time);
+	 		
+	 		if(isset($split_by_colon[0])) {
+	 			$hour = $split_by_colon[0];
+	 		}else{
+	 			throw new IllegalArguementException($this->helper);
+	 		}
+	 		
+	 		if(isset($split_by_colon[1])) {
+	 			$minute = $split_by_colon[1];
+	 		}else{
+	 			throw new IllegalArguementException($this->helper);
+	 		}
+	 		
+	 		if(isset($split_by_colon[2])) {
+	 			$second = $split_by_colon[2];
+	 		}else{
+	 			throw new IllegalArguementException($this->helper);
+	 		}
+	 		
+	 		if(!preg_match('/^[0-9]{4}$/', $year))
+	 			$valid = 'Error: the year value '.$year.' provided is invalid!';
+	 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $month))
+	 			$valid = 'Error: the month value '.$month.' provided is invalid!';
+	 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $day))
+	 			$valid = 'Error: the day value '.$day.' provided is invalid!';
+	 		if(!isset($valid) && !checkdate($month, $day, $year))
+	 			$valid = 'Error: the day value '.$year.'/'.$month.'/'.$day.' provided is invalid!';
+	 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $hour) || !($hour >= 0 && $hour < 24))
+	 			$valid = 'Error: the hour value '.$hour.' provided is invalid!';
+	 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $minute) || !($minute >= 0 && $minute < 60))
+	 			$valid = 'Error: the minute value '.$minute.' provided is invalid!';
+	 		if(!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $second) || !($second >= 0 && $second < 60))
+	 			$valid = 'Error: the second value '.$second.' provided is invalid!';
+	 		
+	 		if (isset($valid)){
+	 			throw new IllegalArguementException($valid);
+	 		}else{
+	 			$this->year = $year;
+	 			$this->month = str_pad($month, 2, '0', STR_PAD_LEFT);
+	 			$this->day = str_pad($day, 2, '0', STR_PAD_LEFT);
+	 			$this->hour = str_pad($hour, 2, '0', STR_PAD_LEFT);
+	 			$this->minute = str_pad($minute, 2, '0', STR_PAD_LEFT);
+	 			$this->second = str_pad($second, 2, '0', STR_PAD_LEFT);
+	 			$unixTime = mktime($this->hour, $this->minute, $this->second, $this->month, $this->day, $this->year); 			
+	 			$this->weekday=date('l', $unixTime); 			
+	 		}
  		}
  	}
  	
