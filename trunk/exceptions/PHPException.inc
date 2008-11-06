@@ -17,8 +17,7 @@ class PHPException extends AlphaException {
 	 *
 	 * @param string $message	 
 	 */
-	public function __construct($message="") {
-		$this->errorLevel = 'sysErrorPhp';
+	public function __construct($message="") {		
 		parent::__construct($message);
 	}
 }

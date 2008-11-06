@@ -17,8 +17,7 @@ class BONotFoundException extends AlphaException {
 	 *
 	 * @param string $message	 
 	 */
-	public function __construct($message) {
-		$this->errorLevel = 'sysErrorFramework';
+	public function __construct($message) {		
 		parent::__construct($message);
 	}
 }

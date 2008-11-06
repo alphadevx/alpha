@@ -497,7 +497,7 @@ class mysqlDAO_Test extends PHPUnit_Framework_TestCase
 				try {
 					$this->person->get($propName);
 				} catch (PHPException $e) {
-					$this->assertEquals('PHP error: Undefined property:  person_object::$'.$propName, $e->getMessage(), 'testing the clear method for unsetting the attributes of an object');
+					$this->assertEquals('[PHP error]: Undefined property:  person_object::$'.$propName, $e->getMessage(), 'testing the clear method for unsetting the attributes of an object');
 				} catch (AlphaException $e) {
 					$this->assertEquals('Could not access the property ['.$propName.'] on the object of class [person_object]', $e->getMessage(), 'testing the clear method for unsetting the attributes of an object');
 				}

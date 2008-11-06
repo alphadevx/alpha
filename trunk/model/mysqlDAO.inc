@@ -1,5 +1,6 @@
 <?php
 
+require_once $config->get('sysRoot').'alpha/util/Logger.inc';
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/BONotFoundException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/FailedSaveException.inc';
@@ -107,15 +108,27 @@ class mysqlDAO {
 	protected $dataLabels = array();
 	
 	/**
+	 * Trace logger
+	 * 
+	 * @var Logger
+	 */
+	private static $logger = null;
+	
+	/**
 	 * The constructor which sets up some housekeeping attributes
 	 */
 	public function __construct() {
+		if(self::$logger == null)
+			self::$logger = new Logger('mysqlDAO');
+		self::$logger->debug('>>__construct()');
+		
 		$this->version_num = new Integer(0);
 		$this->created_ts = new Timestamp();
 		$person_ID = (isset($_SESSION["current_user"])? $_SESSION["current_user"]->getID(): 0);
 		$this->created_by = new Integer($person_ID);
 		$this->updated_ts = new Timestamp();
 		$this->updated_by = new Integer($person_ID);
+		self::$logger->debug('<<__construct');
 	}
 	
 	/**
@@ -124,6 +137,7 @@ class mysqlDAO {
 	 * @param integer $OID	
 	 */
 	public function load($OID) {
+		self::$logger->debug('>>load($OID ['.$OID.'])');
 		if(method_exists($this, 'before_load_callback'))
 			$this->before_load_callback();
 		
@@ -158,6 +172,7 @@ class mysqlDAO {
 		}else{			
 			throw new BONotFoundException('Failed to load object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
 		}
+		self::$logger->debug('<<load');
 	}
 	
 	/**

@@ -1,11 +1,11 @@
 <?php
 
 // load config
-if(!isset($config))
-	require_once 'configLoader.inc';
+require_once 'configLoader.inc';
 $config =&configLoader::getInstance();
 
 require_once $config->get('sysRoot').'alpha/exceptions/PHPException.inc';
+require_once $config->get('sysRoot').'alpha/util/Logger.inc';
 
 /**
  *
@@ -17,13 +17,14 @@ require_once $config->get('sysRoot').'alpha/exceptions/PHPException.inc';
  * @version $Id$
  * 
  */
-function catchException($e) {	
-	$e->displayError();
+function catchException($e) {
+	$logger = new Logger('PHPException');		
+	$logger->error($e->getMessage()."\n [stacktrace]: \n".$e->getTraceAsString());
 }
 	
 function catchError($error_no, $msg, $file, $line) {
 	$e = new PHPException();
-	$e->setMessage('PHP error: '.$msg);
+	$e->setMessage('[PHP error]: '.$msg);
 	$e->setFile($file);
 	 
 	throw $e;
