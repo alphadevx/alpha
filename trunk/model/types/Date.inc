@@ -63,13 +63,21 @@ class Date extends AlphaType implements AlphaTypeInterface {
 	 * @param string $date
 	 */
  	public function __construct($date='') {
+ 		global $config;
+ 		
  		$this->validationRule = DEFAULT_DATE;
 		
  		if(empty($date)) {
-			$this->year=date('Y');
-			$this->month=date('m');
-			$this->day=date('d');
-			$this->weekday=date('l');
+ 			if($config->get('sysDefaultDateTime') == 'now') {
+				$this->year=date('Y');
+				$this->month=date('m');
+				$this->day=date('d');
+				$this->weekday=date('l');
+ 			}else{
+ 				$this->year='0000';
+				$this->month='00';
+				$this->day='00';
+ 			}
 		}else{
 			if (preg_match($this->validationRule, $date)) {
 				$this->populateFromString($date);
@@ -180,43 +188,49 @@ class Date extends AlphaType implements AlphaTypeInterface {
  	public function populateFromString($date) { 		
  		$valid = null;
  		
- 		// This is just here for legacy to ensure that any old time value from a Date object is ignored
- 		$spilt_by_space = explode(" ", $date);
- 		
- 		if(isset($spilt_by_space[0])) {
- 			$date = $spilt_by_space[0];
+ 		if($date == 'Please select' || $date == '0000-00-00') {
+ 			$this->year = '0000';
+	 		$this->month = '00';
+	 		$this->day = '00';
  		}else{
- 			throw new IllegalArguementException('Invalid Date value ['.$date.'] provided!');
- 		}
- 		
- 		$split_by_dash = explode("-", $date);
- 		
- 		// Parse for the date parts, seperated by "-"
- 		if(isset($split_by_dash[0]) && isset($split_by_dash[1]) && isset($split_by_dash[2])) {
-	 		$year = $split_by_dash[0];
-	 		$month = $split_by_dash[1];
-	 		$day = $split_by_dash[2];
- 		}else{
- 			throw new IllegalArguementException('Invalid Date value ['.$date.'] provided!');
- 		}
- 		
- 		if (!preg_match('/^[0-9]{4}$/', $year))
- 			$valid = 'Error: the year value '.$year.' provided is invalid!';
- 		if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $month))
- 			$valid = 'Error: the month value '.$month.' provided is invalid!';
- 		if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $day))
- 			$valid = 'Error: the day value '.$day.' provided is invalid!';
- 		if (!isset($valid) && !checkdate($month, $day, $year))
- 			$valid = 'Error: the day value '.$year.'/'.$month.'/'.$day.' provided is invalid!';
- 		 		
- 		if (isset($valid)){
- 			throw new IllegalArguementException($valid);
- 		}else{
- 			$this->year = $year;
- 			$this->month = str_pad($month, 2, '0', STR_PAD_LEFT);
- 			$this->day = str_pad($day, 2, '0', STR_PAD_LEFT);
- 			$unixTime = mktime(0, 0, 0, $this->month, $this->day, $this->year); 			
- 			$this->weekday=date('l', $unixTime); 			
+	 		// This is just here for legacy to ensure that any old time value from a Date object is ignored
+	 		$spilt_by_space = explode(" ", $date);
+	 		
+	 		if(isset($spilt_by_space[0])) {
+	 			$date = $spilt_by_space[0];
+	 		}else{
+	 			throw new IllegalArguementException('Invalid Date value ['.$date.'] provided!');
+	 		}
+	 		
+	 		$split_by_dash = explode("-", $date);
+	 		
+	 		// Parse for the date parts, seperated by "-"
+	 		if(isset($split_by_dash[0]) && isset($split_by_dash[1]) && isset($split_by_dash[2])) {
+		 		$year = $split_by_dash[0];
+		 		$month = $split_by_dash[1];
+		 		$day = $split_by_dash[2];
+	 		}else{
+	 			throw new IllegalArguementException('Invalid Date value ['.$date.'] provided!');
+	 		}
+	 		
+	 		if (!preg_match('/^[0-9]{4}$/', $year))
+	 			$valid = 'Error: the year value '.$year.' provided is invalid!';
+	 		if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $month))
+	 			$valid = 'Error: the month value '.$month.' provided is invalid!';
+	 		if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $day))
+	 			$valid = 'Error: the day value '.$day.' provided is invalid!';
+	 		if (!isset($valid) && !checkdate($month, $day, $year))
+	 			$valid = 'Error: the day value '.$year.'/'.$month.'/'.$day.' provided is invalid!';
+	 		 		
+	 		if (isset($valid)){
+	 			throw new IllegalArguementException($valid);
+	 		}else{
+	 			$this->year = $year;
+	 			$this->month = str_pad($month, 2, '0', STR_PAD_LEFT);
+	 			$this->day = str_pad($day, 2, '0', STR_PAD_LEFT);
+	 			$unixTime = mktime(0, 0, 0, $this->month, $this->day, $this->year); 			
+	 			$this->weekday=date('l', $unixTime); 			
+	 		}
  		}
  	}
  	

@@ -711,7 +711,10 @@ class View {
 					break;
 					case 'DATE' :
 						if($mode == 'view') {
-							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
+							$value = $this->BO->get($propName);
+							if ($value == '0000-00-00')
+								$value = '';
+							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $value);
 						}else{
 							$date = new calendar($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
 							$html .= $date->render();
@@ -719,7 +722,10 @@ class View {
 					break;
 					case 'TIMESTAMP' :
 						if($mode == 'view') {
-							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
+							$value = $this->BO->get($propName);
+							if ($value == '0000-00-00 00:00:00')
+								$value = '';
+							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $value);
 						}else{
 							$timestamp = new calendar($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
 							$html .= $timestamp->render();

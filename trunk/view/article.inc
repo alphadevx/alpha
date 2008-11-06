@@ -40,9 +40,9 @@ class article extends View
 		
 		if (class_exists("button")) {
 			// render edit buttons for admins only
-			if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->get_access_level() == "Administrator" && $this->BO->get_ID() != 0) {
+			if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->getAccessLevel() == "Administrator" && $this->BO->getID() != 0) {
 				echo '&nbsp;&nbsp;';
-				$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=Edit&bo='.get_class($this->BO).'&oid='.$this->BO->get_ID())."'","Edit","editBut");
+				$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=Edit&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."'","Edit","editBut");
 			}
 		}
 	}

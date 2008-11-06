@@ -183,7 +183,7 @@ class article_object extends mysqlDAO
 				$this->URL = $config->get('sysURL').'/view_article_title/title/'.str_replace(' ', '_', $this->title->getValue());
 			}
 		}else{
-			$this->URL = $config->get('sysURL').'/alpha/controller/view_article.php?oid='.$this->get_ID();
+			$this->URL = $config->get('sysURL').'/alpha/controller/view_article.php?oid='.$this->getID();
 		}
 		
 		// now set up the print version URL
@@ -276,7 +276,7 @@ class article_object extends mysqlDAO
 	function get_attachments_URL() {
 		global $config;
 		
-		return $config->get('sysURL')."/attachments/article_".$this->get_Id();
+		return $config->get('sysURL')."/attachments/article_".$this->getID();
 	}
 	
 	/**
@@ -339,13 +339,13 @@ class article_object extends mysqlDAO
 			}
 		}		
 		
-		if(mysql_error() == '' && $this->set_enum_options()) {
+		if(mysql_error() == '' && $this->setEnumOptions()) {
 			if(method_exists($this, 'after_load_callback'))
 				$this->after_load_callback();
 			return true;
 		}else{			
 			$this->last_query .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load article, MySql error is: '.mysql_error().', query: '.$this->last_query,'load_by_title($title)','framework');
+			//$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load article, MySql error is: '.mysql_error().', query: '.$this->last_query,'load_by_title($title)','framework');
 			return false;
 		}		
 	}
