@@ -818,6 +818,15 @@ class mysqlDAO {
 	}
 	
 	/**
+	 * Gets the OID for the object in zero-padded format
+	 * 
+	 * @return integer
+	 */
+	public function getOID() {
+		return str_pad($this->OID, 11, '0', STR_PAD_LEFT);
+	}
+	
+	/**
 	 * Method for getting version number of the object
 	 * 
 	 * @return Integer
