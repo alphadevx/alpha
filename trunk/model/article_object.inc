@@ -120,6 +120,7 @@ class article_object extends mysqlDAO
 	
 	/**
 	 * the print URL for this article (transient)
+	 * @var string
 	 */
 	var $printURL;
 	
@@ -157,6 +158,8 @@ class article_object extends mysqlDAO
 		$this->date_updated = new Date();
 		$this->published = new Boolean(0);
 		
+		$this->URL = '';
+		$this->printURL = '';
 		// mark the URL attributes as transient
 		$this->markTransient('URL');
 		$this->markTransient('printURL');

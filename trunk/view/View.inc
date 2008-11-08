@@ -797,6 +797,15 @@ class View {
 		// loop over the $fields array and create a local variable for each key value
 		foreach (array_keys($fields) as $fieldName)
 			${$fieldName} = $fields[$fieldName];
+			
+		// now for each BO property, create a local variable holding its value		
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = $reflection->getProperties();
+		
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			${$propName} = $BO->get($propName);
+		}
 		
 		$filename = $mode.'.phtml';
 		$classTemplateDir = get_class($BO);
