@@ -398,29 +398,38 @@ class View {
 	 * @param string $label The label to apply to the field
 	 * @param string $mode The field mode (create/edit/view)
 	 * @param string $value The field value (optional)
+	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 */
-	public function renderIntegerField($name, $label, $mode, $value='') {
+	public function renderIntegerField($name, $label, $mode, $value='', $tableTags=true) {
 		$html = '';
 		
 		if ($mode == 'create') {
-			$html .= '<tr><td style="width:25%;">';
-			$html .= $label;
-			$html .= '</td>';
-	
-			$html .= '<td>';
-			$html .= '<input type="text" size="11" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
-			$html .= '</td></tr>';
+			if($tableTags) {
+				$html .= '<tr><td style="width:25%;">';
+				$html .= $label;
+				$html .= '</td>';
+		
+				$html .= '<td>';
+				$html .= '<input type="text" size="11" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<input type="text" size="11" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
+			}
 		}
 		
 		if ($mode == 'edit') {
-			$html .= '<tr><td style="width:25%;">';
-			$html .= $label;
-			$html .= '</td>';
-
-			$html .= '<td>';
-			$html .= '<input type="text" size="11" name="'.$name.'" value="'.$value.'"/><br>';
-			$html .= '</td></tr>';
+			if($tableTags) {
+				$html .= '<tr><td style="width:25%;">';
+				$html .= $label;
+				$html .= '</td>';
+	
+				$html .= '<td>';
+				$html .= '<input type="text" size="11" name="'.$name.'" value="'.$value.'"/><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<input type="text" size="11" name="'.$name.'" value="'.$value.'"/>';
+			}
 		}
 				
 		return $html;
@@ -433,29 +442,38 @@ class View {
 	 * @param string $label The label to apply to the field
 	 * @param string $mode The field mode (create/edit/view)
 	 * @param string $value The field value (optional)
+	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 */
 	public static function renderDoubleField($name, $label, $mode, $value='') {
 		$html = '';
 		
 		if ($mode == 'create') {
-			$html .= '<tr><td style="width:25%;">';
-			$html .= $label;
-			$html .= '</td>';
-	
-			$html .= '<td>';
-			$html .= '<input type="text" size="13" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
-			$html .= '</td></tr>';
+			if($tableTags) {
+				$html .= '<tr><td style="width:25%;">';
+				$html .= $label;
+				$html .= '</td>';
+		
+				$html .= '<td>';
+				$html .= '<input type="text" size="13" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<input type="text" size="13" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/>';
+			}
 		}
 		
 		if ($mode == 'edit') {
-			$html .= '<tr><td style="width:25%;">';
-			$html .= $label;
-			$html .= '</td>';
-
-			$html .= '<td>';
-			$html .= '<input type="text" size="13" name="'.$name.'" value="'.$value.'"/><br>';
-			$html .= '</td></tr>';
+			if($tableTags) {
+				$html .= '<tr><td style="width:25%;">';
+				$html .= $label;
+				$html .= '</td>';
+	
+				$html .= '<td>';
+				$html .= '<input type="text" size="13" name="'.$name.'" value="'.$value.'"/><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<input type="text" size="13" name="'.$name.'" value="'.$value.'"/>';
+			}
 		}
 				
 		return $html;
@@ -468,35 +486,50 @@ class View {
 	 * @param string $label The label to apply to the field
 	 * @param string $mode The field mode (create/edit/view)
 	 * @param string $value The field value (optional)
+	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 */
-	public function renderBooleanField($name, $label, $mode, $value='') {
+	public function renderBooleanField($name, $label, $mode, $value='', $tableTags=true) {
 		$html = '';
 		
 		if ($mode == 'create') {
-			$html .= '<tr><td style="width:25%;">';
-			$html .= $label;
-			$html .= '</td>';
-	
-			$html .= '<td>';
-			$html .= '<select size="1" name="'.$name.'"/>';
-			$html .= '<option value="0" selected>N</option>';
-			$html .= '<option value="1">Y</option>';
-			$html .= '</select><br>';
-			$html .= '</td></tr>';
+			if($tableTags) {
+				$html .= '<tr><td style="width:25%;">';
+				$html .= $label;
+				$html .= '</td>';
+		
+				$html .= '<td>';
+				$html .= '<select size="1" name="'.$name.'"/>';
+				$html .= '<option value="0" selected>N</option>';
+				$html .= '<option value="1">Y</option>';
+				$html .= '</select><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<select size="1" name="'.$name.'"/>';
+				$html .= '<option value="0" selected>N</option>';
+				$html .= '<option value="1">Y</option>';
+				$html .= '</select>';
+			}
 		}
 		
 		if ($mode == 'edit') {
-			$html .= '<tr><td>';
-			$html .= $label;
-			$html .= '</td>';
-
-			$html .= '<td>';
-			$html .= '<select size="1" name="'.$name.'"/>';
-			$html .= '<option value="0" '.($value == '0'? 'selected':'').'>N</option>';
-			$html .= '<option value="1" '.($value == '1'? 'selected':'').'>Y</option>';
-			$html .= '</select><br>';
-			$html .= '</td></tr>';
+			if($tableTags) {
+				$html .= '<tr><td>';
+				$html .= $label;
+				$html .= '</td>';
+	
+				$html .= '<td>';
+				$html .= '<select size="1" name="'.$name.'"/>';
+				$html .= '<option value="0" '.($value == '0'? 'selected':'').'>N</option>';
+				$html .= '<option value="1" '.($value == '1'? 'selected':'').'>Y</option>';
+				$html .= '</select><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<select size="1" name="'.$name.'"/>';
+				$html .= '<option value="0" '.($value == '0'? 'selected':'').'>N</option>';
+				$html .= '<option value="1" '.($value == '1'? 'selected':'').'>Y</option>';
+				$html .= '</select>';
+			}
 		}
 				
 		return $html;
@@ -510,38 +543,58 @@ class View {
 	 * @param string $mode The field mode (create/edit/view)
 	 * @param array $options The Enum options
 	 * @param string $value The field value (optional)
+	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 */
-	public function renderEnumField($name, $label, $mode, $options, $value='') {
+	public function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
 		$html = '';
 		
 		if ($mode == 'create') {
-			$html .= '<tr><td style="width:25%;">';
-			$html .= $label;
-			$html .= '</td>';
-			$html .= '<td>';
-			$html .= '<select name="'.$name.'"/>';			
-			foreach ($options as $val) {
-				$html .= '<option value="'.$val.'">'.$val.'</option>';
+			if ($tableTags) {
+				$html .= '<tr><td style="width:25%;">';
+				$html .= $label;
+				$html .= '</td>';
+				$html .= '<td>';
+				$html .= '<select name="'.$name.'"/>';			
+				foreach ($options as $val) {
+					$html .= '<option value="'.$val.'">'.$val.'</option>';
+				}
+				$html .= '</select><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<select name="'.$name.'"/>';			
+				foreach ($options as $val) {
+					$html .= '<option value="'.$val.'">'.$val.'</option>';
+				}
+				$html .= '</select>';
 			}
-			$html .= '</select><br>';
-			$html .= '</td></tr>';
 		}
 		
 		if ($mode == 'edit') {
-			$html .= '<tr><td style="width:25%;">';
-			$html .= $label;
-			$html .= '</td>';
-			$html .= '<td>';
-			$html .= '<select name="'.$name.'"/>';			
-			foreach ($options as $val) {
-				if ($value == $val)
-					$html .= '<option value="'.$val.'" selected>'.$val.'</option>';
-				else
-					$html .= '<option value="'.$val.'">'.$val.'</option>';
+			if ($tableTags) {
+				$html .= '<tr><td style="width:25%;">';
+				$html .= $label;
+				$html .= '</td>';
+				$html .= '<td>';
+				$html .= '<select name="'.$name.'"/>';			
+				foreach ($options as $val) {
+					if ($value == $val)
+						$html .= '<option value="'.$val.'" selected>'.$val.'</option>';
+					else
+						$html .= '<option value="'.$val.'">'.$val.'</option>';
+				}
+				$html .= '</select><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<select name="'.$name.'"/>';			
+				foreach ($options as $val) {
+					if ($value == $val)
+						$html .= '<option value="'.$val.'" selected>'.$val.'</option>';
+					else
+						$html .= '<option value="'.$val.'">'.$val.'</option>';
+				}
+				$html .= '</select>';
 			}
-			$html .= '</select><br>';
-			$html .= '</td></tr>';
 		}
 				
 		return $html;
@@ -555,38 +608,58 @@ class View {
 	 * @param string $mode The field mode (create/edit/view)
 	 * @param array $options The DEnum options
 	 * @param string $value The field value (optional)
+	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 */
-	public function renderDEnumField($name, $label, $mode, $options, $value='') {
+	public function renderDEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
 		$html = '';
 		
 		if ($mode == 'create') {
-			$html .= '<tr><td style="width:25%;">';
-			$html .= $label;
-			$html .= '</td>';
-			$html .= '<td>';
-			$html .= '<select name="'.$name.'"/>';
-			foreach (array_keys($options) as $index) {
-				$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
+			if($tableTags) {
+				$html .= '<tr><td style="width:25%;">';
+				$html .= $label;
+				$html .= '</td>';
+				$html .= '<td>';
+				$html .= '<select name="'.$name.'"/>';
+				foreach (array_keys($options) as $index) {
+					$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
+				}
+				$html .= '</select><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<select name="'.$name.'"/>';
+				foreach (array_keys($options) as $index) {
+					$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
+				}
+				$html .= '</select>';
 			}
-			$html .= '</select><br>';
-			$html .= '</td></tr>';
 		}
 		
 		if ($mode == 'edit') {
-			$html .= '<tr><td style="width:25%;">';
-			$html .= $label;
-			$html .= '</td>';
-			$html .= '<td>';
-			$html .= '<select name="'.$name.'"/>';			
-			foreach (array_keys($options) as $index) {
-				if ($value == $index)
-					$html .= '<option value="'.$index.'" selected>'.$options[$index].'</option>';
-				else
-					$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
+			if($tableTags) {
+				$html .= '<tr><td style="width:25%;">';
+				$html .= $label;
+				$html .= '</td>';
+				$html .= '<td>';
+				$html .= '<select name="'.$name.'"/>';			
+				foreach (array_keys($options) as $index) {
+					if ($value == $index)
+						$html .= '<option value="'.$index.'" selected>'.$options[$index].'</option>';
+					else
+						$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
+				}
+				$html .= '</select><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<select name="'.$name.'"/>';			
+				foreach (array_keys($options) as $index) {
+					if ($value == $index)
+						$html .= '<option value="'.$index.'" selected>'.$options[$index].'</option>';
+					else
+						$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
+				}
+				$html .= '</select>';
 			}
-			$html .= '</select><br>';
-			$html .= '</td></tr>';
 		}		
 		
 		return $html;
@@ -599,39 +672,52 @@ class View {
 	 * @param string $label The label to apply to the field
 	 * @param string $mode The field mode (create/edit/view)	 
 	 * @param string $value The field value (optional)
+	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 */
-	public function renderDefaultField($name, $label, $mode, $value='') {
+	public function renderDefaultField($name, $label, $mode, $value='', $tableTags=true) {
 		$html = '';
 		
 		if ($mode == 'create') {
-			$html .= '<tr><td colspan="2">';
-			$html .= $label;
-			$html .= '</td></tr>';
-	
-			$html .= '<tr><td colspan="2">';
-			$html .= '<textarea cols="100" rows="3" name="'.$name.'">'. (isset ($_POST[$name]) ? $_POST[$name] : '').'</textarea><br>';
-			$html .= '</td></tr>';
+			if($tableTags) {
+				$html .= '<tr><td colspan="2">';
+				$html .= $label;
+				$html .= '</td></tr>';
+		
+				$html .= '<tr><td colspan="2">';
+				$html .= '<textarea cols="100" rows="3" name="'.$name.'">'. (isset ($_POST[$name]) ? $_POST[$name] : '').'</textarea><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<textarea cols="100" rows="3" name="'.$name.'">'. (isset ($_POST[$name]) ? $_POST[$name] : '').'</textarea>';
+			}
 		}
 		
 		if ($mode == 'edit') {
-			$html .= '<tr><td colspan="2">';
-			$html .= $label;
-			$html .= '</td></tr>';
-
-			$html .= '<tr><td colspan="2">';
-			$html .= '<textarea cols="100" rows="3" name="'.$name.'">'.$value.'</textarea><br>';
-			$html .= '</td></tr>';
+			if($tableTags) {		
+				$html .= '<tr><td colspan="2">';
+				$html .= $label;
+				$html .= '</td></tr>';
+	
+				$html .= '<tr><td colspan="2">';
+				$html .= '<textarea cols="100" rows="3" name="'.$name.'">'.$value.'</textarea><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<textarea cols="100" rows="3" name="'.$name.'">'.$value.'</textarea>';
+			}
 		}
 		
 		if ($mode == 'view') {
-			$html .= '<tr><th>';
-			$html .= $label;
-			$html .= '</th>';
-
-			$html .= '<td>&nbsp;';
-			$html .= $value;
-			$html .= '</td></tr>';
+			if($tableTags) {
+				$html .= '<tr><th>';
+				$html .= $label;
+				$html .= '</th>';
+	
+				$html .= '<td>&nbsp;';
+				$html .= $value;
+				$html .= '</td></tr>';
+			}else{
+				$html .= $value;
+			}
 		}
 		
 		return $html;
@@ -644,19 +730,20 @@ class View {
 	 * @param string $label The label to apply to the field
 	 * @param string $mode The field mode (create/edit/view)	 
 	 * @param string $value The field value (optional)
+	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 */
-	public function renderTextField($name, $label, $mode, $value='') {
+	public function renderTextField($name, $label, $mode, $value='', $tableTags=true) {
 		$html = '';
 		
 		if ($mode == 'create') {
 			$text = new TextBox($this->BO->getPropObject($name), $label, $name, '');
-			$html .= $text->render();
+			$html .= $text->render($tableTags);
 		}
 		
 		if ($mode == 'edit') {
 			$text = new TextBox($this->BO->getPropObject($name), $label, $name, '');
-			$html .= $text->render();
+			$html .= $text->render($tableTags);
 		}
 		
 		if ($mode == 'view') {
@@ -794,11 +881,7 @@ class View {
 	public function loadTemplate($BO, $mode, $fields) {
 		global $config;
 		
-		// loop over the $fields array and create a local variable for each key value
-		foreach (array_keys($fields) as $fieldName)
-			${$fieldName} = $fields[$fieldName];
-			
-		// now for each BO property, create a local variable holding its value		
+		// for each BO property, create a local variable holding its value		
 		$reflection = new ReflectionClass(get_class($this->BO));
 		$properties = $reflection->getProperties();
 		
@@ -807,6 +890,10 @@ class View {
 			${$propName} = $BO->get($propName);
 		}
 		
+		// loop over the $fields array and create a local variable for each key value
+		foreach (array_keys($fields) as $fieldName)
+			${$fieldName} = $fields[$fieldName];
+			
 		$filename = $mode.'.phtml';
 		$classTemplateDir = get_class($BO);
 
