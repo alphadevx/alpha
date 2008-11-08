@@ -598,6 +598,9 @@ class mysqlDAO {
 						$tmp->save();
 						$sqlQuery .= "$propName INT(11) ZEROFILL,";
 					break;
+					case "RELATION":						
+						$sqlQuery .= "$propName INT(11) ZEROFILL,";
+					break;
 					default:
 						$sqlQuery .= "";
 					break;
@@ -691,6 +694,9 @@ class mysqlDAO {
 						$tmp->save();
 						$sqlQuery .= "$propName INT(11) ZEROFILL,";
 					break;
+					case "RELATION":						
+						$sqlQuery .= "$propName INT(11) ZEROFILL,";
+					break;
 					default:
 						$sqlQuery .= "";
 					break;
@@ -707,7 +713,7 @@ class mysqlDAO {
 			if(method_exists($this, 'after_addProperty_callback'))
 				$this->after_addProperty_callback();			
 		}else{			
-			throw new AlphaException('Failed to add the new attribute ['.$prop.'] to the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');
+			throw new AlphaException('Failed to add the new attribute ['.$propName.'] to the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');
 		}
 	}
 
