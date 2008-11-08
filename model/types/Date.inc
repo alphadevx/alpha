@@ -188,7 +188,7 @@ class Date extends AlphaType implements AlphaTypeInterface {
  	public function populateFromString($date) { 		
  		$valid = null;
  		
- 		if($date == 'Please select' || $date == '0000-00-00') {
+ 		if($date == '' || $date == '0000-00-00') {
  			$this->year = '0000';
 	 		$this->month = '00';
 	 		$this->day = '00';
