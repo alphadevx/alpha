@@ -83,7 +83,7 @@ class calendar{
 		
 		$value = $this->date_object->getValue();
 		if($value == '0000-00-00')
-			$value = 'Please select';
+			$value = '';
 		
 		if($table_tags) {
 			$html .= '<tr><td style="width:25%;">';

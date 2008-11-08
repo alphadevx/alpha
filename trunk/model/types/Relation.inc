@@ -247,7 +247,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 		$obj = new $this->relatedClass;
 		// making sure we have an object to load
 		if(empty($this->value) || $this->value == '00000000000') {
-			return '[Please select]';
+			return '';
 		}else{
 			$obj->load($this->value);		
 			return $obj->get($this->relatedClassDisplayField);
