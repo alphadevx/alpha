@@ -754,7 +754,7 @@ class View {
 			// ensures that line returns are rendered
 			$value = str_replace("\n", '<br>', $value);
 			
-			$html .= '<td>';
+			$html .= '<td>&nbsp;';
 			$html .= $value;
 			$html .= '</td></tr>';
 		}
