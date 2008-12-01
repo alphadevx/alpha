@@ -74,7 +74,12 @@ class DEnum extends mysqlDAO implements AlphaTypeInterface{
 		$this->name = new String($name);
 		
 		if(isset($name)) {
-			$this->loadByAttribute('name',$name);
+			try {
+				$this->loadByAttribute('name',$name);				
+			}catch(BONotFoundException $e) {
+				// DEnum does not exist so create it
+				$this->save();
+			}
 			$this->getOptions();
 		}
 	}
