@@ -30,50 +30,30 @@ $tmpPerson = new person_object();
 
 echo "Attempting to build table ".$tmpPerson->getTableName()." for class person : \n";
 
-$result = $tmpPerson->make_table();
+$result = $tmpPerson->makeTable();
 
 $tmpPerson->set("email", "john@design-ireland.net");
 $tmpPerson->set("displayname", "Admin");
-$tmpPerson->set_password("password");
-$tmpPerson->set_access_level("Administrator");
-$tmpPerson->save_object();
-
-if($result)
-	echo "Successfully re-created the database table ".$tmpPerson->getTableName()."\n";
-else
-	echo "QUERY FAILED : ".$tmpPerson->last_query."\n";
-	
-$tmpArticle = new article_object();
-
-echo "Attempting to build table ".$tmpArticle->getTableName()." for class article : \n";
-
-$result = $tmpArticle->make_table();
-
-if($result)
-	echo "Successfully re-created the database table ".$tmpArticle->getTableName()."\n";
-else
-	echo "QUERY FAILED : ".$tmpArticle->last_query."\n";	
+$tmpPerson->set("password", crypt("password"));
+$tmpPerson->setAccessLevel("Administrator");
+$tmpPerson->save();
 
 $tmpDEnum = new DEnum();
 
 echo "Attempting to build table ".$tmpDEnum->getTableName()." for class article : \n";
 
-$result = $tmpDEnum->make_table();
-
-if($result)
-	echo "Successfully re-created the database table ".$tmpDEnum->getTableName()."\n";
-else
-	echo "QUERY FAILED : ".$tmpDEnum->last_query."\n";	
+$tmpDEnum->makeTable();
 
 $tmpDEnumItem = new DEnumItem();
 
 echo "Attempting to build table ".$tmpDEnumItem->getTableName()." for class DEnumItem : \n";
 
-$result = $tmpDEnumItem->make_table();
+$tmpDEnumItem->makeTable();
 
-if($result)
-	echo "Successfully re-created the database table ".$tmpDEnumItem->getTableName()."\n";
-else
-	echo "QUERY FAILED : ".$tmpDEnumItem->last_query."\n";	
+$tmpArticle = new article_object();
+
+echo "Attempting to build table ".$tmpArticle->getTableName()." for class article : \n";
+
+$tmpArticle->makeTable();
 
 ?>
