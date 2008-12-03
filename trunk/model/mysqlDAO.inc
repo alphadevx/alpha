@@ -8,6 +8,7 @@ require_once $config->get('sysRoot').'alpha/exceptions/LockingException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/ValidationException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/MailNotSentException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/BadBOTableNameException.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Date.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Timestamp.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Double.inc';
@@ -138,18 +139,30 @@ class mysqlDAO {
 	 */
 	public function load($OID) {
 		self::$logger->debug('>>load($OID ['.$OID.'])');
-		if(method_exists($this, 'before_load_callback'))
-			$this->before_load_callback();
-		
 		$this->OID = $OID;
-		$sqlQuery = "SELECT * FROM ".$this->getTableName()." WHERE OID = '$OID';";		
-
+		
+		if(method_exists($this, 'before_load_callback'))
+			$this->before_load_callback();		
+		
+		$sqlQuery = "SELECT * FROM ".$this->getTableName()." WHERE OID = '$OID';";
+					
 		$this->lastQuery = $sqlQuery;
 
 		$result = mysql_query($sqlQuery);
 		
+		// it is possible that the load failed due to the table not existing yet
+		if(!$result) {
+			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
+			if($this->checkTableExists()) {
+				$this->makeTable();
+				throw new BONotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->getTableName().'] did not exist so had to create!');
+			}
+			return;
+		}
+		
 		if(mysql_num_rows($result) == 0) {
 			throw new BONotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');			
+			return;
 		}
 		
 		$row = mysql_fetch_assoc($result);
@@ -158,10 +171,25 @@ class mysqlDAO {
 		$reflection = new ReflectionClass(get_class($this));
 		$properties = $reflection->getProperties();
 
-		foreach($properties as $propObj) {
-			// filter transient attributes
-			if(!in_array($propObj->name, $this->transientAttributes)) {
-				$this->set($propObj->name, $row[$propObj->name]);
+		try {
+			foreach($properties as $propObj) {
+				// filter transient attributes
+				if(!in_array($propObj->name, $this->transientAttributes)) {
+					$this->set($propObj->name, $row[$propObj->name]);
+				}
+			}
+		}catch (IllegalArguementException $e) {
+			self::$logger->warn('Bad data stored in the table ['.$this->getTableName().'], field ['.$propObj->name.'] bad value['.$row[$propObj->name].']');
+		}catch (PHPException $e) {
+			// it is possible that the load failed due to the table not being up-to-date
+			if($this->checkTableNeedsUpdate()) {				
+				$missingFields = $this->findMissingFields();
+	    	
+				for($i = 0; $i < count($missingFields); $i++)
+					$this->addProperty($missingFields[$i]);
+					
+				throw new BONotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->getTableName().'] was out of sync with the database so had to be updated!');
+				return;
 			}
 		}
 		
@@ -185,7 +213,10 @@ class mysqlDAO {
 		if(method_exists($this, 'before_loadByAttribute_callback'))
 				$this->before_loadByAttribute_callback();
 		
-		$sqlQuery = "SELECT * FROM ".$this->getTableName()." WHERE $attribute = '$value';";
+		if(!$this->isTableOverloaded())
+			$sqlQuery = "SELECT * FROM ".$this->getTableName()." WHERE $attribute = '$value';";
+		else
+			$sqlQuery = "SELECT * FROM ".$this->getTableName()." WHERE $attribute = '$value' AND classname='".get_class($this)."';";
 
 		$this->lastQuery = $sqlQuery;
 		
@@ -232,10 +263,17 @@ class mysqlDAO {
 		if(method_exists($this, 'before_loadAll_callback'))
 			$this->before_loadAll_callback();
 		
-		if($limit == 0)
-			$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' ORDER BY '.$orderBy.' '.$order.';';
-		else
-			$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' ORDER BY '.$orderBy.' '.$order.' LIMIT '.$start.', '.$limit.';';
+		if(!$this->isTableOverloaded()) {
+			if($limit == 0)
+				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' ORDER BY '.$orderBy.' '.$order.';';
+			else
+				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' ORDER BY '.$orderBy.' '.$order.' LIMIT '.$start.', '.$limit.';';
+		}else{
+			if($limit == 0)
+				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' WHERE classname=\''.get_class($this).'\' ORDER BY '.$orderBy.' '.$order.';';
+			else
+				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' WHERE classname=\''.get_class($this).'\' ORDER BY '.$orderBy.' '.$order.' LIMIT '.$start.', '.$limit.';';
+		}
 		
 		$this->lastQuery = $sqlQuery;
 
@@ -284,8 +322,11 @@ class mysqlDAO {
 		if ($limit == 0)
 			$limit = $config->get('sysListPageAmount');
 		
-		$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = '$value' ORDER BY ".$orderBy." ".$order." LIMIT ".$start.", ".$limit.";";
-		
+		if(!$this->isTableOverloaded())
+			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = '$value' ORDER BY ".$orderBy." ".$order." LIMIT ".$start.", ".$limit.";";
+		else
+			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = '$value' AND classname='".get_class($this)."' ORDER BY ".$orderBy." ".$order." LIMIT ".$start.", ".$limit.";";
+			
 		$this->lastQuery = $sqlQuery;
 
 		$result = mysql_query($sqlQuery);
@@ -350,8 +391,10 @@ class mysqlDAO {
 						if (!in_array($propName, $this->transientAttributes)) {
 							$sqlQuery .= "$propName,";
 						}
-					}				
+					}
 				}
+				if($this->isTableOverloaded())
+					$sqlQuery .= 'classname,';
 	
 				$sqlQuery = rtrim($sqlQuery, ",");
 	
@@ -371,6 +414,8 @@ class mysqlDAO {
 						}
 					}
 				}
+				if($this->isTableOverloaded())
+					$sqlQuery .= "'".get_class($this)."',";
 	
 				$sqlQuery = rtrim($sqlQuery, ",");
 	
@@ -392,6 +437,8 @@ class mysqlDAO {
 							$sqlQuery .= "version_num = '".$this->version_num->getValue()."',";
 						}
 					}
+					if($this->isTableOverloaded())
+						$sqlQuery = "classname='".get_class($this)."',";
 				}
 	
 				$sqlQuery = rtrim($sqlQuery, ",");
@@ -492,9 +539,12 @@ class mysqlDAO {
 	 */
 	public function deleteAllByAttribute($attribute, $value) {		
 		if(method_exists($this, 'before_delete_callback'))
-				$this->before_delete_callback();
+			$this->before_delete_callback();
 		
-		$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE $attribute = '$value';";		
+		if(!$this->isTableOverloaded())
+			$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE $attribute = '$value';";
+		else
+			$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE $attribute = '$value' AND classname = '".get_class($this)."';";					
 			
 		$this->lastQuery = $sqlQuery;
 
@@ -607,7 +657,9 @@ class mysqlDAO {
 				}
 			}			
 		}
-
+		if($this->isTableOverloaded())
+			$sqlQuery .= "classname VARCHAR(100),";
+		
 		$sqlQuery .= "PRIMARY KEY (OID)) TYPE=InnoDB;";
 		
 		$this->lastQuery = $sqlQuery;
@@ -654,31 +706,34 @@ class mysqlDAO {
 			$this->before_addProperty_callback();
 			
 		$sqlQuery = "ALTER TABLE ".$this->getTableName()." ADD ";
-
-		if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
+		
+		if($this->isTableOverloaded() && $propName == 'classname') {
+			$sqlQuery .= "classname VARCHAR(100)";
+		}else{
+			if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
 				$propClass = get_class($this->getPropObject($propName));
-
+	
 				switch (strtoupper($propClass)) {
 					case "INTEGER":
-						$sqlQuery .= "$propName INT(".$this->getPropObject($propName)->getSize()."),";
+						$sqlQuery .= "$propName INT(".$this->getPropObject($propName)->getSize().")";
 					break;
 					case "DOUBLE":
-						$sqlQuery .= "$propName DOUBLE(".$this->getPropObject($propName)->getSize(true)."),";
+						$sqlQuery .= "$propName DOUBLE(".$this->getPropObject($propName)->getSize(true).")";
 					break;
 					case "STRING":
-						$sqlQuery .= "$propName VARCHAR(".$this->getPropObject($propName)->getSize()."),";
+						$sqlQuery .= "$propName VARCHAR(".$this->getPropObject($propName)->getSize().")";
 					break;
 					case "TEXT":
-						$sqlQuery .= "$propName TEXT,";
+						$sqlQuery .= "$propName TEXT";
 					break;
 					case "BOOLEAN":
-						$sqlQuery .= "$propName CHAR(1) DEFAULT '0',";
+						$sqlQuery .= "$propName CHAR(1) DEFAULT '0'";
 					break;
 					case "DATE":
-						$sqlQuery .= "$propName DATE,";
+						$sqlQuery .= "$propName DATE";
 					break;
 					case "TIMESTAMP":
-						$sqlQuery .= "$propName DATETIME,";
+						$sqlQuery .= "$propName DATETIME";
 					break;
 					case "ENUM":
 						$sqlQuery .= "$propName ENUM(";
@@ -687,23 +742,22 @@ class mysqlDAO {
 							$sqlQuery .= "'".$val."',";
 						}
 						$sqlQuery = rtrim($sqlQuery, ",");
-						$sqlQuery .= "),";
+						$sqlQuery .= ")";
 					break;
 					case "DENUM":
 						$tmp = new DEnum(get_class($this).'::'.$propName);						
 						$tmp->save();
-						$sqlQuery .= "$propName INT(11) ZEROFILL,";
+						$sqlQuery .= "$propName INT(11) ZEROFILL";
 					break;
 					case "RELATION":						
-						$sqlQuery .= "$propName INT(11) ZEROFILL,";
+						$sqlQuery .= "$propName INT(11) ZEROFILL";
 					break;
 					default:
 						$sqlQuery .= "";
 					break;
 				}
+			}
 		}
-		
-		$sqlQuery = rtrim($sqlQuery, ",");
 
 		$this->lastQuery = $sqlQuery;
 
@@ -795,17 +849,20 @@ class mysqlDAO {
 		if(method_exists($this, 'before_getCount_callback'))
 			$this->before_getCount_callback();
 		
-		$sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->getTableName();
+		if(!$this->isTableOverloaded())
+			$sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->getTableName();
+		else
+			$sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->getTableName().' WHERE classname = \''.get_class($this).'\'';
 
 		$this->lastQuery = $sqlQuery;
 
 		$result = mysql_query($sqlQuery);		
 
-		$row = mysql_fetch_assoc($result);
-
 		if (mysql_error() == '') {
 			if(method_exists($this, 'after_getCount_callback'))
 				$this->after_getCount_callback();
+				
+			$row = mysql_fetch_assoc($result);
 				
 			return $row['class_count'];
 		}else{
@@ -1061,12 +1118,25 @@ class mysqlDAO {
 			    		}
 					}
 					
-					if(!$foundMatch) {						
+					if(!$foundMatch)
 						$matchCount--;						
-					}
+					
 					mysql_data_seek($result, 0);					
 				}
-			}		
+			}
+			// check for the "classname" field in overloaded tables
+			if($this->isTableOverloaded()) {
+				$foundMatch = false;
+			
+				while ($row = mysql_fetch_assoc($result)) {
+					if ('classname' == $row['Field']) {
+						$foundMatch = true;
+			    		break;
+					}
+				}
+				if(!$foundMatch)						
+					$matchCount--;
+			}
 			
 			if ($matchCount != 0)
 				$updateRequired = true;
@@ -1124,6 +1194,20 @@ class mysqlDAO {
 			}else{
 				$matchCount = 0;
 			}
+		}
+		
+		// check for the "classname" field in overloaded tables
+		if($this->isTableOverloaded()) {
+			$foundMatch = false;
+			
+			while ($row = mysql_fetch_assoc($result)) {
+				if ('classname' == $row['Field']) {
+					$foundMatch = true;
+		    		break;
+				}
+			}
+			if(!$foundMatch)						
+				array_push($missingFields, 'classname');
 		}
 		
 		if (mysql_error() != '') {			
@@ -1431,6 +1515,68 @@ class mysqlDAO {
 			require_once $config->get('sysRoot').'alpha/model/'.$classname.'.inc';
 		else
 			throw new IllegalArguementException('The class ['.$classname.'] is not defined anywhere!');
+	}
+	
+	/**
+	 * Checks that a record exists for the BO in the database
+	 * 
+	 * @param int $OID
+	 * @return boolean
+	 */
+	public function checkRecordExists($OID) {
+		if(method_exists($this, 'before_checkRecordExists_callback'))
+			$this->before_checkRecordExists_callback();
+		
+		$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE OID = '$OID';";
+
+		$this->lastQuery = $sqlQuery;
+
+		$result = mysql_query($sqlQuery);		
+
+		if (mysql_error() == '') {
+			if(method_exists($this, 'after_checkRecordExists_callback'))
+				$this->after_checkRecordExists_callback();
+				
+			if(mysql_num_rows($result) > 0)				
+				return true;
+			else
+				return false;
+		}else{
+			throw new AlphaException('Failed to check for the record ['.$OID.'] on the class ['.get_class($this).'] from the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');			
+			return false;
+		}
+	}
+	
+	/**
+	 * Checks to see if the table name matches the classname, and if not if the table
+	 * name matches the classname name of another BO, i.e. the table is used to store 
+	 * multiple types of BOs.
+	 * 
+	 * @return bool
+	 */
+	private function isTableOverloaded() {
+		$classname = get_class($this);
+		$tablename = $this->getTableName().'_object';
+		
+		// use reflection to check to see if we are dealing with a persistent type (e.g. DEnum) which are never overloaded
+		$reflection = new ReflectionClass($classname);
+		$implementedInterfaces = $reflection->getInterfaces();
+		
+		foreach ($implementedInterfaces as $interface) {
+			if ($interface->name == 'AlphaTypeInterface')
+				return false;
+		}
+		
+		if($classname != $tablename) {
+			$BOclasses = $this->getBOClassNames();
+			
+			foreach($BOclasses as $BOclassName) {
+				if($tablename == $BOclassName)
+					return true;
+			}
+			throw new BadBOTableNameException('The table name ['.$tablename.'] for the class ['.$classname.'] is invalid as it does not match a BO definition in the system!');
+			return false;
+		}
 	}
 }
 
