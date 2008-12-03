@@ -65,10 +65,26 @@ class ListBusinessObjects extends Controller
 		}
 		
 		foreach($loadedClasses as $classname) {
-			$BO = new $classname();				
-			
-			$BO_View = new View($BO);
-			$BO_View->adminView();
+			try {
+				$BO = new $classname();
+				$BO_View = new View($BO);
+				$BO_View->adminView();
+			}catch (AlphaException $e) {
+				// its possible that the exception occured due to the table schema being out of date
+				if($BO->checkTableNeedsUpdate()) {				
+					$missingFields = $BO->findMissingFields();
+		    	
+					for($i = 0; $i < count($missingFields); $i++)
+						$BO->addProperty($missingFields[$i]);
+						
+					// now try again...
+					$BO = new $classname();
+					$BO_View = new View($BO);
+					$BO_View->adminView();
+				}
+			}catch (Exception $e) {
+				echo '<p class="error">Error accessing the class ['.$classname.'], check the log!</p>';
+			}
 		}
 		
 		$this->display_page_foot();
