@@ -139,11 +139,11 @@ class DAO {
 	 * @param integer $OID	
 	 */
 	public function load($OID) {
-		self::$logger->debug('>>load($OID ['.$OID.'])');
-		$this->OID = $OID;
-		
 		if(method_exists($this, 'before_load_callback'))
-			$this->before_load_callback();		
+			$this->before_load_callback();
+		
+		self::$logger->debug('>>load(OID=['.$OID.'])');
+		$this->OID = $OID;
 		
 		$sqlQuery = "SELECT * FROM ".$this->getTableName()." WHERE OID = '$OID';";
 					
@@ -213,6 +213,8 @@ class DAO {
 	public function loadByAttribute($attribute, $value)	{
 		if(method_exists($this, 'before_loadByAttribute_callback'))
 				$this->before_loadByAttribute_callback();
+				
+		self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'])');
 		
 		if(!$this->isTableOverloaded())
 			$sqlQuery = "SELECT * FROM ".$this->getTableName()." WHERE $attribute = '$value';";
@@ -246,7 +248,8 @@ class DAO {
 				$this->after_loadByAttribute_callback();			
 		}else{			
 			throw new BONotFoundException('Failed to load object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
-		}		
+		}
+		self::$logger->debug('<<loadByAttribute');
 	}
 	
 	/**
