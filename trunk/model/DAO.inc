@@ -321,10 +321,12 @@ class DAO {
 	 * @return array an array containing objects of this type of business object.
 	 */
 	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC") {
-		global $config;
-		
 		if(method_exists($this, 'before_loadAllByAttribute_callback'))
 			$this->before_loadAllByAttribute_callback();
+		
+		global $config;
+		
+		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
 		
 		if ($limit == 0)
 			$limit = $config->get('sysListPageAmount');
@@ -358,6 +360,7 @@ class DAO {
 		if(method_exists($this, 'after_loadAllByAttribute_callback'))
 			$this->after_loadAllByAttribute_callback();
 		
+		self::$logger->debug('<<loadAllByAttribute');
 		return $objects;	
 	}
 
