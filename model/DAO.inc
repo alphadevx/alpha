@@ -305,7 +305,7 @@ class DAO {
 		if(method_exists($this, 'after_loadAll_callback'))
 			$this->after_loadAll_callback();
 		
-		self::$logger->debug('<<loadAll');
+		self::$logger->debug('<<loadAll ['.count($objects).']');
 		return $objects;	
 	}
 	
@@ -360,7 +360,7 @@ class DAO {
 		if(method_exists($this, 'after_loadAllByAttribute_callback'))
 			$this->after_loadAllByAttribute_callback();
 		
-		self::$logger->debug('<<loadAllByAttribute');
+		self::$logger->debug('<<loadAllByAttribute ['.count($objects).']');
 		return $objects;	
 	}
 
@@ -370,6 +370,8 @@ class DAO {
 	public function save() {
 		if(method_exists($this, 'before_save_callback'))
 			$this->before_save_callback();
+			
+		self::$logger->debug('>>save()');
 		
 		// firstly we will validate the object before we try to save it
 		if(!$this->validate()) {
@@ -479,6 +481,8 @@ class DAO {
 				}
 			}
 		}
+		
+		self::$logger->debug('<<save');
 	}
 	
 	/**
@@ -489,6 +493,8 @@ class DAO {
 	protected function validate() {
 		if(method_exists($this, 'before_validate_callback'))
 			$this->before_validate_callback();
+			
+		self::$logger->debug('>>validate()');
 		
 		$valid = true;
 				
@@ -514,7 +520,8 @@ class DAO {
 		
 		if(method_exists($this, 'after_validate_callback'))
 			$this->after_validate_callback();
-		
+			
+		self::$logger->debug('<<validate ['.$valid.']');		
 		return $valid;
 	}
 	
@@ -524,6 +531,8 @@ class DAO {
 	public function delete() {		
 		if(method_exists($this, 'before_delete_callback'))
 				$this->before_deleteAllByAttribute_callback();
+				
+		self::$logger->debug('>>delete()');
 		
 		$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE OID = '".$this->OID."';";		
 			
@@ -537,7 +546,9 @@ class DAO {
 			$this->clear();			
 		}else{			
 			throw new FailedDeleteException('Failed to delete object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
-		}		
+		}
+
+		self::$logger->debug('<<delete');
 	}
 	
 	/**
