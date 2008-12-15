@@ -67,7 +67,7 @@ class ViewExcel extends Controller {
 		}
 		
 		try {
-			mysqlDAO::loadClassDef($BOname);
+			DAO::loadClassDef($BOname);
 			$BO = new $BOname();
 			$BO->load($OID);
 			

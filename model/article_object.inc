@@ -2,7 +2,7 @@
 
 // $Id$
 
-require_once $config->get('sysRoot').'alpha/model/mysqlDAO.inc';
+require_once $config->get('sysRoot').'alpha/model/DAO.inc';
 require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 require_once $config->get('sysRoot').'alpha/model/article_vote_object.inc';
 require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
@@ -17,7 +17,7 @@ require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
  * 
  * 
  */ 
-class article_object extends mysqlDAO
+class article_object extends DAO
 {
 	/**
 	 * the article title

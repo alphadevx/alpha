@@ -25,7 +25,7 @@ require_once $config->get('sysRoot').'alpha/tests/Exceptions_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/String_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Text_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Relation_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/mysqlDAO_Test.php';
+require_once $config->get('sysRoot').'alpha/tests/DAO_Test.php';
 
 /*
  * we are supressing the display and logging of errors on this page, as we 
@@ -280,7 +280,7 @@ class view_test_results extends Controller
 		echo "<h3>MySQL DAO:</h3>";
 		
 		$suite = new PHPUnit_Framework_TestSuite();
-		$suite->addTestSuite('mysqlDAO_Test');
+		$suite->addTestSuite('DAO_Test');
 		$result = $suite->run();
 		$runningTime+=$result->time();
 		$testCount+=$result->count();

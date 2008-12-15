@@ -24,13 +24,13 @@ require_once $config->get('sysRoot').'alpha/model/types/Relation.inc';
 /**
  * Base business object class definition
  * 
- * @package Alpha Core
+ * @package alpha::model
  * @author John Collins <john@design-ireland.net>
  * @copyright 2008 John Collins
  * @version $Id$
  *  
  */
-class mysqlDAO {
+class DAO {
 	/**
 	 * The object ID
 	 * 
@@ -120,7 +120,7 @@ class mysqlDAO {
 	 */
 	public function __construct() {
 		if(self::$logger == null)
-			self::$logger = new Logger('mysqlDAO');
+			self::$logger = new Logger('DAO');
 		self::$logger->debug('>>__construct()');
 		
 		$this->version_num = new Integer(0);
@@ -129,6 +129,7 @@ class mysqlDAO {
 		$this->created_by = new Integer($person_ID);
 		$this->updated_ts = new Timestamp();
 		$this->updated_by = new Integer($person_ID);
+		
 		self::$logger->debug('<<__construct');
 	}
 	
