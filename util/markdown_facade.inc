@@ -101,7 +101,7 @@ class markdown_facade
 	 */
 	function cache() {
 		// check to ensure that the article is not transient before caching it
-		if ($this->BO->get_Id() != "00000000000") {
+		if ($this->BO->getID() != "00000000000") {
 			$fp=fopen($this->filename,"w");
 			if (!$fp) {
 				$error = new handle_error($_SERVER["PHP_SELF"],'Failed to open the cache file for writing, directory permissions my not be set correctly!' ,'cache()','framework');
