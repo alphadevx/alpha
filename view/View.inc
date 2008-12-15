@@ -82,15 +82,14 @@ class View {
 
 	/**
 	 * Renders the default create view
+	 * 
+	 * @param array $fields hash array of HTML fields to pass to the template
 	 */
-	public function createView() {
+	public function createView($fields=array()) {
 		if(method_exists($this, 'before_createView_callback'))
 			$this->before_createView_callback();
 		
 		global $config;
-		
-		// hash array of HTML fields to pass to the template
-		$fields = array();		
 		
 		// the form action
 		$fields['formAction'] = $_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"];
@@ -116,16 +115,15 @@ class View {
 
 	/**
 	 * Renders a form to enable object editing
+	 * 
+	 * @param array $fields hash array of HTML fields to pass to the template
 	 */
-	public function editView() {
+	public function editView($fields=array()) {
 		if(method_exists($this, 'before_editView_callback'))
 			$this->before_editView_callback();
 		
 		global $config;
 
-		// hash array of HTML fields to pass to the template
-		$fields = array();		
-		
 		// the form action
 		$fields['formAction'] = $_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"];
 		
@@ -156,15 +154,14 @@ class View {
 
 	/**
 	 * Renders the list view
+	 * 
+	 * @param array $fields hash array of HTML fields to pass to the template
 	 */
-	public function listView() {
+	public function listView($fields=array()) {
 		if(method_exists($this, 'before_listView_callback'))
 			$this->before_listView_callback();
 		
 		global $config;
-		
-		// hash array of HTML fields to pass to the template
-		$fields = array();
 		
 		// the form action
 		$fields['formAction'] = $_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"];
@@ -246,16 +243,15 @@ class View {
 
 	/**
 	 * Displays a detailed view of the object (read-only)
+	 * 
+	 * @param array $fields hash array of HTML fields to pass to the template
 	 */
-	public function detailedView() {
+	public function detailedView($fields=array()) {
 		if(method_exists($this, 'before_detailedView_callback'))
 			$this->before_detailedView_callback();
 		
 		global $config;
 		
-		// hash array of HTML fields to pass to the template
-		$fields = array();
-
 		// we may want to display the OID regardless of class
 		$fields['OIDLabel'] = $this->BO->getDataLabel('OID');		
 		$fields['OID'] = $this->BO->getID();		
@@ -287,15 +283,14 @@ class View {
 
 	/**
 	 * Renders the admin view for the business object screen.
+	 * 
+	 * @param array $fields hash array of HTML fields to pass to the template
 	 */
-	public function adminView() {
+	public function adminView($fields) {
 		if(method_exists($this, 'before_adminView_callback'))
 			$this->before_adminView_callback();
 		
 		global $config;
-		
-		// hash array of HTML fields to pass to the template
-		$fields = array();
 		
 		// the form action
 		$fields['formAction'] = $_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"];
