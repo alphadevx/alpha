@@ -20,16 +20,26 @@ require_once $config->get('sysRoot').'alpha/view/View.inc';
 * @copyright 2006 John Collins
 *
 */
-class ListBusinessObjects extends Controller
-{
+class ListBusinessObjects extends Controller {
+	/**
+	 * Trace logger
+	 * 
+	 * @var Logger
+	 */
+	private static $logger = null;
+	
 	/**
 	 * the constructor
 	 */
-	function ListBusinessObjects() {
+	public function __construct() {
+		if(self::$logger == null)
+			self::$logger = new Logger('ListBusinessObjects');
+		self::$logger->debug('>>__construct()');
+		
 		global $config;
 		
 		// ensure that the super class constructor is called
-		$this->Controller();
+		parent::__construct();
 		
 		// set up the title and meta details
 		$this->set_title("Listing all business objects in the system");
@@ -46,7 +56,7 @@ class ListBusinessObjects extends Controller
 		if(!empty($_POST))
 			$this->handle_post();
 
-		$classNames = mysqlDAO::getBOClassNames();
+		$classNames = DAO::getBOClassNames();
 		$loadedClasses = array();
 		
 		foreach($classNames as $classname) {
@@ -66,10 +76,12 @@ class ListBusinessObjects extends Controller
 		
 		foreach($loadedClasses as $classname) {
 			try {
+				
 				$BO = new $classname();
-				$BO_View = new View($BO);
-				$BO_View->adminView();
+				$BO_View = new View($BO);				
+				$BO_View->adminView();				
 			}catch (AlphaException $e) {
+				self::$logger->error($e->getTraceAsString());
 				// its possible that the exception occured due to the table schema being out of date
 				if($BO->checkTableNeedsUpdate()) {				
 					$missingFields = $BO->findMissingFields();
@@ -83,11 +95,13 @@ class ListBusinessObjects extends Controller
 					$BO_View->adminView();
 				}
 			}catch (Exception $e) {
+				self::$logger->error($e->getTraceAsString());
 				echo '<p class="error">Error accessing the class ['.$classname.'], check the log!</p>';
 			}
 		}
 		
 		$this->display_page_foot();
+		self::$logger->debug('<<__construct');
 	}
 	
 	/**

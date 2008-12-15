@@ -286,7 +286,7 @@ class View {
 	 * 
 	 * @param array $fields hash array of HTML fields to pass to the template
 	 */
-	public function adminView($fields) {
+	public function adminView($fields=array()) {
 		if(method_exists($this, 'before_adminView_callback'))
 			$this->before_adminView_callback();
 		

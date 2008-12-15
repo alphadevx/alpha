@@ -2,7 +2,7 @@
 
 /**
  *
- * Test case for the mySQLDAO class
+ * Test case for the DAO class
  * 
  * @package Alpha Core Unit Tests
  * @author John Collins <john@design-ireland.net>
@@ -10,7 +10,7 @@
  * @version $Id$ 
  * 
  */
-class mysqlDAO_Test extends PHPUnit_Framework_TestCase
+class DAO_Test extends PHPUnit_Framework_TestCase
 {
 	/**
 	 * A person_object for testing (any business object will do)

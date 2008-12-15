@@ -8,7 +8,7 @@ $config =&configLoader::getInstance();
 
 require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
-require_once $config->get('sysRoot').'alpha/model/mysqlDAO.inc';
+require_once $config->get('sysRoot').'alpha/model/DAO.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Relation.inc';
 
 /**

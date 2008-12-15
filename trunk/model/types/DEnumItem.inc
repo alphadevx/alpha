@@ -12,7 +12,7 @@ require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
  * @version $Id$
  * 
  */
-class DEnumItem extends mysqlDAO implements AlphaTypeInterface{
+class DEnumItem extends DAO implements AlphaTypeInterface{
 	/**
 	 * The value that will appear in the drop-down.
 	 * 

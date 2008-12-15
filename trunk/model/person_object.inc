@@ -1,6 +1,6 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/model/mysqlDAO.inc';
+require_once $config->get('sysRoot').'alpha/model/DAO.inc';
 require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
 
 /**
@@ -13,7 +13,7 @@ require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
  * @version $Id$ 
  * 
  */ 
-class person_object extends mysqlDAO {	
+class person_object extends DAO {	
 	/**
 	 * The forum display name of the person
 	 * 

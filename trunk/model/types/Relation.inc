@@ -99,9 +99,9 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * @param string $RC
 	 */
 	public function setRelatedClass($RC) {		
-		if(in_array($RC, mysqlDAO::getBOClassNames())) {
+		if(in_array($RC, DAO::getBOClassNames())) {
 			// load the class definition if it has not been loaded already
-			mysqlDAO::loadClassDef($RC);		
+			DAO::loadClassDef($RC);		
 			$this->relatedClass = $RC;
 		}else{
 			throw new IllegalArguementException('The class ['.$RC.'] is not defined anywhere!');
