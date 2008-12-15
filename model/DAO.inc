@@ -261,11 +261,13 @@ class DAO {
 	 * @param string $order the order to sort the BOs by, default is ASC
 	 * @return array an array containing objects of this type of business object.
 	 */
-	public function loadAll($start=0, $limit=0, $orderBy="OID", $order="ASC") {
-		global $config;
-		
+	public function loadAll($start=0, $limit=0, $orderBy='OID', $order='ASC') {
 		if(method_exists($this, 'before_loadAll_callback'))
 			$this->before_loadAll_callback();
+			
+		self::$logger->debug('>>loadAll(start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
+		
+		global $config;
 		
 		if(!$this->isTableOverloaded()) {
 			if($limit == 0)
@@ -303,6 +305,7 @@ class DAO {
 		if(method_exists($this, 'after_loadAll_callback'))
 			$this->after_loadAll_callback();
 		
+		self::$logger->debug('<<loadAll');
 		return $objects;	
 	}
 	
