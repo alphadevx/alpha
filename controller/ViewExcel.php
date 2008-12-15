@@ -39,9 +39,9 @@ class ViewExcel extends Controller {
 		// ensure to call the parent constructor
 		parent::__construct();
 		
-		if (!empty($_GET['BO']) && !empty($_GET['OID'])) {
+		if (!empty($_GET['bo']) && !empty($_GET['oid'])) {
 			$this->doGet($_GET);
-		}else{
+		}else{			
 			self::$logger->fatal('No BO and/or OID parameter available for ViewExcel controller!');
 			exit;
 		}
@@ -58,8 +58,8 @@ class ViewExcel extends Controller {
 		self::$logger->debug('>>doGet(params=['.print_r($params, true).'])');
 		
 		try {
-			$BOname = $params['BO'];
-			$OID = $params['OID'];
+			$BOname = $params['bo'];
+			$OID = $params['oid'];
 		}catch (Exception $e) {
 			self::$logger->fatal('No BO and/or OID parameter available for ViewExcel controller!');
 			self::$logger->debug('<<__doGet');
