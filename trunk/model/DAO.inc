@@ -30,7 +30,7 @@ require_once $config->get('sysRoot').'alpha/model/types/Relation.inc';
  * @version $Id$
  *  
  */
-class DAO {
+abstract class DAO {
 	/**
 	 * The object ID
 	 * 
