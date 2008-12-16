@@ -1120,7 +1120,7 @@ class DAO {
 			if(method_exists($this, 'after_getPropObject_callback'))
 				$this->after_getPropObject_callback();
 			
-			self::$logger->debug('<<getPropObject ['.print_r($this->$prop).']');
+			self::$logger->debug('<<getPropObject ['.print_r($this->$prop, true).']');
 			return $this->$prop;			
 		}else{
 			throw new AlphaException('Could not access the property object ['.$prop.'] on the object of class ['.get_class($this).']');
@@ -1309,7 +1309,7 @@ class DAO {
 		if(method_exists($this, 'after_findMissingFields_callback'))
 			$this->after_findMissingFields_callback();
 		
-		self::$logger->debug('<<findMissingFields ['.print_r($missingFields).']');
+		self::$logger->debug('<<findMissingFields ['.print_r($missingFields, true).']');
 		return $missingFields;	
 	}
 	
@@ -1498,7 +1498,7 @@ class DAO {
 	 */
 	public function getDataLabels() {
 		self::$logger->debug('>>getDataLabels()');
-		self::$logger->debug('<<getDataLabels() ['.print_r($this->dataLabels).'])');		
+		self::$logger->debug('<<getDataLabels() ['.print_r($this->dataLabels, true).'])');		
 		return $this->dataLabels;
 	}
 	
@@ -1557,7 +1557,7 @@ class DAO {
 	    	}
 	    }
 
-	    self::$logger->debug('<<getBOClassNames ['.print_r($classNameArray).']');
+	    self::$logger->debug('<<getBOClassNames ['.print_r($classNameArray, true).']');
 	    return $classNameArray;
 	}
 	
@@ -1568,7 +1568,7 @@ class DAO {
 	 */
 	public function getDefaultAttributes() {
 		self::$logger->debug('>>getDefaultAttributes()');
-		self::$logger->debug('<<getDefaultAttributes ['.print_r($this->defaultAttributes).']');
+		self::$logger->debug('<<getDefaultAttributes ['.print_r($this->defaultAttributes, true).']');
 		return $this->defaultAttributes;
 	}
 	
@@ -1579,7 +1579,7 @@ class DAO {
 	 */
 	public function getTransientAttributes() {
 		self::$logger->debug('>>getTransientAttributes()');
-		self::$logger->debug('<<getTransientAttributes ['.print_r($this->transientAttributes).']');
+		self::$logger->debug('<<getTransientAttributes ['.print_r($this->transientAttributes, true).']');
 		return $this->transientAttributes;
 	}
 	
