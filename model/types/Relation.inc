@@ -4,6 +4,7 @@ require_once $config->get('sysRoot').'config/validation_rules.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
+require_once $config->get('sysRoot').'alpha/model/types/RelationLookup.inc';
 
 /**
  * The Relation complex data type
@@ -35,6 +36,37 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * @var string
 	 */
 	private $relatedClassDisplayField;
+		
+	/**
+	 * The name of the business object class on the left of a MANY-TO-MANY relation 
+	 *
+	 * @var string
+	 */
+	private $relatedClassLeft;
+	
+	/**
+	 * The name of the field from the related business object class on the left of a 
+	 * MANY-TO-MANY relation which is displayed by the selection widget
+	 *
+	 * @var string
+	 */
+	private $relatedClassLeftDisplayField;
+	
+	/**
+	 * The name of the business object class on the right of a MANY-TO-MANY relation 
+	 *
+	 * @var string
+	 */
+	private $relatedClassRight;
+	
+	/**
+	 * The name of the field from the related business object class on the right of a 
+	 * MANY-TO-MANY relation which is displayed by the selection widget
+	 *
+	 * @var string
+	 */
+	private $relatedClassRightDisplayField;
+	
 	
 	/**
 	 * The type of relation ('MANY-TO-ONE','ONE-TO-MANY','ONE-TO-ONE','MANY-TO-MANY')
@@ -42,6 +74,13 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * @var string
 	 */
 	private $relationType;
+	
+	/**
+	 * In the case of MANY-TO-MANY relationship, a lookup object will be required
+	 *
+	 * @var unknown_type
+	 */
+	private $lookup;
 	
 	/**
 	 * An array of the allowable relationship types ('MANY-TO-ONE','ONE-TO-MANY','ONE-TO-ONE','MANY-TO-MANY')
@@ -97,12 +136,25 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * Set the name of the business object class that this class is related to
 	 *
 	 * @param string $RC
+	 * @param string $side Only required for MANY-TO-MANY relations
 	 */
-	public function setRelatedClass($RC) {		
+	public function setRelatedClass($RC, $side='') {		
 		if(in_array($RC, DAO::getBOClassNames())) {
 			// load the class definition if it has not been loaded already
-			DAO::loadClassDef($RC);		
-			$this->relatedClass = $RC;
+			DAO::loadClassDef($RC);
+			switch($side) {
+				case '':
+					$this->relatedClass = $RC;
+				break;
+				case 'left':
+					$this->relatedClassLeft = $RC;
+				break;
+				case 'right':
+					$this->relatedClassRight = $RC;
+				break;
+				default:
+					throw new IllegalArguementException('The side paramter ['.$RC.'] is not valid!');							
+			}
 		}else{
 			throw new IllegalArguementException('The class ['.$RC.'] is not defined anywhere!');
 		}
@@ -158,9 +210,22 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * Setter for the display field from the related class
 	 *
 	 * @param string $RCDF
+	 * @param string $side Only required for MANY-TO-MANY relations
 	 */
-	public function setRelatedClassDisplayField($RCDF) {		
-		$this->relatedClassDisplayField = $RCDF;
+	public function setRelatedClassDisplayField($RCDF, $side='') {
+		switch($side) {
+			case '':
+				$this->relatedClassDisplayField = $RCDF;
+			break;
+			case 'left':
+				$this->relatedClassLeftDisplayField = $RCDF;
+			break;
+			case 'right':
+				$this->relatedClassRightDisplayField = $RCDF;
+			break;
+			default:
+				throw new IllegalArguementException('The side paramter ['.$RC.'] is not valid!');							
+		}
 	}
 	
 	/**
@@ -178,10 +243,13 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * @param string $RT
 	 */
 	public function setRelationType($RT) {
-		if(in_array($RT, $this->allowableRelationTypes))
+		if(in_array($RT, $this->allowableRelationTypes)) {
 			$this->relationType = $RT;
-		else
+			if($RT == 'MANY-TO-MANY')
+				$this->lookup = new RelationLookup($this->relatedClassLeft, $this->relatedClassRight);
+		}else{
 			throw new IllegalArguementException('Relation type of ['.$RT.'] is invalid!');
+		}
 	}
 	
 	/**
@@ -281,9 +349,18 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 *	
 	 * @return int
 	 */
-	public function getSize(){
+	public function getSize() {
 		return $this->size;
-	}	
+	}
+	
+	/**
+	 * Get the lookup object if available (only on MANY-TO-MANY relations, null otherwise)
+	 * 
+	 * @return RelationLookup
+	 */
+	public function getLookup() {
+		return $this->lookup;
+	}
 }
 
 ?>
