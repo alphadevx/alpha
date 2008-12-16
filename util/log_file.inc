@@ -27,7 +27,7 @@ class log_file {
  	 * the value-seperator to use in the file (default is a comma)
  	 * @var string
  	 */
- 	var $seperator = ",";
+ 	var $seperator = "|";
  	/**
  	 * the maximum size of the log file before a backup is created and a new file is started
  	 * var int
