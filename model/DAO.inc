@@ -139,10 +139,11 @@ class DAO {
 	 * @param integer $OID	
 	 */
 	public function load($OID) {
+		self::$logger->debug('>>load(OID=['.$OID.'])');
+		
 		if(method_exists($this, 'before_load_callback'))
 			$this->before_load_callback();
 		
-		self::$logger->debug('>>load(OID=['.$OID.'])');
 		$this->OID = $OID;
 		
 		$sqlQuery = "SELECT * FROM ".$this->getTableName()." WHERE OID = '$OID';";
@@ -163,6 +164,7 @@ class DAO {
 		
 		if(mysql_num_rows($result) == 0) {
 			throw new BONotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');			
+			self::$logger->debug('<<load');
 			return;
 		}
 		
@@ -190,6 +192,7 @@ class DAO {
 					$this->addProperty($missingFields[$i]);
 					
 				throw new BONotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->getTableName().'] was out of sync with the database so had to be updated!');
+				self::$logger->debug('<<load');
 				return;
 			}
 		}
@@ -211,10 +214,10 @@ class DAO {
 	 * @param string $value	 
 	 */
 	public function loadByAttribute($attribute, $value)	{
+		self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'])');
+		
 		if(method_exists($this, 'before_loadByAttribute_callback'))
 				$this->before_loadByAttribute_callback();
-				
-		self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'])');
 		
 		if(!$this->isTableOverloaded())
 			$sqlQuery = "SELECT * FROM ".$this->getTableName()." WHERE $attribute = '$value';";
@@ -262,10 +265,10 @@ class DAO {
 	 * @return array an array containing objects of this type of business object.
 	 */
 	public function loadAll($start=0, $limit=0, $orderBy='OID', $order='ASC') {
+		self::$logger->debug('>>loadAll(start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
+		
 		if(method_exists($this, 'before_loadAll_callback'))
 			$this->before_loadAll_callback();
-			
-		self::$logger->debug('>>loadAll(start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
 		
 		global $config;
 		
@@ -287,6 +290,7 @@ class DAO {
 		
 		if(mysql_error() != '') {
 			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+			self::$logger->debug('<<loadAll [0]');
 			return array();
 		}
 		
@@ -321,12 +325,12 @@ class DAO {
 	 * @return array an array containing objects of this type of business object.
 	 */
 	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC") {
+		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
+		
 		if(method_exists($this, 'before_loadAllByAttribute_callback'))
 			$this->before_loadAllByAttribute_callback();
 		
 		global $config;
-		
-		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
 		
 		if ($limit == 0)
 			$limit = $config->get('sysListPageAmount');
@@ -342,6 +346,7 @@ class DAO {
 		
 		if(mysql_error() != '') {
 			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+			self::$logger->debug('<<loadAllByAttribute [p]');
 			return array();
 		}
 		
@@ -368,10 +373,10 @@ class DAO {
 	 * Saves the object.  If $this->OID is empty or null it will INSERT, otherwise UPDATE 	
 	 */
 	public function save() {
+		self::$logger->debug('>>save()');
+		
 		if(method_exists($this, 'before_save_callback'))
 			$this->before_save_callback();
-			
-		self::$logger->debug('>>save()');
 		
 		// firstly we will validate the object before we try to save it
 		if(!$this->validate()) {
@@ -491,10 +496,10 @@ class DAO {
 	 * @return boolean
 	 */
 	protected function validate() {
+		self::$logger->debug('>>validate()');
+		
 		if(method_exists($this, 'before_validate_callback'))
 			$this->before_validate_callback();
-			
-		self::$logger->debug('>>validate()');
 		
 		$valid = true;
 				
@@ -528,11 +533,11 @@ class DAO {
 	/**
 	 * Delete the current object from the database
 	 */
-	public function delete() {		
+	public function delete() {
+		self::$logger->debug('>>delete()');
+				
 		if(method_exists($this, 'before_delete_callback'))
 				$this->before_deleteAllByAttribute_callback();
-				
-		self::$logger->debug('>>delete()');
 		
 		$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE OID = '".$this->OID."';";		
 			
@@ -558,7 +563,9 @@ class DAO {
 	 * @param mixed $value
 	 * @return int The number of rows deleted
 	 */
-	public function deleteAllByAttribute($attribute, $value) {		
+	public function deleteAllByAttribute($attribute, $value) {
+		self::$logger->debug('>>deleteAllByAttribute(attribute=['.$attribute.'], value=['.$value.'])');
+				
 		if(method_exists($this, 'before_delete_callback'))
 			$this->before_delete_callback();
 		
@@ -574,9 +581,13 @@ class DAO {
 		if(mysql_error() == '') {
 			if(method_exists($this, 'after_delete_callback'))
 				$this->after_delete_callback();
-			return mysql_affected_rows(); 			
+			
+			$deletedRowCount = mysql_affected_rows();
+			self::$logger->debug('<<deleteAllByAttribute ['.$deletedRowCount.']');
+			return $deletedRowCount; 			
 		}else{
 			throw new FailedDeleteException('Failed to delete object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+			self::$logger->debug('<<deleteAllByAttribute [0]');
 			return 0;
 		}
 	}
@@ -587,6 +598,8 @@ class DAO {
 	 * @return int
 	 */
 	public function getVersion() {
+		self::$logger->debug('>>getVersion()');
+		
 		if(method_exists($this, 'before_getVersion_callback'))
 			$this->before_getVersion_callback();
 		
@@ -607,9 +620,11 @@ class DAO {
 			if(method_exists($this, 'after_getVersion_callback'))
 				$this->after_getVersion_callback();
 			
+			self::$logger->debug('<<getVersion ['.$version_num.']');
 			return $version_num;
 		}else{			
 			throw new AlphaException('Failed to get version number for object ['.$this->OID.'], MySql error is ['.mysql_error().']');
+			self::$logger->debug('<<getVersion [0]');
 			return 0;
 		}
 	}
@@ -618,6 +633,8 @@ class DAO {
 	 * Builds a new database table for the BO class
 	 */	
 	public function makeTable() {
+		self::$logger->debug('>>makeTable()');
+		
 		if(method_exists($this, 'before_makeTable_callback'))
 			$this->before_makeTable_callback();
 		
@@ -693,12 +710,15 @@ class DAO {
 		}else{
 			throw new AlphaException('Failed to create the table ['.$this->getTableName().'] for the class ['.get_class($this).'], query is ['.$this->lastQuery.']');
 		}
+		self::$logger->debug('<<makeTable');
 	}
 
 	/**
 	 * Re-builds the table if the model requirements have changed.  All data is lost!
 	 */	
 	public function rebuildTable() {
+		self::$logger->debug('>>rebuildTable()');
+		
 		if(method_exists($this, 'before_rebuildTable_callback'))
 			$this->before_rebuildTable_callback();
 		
@@ -714,7 +734,8 @@ class DAO {
 				$this->after_rebuildTable_callback();			
 		}else{			
 			throw new AlphaException('Failed to drop the table ['.$this->getTableName().'] for the class ['.get_class($this).'], query is ['.$this->lastQuery.']');
-		}		
+		}
+		self::$logger->debug('<<rebuildTable()');		
 	}
 
 	/**
@@ -723,6 +744,8 @@ class DAO {
 	 * @param string $propName 	 
 	 */
 	public function addProperty($propName) {
+		self::$logger->debug('>>addProperty(propName=['.$propName.'])');
+		
 		if(method_exists($this, 'before_addProperty_callback'))
 			$this->before_addProperty_callback();
 			
@@ -790,12 +813,15 @@ class DAO {
 		}else{			
 			throw new AlphaException('Failed to add the new attribute ['.$propName.'] to the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');
 		}
+		self::$logger->debug('<<addProperty');
 	}
 
 	/**
 	 * Populates the current business object from global POST data
 	 */	
 	public function populateFromPost() {
+		self::$logger->debug('>>populateFromPost()');
+		
 		if(method_exists($this, 'before_populateFromPost_callback'))
 			$this->before_populateFromPost_callback();
 		
@@ -830,7 +856,9 @@ class DAO {
 				$this->version_num->setValue($_POST["version_num"]);
 		}
 		if(method_exists($this, 'after_populateFromPost_callback'))
-			$this->after_populateFromPost_callback();	
+			$this->after_populateFromPost_callback();
+		
+		self::$logger->debug('<<populateFromPost');	
 	}
 
 	/**
@@ -839,6 +867,8 @@ class DAO {
 	 * @return integer
 	 */
 	public function getMAX() {
+		self::$logger->debug('>>getMAX()');
+		
 		if(method_exists($this, 'before_getMAX_callback'))
 			$this->before_getMAX_callback();
 		
@@ -853,10 +883,12 @@ class DAO {
 		if (mysql_error() == '') {
 			if(method_exists($this, 'after_getMAX_callback'))
 				$this->after_getMAX_callback();
-					
+
+			self::$logger->debug('<<getMAX ['.$row['max_OID'].']');
 			return $row['max_OID'];
 		}else{			
 			throw new AlphaException('Failed to get the MAX ID for the class ['.get_class($this).'] from the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');
+			self::$logger->debug('<<getMAX [0]');
 			return 0;
 		}
 	}
@@ -867,6 +899,8 @@ class DAO {
 	 * @return integer
 	 */
 	public function getCount() {
+		self::$logger->debug('>>getCount()');
+		
 		if(method_exists($this, 'before_getCount_callback'))
 			$this->before_getCount_callback();
 		
@@ -884,30 +918,38 @@ class DAO {
 				$this->after_getCount_callback();
 				
 			$row = mysql_fetch_assoc($result);
-				
+
+			self::$logger->debug('<<getCount ['.$row['class_count'].']');
 			return $row['class_count'];
 		}else{
 			throw new AlphaException('Failed to get the count for the class ['.get_class($this).'] from the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');			
+			self::$logger->debug('<<getCount [0]');
 			return 0;
 		}
 	}
 
 	/**
-	 * Gets the OID for the object in zero-padded format
+	 * Gets the OID for the object in zero-padded format (same as getOID())
 	 * 
 	 * @return integer
 	 */
 	public function getID() {
-		return str_pad($this->OID, 11, '0', STR_PAD_LEFT);
+		self::$logger->debug('>>getID()');
+		$oid = str_pad($this->OID, 11, '0', STR_PAD_LEFT);
+		self::$logger->debug('<<getID ['.$oid.']');
+		return $oid;
 	}
 	
 	/**
-	 * Gets the OID for the object in zero-padded format
+	 * Gets the OID for the object in zero-padded format (same as getID())
 	 * 
 	 * @return integer
 	 */
 	public function getOID() {
-		return str_pad($this->OID, 11, '0', STR_PAD_LEFT);
+		self::$logger->debug('>>getOID()');
+		$oid = str_pad($this->OID, 11, '0', STR_PAD_LEFT);
+		self::$logger->debug('<<getOID ['.$oid.']');
+		return $oid;
 	}
 	
 	/**
@@ -916,6 +958,8 @@ class DAO {
 	 * @return Integer
 	 */
 	public function getVersionNumber() {
+		self::$logger->debug('>>getVersionNumber()');
+		self::$logger->debug('<<getVersionNumber ['.$this->version_num.']');
 		return $this->version_num;
 	}
 	
