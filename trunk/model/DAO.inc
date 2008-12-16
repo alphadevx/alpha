@@ -1111,6 +1111,8 @@ class DAO {
 	 * @return mixed
 	 */
 	public function getPropObject($prop) {
+		self::$logger->debug('>>getPropObject(prop=['.$prop.'])');
+		
 		if(method_exists($this, 'before_getPropObject_callback'))
 			$this->before_getPropObject_callback();
 		
@@ -1118,9 +1120,11 @@ class DAO {
 			if(method_exists($this, 'after_getPropObject_callback'))
 				$this->after_getPropObject_callback();
 			
+			self::$logger->debug('<<getPropObject ['.print_r($this->$prop).']');
 			return $this->$prop;			
 		}else{
 			throw new AlphaException('Could not access the property object ['.$prop.'] on the object of class ['.get_class($this).']');
+			self::$logger->debug('<<getPropObject [false]');
 			return false;
 		}
 	}
@@ -1131,10 +1135,12 @@ class DAO {
 	 * @return boolean
 	 */
 	public function checkTableExists() {
-		global $config;
+		self::$logger->debug('>>checkTableExists()');
 		
 		if(method_exists($this, 'before_checkTableExists_callback'))
 			$this->before_checkTableExists_callback();
+			
+		global $config;
 				
 		$tableExists = false;
 		
@@ -1149,9 +1155,11 @@ class DAO {
 			if(method_exists($this, 'after_checkTableExists_callback'))
 				$this->after_checkTableExists_callback();
 			
+			self::$logger->debug('<<checkTableExists ['.$tableExists.']');
 			return $tableExists;
 		}else{			
 			throw new AlphaException('Failed to access the system database correctly, error is ['.mysql_error().']');
+			self::$logger->debug('<<checkTableExists [false]');
 			return false;
 		}
 	}
@@ -1162,12 +1170,15 @@ class DAO {
 	 * @return boolean
 	 */
 	public function checkTableNeedsUpdate() {
+		self::$logger->debug('>>checkTableNeedsUpdate()');
+		
 		if(method_exists($this, 'before_checkTableNeedsUpdate_callback'))
 			$this->before_checkTableNeedsUpdate_callback();
 		
 		$tableExists = $this->checkTableExists();
 		
 		if (!$tableExists) {
+			self::$logger->debug('<<checkTableNeedsUpdate [true]');
 			return true;
 		}else{
 			$updateRequired = false;
@@ -1225,9 +1236,11 @@ class DAO {
 				// check the table indexes
 				$this->checkIndexes();
 				
+				self::$logger->debug('<<checkTableNeedsUpdate ['.$updateRequired.']');
 				return $updateRequired;
 			}else{				
 				throw new AlphaException('Failed to access the system database correctly, error is ['.mysql_error().']');
+				self::$logger->debug('<<checkTableNeedsUpdate [false]');
 				return false;
 			}
 		}
@@ -1240,6 +1253,8 @@ class DAO {
 	 * @return array
 	 */
 	public function findMissingFields() {
+		self::$logger->debug('>>findMissingFields()');
+		
 		if(method_exists($this, 'before_findMissingFields_callback'))
 			$this->before_findMissingFields_callback();
 		
@@ -1294,6 +1309,7 @@ class DAO {
 		if(method_exists($this, 'after_findMissingFields_callback'))
 			$this->after_findMissingFields_callback();
 		
+		self::$logger->debug('<<findMissingFields ['.print_r($missingFields).']');
 		return $missingFields;	
 	}
 	
@@ -1303,12 +1319,17 @@ class DAO {
 	 * @return string
 	 */
 	public function getTableName() {
+		self::$logger->debug('>>getTableName()');
+		
 		eval('$TABLE_NAME = '.get_class($this).'::TABLE_NAME;');
 		
 		if(!empty($TABLE_NAME)) {
+			self::$logger->debug('<<getTableName ['.$TABLE_NAME.']');
     		return $TABLE_NAME;        
     	}else{
-    		throw new AlphaException('Error: no TABLE_NAME constant set for the class '.get_class($this));		
+    		throw new AlphaException('Error: no TABLE_NAME constant set for the class '.get_class($this));
+    		self::$logger->debug('<<getTableName []');		
+    		return '';
     	}
 	}
 	
@@ -1318,6 +1339,8 @@ class DAO {
 	 * @return Integer
 	 */
 	public function getCreatorId() {
+		self::$logger->debug('<<getCreatorId()');
+		self::$logger->debug('>>getCreatorId ['.$this->created_by.']');
 		return $this->created_by;
 	}
 	
@@ -1327,6 +1350,8 @@ class DAO {
 	 * @return Integer
 	 */
 	public function getUpdatorId() {
+		self::$logger->debug('<<getUpdatorId()');
+		self::$logger->debug('>>getUpdatorId ['.$this->updated_by.']');
 		return $this->updated_by;
 	}
 	
@@ -1336,6 +1361,8 @@ class DAO {
 	 * @return Timestamp
 	 */
 	public function getCreateTS() {
+		self::$logger->debug('<<getCreateTS()');
+		self::$logger->debug('>>getCreateTS ['.$this->created_ts.']');
 		return $this->created_ts;
 	}
 	
@@ -1345,6 +1372,8 @@ class DAO {
 	 * @return Timestamp
 	 */
 	public function getUpdateTS() {
+		self::$logger->debug('<<getUpdateTS()');
+		self::$logger->debug('>>getUpdateTS ['.$this->updated_ts.']');
 		return $this->updated_ts;
 	}
 	
@@ -1354,6 +1383,8 @@ class DAO {
 	 * @param string attributeName
 	 */
 	public function markTransient($attributeName) {
+		self::$logger->debug('<<markTransient(attributeName=['.$attributeName.'])');
+		self::$logger->debug('>>markTransient');
 		array_push($this->transientAttributes, $attributeName);		
 	}
 	
@@ -1364,6 +1395,8 @@ class DAO {
 	 * @param string attributeName
 	 */
 	public function markPersistent($attributeName) {
+		self::$logger->debug('<<markPersistent(attributeName=['.$attributeName.'])');
+		self::$logger->debug('>>markPersistent');
 		$this->transientAttributes = array_diff($this->transientAttributes, array($attributeName));
 	}
 	
@@ -1373,6 +1406,8 @@ class DAO {
 	 * @param string attributeName
 	 */
 	protected function markUnique($attributeName) {
+		self::$logger->debug('<<markUnique(attributeName=['.$attributeName.'])');
+		self::$logger->debug('>>markUnique');
 		array_push($this->uniqueAttributes, $attributeName);		
 	}
 	
@@ -1380,6 +1415,8 @@ class DAO {
 	 * Checks to see if all of the indexes are in place for the BO's table, creates those that are missing
 	 */
 	protected function checkIndexes() {
+		self::$logger->debug('>>checkIndexes()');
+		
 		if(method_exists($this, 'before_check_indexes_callback'))
 			$this->before_check_indexes_callback();
 		
@@ -1409,6 +1446,7 @@ class DAO {
 			$this->lastQuery = $query;
 			throw new AlphaException('Failed to access the system database correctly, error is ['.mysql_error().']');
 		}
+		self::$logger->debug('<<checkIndexes');
 	}
 	
 	/**
@@ -1417,6 +1455,8 @@ class DAO {
 	 * @param string $prop
 	 */
 	protected function createUniqueIndex($prop) {
+		self::$logger->debug('>>createUniqueIndex(prop=['.$prop.'])');
+		
 		if(method_exists($this, 'before_create_unique_index_callback'))
 			$this->before_create_unique_index_callback();
 		
@@ -1432,6 +1472,7 @@ class DAO {
 		}else{			
 			throw new AlphaException('Failed to create the index ['.$prop.'_unq_idx] on ['.$this->getTableName().'], error is ['.mysql_error().']');
 		}
+		self::$logger->debug('<<createUniqueIndex');
 	}
 	
 	/**
@@ -1439,11 +1480,15 @@ class DAO {
 	 * 
 	 * @param string $error
 	 */
-	protected function findOffendingValue($error) {		
+	protected function findOffendingValue($error) {
+		self::$logger->debug('>>findOffendingValue(error=['.$error.'])');
+				
 		$singleQuote1 = strpos($error,"'");
 		$singleQuote2 = strrpos($error,"'");
 		
-		return substr($error, $singleQuote1, ($singleQuote2-$singleQuote1)+1);
+		$value = substr($error, $singleQuote1, ($singleQuote2-$singleQuote1)+1);
+		self::$logger->debug('<<findOffendingValue ['.$value.'])');
+		return $value;
 	}
 	
 	/**
@@ -1451,7 +1496,9 @@ class DAO {
 	 * 
 	 * @return array
 	 */
-	public function getDataLabels() {		
+	public function getDataLabels() {
+		self::$logger->debug('>>getDataLabels()');
+		self::$logger->debug('<<getDataLabels() ['.print_r($this->dataLabels).'])');		
 		return $this->dataLabels;
 	}
 	
@@ -1461,10 +1508,16 @@ class DAO {
 	 * @return string
 	 */
 	public function getDataLabel($att) {
-		if(in_array($att, array_keys($this->dataLabels)))		
+		self::$logger->debug('>>getDataLabel(att=['.$att.'])');
+		
+		if(in_array($att, array_keys($this->dataLabels))) {
+			self::$logger->debug('<<getDataLabel ['.$this->dataLabels[$att].'])');		
 			return $this->dataLabels[$att];
-		else
+		}else{
 			throw new IllegalArguementException('Error: no data label found on the class ['.get_class($this).'] for the attribute ['.$att.']');
+			self::$logger->debug('<<getDataLabel [])');
+			return '';
+		}
 	}
 	
 	/**
@@ -1473,6 +1526,8 @@ class DAO {
 	 * @return array
 	 */
 	public function getBOClassNames() {
+		self::$logger->debug('>>getBOClassNames()');
+		
 		global $config;
 		
 		$classNameArray = array();
@@ -1502,6 +1557,7 @@ class DAO {
 	    	}
 	    }
 
+	    self::$logger->debug('<<getBOClassNames ['.print_r($classNameArray).']');
 	    return $classNameArray;
 	}
 	
@@ -1511,6 +1567,8 @@ class DAO {
 	 * @return array
 	 */
 	public function getDefaultAttributes() {
+		self::$logger->debug('>>getDefaultAttributes()');
+		self::$logger->debug('<<getDefaultAttributes ['.print_r($this->defaultAttributes).']');
 		return $this->defaultAttributes;
 	}
 	
@@ -1520,6 +1578,8 @@ class DAO {
 	 * @return array
 	 */
 	public function getTransientAttributes() {
+		self::$logger->debug('>>getTransientAttributes()');
+		self::$logger->debug('<<getTransientAttributes ['.print_r($this->transientAttributes).']');
 		return $this->transientAttributes;
 	}
 	
@@ -1529,6 +1589,8 @@ class DAO {
 	 * @param int $OID
 	 */
 	private function setOID($OID) {
+		self::$logger->debug('>>setOID(OID=['.$OID.'])');
+		self::$logger->debug('<<setOID');
 		$this->OID = $OID;
 	}
 	
@@ -1538,10 +1600,15 @@ class DAO {
 	 * @return boolean
 	 */
 	public function isTransient() {
-		if(empty($this->OID) || !isset($this->OID) || $this->OID == '00000000000')
+		self::$logger->debug('>>isTransient()');
+		
+		if(empty($this->OID) || !isset($this->OID) || $this->OID == '00000000000') {
+			self::$logger->debug('<<isTransient [true]');
 			return true;
-		else
+		}else{
+			self::$logger->debug('<<isTransient [false]');
 			return false;
+		}
 	}
 	
 	/**
@@ -1550,6 +1617,8 @@ class DAO {
 	 * @return string
 	 */
 	public function getLastQuery() {
+		self::$logger->debug('>>getLastQuery()');
+		self::$logger->debug('<<getLastQuery ['.$this->lastQuery.']');
 		return $this->lastQuery;
 	}
 	
@@ -1557,6 +1626,8 @@ class DAO {
 	 * unsets all of the attributes of this object
 	 */
 	private function clear() {
+		self::$logger->debug('>>clear()');
+		
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this));
 		$properties = $reflection->getProperties();
@@ -1565,17 +1636,21 @@ class DAO {
 			$propName = $propObj->name;
 			unset($this->$propName);
 		}
+		self::$logger->debug('<<clear');
 	}
 	
 	/**
 	 * Reloads the object from the database, overwritting any attribute values in memory 
 	 */
 	public function reload() {
+		self::$logger->debug('>>reload()');
+		
 		if(!$this->isTransient()) {
 			$this->load($this->getID());			
 		}else{
 			throw new AlphaException('Cannot reload transient object from database!');
-		}
+		}		
+		self::$logger->debug('<<reload');
 	}
 	
 	/**
@@ -1584,6 +1659,8 @@ class DAO {
 	 * @param string $classname 
 	 */
 	public static function loadClassDef($classname) {
+		self::$logger->debug('>>loadClassDef(classname=['.$classname.'])');
+		
 		global $config;
 		
 		if(file_exists($config->get('sysRoot').'model/'.$classname.'.inc'))
@@ -1592,6 +1669,8 @@ class DAO {
 			require_once $config->get('sysRoot').'alpha/model/'.$classname.'.inc';
 		else
 			throw new IllegalArguementException('The class ['.$classname.'] is not defined anywhere!');
+		
+		self::$logger->debug('<<loadClassDef');
 	}
 	
 	/**
@@ -1601,6 +1680,8 @@ class DAO {
 	 * @return boolean
 	 */
 	public function checkRecordExists($OID) {
+		self::$logger->debug('>>checkRecordExists(OID=['.$OID.'])');
+		
 		if(method_exists($this, 'before_checkRecordExists_callback'))
 			$this->before_checkRecordExists_callback();
 		
@@ -1614,12 +1695,16 @@ class DAO {
 			if(method_exists($this, 'after_checkRecordExists_callback'))
 				$this->after_checkRecordExists_callback();
 				
-			if(mysql_num_rows($result) > 0)				
+			if(mysql_num_rows($result) > 0) {
+				self::$logger->debug('<<checkRecordExists [true]');
 				return true;
-			else
+			}else{
+				self::$logger->debug('<<checkRecordExists [false]');
 				return false;
+			}
 		}else{
 			throw new AlphaException('Failed to check for the record ['.$OID.'] on the class ['.get_class($this).'] from the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');			
+			self::$logger->debug('<<checkRecordExists [false]');
 			return false;
 		}
 	}
@@ -1632,6 +1717,8 @@ class DAO {
 	 * @return bool
 	 */
 	private function isTableOverloaded() {
+		self::$logger->debug('>>isTableOverloaded()');
+		
 		$classname = get_class($this);
 		$tablename = $this->getTableName().'_object';
 		
@@ -1640,18 +1727,23 @@ class DAO {
 		$implementedInterfaces = $reflection->getInterfaces();
 		
 		foreach ($implementedInterfaces as $interface) {
-			if ($interface->name == 'AlphaTypeInterface')
+			if ($interface->name == 'AlphaTypeInterface') {
+				self::$logger->debug('<<isTableOverloaded [false]');
 				return false;
+			}
 		}
 		
 		if($classname != $tablename) {
 			$BOclasses = $this->getBOClassNames();
 			
 			foreach($BOclasses as $BOclassName) {
-				if($tablename == $BOclassName)
+				if($tablename == $BOclassName) {
+					self::$logger->debug('<<isTableOverloaded [true]');
 					return true;
+				}
 			}
 			throw new BadBOTableNameException('The table name ['.$tablename.'] for the class ['.$classname.'] is invalid as it does not match a BO definition in the system!');
+			self::$logger->debug('<<isTableOverloaded [false]');
 			return false;
 		}
 	}
