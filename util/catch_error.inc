@@ -9,7 +9,7 @@ require_once $config->get('sysRoot').'alpha/util/Logger.inc';
 
 /**
  *
- * A pair of static functions for capturing normal PHP errors as a PHPException
+ * A pair of static functions for capturing normal PHP errors and unhandled Alpha exceptions
  * 
  * @package Alpha Core Util
  * @author John Collins <john@design-ireland.net>
@@ -18,7 +18,7 @@ require_once $config->get('sysRoot').'alpha/util/Logger.inc';
  * 
  */
 function catchException($e) {
-	$logger = new Logger('PHPException');		
+	$logger = new Logger(get_class($e));		
 	$logger->error($e->getMessage()."\n [stacktrace]: \n".$e->getTraceAsString());
 }
 	
