@@ -476,7 +476,7 @@ class DAO_Test extends PHPUnit_Framework_TestCase
 
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;			
-			if(!in_array($propName, $this->person->getDefaultAttributes())) {
+			if(!in_array($propName, $this->person->getDefaultAttributes()) && !in_array($propName, $this->person->getTransientAttributes())) {
 				$this->assertNotNull($this->person->get($propName), 'testing the clear method for unsetting the attributes of an object');
 			}
 		}
