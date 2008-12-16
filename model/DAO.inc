@@ -967,6 +967,8 @@ class DAO {
 	 * Populate all of the enum options for this object from the database
 	 */
 	protected function setEnumOptions() {
+		self::$logger->debug('>>setEnumOptions()');
+		
 		if(method_exists($this, 'before_setEnumOptions_callback'))
 			$this->before_setEnumOptions_callback();
 		
@@ -1007,6 +1009,7 @@ class DAO {
 		}else{			
 			throw new AlphaException('Failed to load enum options correctly for object instance of class ['.get_class($this).']');
 		}
+		self::$logger->debug('<<setEnumOptions');
 	}
 	
 	/**
@@ -1019,6 +1022,8 @@ class DAO {
 	 * @return mixed
 	 */
 	public function get($prop, $noChildMethods = false) {
+		self::$logger->debug('>>get(prop=['.$prop.'], noChildMethods=['.$noChildMethods.'])');
+		
 		if(method_exists($this, 'before_get_callback'))
 			$this->before_get_callback();
 		
@@ -1026,7 +1031,8 @@ class DAO {
 		if(!$noChildMethods && method_exists($this, 'get'.ucfirst($prop))) {
 			if(method_exists($this, 'after_get_callback'))
 				$this->after_get_callback();
-				
+
+			self::$logger->debug('<<get ['.eval('return $this->get'.ucfirst($prop).'();').'])');
 			return eval('return $this->get'.ucfirst($prop).'();');
 		}else{
 			// handle attributes with no dedicated child get.ucfirst($prop) method
@@ -1035,15 +1041,18 @@ class DAO {
 					$this->after_get_callback();
 
 				// complex types will have a getValue() method, return the value of that
+				self::$logger->debug('<<get ['.$this->$prop->getValue().'])');
 				return $this->$prop->getValue();
 			}elseif(isset($this->$prop)) {
 				if(method_exists($this, 'after_get_callback'))
 					$this->after_get_callback();
 
 				// simple types returned as-is
+				self::$logger->debug('<<get ['.$this->$prop.'])');
 				return $this->$prop;
 			}else{
 				throw new AlphaException('Could not access the property ['.$prop.'] on the object of class ['.get_class($this).']');
+				self::$logger->debug('<<get [false])');
 				return false;
 			}
 		}
@@ -1059,6 +1068,8 @@ class DAO {
 	 * @param boolean $noChildMethods
 	 */
 	public function set($prop, $value, $noChildMethods = false) {
+		self::$logger->debug('>>set(prop=['.$prop.'], $value=['.$value.'], noChildMethods=['.$noChildMethods.'])');
+		
 		if(method_exists($this, 'before_set_callback'))
 			$this->before_set_callback();
 		
@@ -1067,7 +1078,7 @@ class DAO {
 			if(method_exists($this, 'after_set_callback'))
 				$this->after_set_callback();
 			
-			return eval('return $this->set'.ucfirst($prop)."('$value');");
+			eval('$this->set'.ucfirst($prop)."('$value');");
 		}else{
 			// handle attributes with no dedicated child set.ucfirst($prop) method
 			if(isset($this->$prop)) {
@@ -1090,6 +1101,7 @@ class DAO {
 				throw new AlphaException('Could not set the property ['.$prop.'] on the object of the class ['.get_class($this).'].  Property may not exist, or else does not have a setValue() method and is private or protected.');
 			}
 		}
+		self::$logger->debug('<<set');
 	}
 	
 	/**
