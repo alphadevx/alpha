@@ -1,6 +1,7 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/model/DAO.inc';
+require_once $config->get('sysRoot').'alpha/model/rights_object.inc';
 require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
 
 /**
@@ -43,6 +44,13 @@ class person_object extends DAO {
 	protected $accessLevel;
 	
 	/**
+	 * A Relation containing all of the rights groups that this person belongs to
+	 *
+	 * @var Relation
+	 */
+	protected $rights;
+	
+	/**
 	 * An array of data display labels for the class properties
 	 * 
 	 * @var array
@@ -54,7 +62,8 @@ class person_object extends DAO {
 		"password"=>"Password",		
 		"accessLevel"=>"Page Access Privileage Level",
 		"state"=>"Account state",
-		"URL"=>"Your site address"
+		"URL"=>"Your site address",
+		"rights"=>"Rights Group Membership"
 	);
 	
 	/**
@@ -111,6 +120,51 @@ class person_object extends DAO {
 		// add unique keys to displayName and email (which is effectively the username in Alpha)
 		$this->markUnique('displayName');
 		$this->markUnique('email');
+		
+		$this->rights = new Relation();
+		$this->markTransient('rights');
+	}
+	
+	/**
+	 * Set up the transient attributes for the rights group after it has loaded
+	 */
+	protected function after_load_callback() {
+		global $config;
+		
+		// set up MANY-TO-MANY relation person2rights
+		$this->rights->setRelatedClass('person_object', 'left');
+		$this->rights->setRelatedClassDisplayField('email', 'left');
+		$this->rights->setRelatedClass('rights_object', 'right');
+		$this->rights->setRelatedClassDisplayField('name', 'right');
+		$this->rights->setRelationType('MANY-TO-MANY');
+	}
+	
+	/**
+	 * Looks up the OID for the Standard rights group, then relates the new person
+	 * to that group.  If that group does not exist it will be recreated!
+	 */
+	protected function after_save_callback() {
+		if($this->getVersionNumber()->getValue() == 1) {
+			$standardGroup = new rights_object();
+			
+			// set up MANY-TO-MANY relation person2rights
+			$this->rights->setRelatedClass('person_object', 'left');
+			$this->rights->setRelatedClassDisplayField('email', 'left');
+			$this->rights->setRelatedClass('rights_object', 'right');
+			$this->rights->setRelatedClassDisplayField('name', 'right');
+			$this->rights->setRelationType('MANY-TO-MANY');
+			
+			try {
+				$standardGroup->loadByAttribute('name', 'Standard');
+			}catch (BONotFoundException $e) {
+				$standardGroup->set('name', 'Standard');
+				$standardGroup->save();
+			}
+			
+			$lookup = $this->rights->getLookup();
+			$lookup->setValue(array($this->getID(), $standardGroup->getID()));
+			$lookup->save();
+		}		
 	}
 	
 	/**

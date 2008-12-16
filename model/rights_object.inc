@@ -1,6 +1,7 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/model/DAO.inc';
+require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 
 /**
  *
@@ -9,7 +10,7 @@ require_once $config->get('sysRoot').'alpha/model/DAO.inc';
  * @package alpha::model
  * @author John Collins <john@design-ireland.net>
  * @copyright 2008 John Collins
- * @version $Id: person_object.inc 701 2008-12-15 19:53:22Z johnc $ 
+ * @version $Id$ 
  * 
  */ 
 class rights_object extends DAO {	
@@ -19,6 +20,13 @@ class rights_object extends DAO {
 	 * @var String
 	 */
 	protected $name;
+	
+	/**
+	 * A Relation containing all of the person_objects that have these rights
+	 *
+	 * @var Relation
+	 */
+	protected $members;
 		
 	/**
 	 * An array of data display labels for the class properties
@@ -27,7 +35,8 @@ class rights_object extends DAO {
 	 */
 	protected $dataLabels = array(
 		"OID"=>"Rights Group ID#",		
-		"name"=>"Rights Group Name"
+		"name"=>"Rights Group Name",
+		"members"=>"Rights Group Members"
 	);
 	
 	/**
@@ -45,8 +54,26 @@ class rights_object extends DAO {
 		parent::__construct();
 		$this->name = new String();
 		
+		
 		// add unique key to name field
 		$this->markUnique('name');
+		
+		$this->members = new Relation();
+		$this->markTransient('members');
+	}
+	
+	/**
+	 * Set up the transient attributes for the rights group after it has loaded
+	 */
+	protected function after_load_callback() {
+		global $config;
+		
+		// set up MANY-TO-MANY relation person2rights
+		$this->members->setRelatedClass('person_object', 'left');
+		$this->members->setRelatedClassDisplayField('email', 'left');
+		$this->members->setRelatedClass('rights_object', 'right');
+		$this->members->setRelatedClassDisplayField('name', 'right');
+		$this->members->setRelationType('MANY-TO-MANY');
 	}
 }
 
