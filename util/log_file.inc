@@ -29,10 +29,10 @@ class log_file {
  	 */
  	var $seperator = ",";
  	/**
- 	 * the maximum amount of records accepting in the log file before a backup is created and a new file is started
+ 	 * the maximum size of the log file before a backup is created and a new file is started
  	 * var int
  	 */
- 	var $max_size = 800;
+ 	var $max_size = 5;
  	
  	/**
  	 * the constructor
@@ -63,45 +63,35 @@ class log_file {
  	 * $param array $line the line of data to write
  	 */
  	function write_line($line) {
- 		$fp=fopen($this->path,"a+");
- 		
- 		flock($fp,2); // locks the file for writting
+ 		$mergedLine = '';
  		
  		$col_count = count($line); 		
  		
- 		// we need to ensure that the seperator is not in the value anywhere, as it
- 		// would cause problems later when reading the log
- 		$values = str_replace($this->seperator, "", $line);
- 		
  		for($i = 0; $i < $col_count; $i++) {
-			fwrite($fp,$values[$i]);
+ 			// we need to ensure that the seperator is not in the value anywhere, as it
+ 			// would cause problems later when reading the log
+ 			$value = str_replace($this->seperator, "", $line[$i]);
 			if ($i == ($col_count-1))
-				fwrite($fp,"\n");
+				$mergedLine .= $value."\n";				
 			else
-				fwrite($fp, $this->seperator);
+				$mergedLine .= $value.$this->seperator;				
  		}
  		
- 		flock($fp,3); // unlocks the file
-		fclose($fp); //closes the file
-		
-		if($this->check_file_line_count() >= $this->max_size) {
+ 		file_put_contents($this->path, $mergedLine, FILE_APPEND|LOCK_EX);
+ 		
+		if($this->check_file_size() >= $this->max_size) {			
 			$this->backup_file();	
 		}
  	}
  	
  	/**
- 	 * returns a count of the amount of lines in the log file on disc
- 	 * @return int the amount of lines in the file
+ 	 * returns the size in megabytes of the log file on disc
+ 	 * @return float
  	 */
- 	function check_file_line_count() {
- 		//counts the number of entries in the logfile
-		$numOfRecords = 0;
+ 	function check_file_size() {		
+		$size = filesize($this->path);
 		
-		$fileArray = file($this->path);
-		for ($k = 0; $k < count($fileArray); $k++) {
-			$numOfRecords++;
-		}
-		return $numOfRecords;
+		return ($size/1024)/1024;
  	}
  	
  	/**
