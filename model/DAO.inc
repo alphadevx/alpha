@@ -124,10 +124,10 @@ abstract class DAO {
 		self::$logger->debug('>>__construct()');
 		
 		$this->version_num = new Integer(0);
-		$this->created_ts = new Timestamp();
+		$this->created_ts = new Timestamp(date("Y-m-d H:i:s"));
 		$person_ID = (isset($_SESSION["current_user"])? $_SESSION["current_user"]->getID(): 0);
 		$this->created_by = new Integer($person_ID);
-		$this->updated_ts = new Timestamp();
+		$this->updated_ts = new Timestamp(date("Y-m-d H:i:s"));
 		$this->updated_by = new Integer($person_ID);
 		
 		self::$logger->debug('<<__construct');
@@ -374,28 +374,34 @@ abstract class DAO {
 	 */
 	public function save() {
 		self::$logger->debug('>>save()');
-		
+			
 		if(method_exists($this, 'before_save_callback'))
 			$this->before_save_callback();
 		
 		// firstly we will validate the object before we try to save it
 		if(!$this->validate()) {
 			throw new FailedSaveException('Could not save due to a validation error.');
+			return;
 		}else{		
 			// get the class attributes
 			$reflection = new ReflectionClass(get_class($this));
 			$properties = $reflection->getProperties();
-			$sqlQuery = "";		
+			$sqlQuery = "";
+
+			// begin a new transaction
+			$this->begin();
 			
 			if($this->getVersion() != $this->version_num->getValue()){
 				throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
+				$this->rollback();
+				return;
 			}
 			
 			// set the "updated by" fields, we can only set the user id if someone is logged in
 			if(isset($_SESSION["current_user"]))
 				$this->updated_by->setValue($_SESSION["current_user"]->getID());
 			
-			$this->updated_ts = new Timestamp();
+			$this->updated_ts = new Timestamp(date("Y-m-d H:i:s"));
 			
 			// check to see if it is a transient object that needs to be inserted
 			if($this->isTransient()) {
@@ -468,11 +474,31 @@ abstract class DAO {
 			$result = mysql_query($sqlQuery);
 	
 			if (mysql_error() == '') {
-				if(method_exists($this, 'after_save_callback'))
-					$this->after_save_callback();
 				// populate the updated OID in case we just done an insert				
 				if($this->isTransient())
-					$this->setOID(mysql_insert_id());				
+					$this->setOID(mysql_insert_id());
+
+				// handle the saving of MANY-TO-MANY relation values
+				/*try {
+					foreach($properties as $propObj) {
+						$propName = $propObj->name;
+						$propClass = $propObj->class;
+						
+						if($propClass == 'Relation' && $prop->getRelationType() == 'MANY-TO-MANY') {
+							// TODO
+						}
+					}
+				}catch (Exception $e) {
+					throw new FailedSaveException('Failed to save object, error is ['.$e->getMessage().']');
+					$this->rollback();
+					return;
+				}*/
+				
+				// commit
+				$this->commit();
+				
+				if(method_exists($this, 'after_save_callback'))
+					$this->after_save_callback();
 			}else{
 				// there has been an error, so decrement the version number back
 				$temp = $this->version_num->getValue();					
@@ -481,13 +507,15 @@ abstract class DAO {
 				// check for unique violations			
 				if(mysql_errno() == '1062') {					
 					throw new ValidationException('Failed to save, the value '.$this->findOffendingValue(mysql_error()).' is already in use!');
+					$this->rollback();
+					return;
 				}else{					
-					throw new FailedSaveException('Failed to save object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');			
+					throw new FailedSaveException('Failed to save object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+					$this->rollback();
+					return;
 				}
 			}
 		}
-		
-		self::$logger->debug('<<save');
 	}
 	
 	/**
@@ -1540,7 +1568,7 @@ abstract class DAO {
         // loop over the business object directory
 	    while (false !== ($file = readdir($handle))) {
 	    	if (preg_match("/_object.inc/", $file)) {
-	    		$classname = substr($file, 0, -4);	    		
+	    		$classname = substr($file, 0, -4);
 	    		
 	    		array_push($classNameArray, $classname);
 	    	}
@@ -1749,6 +1777,50 @@ abstract class DAO {
 			return false;
 		}
 	}
+	
+	/**
+	 * Starts a new database transaction
+	 *
+	 */
+	private function begin() {
+		self::$logger->debug('>>begin()');
+		
+    	mysql_query('START TRANSACTION');
+     	mysql_query('BEGIN');
+     	
+     	if (mysql_error() != '')
+     		throw new AlphaException('Error beginning a new transaction, error is ['.mysql_error().']');
+     	
+     	self::$logger->debug('<<begin');
+	}
+	
+	/**
+	 * Commits the current transaction
+	 *
+	 */
+	private function commit() {
+		self::$logger->debug('>>commit()');
+    	mysql_query('COMMIT');
+    	
+    	if (mysql_error() != '')
+     		throw new FailedSaveException('Error commiting a transaction, error is ['.mysql_error().']');
+    	
+    	self::$logger->debug('<<commit');
+  	}
+  	
+	/**
+	 * Aborts the current transaction
+	 *
+	 */
+	private function rollback() {
+		self::$logger->debug('>>rollback()');
+    	mysql_query('ROLLBACK');
+    	
+    	if (mysql_error() != '')
+     		throw new AlphaException('Error aborting a transaction, error is ['.mysql_error().']');
+    	
+    	self::$logger->debug('<<rollback');
+  	}	
 }
 
 ?>
