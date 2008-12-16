@@ -118,7 +118,7 @@ class Create extends Controller
 			
 			// check to see if a person is being created, then encrypt the password
 			if (get_class($this->BO) == 'person_object' && isset($_POST["password"]))
-				$this->BO->set_password($_POST["password"]);
+				$this->BO->set('password', crypt($_POST["password"]));
 					
 			$success = $this->BO->save();			
 					
