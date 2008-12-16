@@ -95,7 +95,7 @@ class Integer extends AlphaType implements AlphaTypeInterface {
 	 * @return int
 	 */
 	public function getValue() {
-		return $this->value;
+		return intval($this->value);
 	}	
 	
 	/**
