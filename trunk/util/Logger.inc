@@ -17,7 +17,7 @@ class Logger {
 		$this->classname = $classname;
 		$this->level = $config->get('sysTraceLevel');
 		$this->logfile = new log_file($config->get('sysLogFile'));
-		$this->logfile->set_max_size($config->get('sysLogFileMaxEntries'));
+		$this->logfile->set_max_size($config->get('sysLogFileMaxSize'));
 	}
 	
 	public function debug($message) {		
