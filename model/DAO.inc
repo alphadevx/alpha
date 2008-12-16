@@ -1525,7 +1525,9 @@ class DAO {
 	 *
 	 * @return array
 	 */
-	public function getBOClassNames() {
+	public static function getBOClassNames() {
+		if(self::$logger == null)
+			self::$logger = new Logger('DAO');
 		self::$logger->debug('>>getBOClassNames()');
 		
 		global $config;
@@ -1734,7 +1736,7 @@ class DAO {
 		}
 		
 		if($classname != $tablename) {
-			$BOclasses = $this->getBOClassNames();
+			$BOclasses = self::getBOClassNames();
 			
 			foreach($BOclasses as $BOclassName) {
 				if($tablename == $BOclassName) {
