@@ -46,7 +46,14 @@ class RelationLookup extends DAO implements AlphaTypeInterface {
 	 * 
 	 * @var string
 	 */
-	static protected $TABLE_NAME;
+	protected static $TABLE_NAME;
+	
+	/**
+	 * Trace logger
+	 * 
+	 * @var Logger
+	 */
+	private static $logger = null;
 	
 	/**
 	 * an array of data display labels for the class properties
@@ -70,8 +77,17 @@ class RelationLookup extends DAO implements AlphaTypeInterface {
 	 * The constructor
 	 */
 	public function __construct($leftClassName, $rightClassName) {
+		if(self::$logger == null)
+			self::$logger = new Logger('RelationLookup');
+		self::$logger->debug('>>__construct(leftClassName=['.$leftClassName.'], rightClassName=['. $rightClassName.'])');
+		
 		// ensure to call the parent constructor
 		parent::__construct();
+		
+		if(empty($leftClassName) || empty($rightClassName)) {
+			throw new IllegalArguementException('Cannot create RelationLookup object without providing the left and right class names!');
+			return;
+		}
 		
 		$this->leftClassName = $leftClassName;
 		$this->rightClassName = $rightClassName;
@@ -89,13 +105,20 @@ class RelationLookup extends DAO implements AlphaTypeInterface {
 		if(!$this->checkTableExists()) {
 			$this->makeTable();
 		}
+		
+		self::$logger->debug('<<__construct');
 	}
 	
 	private function setTableName() {
+		self::$logger->debug('>>setTableName()');
+		
 		$left = substr($this->leftClassName, 0, -7);
 		$right = substr($this->rightClassName, 0, -7);
 		
+		self::$logger->debug('Setting TABLE_NAME to ['.$left.'2'.$right.']');
 		self::$TABLE_NAME = $left.'2'.$right;
+		
+		self::$logger->debug('<<setTableName');
 	}
 	
 	/**
@@ -111,6 +134,64 @@ class RelationLookup extends DAO implements AlphaTypeInterface {
     		throw new AlphaException('Error: no TABLE_NAME set for the class '.get_class($this));
     		return '';
     	}
+	}
+	
+	/**
+	 * Loads all of the objects of this class by the specified attribute into an array which is returned. 
+	 * This custom version provides the left/right class names to the business object constructor, required 
+	 * for RelationLookup objects.
+	 * 
+	 * @param string $atribute The attribute to load the object by
+	 * @param string $value The value of the attribute to load the object by
+	 * @param integer $start The start of the SQL LIMIT clause
+	 * @param integer $limit The amount (limit) of objects to load
+	 * @param string $orderBy the name of the field to sort the BOs by
+	 * @param string $order the order to sort the BOs by, default is ASC
+	 * @return array an array containing objects of this type of business object.
+	 */
+	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC") {
+		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
+		
+		if(method_exists($this, 'before_loadAllByAttribute_callback'))
+			$this->before_loadAllByAttribute_callback();
+		
+		global $config;
+		
+		if ($limit == 0)
+			$limit = $config->get('sysListPageAmount');
+		
+		if(!$this->isTableOverloaded())
+			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = '$value' ORDER BY ".$orderBy." ".$order." LIMIT ".$start.", ".$limit.";";
+		else
+			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = '$value' AND classname='".get_class($this)."' ORDER BY ".$orderBy." ".$order." LIMIT ".$start.", ".$limit.";";
+			
+		$this->lastQuery = $sqlQuery;
+
+		$result = mysql_query($sqlQuery);
+		
+		if(mysql_error() != '') {
+			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+			self::$logger->debug('<<loadAllByAttribute []');
+			return array();
+		}
+		
+		// now build an array of objects to be returned
+		$objects = array();
+		$count = 0;
+		$BO_Class = get_class($this);
+		
+		while($row = mysql_fetch_assoc($result)) {
+			$obj = new $BO_Class($this->leftClassName, $this->rightClassName);
+			$obj->load($row["OID"]);
+			$objects[$count] = $obj;
+			$count++;
+		}
+		
+		if(method_exists($this, 'after_loadAllByAttribute_callback'))
+			$this->after_loadAllByAttribute_callback();
+		
+		self::$logger->debug('<<loadAllByAttribute ['.count($objects).']');
+		return $objects;	
 	}
 	
 	/**
