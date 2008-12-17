@@ -78,7 +78,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * In the case of MANY-TO-MANY relationship, a lookup object will be required
 	 *
-	 * @var unknown_type
+	 * @var RelationLookup
 	 */
 	private $lookup;
 	
@@ -90,7 +90,8 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	private $allowableRelationTypes = array('MANY-TO-ONE','ONE-TO-MANY','ONE-TO-ONE','MANY-TO-MANY');
 	
 	/**
-	 * The object ID (OID) value of the related object
+	 * The object ID (OID) value of the related object.  In the special case of a MANY-TO-MANY
+	 * relation, contains the OID of the object on the current, accessing side.
 	 *
 	 * @var int
 	 */
@@ -297,28 +298,70 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	}	
 	
 	/**
-	 * Getter for the display value of the related class field
+	 * Getter for the display value of the related class field.  In the case of a 
+	 * MANY-TO-MANY Relation, a comma-seperated list of values is returned.
 	 *
+	 * @param string $accessingClassName Used to indicate the reading side when accessing from MANY-TO-MANY relation (leave blank for other relation types)
 	 * @return string
 	 */
-	public function getRelatedClassDisplayFieldValue() {
+	public function getRelatedClassDisplayFieldValue($accessingClassName='') {
 		global $config;
 		
-		if (file_exists($config->get('sysRoot').'alpha/model/'.$this->relatedClass.'.inc')) {
-			require_once $config->get('sysRoot').'alpha/model/'.$this->relatedClass.'.inc';
-		}elseif (file_exists($config->get('sysRoot').'model/'.$this->relatedClass.'.inc')) {
-			require_once $config->get('sysRoot').'model/'.$this->relatedClass.'.inc';
+		if($this->relationType == 'MANY-TO-MANY') {
+			/*
+			 * 1. Use RelationLookup to get OIDs of related objects
+			 * 2. Load related objects
+			 * 3. Access the value of the field on the object to build the
+			 * comma-seperated list.
+			 */
+			if(empty($this->lookup)) {
+				throw new AlphaException('Tried to load related MANY-TO-MANY fields but no RelationLookup set on the Relation object!');
+				return '';
+			}
+			
+			if(empty($accessingClassName)) {
+				throw new IllegalArguementException('Tried to load related MANY-TO-MANY fields but no accessingClassName parameter set on the call to getRelatedClassDisplayFieldValue!');
+				return '';
+			}
+			
+			// load objects on the right from accessing on the left
+			if($accessingClassName == $this->relatedClassLeft) {
+				DAO::loadClassDef($this->relatedClassLeft);
+				$obj = new $this->relatedClassRight;
+				
+				$lookupObjects = $this->lookup->loadAllByAttribute('leftID', $this->value);
+				
+				$value = '';
+				foreach($lookupObjects as $lookupObject) {
+					$obj->load($lookupObject->get('rightID'));
+					$value .= $obj->get($this->relatedClassRightDisplayField).',';
+				}
+				return substr($value,0,-1);
+			}
+			// load objects on the left from accessing on the right
+			if($accessingClassName == $this->relatedClassRight) {
+				DAO::loadClassDef($this->relatedClassRight);
+				$obj = new $this->relatedClassLeft;
+				
+				$lookupObjects = $this->lookup->loadAllByAttribute('rightID', $this->value);
+			
+				$value = '';
+				foreach($lookupObjects as $lookupObject) {
+					$obj->load($lookupObject->get('leftID'));
+					$value .= $obj->get($this->relatedClassLeftDisplayField).',';
+				}
+				return substr($value,0,-1);
+			}
 		}else{
-			throw new AlphaException('Could not load the definition for the BO class ['.$this->relatedClass.']');
-		}
-					
-		$obj = new $this->relatedClass;
-		// making sure we have an object to load
-		if(empty($this->value) || $this->value == '00000000000') {
-			return '';
-		}else{
-			$obj->load($this->value);		
-			return $obj->get($this->relatedClassDisplayField);
+			DAO::loadClassDef($this->relatedClass);
+			$obj = new $this->relatedClass;
+			// making sure we have an object to load
+			if(empty($this->value) || $this->value == '00000000000') {
+				return '';
+			}else{
+				$obj->load($this->value);		
+				return $obj->get($this->relatedClassDisplayField);
+			}
 		}
 	}
 	
