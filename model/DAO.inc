@@ -1689,6 +1689,8 @@ abstract class DAO {
 	 * @param string $classname 
 	 */
 	public static function loadClassDef($classname) {
+		if(self::$logger == null)
+			self::$logger = new Logger('DAO');
 		self::$logger->debug('>>loadClassDef(classname=['.$classname.'])');
 		
 		global $config;
