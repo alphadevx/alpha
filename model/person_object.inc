@@ -138,6 +138,7 @@ class person_object extends DAO {
 		$this->rights->setRelatedClass('rights_object', 'right');
 		$this->rights->setRelatedClassDisplayField('name', 'right');
 		$this->rights->setRelationType('MANY-TO-MANY');
+		$this->rights->setValue($this->getID());
 	}
 	
 	/**
@@ -154,6 +155,7 @@ class person_object extends DAO {
 			$this->rights->setRelatedClass('rights_object', 'right');
 			$this->rights->setRelatedClassDisplayField('name', 'right');
 			$this->rights->setRelationType('MANY-TO-MANY');
+			$this->rights->setValue($this->getID());
 			
 			try {
 				$standardGroup->loadByAttribute('name', 'Standard');
