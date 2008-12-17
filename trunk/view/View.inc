@@ -25,14 +25,14 @@ class View {
 	/**
 	 * The business object that will be rendered
 	 * 
-	 * @var object
+	 * @var DAO
 	 */
 	protected $BO;
 
 	/**
 	 * Constructor for the View
 	 * 
-	 * @param object $BO
+	 * @param DAO $BO
 	 */
 	public function __construct($BO) {		
 		$this->BO = $BO;
@@ -785,6 +785,14 @@ class View {
 		if ($mode == 'view') {
 			if($rel->getRelationType() == 'MANY-TO-ONE') {
 				$html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue());
+			}elseif($rel->getRelationType() == 'MANY-TO-MANY') {
+				// for overloaded tables, the classname != the table name
+				if($this->BO->isTableOverloaded()) {
+					$parentClassName = $this->BO->getTableName().'_object';
+					$html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue($parentClassName));
+				}else{
+					$html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue(get_class($this->BO)));
+				}
 			}else{
 				$rel = new record_selector($rel, $label, $name);
 				$html .= $rel->render();
