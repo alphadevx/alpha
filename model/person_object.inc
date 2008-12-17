@@ -40,6 +40,7 @@ class person_object extends DAO {
 	 * The access privileage level of the person
 	 * 
 	 * @var Enum
+	 * @deprecated 
 	 */
 	protected $accessLevel;
 	
@@ -189,6 +190,7 @@ class person_object extends DAO {
 	 * Setter for accessLevel value
 	 * 
 	 * @param string $accessLevel
+	 * @deprecated
 	 */
 	public function setAccessLevel($accessLevel) {
 		$this->accessLevel->setValue($accessLevel);
@@ -198,6 +200,7 @@ class person_object extends DAO {
 	 * Getter for accessLevel value
 	 * 
 	 * @return Enum
+	 * @deprecated
 	 */
 	public function getAccessLevel() {
 		return $this->accessLevel;
