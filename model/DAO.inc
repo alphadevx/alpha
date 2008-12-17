@@ -92,7 +92,7 @@ abstract class DAO {
 	 * 
 	 * @var array
 	 */
-	protected $transientAttributes = array("lastQuery","dataLabels","defaultAttributes","transientAttributes","uniqueAttributes","TABLE_NAME");
+	protected $transientAttributes = array("lastQuery","dataLabels","defaultAttributes","transientAttributes","uniqueAttributes","TABLE_NAME","logger");
 	
 	/**
 	 * An array of the uniquely-constained attributes of this persistent BO
@@ -346,7 +346,7 @@ abstract class DAO {
 		
 		if(mysql_error() != '') {
 			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
-			self::$logger->debug('<<loadAllByAttribute [p]');
+			self::$logger->debug('<<loadAllByAttribute []');
 			return array();
 		}
 		
@@ -1748,7 +1748,7 @@ abstract class DAO {
 	 * 
 	 * @return bool
 	 */
-	private function isTableOverloaded() {
+	public function isTableOverloaded() {
 		self::$logger->debug('>>isTableOverloaded()');
 		
 		$classname = get_class($this);
