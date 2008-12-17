@@ -74,6 +74,7 @@ class rights_object extends DAO {
 		$this->members->setRelatedClass('rights_object', 'right');
 		$this->members->setRelatedClassDisplayField('name', 'right');
 		$this->members->setRelationType('MANY-TO-MANY');
+		$this->members->setValue($this->getID());
 	}
 }
 
