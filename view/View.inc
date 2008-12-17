@@ -758,6 +758,43 @@ class View {
 	}
 	
 	/**
+	 * render the default Relation HTML
+	 *
+	 * @param string $name The field name
+	 * @param string $label The label to apply to the field
+	 * @param string $mode The field mode (create/edit/view)	 
+	 * @param string $value The field value (optional)
+	 * @param bool $tableTags Include table tags and label (optional)
+	 * @return string
+	 */
+	public function renderRelationField($name, $label, $mode, $value='', $tableTags=true) {
+		$html = '';
+		
+		$rel = $this->BO->getPropObject($name);
+		
+		if ($mode == 'create') {
+			$rel = new record_selector($rel, $label, $name);
+			$html .= $rel->render();
+		}
+		
+		if ($mode == 'edit') {
+			$rel = new record_selector($rel, $label, $name);
+			$html .= $rel->render();
+		}
+		
+		if ($mode == 'view') {
+			if($rel->getRelationType() == 'MANY-TO-ONE') {
+				$html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue());
+			}else{
+				$rel = new record_selector($rel, $label, $name);
+				$html .= $rel->render();
+			}
+		}
+		
+		return $html;
+	}
+	
+	/**
 	 * Renders all fields for the current BO in edit/create/view mode
 	 *
 	 * @param string $mode
@@ -822,7 +859,7 @@ class View {
 						}
 					break;
 					case 'TEXT' :
-						$html .= $this->renderTextField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));						
+						$html .= $this->renderTextField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
 					break;
 					case 'BOOLEAN' :
 						if($mode == 'view') {
@@ -848,12 +885,7 @@ class View {
 						}
 					break;
 					case 'RELATION' :
-						if($mode == 'view' && $this->BO->getPropObject($propName)->getRelationType() == 'MANY-TO-ONE') {
-							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->getPropObject($propName)->getRelatedClassDisplayFieldValue());
-						}else{
-							$rel = new record_selector($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
-							$html .= $rel->render();
-						}
+						$html .= $this->renderRelationField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
 					break;
 					default :
 						$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
