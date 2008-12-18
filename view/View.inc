@@ -772,14 +772,21 @@ class View {
 		
 		$rel = $this->BO->getPropObject($name);
 		
-		if ($mode == 'create') {
-			$rel = new record_selector($rel, $label, $name);
-			$html .= $rel->render();
-		}
-		
-		if ($mode == 'edit') {
-			$rel = new record_selector($rel, $label, $name);
-			$html .= $rel->render();
+		if ($mode == 'create' || $mode == 'edit') {
+			if($rel->getRelationType() == 'MANY-TO-MANY') {
+				// for overloaded tables, the classname != the table name
+				if($this->BO->isTableOverloaded()) {
+					$parentClassName = $this->BO->getTableName().'_object';
+					$rel = new record_selector($rel, $label, $name, true, $parentClassName);
+					$html .= $rel->render();
+				}else{
+					$rel = new record_selector($rel, $label, $name, true, get_class($this->BO));
+					$html .= $rel->render();
+				}
+			}else{
+				$rel = new record_selector($rel, $label, $name);
+				$html .= $rel->render();
+			}
 		}
 		
 		if ($mode == 'view') {
