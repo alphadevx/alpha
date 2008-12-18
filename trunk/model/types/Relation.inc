@@ -327,7 +327,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	
 	/**
 	 * Getter for the display value of the related class field.  In the case of a 
-	 * MANY-TO-MANY Relation, a comma-seperated list of values is returned.
+	 * MANY-TO-MANY Relation, a comma-seperated sorted list of values is returned.
 	 *
 	 * @param string $accessingClassName Used to indicate the reading side when accessing from MANY-TO-MANY relation (leave blank for other relation types)
 	 * @return string
@@ -359,12 +359,14 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 				
 				$lookupObjects = $this->lookup->loadAllByAttribute('leftID', $this->value);
 				
-				$value = '';
+				$values = array();
 				foreach($lookupObjects as $lookupObject) {
 					$obj->load($lookupObject->get('rightID'));
-					$value .= $obj->get($this->relatedClassRightDisplayField).',';
+					array_push($values, $obj->get($this->relatedClassRightDisplayField));
 				}
-				return substr($value,0,-1);
+				// sort array, then return as comma-seperated string
+				asort($values);
+				return implode(',', $values);
 			}
 			// load objects on the left from accessing on the right
 			if($accessingClassName == $this->relatedClassRight) {
@@ -373,12 +375,14 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 				
 				$lookupObjects = $this->lookup->loadAllByAttribute('rightID', $this->value);
 			
-				$value = '';
+				$values = array();
 				foreach($lookupObjects as $lookupObject) {
 					$obj->load($lookupObject->get('leftID'));
-					$value .= $obj->get($this->relatedClassLeftDisplayField).',';
+					array_push($values, $obj->get($this->relatedClassLeftDisplayField));
 				}
-				return substr($value,0,-1);
+				// sort array, then return as comma-seperated string
+				asort($values);
+				return implode(',', $values);
 			}
 		}else{
 			DAO::loadClassDef($this->relatedClass);
@@ -431,6 +435,23 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 */
 	public function getLookup() {
 		return $this->lookup;
+	}
+	
+	/**
+	 * Gets the side ('left' or 'right') of the passed classname on the current Relation object
+	 *
+	 * @param string $BOClassname
+	 * @return string
+	 */
+	public function getSide($BOClassname) {
+		if($BOClassname == $this->relatedClassLeft) { 
+			return 'left';
+		}elseif($BOClassname == $this->relatedClassRight) {
+			return 'right';
+		}else{
+			throw new IllegalArguementException('Error trying to determine the MANY-TO-MANY relationship side for the classname ['.$BOClassname.']');
+			return '';
+		}
 	}
 }
 
