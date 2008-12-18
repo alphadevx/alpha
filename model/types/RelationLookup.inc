@@ -14,14 +14,14 @@ require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
  */
 class RelationLookup extends DAO implements AlphaTypeInterface {
 	/**
-	 * The OID of the left busines object in the relation
+	 * The OID of the left business object in the relation
 	 * 
 	 * @var Integer
 	 */
 	protected $leftID;
 	
 	/**
-	 * The OID of the right busines object in the relation
+	 * The OID of the right business object in the relation
 	 * 
 	 * @var Integer
 	 */
@@ -30,14 +30,14 @@ class RelationLookup extends DAO implements AlphaTypeInterface {
 	/**
 	 * The name of the left business object class in the relation
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	private $leftClassName;
 	
 	/**
 	 * The name of the right business object class in the relation
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	private $rightClassName;
 	
@@ -107,6 +107,24 @@ class RelationLookup extends DAO implements AlphaTypeInterface {
 		}
 		
 		self::$logger->debug('<<__construct');
+	}
+	
+	/**
+	 * Get the leftClassName value
+	 *
+	 * @return string
+	 */
+	public function getLeftClassName() {
+		return $this->leftClassName;
+	}
+	
+	/**
+	 * Get the rightClassName value
+	 *
+	 * @return string
+	 */
+	public function getRightClassName() {
+		return $this->rightClassName;
 	}
 	
 	private function setTableName() {
