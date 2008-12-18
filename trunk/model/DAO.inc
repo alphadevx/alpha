@@ -505,12 +505,12 @@ abstract class DAO {
 						}
 					}
 					if($this->isTableOverloaded())
-						$sqlQuery = "classname='".get_class($this)."',";
+						$sqlQuery .= "classname = '".get_class($this)."',";
 				}
 	
 				$sqlQuery = rtrim($sqlQuery, ",");
-	
-				$sqlQuery .= " WHERE OID=".$this->OID.";";
+
+				$sqlQuery .= " WHERE OID='".$this->OID."';";
 			}
 	
 			$this->lastQuery = $sqlQuery;
@@ -523,20 +523,64 @@ abstract class DAO {
 					$this->setOID(mysql_insert_id());
 
 				// handle the saving of MANY-TO-MANY relation values
-				/*try {
+				try {
 					foreach($properties as $propObj) {
 						$propName = $propObj->name;
-						$propClass = $propObj->class;
 						
-						if($propClass == 'Relation' && $prop->getRelationType() == 'MANY-TO-MANY') {
-							// TODO
+						if(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {				
+							$prop = $this->getPropObject($propName);
+							
+							if($prop->getRelationType() == 'MANY-TO-MANY') {
+								try {
+									if(isset($_POST[$propName]))
+										$OIDs = explode(',', $_POST[$propName]);
+										
+									if(isset($OIDs) && !empty($OIDs[0])) {
+										
+										// for overloaded tables, the classname != the table name
+										if($this->isTableOverloaded())
+											$className = $this->getTableName().'_object';
+										else
+											$className = get_class($this);
+											
+										$side = $prop->getSide($className);
+										$lookUp = $prop->getLookup();									
+										
+										// first delete all of the old RelationLookup objects for this rel
+										if($side == 'left')
+											$lookUp->deleteAllByAttribute('leftID', $this->getID());
+										else
+											$lookUp->deleteAllByAttribute('rightID', $this->getID());
+				
+										if (mysql_error() != '')
+											throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
+										
+										// now for each posted OID, create a new RelationLookup record and save
+										foreach ($OIDs as $oid) {
+											$newLookUp = new RelationLookup($lookUp->get('leftClassName'), $lookUp->get('rightClassName'));
+											if($side == 'left') {
+												$newLookUp->set('leftID', $this->getID());
+												$newLookUp->set('rightID', $oid);
+											}else{
+												$newLookUp->set('rightID', $this->getID());
+												$newLookUp->set('leftID', $oid);
+											}
+											$newLookUp->save();
+										}									
+									}
+								}catch (Exception $e) {
+									throw new FailedSaveException('Failed to update a MANY-TO-MANY relation on the object, error is ['.$e->getMessage().']');
+									$this->rollback();
+									return;
+								}
+							}
 						}
 					}
 				}catch (Exception $e) {
 					throw new FailedSaveException('Failed to save object, error is ['.$e->getMessage().']');
 					$this->rollback();
 					return;
-				}*/
+				}
 				
 				// commit
 				$this->commit();
@@ -609,7 +653,7 @@ abstract class DAO {
 		self::$logger->debug('>>delete()');
 				
 		if(method_exists($this, 'before_delete_callback'))
-				$this->before_deleteAllByAttribute_callback();
+				$this->before_delete_callback();
 		
 		$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE OID = '".$this->OID."';";		
 			
@@ -619,7 +663,7 @@ abstract class DAO {
 		
 		if(mysql_error() == '') {
 			if(method_exists($this, 'after_delete_callback'))
-				$this->after_deleteAllByAttribute_callback();
+				$this->after_delete_callback();
 			$this->clear();			
 		}else{			
 			throw new FailedDeleteException('Failed to delete object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
@@ -638,8 +682,8 @@ abstract class DAO {
 	public function deleteAllByAttribute($attribute, $value) {
 		self::$logger->debug('>>deleteAllByAttribute(attribute=['.$attribute.'], value=['.$value.'])');
 				
-		if(method_exists($this, 'before_delete_callback'))
-			$this->before_delete_callback();
+		if(method_exists($this, 'before_deleteAllByAttribute_callback'))
+			$this->before_deleteAllByAttribute_callback();
 		
 		if(!$this->isTableOverloaded())
 			$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE $attribute = '$value';";
@@ -651,8 +695,8 @@ abstract class DAO {
 		$result = mysql_query($sqlQuery);		
 		
 		if(mysql_error() == '') {
-			if(method_exists($this, 'after_delete_callback'))
-				$this->after_delete_callback();
+			if(method_exists($this, 'after_deleteAllByAttribute_callback'))
+				$this->after_deleteAllByAttribute_callback();
 			
 			$deletedRowCount = mysql_affected_rows();
 			self::$logger->debug('<<deleteAllByAttribute ['.$deletedRowCount.']');
@@ -1180,7 +1224,8 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Gets the property object rather than the value for complex attributes
+	 * Gets the property object rather than the value for complex attributes.  Returns false if 
+	 * the property exists but is private.
 	 * 
 	 * @param string $prop
 	 * @return mixed
@@ -1190,18 +1235,36 @@ abstract class DAO {
 		
 		if(method_exists($this, 'before_getPropObject_callback'))
 			$this->before_getPropObject_callback();
+			
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this));
+		$properties = $reflection->getProperties();
 		
-		if(isset($this->$prop)) {
+		// firstly, check for private
+		$attribute = new ReflectionProperty(get_class($this), $prop);
+		
+		if($attribute->isPrivate()) {
 			if(method_exists($this, 'after_getPropObject_callback'))
 				$this->after_getPropObject_callback();
-			
-			self::$logger->debug('<<getPropObject ['.print_r($this->$prop, true).']');
-			return $this->$prop;			
-		}else{
-			throw new AlphaException('Could not access the property object ['.$prop.'] on the object of class ['.get_class($this).']');
+				
 			self::$logger->debug('<<getPropObject [false]');
 			return false;
 		}
+		
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+		
+			if($prop == $propName) {
+				if(method_exists($this, 'after_getPropObject_callback'))
+					$this->after_getPropObject_callback();
+				
+				self::$logger->debug('<<getPropObject ['.print_r($this->$prop, true).']');
+				return $this->$prop;
+			}
+		}		
+		throw new AlphaException('Could not access the property object ['.$prop.'] on the object of class ['.get_class($this).']');
+		self::$logger->debug('<<getPropObject [false]');
+		return false;
 	}
 	
 	/**
