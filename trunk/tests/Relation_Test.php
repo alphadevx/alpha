@@ -163,7 +163,7 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     		$value = $this->rel1->getRelatedClassDisplayFieldValue();
     		$this->fail('Testing that getRelatedClassDisplayFieldValue() will fail to load an invalid class definition');
     	}catch (AlphaException $e) {
-    		$this->assertEquals('Could not load the definition for the BO class []'
+    		$this->assertEquals('The class [] is not defined anywhere!'
     			, $e->getMessage()
     			, 'Testing that getRelatedClassDisplayFieldValue() will fail to load an invalid class definition');
     	}
