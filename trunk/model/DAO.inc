@@ -368,6 +368,50 @@ abstract class DAO {
 		self::$logger->debug('<<loadAllByAttribute ['.count($objects).']');
 		return $objects;	
 	}
+	
+	/**
+	 * Loads all of the specified attribute values of this class by the specified attribute into an 
+	 * array which is returned. 
+	 * 
+	 * @param string $attribute The attribute to load the object by
+	 * @param string $value The value of the attribute to load the object by
+	 * @param string $returnAttribute The attribute to return
+	 * @param string $order the order to sort the BOs by, default is ASC
+	 * @return array
+	 */
+	public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order='ASC') {
+		self::$logger->debug('>>loadAllFieldValuesByAttribute(attribute=['.$attribute.'], value=['.$value.'], order=['.$order.']');
+		
+		global $config;
+		
+		if(!$this->isTableOverloaded())
+			$sqlQuery = "SELECT ".$returnAttribute." FROM ".$this->getTableName()." WHERE $attribute = '$value' ORDER BY OID ".$order.";";
+		else
+			$sqlQuery = "SELECT ".$returnAttribute." FROM ".$this->getTableName()." WHERE $attribute = '$value' AND classname='".get_class($this)."' ORDER BY OID ".$order.";";
+			
+		$this->lastQuery = $sqlQuery;
+
+		$result = mysql_query($sqlQuery);
+		
+		if(mysql_error() != '') {
+			throw new BONotFoundException('Failed to load object ['.$returnAttribute.'] values, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+			self::$logger->debug('<<loadAllFieldValuesByAttribute []');
+			return array();
+		}
+		
+		// now build an array of attribute values to be returned
+		$values = array();
+		$count = 0;
+		$BO_Class = get_class($this);
+		
+		while($row = mysql_fetch_assoc($result)) {
+			$values[$count] = $row[$returnAttribute];
+			$count++;
+		}
+		
+		self::$logger->debug('<<loadAllFieldValuesByAttribute ['.count($values).']');
+		return $values;
+	}
 
 	/**
 	 * Saves the object.  If $this->OID is empty or null it will INSERT, otherwise UPDATE 	
@@ -1054,6 +1098,9 @@ abstract class DAO {
 		
 		if(method_exists($this, 'before_get_callback'))
 			$this->before_get_callback();
+			
+		if(empty($prop))
+			throw new IllegalArguementException('Cannot call get with empty $prop arguement!');
 		
 		// handle attributes with a get.ucfirst($prop) method
 		if(!$noChildMethods && method_exists($this, 'get'.ucfirst($prop))) {
