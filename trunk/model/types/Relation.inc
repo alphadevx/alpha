@@ -162,12 +162,26 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	}
 	
 	/**
-	 * Getter for the relatedClass
+	 * Get the name of the business object class that this class is related to
 	 *
+	 * @param string $RC
 	 * @return string
 	 */
-	public function getRelatedClass() {
-		return $this->relatedClass;
+	public function getRelatedClass($side='') {		
+		switch($side) {
+			case '':
+				return $this->relatedClass;
+			break;
+			case 'left':
+				return $this->relatedClassLeft;
+			break;
+			case 'right':
+				return $this->relatedClassRight;
+			break;
+			default:
+				throw new IllegalArguementException('The side paramter ['.$RC.'] is not valid!');
+				return '';							
+		}
 	}
 	
 	/**
@@ -232,10 +246,24 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * Getter for the display field from the related class
 	 *
+	 * @param string $side Only required for MANY-TO-MANY relations
 	 * @return string
 	 */
-	public function getRelatedClassDisplayField() {		
-		return $this->relatedClassDisplayField;
+	public function getRelatedClassDisplayField($side='') {
+		switch($side) {
+			case '':
+				return $this->relatedClassDisplayField;
+			break;
+			case 'left':
+				return $this->relatedClassLeftDisplayField;
+			break;
+			case 'right':
+				return $this->relatedClassRightDisplayField;
+			break;
+			default:
+				throw new IllegalArguementException('The side paramter ['.$RC.'] is not valid!');
+				return '';							
+		}
 	}
 	
 	/**
