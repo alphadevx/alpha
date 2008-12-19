@@ -716,7 +716,7 @@ class Controller
 		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST" id="delete_form">';
 		echo '<input type="hidden" name="delete_oid" id="delete_oid" value=""/>';
 		if(class_exists("View")) {
-			View::renderSecurityFields();
+			echo View::renderSecurityFields();
 		}
 		echo '</form>';
 		
