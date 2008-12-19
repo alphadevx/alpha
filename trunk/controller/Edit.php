@@ -161,21 +161,19 @@ class Edit extends Controller
 			
 			$temp = new $this->BO_name();
 			
-			$temp->load_object($_POST["delete_oid"]);			
+			$temp->load($_POST["delete_oid"]);			
 					
-			$success = $temp->delete_object();
-					
-			if($success) {
+			try {
+				$success = $temp->delete();			
 				echo '<p class="success">'.$this->BO_name.' '.$_POST["delete_oid"].' deleted successfully.</p>';
-			}
-			
-			echo '<center>';
-			if (class_exists("button")) {
+				
+				echo '<center>';
 				$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/ListAll.php?bo=".get_class($this->BO)."'","Back to List","cancelBut");
-			}else{
-				echo '<input type="button" name="cancelBut" value="Back to List" onclick="document.location = \''.$config->get('sysURL').'/alpha/controller/ListAll.php?bo='.get_class($this->BO).'\'"/>';
+				echo $temp->render();
+				echo '</center>';
+			}catch (FailedDeleteException $e) {
+				echo '<p class="error">'.$this->BO_name.' '.$_POST["delete_oid"].' deleted failed, database rolled back.</p>';
 			}
-			echo '</center>';
 			exit;
 		}
 	}	

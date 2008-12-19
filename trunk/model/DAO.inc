@@ -655,7 +655,9 @@ abstract class DAO {
 		if(method_exists($this, 'before_delete_callback'))
 				$this->before_delete_callback();
 		
-		$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE OID = '".$this->OID."';";		
+		$this->begin();
+		
+		$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE OID = '".$this->OID."';";
 			
 		$this->lastQuery = $sqlQuery;
 
@@ -664,9 +666,47 @@ abstract class DAO {
 		if(mysql_error() == '') {
 			if(method_exists($this, 'after_delete_callback'))
 				$this->after_delete_callback();
+				
+			// get the class attributes
+			$reflection = new ReflectionClass(get_class($this));
+			$properties = $reflection->getProperties();
+			
+			// check for any relations on this object, then remove them to prevent orphaned data
+			foreach($properties as $propObj) {
+				$propName = $propObj->name;
+						
+				if(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {				
+					$prop = $this->getPropObject($propName);
+					
+					// Handle MANY-TO-MANY rels
+					if($prop->getRelationType() == 'MANY-TO-MANY') {
+						// for overloaded tables, the classname != the table name
+						if($this->isTableOverloaded())
+							$className = $this->getTableName().'_object';
+						else
+							$className = get_class($this);
+											
+						$side = $prop->getSide($className);
+						$lookUp = $prop->getLookup();									
+										
+						// delete all of the old RelationLookup objects for this rel
+						if($side == 'left')
+							$lookUp->deleteAllByAttribute('leftID', $this->getID());
+						else
+							$lookUp->deleteAllByAttribute('rightID', $this->getID());						
+					}
+					
+					// TODO
+					if($prop->getRelationType() == 'ONE-TO-MANY') {
+					}
+				}
+			}
+			
 			$this->clear();			
+			$this->commit();
 		}else{			
 			throw new FailedDeleteException('Failed to delete object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+			$this->rollback();
 		}
 
 		self::$logger->debug('<<delete');
