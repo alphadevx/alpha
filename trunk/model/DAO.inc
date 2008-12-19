@@ -768,7 +768,11 @@ abstract class DAO {
 
 				switch (strtoupper($propClass)) {
 					case "INTEGER":
-						$sqlQuery .= "$propName INT(".$this->getPropObject($propName)->getSize()."),";
+						// special properties for RelationLookup OIDs
+						if($this instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID'))
+							$sqlQuery .= "$propName INT(".$this->getPropObject($propName)->getSize().") ZEROFILL NOT NULL,";
+						else
+							$sqlQuery .= "$propName INT(".$this->getPropObject($propName)->getSize()."),";
 					break;
 					case "DOUBLE":
 						$sqlQuery .= "$propName DOUBLE(".$this->getPropObject($propName)->getSize(true)."),";
@@ -823,6 +827,9 @@ abstract class DAO {
 		if (mysql_error() == '') {
 			if(method_exists($this, 'after_makeTable_callback'))
 				$this->after_makeTable_callback();
+				
+			// check the table indexes if any additional ones required
+			$this->checkIndexes();
 		}else{
 			throw new AlphaException('Failed to create the table ['.$this->getTableName().'] for the class ['.get_class($this).'], query is ['.$this->lastQuery.']');
 		}
