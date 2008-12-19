@@ -25,6 +25,7 @@ class record_selector
 	var $relation_object = null;	
 	var $label;
 	var $accessingClassName;
+	var $onloadJS;
 	
 	/**
 	 * the name of the HTML input box
@@ -112,6 +113,8 @@ class record_selector
 		if($this->relation_object->getRelationType() == 'MANY-TO-MANY') {
 			// value to appear in the text-box
 			$inputBoxValue = $this->relation_object->getRelatedClassDisplayFieldValue($this->accessingClassName);		
+			// replace commas with line returns
+			$inputBoxValue = str_replace(",", "\n", $inputBoxValue);
 			
 			if($table_tags) {
 				$html .= '<tr><td style="width:25%;">';
@@ -119,13 +122,19 @@ class record_selector
 				$html .= '</td>';
 				
 				$html .= '<td>';			
-				$html .= '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
-				$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/record_selector.php?value='+document.getElementById('".$this->name."_OID').value+'&field=".$this->name."&relatedClassLeft=".$this->relation_object->getRelatedClass('left')."&relatedClassLeftDisplayField=".$this->relation_object->getRelatedClassDisplayField('left')."&relatedClassRight=".$this->relation_object->getRelatedClass('right')."&relatedClassRightDisplayField=".$this->relation_object->getRelatedClassDisplayField('right')."&accessingClassName=".$this->accessingClassName."&relationType=".$this->relation_object->getRelationType()."','relWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=500,height=50,left='+(event.screenX-250)+',top='+event.screenY+'');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
+				$html .= '<textarea id="'.$this->name.'_display" style="width:100%;" rows="4" readonly>';
+				$html .= $inputBoxValue;
+				$html .= '</textarea>';
+				$html .= '<div align="center">';
+				$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/record_selector.php?lookupOIDs='+document.getElementById('".$this->name."').value+'&value='+document.getElementById('".$this->name."_OID').value+'&field=".$this->name."&relatedClassLeft=".$this->relation_object->getRelatedClass('left')."&relatedClassLeftDisplayField=".$this->relation_object->getRelatedClassDisplayField('left')."&relatedClassRight=".$this->relation_object->getRelatedClass('right')."&relatedClassRightDisplayField=".$this->relation_object->getRelatedClassDisplayField('right')."&accessingClassName=".$this->accessingClassName."&relationType=".$this->relation_object->getRelationType()."','relWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=500,height=50,left='+(event.screenX-250)+',top='+event.screenY+'');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
 				$html .= $tmp->render();
+				$html .= '</div>';
 				$html .= '</td></tr>';
 			}else{
-				$html .= '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
-				$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/record_selector.php?value='+document.getElementById('".$this->name."_OID').value+'&field=".$this->name."&relatedClassLeft=".$this->relation_object->getRelatedClass('left')."&relatedClassLeftDisplayField=".$this->relation_object->getRelatedClassDisplayField('left')."&relatedClassRight=".$this->relation_object->getRelatedClass('right')."&relatedClassRightDisplayField=".$this->relation_object->getRelatedClassDisplayField('right')."&accessingClassName=".$this->accessingClassName."&relationType=".$this->relation_object->getRelationType()."','relWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=500,height=50,left='+(event.screenX-250)+',top='+event.screenY+'');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
+				$html .= '<textarea id="'.$this->name.'_display" style="width:95%;" rows="5" readonly>';
+				$html .= $inputBoxValue;
+				$html .= '</textarea>';
+				$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/record_selector.php?lookupOIDs='+document.getElementById('".$this->name."').value+'&value='+document.getElementById('".$this->name."_OID').value+'&field=".$this->name."&relatedClassLeft=".$this->relation_object->getRelatedClass('left')."&relatedClassLeftDisplayField=".$this->relation_object->getRelatedClassDisplayField('left')."&relatedClassRight=".$this->relation_object->getRelatedClass('right')."&relatedClassRightDisplayField=".$this->relation_object->getRelatedClassDisplayField('right')."&accessingClassName=".$this->accessingClassName."&relationType=".$this->relation_object->getRelationType()."','relWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=500,height=50,left='+(event.screenX-250)+',top='+event.screenY+'');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
 				$html .= $tmp->render();
 			}
 			
@@ -164,7 +173,6 @@ class record_selector
 				$oidLabel = $tmpObject->getDataLabel('OID');
 				
 				$objects = $tmpObject->loadAll();
-				$lookupOIDs = $this->relation_object->getLookup()->loadAllFieldValuesByAttribute('leftID', $this->relation_object->getValue(), 'rightID');
 			}else{
 				DAO::loadClassDef($classNameLeft);
 				$tmpObject = new $classNameLeft;
@@ -173,34 +181,45 @@ class record_selector
 				$oidLabel = $tmpObject->getDataLabel('OID');
 				
 				$objects = $tmpObject->loadAll();
-				$lookupOIDs = $this->relation_object->getLookup()->loadAllFieldValuesByAttribute('rightID', $this->relation_object->getValue(), 'leftID');
 			}
 			
-			echo '<table cols="3" width="100%" class="bordered">';
-			echo '<tr>';		
-			echo '<th>'.$oidLabel.'</th>';
-			echo '<th>'.$fieldLabel.'</th>';
-			echo '<th>Connect?</th>';		
-			echo '</tr>';
+			$lookupOIDs = explode(',',$_GET['lookupOIDs']);
+			
+			$html = '<table cols="3" width="100%" class="bordered">';
+			$html .= '<tr>';		
+			$html .= '<th>'.$oidLabel.'</th>';
+			$html .= '<th>'.$fieldLabel.'</th>';
+			$html .= '<th>Connect?</th>';		
+			$html .= '</tr>';
 			
 			foreach($objects as $obj){
-				echo '<tr>';
-				echo '<td width="20%">';
-				echo $obj->getID();
-				echo '</td>';
-				echo '<td width="60%">';
-				echo $obj->get($fieldName);
-				echo '</td>';			
-				echo '<td width="20%">';
+				$html .= '<tr>';
+				$html .= '<td width="20%">';
+				$html .= $obj->getID();
+				$html .= '</td>';
+				$html .= '<td width="60%">';
+				$html .= $obj->get($fieldName);
+				$html .= '</td>';			
+				$html .= '<td width="20%">';
 				
-				if(in_array($obj->getID(), $lookupOIDs)) {					
-					echo '<input name = "$lookupOIDs" type="checkbox" checked/>';
+				if(in_array($obj->getID(), $lookupOIDs)) {
+					$this->onloadJS .= 'toggelOID(\''.$obj->getID().'\',\''.$obj->get($fieldName).'\',true);'; 				
+					$html .= '<input name = "'.$obj->getID().'" type="checkbox" checked onclick="toggelOID(\''.$obj->getID().'\',\''.$obj->get($fieldName).'\',this.checked);"/>';
 				}else{
-					echo '<input name = "$lookupOIDs" type="checkbox"/>';
+					$html .= '<input name = "'.$obj->getID().'" type="checkbox" onclick="toggelOID(\''.$obj->getID().'\',\''.$obj->get($fieldName).'\',this.checked);"/>';
 				}
-				echo '</td>';
-				echo '</tr>';
+				$html .= '</td>';
+				$html .= '</tr>';
 			}
+			$html .= '</table>';
+			
+			$html .= '<div align="center" style="padding:10px;">';
+			$tmp = new button("window.close();", "Cancel", "cancelBut", $config->get('sysURL')."/alpha/images/icons/cancel.png");
+			$html .= $tmp->render();
+			$html .= '&nbsp;&nbsp;&nbsp;';		
+			$tmp = new button("setParentFieldValues(); window.close();", "Accept", "acceptBut", $config->get('sysURL')."/alpha/images/icons/accept.png");
+			$html .= $tmp->render();
+			$html .= '</div>';
 		}else{			
 			$className = $this->relation_object->getRelatedClass();
 			
@@ -212,32 +231,37 @@ class record_selector
 			
 			$objects = $tmpObject->loadAll();
 			
-			echo '<table cols="3" width="100%" class="bordered">';
-			echo '<tr>';		
-			echo '<th>'.$oidLabel.'</th>';
-			echo '<th>'.$label.'</th>';
-			echo '<th>Connect?</th>';		
-			echo '</tr>';
+			$html = '<table cols="3" width="100%" class="bordered">';
+			$html .= '<tr>';		
+			$html .= '<th>'.$oidLabel.'</th>';
+			$html .= '<th>'.$label.'</th>';
+			$html .= '<th>Connect?</th>';		
+			$html .= '</tr>';
 			
 			foreach($objects as $obj){
-				echo '<tr>';
-				echo '<td width="20%">';
-				echo $obj->getID();
-				echo '</td>';
-				echo '<td width="60%">';
-				echo $obj->get($this->relation_object->getRelatedClassDisplayField());
-				echo '</td>';			
-				echo '<td width="20%">';
+				$html .= '<tr>';
+				$html .= '<td width="20%">';
+				$html .= $obj->getID();
+				$html .= '</td>';
+				$html .= '<td width="60%">';
+				$html .= $obj->get($this->relation_object->getRelatedClassDisplayField());
+				$html .= '</td>';			
+				$html .= '<td width="20%">';
 				if($obj->getID() == $this->relation_object->getValue()) {
-					echo '<img src="'.$config->get('sysURL').'/alpha/images/icons/accept_ghost.png"/>';
+					$html .= '<img src="'.$config->get('sysURL').'/alpha/images/icons/accept_ghost.png"/>';
 				}else{
 					$tmp = new button("window.opener.document.getElementById('".$_GET['field']."').value = '".$obj->getID()."'; window.opener.document.getElementById('".$_GET['field']."_display').value = '".$obj->get($this->relation_object->getRelatedClassDisplayField())."'; window.close();", "", "selBut", $config->get('sysURL')."/alpha/images/icons/accept.png");
-					echo $tmp->render();
+					$html .= $tmp->render();
 				}
-				echo '</td>';
-				echo '</tr>';
+				$html .= '</td>';
+				$html .= '</tr>';
 			}
+			$html .= '</table>';
 		}
+		
+		echo '<body onload="'.$this->onloadJS.'">';
+		
+		echo $html;
 		
 		$this->display_page_foot();
 	}
@@ -256,8 +280,39 @@ class record_selector
 		
 		require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
 		
+		echo '<script language="JavaScript">
+			var selectedOIDs = new Object();
+			
+			function toggelOID(oid, displayValue, isSelected) {
+				if(isSelected)
+					selectedOIDs[oid] = displayValue;
+				else
+					delete selectedOIDs[oid];
+			}
+			
+			function setParentFieldValues() {
+				var OIDs;
+				var displayValues;
+				
+				for(key in selectedOIDs) {
+					if(OIDs == null)
+						OIDs = key;
+					else
+						OIDs = OIDs + \',\' + key;
+						
+					if(displayValues == null)
+						displayValues = selectedOIDs[key];
+					else
+						displayValues = displayValues + \'\\n\' + selectedOIDs[key];
+				}
+				
+				window.opener.document.getElementById(\''.$_GET['field'].'\').value = OIDs;
+				window.opener.document.getElementById(\''.$_GET['field'].'_display\').value = displayValues;
+			}
+			
+			</script>';
+		
 		echo '</head>';
-		echo '<body>';		
 	}
 	
 	function display_page_foot() {
