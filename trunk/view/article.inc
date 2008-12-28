@@ -157,8 +157,8 @@ class article extends View
 					break;
 					case "STRING" :
 						// use a string widget if defined
-						if (class_exists("string_box")) {
-							$temp = new string_box($this->BO-> $prop, $this->BO->data_labels[$prop], $prop, "");
+						if (class_exists("StringBox")) {
+							$temp = new StringBox($this->BO-> $prop, $this->BO->data_labels[$prop], $prop, "");
 						} else {
 							echo '<tr><td style="width:25%;">';
 							echo $this->BO->data_labels[$prop];
@@ -171,14 +171,14 @@ class article extends View
 					break;
 					case "TEXT" :
 						// use a text widget if defined
-						if (class_exists("text_box")) {
+						if (class_exists("TextBox")) {
 							$rows = 18;
 							if ($prop == "header_content")
 								$rows = 5;
 							$markdown_content = false;
 							if ($prop == "content")
 								$markdown_content = true;
-							$temp = new text_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "", $rows, true, 0, $markdown_content);
+							$temp = new TextBox($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "", $rows, true, 0, $markdown_content);
 						} else {
 							echo '<tr><td colspan="2">';
 							echo $this->BO->data_labels[$prop];
@@ -274,14 +274,14 @@ class article extends View
 		echo '<table cols="2" class="edit_view">';
 		echo '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
 		foreach (array_keys($properties) as $prop) {
-			if (!in_array($prop, $this->BO->default_attributes) && !in_array($prop, $this->BO->transient_attributes)) {
+			if (!in_array($prop, $this->BO->getDefaultAttributes()) && !in_array($prop, $this->BO->getTransientAttributes())) {
 
 				$obj_type = get_class($properties[$prop]);
 
 				switch (strtoupper($obj_type)) {
 					case "INTEGER" :
 						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->getDataLabel($prop);
 						echo '</td>';
 
 						echo '<td>';
@@ -290,7 +290,7 @@ class article extends View
 					break;
 					case "DOUBLE" :
 						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->getDataLabel($prop);
 						echo '</td>';
 
 						echo '<td>';
@@ -298,38 +298,43 @@ class article extends View
 						echo '</td></tr>';
 					break;
 					case "DATE" :						
-						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);						
+						$temp = new calendar($this->BO->getPropObject($prop), $this->BO->getDataLabel($prop), $prop);						
+						echo $temp->render();
 					break;
 					case "TIMESTAMP" :
-						$temp = new calendar($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop);
+						$temp = new calendar($this->BO->getPropObject($prop), $this->BO->getDataLabel($prop), $prop);
+						echo $temp->render();
 					break;
 					case "STRING" :
 						// use a string widget if defined
-						if (class_exists("string_box")) {
-							$temp = new string_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "");
+						if (class_exists("StringBox")) {
+							$temp = new StringBox($this->BO->getPropObject($prop), $this->BO->getDataLabel($prop), $prop, "");
+							echo $temp->render();
 						} else {
 							echo '<tr><td style="width:25%;">';
-							echo $this->BO->data_labels[$prop];
+							echo $this->BO->getDataLabel($prop);
 							echo '</td>';
 
 							echo '<td>';
-							echo '<input type="text" size="'.$this->BO-> $prop->get_size().'" name="'.$prop.'" value="'.$this->BO->get($prop).'"/><br>';
+							echo '<input type="text" size="'.$this->BO->getPropObject($prop)->getSize().'" name="'.$prop.'" value="'.$this->BO->get($prop).'"/><br>';
 							echo '</td></tr>';
 						}
 					break;
 					case "TEXT" :
 						// use a text widget if defined
-						if (class_exists("text_box")) {
+						if (class_exists("TextBox")) {
 							$rows = 18;
 							if ($prop == "header_content")
 								$rows = 5;
 							$markdown_content = false;
+							$temp = new TextBox($this->BO->getPropObject($prop), $this->BO->getDataLabel($prop), $prop, "", $rows, 0);
 							if ($prop == "content")
-								$markdown_content = true;
-							$temp = new text_box($this->BO->get_prop_object($prop), $this->BO->data_labels[$prop], $prop, "", $rows, true, 0, $markdown_content);
+								echo $temp->render(true,true);
+							else
+								echo $temp->render();
 						} else {
 							echo '<tr><td colspan="2">';
-							echo $this->BO->data_labels[$prop];
+							echo $this->BO->getDataLabel($prop);
 							echo '</td></tr>';
 	
 							echo '<tr><td colspan="2">';
@@ -339,7 +344,7 @@ class article extends View
 					break;
 					case "BOOLEAN":
 						echo '<tr><td>';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->getDataLabel($prop);
 						echo '</td>';
 
 						echo '<td>';
@@ -351,12 +356,12 @@ class article extends View
 					break;
 					case "ENUM" :
 						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->getDataLabel($prop);
 						echo '</td>';
 						echo '<td>';
 						echo '<select name="'.$prop.'"/>';
-						$prop_obj = $this->BO->get_prop_object($prop);
-						$enum_vals = $prop_obj->get_options();						
+						$prop_obj = $this->BO->getPropObject($prop);
+						$enum_vals = $prop_obj->getPropObject();						
 						foreach ($enum_vals as $enum_val) {
 							if ($prop_obj->getValue() == $enum_val)
 								echo '<option value="'.$enum_val.'" selected>'.$enum_val.'</option>';
@@ -368,12 +373,12 @@ class article extends View
 					break;
 					case "DENUM" :
 						echo '<tr><td style="width:25%;">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->getDataLabel($prop);
 						echo '</td>';
 						echo '<td>';
 						echo '<select name="'.$prop.'"/>';
-						$denum = $this->BO->get_prop_object($prop);
-						$denum_vals = $denum->get_options();						
+						$denum = $this->BO->getPropObject($prop);
+						$denum_vals = $denum->getOptions();						
 						foreach (array_keys($denum_vals) as $denum_index) {
 							if ($denum->getValue() == $denum_index)
 								echo '<option value="'.$denum_index.'" selected>'.$denum_vals[$denum_index].'</option>';
@@ -385,7 +390,7 @@ class article extends View
 					break;
 					default :
 						echo '<tr><td colspan="2">';
-						echo $this->BO->data_labels[$prop];
+						echo $this->BO->getDataLabel($prop);
 						echo '</td></tr>';
 
 						echo '<tr><td colspan="2">';
@@ -395,15 +400,18 @@ class article extends View
 				}
 			}
 			if ($prop == "version_num")
-				echo '<input type="hidden" name="version_num" value="'.$this->BO->get_version().'"/>';
+				echo '<input type="hidden" name="version_num" value="'.$this->BO->getVersion().'"/>';
 		}
 
 		echo '<tr><td colspan="2">';		
 		$temp = new button("submit", "Save", "saveBut");
+		echo $temp->render();
 		echo '&nbsp;&nbsp;';
-		$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->get_ID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
+		$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
+		echo $temp->render();
 		echo '&nbsp;&nbsp;';
 		$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
+		echo $temp->render();
 		
 		echo '</td></tr>';
 		
@@ -452,8 +460,7 @@ class article extends View
 		echo '</td></tr>';
 		
 		echo '<input type="hidden" name="file_to_delete" value=""/>';
-
-		$this->render_security_fields();
+		View::renderSecurityFields();
 		
 		echo '</form></table>';
 	}
