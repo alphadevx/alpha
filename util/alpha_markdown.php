@@ -2,6 +2,15 @@
 
 // $Id: markdown_facade.inc 259 2007-03-03 20:47:13Z john $
 
+// include the config file
+if(!isset($config))
+	require_once 'configLoader.inc';
+$config =&configLoader::getInstance();
+
+require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
+require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+
+
 require_once $config->get('sysRoot').'alpha/lib/markdown/markdown.php';
 require_once $config->get('sysRoot').'alpha/lib/geshi.php';
 
@@ -56,6 +65,29 @@ class alpha_markdown extends MarkdownExtra_Parser {
 		
 		return $result;		
 	}
+}
+
+// TODO: move all of this to a dedicated controller
+// check if invoked directly from a preview window
+if(isset($_POST['data'])) {
+	$parser = new alpha_markdown();
+
+	$text = str_replace('$sysURL', $config->get('sysURL'), $_POST['data']);
+
+	echo '<html>';
+	echo '<head>';
+	echo '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">';
+			
+	echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$config->get('sysTheme').'.css.php">';
+	
+	echo '</head>';
+	echo '<body>';
+		
+	// transform text using parser.
+	echo $parser->transform($text);
+	
+	echo '</body>';
+	echo '</html>';
 }
 
 ?>
