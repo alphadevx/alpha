@@ -269,7 +269,7 @@ class article_object extends DAO
 	function get_attachments_location() {
 		global $config;
 		
-		return $config->get('sysRoot')."attachments/article_".$this->get_Id();
+		return $config->get('sysRoot')."attachments/article_".$this->getID();
 	}
 	
 	/**
