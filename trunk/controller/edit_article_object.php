@@ -52,7 +52,7 @@ class edit_article_object extends Controller
 		}
 		
 		$this->BO = new article_object();
-		$this->BO->load_object($BO_oid);
+		$this->BO->load($BO_oid);
 		
 		if(!empty($_POST)) {			
 			$this->handle_post();
@@ -72,6 +72,79 @@ class edit_article_object extends Controller
 	}
 	
 	/**
+	 * method to display the page head
+	 */
+	function display_page_head() {
+		if(method_exists($this, 'before_display_page_head_callback'))
+			$this->before_display_page_head_callback();
+		
+		global $config;		
+		
+		echo '<html>';
+		echo '<head>';
+		echo '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">';
+		echo '<title>'.$this->get_title().'</title>';
+		echo '<meta name="Keywords" content="'.$this->get_keywords().'">';
+		echo '<meta name="Description" content="'.$this->get_description().'">';
+		echo '<meta name="Author" content="john collins">';
+		echo '<meta name="copyright" content="copyright ">';
+		echo '<meta name="identifier" content="http://'.$config->get('sysURL').'/">';
+		echo '<meta name="revisit-after" content="7 days">';
+		echo '<meta name="expires" content="never">';
+		echo '<meta name="language" content="en">';
+		echo '<meta name="distribution" content="global">';
+		echo '<meta name="title" content="'.$this->get_title().'">';
+		echo '<meta name="robots" content="index,follow">';
+		echo '<meta http-equiv="imagetoolbar" content="no">';			
+		
+		echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$config->get('sysTheme').'.css.php">';
+		
+		echo '
+			<script type="text/javascript" src="'.$config->get('sysURL').'/alpha/lib/jquery/jquery.pack.js"></script>
+			<script type="text/javascript" src="'.$config->get('sysURL').'/alpha/lib/markitup/jquery.markitup.pack.js"></script>
+			<script type="text/javascript" src="'.$config->get('sysURL').'/alpha/lib/markitup/sets/markdown/set.js"></script>
+			<link rel="stylesheet" type="text/css" href="'.$config->get('sysURL').'/alpha/lib/markitup/skins/simple/style.css" />
+			<link rel="stylesheet" type="text/css" href="'.$config->get('sysURL').'/alpha/lib/markitup/sets/markdown/style.css" />
+			<script type="text/javascript">
+			$(document).ready(function() {
+				$(\'#text_field_content_0\').markItUp(mySettings);
+			});
+			</script>
+			</head>
+			<body>';
+
+		if ($config->get('sysUseWidgets') && isset($this->BO)) {
+			echo '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
+			require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
+			require_once $config->get('sysRoot').'alpha/view/widgets/StringBox.js.php';
+			require_once $config->get('sysRoot').'alpha/view/widgets/TextBox.js.php';
+		
+			require_once $config->get('sysRoot').'alpha/view/widgets/form_validator.js.php';
+		
+			echo '<script type="text/javascript">';
+			$validator = new form_validator($this->BO);
+			echo '</script>';
+		}
+		
+		if(method_exists($this, 'during_display_page_head_callback'))
+			$this->during_display_page_head_callback();
+		
+		echo '</head>';
+		echo '<body>';
+			
+		echo '<h1>'.$this->get_title().'</h1>';
+		
+		if (isset($_SESSION["current_user"])) {	
+			echo '<p>You are logged in as '.$_SESSION["current_user"]->getDisplayname().'.  <a href="'.$config->get('sysURL').'/alpha/controller/logout.php">Logout</a></p>';
+		}else{
+			echo '<p>You are not logged in</p>';
+		}
+		
+		if(method_exists($this, 'after_display_page_head_callback'))
+			$this->after_display_page_head_callback();
+	}
+	
+	/**
 	 * method to handle POST requests
 	 */
 	function handle_post() {
@@ -83,14 +156,18 @@ class edit_article_object extends Controller
 			exit;
 		}
 		
-		if (isset($_POST["saveBut"])) {			
+		if (isset($_POST["saveBut"])) {
+			echo "<pre>";
+			//var_dump(file_get_contents('php://input'));
+			var_dump($_POST);
+			exit;		
 			
 			// populate the transient object from post data
-			$this->BO->populate_from_post();
+			$this->BO->populateFromPost();
 			
-			$success = $this->BO->save_object();
+			$success = $this->BO->save();
 			
-			$this->BO->load_object($this->BO->get_ID());
+			$this->BO->load($this->BO->getID());
 			
 			// set up the title and meta details
 			$this->set_title($this->BO->get("title")." (editing)");		
