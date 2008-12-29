@@ -272,7 +272,7 @@ class article extends View
 		$obj_type = '';
 
 		echo '<table cols="2" class="edit_view">';
-		echo '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
+		echo '<form id="editArticle" enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
 		foreach (array_keys($properties) as $prop) {
 			if (!in_array($prop, $this->BO->getDefaultAttributes()) && !in_array($prop, $this->BO->getTransientAttributes())) {
 
@@ -308,7 +308,7 @@ class article extends View
 					case "STRING" :
 						// use a string widget if defined
 						if (class_exists("StringBox")) {
-							$temp = new StringBox($this->BO->getPropObject($prop), $this->BO->getDataLabel($prop), $prop, "");
+							$temp = new StringBox($this->BO->getPropObject($prop), $this->BO->getDataLabel($prop), $prop, "editArticle");
 							echo $temp->render();
 						} else {
 							echo '<tr><td style="width:25%;">';
@@ -327,7 +327,7 @@ class article extends View
 							if ($prop == "header_content")
 								$rows = 5;
 							$markdown_content = false;
-							$temp = new TextBox($this->BO->getPropObject($prop), $this->BO->getDataLabel($prop), $prop, "", $rows, 0);
+							$temp = new TextBox($this->BO->getPropObject($prop), $this->BO->getDataLabel($prop), $prop, "editArticle", $rows, 0);
 							if ($prop == "content")
 								echo $temp->render(true,true);
 							else
@@ -431,6 +431,7 @@ class article extends View
 					echo '<td>';
 					if (class_exists("button")) {
 						$temp = new button("if(confirm('Are you sure you want to delete the file ".$file."')) { document.forms[0]['file_to_delete'].value = '".$file."'; document.forms[0].submit();}", "Delete", "deleteBut");
+						echo $temp->render();
 					}else{
 						echo '<input name="deleteBut" type="submit" value="Delete" onclick=""/>';
 					}
@@ -454,13 +455,14 @@ class article extends View
 		echo '<tr><td colspan="2">';
 		if (class_exists("button")) {
 			$temp = new button("submit", "Upload", "uploadBut");
+			echo $temp->render();
 		} else {
 			echo '<input type="submit" name="uploadBut" value="Upload"/>';
 		}
 		echo '</td></tr>';
 		
 		echo '<input type="hidden" name="file_to_delete" value=""/>';
-		View::renderSecurityFields();
+		echo View::renderSecurityFields();
 		
 		echo '</form></table>';
 	}
