@@ -94,6 +94,9 @@ class View {
 		// the form action
 		$fields['formAction'] = $_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"];
 		
+		// the form ID
+		$fields['formID'] = get_class($this->BO).'_'.$this->BO->getID();
+		
 		// buffer form fields to $formFields
 		$fields['formFields'] = $this->renderAllFields('create');
 		
@@ -126,6 +129,9 @@ class View {
 
 		// the form action
 		$fields['formAction'] = $_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"];
+		
+		// the form ID
+		$fields['formID'] = get_class($this->BO).'_'.$this->BO->getID();
 		
 		// buffer form fields to $formFields
 		$fields['formFields'] = $this->renderAllFields('edit');
@@ -732,12 +738,12 @@ class View {
 		$html = '';
 		
 		if ($mode == 'create') {
-			$text = new TextBox($this->BO->getPropObject($name), $label, $name, '');
+			$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getID());
 			$html .= $text->render($tableTags);
 		}
 		
 		if ($mode == 'edit') {
-			$text = new TextBox($this->BO->getPropObject($name), $label, $name, '');
+			$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getID());
 			$html .= $text->render($tableTags);
 		}
 		
@@ -869,7 +875,7 @@ class View {
 						if($mode == 'view') {
 							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
 						}else{
-							$string = new StringBox($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName, '');
+							$string = new StringBox($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName, get_class($this->BO).'_'.$this->BO->getID());
 							$html .= $string->render();
 						}
 					break;
