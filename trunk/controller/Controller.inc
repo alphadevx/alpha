@@ -12,6 +12,7 @@ require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/FailedUnitCommitException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/SecurityException.inc';
 
 /**
  *
@@ -211,7 +212,7 @@ abstract class Controller {
 	  * @param Object $BO
 	  */ 
 	 public function setBO($BO) {
-	 	self::$logger->debug('>>setBO(BO=['.print_r($BO).'])');
+	 	self::$logger->debug('>>setBO(BO=['.print_r($BO, true).'])');
 	 	$this->BO = $BO;
 	 	self::$logger->debug('<<setBO');
 	 }
