@@ -15,13 +15,13 @@ require_once $config->get('sysRoot').'alpha/view/widgets/record_selector.php';
 /**
  * The master rendering view class for the framework
  * 
- * @package Alpha Core
+ * @package alpha::view
  * @author John Collins <john@design-ireland.net>
- * @copyright 2008 John Collins
+ * @copyright 2009 John Collins
  * @version $Id$
  * 
  */
-class View {
+abstract class View {
 	/**
 	 * The business object that will be rendered
 	 * 
@@ -361,7 +361,97 @@ class View {
 	}
 	
 	/**
-	 * method to render two hidden, encrypted form fields to be used as
+	 * Method to render the page header HTML content
+	 * 
+	 * @param Controller $controller
+	 * @return string
+	 * @todo remove output buffering around form_validator instance
+	 */
+	public static function displayPageHead($controller) {
+		if(method_exists($controller, 'before_displayPageHead_callback'))
+			$controller->before_displayPageHead_callback();
+		
+		global $config;
+		
+		$html = '';
+		
+		$html.= '<html>';
+		$html.= '<head>';
+		$html.= '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">';
+		$html.= '<title>'.$controller->getTitle().'</title>';
+		$html.= '<meta name="Keywords" content="'.$controller->getKeywords().'">';
+		$html.= '<meta name="Description" content="'.$controller->getDescription().'">';
+		$html.= '<meta name="identifier" content="http://'.$config->get('sysURL').'/">';
+		$html.= '<meta name="revisit-after" content="7 days">';
+		$html.= '<meta name="expires" content="never">';
+		$html.= '<meta name="language" content="en">';
+		$html.= '<meta name="distribution" content="global">';
+		$html.= '<meta name="title" content="'.$controller->getTitle().'">';
+		$html.= '<meta name="robots" content="index,follow">';
+		$html.= '<meta http-equiv="imagetoolbar" content="no">';
+
+		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$config->get('sysTheme').'.css.php">';
+
+		$html.= '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
+		
+		// if we are working with a BO, render form validation Javascript rules
+		if ($controller->getBO() != null) {
+			require_once $config->get('sysRoot').'alpha/view/widgets/StringBox.js.php';
+			require_once $config->get('sysRoot').'alpha/view/widgets/TextBox.js.php';
+		
+			ob_start();
+			require_once $config->get('sysRoot').'alpha/view/widgets/form_validator.js.php';
+			require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
+			$html.= ob_get_clean();
+
+			$html.= '<script type="text/javascript">';
+			ob_start();
+			$validator = new form_validator($controller->getBO());
+			$html.= ob_get_clean();
+			$html.= '</script>';
+		}
+		
+		if(method_exists($controller, 'during_displayPageHead_callback'))
+			$html.= $controller->during_displayPageHead_callback();
+		
+		$html.= '</head>';
+		$html.= '<body>';
+			
+		$html.= '<h1>'.$controller->getTitle().'</h1>';
+		
+		if (isset($_SESSION['current_user'])) {	
+			$html.= '<p>You are logged in as '.$_SESSION['current_user']->getDisplayname().'.  <a href="'.$config->get('sysURL').'/alpha/controller/logout.php">Logout</a></p>';
+		}else{
+			$html.= '<p>You are not logged in</p>';
+		}
+		
+		if(method_exists($controller, 'after_displayPageHead_callback'))
+			$controller->after_displayPageHead_callback();
+			
+		return $html;
+	}
+	
+	/**
+	 * Method to render the page footer HTML
+	 * 
+	 * @param Controller $controller
+	 * @return string
+	 */
+	public static function displayPageFoot($controller) {
+		if(method_exists($controller, 'before_displayPageFoot_callback'))
+			$controller->before_displayPageFoot_callback();
+		
+		$html = '</body>';
+		$html .= '</html>';
+		
+		if(method_exists($controller, 'after_displayPageFoot_callback'))
+			$this->after_displayPageFoot_callback();
+			
+		return $html;
+	}
+	
+	/**
+	 * Method to render two hidden, encrypted form fields to be used as
 	 * a check to ensure that a post to the controller is being sent from 
 	 * the same server as hosting it.
 	 * 
@@ -382,10 +472,11 @@ class View {
 	 * generates the two security fields to prevent remote form processing
 	 * 
 	 * @return array an array containing the two fields
+	 * @todo move to Controller
 	 */
 	public static function generateSecurityFields() {
 		// the server hostname + today's date
-		$var1 = md5($_SERVER["HTTP_HOST"].date("Ymd"));
+		$var1 = md5($_SERVER['HTTP_HOST'].date("Ymd"));
 		// the server's IP plus $var1
 		$var2 = md5($_SERVER['REMOTE_ADDR'].$var1);
 		
