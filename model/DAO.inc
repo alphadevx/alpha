@@ -1524,8 +1524,8 @@ abstract class DAO {
 	 * @return Integer
 	 */
 	public function getCreatorId() {
-		self::$logger->debug('<<getCreatorId()');
-		self::$logger->debug('>>getCreatorId ['.$this->created_by.']');
+		self::$logger->debug('>>getCreatorId()');
+		self::$logger->debug('<<getCreatorId ['.$this->created_by.']');
 		return $this->created_by;
 	}
 	
@@ -1535,8 +1535,8 @@ abstract class DAO {
 	 * @return Integer
 	 */
 	public function getUpdatorId() {
-		self::$logger->debug('<<getUpdatorId()');
-		self::$logger->debug('>>getUpdatorId ['.$this->updated_by.']');
+		self::$logger->debug('>>getUpdatorId()');
+		self::$logger->debug('<<getUpdatorId ['.$this->updated_by.']');
 		return $this->updated_by;
 	}
 	
@@ -1546,8 +1546,8 @@ abstract class DAO {
 	 * @return Timestamp
 	 */
 	public function getCreateTS() {
-		self::$logger->debug('<<getCreateTS()');
-		self::$logger->debug('>>getCreateTS ['.$this->created_ts.']');
+		self::$logger->debug('>>getCreateTS()');
+		self::$logger->debug('<<getCreateTS ['.$this->created_ts.']');
 		return $this->created_ts;
 	}
 	
@@ -1557,8 +1557,8 @@ abstract class DAO {
 	 * @return Timestamp
 	 */
 	public function getUpdateTS() {
-		self::$logger->debug('<<getUpdateTS()');
-		self::$logger->debug('>>getUpdateTS ['.$this->updated_ts.']');
+		self::$logger->debug('>>getUpdateTS()');
+		self::$logger->debug('<<getUpdateTS ['.$this->updated_ts.']');
 		return $this->updated_ts;
 	}
 	
@@ -1568,8 +1568,8 @@ abstract class DAO {
 	 * @param string attributeName
 	 */
 	public function markTransient($attributeName) {
-		self::$logger->debug('<<markTransient(attributeName=['.$attributeName.'])');
-		self::$logger->debug('>>markTransient');
+		self::$logger->debug('>>markTransient(attributeName=['.$attributeName.'])');
+		self::$logger->debug('<<markTransient');
 		array_push($this->transientAttributes, $attributeName);		
 	}
 	
@@ -1580,8 +1580,8 @@ abstract class DAO {
 	 * @param string attributeName
 	 */
 	public function markPersistent($attributeName) {
-		self::$logger->debug('<<markPersistent(attributeName=['.$attributeName.'])');
-		self::$logger->debug('>>markPersistent');
+		self::$logger->debug('>>markPersistent(attributeName=['.$attributeName.'])');
+		self::$logger->debug('<<markPersistent');
 		$this->transientAttributes = array_diff($this->transientAttributes, array($attributeName));
 	}
 	
@@ -1591,8 +1591,8 @@ abstract class DAO {
 	 * @param string attributeName
 	 */
 	protected function markUnique($attributeName) {
-		self::$logger->debug('<<markUnique(attributeName=['.$attributeName.'])');
-		self::$logger->debug('>>markUnique');
+		self::$logger->debug('>>markUnique(attributeName=['.$attributeName.'])');
+		self::$logger->debug('<<markUnique');
 		array_push($this->uniqueAttributes, $attributeName);		
 	}
 	
