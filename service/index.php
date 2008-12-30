@@ -1,15 +1,13 @@
 <?php
 
-// $Id$
-
 /**
  *
- * Description
+ * Invokes a login controller for logging in to the admin backend
  * 
- * @package Alpha Admin
+ * @package alpha::service
  * @author John Collins <john@design-ireland.net>
- * @copyright 2008 John Collins
- * 
+ * @copyright 2009 John Collins
+ * @version $Id$
  * 
  */
 
@@ -18,17 +16,17 @@ if(!isset($config))
 	require_once '../util/configLoader.inc';
 $config =&configLoader::getInstance();
 
-require_once $config->get('sysRoot').'alpha/controller/login.php';
+require_once $config->get('sysRoot').'alpha/controller/Login.php';
 
-$controller = new login();
-$controller->set_name(Front_Controller::generate_secure_URL('act=login'));
+$controller = new Login();
+$controller->setName(Front_Controller::generate_secure_URL('act=Login'));
 
-$controller->set_unit_of_work(array(Front_Controller::generate_secure_URL('act=login'), Front_Controller::generate_secure_URL('act=ListBusinessObjects')));
+$controller->setUnitOfWork(array(Front_Controller::generate_secure_URL('act=Login'), Front_Controller::generate_secure_URL('act=ListBusinessObjects')));
 
 if(!empty($_POST)) {			
-	$controller->handle_post();		
+	$controller->doPOST($_POST);
 }else{
-	$controller->init();
+	$controller->doGET($_GET);
 }
 
 ?>
