@@ -1,9 +1,6 @@
 <?php
 
-// $Id$
-
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
-
 require_once $config->get('sysRoot').'alpha/view/person.inc';
 require_once $config->get('sysRoot').'alpha/controller/front/Front_Controller.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Date.inc';
@@ -14,121 +11,151 @@ require_once $config->get('sysRoot').'alpha/model/types/String.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/FailedUnitCommitException.inc';
 
 /**
  *
  * The master controller class for the framework
  * 
- * @package Alpha Core
+ * @package alpha::controller
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins
- * 
+ * @copyright 2009 John Collins
+ * @version $Id$
  * 
  */
-class Controller
-{
+abstract class Controller {
 	/**
-	 * the name of the controller
+	 * The name of the controller
+	 * 
 	 * @var string
 	 */
-	var $name = '';
+	protected $name = '';
 	
 	/**
-	 * used to set access privileages to the controller
+	 * Used to set access privileages to the controller to the name of the rights group
+	 * 
 	 * @var string
 	 */ 
-	var $visibility = 'public';
+	protected $visibility = 'Standard';
 	
 	/**
-	 * Optionally, a BO may be set for the default validation form handling code to load in the display_page_head
+	 * Optionally, a BO may be set for the default validation form handling code to load in the displayPageHead()
 	 * method.  The defination of this BO class will need to be included in the child controller.
-	 * @var BO
+	 * 
+	 * @var Object
 	 */
-	var $BO = null;
+	protected $BO = null;
 	
 	/**
-	 * used to determine if the controller is part of a unit of work sequence (empty or the name of the unit)
+	 * Used to determine if the controller is part of a unit of work sequence 
+	 * (either empty or the name of the unit)
+	 * 
 	 * @var string
 	 */
-	var $unit_of_work = '';
+	protected $unitOfWork = '';
 	
 	/**
-	 * stores the start time of a unit of work transaction
+	 * Stores the start time of a unit of work transaction
+	 * 
 	 * @var Timestamp
 	 */
-	var $unit_start_time;
+	protected $unitStartTime;
 	
 	/**
-	 * stores the end time of a unit of work transaction
+	 * Stores the end time of a unit of work transaction
+	 * 
 	 * @var Timestamp
 	 */
-	var $unit_end_time;
+	protected $unitEndTime;
 	
 	/**
-	 * stores the maximum allowed time duration (in second) of the unit of work
-	 * @var integer
+	 * Stores the maximum allowed time duration (in second) of the unit of work
+	 * 
+	 * @var Integer
 	 */
-	var $unit_MAX_duration;
+	protected $unitMAXDuration;
 	
 	/**
-	 * the file name of the first controller that is used in this unit of work
+	 * The name of the first controller that is used in this unit of work
+	 * 
 	 * @var string
 	 */
-	var $first_job = '';
+	protected $firstJob = '';
 	
 	/**
-	 * the file name of the next controller that is used in this unit of work
+	 * The name of the next controller that is used in this unit of work
+	 * 
 	 * @var string
 	 */
-	var $next_job = '';
+	protected $nextJob = '';
 	
 	/**
-	 * the file name of the previous controller that is used in this unit of work
+	 * The name of the previous controller that is used in this unit of work
+	 * 
 	 * @var string
 	 */
-	var $previous_job = '';
+	protected $previousJob = '';
 	
 	/**
-	 * the file name of the last controller that is used in this unit of work
+	 * The name of the last controller that is used in this unit of work
+	 * 
 	 * @var string
 	 */
-	var $last_job = '';
+	protected $lastJob = '';
 	
 	/**
-	 * an array for storing dirty objects in a session
+	 * An array for storing dirty objects in a session (i.e. persistent business 
+	 * objects that have not been commited to the database yet)
+	 * 
 	 * @var array
 	 */
-	var $dirty_objects = array();
+	protected $dirtyObjects = array();
 	
 	/**
-	 * an array for storing new objects in a session
+	 * An array for storing new objects in a session (business objects that have no
+	 * OID yet)
+	 * 
 	 * @var array
 	 */
-	var $new_objects = array();
+	protected $newObjects = array();
 	
 	/**
-	 * the title to be displayed for the controller page
+	 * The title to be displayed for the controller page
+	 * 
 	 * @var string
 	 */
-	var $title;
+	protected $title;
 	
 	/**
-	 * meta keywords for the controller page
+	 * Meta keywords for the controller page, generally populated from tags
+	 * 
 	 * @var string
 	 */
-	var $keywords;
+	protected $keywords;
 	
 	/**
-	 * meta description for the controller page
-	 * @avr string
+	 * Meta description for the controller page
+	 * 
+	 * @var string
 	 */
-	var $description;
+	protected $description;
+	
+	/**
+	 * Trace logger
+	 * 
+	 * @var Logger
+	 */
+	private static $logger = null;
 	
 	/**
 	 * constructor for the Controller that sets up the unit of work start time
 	 * and gets any business objects stored in the session
 	 */
-	 function Controller() {
+	public function __construct() {
+		if(self::$logger == null)
+			self::$logger = new Logger('Controller');
+		self::$logger->debug('>>__construct()');
+		
 	 	global $config;
 	 	
 	 	// if configured to do so, force redirect to the front controller
@@ -142,156 +169,203 @@ class Controller
     			header('Location: '.$config->get('sysURL').'/FC.php?act='.get_class($this).'&'.$_SERVER["QUERY_STRING"]);
  
 		    // we're done here
-    		exit();
+    		exit;
 	 	}
 	 	
-	 	$this->unit_start_time = new Timestamp();
+	 	$this->unitStartTime = new Timestamp();
+	 	$this->unitEndTime = new Timestamp();
+	 	$this->unitMAXDuration = new Integer();
 	 	
 	 	if(!isset($_SESSION))
 	 		session_start();	 	
 	 	
-	 	if(isset($_SESSION["unit_of_work"])) {	 		
-	 		$this->set_unit_of_work($_SESSION["unit_of_work"]);
+	 	if(isset($_SESSION["unitOfWork"])) {	 		
+	 		$this->setUnitOfWork($_SESSION["unitOfWork"]);
 	 	}
-	 	if(isset($_SESSION["dirty_objects"]))
-	 		$this->dirty_objects = $_SESSION["dirty_objects"];
 	 	
-	 	if(isset($_SESSION["new_objects"]))	 		
-	 		$this->new_objects = $_SESSION["new_objects"];	 	
+	 	if(isset($_SESSION["dirtyObjects"])) {
+	 		$this->dirtyObjects = $_SESSION["dirtyObjects"];
+	 	}
+	 	
+	 	if(isset($_SESSION["newObjects"])) {	 		
+	 		$this->newObjects = $_SESSION["newObjects"];
+	 	}
+
+	 	self::$logger->debug('<<__construct');
 	 }
 	 
 	 /**
-	  * get the BO for this controller (if any)
-	  * @return null if BO not set, BO object otherwise
+	  * Get the BO for this controller (if any)
+	  * 
+	  * @return mixed
 	  */
-	 function get_BO() {
+	 public function getBO() {
+	 	self::$logger->debug('>>getBO()');
+	 	self::$logger->debug('<<getBO ['.print_r($this->BO, true).']');
 	 	return $this->BO;
 	 }
 	 
 	 /**
-	  * setter for the BO for this controller
-	  * @param BO $BO
+	  * Setter for the BO for this controller
+	  * 
+	  * @param Object $BO
 	  */ 
-	 function set_BO($BO) {
+	 public function setBO($BO) {
+	 	self::$logger->debug('>>setBO(BO=['.print_r($BO).'])');
 	 	$this->BO = $BO;
+	 	self::$logger->debug('<<setBO');
 	 }
 	 
 	 /**
-	  * get the name of the unit of work
-	  * @return string $name
+	  * Get the name of the unit of work job
+	  * 
+	  * @return string
 	  */
-	 function get_name() {
+	 public function getName() {
+	 	self::$logger->debug('>>getName()');
+	 	self::$logger->debug('<<getName ['.$this->name.']');
 	 	return $this->name;
 	 }
 	 
 	 /**
-	  * setter for the unit of work name
+	  * Setter for the unit of work job name
+	  * 
 	  * @param string $name
 	  */ 
-	 function set_name($name) {
+	 public function setName($name) {
+	 	self::$logger->debug('>>setName(name=['.$name.'])');
 	 	$this->name = $name;
+	 	self::$logger->debug('<<setName');
 	 }
 	 
 	 /**
-	  * get the visibility privileage string for the controller
+	  * Get the name of the rights group that has access to this controller
+	  * 
 	  * @return string $visibility
 	  */
-	 function get_visibility() {
+	 public function getVisibility() {
+	 	self::$logger->debug('>>getVisibility()');
+	 	self::$logger->debug('<<getVisibility ['.$this->visibility.']');
 	 	return $this->visibility;
 	 }
 	 
 	 /**
-	  * setter for the controller visibility privileage level
+	  * Setter for the name of the rights group that has access to this controller
+	  * 
 	  * @param string $visibility
 	  */
-	 function set_visibility($visibility) {
-	 	$this->visibility = $visibility;	
+	 public function setVisibility($visibility) {
+	 	self::$logger->debug('>>setVisibility(visibility=['.$visibility.'])');
+	 	$this->visibility = $visibility;
+	 	self::$logger->debug('<<setVisibility');
 	 }
 	 
 	 /**
-	  * gets the name of the first job in this unit of work
-	  * @return string $first_job
+	  * Gets the name of the first job in this unit of work
+	  * 
+	  * @return string
 	  */
-	 function get_first_job() {
-	 	return $this->first_job;
+	 public function getFirstJob() {
+	 	self::$logger->debug('>>getFirstJob()');
+	 	self::$logger->debug('<<getFirstJob ['.$this->firstJob.']');
+	 	return $this->firstJob;
 	 }
 	 
 	 /**
-	  * gets the name of the next job in this unit of work
-	  * @return string $next_job
+	  * Gets the name of the next job in this unit of work
+	  * 
+	  * @return string
 	  */
-	 function get_next_job() {
-	 	return $this->next_job;
+	 public function getNextJob() {
+	 	self::$logger->debug('>>getNextJob()');
+	 	self::$logger->debug('<<getNextJob ['.$this->nextJob.']');
+	 	return $this->nextJob;
 	 }
 	 
 	 /**
-	  * gets the name of the previous job in this unit of work
-	  * @return string $previous_job
+	  * Gets the name of the previous job in this unit of work
+	  * 
+	  * @return string
 	  */
-	 function get_previous_job() {
-	 	return $this->previous_job;
+	 public function getPreviousJob() {
+	 	self::$logger->debug('>>getPreviousJob()');
+	 	self::$logger->debug('<<getPreviousJob ['.$this->previousJob.']');
+	 	return $this->previousJob;
 	 }
 	 
 	 /**
-	  * gets the name of the last job in this unit of work
-	  * @return string $last_job
+	  * Gets the name of the last job in this unit of work
+	  * 
+	  * @return string
 	  */
-	 function get_last_job() {
-	 	return $this->last_job;
+	 public function getLastJob() {
+	 	self::$logger->debug('>>getLastJob()');
+	 	self::$logger->debug('<<getLastJob ['.$this->lastJob.']');
+	 	return $this->lastJob;
 	 }
 	 
 	 /**
-	  * sets the name of the controller job sequence to the values in the supplied array (and stores array in the session)
-	  * @param array $jobs An array of file names that make up the unit of work
+	  * Sets the name of the controller job sequence to the values in the supplied 
+	  * array (and stores the array in the session)
+	  * 
+	  * @param array $jobs
 	  */
-	 function set_unit_of_work($jobs) {
-	 	if(method_exists($this, 'before_set_unit_of_work_callback'))
-			$this->before_set_unit_of_work_callback();
+	 public function setUnitOfWork($jobs) {
+	 	self::$logger->debug('>>setUnitOfWork(jobs=['.print_r($jobs, true).'])');
+	 	
+	 	if(method_exists($this, 'before_setUnitOfWork_callback'))
+			$this->before_setUnitOfWork_callback();
 			
 		// clear out any previous unit of work from the session
-		$_SESSION["unit_of_work"] = null;		
-		$this->dirty_objects = array();
-		$this->new_objects = array();
+		$_SESSION["unitOfWork"] = null;		
+		$this->dirtyObjects = array();
+		$this->newObjects = array();
 		
-	 	$num_of_jobs = count($jobs);
+	 	$numOfJobs = count($jobs);
 	 	
-	 	for($i=0; $i<$num_of_jobs; $i++) {
+	 	for($i=0; $i<$numOfJobs; $i++) {
 	 		// the first job in the sequence
 	 		if($i==0) {
-	 			$this->first_job = $jobs[$i];
+	 			$this->firstJob = $jobs[$i];
 	 		}
 	 		// found the current job
 	 		if($this->name == $jobs[$i]) {
 	 			if(isset($jobs[$i-1])) {
 	 				// set the previous job if it exists
-	 				$this->previous_job = $jobs[$i-1];
+	 				$this->previousJob = $jobs[$i-1];
 	 			}
 	 			if(isset($jobs[$i+1])) {
 	 				// set the next job if it exists
-	 				$this->next_job = $jobs[$i+1];
+	 				$this->nextJob = $jobs[$i+1];
 	 			}
 	 		}
 	 		// the last job in the sequence
-	 		if($i==($num_of_jobs-1)) {
-	 			$this->last_job = $jobs[$i];
+	 		if($i==($numOfJobs-1)) {
+	 			$this->lastJob = $jobs[$i];
 	 		}	
 	 	}
-	 	$_SESSION["unit_of_work"] = $jobs;
+	 	$_SESSION["unitOfWork"] = $jobs;
 	 	
-	 	if(method_exists($this, 'after_set_unit_of_work_callback'))
-			$this->after_set_unit_of_work_callback();
+	 	if(method_exists($this, 'after_setUnitOfWork_callback'))
+			$this->after_setUnitOfWork_callback();
+			
+		self::$logger->debug('<<setUnitOfWork');
 	 }
 	 
 	 /**
-	  * getter for the unit start time
-	  * @return Timestamp $unit_start_time
+	  * Getter for the unit start time
+	  * 
+	  * @return Timestamp $unitStartTime
 	  */
-	 function get_start_time() {
-	 	return $this->unit_start_time->getValue();
+	 public function getStartTime() {
+	 	self::$logger->debug('>>getStartTime()');
+	 	self::$logger->debug('<<getStartTime ['.$this->unitStartTime.']');
+	 	return $this->unitStartTime;
 	 }
 	 
 	 /**
-	  * setter for the unit start time
+	  * Setter for the unit start time (value will be stored in the session as key unitStartTime)
+	  * 
 	  * @param int $year
 	  * @param int $month
 	  * @param int $day
@@ -299,20 +373,27 @@ class Controller
 	  * @param int $minute
 	  * @param int $second
 	  */
-	 function set_unit_start_time($year, $month, $day, $hour, $minute, $second) {
-	 	$this->unit_start_time = setValue($year, $month, $day, $hour, $minute, $second);
+	 public function setUnitStartTime($year, $month, $day, $hour, $minute, $second) {
+	 	self::$logger->debug('>>setUnitStartTime($year, $month, $day, $hour, $minute, $second)');
+	 	$this->unitStartTime->setTimestampValue($year, $month, $day, $hour, $minute, $second);
+	 	$_SESSION['unitStartTime'] = $this->unitStartTime->getValue();
+	 	self::$logger->debug('<<setUnitStartTime');
 	 }
 	 
 	 /**
-	  * getter for the unit end time
-	  * @return Timestamp $unit_end_time
+	  * Getter for the unit end time
+	  * 
+	  * @return Timestamp $unitEndTime
 	  */
-	 function get_end_time() {
-	 	return $this->unit_end_time->getValue();
+	 public function getEndTime() {
+	 	self::$logger->debug('>>getEndTime()');
+	 	self::$logger->debug('<<getEndTime ['.$this->unitEndTime.']');
+	 	return $this->unitEndTime;
 	 }
 	 
 	 /**
-	  * setter for the unit end time
+	  * Setter for the unit end time (value will be stored in the session as key unitEndTime)
+	  * 
 	  * @param int $year
 	  * @param int $month
 	  * @param int $day
@@ -320,201 +401,228 @@ class Controller
 	  * @param int $minute
 	  * @param int $second
 	  */
-	 function set_unit_end_time($year, $month, $day, $hour, $minute, $second) {
-	 	$this->unit_end_time = new Timestamp();
-	 	$this->unit_end_time->setValue($year, $month, $day, $hour, $minute, $second);
+	 public function setUnitEndTime($year, $month, $day, $hour, $minute, $second) {
+	 	self::$logger->debug('>>setUnitEndTime($year, $month, $day, $hour, $minute, $second)');
+	 	$this->unitEndTime->setTimestampValue($year, $month, $day, $hour, $minute, $second);
+	 	$_SESSION['unitEndTime'] = $this->unitEndTime->getValue();
+	 	self::$logger->debug('<<setUnitEndTime');
 	 }
 	 
 	 /**
-	  * getter for the unit MAX duration
-	  * @return integer $unit_MAX_duration
+	  * Getter for the unit of work MAX duration
+	  * 
+	  * @return Integer $unitMAXDuration
 	  */
-	 function get_MAX_duration() {
-	 	return $this->unit_MAX_duration->getValue();
+	 public function getMAXDuration() {
+	 	self::$logger->debug('>>getMAXDuration()');
+	 	self::$logger->debug('<<getMAXDuration ['.$this->unitMAXDuration.']');
+	 	return $this->unitMAXDuration;
 	 }
 	 
 	 /**
-	  * setter for the unit MAX duration
-	  * @param integer $unit_MAX_duration
+	  * Setter for the unit MAX duration
+	  * 
+	  * @param integer $unitMAXDuration
 	  */
-	 function set_unit_MAX_duration($duration) {
-	 	$this->unit_MAX_duration = $duration;
+	 public function setUnitMAXDuration($duration) {
+	 	self::$logger->debug('>>setUnitMAXDuration(duration=['.$duration.'])');
+	 	$this->unitMAXDuration->setValue($duration);
+	 	self::$logger->debug('<<setUnitMAXDuration');
 	 }
 	 
 	 /**
-	  * calculates and returns the unit of work duration in seconds
+	  * Calculates and returns the unit of work current duration in seconds
+	  * 
 	  * @return integer $duration
 	  */
-	 function get_unit_duration() {
+	 public function getUnitDuration() {
+	 	self::$logger->debug('>>getUnitDuration()');
+	 	
 	 	$int_start_time = mktime(
-	 		$this->unit_start_time->get_hour(),
-	 		$this->unit_start_time->get_minute(),
-	 		$this->unit_start_time->get_second(),
-	 		$this->unit_start_time->get_month(),
-	 		$this->unit_start_time->get_date(),
-	 		$this->unit_start_time->get_year()
+	 		$this->unitStartTime->get_hour(),
+	 		$this->unitStartTime->get_minute(),
+	 		$this->unitStartTime->get_second(),
+	 		$this->unitStartTime->get_month(),
+	 		$this->unitStartTime->get_date(),
+	 		$this->unitStartTime->get_year()
 	 		);
+	 	
 	 	$int_end_time = mktime(
-	 		$this->unit_end_time->get_hour(),
-	 		$this->unit_end_time->get_minute(),
-	 		$this->unit_end_time->get_second(),
-	 		$this->unit_end_time->get_month(),
-	 		$this->unit_end_time->get_date(),
-	 		$this->unit_end_time->get_year()
+	 		$this->unitEndTime->get_hour(),
+	 		$this->unitEndTime->get_minute(),
+	 		$this->unitEndTime->get_second(),
+	 		$this->unitEndTime->get_month(),
+	 		$this->unitEndTime->get_date(),
+	 		$this->unitEndTime->get_year()
 	 		);
+	 	
+	 	self::$logger->debug('<<getUnitDuration ['.$int_end_time-$int_start_time.']');
 	 	return $int_end_time-$int_start_time;
 	 }
 	 
 	 /**
-	  * adds a loaded object to the dirty_objects array
-	  * @param business_object $object
+	  * Adds the supplied business object to the dirtyObjects array in the session
+	  * 
+	  * @param Object $object
 	  */
-	 function mark_dirty($object) {
-	 	if(method_exists($this, 'before_mark_dirty_callback'))
-			$this->before_mark_dirty_callback();
+	 public function markDirty($object) {
+	 	self::$logger->debug('>>markDirty(object=['.print_r($object, true).'])');
+	 	
+	 	if(method_exists($this, 'before_markDirty_callback'))
+			$this->before_markDirty_callback();
 		
-	 	$this->dirty_objects[count($this->dirty_objects)] = $object;
+	 	$this->dirtyObjects[count($this->dirtyObjects)] = $object;
 	 	
-	 	$_SESSION["dirty_objects"] = $this->dirty_objects;
+	 	$_SESSION['dirtyObjects'] = $this->dirtyObjects;
 	 	
-	 	if(method_exists($this, 'after_mark_dirty_callback'))
-			$this->after_mark_dirty_callback();
-	 }
-	 
-	 /**
-	  * getter for the dirty objects array
-	  * @return array $dirty_objects
-	  */
-	 function get_dirty_objects() {
-	 	return $this->dirty_objects;
-	 }
-	 
-	 /**
-	  * adds a newly created object to the new_objects array
-	  * @param business_object $object
-	  */
-	 function mark_new($object) {
-	 	if(method_exists($this, 'before_mark_new_callback'))
-			$this->before_mark_new_callback();
+	 	if(method_exists($this, 'after_markDirty_callback'))
+			$this->after_markDirty_callback();
 		
-	 	$this->new_objects[count($this->new_objects)] = $object;
-	 	
-	 	$_SESSION["new_objects"] = $this->new_objects;
-	 	
-	 	if(method_exists($this, 'after_mark_new_callback'))
-			$this->after_mark_new_callback();
+		self::$logger->debug('<<markDirty');
 	 }
 	 
 	 /**
-	  * getter for the new objects array
-	  * @return array $new_objects
+	  * Getter for the dirty objects array
+	  * 
+	  * @return array $dirtyObjects
 	  */
-	 function get_new_objects() {
-	 	return $this->new_objects;
+	 public function getDirtyObjects() {
+	 	self::$logger->debug('>>getDirtyObjects()');
+	 	self::$logger->debug('<<getDirtyObjects ['.print_r($this->dirtyObjects, true).']');
+	 	return $this->dirtyObjects;
 	 }
 	 
 	 /**
-	 * commits (saves) all of the new amd modified (dirty) objects in the unit of work to the database
-	 * @return bool True on success, false otherwise
+	  * Adds a newly created business object to the newObjects array in the session
+	  * 
+	  * @param Object $object
+	  */
+	 public function markNew($object) {
+	 	self::$logger->debug('>>markNew(object=['.print_r($object, true).'])');
+	 	
+	 	if(method_exists($this, 'before_markNew_callback'))
+			$this->before_markNew_callback();
+		
+	 	$this->newObjects[count($this->newObjects)] = $object;
+	 	
+	 	$_SESSION['newObjects'] = $this->newObjects;
+	 	
+	 	if(method_exists($this, 'after_markNew_callback'))
+			$this->after_markNew_callback();
+			
+		self::$logger->debug('<<markNew');
+	 }
+	 
+	 /**
+	  * Getter for the new objects array
+	  * 
+	  * @return array $newObjects
+	  */
+	 public function getNewObjects() {
+	 	self::$logger->debug('>>getNewObjects()');
+	 	self::$logger->debug('<<getNewObjects ['.print_r($this->newObjects, true).']');
+	 	return $this->newObjects;
+	 }
+	 
+	/**
+	 * Commits (saves) all of the new and modified (dirty) objects in the unit of work to the database
 	 */
-	function commit() {
+	public function commit() {
+		self::$logger->debug('>>commit()');
+		
 		if(method_exists($this, 'before_commit_callback'))
 			$this->before_commit_callback();
 		
-		$sql_query = 'BEGIN;';		
+		$sqlQuery = 'BEGIN;';
 
-		$result = mysql_query($sql_query);		
+		$result = mysql_query($sqlQuery);		
 
-		$new_objects = $this->get_new_objects();
+		$newObjects = $this->getNewObjects();
 
-		for ($i=0; $i<count($new_objects); $i++) {
-			$success = true;
+		for ($i = 0; $i < count($newObjects); $i++) {
 			try {
-				$dirty_objects[$i]->save();
+				$newObjects[$i]->save();
 			}catch (FailedSaveException $e) {
-				$success = false;
-			}catch (LockingException $e) {
-				$success = false;
-			}
-			
-			if (!$success) {
-				$this->last_query .= " Error: ".mysql_error();
-				$error = new handle_error($_SERVER["PHP_SELF"],'Failed to commit the transaction','commit()','framework');
+				throw new FailedUnitCommitException($e->getMessage());
+				self::$logger->error('Failed to save new object of type ['.get_class($newObjects[$i]).'], aborting...');
 				$this->abort();
-				return false;
+				return;
+			}catch (LockingException $e) {
+				throw new FailedUnitCommitException($e->getMessage());
+				self::$logger->error('Failed to save new object of type ['.get_class($newObjects[$i]).'], aborting...');
+				$this->abort();
+				return;
 			}
 		}
 		
-		$dirty_objects = $this->get_dirty_objects();
+		$dirtyObjects = $this->getDirtyObjects();
 
-		for ($i=0; $i<count($dirty_objects); $i++) {
-			$success = true;
+		for ($i = 0; $i < count($dirtyObjects); $i++) {
 			try {
-				$dirty_objects[$i]->save();
+				$dirtyObjects[$i]->save();
 			}catch (FailedSaveException $e) {
-				$success = false;
-			}catch (LockingException $e) {
-				$success = false;
-			}
-			
-			if (!$success) {
-				$this->last_query .= " Error: ".mysql_error();
-				$error = new handle_error($_SERVER["PHP_SELF"],'Failed to commit the transaction','commit()','framework');
+				throw new FailedUnitCommitException($e->getMessage());
+				self::$logger->error('Failed to save OID ['.$dirtyObjects[$i]->getID().'] of type ['.get_class($dirtyObjects[$i]).'], aborting...');
 				$this->abort();
-				return false;
+				return;
+			}catch (LockingException $e) {
+				throw new FailedUnitCommitException($e->getMessage());
+				self::$logger->error('Failed to save OID ['.$dirtyObjects[$i]->getID().'] of type ['.get_class($dirtyObjects[$i]).'], aborting...');
+				$this->abort();
+				return;
 			}
 		}
 		
-		$sql_query = 'COMMIT;';		
+		$sqlQuery = 'COMMIT;';		
 
-		$result = mysql_query($sql_query);
+		$result = mysql_query($sqlQuery);
 		
-		$_SESSION["unit_of_work"] = null;
-		$_SESSION["dirty_objects"] = null;
-		$_SESSION["new_objects"] = null;
+		$_SESSION["unitOfWork"] = null;
+		$_SESSION["dirtyObjects"] = null;
+		$_SESSION["newObjects"] = null;
 		
 		if (mysql_error() == '') {
 			if(method_exists($this, 'after_commit_callback'))
 				$this->after_commit_callback();
 			
-			return true;
+			self::$logger->debug('<<commit');
 		}else{					
-			$this->last_query .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to commit the transaction','commit()','framework');
-			return false;
+			throw new FailedUnitCommitException('Failed to commit the transaction, MySQL error is ['.mysql_error().']');
+			self::$logger->debug('<<commit');
 		}		
 	}
 	
 	/**
-	 * method to clearup a cancelled unit of work
-	 * @return bool True on success, false otherwise
+	 * Method to clearup a cancelled unit of work
 	 */
-	function abort() {
+	public function abort() {
+		self::$logger->debug('>>abort()');
+		
 		if(method_exists($this, 'before_abort_callback'))
 			$this->before_abort_callback();
 		
-		$_SESSION["unit_of_work"] = null;
-		$_SESSION["dirty_objects"] = null;
-		$_SESSION["new_objects"] = null;
+		$_SESSION['unitOfWork'] = null;
+		$_SESSION['dirtyObjects'] = null;
+		$_SESSION['newObjects'] = null;
 		
-		$sql_query = 'ROLLBACK;';		
+		$sqlQuery = 'ROLLBACK;';		
 
-		$result = mysql_query($sql_query);
+		$result = mysql_query($sqlQuery);
 		
 		if (mysql_error() == '') {
 			if(method_exists($this, 'after_abort_callback'))
 				$this->after_abort_callback();
 			
-			return true;
-		}else{					
-			$this->last_query .= " Error: ".mysql_error();
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to rollback the transaction','abort()','framework');
-			return false;
+			self::$logger->debug('<<abort');
+		}else{
+			throw new AlphaException('Failed to rollback the transaction, MySQL error is ['.mysql_error().']');
+			self::$logger->debug('<<abort');
 		}		
 	}
 	
 	/**
 	 * method to display the page head
+	 * @todo move to View
 	 */
 	function display_page_head() {
 		if(method_exists($this, 'before_display_page_head_callback'))
@@ -525,9 +633,9 @@ class Controller
 		echo '<html>';
 		echo '<head>';
 		echo '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">';
-		echo '<title>'.$this->get_title().'</title>';
-		echo '<meta name="Keywords" content="'.$this->get_keywords().'">';
-		echo '<meta name="Description" content="'.$this->get_description().'">';
+		echo '<title>'.$this->getTitle().'</title>';
+		echo '<meta name="Keywords" content="'.$this->getKeywords().'">';
+		echo '<meta name="Description" content="'.$this->getDescription().'">';
 		echo '<meta name="Author" content="john collins">';
 		echo '<meta name="copyright" content="copyright ">';
 		echo '<meta name="identifier" content="http://'.$config->get('sysURL').'/">';
@@ -535,7 +643,7 @@ class Controller
 		echo '<meta name="expires" content="never">';
 		echo '<meta name="language" content="en">';
 		echo '<meta name="distribution" content="global">';
-		echo '<meta name="title" content="'.$this->get_title().'">';
+		echo '<meta name="title" content="'.$this->getTitle().'">';
 		echo '<meta name="robots" content="index,follow">';
 		echo '<meta http-equiv="imagetoolbar" content="no">';			
 		
@@ -560,7 +668,7 @@ class Controller
 		echo '</head>';
 		echo '<body>';
 			
-		echo '<h1>'.$this->get_title().'</h1>';
+		echo '<h1>'.$this->getTitle().'</h1>';
 		
 		if (isset($_SESSION["current_user"])) {	
 			echo '<p>You are logged in as '.$_SESSION["current_user"]->getDisplayname().'.  <a href="'.$config->get('sysURL').'/alpha/controller/logout.php">Logout</a></p>';
@@ -574,6 +682,7 @@ class Controller
 	
 	/**
 	 * method to display the page footer
+	 * @todo move to View
 	 */
 	function display_page_foot() {
 		if(method_exists($this, 'before_display_page_foot_callback'))
@@ -587,127 +696,161 @@ class Controller
 	}
 	
 	/**
-	 * getter for the page title
-	 * @return string page title
+	 * Getter for the page title
+	 * 
+	 * @return string
 	 */
-	function get_title() {
+	public function getTitle() {
+		self::$logger->debug('>>getTitle()');
+		self::$logger->debug('<<getTitle ['.$this->title.']');
 		return $this->title;	
 	}
 	
 	/**
-	 * setter for the page title
-	 * @param string title
+	 * Setter for the page title
+	 * 
+	 * @param string $title
 	 */
-	function set_title($title) {
+	public function setTitle($title) {
+		self::$logger->debug('>>setTitle(title=['.$title.'])');
+		self::$logger->debug('<<setTitle');
 		$this->title = $title;	
 	}
 	
 	/**
-	 * getter for the page description
-	 * @return string page description
+	 * Getter for the page description
+	 * 
+	 * @return string
 	 */
-	function get_description() {
+	public function getDescription() {
+		self::$logger->debug('>>getDescription()');
+		self::$logger->debug('<<getDescription ['.$this->description.']');
 		return $this->description;	
 	}
 	
 	/**
-	 * setter for the page description
-	 * @param string description
+	 * Setter for the page description
+	 * 
+	 * @param string $description
 	 */
-	function set_description($description) {
+	public function setDescription($description) {
+		self::$logger->debug('>>setDescription(description=['.$description.'])');
+		self::$logger->debug('<<setDescription');
 		$this->description = $description;	
 	}
 	
 	/**
-	 * getter for the page keywords
+	 * Getter for the page keywords
+	 * 
 	 * @return string page keywords
 	 */
-	function get_keywords() {
+	public function getKeywords() {
+		self::$logger->debug('>>getKeywords()');
+		self::$logger->debug('<<getKeywords ['.$this->keywords.']');
 		return $this->keywords;	
 	}
 	
 	/**
-	 * setter for the page keywords
-	 * @param string keywords
+	 * Setter for the page keywords, should pass a comma-seperated list as a string
+	 * 
+	 * @param string $keywords
 	 */
-	function set_keywords($keywords) {
+	public function setKeywords($keywords) {
+		self::$logger->debug('>>setKeywords(keywords=['.$keywords.'])');
+		self::$logger->debug('<<setKeywords');
 		$this->keywords = $keywords;	
 	}
 	
 	/**
 	 * method to display an access error for trespassing users
+	 * @todo modify to invoke View methods for headers etc.
 	 */
-	function access_error() {
-		if(method_exists($this, 'before_access_error_callback'))
-			$this->before_access_error_callback();
+	public function accessError() {
+		self::$logger->debug('>>accessError()');
+		
+		if(method_exists($this, 'before_accessError_callback'))
+			$this->before_accessError_callback();
 		
 		global $config;		
 		
 		// set up the title and meta details
-		$this->set_title("Access Error: You Cannot View This Page");
-		$this->set_description("Access Error: You Cannot View This Page.");
-		$this->set_keywords("access,error");		
-		
+		$this->setTitle('Access Error: You cannot view this page!');
+		$this->setDescription('Access Error: You cannot view this page!');
+		$this->setKeywords('access,error');		
 		
 		$this->display_page_head();
 		
-		$error = new handle_error($_SERVER["PHP_SELF"],'You do not have the correct access rights to view this page.  If you have not logged in yet, try going back to the home page and logging in from there.' ,'access_error()','validation');
+		echo '<p class="error">You do not have the correct access rights to view this page.  If you have not logged in yet, try going back to the home page and logging in from there.</p>';
 		echo '<p align="center"><a href="'.$config->get('sysURL').'">Home Page</a></p>';
 		
 		$this->display_page_foot();
 		
-		if(method_exists($this, 'after_access_error_callback'))
-			$this->after_access_error_callback();
+		if(method_exists($this, 'after_accessError_callback'))
+			$this->after_accessError_callback();
+			
+		self::$logger->debug('<<accessError');
 	}
 	
 	/**
-	 * checks the user rights of the currently logged-in person against the page visibility
-	 * @return boolean true if valid user, false otherwise
+	 * Checks the user rights of the currently logged-in person against the page 
+	 * visibility set for this controller.  Will invoke accessError() if the user has
+	 * not got the correct rights.
+	 * 
+	 * @return boolean
+	 * @todo modify to use new rights_object class
 	 */
-	function check_rights() {
-		if(method_exists($this, 'before_check_rights_callback'))
-			$this->before_check_rights_callback();
+	public function checkRights() {
+		self::$logger->debug('>>checkRights()');
+		
+		if(method_exists($this, 'before_checkRights_callback'))
+			$this->before_checkRights_callback();
 		
 		// firstly if the page is public then there is no issue
-		if ($this->get_visibility() == 'public') {
-			if(method_exists($this, 'after_check_rights_callback'))
-				$this->after_check_rights_callback();
-		
+		if ($this->getVisibility() == 'public') {
+			if(method_exists($this, 'after_checkRights_callback'))
+				$this->after_checkRights_callback();
+			
+			self::$logger->debug('<<checkRights [true]');
 			return true;
 		}else{
 			// the person is logged in
-			if (isset($_SESSION["current_user"])) {
+			if (isset($_SESSION['current_user'])) {
 				// checking for admins (can access everything)
-				if ($_SESSION["current_user"]->getAccessLevel() == 'Administrator') {
-					if(method_exists($this, 'after_check_rights_callback'))
-						$this->after_check_rights_callback();
+				if ($_SESSION['current_user']->getAccessLevel() == 'Administrator') {
+					if(method_exists($this, 'after_checkRights_callback'))
+						$this->after_checkRights_callback();
 					
+					self::$logger->debug('<<checkRights [true]');
 					return true;
-				} elseif ($_SESSION["current_user"]->getAccessLevel() == $this->get_visibility()) {
-					if(method_exists($this, 'after_check_rights_callback'))
-						$this->after_check_rights_callback();
+				} elseif ($_SESSION['current_user']->getAccessLevel() == $this->getVisibility()) {
+					if(method_exists($this, 'after_checkRights_callback'))
+						$this->after_checkRights_callback();
 					
+					self::$logger->debug('<<checkRights [true]');
 					return true;
 				// the person is editing their own profile which is allowed
-				} elseif (get_class($this->BO) == "person_object" && $_SESSION["current_user"]->getDisplayName() == $this->BO->getDisplayName()) {
-					if(method_exists($this, 'after_check_rights_callback'))
-						$this->after_check_rights_callback();
+				} elseif (get_class($this->BO) == 'person_object' && $_SESSION['current_user']->getDisplayName() == $this->BO->getDisplayName()) {
+					if(method_exists($this, 'after_checkRights_callback'))
+						$this->after_checkRights_callback();
 					
+					self::$logger->debug('<<checkRights [true]');
 					return true;
 				}else{
-					$this->access_error();
+					$this->accessError();
+					self::$logger->debug('<<checkRights [false]');
 					return false;
 				}
 			}else{ // the person is NOT logged in
-				$this->access_error();
+				$this->accessError();
+				self::$logger->debug('<<checkRights [false]');
 				return false;
 			}
 		}
-		
 	}
 	
 	/**
 	 * method to render a hidden form for posting the OID of an object to be deleted
+	 * @todo move to View
 	 */
 	function render_delete_form() {
 		if(method_exists($this, 'before_render_delete_form_callback'))
@@ -725,28 +868,33 @@ class Controller
 	}
 	
 	/**
-	 * method to check the validity of the two hidden form security
+	 * Method to check the validity of the two hidden form security
 	 * fields which aim to ensure that a post to the controller is being sent from 
-	 * the same server as hosting it.
+	 * the same server that is hosting it.
 	 * 
-	 * @return bool True if the fields are valid, false otherwise 
+	 * @return boolean
 	 */
-	function check_security_fields() {		
-		if(method_exists($this, 'before_check_security_fields_callback'))
-			$this->before_check_security_fields_callback();
+	public function checkSecurityFields() {
+		self::$logger->debug('>>checkSecurityFields()');
+				
+		if(method_exists($this, 'before_checkSecurityFields_callback'))
+			$this->before_checkSecurityFields_callback();
 		
 		// the server hostname + today's date
-		$var1 = md5($_SERVER["HTTP_HOST"].date("Ymd"));
+		$var1 = md5($_SERVER['HTTP_HOST'].date("Ymd"));
 		// the server's IP plus $var1
 		$var2 = md5($_SERVER['REMOTE_ADDR'].$var1);
 		
-		if(empty($_REQUEST["var1"]) || empty($_REQUEST["var2"]))
+		if(empty($_REQUEST['var1']) || empty($_REQUEST['var2'])) {
+			self::$logger->debug('<<checkSecurityFields [false]');
 			return false;
+		}
 		
-		if ($var1 == $_REQUEST["var1"] && $var2 == $_REQUEST["var2"]) {			
-			if(method_exists($this, 'after_check_security_fields_callback'))
-				$this->after_check_security_fields_callback();
-				
+		if ($var1 == $_REQUEST['var1'] && $var2 == $_REQUEST['var2']) {			
+			if(method_exists($this, 'after_checkSecurityFields_callback'))
+				$this->after_checkSecurityFields_callback();
+			
+			self::$logger->debug('<<checkSecurityFields [true]');
 			return true;
 		}else{
 			/*
@@ -756,16 +904,18 @@ class Controller
 			 */			
 			
 			// the server hostname + today's date less 1 hour (i.e. yesterday where time is < 1:00AM)
-			$var1 = md5($_SERVER["HTTP_HOST"].date("Ymd", (time()-3600)));
+			$var1 = md5($_SERVER['HTTP_HOST'].date("Ymd", (time()-3600)));
 			// the server's IP plus $var1
 			$var2 = md5($_SERVER['REMOTE_ADDR'].$var1);
 			
-			if ($var1 == $_REQUEST["var1"] && $var2 == $_REQUEST["var2"]) {				
-				if(method_exists($this, 'after_check_security_fields_callback'))
-					$this->after_check_security_fields_callback();
+			if ($var1 == $_REQUEST['var1'] && $var2 == $_REQUEST['var2']) {				
+				if(method_exists($this, 'after_checkSecurityFields_callback'))
+					$this->after_checkSecurityFields_callback();
 				
+				self::$logger->debug('<<checkSecurityFields [true]');
 				return true;
 			}else{
+				self::$logger->debug('<<checkSecurityFields [false]');
 				return false;
 			}
 		}
