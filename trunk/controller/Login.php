@@ -51,8 +51,8 @@ class Login extends Controller implements AlphaControllerInterface {
 			self::$logger = new Logger('Login');
 		self::$logger->debug('>>__construct()');
 		
-		// ensure that the super class constructor is called
-		parent::__construct();
+		// ensure that the super class constructor is called, indicating the rights group
+		parent::__construct('Public');
 		
 		$this->setName(Front_Controller::encode_query('act=login'));
 		
