@@ -1,7 +1,6 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
-require_once $config->get('sysRoot').'alpha/view/person.inc';
 require_once $config->get('sysRoot').'alpha/controller/front/Front_Controller.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Date.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Timestamp.inc';
@@ -30,14 +29,15 @@ abstract class Controller {
 	 * 
 	 * @var string
 	 */
-	protected $name = '';
+	protected $name;
 	
 	/**
-	 * Used to set access privileages to the controller to the name of the rights group
+	 * Used to set access privileages for the controller to the name of the rights group 
+	 * allowed to access it.  'Public' by default.
 	 * 
 	 * @var string
 	 */ 
-	protected $visibility = 'Standard';
+	protected $visibility = 'Public';
 	
 	/**
 	 * Optionally, a BO may be set for the default validation form handling code to load in the displayPageHead()
@@ -53,7 +53,7 @@ abstract class Controller {
 	 * 
 	 * @var string
 	 */
-	protected $unitOfWork = '';
+	protected $unitOfWork;
 	
 	/**
 	 * Stores the start time of a unit of work transaction
@@ -70,7 +70,7 @@ abstract class Controller {
 	protected $unitEndTime;
 	
 	/**
-	 * Stores the maximum allowed time duration (in second) of the unit of work
+	 * Stores the maximum allowed time duration (in seconds) of the unit of work
 	 * 
 	 * @var Integer
 	 */
@@ -81,28 +81,28 @@ abstract class Controller {
 	 * 
 	 * @var string
 	 */
-	protected $firstJob = '';
+	protected $firstJob;
 	
 	/**
 	 * The name of the next controller that is used in this unit of work
 	 * 
 	 * @var string
 	 */
-	protected $nextJob = '';
+	protected $nextJob;
 	
 	/**
 	 * The name of the previous controller that is used in this unit of work
 	 * 
 	 * @var string
 	 */
-	protected $previousJob = '';
+	protected $previousJob;
 	
 	/**
 	 * The name of the last controller that is used in this unit of work
 	 * 
 	 * @var string
 	 */
-	protected $lastJob = '';
+	protected $lastJob;
 	
 	/**
 	 * An array for storing dirty objects in a session (i.e. persistent business 
@@ -113,15 +113,15 @@ abstract class Controller {
 	protected $dirtyObjects = array();
 	
 	/**
-	 * An array for storing new objects in a session (business objects that have no
-	 * OID yet)
+	 * An array for storing new objects in a session (transient business objects that 
+	 * have no OID yet)
 	 * 
 	 * @var array
 	 */
 	protected $newObjects = array();
 	
 	/**
-	 * The title to be displayed for the controller page
+	 * The title to be displayed on the controller page
 	 * 
 	 * @var string
 	 */
@@ -149,28 +149,38 @@ abstract class Controller {
 	private static $logger = null;
 	
 	/**
-	 * constructor for the Controller that sets up the unit of work start time
-	 * and gets any business objects stored in the session
+	 * Constructor for the Controller that starts a new session if required, and handles 
+	 * the population of new/dirty objects from the session when available.  Accepts the name 
+	 * of the rights group that has access to this controller, 'Public' by default.
+	 * 
+	 * @param string $visibility
 	 */
-	public function __construct() {
+	public function __construct($visibility='Public') {
 		if(self::$logger == null)
 			self::$logger = new Logger('Controller');
-		self::$logger->debug('>>__construct()');
+		self::$logger->debug('>>__construct(visibility=['.$visibility.'])');
 		
 	 	global $config;
+	 	
+	 	$this->visibility = $visibility;
+	 	
+	 	// check the current user's rights on access to the page controller
+	 	if(!$this->checkRights())
+	 		$this->accessError();
 	 	
 	 	// if configured to do so, force redirect to the front controller
 	 	if($config->get('sysForceFC') && basename($_SERVER['PHP_SELF']) != 'FC.php' && basename($_SERVER['PHP_SELF']) != 'index.php') {
 	 		// set the correct HTTP header for the response
     		header('HTTP/1.1 301 Moved Permanently');
     		
-    		if(empty($_SERVER["QUERY_STRING"]))
+    		if(empty($_SERVER['QUERY_STRING']))
     			header('Location: '.$config->get('sysURL').'/FC.php?act='.get_class($this));
     		else
-    			header('Location: '.$config->get('sysURL').'/FC.php?act='.get_class($this).'&'.$_SERVER["QUERY_STRING"]);
+    			header('Location: '.$config->get('sysURL').'/FC.php?act='.get_class($this).'&'.$_SERVER['QUERY_STRING']);
  
 		    // we're done here
-    		exit;
+		    self::$logger->debug('<<__construct');
+    		return;
 	 	}
 	 	
 	 	$this->unitStartTime = new Timestamp();
@@ -180,16 +190,16 @@ abstract class Controller {
 	 	if(!isset($_SESSION))
 	 		session_start();	 	
 	 	
-	 	if(isset($_SESSION["unitOfWork"])) {	 		
-	 		$this->setUnitOfWork($_SESSION["unitOfWork"]);
+	 	if(isset($_SESSION['unitOfWork'])) {	 		
+	 		$this->setUnitOfWork($_SESSION['unitOfWork']);
 	 	}
 	 	
-	 	if(isset($_SESSION["dirtyObjects"])) {
-	 		$this->dirtyObjects = $_SESSION["dirtyObjects"];
+	 	if(isset($_SESSION['dirtyObjects'])) {
+	 		$this->dirtyObjects = $_SESSION['dirtyObjects'];
 	 	}
 	 	
-	 	if(isset($_SESSION["newObjects"])) {	 		
-	 		$this->newObjects = $_SESSION["newObjects"];
+	 	if(isset($_SESSION['newObjects'])) {	 		
+	 		$this->newObjects = $_SESSION['newObjects'];
 	 	}
 
 	 	self::$logger->debug('<<__construct');
@@ -317,8 +327,14 @@ abstract class Controller {
 	 	if(method_exists($this, 'before_setUnitOfWork_callback'))
 			$this->before_setUnitOfWork_callback();
 			
+	 	if(!is_array($jobs)) {
+			throw new IllegalArguementException('Bad $jobs array ['.var_export($jobs, true).'] passed to setUnitOfWork method!');
+			self::$logger->debug('<<setUnitOfWork');
+			return;
+		}
+			
 		// clear out any previous unit of work from the session
-		$_SESSION["unitOfWork"] = null;		
+		$_SESSION['unitOfWork'] = null;		
 		$this->dirtyObjects = array();
 		$this->newObjects = array();
 		
@@ -345,7 +361,7 @@ abstract class Controller {
 	 			$this->lastJob = $jobs[$i];
 	 		}	
 	 	}
-	 	$_SESSION["unitOfWork"] = $jobs;
+	 	$_SESSION['unitOfWork'] = $jobs;
 	 	
 	 	if(method_exists($this, 'after_setUnitOfWork_callback'))
 			$this->after_setUnitOfWork_callback();
@@ -375,7 +391,7 @@ abstract class Controller {
 	  * @param int $second
 	  */
 	 public function setUnitStartTime($year, $month, $day, $hour, $minute, $second) {
-	 	self::$logger->debug('>>setUnitStartTime($year, $month, $day, $hour, $minute, $second)');
+	 	self::$logger->debug('>>setUnitStartTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'], second=['.$second.'])');
 	 	$this->unitStartTime->setTimestampValue($year, $month, $day, $hour, $minute, $second);
 	 	$_SESSION['unitStartTime'] = $this->unitStartTime->getValue();
 	 	self::$logger->debug('<<setUnitStartTime');
@@ -403,7 +419,7 @@ abstract class Controller {
 	  * @param int $second
 	  */
 	 public function setUnitEndTime($year, $month, $day, $hour, $minute, $second) {
-	 	self::$logger->debug('>>setUnitEndTime($year, $month, $day, $hour, $minute, $second)');
+	 	self::$logger->debug('>>setUnitEndTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'], second=['.$second.'])');
 	 	$this->unitEndTime->setTimestampValue($year, $month, $day, $hour, $minute, $second);
 	 	$_SESSION['unitEndTime'] = $this->unitEndTime->getValue();
 	 	self::$logger->debug('<<setUnitEndTime');
@@ -439,26 +455,26 @@ abstract class Controller {
 	 public function getUnitDuration() {
 	 	self::$logger->debug('>>getUnitDuration()');
 	 	
-	 	$int_start_time = mktime(
-	 		$this->unitStartTime->get_hour(),
-	 		$this->unitStartTime->get_minute(),
-	 		$this->unitStartTime->get_second(),
-	 		$this->unitStartTime->get_month(),
-	 		$this->unitStartTime->get_date(),
-	 		$this->unitStartTime->get_year()
+	 	$intStartTime = mktime(
+	 		$this->unitStartTime->getHour(),
+	 		$this->unitStartTime->getMinute(),
+	 		$this->unitStartTime->getSecond(),
+	 		$this->unitStartTime->getMonth(),
+	 		$this->unitStartTime->getDate(),
+	 		$this->unitStartTime->getYear()
 	 		);
 	 	
-	 	$int_end_time = mktime(
-	 		$this->unitEndTime->get_hour(),
-	 		$this->unitEndTime->get_minute(),
-	 		$this->unitEndTime->get_second(),
-	 		$this->unitEndTime->get_month(),
-	 		$this->unitEndTime->get_date(),
-	 		$this->unitEndTime->get_year()
+	 	$intEndTime = mktime(
+	 		$this->unitEndTime->getHour(),
+	 		$this->unitEndTime->getMinute(),
+	 		$this->unitEndTime->getSecond(),
+	 		$this->unitEndTime->getMonth(),
+	 		$this->unitEndTime->getDate(),
+	 		$this->unitEndTime->getYear()
 	 		);
 	 	
-	 	self::$logger->debug('<<getUnitDuration ['.$int_end_time-$int_start_time.']');
-	 	return $int_end_time-$int_start_time;
+	 	self::$logger->debug('<<getUnitDuration ['.$intEndTime-$intStartTime.']');
+	 	return $intEndTime-$intStartTime;
 	 }
 	 
 	 /**
@@ -578,9 +594,9 @@ abstract class Controller {
 
 		$result = mysql_query($sqlQuery);
 		
-		$_SESSION["unitOfWork"] = null;
-		$_SESSION["dirtyObjects"] = null;
-		$_SESSION["newObjects"] = null;
+		$_SESSION['unitOfWork'] = null;
+		$_SESSION['dirtyObjects'] = null;
+		$_SESSION['newObjects'] = null;
 		
 		if (mysql_error() == '') {
 			if(method_exists($this, 'after_commit_callback'))
@@ -619,81 +635,6 @@ abstract class Controller {
 			throw new AlphaException('Failed to rollback the transaction, MySQL error is ['.mysql_error().']');
 			self::$logger->debug('<<abort');
 		}		
-	}
-	
-	/**
-	 * method to display the page head
-	 * @todo move to View
-	 */
-	function display_page_head() {
-		if(method_exists($this, 'before_display_page_head_callback'))
-			$this->before_display_page_head_callback();
-		
-		global $config;		
-		
-		echo '<html>';
-		echo '<head>';
-		echo '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">';
-		echo '<title>'.$this->getTitle().'</title>';
-		echo '<meta name="Keywords" content="'.$this->getKeywords().'">';
-		echo '<meta name="Description" content="'.$this->getDescription().'">';
-		echo '<meta name="Author" content="john collins">';
-		echo '<meta name="copyright" content="copyright ">';
-		echo '<meta name="identifier" content="http://'.$config->get('sysURL').'/">';
-		echo '<meta name="revisit-after" content="7 days">';
-		echo '<meta name="expires" content="never">';
-		echo '<meta name="language" content="en">';
-		echo '<meta name="distribution" content="global">';
-		echo '<meta name="title" content="'.$this->getTitle().'">';
-		echo '<meta name="robots" content="index,follow">';
-		echo '<meta http-equiv="imagetoolbar" content="no">';			
-		
-		echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$config->get('sysTheme').'.css.php">';
-		
-		if ($config->get('sysUseWidgets') && isset($this->BO)) {
-			echo '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
-			require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
-			require_once $config->get('sysRoot').'alpha/view/widgets/StringBox.js.php';
-			require_once $config->get('sysRoot').'alpha/view/widgets/TextBox.js.php';
-		
-			require_once $config->get('sysRoot').'alpha/view/widgets/form_validator.js.php';
-		
-			echo '<script type="text/javascript">';
-			$validator = new form_validator($this->BO);
-			echo '</script>';
-		}
-		
-		if(method_exists($this, 'during_display_page_head_callback'))
-			$this->during_display_page_head_callback();
-		
-		echo '</head>';
-		echo '<body>';
-			
-		echo '<h1>'.$this->getTitle().'</h1>';
-		
-		if (isset($_SESSION["current_user"])) {	
-			echo '<p>You are logged in as '.$_SESSION["current_user"]->getDisplayname().'.  <a href="'.$config->get('sysURL').'/alpha/controller/logout.php">Logout</a></p>';
-		}else{
-			echo '<p>You are not logged in</p>';
-		}
-		
-		if(method_exists($this, 'after_display_page_head_callback'))
-			$this->after_display_page_head_callback();
-	}
-	
-	/**
-	 * method to display the page footer
-	 * @todo move to View
-	 */
-	function display_page_foot() {
-		if(method_exists($this, 'before_display_page_foot_callback'))
-			$this->before_display_page_foot_callback();
-		
-		echo '</body>';
-		echo '</html>';
-		
-		if(method_exists($this, 'after_display_page_foot_callback'))
-			$this->after_display_page_foot_callback();
 	}
 	
 	/**
@@ -763,8 +704,7 @@ abstract class Controller {
 	}
 	
 	/**
-	 * method to display an access error for trespassing users
-	 * @todo modify to invoke View methods for headers etc.
+	 * Method to display an access error for trespassing users
 	 */
 	public function accessError() {
 		self::$logger->debug('>>accessError()');
@@ -779,17 +719,19 @@ abstract class Controller {
 		$this->setDescription('Access Error: You cannot view this page!');
 		$this->setKeywords('access,error');		
 		
-		$this->display_page_head();
+		echo View::displayPageHead($this);		
 		
-		echo '<p class="error">You do not have the correct access rights to view this page.  If you have not logged in yet, try going back to the home page and logging in from there.</p>';
+		echo '<p class="error"><br>You do not have the correct access rights to view this page.  If you have not logged in yet, try going back to the home page and logging in from there.</p>';
 		echo '<p align="center"><a href="'.$config->get('sysURL').'">Home Page</a></p>';
 		
-		$this->display_page_foot();
+		echo View::displayPageFoot($this);
 		
 		if(method_exists($this, 'after_accessError_callback'))
 			$this->after_accessError_callback();
-			
+		
 		self::$logger->debug('<<accessError');
+		// no further execution should take place
+		exit;
 	}
 	
 	/**
@@ -806,15 +748,15 @@ abstract class Controller {
 		if(method_exists($this, 'before_checkRights_callback'))
 			$this->before_checkRights_callback();
 		
-		// firstly if the page is public then there is no issue
-		if ($this->getVisibility() == 'public') {
+		// firstly if the page is Public then there is no issue
+		if ($this->getVisibility() == 'Public') {
 			if(method_exists($this, 'after_checkRights_callback'))
 				$this->after_checkRights_callback();
 			
 			self::$logger->debug('<<checkRights [true]');
 			return true;
 		}else{
-			// the person is logged in
+			// the person is logged in?
 			if (isset($_SESSION['current_user'])) {
 				// checking for admins (can access everything)
 				if ($_SESSION['current_user']->getAccessLevel() == 'Administrator') {
@@ -847,25 +789,6 @@ abstract class Controller {
 				return false;
 			}
 		}
-	}
-	
-	/**
-	 * method to render a hidden form for posting the OID of an object to be deleted
-	 * @todo move to View
-	 */
-	function render_delete_form() {
-		if(method_exists($this, 'before_render_delete_form_callback'))
-			$this->before_render_delete_form_callback();
-		
-		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST" id="delete_form">';
-		echo '<input type="hidden" name="delete_oid" id="delete_oid" value=""/>';
-		if(class_exists("View")) {
-			echo View::renderSecurityFields();
-		}
-		echo '</form>';
-		
-		if(method_exists($this, 'after_render_delete_form_callback'))
-			$this->after_render_delete_form_callback();
 	}
 	
 	/**
