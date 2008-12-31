@@ -6,7 +6,6 @@ if(!isset($config))
 $config =&configLoader::getInstance();
 
 require_once $config->get('sysRoot').'alpha/util/Logger.inc';
-require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 require_once $config->get('sysRoot').'alpha/view/person.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
@@ -95,7 +94,7 @@ class Login extends Controller implements AlphaControllerInterface {
 	}	
 	
 	/**
-	 * Handle GET requests (adds $currentUser person_object to the session)
+	 * Handle POST requests (adds $currentUser person_object to the session)
 	 * 
 	 * @param array $params
 	 */
@@ -134,7 +133,8 @@ class Login extends Controller implements AlphaControllerInterface {
 				// check the password
 				if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Active') {
 					if (crypt($params['password'], $this->personObject->get('password')) == $this->personObject->get('password')) {				
-						$_SESSION['currentUser'] = $this->personObject;					
+						self::$logger->info('Logging in ['.$this->personObject->get('email').'] at ['.date("Y-m-d H:i:s").']');
+						$_SESSION['currentUser'] = $this->personObject;
 						if ($this->getNextJob() != '') {
 							self::$logger->debug('<<doPOST');
 							header('Location: '.$this->getNextJob());
