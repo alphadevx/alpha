@@ -109,7 +109,7 @@ class person_object extends DAO {
 		$this->accessLevel = new Enum(array(
 											'Standard',
 											'Moderator',
-											'Administrator'));
+											'Admin'));
 		$this->accessLevel->setValue('Standard');
 		$this->state = new Enum(array(
 										'Active',
