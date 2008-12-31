@@ -451,6 +451,18 @@ abstract class View {
 	}
 	
 	/**
+	 * Method to render a hidden form for posting the OID of an object to be deleted
+	 * 
+	 * @return string
+	 */
+	public static function renderDeleteForm() {		
+		$html = '<form action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'].'" method="POST" id="delete_form">';
+		$html .= '<input type="hidden" name="delete_oid" id="delete_oid" value=""/>';
+		$html .= self::renderSecurityFields();
+		$html .= '</form>';
+	}
+	
+	/**
 	 * Method to render two hidden, encrypted form fields to be used as
 	 * a check to ensure that a post to the controller is being sent from 
 	 * the same server as hosting it.
