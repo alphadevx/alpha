@@ -21,7 +21,7 @@ require_once $config->get('sysRoot').'alpha/view/widgets/record_selector.php';
  * @version $Id$
  * 
  */
-abstract class View {
+class View {
 	/**
 	 * The business object that will be rendered
 	 * 
@@ -394,6 +394,10 @@ abstract class View {
 
 		$html.= '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
 		
+		ob_start();
+		require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
+		$html.= ob_get_clean();
+		
 		// if we are working with a BO, render form validation Javascript rules
 		if ($controller->getBO() != null) {
 			require_once $config->get('sysRoot').'alpha/view/widgets/StringBox.js.php';
@@ -401,7 +405,6 @@ abstract class View {
 		
 			ob_start();
 			require_once $config->get('sysRoot').'alpha/view/widgets/form_validator.js.php';
-			require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
 			$html.= ob_get_clean();
 
 			$html.= '<script type="text/javascript">';
@@ -419,14 +422,14 @@ abstract class View {
 			
 		$html.= '<h1>'.$controller->getTitle().'</h1>';
 		
-		if (isset($_SESSION['current_user'])) {	
-			$html.= '<p>You are logged in as '.$_SESSION['current_user']->getDisplayname().'.  <a href="'.$config->get('sysURL').'/alpha/controller/logout.php">Logout</a></p>';
+		if (isset($_SESSION['currentUser'])) {	
+			$html.= '<p>You are logged in as '.$_SESSION['currentUser']->getDisplayname().'.  <a href="'.$config->get('sysURL').'/alpha/controller/logout.php">Logout</a></p>';
 		}else{
 			$html.= '<p>You are not logged in</p>';
 		}
 		
 		if(method_exists($controller, 'after_displayPageHead_callback'))
-			$controller->after_displayPageHead_callback();
+			$html.= $controller->after_displayPageHead_callback();
 			
 		return $html;
 	}
