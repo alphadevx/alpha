@@ -184,6 +184,11 @@ class Front_Controller {
 	    		require_once $config->get('sysRoot').'controller/'.$this->page_controller.'.php';
 	    		
 	    		$page_controller = new $this->page_controller();
+	    		if(!empty($_POST)) {			
+					$page_controller->doPOST($_POST);
+				}else{
+					$page_controller->doGET($_GET);
+				}
 	    		return true;
 	    	}
 	    }
@@ -199,6 +204,11 @@ class Front_Controller {
 	    		require_once $config->get('sysRoot').'alpha/controller/'.$this->page_controller.'.php';
 	    		
 	    		$page_controller = new $this->page_controller();
+	    		if(!empty($_POST)) {			
+					$page_controller->doPOST($_POST);
+				}else{
+					$page_controller->doGET($_GET);
+				}
 	    		return true;
 	    	}
 	    }
