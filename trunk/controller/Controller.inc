@@ -10,6 +10,7 @@ require_once $config->get('sysRoot').'alpha/model/types/String.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
+require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/FailedUnitCommitException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/SecurityException.inc';
 
@@ -162,6 +163,11 @@ abstract class Controller {
 		
 	 	global $config;
 	 	
+	 	// kick off new session, or reuse existing one
+	 	if(!isset($_SESSION))
+	 		session_start();
+	 	
+	 	// set the access rights to the group name indicated
 	 	$this->visibility = $visibility;
 	 	
 	 	// check the current user's rights on access to the page controller
@@ -186,9 +192,6 @@ abstract class Controller {
 	 	$this->unitStartTime = new Timestamp();
 	 	$this->unitEndTime = new Timestamp();
 	 	$this->unitMAXDuration = new Integer();
-	 	
-	 	if(!isset($_SESSION))
-	 		session_start();	 	
 	 	
 	 	if(isset($_SESSION['unitOfWork'])) {	 		
 	 		$this->setUnitOfWork($_SESSION['unitOfWork']);
@@ -757,22 +760,22 @@ abstract class Controller {
 			return true;
 		}else{
 			// the person is logged in?
-			if (isset($_SESSION['current_user'])) {
+			if (isset($_SESSION['currentUser'])) {
 				// checking for admins (can access everything)
-				if ($_SESSION['current_user']->getAccessLevel() == 'Administrator') {
+				if ($_SESSION['currentUser']->getAccessLevel() == 'Admin') {
 					if(method_exists($this, 'after_checkRights_callback'))
 						$this->after_checkRights_callback();
 					
 					self::$logger->debug('<<checkRights [true]');
 					return true;
-				} elseif ($_SESSION['current_user']->getAccessLevel() == $this->getVisibility()) {
+				} elseif ($_SESSION['currentUser']->getAccessLevel() == $this->getVisibility()) {
 					if(method_exists($this, 'after_checkRights_callback'))
 						$this->after_checkRights_callback();
 					
 					self::$logger->debug('<<checkRights [true]');
 					return true;
 				// the person is editing their own profile which is allowed
-				} elseif (get_class($this->BO) == 'person_object' && $_SESSION['current_user']->getDisplayName() == $this->BO->getDisplayName()) {
+				} elseif (get_class($this->BO) == 'person_object' && $_SESSION['currentUser']->getDisplayName() == $this->BO->getDisplayName()) {
 					if(method_exists($this, 'after_checkRights_callback'))
 						$this->after_checkRights_callback();
 					
