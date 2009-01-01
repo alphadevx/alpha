@@ -228,7 +228,7 @@ class View {
 
 		$html = '';
 		// render edit and delete buttons for admins only
-		if (isset($_SESSION['current_user']) && $_SESSION['current_user']->getAccessLevel() == 'Administrator') {
+		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->getAccessLevel() == 'Admin') {
 			$html .= '&nbsp;&nbsp;';
 			$button = new button("document.location = '".Front_Controller::generate_secure_URL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getID())."'", "Edit", "editBut");
 			$html .= $button->render();
@@ -271,7 +271,7 @@ class View {
 		
 		$html = '';
 		// render edit and delete buttons for admins only
-		if (isset($_SESSION['current_user']) && $_SESSION['current_user']->getAccessLevel() == 'Administrator') {
+		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->getAccessLevel() == 'Admin') {
 			$html .= '&nbsp;&nbsp;';
 			$button = new button("document.location = '".Front_Controller::generate_secure_URL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getID())."'", "Edit", "editBut");
 			$html .= $button->render();
@@ -441,10 +441,12 @@ class View {
 	 * @return string
 	 */
 	public static function displayPageFoot($controller) {
-		if(method_exists($controller, 'before_displayPageFoot_callback'))
-			$controller->before_displayPageFoot_callback();
+		$html = '';
 		
-		$html = '</body>';
+		if(method_exists($controller, 'before_displayPageFoot_callback'))
+			$html .= $controller->before_displayPageFoot_callback();
+		
+		$html .= '</body>';
 		$html .= '</html>';
 		
 		if(method_exists($controller, 'after_displayPageFoot_callback'))
@@ -463,6 +465,8 @@ class View {
 		$html .= '<input type="hidden" name="delete_oid" id="delete_oid" value=""/>';
 		$html .= self::renderSecurityFields();
 		$html .= '</form>';
+		
+		return $html;
 	}
 	
 	/**
