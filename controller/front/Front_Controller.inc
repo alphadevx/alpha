@@ -51,7 +51,8 @@ class Front_Controller {
 	}
 	
 	/**
-	 * method to populate the global _GET array with the decoded query string
+	 * Method to populate the global _GET and _REQUEST arrays with the decoded 
+	 * query string
 	 */
 	function populate_get_vars() {
 				
@@ -60,6 +61,7 @@ class Front_Controller {
 		foreach($pairs as $pair) {
 			$key_value = explode("=", $pair);
 			$_GET[$key_value[0]] = $key_value[1];
+			$_REQUEST[$key_value[0]] = $key_value[1];
 		}
 	}
 	
@@ -185,7 +187,7 @@ class Front_Controller {
 	    		
 	    		$page_controller = new $this->page_controller();
 	    		if(!empty($_POST)) {			
-					$page_controller->doPOST($_POST);
+					$page_controller->doPOST($_REQUEST);
 				}else{
 					$page_controller->doGET($_GET);
 				}
@@ -205,7 +207,7 @@ class Front_Controller {
 	    		
 	    		$page_controller = new $this->page_controller();
 	    		if(!empty($_POST)) {			
-					$page_controller->doPOST($_POST);
+					$page_controller->doPOST($_REQUEST);
 				}else{
 					$page_controller->doGET($_GET);
 				}
