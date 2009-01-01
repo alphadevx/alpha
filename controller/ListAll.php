@@ -1,7 +1,5 @@
 <?php
 
-// $Id$
-
 // include the config file
 if(!isset($config))
 	require_once '../util/configLoader.inc';
@@ -10,232 +8,270 @@ $config =&configLoader::getInstance();
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
 /**
 * 
 * Controller used to list a BO, which must be supplied in GET vars
 * 
-* @package Alpha Core Scaffolding
+* @package alpha::controller
 * @author John Collins <john@design-ireland.net>
-* @copyright 2008 John Collins
+* @copyright 2009 John Collins
+* @version $Id$
 *
 */
-class ListAll extends Controller
-{
+class ListAll extends Controller implements AlphaControllerInterface {
 	/**
-	 * the new BO to be listed
-	 * @var object
-	 */
-	var $BO;
-	
-	/**
-	 * the name of the BO
+	 * The name of the BO
+	 * 
 	 * @var string
 	 */
-	var $BO_name;
+	private $BOname;
 	
 	/**
-	 * the new default View object used for rendering the onjects to list
-	 * @var View BO_view
+	 * The new default View object used for rendering the onjects to list
+	 * 
+	 * @var View BOView
 	 */
-	var $BO_View;
+	private $BOView;
 	
 	/**
-	 * the start number for list pageination
+	 * The start number for list pageination
+	 * 
 	 * @var integer 
 	 */
-	var $start_point;
+	private $startPoint;
 	
 	/**
-	 * the count of the BOs of this type in the database
+	 * The count of the BOs of this type in the database
+	 * 
 	 * @var integer
 	 */
-	var $BO_count = 0;
+	private $BOCount = 0;
+	
+	/**
+	 * Trace logger
+	 * 
+	 * @var Logger
+	 */
+	private static $logger = null;
 								
 	/**
-	 * constructor that renders the page	
+	 * constructor to set up the object
 	 */
-	function ListAll() {
+	public function __construct() {
+		if(self::$logger == null)
+			self::$logger = new Logger('ListAll');
+		self::$logger->debug('>>__construct()');
+		
 		global $config;
 				
-		// ensure that the super class constructor is called
-		$this->Controller();
+		// ensure that the super class constructor is called, indicating the rights group
+		parent::__construct('Admin');
 		
-		// load the business object (BO) definition
-		if (isset($_GET["bo"])) {
-			$BO_name = $_GET["bo"];
-			if (file_exists($config->get('sysRoot').'alpha/model/'.$BO_name.'.inc')) {
-				require_once $config->get('sysRoot').'alpha/model/'.$BO_name.'.inc';
-			}elseif (file_exists($config->get('sysRoot').'model/'.$BO_name.'.inc')) {
-				require_once $config->get('sysRoot').'model/'.$BO_name.'.inc';
+		self::$logger->debug('<<__construct');
+	}
+
+	/**
+	 * Handle GET requests
+	 * 
+	 * @param array $params
+	 */
+	public function doGET($params) {		
+		try{
+			// load the business object (BO) definition
+			if (isset($params['bo'])) {
+				$BOname = $params['bo'];
+				DAO::loadClassDef($BOname);
+				
+				$this->BO = new $BOname();		
+				$this->BOname = $BOname;		
+				$this->BOView = View::getInstance($this->BO);
+				
+				echo View::displayPageHead($this);
 			}else{
-				$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the defination for the BO class '.$BO_name,'GET');
-				exit;
+				throw new IllegalArguementException('No BO available to list!');
+				return;
 			}
-		}else{
-			$error = new handle_error($_SERVER["PHP_SELF"],'No BO available to list!','GET');
-			exit;
+		}catch(IllegalArguementException $e) {
+			self::$logger->error($e->getMessage());
 		}
 		
-		$this->BO = new $BO_name();
+		$this->displayBodyContent();
 		
-		$this->BO_name = $BO_name;
+		echo View::displayPageFoot($this);
+	}
+	
+	/**
+	 * Handle POST requests
+	 * 
+	 * @param array $params
+	 */
+	public function doPOST($params) {
+		try{
+			// load the business object (BO) definition
+			if (isset($params['bo'])) {
+				$BOname = $params['bo'];
+				DAO::loadClassDef($BOname);
+				
+				$this->BO = new $BOname();		
+				$this->BOname = $BOname;		
+				$this->BOView = View::getInstance($this->BO);
+				
+				if (!empty($params['delete_oid'])) {
+					$temp = new $BOname();
+					$temp->load($params['delete_oid']);			
 		
-		$this->BO_View = new View($this->BO);		
+					try {
+						$temp->delete();
+						
+						echo View::displayPageHead($this);
+						
+						echo '<p class="success">'.$this->BOname.' '.$params['delete_oid'].' deleted successfully.</p>';
+						
+						$this->displayBodyContent();
+						
+						echo View::displayPageFoot($this);
+					}catch(AlphaException $e) {
+						self::$logger->error($e->getTraceAsString());
+						echo '<p class="error"><br>Error deleting the OID ['.$params['delete_oid'].'], check the log!</p>';
+					}
+				}
+			}else{
+				throw new IllegalArguementException('No BO available to list!');
+				return;
+			}
+		}catch(IllegalArguementException $e) {
+			self::$logger->error($e->getMessage());
+		}
 		
+	}
+	
+	/**
+	 * Sets up the title etc. and pagination start point
+	 */
+	public function before_displayPageHead_callback() {
 		// set up the title and meta details
-		$this->set_title("Listing all ".$BO_name);
-		$this->set_description("Page to list all ".$BO_name.".");
-		$this->set_keywords("list,all,".$BO_name);
+		$this->setTitle('Listing all '.$this->BOname);
+		$this->setDescription('Page listing all '.$this->BOname.'.');
+		$this->setKeywords('list,all,'.$this->BOname);
+		// set the start point for the list pagination
+		if (isset($_GET['start']) ? $this->startPoint = $_GET['start']: $this->startPoint = 0);
+	}
+	
+	/**
+	 * Renders an administration home page link after the page header is rendered
+	 * 
+	 * @return string
+	 */
+	public function after_displayPageHead_callback() {
+		global $config;
 		
-		$this->set_visibility('Administrator');
-		if(!$this->check_rights()) {
-			exit;
-		}
+		$html = '<p align="center"><a href="'.Front_Controller::generate_secure_URL('act=ListBusinessObjects').'">Administration Home Page</a></p>';
 		
-		if(!empty($_POST)) {
-			$this->handle_post();
-			return;
+		return $html;
+	}
+	
+	/**
+	 * Method to display the page footer with pageination links
+	 * 
+	 * @return string
+	 */
+	public function before_displayPageFoot_callback() {
+		$html = $this->renderPageLinks();
+		
+		$html .= '<br>';
+		
+		return $html;
+	}
+	
+	/**
+	 * Method for rendering the pagination links
+	 * 
+	 * @return string
+	 */
+	private function renderPageLinks() {
+		global $config;
+		
+		$html = '';
+		
+		$end = ($this->startPoint+$config->get('sysListPageAmount'));
+		
+		if($end > $this->BOCount)
+			$end = $this->BOCount;
+		
+		if ($this->startPoint > 9)
+			$html .= '<p align="center">Displaying '.($this->startPoint+1).' to '.$end.' of <strong>'.$this->BOCount.'</strong>.&nbsp;&nbsp;';		
+		else
+			$html .= '<p align="center">Displaying &nbsp;'.($this->startPoint+1).' to '.$end.' of <strong>'.$this->BOCount.'</strong>.&nbsp;&nbsp;';		
+				
+		if ($this->startPoint > 0) {
+			// handle secure URLs
+			if(isset($_GET['tk']))
+				$html .= '<a href="'.Front_Controller::generate_secure_URL('act=ListAll&bo='.$this->BOname.'&start='.($this->startPoint-$config->get('sysListPageAmount'))).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
+			else
+				$html .= '<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($this->startPoint-$config->get('sysListPageAmount')).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
+		}elseif($this->BOCount > $config->get('sysListPageAmount')){
+			$html .= '&lt;&lt;-Previous&nbsp;&nbsp;';
 		}
+		$page = 1;
+		for ($i = 0; $i < $this->BOCount; $i+=$config->get('sysListPageAmount')) {
+			if($i != $this->startPoint) {
+				// handle secure URLs
+				if(isset($_GET['tk']))
+					$html .= '&nbsp;<a href="'.Front_Controller::generate_secure_URL('act=ListAll&bo='.$this->BOname.'&start='.$i).'">'.$page.'</a>&nbsp;';
+				else
+					$html .= '&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".$i.'">'.$page.'</a>&nbsp;';
+			}elseif($this->BOCount > $config->get('sysListPageAmount')){
+				$html .= '&nbsp;'.$page.'&nbsp;';
+			}
+			$page++;
+		}
+		if ($this->BOCount > $end) {
+			// handle secure URLs
+			if(isset($_GET['tk']))
+				$html .= '&nbsp;&nbsp;<a href="'.Front_Controller::generate_secure_URL('act=ListAll&bo='.$this->BOname.'&start='.($this->startPoint+$config->get('sysListPageAmount'))).'">Next-&gt;&gt;</a>';
+			else
+				$html .= '&nbsp;&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($this->startPoint+$config->get('sysListPageAmount')).'">Next-&gt;&gt;</a>';
+		}elseif($this->BOCount > $config->get('sysListPageAmount')){
+			$html .= '&nbsp;&nbsp;Next-&gt;&gt;';
+		}
+		$html .= '</p>';
+		
+		return $html;
+	}
+	
+	/**
+	 * Private method to display the main body HTML for this page
+	 */
+	private function displayBodyContent() {
+		global $config;
 		
 		// get all of the BOs and invoke the listView on each one
-		$temp = new $BO_name();
-		// set the start point for the list pagination
-		if (isset($_GET["start"]) ? $this->start_point = $_GET["start"]: $this->start_point = 0);
+		$temp = new $this->BOname;
 			
-		$objects = $temp->loadAll($this->start_point,$config->get('sysListPageAmount'));
+		$objects = $temp->loadAll($this->startPoint, $config->get('sysListPageAmount'));
 			
-		$this->BO_count = $this->BO->getCount();
-			
-		$this->display_page_head();
+		$this->BOCount = $this->BO->getCount();
 		
-		$this->render_delete_form();
+		echo View::renderDeleteForm();
 		
 		foreach($objects as $object) {
 			$temp = View::getInstance($object);
 			$temp->listView();
 		}
-		
-		$this->display_page_foot();
-	}	
-	
-	/**
-	 * method to handle POST requests
-	 */
-	function handle_post() {		
-		// check the hidden security fields before accepting the form POST data
-		if(!$this->check_security_fields()) {
-			$error = new handle_error($_SERVER["PHP_SELF"],'This page cannot accept post data from remote servers!','handle_post()','validation');
-			exit;
-		}
-		
-		if (!empty($_POST["delete_oid"])) {
-			
-			$temp = new $this->BO_name();
-			
-			$temp->load_object($_POST["delete_oid"]);			
-					
-			$success = $temp->delete_object();
-			
-			// get all of the BOs and invoke the listView on each one
-			$temp = new $this->BO_name();
-			// set the start point for the list pagination
-			if (isset($_GET["start"]) ? $this->start_point = $_GET["start"]: $this->start_point = 0);
-				
-			$objects = $temp->load_all($this->start_point);
-				
-			$this->BO_count = $this->BO->get_count();
-				
-			$this->display_page_head();
-			
-			if($success) {
-				echo '<p class="success">'.$this->BO_name.' '.$_POST["delete_oid"].' deleted successfully.</p>';
-			}
-			
-			$this->render_delete_form();
-			
-			foreach($objects as $object) {
-				$temp = View::getInstance($object);
-				$temp->listView();
-			}
-			
-			$this->display_page_foot();					
-		}
-	}
-	
-	/**
-	 * Renders an administration home page link after the page header is rendered
-	 */
-	function after_display_page_head_callback() {
-		global $config;
-		
-		echo '<p align="center"><a href="'.Front_Controller::generate_secure_URL('act=ListBusinessObjects').'">Administration Home Page</a></p>';
-	}
-	
-	/**
-	 * method to display the page footer with pageination links
-	 */
-	function display_page_foot() {
-				
-		$this->render_page_links();
-		
-		echo '<br></body>';
-		echo '</html>';
-	}
-	
-	/**
-	 * method for rendering the pagination links 
-	 */
-	function render_page_links() {
-		global $config;
-		
-		$end = ($this->start_point+$config->get('sysListPageAmount'));
-		
-		if($end > $this->BO_count)
-			$end = $this->BO_count;
-		
-		if ($this->start_point > 9)
-			echo '<p align="center">Displaying '.($this->start_point+1).' to '.$end.' of <strong>'.$this->BO_count.'</strong>.&nbsp;&nbsp;';		
-		else
-			echo '<p align="center">Displaying &nbsp;'.($this->start_point+1).' to '.$end.' of <strong>'.$this->BO_count.'</strong>.&nbsp;&nbsp;';		
-				
-		if ($this->start_point > 0) {
-			// handle secure URLs
-			if(isset($_GET['tk']))
-				echo '<a href="'.Front_Controller::generate_secure_URL('act=ListAll&bo='.$this->BO_name.'&start='.($this->start_point-$config->get('sysListPageAmount'))).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
-			else
-				echo '<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BO_name."&start=".($this->start_point-$config->get('sysListPageAmount')).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
-		}elseif($this->BO_count > $config->get('sysListPageAmount')){
-			echo '&lt;&lt;-Previous&nbsp;&nbsp;';
-		}
-		$page = 1;
-		for ($i = 0; $i < $this->BO_count; $i+=$config->get('sysListPageAmount')) {
-			if($i != $this->start_point) {
-				// handle secure URLs
-				if(isset($_GET['tk']))
-					echo '&nbsp;<a href="'.Front_Controller::generate_secure_URL('act=ListAll&bo='.$this->BO_name.'&start='.$i).'">'.$page.'</a>&nbsp;';
-				else
-					echo '&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BO_name."&start=".$i.'">'.$page.'</a>&nbsp;';
-			}elseif($this->BO_count > $config->get('sysListPageAmount')){
-				echo '&nbsp;'.$page.'&nbsp;';
-			}
-			$page++;
-		}
-		if ($this->BO_count > $end) {
-			// handle secure URLs
-			if(isset($_GET['tk']))
-				echo '&nbsp;&nbsp;<a href="'.Front_Controller::generate_secure_URL('act=ListAll&bo='.$this->BO_name.'&start='.($this->start_point+$config->get('sysListPageAmount'))).'">Next-&gt;&gt;</a>';
-			else
-				echo '&nbsp;&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BO_name."&start=".($this->start_point+$config->get('sysListPageAmount')).'">Next-&gt;&gt;</a>';
-		}elseif($this->BO_count > $config->get('sysListPageAmount')){
-			echo '&nbsp;&nbsp;Next-&gt;&gt;';
-		}
-		echo '</p>';
 	}
 }
 
 // now build the new controller
-if(basename($_SERVER["PHP_SELF"]) == "ListAll.php")
+if(basename($_SERVER['PHP_SELF']) == 'ListAll.php') {
 	$controller = new ListAll();
+	
+	if(!empty($_POST)) {			
+		$controller->doPOST($_REQUEST);
+	}else{
+		$controller->doGET($_GET);
+	}
+}
 
 ?>
