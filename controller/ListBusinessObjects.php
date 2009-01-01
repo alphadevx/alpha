@@ -57,7 +57,7 @@ class ListBusinessObjects extends Controller implements AlphaControllerInterface
 	public function doGET($params) {
 		echo View::displayPageHead($this);
 		
-		$this->displayBodyContect();
+		$this->displayBodyContent();
 		
 		echo View::displayPageFoot($this);
 	}
@@ -131,7 +131,7 @@ class ListBusinessObjects extends Controller implements AlphaControllerInterface
 			self::$logger->warn($e->getMessage());
 		}
 		
-		$this->displayBodyContect();
+		$this->displayBodyContent();
 				
 		echo View::displayPageFoot($this);
 	}
@@ -164,7 +164,7 @@ class ListBusinessObjects extends Controller implements AlphaControllerInterface
 	/**
 	 * Private method to display the main body HTML for this page
 	 */
-	private function displayBodyContect() {
+	private function displayBodyContent() {
 		$classNames = DAO::getBOClassNames();
 		$loadedClasses = array();
 		
@@ -206,7 +206,7 @@ if(basename($_SERVER['PHP_SELF']) == 'ListBusinessObjects.php') {
 	$controller = new ListBusinessObjects();
 	
 	if(!empty($_POST)) {			
-		$controller->doPOST($_POST);
+		$controller->doPOST($_REQUEST);
 	}else{
 		$controller->doGET($_GET);
 	}
