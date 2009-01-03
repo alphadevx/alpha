@@ -944,6 +944,11 @@ class View {
 			if (!in_array($propName, $this->BO->getDefaultAttributes())) {
 				$propClass = get_class($this->BO->getPropObject($propName));
 				
+				// exclude non-Relation transient attributes from create and edit screens
+				if($propClass != 'Relation' && ($mode == 'edit' || $mode == 'create') && in_array($propName, $this->BO->getTransientAttributes())) {
+					continue;
+				}
+				
 				switch (strtoupper($propClass)) {
 					case 'INTEGER' :
 						if($mode == 'view') {
