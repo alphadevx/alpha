@@ -72,7 +72,12 @@ class Detail extends Controller implements AlphaControllerInterface {
 		self::$logger->debug('<<__construct');
 	}
 	
-	public function doGET($params) {		
+	/**
+	 * Handle GET requests
+	 * 
+	 * @param array $params
+	 */
+	public function doGET($params) {
 		try{
 			// load the business object (BO) definition
 			if (isset($params['bo']) && isset($params['oid'])) {
@@ -103,7 +108,9 @@ class Detail extends Controller implements AlphaControllerInterface {
 	}
 	
 	/**
-	 * method to handle POST requests
+	 * Method to handle POST requests
+	 * 
+	 * @param array $params
 	 */
 	public function doPOST($params) {
 		global $config;
@@ -119,15 +126,15 @@ class Detail extends Controller implements AlphaControllerInterface {
 			
 			// load the business object (BO) definition
 			if (isset($params['bo'])) {
-				$BOname = $params['bo'];
-				DAO::loadClassDef($BOname);
+				$BOName = $params['bo'];
+				DAO::loadClassDef($BOName);
 				
-				$this->BO = new $BOname();		
-				$this->BOname = $BOname;		
+				$this->BO = new $BOName();
+				$this->BOname = $BOName;		
 				$this->BOView = View::getInstance($this->BO);
 		
 				if (!empty($params['delete_oid'])) {
-					$temp = new $BOname();
+					$temp = new $BOName();
 					$temp->load($params['delete_oid']);
 					
 					try {
