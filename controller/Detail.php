@@ -1,7 +1,5 @@
 <?php
 
-// $Id$
-
 // include the config file
 if(!isset($config))
 	require_once '../util/configLoader.inc';
@@ -10,140 +8,176 @@ $config =&configLoader::getInstance();
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
 /**
-* 
-* Controller used to display the details of a BO, which must be supplied in GET vars
-* 
-* @package Alpha Core Scaffolding
-* @author John Collins <john@design-ireland.net>
-* @copyright 2008 John Collins
-*
-*/
-class Detail extends Controller
-{
+ * 
+ * Controller used to display the details of a BO, which must be supplied in GET vars
+ * 
+ * @package alpha::controller
+ * @author John Collins <john@design-ireland.net>
+ * @copyright 2009 John Collins
+ * @version $Id$
+ *
+ */
+class Detail extends Controller implements AlphaControllerInterface {
 	/**
-	 * the new BO to be displayed
-	 * @var object
+	 * The BO to be displayed
+	 * 
+	 * @var Object
 	 */
-	var $BO;
+	protected $BO;
 	
 	/**
-	 * the OID of the BO to be loaded
+	 * The OID of the BO to be displayed
+	 * 
 	 * @var int
 	 */
-	var $BO_oid;
+	private $BOoid;
 	
 	/**
-	 * the name of the BO
+	 * The name of the BO
+	 * 
 	 * @var string
 	 */
-	var $BO_name;
+	private $BOName;
 	
 	/**
-	 * the new default View object used for rendering the onject
-	 * @var View BO_view
+	 * The default View object used for rendering the business object
+	 * 
+	 * @var View
 	 */
-	var $BO_View;
+	private $BOView;
 	
 	/**
-	 * constructor that renders the page	 
+	 * Trace logger
+	 * 
+	 * @var Logger
 	 */
-	function Detail($BO_name=null) {
+	private static $logger = null;
+	
+	/**
+	 * constructor to set up the object
+	 */
+	public function __construct() {
+		if(self::$logger == null)
+			self::$logger = new Logger('Detail');
+		self::$logger->debug('>>__construct()');
+		
 		global $config;
-			
-		// load the business object (BO) definition
-		if (isset($_GET["bo"])) {
-			$BO_name = $_GET["bo"];			
-		}elseif($BO_name==null) {
-			$error = new handle_error($_SERVER["PHP_SELF"],'No BO available to list!','GET');
-			exit;
+				
+		// ensure that the super class constructor is called, indicating the rights group
+		parent::__construct('Standard');
+		
+		self::$logger->debug('<<__construct');
+	}
+	
+	public function doGET($params) {		
+		try{
+			// load the business object (BO) definition
+			if (isset($params['bo']) && isset($params['oid'])) {
+				$BOName = $params['bo'];
+				DAO::loadClassDef($BOName);
+				
+				$this->BO = new $BOName();						
+				$this->BOName = $BOName;		
+				$this->BOView = View::getInstance($this->BO);
+				
+				echo View::displayPageHead($this);
+				
+				echo View::renderDeleteForm();
+		
+				$this->BO->load($params['oid']);
+				echo $this->BOView->detailedView();
+			}else{
+				throw new IllegalArguementException('No BO available to display!');
+			}
+		}catch(IllegalArguementException $e) {
+			self::$logger->error($e->getMessage());
+		}catch(BONotFoundException $e) {
+			self::$logger->warn($e->getMessage());
+			echo '<p class="error"><br>Failed to load the requested item from the database!</p>';
 		}
 		
-		if (file_exists($config->get('sysRoot').'model/'.$BO_name.'.inc')) {
-			require_once $config->get('sysRoot').'model/'.$BO_name.'.inc';
-		} elseif (file_exists($config->get('sysRoot').'alpha/model/'.$BO_name.'.inc')) {
-			require_once $config->get('sysRoot').'alpha/model/'.$BO_name.'.inc';
-		}else{
-			$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the defination for the BO class '.$BO_name,'GET');
-			exit;
-		}
-		
-		// ensure that a OID is also provided
-		if (isset($_GET["oid"])) {
-			$BO_oid = $_GET["oid"];
-		}else{
-			$error = new handle_error($_SERVER["PHP_SELF"],'Could not load the BO object '.$BO_name.' as an oid was not supplied!','GET');
-			exit;
-		}
-		
-		// ensure that the super class constructor is called
-		$this->Controller();
-		
-		$this->BO = new $BO_name();
-		$this->BO->load($BO_oid);		
-		
-		$this->BO_name = $BO_name;
-		
-		$this->BO_View = View::getInstance($this->BO);
-		
-		// set up the title and meta details
-		$this->set_title("Displaying ".$BO_name." number ".$BO_oid);
-		$this->set_description("Page to display ".$BO_name." number ".$BO_oid);
-		$this->set_keywords("display,details,".$BO_name);		
-		
-		$this->display_page_head();
-		
-		if(!empty($_POST))
-			$this->handle_post();
-		
-		$this->render_delete_form();
-		
-		$this->BO_View->detailedView();
-		
-		$this->display_page_foot();
-	}	
+		echo View::displayPageFoot($this);
+	}
 	
 	/**
 	 * method to handle POST requests
 	 */
-	function handle_post() {
+	public function doPOST($params) {
 		global $config;
 		
-		// check the hidden security fields before accepting the form POST data
-		if(!$this->check_security_fields()) {
-			$error = new handle_error($_SERVER["PHP_SELF"],'This page cannot accept post data from remote servers!','handle_post()','validation');
-			exit;
-		}
+		echo View::displayPageHead($this);
 		
-		if (!empty($_POST["delete_oid"])) {
-			
-			$temp = new $this->BO_name();
-			
-			$temp->load_object($_POST["delete_oid"]);			
-					
-			$success = $temp->delete_object();
-					
-			if($success) {
-				echo '<p class="success">'.$this->BO_name.' '.$_POST["delete_oid"].' deleted successfully.</p>';
+		try {
+			// check the hidden security fields before accepting the form POST data
+			if(!$this->checkSecurityFields()) {
+				throw new SecurityException('This page cannot accept post data from remote servers!');
+				self::$logger->debug('<<doPOST');
 			}
 			
-			echo '<center>';
-			
-			$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=ListAll&bo='.get_class($this->BO))."'","Back to List","cancelBut");
-			
-			echo '</center>';
-			exit;
+			// load the business object (BO) definition
+			if (isset($params['bo'])) {
+				$BOname = $params['bo'];
+				DAO::loadClassDef($BOname);
+				
+				$this->BO = new $BOname();		
+				$this->BOname = $BOname;		
+				$this->BOView = View::getInstance($this->BO);
+		
+				if (!empty($params['delete_oid'])) {
+					$temp = new $BOname();
+					$temp->load($params['delete_oid']);
+					
+					try {
+						$temp->delete();
+								
+						echo '<p class="success">'.$this->BOName.' '.$params['delete_oid'].' deleted successfully.</p>';
+										
+						echo '<center>';
+						
+						$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=ListAll&bo='.get_class($this->BO))."'",'Back to List','cancelBut');
+						echo $temp->render();
+						
+						echo '</center>';
+					}catch(AlphaException $e) {
+						self::$logger->error($e->getTraceAsString());
+						echo '<p class="error"><br>Error deleting the OID ['.$params['delete_oid'].'], check the log!</p>';
+					}
+				}
+			}else{
+				throw new IllegalArguementException('No BO available to display!');
+			}
+		}catch(SecurityException $e) {
+			echo '<p class="error"><br>'.$e->getMessage().'</p>';								
+			self::$logger->warn($e->getMessage());
+		}catch(IllegalArguementException $e) {
+			self::$logger->error($e->getMessage());
 		}
 		
-		if (isset($_POST["homeBut"])) {
-			header('Location: '.$config->get('sysURL'));
-		}
+		echo View::displayPageFoot($this);
+	}
+	
+	/**
+	 * Sets up the title etc.
+	 */
+	public function before_displayPageHead_callback() {
+		$this->setTitle('Displaying '.$this->BOName.' number '.$this->BOoid);
+		$this->setDescription('Page to display '.$this->BOName.' number '.$this->BOoid);
+		$this->setKeywords('display,details,'.$this->BOName);
 	}
 }
 
 // now build the new controller
-if(basename($_SERVER["PHP_SELF"]) == "Detail.php")
+if(basename($_SERVER['PHP_SELF']) == 'Detail.php') {
 	$controller = new Detail();
+	
+	if(!empty($_POST)) {			
+		$controller->doPOST($_REQUEST);
+	}else{
+		$controller->doGET($_GET);
+	}
+}
 
 ?>
