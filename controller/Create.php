@@ -136,8 +136,8 @@ class Create extends Controller implements AlphaControllerInterface {
 						else					
 							header('Location: '.Front_Controller::generate_secure_URL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID()));
 					}catch(AlphaException $e) {
-							self::$logger->error($e->getTraceAsString());
-							echo '<p class="error"><br>Error creating the new , check the log!</p>';
+						self::$logger->error($e->getTraceAsString());
+						echo '<p class="error"><br>Error creating the new ['.$BOName.'], check the log!</p>';
 					}
 				}
 			}else{
