@@ -1,0 +1,15 @@
+<form action="<?= $formAction ?>" id="<?= $formID ?>" method="POST">
+	<table class="edit_view">	
+		<?= $formFields ?>
+		<tr><td colspan="2">
+		<?= $saveButton ?>
+		&nbsp;&nbsp;
+		<?= $deleteButton ?>
+		&nbsp;&nbsp;
+		<?= $cancelButton ?>
+		</td></tr>
+		<?= $fileAttachments; ?>
+		<?= $formSecurityFields ?>	
+	</table>
+	<input type="hidden" name="version_num" value="<?= $version_num ?>"/>
+</form>
