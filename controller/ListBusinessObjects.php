@@ -11,15 +11,15 @@ require_once $config->get('sysRoot').'alpha/view/View.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
 /**
-* 
-* Controller used to list all of the business objects for the system
-* 
-* @package alpha::controller
-* @author John Collins <john@design-ireland.net>
-* @copyright 2009 John Collins
-* @version $Id$
-*
-*/
+ * 
+ * Controller used to list all of the business objects for the system
+ * 
+ * @package alpha::controller
+ * @author John Collins <john@design-ireland.net>
+ * @copyright 2009 John Collins
+ * @version $Id$
+ *
+ */
 class ListBusinessObjects extends Controller implements AlphaControllerInterface {
 	/**
 	 * Trace logger
@@ -77,7 +77,6 @@ class ListBusinessObjects extends Controller implements AlphaControllerInterface
 			if(!$this->checkSecurityFields()) {
 				throw new SecurityException('This page cannot accept post data from remote servers!');
 				self::$logger->debug('<<doPOST');
-				return;
 			}
 		
 			if(isset($params['createTableBut'])) {
