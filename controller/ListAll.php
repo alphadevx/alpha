@@ -91,7 +91,6 @@ class ListAll extends Controller implements AlphaControllerInterface {
 				echo View::displayPageHead($this);
 			}else{
 				throw new IllegalArguementException('No BO available to list!');
-				return;
 			}
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());
@@ -108,7 +107,15 @@ class ListAll extends Controller implements AlphaControllerInterface {
 	 * @param array $params
 	 */
 	public function doPOST($params) {
+		echo View::displayPageHead($this);
+		
 		try{
+			// check the hidden security fields before accepting the form POST data
+			if(!$this->checkSecurityFields()) {
+				throw new SecurityException('This page cannot accept post data from remote servers!');
+				self::$logger->debug('<<doPOST');
+			}
+			
 			// load the business object (BO) definition
 			if (isset($params['bo'])) {
 				$BOname = $params['bo'];
@@ -120,18 +127,14 @@ class ListAll extends Controller implements AlphaControllerInterface {
 				
 				if (!empty($params['delete_oid'])) {
 					$temp = new $BOname();
-					$temp->load($params['delete_oid']);			
+					$temp->load($params['delete_oid']);
 		
 					try {
 						$temp->delete();
 						
-						echo View::displayPageHead($this);
-						
 						echo '<p class="success">'.$this->BOname.' '.$params['delete_oid'].' deleted successfully.</p>';
 						
 						$this->displayBodyContent();
-						
-						echo View::displayPageFoot($this);
 					}catch(AlphaException $e) {
 						self::$logger->error($e->getTraceAsString());
 						echo '<p class="error"><br>Error deleting the OID ['.$params['delete_oid'].'], check the log!</p>';
@@ -139,12 +142,15 @@ class ListAll extends Controller implements AlphaControllerInterface {
 				}
 			}else{
 				throw new IllegalArguementException('No BO available to list!');
-				return;
 			}
+		}catch(SecurityException $e) {
+			echo '<p class="error"><br>'.$e->getMessage().'</p>';								
+			self::$logger->warn($e->getMessage());
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());
 		}
 		
+		echo View::displayPageFoot($this);
 	}
 	
 	/**
