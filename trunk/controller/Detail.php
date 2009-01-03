@@ -93,6 +93,7 @@ class Detail extends Controller implements AlphaControllerInterface {
 				echo View::renderDeleteForm();
 		
 				$this->BO->load($params['oid']);
+				
 				echo $this->BOView->detailedView();
 			}else{
 				throw new IllegalArguementException('No BO available to display!');
@@ -161,6 +162,9 @@ class Detail extends Controller implements AlphaControllerInterface {
 			self::$logger->warn($e->getMessage());
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());
+		}catch(BONotFoundException $e) {
+			self::$logger->warn($e->getMessage());
+			echo '<p class="error"><br>Failed to load the requested item from the database!</p>';
 		}
 		
 		echo View::displayPageFoot($this);
