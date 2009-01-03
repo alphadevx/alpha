@@ -51,7 +51,8 @@ class View {
 		
 		$filename = get_class($BO);
 		$underscore_pos = strrpos($filename, '_');
-		$filename = substr($filename, 0, $underscore_pos);		
+		$filename = substr($filename, 0, $underscore_pos);
+		$filename = ucfirst($filename).'View';	
 
 		// Check to see if a custom view exists for this BO, and if it does return that view instead		
 		if (!$returnParent) {
@@ -1061,13 +1062,16 @@ class View {
 		$classTemplateDir = get_class($BO);
 
 		$customPath = $config->get('sysRoot').'view/templates/'.$classTemplateDir.'/'.$filename;
-		$defaultPath = $config->get('sysRoot').'alpha/view/templates/'.$filename;
+		$defaultPath1 = $config->get('sysRoot').'alpha/view/templates/'.$classTemplateDir.'/'.$filename;
+		$defaultPath2 = $config->get('sysRoot').'alpha/view/templates/'.$filename;
 
 		// Check to see if a custom template exists for this BO, and if it does load that		
 		if (file_exists($customPath)) {
 			require $customPath;				
-		}elseif (file_exists($defaultPath)) {
-			require $defaultPath;		
+		}elseif (file_exists($defaultPath1)) {
+			require $defaultPath1;
+		}elseif (file_exists($defaultPath2)) {
+			require $defaultPath2;	
 		}else{
 			throw new AlphaException('No ['.$mode.'] HTML template found for class ['.get_class($BO).']');
 		}
