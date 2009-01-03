@@ -42,6 +42,8 @@ class record_selector
 	 * @param string $accessingClassName Used to indicate the reading side when accessing from MANY-TO-MANY relation (leave blank for other relation types)
 	 */
 	function record_selector($object, $label="", $name="", $table_tags=true, $accessingClassName='') {
+		if(!isset($_SESSION))
+			session_start();
 		
 		$this->relation_object = $object;		
 		$this->label = $label;
