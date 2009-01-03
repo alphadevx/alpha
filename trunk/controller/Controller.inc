@@ -847,6 +847,47 @@ abstract class Controller {
 			}
 		}
 	}
+	
+	/**
+	 * Does a HTTP redirect to a custom controller if one is found
+	 *
+	 * @param string $BOName The classname of the business object
+	 * @param string $mode The mode of the controller (create, detail, edit)
+	 */
+	protected function loadCustomController($BOName, $mode) {
+		self::$logger->debug('>>loadCustomController(BOName=['.$BOName.'], mode=['.$mode.'])');
+		
+		global $config;
+		
+		// replace _ with a space in BO name
+		$BOName = str_replace('_', ' ', $BOName);
+		// uppercase the first letter of each word, e.g. create cart object becomes Create Cart Object
+		$controllerName = ucwords($mode.' '.$BOName);
+		// remove spaces
+		$controllerName = str_replace(' ', '', $controllerName);
+
+		self::$logger->debug('Custom controller name is ['.$controllerName.']');
+		
+		if (file_exists($config->get('sysRoot').'controller/'.$controllerName.'.php')) {
+			self::$logger->debug('Custom controller found, redirecting...');
+			// handle secure URLs
+			if(isset($_GET['tk']))
+				header('Location: '.Front_Controller::generate_secure_URL('act='.$controllerName));
+			else
+				header('Location: '.$config->get('sysURL').'/controller/'.$controllerName.'.php');
+		}
+
+		if (file_exists($config->get('sysRoot').'alpha/controller/'.$controllerName.'.php')) {
+			self::$logger->debug('Custom controller found, redirecting...');
+			// handle secure URLs
+			if(isset($_GET['tk']))
+				header('Location: '.Front_Controller::generate_secure_URL('act='.$controllerName));
+			else
+				header('Location: '.$config->get('sysURL').'/alpha/controller/'.$controllerName.'.php');	
+		}
+		
+		self::$logger->debug('<<loadCustomController');
+	}
 }
 
 ?>
