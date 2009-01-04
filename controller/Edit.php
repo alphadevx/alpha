@@ -120,9 +120,11 @@ class Edit extends Controller implements AlphaControllerInterface {
 	}
 	
 	/**
-	 * method to handle POST requests
+	 * Handle POST requests
+	 * 
+	 * @param array $params
 	 */
-	function doPOST($params) {
+	public function doPOST($params) {
 		global $config;
 		
 		try {
@@ -141,8 +143,6 @@ class Edit extends Controller implements AlphaControllerInterface {
 				$this->BO->load($params['oid']);
 				
 				$this->BOView = View::getInstance($this->BO);
-				
-				$this->BOView->setBO($this->BO);
 					
 				// set up the title and meta details
 				$this->setTitle('Editing a '.$BOName);
@@ -164,7 +164,7 @@ class Edit extends Controller implements AlphaControllerInterface {
 						echo '<p class="error"><br>'.$e->getMessage().'</p>';
 					}
 					
-					$this->BOView->editView();
+					echo $this->BOView->editView();
 				}
 				
 				if (!empty($params['delete_oid'])) {
