@@ -871,19 +871,23 @@ abstract class Controller {
 		if (file_exists($config->get('sysRoot').'controller/'.$controllerName.'.php')) {
 			self::$logger->debug('Custom controller found, redirecting...');
 			// handle secure URLs
-			if(isset($_GET['tk']))
-				header('Location: '.Front_Controller::generate_secure_URL('act='.$controllerName));
-			else
-				header('Location: '.$config->get('sysURL').'/controller/'.$controllerName.'.php');
+			if(isset($_GET['tk'])) {
+				$params = Front_Controller::decode_query_params($_GET['tk']);
+				header('Location: '.Front_Controller::generate_secure_URL('act='.$controllerName.'&'.$params));
+			}else{
+				header('Location: '.$config->get('sysURL').'/controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING']);
+			}
 		}
 
 		if (file_exists($config->get('sysRoot').'alpha/controller/'.$controllerName.'.php')) {
 			self::$logger->debug('Custom controller found, redirecting...');
 			// handle secure URLs
-			if(isset($_GET['tk']))
-				header('Location: '.Front_Controller::generate_secure_URL('act='.$controllerName));
-			else
-				header('Location: '.$config->get('sysURL').'/alpha/controller/'.$controllerName.'.php');	
+			if(isset($_GET['tk'])) {
+				$params = Front_Controller::decode_query_params($_GET['tk']);
+				header('Location: '.Front_Controller::generate_secure_URL('act='.$controllerName.'&'.$params));
+			}else{
+				header('Location: '.$config->get('sysURL').'/alpha/controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING']);
+			}	
 		}
 		
 		self::$logger->debug('<<loadCustomController');
