@@ -120,6 +120,11 @@ class CreateArticleObject extends Controller implements AlphaControllerInterface
 		}
 	}
 	
+	/**
+	 * Renders the Javascript required in the header by markItUp!
+	 *
+	 * @return string
+	 */
 	public function during_displayPageHead_callback() {
 		global $config;
 		
