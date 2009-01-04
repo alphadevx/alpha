@@ -115,23 +115,18 @@ class Front_Controller {
 	/**
 	 * Static method to return the decoded GET paramters from an encrytpted tk value (excludes the act paramter)
 	 */
-	function decode_query_params($query_string) {
+	function decode_query_params($tk) {
 		global $config;		
 		
-		if (!isset($_GET["tk"])) {
-			$error = new handle_error($_SERVER["PHP_SELF"],'No token provided for the front controller!','decode_query()');
-			exit;
-		}else{			
-			$td = mcrypt_module_open('tripledes', '', 'ecb', '');
-			$iv = mcrypt_create_iv(mcrypt_enc_get_iv_size ($td), MCRYPT_RAND);
-			// replace any troublesome characters from the URL with the original values
-			$token = strtr($_GET["tk"], '-_', '+/');
-			$token = base64_decode($token);
-			$params = trim(mcrypt_decrypt('tripledes', $config->get('sysQSKey'), $token, 'ecb', $iv));
-			// now remove the first param ("act" the page controller action)			
-			$params = substr($params, strpos($params,'&')+1);
-			return $params;
-		}
+		$td = mcrypt_module_open('tripledes', '', 'ecb', '');
+		$iv = mcrypt_create_iv(mcrypt_enc_get_iv_size ($td), MCRYPT_RAND);
+		// replace any troublesome characters from the URL with the original values
+		$token = strtr($tk, '-_', '+/');
+		$token = base64_decode($token);
+		$params = trim(mcrypt_decrypt('tripledes', $config->get('sysQSKey'), $token, 'ecb', $iv));
+		// now remove the first param ("act" the page controller action)			
+		$params = substr($params, strpos($params,'&')+1);
+		return $params;
 	}
 	
 	/**
