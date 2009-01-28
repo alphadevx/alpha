@@ -65,7 +65,7 @@ class EditArticleObject extends Controller implements AlphaControllerInterface {
 			if (isset($params['oid'])) {
 				$this->BO->load($params['oid']);
 				
-				$this->BOView = View::getInstance($this->BO);
+				$BOView = View::getInstance($this->BO);
 				
 				// set up the title and meta details
 				$this->setTitle($this->BO->get('title').' (editing)');
@@ -74,7 +74,7 @@ class EditArticleObject extends Controller implements AlphaControllerInterface {
 				
 				echo View::displayPageHead($this);
 		
-				echo $this->BOView->editView();
+				echo $BOView->editView();
 			}else{
 				throw new IllegalArguementException('No article available to edit!');
 			}
@@ -108,7 +108,7 @@ class EditArticleObject extends Controller implements AlphaControllerInterface {
 			if (isset($params['oid'])) {				
 				$this->BO->load($params['oid']);
 				
-				$this->BOView = View::getInstance($this->BO);
+				$BOView = View::getInstance($this->BO);
 					
 				// set up the title and meta details
 				$this->setTitle($this->BO->get('title').' (editing)');
@@ -129,7 +129,7 @@ class EditArticleObject extends Controller implements AlphaControllerInterface {
 						echo '<p class="error"><br>'.$e->getMessage().'</p>';
 					}
 					
-					echo $this->BOView->editView();
+					echo $BOView->editView();
 				}
 				
 				if (!empty($params['delete_oid'])) {
