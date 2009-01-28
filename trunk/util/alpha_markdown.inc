@@ -97,6 +97,54 @@ class alpha_markdown extends MarkdownExtra_Parser {
 
 		return $this->hashSpan($result);
 	}
+	
+	/**
+	 * Custom _doAnchors_inline_callback that renders links to external sites with a
+	 * target attribute and an icon.
+	 */
+	function _doAnchors_inline_callback($matches) {
+		global $config;
+		
+		$whole_match	=  $matches[1];
+		$link_text		=  $this->runSpanGamut($matches[2]);
+		$url			=  $matches[3];
+		$title			=& $matches[6];
+		
+		$external = false;
+		
+		$parts = parse_url($url);
+
+		/*
+		 * Only an external link if:
+		 * 
+		 * 1. $url parses to a valid URL
+		 * 2. $url has a host part
+		 * 3. $url does not contain $config->get('sysURL'), i.e. points to a local resource.
+		 */
+		if(is_array($parts) && isset($parts['host']) && strpos($url, $config->get('sysURL')) === false)
+			$external = true;			
+		
+		$url = $this->encodeAmpsAndAngles($url);
+
+		$result = "<a href=\"$url\"";
+		if (isset($title)) {
+			$title = str_replace('"', '&quot;', $title);
+			$title = $this->encodeAmpsAndAngles($title);
+			$result .=  " title=\"$title\"";
+		}
+		if ($external) {
+			$result .= " target=\"$url\"";
+		}
+		
+		$link_text = $this->runSpanGamut($link_text);
+		if (!$external) {
+			$result .= ">$link_text</a>";
+		}else{
+			$result .= ">$link_text<img class=\"externalLink\" src=\"".$config->get('sysURL').'/alpha/images/icons/page_go.png'."\"/></a>";
+		}
+
+		return $this->hashSpan($result);
+	}
 }
 
 ?>
