@@ -852,21 +852,21 @@ abstract class Controller {
 	 * Does a HTTP redirect to a custom controller if one is found
 	 *
 	 * @param string $BOName The classname of the business object
-	 * @param string $mode The mode of the controller (create, detail, edit)
+	 * @param string $mode The mode of the controller (create, view, edit)
 	 */
 	protected function loadCustomController($BOName, $mode) {
 		self::$logger->debug('>>loadCustomController(BOName=['.$BOName.'], mode=['.$mode.'])');
 		
 		global $config;
 		
-		// replace _ with a space in BO name
-		$BOName = str_replace('_', ' ', $BOName);
-		// uppercase the first letter of each word, e.g. create cart object becomes Create Cart Object
+		// strip the _object part from the class name
+		$BOName = substr($BOName, 0, strpos($BOName, '_object'));
+		// uppercase the first letter of each word, e.g. create cart becomes Create Cart
 		$controllerName = ucwords($mode.' '.$BOName);
 		// remove spaces
 		$controllerName = str_replace(' ', '', $controllerName);
 
-		self::$logger->debug('Custom controller name is ['.$controllerName.']');
+		self::$logger->error('Custom controller name is ['.$controllerName.']');
 		
 		if (file_exists($config->get('sysRoot').'controller/'.$controllerName.'.php')) {
 			self::$logger->debug('Custom controller found, redirecting...');
