@@ -409,10 +409,10 @@ class article_object extends DAO
 	 */
 	function check_user_voted() {
 		// just going to return true if nobody is logged in
-		if (!isset($_SESSION["current_user"]))
+		if (!isset($_SESSION['currentUser']))
 			return true;
 		
-		$userID = $_SESSION["current_user"]->get_ID();
+		$userID = $_SESSION['currentUser']->getID();
 		
 		$sql_query = "SELECT COUNT(*) AS users_vote FROM article_vote WHERE article_oid='".$this->OID."' AND person_oid='".$userID."';";		
 
