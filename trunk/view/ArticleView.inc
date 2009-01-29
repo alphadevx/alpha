@@ -17,21 +17,28 @@ require_once $config->get('sysRoot').'alpha/util/markdown_facade.inc';
 class ArticleView extends View {	
 	/**
 	 * Method to generate the markdown HTML render of the article content
+	 * 
+	 * @param array $fields hash array of HTML fields to pass to the template
 	 */
-	public function markdownView() {
+	public function markdownView($fields=array()) {
 		global $config;
 		
 		$markdown = new markdown_facade($this->BO);
 		 
-		echo $markdown->get_content();
+		$fields['markdownContent'] = $markdown->get_content();
 		
-		if (class_exists("button")) {
+		$html = '';
+		// render edit and delete buttons for admins only
+		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->getAccessLevel() == 'Admin') {
 			// render edit buttons for admins only
-			if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->getAccessLevel() == "Administrator" && $this->BO->getID() != 0) {
-				echo '&nbsp;&nbsp;';
-				$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=Edit&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."'","Edit","editBut");
-			}
+			$html .= '&nbsp;&nbsp;';
+			$button = new button("document.location = '".Front_Controller::generate_secure_URL('act=Edit&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."'",'Edit','editBut');
+			$html .= $button->render();
 		}
+			
+		$fields['adminButtons'] = $html;
+		
+		$this->loadTemplate($this->BO, 'markdown', $fields);
 	}
 	
 	/**
