@@ -866,7 +866,7 @@ abstract class Controller {
 		// remove spaces
 		$controllerName = str_replace(' ', '', $controllerName);
 
-		self::$logger->error('Custom controller name is ['.$controllerName.']');
+		self::$logger->debug('Custom controller name is ['.$controllerName.']');
 		
 		if (file_exists($config->get('sysRoot').'controller/'.$controllerName.'.php')) {
 			self::$logger->debug('Custom controller found, redirecting...');
