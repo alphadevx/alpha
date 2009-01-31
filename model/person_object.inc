@@ -257,7 +257,7 @@ class person_object extends DAO {
 	public function getCommentCount() {
 		$temp = new article_comment_object();
 		
-		$sql_query = "SELECT COUNT(OID) AS post_count FROM ".self::TABLE_NAME." WHERE created_by='".$this->OID."';";
+		$sql_query = "SELECT COUNT(OID) AS post_count FROM ".article_comment_object::TABLE_NAME." WHERE created_by='".$this->OID."';";
 
 		$this->lastQuery = $sql_query;
 
