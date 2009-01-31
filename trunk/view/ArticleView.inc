@@ -27,17 +27,6 @@ class ArticleView extends View {
 		 
 		$fields['markdownContent'] = $markdown->get_content();
 		
-		$html = '';
-		// render edit and delete buttons for admins only
-		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->getAccessLevel() == 'Admin') {
-			// render edit buttons for admins only
-			$html .= '&nbsp;&nbsp;';
-			$button = new button("document.location = '".Front_Controller::generate_secure_URL('act=Edit&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."'",'Edit','editBut');
-			$html .= $button->render();
-		}
-			
-		$fields['adminButtons'] = $html;
-		
 		$this->loadTemplate($this->BO, 'markdown', $fields);
 	}
 	
