@@ -31,6 +31,13 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 	protected $BO;
 	
 	/**
+	 * Used to set status update messages to display to the user
+	 *
+	 * @var string
+	 */
+	private $statusMessage = '';
+	
+	/**
 	 * Trace logger
 	 * 
 	 * @var Logger
@@ -190,6 +197,9 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 			$html.= '<p>You are not logged in</p>';
 		}
 		
+		if($this->statusMessage != '')
+			$html .= $this->statusMessage;
+		
 		if(method_exists($controller, 'after_displayPageHead_callback'))
 			$html.= $controller->after_displayPageHead_callback();
 			
@@ -245,6 +255,13 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 			$html .= $temp->render();
 		}
 		
+		// render edit button for admins only
+		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->getAccessLevel() == 'Admin') {
+			$html .= '&nbsp;&nbsp;';
+			$button = new button("document.location = '".Front_Controller::generate_secure_URL('act=Edit&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."'",'Edit','editBut');
+			$html .= $button->render();
+		}
+		
 		if($config->get('sysCMSDisplayStandardFooter')) {
 			$html .= '<p>Article URL: <a href="'.$this->BO->URL.'">'.$this->BO->URL.'</a><br>';
 			$html .= 'Title: '.$this->BO->get('title').'<br>';
@@ -258,58 +275,73 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 	/**
 	 * Method to handle POST requests
 	 * 
-	 * @todo revise implementation
 	 * @param array $params
 	 */
 	public function doPOST($params) {
-		if(!$this->check_security_fields()) {
-			$error = new handle_error($_SERVER["PHP_SELF"],'This page cannot accept post data from remote servers!','handle_post()','validation');
-			exit;
-		}
-			
-		if(isset($_POST["voteBut"]) && !$this->article->check_user_voted()) {
-			$vote = new article_vote_object();
-			$vote->set("article_oid", $this->article->get_ID());
-			$vote->set("person_oid", $_SESSION["current_user"]->get_ID());
-			$vote->set("score", $_POST["user_vote"]);
-			$success = $vote->save_object();
-			if($success)
-				echo '<p class="success">Thank you for rating this article!</p>';
-		}
+		global $config;
 		
-		if(isset($_POST["createBut"])) {
-			$comment = new article_comment_object();
-			
-			// populate the transient object from post data
-			$comment->populate_from_post();
-			
-			// filter the comment before saving
-			$filter = new input_filter($comment->get_prop_object("content"));
-			$comment->set("content", $filter->encode());
-			
-			$success = $comment->save_object();			
-			
-			if($success) {
-				echo '<p class="success">Thank you for your comment!</p>';
+		try {
+			// check the hidden security fields before accepting the form POST data
+			if(!$this->checkSecurityFields()) {
+				throw new SecurityException('This page cannot accept post data from remote servers!');
 			}
-		}
-		
-		if(isset($_POST["saveBut"])) {			
-			$comment = new article_comment_object();
-			$comment->load_object($_POST["OID"]);
 			
-			// re-populates the old object from post data
-			$comment->populate_from_post();			
-			
-			// filter the comment before saving
-			$filter = new input_filter($comment->get_prop_object("content"));
-			$comment->set("content", $filter->encode());
-			
-			$success = $comment->save_object();			
-			
-			if($success) {
-				echo '<p class="success">Your comment has been updated.</p>';
+			if(isset($params['voteBut']) && !$this->BO->check_user_voted()) {
+				$vote = new article_vote_object();
+				$vote->set('article_oid', $params['oid']);
+				$vote->set('person_oid', $_SESSION['currentUser']->getID());
+				$vote->set('score', $params['user_vote']);
+				try {
+					$vote->save();
+					$this->statusMessage = '<p class="success">Thank you for rating this article!</p>';
+					$this->doGET($params);
+				}catch (FailedSaveException $e) {
+					self::$logger->error($e->getMessage());
+				}
 			}
+			
+			if(isset($params['createBut'])) {
+				$comment = new article_comment_object();
+				
+				// populate the transient object from post data
+				$comment->populateFromPost();
+				
+				// filter the comment before saving
+				$filter = new input_filter($comment->getPropObject('content'));
+				$comment->set('content', $filter->encode());
+				
+				try {
+					$success = $comment->save();			
+					$this->statusMessage = '<p class="success">Thank you for your comment!</p>';
+					$this->doGET($params);
+				}catch (FailedSaveException $e) {
+					self::$logger->error($e->getMessage());
+				}				
+			}
+			
+			if(isset($params['saveBut'])) {			
+				$comment = new article_comment_object();
+				
+				try {
+					$comment->load($params['article_comment_id']);
+					
+					// re-populates the old object from post data
+					$comment->populateFromPost();			
+					
+					// filter the comment before saving
+					$filter = new input_filter($comment->getPropObject('content'));
+					$comment->set('content', $filter->encode());
+					
+					$success = $comment->save();			
+					$this->statusMessage = '<p class="success">Your comment has been updated.</p>';
+					$this->doGET($params);
+				}catch (AlphaException $e) {
+					self::$logger->error($e->getMessage());
+				}
+			}
+		}catch(SecurityException $e) {
+			echo '<p class="error"><br>'.$e->getMessage().'</p>';								
+			self::$logger->warn($e->getMessage());
 		}
 	}
 	
@@ -333,7 +365,7 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 			ob_start();
 			for($i = 0; $i < $comment_count; $i++) {
 				$view = View::getInstance($comments[$i]);
-				$view->markdown_view();
+				$view->markdownView();
 			}
 			$html.= ob_get_clean();
 		}
