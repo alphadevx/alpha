@@ -395,7 +395,7 @@ class article_object extends DAO
 		$i = 0;
 		while ($row = mysql_fetch_assoc($result)) {
 			$temp = new article_vote_object();
-			$temp->load_object($row["OID"]);
+			$temp->load($row['OID']);
 			$votes[$i] = $temp;
 			$i++;
 		}
@@ -454,7 +454,7 @@ class article_object extends DAO
 		$i = 0;
 		while ($row = mysql_fetch_assoc($result)) {
 			$temp = new article_comment_object();
-			$temp->load_object($row["OID"]);
+			$temp->load($row['OID']);
 			$comments[$i] = $temp;
 			$i++;
 		}
