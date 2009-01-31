@@ -21,7 +21,7 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.
  * @version $Id$
  * 
  */
-class EditArticleObject extends Controller implements AlphaControllerInterface {
+class EditArticle extends Controller implements AlphaControllerInterface {
 	/**
 	 * The new article to be edited
 	 * 
@@ -41,7 +41,7 @@ class EditArticleObject extends Controller implements AlphaControllerInterface {
 	 */
 	public function __construct() {
 		if(self::$logger == null)
-			self::$logger = new Logger('EditArticleObject');
+			self::$logger = new Logger('EditArticle');
 		self::$logger->debug('>>__construct()');
 		
 		global $config;
@@ -128,7 +128,8 @@ class EditArticleObject extends Controller implements AlphaControllerInterface {
 						$this->BO->reload();
 						echo '<p class="error"><br>'.$e->getMessage().'</p>';
 					}
-					
+					// needed by markItUp so that it does not include \'s in text box after saving
+					$this->BO->set('content', stripslashes($this->BO->get('content')));
 					echo $BOView->editView();
 				}
 				
@@ -231,8 +232,8 @@ class EditArticleObject extends Controller implements AlphaControllerInterface {
 }
 
 // now build the new controller
-if(basename($_SERVER['PHP_SELF']) == 'EditArticleObject.php') {
-	$controller = new EditArticleObject();
+if(basename($_SERVER['PHP_SELF']) == 'EditArticle.php') {
+	$controller = new EditArticle();
 	
 	if(!empty($_POST)) {			
 		$controller->doPOST($_REQUEST);
