@@ -125,7 +125,7 @@ abstract class DAO {
 		
 		$this->version_num = new Integer(0);
 		$this->created_ts = new Timestamp(date("Y-m-d H:i:s"));
-		$person_ID = (isset($_SESSION["current_user"])? $_SESSION["current_user"]->getID(): 0);
+		$person_ID = (isset($_SESSION['currentUser'])? $_SESSION['currentUser']->getID(): 0);
 		$this->created_by = new Integer($person_ID);
 		$this->updated_ts = new Timestamp(date("Y-m-d H:i:s"));
 		$this->updated_by = new Integer($person_ID);
