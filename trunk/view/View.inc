@@ -50,9 +50,13 @@ class View {
 		global $config;
 		
 		$filename = get_class($BO);
-		$underscore_pos = strrpos($filename, '_');
-		$filename = substr($filename, 0, $underscore_pos);
-		$filename = ucfirst($filename).'View';	
+		// remove the _object part
+		$filename = str_replace('_object', '', $filename);
+		// replace _ with space, then uppercase words
+		$filename = str_replace('_', ' ', $filename);
+		$filename = ucwords($filename).'View';
+		// finally, remove spaces
+		$filename = str_replace(' ', '', $filename);		
 
 		// Check to see if a custom view exists for this BO, and if it does return that view instead		
 		if (!$returnParent) {
