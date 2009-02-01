@@ -2,7 +2,7 @@
 
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 require_once $config->get('sysRoot').'alpha/view/View.inc';
-require_once $config->get('sysRoot').'alpha/util/markdown_facade.inc';
+require_once $config->get('sysRoot').'alpha/util/MarkdownFacade.inc';
 
 /**
  *
@@ -23,9 +23,9 @@ class ArticleView extends View {
 	public function markdownView($fields=array()) {
 		global $config;
 		
-		$markdown = new markdown_facade($this->BO);
+		$markdown = new MarkdownFacade($this->BO);
 		 
-		$fields['markdownContent'] = $markdown->get_content();
+		$fields['markdownContent'] = $markdown->getContent();
 		
 		$this->loadTemplate($this->BO, 'markdown', $fields);
 	}

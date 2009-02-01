@@ -3,7 +3,7 @@
 require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 require_once $config->get('sysRoot').'alpha/view/View.inc';
-require_once $config->get('sysRoot').'alpha/util/markdown_facade.inc';
+require_once $config->get('sysRoot').'alpha/util/MarkdownFacade.inc';
 require_once $config->get('sysRoot').'alpha/util/input_filter.inc';
 
 /**
@@ -23,7 +23,7 @@ class ArticleCommentView extends View {
 	public function markdownView() {
 		global $config;
 		
-		$markdown = new markdown_facade($this->BO);
+		$markdown = new MarkdownFacade($this->BO);
 		$author = new person_object();
 		$id = $this->BO->getCreatorID();
 		$author->load($id->getValue());
@@ -39,7 +39,7 @@ class ArticleCommentView extends View {
 		if($config->get('sysCMSCommentsAllowed') && isset($_SESSION['currentUser']) && $_SESSION['currentUser']->getID() == $author->getID())
 			$this->editView();
 		else
-			echo $markdown->get_content();
+			echo $markdown->getContent();
 		
 		if($create_TS->getValue() != $update_TS->getValue()) {
 			$updator = new person_object();
