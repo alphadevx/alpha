@@ -170,7 +170,7 @@ class image
 		 * Not required for the view_article_pdf.php controller.
 		 */
 		if($config->get('sysCMSImagesWidgetSecure') && basename($_SERVER["PHP_SELF"]) != 'view_article_pdf.php') {
-			$valid = Controller::check_security_fields();			
+			$valid = Controller::checkSecurityFields();			
 			
 			// if not valid, just return a blank black image of the same dimensions
 			if(!$valid) {
@@ -346,7 +346,7 @@ EOS;
 // end of javascript
 // -----------------
 		if($config->get('sysCMSImagesWidgetSecure')) {
-			$secureFields = View::generate_security_fields();
+			$secureFields = View::generateSecurityFields();
 			echo 'document.write(\'<img src="'.$config->get('sysURL').'/alpha/view/widgets/image.js.php?source=\'+source+\'&width=\'+new_width+\'&height=\'+new_height+\'&sourceType=\'+sourceType+\'&quality=\'+quality+\'&scale=\'+scale+\'&var1='.$secureFields[0].'&var2='.$secureFields[1].'" width="\'+new_width+\'" height="\'+new_height+\'" border="0"/>\')';
 		}else{
 			echo 'document.write(\'<img src="'.$config->get('sysURL').'/alpha/view/widgets/image.js.php?source=\'+source+\'&width=\'+new_width+\'&height=\'+new_height+\'&sourceType=\'+sourceType+\'&quality=\'+quality+\'&scale=\'+scale+\'" width="\'+new_width+\'" height="\'+new_height+\'" border="0"/>\')';
