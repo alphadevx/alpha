@@ -22,7 +22,7 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.
  * @todo Validation must include checking the size of the uploaded file
  *
  */
-class CreateArticleObject extends Controller implements AlphaControllerInterface {
+class CreateArticle extends Controller implements AlphaControllerInterface {
 	/**
 	 * The new article to be created
 	 * 
@@ -42,7 +42,7 @@ class CreateArticleObject extends Controller implements AlphaControllerInterface
 	 */
 	public function __construct() {
 		if(self::$logger == null)
-			self::$logger = new Logger('CreateArticleObject');
+			self::$logger = new Logger('CreateArticle');
 		self::$logger->debug('>>__construct()');
 		
 		global $config;
@@ -145,8 +145,8 @@ class CreateArticleObject extends Controller implements AlphaControllerInterface
 }
 
 // now build the new controller
-if(basename($_SERVER['PHP_SELF']) == 'CreateArticleObject.php') {
-	$controller = new CreateArticleObject();
+if(basename($_SERVER['PHP_SELF']) == 'CreateArticle.php') {
+	$controller = new CreateArticle();
 	
 	if(!empty($_POST)) {			
 		$controller->doPOST($_REQUEST);
