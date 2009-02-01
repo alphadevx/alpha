@@ -1,7 +1,5 @@
 <?php
 
-// $Id$
-
 require_once $config->get('sysRoot').'alpha/lib/markdown/markdown.php';
 require_once $config->get('sysRoot').'alpha/lib/geshi.php';
 
@@ -9,18 +7,20 @@ require_once $config->get('sysRoot').'alpha/lib/geshi.php';
  *
  * A custom version of the markdown class which uses the geshi library for rendering code
  * 
- * @package Alpha Util
+ * @package alpha::util
  * @author John Collins <john@design-ireland.net>
- * @copyright 2007 John Collins 
+ * @copyright 2009 John Collins 
+ * @version $Id$
  * 
  */
 
-class alpha_markdown extends MarkdownExtra_Parser {
+class AlphaMarkdown extends MarkdownExtra_Parser {
 	
 	/**
-	 * custom version of the _doCodeBlocks_callback method which invokes a heshi object to render code
+	 * Custom version of the _doCodeBlocks_callback method which invokes a Gheshi 
+	 * object to render code.
 	 */
-	function _doCodeBlocks_callback($matches) {		
+	public function _doCodeBlocks_callback($matches) {		
 		$codeblock = $matches[1];	
 		
 		$codeblock = $this->outdent($codeblock);
@@ -63,11 +63,11 @@ class alpha_markdown extends MarkdownExtra_Parser {
 	 * behaviour for handling images.
 	 * 
 	 */	
-	function _doImages_inline_callback($matches) {
+	public function _doImages_inline_callback($matches) {
 		global $config;
 		
-		// just making sure that the option is configured, and that the controller is not the PDF one
-		if($config->get('sysCMSImagesWidget') && basename($_SERVER["PHP_SELF"]) != 'view_article_pdf.php') {			
+		// just making sure that the option is configured, and that the controller is not the PDF one or preview one
+		if($config->get('sysCMSImagesWidget') && basename($_SERVER['PHP_SELF']) != 'view_article_pdf.php' && basename($_SERVER['PHP_SELF']) != 'PreviewArticle.php') {			
 			// get the details of the source image
 			$url			= image::convertImageURLToPath($matches[3]);
 			$image_details = getimagesize($config->get('sysRoot').$url);
@@ -102,7 +102,7 @@ class alpha_markdown extends MarkdownExtra_Parser {
 	 * Custom _doAnchors_inline_callback that renders links to external sites with a
 	 * target attribute and an icon.
 	 */
-	function _doAnchors_inline_callback($matches) {
+	public function _doAnchors_inline_callback($matches) {
 		global $config;
 		
 		$whole_match	=  $matches[1];
