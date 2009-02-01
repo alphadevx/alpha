@@ -853,12 +853,20 @@ class View {
 		$html = '';
 		
 		if ($mode == 'create') {
-			$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getID());
+			// give 10 rows for content fields (other 5 by default)
+			if($name == 'content')
+				$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getID(), 10);
+			else
+				$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getID());
 			$html .= $text->render($tableTags);
 		}
 		
 		if ($mode == 'edit') {
-			$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getID());
+			// give 10 rows for content fields (other 5 by default)
+			if($name == 'content')
+				$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getID(), 10);
+			else
+				$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getID());
 			$html .= $text->render($tableTags);
 		}
 		
