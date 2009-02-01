@@ -801,11 +801,10 @@ abstract class Controller {
 	 * 
 	 * @return boolean
 	 */
-	public function checkSecurityFields() {
+	static public function checkSecurityFields() {
+		if(self::$logger == null)
+			self::$logger = new Logger('Controller');
 		self::$logger->debug('>>checkSecurityFields()');
-				
-		if(method_exists($this, 'before_checkSecurityFields_callback'))
-			$this->before_checkSecurityFields_callback();
 		
 		// the server hostname + today's date
 		$var1 = md5($_SERVER['HTTP_HOST'].date("Ymd"));
@@ -818,9 +817,6 @@ abstract class Controller {
 		}
 		
 		if ($var1 == $_REQUEST['var1'] && $var2 == $_REQUEST['var2']) {			
-			if(method_exists($this, 'after_checkSecurityFields_callback'))
-				$this->after_checkSecurityFields_callback();
-			
 			self::$logger->debug('<<checkSecurityFields [true]');
 			return true;
 		}else{
@@ -836,9 +832,6 @@ abstract class Controller {
 			$var2 = md5($_SERVER['REMOTE_ADDR'].$var1);
 			
 			if ($var1 == $_REQUEST['var1'] && $var2 == $_REQUEST['var2']) {				
-				if(method_exists($this, 'after_checkSecurityFields_callback'))
-					$this->after_checkSecurityFields_callback();
-				
 				self::$logger->debug('<<checkSecurityFields [true]');
 				return true;
 			}else{
