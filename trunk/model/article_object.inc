@@ -279,7 +279,7 @@ class article_object extends DAO
 	function get_attachments_URL() {
 		global $config;
 		
-		return $config->get('sysURL')."/attachments/article_".$this->getID();
+		return $config->get('sysURL')."attachments/article_".$this->getID();
 	}
 	
 	/**
