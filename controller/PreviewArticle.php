@@ -66,7 +66,7 @@ class PreviewArticle extends Controller implements AlphaControllerInterface {
 	 * @param array $params
 	 */
 	public function doPOST($params) {
-		self::$logger->info('>>doPOST($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');
 		
 		global $config;
 		
