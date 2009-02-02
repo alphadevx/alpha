@@ -1586,14 +1586,21 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Adds the name of the atribute provided to the list of unique (constrained) attributes for this BO
+	 * Adds the name of the attribute(s) provided to the list of unique (constrained) attributes for this BO
 	 * 
-	 * @param string attributeName
+	 * @param string attribute1Name
+	 * @param string attribute2Name (optional, use only for composite keys)
 	 */
-	protected function markUnique($attributeName) {
-		self::$logger->debug('>>markUnique(attributeName=['.$attributeName.'])');
+	protected function markUnique($attribute1Name, $attribute2Name='') {
+		self::$logger->debug('>>markUnique(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'])');
+		if(empty($attribute2Name)) {
+			array_push($this->uniqueAttributes, $attribute1Name);
+		}else{
+			// Process composite unique keys: add them seperated by a + sign
+			$attributes = $attribute1Name.'+'.$attribute2Name;
+			array_push($this->uniqueAttributes, $attributes);
+		}
 		self::$logger->debug('<<markUnique');
-		array_push($this->uniqueAttributes, $attributeName);		
 	}
 	
 	/**
@@ -1611,17 +1618,34 @@ abstract class DAO {
 		
 		// process unique keys
 		foreach($this->uniqueAttributes as $prop) {
-			$index_exists = false;
-			// reset the MySQL result set pointer
-			mysql_data_seek($result, 0);
-			while ($row = mysql_fetch_assoc($result)) {					
-				if ($prop.'_unq_idx' == $row['Key_name']) {
-			    	$index_exists = true;
+			// check for composite indexes
+			if(strpos($prop, '+')) {
+				$attributes = explode('+', $prop);
+				
+				$index_exists = false;
+				// reset the MySQL result set pointer
+				mysql_data_seek($result, 0);
+				while ($row = mysql_fetch_assoc($result)) {					
+					if ($attributes[0].'_'.$attributes[1].'_unq_idx' == $row['Key_name']) {
+				    	$index_exists = true;
+					}
 				}
+	
+				if(!$index_exists)
+					$this->createUniqueIndex($attributes[0], $attributes[1]);
+			}else{
+				$index_exists = false;
+				// reset the MySQL result set pointer
+				mysql_data_seek($result, 0);
+				while ($row = mysql_fetch_assoc($result)) {					
+					if ($prop.'_unq_idx' == $row['Key_name']) {
+				    	$index_exists = true;
+					}
+				}
+	
+				if(!$index_exists)
+					$this->createUniqueIndex($prop);
 			}
-
-			if(!$index_exists)
-				$this->createUniqueIndex($prop);
 		}
 		
 		if (mysql_error() == '') {
@@ -1635,27 +1659,44 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Creates a unique index in the database on the given property
+	 * Creates a unique index in the database on the given attribute(s)
 	 * 
-	 * @param string $prop
+	 * @param string attribute1Name
+	 * @param string attribute2Name (optional, use only for composite keys)
 	 */
-	protected function createUniqueIndex($prop) {
-		self::$logger->debug('>>createUniqueIndex(prop=['.$prop.'])');
+	protected function createUniqueIndex($attribute1Name, $attribute2Name = '') {
+		self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'])');
 		
 		if(method_exists($this, 'before_create_unique_index_callback'))
 			$this->before_create_unique_index_callback();
 		
-		$sqlQuery = 'CREATE UNIQUE INDEX '.$prop.'_unq_idx ON '.$this->getTableName().' ('.$prop.');';
-		
-		$this->lastQuery = $sqlQuery;
-
-		$result = mysql_query($sqlQuery);
-
-		if (mysql_error() == '') {
-			if(method_exists($this, 'after_create_unique_index_callback'))
-				$this->after_create_unique_index_callback();
-		}else{			
-			throw new AlphaException('Failed to create the index ['.$prop.'_unq_idx] on ['.$this->getTableName().'], error is ['.mysql_error().']');
+		if(empty($attribute2Name)) {
+			$sqlQuery = 'CREATE UNIQUE INDEX '.$attribute1Name.'_unq_idx ON '.$this->getTableName().' ('.$attribute1Name.');';
+			
+			$this->lastQuery = $sqlQuery;
+	
+			$result = mysql_query($sqlQuery);
+	
+			if (mysql_error() == '') {
+				if(method_exists($this, 'after_create_unique_index_callback'))
+					$this->after_create_unique_index_callback();
+			}else{			
+				throw new AlphaException('Failed to create the index ['.$attribute1Name.'_unq_idx] on ['.$this->getTableName().'], error is ['.mysql_error().']');
+			}
+		}else{
+			// process composite unique keys
+			$sqlQuery = 'CREATE UNIQUE INDEX '.$attribute1Name.'_'.$attribute2Name.'_unq_idx ON '.$this->getTableName().' ('.$attribute1Name.','.$attribute2Name.');';
+			
+			$this->lastQuery = $sqlQuery;
+	
+			$result = mysql_query($sqlQuery);
+	
+			if (mysql_error() == '') {
+				if(method_exists($this, 'after_create_unique_index_callback'))
+					$this->after_create_unique_index_callback();
+			}else{			
+				throw new AlphaException('Failed to create the index ['.$attribute1Name.'_'.$attribute2Name.'_unq_idx] on ['.$this->getTableName().'], error is ['.mysql_error().']');
+			}
 		}
 		self::$logger->debug('<<createUniqueIndex');
 	}
