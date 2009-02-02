@@ -101,6 +101,9 @@ class RelationLookup extends DAO implements AlphaTypeInterface {
 		$this->markTransient('rightClassName');
 		$this->markTransient('helper');
 		
+		// add a unique composite key to these fields
+		$this->markUnique('leftID','rightID');
+		
 		// make sure the lookup table exists
 		if(!$this->checkTableExists()) {
 			$this->makeTable();
