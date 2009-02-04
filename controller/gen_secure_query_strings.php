@@ -8,7 +8,7 @@ if(!isset($config))
 $config =&configLoader::getInstance();
 
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
-require_once $config->get('sysRoot').'alpha/controller/front/Front_Controller.inc';
+require_once $config->get('sysRoot').'alpha/controller/front/FrontController.inc';
 
 /**
 * 
@@ -32,7 +32,7 @@ class gen_secure_query_strings extends Controller
 		
 		$this->display_page_head();
 		
-		echo '<p align="center"><a href="'.Front_Controller::generate_secure_URL('act=ListBusinessObjects').'">Administration Home Page</a></p>';
+		echo '<p align="center"><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Administration Home Page</a></p>';
 		
 		echo '<p>Use this form to generate secure (encrypted) URLs which make use of the Front Controller.  Always be sure to specify an action controller (act) at a minimum.</p>';
 		echo '<p>Example 1: to generate a secure URL for viewing article object 00000000001, enter <em>act=view_article&oid=00000000001</em></p>';
@@ -58,7 +58,7 @@ class gen_secure_query_strings extends Controller
 		
 		echo '<p style="width:90%; overflow:scroll;">';
 		if(isset($_POST["QS"]))
-			echo $config->get('sysURL')."/FC.php?tk=".Front_Controller::encode_query($_POST["QS"]);
+			echo $config->get('sysURL')."/FC.php?tk=".FrontController::encodeQuery($_POST["QS"]);
 		echo '</p>';
 	}
 	

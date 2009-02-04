@@ -64,7 +64,7 @@ class ArticleView extends View {
 		$button = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getID()."'; document.getElementById('delete_form').submit();}", "Delete", "deleteBut");
 		$fields['deleteButton'] = $button->render();
 		
-		$button = new button("document.location = '".Front_Controller::generate_secure_URL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
+		$button = new button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
 		$fields['cancelButton'] = $button->render();		
 				
 		// buffer security fields to $formSecurityFields variable		

@@ -109,7 +109,7 @@ class View {
 		$button = new button('submit', 'Create', 'createBut');
 		$fields['createButton'] = $button->render();
 		
-		$button = new button("document.location.replace('".Front_Controller::generate_secure_URL('act=ListBusinessObjects')."')", 'Cancel', 'cancelBut');
+		$button = new button("document.location.replace('".FrontController::generateSecureURL('act=ListBusinessObjects')."')", 'Cancel', 'cancelBut');
 		$fields['cancelButton'] = $button->render();		
 		
 		// buffer security fields to $formSecurityFields variable		
@@ -148,7 +148,7 @@ class View {
 		$button = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getID()."'; document.getElementById('delete_form').submit();}", "Delete", "deleteBut");
 		$fields['deleteButton'] = $button->render();
 		
-		$button = new button("document.location = '".Front_Controller::generate_secure_URL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
+		$button = new button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
 		$fields['cancelButton'] = $button->render();		
 				
 		// buffer security fields to $formSecurityFields variable		
@@ -228,14 +228,14 @@ class View {
 		$fields['formFields'] = $html;
 		
 		// View button
-		$button = new button("document.location = '".Front_Controller::generate_secure_URL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."'", 'View', 'viewBut');
+		$button = new button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."'", 'View', 'viewBut');
 		$fields['viewButton'] = $button->render();
 
 		$html = '';
 		// render edit and delete buttons for admins only
 		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->getAccessLevel() == 'Admin') {
 			$html .= '&nbsp;&nbsp;';
-			$button = new button("document.location = '".Front_Controller::generate_secure_URL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getID())."'", "Edit", "editBut");
+			$button = new button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getID())."'", "Edit", "editBut");
 			$html .= $button->render();
 			$html .= '&nbsp;&nbsp;';
 			$button = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getID()."'; document.getElementById('delete_form').submit();}", "Delete", "deleteBut");
@@ -278,7 +278,7 @@ class View {
 		// render edit and delete buttons for admins only
 		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->getAccessLevel() == 'Admin') {
 			$html .= '&nbsp;&nbsp;';
-			$button = new button("document.location = '".Front_Controller::generate_secure_URL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getID())."'", "Edit", "editBut");
+			$button = new button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getID())."'", "Edit", "editBut");
 			$html .= $button->render();
 			$html .= '&nbsp;&nbsp;';
 			$button = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
@@ -322,11 +322,11 @@ class View {
 		$fields['tableNeedsUpdate'] = ($this->BO->checkTableNeedsUpdate() ? '<span class="warning">Yes</span>' : '<span class="success">No</span>');
 
 		// create button
-		$button = new button("document.location = '".Front_Controller::generate_secure_URL('act=Create&bo='.get_class($this->BO))."'", "Create New", "createBut");
+		$button = new button("document.location = '".FrontController::generateSecureURL('act=Create&bo='.get_class($this->BO))."'", "Create New", "createBut");
 		$fields['createButton'] = $button->render();
 		
 		// list all button
-		$button = new button("document.location = '".Front_Controller::generate_secure_URL('act=ListAll&bo='.get_class($this->BO).'&no-forceframe=true')."'", "List All", "listBut");
+		$button = new button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO).'&no-forceframe=true')."'", "List All", "listBut");
 		$fields['listButton'] = $button->render();
 		
 		// the create table button (if required)

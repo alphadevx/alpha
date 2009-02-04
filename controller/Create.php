@@ -134,7 +134,7 @@ class Create extends Controller implements AlphaControllerInterface {
 						if ($this->getNextJob() != '')					
 							header('Location: '.$this->getNextJob());
 						else					
-							header('Location: '.Front_Controller::generate_secure_URL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID()));
+							header('Location: '.FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID()));
 					}catch(AlphaException $e) {
 						self::$logger->error($e->getTraceAsString());
 						echo '<p class="error"><br>Error creating the new ['.$BOName.'], check the log!</p>';
@@ -145,7 +145,7 @@ class Create extends Controller implements AlphaControllerInterface {
 			}
 			
 			if (isset($params['cancelBut'])) {
-				header('Location: '.Front_Controller::generate_secure_URL('act=ListBusinessObjects'));
+				header('Location: '.FrontController::generateSecureURL('act=ListBusinessObjects'));
 			}
 		}catch(SecurityException $e) {
 			echo '<p class="error"><br>'.$e->getMessage().'</p>';								

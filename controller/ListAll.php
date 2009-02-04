@@ -173,7 +173,7 @@ class ListAll extends Controller implements AlphaControllerInterface {
 	public function after_displayPageHead_callback() {
 		global $config;
 		
-		$html = '<p align="center"><a href="'.Front_Controller::generate_secure_URL('act=ListBusinessObjects').'">Administration Home Page</a></p>';
+		$html = '<p align="center"><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Administration Home Page</a></p>';
 		
 		return $html;
 	}
@@ -214,7 +214,7 @@ class ListAll extends Controller implements AlphaControllerInterface {
 		if ($this->startPoint > 0) {
 			// handle secure URLs
 			if(isset($_GET['tk']))
-				$html .= '<a href="'.Front_Controller::generate_secure_URL('act=ListAll&bo='.$this->BOname.'&start='.($this->startPoint-$config->get('sysListPageAmount'))).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
+				$html .= '<a href="'.FrontController::generateSecureURL('act=ListAll&bo='.$this->BOname.'&start='.($this->startPoint-$config->get('sysListPageAmount'))).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
 			else
 				$html .= '<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($this->startPoint-$config->get('sysListPageAmount')).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
 		}elseif($this->BOCount > $config->get('sysListPageAmount')){
@@ -225,7 +225,7 @@ class ListAll extends Controller implements AlphaControllerInterface {
 			if($i != $this->startPoint) {
 				// handle secure URLs
 				if(isset($_GET['tk']))
-					$html .= '&nbsp;<a href="'.Front_Controller::generate_secure_URL('act=ListAll&bo='.$this->BOname.'&start='.$i).'">'.$page.'</a>&nbsp;';
+					$html .= '&nbsp;<a href="'.FrontController::generateSecureURL('act=ListAll&bo='.$this->BOname.'&start='.$i).'">'.$page.'</a>&nbsp;';
 				else
 					$html .= '&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".$i.'">'.$page.'</a>&nbsp;';
 			}elseif($this->BOCount > $config->get('sysListPageAmount')){
@@ -236,7 +236,7 @@ class ListAll extends Controller implements AlphaControllerInterface {
 		if ($this->BOCount > $end) {
 			// handle secure URLs
 			if(isset($_GET['tk']))
-				$html .= '&nbsp;&nbsp;<a href="'.Front_Controller::generate_secure_URL('act=ListAll&bo='.$this->BOname.'&start='.($this->startPoint+$config->get('sysListPageAmount'))).'">Next-&gt;&gt;</a>';
+				$html .= '&nbsp;&nbsp;<a href="'.FrontController::generateSecureURL('act=ListAll&bo='.$this->BOname.'&start='.($this->startPoint+$config->get('sysListPageAmount'))).'">Next-&gt;&gt;</a>';
 			else
 				$html .= '&nbsp;&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($this->startPoint+$config->get('sysListPageAmount')).'">Next-&gt;&gt;</a>';
 		}elseif($this->BOCount > $config->get('sysListPageAmount')){

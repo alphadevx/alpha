@@ -178,8 +178,8 @@ class article_object extends DAO
 		// check the config to see if we are using mod_rewrite
 		if($config->get("sysUseModRewrite")) {
 			// check to see if an alias is registered for the view_article_title controller, otherwise use the long URL version
-			if(isset($front) && $front->has_alias('view_article_title')) {
-				$alias = $front->get_controller_alias('view_article_title');
+			if(isset($front) && $front->hasAlias('view_article_title')) {
+				$alias = $front->getControllerAlias('view_article_title');
 				
 				$this->URL = $config->get('sysURL').'/'.$alias.'/'.str_replace(' ', '_', $this->title->getValue());
 			}else{
@@ -192,8 +192,8 @@ class article_object extends DAO
 		// now set up the print version URL
 		if($config->get("sysUseModRewrite")) {
 			// check to see if an alias is registered for the view_article_title controller, otherwise use the long URL version
-			if(isset($front) && $front->has_alias('view_article_print')) {
-				$alias = $front->get_controller_alias('view_article_print');
+			if(isset($front) && $front->hasAlias('view_article_print')) {
+				$alias = $front->getControllerAlias('view_article_print');
 				
 				$this->printURL = $config->get('sysURL').'/'.$alias.'/'.str_replace(' ', '_', $this->title->getValue());
 			}else{
@@ -478,7 +478,7 @@ class article_object extends DAO
 		global $front;
 		
 		// if accessing from the admin backend, use the parent method which includes all articles
-		if(basename($_SERVER["PHP_SELF"]) == "ListAll.php" || (isset($front) && $front->get_page_controller() == 'ListAll'))
+		if(basename($_SERVER["PHP_SELF"]) == "ListAll.php" || (isset($front) && $front->getPageController() == 'ListAll'))
 			return parent::load_all($start, $limit, $order_by, $order);
 		
 		if ($limit == 0)

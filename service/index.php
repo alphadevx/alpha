@@ -19,9 +19,9 @@ $config =&configLoader::getInstance();
 require_once $config->get('sysRoot').'alpha/controller/Login.php';
 
 $controller = new Login();
-$controller->setName(Front_Controller::generate_secure_URL('act=Login'));
+$controller->setName(FrontController::generateSecureURL('act=Login'));
 
-$controller->setUnitOfWork(array(Front_Controller::generate_secure_URL('act=Login'), Front_Controller::generate_secure_URL('act=ListBusinessObjects')));
+$controller->setUnitOfWork(array(FrontController::generateSecureURL('act=Login'), FrontController::generateSecureURL('act=ListBusinessObjects')));
 
 if(!empty($_POST)) {			
 	$controller->doPOST($_POST);

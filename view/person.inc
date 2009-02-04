@@ -297,7 +297,7 @@ class person extends View
 			echo '&nbsp;&nbsp;';
 			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
+			$temp = new button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
 		}		
 		echo '</td></tr>';
 
@@ -354,11 +354,11 @@ class person extends View
 
 		echo '<tr><td colspan="'.$col_count.'" align="center">';
 		
-		$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."'", "View", "viewBut");
+		$temp = new button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."'", "View", "viewBut");
 		// render edit and delete buttons for admins only
 		if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->getAccessLevel() == "Administrator") {
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".Front_Controller::generate_secure_URL('act=edit_person_object&oid='.$this->BO->getID())."'", "Edit", "editBut");
+			$temp = new button("document.location = '".FrontController::generateSecureURL('act=edit_person_object&oid='.$this->BO->getID())."'", "Edit", "editBut");
 			echo '&nbsp;&nbsp;';
 			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
 		}		

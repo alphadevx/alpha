@@ -1,7 +1,7 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
-require_once $config->get('sysRoot').'alpha/controller/front/Front_Controller.inc';
+require_once $config->get('sysRoot').'alpha/controller/front/FrontController.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Date.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Timestamp.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Double.inc';
@@ -801,7 +801,7 @@ abstract class Controller {
 	 * 
 	 * @return boolean
 	 */
-	static public function checkSecurityFields() {
+	public static function checkSecurityFields() {
 		if(self::$logger == null)
 			self::$logger = new Logger('Controller');
 		self::$logger->debug('>>checkSecurityFields()');
@@ -865,8 +865,8 @@ abstract class Controller {
 			self::$logger->debug('Custom controller found, redirecting...');
 			// handle secure URLs
 			if(isset($_GET['tk'])) {
-				$params = Front_Controller::decode_query_params($_GET['tk']);
-				header('Location: '.Front_Controller::generate_secure_URL('act='.$controllerName.'&'.$params));
+				$params = FrontController::decodeQueryParams($_GET['tk']);
+				header('Location: '.FrontController::generateSecureURL('act='.$controllerName.'&'.$params));
 			}else{
 				header('Location: '.$config->get('sysURL').'/controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING']);
 			}
@@ -876,8 +876,8 @@ abstract class Controller {
 			self::$logger->debug('Custom controller found, redirecting...');
 			// handle secure URLs
 			if(isset($_GET['tk'])) {
-				$params = Front_Controller::decode_query_params($_GET['tk']);
-				header('Location: '.Front_Controller::generate_secure_URL('act='.$controllerName.'&'.$params));
+				$params = FrontController::decodeQueryParams($_GET['tk']);
+				header('Location: '.FrontController::generateSecureURL('act='.$controllerName.'&'.$params));
 			}else{
 				header('Location: '.$config->get('sysURL').'/alpha/controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING']);
 			}	
