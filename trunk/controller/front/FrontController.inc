@@ -1,0 +1,385 @@
+<?php
+
+require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/SecurityException.inc';
+require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
+
+/**
+ * 
+ * The front controller designed to optionally handle all requests
+ * 
+ * @package alpha::controller::front
+ * @author John Collins <john@design-ireland.net>
+ * @copyright 2009 John Collins
+ * @version $Id$
+ */
+class FrontController {
+	/**
+	 * The GET query string
+	 *
+	 * @var string
+	 */
+	private $queryString;
+	
+	/**
+	 * The name of the page controller we want to invoke
+	 *
+	 * @var string
+	 */
+	private $pageController;
+	
+	/**
+	 * Boolean to flag if the GET query string is encrypted or not
+	 *
+	 * @var bool
+	 */
+	private $encryptedQuery = false;
+	
+	/**
+	 * An array of controller alias
+	 *
+	 * @var array
+	 */
+	private $controllerAlias = array();
+	
+	/**
+	 * The name of the current alias
+	 *
+	 * @var string
+	 */
+	private $currentAlias;
+	
+	/**
+	 * The constructor method
+	 */
+	public function __construct() {
+		global $config;
+		
+		// direct calls to the front controller
+		if (isset($_GET['act'])) {
+			$this->pageController = $_GET['act'];
+		// calls to the front controller via mod_rewrite
+		}elseif($config->get('sysUseModRewrite') && !isset($_GET['tk'])) {
+			$this->handleModRewriteRequests();			
+		// direct calls to the front controller with an encrypted query string
+		}else{
+			if (!isset($_GET['tk'])) {
+				throw new SecurityException('No controller action set for the front controller!');
+			}else{
+				$this->setEncrypt(true);
+			}
+		}
+	}
+	
+	/**
+	 * Sets the encryption flag
+	 *
+	 * @param bool $encryptedQuery
+	 */
+	public function setEncrypt($encryptedQuery) {
+		$this->encryptedQuery = $encryptedQuery;
+	}
+	
+	/**
+	 * Method to populate the global _GET and _REQUEST arrays with the decoded 
+	 * query string
+	 */
+	private function populateGetVars() {
+				
+		$pairs = explode('&', $this->queryString);		
+		
+		foreach($pairs as $pair) {
+			$keyValue = explode('=', $pair);
+			$_GET[$keyValue[0]] = $keyValue[1];
+			$_REQUEST[$keyValue[0]] = $keyValue[1];
+		}
+	}
+	
+	/**
+	 * Static method for generating an absolute, secure URL for a page controller
+	 * 
+	 * @param string $params
+	 * @return string
+	 */
+	public static function generateSecureURL($params) {
+		global $config;
+		
+		return $config->get('sysURL').'FC.php?tk='.FrontController::encodeQuery($params);
+	}
+	
+	/**
+	 * Static method for encoding a query string
+	 * 
+	 * @param string $queryString
+	 * @return string
+	 */
+	public static function encodeQuery($queryString) {
+		global $config;
+   
+		$td = mcrypt_module_open ('tripledes', '', 'ecb', ''); 
+		$iv = mcrypt_create_iv (mcrypt_enc_get_iv_size ($td), MCRYPT_RAND); 
+		mcrypt_generic_init ($td, $config->get('sysQSKey'), $iv); 
+		$encryptedData = mcrypt_generic ($td, $queryString); 
+		mcrypt_generic_deinit ($td); 
+		mcrypt_module_close ($td);
+	   
+		$return = base64_encode($encryptedData);
+		// remove any characters that are likely to cause trouble on a URL		
+		$return = strtr($return, '+/', '-_');
+		
+		return $return;
+	}
+	
+	/**
+	 * Method to decode the current query string
+	 */
+	private function decodeQuery() {
+		global $config;		
+		
+		if (!isset($_GET['tk'])) {
+			throw new SecurityException('No token provided for the front controller!');
+		}else{			
+			$td = mcrypt_module_open('tripledes', '', 'ecb', '');
+			$iv = mcrypt_create_iv(mcrypt_enc_get_iv_size ($td), MCRYPT_RAND);
+			// replace any troublesome characters from the URL with the original values
+			$token = strtr($_GET['tk'], '-_', '+/');
+			$token = base64_decode($token);			
+			$this->queryString = trim(mcrypt_decrypt('tripledes', $config->get('sysQSKey'), $token, 'ecb', $iv));
+		}
+	}
+	
+	/**
+	 * Static method to return the decoded GET paramters from an encrytpted tk value (excludes the act paramter)
+	 * 
+	 * @return string
+	 */
+	public static function decodeQueryParams($tk) {
+		global $config;		
+		
+		$td = mcrypt_module_open('tripledes', '', 'ecb', '');
+		$iv = mcrypt_create_iv(mcrypt_enc_get_iv_size ($td), MCRYPT_RAND);
+		// replace any troublesome characters from the URL with the original values
+		$token = strtr($tk, '-_', '+/');
+		$token = base64_decode($token);
+		$params = trim(mcrypt_decrypt('tripledes', $config->get('sysQSKey'), $token, 'ecb', $iv));
+		// now remove the first param ("act" the page controller action)			
+		$params = substr($params, strpos($params,'&')+1);
+		
+		return $params;
+	}
+	
+	/**
+	 * Method to load the page controller
+	 * 
+	 * @param bool $allowRedirects Defaults to true, set to false if you want to prevent the front controller from redirecting the request
+	 * @return bool True if the controller loaded, false otherwise
+	 */
+	public function loadController($allowRedirects = true) {
+		global $config;
+		
+		if($allowRedirects) {
+			// if there is an alias configured for the above page controller, redirect there
+			if($config->get('sysForceFC') && $this->hasAlias($this->pageController)) {
+				// make sure that it is not already an alias-based request to prevent re-direct loop			
+				if(empty($this->currentAlias)) {
+					// set the correct HTTP header for the response
+			    	header('HTTP/1.1 301 Moved Permanently');
+			    	
+			    	// see if there are any other GET params appart from the controller name
+			    	if (count($_GET) > 1) {
+			    		$keys = array_keys($_GET);
+			    		$param = $_GET[$keys[1]];
+			    		// if its a title then replace spaces with underscores in the URL
+			    		if($keys[1] == 'title')
+			    			$param = str_replace(' ','_',$param);
+			    		
+			    		$URL = $config->get('sysURL').'/'.$this->getControllerAlias($this->pageController).'/'.$this->getControllerParam($this->pageController).$param;
+			    	}else{
+			    		$URL = $config->get('sysURL').'/'.$this->getControllerAlias($this->pageController).'/'.$this->getControllerParam($this->pageController);
+			    	}
+			    	
+			    	header('Location: '.$URL);
+			 
+				    // we're done here
+			    	return true;
+				}
+			}
+		}
+		
+		// handle encrypted query strings
+		if($this->encryptedQuery) {
+			$this->decodeQuery();			
+			$this->populateGetVars();
+			$this->pageController = $_GET['act'];
+		}
+		
+		$handle = opendir($config->get('sysRoot').'controller');
+   		
+        // loop over the custom controllers directory
+	    while (false !== ($file = readdir($handle))) {
+	    	if (preg_match("/".$this->pageController.".php/", $file)) {	    		
+	    		
+	    		require_once $config->get('sysRoot').'controller/'.$this->pageController.'.php';
+	    		
+	    		$pageController = new $this->pageController();
+	    		if(!empty($_POST)) {			
+					$pageController->doPOST($_REQUEST);
+				}else{
+					$pageController->doGET($_GET);
+				}
+	    		return true;
+	    	}
+	    }
+	    
+	    // now loop over the core controllers provided with Alpha
+	    
+	    $handle = opendir($config->get('sysRoot').'alpha/controller');
+   		
+        // loop over the default controller directory
+	    while (false !== ($file = readdir($handle))) {
+	    	if (preg_match("/".$this->pageController.".php/", $file)) {	    		
+	    		
+	    		require_once $config->get('sysRoot').'alpha/controller/'.$this->pageController.'.php';
+	    		
+	    		$pageController = new $this->pageController();
+	    		if(!empty($_POST)) {			
+					$pageController->doPOST($_REQUEST);
+				}else{
+					$pageController->doGET($_GET);
+				}
+	    		return true;
+	    	}
+	    }
+	    
+	    throw new AlphaException('Failed to find the definition for the class ['.$this->pageController.']');
+		return false;
+	}
+	
+	/**
+	 * Used to register a controller alias to enable shorter URLs with mod_rewrite support enabled.  Note that
+	 * only controllers with a single parameter are supported.
+	 * 
+	 * @param string $controller The name of the page controller class
+	 * @param string $alias The URL alias for the page controller
+	 * @param string $param The name of the GET parameter on the alias URL request
+	 */
+	public static function registerAlias($controller, $alias, $param) {
+		$this->controllerAlias[$alias] = $controller;
+		$this->controllerAlias[$alias.'_param'] = $param;
+		
+		// set up the page controller 
+		$this->handleModRewriteRequests();
+	}
+	
+	/**
+	 * Check to see if an alias exists for the given alias name
+	 * 
+	 * @param string $alias
+	 * @return bool
+	 */
+	private function checkAlias($alias) {		
+		if(array_key_exists($alias, $this->controllerAlias))
+			return true;
+		else
+			return false;
+	}
+	
+	/**
+	 * Check to see if an alias exists for the given controller name
+	 * 
+	 * @param string $controller
+	 * @return bool
+	 */
+	public function hasAlias($controller) {
+		if(in_array($controller, $this->controllerAlias))
+			return true;
+		else
+			return false;
+	}
+	
+	/**
+	 * Gets the full name of the controller for the given alias
+	 * 
+	 * @param string $alias
+	 * @return string
+	 */
+	private function getAliasController($alias) {
+		if(array_key_exists($alias, $this->controllerAlias))
+			return $this->controllerAlias[$alias];
+	}
+	
+	/**
+	 * Gets the name of the alias for the given controller
+	 * 
+	 * @param string $controller
+	 * @return string
+	 */
+	public function getControllerAlias($controller) {
+		if(in_array($controller, $this->controllerAlias)) {
+			$keys = array_keys($this->controllerAlias, $controller);
+			// there should only ever be one key per controller
+			return $keys[0];
+		}
+	}
+	
+	/**
+	 * Gets the parameter name expected in requests to the controller with the given alias
+	 * 
+	 * @param string $alias
+	 * @return string
+	 */
+	private function getAliasParam($alias) {
+		if(array_key_exists($alias.'_param', $this->controllerAlias))
+			return $this->controllerAlias[$alias.'_param'];
+	}
+	
+	/**
+	 * Gets the parameter name expected in requests to the controller with the given controller name
+	 * 
+	 * @param string $controller
+	 * @return string
+	 */
+	private function getControllerParam($controller) {
+		if(in_array($controller.'_param', $this->controllerAlias))
+			return $this->controllerAlias[$controller.'_param'];
+	}
+	
+	/**
+	 * Handles all of the rules for mod_rewrite style URL parsing
+	 */
+	function handleModRewriteRequests() {
+		global $config;
+		
+		// strip off the system URL from the request URL
+		$request = str_replace($config->get('sysURL'), '', 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+		$params = explode('/', $request);
+			
+		// second param will always be the controller
+		if(empty($this->pageController))
+			$this->pageController = $params[1];
+			
+		// check to see if the controller is an alias for something
+		if($this->checkAlias($params[1])) {
+			$this->pageController = $this->getAliasController($params[1]);
+			$this->currentAlias = $params[1];
+			$_GET[$this->getAliasParam($params[1])] = $params[2];
+		}else{			
+			// now populate the _GET vars
+			for($i = 2; $i < count($params); $i++) {
+				if(isset($params[$i+1]))				
+					$_GET[$params[$i]] = $params[$i+1];
+			}
+		}
+	}
+	
+	/**
+	 * Getter for the page controller
+	 * 
+	 * @return string
+	 */
+	public function getPageController() {
+		return $this->pageController;
+	}
+}
+
+?>
