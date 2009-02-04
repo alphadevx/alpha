@@ -14,10 +14,10 @@ require_once $config->get('sysRoot').'model/news_object.inc';
 
 if($config->get("sysUseModRewrite")) {
 	// we need a front controller here to handle our alias registration
-	require_once $config->get('sysRoot').'alpha/controller/front/Front_Controller.inc';
-	$front = new Front_Controller();
+	require_once $config->get('sysRoot').'alpha/controller/front/FrontController.inc';
+	$front = new FrontController();
 	// register the article load by title alias
-	$front->register_alias('view_article_title','article','title');
+	$front->registerAlias('view_article_title','article','title');
 }
 
 /**

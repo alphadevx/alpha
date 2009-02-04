@@ -107,7 +107,7 @@ class view_log extends Controller
 			echo '<p>You are not logged in</p>';
 		}
 		
-		echo '<p align="center"><a href="'.Front_Controller::generate_secure_URL('act=ListBusinessObjects').'">Administration Home Page</a></p>';
+		echo '<p align="center"><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Administration Home Page</a></p>';
 	}
 }
 
