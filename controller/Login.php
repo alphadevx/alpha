@@ -31,6 +31,7 @@ class Login extends Controller implements AlphaControllerInterface {
 	
 	/**
 	 * The person view object
+	 * 
 	 * @var person
 	 */
 	private $personView;
