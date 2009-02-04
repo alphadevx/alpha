@@ -27,7 +27,7 @@ class log_file {
  	 * the value-seperator to use in the file (default is a comma)
  	 * @var string
  	 */
- 	var $seperator = "|";
+ 	var $seperator = '|';
  	/**
  	 * the maximum size of the log file before a backup is created and a new file is started
  	 * var int
@@ -72,7 +72,7 @@ class log_file {
  			// would cause problems later when reading the log
  			$value = str_replace($this->seperator, "", $line[$i]);
 			if ($i == ($col_count-1))
-				$mergedLine .= $value."\n";				
+				$mergedLine .= $value.$this->seperator."\n";				
 			else
 				$mergedLine .= $value.$this->seperator;				
  		}
@@ -123,38 +123,43 @@ class log_file {
  		echo '</tr>';
  		
  		// now read the file and render the data
- 		$log_file = file($this->path);
+ 		$log_file = file_get_contents($this->path);
  		
- 		foreach($log_file as $line) {
- 			echo '<tr>';
- 			$fields = split($this->seperator, $line);
- 			for($i = 0; $i < count($fields); $i++) {
- 				// if it is an error log, render the error types field in different colours
- 				if($i == 4 && preg_match("/error_log.*/", basename($this->path))){
- 					switch($fields[$i]) {
- 						case "validation":
- 							echo '<td class="validation">'.$fields[$i].'</td>';
- 						break;
- 						case "warning":
- 							echo '<td class="warning">'.$fields[$i].'</td>';
- 						break;
- 						case "php":
- 							echo '<td class="php">'.$fields[$i].'</td>';
- 						break;
- 						case "framework":
- 							echo '<td class="framework">'.$fields[$i].'</td>';
- 						break;
- 						case "other":
- 							echo '<td class="other">'.$fields[$i].'</td>';
- 						break;
- 						default:
- 							echo '<td>'.$fields[$i].'</td>';
- 						break;
- 					}
- 				}else{
- 					echo '<td>'.$fields[$i].'</td>';
- 				}
- 			}
+ 		$regEx = '\\'.$this->seperator;
+ 		$fields = split($regEx, $log_file); 			
+		$totalLines = (count($fields)-1)/count($cols);
+ 		
+ 		for($line = 0; $line < $totalLines; $line++) {
+	 		for($col = 0; $col < count($cols); $col++) {
+	 			$index = ($line*count($cols))+$col;
+	 			
+	 			// if it is an error log, render the error types field in different colours
+	 			if($col == 1 && preg_match("/alpha./", basename($this->path))){
+	 				switch($fields[$index]) {
+	 					case 'DEBUG':
+	 						echo '<td class="validation"><pre>'.htmlentities($fields[$index]).'</pre></td>';
+	 					break;
+	 					case 'INFO':
+	 						echo '<td class="validation"><pre>'.htmlentities($fields[$index]).'</pre></td>';
+	 					break;
+	 					case 'WARN':
+	 						echo '<td class="warning"><pre>'.htmlentities($fields[$index]).'</pre></td>';
+	 					break;
+	 					case 'ERROR':
+	 						echo '<td class="framework"><pre>'.htmlentities($fields[$index]).'</pre></td>';
+	 					break;
+	 					case 'FATAL':
+	 						echo '<td class="other"><pre>'.htmlentities($fields[$index]).'</pre></td>';
+	 					break;
+	 					default:
+	 						echo '<td><pre>'.htmlentities($fields[$index]).'</pre></td>';
+	 					break;
+	 				}
+	 			}else{
+	 				echo '<td><pre>'.htmlentities($fields[$index]).'</pre></td>';
+	 			}
+	 		}
+ 			
  			echo '</tr>';
  		}
  		
