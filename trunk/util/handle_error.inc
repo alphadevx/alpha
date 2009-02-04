@@ -16,7 +16,7 @@ require_once $config->get('sysRoot').'alpha/util/log_file.inc';
  * @author John Collins <john@design-ireland.net>
  * @copyright 2006 John Collins 
  * @todo Implement database logging
- * 
+ * @deprecated Use exceptions instead!
  */
  class handle_error {
 	/**
