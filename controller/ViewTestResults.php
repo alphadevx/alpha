@@ -10,9 +10,11 @@ ini_set('include_path', ini_get('include_path').':'.$config->get('sysRoot').'alp
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
+require_once $config->get('sysRoot').'alpha/util/Logger.inc';
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 require_once $config->get('sysRoot').'alpha/view/person.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
+require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/tests/Enum_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/DEnum_Test.php';
@@ -48,38 +50,53 @@ $config->set('sysErrorOtherLog', false);
  *
  * Controller which displays all of the unit test results
  * 
- * @package Alpha Core Unit Tests
+ * @package alpha::controller
  * @author John Collins <john@design-ireland.net>
- * @copyright 2008 John Collins 
+ * @copyright 2009 John Collins 
  * @version $Id$
  * 
  */
-class view_test_results extends Controller
-{	
+class ViewTestResults extends Controller implements AlphaControllerInterface {	
 	/**
-	 * constructor to set up the object
+	 * Trace logger
+	 * 
+	 * @var Logger
 	 */
-	function view_test_results() {
-		// ensure that the super class constructor is called
-		$this->Controller();		
+	private static $logger = null;
+	
+	/**
+	 * The constructor
+	 */
+	public function __construct() {
+		if(self::$logger == null)
+			self::$logger = new Logger('ViewTestResults');
+		self::$logger->debug('>>__construct()');
 		
-		$this->set_visibility("Administrator");
-		if(!$this->check_rights()){			
-			exit;
-		}
+		// ensure that the super class constructor is called, indicating the rights group
+		parent::__construct('Admin');
 		
 		// set up the title and meta details
-		$this->set_title("Alpha Core Unit Test Results");		
+		$this->setTitle('Alpha Core Unit Test Results');	
 		
-		$this->display_page_head();
+		self::$logger->debug('<<__construct');
+	}
+	
+	/**
+	 * Handle GET requests
+	 * 
+	 * @param array $params
+	 */
+	public function doGET($params) {
+		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
+		echo View::displayPageHead($this);
 		
 		$runningTime = 0;
 		$testCount = 0;
 		
-		echo "<h2>Core Complex Data Types</h2>";
+		echo '<h2>Core Complex Data Types</h2>';
 		
 		//------------------------------------------------
-		echo "<h3>Enum:</h3>";
+		echo '<h3>Enum:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('Enum_Test');
@@ -97,7 +114,7 @@ class view_test_results extends Controller
 		echo '</pre>';
 		
 		//------------------------------------------------
-		echo "<h3>DEnum:</h3>";
+		echo '<h3>DEnum:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('DEnum_Test');
@@ -115,7 +132,7 @@ class view_test_results extends Controller
 		echo '</pre>';
 		
 		//------------------------------------------------
-		echo "<h3>Boolean:</h3>";
+		echo '<h3>Boolean:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('Boolean_Test');
@@ -133,7 +150,7 @@ class view_test_results extends Controller
 		echo '</pre>';
 		
 		//------------------------------------------------
-		echo "<h3>Date:</h3>";
+		echo '<h3>Date:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('Date_Test');
@@ -151,7 +168,7 @@ class view_test_results extends Controller
 		echo '</pre>';
 		
 		//------------------------------------------------
-		echo "<h3>Timestamp:</h3>";
+		echo '<h3>Timestamp:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('Timestamp_Test');
@@ -169,7 +186,7 @@ class view_test_results extends Controller
 		echo '</pre>';
 		
 		//------------------------------------------------
-		echo "<h3>Integer:</h3>";
+		echo '<h3>Integer:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('Integer_Test');
@@ -187,7 +204,7 @@ class view_test_results extends Controller
 		echo '</pre>';
 		
 		//------------------------------------------------
-		echo "<h3>Double:</h3>";
+		echo '<h3>Double:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('Double_Test');
@@ -205,7 +222,7 @@ class view_test_results extends Controller
 		echo '</pre>';
 		
 		//------------------------------------------------
-		echo "<h3>String:</h3>";
+		echo '<h3>String:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('String_Test');
@@ -223,7 +240,7 @@ class view_test_results extends Controller
 		echo '</pre>';
 		
 		//------------------------------------------------
-		echo "<h3>Text:</h3>";
+		echo '<h3>Text:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('Text_Test');
@@ -241,7 +258,7 @@ class view_test_results extends Controller
 		echo '</pre>';
 		
 		//------------------------------------------------
-		echo "<h3>Relation:</h3>";
+		echo '<h3>Relation:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('Relation_Test');
@@ -259,7 +276,7 @@ class view_test_results extends Controller
 		echo '</pre>';
 		
 		//------------------------------------------------
-		echo "<h3>Exception Handling:</h3>";
+		echo '<h3>Exception Handling:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('Exceptions_Test');
@@ -277,7 +294,7 @@ class view_test_results extends Controller
 		echo '</pre>';
 		
 		//------------------------------------------------
-		echo "<h3>MySQL DAO:</h3>";
+		echo '<h3>MySQL DAO:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('DAO_Test');
@@ -297,55 +314,44 @@ class view_test_results extends Controller
 		echo '<h3>Total tests ran: '.$testCount.'</h3>';
 		echo '<h3>Total running time: '.$runningTime.'</h3>';
 		
-		$this->display_page_foot();
+		echo View::displayPageFoot($this);
+		self::$logger->debug('<<doGET');
 	}
 	
 	/**
-	 * method to display the page head
+	 * Handle POST requests
+	 * 
+	 * @param array $params
 	 */
-	function display_page_head() {
+	public function doPOST($params) {
+		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');
+		
+		self::$logger->debug('<<doPOST');
+	}
+	
+	/**
+	 * Renders an administration home page link after the page header is rendered
+	 * 
+	 * @return string
+	 */
+	public function after_displayPageHead_callback() {
 		global $config;
 		
-		echo '<html>';
-		echo '<head>';
-		echo '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">';
-		echo '<title>'.$this->get_title().'</title>';
-		echo '<meta name="Keywords" content="'.$this->get_keywords().'">';
-		echo '<meta name="Description" content="'.$this->get_description().'">';
-		echo '<meta name="Author" content="john collins">';
-		echo '<meta name="copyright" content="copyright ">';
-		echo '<meta name="identifier" content="http://'.$config->get('sysURL').'/">';
-		echo '<meta name="revisit-after" content="7 days">';
-		echo '<meta name="expires" content="never">';
-		echo '<meta name="language" content="en">';
-		echo '<meta name="distribution" content="global">';
-		echo '<meta name="title" content="'.$this->get_title().'">';
-		echo '<meta name="robots" content="index,follow">';
-		echo '<meta http-equiv="imagetoolbar" content="no">';			
+		$html = '<p align="center"><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Administration Home Page</a></p>';
 		
-		echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$config->get('sysTheme').'.css.php">';
-		
-		if ($config->get('sysUseWidgets')) {
-			echo '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
-			require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
-		}
-		
-		echo '</head>';
-		echo '<body>';
-			
-		echo '<h1>'.$this->get_title().'</h1>';
-		
-		if (isset($_SESSION["current_user"])) {	
-			echo '<p>You are logged in as '.$_SESSION["current_user"]->getDisplayname().'.  <a href="'.$config->get('sysURL').'/alpha/controller/logout.php">Logout</a></p>';
-		}else{
-			echo '<p>You are not logged in</p>';
-		}
-		
-		echo '<p align="center"><a href="'.$config->get('sysURL').'/alpha/controller/ListBusinessObjects.php">Administration Home Page</a></p><br>';
+		return $html;
 	}
 }
 
-if(basename($_SERVER["PHP_SELF"]) == 'view_test_results.php')
-	$controller = new view_test_results();
+// now build the new controller if this file is called directly
+if ('ViewTestResults.php' == basename($_SERVER['PHP_SELF'])) {
+	$controller = new ViewTestResults();
+	
+	if(!empty($_POST)) {			
+		$controller->doPOST($_POST);
+	}else{
+		$controller->doGET($_GET);
+	}
+}
 
 ?>
