@@ -62,8 +62,8 @@ class DAO_Test extends PHPUnit_Framework_TestCase
      */
     public function testDefaultHouseKeepingValues() {
     	// make sure the person logged in is the same person to create/update the object
-    	$this->assertEquals($_SESSION["current_user"]->getID(), $this->person->getCreatorId()->getValue(), 'test that the constructor sets the correct values of the "house keeping" attributes');
-    	$this->assertEquals($_SESSION["current_user"]->getID(), $this->person->getUpdatorId()->getValue(), 'test that the constructor sets the correct values of the "house keeping" attributes');
+    	$this->assertEquals($_SESSION['currentUser']->getID(), $this->person->getCreatorId()->getValue(), 'test that the constructor sets the correct values of the "house keeping" attributes');
+    	$this->assertEquals($_SESSION['currentUser']->getID(), $this->person->getUpdatorId()->getValue(), 'test that the constructor sets the correct values of the "house keeping" attributes');
     	// as it is a new object, make sure the version number is zero
     	$this->assertEquals(0, $this->person->getVersionNumber()->getValue(), 'test that the constructor sets the correct values of the "house keeping" attributes');
     
@@ -269,7 +269,7 @@ class DAO_Test extends PHPUnit_Framework_TestCase
     	$this->person->save();
     	$id = $this->person->getMAX();
     	$this->person->load($id);
-    	$this->assertTrue(in_array('Administrator', $this->person->getAccessLevel()->getOptions()), 'testing the setEnumOptions method is loading enum options correctly');
+    	$this->assertTrue(in_array('Admin', $this->person->getAccessLevel()->getOptions()), 'testing the setEnumOptions method is loading enum options correctly');
     }
     
     /**
@@ -350,18 +350,18 @@ class DAO_Test extends PHPUnit_Framework_TestCase
      * testing set on an Enum attribute with a child method available, with $noChildMethods disabled (default)
      */
     public function testSetNoChildMethodsDisabled() {
-    	$this->person->set('accessLevel','Administrator');
+    	$this->person->set('accessLevel','Admin');
 
-    	$this->assertEquals('Administrator', $this->person->get('accessLevel')->getValue(), 'testing set on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
+    	$this->assertEquals('Admin', $this->person->get('accessLevel')->getValue(), 'testing set on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
     }
     
 	/**
      * testing set on an Enum attribute with a child method available, with $noChildMethods enabled
      */
     public function testSetNoChildMethodsEnabled() {
-    	$this->person->set('accessLevel','Administrator', true);
+    	$this->person->set('accessLevel','Admin', true);
     	    	
-    	$this->assertEquals('Administrator', $this->person->get('accessLevel')->getValue(), 'testing set on an Enum attribute with a child method avaialble, with $noChildMethods enabled');
+    	$this->assertEquals('Admin', $this->person->get('accessLevel')->getValue(), 'testing set on an Enum attribute with a child method avaialble, with $noChildMethods enabled');
     }
     
     /**

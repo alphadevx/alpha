@@ -52,7 +52,7 @@ class Enum_Test extends PHPUnit_Framework_TestCase
     	// table is an administrator
     	$this->person->load('1');
     	
-    	$this->assertEquals('Administrator', $this->person->getAccessLevel()->getValue(), "testing that enum options are loaded correctly from the database");
+    	$this->assertEquals('Admin', $this->person->getAccessLevel()->getValue(), "testing that enum options are loaded correctly from the database");
     }
     
     /**
