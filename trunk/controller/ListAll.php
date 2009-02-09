@@ -26,28 +26,28 @@ class ListAll extends Controller implements AlphaControllerInterface {
 	 * 
 	 * @var string
 	 */
-	private $BOname;
+	protected $BOname;
 	
 	/**
 	 * The new default View object used for rendering the onjects to list
 	 * 
 	 * @var View BOView
 	 */
-	private $BOView;
+	protected $BOView;
 	
 	/**
 	 * The start number for list pageination
 	 * 
 	 * @var integer 
 	 */
-	private $startPoint;
+	protected $startPoint;
 	
 	/**
 	 * The count of the BOs of this type in the database
 	 * 
 	 * @var integer
 	 */
-	private $BOCount = 0;
+	protected $BOCount = 0;
 	
 	/**
 	 * Trace logger
@@ -257,7 +257,7 @@ class ListAll extends Controller implements AlphaControllerInterface {
 		$temp = new $this->BOname;
 			
 		$objects = $temp->loadAll($this->startPoint, $config->get('sysListPageAmount'));
-			
+		
 		$this->BOCount = $this->BO->getCount();
 		
 		echo View::renderDeleteForm();
