@@ -1,7 +1,5 @@
 <?php
 
-// $Id$
-
 require_once $config->get('sysRoot').'alpha/model/types/DEnum.inc';
 require_once $config->get('sysRoot').'alpha/model/types/DEnumItem.inc';
 require_once $config->get('sysRoot').'alpha/view/View.inc';
@@ -10,25 +8,17 @@ require_once $config->get('sysRoot').'alpha/view/View.inc';
  *
  * The rendering class for the DEnum class
  * 
- * @package Alpha Scafolding
+ * @package alpha::view
  * @author John Collins <john@design-ireland.net>
- * @copyright 2008 John Collins
- * 
+ * @copyright 2009 John Collins
+ * @version $Id$
  * 
  */
-class DEnumView extends View
-{
+class DEnumView extends View {
 	/**
-	 * constructor for the DEnum	
-	 * @param DEnum $DEnum the DEnum object for rendering
-	 */
-	function DEnumView($DEnum)
-	{
-		parent::__construct($DEnum);
-	}	
-	
-	/**
-	 * Custom list view with no password field present.
+	 * Custom list view
+	 * 
+	 * @return string
 	 */
 	public function listView() {
 		global $config;
@@ -36,55 +26,57 @@ class DEnumView extends View
 		$reflection = new ReflectionClass(get_class($this->BO));
 		$properties = $reflection->getProperties();
 		$labels = $this->BO->getDataLabels();
-		$col_count = 1;
+		$colCount = 1;
 
-		echo '<table class="list_view">';
-		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
+		$html = '<table class="list_view">';
+		$html .= '<form action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'].'" method="POST">';
 		// first render all of the table headers
-		echo '<tr>';
+		$html .= '<tr>';
 		foreach($properties as $propObj) {
 			$prop = $propObj->name;
 			if (!in_array($prop, $this->BO->getDefaultAttributes()) && !in_array($prop, $this->BO->getTransientAttributes())) {
-				if (get_class($this->BO->getPropObject($prop)) != "Text") {
-					$col_count ++;
-					echo '	<th>'.$labels[$prop].'</th>';
+				if (get_class($this->BO->getPropObject($prop)) != 'Text') {
+					$colCount ++;
+					$html .= '	<th>'.$labels[$prop].'</th>';
 				}
 			}
-			if ($prop == "OID")
-				echo '	<th>'.$labels[$prop].'</th>';			
+			if ($prop == 'OID')
+				$html .= '	<th>'.$labels[$prop].'</th>';			
 		}
 		// render the count
-		echo '	<th>Item count</th>';
+		$html .= '	<th>Item count</th>';
 		
-		echo '</tr><tr>';
+		$html .= '</tr><tr>';
 
 		// and now the values
 		foreach($properties as $propObj) {
 			$prop = $propObj->name;
 			if (!in_array($prop, $this->BO->getDefaultAttributes()) && !in_array($prop, $this->BO->getTransientAttributes())) {
-				if (get_class($this->BO->getPropObject($prop)) != "Text") {
-					echo '	<td>&nbsp;'.$this->BO->get($prop).'</td>';
+				if (get_class($this->BO->getPropObject($prop)) != 'Text') {
+					$html .= '	<td>&nbsp;'.$this->BO->get($prop).'</td>';
 				}
 			}
-			if ($prop == "OID")
-				echo '	<td>&nbsp;'.$this->BO->getID().'</td>';
+			if ($prop == 'OID')
+				$html .= '	<td>&nbsp;'.$this->BO->getID().'</td>';
 		}
 		// render the count
-		echo '	<td>&nbsp;'.$this->BO->getItemCount().'</td>';
+		$html .= '	<td>&nbsp;'.$this->BO->getItemCount().'</td>';
 		
-		echo '</tr>';
+		$html .= '</tr>';
 
-		echo '<tr><td colspan="'.($col_count+1).'" align="center">';
+		$html .= '<tr><td colspan="'.($colCount+1).'" align="center">';
 		// render edit buttons for admins only
-		if (isset($_SESSION["current_user"]) && $_SESSION["current_user"]->getAccessLevel() == "Administrator") {
-			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/EditDEnum.php?oid=".$this->BO->getID()."'", "Edit", "editBut");
-			echo $temp->render();
+		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->getAccessLevel() == 'Admin') {
+			$html .= '&nbsp;&nbsp;';
+			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/EditDEnum.php?oid=".$this->BO->getID()."'", 'Edit', 'editBut');
+			$html .= $temp->render();
 		}
-		echo '</td></tr>';
+		$html .= '</td></tr>';
 
-		echo '</form>';
-		echo '</table>';
+		$html .= '</form>';
+		$html .= '</table>';
+		
+		return $html;
 	}
 	
 	/**
