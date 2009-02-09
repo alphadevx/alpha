@@ -4,6 +4,7 @@ require_once $config->get('sysRoot').'alpha/util/Logger.inc';
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/BONotFoundException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/FailedSaveException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/FailedDeleteException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/LockingException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/ValidationException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
@@ -680,20 +681,26 @@ abstract class DAO {
 					
 					// Handle MANY-TO-MANY rels
 					if($prop->getRelationType() == 'MANY-TO-MANY') {
+						self::$logger->debug('Deleting MANY-TO-MANY lookup objects...');
+						
 						// for overloaded tables, the classname != the table name
 						if($this->isTableOverloaded())
 							$className = $this->getTableName().'_object';
 						else
 							$className = get_class($this);
 											
-						$side = $prop->getSide($className);
-						$lookUp = $prop->getLookup();									
+						$side = $prop->getSide($className);						
+						self::$logger->debug('Side is ['.$side.']'.$this->getID());
+						
+						$lookUp = $prop->getLookup();
+						self::$logger->debug('Lookup object['.print_r($lookUp, true).']');
 										
 						// delete all of the old RelationLookup objects for this rel
 						if($side == 'left')
 							$lookUp->deleteAllByAttribute('leftID', $this->getID());
 						else
-							$lookUp->deleteAllByAttribute('rightID', $this->getID());						
+							$lookUp->deleteAllByAttribute('rightID', $this->getID());
+						self::$logger->debug('...done deleting!');
 					}
 					
 					// TODO
@@ -702,8 +709,8 @@ abstract class DAO {
 				}
 			}
 			
-			$this->clear();			
 			$this->commit();
+			$this->clear();
 		}else{			
 			throw new FailedDeleteException('Failed to delete object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
 			$this->rollback();
@@ -725,27 +732,29 @@ abstract class DAO {
 		if(method_exists($this, 'before_deleteAllByAttribute_callback'))
 			$this->before_deleteAllByAttribute_callback();
 		
-		if(!$this->isTableOverloaded())
-			$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE $attribute = '$value';";
-		else
-			$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE $attribute = '$value' AND classname = '".get_class($this)."';";					
-			
-		$this->lastQuery = $sqlQuery;
-
-		$result = mysql_query($sqlQuery);		
+		$doomedObjects = $this->loadAllByAttribute($attribute, $value);
+		$deletedRowCount = 0;
+		$this->begin();
 		
-		if(mysql_error() == '') {
-			if(method_exists($this, 'after_deleteAllByAttribute_callback'))
-				$this->after_deleteAllByAttribute_callback();
-			
-			$deletedRowCount = mysql_affected_rows();
-			self::$logger->debug('<<deleteAllByAttribute ['.$deletedRowCount.']');
-			return $deletedRowCount; 			
-		}else{
-			throw new FailedDeleteException('Failed to delete object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+		try {
+			foreach ($doomedObjects as $object) {
+				$object->delete();
+				$deletedRowCount++;
+			}
+		}catch (AlphaException $e) {
+			throw new FailedDeleteException('Failed to delete objects, error is ['.$e->getMessage().']');
 			self::$logger->debug('<<deleteAllByAttribute [0]');
+			$this->rollback();
 			return 0;
 		}
+		
+		$this->commit();
+		
+		if(method_exists($this, 'after_deleteAllByAttribute_callback'))
+			$this->after_deleteAllByAttribute_callback();
+			
+		self::$logger->debug('<<deleteAllByAttribute ['.$deletedRowCount.']');
+		return $deletedRowCount;
 	}
 	
 	/**
@@ -1862,8 +1871,10 @@ abstract class DAO {
 		
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
-			unset($this->$propName);
+			if(!$propObj->isPrivate())
+				unset($this->$propName);
 		}
+		
 		self::$logger->debug('<<clear');
 	}
 	
