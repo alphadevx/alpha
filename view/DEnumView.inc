@@ -68,7 +68,7 @@ class DEnumView extends View {
 		// render edit buttons for admins only
 		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->getAccessLevel() == 'Admin') {
 			$html .= '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/EditDEnum.php?oid=".$this->BO->getID()."'", 'Edit', 'editBut');
+			$temp = new button("document.location = '".FrontController::generateSecureURL('act=EditDEnum&oid='.$this->BO->getID())."'", 'Edit', 'editBut');
 			$html .= $temp->render();
 		}
 		$html .= '</td></tr>';
@@ -80,24 +80,24 @@ class DEnumView extends View {
 	}
 	
 	/**
-	 * draws a form to enable object editing
+	 * Custom edit view
+	 * 
+	 * @return string
 	 */
-	function edit_view() {
-		if(method_exists($this, 'before_edit_view_callback'))
-			$this->before_edit_view_callback();
-		
+	public function editView() {		
 		global $config;
 
-		$properties = get_object_vars($this->BO);
+		//$properties = get_object_vars($this->BO);
 		$labels = $this->BO->getDataLabels();
 		$obj_type = '';
 
-		echo '<table cols="2" class="edit_view">';
-		echo '<form action="'.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].'" method="POST">';
+		$html = '<table cols="2" class="edit_view">';
+		$html .= '<form action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'].'" method="POST">';
 		
-		$temp = new stringBox($this->BO->getPropObject("name"), $labels["name"], "name", "", 0, true, true);
+		$temp = new StringBox($this->BO->getPropObject('name'), $labels['name'], 'name', '', 0, true, true);
+		$html .= $temp->render();
 		
-		echo '<tr><td colspan="2"><h3>DEnum display values:</h3></td></tr>';
+		$html .= '<tr><td colspan="2"><h3>DEnum display values:</h3></td></tr>';
 		
 		// now get all of the options for the enum and render
 		$denum = $this->BO;
@@ -106,32 +106,31 @@ class DEnumView extends View {
 		
 		foreach ($denumItems as $item) {
 			$labels = $item->getDataLabels();
-			$temp = new stringBox($item->getPropObject("value"), $labels["value"], "value_".$item->getID(), "");
-			echo $temp->render();
+			$temp = new StringBox($item->getPropObject('value'), $labels['value'], 'value_'.$item->getID(), '');
+			$html .= $temp->render();
 		}
 		
-		echo '<input type="hidden" name="version_num" value="'.$this->BO->getVersion().'"/>';
+		$html .= '<input type="hidden" name="version_num" value="'.$this->BO->getVersion().'"/>';
 		
-		echo '<tr><td colspan="2"><h3>Add a new value to the DEnum dropdown list:</h3></td></tr>';
+		$html .= '<tr><td colspan="2"><h3>Add a new value to the DEnum dropdown list:</h3></td></tr>';
 		
-		$temp = new stringBox(new String(), $labels["value"], "new_value", "");
-		echo $temp->render();
+		$temp = new StringBox(new String(), $labels['value'], 'new_value', '');
+		$html .= $temp->render();
 		
-		echo '<tr><td colspan="2">';
+		$html .= '<tr><td colspan="2">';
 		
-		$temp = new button("submit", "Save", "saveBut");
-		echo $temp->render();
-		echo '&nbsp;&nbsp;';
-		$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/ListDEnums.php'", "Back to List", "cancelBut");
-		echo $temp->render();
-		echo '</td></tr>';
+		$temp = new button('submit', 'Save', 'saveBut');
+		$html .= $temp->render();
+		$html .= '&nbsp;&nbsp;';
+		$temp = new button("document.location = '".FrontController::generateSecureURL('act=ListDEnums')."'", 'Back to List', 'cancelBut');
+		$html .= $temp->render();
+		$html .= '</td></tr>';
 
-		echo $this->renderSecurityFields();
+		$html .= View::renderSecurityFields();
 		
-		echo '</form></table>';
+		$html .= '</form></table>';
 		
-		if(method_exists($this, 'after_edit_view_callback'))
-			$this->after_edit_view_callback();
+		return $html;
 	}
 }
 
