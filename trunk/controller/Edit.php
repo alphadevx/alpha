@@ -33,7 +33,7 @@ class Edit extends Controller implements AlphaControllerInterface {
 	 * 
 	 * @var string
 	 */
-	private $BOName;
+	protected $BOName;
 	
 	/**
 	 * The OID of the BO to be edited
