@@ -5,9 +5,11 @@ if(!isset($config))
 	require_once '../util/configLoader.inc';
 $config =&configLoader::getInstance();
 
+require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/util/Logger.inc';
 require_once $config->get('sysRoot').'alpha/util/convertors/BO2Excel.inc';
+require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
 /**
  *
@@ -15,11 +17,11 @@ require_once $config->get('sysRoot').'alpha/util/convertors/BO2Excel.inc';
  * 
  * @package alpha::controller
  * @author John Collins <john@design-ireland.net>
- * @copyright 2008 John Collins
+ * @copyright 2009 John Collins
  * @version $Id$
  * 
  */
-class ViewExcel extends Controller {
+class ViewExcel extends Controller implements AlphaControllerInterface {
 	/**
 	 * Trace logger
 	 * 
@@ -29,22 +31,14 @@ class ViewExcel extends Controller {
 	
 	/**
 	 * Constructor
-	 *
 	 */
 	public function __construct() {
 		if(self::$logger == null)
 			self::$logger = new Logger('ViewExcel');
 		self::$logger->debug('>>__construct()');
 		
-		// ensure to call the parent constructor
-		parent::__construct();
-		
-		if (!empty($_GET['bo']) && !empty($_GET['oid'])) {
-			$this->doGet($_GET);
-		}else{			
-			self::$logger->fatal('No BO and/or OID parameter available for ViewExcel controller!');
-			exit;
-		}
+		// ensure that the super class constructor is called, indicating the rights group
+		parent::__construct('Public');
 		
 		self::$logger->debug('<<__construct');
 	}
@@ -85,10 +79,28 @@ class ViewExcel extends Controller {
 		self::$logger->debug('<<__doGet');
 	}
 	
+	/**
+	 * Handle POST requests
+	 * 
+	 * @param array $params
+	 */
+	public function doPOST($params) {
+		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');		
+		
+		self::$logger->debug('<<doPOST');
+	}
+	
 }
 
-// now build the new controller
-if(basename($_SERVER['PHP_SELF']) == 'ViewExcel.php')
+// now build the new controller if this file is called directly
+if ('ViewExcel.php' == basename($_SERVER['PHP_SELF'])) {
 	$controller = new ViewExcel();
+	
+	if(!empty($_POST)) {			
+		$controller->doPOST($_POST);
+	}else{
+		$controller->doGET($_GET);
+	}
+}
 
 ?>
