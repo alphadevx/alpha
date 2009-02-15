@@ -122,29 +122,33 @@ class ListAll extends Controller implements AlphaControllerInterface {
 			// load the business object (BO) definition
 			if (isset($params['bo'])) {
 				$BOname = $params['bo'];
-				DAO::loadClassDef($BOname);
-				
-				$this->BO = new $BOname();		
-				$this->BOname = $BOname;		
-				$this->BOView = View::getInstance($this->BO);
-				
-				if (!empty($params['delete_oid'])) {
-					$temp = new $BOname();
-					$temp->load($params['delete_oid']);
-		
-					try {
-						$temp->delete();
-						
-						echo '<p class="success">'.$this->BOname.' '.$params['delete_oid'].' deleted successfully.</p>';
-						
-						$this->displayBodyContent();
-					}catch(AlphaException $e) {
-						self::$logger->error($e->getTraceAsString());
-						echo '<p class="error"><br>Error deleting the OID ['.$params['delete_oid'].'], check the log!</p>';
-					}
-				}
+				$this->BOname = $BOname;
+			}elseif(isset($this->BOname)) {
+				$BOname = $this->BOname;
 			}else{
 				throw new IllegalArguementException('No BO available to list!');
+			}
+			
+			DAO::loadClassDef($BOname);
+				
+			$this->BO = new $BOname();		
+			$this->BOname = $BOname;		
+			$this->BOView = View::getInstance($this->BO);
+				
+			if (!empty($params['delete_oid'])) {
+				$temp = new $BOname();
+				$temp->load($params['delete_oid']);
+		
+				try {
+					$temp->delete();
+						
+					echo '<p class="success">'.$this->BOname.' '.$params['delete_oid'].' deleted successfully.</p>';
+						
+					$this->displayBodyContent();
+				}catch(AlphaException $e) {
+					self::$logger->error($e->getTraceAsString());
+					echo '<p class="error"><br>Error deleting the OID ['.$params['delete_oid'].'], check the log!</p>';
+				}
 			}
 		}catch(SecurityException $e) {
 			echo '<p class="error"><br>'.$e->getMessage().'</p>';								
