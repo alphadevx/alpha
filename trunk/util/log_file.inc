@@ -123,10 +123,8 @@ class log_file {
  		echo '</tr>';
  		
  		// now read the file and render the data
- 		$log_file = file_get_contents($this->path);
- 		
- 		$regEx = '\\'.$this->seperator;
- 		$fields = split($regEx, $log_file); 			
+ 		$log_file = file_get_contents($this->path); 		
+ 		$fields = explode($this->seperator, $log_file); 		
 		$totalLines = (count($fields)-1)/count($cols);
  		
  		for($line = 0; $line < $totalLines; $line++) {
