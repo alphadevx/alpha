@@ -82,16 +82,19 @@ class ListAll extends Controller implements AlphaControllerInterface {
 			// load the business object (BO) definition
 			if (isset($params['bo'])) {
 				$BOname = $params['bo'];
-				DAO::loadClassDef($BOname);
-				
-				$this->BO = new $BOname();		
-				$this->BOname = $BOname;		
-				$this->BOView = View::getInstance($this->BO);
-				
-				echo View::displayPageHead($this);
+				$this->BOname = $BOname;
+			}elseif(isset($this->BOname)) {
+				$BOname = $this->BOname;
 			}else{
 				throw new IllegalArguementException('No BO available to list!');
 			}
+			
+			DAO::loadClassDef($BOname);
+				
+			$this->BO = new $BOname();
+			$this->BOView = View::getInstance($this->BO);
+				
+			echo View::displayPageHead($this);
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());
 		}
@@ -158,9 +161,12 @@ class ListAll extends Controller implements AlphaControllerInterface {
 	 */
 	public function before_displayPageHead_callback() {
 		// set up the title and meta details
-		$this->setTitle('Listing all '.$this->BOname);
-		$this->setDescription('Page listing all '.$this->BOname.'.');
-		$this->setKeywords('list,all,'.$this->BOname);
+		if(!isset($this->title))
+			$this->setTitle('Listing all '.$this->BOname);
+		if(!isset($this->description))
+			$this->setDescription('Page listing all '.$this->BOname.'.');
+		if(!isset($this->keywords))
+			$this->setKeywords('list,all,'.$this->BOname);
 		// set the start point for the list pagination
 		if (isset($_GET['start']) ? $this->startPoint = $_GET['start']: $this->startPoint = 0);
 	}
