@@ -22,6 +22,13 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.
 */
 class Create extends Controller implements AlphaControllerInterface {
 	/**
+	 * The name of the BO
+	 * 
+	 * @var string
+	 */
+	protected $BOname;
+	
+	/**
 	 * The new BO to be created
 	 * 
 	 * @var Object
@@ -67,29 +74,36 @@ class Create extends Controller implements AlphaControllerInterface {
 		try{
 			// load the business object (BO) definition
 			if (isset($params['bo'])) {
-				$BOName = $params['bo'];
-				DAO::loadClassDef($BOName);
-		
-				/*
-				 *  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
-				 */
-				$this->loadCustomController($BOName, 'create');
-		
-				$this->BO = new $BOName();
-				
-				$this->BOView = View::getInstance($this->BO);
-				
-				// set up the title and meta details
-				$this->setTitle('Create a new '.$BOName);
-				$this->setDescription('Page to create a new '.$BOName.'.');
-				$this->setKeywords('create,new,'.$BOName);				
-						
-				echo View::displayPageHead($this);
-				
-				echo $this->BOView->createView();
+				$BOname = $params['bo'];
+				$this->BOname = $BOname;
+			}elseif(isset($this->BOname)) {
+				$BOname = $this->BOname;
 			}else{
-				throw new IllegalArguementException('No BO available to display!');
+				throw new IllegalArguementException('No BO available to create!');
 			}
+			
+			DAO::loadClassDef($BOname);
+		
+			/*
+			 *  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
+			 */
+			$this->loadCustomController($BOname, 'create');
+		
+			$this->BO = new $BOname();
+				
+			$this->BOView = View::getInstance($this->BO);
+				
+			// set up the title and meta details
+			if(!isset($this->title))
+				$this->setTitle('Create a new '.$BOname);
+			if(!isset($this->description))
+				$this->setDescription('Page to create a new '.$BOname.'.');
+			if(!isset($this->keywords))
+				$this->setKeywords('create,new,'.$BOname);				
+						
+			echo View::displayPageHead($this);
+				
+			echo $this->BOView->createView();
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());
 		}
@@ -115,33 +129,37 @@ class Create extends Controller implements AlphaControllerInterface {
 			
 			// load the business object (BO) definition
 			if (isset($params['bo'])) {
-				$BOName = $params['bo'];
-				DAO::loadClassDef($BOName);
-				
-				$this->BO = new $BOName();
-		
-				if (isset($params['createBut'])) {			
-					// populate the transient object from post data
-					$this->BO->populateFromPost();
-					
-					// check to see if a person is being created, then encrypt the password
-					if (get_class($this->BO) == 'person_object' && isset($params['password']))
-						$this->BO->set('password', crypt($params['password']));
-							
-					$this->BO->save();			
-	
-					try {
-						if ($this->getNextJob() != '')					
-							header('Location: '.$this->getNextJob());
-						else					
-							header('Location: '.FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID()));
-					}catch(AlphaException $e) {
-						self::$logger->error($e->getTraceAsString());
-						echo '<p class="error"><br>Error creating the new ['.$BOName.'], check the log!</p>';
-					}
-				}
+				$BOname = $params['bo'];
+				$this->BOname = $BOname;
+			}elseif(isset($this->BOname)) {
+				$BOname = $this->BOname;
 			}else{
 				throw new IllegalArguementException('No BO available to create!');
+			}
+			
+			DAO::loadClassDef($BOname);
+				
+			$this->BO = new $BOname();
+		
+			if (isset($params['createBut'])) {			
+				// populate the transient object from post data
+				$this->BO->populateFromPost();
+					
+				// check to see if a person is being created, then encrypt the password
+				if (get_class($this->BO) == 'person_object' && isset($params['password']))
+					$this->BO->set('password', crypt($params['password']));
+							
+				$this->BO->save();			
+	
+				try {
+					if ($this->getNextJob() != '')					
+						header('Location: '.$this->getNextJob());
+					else					
+						header('Location: '.FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID()));
+				}catch(AlphaException $e) {
+					self::$logger->error($e->getTraceAsString());
+					echo '<p class="error"><br>Error creating the new ['.$BOname.'], check the log!</p>';
+				}
 			}
 			
 			if (isset($params['cancelBut'])) {
