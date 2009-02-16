@@ -100,7 +100,7 @@ class ArticleCommentView extends View {
 		echo '<input type="hidden" name="article_comment_id" value="'.$this->BO->getID().'"/>';
 		
 		// render special buttons for admins only
-		if ($_SESSION['currentUser']->getAccessLevel() == "Administrator") {
+		if ($_SESSION['currentUser']->inGroup('Admin')) {
 			echo '<tr><td colspan="2">';
 			
 			$temp = new button('submit', 'Save', 'saveBut');

@@ -63,6 +63,15 @@ class rights_object extends DAO {
 	}
 	
 	/**
+	 * Get the group members Relation
+	 *
+	 * @return Relation
+	 */
+	public function getMembers() {
+		return $this->members;
+	}
+	
+	/**
 	 * Set up the transient attributes for the rights group after it has loaded
 	 */
 	protected function after_load_callback() {
@@ -75,6 +84,13 @@ class rights_object extends DAO {
 		$this->members->setRelatedClassDisplayField('name', 'right');
 		$this->members->setRelationType('MANY-TO-MANY');
 		$this->members->setValue($this->getID());
+	}
+	
+	/**
+	 * Set up the transient attributes for the rights group after it has loaded
+	 */
+	protected function after_loadByAttribute_callback() {
+		$this->after_load_callback();
 	}
 }
 

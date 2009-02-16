@@ -257,7 +257,7 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 		}
 		
 		// render edit button for admins only
-		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->getAccessLevel() == 'Admin') {
+		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
 			$html .= '&nbsp;&nbsp;';
 			$button = new button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."'",'Edit','editBut');
 			$html .= $button->render();

@@ -743,7 +743,6 @@ abstract class Controller {
 	 * not got the correct rights.
 	 * 
 	 * @return boolean
-	 * @todo modify to use new rights_object class
 	 */
 	public function checkRights() {
 		self::$logger->debug('>>checkRights()');
@@ -761,14 +760,14 @@ abstract class Controller {
 		}else{
 			// the person is logged in?
 			if (isset($_SESSION['currentUser'])) {
-				// checking for admins (can access everything)
-				if ($_SESSION['currentUser']->getAccessLevel() == 'Admin') {
+				// checking for admins (can access everything)				
+				if ($_SESSION['currentUser']->inGroup('Admin')) {
 					if(method_exists($this, 'after_checkRights_callback'))
 						$this->after_checkRights_callback();
 					
 					self::$logger->debug('<<checkRights [true]');
 					return true;
-				} elseif ($_SESSION['currentUser']->getAccessLevel() == $this->getVisibility()) {
+				} elseif ($_SESSION['currentUser']->inGroup($this->getVisibility())) {
 					if(method_exists($this, 'after_checkRights_callback'))
 						$this->after_checkRights_callback();
 					
