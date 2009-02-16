@@ -66,7 +66,7 @@ class DEnumView extends View {
 
 		$html .= '<tr><td colspan="'.($colCount+1).'" align="center">';
 		// render edit buttons for admins only
-		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->getAccessLevel() == 'Admin') {
+		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
 			$html .= '&nbsp;&nbsp;';
 			$temp = new button("document.location = '".FrontController::generateSecureURL('act=EditDEnum&oid='.$this->BO->getID())."'", 'Edit', 'editBut');
 			$html .= $temp->render();
