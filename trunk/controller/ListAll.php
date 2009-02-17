@@ -57,9 +57,11 @@ class ListAll extends Controller implements AlphaControllerInterface {
 	private static $logger = null;
 								
 	/**
-	 * constructor to set up the object
+	 * Constructor to set up the object
+	 * 
+	 * @param string $visibility
 	 */
-	public function __construct() {
+	public function __construct($visibility='Admin') {
 		if(self::$logger == null)
 			self::$logger = new Logger('ListAll');
 		self::$logger->debug('>>__construct()');
@@ -67,7 +69,7 @@ class ListAll extends Controller implements AlphaControllerInterface {
 		global $config;
 				
 		// ensure that the super class constructor is called, indicating the rights group
-		parent::__construct('Admin');
+		parent::__construct($visibility);
 		
 		self::$logger->debug('<<__construct');
 	}
