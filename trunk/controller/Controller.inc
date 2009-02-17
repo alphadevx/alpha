@@ -860,26 +860,29 @@ abstract class Controller {
 
 		self::$logger->debug('Custom controller name is ['.$controllerName.']');
 		
-		if (file_exists($config->get('sysRoot').'controller/'.$controllerName.'.php')) {
-			self::$logger->debug('Custom controller found, redirecting...');
-			// handle secure URLs
-			if(isset($_GET['tk'])) {
-				$params = FrontController::decodeQueryParams($_GET['tk']);
-				header('Location: '.FrontController::generateSecureURL('act='.$controllerName.'&'.$params));
-			}else{
-				header('Location: '.$config->get('sysURL').'/controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING']);
+		// just making sure that we are not already using the custom controller
+		if(get_class($this) != $controllerName) {
+			if (file_exists($config->get('sysRoot').'controller/'.$controllerName.'.php')) {
+				self::$logger->debug('Custom controller found, redirecting...');
+				// handle secure URLs
+				if(isset($_GET['tk'])) {
+					$params = FrontController::decodeQueryParams($_GET['tk']);
+					header('Location: '.FrontController::generateSecureURL('act='.$controllerName.'&'.$params));
+				}else{
+					header('Location: '.$config->get('sysURL').'controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING']);
+				}
 			}
-		}
-
-		if (file_exists($config->get('sysRoot').'alpha/controller/'.$controllerName.'.php')) {
-			self::$logger->debug('Custom controller found, redirecting...');
-			// handle secure URLs
-			if(isset($_GET['tk'])) {
-				$params = FrontController::decodeQueryParams($_GET['tk']);
-				header('Location: '.FrontController::generateSecureURL('act='.$controllerName.'&'.$params));
-			}else{
-				header('Location: '.$config->get('sysURL').'/alpha/controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING']);
-			}	
+	
+			if (file_exists($config->get('sysRoot').'alpha/controller/'.$controllerName.'.php')) {
+				self::$logger->debug('Custom controller found, redirecting...');
+				// handle secure URLs
+				if(isset($_GET['tk'])) {
+					$params = FrontController::decodeQueryParams($_GET['tk']);
+					header('Location: '.FrontController::generateSecureURL('act='.$controllerName.'&'.$params));
+				}else{
+					header('Location: '.$config->get('sysURL').'alpha/controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING']);
+				}	
+			}
 		}
 		
 		self::$logger->debug('<<loadCustomController');
