@@ -147,7 +147,7 @@ class ListBusinessObjects extends Controller implements AlphaControllerInterface
 		
 		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
 			$html .= '<p align="center"><a href="'.$config->get('sysURL').'">Home Page</a>&nbsp;-';
-			$html .= '<a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'alpha/util/logs/alpha.log').'">System Log</a>&nbsp;-&nbsp;';
+			$html .= '<a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysLogFile')).'">System Log</a>&nbsp;-&nbsp;';
 			$html .= '<a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'alpha/util/logs/search_log.log').'">Search Log</a>&nbsp;-&nbsp;';
 			$html .= '<a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'alpha/util/logs/feed_log.log').'">Feed Log</a>&nbsp;-&nbsp;';
 			$html .= '<a href="'.FrontController::generateSecureURL('act=gen_secure_query_strings').'">Generate Secure URL</a>&nbsp;-&nbsp;';
