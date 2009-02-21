@@ -151,7 +151,7 @@ class ListBusinessObjects extends Controller implements AlphaControllerInterface
 			$html .= '<a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'alpha/util/logs/search_log.log').'">Search Log</a>&nbsp;-&nbsp;';
 			$html .= '<a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'alpha/util/logs/feed_log.log').'">Feed Log</a>&nbsp;-&nbsp;';
 			$html .= '<a href="'.FrontController::generateSecureURL('act=gen_secure_query_strings').'">Generate Secure URL</a>&nbsp;-&nbsp;';
-			$html .= '<a href="'.FrontController::generateSecureURL('act=view_metrics').'">Software Metrics</a>&nbsp;-&nbsp;';
+			$html .= '<a href="'.FrontController::generateSecureURL('act=ViewMetrics').'">Software Metrics</a>&nbsp;-&nbsp;';
 			$html .= '<a href="'.FrontController::generateSecureURL('act=CacheManager').'">Manage Cache</a>&nbsp;-&nbsp;';
 			$html .= '<a href="'.FrontController::generateSecureURL('act=ListDEnums').'">Manage DEnums</a>&nbsp;-&nbsp;';
 			$html .= '<a href="'.FrontController::generateSecureURL('act=ViewTestResults').'">Unit Tests</a></p>';
