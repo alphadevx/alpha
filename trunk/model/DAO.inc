@@ -1194,6 +1194,9 @@ abstract class DAO {
 	 * @return mixed
 	 */
 	public function get($prop, $noChildMethods = false) {
+		if(self::$logger == null)
+			self::$logger = new Logger('DAO');
+			
 		self::$logger->debug('>>get(prop=['.$prop.'], noChildMethods=['.$noChildMethods.'])');
 		
 		if(method_exists($this, 'before_get_callback'))
