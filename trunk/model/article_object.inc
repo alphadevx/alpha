@@ -181,12 +181,12 @@ class article_object extends DAO
 			if(isset($front) && $front->hasAlias('view_article_title')) {
 				$alias = $front->getControllerAlias('view_article_title');
 				
-				$this->URL = $config->get('sysURL').'/'.$alias.'/'.str_replace(' ', '_', $this->title->getValue());
+				$this->URL = $config->get('sysURL').$alias.'/'.str_replace(' ', '_', $this->title->getValue());
 			}else{
-				$this->URL = $config->get('sysURL').'/view_article_title/title/'.str_replace(' ', '_', $this->title->getValue());
+				$this->URL = $config->get('sysURL').'view_article_title/title/'.str_replace(' ', '_', $this->title->getValue());
 			}
 		}else{
-			$this->URL = $config->get('sysURL').'/alpha/controller/view_article.php?oid='.$this->getID();
+			$this->URL = $config->get('sysURL').'alpha/controller/ViewArticle.php?oid='.$this->getID();
 		}
 		
 		// now set up the print version URL
@@ -195,12 +195,12 @@ class article_object extends DAO
 			if(isset($front) && $front->hasAlias('view_article_print')) {
 				$alias = $front->getControllerAlias('view_article_print');
 				
-				$this->printURL = $config->get('sysURL').'/'.$alias.'/'.str_replace(' ', '_', $this->title->getValue());
+				$this->printURL = $config->get('sysURL').$alias.'/'.str_replace(' ', '_', $this->title->getValue());
 			}else{
-				$this->printURL = $config->get('sysURL').'/view_article_print/title/'.str_replace(' ', '_', $this->title->getValue());
+				$this->printURL = $config->get('sysURL').'view_article_print/title/'.str_replace(' ', '_', $this->title->getValue());
 			}
 		}else{
-			$this->printURL = $config->get('sysURL').'/alpha/controller/view_article_print.php?title='.$this->title->getValue();
+			$this->printURL = $config->get('sysURL').'alpha/controller/ViewArticlePrint.php?title='.$this->title->getValue();
 		}
 	}
 	
