@@ -77,11 +77,16 @@ class log_file {
 				$mergedLine .= $value.$this->seperator;				
  		}
  		
- 		file_put_contents($this->path, $mergedLine, FILE_APPEND|LOCK_EX);
- 		
-		if($this->check_file_size() >= $this->max_size) {			
-			$this->backup_file();	
-		}
+ 		try{
+ 			file_put_contents($this->path, $mergedLine, FILE_APPEND|LOCK_EX);
+ 			
+ 			if($this->check_file_size() >= $this->max_size) {			
+				$this->backup_file();	
+			}
+ 		}catch(Exception $e) {
+ 			echo '<p class="error"><br>Unable to write to the log file ['.$this->path.'], error ['.$e->getMessage().']</p>';
+ 			exit;	
+ 		}
  	}
  	
  	/**
