@@ -11,7 +11,7 @@ require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 require_once $config->get('sysRoot').'alpha/view/View.inc';
-require_once $config->get('sysRoot').'alpha/util/log_file.inc';
+require_once $config->get('sysRoot').'alpha/util/LogFile.inc';
 
 // load the business object (BO) definition
 if (isset($_GET["bo"])) {
@@ -252,8 +252,8 @@ class Search extends Controller
 		}	
 	
 		// log the user's search query in a log file
-		$search_log = new log_file($config->get('sysRoot').'alpha/util/logs/search_log.log');		
-		$search_log->write_line(array($this->query, date("Y-m-d H:i:s"), $_SERVER["HTTP_USER_AGENT"], $_SERVER["REMOTE_ADDR"]));
+		$search_log = new LogFile($config->get('sysRoot').'alpha/util/logs/search_log.log');		
+		$search_log->writeLine(array($this->query, date("Y-m-d H:i:s"), $_SERVER["HTTP_USER_AGENT"], $_SERVER["REMOTE_ADDR"]));
 		
 		// now we will peform a sort on the parallel arrays, sorted by matching word count!	
 	

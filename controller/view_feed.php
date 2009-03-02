@@ -9,7 +9,7 @@ require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/util/feeds/RSS2.inc';
 require_once $config->get('sysRoot').'alpha/util/feeds/RSS.inc';
 require_once $config->get('sysRoot').'alpha/util/feeds/Atom.inc';
-require_once $config->get('sysRoot').'alpha/util/log_file.inc';
+require_once $config->get('sysRoot').'alpha/util/LogFile.inc';
 
 /**
  *
@@ -110,8 +110,8 @@ class view_feed extends Controller
 		echo $feed->dump();
 		
 		// log the request for this news feed
-		$feed_log = new log_file($config->get('sysRoot').'alpha/util/logs/feed_log.log');		
-		$feed_log->write_line(array($this->BO_name, $this->type, date("Y-m-d H:i:s"), $_SERVER["HTTP_USER_AGENT"], $_SERVER["REMOTE_ADDR"]));
+		$feed_log = new LogFile($config->get('sysRoot').'alpha/util/logs/feed_log.log');		
+		$feed_log->writeLine(array($this->BO_name, $this->type, date("Y-m-d H:i:s"), $_SERVER["HTTP_USER_AGENT"], $_SERVER["REMOTE_ADDR"]));
 	}
 	
 	/**
