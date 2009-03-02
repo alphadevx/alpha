@@ -6,11 +6,42 @@ $config =&configLoader::getInstance();
 
 require_once $config->get('sysRoot').'alpha/util/LogFile.inc';
 
+/**
+ * Log class used for debug and exception logging
+ * 
+ * @package alpha::util
+ * @author John Collins <john@design-ireland.net>
+ * @copyright 2009 John Collins
+ * @version $Id$
+ *
+ */
 class Logger {
+	/**
+	 * The log file the log entries will be saved to
+	 *
+	 * @var LogFile
+	 */
 	private $logfile;
+	
+	/**
+	 * The logging level applied accross the system.  Valid options are DEBUG, INFO, WARN, ERROR and FATAL
+	 *
+	 * @var string
+	 */
 	private $level;
+	
+	/**
+	 * The name of the class that this Logger is logging for
+	 *
+	 * @var string
+	 */
 	private $classname;
 	
+	/**
+	 * The constructor
+	 *
+	 * @param string $classname
+	 */
 	public function __construct($classname) {
 		global $config;
 		
@@ -20,6 +51,11 @@ class Logger {
 		$this->logfile->setMaxSize($config->get('sysLogFileMaxSize'));
 	}
 	
+	/**
+	 * Log a DEBUG message
+	 *
+	 * @param string $message
+	 */
 	public function debug($message) {		
 		$dateTime = date("Y-m-d H:i:s");		
 		
@@ -27,6 +63,11 @@ class Logger {
 			$this->logfile->writeLine(array($dateTime, 'DEBUG', $this->classname, $message));
 	}
 	
+	/**
+	 * Log an INFO message
+	 *
+	 * @param string $message
+	 */
 	public function info($message) {
 		$dateTime = date("Y-m-d H:i:s");		
 		
@@ -34,6 +75,11 @@ class Logger {
 			$this->logfile->writeLine(array($dateTime, 'INFO', $this->classname, $message));
 	}
 	
+	/**
+	 * Log a WARN message
+	 *
+	 * @param string $message
+	 */
 	public function warn($message) {
 		$dateTime = date("Y-m-d H:i:s");		
 		
@@ -41,6 +87,11 @@ class Logger {
 			$this->logfile->writeLine(array($dateTime, 'WARN', $this->classname, $message));
 	}
 	
+	/**
+	 * Log an ERROR message
+	 *
+	 * @param string $message
+	 */
 	public function error($message) {
 		$dateTime = date("Y-m-d H:i:s");		
 		
@@ -48,6 +99,11 @@ class Logger {
 			$this->logfile->writeLine(array($dateTime, 'ERROR', $this->classname, $message));
 	}
 	
+	/**
+	 * Log a FATAL message
+	 *
+	 * @param string $message
+	 */
 	public function fatal($message) {
 		$dateTime = date("Y-m-d H:i:s");		
 		
@@ -56,7 +112,9 @@ class Logger {
 	}
 	
 	/**
-	 * Notify the sys admin when a serious error occurs
+	 * Notify the sys admin via email when a serious error occurs
+	 * 
+	 * @param string $message
 	 */
 	public function notifyAdmin($message) {
 		global $config;
