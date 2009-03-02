@@ -1,77 +1,89 @@
 <?php
 
-// $Id$
-
 /**
  *
- * Generic log_file class to encapsulate common file I/O calls 
+ * Generic log file class to encapsulate common file I/O and rendering calls 
  * 
- * @package Alpha Core Util
+ * @package alpha::util
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins
+ * @copyright 2009 John Collins
+ * @version $Id$
  * 
  */
- 
-class log_file {
+class LogFile {
  	/**
- 	 * the log file path
+ 	 * The log file path
+ 	 * 
  	 * @var string
  	 */
- 	var $path; 	
+ 	private $path;
+ 	 	
  	/**
- 	 * an array of column headers use when rendering the log file
+ 	 * An array of column headers use when rendering the log file
+ 	 * 
  	 * @var array
  	 */
- 	var $column_headers;
- 	/**
- 	 * the value-seperator to use in the file (default is a comma)
- 	 * @var string
- 	 */
- 	var $seperator = '|';
- 	/**
- 	 * the maximum size of the log file before a backup is created and a new file is started
- 	 * var int
- 	 */
- 	var $max_size = 5;
+ 	private $columnHeadings;
  	
  	/**
- 	 * the constructor
+ 	 * The value seperator to use in the file (default is a pipe)
+ 	 * 
+ 	 * @var string
+ 	 */
+ 	private $seperator = '|';
+ 	
+ 	/**
+ 	 * The maximum size of the log file in megabytes before a backup is created and a 
+ 	 * new file is created, default is 5
+ 	 * 
+ 	 * @var int
+ 	 */
+ 	private $MaxSize = 5;
+ 	
+ 	/**
+ 	 * The constructor
+ 	 * 
  	 * @param string $path
  	 */
- 	function log_file($path) {
+ 	public function __construct($path) {
  		$this->path = $path; 		
  	}
  	
  	/**
- 	 * change the max log size from the default of 800
- 	 * @param int $max_size
+ 	 * Set the max log size in megabytes
+ 	 * 
+ 	 * @param int $MaxSize
  	 */
- 	function set_max_size($max_size) {
- 		$this->max_size = $max_size;
+ 	public function setMaxSize($MaxSize) {
+ 		$this->MaxSize = $MaxSize;
  	}
  	
  	/**
- 	 * change the value seperator from the default of a comma
- 	 * @param int $max_size
+ 	 * Set the value seperator
+ 	 * 
+ 	 * @param string $seperator
  	 */
- 	function set_seperator($seperator) {
+ 	public function setSeperator($seperator) {
  		$this->seperator = $seperator;
  	}
  	
  	/**
- 	 * writes a line of data to the log file
- 	 * $param array $line the line of data to write
+ 	 * Writes a line of data to the log file
+ 	 * 
+ 	 * $param array $line
  	 */
- 	function write_line($line) {
+ 	public function writeLine($line) {
  		$mergedLine = '';
  		
- 		$col_count = count($line); 		
+ 		$colCount = count($line); 		
  		
- 		for($i = 0; $i < $col_count; $i++) {
- 			// we need to ensure that the seperator is not in the value anywhere, as it
- 			// would cause problems later when reading the log
- 			$value = str_replace($this->seperator, "", $line[$i]);
-			if ($i == ($col_count-1))
+ 		for($i = 0; $i < $colCount; $i++) {
+ 			/*
+ 			 * we need to ensure that the seperator is not in the value anywhere, as it
+ 			 * would cause problems later when reading the log
+ 			 */
+ 			$value = str_replace($this->seperator, '', $line[$i]);
+			if ($i == ($colCount-1))
 				$mergedLine .= $value.$this->seperator."\n";				
 			else
 				$mergedLine .= $value.$this->seperator;				
@@ -80,8 +92,8 @@ class log_file {
  		try{
  			file_put_contents($this->path, $mergedLine, FILE_APPEND|LOCK_EX);
  			
- 			if($this->check_file_size() >= $this->max_size) {			
-				$this->backup_file();	
+ 			if($this->checkFileSize() >= $this->MaxSize) {			
+				$this->backupFile();	
 			}
  		}catch(Exception $e) {
  			echo '<p class="error"><br>Unable to write to the log file ['.$this->path.'], error ['.$e->getMessage().']</p>';
@@ -90,36 +102,39 @@ class log_file {
  	}
  	
  	/**
- 	 * returns the size in megabytes of the log file on disc
+ 	 * Returns the size in megabytes of the log file on disc
+ 	 * 
  	 * @return float
  	 */
- 	function check_file_size() {		
+ 	private function checkFileSize() {		
 		$size = filesize($this->path);
 		
 		return ($size/1024)/1024;
  	}
  	
  	/**
- 	 * creates a backup of the log file, which is the same file name and location plus a timestamp
+ 	 * Creates a backup of the log file, which has the same file name and location as the 
+ 	 * current file plus a timestamp appended
  	 */
- 	function backup_file() {
+ 	private function backupFile() {
  		// generate the name of the backup file name to contain a timestampe
- 		$backName = str_replace(".log", "-backup-".date("y-m-d H.i.s").".log", $this->path);
+ 		$backName = str_replace('.log', '-backup-'.date("y-m-d H.i.s").'.log', $this->path);
  		
- 		//renames the logfile as the value of $backName
+ 		// renames the logfile as the value of $backName
 		rename($this->path, $backName);
 		//creates a new log file, and sets it's permission for writting!
-		$fp = fopen($this->path, "a+"); // remember set directory permissons to allow creation!
+		$fp = fopen($this->path, 'a+'); // remember set directory permissons to allow creation!
 		fclose($fp);
 		//sets the new permission to rw+:rw+:rw+
 		chmod($this->path, 0666);		
  	}
  	
  	/**
- 	 * renders a log file as a HTML table
- 	 * $param array $cols the headings to use when rendering the log file
+ 	 * Renders a log file as a HTML table
+ 	 * 
+ 	 * $param array $cols The headings to use when rendering the log file
  	 */
- 	function render_log($cols) {
+ 	public function renderLog($cols) {
  		// render the start of the table
  		echo '<table class="log_file">';
  		echo '<tr>';
@@ -128,8 +143,8 @@ class log_file {
  		echo '</tr>';
  		
  		// now read the file and render the data
- 		$log_file = file_get_contents($this->path); 		
- 		$fields = explode($this->seperator, $log_file); 		
+ 		$LogFile = file_get_contents($this->path); 		
+ 		$fields = explode($this->seperator, $LogFile); 		
 		$totalLines = (count($fields)-1)/count($cols);
  		
  		for($line = 0; $line < $totalLines; $line++) {

@@ -6,7 +6,7 @@
 require_once 'configLoader.inc';
 $config =&configLoader::getInstance();
 
-require_once $config->get('sysRoot').'alpha/util/log_file.inc';
+require_once $config->get('sysRoot').'alpha/util/LogFile.inc';
 
 /**
  *
@@ -117,9 +117,9 @@ require_once $config->get('sysRoot').'alpha/util/log_file.inc';
 		// before writting the error to the log file, will will strip out any line returns from the message
 		$this->message = str_replace("\n", "", $this->message);
 		
-		$error_log = new log_file($config->get('sysErrorLogFile'));
-		$error_log->set_max_size($config->get('sysErrorLogFileMaxEntires'));	
-		$error_log->write_line(array($dateTime, $this->sys_file, $this->method, $this->message, $this->type, $ip, $host, $browser));
+		$error_log = new LogFile($config->get('sysErrorLogFile'));
+		$error_log->setMaxSize($config->get('sysErrorLogFileMaxEntires'));	
+		$error_log->writeLine(array($dateTime, $this->sys_file, $this->method, $this->message, $this->type, $ip, $host, $browser));
 	}
 	
 	/**

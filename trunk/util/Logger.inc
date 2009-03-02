@@ -4,7 +4,7 @@
 require_once 'configLoader.inc';
 $config =&configLoader::getInstance();
 
-require_once $config->get('sysRoot').'alpha/util/log_file.inc';
+require_once $config->get('sysRoot').'alpha/util/LogFile.inc';
 
 class Logger {
 	private $logfile;
@@ -16,43 +16,43 @@ class Logger {
 		
 		$this->classname = $classname;
 		$this->level = $config->get('sysTraceLevel');
-		$this->logfile = new log_file($config->get('sysLogFile'));
-		$this->logfile->set_max_size($config->get('sysLogFileMaxSize'));
+		$this->logfile = new LogFile($config->get('sysLogFile'));
+		$this->logfile->setMaxSize($config->get('sysLogFileMaxSize'));
 	}
 	
 	public function debug($message) {		
 		$dateTime = date("Y-m-d H:i:s");		
 		
 		if($this->level == 'DEBUG')
-			$this->logfile->write_line(array($dateTime, 'DEBUG', $this->classname, $message));
+			$this->logfile->writeLine(array($dateTime, 'DEBUG', $this->classname, $message));
 	}
 	
 	public function info($message) {
 		$dateTime = date("Y-m-d H:i:s");		
 		
 		if($this->level == 'DEBUG' || $this->level == 'INFO')
-			$this->logfile->write_line(array($dateTime, 'INFO', $this->classname, $message));
+			$this->logfile->writeLine(array($dateTime, 'INFO', $this->classname, $message));
 	}
 	
 	public function warn($message) {
 		$dateTime = date("Y-m-d H:i:s");		
 		
 		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN')
-			$this->logfile->write_line(array($dateTime, 'WARN', $this->classname, $message));
+			$this->logfile->writeLine(array($dateTime, 'WARN', $this->classname, $message));
 	}
 	
 	public function error($message) {
 		$dateTime = date("Y-m-d H:i:s");		
 		
 		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR')
-			$this->logfile->write_line(array($dateTime, 'ERROR', $this->classname, $message));
+			$this->logfile->writeLine(array($dateTime, 'ERROR', $this->classname, $message));
 	}
 	
 	public function fatal($message) {
 		$dateTime = date("Y-m-d H:i:s");		
 		
 		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' || $this->level == 'FATAL')
-			$this->logfile->write_line(array($dateTime, 'FATAL', $this->classname, $message));
+			$this->logfile->writeLine(array($dateTime, 'FATAL', $this->classname, $message));
 	}
 	
 	/**

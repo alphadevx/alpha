@@ -9,7 +9,7 @@ require_once $config->get('sysRoot').'alpha/util/Logger.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
-require_once $config->get('sysRoot').'alpha/util/log_file.inc';
+require_once $config->get('sysRoot').'alpha/util/LogFile.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
 require_once $config->get('sysRoot').'alpha/view/View.inc';
 
@@ -73,13 +73,13 @@ class ViewLog extends Controller implements AlphaControllerInterface{
 		
 		$this->logPath = $logPath;
 		
-		$log = new log_file($this->logPath);
+		$log = new LogFile($this->logPath);
 		if(preg_match("/alpha.*/", basename($this->logPath)))
-			$log->render_log(array('Date/time','Level','Class','Message'));
+			$log->renderLog(array('Date/time','Level','Class','Message'));
 		if(preg_match("/search_log.*/", basename($this->logPath)))
-			$log->render_log(array("Search query","Search date","Client Application","Client IP"));
+			$log->renderLog(array("Search query","Search date","Client Application","Client IP"));
 		if(preg_match("/feed_log.*/", basename($this->logPath)))
-			$log->render_log(array("Business object","Feed type","Request date","Client Application","Client IP"));		
+			$log->renderLog(array("Business object","Feed type","Request date","Client Application","Client IP"));		
 		
 		echo View::displayPageFoot($this);
 		self::$logger->debug('<<doGET');
