@@ -9,7 +9,7 @@ require_once $config->get('sysRoot').'alpha/util/Logger.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
-require_once $config->get('sysRoot').'alpha/util/LOC/metrics.inc';
+require_once $config->get('sysRoot').'alpha/util/LOC/AlphaMetrics.inc';
 require_once $config->get('sysRoot').'alpha/view/View.inc';
 
 /**
@@ -59,9 +59,9 @@ class ViewMetrics extends Controller implements AlphaControllerInterface{
 
 		$dir = $config->get('sysRoot');
 		
-		$metrics = new metrics($dir);
-		$metrics->calculate_LOC();
-		$metrics->results_to_HTML();
+		$metrics = new AlphaMetrics($dir);
+		$metrics->calculateLOC();
+		echo $metrics->resultsToHTML();
 		
 		echo View::displayPageFoot($this);
 		self::$logger->debug('<<doGET');
@@ -87,6 +87,25 @@ class ViewMetrics extends Controller implements AlphaControllerInterface{
 		global $config;
 		
 		$html = '<p align="center"><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Administration Home Page</a></p>';
+		
+		return $html;
+	}
+	
+	public function during_displayPageHead_callback() {
+		global $config;
+		
+		$html = '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jquery.pack.js"></script>'; 
+		
+		$html .= '<script type="text/javascript">'.
+			'$(document).ready(function(){'.
+			'	$(".list_view tr:even").addClass("zebraAlt");'.
+			'	$(".list_view tr").mouseover(function(){'.
+			'		$(this).addClass("zebraOver");'.
+			'	});'.
+			'	$(".list_view tr").mouseout(function(){'.
+			'		$(this).removeClass("zebraOver");'.
+			'	});'.
+			'});</script>';
 		
 		return $html;
 	}
