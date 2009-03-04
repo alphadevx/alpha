@@ -170,12 +170,16 @@ class AlphaMetrics {
 		$LOC = 0;
 		
 		foreach ($file as $line) {
+			$exclude = false;
 			$line = ltrim($line);
 			
-			$exclude = false;
-			foreach ($this->comments as $comment) {
-				if (substr($line, 0, 1) == $comment) {
-					$exclude = true;
+			if(empty($line)) {
+				$exclude = true;
+			}else{			
+				foreach ($this->comments as $comment) {
+					if (substr($line, 0, 1) == $comment) {
+						$exclude = true;
+					}
 				}
 			}
 				
