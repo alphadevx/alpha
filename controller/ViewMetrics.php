@@ -91,6 +91,11 @@ class ViewMetrics extends Controller implements AlphaControllerInterface{
 		return $html;
 	}
 	
+	/**
+	 * Renders the JQuery code to do zebra-style table colouring
+	 *
+	 * @return string
+	 */
 	public function during_displayPageHead_callback() {
 		global $config;
 		
