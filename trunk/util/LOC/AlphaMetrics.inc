@@ -138,7 +138,7 @@ class AlphaMetrics {
 	public function resultsToHTML() {
 		$count = 1;
 		
-		$html = '<table border="1" class="list_view"><tr>';
+		$html = '<table class="list_view"><tr>';
 		$html .= '<th width="10%">File #:</th>';
 		$html .= '<th width="50%">File name:</th>';
 		$html .= '<th width="20%">Lines of Code (LOC):</th>';
