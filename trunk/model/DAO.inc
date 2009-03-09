@@ -1621,8 +1621,8 @@ abstract class DAO {
 	protected function checkIndexes() {
 		self::$logger->debug('>>checkIndexes()');
 		
-		if(method_exists($this, 'before_check_indexes_callback'))
-			$this->before_check_indexes_callback();
+		if(method_exists($this, 'before_checkIndexes_callback'))
+			$this->before_checkIndexes_callback();
 		
 		$query = 'SHOW INDEX FROM '.$this->getTableName();
 		$result = mysql_query($query);
@@ -1661,8 +1661,8 @@ abstract class DAO {
 		}
 		
 		if (mysql_error() == '') {
-			if(method_exists($this, 'after_check_indexes_callback'))
-				$this->after_check_indexes_callback();
+			if(method_exists($this, 'after_checkIndexes_callback'))
+				$this->after_checkIndexes_callback();
 		}else{
 			$this->lastQuery = $query;
 			throw new AlphaException('Failed to access the system database correctly, error is ['.mysql_error().']');
@@ -1679,8 +1679,8 @@ abstract class DAO {
 	protected function createUniqueIndex($attribute1Name, $attribute2Name = '') {
 		self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'])');
 		
-		if(method_exists($this, 'before_create_unique_index_callback'))
-			$this->before_create_unique_index_callback();
+		if(method_exists($this, 'before_createUniqueIndex_callback'))
+			$this->before_createUniqueIndex_callback();
 		
 		if(empty($attribute2Name)) {
 			$sqlQuery = 'CREATE UNIQUE INDEX '.$attribute1Name.'_unq_idx ON '.$this->getTableName().' ('.$attribute1Name.');';
@@ -1691,7 +1691,7 @@ abstract class DAO {
 	
 			if (mysql_error() == '') {
 				if(method_exists($this, 'after_create_unique_index_callback'))
-					$this->after_create_unique_index_callback();
+					$this->after_createUniqueIndex_callback();
 			}else{			
 				throw new AlphaException('Failed to create the index ['.$attribute1Name.'_unq_idx] on ['.$this->getTableName().'], error is ['.mysql_error().']');
 			}
@@ -1705,7 +1705,7 @@ abstract class DAO {
 	
 			if (mysql_error() == '') {
 				if(method_exists($this, 'after_create_unique_index_callback'))
-					$this->after_create_unique_index_callback();
+					$this->after_createUniqueIndex_callback();
 			}else{			
 				throw new AlphaException('Failed to create the index ['.$attribute1Name.'_'.$attribute2Name.'_unq_idx] on ['.$this->getTableName().'], error is ['.mysql_error().']');
 			}
