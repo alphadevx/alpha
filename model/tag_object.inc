@@ -68,14 +68,25 @@ class tag_object extends DAO {
 	 * Use this callback to create the tclass_toid__tcontent unique table index
 	 */
 	protected function after_checkIndexes_callback() {
-		$sqlQuery = 'CREATE UNIQUE INDEX tclass_toid_tcontent_unq_idx ON '.$this->getTableName().' (taggedClass,taggedOID,content);';
-			
-		$this->lastQuery = $sqlQuery;
-	
-		$result = mysql_query($sqlQuery);
-	
-		if (mysql_error() != '') {				
-			throw new AlphaException('Failed to create the index [tclass_toid_tcontent_unq_idx] on ['.$this->getTableName().'], error is ['.mysql_error().']');
+		$indexNames = $this->getIndexes();
+		$indexExists = false;
+		
+		foreach ($indexNames as $index) {					
+			if ('tclass_toid_tcontent_unq_idx' == $index) {
+		    	$indexExists = true;
+			}
+		}
+		
+		if(!$indexExists) {
+			$sqlQuery = 'CREATE UNIQUE INDEX tclass_toid_tcontent_unq_idx ON '.$this->getTableName().' (taggedClass,taggedOID,content);';
+				
+			$this->lastQuery = $sqlQuery;
+		
+			$result = mysql_query($sqlQuery);
+		
+			if (mysql_error() != '') {				
+				throw new AlphaException('Failed to create the index [tclass_toid_tcontent_unq_idx] on ['.$this->getTableName().'], error is ['.mysql_error().']');
+			}
 		}
 	}	
 }
