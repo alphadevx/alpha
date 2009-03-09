@@ -1616,6 +1616,32 @@ abstract class DAO {
 	}
 	
 	/**
+	 * Gets an array of all of the names of the active database indexes for this class
+	 *
+	 * @return array
+	 */
+	protected function getIndexes() {
+		self::$logger->debug('>>getIndexes()');
+		
+		$query = 'SHOW INDEX FROM '.$this->getTableName();
+		$result = mysql_query($query);
+		$this->lastQuery = $query;
+		
+		$indexNames = array();
+		while ($row = mysql_fetch_assoc($result)) {
+			array_push($indexNames, $row['Key_name']);
+		}
+		
+		if (mysql_error() != '') {			
+			throw new AlphaException('Failed to access the system database correctly, error is ['.mysql_error().']');
+		}
+		
+		return $indexNames;
+		
+		self::$logger->debug('<<getIndexes');
+	}
+	
+	/**
 	 * Checks to see if all of the indexes are in place for the BO's table, creates those that are missing
 	 */
 	protected function checkIndexes() {
@@ -1624,9 +1650,7 @@ abstract class DAO {
 		if(method_exists($this, 'before_checkIndexes_callback'))
 			$this->before_checkIndexes_callback();
 		
-		$query = 'SHOW INDEX FROM '.$this->getTableName();
-		$result = mysql_query($query);
-		$this->lastQuery = $query;
+		$indexNames = $this->getIndexes();
 		
 		// process unique keys
 		foreach($this->uniqueAttributes as $prop) {
@@ -1635,10 +1659,8 @@ abstract class DAO {
 				$attributes = explode('+', $prop);
 				
 				$index_exists = false;
-				// reset the MySQL result set pointer
-				mysql_data_seek($result, 0);
-				while ($row = mysql_fetch_assoc($result)) {					
-					if ($attributes[0].'_'.$attributes[1].'_unq_idx' == $row['Key_name']) {
+				foreach ($indexNames as $index) {
+					if ($attributes[0].'_'.$attributes[1].'_unq_idx' == $index) {
 				    	$index_exists = true;
 					}
 				}
@@ -1647,10 +1669,8 @@ abstract class DAO {
 					$this->createUniqueIndex($attributes[0], $attributes[1]);
 			}else{
 				$index_exists = false;
-				// reset the MySQL result set pointer
-				mysql_data_seek($result, 0);
-				while ($row = mysql_fetch_assoc($result)) {					
-					if ($prop.'_unq_idx' == $row['Key_name']) {
+				foreach ($indexNames as $index) {					
+					if ($prop.'_unq_idx' == $index) {
 				    	$index_exists = true;
 					}
 				}
