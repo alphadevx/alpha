@@ -71,21 +71,22 @@ class button
 	/**
 	 * renders the HTML and javascript for the button
 	 * 
+	 * @param int $width The width in pixels of the button, defaults to 0 meaning auto-width to fit text
 	 * @return string
 	 */
-	function render() {
+	function render($width=0) {
 		$html = '';
 		
 		if(empty($this->imgURL)) {
 			switch ($this->action->getValue()) {
 				case "submit":
-					$html .= '<input type="submit" id="'.$this->get_id().'" name="'.$this->get_id().'" class="norButton" value="'.$this->get_title().'"/>';
+					$html .= '<input type="submit" id="'.$this->get_id().'" name="'.$this->get_id().'" class="norButton" value="'.$this->get_title().'"'.($width == 0? '':' style="width:'.$width.';"').'/>';
 				break;
 				case "file":
-					$html .= '<input type="file" id="'.$this->get_id().'" name="'.$this->get_id().'" class="norButton" value="'.$this->get_title().'"/>';
+					$html .= '<input type="file" id="'.$this->get_id().'" name="'.$this->get_id().'" class="norButton" value="'.$this->get_title().'"'.($width == 0? '':' style="width:'.$width.';"').'/>';
 				break;
 				default:
-					$html .= '<input type="button" id="'.$this->get_id().'" name="'.$this->get_id().'" class="norButton" onClick="'.$this->get_action().';" value="'.$this->get_title().'"/>';
+					$html .= '<input type="button" id="'.$this->get_id().'" name="'.$this->get_id().'" class="norButton" onClick="'.$this->get_action().';" value="'.$this->get_title().'"'.($width == 0? '':' style="width:'.$width.';"').'/>';
 				break;
 			}
 		}else{
