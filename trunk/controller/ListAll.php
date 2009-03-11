@@ -92,6 +92,11 @@ class ListAll extends Controller implements AlphaControllerInterface {
 			}
 			
 			DAO::loadClassDef($BOname);
+			
+			/*
+			 *  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
+			 */
+			$this->loadCustomController($BOname, 'list');
 				
 			$this->BO = new $BOname();
 			$this->BOView = View::getInstance($this->BO);
@@ -208,7 +213,7 @@ class ListAll extends Controller implements AlphaControllerInterface {
 	 * 
 	 * @return string
 	 */
-	private function renderPageLinks() {
+	protected function renderPageLinks() {
 		global $config;
 		
 		$html = '';
