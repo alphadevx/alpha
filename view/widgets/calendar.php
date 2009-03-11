@@ -367,7 +367,7 @@ class calendar{
 		require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
 		
 		$html .= '</head>';
-		$html .= '<body>';
+		$html .= '<body class="calendarBody">';
 
 		return $html;
 	}
