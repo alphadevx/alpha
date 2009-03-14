@@ -267,7 +267,7 @@ class ListAll extends Controller implements AlphaControllerInterface {
 	/**
 	 * Private method to display the main body HTML for this page
 	 */
-	private function displayBodyContent() {
+	protected function displayBodyContent() {
 		global $config;
 		
 		// get all of the BOs and invoke the listView on each one
