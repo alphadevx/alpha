@@ -465,8 +465,11 @@ class View {
 	 * 
 	 * @return string
 	 */
-	public static function renderDeleteForm() {		
-		$html = '<form action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'].'" method="POST" id="delete_form">';
+	public static function renderDeleteForm() {
+		if(!empty($_SERVER['QUERY_STRING']))
+			$html = '<form action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'].'" method="POST" id="delete_form">';
+		else
+			$html = '<form action="'.$_SERVER['PHP_SELF'].'" method="POST" id="delete_form">';
 		$html .= '<input type="hidden" name="delete_oid" id="delete_oid" value=""/>';
 		$html .= self::renderSecurityFields();
 		$html .= '</form>';
