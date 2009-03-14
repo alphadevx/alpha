@@ -116,9 +116,7 @@ class ListAll extends Controller implements AlphaControllerInterface {
 	 * 
 	 * @param array $params
 	 */
-	public function doPOST($params) {
-		echo View::displayPageHead($this);
-		
+	public function doPOST($params) {		
 		try{
 			// check the hidden security fields before accepting the form POST data
 			if(!$this->checkSecurityFields()) {
@@ -141,6 +139,8 @@ class ListAll extends Controller implements AlphaControllerInterface {
 			$this->BO = new $BOname();		
 			$this->BOname = $BOname;		
 			$this->BOView = View::getInstance($this->BO);
+			
+			echo View::displayPageHead($this);
 				
 			if (!empty($params['delete_oid'])) {
 				$temp = new $BOname();
