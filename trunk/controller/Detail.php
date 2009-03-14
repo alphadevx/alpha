@@ -84,6 +84,11 @@ class Detail extends Controller implements AlphaControllerInterface {
 				$BOName = $params['bo'];
 				DAO::loadClassDef($BOName);
 				
+				/*
+			 	*  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
+			 	*/
+				$this->loadCustomController($BOName, 'view');
+				
 				$this->BO = new $BOName();						
 				$this->BOName = $BOName;		
 				$this->BOView = View::getInstance($this->BO);
