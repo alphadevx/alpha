@@ -121,32 +121,49 @@ class Login extends Controller implements AlphaControllerInterface {
 			}
 		
 			if (isset($params['loginBut'])) {
-				// here we are attempting to load the person from the email address
-				$this->personObject->loadByAttribute('email', $params['email']);
-				
-				// checking to see if the account has been disabled
-				if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Disabled') {
-					throw new SecurityException('Failed to login user '.$params['email'].', that account has been disabled!');	
-					self::$logger->debug('<<doPOST');
-					return;
-				}
-				
-				// check the password
-				if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Active') {
-					if (crypt($params['password'], $this->personObject->get('password')) == $this->personObject->get('password')) {				
-						self::$logger->info('Logging in ['.$this->personObject->get('email').'] at ['.date("Y-m-d H:i:s").']');
-						$_SESSION['currentUser'] = $this->personObject;
-						if ($this->getNextJob() != '') {
-							self::$logger->debug('<<doPOST');
-							header('Location: '.$this->getNextJob());
-						}else{
-							self::$logger->debug('<<doPOST');
-							header('Location: '.$config->get('sysURL'));
-						}
+				// if the database has not been set up yet, accept a login from the config admin username/password
+				if(!DAO::isInstalled()) {
+					if ($params['email'] == $config->get('sysInstallUsername') && crypt($params['password'], $config->get('sysInstallPassword')) == crypt($config->get('sysInstallPassword'), $config->get('sysInstallPassword'))) {
+						$admin = new person_object();
+						$admin->set('displayName', 'Admin');
+						$admin->set('email', $params['email']);
+						$admin->set('password', crypt($params['password'], $config->get('sysInstallPassword')));
+						$admin->set('OID', '00000000001');
+						$_SESSION['currentUser'] = $admin;
+						header('Location: '.$config->get('sysURL').'alpha/controller/Install.php');
 					}else{
 						throw new ValidationException('Failed to login user '.$params['email'].', the password is incorrect!');
 						self::$logger->debug('<<doPOST');
 						return;
+					}
+				}else{
+					// here we are attempting to load the person from the email address
+					$this->personObject->loadByAttribute('email', $params['email']);
+					
+					// checking to see if the account has been disabled
+					if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Disabled') {
+						throw new SecurityException('Failed to login user '.$params['email'].', that account has been disabled!');	
+						self::$logger->debug('<<doPOST');
+						return;
+					}
+					
+					// check the password
+					if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Active') {
+						if (crypt($params['password'], $this->personObject->get('password')) == $this->personObject->get('password')) {				
+							self::$logger->info('Logging in ['.$this->personObject->get('email').'] at ['.date("Y-m-d H:i:s").']');
+							$_SESSION['currentUser'] = $this->personObject;
+							if ($this->getNextJob() != '') {
+								self::$logger->debug('<<doPOST');
+								header('Location: '.$this->getNextJob());
+							}else{
+								self::$logger->debug('<<doPOST');
+								header('Location: '.$config->get('sysURL'));
+							}
+						}else{
+							throw new ValidationException('Failed to login user '.$params['email'].', the password is incorrect!');
+							self::$logger->debug('<<doPOST');
+							return;
+						}
 					}
 				}
 				
