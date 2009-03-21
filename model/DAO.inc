@@ -434,11 +434,11 @@ abstract class DAO {
 			$sqlQuery = "";
 
 			// begin a new transaction
-			$this->begin();
+			self::begin();
 			
 			if($this->getVersion() != $this->version_num->getValue()){
 				throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
-				$this->rollback();
+				self::rollback();
 				return;
 			}
 			
@@ -571,7 +571,7 @@ abstract class DAO {
 									}
 								}catch (Exception $e) {
 									throw new FailedSaveException('Failed to update a MANY-TO-MANY relation on the object, error is ['.$e->getMessage().']');
-									$this->rollback();
+									self::rollback();
 									return;
 								}
 							}
@@ -579,12 +579,12 @@ abstract class DAO {
 					}
 				}catch (Exception $e) {
 					throw new FailedSaveException('Failed to save object, error is ['.$e->getMessage().']');
-					$this->rollback();
+					self::rollback();
 					return;
 				}
 				
 				// commit
-				$this->commit();
+				self::commit();
 				
 				if(method_exists($this, 'after_save_callback'))
 					$this->after_save_callback();
@@ -596,11 +596,11 @@ abstract class DAO {
 				// check for unique violations			
 				if(mysql_errno() == '1062') {					
 					throw new ValidationException('Failed to save, the value '.$this->findOffendingValue(mysql_error()).' is already in use!');
-					$this->rollback();
+					self::rollback();
 					return;
 				}else{					
 					throw new FailedSaveException('Failed to save object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
-					$this->rollback();
+					self::rollback();
 					return;
 				}
 			}
@@ -656,7 +656,7 @@ abstract class DAO {
 		if(method_exists($this, 'before_delete_callback'))
 				$this->before_delete_callback();
 		
-		$this->begin();
+		self::begin();
 		
 		$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE OID = '".$this->OID."';";
 			
@@ -709,11 +709,11 @@ abstract class DAO {
 				}
 			}
 			
-			$this->commit();
+			self::commit();
 			$this->clear();
 		}else{			
 			throw new FailedDeleteException('Failed to delete object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
-			$this->rollback();
+			self::rollback();
 		}
 
 		self::$logger->debug('<<delete');
@@ -734,7 +734,7 @@ abstract class DAO {
 		
 		$doomedObjects = $this->loadAllByAttribute($attribute, $value);
 		$deletedRowCount = 0;
-		$this->begin();
+		self::begin();
 		
 		try {
 			foreach ($doomedObjects as $object) {
@@ -744,11 +744,11 @@ abstract class DAO {
 		}catch (AlphaException $e) {
 			throw new FailedDeleteException('Failed to delete objects, error is ['.$e->getMessage().']');
 			self::$logger->debug('<<deleteAllByAttribute [0]');
-			$this->rollback();
+			self::rollback();
 			return 0;
 		}
 		
-		$this->commit();
+		self::commit();
 		
 		if(method_exists($this, 'after_deleteAllByAttribute_callback'))
 			$this->after_deleteAllByAttribute_callback();
@@ -1998,6 +1998,8 @@ abstract class DAO {
 		}
 		
 		if($classname != $tablename) {
+			// loop over all BOs to see if there is one using the same table as this BO
+			
 			$BOclasses = self::getBOClassNames();
 			
 			foreach($BOclasses as $BOclassName) {
@@ -2009,14 +2011,35 @@ abstract class DAO {
 			throw new BadBOTableNameException('The table name ['.$tablename.'] for the class ['.$classname.'] is invalid as it does not match a BO definition in the system!');
 			self::$logger->debug('<<isTableOverloaded [false]');
 			return false;
+		}else{
+			// check to see if there is already a "classname" column in the database for this BO
+			
+			$query = 'SHOW COLUMNS FROM '.$this->getTableName();
+			$result = mysql_query($query);
+			$this->lastQuery = $query;			
+			
+			if(mysql_error() == '') {
+				while ($row = mysql_fetch_assoc($result)) {						
+					if ('classname' == $row['Field']) {
+						self::$logger->debug('<<isTableOverloaded [true]');
+						return true;
+					}
+				}
+			}else{
+				self::$logger->warn('Error during show columns ['.mysql_error().']');
+			}
+			
+			self::$logger->debug('<<isTableOverloaded [false]');
+			return false;
 		}
 	}
 	
 	/**
 	 * Starts a new database transaction
-	 *
 	 */
-	private function begin() {
+	public static function begin() {
+		if(self::$logger == null)
+			self::$logger = new Logger('DAO');
 		self::$logger->debug('>>begin()');
 		
     	mysql_query('START TRANSACTION');
@@ -2030,9 +2053,10 @@ abstract class DAO {
 	
 	/**
 	 * Commits the current transaction
-	 *
 	 */
-	private function commit() {
+	public static function commit() {
+		if(self::$logger == null)
+			self::$logger = new Logger('DAO');
 		self::$logger->debug('>>commit()');
     	mysql_query('COMMIT');
     	
@@ -2044,9 +2068,10 @@ abstract class DAO {
   	
 	/**
 	 * Aborts the current transaction
-	 *
 	 */
-	private function rollback() {
+	public static function rollback() {
+		if(self::$logger == null)
+			self::$logger = new Logger('DAO');
 		self::$logger->debug('>>rollback()');
     	mysql_query('ROLLBACK');
     	
@@ -2054,7 +2079,36 @@ abstract class DAO {
      		throw new AlphaException('Error aborting a transaction, error is ['.mysql_error().']');
     	
     	self::$logger->debug('<<rollback');
-  	}	
+  	}
+
+  	/**
+  	 * Static method that tries to determine if the system database has been installed or not
+  	 *
+  	 * @return boolean
+  	 */
+  	public static function isInstalled() {
+  		if(self::$logger == null)
+			self::$logger = new Logger('DAO');
+		self::$logger->debug('>>isInstalled()');
+		
+  		/*
+  		 * Install conditions are:
+  		 * 
+  		 * 1. person table exists
+  		 * 2. rights table exists
+  		 */
+  		
+  		$person = new person_object();
+  		$rights = new rights_object();
+  		
+  		if($person->checkTableExists() && $rights->checkTableExists()) {
+  			self::$logger->debug('<<isInstalled [true]');
+  			return true;
+  		}else{
+  			self::$logger->debug('<<isInstalled [false]');
+  			return false;
+  		}
+  	}
 }
 
 ?>
