@@ -114,7 +114,7 @@ class DEnumView extends View {
 		
 		$html .= '<tr><td colspan="2"><h3>Add a new value to the DEnum dropdown list:</h3></td></tr>';
 		
-		$temp = new StringBox(new String(), $labels['value'], 'new_value', '');
+		$temp = new StringBox(new String(), 'Dropdown value', 'new_value', '');
 		$html .= $temp->render();
 		
 		$html .= '<tr><td colspan="2">';
