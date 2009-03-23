@@ -212,15 +212,18 @@ abstract class DAO {
 	 * Populates the child object from the database table by the given attribute value
 	 * 
 	 * @param string $atribute
-	 * @param string $value	 
+	 * @param string $value
+	 * @package boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
 	 */
-	public function loadByAttribute($attribute, $value)	{
-		self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'])');
+	public function loadByAttribute($attribute, $value, $ignoreClassType=false)	{
+		self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'], ignoreClassType=['.$ignoreClassType.'])');
 		
 		if(method_exists($this, 'before_loadByAttribute_callback'))
 				$this->before_loadByAttribute_callback();
 		
-		if(!$this->isTableOverloaded())
+		if($ignoreClassType)
+			$sqlQuery = "SELECT * FROM ".$this->getTableName()." WHERE $attribute = '$value';";
+		elseif(!$this->isTableOverloaded())
 			$sqlQuery = "SELECT * FROM ".$this->getTableName()." WHERE $attribute = '$value';";
 		else
 			$sqlQuery = "SELECT * FROM ".$this->getTableName()." WHERE $attribute = '$value' AND classname='".get_class($this)."';";
