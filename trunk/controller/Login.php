@@ -138,7 +138,7 @@ class Login extends Controller implements AlphaControllerInterface {
 					}
 				}else{
 					// here we are attempting to load the person from the email address
-					$this->personObject->loadByAttribute('email', $params['email']);
+					$this->personObject->loadByAttribute('email', $params['email'], true);
 					
 					// checking to see if the account has been disabled
 					if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Disabled') {
