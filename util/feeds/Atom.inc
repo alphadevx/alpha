@@ -1,47 +1,79 @@
 <?php
 
-// $Id$
-
-require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
-require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
-require_once $config->get('sysRoot').'alpha/view/View.inc';
-require_once $config->get('sysRoot').'alpha/util/LogFile.inc';
-require_once $config->get('sysRoot').'alpha/util/feeds/feed.inc';
+require_once $config->get('sysRoot').'alpha/util/feeds/AlphaFeed.inc';
 
 /**
-* 
-* Atom class for synication
-* 
-* @package Alpha Feeds
-* @author John Collins <john@design-ireland.net>
-* @copyright 2007 John Collins
-*
-*/
-class Atom extends feed {
-	var $NS = "http://www.w3.org/2005/Atom";	
-	var $SHELL = '<feed xmlns="http://www.w3.org/2005/Atom" />';
-	var $has_channel = false;
-	var $tag_map = array('item'=>'entry','feeddesc'=>'subtitle','itemdesc'=>'summary');
+ * 
+ * Atom class for syndication
+ * 
+ * @package alpha::util::feeds
+ * @author John Collins <john@design-ireland.net>
+ * @copyright 2009 John Collins
+ * @version $Id$
+ *
+ */
+class Atom extends AlphaFeed {
+	/**
+	 * The XML namespace
+	 * 
+	 * @var string
+	 */
+	protected $ns = 'http://www.w3.org/2005/Atom';
+
+	/**
+	 * The main feed tag
+	 * 
+	 * @var string
+	 */
+	protected $shell = '<feed xmlns="http://www.w3.org/2005/Atom" />';
 	
-	function create_link($parent, $url) {
-		$link = $this->rss_doc->createElementNS($this->NS, 'link');
+	/**
+	 * Maps the tags to the feed-specific tags
+	 * 
+	 * @var array
+	 */
+	protected $tagMap = array('item'=>'entry','feeddesc'=>'subtitle','itemdesc'=>'summary');
+		
+	/**
+	 * Used to create a link in the feed
+	 * 
+	 * (non-PHPdoc)
+	 * @see alpha/util/feeds/AlphaFeed#createLink($parent, $url)
+	 */
+	protected function createLink($parent, $url) {
+		$link = $this->rssDoc->createElementNS($this->ns, 'link');
 		$parent->appendChild($link);
 		$link->setAttribute('href', $url);
 	}
 	
-	function Atom($title, $url, $description, $pub_date = null, $id = null) {
+	/**
+	 * Constructor to create a new Atom feed
+	 * 
+	 * @param string $title
+	 * @param string $url
+	 * @param string $description
+	 * @param string $pubDate
+	 * @param integer $id
+	 */
+	public function __construct($title, $url, $description, $pubDate = null, $id = null) {
 		if(empty($id))
 			$id = $url;
-		if(empty($pub_date))
-			$pub_date = date("Y-m-d");
-		parent::feed($title, $url, $description, $pub_date, $id);
+		if(empty($pubDate))
+			$pubDate = date("Y-m-d");
+		parent::__construct($title, $url, $description, $pubDate, $id);
 	}
 	
-	function add_author($name) {
-		$author = $this->rss_doc->createElementNS($this->NS, 'author');
+	/**
+	 * Adds an auther to a feed
+	 * 
+	 * @param string $name
+	 * @return boolean
+	 */
+	public function addAuthor($name) {
+		$author = $this->rssDoc->createElementNS($this->ns, 'author');
 		
-		if($this->doc_element->appendChild($author)) {
-			$namenode = $this->rss_doc->createElementNS($this->NS, 'name', $name);
+		if($this->docElement->appendChild($author)) {
+			$namenode = $this->rssDoc->createElementNS($this->ns, 'name', $name);
 			if($author->appendChild($namenode)) {
 				return true;
 			}
@@ -50,12 +82,18 @@ class Atom extends feed {
 		return false;
 	}
 	
-	function add_item($title, $link, $description=null, $pub_date = null, $id = null) {
+	/**
+	 * Adds a new item to the Atom feed
+	 * 
+	 * (non-PHPdoc)
+	 * @see alpha/util/feeds/AlphaFeed#addItem($title, $link, $description, $publish_date, $id)
+	 */
+	protected function addItem($title, $link, $description=null, $pubDate = null, $id = null) {
 		if(empty($id))
 			$id = $link;
-		if(empty($pub_date))
-			$pub_date = date("Y-m-d");
-		return parent::add_item($title, $link, $description, $pub_date, $id);
+		if(empty($pubDate))
+			$pubDate = date("Y-m-d");
+		return parent::addItem($title, $link, $description, $pubDate, $id);
 	}
 }
 

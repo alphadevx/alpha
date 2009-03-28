@@ -6,18 +6,18 @@ require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 require_once $config->get('sysRoot').'alpha/view/View.inc';
 require_once $config->get('sysRoot').'alpha/util/LogFile.inc';
-require_once $config->get('sysRoot').'alpha/util/feeds/feed.inc';
+require_once $config->get('sysRoot').'alpha/util/feeds/AlphaFeed.inc';
 
 /**
 * 
 * RSS 1.0 class for synication
 * 
-* @package Alpha Feeds
+* @package alpha::util::feeds
 * @author John Collins <john@design-ireland.net>
 * @copyright 2007 John Collins
 *
 */
-class RSS extends feed {
+class RSS extends AlphaFeed {
 	var $NS = 'http://purl.org/rss/1.0/';
 	var $RDFNS = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
 	var $SHELL = '<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/" />';
