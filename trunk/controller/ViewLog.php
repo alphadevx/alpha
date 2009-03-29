@@ -76,9 +76,9 @@ class ViewLog extends Controller implements AlphaControllerInterface{
 		$log = new LogFile($this->logPath);
 		if(preg_match("/alpha.*/", basename($this->logPath)))
 			$log->renderLog(array('Date/time','Level','Class','Message'));
-		if(preg_match("/search_log.*/", basename($this->logPath)))
+		if(preg_match("/search.*/", basename($this->logPath)))
 			$log->renderLog(array("Search query","Search date","Client Application","Client IP"));
-		if(preg_match("/feed_log.*/", basename($this->logPath)))
+		if(preg_match("/feeds.*/", basename($this->logPath)))
 			$log->renderLog(array("Business object","Feed type","Request date","Client Application","Client IP"));		
 		
 		echo View::displayPageFoot($this);
