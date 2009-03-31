@@ -115,11 +115,11 @@ class ViewFeed extends Controller implements AlphaControllerInterface {
 			switch($type) {
 				case 'RSS2':
 					$feed = new RSS2($BOName, $this->title, str_replace('&', '&amp;', $_SERVER["REQUEST_URI"]), $this->description);
-					$feed->setFieldMappings($this->fieldMappings[0], $this->fieldMappings[1], $this->fieldMappings[2], $this->fieldMappings[3], $this->fieldMappings[4]);
+					$feed->setFieldMappings($this->fieldMappings[0], $this->fieldMappings[1], $this->fieldMappings[2], $this->fieldMappings[3]);
 				break;
 				case 'RSS':
 					$feed = new RSS($BOName, $this->title, str_replace('&', '&amp;', $_SERVER["REQUEST_URI"]), $this->description);
-					$feed->setFieldMappings($this->fieldMappings[0], $this->fieldMappings[1], $this->fieldMappings[2], $this->fieldMappings[3], $this->fieldMappings[4]);
+					$feed->setFieldMappings($this->fieldMappings[0], $this->fieldMappings[1], $this->fieldMappings[2], $this->fieldMappings[3]);
 				break;
 				case 'Atom':
 					$feed = new Atom($BOName, $this->title, str_replace('&', '&amp;', $_SERVER["REQUEST_URI"]), $this->description);
