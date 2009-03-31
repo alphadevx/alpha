@@ -28,6 +28,13 @@ class Atom extends AlphaFeed {
 	protected $shell = '<feed xmlns="http://www.w3.org/2005/Atom" />';
 	
 	/**
+	 * If the feed format has a channel or not
+	 * 
+	 * @var boolean
+	 */
+	protected $hasChannel = false;
+	
+	/**
 	 * Maps the tags to the feed-specific tags
 	 * 
 	 * @var array

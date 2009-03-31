@@ -45,7 +45,7 @@ abstract class AlphaFeed {
 	 * 
 	 * @var boolean
 	 */
-	protected $hasChannel = false;
+	protected $hasChannel = true;
 	
 	/**
 	 * Maps the tags to the feed-specific tags
