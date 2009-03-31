@@ -57,7 +57,7 @@ class ViewFeed extends Controller implements AlphaControllerInterface {
 	 * 
 	 * @var array
 	 */
-	private $fieldMappings;
+	protected $fieldMappings;
 	
 	/**
 	 * The BO field name to sort the feed by (descending), default is OID
@@ -83,8 +83,7 @@ class ViewFeed extends Controller implements AlphaControllerInterface {
 		global $config;		
 		
 		// ensure that the super class constructor is called, indicating the rights group
-		parent::__construct('Public');
-		
+		parent::__construct('Public');		
 	}
 	
 	/**

@@ -136,10 +136,12 @@ abstract class AlphaFeed {
 				$description = $BO->get($this->fieldNameMappings['description']);
 			else
 				$description = '';
-			if(isset($this->fieldNameMappings['pubDate']))
-				$pubDate = $BO->get($this->fieldNameMappings['pubDate']);
-			else
+			if(isset($this->fieldNameMappings['pubDate'])) {
+				$dateTS = strtotime($BO->get($this->fieldNameMappings['pubDate']));
+				$pubDate = date(DATE_ATOM, $dateTS);
+			}else{
 				$pubDate = '';
+			}
 			if(isset($this->fieldNameMappings['id']))
 				$id = $BO->get($this->fieldNameMappings['id']);
 			else
