@@ -155,16 +155,16 @@ class EditArticle extends Controller implements AlphaControllerInterface {
 				
 				if(isset($params['uploadBut'])) {							
 					// upload the file to the attachments directory
-					$success = move_uploaded_file($_FILES['userfile']['tmp_name'], $this->BO->get_attachments_location().'/'.$_FILES['userfile']['name']);
+					$success = move_uploaded_file($_FILES['userfile']['tmp_name'], $this->BO->getAttachmentsLocation().'/'.$_FILES['userfile']['name']);
 					
 					if(!$success)
 						throw new AlphaException('Could not move the uploaded file ['.$success.']');
 					
 					// set read/write permissions on the file
-					$success = chmod($this->BO->get_attachments_location().'/'.$_FILES['userfile']['name'], 0666);
+					$success = chmod($this->BO->getAttachmentsLocation().'/'.$_FILES['userfile']['name'], 0666);
 					
 					if (!$success)
-						throw new AlphaException('Unable to set read/write permissions on the uploaded file ['.$this->BO->get_attachments_location().'/'.$_FILES['userfile']['name'].'].');
+						throw new AlphaException('Unable to set read/write permissions on the uploaded file ['.$this->BO->getAttachmentsLocation().'/'.$_FILES['userfile']['name'].'].');
 					
 					if($success) {
 						echo '<p class="success">File uploaded successfully.</p>';
@@ -176,7 +176,7 @@ class EditArticle extends Controller implements AlphaControllerInterface {
 				}
 				
 				if (!empty($params['file_to_delete'])) {							
-					$success = unlink($this->BO->get_attachments_location().'/'.$params['file_to_delete']);
+					$success = unlink($this->BO->getAttachmentsLocation().'/'.$params['file_to_delete']);
 					
 					if(!$success)
 						throw new AlphaException('Could not delete the file ['.$params['file_to_delete'].']');

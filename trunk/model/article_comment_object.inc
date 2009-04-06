@@ -1,42 +1,42 @@
 <?php
 
-// $Id$
-
 require_once $config->get('sysRoot').'alpha/model/DAO.inc';
 require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 
 /**
  *
- * an article comment class for user comments
+ * An article comment class for user comments
  * 
- * @package Alpha CMS
+ * @package alpha::model
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins
- * 
+ * @copyright 2009 John Collins
+ * @version $Id$
  * 
  */ 
-class article_comment_object extends DAO
-{
+class article_comment_object extends DAO {
 	/**
-	 * the OID of the parent article
-	 * @var Integer
+	 * The article this comment belongs to
+	 * 
+	 * @var Relation
 	 */
-	var $article_oid;	
+	protected $article_oid;
 	
 	/**
-	 * the content of the comment posted by the user
+	 * The content of the comment posted by the user
+	 * 
 	 * @var Text
 	 */	
-	var $content;
+	protected $content;
 	
 	/**
-	 * an array of data display labels for the class properties
+	 * An array of data display labels for the class properties
+	 * 
 	 * @var array
 	 */
-	var $dataLabels = array(
+	protected $dataLabels = array(
 		"OID"=>"Article Comment ID#",
-		"article_oid"=>"Article ID#",		
-		"content"=>"Your Comment"
+		"article_oid"=>"Article",		
+		"content"=>"Comment"
 	);
 	
 	/**
@@ -48,10 +48,16 @@ class article_comment_object extends DAO
 	/**
 	 * constructor for the class
 	 */
-	function article_comment_object() {
+	public function __construct() {
 		// ensure to call the parent constructor
 		parent::__construct();
-		$this->article_oid = new Integer();		
+		
+		$this->article_oid = new Relation();
+		$this->article_oid->setRelatedClass('article_object');
+		$this->article_oid->setRelatedClassField('OID');
+		$this->article_oid->setRelatedClassDisplayField('description');
+		$this->article_oid->setRelationType('MANY-TO-ONE');
+				
 		$this->content = new Text();
 	}	
 }

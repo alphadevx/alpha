@@ -38,6 +38,16 @@ class ArticleView extends View {
 	}
 	
 	/**
+	 * Renders the list view (adds the dateAdded field for the list template)
+	 * 
+	 * @param array $fields hash array of HTML fields to pass to the template
+	 */
+	public function listView($fields=array()) {
+		$fields['dateAdded'] = $this->BO->getCreateTS()->getDate();
+		parent::listView($fields);				
+	}
+	
+	/**
 	 * Renders a form to enable article editing with attachments options
 	 * 
 	 * @param array $fields hash array of HTML fields to pass to the template
@@ -90,14 +100,14 @@ class ArticleView extends View {
 	private function renderFileUploadSection() {		
 		$html = '<tr><td colspan="2">&nbsp;</td></tr><tr><th colspan="2" style="text-align:left;">File Attachments:</th></tr>';
 		
-		if (is_dir($this->BO->get_attachments_location())) {
-			$handle = opendir($this->BO->get_attachments_location());
+		if (is_dir($this->BO->getAttachmentsLocation())) {
+			$handle = opendir($this->BO->getAttachmentsLocation());
 	   		
 	        // loop over the attachments directory
 		    while (false !== ($file = readdir($handle))) {
 		    	if($file != '.' && $file != '..') {
 			    	$html .= '<tr><td>';		    	
-					$html .= '&nbsp;'.$file.'&nbsp;<em>('.number_format(filesize($this->BO->get_attachments_location().'/'.$file)/1024).' KB)</em>';
+					$html .= '&nbsp;'.$file.'&nbsp;<em>('.number_format(filesize($this->BO->getAttachmentsLocation().'/'.$file)/1024).' KB)</em>';
 					$html .= '</td>';
 					$html .= '<td>';
 					$temp = new button("if(confirm('Are you sure you want to delete the file ".$file."')) { document.forms[0]['file_to_delete'].value = '".$file."'; document.forms[0].submit();}", "Delete", "deleteBut");
