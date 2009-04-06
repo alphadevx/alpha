@@ -1,65 +1,78 @@
 <?php
 
-// $Id$
-
 require_once $config->get('sysRoot').'alpha/model/DAO.inc';
 require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 
 /**
  *
- * an article vote class for user ratings
+ * An article vote class for user ratings
  * 
- * @package Alpha CMS
+ * @package alpha::model
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins
- * 
+ * @copyright 2009 John Collins
+ * $Id$
  * 
  */ 
-class article_vote_object extends DAO
-{
+class article_vote_object extends DAO {
 	/**
-	 * the OID of the parent article
-	 * @var Integer
+	 * The article this comment belongs to
+	 * 
+	 * @var Relation
 	 */
-	var $article_oid;
+	protected $article_oid;
 	
 	/**
-	 * the OID of the person casting the vote
-	 * @var Integer
+	 * The person who cast the vote
+	 * 
+	 * @var Relation
 	 */
-	var $person_oid;
+	protected $person_oid;
 	
 	/**
-	 * the actual vote score (default 1-10)
+	 * The actual vote score (default 1-10)
+	 * 
 	 * @var Integer
 	 */	
-	var $score;
+	protected $score;
 	
 	/**
-	 * an array of data display labels for the class properties
+	 * An array of data display labels for the class properties
+	 * 
 	 * @var array
 	 */
-	var $dataLabels = array(
+	protected $dataLabels = array(
 		"OID"=>"Article Vote ID#",
-		"article_oid"=>"Article ID#",
-		"person_oid"=>"Person ID#",
+		"article_oid"=>"Article",
+		"person_oid"=>"Voter",
 		"score"=>"Article Score"
 	);
 	
 	/**
 	 * the name of the database table for the class
+	 * 
 	 * @var string
 	 */
 	const TABLE_NAME = 'article_vote';
 	
 	/**
-	 * constructor for the class
+	 * Constructor for the class
 	 */
-	function article_vote_object() {
+	public function __construct() {
 		// ensure to call the parent constructor
 		parent::__construct();
-		$this->article_oid = new Integer();
-		$this->person_oid = new Integer();
+		
+		$this->article_oid = new Relation();
+		$this->article_oid->setRelatedClass('article_object');
+		$this->article_oid->setRelatedClassField('OID');
+		$this->article_oid->setRelatedClassDisplayField('description');
+		$this->article_oid->setRelationType('MANY-TO-ONE');
+		
+		$this->person_oid = new Relation();
+		$this->person_oid->setRelatedClass('person_object');
+		$this->person_oid->setRelatedClassField('OID');
+		$this->person_oid->setRelatedClassDisplayField('email');
+		$this->person_oid->setRelationType('MANY-TO-ONE');
+		
 		$this->score = new Integer();
 	}	
 }

@@ -115,7 +115,7 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 	 * @return string
 	 */
 	public function during_displayPageHead_callback() {
-		return $this->BO->get('header_content');
+		return $this->BO->get('headerContent');
 	}
 	
 	/**
@@ -177,14 +177,14 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 			$html.= $controller->during_displayPageHead_callback();
 		
 		$html.= '</head>';
-		$html.= '<body'.($this->BO->get('body_onload') != '' ? ' onload="'.$this->BO->get('body_onload').'"' : '').'>';
+		$html.= '<body'.($this->BO->get('bodyOnload') != '' ? ' onload="'.$this->BO->get('bodyOnload').'"' : '').'>';
 		
 		if($config->get('sysCMSDisplayStandardHeader')) {
 			$html.= '<p><a href="'.$config->get('sysURL').'">'.$config->get('sysTitle').'</a> &nbsp; &nbsp;';
 			$denum = $this->BO->getPropObject('section');
 			$html.= 'Site Section: <em>'.$denum->getDisplayValue().'</em> &nbsp; &nbsp;';
-			$html.= 'Date Added: <em>'.$this->BO->get('date_added').'</em> &nbsp; &nbsp;';
-			$html.= 'Last Updated: <em>'.$this->BO->get('date_updated').'</em> &nbsp; &nbsp;';
+			$html.= 'Date Added: <em>'.$this->BO->getCreateTS()->getDate().'</em> &nbsp; &nbsp;';
+			$html.= 'Last Updated: <em>'.$this->BO->getUpdateTS()->getDate().'</em> &nbsp; &nbsp;';
 			$html.= 'Revision: <em>'.$this->BO->getVersion().'</em></p>';
 		}
 		
@@ -218,13 +218,13 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 		
 		$html = $this->renderComments();
 		
-		$rating = $this->BO->get_score();
-		$votes = $this->BO->get_votes();
+		$rating = $this->BO->getArticleScore();
+		$votes = $this->BO->getArticleVotes();
 		
 		if($config->get('sysCMSDisplayVotes'))
 			$html .= '<p>Average Article User Rating: <strong>'.$rating.'</strong> out of 10 (based on <strong>'.count($votes).'</strong> votes)</p>';
 		
-		if(!$this->BO->check_user_voted() && $config->get('sysCMSVotingAllowed')) {
+		if(!$this->BO->checkUserVoted() && $config->get('sysCMSVotingAllowed')) {
 			$html .= '<form action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'].'" method="post">';
 			$html .= '<p>Please rate this article from 1-10 (10 being the best):' .
 					'<select name="user_vote">' .
@@ -247,7 +247,7 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 		}
 		
 		$html .= '&nbsp;&nbsp;';
-		$temp = new button("window.open('".$this->BO->printURL."')",'Open Printer Version','printBut');
+		$temp = new button("window.open('".$this->BO->get('printURL')."')",'Open Printer Version','printBut');
 		$html .= $temp->render();
 		
 		$html .= '&nbsp;&nbsp;';
@@ -264,7 +264,7 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 		}
 		
 		if($config->get('sysCMSDisplayStandardFooter')) {
-			$html .= '<p>Article URL: <a href="'.$this->BO->URL.'">'.$this->BO->URL.'</a><br>';
+			$html .= '<p>Article URL: <a href="'.$this->BO->get('URL').'">'.$this->BO->get('URL').'</a><br>';
 			$html .= 'Title: '.$this->BO->get('title').'<br>';
 			$html .= 'Author: '.$this->BO->get('author').'<br>';
 		}
@@ -357,7 +357,7 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 		
 		$html = '';
 		
-		$comments = $this->BO->get_comments();
+		$comments = $this->BO->getArticleComments();
 		$comment_count = count($comments);
 		
 		if($config->get('sysCMSDisplayComments') && $comment_count > 0) {

@@ -1,7 +1,5 @@
 <?php
 
-// $Id$
-
 require_once $config->get('sysRoot').'alpha/model/DAO.inc';
 require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 require_once $config->get('sysRoot').'alpha/model/article_vote_object.inc';
@@ -9,154 +7,175 @@ require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
 
 /**
  *
- * an article class for publishing online
+ * An article class for the CMS
  * 
- * @package Design-Ireland
+ * @package alpha::model
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins
- * 
+ * @copyright 2009 John Collins
+ * @version $Id$
  * 
  */ 
-class article_object extends DAO
-{
+class article_object extends DAO {
 	/**
-	 * the article title
+	 * The article title
+	 * 
 	 * @var String
 	 */
-	var $title;
+	protected $title;
 	
 	/**
-	 * the article site section
+	 * The article site section
+	 * 
 	 * @var DEnum
 	 */
-	var $section;
+	protected $section;
 	
 	/**
-	 * the keywords for the article
+	 * The keywords for the article
+	 * 
 	 * @var String
 	 */
-	var $keywords;
+	protected $keywords;
 	
 	/**
-	 * the description of the article
+	 * The description of the article
+	 * 
 	 * @var String
 	 */
-	var $description;
+	protected $description;
 	
 	/**
-	 * optional custom body onload Javascript
+	 * Optional custom body onload Javascript
+	 * 
 	 * @var String
 	 */
-	var $body_onload;
+	protected $bodyOnload;
 	
 	/**
-	 * any custom HTML header content (e.g. Javascript) for the article
+	 * Any custom HTML header content (e.g. Javascript) for the article
+	 * 
 	 * @var Text;
 	 */
-	var $header_content;
+	protected $headerContent;
 	
 	/**
-	 * the article content
+	 * The article content
+	 * 
 	 * @var Text;
 	 */
-	var $content;
+	protected $content;
 	
 	/**
-	 * the author of the article
+	 * The author of the article
+	 * 
 	 * @var String
 	 */
-	var $author;
+	protected $author;
 	
 	/**
-	 * the date the article was added
-	 * @var Date
-	 */
-	var $date_added;
-	
-	/**
-	 * the date the article was updated
-	 * @var Date
-	 */
-	var $date_updated;
-	
-	/**
-	 * a boolean to control whether the artcile is publically accessible or not
+	 * A boolean to control whether the artcile is publically accessible or not
+	 * 
 	 * @var Boolean
 	 */
-	var $published;
+	protected $published;
 	
 	/**
-	 * an array of data display labels for the class properties
+	 * A Relation containing all of the comments on this article
+	 *
+	 * @var Relation
+	 */
+	protected $comments;
+	
+	/**
+	 * A Relation containing all of the votes on this article
+	 *
+	 * @var Relation
+	 */
+	protected $votes;
+	
+	/**
+	 * An array of data display labels for the class properties
+	 * 
 	 * @var array
 	 */
-	var $dataLabels = array(
+	protected $dataLabels = array(
 		"OID"=>"Article ID#",		
 		"title"=>"Title",
 		"section"=>"Site Section",
 		"keywords"=>"Keywords",		
 		"description"=>"Description",
-		"body_onload"=>"Body onload Javascript",
+		"bodyOnload"=>"Body onload Javascript",
 		"content"=>"Content",
-		"header_content"=>"HTML Header Content",
+		"headerContent"=>"HTML Header Content",
 		"author"=>"Author",
-		"date_added"=>"Date Added",
-		"date_updated"=>"Date of last Update",
+		"created_ts"=>"Date Added",
+		"updated_ts"=>"Date of last Update",
 		"published"=>"Published",
 		"URL"=>"URL",
-		"printURL"=>"Printer version URL"
+		"printURL"=>"Printer version URL",
+		"comments"=>"Comments",
+		"votes"=>"Votes"
 	);
 	
 	/**
-	 * the name of the database table for the class
+	 * The name of the database table for the class
+	 * 
 	 * @var string
 	 */
 	const TABLE_NAME = 'article';
 	
 	/**
-	 * the URL for this article (transient)
+	 * The URL for this article (transient)
+	 * 
 	 * @var string
 	 */
-	var $URL;
+	protected $URL;
 	
 	/**
-	 * the print URL for this article (transient)
+	 * The print URL for this article (transient)
+	 * 
 	 * @var string
 	 */
-	var $printURL;
+	protected $printURL;
 	
 	/**
 	 * constructor for the class
 	 */
-	function article_object() {
+	public function __construct() {
 		// ensure to call the parent constructor
 		parent::__construct();
+		
 		$this->title = new String();
-		$this->title->setHelper("Please provide a title for the article.");
+		$this->title->setHelper('Please provide a title for the article.');
 		$this->title->setSize(100);
 		$this->title->setRule("/\w+/");
 		
 		$this->section = new DEnum('article_object::section');
 		
 		$this->keywords = new String();
-		$this->keywords->setHelper("Please provide some coma-seperated search engine keywords for the article.");
+		$this->keywords->setHelper('Please provide some coma-seperated search engine keywords for the article.');
 		$this->keywords->setSize(150);
 		$this->keywords->setRule("/\w+/");
 		$this->description = new String();
-		$this->description->setHelper("Please provide a brief description of the article.");
+		$this->description->setHelper('Please provide a brief description of the article.');
 		$this->description->setSize(200);
 		$this->description->setRule("/\w+/");
-		$this->body_onload = new String();		
+		$this->bodyOnload = new String();		
 		$this->content = new Text();
-		$this->content->setHelper("Please provide some content for the article.");
+		$this->content->setHelper('Please provide some content for the article.');
 		$this->content->setRule("/\w+/");
-		$this->header_content = new Text();		
+		$this->headerContent = new Text();		
 		$this->author = new String();
-		$this->author->setHelper("Please state the name of the author of this article");
+		$this->author->setHelper('Please state the name of the author of this article');
 		$this->author->setSize(70);
 		$this->author->setRule("/\w+/");
-		$this->date_added = new Date();
-		$this->date_updated = new Date();
 		$this->published = new Boolean(0);
+		
+		$this->comments = new Relation();
+		$this->markTransient('comments');
+		
+		$this->votes = new Relation();
+		$this->markTransient('votes');
 		
 		$this->URL = '';
 		$this->printURL = '';
@@ -183,7 +202,7 @@ class article_object extends DAO
 		global $front;
 		
 		// check the config to see if we are using mod_rewrite
-		if($config->get("sysUseModRewrite")) {
+		if($config->get('sysUseModRewrite')) {
 			// check to see if an alias is registered for the view_article_title controller, otherwise use the long URL version
 			if(isset($front) && $front->hasAlias('view_article_title')) {
 				$alias = $front->getControllerAlias('view_article_title');
@@ -197,7 +216,7 @@ class article_object extends DAO
 		}
 		
 		// now set up the print version URL
-		if($config->get("sysUseModRewrite")) {
+		if($config->get('sysUseModRewrite')) {
 			// check to see if an alias is registered for the view_article_title controller, otherwise use the long URL version
 			if(isset($front) && $front->hasAlias('view_article_print')) {
 				$alias = $front->getControllerAlias('view_article_print');
@@ -209,32 +228,48 @@ class article_object extends DAO
 		}else{
 			$this->printURL = $config->get('sysURL').'alpha/controller/ViewArticlePrint.php?title='.$this->title->getValue();
 		}
+		
+		// setup relation to the comments
+		$this->comments->setRelatedClass('article_comment_object');
+		$this->comments->setRelatedClassField('article_oid');
+		$this->comments->setRelatedClassDisplayField('content');
+		$this->comments->setRelationType('ONE-TO-MANY');
+		$this->comments->setValue($this->getID());
+		
+		// setup relation to the votes
+		$this->votes->setRelatedClass('article_vote_object');
+		$this->votes->setRelatedClassField('article_oid');
+		$this->votes->setRelatedClassDisplayField('score');
+		$this->votes->setRelationType('ONE-TO-MANY');
+		$this->votes->setValue($this->getID());
 	}
 	
 	/**
-	 * gets the OIDs of the two most recent articles added to the system (by date)
-	 * @return array an array of the two OIDs, or boolean false on failure
+	 * Gets an array of the OIDs of the most recent articles added to the system (by date), from the newest 
+	 * article to the amount specified by the $limit
+	 * 
+	 * @return array
 	 */
-	function get_two_most_recent(){
+	public function loadRecentWithLimit($limit){
 		$denum = new DEnum('article_object::section');
 		$excludeID = $denum->getOptionID('Main');
 		
-		$sql_query = "SELECT OID FROM ".self::TABLE_NAME." WHERE published='1' AND section!='$excludeID' ORDER BY date_added DESC LIMIT 0, 2;";		
+		$sql_query = "SELECT OID FROM ".self::TABLE_NAME." WHERE published='1' AND section!='$excludeID' ORDER BY dateAdded DESC LIMIT 0, $limit;";		
 
 		$this->last_query = $sql_query;
 
 		$result = mysql_query($sql_query);
 		
 		if(mysql_error() != '') {
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load the OIDs for the two most recent articles, MySql error is: '.mysql_error().', query: '.$sql_query ,'get_two_most_recent()');
-			return false;
+			throw new AlphaException('Failed to load the OIDs for the most recent articles, MySql error is ['.mysql_error().'], query ['.$sql_query.']');
+			return array();
 		}
 		
 		$OIDs = array();
 		
 		$i = 0;
 		while ($row = mysql_fetch_assoc($result)) {
-			$OIDs[$i] = $row["OID"];
+			$OIDs[$i] = $row['OID'];
 			$i++;
 		}
 		
@@ -242,137 +277,60 @@ class article_object extends DAO
 	}
 	
 	/**
-	 * gets the OIDs of the ten most recent articles added to the system (by date), for the category section provided
-	 * @return array an array of the ten OIDs (or less than ten), or boolean false on failure
-	 * @param string $section the article category section to fetch the ten articles from 
+	 * Generates the location of the attachments folder for this article
+	 * 
+	 * @return string
 	 */
-	function get_ten_most_recent($section){
-		$sql_query = "SELECT OID FROM ".self::TABLE_NAME." WHERE published='1' AND section='".$section."' ORDER BY date_added DESC LIMIT 0, 10;";		
-
-		$this->last_query = $sql_query;
-
-		$result = mysql_query($sql_query);
+	public function getAttachmentsLocation() {
+		global $config;
 		
-		if(mysql_error() != '') {
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load the OIDs for the ten most recent articles from the section '.$section.', MySql error is: '.mysql_error().', query: '.$sql_query ,'get_ten_most_recent()');
-			return false;
-		}
-		
-		$OIDs = array();
-		
-		$i = 0;
-		while ($row = mysql_fetch_assoc($result)) {
-			$OIDs[$i] = $row["OID"];
-			$i++;
-		}
-		
-		return $OIDs;
+		return $config->get('sysRoot').'attachments/article_'.$this->getID();
 	}
 	
 	/**
-	 * generates the location of the attachments folder for this article
-	 * @return string returns the location of the attachments folder
+	 * Generates the URL of the attachments folder for this article
+	 * 
+	 * @return string
 	 */
-	function get_attachments_location() {
+	public function getAttachmentsURL() {
 		global $config;
 		
-		return $config->get('sysRoot')."attachments/article_".$this->getID();
-	}
-	
-	/**
-	 * generates the URL of the attachments folder for this article
-	 * @return string returns the URL of the attachments folder
-	 */
-	function get_attachments_URL() {
-		global $config;
-		
-		return $config->get('sysURL')."attachments/article_".$this->getID();
+		return $config->get('sysURL').'attachments/article_'.$this->getID();
 	}
 	
 	/**
 	 * creates the attachment folder for the article on the server
 	 */
-	function create_attachments_folder() {
+	public function createAttachmentsFolder() {
 		// create the attachment directory for the article
-		$success = mkdir($this->get_attachments_location());
+		$success = mkdir($this->getAttachmentsLocation());
 			
 		if (!$success) {
-			$error = new handle_error($_SERVER["PHP_SELF"],'Unable to create the folder '.$this->get_attachments_location().' for the article.','create_attachments_folder()','framework');
+			throw new AlphaException('Unable to create the folder ['.$this->getAttachmentsLocation().'] for the article.');
 		}
 			
 		// ...and set write permissions on the folder
-		$success = chmod($this->get_attachments_location(), 0777);
+		$success = chmod($this->getAttachmentsLocation(), 0777);
 			
 		if (!$success) {
-			$error = new handle_error($_SERVER["PHP_SELF"],'Unable to set write permissions on the folder '.$this->get_attachments_location().'.','create_attachments_folder()','framework');
+			throw new AlphaException('Unable to set write permissions on the folder ['.$this->getAttachmentsLocation().'].');
 		}
 	}
 	
 	/**
-	 * populates an article_object from the database table by the article title
-	 * @param string $title The title of the article to load
-	 * @return bool True if no database error occured, else false and error is stored in $this->last_query
+	 * Method for returning the calculated score for this article
+	 * 
+	 * @return double
 	 */
-	function load_by_title($title)
-	{
-		if(method_exists($this, 'after_load_callback'))
-				$this->after_load_callback();
-		
-		$sql_query = "SELECT * FROM ".self::TABLE_NAME." WHERE title = '$title';";
-
-		$this->last_query = $sql_query;
-		
-		$result = mysql_query($sql_query);
-		
-		if(mysql_num_rows($result) == 0) {
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load article '.$title.', not found in database.' ,'load_by_title($title)','framework');
-			return false;
-		}
-		
-		$row = mysql_fetch_assoc($result);
-		
-		$properties = get_class_vars(get_class($this));
-
-		foreach(array_keys($properties) as $prop) {
-			if (get_class($this->$prop) != false) {	
-				if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {					
-					$this->$prop->setValue(stripslashes($row[$prop]));
-				}else{
-					$this->$prop->populateFromString(stripslashes($row[$prop]));
-				}
-			}
-			if($prop == "OID"){				
-				$this->OID = $row[$prop];
-			}	
-			if($prop == "version_num"){				
-				$this->version_num = $row[$prop];
-			}
-		}		
-		
-		if(mysql_error() == '' && $this->setEnumOptions()) {
-			if(method_exists($this, 'after_load_callback'))
-				$this->after_load_callback();
-			return true;
-		}else{			
-			$this->last_query .= " Error: ".mysql_error();
-			//$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load article, MySql error is: '.mysql_error().', query: '.$this->last_query,'load_by_title($title)','framework');
-			return false;
-		}		
-	}
-	
-	/**
-	 * method for returning the calculated score for this article
-	 * @return double the average score
-	 */
-	function get_score() {
-		$votes = $this->get_votes();
+	public function getArticleScore() {
+		$votes = $this->getArticleVotes();
 		
 		$score = 0;
 		$total_score = 0;
 		$vote_count = count($votes);
 		
 		for($i = 0; $i < $vote_count; $i++){
-			$total_score += $votes[$i]->get("score");
+			$total_score += $votes[$i]->get('score');
 		}
 		
 		if($vote_count > 0)
@@ -382,39 +340,22 @@ class article_object extends DAO
 	}
 	
 	/**
-	 * method for fetching all of the votes for this article
-	 * @return array an array of article_vote_object objects
+	 * Method for fetching all of the votes for this article
+	 * 
+	 * @return array An array of article_vote_object objects
 	 */
-	function get_votes() {
-		$sql_query = "SELECT OID FROM article_vote WHERE article_oid='".$this->OID."';";		
-
-		$this->last_query = $sql_query;
-
-		$result = mysql_query($sql_query);
-		
-		if(mysql_error() != '') {
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load the votes for the article '.$this->OID.', MySql error is: '.mysql_error().', query: '.$sql_query ,'get_votes()');
-			return false;
-		}
-		
-		$votes = array();
-		
-		$i = 0;
-		while ($row = mysql_fetch_assoc($result)) {
-			$temp = new article_vote_object();
-			$temp->load($row['OID']);
-			$votes[$i] = $temp;
-			$i++;
-		}
+	public function getArticleVotes() {
+		$votes = $this->votes->getRelatedObjects();
 		
 		return $votes;
 	}
 	
 	/**
-	 * method to determine if the logged-in user has already voted for this article
+	 * Method to determine if the logged-in user has already voted for this article
+	 * 
 	 * @return boolean true if they have voted already, false otherwise
 	 */
-	function check_user_voted() {
+	public function checkUserVoted() {
 		// just going to return true if nobody is logged in
 		if (!isset($_SESSION['currentUser']))
 			return true;
@@ -428,97 +369,27 @@ class article_object extends DAO
 		$result = mysql_query($sql_query);
 		
 		if(mysql_error() != '') {
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to check if the current user voted for the article '.$this->OID.', MySql error is: '.mysql_error().', query: '.$sql_query ,'check_user_voted()');
+			throw new AlphaException('Failed to check if the current user voted for the article ['.$this->OID.'], MySql error is ['.mysql_error().'], query ['.$sql_query.']');
 			return false;
 		}
 		
 		$row = mysql_fetch_assoc($result);
 		
-		if($row["users_vote"] == "0")
+		if($row['users_vote'] == "0")
 			return false;
 		else
 			return true;			
 	}
 	
 	/**
-	 * method for fetching all of the comments for this article
+	 * Method for fetching all of the comments for this article
+	 * 
 	 * @return array an array of article_comment_object objects
 	 */
-	function get_comments() {
-		$sql_query = "SELECT OID FROM article_comment WHERE article_oid='".$this->OID."' ORDER BY created_ts;";		
-
-		$this->last_query = $sql_query;
-
-		$result = mysql_query($sql_query);
-		
-		if(mysql_error() != '') {
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load the comments for the article '.$this->OID.', MySql error is: '.mysql_error().', query: '.$sql_query ,'get_comments()');
-			return false;
-		}
-		
-		$comments = array();
-		
-		$i = 0;
-		while ($row = mysql_fetch_assoc($result)) {
-			$temp = new article_comment_object();
-			$temp->load($row['OID']);
-			$comments[$i] = $temp;
-			$i++;
-		}
+	public function getArticleComments() {
+		$comments = $this->comments->getRelatedObjects();		
 		
 		return $comments;
-	}
-	
-	/**
-	 * loads all of the objects of this class into an array, which is returned
-	 * this custom version for an article only returns published articles
-	 * 
-	 * @param integer $start The start of the SQL LIMIT clause
-	 * @param integer $limit The amount (limit) of objects to load
-	 * @param string $order_by the name of the field to sort the BOs by
-	 * @param string $order the order to sort the BOs by, default is DESC
-	 * @return array an array containing objects of this type of business object.
-	 */
-	function load_all($start=0, $limit=0, $order_by="OID", $order="DESC")
-	{
-		global $config;
-		global $front;
-		
-		// if accessing from the admin backend, use the parent method which includes all articles
-		if(basename($_SERVER["PHP_SELF"]) == "ListAll.php" || (isset($front) && $front->getPageController() == 'ListAll'))
-			return parent::load_all($start, $limit, $order_by, $order);
-		
-		if ($limit == 0)
-			$limit = $config->get('sysListPageAmount');
-		
-		// exclude 'General' articles when we are accessing from a news feed
-		if(basename($_SERVER["PHP_SELF"]) == "view_feed.php" || (isset($_GET["act"]) && $_GET["act"] == "view_feed"))
-			$sql_query = "SELECT OID FROM ".self::TABLE_NAME." WHERE published='1' AND section!='General' ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
-		else
-			$sql_query = "SELECT OID FROM ".self::TABLE_NAME." WHERE published='1' ORDER BY ".$order_by." ".$order." LIMIT ".$start.", ".$limit.";";
-		
-		$this->last_query = $sql_query;
-
-		$result = mysql_query($sql_query);
-		
-		if(mysql_error() != '') {
-			$error = new handle_error($_SERVER["PHP_SELF"],'Failed to load objects, query: '.$this->last_query.'.' ,'load_all()','framework');
-			return false;
-		}
-		
-		// now build an array of objects to be returned
-		$objects = array();
-		$count = 0;
-		$BO_Class = get_class($this);
-		
-		while($row = mysql_fetch_assoc($result)) {
-			$obj = new $BO_Class();
-			$obj->load_object($row["OID"]);
-			$objects[$count] = $obj;
-			$count++;			
-		}
-		
-		return $objects;	
 	}
 }
 

@@ -405,11 +405,9 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	public function getRelatedObjects() {
 		global $config;
 		
-		if (file_exists($config->get('sysRoot').'alpha/model/'.$this->relatedClass.'.inc')) {
-			require_once $config->get('sysRoot').'alpha/model/'.$this->relatedClass.'.inc';
-		}elseif (file_exists($config->get('sysRoot').'model/'.$this->relatedClass.'.inc')) {
-			require_once $config->get('sysRoot').'model/'.$this->relatedClass.'.inc';
-		}else{
+		try {
+			DAO::loadClassDef($this->relatedClass);
+		}catch(IllegalArguementException $e) {		
 			throw new AlphaException('Could not load the definition for the BO class ['.$this->relatedClass.']');
 		}
 					
