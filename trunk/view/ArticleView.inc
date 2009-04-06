@@ -122,7 +122,7 @@ class ArticleView extends View {
 		}else{
 			// we will take this opportunity to create the attachments folder is it does
 			// not already exist.
-			$this->BO->create_attachments_folder();
+			$this->BO->createAttachmentsFolder();
 		}
 
 		$html .= '<td>';
