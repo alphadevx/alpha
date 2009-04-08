@@ -48,7 +48,7 @@ class MarkdownFacade {
 		$this->filename = $config->get('sysRoot').'cache/html/'.get_class($this->BO).'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.html';
 		
 		if(get_class($this->BO) == 'article_object')
-			$attachURL = $this->BO->get_attachments_URL();
+			$attachURL = $this->BO->getAttachmentsURL();
 		else
 			$attachURL = "";
 		
