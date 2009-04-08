@@ -138,6 +138,99 @@ class ArticleView extends View {
 		
 		return $html;
 	}
+	
+	/**
+	 * Custom method to render the page header HTML content with CMS headers and onload events
+	 * 
+	 * @param Controller $controller
+	 * @param string $cssStyleSheet
+	 * @return string
+	 * @todo remove output buffering around form_validator instance
+	 */
+	public function displayArticlePageHead($controller, $cssStyleSheet='') {
+		if(method_exists($controller, 'before_displayPageHead_callback'))
+			$controller->before_displayPageHead_callback();
+		
+		global $config;
+		
+		$html = '';
+		
+		$html.= '<html>';
+		$html.= '<head>';
+		$html.= '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">';
+		$html.= '<title>'.$controller->getTitle().'</title>';
+		$html.= '<meta name="Keywords" content="'.$controller->getKeywords().'">';
+		$html.= '<meta name="Description" content="'.$controller->getDescription().'">';
+		$html.= '<meta name="identifier" content="http://'.$config->get('sysURL').'/">';
+		$html.= '<meta name="revisit-after" content="7 days">';
+		$html.= '<meta name="expires" content="never">';
+		$html.= '<meta name="language" content="en">';
+		$html.= '<meta name="distribution" content="global">';
+		$html.= '<meta name="title" content="'.$controller->getTitle().'">';
+		$html.= '<meta name="robots" content="index,follow">';
+		$html.= '<meta http-equiv="imagetoolbar" content="no">';
+
+		if($cssStyleSheet == '')
+			$cssStyleSheet = $config->get('sysTheme');
+			
+		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$cssStyleSheet.'.css.php">';
+
+		$html.= '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
+		
+		ob_start();
+		require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
+		require_once $config->get('sysRoot').'alpha/view/widgets/image.js.php';
+		$html.= ob_get_clean();
+		
+		// if we are working with a BO, render form validation Javascript rules
+		if ($controller->getBO() != null) {
+			require_once $config->get('sysRoot').'alpha/view/widgets/StringBox.js.php';
+			require_once $config->get('sysRoot').'alpha/view/widgets/TextBox.js.php';
+		
+			ob_start();
+			require_once $config->get('sysRoot').'alpha/view/widgets/form_validator.js.php';
+			$html.= ob_get_clean();
+
+			$html.= '<script type="text/javascript">';
+			ob_start();
+			$validator = new form_validator($controller->getBO());
+			$html.= ob_get_clean();
+			$html.= '</script>';
+		}
+		
+		if(method_exists($controller, 'during_displayPageHead_callback'))
+			$html.= $controller->during_displayPageHead_callback();
+		
+		$html.= '</head>';
+		$html.= '<body'.($this->BO->get('bodyOnload') != '' ? ' onload="'.$this->BO->get('bodyOnload').'"' : '').'>';
+		
+		if($config->get('sysCMSDisplayStandardHeader')) {
+			$html.= '<p><a href="'.$config->get('sysURL').'">'.$config->get('sysTitle').'</a> &nbsp; &nbsp;';
+			$denum = $this->BO->getPropObject('section');
+			$html.= 'Site Section: <em>'.$denum->getDisplayValue().'</em> &nbsp; &nbsp;';
+			$html.= 'Date Added: <em>'.$this->BO->getCreateTS()->getDate().'</em> &nbsp; &nbsp;';
+			$html.= 'Last Updated: <em>'.$this->BO->getUpdateTS()->getDate().'</em> &nbsp; &nbsp;';
+			$html.= 'Revision: <em>'.$this->BO->getVersion().'</em></p>';
+		}
+		
+		$html.= $config->get('sysCMSHeader');
+			
+		$html.= '<h1>'.$controller->getTitle().'</h1>';
+		
+		if (isset($_SESSION['currentUser'])) {	
+			$html.= '<p>You are logged in as '.$_SESSION['currentUser']->getDisplayname().'.  <a href="'.$config->get('sysURL').'alpha/controller/Logout.php">Logout</a></p>';
+		}else{
+			$html.= '<p>You are not logged in</p>';
+		}
+		
+		if($controller->getStatus() != '')
+			$html .= $controller->getStatus();
+		
+		if(method_exists($controller, 'after_displayPageHead_callback'))
+			$html.= $controller->after_displayPageHead_callback();
+			
+		return $html;
+	}
 }
 
 ?>
