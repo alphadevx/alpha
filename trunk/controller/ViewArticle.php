@@ -163,7 +163,7 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 		
 		$html .= '&nbsp;&nbsp;';
 		if($config->get('sysAllowPDFVersions')) {
-			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/ViewArticlePDF.php?title=".$this->BO->get("title")."';",'Open PDF Version','pdfBut');
+			$temp = new button("document.location = '".$config->get('sysURL')."alpha/controller/ViewArticlePDF.php?title=".$this->BO->get("title")."';",'Open PDF Version','pdfBut');
 			$html .= $temp->render();
 		}
 		
