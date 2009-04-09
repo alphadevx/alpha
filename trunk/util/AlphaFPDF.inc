@@ -16,7 +16,7 @@ require_once $config->get('sysRoot').'alpha/view/widgets/image.js.php';
  * 
  */
 
-class alpha_fpdf extends FPDF {	
+class AlphaFPDF extends FPDF {	
 	var $B;
 	var $I;
 	var $U;
@@ -28,7 +28,7 @@ class alpha_fpdf extends FPDF {
 	//Private properties
 	var $tmpFiles = array();
 	
-	function alpha_fpdf($orientation='P',$unit='mm',$format='A4')
+	function AlphaFPDF($orientation='P',$unit='mm',$format='A4')
 	{
 	    //Call parent constructor
 	    $this->FPDF($orientation,$unit,$format);
@@ -133,7 +133,7 @@ class alpha_fpdf extends FPDF {
 	    			
 	    		$imgPath = image::convertImageURLToPath($imgSrc);
 	    		
-	    		$img = new image($imgPath, $image_details[0], $image_details[1], $type, 0.95, 0, 1);
+	    		$img = new image($imgPath, $image_details[0]/$this->k, $image_details[1]/$this->k, $type, 0.95, 0, 1);
 	    		$imgSrc = $img->filename;
 	    	}
 	    	// just making sure that the image will be on a new line
@@ -142,21 +142,22 @@ class alpha_fpdf extends FPDF {
 	    	 * check to ensure that there is enough room on the current page to render the image, if
 	    	 * not then insert a page break
 	    	 */
-	    	$remainingY = $this->fh - $this->GetY();	    	
-	    	if($remainingY < ($image_details[1]/$this->k))
+	    	$remainingY = $this->h - $this->GetY();	    	
+	    	if($remainingY < intval(($image_details[1]/$this->k)/2))
 	    		$this->AddPage('P');
 	    		
 	    	// check config to see if we want to allow transparent PNGs
-			if($imgType == 3 && $config->get('sysImagesPerservePNG'))
+			if($imgType == 3 && $config->get('sysImagesPerservePNG')) {
 				$this->ImagePngWithAlpha($imgSrc, $this->GetX(), $this->GetY(), $image_details[0]/$this->k, $image_details[1]/$this->k);
-			else
-	    		$this->Image($imgSrc, $this->GetX(), $this->GetY(), $image_details[0]/$this->k, $image_details[1]/$this->k, $type);
-	    	
+			}else{
+				$this->Image($imgSrc, $this->GetX(), $this->GetY(), intval(($image_details[0]/$this->k)/2), intval(($image_details[1]/$this->k)/2), 'jpg');
+			}
+			
 	    	/*
 	    	 * set the internal pointer position for the document to be past the height of the image
 	    	 * ($this->k is the scaling factor from the parent class)
 	    	 */ 
-	    	$this->SetY($this->GetY()+($image_details[1]/$this->k));	    	
+	    	$this->SetY($this->GetY()+intval(($image_details[1]/$this->k)/2));	    	
 	    }
 	    if($tag=='CODE') {
 	    	$this->SetFont('Arial','',10);	    	
@@ -198,7 +199,7 @@ class alpha_fpdf extends FPDF {
 	    if($tag=='A')
 	        $this->HREF='';
 	    if($tag=='H1')    	
-	    	$this->Ln(5);
+	    	$this->Ln(15);
 	    if($tag=='H2')
 	    	$this->Ln(1);	    
 	    if($tag=='P')	
