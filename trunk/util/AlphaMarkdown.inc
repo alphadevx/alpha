@@ -140,7 +140,7 @@ class AlphaMarkdown extends MarkdownExtra_Parser {
 		if (!$external) {
 			$result .= ">$link_text</a>";
 		}else{
-			$result .= ">$link_text<img class=\"externalLink\" src=\"".$config->get('sysURL').'/alpha/images/icons/page_go.png'."\"/></a>";
+			$result .= ">$link_text<img class=\"externalLink\" src=\"".$config->get('sysURL').'alpha/images/icons/page_go.png'."\"/></a>";
 		}
 
 		return $this->hashSpan($result);
