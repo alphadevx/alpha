@@ -140,10 +140,71 @@ class AlphaMarkdown extends MarkdownExtra_Parser {
 		if (!$external) {
 			$result .= ">$link_text</a>";
 		}else{
-			$result .= ">$link_text<img class=\"externalLink\" src=\"".$config->get('sysURL').'alpha/images/icons/page_go.png'."\"/></a>";
+			$result .= '>'.$link_text.'<img class="externalLink" src="'.$config->get('sysURL').'alpha/images/icons/page_go.png'.'" /></a>';
 		}
 
 		return $this->hashSpan($result);
+	}
+	
+	/**
+	 * Custom version of the _doTable_callback(...) method which sets the table border and CSS style
+	 */
+	public function _doTable_callback($matches) {
+		$head		= $matches[1];
+		$underline	= $matches[2];
+		$content	= $matches[3];
+
+		# Remove any tailing pipes for each line.
+		$head		= preg_replace('/[|] *$/m', '', $head);
+		$underline	= preg_replace('/[|] *$/m', '', $underline);
+		$content	= preg_replace('/[|] *$/m', '', $content);
+		
+		# Reading alignement from header underline.
+		$separators	= preg_split('/ *[|] */', $underline);
+		foreach ($separators as $n => $s) {
+			if (preg_match('/^ *-+: *$/', $s))		$attr[$n] = ' align="right"';
+			else if (preg_match('/^ *:-+: *$/', $s))$attr[$n] = ' align="center"';
+			else if (preg_match('/^ *:-+ *$/', $s))	$attr[$n] = ' align="left"';
+			else									$attr[$n] = '';
+		}
+		
+		# Creating code spans before splitting the row is an easy way to 
+		# handle a code span containg pipes.
+		$head	= $this->doCodeSpans($head);
+		$headers	= preg_split('/ *[|] */', $head);
+		$col_count	= count($headers);
+		
+		# Write column headers.
+		$text = "<table class=\"bordered\" border=\"1\">\n";
+		$text .= "<thead>\n";
+		$text .= "<tr>\n";
+		foreach ($headers as $n => $header)
+			$text .= "  <th$attr[$n]>".$this->runSpanGamut(trim($header))."</th>\n";
+		$text .= "</tr>\n";
+		$text .= "</thead>\n";
+		
+		# Split content by row.
+		$rows = explode("\n", trim($content, "\n"));
+		
+		$text .= "<tbody>\n";
+		foreach ($rows as $row) {
+			# Creating code spans before splitting the row is an easy way to 
+			# handle a code span containg pipes.
+			$row = $this->doCodeSpans($row);
+			
+			# Split row by cell.
+			$row_cells = preg_split('/ *[|] */', $row, $col_count);
+			$row_cells = array_pad($row_cells, $col_count, '');
+			
+			$text .= "<tr>\n";
+			foreach ($row_cells as $n => $cell)
+				$text .= "  <td$attr[$n]>".$this->runSpanGamut(trim($cell))."</td>\n";
+			$text .= "</tr>\n";
+		}
+		$text .= "</tbody>\n";
+		$text .= "</table>";
+		
+		return $this->hashBlock($text) . "\n";
 	}
 }
 
