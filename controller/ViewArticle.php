@@ -198,7 +198,7 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 				throw new SecurityException('This page cannot accept post data from remote servers!');
 			}
 			
-			if(isset($params['voteBut']) && !$this->BO->check_user_voted()) {
+			if(isset($params['voteBut']) && !$this->BO->checkUserVoted()) {
 				$vote = new article_vote_object();
 				$vote->set('article_oid', $params['oid']);
 				$vote->set('person_oid', $_SESSION['currentUser']->getID());
