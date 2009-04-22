@@ -203,7 +203,7 @@ if (!defined('K_TCPDF_EXTERNAL_CONFIG')) {
 	/**
 	 * ratio used to adjust the conversion of pixels to user units
 	 */
-	define ('PDF_IMAGE_SCALE_RATIO', 1.5);
+	define ('PDF_IMAGE_SCALE_RATIO', 1);
 	
 	/**
 	 * magnification factor for titles

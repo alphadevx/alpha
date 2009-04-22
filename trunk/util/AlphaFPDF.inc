@@ -12,10 +12,9 @@ require_once $config->get('sysRoot').'alpha/view/widgets/image.js.php';
  * @package Alpha Util
  * @author John Collins <john@design-ireland.net>
  * @copyright 2007 John Collins 
- * @todo add in more support for other HTML tags!
+ * @deprecated use TCPDFFacade instead!
  * 
  */
-
 class AlphaFPDF extends FPDF {	
 	var $B;
 	var $I;

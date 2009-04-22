@@ -5,7 +5,7 @@ if(!isset($config))
 	require_once '../util/configLoader.inc';
 $config =&configLoader::getInstance();
 
-require_once $config->get('sysRoot').'alpha/util/FPDFFacade.inc';
+require_once $config->get('sysRoot').'alpha/util/TCPDFFacade.inc';
 require_once $config->get('sysRoot').'alpha/util/AlphaMarkdown.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
@@ -51,7 +51,7 @@ class ViewArticlePDF extends Controller {
 			$this->BO = new article_object();
 			$this->BO->loadByAttribute('title', $title);
 			
-			$pdf = new FPDFFacade($this->BO);
+			$pdf = new TCPDFFacade($this->BO);
 			
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());
