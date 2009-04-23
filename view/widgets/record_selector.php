@@ -12,6 +12,7 @@ require_once $config->get('sysRoot').'alpha/model/DAO.inc';
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Relation.inc';
 
+
 /**
 * Record selction HTML widget
 * 
@@ -100,6 +101,12 @@ class record_selector
 				$html .= '<tr><td colspan="2">';
 				$html .= '<div id="relation_field_'.$this->name.'" style="display:none;">';
 				foreach($objects as $obj) {
+					// check to see if we are in the admin back-end
+					if(basename($_SERVER['PHP_SELF']) == 'FC.php')					
+						$viewURL = FrontController::generateSecureURL('act=Detail&bo='.get_class($obj).'&oid='.$obj->getID());
+					else
+						$viewURL = $config->get('sysURL').'alpha/controller/Detail.php?bo='.get_class($obj).'&oid='.$obj->getID();
+					
 					$html .= '<div class="bordered" style="margin:5px;">';
 					$html .= '<p>';
 					/*
@@ -118,13 +125,18 @@ class record_selector
 								$value = $person->getDisplayName();
 							}
 							
-							$html .= '<em>'.$label.': </em>'.$value.'&nbsp;&nbsp;&nbsp;&nbsp;';
+							if($field == 'OID')
+								$html .= '<em>'.$label.': </em><a href="'.$viewURL.'">'.$value.'</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+							else
+								$html .= '<em>'.$label.': </em>'.$value.'&nbsp;&nbsp;&nbsp;&nbsp;';
 						}
-					}else{
-						$html .= '<em>'.$obj->getDataLabel('OID').': </em>'.$obj->getID();
+					}else{						
+						$html .= '<em>'.$obj->getDataLabel('OID').': </em><a href="'.$viewURL.'">'.$obj->getID().'</a>';
 					}
 					$html .= '</p>';
-					$html .= '<p>'.$obj->get($this->relation_object->getRelatedClassDisplayField()).'</p>';
+					// ensures that line returns are rendered
+					$value = str_replace("\n", '<br>', $obj->get($this->relation_object->getRelatedClassDisplayField()));
+					$html .= '<p>'.$value.'</p>';
 					$html .= '</div>';
 				}
 				$html .= '</div>';
