@@ -9,6 +9,7 @@ $config =&configLoader::getInstance();
 require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/model/DAO.inc';
+require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Relation.inc';
 
 /**
@@ -100,8 +101,30 @@ class record_selector
 				$html .= '<div id="relation_field_'.$this->name.'" style="display:none;">';
 				foreach($objects as $obj) {
 					$html .= '<div class="bordered" style="margin:5px;">';
-					$html .= '<p>'.$obj->getDataLabel('OID').': <em>'.$obj->getID().'</em></p>';
-					$html .= '<p>'.$obj->getDataLabel($this->relation_object->getRelatedClassDisplayField()).': <em>'.$obj->get($this->relation_object->getRelatedClassDisplayField()).'</em></p>';
+					$html .= '<p>';
+					/*
+					 * If any display headers were set with setRelatedClassHeaderFields, use them otherwise
+					 * use the OID of the related class as the only header.
+					 */ 
+					$headerFields = $this->relation_object->getRelatedClassHeaderFields();
+					if(count($headerFields) > 0) {
+						foreach($headerFields as $field) {
+							$label = $obj->getDataLabel($field);
+							$value = $obj->get($field);
+							
+							if($field == 'created_by' || $field == 'updated_by') {
+								$person = new person_object();
+								$person->load($value);
+								$value = $person->getDisplayName();
+							}
+							
+							$html .= '<em>'.$label.': </em>'.$value.'&nbsp;&nbsp;&nbsp;&nbsp;';
+						}
+					}else{
+						$html .= '<em>'.$obj->getDataLabel('OID').': </em>'.$obj->getID();
+					}
+					$html .= '</p>';
+					$html .= '<p>'.$obj->get($this->relation_object->getRelatedClassDisplayField()).'</p>';
 					$html .= '</div>';
 				}
 				$html .= '</div>';

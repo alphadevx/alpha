@@ -36,6 +36,13 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * @var string
 	 */
 	private $relatedClassDisplayField;
+	
+	/**
+	 * An array of fields to use the values of while rendering related display values via the selection widget
+	 * 
+	 * @var array
+	 */
+	private $relatedClassHeaderFields = array();
 		
 	/**
 	 * The name of the business object class on the left of a MANY-TO-MANY relation 
@@ -219,6 +226,25 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 */
 	public function getRelatedClassField() {
 		return $this->relatedClassField;
+	}
+	
+	/**
+	 * Setter for ONE-TO-MANY relations, which sets the header fields to
+	 * render from the related class
+	 * 
+	 * @param array $fieldNames
+	 */
+	public function setRelatedClassHeaderFields($fieldNames) {
+		$this->relatedClassHeaderFields = $fieldNames;
+	}
+	
+	/**
+	 * Getter for the selection widget field headings of the related class
+	 *
+	 * @return array
+	 */
+	public function getRelatedClassHeaderFields() {
+		return $this->relatedClassHeaderFields;
 	}
 	
 	/**
