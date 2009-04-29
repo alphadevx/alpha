@@ -1775,7 +1775,7 @@ abstract class DAO {
 			self::$logger->debug('<<getDataLabel ['.$this->dataLabels[$att].'])');		
 			return $this->dataLabels[$att];
 		}else{
-			throw new IllegalArguementException('Error: no data label found on the class ['.get_class($this).'] for the attribute ['.$att.']');
+			throw new IllegalArguementException('No data label found on the class ['.get_class($this).'] for the attribute ['.$att.']');
 			self::$logger->debug('<<getDataLabel [])');
 			return '';
 		}
