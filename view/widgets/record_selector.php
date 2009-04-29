@@ -88,27 +88,39 @@ class record_selector
 			$objects = $this->relation_object->getRelatedObjects();			
 			
 			if(count($objects) > 0 && $table_tags) {
-				$html .= '<tr><td colspan="2">';
-				$html .= '<table cols="1" width="100%">';
-				$html .= '<tr><td style="text-align:center;">';
+				$html .= '<tr><td style="text-align:center;" colspan="2">';
 				$html .= $this->label;
-				$tmp = new button("document.getElementById('relation_field_".$this->name."').style.display = 'block';", "Display related objects", $this->name."DisBut", $config->get('sysURL')."/alpha/images/icons/arrow_down.png");
+				$tmp = new button("document.getElementById('relation_field_".$this->name."').style.display = '';", "Display related objects", $this->name."DisBut", $config->get('sysURL')."/alpha/images/icons/arrow_down.png");
 				$html .= $tmp->render();
 				$tmp = new button("document.getElementById('relation_field_".$this->name."').style.display = 'none';", "Hide related objects", $this->name."HidBut", $config->get('sysURL')."/alpha/images/icons/arrow_up.png");
 				$html .= $tmp->render();
-				$html .= '</td></tr>';
+				$html .= '</td></tr>';				
 				
-				$html .= '<tr><td colspan="2">';
-				$html .= '<div id="relation_field_'.$this->name.'" style="display:none;">';
+				$html .= '<tr><td colspan="2">';				
+				$html .= '<table id="relation_field_'.$this->name.'" style="width:100%; display:none;" class="relationTable">';
+				
+				$customerViewControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'view');
+				$customerEditControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'edit');
+				
 				foreach($objects as $obj) {
+					$html .= '<tr><td>';					
 					// check to see if we are in the admin back-end
-					if(basename($_SERVER['PHP_SELF']) == 'FC.php')					
+					if(basename($_SERVER['PHP_SELF']) == 'FC.php') {					
 						$viewURL = FrontController::generateSecureURL('act=Detail&bo='.get_class($obj).'&oid='.$obj->getID());
-					else
-						$viewURL = $config->get('sysURL').'alpha/controller/Detail.php?bo='.get_class($obj).'&oid='.$obj->getID();
-					
-					$html .= '<div class="bordered" style="margin:5px;">';
-					$html .= '<p>';
+						$editURL = FrontController::generateSecureURL('act=Edit&bo='.get_class($obj).'&oid='.$obj->getID());
+					}else{						
+						if(isset($customerViewControllerName)) {
+							$viewURL = $config->get('sysURL').'controller/'.$customerViewControllerName.'.php?oid='.$obj->getID();
+						}else{
+							$viewURL = $config->get('sysURL').'alpha/controller/Detail.php?bo='.get_class($obj).'&oid='.$obj->getID();
+						}
+						if(isset($customerEditControllerName)) {
+							$editURL = $config->get('sysURL').'controller/'.$customerEditControllerName.'.php?oid='.$obj->getID();
+						}else{
+							$editURL = $config->get('sysURL').'alpha/controller/Edit.php?bo='.get_class($obj).'&oid='.$obj->getID();
+						}
+					}						
+										
 					/*
 					 * If any display headers were set with setRelatedClassHeaderFields, use them otherwise
 					 * use the OID of the related class as the only header.
@@ -125,23 +137,32 @@ class record_selector
 								$value = $person->getDisplayName();
 							}
 							
-							if($field == 'OID')
-								$html .= '<em>'.$label.': </em><a href="'.$viewURL.'">'.$value.'</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-							else
-								$html .= '<em>'.$label.': </em>'.$value.'&nbsp;&nbsp;&nbsp;&nbsp;';
+							$html .= '<em>'.$label.': </em>'.$value.'&nbsp;&nbsp;&nbsp;&nbsp;';
 						}
-					}else{						
-						$html .= '<em>'.$obj->getDataLabel('OID').': </em><a href="'.$viewURL.'">'.$obj->getID().'</a>';
+						// if the related BO has been updated, render the update time
+						if($obj->getCreateTS() != $obj->getUpdateTS()) {
+							try {
+								$html .= '<em>'.$obj->getDataLabel('updated_ts').': </em>'.$obj->get('updated_ts');
+							}catch(IllegalArguementException $e) {
+								$html .= '<em>Updated: </em>'.$obj->get('updated_ts');
+							}
+						}
+					}else{
+						$html .= '<em>'.$obj->getDataLabel('OID').': </em>'.$obj->get('OID');
 					}
-					$html .= '</p>';
 					// ensures that line returns are rendered
 					$value = str_replace("\n", '<br>', $obj->get($this->relation_object->getRelatedClassDisplayField()));
 					$html .= '<p>'.$value.'</p>';
-					$html .= '</div>';
-				}
-				$html .= '</div>';
-				$html .= '</td></tr>';
-				$html .= '</table>';
+					
+					$html .= '<div align="center">';
+					$html .= '<a href="'.$viewURL.'">View</a>';
+					// if the current user owns it, they get the edit link
+					if(isset($_SESSION['currentUser']) && $_SESSION['currentUser']->getID() == $obj->getCreatorId())
+						$html .= '&nbsp;&nbsp;&nbsp;&nbsp;<a href="'.$editURL.'">Edit</a></div>';
+					$html .= '</div>';					
+				}				
+				$html .= '</table>';				
+				
 				$html .= '</td></tr>';				
 			}
 		}
