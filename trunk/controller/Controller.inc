@@ -841,6 +841,38 @@ abstract class Controller {
 	}
 	
 	/**
+	 * Returns the name of a custom controller if one is found, otherwise returns null
+	 *
+	 * @param string $BOName The classname of the business object
+	 * @param string $mode The mode of the controller (create, view, edit)
+	 * @return string
+	 */
+	public static function getCustomControllerName($BOName, $mode) {
+		if(self::$logger == null)
+			self::$logger = new Logger('Controller');
+		self::$logger->debug('>>getCustomControllerName(BOName=['.$BOName.'], mode=['.$mode.'])');
+		
+		global $config;
+		
+		// strip the _object part from the class name
+		$BOName = substr($BOName, 0, strpos($BOName, '_object'));
+		// uppercase the first letter of each word, e.g. create cart becomes Create Cart
+		$controllerName = ucwords($mode.' '.$BOName);
+		// remove spaces
+		$controllerName = str_replace(' ', '', $controllerName);
+
+		self::$logger->debug('Custom controller name is ['.$controllerName.']');
+		
+		if (file_exists($config->get('sysRoot').'controller/'.$controllerName.'.php')) {
+			self::$logger->debug('<<getCustomControllerName');
+			return $controllerName;
+		}else{
+			self::$logger->debug('<<getCustomControllerName');
+			return null;
+		}		
+	}
+	
+	/**
 	 * Does a HTTP redirect to a custom controller if one is found
 	 *
 	 * @param string $BOName The classname of the business object
