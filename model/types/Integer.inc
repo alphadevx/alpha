@@ -34,7 +34,7 @@ class Integer extends AlphaType implements AlphaTypeInterface {
 	 * 
 	 * @var string
 	 */
-	protected $helper = 'Error: not a valid Integer value!';
+	protected $helper;
 	
 	/**
 	 * The size of the value for the Integer
@@ -58,16 +58,16 @@ class Integer extends AlphaType implements AlphaTypeInterface {
 	public function __construct($val=0) {		
 		
 		$this->validationRule = DEFAULT_INTEGER;
-		$this->helper = 'Error: not a valid Integer value!  A maximum of '.$this->size.' characters is allowed';
+		$this->helper = ' is not a valid Integer value!  A maximum of '.$this->size.' characters is allowed';
 		
 		if (strlen($val) <= $this->size) {			
 			if (preg_match($this->validationRule, $val)) {				
 				$this->value = $val;				
 			}else{
-				throw new IllegalArguementException($this->helper);
+				throw new IllegalArguementException("[$val]".$this->helper);
 			}
 		}else{
-			throw new IllegalArguementException($this->helper);
+			throw new IllegalArguementException("[$val]".$this->helper);
 		}
 	}
 	
@@ -82,10 +82,10 @@ class Integer extends AlphaType implements AlphaTypeInterface {
 			if (preg_match($this->validationRule, $val)) {				
 				$this->value = $val;				
 			}else{
-				throw new IllegalArguementException($this->helper);
+				throw new IllegalArguementException("[$val]".$this->helper);
 			}
 		}else{
-			throw new IllegalArguementException($this->helper);
+			throw new IllegalArguementException("[$val]".$this->helper);
 		}
 	}
 	

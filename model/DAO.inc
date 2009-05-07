@@ -446,22 +446,25 @@ abstract class DAO {
 			}
 			
 			// set the "updated by" fields, we can only set the user id if someone is logged in
-			if(isset($_SESSION["current_user"]))
-				$this->updated_by->setValue($_SESSION["current_user"]->getID());
+			if(isset($_SESSION['current_user']))
+				$this->updated_by->setValue($_SESSION['current_user']->getID());
 			
 			$this->updated_ts = new Timestamp(date("Y-m-d H:i:s"));
 			
 			// check to see if it is a transient object that needs to be inserted
 			if($this->isTransient()) {
-				$sqlQuery = "INSERT INTO ".$this->getTableName()." (";
+				$sqlQuery = 'INSERT INTO '.$this->getTableName().' (';
 	
 				foreach($properties as $propObj) {
 					$propName = $propObj->name;
-					// skip the OID, database auto number takes care of this 
-					if($propName != 'OID') {				
+					// Skip the OID, database auto number takes care of this.  Also skip empty strings.
+					if($this->get($propName) != '' && $propName != 'OID') {				
 						if (!in_array($propName, $this->transientAttributes)) {
 							$sqlQuery .= "$propName,";
 						}
+					}
+					if($propName == 'version_num') {
+						$sqlQuery .= 'version_num,';
 					}
 				}
 				if($this->isTableOverloaded())
@@ -473,16 +476,17 @@ abstract class DAO {
 				
 				foreach($properties as $propObj) {
 					$propName = $propObj->name;
-					// skip the OID, database auto number takes care of this 
-					if($propName != 'OID') {
-						if ($propName != 'version_num' && !in_array($propName, $this->transientAttributes)) {
+					// Skip the OID, database auto number takes care of this.  Also skip empty strings.
+					if($this->get($propName) != '' && $propName != 'OID') {
+						if (!in_array($propName, $this->transientAttributes)) {
 							$sqlQuery .= "'".$this->get($propName)."',";
 						}
-						if ($propName == 'version_num') {					
-							$temp = $this->version_num->getValue();
-							$this->version_num->setValue($temp+1);
-							$sqlQuery .= "'".$this->version_num->getValue()."',";
-						}
+					}
+					
+					if($propName == 'version_num') {
+						$temp = $this->version_num->getValue();
+						$this->version_num->setValue($temp+1);
+						$sqlQuery .= "'".$this->version_num->getValue()."',";
 					}
 				}
 				if($this->isTableOverloaded())
@@ -490,19 +494,19 @@ abstract class DAO {
 	
 				$sqlQuery = rtrim($sqlQuery, ",");
 	
-				$sqlQuery .= ");";
+				$sqlQuery .= ');';
 			}else{
 				// assume that it is a persistent object that needs to be updated
-				$sqlQuery = "UPDATE ".$this->getTableName()." SET ";
+				$sqlQuery = 'UPDATE '.$this->getTableName().' SET ';
 				
 				foreach($properties as $propObj) {
 					$propName = $propObj->name;
-					// skip the OID, database auto number takes care of this 
-					if($propName != 'OID') {
-						if ($propName != "version_num" && !in_array($propName, $this->transientAttributes)) {
+					// Skip the OID, database auto number takes care of this.  Also skip empty strings.
+					if($this->get($propName) != '' && $propName != 'OID') {
+						if ($propName != 'version_num' && !in_array($propName, $this->transientAttributes)) {
 							$sqlQuery .= "$propName = '".$this->get($propName)."',";
 						}
-						if ($propName == "version_num") {					
+						if ($propName == 'version_num') {					
 							$temp = $this->version_num->getValue();					
 							$this->version_num->setValue($temp+1);					
 							$sqlQuery .= "version_num = '".$this->version_num->getValue()."',";
@@ -526,56 +530,59 @@ abstract class DAO {
 				if($this->isTransient())
 					$this->setOID(mysql_insert_id());
 
-				// handle the saving of MANY-TO-MANY relation values
 				try {
 					foreach($properties as $propObj) {
 						$propName = $propObj->name;
 						
-						if(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {				
-							$prop = $this->getPropObject($propName);
-							
-							if($prop->getRelationType() == 'MANY-TO-MANY') {
-								try {
-									if(isset($_POST[$propName]))
-										$OIDs = explode(',', $_POST[$propName]);
-										
-									if(isset($OIDs) && !empty($OIDs[0])) {
-										
-										// for overloaded tables, the classname != the table name
-										if($this->isTableOverloaded())
-											$className = $this->getTableName().'_object';
-										else
-											$className = get_class($this);
+						// Skip empty strings.
+						if($this->get($propName) != '') {							
+							// handle the saving of MANY-TO-MANY relation values
+							if(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {				
+								$prop = $this->getPropObject($propName);
+								
+								if($prop->getRelationType() == 'MANY-TO-MANY') {
+									try {
+										if(isset($_POST[$propName]))
+											$OIDs = explode(',', $_POST[$propName]);
 											
-										$side = $prop->getSide($className);
-										$lookUp = $prop->getLookup();									
-										
-										// first delete all of the old RelationLookup objects for this rel
-										if($side == 'left')
-											$lookUp->deleteAllByAttribute('leftID', $this->getID());
-										else
-											$lookUp->deleteAllByAttribute('rightID', $this->getID());
-				
-										if (mysql_error() != '')
-											throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
-										
-										// now for each posted OID, create a new RelationLookup record and save
-										foreach ($OIDs as $oid) {
-											$newLookUp = new RelationLookup($lookUp->get('leftClassName'), $lookUp->get('rightClassName'));
-											if($side == 'left') {
-												$newLookUp->set('leftID', $this->getID());
-												$newLookUp->set('rightID', $oid);
-											}else{
-												$newLookUp->set('rightID', $this->getID());
-												$newLookUp->set('leftID', $oid);
-											}
-											$newLookUp->save();
-										}									
+										if(isset($OIDs) && !empty($OIDs[0])) {
+											
+											// for overloaded tables, the classname != the table name
+											if($this->isTableOverloaded())
+												$className = $this->getTableName().'_object';
+											else
+												$className = get_class($this);
+												
+											$side = $prop->getSide($className);
+											$lookUp = $prop->getLookup();									
+											
+											// first delete all of the old RelationLookup objects for this rel
+											if($side == 'left')
+												$lookUp->deleteAllByAttribute('leftID', $this->getID());
+											else
+												$lookUp->deleteAllByAttribute('rightID', $this->getID());
+					
+											if (mysql_error() != '')
+												throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
+											
+											// now for each posted OID, create a new RelationLookup record and save
+											foreach ($OIDs as $oid) {
+												$newLookUp = new RelationLookup($lookUp->get('leftClassName'), $lookUp->get('rightClassName'));
+												if($side == 'left') {
+													$newLookUp->set('leftID', $this->getID());
+													$newLookUp->set('rightID', $oid);
+												}else{
+													$newLookUp->set('rightID', $this->getID());
+													$newLookUp->set('leftID', $oid);
+												}
+												$newLookUp->save();
+											}									
+										}
+									}catch (Exception $e) {
+										throw new FailedSaveException('Failed to update a MANY-TO-MANY relation on the object, error is ['.$e->getMessage().']');
+										self::rollback();
+										return;
 									}
-								}catch (Exception $e) {
-									throw new FailedSaveException('Failed to update a MANY-TO-MANY relation on the object, error is ['.$e->getMessage().']');
-									self::rollback();
-									return;
 								}
 							}
 						}
@@ -859,7 +866,7 @@ abstract class DAO {
 						$sqlQuery .= "$propName INT(11) ZEROFILL,";
 					break;
 					case "RELATION":						
-						$sqlQuery .= "$propName INT(11) ZEROFILL,";
+						$sqlQuery .= "$propName INT(11),";
 					break;
 					default:
 						$sqlQuery .= "";
@@ -969,7 +976,7 @@ abstract class DAO {
 						$sqlQuery .= "$propName INT(11) ZEROFILL";
 					break;
 					case "RELATION":						
-						$sqlQuery .= "$propName INT(11) ZEROFILL";
+						$sqlQuery .= "$propName INT(11)";
 					break;
 					default:
 						$sqlQuery .= "";
