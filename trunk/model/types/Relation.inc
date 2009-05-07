@@ -98,11 +98,11 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	
 	/**
 	 * The object ID (OID) value of the related object.  In the special case of a MANY-TO-MANY
-	 * relation, contains the OID of the object on the current, accessing side.
+	 * relation, contains the OID of the object on the current, accessing side.  Can contain NULL.
 	 *
-	 * @var int
+	 * @var mixed
 	 */
-	private $value;
+	private $value = NULL;
 	
 	/**
 	 * The validation rule for the Relation type
@@ -137,7 +137,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 */
 	public function __construct() {
 		$this->validationRule = DEFAULT_INTEGER;		
-		$this->helper = 'Error: not a valid Relation value!  A maximum of '.$this->size.' characters is allowed.';		
+		$this->helper = ' not a valid Relation value!  A maximum of '.$this->size.' characters is allowed.';		
 	}
 	
 	/**
@@ -321,22 +321,26 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 *
 	 * @param int $val	 
 	 */
-	public function setValue($val) {		
-		if (strlen($val) <= $this->size) {			
-			if (preg_match($this->validationRule, $val)) {				
-				$this->value = str_pad($val, 11, "0", STR_PAD_LEFT);				
-			}else{			
-				throw new IllegalArguementException($this->helper);
+	public function setValue($val) {
+		if(empty($val)) {
+			$this->value = NULL;
+		}else{					
+			if (strlen($val) <= $this->size) {			
+				if (preg_match($this->validationRule, $val)) {				
+					$this->value = str_pad($val, 11, '0', STR_PAD_LEFT);				
+				}else{			
+					throw new IllegalArguementException("[$val]".$this->helper);
+				}
+			}else{
+				throw new IllegalArguementException("[$val]".$this->helper);
 			}
-		}else{
-			throw new IllegalArguementException($this->helper);
 		}
 	}
 	
 	/**
-	 * Getter for the Integer value
+	 * Getter for the Relation value
 	 *
-	 * @return int
+	 * @return mixed
 	 */
 	public function getValue() {
 		return $this->value;
