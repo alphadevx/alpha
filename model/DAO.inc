@@ -1690,6 +1690,30 @@ abstract class DAO {
 			}
 		}
 		
+		// process foreign-key indexes
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this));
+		$properties = $reflection->getProperties();
+		
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			$prop = $this->getPropObject($propName);
+			if(get_class($prop) == 'Relation' && $prop->getRelationType() == 'MANY-TO-ONE') {
+				$index_exists = false;
+				foreach ($indexNames as $index) {
+					//echo $propName.'_fx_idx == '.$index.'<br>';
+					if ($propName.'_fk_idx' == $index) {
+				    	$index_exists = true;
+					}
+				}
+	
+				if(!$index_exists) {
+					$this->createForeignIndex($propName, $prop->getRelatedClass(), $prop->getRelatedClassField());
+				}
+				
+			}
+		}
+		
 		if (mysql_error() == '') {
 			if(method_exists($this, 'after_checkIndexes_callback'))
 				$this->after_checkIndexes_callback();
@@ -1698,6 +1722,40 @@ abstract class DAO {
 			throw new AlphaException('Failed to access the system database correctly, error is ['.mysql_error().']');
 		}
 		self::$logger->debug('<<checkIndexes');
+	}
+	
+	/**
+	 * Creates a foreign key constraint (index) in the database on the given attribute
+	 * 
+	 * @param string $attributeName
+	 * @param string $relatedClass
+	 * @param string $relatedClassAttribute
+	 */
+	protected function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute) {
+		self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.']');
+		
+		if(method_exists($this, 'before_createForeignIndex_callback'))
+			$this->before_createForeignIndex_callback();
+			
+		DAO::loadClassDef($relatedClass);
+		$relatedBO = new $relatedClass;
+		$tableName = $relatedBO->getTableName();
+			
+		$sqlQuery = 'ALTER TABLE '.$this->getTableName().' ADD FOREIGN KEY '.$attributeName.'_fk_idx ('.$attributeName.') REFERENCES '.$tableName.' ('.$relatedClassAttribute.') ON DELETE SET NULL;';
+		
+		$this->lastQuery = $sqlQuery;
+	
+		$result = mysql_query($sqlQuery);
+	
+		if (mysql_error() == '') {
+			if(method_exists($this, 'after_createForeignIndex_callback'))
+				$this->after_createForeignIndex_callback();
+				self::$logger->info('Successfully created the foreign key index ['.$attributeName.'_fk_idx]');
+		}else{			
+			throw new AlphaException('Failed to create the index ['.$attributeName.'_fk_idx] on ['.$this->getTableName().'], error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+		}
+		
+		self::$logger->debug('<<createForeignIndex');
 	}
 	
 	/**
@@ -1720,7 +1778,7 @@ abstract class DAO {
 			$result = mysql_query($sqlQuery);
 	
 			if (mysql_error() == '') {
-				if(method_exists($this, 'after_create_unique_index_callback'))
+				if(method_exists($this, 'after_createUniqueIndex_callback'))
 					$this->after_createUniqueIndex_callback();
 			}else{			
 				throw new AlphaException('Failed to create the index ['.$attribute1Name.'_unq_idx] on ['.$this->getTableName().'], error is ['.mysql_error().']');
