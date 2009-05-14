@@ -115,7 +115,7 @@ class Integer extends AlphaType implements AlphaTypeInterface {
 	public function setSize($size) {
 		if ($size <= self::MAX_SIZE) {
 			$this->size = $size;
-			$this->helper = 'Error: not a valid Integer value!  A maximum of '.$this->size.' characters is allowed';
+			$this->helper = ' is not a valid Integer value!  A maximum of '.$this->size.' characters is allowed';
 		}else{
 			throw new IllegalArguementException('Error: the value '.$size.' provided by set_size is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
 		}	
