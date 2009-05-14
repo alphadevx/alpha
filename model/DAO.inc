@@ -536,60 +536,55 @@ abstract class DAO {
 					foreach($properties as $propObj) {
 						$propName = $propObj->name;
 						
-						if(!in_array($propName, $this->transientAttributes)) {
-							// Skip the OID, database auto number takes care of this.  Also skip empty strings.
-							if($this->get($propName) != '' && $propName != 'OID' && $propName != 'version_num') {
-								// handle the saving of MANY-TO-MANY relation values
-								if(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {				
-									$prop = $this->getPropObject($propName);
+						// handle the saving of MANY-TO-MANY relation values
+						if(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {				
+							$prop = $this->getPropObject($propName);
 									
-									if($prop->getRelationType() == 'MANY-TO-MANY') {
-										try {
-											if(isset($_POST[$propName]))
-												$OIDs = explode(',', $_POST[$propName]);
+							if($prop->getRelationType() == 'MANY-TO-MANY') {
+								try {
+									if(isset($_POST[$propName]))
+										$OIDs = explode(',', $_POST[$propName]);
 												
-											if(isset($OIDs) && !empty($OIDs[0])) {
+									if(isset($OIDs) && !empty($OIDs[0])) {
 												
-												// for overloaded tables, the classname != the table name
-												if($this->isTableOverloaded())
-													$className = $this->getTableName().'_object';
-												else
-													$className = get_class($this);
-													
-												$side = $prop->getSide($className);
-												$lookUp = $prop->getLookup();									
+										// for overloaded tables, the classname != the table name
+										if($this->isTableOverloaded())
+											$className = $this->getTableName().'_object';
+										else
+											$className = get_class($this);
 												
-												// first delete all of the old RelationLookup objects for this rel
-												if($side == 'left')
-													$lookUp->deleteAllByAttribute('leftID', $this->getID());
-												else
-													$lookUp->deleteAllByAttribute('rightID', $this->getID());
+										$side = $prop->getSide($className);
+										$lookUp = $prop->getLookup();									
+												
+										// first delete all of the old RelationLookup objects for this rel
+										if($side == 'left')
+											$lookUp->deleteAllByAttribute('leftID', $this->getID());
+										else
+											$lookUp->deleteAllByAttribute('rightID', $this->getID());
 						
-												if (mysql_error() != '')
-													throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
+										if (mysql_error() != '')
+											throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
 												
-												// now for each posted OID, create a new RelationLookup record and save
-												foreach ($OIDs as $oid) {
-													$newLookUp = new RelationLookup($lookUp->get('leftClassName'), $lookUp->get('rightClassName'));
-													if($side == 'left') {
-														$newLookUp->set('leftID', $this->getID());
-														$newLookUp->set('rightID', $oid);
-													}else{
-														$newLookUp->set('rightID', $this->getID());
-														$newLookUp->set('leftID', $oid);
-													}
-													$newLookUp->save();
-												}									
+										// now for each posted OID, create a new RelationLookup record and save
+										foreach ($OIDs as $oid) {
+											$newLookUp = new RelationLookup($lookUp->get('leftClassName'), $lookUp->get('rightClassName'));
+											if($side == 'left') {
+												$newLookUp->set('leftID', $this->getID());
+												$newLookUp->set('rightID', $oid);
+											}else{
+												$newLookUp->set('rightID', $this->getID());
+												$newLookUp->set('leftID', $oid);
 											}
-										}catch (Exception $e) {
-											throw new FailedSaveException('Failed to update a MANY-TO-MANY relation on the object, error is ['.$e->getMessage().']');
-											self::rollback();
-											return;
-										}
+											$newLookUp->save();
+										}									
 									}
+								}catch (Exception $e) {
+									throw new FailedSaveException('Failed to update a MANY-TO-MANY relation on the object, error is ['.$e->getMessage().']');
+									self::rollback();
+									return;
 								}
 							}
-						}
+						}						
 					}
 				}catch (Exception $e) {
 					throw new FailedSaveException('Failed to save object, error is ['.$e->getMessage().']');
@@ -672,6 +667,47 @@ abstract class DAO {
 		
 		self::begin();
 		
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this));
+		$properties = $reflection->getProperties();
+			
+		// check for any relations on this object, then remove them to prevent orphaned data
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+						
+			if(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {				
+				$prop = $this->getPropObject($propName);
+					
+				// Handle MANY-TO-MANY rels
+				if($prop->getRelationType() == 'MANY-TO-MANY') {
+					self::$logger->debug('Deleting MANY-TO-MANY lookup objects...');
+						
+					// for overloaded tables, the classname != the table name
+					if($this->isTableOverloaded())
+						$className = $this->getTableName().'_object';
+					else
+						$className = get_class($this);
+											
+					$side = $prop->getSide($className);						
+					self::$logger->debug('Side is ['.$side.']'.$this->getID());
+						
+					$lookUp = $prop->getLookup();
+					self::$logger->debug('Lookup object['.print_r($lookUp, true).']');
+										
+					// delete all of the old RelationLookup objects for this rel
+					if($side == 'left')
+						$lookUp->deleteAllByAttribute('leftID', $this->getID());
+					else
+						$lookUp->deleteAllByAttribute('rightID', $this->getID());
+					self::$logger->debug('...done deleting!');
+				}
+					
+				// TODO should set related field values to null (MySQL is doing this for us as-is)
+				if($prop->getRelationType() == 'ONE-TO-MANY') {					
+				}
+			}
+		}
+		
 		$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE OID = '".$this->OID."';";
 			
 		$this->lastQuery = $sqlQuery;
@@ -680,48 +716,7 @@ abstract class DAO {
 		
 		if(mysql_error() == '') {
 			if(method_exists($this, 'after_delete_callback'))
-				$this->after_delete_callback();
-				
-			// get the class attributes
-			$reflection = new ReflectionClass(get_class($this));
-			$properties = $reflection->getProperties();
-			
-			// check for any relations on this object, then remove them to prevent orphaned data
-			foreach($properties as $propObj) {
-				$propName = $propObj->name;
-						
-				if(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {				
-					$prop = $this->getPropObject($propName);
-					
-					// Handle MANY-TO-MANY rels
-					if($prop->getRelationType() == 'MANY-TO-MANY') {
-						self::$logger->debug('Deleting MANY-TO-MANY lookup objects...');
-						
-						// for overloaded tables, the classname != the table name
-						if($this->isTableOverloaded())
-							$className = $this->getTableName().'_object';
-						else
-							$className = get_class($this);
-											
-						$side = $prop->getSide($className);						
-						self::$logger->debug('Side is ['.$side.']'.$this->getID());
-						
-						$lookUp = $prop->getLookup();
-						self::$logger->debug('Lookup object['.print_r($lookUp, true).']');
-										
-						// delete all of the old RelationLookup objects for this rel
-						if($side == 'left')
-							$lookUp->deleteAllByAttribute('leftID', $this->getID());
-						else
-							$lookUp->deleteAllByAttribute('rightID', $this->getID());
-						self::$logger->debug('...done deleting!');
-					}
-					
-					// TODO
-					if($prop->getRelationType() == 'ONE-TO-MANY') {
-					}
-				}
-			}
+				$this->after_delete_callback();			
 			
 			self::commit();
 			$this->clear();
@@ -1703,20 +1698,47 @@ abstract class DAO {
 			$propName = $propObj->name;
 			$prop = $this->getPropObject($propName);
 			if(get_class($prop) == 'Relation') {
+				
 				if($prop->getRelationType() == 'MANY-TO-ONE') {
-					$index_exists = false;
-					foreach ($indexNames as $index) {						
+					$indexExists = false;
+					foreach ($indexNames as $index) {
 						if ($propName.'_fk_idx' == $index) {
-					    	$index_exists = true;
+					    	$indexExists = true;
 						}
 					}
 		
-					if(!$index_exists) {
+					if(!$indexExists) {
 						$this->createForeignIndex($propName, $prop->getRelatedClass(), $prop->getRelatedClassField());
 					}
 				}
-				if($prop->getRelationType() == 'MANY-TO-MANY') {
-					// TODO handle setting up MANY-TO-MANY lookup table FKs where required
+				
+				if($prop->getRelationType() == 'MANY-TO-MANY') {					
+					$lookup = $prop->getLookup();
+					$lookupIndexNames = $lookup->getIndexes();
+										
+					// handle index check/creation on left side of Relation
+					$indexExists = false;
+					foreach ($lookupIndexNames as $index) {
+						if ('leftID_fk_idx' == $index) {
+					    	$indexExists = true;
+						}
+					}
+					
+					if(!$indexExists) {
+						$lookup->createForeignIndex('leftID', $prop->getRelatedClass('left'), 'OID', false);
+					}
+					
+					// handle index check/creation on right side of Relation
+					$indexExists = false;
+					foreach ($lookupIndexNames as $index) {
+						if ('rightID_fk_idx' == $index) {
+					    	$indexExists = true;
+						}
+					}
+					
+					if(!$indexExists) {
+						$lookup->createForeignIndex('rightID', $prop->getRelatedClass('right'), 'OID', false);
+					}
 				}
 				
 			}
@@ -1738,9 +1760,10 @@ abstract class DAO {
 	 * @param string $attributeName
 	 * @param string $relatedClass
 	 * @param string $relatedClassAttribute
+	 * @param bool $allowNullValues For foreign key indexes that don't allow null values, set this to false (default is true)
 	 */
-	protected function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute) {
-		self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.']');
+	protected function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $allowNullValues=true) {
+		self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.'], allowNullValues=['.$allowNullValues.']');
 		
 		if(method_exists($this, 'before_createForeignIndex_callback'))
 			$this->before_createForeignIndex_callback();
@@ -1748,8 +1771,28 @@ abstract class DAO {
 		DAO::loadClassDef($relatedClass);
 		$relatedBO = new $relatedClass;
 		$tableName = $relatedBO->getTableName();
-			
-		$sqlQuery = 'ALTER TABLE '.$this->getTableName().' ADD FOREIGN KEY '.$attributeName.'_fk_idx ('.$attributeName.') REFERENCES '.$tableName.' ('.$relatedClassAttribute.') ON DELETE SET NULL;';
+
+		if($allowNullValues) {
+			$sqlQuery = 'ALTER TABLE '.$this->getTableName().' ADD FOREIGN KEY '.$attributeName.'_fk_idx ('.$attributeName.') REFERENCES '.$tableName.' ('.$relatedClassAttribute.') ON DELETE SET NULL;';
+		}else{
+			$sqlQuery = '';
+			if($attributeName == 'leftID')
+				$sqlQuery = 'ALTER TABLE '.$this->getTableName().' ADD INDEX leftID_fk_idx (leftID);';
+			if($attributeName == 'rightID')
+				$sqlQuery = 'ALTER TABLE '.$this->getTableName().' ADD INDEX rightID_fk_idx (rightID);';
+				
+			if(!empty($sqlQuery)) {
+				$this->lastQuery = $sqlQuery;
+	
+				$result = mysql_query($sqlQuery);
+	
+				if (mysql_error() != '') {					
+					throw new AlphaException('Failed to create an index on ['.$this->getTableName().'], error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+				}
+			}
+				
+			$sqlQuery = 'ALTER TABLE '.$this->getTableName().' ADD FOREIGN KEY '.$attributeName.'_fk_idx ('.$attributeName.') REFERENCES '.$tableName.' ('.$relatedClassAttribute.');';
+		}
 		
 		$this->lastQuery = $sqlQuery;
 	
