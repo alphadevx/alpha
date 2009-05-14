@@ -60,6 +60,7 @@ class rights_object extends DAO {
 		
 		$this->members = new Relation();
 		$this->markTransient('members');
+		$this->setupRels();
 	}
 	
 	/**
@@ -75,8 +76,20 @@ class rights_object extends DAO {
 	 * Set up the transient attributes for the rights group after it has loaded
 	 */
 	protected function after_load_callback() {
-		global $config;
-		
+		$this->setupRels();
+	}
+	
+	/**
+	 * Set up the transient attributes for the rights group after it has loaded
+	 */
+	protected function after_loadByAttribute_callback() {
+		$this->setupRels();
+	}
+	
+	/**
+	 * Sets up the Relation definitions on this BO
+	 */
+	private function setupRels() {
 		// set up MANY-TO-MANY relation person2rights
 		$this->members->setRelatedClass('person_object', 'left');
 		$this->members->setRelatedClassDisplayField('email', 'left');
@@ -84,13 +97,6 @@ class rights_object extends DAO {
 		$this->members->setRelatedClassDisplayField('name', 'right');
 		$this->members->setRelationType('MANY-TO-MANY');
 		$this->members->setValue($this->getID());
-	}
-	
-	/**
-	 * Set up the transient attributes for the rights group after it has loaded
-	 */
-	protected function after_loadByAttribute_callback() {
-		$this->after_load_callback();
 	}
 }
 

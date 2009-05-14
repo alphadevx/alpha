@@ -124,21 +124,14 @@ class person_object extends DAO {
 
 		$this->rights = new Relation();
 		$this->markTransient('rights');
+		$this->setupRels();
 	}
 
 	/**
 	 * Set up the transient attributes for the rights group after it has loaded
 	 */
 	protected function after_load_callback() {
-		global $config;
-
-		// set up MANY-TO-MANY relation person2rights
-		$this->rights->setRelatedClass('person_object', 'left');
-		$this->rights->setRelatedClassDisplayField('email', 'left');
-		$this->rights->setRelatedClass('rights_object', 'right');
-		$this->rights->setRelatedClassDisplayField('name', 'right');
-		$this->rights->setRelationType('MANY-TO-MANY');
-		$this->rights->setValue($this->getID());
+		$this->setupRels();		
 	}
 
 	/**
@@ -148,14 +141,8 @@ class person_object extends DAO {
 	protected function after_save_callback() {
 		if($this->getVersionNumber()->getValue() == 1) {
 			$standardGroup = new rights_object();
-					
-			// set up MANY-TO-MANY relation person2rights
-			$this->rights->setRelatedClass('person_object', 'left');
-			$this->rights->setRelatedClassDisplayField('email', 'left');
-			$this->rights->setRelatedClass('rights_object', 'right');
-			$this->rights->setRelatedClassDisplayField('name', 'right');
-			$this->rights->setRelationType('MANY-TO-MANY');
-			$this->rights->setValue($this->getID());
+			
+			$this->setupRels();
 					
 			try {
 				$standardGroup->loadByAttribute('name', 'Standard');
@@ -168,6 +155,19 @@ class person_object extends DAO {
 			$lookup->setValue(array($this->getID(), $standardGroup->getID()));
 			$lookup->save();
 		}
+	}
+	
+	/**
+	 * Sets up the Relation definitions on this BO
+	 */
+	private function setupRels() {
+		// set up MANY-TO-MANY relation person2rights
+		$this->rights->setRelatedClass('person_object', 'left');
+		$this->rights->setRelatedClassDisplayField('email', 'left');
+		$this->rights->setRelatedClass('rights_object', 'right');
+		$this->rights->setRelatedClassDisplayField('name', 'right');
+		$this->rights->setRelationType('MANY-TO-MANY');
+		$this->rights->setValue($this->getID());
 	}
 
 	/**
