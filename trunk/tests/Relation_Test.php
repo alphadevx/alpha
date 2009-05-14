@@ -133,7 +133,7 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     		$this->rel1->setValue('xyz');
     		$this->fail('Testing setValue method with an invalid value');
     	}catch (AlphaException $e) {
-    		$this->assertEquals('Error: not a valid Relation value!  A maximum of '.$this->rel1->getSize().' characters is allowed.'
+    		$this->assertEquals('[xyz] not a valid Relation value!  A maximum of 11 characters is allowed.'
     			, $e->getMessage()
     			, 'Testing setValue method with an invalid value');
     	}
