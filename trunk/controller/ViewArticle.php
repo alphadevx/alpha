@@ -9,7 +9,7 @@ require_once $config->get('sysRoot').'alpha/view/View.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/model/article_object.inc';
-require_once $config->get('sysRoot').'alpha/util/input_filter.inc';
+require_once $config->get('sysRoot').'alpha/util/InputFilter.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
 /**
@@ -218,9 +218,8 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 				// populate the transient object from post data
 				$comment->populateFromPost();
 				
-				// filter the comment before saving
-				$filter = new input_filter($comment->getPropObject('content'));
-				$comment->set('content', $filter->encode());
+				// filter the comment before saving				
+				$comment->set('content', InputFilter::encode($comment->get('content')));
 				
 				try {
 					$success = $comment->save();			
@@ -239,10 +238,6 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 					
 					// re-populates the old object from post data
 					$comment->populateFromPost();			
-					
-					// filter the comment before saving
-					$filter = new input_filter($comment->getPropObject('content'));
-					$comment->set('content', $filter->encode());
 					
 					$success = $comment->save();			
 					$this->statusMessage = '<p class="success">Your comment has been updated.</p>';

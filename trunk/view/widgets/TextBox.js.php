@@ -3,7 +3,7 @@
 // $Id$
 
 require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
-
+require_once $config->get('sysRoot').'alpha/util/InputFilter.inc';
 require_once $config->get('sysRoot').'alpha/model/types/String.inc';
 
 /**
@@ -84,7 +84,13 @@ class TextBox
 			
 			$html .= '<tr><td colspan="2">';
 		}
-		$html .= '<textarea id="text_field_'.$this->get_name().'_'.$this->identifier.'" style="width:100%;" rows="'.$this->get_rows().'" name="'.$this->get_name().'">'.htmlspecialchars(((isset($_POST[$this->get_name()]) && $text_obj->getValue() == "")? $_POST[$this->get_name()] : $text_obj->getValue())).'</textarea><br>';
+		
+		$html .= '<textarea id="text_field_'.$this->get_name().'_'.$this->identifier.'" style="width:100%;" rows="'.$this->get_rows().'" name="'.$this->get_name().'">';
+		if($text_obj->getAllowHTML())
+			$html .= InputFilter::decode($text_obj->getValue(), true);
+		else
+			$html .= InputFilter::decode($text_obj->getValue());
+		$html .= '</textarea><br>';
 		if($tableTags) {
 			$html .= '</td></tr>';
 			$html .= '<tr><td colspan="2">';

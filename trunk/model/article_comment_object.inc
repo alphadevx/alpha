@@ -59,6 +59,7 @@ class article_comment_object extends DAO {
 		$this->article_oid->setRelationType('MANY-TO-ONE');
 				
 		$this->content = new Text();
+		$this->content->setAllowHTML(false);
 	}	
 }
 

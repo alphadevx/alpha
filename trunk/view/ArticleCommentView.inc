@@ -4,7 +4,7 @@ require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 require_once $config->get('sysRoot').'alpha/view/View.inc';
 require_once $config->get('sysRoot').'alpha/util/MarkdownFacade.inc';
-require_once $config->get('sysRoot').'alpha/util/input_filter.inc';
+require_once $config->get('sysRoot').'alpha/util/InputFilter.inc';
 
 /**
  *
@@ -89,11 +89,7 @@ class ArticleCommentView extends View {
 		echo '<table cols="2" class="edit_view" style="width:100%; margin:0px">';
 		echo '<form action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'].'" method="POST">';
 		
-		// need to decode the text for the comment
-		$text = $this->BO->getPropObject('content');
-		$filter = new input_filter($text);
-		$text->setValue($filter->decode());
-		$textBox = new textBox($text, $this->BO->getDataLabel('content'), 'content', '', 5, $this->BO->getID());
+		$textBox = new TextBox($this->BO->getPropObject('content'), $this->BO->getDataLabel('content'), 'content', '', 5, $this->BO->getID());
 		echo $textBox->render();		
 
 		echo '<input type="hidden" name="version_num" value="'.$this->BO->getVersion().'"/>';
