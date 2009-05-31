@@ -2,6 +2,7 @@
 
 require_once $config->get('sysRoot').'alpha/util/Logger.inc';
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
+require_once $config->get('sysRoot').'alpha/util/InputFilter.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/BONotFoundException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/FailedSaveException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/FailedDeleteException.inc';
@@ -314,7 +315,7 @@ abstract class DAO {
 			$this->after_loadAll_callback();
 		
 		self::$logger->debug('<<loadAll ['.count($objects).']');
-		return $objects;	
+		return $objects;
 	}
 	
 	/**
@@ -1019,20 +1020,14 @@ abstract class DAO {
 				$propClass = get_class($this->getPropObject($propName));
 				
 				if(isset($_POST[$propName])) {
-					// checking to see if we need to use addslashes() on the posted data
-					if(!get_magic_quotes_gpc()) {
-						if (strtoupper($propClass) != 'DATE' && strtoupper($propClass) != 'TIMESTAMP') {
-							$this->getPropObject($propName)->setValue(addslashes($_POST[$propName]));					
-						}else{						
-							$this->getPropObject($propName)->populateFromString(addslashes($_POST[$propName]));
-						}
-					}else{
-						if (strtoupper($propClass) != 'DATE' && strtoupper($propClass) != 'TIMESTAMP') {
-							$this->getPropObject($propName)->setValue($_POST[$propName]);					
-						}else{						
-							$this->getPropObject($propName)->populateFromString($_POST[$propName]);
-						}
-					}
+					if (strtoupper($propClass) != 'DATE' && strtoupper($propClass) != 'TIMESTAMP') {
+						if(strtoupper($propClass) == 'TEXT' && !$this->getPropObject($propName)->getAllowHTML())
+							$this->getPropObject($propName)->setValue(InputFilter::encode($_POST[$propName], false));
+						else
+							$this->getPropObject($propName)->setValue(InputFilter::encode($_POST[$propName], true));
+					}else{						
+						$this->getPropObject($propName)->populateFromString(InputFilter::encode($_POST[$propName], true));
+					}					
 				}
 			}
 			if ($propName == "version_num" && isset($_POST["version_num"]))

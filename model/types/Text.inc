@@ -30,6 +30,14 @@ class Text extends AlphaType implements AlphaTypeInterface {
 	private $validationRule;
 	
 	/**
+	 * Used to determine if the Text object can support HTML content or not.  Defaults to true, if set to false
+	 * then HTML content will be filtered.
+	 * 
+	 * @var boolen
+	 */
+	private $allowHTML = true;
+	
+	/**
 	 * The error message for the string type when validation fails
 	 * 
 	 * @var string
@@ -136,6 +144,24 @@ class Text extends AlphaType implements AlphaTypeInterface {
 	 */
 	public function getSize(){
 		return $this->size;
+	}
+	
+	/**
+	 * Set the $allowHTML value
+	 * 
+	 * @param boolean $allowHTML
+	 */
+	public function setAllowHTML($allowHTML) {
+		$this->allowHTML = $allowHTML;
+	}
+	
+	/**
+	 * Get the $allowHTML value
+	 * 
+	 * @return boolean
+	 */
+	public function getAllowHTML() {
+		return $this->allowHTML;
 	}
 }
 
