@@ -336,13 +336,15 @@ abstract class DAO {
 		
 		global $config;
 		
-		if ($limit == 0)
-			$limit = $config->get('sysListPageAmount');
+		if ($start != 0 && $limit != 0)
+			$limit = ' LIMIT '.$start.', '.$limit.';';
+		else
+			$limit = ';';
 		
 		if(!$this->isTableOverloaded())
-			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = '$value' ORDER BY ".$orderBy." ".$order." LIMIT ".$start.", ".$limit.";";
+			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = '$value' ORDER BY ".$orderBy." ".$order.$limit;
 		else
-			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = '$value' AND classname='".get_class($this)."' ORDER BY ".$orderBy." ".$order." LIMIT ".$start.", ".$limit.";";
+			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = '$value' AND classname='".get_class($this)."' ORDER BY ".$orderBy." ".$order.$limit;
 			
 		$this->lastQuery = $sqlQuery;
 
