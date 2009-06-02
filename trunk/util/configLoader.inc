@@ -80,17 +80,21 @@ class configLoader{
   		$rootPath = '';		
   		
   		// first check to see if it is a controller under /alpha
-  		if(strrpos($currentScript, 'alpha/') != false) {
+  		if(strrpos($currentScript, 'alpha/') !== false) {
   			$rootPath = substr($currentScript, 0, strrpos($currentScript, 'alpha/'));
   		}elseif(!strrpos($currentScript, 'alpha/') && strrpos($currentScript, 'controller/') != false) {
   			// handle custom controllers at a lower level
   			$rootPath = substr($currentScript, 0, strrpos($currentScript, 'controller/'));
-  		}elseif(strrpos($currentScript, 'config/css/') != false) {
+  		}elseif(strrpos($currentScript, 'config/css/') !== false) {
   			// set path for CSS files
   			$rootPath = substr($currentScript, 0, strrpos($currentScript, 'config/css/'));
+  		}elseif(strrpos($currentScript, 'AlphaCronManager') !== false) {
+  			// set the path for the AlphaCronManager being run from CLI
+  			$rootPath = '../../';
   		}else{
   			$rootPath = '';
   		}
+  		
   		$config =&configLoader::getInstance();
   		$config->set('rootPath', $rootPath);
   	}
@@ -115,21 +119,29 @@ class configLoader{
   		$rootPath = $config->get('rootPath');  		
   		
   		// first we need to see if we are in dev, pro or test environment
-  		$server = $_SERVER["SERVER_NAME"];
-  		// load the servers to see which environment the current server is set as  		
-  		$serverIni = $rootPath.'config/servers.ini';
-  		if(file_exists($serverIni)) {
-	  		$envs = parse_ini_file($serverIni);
-	  		if(in_array($server, $envs)) {	
-	  			$environment = array_search($server, $envs);
-	  		}else{	  			
-	  			die('No environment configured for the server '.$server);
-	  		}
-  		}else{  			
-  			die('Failed to load the config file '.$serverIni);
+  		if(isset($_SERVER['SERVER_NAME'])) {
+  			$server = $_SERVER['SERVER_NAME'];
+  		}else{
+  			// we may be running in CLI mode
+  			$server = $_ENV['HOSTNAME'];
   		}
+  			
   		
-  		$envIni = $rootPath.'config/'.$environment.'.ini';
+	  	// load the servers to see which environment the current server is set as  		
+	  	$serverIni = $rootPath.'config/servers.ini';
+	  	if(file_exists($serverIni)) {
+			$envs = parse_ini_file($serverIni);
+			if(in_array($server, $envs)) {	
+				$environment = array_search($server, $envs);
+			}else{	  			
+				die('No environment configured for the server '.$server);
+			}
+	  	}else{  			
+	  		die('Failed to load the config file '.$serverIni);
+	  	}
+	  		
+	  	$envIni = $rootPath.'config/'.$environment.'.ini';
+   		
   		$configArray = parse_ini_file($envIni);
   		
   		$config =&configLoader::getInstance();
