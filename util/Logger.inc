@@ -131,6 +131,18 @@ class Logger {
 			mail($config->get('sysErrorMailAddress'), "Error in class ".$this->classname." on site .".$config->get('sysTitle'), $body, "From: ".$config->get('sysReplyTo')."\r\nReply-To: ".$config->get('sysReplyTo')."\r\nX-Mailer: PHP/" . phpversion());
 		}
 	}
+	
+	/**
+	 * Allows you to set the log file path to one other than the main application log.
+	 * 
+	 * @param string $filepath
+	 */
+	public function setLogFile($filepath) {
+		global $config;
+		
+		$this->logfile = new LogFile($filepath);
+		$this->logfile->setMaxSize($config->get('sysLogFileMaxSize'));
+	}
 }
 
 ?>
