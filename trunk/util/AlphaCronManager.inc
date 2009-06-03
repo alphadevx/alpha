@@ -37,7 +37,96 @@ class AlphaCronManager {
 		
 		self::$logger->info('New AlphaCronManager invoked');
 		
+		$taskList = self::getTaskClassNames();
+		
+		self::$logger->info('Found ['.count($taskList).'] tasks in the directory ['.$config->get('sysRoot').'tasks]');
+		
+		foreach($taskList as $taskClass) {
+			self::$logger->info('Loading task ['.$taskClass.']');
+			self::loadClassDef($taskClass);
+			$task = new $taskClass;
+			
+			$startTime = microtime(true);			
+			$maxAllowedTime = $startTime+$task->getMaxRunTime();
+			
+			self::$logger->info('Start time is ['.$startTime.'], maximum task run time is ['.$task->getMaxRunTime().']');
+			
+			// keep running until $task->doTask() returns true or the max time has elapsed
+			$running = false;
+			while(microtime(true) < $maxAllowedTime) {
+				if(!$running && !$ret = $task->doTask()) {
+					self::$logger->info('Processing...');
+					
+					$running = true;					
+				}else{
+					if($ret) {
+						$running = false;
+						break;
+					}
+				}
+			}
+			self::$logger->info('Done in ['.round(microtime(true)-$startTime, 5).'] seconds');
+		}
+		
+		self::$logger->info('Finished processing all cron tasks');
+		
 		self::$logger->debug('<<__construct');
+	}
+	
+	/**
+	 * Loops over the /tasks directory and builds an array of all of the task
+	 * class names in the system.
+	 *
+	 * @return array
+	 */
+	public static function getTaskClassNames() {
+		global $config;
+		
+		if(self::$logger == null) {
+			self::$logger = new Logger('AlphaCronManager');
+			self::$logger->setLogFile($config->get('sysRoot').'logs/tasks.log');
+		}
+		self::$logger->debug('>>getTaskClassNames()');
+		
+		global $config;
+		
+		$classNameArray = array();		
+		
+		$handle = opendir($config->get('sysRoot').'tasks');
+   		
+        // loop over the business object directory
+	    while (false !== ($file = readdir($handle))) {
+	    	if (preg_match("/_task.inc/", $file)) {
+	    		$classname = substr($file, 0, -4);
+	    		
+	    		array_push($classNameArray, $classname);
+	    	}
+	    }
+
+	    self::$logger->debug('<<getTaskClassNames ['.print_r($classNameArray, true).']');
+	    return $classNameArray;
+	}
+	
+	/**
+	 * Loads the definition for the task classname provided
+	 * 
+	 * @param string $classname 
+	 */
+	public static function loadClassDef($classname) {
+		global $config;
+		
+		if(self::$logger == null) {
+			self::$logger = new Logger('AlphaCronManager');
+			self::$logger->setLogFile($config->get('sysRoot').'logs/tasks.log');
+		}
+		self::$logger->debug('>>loadClassDef(classname=['.$classname.'])');
+		
+		if(file_exists($config->get('sysRoot').'tasks/'.$classname.'.inc'))
+			require_once $config->get('sysRoot').'tasks/'.$classname.'.inc';
+		else
+			throw new IllegalArguementException('The class ['.$classname.'] is not defined anywhere!');
+		
+		self::$logger->debug('<<loadClassDef');
 	}
 }
 
