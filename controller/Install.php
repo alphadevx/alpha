@@ -81,6 +81,24 @@ class Install extends Controller implements AlphaControllerInterface {
 		}
 		
 		/*
+		 * Create the cron tasks directory
+		 */
+		try {
+			$tasksDir = $config->get('sysRoot').'tasks';
+			
+			echo '<p>Attempting to create the tasks directory <em>'.$tasksDir.'</em>...';
+			
+			if(!file_exists($tasksDir))
+				mkdir($tasksDir, 0766);			
+			
+			self::$logger->info('Tasks directory ['.$tasksDir.'] successfully created');
+		}catch (Exception $e) {
+			echo '<p class="error"><br>'.$e->getMessage().'</p>';			
+			echo '<p>Aborting.</p>';
+			exit;
+		}
+		
+		/*
 		 * Create the attachments directory
 		 */
 		try {
