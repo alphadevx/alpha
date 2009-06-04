@@ -252,19 +252,14 @@ class person_object extends DAO {
 	function sendMail($message, $subject) {
 		global $config;
 
-		$body = '<p>Dear '.$this->getDisplayName().'</p>';
+		$body = '<html><head></head><body><p>Dear '.$this->getDisplayName().',</p>';
 
 		$body .= $message;
 
-		$body .= '<p>Kind regards,</p><p>Administrator</p><a href="'.$config->get('sysURL').'">'.$config->get('sysURL').'</a>';
+		$body .= '<p>Kind regards,</p><p>Administrator</p><a href="'.$config->get('sysURL').'">'.$config->get('sysURL').'</a></body></html>';
 
-		// To send HTML mail, the Content-type header must be set
-		$headers  = 'MIME-Version: 1.0' . "\r\n";
-		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-		
-		// Additional headers
-		$headers .= 'To: '.$this->get('email')."\r\n";
-		$headers .= 'From: '.$config->get('sysReplyTo')."\r\n";		
+		$headers  = "From: ".$config->get('sysReplyTo')."\n";
+    	$headers .= "Content-type: text/html\n";
 		
 		try {
 			mail($this->get('email'), $subject, $body, $headers);
