@@ -51,20 +51,10 @@ class AlphaCronManager {
 			
 			self::$logger->info('Start time is ['.$startTime.'], maximum task run time is ['.$task->getMaxRunTime().']');
 			
-			// keep running until $task->doTask() returns true or the max time has elapsed
-			$running = false;
-			while(microtime(true) < $maxAllowedTime) {
-				if(!$running && !$ret = $task->doTask()) {
-					self::$logger->info('Processing...');
-					
-					$running = true;					
-				}else{
-					if($ret) {
-						$running = false;
-						break;
-					}
-				}
-			}
+			// only continue to execute for the task max time
+			set_time_limit($task->getMaxRunTime());
+			$task->doTask();
+			
 			self::$logger->info('Done in ['.round(microtime(true)-$startTime, 5).'] seconds');
 		}
 		
