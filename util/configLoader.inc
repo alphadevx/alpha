@@ -75,7 +75,7 @@ class configLoader{
   	 * Sets the root directory of the application
   	 */
   	function setRootPath() {
-  		$currentScript = $_SERVER["SCRIPT_FILENAME"];
+  		$currentScript = __FILE__;
   		
   		$rootPath = '';		
   		
