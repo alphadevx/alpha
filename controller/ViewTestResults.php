@@ -12,6 +12,7 @@ require_once 'PHPUnit/TextUI/TestRunner.php';
 
 require_once $config->get('sysRoot').'alpha/util/Logger.inc';
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
+require_once $config->get('sysRoot').'alpha/model/tag_object.inc';
 require_once $config->get('sysRoot').'alpha/view/person.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
@@ -27,6 +28,7 @@ require_once $config->get('sysRoot').'alpha/tests/Exceptions_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/String_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Text_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Relation_Test.php';
+require_once $config->get('sysRoot').'alpha/tests/Tag_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/DAO_Test.php';
 
 /*
@@ -280,6 +282,24 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('Exceptions_Test');
+		$result = $suite->run();
+		$runningTime+=$result->time();
+		$testCount+=$result->count();
+				
+		if($result->wasSuccessful())
+			echo '<pre class="success">';
+		else
+			echo '<pre class="warning">';
+			
+		$report = new PHPUnit_TextUI_ResultPrinter();		
+		$report->printResult($result);
+		echo '</pre>';
+		
+		//------------------------------------------------
+		echo '<h3>Tag:</h3>';
+		
+		$suite = new PHPUnit_Framework_TestSuite();
+		$suite->addTestSuite('Tag_Test');
 		$result = $suite->run();
 		$runningTime+=$result->time();
 		$testCount+=$result->count();

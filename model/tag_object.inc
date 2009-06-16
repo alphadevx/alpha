@@ -88,7 +88,54 @@ class tag_object extends DAO {
 				throw new AlphaException('Failed to create the index [tclass_toid_tcontent_unq_idx] on ['.$this->getTableName().'], error is ['.mysql_error().']');
 			}
 		}
-	}	
+	}
+
+	/**
+	 * Splits the passed content by spaces, filters (removes) stop words from stopwords.ini, 
+	 * and returns an array of tag_object instances.
+	 * 
+	 * @param $content
+	 * @param $taggedClass
+	 * @param $taggedOID
+	 * @return array
+	 */
+	public static function tokenize($content, $taggedClass, $taggedOID) {
+		global $config;
+		
+		// apply stop words
+		$lowerWords = explode(' ', $content);
+		array_walk($lowerWords, 'tag_object::lowercaseArrayElement');		
+		$stopwords = file($config->get('sysRoot').'config/stopwords.ini', FILE_IGNORE_NEW_LINES);
+		array_walk($stopwords, 'tag_object::lowercaseArrayElement');
+		$filtered = array_diff($lowerWords, $stopwords);		
+		
+		$tagObjects = array();
+		$tagContents = array();
+		foreach($filtered as $tagContent) {
+			// just making sure that we haven't added this one in already
+			if(!in_array($tagContent, $tagContents)) {
+				$tag = new tag_object();
+				$tag->set('content', trim(strtolower($tagContent)));
+				$tag->set('taggedClass', $taggedClass);
+				$tag->set('taggedOID', $taggedOID);
+				
+				array_push($tagObjects, $tag);
+				array_push($tagContents, $tagContent);
+			}
+		}
+		
+		return $tagObjects;
+	}
+	
+	/**
+	 * Applies trim() and strtolower to the array element passed by reference
+	 * 
+	 * @param $element
+	 * @param $key (not required)
+	 */
+	private static function lowercaseArrayElement(&$element, $key) {
+		$element = trim(strtolower($element));
+	}
 }
 
 ?>
