@@ -54,14 +54,61 @@ class tag_object extends DAO {
 	const TABLE_NAME = 'tag';
 	
 	/**
-	 * Constructor
+	 * Trace logger
+	 * 
+	 * @var Logger
+	 */
+	private static $logger = null;
+	
+	/**
+	 * The constructor
 	 */
 	public function __construct() {
+		if(self::$logger == null)
+			self::$logger = new Logger('tag_object');
+			
 		// ensure to call the parent constructor
 		parent::__construct();
 		$this->taggedClass = new String();
 		$this->taggedOID = new Integer();
 		$this->content = new String();
+	}
+	
+	/**
+	 * Returns an array of tag_objects matching the class and OID provided
+	 * 
+	 * @param $taggedClass
+	 * @param $taggedOID
+	 * @return array
+	 */
+	public function loadTags($taggedClass, $taggedOID) {
+		global $config;		
+		
+		$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE taggedOID='$taggedOID' AND taggedClass='$taggedClass' ORDER BY OID";
+		
+		$this->lastQuery = $sqlQuery;
+
+		$result = mysql_query($sqlQuery);
+		
+		if(mysql_error() != '') {
+			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+			self::$logger->debug('<<loadAllByAttribute []');
+			return array();
+		}
+		
+		// now build an array of objects to be returned
+		$objects = array();
+		$count = 0;
+		$BO_Class = get_class($this);
+		
+		while($row = mysql_fetch_assoc($result)) {
+			$obj = new $BO_Class();
+			$obj->load($row["OID"]);
+			$objects[$count] = $obj;
+			$count++;
+		}
+		
+		return $objects;	
 	}
 	
 	/**

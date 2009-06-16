@@ -72,8 +72,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 *
 	 * @var string
 	 */
-	private $relatedClassRightDisplayField;
-	
+	private $relatedClassRightDisplayField;	
 	
 	/**
 	 * The type of relation ('MANY-TO-ONE','ONE-TO-MANY','ONE-TO-ONE','MANY-TO-MANY')
@@ -88,6 +87,13 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * @var RelationLookup
 	 */
 	private $lookup;
+	
+	/**
+	 * When building a relation with the tag_object BO, set this to the name of the tagged class
+	 * 
+	 * @var string
+	 */
+	private $taggedClass;
 	
 	/**
 	 * An array of the allowable relationship types ('MANY-TO-ONE','ONE-TO-MANY','ONE-TO-ONE','MANY-TO-MANY')
@@ -440,9 +446,13 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 		}catch(IllegalArguementException $e) {		
 			throw new AlphaException('Could not load the definition for the BO class ['.$this->relatedClass.']');
 		}
-					
+		
 		$obj = new $this->relatedClass;
-		$objects = $obj->loadAllByAttribute($this->getRelatedClassField(), $this->getValue());
+		if($this->relatedClass == 'tag_object') {
+			$objects = $obj->loadTags($this->taggedClass, $this->getValue());
+		}else{
+			$objects = $obj->loadAllByAttribute($this->getRelatedClassField(), $this->getValue());
+		}
 		
 		return $objects;
 	}
@@ -480,6 +490,16 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 			throw new IllegalArguementException('Error trying to determine the MANY-TO-MANY relationship side for the classname ['.$BOClassname.']');
 			return '';
 		}
+	}
+	
+	/**
+	 * Set the taggedClass property to the name of the tagged class when building relations
+	 * to the tag_object BO.
+	 * 
+	 * @param $taggedClass
+	 */
+	public function setTaggedClass($taggedClass) {
+		$this->taggedClass = $taggedClass;
 	}
 }
 

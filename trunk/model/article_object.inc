@@ -4,6 +4,7 @@ require_once $config->get('sysRoot').'alpha/model/DAO.inc';
 require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 require_once $config->get('sysRoot').'alpha/model/article_vote_object.inc';
 require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
+require_once $config->get('sysRoot').'alpha/model/tag_object.inc';
 
 /**
  *
@@ -34,6 +35,7 @@ class article_object extends DAO {
 	 * The keywords for the article
 	 * 
 	 * @var String
+	 * @deprecated Use tags instead!
 	 */
 	protected $keywords;
 	
@@ -94,6 +96,13 @@ class article_object extends DAO {
 	protected $votes;
 	
 	/**
+	 * A Relation containing all of the tags on this article
+	 *
+	 * @var Relation
+	 */
+	protected $tags;
+	
+	/**
 	 * An array of data display labels for the class properties
 	 * 
 	 * @var array
@@ -102,7 +111,7 @@ class article_object extends DAO {
 		"OID"=>"Article ID#",		
 		"title"=>"Title",
 		"section"=>"Site Section",
-		"keywords"=>"Keywords",		
+		"keywords"=>"Keywords",
 		"description"=>"Description",
 		"bodyOnload"=>"Body onload Javascript",
 		"content"=>"Content",
@@ -114,7 +123,8 @@ class article_object extends DAO {
 		"URL"=>"URL",
 		"printURL"=>"Printer version URL",
 		"comments"=>"Comments",
-		"votes"=>"Votes"
+		"votes"=>"Votes",
+		"tags"=>"Tags"
 	);
 	
 	/**
@@ -139,9 +149,19 @@ class article_object extends DAO {
 	protected $printURL;
 	
 	/**
-	 * constructor for the class
+	 * Trace logger
+	 * 
+	 * @var Logger
+	 */
+	private static $logger = null;
+	
+	/**
+	 * The constructor which sets up some housekeeping attributes
 	 */
 	public function __construct() {
+		if(self::$logger == null)
+			self::$logger = new Logger('article_object');
+		
 		// ensure to call the parent constructor
 		parent::__construct();
 		
@@ -173,9 +193,25 @@ class article_object extends DAO {
 		
 		$this->comments = new Relation();
 		$this->markTransient('comments');
+		$this->comments->setRelatedClass('article_comment_object');
+		$this->comments->setRelatedClassField('article_oid');
+		$this->comments->setRelatedClassDisplayField('content');
+		$this->comments->setRelationType('ONE-TO-MANY');
 		
 		$this->votes = new Relation();
 		$this->markTransient('votes');
+		$this->votes->setRelatedClass('article_vote_object');
+		$this->votes->setRelatedClassField('article_oid');
+		$this->votes->setRelatedClassDisplayField('score');
+		$this->votes->setRelationType('ONE-TO-MANY');
+		
+		$this->tags = new Relation();
+		$this->markTransient('tags');
+		$this->tags->setRelatedClass('tag_object');
+		$this->tags->setRelatedClassField('taggedOID');
+		$this->tags->setRelatedClassDisplayField('content');
+		$this->tags->setRelationType('ONE-TO-MANY');
+		$this->tags->setTaggedClass('article_object');
 		
 		$this->URL = '';
 		$this->printURL = '';
@@ -188,6 +224,41 @@ class article_object extends DAO {
 	}
 	
 	/**
+	 * After creating a new article_object, tokenize the description field to form a set
+	 * of automated tags and save them.
+	 */
+	protected function after_save_callback() {
+		if($this->getVersion() == 1) {
+			// make tags based on the description
+			$tags = tag_object::tokenize($this->description->getValue(), 'article_object', $this->getOID());
+			foreach($tags as $tag) {
+				try {
+					$tag->save();
+				}catch(ValidationException $e){
+					/*
+					 * The unique key has most-likely been violated because this BO is already tagged with this
+					 * value, so we will just log a warning
+					 */
+					self::$logger->warn('Error creating new tag: '.$e->getMessage());
+				}
+			}
+			// make tags based on the title
+			$tags = tag_object::tokenize($this->title->getValue(), 'article_object', $this->getOID());
+			foreach($tags as $tag) {
+				try {
+					$tag->save();
+				}catch(ValidationException $e){
+					/*
+					 * The unique key has most-likely been violated because this BO is already tagged with this
+					 * value, so we will just log a warning
+					 */
+					self::$logger->warn('Error creating new tag: '.$e->getMessage());
+				}
+			}
+		}
+	}
+	
+	/**
 	 * set up the transient URL attributes for the artcile after it has loaded
 	 */
 	protected function after_loadByAttribute_callback() {
@@ -195,7 +266,7 @@ class article_object extends DAO {
 	}
 	
 	/**
-	 * set up the transient URL attributes for the artcile after it has loaded
+	 * set up the transient URL attributes for the article after it has loaded
 	 */
 	function after_load_callback() {
 		global $config;
@@ -228,20 +299,6 @@ class article_object extends DAO {
 		}else{
 			$this->printURL = $config->get('sysURL').'alpha/controller/ViewArticlePrint.php?title='.$this->title->getValue();
 		}
-		
-		// setup relation to the comments
-		$this->comments->setRelatedClass('article_comment_object');
-		$this->comments->setRelatedClassField('article_oid');
-		$this->comments->setRelatedClassDisplayField('content');
-		$this->comments->setRelationType('ONE-TO-MANY');
-		$this->comments->setValue($this->getID());
-		
-		// setup relation to the votes
-		$this->votes->setRelatedClass('article_vote_object');
-		$this->votes->setRelatedClassField('article_oid');
-		$this->votes->setRelatedClassDisplayField('score');
-		$this->votes->setRelationType('ONE-TO-MANY');
-		$this->votes->setValue($this->getID());
 	}
 	
 	/**
