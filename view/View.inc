@@ -1066,7 +1066,9 @@ class View {
 		
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
-			${$propName} = $BO->get($propName);
+			
+			if($propName != 'logger')
+				${$propName} = $BO->get($propName);
 		}
 		
 		// loop over the $fields array and create a local variable for each key value

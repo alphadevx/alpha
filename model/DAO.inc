@@ -87,7 +87,7 @@ abstract class DAO {
 	 * 
 	 * @var array
 	 */
-	protected $defaultAttributes = array("OID","lastQuery","version_num","dataLabels","created_ts","created_by","updated_ts","updated_by","defaultAttributes","transientAttributes","uniqueAttributes","TABLE_NAME");
+	protected $defaultAttributes = array("OID","lastQuery","version_num","dataLabels","created_ts","created_by","updated_ts","updated_by","defaultAttributes","transientAttributes","uniqueAttributes","TABLE_NAME","logger");
 	
 	/**
 	 * An array of the names of all of the transient attributes of a persistent BO which are not saved to the DB
@@ -178,9 +178,18 @@ abstract class DAO {
 
 		try {
 			foreach($properties as $propObj) {
+				$propName = $propObj->name;
+											
 				// filter transient attributes
-				if(!in_array($propObj->name, $this->transientAttributes)) {
-					$this->set($propObj->name, $row[$propObj->name]);
+				if(!in_array($propName, $this->transientAttributes)) {
+					$this->set($propName, $row[$propName]);
+				}elseif(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {
+					$prop = $this->getPropObject($propName);
+					
+					// handle the setting of ONE-TO-MANY relation values
+					if($prop->getRelationType() == 'ONE-TO-MANY') {
+						$this->set($propObj->name, $this->getID());
+					}
 				}
 			}
 		}catch (IllegalArguementException $e) {
@@ -244,9 +253,18 @@ abstract class DAO {
 		$properties = $reflection->getProperties();
 
 		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			
 			// filter transient attributes
 			if(!in_array($propObj->name, $this->transientAttributes)) {
 				$this->set($propObj->name, $row[$propObj->name]);
+			}elseif(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {
+				$prop = $this->getPropObject($propName);
+					
+				// handle the setting of ONE-TO-MANY relation values
+				if($prop->getRelationType() == 'ONE-TO-MANY') {
+					$this->set($propObj->name, $this->getID());
+				}
 			}
 		}
 		
@@ -596,10 +614,10 @@ abstract class DAO {
 					foreach($properties as $propObj) {
 						$propName = $propObj->name;
 						
-						// handle the saving of MANY-TO-MANY relation values
 						if(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {				
 							$prop = $this->getPropObject($propName);
-									
+							
+							// handle the saving of MANY-TO-MANY relation values
 							if($prop->getRelationType() == 'MANY-TO-MANY') {
 								try {
 									if(isset($_POST[$propName]))
@@ -643,6 +661,11 @@ abstract class DAO {
 									self::rollback();
 									return;
 								}
+							}
+							
+							// handle the saving of ONE-TO-MANY relation values
+							if($prop->getRelationType() == 'ONE-TO-MANY') {
+								$prop->setValue($this->getID());
 							}
 						}						
 					}
@@ -762,8 +785,23 @@ abstract class DAO {
 					self::$logger->debug('...done deleting!');
 				}
 					
-				// TODO should set related field values to null (MySQL is doing this for us as-is)
-				if($prop->getRelationType() == 'ONE-TO-MANY') {					
+				// should set related field values to null (MySQL is doing this for us as-is)
+				if($prop->getRelationType() == 'ONE-TO-MANY' && !$prop->getRelatedClass() == 'tag_object') {
+					$relatedObjects = $prop->getRelatedObjects();
+					
+					foreach($relatedObjects as $object) {
+						$object->set($prop->getRelatedClassField(), null);
+						$object->save();
+					}
+				}
+				
+				// in the case of tags, we will always remove the related tags once the BO is deleted
+				if($prop->getRelationType() == 'ONE-TO-MANY' && $prop->getRelatedClass() == 'tag_object') {
+					$relatedObjects = $prop->getRelatedObjects();
+					
+					foreach($relatedObjects as $object) {						
+						$object->delete();
+					}
 				}
 			}
 		}
