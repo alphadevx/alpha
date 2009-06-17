@@ -173,6 +173,15 @@ class Timestamp extends AlphaType implements AlphaTypeInterface {
  	}
  	
  	/**
+ 	 * Return the value in UNIX timestamp format
+ 	 * 
+ 	 * @return int
+ 	 */
+ 	public function getUnixValue() {
+ 		return mktime($this->hour, $this->minute, $this->second, $this->month, $this->day, $this->year);
+ 	}
+ 	
+ 	/**
  	 * Getter for the date part
  	 *
  	 * @return string
