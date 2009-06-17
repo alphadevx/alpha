@@ -524,8 +524,8 @@ abstract class DAO {
 			}
 			
 			// set the "updated by" fields, we can only set the user id if someone is logged in
-			if(isset($_SESSION['current_user']))
-				$this->updated_by->setValue($_SESSION['current_user']->getID());
+			if(isset($_SESSION['currentUser']))
+				$this->updated_by->setValue($_SESSION['currentUser']->getOID());
 			
 			$this->updated_ts = new Timestamp(date("Y-m-d H:i:s"));
 			
