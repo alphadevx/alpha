@@ -135,6 +135,15 @@ class Date extends AlphaType implements AlphaTypeInterface {
  		return $this->year.'-'.$this->month.'-'.$this->day;
  	}
  	
+	/**
+ 	 * Return the value in UNIX timestamp format
+ 	 * 
+ 	 * @return int
+ 	 */
+ 	public function getUnixValue() {
+ 		return mktime(0, 0, 0, $this->month, $this->day, $this->year);
+ 	}
+ 	
  	/**
  	 * Get the date value as a string in the format "DD/MM/YYYY"
  	 *
