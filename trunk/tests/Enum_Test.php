@@ -48,9 +48,7 @@ class Enum_Test extends PHPUnit_Framework_TestCase
      * testing that enum options are loaded correctly from the database
      */
     public function testLoadEnumOptions() {
-    	// here we are assuming that the first user in the DB
-    	// table is an administrator
-    	$this->person->load('1');
+    	$this->person->loadByAttribute('displayName', 'Admin');
     	
     	$this->assertEquals('Admin', $this->person->getAccessLevel()->getValue(), "testing that enum options are loaded correctly from the database");
     }

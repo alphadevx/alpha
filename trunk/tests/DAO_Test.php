@@ -25,6 +25,7 @@ class DAO_Test extends PHPUnit_Framework_TestCase
      * here
      */
     protected function setUp() {
+    	DAO::begin();
     	$this->person = $this->createPersonObject('unitTestUser');
         // just making sure no previous test user is in the DB
         $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/');
@@ -36,9 +37,8 @@ class DAO_Test extends PHPUnit_Framework_TestCase
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
      */    
-    protected function tearDown() {
-    	if(!$this->person->isTransient())
-    		$this->person->delete(); 
+    protected function tearDown() {    	
+    	DAO::rollback();
         unset($this->person);
     }
     
