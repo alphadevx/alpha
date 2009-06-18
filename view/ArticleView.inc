@@ -75,7 +75,14 @@ class ArticleView extends View {
 		$fields['deleteButton'] = $button->render();
 		
 		$button = new button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
-		$fields['cancelButton'] = $button->render();		
+		$fields['cancelButton'] = $button->render();
+		
+		$tags = $this->BO->getPropObject('tags')->getRelatedObjects();
+			
+		if(count($tags) > 0) {
+			$button = new button("document.location = '".FrontController::generateSecureURL('act=EditTags&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."'", "Edit Tags", "tagsBut");
+			$fields['tagsButton'] = $button->render();
+		}
 				
 		// buffer security fields to $formSecurityFields variable		
 		$fields['formSecurityFields'] = $this->renderSecurityFields();
