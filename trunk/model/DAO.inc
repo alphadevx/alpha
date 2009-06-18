@@ -514,12 +514,8 @@ abstract class DAO {
 			$properties = $reflection->getProperties();
 			$sqlQuery = "";
 
-			// begin a new transaction
-			self::begin();
-			
 			if($this->getVersion() != $this->version_num->getValue()){
 				throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
-				self::rollback();
 				return;
 			}
 			
@@ -658,7 +654,6 @@ abstract class DAO {
 									}
 								}catch (Exception $e) {
 									throw new FailedSaveException('Failed to update a MANY-TO-MANY relation on the object, error is ['.$e->getMessage().']');
-									self::rollback();
 									return;
 								}
 							}
@@ -671,12 +666,8 @@ abstract class DAO {
 					}
 				}catch (Exception $e) {
 					throw new FailedSaveException('Failed to save object, error is ['.$e->getMessage().']');
-					self::rollback();
 					return;
 				}
-				
-				// commit
-				self::commit();
 				
 				if(method_exists($this, 'after_save_callback'))
 					$this->after_save_callback();
@@ -687,13 +678,10 @@ abstract class DAO {
 				
 				// check for unique violations			
 				if(mysql_errno() == '1062') {					
-					throw new ValidationException('Failed to save, the value '.$this->findOffendingValue(mysql_error()).' is already in use!');
-					self::rollback();
+					throw new ValidationException('Failed to save, the value '.$this->findOffendingValue(mysql_error()).' is already in use, query ['.$this->lastQuery.']');
 					return;
 				}else{					
 					throw new FailedSaveException('Failed to save object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
-					self::rollback();
-					return;
 				}
 			}
 		}
@@ -747,8 +735,6 @@ abstract class DAO {
 				
 		if(method_exists($this, 'before_delete_callback'))
 				$this->before_delete_callback();
-		
-		self::begin();
 		
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this));
@@ -816,11 +802,9 @@ abstract class DAO {
 			if(method_exists($this, 'after_delete_callback'))
 				$this->after_delete_callback();			
 			
-			self::commit();
 			$this->clear();
 		}else{			
 			throw new FailedDeleteException('Failed to delete object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
-			self::rollback();
 		}
 
 		self::$logger->debug('<<delete');
@@ -840,8 +824,7 @@ abstract class DAO {
 			$this->before_deleteAllByAttribute_callback();
 		
 		$doomedObjects = $this->loadAllByAttribute($attribute, $value);
-		$deletedRowCount = 0;
-		self::begin();
+		$deletedRowCount = 0;		
 		
 		try {
 			foreach ($doomedObjects as $object) {
@@ -851,11 +834,8 @@ abstract class DAO {
 		}catch (AlphaException $e) {
 			throw new FailedDeleteException('Failed to delete objects, error is ['.$e->getMessage().']');
 			self::$logger->debug('<<deleteAllByAttribute [0]');
-			self::rollback();
 			return 0;
 		}
-		
-		self::commit();
 		
 		if(method_exists($this, 'after_deleteAllByAttribute_callback'))
 			$this->after_deleteAllByAttribute_callback();
@@ -2319,6 +2299,18 @@ abstract class DAO {
   			self::$logger->debug('<<isInstalled [false]');
   			return false;
   		}
+  	}
+  	
+  	/**
+  	 * Returns true if the BO has a Relation property called tags, false otherwise.
+  	 * 
+  	 * @return bool
+  	 */
+  	public function isTagged() {
+  		if(isset($this->tags) && $this->tags instanceof Relation)
+  			return true;
+  		else
+  			return false;
   	}
 }
 
