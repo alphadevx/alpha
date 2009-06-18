@@ -44,7 +44,7 @@ class EditDEnum extends Edit implements AlphaControllerInterface {
 	 */
 	public function __construct() {
 		if(self::$logger == null)
-			self::$logger = new Logger('ListDEnums');
+			self::$logger = new Logger('EditDEnum');
 		self::$logger->debug('>>__construct()');
 		
 		// ensure that the super class constructor is called, indicating the rights group
@@ -121,7 +121,7 @@ class EditDEnum extends Edit implements AlphaControllerInterface {
 				throw new IllegalArguementException('Could not load the DEnum object as an oid was not supplied!');
 			}
 			
-			if (isset($params['saveBut'])) {			
+			if (isset($params['saveBut'])) {
 				try {
 					$this->BO->load($BOoid);
 					// update the object from post data
@@ -194,7 +194,7 @@ class EditDEnum extends Edit implements AlphaControllerInterface {
 		if($this->statusMessage != '')
 			$html .= $this->statusMessage;
 		return $html;
-	}	
+	}
 }
 
 // now build the new controller if this file is called directly
