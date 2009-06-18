@@ -130,10 +130,23 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 		$html = $this->renderComments();
 		
 		$rating = $this->BO->getArticleScore();
-		$votes = $this->BO->getArticleVotes();
 		
-		if($config->get('sysCMSDisplayVotes'))
+		if($config->get('sysCMSDisplayTags')) {
+			$tags = $this->BO->getPropObject('tags')->getRelatedObjects();
+			
+			if(count($tags) > 0) {
+				$html .= '<p>Tags:';
+				
+				foreach($tags as $tag)
+					$html .= ' <a href="'.$config->get('sysURL').'alpha/controller/Search.php?q='.$tag->get('content').'">'.$tag->get('content').'</a>';
+				$html .= '</p>';
+			}
+		}
+		
+		if($config->get('sysCMSDisplayVotes')) {
+			$votes = $this->BO->getArticleVotes();
 			$html .= '<p>Average Article User Rating: <strong>'.$rating.'</strong> out of 10 (based on <strong>'.count($votes).'</strong> votes)</p>';
+		}
 		
 		if(!$this->BO->checkUserVoted() && $config->get('sysCMSVotingAllowed')) {
 			$html .= '<form action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'].'" method="post">';
