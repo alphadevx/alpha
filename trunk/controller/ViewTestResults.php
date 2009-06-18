@@ -115,6 +115,8 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$report->printResult($result);
 		echo '</pre>';
 		
+		echo '<p>Running time: '.$runningTime.'</p>';
+		
 		//------------------------------------------------
 		echo '<h3>DEnum:</h3>';
 		
@@ -132,6 +134,8 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$report = new PHPUnit_TextUI_ResultPrinter();		
 		$report->printResult($result);
 		echo '</pre>';
+		
+		echo '<p>Running time: '.$runningTime.'</p>';
 		
 		//------------------------------------------------
 		echo '<h3>Boolean:</h3>';
@@ -151,6 +155,8 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$report->printResult($result);
 		echo '</pre>';
 		
+		echo '<p>Running time: '.$runningTime.'</p>';
+		
 		//------------------------------------------------
 		echo '<h3>Date:</h3>';
 		
@@ -168,6 +174,8 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$report = new PHPUnit_TextUI_ResultPrinter();		
 		$report->printResult($result);
 		echo '</pre>';
+		
+		echo '<p>Running time: '.$runningTime.'</p>';
 		
 		//------------------------------------------------
 		echo '<h3>Timestamp:</h3>';
@@ -187,6 +195,8 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$report->printResult($result);
 		echo '</pre>';
 		
+		echo '<p>Running time: '.$runningTime.'</p>';
+		
 		//------------------------------------------------
 		echo '<h3>Integer:</h3>';
 		
@@ -204,6 +214,8 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$report = new PHPUnit_TextUI_ResultPrinter();		
 		$report->printResult($result);
 		echo '</pre>';
+		
+		echo '<p>Running time: '.$runningTime.'</p>';
 		
 		//------------------------------------------------
 		echo '<h3>Double:</h3>';
@@ -223,6 +235,8 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$report->printResult($result);
 		echo '</pre>';
 		
+		echo '<p>Running time: '.$runningTime.'</p>';
+		
 		//------------------------------------------------
 		echo '<h3>String:</h3>';
 		
@@ -240,6 +254,8 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$report = new PHPUnit_TextUI_ResultPrinter();		
 		$report->printResult($result);
 		echo '</pre>';
+		
+		echo '<p>Running time: '.$runningTime.'</p>';
 		
 		//------------------------------------------------
 		echo '<h3>Text:</h3>';
@@ -259,6 +275,8 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$report->printResult($result);
 		echo '</pre>';
 		
+		echo '<p>Running time: '.$runningTime.'</p>';
+		
 		//------------------------------------------------
 		echo '<h3>Relation:</h3>';
 		
@@ -276,6 +294,8 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$report = new PHPUnit_TextUI_ResultPrinter();		
 		$report->printResult($result);
 		echo '</pre>';
+		
+		echo '<p>Running time: '.$runningTime.'</p>';
 		
 		//------------------------------------------------
 		echo '<h3>Exception Handling:</h3>';
@@ -295,6 +315,8 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$report->printResult($result);
 		echo '</pre>';
 		
+		echo '<p>Running time: '.$runningTime.'</p>';
+		
 		//------------------------------------------------
 		echo '<h3>Tag:</h3>';
 		
@@ -313,6 +335,8 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$report->printResult($result);
 		echo '</pre>';
 		
+		echo '<p>Running time: '.$runningTime.'</p>';
+		
 		//------------------------------------------------
 		echo '<h3>MySQL DAO:</h3>';
 		
@@ -330,6 +354,8 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$report = new PHPUnit_TextUI_ResultPrinter();		
 		$report->printResult($result);
 		echo '</pre>';
+		
+		echo '<p>Running time: '.$runningTime.'</p>';
 		
 		echo '<h3>Total tests ran: '.$testCount.'</h3>';
 		echo '<h3>Total running time: '.$runningTime.'</h3>';
