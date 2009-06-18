@@ -237,9 +237,8 @@ class article_object extends DAO {
 				}catch(ValidationException $e){
 					/*
 					 * The unique key has most-likely been violated because this BO is already tagged with this
-					 * value, so we will just log a warning
+					 * value, so we can ignore in this case.
 					 */
-					self::$logger->warn('Error creating new tag: '.$e->getMessage());
 				}
 			}
 			// make tags based on the title
