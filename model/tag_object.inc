@@ -92,7 +92,6 @@ class tag_object extends DAO {
 		
 		if(mysql_error() != '') {
 			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
-			self::$logger->debug('<<loadAllByAttribute []');
 			return array();
 		}
 		
@@ -103,7 +102,7 @@ class tag_object extends DAO {
 		
 		while($row = mysql_fetch_assoc($result)) {
 			$obj = new $BO_Class();
-			$obj->load($row["OID"]);
+			$obj->load($row['OID']);
 			$objects[$count] = $obj;
 			$count++;
 		}
@@ -182,6 +181,16 @@ class tag_object extends DAO {
 	 */
 	private static function lowercaseArrayElement(&$element, $key) {
 		$element = trim(strtolower($element));
+	}
+	
+	/**
+	 * Cleans tag content by remocing white spaces and converting to lowercase.
+	 * 
+	 * @param $content
+	 * @return string
+	 */
+	public static function cleanTagContent($content) {
+		return trim(strtolower(str_replace(' ', '', $content)));
 	}
 }
 
