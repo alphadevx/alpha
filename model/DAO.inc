@@ -262,8 +262,8 @@ abstract class DAO {
 				$prop = $this->getPropObject($propName);
 					
 				// handle the setting of ONE-TO-MANY relation values
-				if($prop->getRelationType() == 'ONE-TO-MANY') {
-					$this->set($propObj->name, $this->getID());
+				if($prop->getRelationType() == 'ONE-TO-MANY') {					
+					$this->set($propObj->name, $row['OID']);
 				}
 			}
 		}
