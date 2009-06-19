@@ -152,7 +152,7 @@ class LogFile {
 	 			$index = ($line*count($cols))+$col;
 	 			
 	 			// if it is an error log, render the error types field in different colours
-	 			if($col == 1 && preg_match("/alpha./", basename($this->path))){
+	 			if($col == 1 && $cols[1] == 'Level'){
 	 				switch($fields[$index]) {
 	 					case 'DEBUG':
 	 						echo '<td class="validation"><pre>'.htmlentities($fields[$index]).'</pre></td>';

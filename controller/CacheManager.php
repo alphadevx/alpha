@@ -142,15 +142,14 @@ class CacheManager extends Controller implements AlphaControllerInterface {
 	}
 	
 	/**
-	 * Renders an administration home page link after the page header is rendered, and the
-	 * status message if one is set
+	 * Renders the status message if one is set
 	 * 
 	 * @return string
 	 */
 	public function after_displayPageHead_callback() {
 		global $config;
 		
-		$html = '<p align="center"><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Administration Home Page</a></p>';
+		$html = '';
 				
 		if($this->statusMessage != '')
 			$html .= $this->statusMessage;		

@@ -398,7 +398,14 @@ class View {
 		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$config->get('sysTheme').'.css.php">';
 
 		$html.= '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
-		
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jquery.pack.js"></script>';
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/contextMenu/jquery.contextMenu.js"></script>';
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.dimensions.js"></script>';
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.positionBy.js"></script>';
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.bgiframe.js"></script>';
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.jdMenu.js"></script>';
+		$html.= '<link rel="stylesheet" href="'.$config->get('sysURL').'config/css/jquery.jdMenu.css" type="text/css" />';
+				
 		ob_start();
 		require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
 		$html.= ob_get_clean();
@@ -431,6 +438,26 @@ class View {
 			$html.= '<p>You are logged in as '.$_SESSION['currentUser']->getDisplayname().'.  <a href="'.$config->get('sysURL').'alpha/controller/Logout.php">Logout</a></p>';
 		}else{
 			$html.= '<p>You are not logged in</p>';
+		}
+		
+		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin') && basename($_SERVER['PHP_SELF']) == 'FC.php') {
+			$html .= '<ul class="jd_menu">
+						<li><a href="'.$config->get('sysURL').'">Home</a></li>
+						<li><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Admin Home</a></li>
+						<li>Logs &raquo;			
+							<ul>
+								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysLogFile')).'">System Log</a></li>
+								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/search.log').'">Search Log</a></li>
+								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/feeds.log').'">Feed Log</a></li>
+								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/tasks.log').'">Cron Tasks Log</a></li>
+							</ul>
+						</li>
+						<li><a href="'.FrontController::generateSecureURL('act=gen_secure_query_strings').'">Generate Secure URL</a></li>
+						<li><a href="'.FrontController::generateSecureURL('act=ViewMetrics').'">Software Metrics</a></li>
+						<li><a href="'.FrontController::generateSecureURL('act=CacheManager').'">Manage Cache</a></li>
+						<li><a href="'.FrontController::generateSecureURL('act=ListDEnums').'">Manage DEnums</a></li>
+						<li><a href="'.FrontController::generateSecureURL('act=ViewTestResults').'">Unit Tests</a></li>
+					</ul>';
 		}
 		
 		if(method_exists($controller, 'after_displayPageHead_callback'))
