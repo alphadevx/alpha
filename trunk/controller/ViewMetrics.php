@@ -79,19 +79,6 @@ class ViewMetrics extends Controller implements AlphaControllerInterface{
 	}
 	
 	/**
-	 * Renders an administration home page link after the page header is rendered
-	 * 
-	 * @return string
-	 */
-	public function after_displayPageHead_callback() {
-		global $config;
-		
-		$html = '<p align="center"><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Administration Home Page</a></p>';
-		
-		return $html;
-	}
-	
-	/**
 	 * Renders the JQuery code to do zebra-style table colouring
 	 *
 	 * @return string

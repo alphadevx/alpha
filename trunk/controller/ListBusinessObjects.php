@@ -140,25 +140,32 @@ class ListBusinessObjects extends Controller implements AlphaControllerInterface
 	 *
 	 * @return string
 	 */
-	public function after_displayPageHead_callback() {
+	/*public function after_displayPageHead_callback() {
 		global $config;
 		
 		$html = '';
 		
 		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
-			$html .= '<p align="center"><a href="'.$config->get('sysURL').'">Home Page</a>&nbsp;-';
-			$html .= '<a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysLogFile')).'">System Log</a>&nbsp;-&nbsp;';
-			$html .= '<a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/search.log').'">Search Log</a>&nbsp;-&nbsp;';
-			$html .= '<a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/feeds.log').'">Feed Log</a>&nbsp;-&nbsp;';
-			$html .= '<a href="'.FrontController::generateSecureURL('act=gen_secure_query_strings').'">Generate Secure URL</a>&nbsp;-&nbsp;';
-			$html .= '<a href="'.FrontController::generateSecureURL('act=ViewMetrics').'">Software Metrics</a>&nbsp;-&nbsp;';
-			$html .= '<a href="'.FrontController::generateSecureURL('act=CacheManager').'">Manage Cache</a>&nbsp;-&nbsp;';
-			$html .= '<a href="'.FrontController::generateSecureURL('act=ListDEnums').'">Manage DEnums</a>&nbsp;-&nbsp;';
-			$html .= '<a href="'.FrontController::generateSecureURL('act=ViewTestResults').'">Unit Tests</a></p>';
+			$html .= '<ul class="jd_menu">
+						<li><a href="'.$config->get('sysURL').'">Home Page</a></li>
+						<li>Logs &raquo;			
+							<ul>
+								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysLogFile')).'">System Log</a></li>
+								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/search.log').'">Search Log</a></li>
+								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/feeds.log').'">Feed Log</a></li>
+								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/tasks.log').'">Cron Tasks Log</a></li>
+							</ul>
+						</li>
+						<li><a href="'.FrontController::generateSecureURL('act=gen_secure_query_strings').'">Generate Secure URL</a></li>
+						<li><a href="'.FrontController::generateSecureURL('act=ViewMetrics').'">Software Metrics</a></li>
+						<li><a href="'.FrontController::generateSecureURL('act=CacheManager').'">Manage Cache</a></li>
+						<li><a href="'.FrontController::generateSecureURL('act=ListDEnums').'">Manage DEnums</a></li>
+						<li><a href="'.FrontController::generateSecureURL('act=ViewTestResults').'">Unit Tests</a></li>
+					</ul>';
 		}
 		
 		return $html;
-	}
+	}*/
 	
 	/**
 	 * Private method to display the main body HTML for this page
@@ -198,6 +205,24 @@ class ListBusinessObjects extends Controller implements AlphaControllerInterface
 			}
 		}
 	}
+	
+	/**
+	 * Renders the JQuery code to do zebra-style table colouring and list context menu
+	 *
+	 * @return string
+	 */
+	/*public function during_displayPageHead_callback() {
+		global $config;
+		
+		$html = '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/contextMenu/jquery.contextMenu.js"></script>';
+		$html .= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.dimensions.js"></script>';
+		$html .= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.positionBy.js"></script>';
+		$html .= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.bgiframe.js"></script>';
+		$html .= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.jdMenu.js"></script>';
+		$html .= '<link rel="stylesheet" href="'.$config->get('sysURL').'config/css/jquery.jdMenu.css" type="text/css" />';
+		
+		return $html;
+	}*/
 }
 
 // now build the new controller

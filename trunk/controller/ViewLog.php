@@ -77,9 +77,11 @@ class ViewLog extends Controller implements AlphaControllerInterface{
 		if(preg_match("/alpha.*/", basename($this->logPath)))
 			$log->renderLog(array('Date/time','Level','Class','Message'));
 		if(preg_match("/search.*/", basename($this->logPath)))
-			$log->renderLog(array("Search query","Search date","Client Application","Client IP"));
+			$log->renderLog(array('Search query','Search date','Client Application','Client IP'));
 		if(preg_match("/feeds.*/", basename($this->logPath)))
-			$log->renderLog(array("Business object","Feed type","Request date","Client Application","Client IP"));		
+			$log->renderLog(array('Business object','Feed type','Request date','Client Application','Client IP'));
+		if(preg_match("/tasks.*/", basename($this->logPath)))
+			$log->renderLog(array('Date/time','Level','Class','Message'));
 		
 		echo View::displayPageFoot($this);
 		self::$logger->debug('<<doGET');
@@ -94,19 +96,6 @@ class ViewLog extends Controller implements AlphaControllerInterface{
 		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');
 		
 		self::$logger->debug('<<doPOST');
-	}
-	
-	/**
-	 * Renders an administration home page link after the page header is rendered
-	 * 
-	 * @return string
-	 */
-	public function after_displayPageHead_callback() {
-		global $config;
-		
-		$html = '<p align="center"><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Administration Home Page</a></p>';
-		
-		return $html;
 	}
 }
 

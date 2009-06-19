@@ -374,19 +374,6 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		
 		self::$logger->debug('<<doPOST');
 	}
-	
-	/**
-	 * Renders an administration home page link after the page header is rendered
-	 * 
-	 * @return string
-	 */
-	public function after_displayPageHead_callback() {
-		global $config;
-		
-		$html = '<p align="center"><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Administration Home Page</a></p>';
-		
-		return $html;
-	}
 }
 
 // now build the new controller if this file is called directly
