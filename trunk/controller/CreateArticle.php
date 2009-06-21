@@ -83,11 +83,9 @@ class CreateArticle extends Controller implements AlphaControllerInterface {
 	public function doPOST($params) {
 		global $config;
 		
-		echo View::displayPageHead($this);
-		
 		try {
 			// check the hidden security fields before accepting the form POST data
-			if(!$this->checkSecurityFields()) {
+			if(!$this->checkSecurityFields()) {				
 				throw new SecurityException('This page cannot accept post data from remote servers!');
 				self::$logger->debug('<<doPOST');
 			}
@@ -115,6 +113,7 @@ class CreateArticle extends Controller implements AlphaControllerInterface {
 				header('Location: '.FrontController::generateSecureURL('act=ListBusinessObjects'));
 			}
 		}catch(SecurityException $e) {
+			echo View::displayPageHead($this);
 			echo '<p class="error"><br>'.$e->getMessage().'</p>';								
 			self::$logger->warn($e->getMessage());
 		}
