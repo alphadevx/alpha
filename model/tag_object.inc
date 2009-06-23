@@ -141,11 +141,11 @@ class tag_object extends DAO {
 	 * and returns an array of tag_object instances.
 	 * 
 	 * @param $content
-	 * @param $taggedClass
-	 * @param $taggedOID
+	 * @param $taggedClass Optionally provide a BO class name
+	 * @param $taggedOID Optionally provide a BO instance OID
 	 * @return array
 	 */
-	public static function tokenize($content, $taggedClass, $taggedOID) {
+	public static function tokenize($content, $taggedClass='', $taggedOID='') {
 		global $config;
 		
 		// apply stop words
@@ -162,8 +162,10 @@ class tag_object extends DAO {
 			if(!in_array($tagContent, $tagContents)) {
 				$tag = new tag_object();
 				$tag->set('content', trim(strtolower($tagContent)));
-				$tag->set('taggedClass', $taggedClass);
-				$tag->set('taggedOID', $taggedOID);
+				if(!empty($taggedClass))
+					$tag->set('taggedClass', $taggedClass);
+				if(!empty($taggedOID))
+					$tag->set('taggedOID', $taggedOID);
 				
 				array_push($tagObjects, $tag);
 				array_push($tagContents, $tagContent);
