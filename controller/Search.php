@@ -91,6 +91,8 @@ class Search extends Controller implements AlphaControllerInterface {
 							$matchingTags = array_merge($matchingTags, $tags);
 						}
 						
+						self::$logger->info('There are ['.count($matchingTags).'] tag_objects matching the query ['.$params['q'].']');
+						
 						/*
 						 * Build an array of BOs for the matching tags from the DB:
 						 * array key = BO ID
@@ -101,15 +103,17 @@ class Search extends Controller implements AlphaControllerInterface {
 							if($tag->get('taggedClass') == $BO) {
 								if(isset($BOIDs[$tag->get('taggedOID')])) {
 									// increment the weight if the same BO is tagged more than once
-									$BOIDs[$tag->get('taggedOID')] = intval($BOIDs[$tag->get('taggedOID')]) + 1;									
+									$weight = intval($BOIDs[$tag->get('taggedOID')]) + 1;
+									$BOIDs[$tag->get('taggedOID')] = $weight;									
 								}else{
 									$BOIDs[$tag->get('taggedOID')] = 1;									
-								}								
+								}
+								self::$logger->info('Found BO ['.$tag->get('taggedOID').'] has weight ['.$BOIDs[$tag->get('taggedOID')].']');								
 							}
 						}
 						
-						// sort the BO IDs based on tag frequency weight
-						krsort($BOIDs);
+						// sort the BO IDs based on tag frequency weight						
+						arsort($BOIDs);						
 						
 						// render the list view for each BO
 						foreach(array_keys($BOIDs) as $oid) {
@@ -119,8 +123,22 @@ class Search extends Controller implements AlphaControllerInterface {
 								
 								$view = View::getInstance($temp);
 								echo $view->listView();
+								
+								$tags = $temp->getPropObject('tags')->getRelatedObjects();
+			
+								if(count($tags) > 0) {
+									echo '<p>Tags: ';
+									
+									$queryTerms = explode(' ', $params['q']);
+									
+									foreach($tags as $tag) {
+										echo (in_array($tag->get('content'), $queryTerms) ? '<strong>'.$tag->get('content').' </strong>' : $tag->get('content').' ');
+									}
+									
+									echo '</p>';
+								}
 							}catch(BONotFoundException $e) {
-								// TODO orphaned tag!
+								self::$logger->warn('Orpaned tag_object detected pointing to a non-existant BO of OID ['.$oid.'] and type ['.$BO.'].');
 							}
 						}
 					}
@@ -147,6 +165,16 @@ class Search extends Controller implements AlphaControllerInterface {
 		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');
 		
 		self::$logger->debug('<<doPOST');
+	}
+	
+	public function after_displayPageHead_callback() {
+		$html = '<div align="center"><form action="'.$_SERVER['PHP_SELF'].'" method="GET" id="search_form">';
+		$html .= 'Search for: <input type="text" size="80" name="q"/>&nbsp;';		
+		$button = new button('submit', 'Search', 'searchBut');
+		$html .= $button->render();
+		$html .= '</form></div>';
+		
+		return $html;
 	}
 }
 
