@@ -210,14 +210,16 @@ class View {
 			if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
 				$propClass = get_class($this->BO->getPropObject($propName));
 				
-				if ($propClass != 'Text') {
-					$html .= '	<td>&nbsp;'.$this->BO->get($propName).'</td>';
-				}else{
+				if ($propClass == 'Text') {
 					$text = htmlentities($this->BO->get($propName));
 					if(strlen($text) > 70)
 						$html .= '	<td>&nbsp;'.substr($text, 0, 70).'...</td>';
 					else
 						$html .= '	<td>&nbsp;'.$text.'</td>';
+				}elseif($propClass == 'DEnum') {
+					$html .= '	<td>&nbsp;'.$this->BO->getPropObject($propName)->getDisplayValue().'</td>';
+				}else{
+					$html .= '	<td>&nbsp;'.$this->BO->get($propName).'</td>';
 				}
 			}
 			if ($propName == 'OID')
@@ -1094,8 +1096,13 @@ class View {
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
 			
-			if($propName != 'logger')
-				${$propName} = $BO->get($propName);
+			if($propName != 'logger') {
+				if(get_class($BO->getPropObject($propName)) == 'DEnum') {					
+					${$propName} = $BO->getPropObject($propName)->getDisplayValue();
+				}else{
+					${$propName} = $BO->get($propName);
+				}
+			}
 		}
 		
 		// loop over the $fields array and create a local variable for each key value
