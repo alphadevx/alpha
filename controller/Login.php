@@ -51,6 +51,8 @@ class Login extends Controller implements AlphaControllerInterface {
 			self::$logger = new Logger('Login');
 		self::$logger->debug('>>__construct()');
 		
+		global $config;
+		
 		// ensure that the super class constructor is called, indicating the rights group
 		parent::__construct('Public');
 		
@@ -61,7 +63,7 @@ class Login extends Controller implements AlphaControllerInterface {
 		$this->setBO($this->personObject);
 		
 		// set up the title and meta details
-		$this->setTitle('Login to the site');
+		$this->setTitle('Login to '.$config->get('sysTitle'));
 		$this->setDescription('Login page.');
 		$this->setKeywords('login,logon');
 		
