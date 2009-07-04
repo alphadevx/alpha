@@ -32,7 +32,8 @@ class person extends View
 	function display_login_form() {
 		global $config;
 		
-		echo '<table cols="2">';
+		echo '<div class="bordered" style="text-align:center; padding:10px; margin:10px;">';
+		echo '<table cols="2" align="center">';
 		echo '<form action="'.$_SERVER["PHP_SELF"].'" method="POST">';
 		echo '<tr>';
 		echo '	<td>E-mail Address</td> <td><input type="text" name="email" size="50" value="'.(isset($_POST["email"])? $_POST["email"] : '').'"/></td>';
@@ -43,10 +44,7 @@ class person extends View
 		echo '<tr><td colspan="2">';
 		if (class_exists("button")) {			
 			$temp = new button("submit","Login","loginBut");
-			echo $temp->render();
-			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location.replace('".$config->get('sysURL')."')","Cancel","cancelBut");
-			echo $temp->render();
+			echo '<div align="center">'.$temp->render(80).'</div>';			
 		}else{
 			echo '	<input type="submit" name="loginBut" value="Login"/>';
 			$temp = new button("document.location.replace('".$config->get('sysURL')."')","Cancel","cancelBut");
@@ -58,7 +56,8 @@ class person extends View
 		
 		echo '</form>';
 		echo '</table>';
-		echo '<a href="'.$_SERVER["PHP_SELF"].'?reset=true">Forgotten your password?</a>';
+		echo '<p><a href="'.$_SERVER["PHP_SELF"].'?reset=true">Forgotten your password?</a></p>';
+		echo '</div>';
 	}
 	
 	/**
