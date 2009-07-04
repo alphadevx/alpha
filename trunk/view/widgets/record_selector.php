@@ -53,7 +53,14 @@ class record_selector
 		$this->accessingClassName = $accessingClassName;
 	}
 	
-	function render($table_tags=true) {
+	/**
+	 * 
+	 * @param bool $table_tags Include table tags and label (optional)
+	 * @param bool $expanded Render the related fields in expanded format or not (optional)
+	 * @param bool $buttons Render buttons for expanding/contacting the related fields (optional)
+	 * @return string
+	 */
+	function render($table_tags=true, $expanded=false, $buttons=true) {
 		global $config;
 		
 		$html = '';
@@ -100,14 +107,16 @@ class record_selector
 				}else{
 					$html .= '<tr><td style="text-align:center;" colspan="2">';
 					$html .= $this->label;
-					$tmp = new button("document.getElementById('relation_field_".$this->name."').style.display = '';", "Display related objects", $this->name."DisBut", $config->get('sysURL')."/alpha/images/icons/arrow_down.png");
-					$html .= $tmp->render();
-					$tmp = new button("document.getElementById('relation_field_".$this->name."').style.display = 'none';", "Hide related objects", $this->name."HidBut", $config->get('sysURL')."/alpha/images/icons/arrow_up.png");
-					$html .= $tmp->render();
+					if($buttons) {
+						$tmp = new button("document.getElementById('relation_field_".$this->name."').style.display = '';", "Display related objects", $this->name."DisBut", $config->get('sysURL')."/alpha/images/icons/arrow_down.png");
+						$html .= $tmp->render();
+						$tmp = new button("document.getElementById('relation_field_".$this->name."').style.display = 'none';", "Hide related objects", $this->name."HidBut", $config->get('sysURL')."/alpha/images/icons/arrow_up.png");
+						$html .= $tmp->render();
+					}
 					$html .= '</td></tr>';
 					
 					$html .= '<tr><td colspan="2">';				
-					$html .= '<table id="relation_field_'.$this->name.'" style="width:100%; display:none;" class="relationTable">';
+					$html .= '<table id="relation_field_'.$this->name.'" style="width:100%; display:'.($expanded ? '' : 'none').';" class="relationTable">';
 					
 					$customerViewControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'view');
 					$customerEditControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'edit');
