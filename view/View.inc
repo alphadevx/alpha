@@ -926,9 +926,11 @@ class View {
 	 * @param string $mode The field mode (create/edit/view)	 
 	 * @param string $value The field value (optional)
 	 * @param bool $tableTags Include table tags and label (optional)
+	 * @param bool $expanded Render the related fields in expanded format or not (optional)
+	 * @param bool $buttons Render buttons for expanding/contacting the related fields (optional)
 	 * @return string
 	 */
-	public function renderRelationField($name, $label, $mode, $value='', $tableTags=true) {
+	public function renderRelationField($name, $label, $mode, $value='', $tableTags=true, $expanded=false, $buttons=true) {
 		$html = '';
 		
 		$rel = $this->BO->getPropObject($name);
@@ -942,11 +944,11 @@ class View {
 					$html .= $rel->render();
 				}else{
 					$rel = new record_selector($rel, $label, $name, true, get_class($this->BO));
-					$html .= $rel->render();
+					$html .= $rel->render($tableTags, $expanded, $buttons);
 				}
 			}else{
 				$rel = new record_selector($rel, $label, $name);
-				$html .= $rel->render();
+				$html .= $rel->render($tableTags, $expanded, $buttons);
 			}
 		}
 		
@@ -963,7 +965,7 @@ class View {
 				}
 			}else{
 				$rel = new record_selector($rel, $label, $name);
-				$html .= $rel->render();
+				$html .= $rel->render($tableTags, $expanded, $buttons);
 			}
 		}
 		
@@ -973,10 +975,11 @@ class View {
 	/**
 	 * Renders all fields for the current BO in edit/create/view mode
 	 *
-	 * @param string $mode
+	 * @param string $mode (view|edit|create)
+	 * @param array $filterFields Optional list of field names to exclude from rendering
 	 * @return string
 	 */
-	public function renderAllFields($mode) {
+	public function renderAllFields($mode, $filterFields=array()) {
 		$html = '';
 				
 		// get the class attributes
@@ -986,7 +989,7 @@ class View {
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
 			
-			if (!in_array($propName, $this->BO->getDefaultAttributes())) {
+			if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $filterFields)) {
 				$propClass = get_class($this->BO->getPropObject($propName));
 				
 				// exclude non-Relation transient attributes from create and edit screens
