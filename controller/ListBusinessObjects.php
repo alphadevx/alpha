@@ -186,7 +186,7 @@ class ListBusinessObjects extends Controller implements AlphaControllerInterface
 				$BO_View = View::getInstance($BO);				
 				$BO_View->adminView();				
 			}catch (AlphaException $e) {
-				self::$logger->error($e->getTraceAsString());
+				self::$logger->error("[$classname]:".$e->getTraceAsString());
 				// its possible that the exception occured due to the table schema being out of date
 				if($BO->checkTableNeedsUpdate()) {				
 					$missingFields = $BO->findMissingFields();
@@ -205,24 +205,6 @@ class ListBusinessObjects extends Controller implements AlphaControllerInterface
 			}
 		}
 	}
-	
-	/**
-	 * Renders the JQuery code to do zebra-style table colouring and list context menu
-	 *
-	 * @return string
-	 */
-	/*public function during_displayPageHead_callback() {
-		global $config;
-		
-		$html = '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/contextMenu/jquery.contextMenu.js"></script>';
-		$html .= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.dimensions.js"></script>';
-		$html .= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.positionBy.js"></script>';
-		$html .= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.bgiframe.js"></script>';
-		$html .= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.jdMenu.js"></script>';
-		$html .= '<link rel="stylesheet" href="'.$config->get('sysURL').'config/css/jquery.jdMenu.css" type="text/css" />';
-		
-		return $html;
-	}*/
 }
 
 // now build the new controller
