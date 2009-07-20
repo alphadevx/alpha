@@ -46,7 +46,7 @@ class RelationLookup extends DAO implements AlphaTypeInterface {
 	 * 
 	 * @var string
 	 */
-	protected static $TABLE_NAME;
+	private static $TABLE_NAME;
 	
 	/**
 	 * Trace logger
@@ -106,8 +106,10 @@ class RelationLookup extends DAO implements AlphaTypeInterface {
 		$this->markUnique('leftID','rightID');
 		
 		// make sure the lookup table exists
-		if(!$this->checkTableExists()) {
-			$this->makeTable();
+		if(!$this->checkTableExists()) {			
+			// first make sure that the two BO tables exist before relating them with a lookup table
+			if(DAO::checkBOTableExists($leftClassName) && DAO::checkBOTableExists($rightClassName))
+				$this->makeTable();
 		}
 		
 		self::$logger->debug('<<__construct');

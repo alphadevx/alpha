@@ -442,7 +442,7 @@ class View {
 			$html.= '<p>You are not logged in</p>';
 		}
 		
-		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin') && basename($_SERVER['PHP_SELF']) == 'FC.php') {
+		if (isset($_SESSION['currentUser']) && DAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && basename($_SERVER['PHP_SELF']) == 'FC.php') {
 			$html .= '<ul class="jd_menu">
 						<li><a href="'.$config->get('sysURL').'">Home</a></li>
 						<li><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Admin Home</a></li>

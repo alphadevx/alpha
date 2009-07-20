@@ -845,7 +845,7 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Gets the version_num of the object from the database
+	 * Gets the version_num of the object from the database (returns 0 if the BO is not saved yet)
 	 * 
 	 * @return int
 	 */
@@ -856,26 +856,24 @@ abstract class DAO {
 			$this->before_getVersion_callback();
 		
 		$sqlQuery = 'SELECT version_num FROM '.$this->getTableName().' WHERE OID = \''.$this->OID.'\';';
-		
 		$this->lastQuery = $sqlQuery;
 
 		$result = mysql_query($sqlQuery);
-
-		$row = mysql_fetch_assoc($result);
-		
-		if (isset($row['version_num']))
-			$version_num = $row['version_num'];
-		else
-			$version_num = 0;
 		
 		if (mysql_error() == '') {
 			if(method_exists($this, 'after_getVersion_callback'))
 				$this->after_getVersion_callback();
+				
+			$row = mysql_fetch_assoc($result);
+		
+			if (isset($row['version_num']))
+				$version_num = $row['version_num'];
+			else
+				$version_num = 0;
 			
 			self::$logger->debug('<<getVersion ['.$version_num.']');
 			return $version_num;
 		}else{			
-			throw new AlphaException('Failed to get version number for object ['.$this->OID.'], MySql error is ['.mysql_error().']');
 			self::$logger->debug('<<getVersion [0]');
 			return 0;
 		}
@@ -943,7 +941,7 @@ abstract class DAO {
 						$sqlQuery .= "$propName INT(11) ZEROFILL,";
 					break;
 					case "RELATION":						
-						$sqlQuery .= "$propName INT(11),";
+						$sqlQuery .= "$propName INT(11) ZEROFILL UNSIGNED,";
 					break;
 					default:
 						$sqlQuery .= "";
@@ -1053,7 +1051,7 @@ abstract class DAO {
 						$sqlQuery .= "$propName INT(11) ZEROFILL";
 					break;
 					case "RELATION":						
-						$sqlQuery .= "$propName INT(11)";
+						$sqlQuery .= "$propName INT(11) ZEROFILL UNSIGNED";
 					break;
 					default:
 						$sqlQuery .= "";
@@ -1398,11 +1396,14 @@ abstract class DAO {
 				if(method_exists($this, 'after_getPropObject_callback'))
 					$this->after_getPropObject_callback();
 				
-				self::$logger->debug('<<getPropObject ['.print_r($this->$prop, true).']');
-				return $this->$prop;
+				//if(property_exists(get_class($this), $prop)) {
+					//echo get_class($this)."===".$prop;
+					self::$logger->debug('<<getPropObject ['.print_r($this->$prop, true).']');
+					return $this->$prop;
+				//}
 			}
 		}		
-		throw new AlphaException('Could not access the property object ['.$prop.'] on the object of class ['.get_class($this).']');
+		throw new IllegalArguementException('Could not access the property object ['.$prop.'] on the object of class ['.get_class($this).']');
 		self::$logger->debug('<<getPropObject [false]');
 		return false;
 	}
@@ -1443,17 +1444,53 @@ abstract class DAO {
 	}
 	
 	/**
+	 * Static method to check the database and see if the table for the indicated BO class name
+	 * exists (assumes table name will be $BOClassName - "_object").
+	 * 
+	 * @param string $BOClassName
+	 * @return boolean
+	 */
+	public static function checkBOTableExists($BOClassName) {
+		if(self::$logger == null)
+			self::$logger = new Logger('DAO');
+		self::$logger->debug('>>checkBOTableExists(BOClassName=['.$BOClassName.'])');
+		
+		global $config;
+		
+		$tableName = substr($BOClassName, 0, strpos($BOClassName, '_'));		
+				
+		$tableExists = false;
+		
+		$result = mysql_list_tables($config->get('sysDB'));
+		
+		while ($row = mysql_fetch_row($result)) {    		
+    		if ($row[0] == $tableName)
+    			$tableExists = true;
+		}		
+		
+		if (mysql_error() == '') {			
+			self::$logger->debug('<<checkBOTableExists ['.($tableExists ? 'true' : 'false').']');
+			return $tableExists;
+		}else{			
+			throw new AlphaException('Failed to access the system database correctly, error is ['.mysql_error().']');
+			self::$logger->debug('<<checkBOTableExists [false]');
+			return false;
+		}
+	}
+	
+	/**
 	 * Checks to see if the table in the database matches (for fields) the business class definition
 	 * 
 	 * @return boolean
 	 */
 	public function checkTableNeedsUpdate() {
 		self::$logger->debug('>>checkTableNeedsUpdate()');
-		
+				
 		if(method_exists($this, 'before_checkTableNeedsUpdate_callback'))
 			$this->before_checkTableNeedsUpdate_callback();
 		
 		$tableExists = $this->checkTableExists();
+		
 		
 		if (!$tableExists) {
 			self::$logger->debug('<<checkTableNeedsUpdate [true]');
@@ -1470,6 +1507,7 @@ abstract class DAO {
 			// get the class attributes
 			$reflection = new ReflectionClass(get_class($this));
 			$properties = $reflection->getProperties();
+			
 		
 			foreach($properties as $propObj) {
 				$propName = $propObj->name;
@@ -1490,6 +1528,7 @@ abstract class DAO {
 					mysql_data_seek($result, 0);					
 				}
 			}
+			
 			// check for the "classname" field in overloaded tables
 			if($this->isTableOverloaded()) {
 				$foundMatch = false;
@@ -1709,29 +1748,29 @@ abstract class DAO {
 		$this->lastQuery = $query;
 		
 		$indexNames = array();
-		while ($row = mysql_fetch_assoc($result)) {
-			array_push($indexNames, $row['Key_name']);
-		}
 		
-		if (mysql_error() != '') {			
+		if (mysql_error() != '') {
 			throw new AlphaException('Failed to access the system database correctly, error is ['.mysql_error().']');
+		}else{			
+			while ($row = mysql_fetch_assoc($result)) {				
+				array_push($indexNames, $row['Key_name']);
+			}
 		}
-		
-		return $indexNames;
 		
 		self::$logger->debug('<<getIndexes');
+		return $indexNames;
 	}
 	
 	/**
 	 * Checks to see if all of the indexes are in place for the BO's table, creates those that are missing
 	 */
 	protected function checkIndexes() {
-		self::$logger->debug('>>checkIndexes()');
+		self::$logger->debug('>>checkIndexes()');		
 		
 		if(method_exists($this, 'before_checkIndexes_callback'))
 			$this->before_checkIndexes_callback();
 		
-		$indexNames = $this->getIndexes();
+		$indexNames = $this->getIndexes();		
 		
 		// process unique keys
 		foreach($this->uniqueAttributes as $prop) {
@@ -1759,7 +1798,7 @@ abstract class DAO {
 				if(!$index_exists)
 					$this->createUniqueIndex($prop);
 			}
-		}
+		}		
 		
 		// process foreign-key indexes
 		// get the class attributes
@@ -1767,10 +1806,10 @@ abstract class DAO {
 		$properties = $reflection->getProperties();
 		
 		foreach($properties as $propObj) {
-			$propName = $propObj->name;
+			$propName = $propObj->name;			
 			$prop = $this->getPropObject($propName);
 			if(get_class($prop) == 'Relation') {
-				
+								
 				if($prop->getRelationType() == 'MANY-TO-ONE') {
 					$indexExists = false;
 					foreach ($indexNames as $index) {
@@ -1786,43 +1825,43 @@ abstract class DAO {
 				
 				if($prop->getRelationType() == 'MANY-TO-MANY') {					
 					$lookup = $prop->getLookup();
-					$lookupIndexNames = $lookup->getIndexes();
-										
-					// handle index check/creation on left side of Relation
-					$indexExists = false;
-					foreach ($lookupIndexNames as $index) {
-						if ('leftID_fk_idx' == $index) {
-					    	$indexExists = true;
+					try {					
+						$lookupIndexNames = $lookup->getIndexes();
+						
+						// handle index check/creation on left side of Relation
+						$indexExists = false;
+						foreach ($lookupIndexNames as $index) {
+							if ('leftID_fk_idx' == $index) {
+						    	$indexExists = true;
+							}
 						}
-					}
-					
-					if(!$indexExists) {
-						$lookup->createForeignIndex('leftID', $prop->getRelatedClass('left'), 'OID', false);
-					}
-					
-					// handle index check/creation on right side of Relation
-					$indexExists = false;
-					foreach ($lookupIndexNames as $index) {
-						if ('rightID_fk_idx' == $index) {
-					    	$indexExists = true;
+						
+						if(!$indexExists) {
+							$lookup->createForeignIndex('leftID', $prop->getRelatedClass('left'), 'OID');
 						}
-					}
-					
-					if(!$indexExists) {
-						$lookup->createForeignIndex('rightID', $prop->getRelatedClass('right'), 'OID', false);
+						
+						// handle index check/creation on right side of Relation
+						$indexExists = false;
+						foreach ($lookupIndexNames as $index) {
+							if ('rightID_fk_idx' == $index) {
+						    	$indexExists = true;
+							}
+						}
+						
+						if(!$indexExists) {
+							$lookup->createForeignIndex('rightID', $prop->getRelatedClass('right'), 'OID');
+						}
+					}catch(AlphaException $e) {
+						self::$logger->error($e->getMessage());
 					}
 				}
 				
 			}
 		}
 		
-		if (mysql_error() == '') {
-			if(method_exists($this, 'after_checkIndexes_callback'))
-				$this->after_checkIndexes_callback();
-		}else{
-			$this->lastQuery = $query;
-			throw new AlphaException('Failed to access the system database correctly, error is ['.mysql_error().']');
-		}
+		if(method_exists($this, 'after_checkIndexes_callback'))
+			$this->after_checkIndexes_callback();
+		
 		self::$logger->debug('<<checkIndexes');
 	}
 	
@@ -1834,19 +1873,17 @@ abstract class DAO {
 	 * @param string $relatedClassAttribute
 	 * @param bool $allowNullValues For foreign key indexes that don't allow null values, set this to false (default is true)
 	 */
-	protected function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $allowNullValues=true) {
-		self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.'], allowNullValues=['.$allowNullValues.']');
+	protected function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute) {
+		self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.']');
 		
 		if(method_exists($this, 'before_createForeignIndex_callback'))
 			$this->before_createForeignIndex_callback();
-			
-		DAO::loadClassDef($relatedClass);
-		$relatedBO = new $relatedClass;
-		$tableName = $relatedBO->getTableName();
+		
+		DAO::loadClassDef($relatedClass);		
+		$relatedBO = new $relatedClass;		
+		$tableName = $relatedBO->getTableName();		
 
-		if($allowNullValues) {
-			$sqlQuery = 'ALTER TABLE '.$this->getTableName().' ADD FOREIGN KEY '.$attributeName.'_fk_idx ('.$attributeName.') REFERENCES '.$tableName.' ('.$relatedClassAttribute.') ON DELETE SET NULL;';
-		}else{
+		if(DAO::checkBOTableExists($tableName.'_object')) {
 			$sqlQuery = '';
 			if($attributeName == 'leftID')
 				$sqlQuery = 'ALTER TABLE '.$this->getTableName().' ADD INDEX leftID_fk_idx (leftID);';
@@ -1862,13 +1899,12 @@ abstract class DAO {
 					throw new AlphaException('Failed to create an index on ['.$this->getTableName().'], error is ['.mysql_error().'], query ['.$this->lastQuery.']');
 				}
 			}
-				
-			$sqlQuery = 'ALTER TABLE '.$this->getTableName().' ADD FOREIGN KEY '.$attributeName.'_fk_idx ('.$attributeName.') REFERENCES '.$tableName.' ('.$relatedClassAttribute.');';
+
+			$sqlQuery = 'ALTER TABLE '.$this->getTableName().' ADD FOREIGN KEY '.$attributeName.'_fk_idx ('.$attributeName.') REFERENCES '.$tableName.' ('.$relatedClassAttribute.') ON DELETE SET NULL;';
+			echo $sqlQuery;
+			$this->lastQuery = $sqlQuery;	
+			$result = mysql_query($sqlQuery);
 		}
-		
-		$this->lastQuery = $sqlQuery;
-	
-		$result = mysql_query($sqlQuery);
 	
 		if (mysql_error() == '') {
 			if(method_exists($this, 'after_createForeignIndex_callback'))
@@ -1876,7 +1912,7 @@ abstract class DAO {
 				self::$logger->info('Successfully created the foreign key index ['.$attributeName.'_fk_idx]');
 		}else{			
 			throw new AlphaException('Failed to create the index ['.$attributeName.'_fk_idx] on ['.$this->getTableName().'], error is ['.mysql_error().'], query ['.$this->lastQuery.']');
-		}
+		}		
 		
 		self::$logger->debug('<<createForeignIndex');
 	}
@@ -2282,23 +2318,36 @@ abstract class DAO {
 			self::$logger = new Logger('DAO');
 		self::$logger->debug('>>isInstalled()');
 		
+		global $config;
+		
   		/*
   		 * Install conditions are:
   		 * 
   		 * 1. person table exists
   		 * 2. rights table exists
   		 */
-  		
-  		$person = new person_object();
-  		$rights = new rights_object();
-  		
-  		if($person->checkTableExists() && $rights->checkTableExists()) {
-  			self::$logger->debug('<<isInstalled [true]');
-  			return true;
-  		}else{
-  			self::$logger->debug('<<isInstalled [false]');
-  			return false;
-  		}
+  		$tableExistsCount = 0;
+		
+		$result = mysql_list_tables($config->get('sysDB'));
+		
+		while ($row = mysql_fetch_row($result)) {    		
+    		if ($row[0] == person_object::TABLE_NAME || $row[0] == rights_object::TABLE_NAME)
+    			$tableExistsCount++;
+		}		
+		
+		if (mysql_error() == '') {			
+			if($tableExistsCount == 2) {
+				self::$logger->debug('<<isInstalled [true]');
+				return true;
+			}else{
+				self::$logger->debug('<<isInstalled [false]');
+				return false;
+			}
+		}else{			
+			throw new AlphaException('Failed to access the system database correctly, error is ['.mysql_error().']');
+			self::$logger->debug('<<isInstalled [false]');
+			return false;
+		}
   	}
   	
   	/**

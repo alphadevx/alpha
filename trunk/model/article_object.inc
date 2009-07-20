@@ -173,9 +173,9 @@ class article_object extends DAO {
 		$this->section = new DEnum('article_object::section');
 		
 		$this->keywords = new String();
-		$this->keywords->setHelper('Please provide some coma-seperated search engine keywords for the article.');
+		//$this->keywords->setHelper('Please provide some coma-seperated search engine keywords for the article.');
 		$this->keywords->setSize(150);
-		$this->keywords->setRule("/\w+/");
+		//$this->keywords->setRule("/\w+/");
 		$this->description = new String();
 		$this->description->setHelper('Please provide a brief description of the article.');
 		$this->description->setSize(200);

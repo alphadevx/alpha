@@ -32,9 +32,9 @@ class Install extends Controller implements AlphaControllerInterface {
 	 * the constructor
 	 */
 	public function __construct() {
-		//if(self::$logger == null)
-			//self::$logger = new Logger('Install');
-		//self::$logger->debug('>>__construct()');
+		if(self::$logger == null)
+			self::$logger = new Logger('Install');
+		self::$logger->debug('>>__construct()');
 		
 		global $config;
 		
@@ -44,7 +44,7 @@ class Install extends Controller implements AlphaControllerInterface {
 		// set up the title and meta details
 		$this->setTitle('Installing '.$config->get('sysTitle'));		
 		
-		//self::$logger->debug('<<__construct');
+		self::$logger->debug('<<__construct');
 	}
 	
 	/**
@@ -77,6 +77,7 @@ class Install extends Controller implements AlphaControllerInterface {
 		}catch (Exception $e) {
 			echo '<p class="error"><br>'.$e->getMessage().'</p>';			
 			echo '<p>Aborting.</p>';
+			DAO::rollback();
 			exit;
 		}
 		
@@ -95,6 +96,7 @@ class Install extends Controller implements AlphaControllerInterface {
 		}catch (Exception $e) {
 			echo '<p class="error"><br>'.$e->getMessage().'</p>';			
 			echo '<p>Aborting.</p>';
+			DAO::rollback();
 			exit;
 		}
 		
@@ -113,6 +115,7 @@ class Install extends Controller implements AlphaControllerInterface {
 		}catch (Exception $e) {
 			echo '<p class="error"><br>'.$e->getMessage().'</p>';			
 			echo '<p>Aborting.</p>';
+			DAO::rollback();
 			exit;
 		}
 		
@@ -158,6 +161,7 @@ class Install extends Controller implements AlphaControllerInterface {
 		}catch (Exception $e) {
 			echo '<p class="error"><br>'.$e->getMessage().'</p>';			
 			echo '<p>Aborting.</p>';
+			DAO::rollback();
 			exit;
 		}
 		
@@ -189,6 +193,7 @@ class Install extends Controller implements AlphaControllerInterface {
 			echo '<p class="error"><br>'.$e->getMessage().'</p>';											
 			self::$logger->error($e->getMessage());
 			echo '<p>Aborting.</p>';
+			DAO::rollback();
 			exit;
 		}
 		
@@ -207,15 +212,15 @@ class Install extends Controller implements AlphaControllerInterface {
 			try {				
 				$BO = new $classname();
 				echo '<p>Attempting to create the table for the class ['.$classname.']...';
-				if(!$BO->checkTableExists()) {
+				if(!$BO->checkTableExists()) {					
 					$BO->makeTable();
-				}else{
-					if($BO->checkTableNeedsUpdate()) {				
-						$missingFields = $BO->findMissingFields();
+				}else{					
+					if($BO->checkTableNeedsUpdate()) {						
+						$missingFields = $BO->findMissingFields();						
 	    	
 						for($i = 0; $i < count($missingFields); $i++)
 							$BO->addProperty($missingFields[$i]);
-					}
+					}					
 				}
 				echo '<p class="success">Done!</p>';
 				self::$logger->info('Created the ['.$BO->getTableName().'] table successfully');
@@ -223,6 +228,7 @@ class Install extends Controller implements AlphaControllerInterface {
 				echo '<p class="error"><br><pre>'.$e->getTraceAsString().'</pre></p>';											
 				self::$logger->error($e->getTraceAsString());
 				echo '<p>Aborting.</p>';
+				DAO::rollback();
 				exit;				
 			}
 		}
@@ -244,6 +250,7 @@ class Install extends Controller implements AlphaControllerInterface {
 			echo '<p class="error"><br>'.$e->getMessage().'</p>';											
 			self::$logger->error($e->getMessage());
 			echo '<p>Aborting.</p>';
+			DAO::rollback();
 			exit;				
 		}
 		
@@ -269,7 +276,8 @@ class Install extends Controller implements AlphaControllerInterface {
 		}catch (Exception $e) {
 			echo '<p class="error"><br>'.$e->getMessage().'</p>';											
 			self::$logger->error($e->getMessage());
-			echo '<p>Aborting.</p>';			
+			echo '<p>Aborting.</p>';
+			DAO::rollback();
 			exit;				
 		}		
 		
@@ -300,19 +308,19 @@ class Install extends Controller implements AlphaControllerInterface {
 	 * @return boolean
 	 */
 	public function checkRights() {
-		//self::$logger->debug('>>checkRights()');
+		self::$logger->debug('>>checkRights()');
 		
 		global $config;
 
 		if(DAO::isInstalled()) {
-			//self::$logger->debug('<<checkRights [false]');
+			self::$logger->debug('<<checkRights [false]');
 			return false;
 		}
 		
 		// the person is logged in?
 		if (isset($_SESSION['currentUser'])) {
 			if ($_SESSION['currentUser']->get('email') == $config->get('sysInstallUsername')) {
-				//self::$logger->debug('<<checkRights [true]');
+				self::$logger->debug('<<checkRights [true]');
 				return true;
 			}
 		}
