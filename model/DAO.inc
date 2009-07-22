@@ -783,7 +783,9 @@ abstract class DAO {
 				
 				// in the case of tags, we will always remove the related tags once the BO is deleted
 				if($prop->getRelationType() == 'ONE-TO-MANY' && $prop->getRelatedClass() == 'tag_object') {
-					$relatedObjects = $prop->getRelatedObjects();
+					// just making sure that the Relation is set to current OID as its transient
+					$prop->setValue($this->getOID());
+					$relatedObjects = $prop->getRelatedObjects();					
 					
 					foreach($relatedObjects as $object) {						
 						$object->delete();
