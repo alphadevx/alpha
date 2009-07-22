@@ -205,13 +205,13 @@ class article_object extends DAO {
 		$this->votes->setRelatedClassDisplayField('score');
 		$this->votes->setRelationType('ONE-TO-MANY');
 		
-		$this->tags = new Relation();
+		$this->tags = new Relation();		
 		$this->markTransient('tags');
 		$this->tags->setRelatedClass('tag_object');
 		$this->tags->setRelatedClassField('taggedOID');
 		$this->tags->setRelatedClassDisplayField('content');
 		$this->tags->setRelationType('ONE-TO-MANY');
-		$this->tags->setTaggedClass('article_object');
+		$this->tags->setTaggedClass(get_class($this));
 		
 		$this->URL = '';
 		$this->printURL = '';
@@ -230,7 +230,7 @@ class article_object extends DAO {
 	protected function after_save_callback() {
 		if($this->getVersion() == 1) {
 			// make tags based on the description
-			$tags = tag_object::tokenize($this->description->getValue(), 'article_object', $this->getOID());
+			$tags = tag_object::tokenize($this->description->getValue(), get_class($this), $this->getOID());
 			foreach($tags as $tag) {
 				try {
 					$tag->save();
@@ -242,7 +242,7 @@ class article_object extends DAO {
 				}
 			}
 			// make tags based on the title
-			$tags = tag_object::tokenize($this->title->getValue(), 'article_object', $this->getOID());
+			$tags = tag_object::tokenize($this->title->getValue(), get_class($this), $this->getOID());
 			foreach($tags as $tag) {
 				try {
 					$tag->save();
@@ -250,8 +250,7 @@ class article_object extends DAO {
 					/*
 					 * The unique key has most-likely been violated because this BO is already tagged with this
 					 * value, so we will just log a warning
-					 */
-					self::$logger->warn('Error creating new tag: '.$e->getMessage());
+					 */					
 				}
 			}
 		}
