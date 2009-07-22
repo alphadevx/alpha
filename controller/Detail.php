@@ -144,7 +144,9 @@ class Detail extends Controller implements AlphaControllerInterface {
 					$temp->load($params['delete_oid']);
 					
 					try {
+						DAO::begin();
 						$temp->delete();
+						DAO::commit();
 								
 						echo '<p class="success">'.$this->BOName.' '.$params['delete_oid'].' deleted successfully.</p>';
 										
@@ -157,6 +159,7 @@ class Detail extends Controller implements AlphaControllerInterface {
 					}catch(AlphaException $e) {
 						self::$logger->error($e->getTraceAsString());
 						echo '<p class="error"><br>Error deleting the OID ['.$params['delete_oid'].'], check the log!</p>';
+						DAO::rollback();
 					}
 				}
 			}else{
