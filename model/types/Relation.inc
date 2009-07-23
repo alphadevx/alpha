@@ -458,6 +458,26 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	}
 	
 	/**
+	 * For one-to-one relations, get the object on the other side
+	 * 
+	 * @return array
+	 */
+	public function getRelatedObject() {
+		global $config;
+		
+		try {
+			DAO::loadClassDef($this->relatedClass);
+		}catch(IllegalArguementException $e) {		
+			throw new AlphaException('Could not load the definition for the BO class ['.$this->relatedClass.']');
+		}
+		
+		$obj = new $this->relatedClass;
+		$obj->loadByAttribute($this->getRelatedClassField(), $this->getValue());		
+		
+		return $obj;
+	}
+	
+	/**
 	 * Get the allowable size of the Relation in the database field
 	 *	
 	 * @return int

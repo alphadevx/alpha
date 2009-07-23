@@ -39,7 +39,7 @@ class EditArticle extends Controller implements AlphaControllerInterface {
 	/**
 	 * constructor to set up the object
 	 */
-	public function __construct() {
+	public function __construct($visibility='Editor') {
 		if(self::$logger == null)
 			self::$logger = new Logger('EditArticle');
 		self::$logger->debug('>>__construct()');
@@ -47,7 +47,7 @@ class EditArticle extends Controller implements AlphaControllerInterface {
 		global $config;
 		
 		// ensure that the super class constructor is called, indicating the rights group
-		parent::__construct('Editor');
+		parent::__construct($visibility);
 		
 		$this->BO = new article_object();
 		
@@ -218,8 +218,7 @@ class EditArticle extends Controller implements AlphaControllerInterface {
 		$html = '
 			<script type="text/javascript">
 			var articleID = "'.$this->BO->getID().'";
-			</script>
-			<script type="text/javascript" src="'.$config->get('sysURL').'/alpha/lib/jquery/jquery.pack.js"></script>
+			</script>			
 			<script type="text/javascript" src="'.$config->get('sysURL').'/alpha/lib/markitup/jquery.markitup.pack.js"></script>
 			<script type="text/javascript" src="'.$config->get('sysURL').'/alpha/lib/markitup/sets/markdown/set.js"></script>
 			<link rel="stylesheet" type="text/css" href="'.$config->get('sysURL').'/alpha/lib/markitup/skins/simple/style.css" />
