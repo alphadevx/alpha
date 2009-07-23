@@ -104,7 +104,7 @@ class ArticleView extends View {
 	 *
 	 * @return string
 	 */
-	private function renderFileUploadSection() {		
+	protected function renderFileUploadSection() {		
 		$html = '<tr><td colspan="2">&nbsp;</td></tr><tr><th colspan="2" style="text-align:left;">File Attachments:</th></tr>';
 		
 		if (is_dir($this->BO->getAttachmentsLocation())) {
