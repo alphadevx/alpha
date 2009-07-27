@@ -32,14 +32,6 @@ class article_object extends DAO {
 	protected $section;
 	
 	/**
-	 * The keywords for the article
-	 * 
-	 * @var String
-	 * @deprecated Use tags instead!
-	 */
-	protected $keywords;
-	
-	/**
 	 * The description of the article
 	 * 
 	 * @var String
@@ -111,7 +103,6 @@ class article_object extends DAO {
 		"OID"=>"Article ID#",		
 		"title"=>"Title",
 		"section"=>"Site Section",
-		"keywords"=>"Keywords",
 		"description"=>"Description",
 		"bodyOnload"=>"Body onload Javascript",
 		"content"=>"Content",
@@ -170,12 +161,8 @@ class article_object extends DAO {
 		$this->title->setSize(100);
 		$this->title->setRule("/\w+/");
 		
-		$this->section = new DEnum('article_object::section');
+		$this->section = new DEnum('article_object::section');		
 		
-		$this->keywords = new String();
-		//$this->keywords->setHelper('Please provide some coma-seperated search engine keywords for the article.');
-		$this->keywords->setSize(150);
-		//$this->keywords->setRule("/\w+/");
 		$this->description = new String();
 		$this->description->setHelper('Please provide a brief description of the article.');
 		$this->description->setSize(200);
