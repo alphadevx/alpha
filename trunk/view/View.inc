@@ -400,13 +400,17 @@ class View {
 		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$config->get('sysTheme').'.css.php">';
 
 		$html.= '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jquery.pack.js"></script>';
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jquery-1.3.2.min.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/contextMenu/jquery.contextMenu.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.dimensions.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.positionBy.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.bgiframe.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.jdMenu.js"></script>';
 		$html.= '<link rel="stylesheet" href="'.$config->get('sysURL').'config/css/jquery.jdMenu.css" type="text/css" />';
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery-ui-1.7.2.custom.min.js"></script>';
+		$html.= '<link href="'.$config->get('sysURL').'config/css/jquery.ui.tabs.css" rel="stylesheet" type="text/css" />';
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/ui.datepicker.js"></script>';
+		$html.= '<link href="'.$config->get('sysURL').'config/css/jquery.ui.datepicker.css" rel="stylesheet" type="text/css" />';
 				
 		ob_start();
 		require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
