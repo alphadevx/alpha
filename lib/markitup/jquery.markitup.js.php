@@ -1,3 +1,12 @@
+<?php 
+
+// include the config file
+if(!isset($config))
+	require_once '../../util/configLoader.inc';
+$config =&configLoader::getInstance();
+
+?>
+
 // ----------------------------------------------------------------------------
 // markItUp! Universal MarkUp Engine, JQuery plugin
 // v 1.1.4
@@ -433,6 +442,11 @@
 				if (!options.previewAutoRefresh) {
 					refreshPreview(); 
 				}
+			}
+			
+			// open Markdown syntax help window
+			function help() {
+				window.open('<?= $config->get('sysURL') ?>alpha/controller/ViewArticleFile.php?file=Markdown_Help.text','helpWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=800,height=500,left='+((screen.width/2)-400)+',top='+((screen.height/2)-250)+'');
 			}
 
 			// refresh Preview window
