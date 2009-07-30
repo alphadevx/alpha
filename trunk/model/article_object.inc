@@ -433,6 +433,19 @@ class article_object extends DAO {
 		
 		return $comments;
 	}
+	
+	/**
+	 * Loads the content of the article_object from the specified file path
+	 * 
+	 * @param $filePath
+	 */
+	public function loadContentFromFile($filePath) {
+		try{
+			$this->content->setValue(file_get_contents($filePath));
+		}catch (Exception $e) {
+			throw new FileNotFoundException($e->getMessage());
+		}
+	}
 }
 
 ?>

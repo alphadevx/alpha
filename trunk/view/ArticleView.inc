@@ -182,6 +182,13 @@ class ArticleView extends View {
 			
 		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$cssStyleSheet.'.css.php">';
 
+		// if we a rendering a .text Markdown file, we don't need to proceed beyond this point
+		if($controller instanceof ViewArticleFile) {
+			$html.= '</head>';
+			$html.= '<body>';
+			return $html;			
+		}
+		
 		$html.= '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
 		
 		ob_start();
