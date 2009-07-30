@@ -64,7 +64,7 @@ class FrontController {
 		// direct calls to the front controller with an encrypted query string
 		}else{
 			if (!isset($_GET['tk'])) {
-				throw new SecurityException('No controller action set for the front controller!');
+				throw new SecurityException('No controller action set for the front controller, URL is ['.$_SERVER['REQUEST_URI'].']');
 			}else{
 				$this->setEncrypt(true);
 			}
