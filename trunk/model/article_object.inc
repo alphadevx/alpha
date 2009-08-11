@@ -215,7 +215,7 @@ class article_object extends DAO {
 	 * of automated tags and save them.
 	 */
 	protected function after_save_callback() {
-		if($this->getVersion() == 1) {
+		if($this->getVersion() == 1 && $this->tags instanceof Relation) {
 			// make tags based on the description
 			$tags = tag_object::tokenize($this->description->getValue(), get_class($this), $this->getOID());
 			foreach($tags as $tag) {
