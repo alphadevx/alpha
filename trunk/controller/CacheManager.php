@@ -122,7 +122,11 @@ class CacheManager extends Controller implements AlphaControllerInterface {
 				try {
 					FileUtil::deleteDirectoryContents($this->dataDir);
 							
-					$this->statusMessage = '<p class="success">Cache contents deleted successfully.</p>';
+					$this->statusMessage = '<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
+						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
+						<strong>Update:</strong> Cache contents deleted successfully.</p>
+						</div>';
+					
 					self::$logger->info('Cache contents deleted successfully.');
 				}catch (AlphaException $e) {
 					self::$logger->error($e->getMessage());
@@ -131,7 +135,11 @@ class CacheManager extends Controller implements AlphaControllerInterface {
 			
 			$this->doGET($params);
 		}catch(SecurityException $e) {
-			echo '<p class="error"><br>'.$e->getMessage().'</p>';								
+			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
+				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+				<strong>Error:</strong> '.$e->getMessage().'</p>
+				</div>';
+			
 			self::$logger->warn($e->getMessage());
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());
