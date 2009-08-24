@@ -192,17 +192,27 @@ class Login extends Controller implements AlphaControllerInterface {
 				echo '<a href="'.$config->get('sysURL').'">Home Page</a>';
 			}
 		}catch(ValidationException $e) {
-			echo '<p class="error"><br>'.$e->getMessage().'</p>';
+			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
+				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+				<strong>Error:</strong> '.$e->getMessage().'</p>
+				</div>';
 			
 			$this->personView->display_login_form();
 											
 			self::$logger->warn($e->getMessage());
-		}catch(SecurityException $e) {
-			echo '<p class="error"><br>'.$e->getMessage().'</p>';								
+		}catch(SecurityException $e) {			
+			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
+				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+				<strong>Error:</strong> '.$e->getMessage().'</p>
+				</div>';
+											
 			self::$logger->warn($e->getMessage());
-		}catch(BONotFoundException $e) {
-			echo '<p class="error"><br>Failed to find the user \''.$params['email'].'\'</p>';
-
+		}catch(BONotFoundException $e) {			
+			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
+				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+				<strong>Error:</strong> Failed to find the user \''.$params['email'].'\'.</p>
+				</div>';
+			
 			$this->personView->display_login_form();
 			
 			self::$logger->warn($e->getMessage());
