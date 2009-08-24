@@ -81,7 +81,9 @@ class PreviewArticle extends Controller implements AlphaControllerInterface {
 			echo '<html>';
 			echo '<head>';
 					
-			echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$config->get('sysTheme').'.css.php">';
+			echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/ui/themes/'.$config->get('sysTheme').'/ui.all.css">';
+			echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/alpha.css">';
+			echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
 			echo '</head>';
 			echo '<body>';
 				

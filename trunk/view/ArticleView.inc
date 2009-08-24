@@ -150,11 +150,10 @@ class ArticleView extends View {
 	 * Custom method to render the page header HTML content with CMS headers and onload events
 	 * 
 	 * @param Controller $controller
-	 * @param string $cssStyleSheet
 	 * @return string
 	 * @todo remove output buffering around form_validator instance
 	 */
-	public function displayArticlePageHead($controller, $cssStyleSheet='') {
+	public function displayArticlePageHead($controller) {
 		if(method_exists($controller, 'before_displayPageHead_callback'))
 			$controller->before_displayPageHead_callback();
 		
@@ -177,10 +176,9 @@ class ArticleView extends View {
 		$html.= '<meta name="robots" content="index,follow">';
 		$html.= '<meta http-equiv="imagetoolbar" content="no">';
 
-		if($cssStyleSheet == '')
-			$cssStyleSheet = $config->get('sysTheme');
-			
-		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$cssStyleSheet.'.css.php">';
+		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/ui/themes/'.$config->get('sysTheme').'/ui.all.css">';
+		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/alpha.css">';
+		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
 
 		// if we a rendering a .text Markdown file, we don't need to proceed beyond this point
 		if($controller instanceof ViewArticleFile) {

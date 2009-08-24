@@ -397,7 +397,10 @@ class View {
 		$html.= '<meta name="robots" content="index,follow">';
 		$html.= '<meta http-equiv="imagetoolbar" content="no">';
 
-		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'/config/css/'.$config->get('sysTheme').'.css.php">';
+		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/ui/themes/'.$config->get('sysTheme').'/ui.all.css">';
+		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.jdMenu.css">';
+		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/alpha.css">';
+		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
 
 		$html.= '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jquery-1.3.2.min.js"></script>';
@@ -406,11 +409,8 @@ class View {
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.positionBy.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.bgiframe.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.jdMenu.js"></script>';
-		$html.= '<link rel="stylesheet" href="'.$config->get('sysURL').'config/css/jquery.jdMenu.css" type="text/css" />';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery-ui-1.7.2.custom.min.js"></script>';
-		$html.= '<link href="'.$config->get('sysURL').'config/css/jquery.ui.tabs.css" rel="stylesheet" type="text/css" />';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/ui.datepicker.js"></script>';
-		$html.= '<link href="'.$config->get('sysURL').'config/css/jquery.ui.datepicker.css" rel="stylesheet" type="text/css" />';
 				
 		ob_start();
 		require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
