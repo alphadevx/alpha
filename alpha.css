@@ -15,9 +15,9 @@ body {
 .boxout, pre.php, pre.xml, pre.javascript, pre.perl, pre.html4strict, pre.css {padding:5px; margin:8px; background-color:white; border:2px dashed #20557C;}
 .usercomment {padding:5px; margin:5px; background-color:white; border:1px solid #027ABB; width:97%; text-align:left;}
 
-.norButton {background-color:#5C5959; border: 2px solid #222222; text-align:center; overflow:hidden; font-family:arial; font-weight:bold; color:white; font-size:8pt;}
-.oveButton {background-color:#B6B2B2; border: 2px solid #222222; text-align:center; overflow:hidden; font-family:arial; font-weight:bold; color:white; font-size:8pt;}
-.selButton {background-color:#FBF9EE; border: 2px solid #222222; text-align:center; overflow:hidden; font-family:arial; font-weight:bold; color:black; font-size:8pt;}
+.norButton {background-color:#5C5959; border: 2px solid #222222; text-align:center; overflow:hidden; font-family:arial; font-weight:bold; color:white; font-size:8pt !important;}
+.oveButton {background-color:#B6B2B2; border: 2px solid #222222; text-align:center; overflow:hidden; font-family:arial; font-weight:bold; color:white; font-size:8pt !important;}
+.selButton {background-color:#FBF9EE; border: 2px solid #222222; text-align:center; overflow:hidden; font-family:arial; font-weight:bold; color:black; font-size:8pt !important;}
 
 h1 {font-size:170%; font-weight:bold; border:1px solid #222222; background-color:#575656; color:white; margin:1%;}
 h2 {font-size:140%; margin:10px; color:#8C8B8B; margin-bottom:20px; margin-top:20px;}
@@ -75,3 +75,10 @@ img.externalLink {padding:0px; margin:0px; vertical-align:bottom; border:none;}
 
 tr.zebraAlt td {background-color:#C3C2C2;}
 tr.zebraOver td, tr.zebraOver:hover td {background-color:#FBF9EE;}
+
+/* JQuery UI overrides */
+.ui-widget {font-family: arial; font-size:10pt;}
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {font-family: arial; font-size:10pt;}
+.ui-state-highlight {margin: 1%;}
+.ui-state-error {margin: 1%;}
+.ui-tabs {margin: 1%;}
