@@ -219,7 +219,7 @@ class EditArticle extends Controller implements AlphaControllerInterface {
 			<script type="text/javascript">
 			var articleID = "'.$this->BO->getID().'";
 			</script>			
-			<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/markitup/jquery.markitup.js.php"></script>
+			<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/markitup/jquery.markitup.js"></script>
 			<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/markitup/sets/markdown/set.js"></script>
 			<link rel="stylesheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/markitup/skins/simple/style.css" />
 			<link rel="stylesheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/markitup/sets/markdown/style.css" />
