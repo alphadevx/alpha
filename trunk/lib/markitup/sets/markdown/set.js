@@ -35,7 +35,7 @@ mySettings = {
 		{separator:'---------------'},	
 		{name:'Quotes', openWith:'> '},
 		{name:'Code Block / Code', openWith:'(!(\t|!|`)!)', closeWith:'(!(`)!)'},
-		{name:'Markdown Help', call:'help'},
+		{name:'Markdown Help'},
 		{separator:'---------------'},
 		{name:'Preview', call:'preview', className:"preview"}
 	]
