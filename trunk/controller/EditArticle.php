@@ -226,6 +226,30 @@ class EditArticle extends Controller implements AlphaControllerInterface {
 			<script type="text/javascript">
 			$(document).ready(function() {
 				$(\'#text_field_content_0\').markItUp(mySettings);
+				
+				var dialogCoords = [(screen.width/2)-400, (screen.height/2)-300];
+				
+				var dialogOpts = {
+			        title: "Help Page",
+			        modal: false,
+			        autoOpen: false,
+			        height: 400,
+			        width: 800,
+			        position: dialogCoords,
+			        open: function() {
+			        	//display correct dialog content
+			        	$("#helpPage").load("'.$config->get('sysURL').'alpha/controller/ViewArticleFile.php?file=Markdown_Help.text");
+					}
+			    };
+			        
+			    $("#helpPage").dialog(dialogOpts);
+    
+			    $(".markItUpButton15").click(
+			        function (){
+			            $("#helpPage").dialog("open");
+			            return false;
+			        }
+			    );
 			});
 			</script>';
 		
