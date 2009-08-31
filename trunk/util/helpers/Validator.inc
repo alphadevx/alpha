@@ -17,7 +17,7 @@ class Validator {
 	 * return boolean
 	 */
 	public static function isInteger($value) {
-		return is_int($value);
+		return (is_numeric($value) ? intval($value) == $value : false);
 	}
 
 	/**
