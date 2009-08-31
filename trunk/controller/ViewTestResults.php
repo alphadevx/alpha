@@ -30,6 +30,7 @@ require_once $config->get('sysRoot').'alpha/tests/Text_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Relation_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Tag_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/DAO_Test.php';
+require_once $config->get('sysRoot').'alpha/tests/Validator_Test.php';
 
 /*
  * we are supressing the display and logging of errors on this page, as we 
@@ -258,6 +259,19 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('DAO_Test');
+		$result = $suite->run();
+		$runningTime+=$result->time();
+		$testCount+=$result->count();
+				
+		$this->printTestResult($result);
+		
+		echo '<p>Running time: '.$runningTime.'</p>';
+		
+		//------------------------------------------------
+		echo '<h3>Validator helper:</h3>';
+		
+		$suite = new PHPUnit_Framework_TestSuite();
+		$suite->addTestSuite('Validator_Test');
 		$result = $suite->run();
 		$runningTime+=$result->time();
 		$testCount+=$result->count();
