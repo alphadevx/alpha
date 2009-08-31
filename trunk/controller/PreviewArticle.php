@@ -71,7 +71,13 @@ class PreviewArticle extends Controller implements AlphaControllerInterface {
 		global $config;
 		
 		if(isset($params['data'])) {
-			$temp = new article_object();
+			if(isset($params['bo'])) {
+				DAO::loadClassDef($params['bo']);
+				$temp = new $params['bo'];
+			}else{
+				$temp = new article_object();
+			}
+			
 			$temp->set('content', $params['data']);
 			if(isset($params['oid']))
 				$temp->set('OID', $params['oid']);

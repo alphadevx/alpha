@@ -62,7 +62,10 @@ class EditArticle extends Controller implements AlphaControllerInterface {
 	public function doGET($params) {
 		try{
 			// load the business object (BO) definition
-			if (isset($params['oid'])) {
+			if (isset($params['oid'])) {				
+				if(!Validator::isInteger($params['oid']))
+					throw new IllegalArguementException('Article ID provided ['.$params['oid'].'] is not valid!');
+				
 				$this->BO->load($params['oid']);
 				
 				$BOView = View::getInstance($this->BO);
@@ -76,13 +79,15 @@ class EditArticle extends Controller implements AlphaControllerInterface {
 		
 				echo $BOView->editView();
 			}else{
-				throw new IllegalArguementException('No article available to edit!');
+				throw new IllegalArguementException('No valid article ID provided!');
 			}
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());
 		}catch(BONotFoundException $e) {
 			self::$logger->warn($e->getMessage());
-			echo '<p class="error"><br>Failed to load the requested article from the database!</p>';
+			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
+				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+				<strong>Error:</strong> Failed to load the requested article from the database!</p></div>';
 		}
 		
 		echo View::renderDeleteForm();
@@ -105,7 +110,10 @@ class EditArticle extends Controller implements AlphaControllerInterface {
 				self::$logger->debug('<<doPOST');
 			}
 
-			if (isset($params['oid'])) {				
+			if (isset($params['oid'])) {
+				if(!Validator::isInteger($params['oid']))
+					throw new IllegalArguementException('Article ID provided ['.$params['oid'].'] is not valid!');
+									
 				$this->BO->load($params['oid']);
 				
 				$BOView = View::getInstance($this->BO);
@@ -123,10 +131,14 @@ class EditArticle extends Controller implements AlphaControllerInterface {
 					
 					try {
 						$success = $this->BO->save();			
-						echo '<p class="success">Article '.$this->BO->getID().' saved successfully.</p>';
+						echo '<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
+							<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
+							<strong>Update:</strong> Article '.$this->BO->getID().' saved successfully.</p></div>';
 					}catch (LockingException $e) {
-						$this->BO->reload();
-						echo '<p class="error"><br>'.$e->getMessage().'</p>';
+						$this->BO->reload();						
+						echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
+							<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+							<strong>Error:</strong> '.$e->getMessage().'</p></div>';
 					}
 					// needed by markItUp so that it does not include \'s in text box after saving
 					$this->BO->set('content', stripslashes($this->BO->get('content')));
@@ -139,7 +151,9 @@ class EditArticle extends Controller implements AlphaControllerInterface {
 					try {
 						$this->BO->delete();
 								
-						echo '<p class="success">Article '.$params['delete_oid'].' deleted successfully.</p>';
+						echo '<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
+							<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
+							<strong>Update:</strong> Article '.$params['delete_oid'].' deleted successfully.</p></div>';
 										
 						echo '<center>';
 						
@@ -148,8 +162,10 @@ class EditArticle extends Controller implements AlphaControllerInterface {
 						
 						echo '</center>';
 					}catch(AlphaException $e) {
-						self::$logger->error($e->getTraceAsString());
-						echo '<p class="error"><br>Error deleting the article, check the log!</p>';
+						self::$logger->error($e->getTraceAsString());						
+						echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
+							<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+							<strong>Error:</strong> Error deleting the article, check the log!</p></div>';
 					}
 				}
 				
@@ -166,8 +182,10 @@ class EditArticle extends Controller implements AlphaControllerInterface {
 					if (!$success)
 						throw new AlphaException('Unable to set read/write permissions on the uploaded file ['.$this->BO->getAttachmentsLocation().'/'.$_FILES['userfile']['name'].'].');
 					
-					if($success) {
-						echo '<p class="success">File uploaded successfully.</p>';
+					if($success) {						
+						echo '<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
+						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
+						<strong>Update:</strong> File uploaded successfully.</p></div>';
 					}
 					
 					$view = View::getInstance($this->BO);
@@ -181,8 +199,10 @@ class EditArticle extends Controller implements AlphaControllerInterface {
 					if(!$success)
 						throw new AlphaException('Could not delete the file ['.$params['file_to_delete'].']');
 					
-					if($success) {
-						echo '<p class="success">'.$params['file_to_delete'].' deleted successfully.</p>';
+					if($success) {						
+						echo '<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
+						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
+						<strong>Update:</strong> '.$params['file_to_delete'].' deleted successfully.</p></div>';
 					}
 					
 					$view = View::getInstance($this->BO);
@@ -190,16 +210,20 @@ class EditArticle extends Controller implements AlphaControllerInterface {
 					echo $view->editView();
 				}
 			}else{
-				throw new IllegalArguementException('No article available to edit!');
+				throw new IllegalArguementException('No valid article ID provided!');
 			}
 		}catch(SecurityException $e) {
-			echo '<p class="error"><br>'.$e->getMessage().'</p>';								
+			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
+				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+				<strong>Error:</strong> '.$e->getMessage().'</p></div>';
 			self::$logger->warn($e->getMessage());
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());
 		}catch(BONotFoundException $e) {
 			self::$logger->warn($e->getMessage());
-			echo '<p class="error"><br>Failed to load the requested article from the database!</p>';
+			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
+				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+				<strong>Error:</strong> Failed to load the requested article from the database!</p></div>';
 		}
 		
 		echo View::renderDeleteForm();
@@ -217,7 +241,7 @@ class EditArticle extends Controller implements AlphaControllerInterface {
 		
 		$html = '
 			<script type="text/javascript">
-			var articleID = "'.$this->BO->getID().'";
+			var previewURL = "'.$config->get('sysURL').'alpha/controller/PreviewArticle.php?oid='.$this->BO->getID().'&bo='.get_class($this->BO).'";
 			</script>			
 			<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/markitup/jquery.markitup.js"></script>
 			<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/markitup/sets/markdown/set.js"></script>

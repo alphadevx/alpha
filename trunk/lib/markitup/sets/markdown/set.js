@@ -11,7 +11,7 @@
 // Feel free to add more tags
 // -------------------------------------------------------------------
 mySettings = {
-	previewParserPath:	'alpha/controller/PreviewArticle.php?oid='+articleID,
+	previewParserPath:	previewURL,
 	resizeHandle:			false,
 	onShiftEnter:		{keepDefault:false, openWith:'\n\n'},
 	markupSet: [
