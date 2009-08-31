@@ -106,14 +106,7 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$runningTime+=$result->time();
 		$testCount+=$result->count();
 				
-		if($result->wasSuccessful())
-			echo '<pre class="success">';
-		else
-			echo '<pre class="warning">';
-			
-		$report = new PHPUnit_TextUI_ResultPrinter();		
-		$report->printResult($result);
-		echo '</pre>';
+		$this->printTestResult($result);
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
@@ -126,14 +119,7 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$runningTime+=$result->time();
 		$testCount+=$result->count();
 				
-		if($result->wasSuccessful())
-			echo '<pre class="success">';
-		else
-			echo '<pre class="warning">';
-			
-		$report = new PHPUnit_TextUI_ResultPrinter();		
-		$report->printResult($result);
-		echo '</pre>';
+		$this->printTestResult($result);
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
@@ -146,14 +132,7 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$runningTime+=$result->time();
 		$testCount+=$result->count();
 				
-		if($result->wasSuccessful())
-			echo '<pre class="success">';
-		else
-			echo '<pre class="warning">';
-			
-		$report = new PHPUnit_TextUI_ResultPrinter();		
-		$report->printResult($result);
-		echo '</pre>';
+		$this->printTestResult($result);
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
@@ -166,14 +145,7 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$runningTime+=$result->time();
 		$testCount+=$result->count();
 				
-		if($result->wasSuccessful())
-			echo '<pre class="success">';
-		else
-			echo '<pre class="warning">';
-			
-		$report = new PHPUnit_TextUI_ResultPrinter();		
-		$report->printResult($result);
-		echo '</pre>';
+		$this->printTestResult($result);
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
@@ -186,14 +158,7 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$runningTime+=$result->time();
 		$testCount+=$result->count();
 				
-		if($result->wasSuccessful())
-			echo '<pre class="success">';
-		else
-			echo '<pre class="warning">';
-			
-		$report = new PHPUnit_TextUI_ResultPrinter();		
-		$report->printResult($result);
-		echo '</pre>';
+		$this->printTestResult($result);
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
@@ -206,14 +171,7 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$runningTime+=$result->time();
 		$testCount+=$result->count();
 				
-		if($result->wasSuccessful())
-			echo '<pre class="success">';
-		else
-			echo '<pre class="warning">';
-			
-		$report = new PHPUnit_TextUI_ResultPrinter();		
-		$report->printResult($result);
-		echo '</pre>';
+		$this->printTestResult($result);
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
@@ -226,14 +184,7 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$runningTime+=$result->time();
 		$testCount+=$result->count();
 				
-		if($result->wasSuccessful())
-			echo '<pre class="success">';
-		else
-			echo '<pre class="warning">';
-			
-		$report = new PHPUnit_TextUI_ResultPrinter();		
-		$report->printResult($result);
-		echo '</pre>';
+		$this->printTestResult($result);
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
@@ -246,14 +197,7 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$runningTime+=$result->time();
 		$testCount+=$result->count();
 				
-		if($result->wasSuccessful())
-			echo '<pre class="success">';
-		else
-			echo '<pre class="warning">';
-			
-		$report = new PHPUnit_TextUI_ResultPrinter();		
-		$report->printResult($result);
-		echo '</pre>';
+		$this->printTestResult($result);
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
@@ -266,14 +210,7 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$runningTime+=$result->time();
 		$testCount+=$result->count();
 				
-		if($result->wasSuccessful())
-			echo '<pre class="success">';
-		else
-			echo '<pre class="warning">';
-			
-		$report = new PHPUnit_TextUI_ResultPrinter();		
-		$report->printResult($result);
-		echo '</pre>';
+		$this->printTestResult($result);
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
@@ -286,14 +223,7 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$runningTime+=$result->time();
 		$testCount+=$result->count();
 				
-		if($result->wasSuccessful())
-			echo '<pre class="success">';
-		else
-			echo '<pre class="warning">';
-			
-		$report = new PHPUnit_TextUI_ResultPrinter();		
-		$report->printResult($result);
-		echo '</pre>';
+		$this->printTestResult($result);
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
@@ -306,14 +236,7 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$runningTime+=$result->time();
 		$testCount+=$result->count();
 				
-		if($result->wasSuccessful())
-			echo '<pre class="success">';
-		else
-			echo '<pre class="warning">';
-			
-		$report = new PHPUnit_TextUI_ResultPrinter();		
-		$report->printResult($result);
-		echo '</pre>';
+		$this->printTestResult($result);
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
@@ -326,14 +249,7 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$runningTime+=$result->time();
 		$testCount+=$result->count();
 				
-		if($result->wasSuccessful())
-			echo '<pre class="success">';
-		else
-			echo '<pre class="warning">';
-			
-		$report = new PHPUnit_TextUI_ResultPrinter();		
-		$report->printResult($result);
-		echo '</pre>';
+		$this->printTestResult($result);
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
@@ -346,14 +262,7 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		$runningTime+=$result->time();
 		$testCount+=$result->count();
 				
-		if($result->wasSuccessful())
-			echo '<pre class="success">';
-		else
-			echo '<pre class="warning">';
-			
-		$report = new PHPUnit_TextUI_ResultPrinter();		
-		$report->printResult($result);
-		echo '</pre>';
+		$this->printTestResult($result);
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
@@ -373,6 +282,27 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');
 		
 		self::$logger->debug('<<doPOST');
+	}
+	
+	/**
+	 * Prints the test result HTML & CSS for the passed PHPUnit test result
+	 * 
+	 * @param PHPUnit_Framework_TestResult $result 
+	 */
+	private function printTestResult($result) {
+		if($result->wasSuccessful()) {
+			echo '<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;">';
+			echo '<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>';
+			echo '<strong>Success</strong><pre>';
+		}else{
+			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;">'; 
+			echo '<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>';
+			echo '<strong>Fail</strong><pre>';
+		}
+			
+		$report = new PHPUnit_TextUI_ResultPrinter();		
+		$report->printResult($result);
+		echo '</pre></p></div>';
 	}
 }
 
