@@ -48,8 +48,7 @@ class Tag_Test extends PHPUnit_Framework_TestCase {
     private function createArticleObject($name) {
     	$article = new article_object();
         $article->set('title', $name);
-        $article->set('description', 'A test article called unitTestArticle with some stop words and the unitTestArticle title twice');        
-        $article->set('keywords', 'blah');
+        $article->set('description', 'A test article called unitTestArticle with some stop words and the unitTestArticle title twice');
         $article->set('author', 'blah');
         $article->set('content', 'blah');        
         
