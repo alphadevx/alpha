@@ -28,7 +28,7 @@ require_once $config->get('sysRoot').'alpha/model/types/Relation.inc';
  * 
  * @package alpha::model
  * @author John Collins <john@design-ireland.net>
- * @copyright 2008 John Collins
+ * @copyright 2009 John Collins
  * @version $Id$
  *  
  */
@@ -81,6 +81,13 @@ abstract class DAO {
 	 * @var Integer 
 	 */
 	protected $updated_by;
+	
+	/**
+	 * For business objects where the table is overloaded, use this attribute to manually set the classname when required
+	 * 
+	 * @var string
+	 */
+	private $classname;
 	
 	/**
 	 * An array of the names of all of the default attributes of a persistent BO defined in this class
@@ -564,8 +571,12 @@ abstract class DAO {
 						}
 					}
 				}
-				if($this->isTableOverloaded())
-					$sqlQuery .= "'".get_class($this)."',";
+				if($this->isTableOverloaded()) {
+					if(isset($this->classname))
+						$sqlQuery .= "'".$this->classname."',";
+					else
+						$sqlQuery .= "'".get_class($this)."',";
+				}
 	
 				$sqlQuery = rtrim($sqlQuery, ",");
 	
@@ -588,8 +599,12 @@ abstract class DAO {
 							$sqlQuery .= "version_num = '".$this->version_num->getValue()."',";
 						}
 					}
-					if($this->isTableOverloaded())
-						$sqlQuery .= "classname = '".get_class($this)."',";
+					if($this->isTableOverloaded()) {
+						if(isset($this->classname))
+							$sqlQuery .= "classname = '".$this->classname."',";							
+						else
+							$sqlQuery .= "classname = '".get_class($this)."',";
+					}
 				}
 	
 				$sqlQuery = rtrim($sqlQuery, ",");
@@ -2362,6 +2377,16 @@ abstract class DAO {
   			return true;
   		else
   			return false;
+  	}
+  	
+  	/**
+  	 * Useful only for overloaded business object tables, use this method to manually set the classname
+  	 * when required to do so.
+  	 * 
+  	 * @param string $classname
+   	 */
+  	public function setClassName($classname) {
+  		$this->classname = $classname;
   	}
 }
 
