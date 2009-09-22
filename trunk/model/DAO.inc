@@ -83,13 +83,6 @@ abstract class DAO {
 	protected $updated_by;
 	
 	/**
-	 * For business objects where the table is overloaded, use this attribute to manually set the classname when required
-	 * 
-	 * @var string
-	 */
-	private $classname;
-	
-	/**
 	 * An array of the names of all of the default attributes of a persistent BO defined in this class
 	 * 
 	 * @var array
@@ -2378,15 +2371,31 @@ abstract class DAO {
   		else
   			return false;
   	}
+
+  	/**
+  	 * Setter for the BO version number
+  	 * 
+  	 * @param $versionNumber
+  	 */
+  	private function setVersion($versionNumber) {
+  		$this->version_num = $versionNumber;
+  	}
   	
   	/**
-  	 * Useful only for overloaded business object tables, use this method to manually set the classname
-  	 * when required to do so.
+  	 * Cast a BO to another type of BO.  The new BO will be returned with the same OID and
+  	 * version)num as a new object, so this is NOT a true cast.
   	 * 
-  	 * @param string $classname
-   	 */
-  	public function setClassName($classname) {
-  		$this->classname = $classname;
+  	 * @param $targetClassName
+  	 * @return BO
+  	 */
+  	public function cast($targetClassName) {
+  		DAO::loadClassDef($targetClassName);
+  		
+  		$BO = new $targetClassName;
+  		$BO->setOID($this->OID);
+  		$BO->setVersion($this->version_num);
+  		
+  		return $BO;
   	}
 }
 
