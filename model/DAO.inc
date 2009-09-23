@@ -2382,18 +2382,44 @@ abstract class DAO {
   	}
   	
   	/**
-  	 * Cast a BO to another type of BO.  The new BO will be returned with the same OID and
-  	 * version)num as a new object, so this is NOT a true cast.
+  	 * Cast a BO to another type of BO.  A new BO will be returned with the same OID and
+  	 * version_num as the old BO, so this is NOT a true cast but is a copy.  All attribute
+  	 * values will be copied accross.
   	 * 
-  	 * @param $targetClassName
+  	 * @param $targetClassName string
+  	 * @param $originalBO BO
   	 * @return BO
   	 */
-  	public function cast($targetClassName) {
+  	public function cast($targetClassName, $originalBO) {  		
   		DAO::loadClassDef($targetClassName);
   		
   		$BO = new $targetClassName;
   		$BO->setOID($this->OID);
   		$BO->setVersion($this->version_num);
+  		
+  		// get the class attributes
+		$originalBOreflection = new ReflectionClass(get_class($originalBO));
+		$originalBOproperties = $originalBOreflection->getProperties();
+		$newBOreflection = new ReflectionClass($targetClassName);
+		$newBOproperties = $newBOreflection->getProperties();
+		
+		// copy the property values from the old BO to the new BO
+		
+		if(count($originalBOproperties) < count($newBOproperties)) {
+			// the original BO is smaller, so loop over its properties
+			foreach($originalBOproperties as $propObj) {
+				$propName = $propObj->name;
+				if(!in_array($propName, $this->transientAttributes))
+					$BO->set($propName, $originalBO->get($propName));
+			}
+		}else{
+			// the new BO is smaller, so loop over its properties
+			foreach($newBOproperties as $propObj) {
+				$propName = $propObj->name;
+				if(!in_array($propName, $this->transientAttributes))
+					$BO->set($propName, $originalBO->get($propName));
+			}
+		}		
   		
   		return $BO;
   	}
