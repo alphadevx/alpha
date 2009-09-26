@@ -1,9 +1,10 @@
 <?php
 
 // include the config file
-if(!isset($config))
+if(!isset($config)) {
 	require_once '../util/configLoader.inc';
-$config =&configLoader::getInstance();
+	$config = configLoader::getInstance();
+}
 
 require_once $config->get('sysRoot').'alpha/controller/ListAll.php';
 require_once $config->get('sysRoot').'alpha/model/types/DEnum.inc';

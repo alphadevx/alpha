@@ -1,9 +1,10 @@
 <?php
 
 // include the config file
-if(!isset($config))
-	require_once '../util/configLoader.inc';
-$config =&configLoader::getInstance();
+if(!isset($config)) {
+	require_once '../util/AlphaConfig.inc';
+	$config = AlphaConfig::getInstance();
+}
 
 // add PHPUnit to the include_path
 ini_set('include_path', ini_get('include_path').':'.$config->get('sysRoot').'alpha/lib/PEAR/PHPUnit-3.2.9/');

@@ -1,9 +1,10 @@
 <?php
 
 // include the config file
-if(!isset($config))
-	require_once '../util/configLoader.inc';
-$config =&configLoader::getInstance();
+if(!isset($config)) {
+	require_once '../util/AlphaConfig.inc';
+	$config = AlphaConfig::getInstance();
+}
 
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
@@ -11,15 +12,15 @@ require_once $config->get('sysRoot').'alpha/view/View.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
 /**
-* 
-* Controller used to create a new BO, which must be supplied in GET vars
-* 
-* @package alpha::controller
-* @author John Collins <john@design-ireland.net>
-* @copyright 2009 John Collins
-* @version $Id$
-*
-*/
+ * 
+ * Controller used to create a new BO, which must be supplied in GET vars
+ * 
+ * @package alpha::controller
+ * @author John Collins <john@design-ireland.net>
+ * @copyright 2009 John Collins
+ * @version $Id$
+ *
+ */
 class Create extends Controller implements AlphaControllerInterface {
 	/**
 	 * The name of the BO

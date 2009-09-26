@@ -9,7 +9,7 @@
  * @package Alpha Util
  * @author John Collins <john@design-ireland.net>
  * @copyright 2007 John Collins 
- * 
+ * @deprecated use AlphaConfig instead! 
  */
 class configLoader{
 	/**

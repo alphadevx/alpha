@@ -1,9 +1,10 @@
 <?php
 
 // load config
-if(!isset($config))
-	require_once '../utils/configLoader.inc';
-$config =&configLoader::getInstance();
+if(!isset($config)) {
+	require_once '../utils/AlphaConfig.inc';
+	$config = AlphaConfig::getInstance();
+}
 
 /**
  * The parent exception class for Alpha
