@@ -85,7 +85,8 @@ class TCPDFFacade {
 		$this->pdf->SetAuthor($this->BO->get('author'));
 		$this->pdf->SetTitle($this->BO->get('title'));
 		$this->pdf->SetSubject($this->BO->get('description'));
-		$this->pdf->SetKeywords($this->BO->get('keywords'));
+		// TODO inject tags here?
+		//$this->pdf->SetKeywords($this->BO->get('keywords'));
 		
 		//set margins
 		$this->pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
