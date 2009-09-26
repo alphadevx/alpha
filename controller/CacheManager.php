@@ -2,8 +2,8 @@
 
 // include the config file
 if(!isset($config))
-	require_once '../util/configLoader.inc';
-$config =&configLoader::getInstance();
+	require_once '../util/AlphaConfig.inc';
+$config = AlphaConfig::getInstance();
 
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/util/FileUtil.inc';
