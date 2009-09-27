@@ -986,13 +986,10 @@ class View {
 	public function renderAllFields($mode, $filterFields=array()) {
 		$html = '';
 				
-		// get the class attributes
-		$reflection = new ReflectionClass(get_class($this->BO));
-		$properties = $reflection->getProperties();
+		// get the class attributes		
+		$properties = array_keys($this->BO->getDataLabels());
 		
-		foreach($properties as $propObj) {
-			$propName = $propObj->name;
-			
+		foreach($properties as $propName) {			
 			if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $filterFields)) {
 				$propClass = get_class($this->BO->getPropObject($propName));
 				
