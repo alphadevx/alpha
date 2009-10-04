@@ -263,7 +263,7 @@ class FrontController {
 	 * @param string $alias The URL alias for the page controller
 	 * @param string $param The name of the GET parameter on the alias URL request
 	 */
-	public static function registerAlias($controller, $alias, $param) {
+	public function registerAlias($controller, $alias, $param) {
 		$this->controllerAlias[$alias] = $controller;
 		$this->controllerAlias[$alias.'_param'] = $param;
 		
@@ -354,15 +354,18 @@ class FrontController {
 		$request = str_replace($config->get('sysURL'), '', 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 		$params = explode('/', $request);
 			
-		// second param will always be the controller
-		if(empty($this->pageController))
-			$this->pageController = $params[1];
+		// first param will always be the controller alias
+		if(empty($this->currentAlias))
+			$this->currentAlias = $params[0];
 			
 		// check to see if the controller is an alias for something
-		if($this->checkAlias($params[1])) {
-			$this->pageController = $this->getAliasController($params[1]);
-			$this->currentAlias = $params[1];
-			$_GET[$this->getAliasParam($params[1])] = $params[2];
+		if($this->checkAlias($this->currentAlias)) {
+			$this->pageController = $this->getAliasController($this->currentAlias);
+			
+			if(!empty($_POST))
+				$_REQUEST[$this->getAliasParam($this->currentAlias)] = $params[1];
+			else
+				$_GET[$this->getAliasParam($this->currentAlias)] = $params[1];
 		}else{			
 			// now populate the _GET vars
 			for($i = 2; $i < count($params); $i++) {
