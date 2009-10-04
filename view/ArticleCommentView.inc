@@ -59,7 +59,7 @@ class ArticleCommentView extends View {
 		echo '<h2>Post a new comment:</h2>';
 
 		echo '<table cols="2" class="create_view">';
-		echo '<form action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'].'" method="POST">';
+		echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
 		
 		$textBox = new textBox($this->BO->getPropObject('content'), $this->BO->getDataLabel('content'), 'content', '', 10);
 		echo $textBox->render();		
@@ -87,7 +87,7 @@ class ArticleCommentView extends View {
 		global $config;
 
 		echo '<table cols="2" class="edit_view" style="width:100%; margin:0px">';
-		echo '<form action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'].'" method="POST">';
+		echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
 		
 		$textBox = new TextBox($this->BO->getPropObject('content'), $this->BO->getDataLabel('content'), 'content', '', 5, $this->BO->getID());
 		echo $textBox->render();		

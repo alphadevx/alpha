@@ -26,13 +26,6 @@ require_once $config->get('sysRoot').'alpha/exceptions/FailedSaveException.inc';
  */
 class EditTags extends Edit implements AlphaControllerInterface {
 	/**
-	 * Used to set status update messages to display to the user
-	 *
-	 * @var string
-	 */
-	private $statusMessage = '';
-	
-	/**
 	 * Trace logger
 	 * 
 	 * @var Logger
@@ -199,9 +192,13 @@ class EditTags extends Edit implements AlphaControllerInterface {
 						$newTag->save();
 					}
 							
-					DAO::commit();
+					DAO::commit();					
 					
-					$this->statusMessage = '<p class="success">Tags on '.get_class($this->BO).' '.$this->BO->getID().' saved successfully.</p>';
+					$this->setStatusMessage('<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
+						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
+						<strong>Update:</strong> Tags on '.get_class($this->BO).' '.$this->BO->getID().' saved successfully.</p>
+						</div>');
+										
 					$this->doGET($params);
 				}catch (ValidationException $e) {
 					/*
@@ -209,12 +206,22 @@ class EditTags extends Edit implements AlphaControllerInterface {
 					 * value.
 					 */
 					DAO::rollback();
-					$this->statusMessage = '<p class="error"><br>Tags on '.get_class($this->BO).' '.$this->BO->getID().' not saved due to duplicate tag values, please try again.</p>';
+					
+					$this->setStatusMessage('<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
+						<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+						<strong>Error:</strong> Tags on '.get_class($this->BO).' '.$this->BO->getID().' not saved due to duplicate tag values, please try again.</p>
+						</div>');
+					
 					$this->doGET($params);
 				}catch (FailedSaveException $e) {
 					self::$logger->error('Unable to save the tags of id ['.$params['oid'].'], error was ['.$e->getMessage().']');
 					DAO::rollback();
-					$this->statusMessage = '<p class="error"><br>Tags on '.get_class($this->BO).' '.$this->BO->getID().' not saved, please check the application logs.</p>';
+					
+					$this->setStatusMessage('<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
+						<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+						<strong>Error:</strong> Tags on '.get_class($this->BO).' '.$this->BO->getID().' not saved, please check the application logs.</p>
+						</div>');
+					
 					$this->doGET($params);
 				}
 			}
@@ -235,23 +242,41 @@ class EditTags extends Edit implements AlphaControllerInterface {
 								
 					DAO::commit();
 					
-					$this->statusMessage = '<p class="success">Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' deleted successfully.</p>';
+					$this->setStatusMessage('<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
+						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
+						<strong>Update:</strong> Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' deleted successfully.</p>
+						</div>');					
+					
 					$this->doGET($params);									
 				}catch(AlphaException $e) {
 					self::$logger->error('Unable to delete the tag of id ['.$params['delete_oid'].'], error was ['.$e->getMessage().']');
 					DAO::rollback();
-					$this->statusMessage = '<p class="error"><br>Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' not deleted, please check the application logs.</p>';
+					
+					$this->setStatusMessage('<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
+						<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+						<strong>Error:</strong> Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' not deleted, please check the application logs.</p>
+						</div>');
+					
 					$this->doGET($params);
 				}
 			}
 		}catch(SecurityException $e) {
-			echo '<p class="error"><br>'.$e->getMessage().'</p>';								
+			
+			$this->setStatusMessage('<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
+				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+				<strong>Error:</strong> '.$e->getMessage().'</p>
+				</div>');
+											
 			self::$logger->warn($e->getMessage());
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());
 		}catch(BONotFoundException $e) {
 			self::$logger->warn($e->getMessage());
-			echo '<p class="error"><br>Failed to load the requested item from the database!</p>';
+			
+			$this->setStatusMessage('<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
+				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+				<strong>Error:</strong> Failed to load the requested item from the database!</p>
+				</div>');
 		}
 				
 		self::$logger->debug('<<doPOST');		
@@ -270,18 +295,6 @@ class EditTags extends Edit implements AlphaControllerInterface {
 		$html .= '}';
 		$html .= 'addOnloadEvent(clearNewField);';
 		$html .= '</script>';
-		return $html;
-	}
-	
-	/**
-	 * Callback used to render a status message if there is one
-	 *
-	 * @return string
-	 */
-	public function after_displayPageHead_callback() {
-		$html = '';
-		if($this->statusMessage != '')
-			$html .= $this->statusMessage;
 		return $html;
 	}
 }
