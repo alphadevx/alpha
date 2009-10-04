@@ -144,6 +144,14 @@ abstract class Controller {
 	protected $description;
 	
 	/**
+	 * Used to set status update messages to display to the user (messages stored between requests
+	 * in _SESSION)
+	 *
+	 * @var string
+	 */
+	protected $statusMessage;
+	
+	/**
 	 * Trace logger
 	 * 
 	 * @var Logger
@@ -204,6 +212,10 @@ abstract class Controller {
 	 	
 	 	if(isset($_SESSION['newObjects'])) {	 		
 	 		$this->newObjects = $_SESSION['newObjects'];
+	 	}
+	 	
+	 	if(isset($_SESSION['statusMessage'])) {
+	 		$this->setStatusMessage($_SESSION['statusMessage']);
 	 	}
 
 	 	self::$logger->debug('<<__construct');
@@ -919,6 +931,28 @@ abstract class Controller {
 		}
 		
 		self::$logger->debug('<<loadCustomController');
+	}
+	
+	/**
+	 * Set the status message in the _SESSION to the value provided.
+	 * 
+	 * @param $message
+	 */
+	public function setStatusMessage($message) {
+		$this->statusMessage = $message;
+		$_SESSION['statusMessage'] = $message;
+	}
+	
+	/**
+	 * Gets the current status message for this controller.  Note that by getting the current
+	 * status message, you clear out the value stored in _SESSION so this method can only be used
+	 * to get the status message once for display purposes.
+	 * 
+	 * @return string
+	 */
+	public function getStatusMessage() {
+		$_SESSION['statusMessage'] = null;
+		return $this->statusMessage;
 	}
 }
 

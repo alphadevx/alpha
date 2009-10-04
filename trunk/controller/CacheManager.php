@@ -22,13 +22,6 @@ require_once $config->get('sysRoot').'alpha/view/View.inc';
  */
 class CacheManager extends Controller implements AlphaControllerInterface {
 	/**
-	 * Used to set status update messages to display to the user
-	 *
-	 * @var string
-	 */
-	private $statusMessage = '';
-	
-	/**
 	 * The root of the cache directory
 	 * 
 	 * @var string
@@ -122,10 +115,10 @@ class CacheManager extends Controller implements AlphaControllerInterface {
 				try {
 					FileUtil::deleteDirectoryContents($this->dataDir);
 							
-					$this->statusMessage = '<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
+					$this->setStatusMessage('<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
 						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
 						<strong>Update:</strong> Cache contents deleted successfully.</p>
-						</div>';
+						</div>');
 					
 					self::$logger->info('Cache contents deleted successfully.');
 				}catch (AlphaException $e) {
@@ -147,22 +140,6 @@ class CacheManager extends Controller implements AlphaControllerInterface {
 		
 		echo View::displayPageFoot($this);
 		self::$logger->debug('<<doPOST');
-	}
-	
-	/**
-	 * Renders the status message if one is set
-	 * 
-	 * @return string
-	 */
-	public function after_displayPageHead_callback() {
-		global $config;
-		
-		$html = '';
-				
-		if($this->statusMessage != '')
-			$html .= $this->statusMessage;		
-		
-		return $html;
 	}
 }
 

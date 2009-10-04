@@ -466,6 +466,11 @@ class View {
 					</ul>';
 		}
 		
+		// render a status message if there is any
+		$message = $controller->getStatusMessage();
+		if(!empty($message))
+			$html .= $message;
+		
 		if(method_exists($controller, 'after_displayPageHead_callback'))
 			$html.= $controller->after_displayPageHead_callback();
 			

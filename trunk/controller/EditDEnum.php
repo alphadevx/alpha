@@ -27,13 +27,6 @@ require_once $config->get('sysRoot').'alpha/exceptions/FailedSaveException.inc';
  */
 class EditDEnum extends Edit implements AlphaControllerInterface {
 	/**
-	 * Used to set status update messages to display to the user
-	 *
-	 * @var string
-	 */
-	private $statusMessage = '';
-	
-	/**
 	 * Trace logger
 	 * 
 	 * @var Logger
@@ -149,9 +142,12 @@ class EditDEnum extends Edit implements AlphaControllerInterface {
 						$newItem->save();
 					}			
 							
-					DAO::commit();
+					DAO::commit();					
 					
-					$this->statusMessage = '<p class="success">'.get_class($this->BO).' '.$this->BO->getID().' saved successfully.</p>';
+					$this->setStatusMessage('<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
+						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
+						<strong>Update:</strong> '.get_class($this->BO).' '.$this->BO->getID().' saved successfully.</p>
+						</div>');
 					
 					$this->doGET($params);
 				}catch (FailedSaveException $e) {
@@ -185,18 +181,6 @@ class EditDEnum extends Edit implements AlphaControllerInterface {
 		$html .= '}';
 		$html .= 'addOnloadEvent(clearNewField);';
 		$html .= '</script>';
-		return $html;
-	}
-	
-	/**
-	 * Callback used to render a status message if there is one
-	 *
-	 * @return string
-	 */
-	public function after_displayPageHead_callback() {
-		$html = '';
-		if($this->statusMessage != '')
-			$html .= $this->statusMessage;
 		return $html;
 	}
 }

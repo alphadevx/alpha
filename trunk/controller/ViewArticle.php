@@ -32,13 +32,6 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 	protected $BO;
 	
 	/**
-	 * Used to set status update messages to display to the user
-	 *
-	 * @var string
-	 */
-	private $statusMessage = '';
-	
-	/**
 	 * Trace logger
 	 * 
 	 * @var Logger
@@ -150,7 +143,7 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 		}
 		
 		if(!$this->BO->checkUserVoted() && $config->get('sysCMSVotingAllowed')) {
-			$html .= '<form action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'].'" method="post">';
+			$html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="post">';
 			$html .= '<p>Please rate this article from 1-10 (10 being the best):' .
 					'<select name="user_vote">' .
 					'<option value="1">1' .
@@ -214,12 +207,30 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 			
 			if(isset($params['voteBut']) && !$this->BO->checkUserVoted()) {
 				$vote = new article_vote_object();
-				$vote->set('article_oid', $params['oid']);
+				if(isset($params['oid'])) {
+					$vote->set('article_oid', $params['oid']);
+				}else{
+					// load article by title?					
+					if (isset($params['title'])) {
+						$title = str_replace('_', ' ', $params['title']);
+					}else{
+						throw new IllegalArguementException('Could not load the article as a title or OID was not supplied!');
+					}
+					
+					$this->BO = new article_object();
+					$this->BO->loadByAttribute('title', $title);
+					$vote->set('article_oid', $this->BO->getOID());
+				}
 				$vote->set('person_oid', $_SESSION['currentUser']->getID());
 				$vote->set('score', $params['user_vote']);
 				try {
-					$vote->save();
-					$this->statusMessage = '<p class="success">Thank you for rating this article!</p>';
+					$vote->save();					
+					
+					$this->setStatusMessage('<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
+						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
+						<strong>Update:</strong> Thank you for rating this article!</p>
+						</div>');
+					
 					$this->doGET($params);
 				}catch (FailedSaveException $e) {
 					self::$logger->error($e->getMessage());
@@ -237,7 +248,12 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 				
 				try {
 					$success = $comment->save();			
-					$this->statusMessage = '<p class="success">Thank you for your comment!</p>';
+					
+					$this->setStatusMessage('<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
+						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
+						<strong>Update:</strong> Thank you for your comment!</p>
+						</div>');
+					
 					$this->doGET($params);
 				}catch (FailedSaveException $e) {
 					self::$logger->error($e->getMessage());
@@ -253,8 +269,13 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 					// re-populates the old object from post data
 					$comment->populateFromPost();			
 					
-					$success = $comment->save();			
-					$this->statusMessage = '<p class="success">Your comment has been updated.</p>';
+					$success = $comment->save();
+
+					$this->setStatusMessage('<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
+						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
+						<strong>Update:</strong> Your comment has been updated.</p>
+						</div>');
+					
 					$this->doGET($params);
 				}catch (AlphaException $e) {
 					self::$logger->error($e->getMessage());
@@ -302,24 +323,6 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 		}
 		
 		return $html;
-	}
-	
-	/**
-	 * Used to set any status messages we want to render for the user
-	 * 
-	 * @param $message
-	 */
-	public function setStatus($message) {
-		$this->statusMessage = $message;
-	}
-	
-	/**
-	 * Gets the status message
-	 * 
-	 * @return string
-	 */
-	public function getStatus() {
-		return $this->statusMessage;
 	}
 }
 

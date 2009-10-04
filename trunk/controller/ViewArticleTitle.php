@@ -18,7 +18,14 @@ require_once $config->get('sysRoot').'alpha/controller/ViewArticle.php';
  * @version $Id$
  *
  */
-class ViewArticleTitle extends ViewArticle {								
+class ViewArticleTitle extends ViewArticle {
+	/**
+	 * Trace logger
+	 * 
+	 * @var Logger
+	 */
+	private static $logger = null;
+									
 	/**
 	 * Handle GET requests
 	 * 
@@ -27,17 +34,23 @@ class ViewArticleTitle extends ViewArticle {
 	public function doGET($params) {
 		global $config;
 		
+		if(self::$logger == null)
+			self::$logger = new Logger('ViewArticleTitle');
+		
 		try {
-			// ensure that a title is provided
-			if (isset($params['title'])) {
-				$title = str_replace('_', ' ', $params['title']);
-			}else{
-				throw new IllegalArguementException('Could not load the article as a title was not supplied!');
+			// it may have already been loaded by a doPOST call
+			if($this->BO->isTransient()) {
+				// ensure that a title is provided
+				if (isset($params['title'])) {
+					$title = str_replace('_', ' ', $params['title']);
+				}else{
+					throw new IllegalArguementException('Could not load the article as a title was not supplied!');
+				}
+				
+				$this->BO = new article_object();
+				$this->BO->loadByAttribute('title', $title);
 			}
-			
-			$this->BO = new article_object();
-			$this->BO->loadByAttribute('title', $title);
-			
+						
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());
 			exit;
