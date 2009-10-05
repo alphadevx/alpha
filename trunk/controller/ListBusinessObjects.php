@@ -137,38 +137,6 @@ class ListBusinessObjects extends Controller implements AlphaControllerInterface
 	}
 	
 	/**
-	 * Callback used to render the admin links
-	 *
-	 * @return string
-	 */
-	/*public function after_displayPageHead_callback() {
-		global $config;
-		
-		$html = '';
-		
-		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
-			$html .= '<ul class="jd_menu">
-						<li><a href="'.$config->get('sysURL').'">Home Page</a></li>
-						<li>Logs &raquo;			
-							<ul>
-								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysLogFile')).'">System Log</a></li>
-								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/search.log').'">Search Log</a></li>
-								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/feeds.log').'">Feed Log</a></li>
-								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/tasks.log').'">Cron Tasks Log</a></li>
-							</ul>
-						</li>
-						<li><a href="'.FrontController::generateSecureURL('act=gen_secure_query_strings').'">Generate Secure URL</a></li>
-						<li><a href="'.FrontController::generateSecureURL('act=ViewMetrics').'">Software Metrics</a></li>
-						<li><a href="'.FrontController::generateSecureURL('act=CacheManager').'">Manage Cache</a></li>
-						<li><a href="'.FrontController::generateSecureURL('act=ListDEnums').'">Manage DEnums</a></li>
-						<li><a href="'.FrontController::generateSecureURL('act=ViewTestResults').'">Unit Tests</a></li>
-					</ul>';
-		}
-		
-		return $html;
-	}*/
-	
-	/**
 	 * Private method to display the main body HTML for this page
 	 */
 	private function displayBodyContent() {
