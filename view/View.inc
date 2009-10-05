@@ -398,17 +398,21 @@ class View {
 		$html.= '<meta http-equiv="imagetoolbar" content="no">';
 
 		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/ui/themes/'.$config->get('sysTheme').'/ui.all.css">';
-		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.jdMenu.css">';
+		//$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.jdMenu.css">';
 		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/alpha.css">';
 		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
 
 		$html.= '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jquery-1.3.2.min.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/contextMenu/jquery.contextMenu.js"></script>';
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.dimensions.js"></script>';
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.positionBy.js"></script>';
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.bgiframe.js"></script>';
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.jdMenu.js"></script>';
+		
+		//$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.dimensions.js"></script>';
+		//$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.positionBy.js"></script>';
+		//$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.bgiframe.js"></script>';
+		//$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.jdMenu.js"></script>';
+		
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery.ui.potato.menu.js"></script>';
+		
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery-ui-1.7.2.custom.min.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/ui.datepicker.js"></script>';
 				
@@ -432,6 +436,16 @@ class View {
 			$html.= '</script>';
 		}
 		
+		if (isset($_SESSION['currentUser']) && DAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && basename($_SERVER['PHP_SELF']) == 'FC.php') {
+			$html.= '<script type="text/javascript">';
+			$html.= '	(function($) {';
+			$html.= '		$(document).ready(function(){';
+			$html.= '		$("#adminmenu").ptMenu();';
+			$html.= '	});';
+			$html.= '})(jQuery);';
+			$html.= '</script>';
+		}
+		
 		if(method_exists($controller, 'during_displayPageHead_callback'))
 			$html.= $controller->during_displayPageHead_callback();
 		
@@ -447,10 +461,10 @@ class View {
 		}
 		
 		if (isset($_SESSION['currentUser']) && DAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && basename($_SERVER['PHP_SELF']) == 'FC.php') {
-			$html .= '<ul class="jd_menu">
+			$html .= '<ul id="adminmenu" class="potato-menu">
 						<li><a href="'.$config->get('sysURL').'">Home</a></li>
 						<li><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Admin Home</a></li>
-						<li>Logs &raquo;			
+						<li><a href="#">Logs &raquo;</a>			
 							<ul>
 								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysLogFile')).'">System Log</a></li>
 								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/search.log').'">Search Log</a></li>
