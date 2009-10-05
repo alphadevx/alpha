@@ -260,12 +260,12 @@ class article_object extends DAO {
 		// check the config to see if we are using mod_rewrite
 		if($config->get('sysUseModRewrite')) {
 			// check to see if an alias is registered for the view_article_title controller, otherwise use the long URL version
-			if(isset($front) && $front->hasAlias('view_article_title')) {
-				$alias = $front->getControllerAlias('view_article_title');
+			if(isset($front) && $front->hasAlias('ViewArticleTitle')) {
+				$alias = $front->getControllerAlias('ViewArticleTitle');
 				
 				$this->URL = $config->get('sysURL').$alias.'/'.str_replace(' ', '_', $this->title->getValue());
 			}else{
-				$this->URL = $config->get('sysURL').'view_article_title/title/'.str_replace(' ', '_', $this->title->getValue());
+				$this->URL = $config->get('sysURL').'ViewArticleTitle/title/'.str_replace(' ', '_', $this->title->getValue());
 			}
 		}else{
 			$this->URL = $config->get('sysURL').'alpha/controller/ViewArticle.php?oid='.$this->getID();
@@ -274,12 +274,12 @@ class article_object extends DAO {
 		// now set up the print version URL
 		if($config->get('sysUseModRewrite')) {
 			// check to see if an alias is registered for the view_article_title controller, otherwise use the long URL version
-			if(isset($front) && $front->hasAlias('view_article_print')) {
-				$alias = $front->getControllerAlias('view_article_print');
+			if(isset($front) && $front->hasAlias('ViewArticlePrint')) {
+				$alias = $front->getControllerAlias('ViewArticlePrint');
 				
 				$this->printURL = $config->get('sysURL').$alias.'/'.str_replace(' ', '_', $this->title->getValue());
 			}else{
-				$this->printURL = $config->get('sysURL').'view_article_print/title/'.str_replace(' ', '_', $this->title->getValue());
+				$this->printURL = $config->get('sysURL').'ViewArticlePrint/title/'.str_replace(' ', '_', $this->title->getValue());
 			}
 		}else{
 			$this->printURL = $config->get('sysURL').'alpha/controller/ViewArticlePrint.php?title='.$this->title->getValue();
