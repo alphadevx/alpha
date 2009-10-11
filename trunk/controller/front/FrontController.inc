@@ -2,6 +2,7 @@
 
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/SecurityException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
 
 /**
@@ -50,25 +51,41 @@ class FrontController {
 	private $currentAlias;
 	
 	/**
+	 * Trace logger
+	 * 
+	 * @var Logger
+	 */
+	private static $logger = null;
+	
+	/**
 	 * The constructor method
 	 */
 	public function __construct() {
+		if(self::$logger == null)
+			self::$logger = new Logger('FrontController');
+		self::$logger->debug('>>__construct()');
+		
 		global $config;
 		
 		// direct calls to the front controller
 		if (isset($_GET['act'])) {
+			self::$logger->debug('Processing direct request to the front controller');
 			$this->pageController = $_GET['act'];
 		// calls to the front controller via mod_rewrite
 		}elseif($config->get('sysUseModRewrite') && !isset($_GET['tk'])) {
+			self::$logger->debug('Processing a mod_rewrite request');
 			$this->handleModRewriteRequests();			
 		// direct calls to the front controller with an encrypted query string
 		}else{
 			if (!isset($_GET['tk'])) {
 				throw new SecurityException('No controller action set for the front controller, URL is ['.$_SERVER['REQUEST_URI'].']');
 			}else{
+				self::$logger->debug('Processing a direct request to the front controller with an encrypted token param');
 				$this->setEncrypt(true);
 			}
 		}
+		
+		self::$logger->debug('<<__construct');
 	}
 	
 	/**
@@ -348,31 +365,47 @@ class FrontController {
 	 * Handles all of the rules for mod_rewrite style URL parsing
 	 */
 	function handleModRewriteRequests() {
+		self::$logger->debug('>>handleModRewriteRequests');
 		global $config;
 		
 		// strip off the system URL from the request URL
 		$request = str_replace($config->get('sysURL'), '', 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+		self::$logger->debug('$request is ['.$request.']');
 		$params = explode('/', $request);
+		self::$logger->debug('$params are ['.print_r($params, true).']');
+		
+		try {
+			// first param will always be the controller alias
+			if(empty($this->currentAlias) && !empty($params[0]))
+				$this->currentAlias = $params[0];
+
+			// check to see if we can load the page controller without an alias
+			self::loadControllerDef($params[0]);
+			self::$logger->debug('Page controller name set on the request URL is ['.$params[0].']');
+			$this->pageController = $params[0];
+		}catch (IllegalArguementException $iae) {
+			// handle request with alias		
+			self::$logger->debug('The supplied controller alias is ['.$this->currentAlias.']');
 			
-		// first param will always be the controller alias
-		if(empty($this->currentAlias))
-			$this->currentAlias = $params[0];
-			
-		// check to see if the controller is an alias for something
-		if($this->checkAlias($this->currentAlias)) {
-			$this->pageController = $this->getAliasController($this->currentAlias);
-			
-			if(!empty($_POST))
-				$_REQUEST[$this->getAliasParam($this->currentAlias)] = $params[1];
-			else
-				$_GET[$this->getAliasParam($this->currentAlias)] = $params[1];
-		}else{			
-			// now populate the _GET vars
-			for($i = 2; $i < count($params); $i++) {
-				if(isset($params[$i+1]))				
-					$_GET[$params[$i]] = $params[$i+1];
+			// check to see if the controller is an alias for something
+			if($this->checkAlias($this->currentAlias)) {
+				$this->pageController = $this->getAliasController($this->currentAlias);
+				self::$logger->debug('Page controller name obtained from the URL alias is ['.$this->pageController.']');
+				
+				if(!empty($_POST))
+					$_REQUEST[$this->getAliasParam($this->currentAlias)] = $params[1];
+				else
+					$_GET[$this->getAliasParam($this->currentAlias)] = $params[1];
+			}else{			
+				// now populate the _GET vars
+				for($i = 2; $i < count($params); $i++) {
+					if(isset($params[$i+1]))				
+						$_GET[$params[$i]] = $params[$i+1];
+				}
 			}
 		}
+		
+		self::$logger->debug('<<handleModRewriteRequests');
 	}
 	
 	/**
@@ -382,6 +415,28 @@ class FrontController {
 	 */
 	public function getPageController() {
 		return $this->pageController;
+	}
+	
+	/**
+	 * Loads the definition for the controller classname provided
+	 * 
+	 * @param string $controllerName 
+	 */
+	public static function loadControllerDef($controllerName) {
+		if(self::$logger == null)
+			self::$logger = new Logger('FrontController');
+		self::$logger->debug('>>loadControllerDef(controllerName=['.$controllerName.'])');
+		
+		global $config;
+		
+		if(file_exists($config->get('sysRoot').'controller/'.$controllerName.'.php'))
+			require_once $config->get('sysRoot').'controller/'.$controllerName.'.php';
+		elseif(file_exists($config->get('sysRoot').'alpha/controller/'.$controllerName.'.php'))
+			require_once $config->get('sysRoot').'alpha/controller/'.$controllerName.'.php';
+		else
+			throw new IllegalArguementException('The class ['.$controllerName.'] is not defined anywhere!');
+		
+		self::$logger->debug('<<loadControllerDef');
 	}
 }
 
