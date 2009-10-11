@@ -396,15 +396,16 @@ class FrontController {
 					$_REQUEST[$this->getAliasParam($this->currentAlias)] = $params[1];
 				else
 					$_GET[$this->getAliasParam($this->currentAlias)] = $params[1];
-			}else{			
-				// now populate the _GET vars
-				for($i = 2; $i < count($params); $i++) {
-					if(isset($params[$i+1]))				
-						$_GET[$params[$i]] = $params[$i+1];
-				}
 			}
 		}
 		
+		// now populate the _GET vars
+		for($i = 1; $i < count($params); $i++) {
+			if(isset($params[$i+1]))				
+				$_GET[$params[$i]] = $params[$i+1];
+		}
+		
+		self::$logger->debug('$params are ['.print_r($_GET, true).']');		
 		self::$logger->debug('<<handleModRewriteRequests');
 	}
 	
