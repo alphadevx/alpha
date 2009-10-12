@@ -118,23 +118,29 @@ class record_selector
 					$html .= '<tr><td colspan="2">';				
 					$html .= '<table id="relation_field_'.$this->name.'" style="width:100%; display:'.($expanded ? '' : 'none').';" class="relationTable">';
 					
-					$customerViewControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'view');
-					$customerEditControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'edit');
+					$customViewControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'view');
+					$customEditControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'edit');
 					
 					foreach($objects as $obj) {
 						$html .= '<tr><td>';					
 						// check to see if we are in the admin back-end
-						if(basename($_SERVER['PHP_SELF']) == 'FC.php') {					
+						if(strpos($_SERVER['REQUEST_URI'], 'FC.php') !== false) {					
 							$viewURL = FrontController::generateSecureURL('act=Detail&bo='.get_class($obj).'&oid='.$obj->getID());
 							$editURL = FrontController::generateSecureURL('act=Edit&bo='.get_class($obj).'&oid='.$obj->getID());
 						}else{						
-							if(isset($customerViewControllerName)) {
-								$viewURL = $config->get('sysURL').'controller/'.$customerViewControllerName.'.php?oid='.$obj->getID();
+							if(isset($customViewControllerName)) {
+								if($config->get('sysUseModRewrite'))
+									$viewURL = $config->get('sysURL').$customViewControllerName.'/oid/'.$obj->getID();
+								else
+									$viewURL = $config->get('sysURL').'controller/'.$customViewControllerName.'.php?oid='.$obj->getID();
 							}else{
 								$viewURL = $config->get('sysURL').'alpha/controller/Detail.php?bo='.get_class($obj).'&oid='.$obj->getID();
 							}
-							if(isset($customerEditControllerName)) {
-								$editURL = $config->get('sysURL').'controller/'.$customerEditControllerName.'.php?oid='.$obj->getID();
+							if(isset($customEditControllerName)) {
+								if($config->get('sysUseModRewrite'))
+									$editURL = $config->get('sysURL').$customEditControllerName.'/oid/'.$obj->getID();
+								else
+									$editURL = $config->get('sysURL').'controller/'.$customEditControllerName.'.php?oid='.$obj->getID();
 							}else{
 								$editURL = $config->get('sysURL').'alpha/controller/Edit.php?bo='.get_class($obj).'&oid='.$obj->getID();
 							}
