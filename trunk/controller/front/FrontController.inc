@@ -401,8 +401,12 @@ class FrontController {
 		
 		// now populate the _GET vars
 		for($i = 1; $i < count($params); $i++) {
-			if(isset($params[$i+1]))				
-				$_GET[$params[$i]] = $params[$i+1];
+			if(isset($params[$i+1])) {
+				if(!empty($_POST))
+					$_REQUEST[$params[$i]] = $params[$i+1];
+				else			
+					$_GET[$params[$i]] = $params[$i+1];
+			}
 		}
 		
 		self::$logger->debug('$params are ['.print_r($_GET, true).']');		
