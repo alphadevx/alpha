@@ -97,7 +97,7 @@ class View {
 		global $config;
 		
 		// the form action
-		$fields['formAction'] = $_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"];
+		$fields['formAction'] = $_SERVER['REQUEST_URI'];
 		
 		// the form ID
 		$fields['formID'] = get_class($this->BO).'_'.$this->BO->getID();
@@ -133,7 +133,7 @@ class View {
 		global $config;
 
 		// the form action
-		$fields['formAction'] = $_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"];
+		$fields['formAction'] = $_SERVER['REQUEST_URI'];
 		
 		// the form ID
 		$fields['formID'] = get_class($this->BO).'_'.$this->BO->getID();
@@ -175,7 +175,7 @@ class View {
 		global $config;
 		
 		// the form action
-		$fields['formAction'] = $_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"];
+		$fields['formAction'] = $_SERVER['REQUEST_URI'];
 		
 		// work out how many columns will be in the table
 		$reflection = new ReflectionClass(get_class($this->BO));
@@ -306,7 +306,7 @@ class View {
 		global $config;
 		
 		// the form action
-		$fields['formAction'] = $_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"];
+		$fields['formAction'] = $_SERVER['REQUEST_URI'];
 		
 		// the class name of the BO
 		$fields['className'] = get_class($this->BO);
@@ -398,18 +398,12 @@ class View {
 		$html.= '<meta http-equiv="imagetoolbar" content="no">';
 
 		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/ui/themes/'.$config->get('sysTheme').'/ui.all.css">';
-		//$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.jdMenu.css">';
 		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/alpha.css">';
 		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
 
 		$html.= '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jquery-1.3.2.min.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/contextMenu/jquery.contextMenu.js"></script>';
-		
-		//$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.dimensions.js"></script>';
-		//$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.positionBy.js"></script>';
-		//$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.bgiframe.js"></script>';
-		//$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jdMenu/jquery.jdMenu.js"></script>';
 		
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery.ui.potato.menu.js"></script>';
 		
@@ -460,7 +454,7 @@ class View {
 			$html.= '<p>You are not logged in</p>';
 		}
 		
-		if (isset($_SESSION['currentUser']) && DAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && basename($_SERVER['PHP_SELF']) == 'FC.php') {
+		if (isset($_SESSION['currentUser']) && DAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], 'FC.php') !== false) {
 			$html .= '<ul id="adminmenu" class="potato-menu">
 						<li><a href="'.$config->get('sysURL').'">Home</a></li>
 						<li><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Admin Home</a></li>
@@ -518,10 +512,7 @@ class View {
 	 * @return string
 	 */
 	public static function renderDeleteForm() {
-		if(!empty($_SERVER['QUERY_STRING']))
-			$html = '<form action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'].'" method="POST" id="delete_form">';
-		else
-			$html = '<form action="'.$_SERVER['PHP_SELF'].'" method="POST" id="delete_form">';
+		$html = '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" id="delete_form">';		
 		$html .= '<input type="hidden" name="delete_oid" id="delete_oid" value=""/>';
 		$html .= self::renderSecurityFields();
 		$html .= '</form>';
