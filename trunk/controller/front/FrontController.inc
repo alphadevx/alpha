@@ -2,6 +2,7 @@
 
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/SecurityException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/ResourceNotFoundException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
 
@@ -78,7 +79,8 @@ class FrontController {
 		// direct calls to the front controller with an encrypted query string
 		}else{
 			if (!isset($_GET['tk'])) {
-				throw new SecurityException('No controller action set for the front controller, URL is ['.$_SERVER['REQUEST_URI'].']');
+				self::$logger->warn('No controller action set for the front controller, URL is ['.$_SERVER['REQUEST_URI'].']');
+				throw new ResourceNotFoundException('The file that you have requested cannot be found!');
 			}else{
 				self::$logger->debug('Processing a direct request to the front controller with an encrypted token param');
 				$this->setEncrypt(true);
@@ -230,46 +232,20 @@ class FrontController {
 			$this->pageController = $_GET['act'];
 		}
 		
-		$handle = opendir($config->get('sysRoot').'controller');
-   		
-        // loop over the custom controllers directory
-	    while (false !== ($file = readdir($handle))) {
-	    	if (preg_match("/".$this->pageController.".php/", $file)) {	    		
-	    		
-	    		require_once $config->get('sysRoot').'controller/'.$this->pageController.'.php';
-	    		
-	    		$pageController = new $this->pageController();
-	    		if(!empty($_POST)) {			
-					$pageController->doPOST($_REQUEST);
-				}else{
-					$pageController->doGET($_GET);
-				}
-	    		return true;
-	    	}
-	    }
-	    
-	    // now loop over the core controllers provided with Alpha
-	    
-	    $handle = opendir($config->get('sysRoot').'alpha/controller');
-   		
-        // loop over the default controller directory
-	    while (false !== ($file = readdir($handle))) {
-	    	if (preg_match("/".$this->pageController.".php/", $file)) {	    		
-	    		
-	    		require_once $config->get('sysRoot').'alpha/controller/'.$this->pageController.'.php';
-	    		
-	    		$pageController = new $this->pageController();
-	    		if(!empty($_POST)) {			
-					$pageController->doPOST($_REQUEST);
-				}else{
-					$pageController->doGET($_GET);
-				}
-	    		return true;
-	    	}
-	    }
-	    
-	    throw new AlphaException('Failed to find the definition for the class ['.$this->pageController.']');
-		return false;
+		try {
+			self::loadControllerDef($this->pageController);
+			$pageController = new $this->pageController();
+	    	if(!empty($_POST)) {			
+				$pageController->doPOST($_REQUEST);
+			}else{
+				$pageController->doGET($_GET);
+			}
+	    	return true;
+		}catch (IllegalArguementException $iae) {
+			self::$logger->warn('Failed to find the definition for the controller class ['.$this->pageController.'], request URL is ['.$_SERVER['REQUEST_URI'].']');
+		    throw new ResourceNotFoundException('The file that you have requested cannot be found!');
+			return false;
+		}
 	}
 	
 	/**
@@ -442,6 +418,31 @@ class FrontController {
 			throw new IllegalArguementException('The class ['.$controllerName.'] is not defined anywhere!');
 		
 		self::$logger->debug('<<loadControllerDef');
+	}
+	
+	/**
+	 * Renders a HTML error page with the supplied error code (typlically a HTTP code) and a message
+	 * 
+	 * @param $code
+	 * @param $message
+	 * @return string
+	 */
+	public function renderErrorPage($code, $message) {
+		global $config;		
+		
+		$html = '<html><head>';
+		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/ui/themes/'.$config->get('sysTheme').'/ui.all.css">';
+		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/alpha.css">';
+		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
+		$html .= '<title>'.$code.' - '.$message.'</title></head>';
+		$html .= '<body>';
+		$html .= '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
+				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+				<strong>'.$code.':</strong> '.$message.'</p>
+				</div>';
+		$html .= '</body></html>';
+		
+		return $html;
 	}
 }
 
