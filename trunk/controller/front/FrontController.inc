@@ -5,6 +5,7 @@ require_once $config->get('sysRoot').'alpha/exceptions/SecurityException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/ResourceNotFoundException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
+require_once $config->get('sysRoot').'alpha/util/filters/AlphaFilterInterface.inc';
 
 /**
  * 
@@ -43,6 +44,14 @@ class FrontController {
 	 * @var array
 	 */
 	private $controllerAlias = array();
+	
+	/**
+	 * An array of HTTP filters applied to each request to the front controller.  Each
+	 * member must implement AlphaFilterInterface!
+	 * 
+	 * @var array
+	 */
+	private $filters = array();
 	
 	/**
 	 * The name of the current alias
@@ -196,6 +205,10 @@ class FrontController {
 	public function loadController($allowRedirects = true) {
 		global $config;
 		
+		// first process any attached filters
+		foreach ($this->filters as $filter)
+			$filter->process();
+		
 		if($allowRedirects) {
 			// if there is an alias configured for the above page controller, redirect there
 			if($config->get('sysForceFC') && $this->hasAlias($this->pageController)) {
@@ -340,7 +353,7 @@ class FrontController {
 	/**
 	 * Handles all of the rules for mod_rewrite style URL parsing
 	 */
-	function handleModRewriteRequests() {
+	private function handleModRewriteRequests() {
 		self::$logger->debug('>>handleModRewriteRequests');
 		global $config;
 		
@@ -443,6 +456,18 @@ class FrontController {
 		$html .= '</body></html>';
 		
 		return $html;
+	}
+	
+	/**
+	 * Add the supplied filter object to the list of filters ran on each request to the front controller
+	 * 
+	 * @param $filterObject AlphaFilterInterface
+	 */
+	public function registerFilter($filterObject) {
+		if($filterObject instanceof AlphaFilterInterface)
+			array_push($this->filters, $filterObject);
+		else
+			throw new IllegalArguementException('Supplied filter object is not a valid AlphaFilterInterface instance!');
 	}
 }
 
