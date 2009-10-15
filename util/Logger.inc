@@ -60,7 +60,7 @@ class Logger {
 		$dateTime = date("Y-m-d H:i:s");		
 		
 		if($this->level == 'DEBUG')
-			$this->logfile->writeLine(array($dateTime, 'DEBUG', $this->classname, $message));
+			$this->logfile->writeLine(array($dateTime, 'DEBUG', $this->classname, $message, $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
 	}
 	
 	/**
@@ -72,7 +72,7 @@ class Logger {
 		$dateTime = date("Y-m-d H:i:s");		
 		
 		if($this->level == 'DEBUG' || $this->level == 'INFO')
-			$this->logfile->writeLine(array($dateTime, 'INFO', $this->classname, $message));
+			$this->logfile->writeLine(array($dateTime, 'INFO', $this->classname, $message, $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
 	}
 	
 	/**
@@ -84,7 +84,7 @@ class Logger {
 		$dateTime = date("Y-m-d H:i:s");		
 		
 		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN')
-			$this->logfile->writeLine(array($dateTime, 'WARN', $this->classname, $message));
+			$this->logfile->writeLine(array($dateTime, 'WARN', $this->classname, $message, $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
 	}
 	
 	/**
@@ -96,7 +96,7 @@ class Logger {
 		$dateTime = date("Y-m-d H:i:s");		
 		
 		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR')
-			$this->logfile->writeLine(array($dateTime, 'ERROR', $this->classname, $message));
+			$this->logfile->writeLine(array($dateTime, 'ERROR', $this->classname, $message, $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
 	}
 	
 	/**
@@ -108,7 +108,7 @@ class Logger {
 		$dateTime = date("Y-m-d H:i:s");		
 		
 		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' || $this->level == 'FATAL')
-			$this->logfile->writeLine(array($dateTime, 'FATAL', $this->classname, $message));
+			$this->logfile->writeLine(array($dateTime, 'FATAL', $this->classname, $message, $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
 	}
 	
 	/**
