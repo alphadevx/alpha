@@ -12,6 +12,9 @@ body {
 	font-size:10pt;
 }
 
+.warning {color:red;}
+.success {color:blue;}
+
 .boxout, pre.php, pre.xml, pre.javascript, pre.perl, pre.html4strict, pre.css {padding:5px; margin:8px; background-color:white; border:2px dashed #20557C;}
 .usercomment {padding:5px; margin:5px; background-color:white; border:1px solid #027ABB; width:97%; text-align:left;}
 
