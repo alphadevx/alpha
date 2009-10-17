@@ -507,6 +507,34 @@ class View {
 	}
 	
 	/**
+	 * Renders the HTML for an update (e.g. successful save) message
+	 * 
+	 * @param string $message
+	 * @return string
+	 */
+	public static function displayUpdateMessage($message) {
+		$html = '<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
+				<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
+				<strong>Update:</strong> '.$message.'</p></div>';
+		
+		return $html;
+	}
+	
+	/**
+	 * Renders the HTML for an error (e.g. save failed) message
+	 * 
+	 * @param string $message
+	 * @return string
+	 */
+	public static function displayErrorMessage($message) {
+		$html = '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
+				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+				<strong>Error:</strong> '.$message.'</p></div>';
+		
+		return $html;
+	}
+	
+	/**
 	 * Method to render a hidden form for posting the OID of an object to be deleted
 	 * 
 	 * @return string
