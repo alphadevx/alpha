@@ -10,6 +10,7 @@ require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/view/View.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
+require_once $config->get('sysRoot').'alpha/util/helpers/Validator.inc';
 
 /**
  * 
@@ -79,9 +80,14 @@ class Detail extends Controller implements AlphaControllerInterface {
 	 * @param array $params
 	 */
 	public function doGET($params) {
+		self::$logger->debug('>>doGET(params=['.print_r($params, true).'])');
+		
 		try{
 			// load the business object (BO) definition
 			if (isset($params['bo']) && isset($params['oid'])) {
+				if(!Validator::isInteger($params['oid']))
+					throw new IllegalArguementException('Invalid oid ['.$params['oid'].'] provided on the request!');
+				
 				$BOName = $params['bo'];
 				DAO::loadClassDef($BOName);
 				
@@ -105,13 +111,15 @@ class Detail extends Controller implements AlphaControllerInterface {
 				throw new IllegalArguementException('No BO available to display!');
 			}
 		}catch(IllegalArguementException $e) {
-			self::$logger->error($e->getMessage());
+			self::$logger->warn($e->getMessage());
+			throw new ResourceNotFoundException('The file that you have requested cannot be found!');
 		}catch(BONotFoundException $e) {
 			self::$logger->warn($e->getMessage());
-			echo '<p class="error"><br>Failed to load the requested item from the database!</p>';
+			throw new ResourceNotFoundException('The item that you have requested cannot be found!');
 		}
 		
 		echo View::displayPageFoot($this);
+		self::$logger->debug('<<doGET');
 	}
 	
 	/**
@@ -120,16 +128,16 @@ class Detail extends Controller implements AlphaControllerInterface {
 	 * @param array $params
 	 */
 	public function doPOST($params) {
+		self::$logger->debug('>>doPOST(params=['.print_r($params, true).'])');
+		
 		global $config;
 		
 		echo View::displayPageHead($this);
 		
 		try {
 			// check the hidden security fields before accepting the form POST data
-			if(!$this->checkSecurityFields()) {
+			if(!$this->checkSecurityFields())
 				throw new SecurityException('This page cannot accept post data from remote servers!');
-				self::$logger->debug('<<doPOST');
-			}
 			
 			// load the business object (BO) definition
 			if (isset($params['bo'])) {
@@ -141,6 +149,9 @@ class Detail extends Controller implements AlphaControllerInterface {
 				$this->BOView = View::getInstance($this->BO);
 		
 				if (!empty($params['delete_oid'])) {
+					if(!Validator::isInteger($params['delete_oid']))
+						throw new IllegalArguementException('Invalid delete_oid ['.$params['delete_oid'].'] provided on the request!');
+					
 					$temp = new $BOName();
 					$temp->load($params['delete_oid']);
 					
@@ -148,8 +159,8 @@ class Detail extends Controller implements AlphaControllerInterface {
 						DAO::begin();
 						$temp->delete();
 						DAO::commit();
-								
-						echo '<p class="success">'.$this->BOName.' '.$params['delete_oid'].' deleted successfully.</p>';
+
+						echo View::displayUpdateMessage($this->BOName.' '.$params['delete_oid'].' deleted successfully.');
 										
 						echo '<center>';
 						
@@ -159,7 +170,7 @@ class Detail extends Controller implements AlphaControllerInterface {
 						echo '</center>';
 					}catch(AlphaException $e) {
 						self::$logger->error($e->getTraceAsString());
-						echo '<p class="error"><br>Error deleting the OID ['.$params['delete_oid'].'], check the log!</p>';
+						echo View::displayErrorMessage('Error deleting the BO of OID ['.$params['delete_oid'].'], check the log!');
 						DAO::rollback();
 					}
 				}
@@ -167,16 +178,18 @@ class Detail extends Controller implements AlphaControllerInterface {
 				throw new IllegalArguementException('No BO available to display!');
 			}
 		}catch(SecurityException $e) {
-			echo '<p class="error"><br>'.$e->getMessage().'</p>';								
 			self::$logger->warn($e->getMessage());
+			throw new ResourceNotAllowedException($e->getMessage());
 		}catch(IllegalArguementException $e) {
-			self::$logger->error($e->getMessage());
+			self::$logger->warn($e->getMessage());
+			throw new ResourceNotFoundException('The file that you have requested cannot be found!');
 		}catch(BONotFoundException $e) {
 			self::$logger->warn($e->getMessage());
-			echo '<p class="error"><br>Failed to load the requested item from the database!</p>';
+			throw new ResourceNotFoundException('The item that you have requested cannot be found!');
 		}
 		
 		echo View::displayPageFoot($this);
+		self::$logger->debug('<<doPOST');
 	}
 	
 	/**
