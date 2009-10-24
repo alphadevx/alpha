@@ -108,7 +108,8 @@ class Create extends Controller implements AlphaControllerInterface {
 				
 			echo $this->BOView->createView();
 		}catch(IllegalArguementException $e) {
-			self::$logger->error($e->getMessage());
+			self::$logger->warn($e->getMessage());
+			throw new ResourceNotFoundException('The file that you have requested cannot be found!');
 		}
 		echo View::displayPageFoot($this);
 	}
@@ -125,10 +126,8 @@ class Create extends Controller implements AlphaControllerInterface {
 		
 		try {
 			// check the hidden security fields before accepting the form POST data
-			if(!$this->checkSecurityFields()) {
+			if(!$this->checkSecurityFields())
 				throw new SecurityException('This page cannot accept post data from remote servers!');
-				self::$logger->debug('<<doPOST');
-			}
 			
 			// load the business object (BO) definition
 			if (isset($params['bo'])) {
@@ -161,7 +160,7 @@ class Create extends Controller implements AlphaControllerInterface {
 						header('Location: '.FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID()));
 				}catch(AlphaException $e) {
 					self::$logger->error($e->getTraceAsString());
-					echo '<p class="error"><br>Error creating the new ['.$BOname.'], check the log!</p>';
+					echo View::displayErrorMessage('Error creating the new ['.$BOname.'], check the log!');
 				}
 			}
 			
@@ -169,8 +168,11 @@ class Create extends Controller implements AlphaControllerInterface {
 				header('Location: '.FrontController::generateSecureURL('act=ListBusinessObjects'));
 			}
 		}catch(SecurityException $e) {
-			echo '<p class="error"><br>'.$e->getMessage().'</p>';								
 			self::$logger->warn($e->getMessage());
+			throw new ResourceNotAllowedException($e->getMessage());
+		}catch(IllegalArguementException $e) {
+			self::$logger->warn($e->getMessage());
+			throw new ResourceNotFoundException('The file that you have requested cannot be found!');
 		}
 	}
 }
