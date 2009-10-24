@@ -93,6 +93,7 @@ ul.potato-menu {
 	width:100%;
 	list-style:none;
 	background: #5C5959;
+	display:none;
 }
 .potato-menu:after {
 	content: " ";
