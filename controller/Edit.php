@@ -158,11 +158,11 @@ class Edit extends Controller implements AlphaControllerInterface {
 					$this->BO->populateFromPost();
 					
 					try {
-						$success = $this->BO->save();			
-						echo '<p class="success">'.get_class($this->BO).' '.$this->BO->getID().' saved successfully.</p>';
+						$this->BO->save();			
+						echo View::displayUpdateMessage(get_class($this->BO).' '.$this->BO->getID().' saved successfully.');
 					}catch (LockingException $e) {
 						$this->BO->reload();
-						echo '<p class="error"><br>'.$e->getMessage().'</p>';
+						echo View::displayErrorMessage($e->getMessage());
 					}
 					
 					echo $this->BOView->editView();
