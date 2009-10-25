@@ -147,8 +147,8 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     		$this->rel1->setRelatedClass('person_object');
     		// assuming here that user #1 is the default Administrator account
     		$this->rel1->setValue(1);
-    		$this->rel1->setRelatedClassDisplayField('accessLevel');
-    		$this->assertEquals('Admin', $this->rel1->getRelatedClassDisplayFieldValue()->getValue(), 'Testing that the display field value of the related class is accessed correctly');    		
+    		$this->rel1->setRelatedClassDisplayField('state');
+    		$this->assertEquals('Active', $this->rel1->getRelatedClassDisplayFieldValue(), 'Testing that the display field value of the related class is accessed correctly');    		
     	}catch (AlphaException $e) {
     		$this->fail('Testing that the display field value of the related class is accessed correctly');
     	}

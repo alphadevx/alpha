@@ -222,7 +222,7 @@ class String_Test extends PHPUnit_Framework_TestCase
     		$this->str1->setValue('');
     		$this->fail('testing to see that isPassword makes the string required');
     	}catch (AlphaException $e) {
-    		$this->assertEquals('This string requires a value!'
+    		$this->assertEquals('Password is required!'
     			, $e->getMessage()
     			, 'testing to see that isPassword makes the string required');
     	}

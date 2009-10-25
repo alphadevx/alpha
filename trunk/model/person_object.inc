@@ -37,14 +37,6 @@ class person_object extends DAO {
 	protected $password;
 
 	/**
-	 * The access privileage level of the person
-	 *
-	 * @var Enum
-	 * @deprecated
-	 */
-	protected $accessLevel;
-
-	/**
 	 * A Relation containing all of the rights groups that this person belongs to
 	 *
 	 * @var Relation
@@ -60,8 +52,7 @@ class person_object extends DAO {
 		"OID"=>"Member ID#",		
 		"displayName"=>"Forum Name",		
 		"email"=>"E-mail Address",
-		"password"=>"Password",		
-		"accessLevel"=>"Page Access Privileage Level",
+		"password"=>"Password",
 		"state"=>"Account state",
 		"URL"=>"Your site address",
 		"rights"=>"Rights Group Membership"
@@ -104,13 +95,8 @@ class person_object extends DAO {
 		$this->email->setHelper('Please provide a valid e-mail address as your username.');
 		$this->password = new String();
 		$this->password->setSize(70);
-		$this->password->setHelper('Please provide a password for logging in.');
-		$this->password->setRule('/\w+/');
-		$this->accessLevel = new Enum(array(
-										'Standard',
-										'Moderator',
-										'Admin'));
-		$this->accessLevel->setValue('Standard');
+		$this->password->setHelper('Please provide a password for logging in.');		
+		$this->password->isPassword(true);		
 		$this->state = new Enum(array(
 									'Active',
 									'Disabled'));
@@ -136,25 +122,36 @@ class person_object extends DAO {
 
 	/**
 	 * Looks up the OID for the Standard rights group, then relates the new person
-	 * to that group.  If that group does not exist it will be recreated!
+	 * to that group if they are not in it already.  If that group does not exist it 
+	 * will be recreated!
 	 */
 	protected function after_save_callback() {
 		if($this->getVersionNumber()->getValue() == 1) {
 			$standardGroup = new rights_object();
 			
 			$this->setupRels();
-					
-			try {
-				$standardGroup->loadByAttribute('name', 'Standard');
-			}catch (BONotFoundException $e) {
-				$standardGroup->set('name', 'Standard');
-				$standardGroup->save();
+
+			if(!$this->inGroup('Standard')) {
+				try {
+					$standardGroup->loadByAttribute('name', 'Standard');
+				}catch (BONotFoundException $e) {
+					$standardGroup->set('name', 'Standard');
+					$standardGroup->save();
+				}
+						
+				$lookup = $this->rights->getLookup();
+				$lookup->setValue(array($this->getID(), $standardGroup->getID()));
+				$lookup->save();
 			}
-					
-			$lookup = $this->rights->getLookup();
-			$lookup->setValue(array($this->getID(), $standardGroup->getID()));
-			$lookup->save();
 		}
+	}
+	
+	/**
+	 * Encrypts any fields called 'password' posted for the person_object 
+	 */
+	protected function before_populateFromPost_callback() {
+		if(isset($_POST['password']) && preg_match(REQUIRED_STRING, $_POST['password']))
+			$_POST['password'] = crypt($_POST['password']);
 	}
 	
 	/**
@@ -186,26 +183,6 @@ class person_object extends DAO {
 	 */
 	public function getDisplayName() {
 		return $this->displayName;
-	}
-
-	/**
-	 * Setter for accessLevel value
-	 *
-	 * @param string $accessLevel
-	 * @deprecated
-	 */
-	public function setAccessLevel($accessLevel) {
-		$this->accessLevel->setValue($accessLevel);
-	}
-
-	/**
-	 * Getter for accessLevel value
-	 *
-	 * @return Enum
-	 * @deprecated Use inGroup() instead!
-	 */
-	public function getAccessLevel() {
-		return $this->accessLevel;
 	}
 
 	/**
