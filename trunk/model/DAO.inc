@@ -686,7 +686,7 @@ abstract class DAO {
 				
 				// check for unique violations			
 				if(mysql_errno() == '1062') {					
-					throw new ValidationException('Failed to save, the value '.$this->findOffendingValue(mysql_error()).' is already in use, query ['.$this->lastQuery.']');
+					throw new ValidationException('Failed to save, the value '.$this->findOffendingValue(mysql_error()).' is already in use!');
 					return;
 				}else{					
 					throw new FailedSaveException('Failed to save object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
@@ -2054,6 +2054,7 @@ abstract class DAO {
 	    	}
 	    }
 
+	    asort($classNameArray);
 	    self::$logger->debug('<<getBOClassNames ['.print_r($classNameArray, true).']');
 	    return $classNameArray;
 	}
