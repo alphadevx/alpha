@@ -153,10 +153,10 @@ class String extends AlphaType implements AlphaTypeInterface {
 	 */
 	public function isRequired($req=true) {
 		if ($req) {
-			$this->validationRule = "/^([a-zA-Z0-9]+)$/";
+			$this->validationRule = REQUIRED_STRING;
 			$this->helper = 'This string requires a value!';
 		}else{
-			$this->validationRule = "/.*/i";
+			$this->validationRule = DEFAULT_STRING;
 		}
 	}
 	
@@ -168,8 +168,10 @@ class String extends AlphaType implements AlphaTypeInterface {
 	public function isPassword($pass=true) {
 		$this->password = $pass;
 		
-		if($pass)
-			$this->isRequired();
+		if($pass) {
+			$this->validationRule = '/\w+/';
+			$this->helper = 'Password is required!';
+		}
 	}
 	
 	/**
