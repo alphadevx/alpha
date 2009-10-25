@@ -191,11 +191,17 @@ class View {
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
 			
-			if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
-				$html .= '	<th>'.$this->BO->getDataLabel($propName).'</th>';				
+			// skip over password fields
+			$property = $this->BO->getPropObject($propName);
+			if(!($property instanceof String && $property->checkIsPassword())) {			
+				if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
+					$html .= '	<th>'.$this->BO->getDataLabel($propName).'</th>';				
+				}
+				if ($propName == 'OID')
+					$html .= '	<th>'.$this->BO->getDataLabel($propName).'</th>';
+			}else{
+				$fields['colCount'] = $fields['colCount']-1;
 			}
-			if ($propName == 'OID')
-				$html .= '	<th>'.$this->BO->getDataLabel($propName).'</th>';
 		}
 		$html .= '</tr><tr>';
 		
@@ -207,23 +213,26 @@ class View {
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
 			
-			if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
-				$propClass = get_class($this->BO->getPropObject($propName));
-				
-				if ($propClass == 'Text') {
-					$text = htmlentities($this->BO->get($propName));
-					if(strlen($text) > 70)
-						$html .= '	<td>&nbsp;'.substr($text, 0, 70).'...</td>';
-					else
-						$html .= '	<td>&nbsp;'.$text.'</td>';
-				}elseif($propClass == 'DEnum') {
-					$html .= '	<td>&nbsp;'.$this->BO->getPropObject($propName)->getDisplayValue().'</td>';
-				}else{
-					$html .= '	<td>&nbsp;'.$this->BO->get($propName).'</td>';
+			$property = $this->BO->getPropObject($propName);
+			if(!($property instanceof String && $property->checkIsPassword())) {
+				if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
+					$propClass = get_class($this->BO->getPropObject($propName));
+					
+					if ($propClass == 'Text') {
+						$text = htmlentities($this->BO->get($propName));
+						if(strlen($text) > 70)
+							$html .= '	<td>&nbsp;'.substr($text, 0, 70).'...</td>';
+						else
+							$html .= '	<td>&nbsp;'.$text.'</td>';
+					}elseif($propClass == 'DEnum') {
+						$html .= '	<td>&nbsp;'.$this->BO->getPropObject($propName)->getDisplayValue().'</td>';
+					}else{
+						$html .= '	<td>&nbsp;'.$this->BO->get($propName).'</td>';
+					}
 				}
+				if ($propName == 'OID')
+					$html .= '	<td>&nbsp;'.$this->BO->getID().'</td>';
 			}
-			if ($propName == 'OID')
-				$html .= '	<td>&nbsp;'.$this->BO->getID().'</td>';
 		}
 		$html .= '</tr>';
 		
