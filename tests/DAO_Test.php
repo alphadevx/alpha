@@ -187,7 +187,7 @@ class DAO_Test extends PHPUnit_Framework_TestCase
     	$this->assertFalse($this->person->isTransient(), 'testing the delete method');
     	$id = $this->person->getID();
     	$this->person->delete();
-    	// gone from memory (all attributes null)
+    	// gone from memory (all attributes null)    	
     	$this->assertEquals(0, count(get_object_vars($this->person)), 'testing the delete method');
     	// gone from the database
     	try {
@@ -269,7 +269,7 @@ class DAO_Test extends PHPUnit_Framework_TestCase
     	$this->person->save();
     	$id = $this->person->getMAX();
     	$this->person->load($id);
-    	$this->assertTrue(in_array('Admin', $this->person->getAccessLevel()->getOptions()), 'testing the setEnumOptions method is loading enum options correctly');
+    	$this->assertTrue(in_array('Active', $this->person->getPropObject('state')->getOptions()), 'testing the setEnumOptions method is loading enum options correctly');
     }
     
     /**
@@ -313,19 +313,19 @@ class DAO_Test extends PHPUnit_Framework_TestCase
      * testing get on an Enum attribute with a child method available, with $noChildMethods disabled (default)
      */
     public function testGetNoChildMethodsDisabled() {
-    	$accessLevel = $this->person->get('accessLevel');
+    	$state = $this->person->getPropObject('state');
     	
-    	$this->assertEquals('Enum', get_class($accessLevel), 'testing get on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
-    	$this->assertEquals('Standard', $accessLevel->getValue(), 'testing get on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
+    	$this->assertEquals('Enum', get_class($state), 'testing get on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
+    	$this->assertEquals('Active', $state->getValue(), 'testing get on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
     }
     
 	/**
      * testing get on an Enum attribute with a child method available, with $noChildMethods enabled
      */
     public function testGetNoChildMethodsEnabled() {
-    	$accessLevel = $this->person->get('accessLevel', true);
+    	$state = $this->person->get('state', true);
     	
-    	$this->assertEquals('Standard', $accessLevel, 'testing get on an Enum attribute with a child method avaialble, with $noChildMethods enabled');
+    	$this->assertEquals('Active', $state, 'testing get on an Enum attribute with a child method avaialble, with $noChildMethods enabled');
     }
     
     /**
@@ -350,18 +350,18 @@ class DAO_Test extends PHPUnit_Framework_TestCase
      * testing set on an Enum attribute with a child method available, with $noChildMethods disabled (default)
      */
     public function testSetNoChildMethodsDisabled() {
-    	$this->person->set('accessLevel','Admin');
+    	$this->person->set('state','Active');
 
-    	$this->assertEquals('Admin', $this->person->get('accessLevel')->getValue(), 'testing set on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
+    	$this->assertEquals('Active', $this->person->get('state'), 'testing set on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
     }
     
 	/**
      * testing set on an Enum attribute with a child method available, with $noChildMethods enabled
      */
     public function testSetNoChildMethodsEnabled() {
-    	$this->person->set('accessLevel','Admin', true);
+    	$this->person->set('state','Active', true);
     	    	
-    	$this->assertEquals('Admin', $this->person->get('accessLevel')->getValue(), 'testing set on an Enum attribute with a child method avaialble, with $noChildMethods enabled');
+    	$this->assertEquals('Active', $this->person->get('state'), 'testing set on an Enum attribute with a child method avaialble, with $noChildMethods enabled');
     }
     
     /**
@@ -380,10 +380,10 @@ class DAO_Test extends PHPUnit_Framework_TestCase
      * testing getPropObject on a complex type
      */
     public function testGetPropObjectComplexType() {
-    	$accessLevel = $this->person->getPropObject('accessLevel');
+    	$state = $this->person->getPropObject('state');
     	
-    	$this->assertEquals('Enum', get_class($accessLevel), 'testing getPropObject on a complex type');
-    	$this->assertEquals('Standard', $accessLevel->getValue(), 'testing getPropObject on a complex type');
+    	$this->assertEquals('Enum', get_class($state), 'testing getPropObject on a complex type');
+    	$this->assertEquals('Active', $state->getValue(), 'testing getPropObject on a complex type');
     }
     
 	/**
@@ -468,8 +468,8 @@ class DAO_Test extends PHPUnit_Framework_TestCase
      * testing the clear method for unsetting the attributes of an object 
      */
     public function testClear() {
-    	$level = $this->person->getAccessLevel();
-    	$this->assertTrue(!empty($level), 'testing the clear method for unsetting the attributes of an object');
+    	$state = $this->person->get('state');
+    	$this->assertTrue(!empty($state), 'testing the clear method for unsetting the attributes of an object');
     	
     	$reflection = new ReflectionClass(get_class($this->person));
     	$properties = $reflection->getProperties();
@@ -485,9 +485,9 @@ class DAO_Test extends PHPUnit_Framework_TestCase
     	$this->person->delete();
     	
     	try {
-    		$level = $this->person->getAccessLevel();
+    		$state = $this->person->get('state');
     		$this->fail('testing the clear method for unsetting the attributes of an object');
-    	} catch (PHPException $e) {
+    	} catch (AlphaException $e) {
 	    	$reflection = new ReflectionClass(get_class($this->person));
 	    	$properties = $reflection->getProperties();
 	
