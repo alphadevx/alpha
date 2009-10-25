@@ -122,8 +122,6 @@ class Create extends Controller implements AlphaControllerInterface {
 	public function doPOST($params) {
 		global $config;
 		
-		echo View::displayPageHead($this);
-		
 		try {
 			// check the hidden security fields before accepting the form POST data
 			if(!$this->checkSecurityFields())
@@ -146,10 +144,6 @@ class Create extends Controller implements AlphaControllerInterface {
 			if (isset($params['createBut'])) {			
 				// populate the transient object from post data
 				$this->BO->populateFromPost();
-					
-				// check to see if a person is being created, then encrypt the password
-				if (get_class($this->BO) == 'person_object' && isset($params['password']))
-					$this->BO->set('password', crypt($params['password']));
 							
 				$this->BO->save();			
 	
@@ -159,6 +153,7 @@ class Create extends Controller implements AlphaControllerInterface {
 					else					
 						header('Location: '.FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID()));
 				}catch(AlphaException $e) {
+					echo View::displayPageHead($this);
 					self::$logger->error($e->getTraceAsString());
 					echo View::displayErrorMessage('Error creating the new ['.$BOname.'], check the log!');
 				}
@@ -169,10 +164,16 @@ class Create extends Controller implements AlphaControllerInterface {
 			}
 		}catch(SecurityException $e) {
 			self::$logger->warn($e->getMessage());
+			echo View::displayPageHead($this);
 			throw new ResourceNotAllowedException($e->getMessage());
 		}catch(IllegalArguementException $e) {
 			self::$logger->warn($e->getMessage());
+			echo View::displayPageHead($this);
 			throw new ResourceNotFoundException('The file that you have requested cannot be found!');
+		}catch(ValidationException $e) {
+			self::$logger->warn($e->getMessage().', query ['.$this->BO->getLastQuery().']');
+			$this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
+			$this->doGET($params);
 		}
 	}
 }
