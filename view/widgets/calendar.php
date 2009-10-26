@@ -85,9 +85,9 @@ class calendar{
 			$value = '';
 		
 		if($table_tags) {
-			$html .= '<tr><td style="width:25%;">';
+			$html .= '<tr><th style="width:25%;">';
 			$html .= $this->label;
-			$html .= '</td>';
+			$html .= '</th>';
 
 			$html .= '<td>';
 			$html .= '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$value.'" readonly/>';

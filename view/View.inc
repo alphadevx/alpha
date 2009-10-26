@@ -605,9 +605,9 @@ class View {
 		
 		if ($mode == 'create') {
 			if($tableTags) {
-				$html .= '<tr><td style="width:25%;">';
+				$html .= '<tr><th style="width:25%;">';
 				$html .= $label;
-				$html .= '</td>';
+				$html .= '</th>';
 		
 				$html .= '<td>';
 				$html .= '<input type="text" size="11" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
@@ -619,9 +619,9 @@ class View {
 		
 		if ($mode == 'edit') {
 			if($tableTags) {
-				$html .= '<tr><td style="width:25%;">';
+				$html .= '<tr><th style="width:25%;">';
 				$html .= $label;
-				$html .= '</td>';
+				$html .= '</th>';
 	
 				$html .= '<td>';
 				$html .= '<input type="text" size="11" name="'.$name.'" value="'.$value.'"/><br>';
@@ -649,9 +649,9 @@ class View {
 		
 		if ($mode == 'create') {
 			if($tableTags) {
-				$html .= '<tr><td style="width:25%;">';
+				$html .= '<tr><th style="width:25%;">';
 				$html .= $label;
-				$html .= '</td>';
+				$html .= '</th>';
 		
 				$html .= '<td>';
 				$html .= '<input type="text" size="13" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
@@ -663,9 +663,9 @@ class View {
 		
 		if ($mode == 'edit') {
 			if($tableTags) {
-				$html .= '<tr><td style="width:25%;">';
+				$html .= '<tr><th style="width:25%;">';
 				$html .= $label;
-				$html .= '</td>';
+				$html .= '</th>';
 	
 				$html .= '<td>';
 				$html .= '<input type="text" size="13" name="'.$name.'" value="'.$value.'"/><br>';
@@ -693,9 +693,9 @@ class View {
 		
 		if ($mode == 'create') {
 			if($tableTags) {
-				$html .= '<tr><td style="width:25%;">';
+				$html .= '<tr><th style="width:25%;">';
 				$html .= $label;
-				$html .= '</td>';
+				$html .= '</th>';
 		
 				$html .= '<td>';
 				$html .= '<select size="1" name="'.$name.'"/>';
@@ -713,9 +713,9 @@ class View {
 		
 		if ($mode == 'edit') {
 			if($tableTags) {
-				$html .= '<tr><td>';
+				$html .= '<tr><th>';
 				$html .= $label;
-				$html .= '</td>';
+				$html .= '</th>';
 	
 				$html .= '<td>';
 				$html .= '<select size="1" name="'.$name.'"/>';
@@ -750,9 +750,9 @@ class View {
 		
 		if ($mode == 'create') {
 			if ($tableTags) {
-				$html .= '<tr><td style="width:25%;">';
+				$html .= '<tr><th style="width:25%;">';
 				$html .= $label;
-				$html .= '</td>';
+				$html .= '</th>';
 				$html .= '<td>';
 				$html .= '<select name="'.$name.'"/>';			
 				foreach ($options as $val) {
@@ -771,9 +771,9 @@ class View {
 		
 		if ($mode == 'edit') {
 			if ($tableTags) {
-				$html .= '<tr><td style="width:25%;">';
+				$html .= '<tr><th style="width:25%;">';
 				$html .= $label;
-				$html .= '</td>';
+				$html .= '</th>';
 				$html .= '<td>';
 				$html .= '<select name="'.$name.'"/>';			
 				foreach ($options as $val) {
@@ -815,9 +815,9 @@ class View {
 		
 		if ($mode == 'create') {
 			if($tableTags) {
-				$html .= '<tr><td style="width:25%;">';
+				$html .= '<tr><th style="width:25%;">';
 				$html .= $label;
-				$html .= '</td>';
+				$html .= '</th>';
 				$html .= '<td>';
 				$html .= '<select name="'.$name.'"/>';
 				foreach (array_keys($options) as $index) {
@@ -836,9 +836,9 @@ class View {
 		
 		if ($mode == 'edit') {
 			if($tableTags) {
-				$html .= '<tr><td style="width:25%;">';
+				$html .= '<tr><th style="width:25%;">';
 				$html .= $label;
-				$html .= '</td>';
+				$html .= '</th>';
 				$html .= '<td>';
 				$html .= '<select name="'.$name.'"/>';			
 				foreach (array_keys($options) as $index) {
@@ -879,9 +879,9 @@ class View {
 		
 		if ($mode == 'create') {
 			if($tableTags) {
-				$html .= '<tr><td colspan="2">';
+				$html .= '<tr><th colspan="2">';
 				$html .= $label;
-				$html .= '</td></tr>';
+				$html .= '</th></tr>';
 		
 				$html .= '<tr><td colspan="2">';
 				$html .= '<textarea cols="100" rows="3" name="'.$name.'">'. (isset ($_POST[$name]) ? $_POST[$name] : '').'</textarea><br>';
@@ -893,9 +893,9 @@ class View {
 		
 		if ($mode == 'edit') {
 			if($tableTags) {		
-				$html .= '<tr><td colspan="2">';
+				$html .= '<tr><th colspan="2">';
 				$html .= $label;
-				$html .= '</td></tr>';
+				$html .= '</th></tr>';
 	
 				$html .= '<tr><td colspan="2">';
 				$html .= '<textarea cols="100" rows="3" name="'.$name.'">'.$value.'</textarea><br>';

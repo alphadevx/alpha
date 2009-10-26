@@ -96,7 +96,7 @@ class ArticleCommentView extends View {
 		echo '<input type="hidden" name="article_comment_id" value="'.$this->BO->getID().'"/>';
 		
 		// render special buttons for admins only
-		if ($_SESSION['currentUser']->inGroup('Admin')) {
+		if ($_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], 'FC.php') !== false) {
 			echo '<tr><td colspan="2">';
 			
 			$temp = new button('submit', 'Save', 'saveBut');
@@ -105,7 +105,7 @@ class ArticleCommentView extends View {
 			$temp = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getID()."'; document.forms[0].submit();}", 'Delete', 'deleteBut');
 			echo $temp->render();
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".$config->get('sysURL')."/alpha/controller/ListAll.php?bo=".get_class($this->BO)."'", 'Back to List', 'cancelBut');
+			$temp = new button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'",'Back to List','cancelBut');
 			echo $temp->render();
 			echo '</td></tr>';
 			
