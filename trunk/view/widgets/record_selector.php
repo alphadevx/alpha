@@ -71,9 +71,9 @@ class record_selector
 			$inputBoxValue = $this->relation_object->getRelatedClassDisplayFieldValue();		
 				
 			if($table_tags) {
-				$html .= '<tr><td style="width:25%;">';
+				$html .= '<tr><th style="width:25%;">';
 				$html .= $this->label;
-				$html .= '</td>';
+				$html .= '</th>';
 					
 				$html .= '<td>';			
 				$html .= '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
@@ -105,7 +105,7 @@ class record_selector
 					
 					$html .= '</td></tr>';
 				}else{
-					$html .= '<tr><td style="text-align:center;" colspan="2">';
+					$html .= '<tr><th style="text-align:center;" colspan="2">';
 					$html .= $this->label;
 					if($buttons) {
 						$tmp = new button("document.getElementById('relation_field_".$this->name."').style.display = '';", "Display related objects", $this->name."DisBut", $config->get('sysURL')."/alpha/images/icons/arrow_down.png");
@@ -113,7 +113,7 @@ class record_selector
 						$tmp = new button("document.getElementById('relation_field_".$this->name."').style.display = 'none';", "Hide related objects", $this->name."HidBut", $config->get('sysURL')."/alpha/images/icons/arrow_up.png");
 						$html .= $tmp->render();
 					}
-					$html .= '</td></tr>';
+					$html .= '</th></tr>';
 					
 					$html .= '<tr><td colspan="2">';				
 					$html .= '<table id="relation_field_'.$this->name.'" style="width:100%; display:'.($expanded ? '' : 'none').';" class="relationTable">';
@@ -201,9 +201,9 @@ class record_selector
 			$inputBoxValue = str_replace(",", "\n", $inputBoxValue);
 			
 			if($table_tags) {
-				$html .= '<tr><td style="width:25%;">';
+				$html .= '<tr><th style="width:25%;">';
 				$html .= $this->label;
-				$html .= '</td>';
+				$html .= '</th>';
 				
 				$html .= '<td>';			
 				$html .= '<textarea id="'.$this->name.'_display" style="width:100%;" rows="4" readonly>';

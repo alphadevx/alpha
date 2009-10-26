@@ -78,9 +78,9 @@ class TextBox
 		$text_obj = $this->get_text_object(); 
 		
 		if($tableTags) {
-			$html .= '<tr><td colspan="2">';
+			$html .= '<tr><th colspan="2">';
 			$html .= $this->get_label();
-			$html .= '</td></tr>';	
+			$html .= '</th></tr>';	
 			
 			$html .= '<tr><td colspan="2">';
 		}

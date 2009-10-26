@@ -39,9 +39,9 @@ th {font-size:8pt;}
 input {font-size:8pt;}
 
 table.bordered {background-color:whitesmoke;}
-table.bordered th {font-weight:bold; border:1px solid #5C5959; background-color:#575656; color:white; font-family:arial; font-weight:bold; font-size:8pt; text-align:center;}
+table.bordered th {border:1px solid #5C5959; background-color:#575656; color:white; font-family:arial; font-size:8pt; text-align:center;}
 table.bordered td {border:1px solid #5C5959;}
-th.bordered {font-weight:bold; border:1px solid #5C5959; background-color:#575656; color:white; font-family:arial; font-weight:bold; font-size:8pt; text-align:center;}
+th.bordered {border:1px solid #5C5959; background-color:#575656; color:white; font-family:arial; font-size:8pt; text-align:center;}
 td.bordered {border:1px solid #5C5959;}
 .bordered {border:1px solid #5C5959;}
 
@@ -62,7 +62,7 @@ table.detailed_view th {background-color:#575656; color:white; width:30%; text-a
 table.detailed_view td {background-color:#E6E6E6; border:1px solid #5C5959;}
 
 table.edit_view {table-layout:fixed; width:98%; margin:1%;}
-table.edit_view th {background-color:#575656; color:white; width:50%; text-align:right;}
+table.edit_view th {background-color:#575656; color:white; width:50%; text-align:left;}
 table.edit_view td {background-color:#E6E6E6; border:1px solid #5C5959;}
 
 table.log_file {width:95%; margin:10px; overflow:scroll;}

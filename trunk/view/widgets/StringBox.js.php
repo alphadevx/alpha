@@ -68,9 +68,9 @@ class StringBox
 		
 		$string_obj = $this->getStringObject(); 
 		if ($tableTags) {
-			$html .= '<tr><td style="width:25%;">';
+			$html .= '<tr><th style="width:25%;">';
 			$html .= $this->get_label();
-			$html .= '</td>';
+			$html .= '</th>';
 	
 			$html .= '<td>';
 			$html .= '<input '.($string_obj->checkIsPassword()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.String::MAX_SIZE.'" name="'.$this->get_name().'" id="'.$this->get_name().'" value="'.((isset($_POST[$this->get_name()]) && $string_obj->getValue() == "")? $_POST[$this->get_name()] : $string_obj->getValue()).'"'.($readOnly ? 'readonly class="readonly"' : '').'/>';
