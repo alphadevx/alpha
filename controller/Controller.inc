@@ -730,17 +730,14 @@ abstract class Controller {
 		
 		global $config;		
 		
-		// set up the title and meta details
-		$this->setTitle('Access Error: You cannot view this page!');
-		$this->setDescription('Access Error: You cannot view this page!');
-		$this->setKeywords('access,error');		
-		
-		echo View::displayPageHead($this);		
-		
-		echo '<p class="error"><br>You do not have the correct access rights to view this page.  If you have not logged in yet, try going back to the home page and logging in from there.</p>';
-		echo '<p align="center"><a href="'.$config->get('sysURL').'">Home Page</a></p>';
-		
-		echo View::displayPageFoot($this);
+		if(isset($_SESSION['currentUser']))
+			self::$logger->warn('The user ['.$_SESSION['currentUser']->get('email').'] attempted to access the resource ['.$_SERVER['REQUEST_URI'].'] but was denied due to insufficient rights');
+		else
+			self::$logger->warn('An unknown user attempted to access the resource ['.$_SERVER['REQUEST_URI'].'] but was denied due to insufficient rights');
+			
+		header('HTTP/1.1 403 Forbidden');
+		$front = new FrontController();
+		echo $front->renderErrorPage(403, 'You do not have the correct access rights to view this page.  If you have not logged in yet, try going back to the home page and logging in from there.');
 		
 		if(method_exists($this, 'after_accessError_callback'))
 			$this->after_accessError_callback();
