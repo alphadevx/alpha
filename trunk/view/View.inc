@@ -1010,12 +1010,14 @@ class View {
 			if($rel->getRelationType() == 'MANY-TO-ONE') {
 				$html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue());
 			}elseif($rel->getRelationType() == 'MANY-TO-MANY') {
-				// for overloaded tables, the classname != the table name
-				if($this->BO->isTableOverloaded()) {
+				try{
+					// check to see if the rel is on this class
+					$rel->getSide(get_class($this->BO));
+					$html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue(get_class($this->BO)));
+				}catch (IllegalArguementException $iae) {
+					// the rel may be on a parent class
 					$parentClassName = $this->BO->getTableName().'_object';
 					$html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue($parentClassName));
-				}else{
-					$html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue(get_class($this->BO)));
 				}
 			}else{
 				$rel = new record_selector($rel, $label, $name);
