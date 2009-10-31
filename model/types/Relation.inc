@@ -306,8 +306,13 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	public function setRelationType($RT) {
 		if(in_array($RT, $this->allowableRelationTypes)) {
 			$this->relationType = $RT;
-			if($RT == 'MANY-TO-MANY')
-				$this->lookup = new RelationLookup($this->relatedClassLeft, $this->relatedClassRight);
+			if($RT == 'MANY-TO-MANY') {
+				try {
+					$this->lookup = new RelationLookup($this->relatedClassLeft, $this->relatedClassRight);
+				}catch (Exception $e) {
+					throw new AlphaException($e->getMessage());
+				}
+			}
 		}else{
 			throw new IllegalArguementException('Relation type of ['.$RT.'] is invalid!');
 		}
@@ -388,7 +393,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 				return '';
 			}
 			
-			// load objects on the right from accessing on the left
+			// load objects on the right from accessing on the left			
 			if($accessingClassName == $this->relatedClassLeft) {
 				DAO::loadClassDef($this->relatedClassLeft);
 				$obj = new $this->relatedClassRight;
@@ -501,7 +506,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * @param string $BOClassname
 	 * @return string
 	 */
-	public function getSide($BOClassname) {
+	public function getSide($BOClassname) {		
 		if($BOClassname == $this->relatedClassLeft) { 
 			return 'left';
 		}elseif($BOClassname == $this->relatedClassRight) {
