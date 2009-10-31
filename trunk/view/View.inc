@@ -455,7 +455,8 @@ class View {
 		$html.= '</head>';
 		$html.= '<body>';
 			
-		$html.= '<h1>'.$controller->getTitle().'</h1>';
+		if($controller->getTitle() != '')
+			$html.= '<h1>'.$controller->getTitle().'</h1>';
 		
 		if (isset($_SESSION['currentUser'])) {	
 			$html.= '<p>You are logged in as '.$_SESSION['currentUser']->getDisplayname().'.  <a href="'.$config->get('sysURL').'alpha/controller/Logout.php">Logout</a></p>';
