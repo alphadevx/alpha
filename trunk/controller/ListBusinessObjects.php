@@ -155,7 +155,7 @@ class ListBusinessObjects extends Controller implements AlphaControllerInterface
 				$BO_View = View::getInstance($BO);				
 				$BO_View->adminView();				
 			}catch (AlphaException $e) {
-				self::$logger->error("[$classname]:".$e->getTraceAsString());
+				self::$logger->error("[$classname]:".$e->getMessage());
 				// its possible that the exception occured due to the table schema being out of date
 				if($BO->checkTableNeedsUpdate()) {				
 					$missingFields = $BO->findMissingFields();
