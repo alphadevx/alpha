@@ -989,14 +989,16 @@ class View {
 		
 		if ($mode == 'create' || $mode == 'edit') {
 			if($rel->getRelationType() == 'MANY-TO-MANY') {
-				// for overloaded tables, the classname != the table name
-				if($this->BO->isTableOverloaded()) {
+				try{
+					// check to see if the rel is on this class
+					$rel->getSide(get_class($this->BO));
+					$widget = new record_selector($rel, $label, $name, true, get_class($this->BO));
+					$html .= $widget->render($tableTags, $expanded, $buttons);
+				}catch (IllegalArguementException $iae) {
+					// the rel may be on a parent class
 					$parentClassName = $this->BO->getTableName().'_object';
-					$rel = new record_selector($rel, $label, $name, true, $parentClassName);
-					$html .= $rel->render();
-				}else{
-					$rel = new record_selector($rel, $label, $name, true, get_class($this->BO));
-					$html .= $rel->render($tableTags, $expanded, $buttons);
+					$widget = new record_selector($rel, $label, $name, true, $parentClassName);
+					$html .= $widget->render($tableTags, $expanded, $buttons);
 				}
 			}else{
 				$rel = new record_selector($rel, $label, $name);
