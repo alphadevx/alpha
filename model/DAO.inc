@@ -627,17 +627,16 @@ abstract class DAO {
 									if(isset($_POST[$propName]))
 										$OIDs = explode(',', $_POST[$propName]);
 												
-									if(isset($OIDs) && !empty($OIDs[0])) {
-												
-										// for overloaded tables, the classname != the table name
-										if($this->isTableOverloaded())
-											$className = $this->getTableName().'_object';
-										else
-											$className = get_class($this);
-												
-										$side = $prop->getSide($className);
+									if(isset($OIDs) && !empty($OIDs[0])) {										
+										try{
+											// check to see if the rel is on this class
+											$side = $prop->getSide(get_class($this));											
+										}catch (IllegalArguementException $iae) {
+											$side = $prop->getSide($this->getTableName().'_object');
+										}
+										
 										$lookUp = $prop->getLookup();									
-												
+										
 										// first delete all of the old RelationLookup objects for this rel
 										if($side == 'left')
 											$lookUp->deleteAllByAttribute('leftID', $this->getID());
@@ -648,7 +647,7 @@ abstract class DAO {
 											throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
 												
 										// now for each posted OID, create a new RelationLookup record and save
-										foreach ($OIDs as $oid) {
+										foreach ($OIDs as $oid) {											
 											$newLookUp = new RelationLookup($lookUp->get('leftClassName'), $lookUp->get('rightClassName'));
 											if($side == 'left') {
 												$newLookUp->set('leftID', $this->getID());
@@ -764,7 +763,7 @@ abstract class DAO {
 						$className = $this->getTableName().'_object';
 					else
 						$className = get_class($this);
-											
+			
 					$side = $prop->getSide($className);						
 					self::$logger->debug('Side is ['.$side.']'.$this->getID());
 						
@@ -833,14 +832,18 @@ abstract class DAO {
 		if(method_exists($this, 'before_deleteAllByAttribute_callback'))
 			$this->before_deleteAllByAttribute_callback();
 		
-		$doomedObjects = $this->loadAllByAttribute($attribute, $value);
-		$deletedRowCount = 0;		
-		
 		try {
+			$doomedObjects = $this->loadAllByAttribute($attribute, $value);
+			$deletedRowCount = 0;
+			
 			foreach ($doomedObjects as $object) {
 				$object->delete();
 				$deletedRowCount++;
 			}
+		}catch (BONotFoundException $bonf) {
+			// nothing found to delete
+			self::$logger->warn($bonf->getMessage());
+			return 0;
 		}catch (AlphaException $e) {
 			throw new FailedDeleteException('Failed to delete objects, error is ['.$e->getMessage().']');
 			self::$logger->debug('<<deleteAllByAttribute [0]');
@@ -1406,11 +1409,8 @@ abstract class DAO {
 				if(method_exists($this, 'after_getPropObject_callback'))
 					$this->after_getPropObject_callback();
 				
-				//if(property_exists(get_class($this), $prop)) {
-					//echo get_class($this)."===".$prop;
-					self::$logger->debug('<<getPropObject ['.print_r($this->$prop, true).']');
-					return $this->$prop;
-				//}
+				self::$logger->debug('<<getPropObject ['.print_r($this->$prop, true).']');
+				return $this->$prop;				
 			}
 		}		
 		throw new IllegalArguementException('Could not access the property object ['.$prop.'] on the object of class ['.get_class($this).']');
@@ -1467,7 +1467,10 @@ abstract class DAO {
 		
 		global $config;
 		
-		$tableName = substr($BOClassName, 0, strpos($BOClassName, '_'));		
+		eval('$tableName = '.$BOClassName.'::TABLE_NAME;');
+		
+		if(empty($tableName))
+			$tableName = substr($BOClassName, 0, strpos($BOClassName, '_'));		
 				
 		$tableExists = false;
 		
@@ -1911,7 +1914,7 @@ abstract class DAO {
 			}
 
 			$sqlQuery = 'ALTER TABLE '.$this->getTableName().' ADD FOREIGN KEY '.$attributeName.'_fk_idx ('.$attributeName.') REFERENCES '.$tableName.' ('.$relatedClassAttribute.') ON DELETE SET NULL;';
-			echo $sqlQuery;
+			
 			$this->lastQuery = $sqlQuery;	
 			$result = mysql_query($sqlQuery);
 		}
