@@ -119,6 +119,13 @@ class person_object extends DAO {
 	protected function after_load_callback() {
 		$this->setupRels();		
 	}
+	
+	/**
+	 * Set up the transient attributes for the site after it has loaded
+	 */
+	protected function after_loadByAttribute_callback() {
+		$this->setupRels();
+	}
 
 	/**
 	 * Looks up the OID for the Standard rights group, then relates the new person
@@ -157,14 +164,16 @@ class person_object extends DAO {
 	/**
 	 * Sets up the Relation definitions on this BO
 	 */
-	private function setupRels() {
+	protected function setupRels() {		
 		// set up MANY-TO-MANY relation person2rights
-		$this->rights->setRelatedClass('person_object', 'left');
-		$this->rights->setRelatedClassDisplayField('email', 'left');
-		$this->rights->setRelatedClass('rights_object', 'right');
-		$this->rights->setRelatedClassDisplayField('name', 'right');
-		$this->rights->setRelationType('MANY-TO-MANY');
-		$this->rights->setValue($this->getID());
+		if(isset($this->rights)) {
+			$this->rights->setRelatedClass('person_object', 'left');
+			$this->rights->setRelatedClassDisplayField('email', 'left');
+			$this->rights->setRelatedClass('rights_object', 'right');
+			$this->rights->setRelatedClassDisplayField('name', 'right');
+			$this->rights->setRelationType('MANY-TO-MANY');
+			$this->rights->setValue($this->getID());
+		}
 	}
 
 	/**
