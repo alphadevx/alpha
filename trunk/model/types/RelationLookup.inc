@@ -42,13 +42,6 @@ class RelationLookup extends DAO implements AlphaTypeInterface {
 	private $rightClassName;
 	
 	/**
-	 * The name of the database table for the lookup (will need to be set at runtime)
-	 * 
-	 * @var string
-	 */
-	private static $TABLE_NAME;
-	
-	/**
 	 * Trace logger
 	 * 
 	 * @var Logger
@@ -92,8 +85,6 @@ class RelationLookup extends DAO implements AlphaTypeInterface {
 		$this->leftClassName = $leftClassName;
 		$this->rightClassName = $rightClassName;
 		
-		$this->setTableName();
-		
 		$this->leftID = new Integer();
 		$this->rightID = new Integer();
 		
@@ -108,8 +99,12 @@ class RelationLookup extends DAO implements AlphaTypeInterface {
 		// make sure the lookup table exists
 		if(!$this->checkTableExists()) {			
 			// first make sure that the two BO tables exist before relating them with a lookup table
-			if(DAO::checkBOTableExists($leftClassName) && DAO::checkBOTableExists($rightClassName))
+			if(DAO::checkBOTableExists($leftClassName) && DAO::checkBOTableExists($rightClassName)) {
 				$this->makeTable();
+			}else{
+				throw new AlphaException('Error trying to create a lookup table ['.$this->getTableName().'], as tables for BOs ['.$leftClassName.'] or ['.$rightClassName.'] don\'t exist!');
+				return;
+			}
 		}
 		
 		self::$logger->debug('<<__construct');
@@ -133,18 +128,6 @@ class RelationLookup extends DAO implements AlphaTypeInterface {
 		return $this->rightClassName;
 	}
 	
-	private function setTableName() {
-		self::$logger->debug('>>setTableName()');
-		
-		$left = substr($this->leftClassName, 0, -7);
-		$right = substr($this->rightClassName, 0, -7);
-		
-		self::$logger->debug('Setting TABLE_NAME to ['.$left.'2'.$right.']');
-		self::$TABLE_NAME = $left.'2'.$right;
-		
-		self::$logger->debug('<<setTableName');
-	}
-	
 	/**
 	 * Custom getter for the TABLE_NAME, which can't be static in this class due to
 	 * the lookup tablenames being different each time.
@@ -152,10 +135,13 @@ class RelationLookup extends DAO implements AlphaTypeInterface {
 	 * @return string
 	 */
 	public function getTableName() {
-		if(!empty(self::$TABLE_NAME)) {			
-    		return self::$TABLE_NAME;        
+		if(isset($this->leftClassName) && isset($this->rightClassName)) {
+			$left = substr($this->leftClassName, 0, -7);
+			$right = substr($this->rightClassName, 0, -7);
+			self::$logger->debug('Setting table name to ['.$left.'2'.$right.']');			
+    		return $left.'2'.$right;
     	}else{
-    		throw new AlphaException('Error: no TABLE_NAME set for the class '.get_class($this));
+    		throw new AlphaException('Error: no table name set for the class ['.get_class($this).'], left or right class name(s) missing');
     		return '';
     	}
 	}
