@@ -250,13 +250,13 @@ class FrontController {
 			$pageController = new $this->pageController();
 	    	if(!empty($_POST)) {			
 				$pageController->doPOST($_REQUEST);
-			}else{
+			}else{				
 				$pageController->doGET($_GET);
 			}
 	    	return true;
-		}catch (IllegalArguementException $iae) {
-			self::$logger->warn('Failed to find the definition for the controller class ['.$this->pageController.'], request URL is ['.$_SERVER['REQUEST_URI'].']');
-		    throw new ResourceNotFoundException('The file that you have requested cannot be found!');
+		}catch (AlphaException $e) {
+			self::$logger->warn($e->getMessage()."\n\n".$e->getTraceAsString());
+			throw new ResourceNotFoundException('The file that you have requested cannot be found!');
 			return false;
 		}
 	}
