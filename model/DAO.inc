@@ -1564,7 +1564,11 @@ abstract class DAO {
 					$this->before_checkTableNeedsUpdate_callback();
 				
 				// check the table indexes
-				$this->checkIndexes();
+				try {
+					$this->checkIndexes();
+				}catch (AlphaException $ae) {
+					self::$logger->warn("Error while checking database indexes:\n\n".$ae->getMessage());
+				}
 				
 				self::$logger->debug('<<checkTableNeedsUpdate ['.$updateRequired.']');
 				return $updateRequired;
