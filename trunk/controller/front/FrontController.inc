@@ -254,6 +254,10 @@ class FrontController {
 				$pageController->doGET($_GET);
 			}
 	    	return true;
+		}catch (ResourceNotAllowedException $e) {
+			self::$logger->warn($e->getMessage());
+			throw new ResourceNotAllowedException($e->getMessage());
+			return false;
 		}catch (AlphaException $e) {
 			self::$logger->warn($e->getMessage()."\n\n".$e->getTraceAsString());
 			throw new ResourceNotFoundException('The file that you have requested cannot be found!');

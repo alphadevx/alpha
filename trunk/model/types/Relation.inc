@@ -364,7 +364,16 @@ class Relation extends AlphaType implements AlphaTypeInterface {
  	 */
  	public function getRule() {
 		return $this->validationRule;
-	}	
+	}
+
+	/**
+	 * Setter to override the default validation rule
+	 *
+	 * @param string $rule
+	 */
+	public function setRule($rule) {
+		$this->validationRule = $rule;
+	}
 	
 	/**
 	 * Getter for the display value of the related class field.  In the case of a 
