@@ -120,6 +120,10 @@ class form_validator
 						if(!check_text_field(field))
 							val_count--;
 					break;
+					case "hidden":						
+						if(!check_hidden_field(field))
+							val_count--;
+					break;
 					case "password":						
 						if(!check_text_field(field))
 							val_count--;
@@ -160,6 +164,28 @@ class form_validator
 			}else{
 				if(field.style.className != "readonly")
 					field.style.backgroundColor = 'white';
+				return true;
+			}
+		}
+		
+		function check_hidden_field(field) {
+			// get the validation rule for this field
+			var rule = validation_rules[field.getAttribute("name")];
+			
+			var displayField = document.getElementById(field.getAttribute("name")+"_display") 
+			
+			// if no rule is defined for the field, return true
+				if(!rule)
+					return true;
+						
+			// now use the rule regular expression to validate the field
+			if (!field.value.match(rule)) {				
+				raise_error(validation_rules[field.name+"_msg"]);
+				displayField.style.backgroundColor = 'yellow';
+				return false;
+			}else{
+				if(field.style.className != "readonly")
+					displayField.style.backgroundColor = 'white';
 				return true;
 			}
 		}

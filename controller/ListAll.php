@@ -263,7 +263,7 @@ class ListAll extends Controller implements AlphaControllerInterface {
 			
 		$objects = $temp->loadAll($this->startPoint, $config->get('sysListPageAmount'));
 		
-		$this->BOCount = $this->BO->getCount();
+		$this->BOCount = count($objects);
 		
 		echo View::renderDeleteForm();
 		

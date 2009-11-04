@@ -323,10 +323,14 @@ abstract class DAO {
 		$BO_Class = get_class($this);
 		
 		while($row = mysql_fetch_assoc($result)) {
-			$obj = new $BO_Class();
-			$obj->load($row["OID"]);
-			$objects[$count] = $obj;
-			$count++;			
+			try {
+				$obj = new $BO_Class();
+				$obj->load($row["OID"]);
+				$objects[$count] = $obj;
+				$count++;
+			}catch(ResourceNotAllowedException $e) {
+				// the resource not allowed will be absent from the list
+			}
 		}
 		
 		if(method_exists($this, 'after_loadAll_callback'))
@@ -381,10 +385,14 @@ abstract class DAO {
 		$BO_Class = get_class($this);
 		
 		while($row = mysql_fetch_assoc($result)) {
-			$obj = new $BO_Class();
-			$obj->load($row["OID"]);
-			$objects[$count] = $obj;
-			$count++;
+			try {
+				$obj = new $BO_Class();
+				$obj->load($row["OID"]);
+				$objects[$count] = $obj;
+				$count++;
+			}catch(ResourceNotAllowedException $e) {
+				// the resource not allowed will be absent from the list
+			}
 		}
 		
 		if(method_exists($this, 'after_loadAllByAttribute_callback'))
