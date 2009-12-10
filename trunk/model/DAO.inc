@@ -765,14 +765,14 @@ abstract class DAO {
 				// Handle MANY-TO-MANY rels
 				if($prop->getRelationType() == 'MANY-TO-MANY') {
 					self::$logger->debug('Deleting MANY-TO-MANY lookup objects...');
-						
-					// for overloaded tables, the classname != the table name
-					if($this->isTableOverloaded())
-						$className = $this->getTableName().'_object';
-					else
-						$className = get_class($this);
-			
-					$side = $prop->getSide($className);						
+					
+					try{
+						// check to see if the rel is on this class
+						$side = $prop->getSide(get_class($this));											
+					}catch (IllegalArguementException $iae) {
+						$side = $prop->getSide($this->getTableName().'_object');
+					}
+																
 					self::$logger->debug('Side is ['.$side.']'.$this->getID());
 						
 					$lookUp = $prop->getLookup();

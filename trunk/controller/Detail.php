@@ -160,7 +160,7 @@ class Detail extends Controller implements AlphaControllerInterface {
 						$temp->delete();
 						DAO::commit();
 
-						echo View::displayUpdateMessage($this->BOName.' '.$params['delete_oid'].' deleted successfully.');
+						echo View::displayUpdateMessage($BOName.' '.$params['delete_oid'].' deleted successfully.');
 										
 						echo '<center>';
 						
@@ -169,7 +169,7 @@ class Detail extends Controller implements AlphaControllerInterface {
 						
 						echo '</center>';
 					}catch(AlphaException $e) {
-						self::$logger->error($e->getTraceAsString());
+						self::$logger->error($e->getMessage());
 						echo View::displayErrorMessage('Error deleting the BO of OID ['.$params['delete_oid'].'], check the log!');
 						DAO::rollback();
 					}
