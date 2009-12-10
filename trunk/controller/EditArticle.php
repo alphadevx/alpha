@@ -256,7 +256,9 @@ class EditArticle extends Controller implements AlphaControllerInterface {
 				
 				var dialogOpts = {
 			        title: "Help Page",
-			        modal: false,
+			        modal: true,
+			        resizable: false,
+			        draggable: false,
 			        autoOpen: false,
 			        height: 400,
 			        width: 800,
