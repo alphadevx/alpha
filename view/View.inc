@@ -1,5 +1,6 @@
 <?php
 
+require_once $config->get('sysRoot').'alpha/util/Logger.inc';
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Date.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Timestamp.inc';
@@ -28,14 +29,27 @@ class View {
 	 * @var DAO
 	 */
 	protected $BO;
+	
+	/**
+	 * Trace logger
+	 * 
+	 * @var Logger
+	 */
+	private static $logger = null;
 
 	/**
 	 * Constructor for the View
 	 * 
 	 * @param DAO $BO
 	 */
-	public function __construct($BO) {		
+	public function __construct($BO) {
+		if(self::$logger == null)
+			self::$logger = new Logger('View');
+		self::$logger->debug('>>__construct(BO=['.print_r($BO, true).'])');
+				
 		$this->BO = $BO;
+		
+		self::$logger->debug('<<__construct');
 	}
 	
 	/**
@@ -47,6 +61,10 @@ class View {
 	 * @return object returns a View object, or a child view object from the /view directory if one exists for this BO 
 	 */
 	public static function getInstance($BO, $returnParent=false) {
+		if(self::$logger == null)
+			self::$logger = new Logger('View');
+		self::$logger->debug('>>getInstance(BO=['.print_r($BO, true).'], returnParent=['.$returnParent.'])');
+		
 		global $config;
 		
 		$filename = get_class($BO);
@@ -63,15 +81,19 @@ class View {
 			if (file_exists($config->get('sysRoot').'view/'.$filename.'.inc')) {
 				require_once $config->get('sysRoot').'view/'.$filename.'.inc';
 
+				self::$logger->debug('<<getInstance [new '.$filename.'('.get_class($BO).')]');
 				return new $filename($BO);
 			}elseif (file_exists($config->get('sysRoot').'alpha/view/'.$filename.'.inc')) {
 				require_once $config->get('sysRoot').'alpha/view/'.$filename.'.inc';
 
+				self::$logger->debug('<<getInstance [new '.$filename.'('.get_class($BO).')]');
 				return new $filename($BO);
 			}else{
+				self::$logger->debug('<<getInstance [new View('.get_class($BO).', true)]');
 				return new View($BO, true);
 			}
 		}else{
+			self::$logger->debug('<<getInstance [new View('.get_class($BO).', true)]');
 			return new View($BO, true);
 		}
 	}
@@ -81,8 +103,12 @@ class View {
 	 * 
 	 * @param object $BO
 	 */
-	public function setBO($BO) {
+	public function setBO($BO) {		
+		self::$logger->debug('>>setBO(BO=['.print_r($BO, true).'])');
+		
 		$this->BO = $BO;
+		
+		self::$logger->debug('<<setBO');
 	}
 
 	/**
@@ -90,7 +116,9 @@ class View {
 	 * 
 	 * @param array $fields hash array of HTML fields to pass to the template
 	 */
-	public function createView($fields=array()) {
+	public function createView($fields=array()) {		
+		self::$logger->debug('>>createView(fields=['.print_r($fields, true).'])');
+		
 		if(method_exists($this, 'before_createView_callback'))
 			$this->before_createView_callback();
 		
@@ -119,6 +147,8 @@ class View {
 		
 		if(method_exists($this, 'after_createView_callback'))
 			$this->after_createView_callback();
+			
+		self::$logger->debug('<<createView');
 	}
 
 	/**
@@ -127,6 +157,8 @@ class View {
 	 * @param array $fields hash array of HTML fields to pass to the template
 	 */
 	public function editView($fields=array()) {
+		self::$logger->debug('>>editView(fields=['.print_r($fields, true).'])');
+		
 		if(method_exists($this, 'before_editView_callback'))
 			$this->before_editView_callback();
 		
@@ -161,6 +193,8 @@ class View {
 		
 		if(method_exists($this, 'after_editView_callback'))
 			$this->after_editView_callback();
+			
+		self::$logger->debug('<<editView');
 	}
 
 	/**
@@ -169,6 +203,8 @@ class View {
 	 * @param array $fields hash array of HTML fields to pass to the template
 	 */
 	public function listView($fields=array()) {
+		self::$logger->debug('>>listView(fields=['.print_r($fields, true).'])');
+		
 		if(method_exists($this, 'before_listView_callback'))
 			$this->before_listView_callback();
 		
@@ -261,6 +297,8 @@ class View {
 		
 		if(method_exists($this, 'after_listView_callback'))
 			$this->after_listView_callback();
+			
+		self::$logger->debug('<<listView');
 	}
 
 	/**
@@ -269,6 +307,8 @@ class View {
 	 * @param array $fields hash array of HTML fields to pass to the template
 	 */
 	public function detailedView($fields=array()) {
+		self::$logger->debug('>>detailedView(fields=['.print_r($fields, true).'])');
+		
 		if(method_exists($this, 'before_detailedView_callback'))
 			$this->before_detailedView_callback();
 		
@@ -301,6 +341,8 @@ class View {
 		
 		if(method_exists($this, 'after_detailedView_callback'))
 			$this->after_detailedView_callback();
+			
+		self::$logger->debug('<<detailedView');
 	}
 
 	/**
@@ -309,6 +351,8 @@ class View {
 	 * @param array $fields hash array of HTML fields to pass to the template
 	 */
 	public function adminView($fields=array()) {
+		self::$logger->debug('>>adminView(fields=['.print_r($fields, true).'])');
+		
 		if(method_exists($this, 'before_adminView_callback'))
 			$this->before_adminView_callback();
 		
@@ -374,6 +418,8 @@ class View {
 		
 		if(method_exists($this, 'after_adminView_callback'))
 			$this->after_adminView_callback();
+			
+		self::$logger->debug('<<adminView');
 	}
 	
 	/**
@@ -384,6 +430,10 @@ class View {
 	 * @todo remove output buffering around form_validator instance
 	 */
 	public static function displayPageHead($controller) {
+		if(self::$logger == null)
+			self::$logger = new Logger('View');
+		self::$logger->debug('>>displayPageHead(controller=['.print_r($controller, true).'])');
+		
 		if(method_exists($controller, 'before_displayPageHead_callback'))
 			$controller->before_displayPageHead_callback();
 		
@@ -492,6 +542,7 @@ class View {
 		if(!empty($message))
 			$html .= $message;
 			
+		self::$logger->debug('<<displayPageHead ['.$html.']');
 		return $html;
 	}
 	
@@ -502,6 +553,10 @@ class View {
 	 * @return string
 	 */
 	public static function displayPageFoot($controller) {
+		if(self::$logger == null)
+			self::$logger = new Logger('View');
+		self::$logger->debug('>>displayPageFoot(controller=['.print_r($controller, true).'])');
+		
 		$html = '';
 		
 		if(method_exists($controller, 'before_displayPageFoot_callback'))
@@ -513,6 +568,7 @@ class View {
 		if(method_exists($controller, 'after_displayPageFoot_callback'))
 			$this->after_displayPageFoot_callback();
 			
+		self::$logger->debug('<<displayPageFoot ['.$html.']');
 		return $html;
 	}
 	
@@ -523,10 +579,15 @@ class View {
 	 * @return string
 	 */
 	public static function displayUpdateMessage($message) {
+		if(self::$logger == null)
+			self::$logger = new Logger('View');
+		self::$logger->debug('>>displayUpdateMessage(message=['.$message.'])');
+		
 		$html = '<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
 				<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
 				<strong>Update:</strong> '.$message.'</p></div>';
 		
+		self::$logger->debug('<<displayUpdateMessage ['.$html.']');
 		return $html;
 	}
 	
@@ -537,10 +598,15 @@ class View {
 	 * @return string
 	 */
 	public static function displayErrorMessage($message) {
+		if(self::$logger == null)
+			self::$logger = new Logger('View');
+		self::$logger->debug('>>displayErrorMessage(message=['.$message.'])');
+		
 		$html = '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
 				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
 				<strong>Error:</strong> '.$message.'</p></div>';
 		
+		self::$logger->debug('<<displayErrorMessage ['.$html.']');
 		return $html;
 	}
 	
@@ -550,11 +616,16 @@ class View {
 	 * @return string
 	 */
 	public static function renderDeleteForm() {
+		if(self::$logger == null)
+			self::$logger = new Logger('View');
+		self::$logger->debug('>>renderDeleteForm()');
+		
 		$html = '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" id="delete_form">';		
 		$html .= '<input type="hidden" name="delete_oid" id="delete_oid" value=""/>';
 		$html .= self::renderSecurityFields();
 		$html .= '</form>';
 		
+		self::$logger->debug('<<renderDeleteForm ['.$html.']');
 		return $html;
 	}
 	
@@ -566,6 +637,10 @@ class View {
 	 * @return string 
 	 */
 	public static function renderSecurityFields() {
+		if(self::$logger == null)
+			self::$logger = new Logger('View');
+		self::$logger->debug('>>renderSecurityFields()');
+		
 		$html = '';
 		
 		$fields = View::generateSecurityFields();
@@ -573,6 +648,7 @@ class View {
 		$html .= '<input type="hidden" name="var1" value="'.$fields[0].'"/>';
 		$html .= '<input type="hidden" name="var2" value="'.$fields[1].'"/>';
 		
+		self::$logger->debug('<<renderSecurityFields ['.$html.']');
 		return $html;
 	}
 	
@@ -583,11 +659,16 @@ class View {
 	 * @todo move to Controller
 	 */
 	public static function generateSecurityFields() {
+		if(self::$logger == null)
+			self::$logger = new Logger('View');
+		self::$logger->debug('>>generateSecurityFields()');
+		
 		// the server hostname + today's date
 		$var1 = md5($_SERVER['HTTP_HOST'].date("Ymd"));
 		// the server's IP plus $var1
 		$var2 = md5($_SERVER['REMOTE_ADDR'].$var1);
 		
+		self::$logger->debug('<<generateSecurityFields [array('.$var1.', '.$var2.')]');
 		return array($var1, $var2);
 	}
 	
@@ -602,6 +683,8 @@ class View {
 	 * @return string
 	 */
 	public function renderIntegerField($name, $label, $mode, $value='', $tableTags=true) {
+		self::$logger->debug('>>renderIntegerField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+		
 		$html = '';
 		
 		if ($mode == 'create') {
@@ -632,6 +715,7 @@ class View {
 			}
 		}
 				
+		self::$logger->debug('<<renderIntegerField ['.$html.']');
 		return $html;
 	}
 	
@@ -645,7 +729,9 @@ class View {
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 */
-	public static function renderDoubleField($name, $label, $mode, $value='') {
+	public static function renderDoubleField($name, $label, $mode, $value='', $tableTags=true) {
+		self::$logger->debug('>>renderDoubleField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+		
 		$html = '';
 		
 		if ($mode == 'create') {
@@ -676,6 +762,7 @@ class View {
 			}
 		}
 				
+		self::$logger->debug('<<renderDoubleField ['.$html.']');
 		return $html;
 	}
 	
@@ -690,6 +777,8 @@ class View {
 	 * @return string
 	 */
 	public function renderBooleanField($name, $label, $mode, $value='', $tableTags=true) {
+		self::$logger->debug('>>renderBooleanField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+		
 		$html = '';
 		
 		if ($mode == 'create') {
@@ -732,6 +821,7 @@ class View {
 			}
 		}
 				
+		self::$logger->debug('<<renderBooleanField ['.$html.']');
 		return $html;
 	}
 	
@@ -747,6 +837,8 @@ class View {
 	 * @return string
 	 */
 	public function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
+		self::$logger->debug('>>renderEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+		
 		$html = '';
 		
 		if ($mode == 'create') {
@@ -797,6 +889,7 @@ class View {
 			}
 		}
 				
+		self::$logger->debug('<<renderEnumField ['.$html.']');
 		return $html;
 	}
 	
@@ -812,6 +905,8 @@ class View {
 	 * @return string
 	 */
 	public function renderDEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
+		self::$logger->debug('>>renderDEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+		
 		$html = '';
 		
 		if ($mode == 'create') {
@@ -862,6 +957,7 @@ class View {
 			}
 		}		
 		
+		self::$logger->debug('<<renderDEnumField ['.$html.']');
 		return $html;
 	}
 	
@@ -876,6 +972,8 @@ class View {
 	 * @return string
 	 */
 	public function renderDefaultField($name, $label, $mode, $value='', $tableTags=true) {
+		self::$logger->debug('>>renderDefaultField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+		
 		$html = '';
 		
 		if ($mode == 'create') {
@@ -920,6 +1018,7 @@ class View {
 			}
 		}
 		
+		self::$logger->debug('<<renderDefaultField ['.$html.']');
 		return $html;
 	}
 	
@@ -934,6 +1033,8 @@ class View {
 	 * @return string
 	 */
 	public function renderTextField($name, $label, $mode, $value='', $tableTags=true) {
+		self::$logger->debug('>>renderTextField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+		
 		$html = '';
 		
 		if ($mode == 'create') {
@@ -967,6 +1068,7 @@ class View {
 			$html .= '</td></tr>';
 		}
 		
+		self::$logger->debug('<<renderTextField ['.$html.']');
 		return $html;
 	}
 	
@@ -983,6 +1085,8 @@ class View {
 	 * @return string
 	 */
 	public function renderRelationField($name, $label, $mode, $value='', $tableTags=true, $expanded=false, $buttons=true) {
+		self::$logger->debug('>>renderRelationField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'], expanded=['.$expanded.'], buttons=['.$buttons.'])');
+		
 		$html = '';
 		
 		$rel = $this->BO->getPropObject($name);
@@ -1025,6 +1129,7 @@ class View {
 			}
 		}
 		
+		self::$logger->debug('<<renderRelationField ['.$html.']');
 		return $html;
 	}
 	
@@ -1036,6 +1141,8 @@ class View {
 	 * @return string
 	 */
 	public function renderAllFields($mode, $filterFields=array()) {
+		self::$logger->debug('>>renderAllFields(mode=['.$mode.'], filterFields=['.print_r($filterFields, true).'])');
+		
 		$html = '';
 				
 		// get the class attributes		
@@ -1131,6 +1238,7 @@ class View {
 			}
 		}
 		
+		self::$logger->debug('<<renderAllFields ['.$html.']');
 		return $html;
 	}
 	
@@ -1143,6 +1251,8 @@ class View {
 	 * @param array $fields 
 	 */
 	public function loadTemplate($BO, $mode, $fields) {
+		self::$logger->debug('>>loadTemplate(BO=['.print_r($BO, true).'], mode=['.$mode.'], fields=['.print_r($fields, true).'])');
+		
 		global $config;
 		
 		// for each BO property, create a local variable holding its value		
@@ -1182,6 +1292,8 @@ class View {
 		}else{
 			throw new AlphaException('No ['.$mode.'] HTML template found for class ['.get_class($BO).']');
 		}
+		
+		self::$logger->debug('<<loadTemplate');
 	}
 }
 ?>
