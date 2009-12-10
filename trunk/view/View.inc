@@ -1262,7 +1262,7 @@ class View {
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
 			
-			if($propName != 'logger') {
+			if($propName != 'logger' && !$propObj->isPrivate()) {
 				if(get_class($BO->getPropObject($propName)) == 'DEnum') {					
 					${$propName} = $BO->getPropObject($propName)->getDisplayValue();
 				}else{
