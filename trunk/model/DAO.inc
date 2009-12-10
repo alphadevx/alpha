@@ -1906,7 +1906,13 @@ abstract class DAO {
 		
 		DAO::loadClassDef($relatedClass);		
 		$relatedBO = new $relatedClass;		
-		$tableName = $relatedBO->getTableName();		
+		$tableName = $relatedBO->getTableName();
+
+		// if the relation is on itself (table-wise), exist without attempting to create the foreign keys
+		if($this->getTableName() == $tableName) {
+			self::$logger->debug('<<createForeignIndex');
+			return;
+		}
 
 		if(DAO::checkBOTableExists($tableName.'_object')) {
 			$sqlQuery = '';
