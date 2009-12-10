@@ -144,18 +144,24 @@ class ListAll extends Controller implements AlphaControllerInterface {
 			echo View::displayPageHead($this);
 				
 			if (!empty($params['delete_oid'])) {
+				if(!Validator::isInteger($params['delete_oid']))
+						throw new IllegalArguementException('Invalid delete_oid ['.$params['delete_oid'].'] provided on the request!');
+				
 				$temp = new $BOname();
 				$temp->load($params['delete_oid']);
 		
 				try {
+					DAO::begin();
 					$temp->delete();
-						
-					echo '<p class="success">'.$this->BOname.' '.$params['delete_oid'].' deleted successfully.</p>';
-						
+					DAO::commit();
+
+					echo View::displayUpdateMessage($BOname.' '.$params['delete_oid'].' deleted successfully.');
+							
 					$this->displayBodyContent();
 				}catch(AlphaException $e) {
-					self::$logger->error($e->getTraceAsString());
-					echo '<p class="error"><br>Error deleting the OID ['.$params['delete_oid'].'], check the log!</p>';
+					self::$logger->error($e->getMessage());
+					echo View::displayErrorMessage('Error deleting the BO of OID ['.$params['delete_oid'].'], check the log!');
+					DAO::rollback();
 				}
 			}
 		}catch(SecurityException $e) {
