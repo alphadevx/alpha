@@ -95,6 +95,13 @@ class article_object extends DAO {
 	protected $tags;
 	
 	/**
+	 * Path to a .text file where the content of this article is stored (optional)
+	 * 
+	 * @var string
+	 */
+	private $filePath;
+	
+	/**
 	 * An array of data display labels for the class properties
 	 * 
 	 * @var array
@@ -208,6 +215,8 @@ class article_object extends DAO {
 		
 		// mark title as unique
 		$this->markUnique('title');
+		
+		$this->markTransient('filePath');
 	}
 	
 	/**
@@ -442,8 +451,36 @@ class article_object extends DAO {
 	public function loadContentFromFile($filePath) {
 		try{
 			$this->content->setValue(file_get_contents($filePath));
+			$this->filePath = $filePath;
 		}catch (Exception $e) {
 			throw new FileNotFoundException($e->getMessage());
+		}
+	}
+	
+	/**
+	 * Returns true if the article content was loaded from a .text file, false otherwise.
+	 * 
+	 * @return bool
+	 */
+	public function isLoadedFromFile() {
+		return ($this->filePath == '' ? false: true);
+	}
+	
+	/**
+	 * Returns the timestamp of when the content .text file for this article was last
+	 * modified.
+	 * 
+	 * @return string
+	 */
+	public function getContentFileDate() {
+		if($this->filePath != '') {
+			try{				
+				return date("Y-m-d H:i:s", filemtime($this->filePath));
+			}catch (Exception $e) {
+				throw new FileNotFoundException($e->getMessage());
+			}
+		}else{
+			throw new FileNotFoundException('Error trying to access an article content file when none is set!');
 		}
 	}
 }
