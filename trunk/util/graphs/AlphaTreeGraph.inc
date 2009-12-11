@@ -9,7 +9,7 @@ require_once $config->get('sysRoot').'alpha/util/graphs/AlphaGraphNode.inc';
  * @package util::graphs
  * @author John Collins <john@design-ireland.net>
  * @copyright 2009 John Collins
- * @version $Id: BarView.inc 239 2009-11-04 21:45:03Z johnc $
+ * @version $Id$
  * 
  */
 class AlphaTreeGraph {
