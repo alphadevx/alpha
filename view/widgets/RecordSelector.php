@@ -22,7 +22,7 @@ require_once $config->get('sysRoot').'alpha/model/types/Relation.inc';
 *  
 */
 
-class record_selector
+class RecordSelector
 {
 	var $relation_object = null;	
 	var $label;
@@ -40,10 +40,10 @@ class record_selector
 	 * @param Relation $object the Relation that will be edited
 	 * @param string $label the data label for the Relation object
 	 * @param string $name the name of the HTML input box	 
-	 * @param bool $table_tags determines if table tags are also rendered
+	 * @param bool $TableTags determines if table tags are also rendered
 	 * @param string $accessingClassName Used to indicate the reading side when accessing from MANY-TO-MANY relation (leave blank for other relation types)
 	 */
-	function record_selector($object, $label="", $name="", $table_tags=true, $accessingClassName='') {
+	function RecordSelector($object, $label="", $name="", $TableTags=true, $accessingClassName='') {
 		if(!isset($_SESSION))
 			session_start();
 		
@@ -55,12 +55,12 @@ class record_selector
 	
 	/**
 	 * 
-	 * @param bool $table_tags Include table tags and label (optional)
+	 * @param bool $TableTags Include table tags and label (optional)
 	 * @param bool $expanded Render the related fields in expanded format or not (optional)
 	 * @param bool $buttons Render buttons for expanding/contacting the related fields (optional)
 	 * @return string
 	 */
-	function render($table_tags=true, $expanded=false, $buttons=true) {
+	function render($TableTags=true, $expanded=false, $buttons=true) {
 		global $config;
 		
 		$html = '';
@@ -70,19 +70,19 @@ class record_selector
 			// value to appear in the text-box
 			$inputBoxValue = $this->relation_object->getRelatedClassDisplayFieldValue();		
 				
-			if($table_tags) {
+			if($TableTags) {
 				$html .= '<tr><th style="width:25%;">';
 				$html .= $this->label;
 				$html .= '</th>';
 					
 				$html .= '<td>';			
 				$html .= '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
-				$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/record_selector.php?value='+document.getElementById('".$this->name."').value+'&field=".$this->name."&relatedClass=".$this->relation_object->getRelatedClass()."&relatedClassField=".$this->relation_object->getRelatedClassField()."&relatedClassDisplayField=".$this->relation_object->getRelatedClassDisplayField()."&relationType=".$this->relation_object->getRelationType()."','relWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=500,height=50,left='+(event.screenX-250)+',top='+event.screenY+'');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
+				$tmp = new button("$('#recordSelector').dialog('open'); $('#recordSelector').load('".$config->get('sysURL')."/alpha/view/widgets/RecordSelector.php?value='+document.getElementById('".$this->name."').value+'&field=".$this->name."&relatedClass=".$this->relation_object->getRelatedClass()."&relatedClassField=".$this->relation_object->getRelatedClassField()."&relatedClassDisplayField=".$this->relation_object->getRelatedClassDisplayField()."&relationType=".$this->relation_object->getRelationType()."');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
 				$html .= $tmp->render();
 				$html .= '</td></tr>';
 			}else{
 				$html .= '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
-				$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/record_selector.php?value='+document.getElementById('".$this->name."').value+'&field=".$this->name."&relatedClass=".$this->relation_object->getRelatedClass()."&relatedClassField=".$this->relation_object->getRelatedClassField()."&relatedClassDisplayField=".$this->relation_object->getRelatedClassDisplayField()."&relationType=".$this->relation_object->getRelationType()."','relWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=500,height=50,left='+(event.screenX-250)+',top='+event.screenY+'');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
+				$tmp = new button("$('#upgradeDialog').dialog('open')", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
 				$html .= $tmp->render();
 			}
 				
@@ -94,7 +94,7 @@ class record_selector
 		if($this->relation_object->getRelationType() == 'ONE-TO-MANY') {
 			$objects = $this->relation_object->getRelatedObjects();			
 			
-			if(count($objects) > 0 && $table_tags) {
+			if(count($objects) > 0 && $TableTags) {
 				// render tags differently			
 				if($this->name == 'tags' && $this->relation_object->getRelatedClass() == 'tag_object') {
 					$html .= '<tr><td colspan="2">'.$this->label.': ';
@@ -200,7 +200,7 @@ class record_selector
 			// replace commas with line returns
 			$inputBoxValue = str_replace(",", "\n", $inputBoxValue);
 			
-			if($table_tags) {
+			if($TableTags) {
 				$html .= '<tr><th style="width:25%;">';
 				$html .= $this->label;
 				$html .= '</th>';
@@ -210,7 +210,7 @@ class record_selector
 				$html .= $inputBoxValue;
 				$html .= '</textarea>';
 				$html .= '<div align="center">';
-				$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/record_selector.php?lookupOIDs='+document.getElementById('".$this->name."').value+'&value='+document.getElementById('".$this->name."_OID').value+'&field=".$this->name."&relatedClassLeft=".$this->relation_object->getRelatedClass('left')."&relatedClassLeftDisplayField=".$this->relation_object->getRelatedClassDisplayField('left')."&relatedClassRight=".$this->relation_object->getRelatedClass('right')."&relatedClassRightDisplayField=".$this->relation_object->getRelatedClassDisplayField('right')."&accessingClassName=".$this->accessingClassName."&relationType=".$this->relation_object->getRelationType()."','relWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=500,height=50,left='+(event.screenX-250)+',top='+event.screenY+'');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
+				$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/RecordSelector.php?lookupOIDs='+document.getElementById('".$this->name."').value+'&value='+document.getElementById('".$this->name."_OID').value+'&field=".$this->name."&relatedClassLeft=".$this->relation_object->getRelatedClass('left')."&relatedClassLeftDisplayField=".$this->relation_object->getRelatedClassDisplayField('left')."&relatedClassRight=".$this->relation_object->getRelatedClass('right')."&relatedClassRightDisplayField=".$this->relation_object->getRelatedClassDisplayField('right')."&accessingClassName=".$this->accessingClassName."&relationType=".$this->relation_object->getRelationType()."','relWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=500,height=50,left='+(event.screenX-250)+',top='+event.screenY+'');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
 				$html .= $tmp->render();
 				$html .= '</div>';
 				$html .= '</td></tr>';
@@ -218,7 +218,7 @@ class record_selector
 				$html .= '<textarea id="'.$this->name.'_display" style="width:95%;" rows="5" readonly>';
 				$html .= $inputBoxValue;
 				$html .= '</textarea>';
-				$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/record_selector.php?lookupOIDs='+document.getElementById('".$this->name."').value+'&value='+document.getElementById('".$this->name."_OID').value+'&field=".$this->name."&relatedClassLeft=".$this->relation_object->getRelatedClass('left')."&relatedClassLeftDisplayField=".$this->relation_object->getRelatedClassDisplayField('left')."&relatedClassRight=".$this->relation_object->getRelatedClass('right')."&relatedClassRightDisplayField=".$this->relation_object->getRelatedClassDisplayField('right')."&accessingClassName=".$this->accessingClassName."&relationType=".$this->relation_object->getRelationType()."','relWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=500,height=50,left='+(event.screenX-250)+',top='+event.screenY+'');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
+				$tmp = new button("window.open('".$config->get('sysURL')."/alpha/view/widgets/RecordSelector.php?lookupOIDs='+document.getElementById('".$this->name."').value+'&value='+document.getElementById('".$this->name."_OID').value+'&field=".$this->name."&relatedClassLeft=".$this->relation_object->getRelatedClass('left')."&relatedClassLeftDisplayField=".$this->relation_object->getRelatedClassDisplayField('left')."&relatedClassRight=".$this->relation_object->getRelatedClass('right')."&relatedClassRightDisplayField=".$this->relation_object->getRelatedClassDisplayField('right')."&accessingClassName=".$this->accessingClassName."&relationType=".$this->relation_object->getRelationType()."','relWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=500,height=50,left='+(event.screenX-250)+',top='+event.screenY+'');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
 				$html .= $tmp->render();
 			}
 			
@@ -334,7 +334,7 @@ class record_selector
 				if($obj->getID() == $this->relation_object->getValue()) {
 					$html .= '<img src="'.$config->get('sysURL').'/alpha/images/icons/accept_ghost.png"/>';
 				}else{
-					$tmp = new button("window.opener.document.getElementById('".$_GET['field']."').value = '".$obj->getID()."'; window.opener.document.getElementById('".$_GET['field']."_display').value = '".$obj->get($this->relation_object->getRelatedClassDisplayField())."'; window.close();", "", "selBut", $config->get('sysURL')."/alpha/images/icons/accept.png");
+					$tmp = new button("document.getElementById('".$_GET['field']."').value = '".$obj->getID()."'; document.getElementById('".$_GET['field']."_display').value = '".$obj->get($this->relation_object->getRelatedClassDisplayField())."'; $('#recordSelector').dialog('close');", "", "selBut", $config->get('sysURL')."/alpha/images/icons/accept.png");
 					$html .= $tmp->render();
 				}
 				$html .= '</td>';
@@ -407,8 +407,8 @@ class record_selector
 	}
 }
 
-// checking to see if the record_selector has been accessed directly via a pop-up
-if(basename($_SERVER["PHP_SELF"]) == "record_selector.php") {
+// checking to see if the RecordSelector has been accessed directly via a pop-up
+if(basename($_SERVER["PHP_SELF"]) == "RecordSelector.php") {
 	$relation_object = new Relation();
 
 	if($_GET['relationType'] == 'MANY-TO-MANY') {
@@ -419,7 +419,7 @@ if(basename($_SERVER["PHP_SELF"]) == "record_selector.php") {
 		$relation_object->setRelationType($_GET['relationType']);
 		$relation_object->setValue($_GET['value']);
 		
-		$recSelector = new record_selector($relation_object,'',$_GET['field'],true,$_GET['accessingClassName']);
+		$recSelector = new RecordSelector($relation_object,'',$_GET['field'],true,$_GET['accessingClassName']);
 		$recSelector->render_selector();
 	}else{
 		$relation_object->setRelatedClass($_GET['relatedClass']);
@@ -428,7 +428,7 @@ if(basename($_SERVER["PHP_SELF"]) == "record_selector.php") {
 		$relation_object->setRelationType($_GET['relationType']);
 		$relation_object->setValue($_GET['value']);
 		
-		$recSelector = new record_selector($relation_object);
+		$recSelector = new RecordSelector($relation_object);
 		$recSelector->render_selector();
 	}
 }
