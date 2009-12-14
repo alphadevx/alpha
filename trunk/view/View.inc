@@ -11,7 +11,7 @@ require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
 require_once $config->get('sysRoot').'alpha/view/widgets/calendar.php';
-require_once $config->get('sysRoot').'alpha/view/widgets/record_selector.php';
+require_once $config->get('sysRoot').'alpha/view/widgets/RecordSelector.php';
 
 /**
  * The master rendering view class for the framework
@@ -499,11 +499,31 @@ class View {
 			$html.= '</script>';
 		}
 		
+		// record selector JS
+		$html.= '<script type="text/javascript">';
+		$html.= '	(function($) {';
+		$html.= '		$(document).ready(function(){';
+		$html.= '			var dialogOpts = {';
+		$html.= '			    title: "Record selector",';
+		$html.= '			    modal: true,';
+		$html.= '			    resizable: false,';
+		$html.= '			    draggable: false,';
+		$html.= '			    autoOpen: false,';
+		$html.= '			    height: 300,';
+		$html.= '			    width: 600';
+		$html.= '			};';
+		$html.= '			$("#recordSelector").dialog(dialogOpts);';
+		$html.= '		});';
+		$html.= '	})(jQuery);';
+		$html.= '</script>';
+		
 		if(method_exists($controller, 'during_displayPageHead_callback'))
 			$html.= $controller->during_displayPageHead_callback();
 		
 		$html.= '</head>';
 		$html.= '<body>';
+		
+		$html .= '<div id="recordSelector"></div>';
 			
 		if($controller->getTitle() != '')
 			$html.= '<h1>'.$controller->getTitle().'</h1>';
@@ -1096,16 +1116,16 @@ class View {
 				try{
 					// check to see if the rel is on this class
 					$rel->getSide(get_class($this->BO));
-					$widget = new record_selector($rel, $label, $name, true, get_class($this->BO));
+					$widget = new RecordSelector($rel, $label, $name, true, get_class($this->BO));
 					$html .= $widget->render($tableTags, $expanded, $buttons);
 				}catch (IllegalArguementException $iae) {
 					// the rel may be on a parent class
 					$parentClassName = $this->BO->getTableName().'_object';
-					$widget = new record_selector($rel, $label, $name, true, $parentClassName);
+					$widget = new RecordSelector($rel, $label, $name, true, $parentClassName);
 					$html .= $widget->render($tableTags, $expanded, $buttons);
 				}
 			}else{
-				$rel = new record_selector($rel, $label, $name);
+				$rel = new RecordSelector($rel, $label, $name);
 				$html .= $rel->render($tableTags, $expanded, $buttons);
 			}
 		}
@@ -1124,7 +1144,7 @@ class View {
 					$html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue($parentClassName));
 				}
 			}else{
-				$rel = new record_selector($rel, $label, $name);
+				$rel = new RecordSelector($rel, $label, $name);
 				$html .= $rel->render($tableTags, $expanded, $buttons);
 			}
 		}
