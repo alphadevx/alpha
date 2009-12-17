@@ -295,6 +295,13 @@ abstract class DAO {
 		
 		global $config;
 		
+		// ensure that the field name provided in the orderBy param is legit
+		try {
+			$field = $this->get($orderBy);
+		}catch(AlphaException $e) {
+			throw new AlphaException('The field name ['.$orderBy.'] provided in the param orderBy does not exist on the class ['.get_class($this).']');
+		}
+		
 		if(!$this->isTableOverloaded()) {
 			if($limit == 0)
 				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' ORDER BY '.$orderBy.' '.$order.';';
