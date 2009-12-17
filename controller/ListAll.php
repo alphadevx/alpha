@@ -55,14 +55,14 @@ class ListAll extends Controller implements AlphaControllerInterface {
 	 * 
 	 * @var string
 	 */
-	protected $sort = 'OID';
+	protected $sort;
 	
 	/**
 	 * The order to sort the list by (optional, should be ASC or DESC, default is ASC)
 	 * 
 	 * @var string
 	 */
-	protected $order = 'ASC';
+	protected $order;
 	
 	/**
 	 * Trace logger
@@ -94,7 +94,7 @@ class ListAll extends Controller implements AlphaControllerInterface {
 	 * 
 	 * @param array $params
 	 */
-	public function doGET($params) {		
+	public function doGET($params) {
 		try{
 			// load the business object (BO) definition
 			if (isset($params['bo'])) {
@@ -251,10 +251,7 @@ class ListAll extends Controller implements AlphaControllerInterface {
 		if($end > $this->BOCount)
 			$end = $this->BOCount;
 		
-		if ($this->startPoint > 9)
-			$html .= '<p align="center">Displaying '.($this->startPoint+1).' to '.$end.' of <strong>'.$this->BOCount.'</strong>.&nbsp;&nbsp;';		
-		else
-			$html .= '<p align="center">Displaying &nbsp;'.($this->startPoint+1).' to '.$end.' of <strong>'.$this->BOCount.'</strong>.&nbsp;&nbsp;';		
+		$html .= '<p align="center">Displaying '.($this->startPoint+1).' to '.$end.' of <strong>'.$this->BOCount.'</strong>.&nbsp;&nbsp;';		
 				
 		if ($this->startPoint > 0) {
 			// handle secure URLs
@@ -306,7 +303,7 @@ class ListAll extends Controller implements AlphaControllerInterface {
 		else
 			$objects = $temp->loadAll($this->startPoint, $config->get('sysListPageAmount'));
 		
-		$this->BOCount = count($objects);
+		$this->BOCount = $temp->getCount();
 		
 		echo View::renderDeleteForm();
 		
