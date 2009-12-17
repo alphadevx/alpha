@@ -51,6 +51,20 @@ class ListAll extends Controller implements AlphaControllerInterface {
 	protected $BOCount = 0;
 	
 	/**
+	 * The field name to sort the list by (optional, default is OID)
+	 * 
+	 * @var string
+	 */
+	protected $sort = 'OID';
+	
+	/**
+	 * The order to sort the list by (optional, should be ASC or DESC, default is ASC)
+	 * 
+	 * @var string
+	 */
+	protected $order = 'ASC';
+	
+	/**
 	 * Trace logger
 	 * 
 	 * @var Logger
@@ -92,6 +106,16 @@ class ListAll extends Controller implements AlphaControllerInterface {
 				throw new IllegalArguementException('No BO available to list!');
 			}
 			
+			if (isset($params['order'])) {
+				if($params['order'] == 'ASC' || $params['order'] == 'DESC')
+					$this->order = $params['order'];
+				else
+					throw new IllegalArguementException('Order value ['.$params['order'].'] provided is invalid!');
+			}
+			
+			if (isset($params['sort']))
+				$this->sort = $params['sort'];
+				
 			DAO::loadClassDef($BOname);
 			
 			/*
@@ -134,6 +158,16 @@ class ListAll extends Controller implements AlphaControllerInterface {
 			}else{
 				throw new IllegalArguementException('No BO available to list!');
 			}
+			
+			if (isset($params['order'])) {
+				if($params['order'] == 'ASC' || $params['order'] == 'DESC')
+					$this->order = $params['order'];
+				else
+					throw new IllegalArguementException('Order value ['.$params['order'].'] provided is invalid!');
+			}
+			
+			if (isset($params['sort']))
+				$this->sort = $params['sort'];
 			
 			DAO::loadClassDef($BOname);
 				
@@ -259,15 +293,18 @@ class ListAll extends Controller implements AlphaControllerInterface {
 	}
 	
 	/**
-	 * Private method to display the main body HTML for this page
+	 * Method to display the main body HTML for this page
 	 */
 	protected function displayBodyContent() {
 		global $config;
 		
 		// get all of the BOs and invoke the listView on each one
 		$temp = new $this->BOname;
-			
-		$objects = $temp->loadAll($this->startPoint, $config->get('sysListPageAmount'));
+		
+		if(isset($this->sort) && isset($this->order))
+			$objects = $temp->loadAll($this->startPoint, $config->get('sysListPageAmount'), $this->sort, $this->order);
+		else
+			$objects = $temp->loadAll($this->startPoint, $config->get('sysListPageAmount'));
 		
 		$this->BOCount = count($objects);
 		
