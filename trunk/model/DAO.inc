@@ -639,28 +639,28 @@ abstract class DAO {
 							// handle the saving of MANY-TO-MANY relation values
 							if($prop->getRelationType() == 'MANY-TO-MANY') {
 								try {
-									if(isset($_POST[$propName]))
-										$OIDs = explode(',', $_POST[$propName]);
-												
-									if(isset($OIDs) && !empty($OIDs[0])) {										
-										try{
-											// check to see if the rel is on this class
-											$side = $prop->getSide(get_class($this));											
-										}catch (IllegalArguementException $iae) {
-											$side = $prop->getSide($this->getTableName().'_object');
-										}
+									try{
+										// check to see if the rel is on this class
+										$side = $prop->getSide(get_class($this));											
+									}catch (IllegalArguementException $iae) {
+										$side = $prop->getSide($this->getTableName().'_object');
+									}
 										
-										$lookUp = $prop->getLookup();									
+									$lookUp = $prop->getLookup();									
 										
-										// first delete all of the old RelationLookup objects for this rel
-										if($side == 'left')
-											$lookUp->deleteAllByAttribute('leftID', $this->getID());
-										else
-											$lookUp->deleteAllByAttribute('rightID', $this->getID());
+									// first delete all of the old RelationLookup objects for this rel
+									if($side == 'left')
+										$lookUp->deleteAllByAttribute('leftID', $this->getID());
+									else
+										$lookUp->deleteAllByAttribute('rightID', $this->getID());
 						
-										if (mysql_error() != '')
-											throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
-												
+									if (mysql_error() != '')
+										throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
+											
+									if(isset($_POST[$propName]) && $_POST[$propName] != '00000000000')
+										$OIDs = explode(',', $_POST[$propName]);
+																					
+									if(isset($OIDs) && !empty($OIDs[0])) {										
 										// now for each posted OID, create a new RelationLookup record and save
 										foreach ($OIDs as $oid) {											
 											$newLookUp = new RelationLookup($lookUp->get('leftClassName'), $lookUp->get('rightClassName'));

@@ -423,8 +423,13 @@ class RecordSelector {
 						displayValues = displayValues + \'\\n\' + selectedOIDs[key];
 				}
 				
-				document.getElementById(\''.$_GET['field'].'\').value = OIDs;
-				document.getElementById(\''.$_GET['field'].'_display\').value = displayValues;
+				if(OIDs == null) {
+					document.getElementById(\''.$_GET['field'].'\').value = "00000000000";
+					document.getElementById(\''.$_GET['field'].'_display\').value = "";
+				}else{
+					document.getElementById(\''.$_GET['field'].'\').value = OIDs;
+					document.getElementById(\''.$_GET['field'].'_display\').value = displayValues;
+				}
 			}
 			
 			</script>';
