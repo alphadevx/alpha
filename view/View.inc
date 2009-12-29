@@ -573,10 +573,10 @@ class View {
 	 * @return string
 	 */
 	public static function displayPageFoot($controller) {
-		if(self::$logger == null)
+		if(self::$logger == null)		
 			self::$logger = new Logger('View');
-		self::$logger->debug('>>displayPageFoot(controller=['.print_r($controller, true).'])');
 		
+		self::$logger->debug('>>displayPageFoot(controller=['.get_class($controller).'])');
 		$html = '';
 		
 		if(method_exists($controller, 'before_displayPageFoot_callback'))
