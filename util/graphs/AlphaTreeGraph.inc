@@ -24,9 +24,18 @@ class AlphaTreeGraph {
 	private $isRendered = false;
 	private $position = 0;
 	private $height = 0;
-	private $width = 0;	
+	private $width = 0;
+
+	/**
+	 * Trace logger
+	 * 
+	 * @var Logger
+	 */
+	private static $logger = null;
 	
 	public function __construct($rowSpace=40, $colSpace=40, $branchSpace=80) {
+		self::$logger = new Logger('AlphaTreeGraph');
+		
 		$this->root = new AlphaGraphNode(0, 0, 0, 0);
 		$this->rowSpace = $rowSpace;
 		$this->colSpace = $colSpace;
@@ -77,7 +86,9 @@ class AlphaTreeGraph {
             }else{            	
                 $node->prelim = $midPoint;
             }
-        }			
+        }
+
+        self::$logger->debug('Memory usage at first scan ['.((memory_get_usage(true)/1024)/1024).' MB]');
 	}
 	
 	private function secondScan($node, $level, $x=0, $y=0) {
@@ -97,6 +108,8 @@ class AlphaTreeGraph {
         if($rightSibling) {
             $this->secondScan($rightSibling, $level, $x, $y);
 		}
+		
+		self::$logger->debug('Memory usage at second scan ['.((memory_get_usage(true)/1024)/1024).' MB]');
 	}
 	
 	private function apportion($node, $level) {
@@ -188,8 +201,7 @@ class AlphaTreeGraph {
 		return 0;	
 	}
 	
-	protected function render()
-	{
+	protected function render()	{
 		$this->firstScan($this->root, 0);
 		$this->secondScan($this->root, 0);
 		foreach($this->nodes as $node) {
