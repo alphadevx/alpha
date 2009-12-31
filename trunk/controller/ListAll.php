@@ -65,6 +65,20 @@ class ListAll extends Controller implements AlphaControllerInterface {
 	protected $order;
 	
 	/**
+	 * The name of the BO field to filter the list by (optional)
+	 * 
+	 * @var string
+	 */
+	protected $filterField;
+	
+	/**
+	 * The value of the filterField to filter by (optional)
+	 * 
+	 * @var string
+	 */
+	protected $filterValue;
+	
+	/**
 	 * Trace logger
 	 * 
 	 * @var Logger
@@ -298,10 +312,17 @@ class ListAll extends Controller implements AlphaControllerInterface {
 		// get all of the BOs and invoke the listView on each one
 		$temp = new $this->BOname;
 		
-		if(isset($this->sort) && isset($this->order))
-			$objects = $temp->loadAll($this->startPoint, $config->get('sysListPageAmount'), $this->sort, $this->order);
-		else
-			$objects = $temp->loadAll($this->startPoint, $config->get('sysListPageAmount'));
+		if(isset($this->filterField) && isset($this->filterValue)) {
+			if(isset($this->sort) && isset($this->order))
+				$objects = $temp->loadAllByAttribute($this->filterField, $this->filterValue, $this->startPoint, $config->get('sysListPageAmount'), $this->sort, $this->order);
+			else
+				$objects = $temp->loadAllByAttribute($this->filterField, $this->filterValue, $this->startPoint, $config->get('sysListPageAmount'));
+		}else{
+			if(isset($this->sort) && isset($this->order))
+				$objects = $temp->loadAll($this->startPoint, $config->get('sysListPageAmount'), $this->sort, $this->order);
+			else
+				$objects = $temp->loadAll($this->startPoint, $config->get('sysListPageAmount'));
+		}
 		
 		$this->BOCount = $temp->getCount();
 		
