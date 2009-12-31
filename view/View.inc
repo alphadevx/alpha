@@ -1158,18 +1158,28 @@ class View {
 	 *
 	 * @param string $mode (view|edit|create)
 	 * @param array $filterFields Optional list of field names to exclude from rendering
+	 * @param array $readOnlyFields Optional list of fields to render in a readonly fashion when rendering in create or edit mode
+	 * 
 	 * @return string
 	 */
-	public function renderAllFields($mode, $filterFields=array()) {
-		self::$logger->debug('>>renderAllFields(mode=['.$mode.'], filterFields=['.print_r($filterFields, true).'])');
+	public function renderAllFields($mode, $filterFields=array(), $readOnlyFields=array()) {
+		self::$logger->debug('>>renderAllFields(mode=['.$mode.'], filterFields=['.print_r($filterFields, true).'], readOnlyFields=['.print_r($readOnlyFields, true).'])');
 		
 		$html = '';
 				
 		// get the class attributes		
 		$properties = array_keys($this->BO->getDataLabels());
 		
+		$orignalMode = $mode;
+		
 		foreach($properties as $propName) {			
 			if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $filterFields)) {
+				// render readonly fields in the supplied array
+				if(in_array($propName, $readOnlyFields))
+					$mode = 'view';
+				else
+					$mode = $orignalMode;
+					
 				$propClass = get_class($this->BO->getPropObject($propName));
 				
 				// exclude non-Relation transient attributes from create and edit screens
