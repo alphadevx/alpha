@@ -714,10 +714,10 @@ class View {
 				$html .= '</th>';
 		
 				$html .= '<td>';
-				$html .= '<input type="text" size="11" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
+				$html .= '<input type="text" style="width:100%;" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
 				$html .= '</td></tr>';
 			}else{
-				$html .= '<input type="text" size="11" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
+				$html .= '<input type="text" style="width:100%;" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
 			}
 		}
 		
@@ -728,10 +728,10 @@ class View {
 				$html .= '</th>';
 	
 				$html .= '<td>';
-				$html .= '<input type="text" size="11" name="'.$name.'" value="'.$value.'"/><br>';
+				$html .= '<input type="text" style="width:100%;" name="'.$name.'" value="'.$value.'"/><br>';
 				$html .= '</td></tr>';
 			}else{
-				$html .= '<input type="text" size="11" name="'.$name.'" value="'.$value.'"/>';
+				$html .= '<input type="text" style="width:100%;" name="'.$name.'" value="'.$value.'"/>';
 			}
 		}
 				
