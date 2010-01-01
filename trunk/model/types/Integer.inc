@@ -58,16 +58,16 @@ class Integer extends AlphaType implements AlphaTypeInterface {
 	public function __construct($val=0) {		
 		
 		$this->validationRule = DEFAULT_INTEGER;
-		$this->helper = ' is not a valid Integer value!  A maximum of '.$this->size.' characters is allowed';
+		$this->helper = 'Error: not a valid integer value!  A maximum of '.$this->size.' characters is allowed';
 		
 		if (strlen($val) <= $this->size) {			
 			if (preg_match($this->validationRule, $val)) {				
 				$this->value = $val;				
 			}else{
-				throw new IllegalArguementException("[$val]".$this->helper);
+				throw new IllegalArguementException($this->helper);
 			}
 		}else{
-			throw new IllegalArguementException("[$val]".$this->helper);
+			throw new IllegalArguementException($this->helper);
 		}
 	}
 	
@@ -82,10 +82,10 @@ class Integer extends AlphaType implements AlphaTypeInterface {
 			if (preg_match($this->validationRule, $val)) {				
 				$this->value = $val;				
 			}else{
-				throw new IllegalArguementException("[$val]".$this->helper);
+				throw new IllegalArguementException($this->helper);
 			}
 		}else{
-			throw new IllegalArguementException("[$val]".$this->helper);
+			throw new IllegalArguementException($this->helper);
 		}
 	}
 	
@@ -115,7 +115,7 @@ class Integer extends AlphaType implements AlphaTypeInterface {
 	public function setSize($size) {
 		if ($size <= self::MAX_SIZE) {
 			$this->size = $size;
-			$this->helper = ' is not a valid Integer value!  A maximum of '.$this->size.' characters is allowed';
+			$this->helper = 'Error: not a valid integer value!  A maximum of '.$this->size.' characters is allowed';
 		}else{
 			throw new IllegalArguementException('Error: the value '.$size.' provided by set_size is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
 		}	
