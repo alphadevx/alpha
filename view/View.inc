@@ -546,7 +546,7 @@ class View {
 								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/tasks.log').'">Cron Tasks Log</a></li>
 							</ul>
 						</li>
-						<li><a href="'.FrontController::generateSecureURL('act=gen_secure_query_strings').'">Generate Secure URL</a></li>
+						<li><a href="'.FrontController::generateSecureURL('act=GenSecureQueryStrings').'">Generate Secure URL</a></li>
 						<li><a href="'.FrontController::generateSecureURL('act=ViewMetrics').'">Software Metrics</a></li>
 						<li><a href="'.FrontController::generateSecureURL('act=CacheManager').'">Manage Cache</a></li>
 						<li><a href="'.FrontController::generateSecureURL('act=ListDEnums').'">Manage DEnums</a></li>
