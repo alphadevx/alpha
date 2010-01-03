@@ -607,12 +607,12 @@ abstract class DAO {
 							$sqlQuery .= "version_num = '".$this->version_num->getValue()."',";
 						}
 					}
-					if($this->isTableOverloaded()) {
-						if(isset($this->classname))
-							$sqlQuery .= "classname = '".$this->classname."',";							
-						else
-							$sqlQuery .= "classname = '".get_class($this)."',";
-					}
+				}
+				if($this->isTableOverloaded()) {
+					if(isset($this->classname))
+						$sqlQuery .= "classname = '".$this->classname."',";							
+					else
+						$sqlQuery .= "classname = '".get_class($this)."',";
 				}
 	
 				$sqlQuery = rtrim($sqlQuery, ",");
