@@ -222,6 +222,17 @@ class Login extends Controller implements AlphaControllerInterface {
 		echo View::displayPageFoot($this);
 		self::$logger->debug('<<doPOST');
 	}
+	
+	/**
+	 * Displays the application version number on the login screen.
+	 * 
+	 * @return string
+	 */
+	public function before_displayPageFoot_callback() {
+		global $config;
+		
+		return '<p><em>Version '.$config->get('sysVersion').'</em></p>';
+	}
 }
 
 // now build the new controller if this file is called directly
