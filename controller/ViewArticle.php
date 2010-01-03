@@ -85,7 +85,6 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 				// set up the title and meta details
 				$this->setTitle($this->BO->get('title'));
 				$this->setDescription($this->BO->get('description'));
-				$this->setKeywords($this->BO->get('keywords'));
 				
 				echo $BOView->displayArticlePageHead($this);
 		
