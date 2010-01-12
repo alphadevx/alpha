@@ -255,11 +255,15 @@ class FrontController {
 			}
 	    	return true;
 		}catch (ResourceNotAllowedException $e) {
-			self::$logger->warn($e->getMessage());
+			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".print_r($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
 			throw new ResourceNotAllowedException($e->getMessage());
 			return false;
+		}catch (IllegalArguementException $e) {
+			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".print_r($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
+			throw new ResourceNotFoundException('The file that you have requested cannot be found!');
+			return false;
 		}catch (AlphaException $e) {
-			self::$logger->warn($e->getMessage()."\n\n".$e->getTraceAsString());
+			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".print_r($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
 			throw new ResourceNotFoundException('The file that you have requested cannot be found!');
 			return false;
 		}
