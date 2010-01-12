@@ -113,8 +113,6 @@ class Login extends Controller implements AlphaControllerInterface {
 				
 		global $config;
 		
-		echo View::displayPageHead($this);
-		
 		try {
 			// check the hidden security fields before accepting the form POST data
 			if(!$this->checkSecurityFields()) {
@@ -169,6 +167,8 @@ class Login extends Controller implements AlphaControllerInterface {
 						}
 					}
 				}
+				
+				echo View::displayPageHead($this);
 				
 				$this->personView->display_login_form();
 			}
