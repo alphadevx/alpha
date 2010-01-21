@@ -24,6 +24,7 @@ if($config->get('sysCMSImagesWidgetSecure')) {
 * @package Alpha Widgets
 * @author John Collins <john@design-ireland.net>
 * @copyright 2007 John Collins
+* @deprecated Use Image.inc instead!
 *
 */
 class image
