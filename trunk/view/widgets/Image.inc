@@ -108,6 +108,8 @@ class Image {
 		if(self::$logger == null)
 			self::$logger = new Logger('Image');
 			
+		global $config;
+			
 		if(file_exists($source))
 			$this->source = $source;
 		else
@@ -117,11 +119,30 @@ class Image {
 		$this->sourceType->setOptions(array('jpg','png','gif'));
 		$this->sourceType->setValue($sourceType);
 		
-		$this->width = new Integer($width);
-		$this->height = new Integer($height);
 		$this->quality = new Double($quality);
 		$this->scale = new Boolean($scale);
 		$this->secure = new Boolean($secure);
+		
+		// if scaled, we need to compute the target image size
+		if($secure && isset($_COOKIE['screenSize'])) {
+				$originalScreenResolution = explode('x', $config->get('sysCMSImagesWidgetScreenResolution'));
+				$originalScreenX = $originalScreenResolution[0];
+				$originalScreenY = $originalScreenResolution[1];
+				
+				$targetScreenResolution = explode('x', $_COOKIE['screenSize']);
+				$targetScreenX = $targetScreenResolution[0];
+				$targetScreenY = $targetScreenResolution[1];
+				
+				// calculate the new units we will scale by 
+				$xu = $targetScreenX/$originalScreenX;
+				$yu = $targetScreenY/$originalScreenY;
+				
+				$this->width = new Integer(intval($width*$xu));
+				$this->height = new Integer(intval($height*$yu));
+		}else{
+			$this->width = new Integer($width);
+			$this->height = new Integer($height);
+		}
 		
 		$this->setFilename();
 	}
