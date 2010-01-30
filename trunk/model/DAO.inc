@@ -2395,7 +2395,7 @@ abstract class DAO {
   	 * @return bool
   	 */
   	public function isTagged() {
-  		if(isset($this->tags) && $this->tags instanceof Relation)
+  		if(isset($this->taggedAttributes) && isset($this->tags) && $this->tags instanceof Relation)
   			return true;
   		else
   			return false;
@@ -2451,6 +2451,16 @@ abstract class DAO {
 		}		
   		
   		return $BO;
+  	}
+  	
+  	/**
+  	 * Converts "business_object" to "Business" and returns
+  	 *  
+  	 * @return string
+  	 */
+  	public function getFriendlyClassName() {
+  		$name = explode('_', get_class($this));
+  		return ucfirst($name[0]);
   	}
 }
 
