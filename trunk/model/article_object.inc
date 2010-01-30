@@ -95,6 +95,13 @@ class article_object extends DAO {
 	protected $tags;
 	
 	/**
+	 * An array of all of the attributes on this BO which are tagged
+	 *  
+	 * @var array
+	 */
+	protected $taggedAttributes = array('title', 'description');
+	
+	/**
 	 * Path to a .text file where the content of this article is stored (optional)
 	 * 
 	 * @var string
@@ -217,6 +224,7 @@ class article_object extends DAO {
 		$this->markUnique('title');
 		
 		$this->markTransient('filePath');
+		$this->markTransient('taggedAttributes');
 	}
 	
 	/**
@@ -225,28 +233,17 @@ class article_object extends DAO {
 	 */
 	protected function after_save_callback() {
 		if($this->getVersion() == 1 && $this->tags instanceof Relation) {
-			// make tags based on the description
-			$tags = tag_object::tokenize($this->description->getValue(), get_class($this), $this->getOID());
-			foreach($tags as $tag) {
-				try {
-					$tag->save();
-				}catch(ValidationException $e){
-					/*
-					 * The unique key has most-likely been violated because this BO is already tagged with this
-					 * value, so we can ignore in this case.
-					 */
-				}
-			}
-			// make tags based on the title
-			$tags = tag_object::tokenize($this->title->getValue(), get_class($this), $this->getOID());
-			foreach($tags as $tag) {
-				try {
-					$tag->save();
-				}catch(ValidationException $e){
-					/*
-					 * The unique key has most-likely been violated because this BO is already tagged with this
-					 * value, so we will just log a warning
-					 */					
+			foreach($this->taggedAttributes as $tagged) {
+				$tags = tag_object::tokenize($this->get($tagged)->getValue(), get_class($this), $this->getOID());
+				foreach($tags as $tag) {
+					try {
+						$tag->save();
+					}catch(ValidationException $e){
+						/*
+						 * The unique key has most-likely been violated because this BO is already tagged with this
+						 * value, so we can ignore in this case.
+						 */
+					}
 				}
 			}
 		}
