@@ -149,7 +149,7 @@ class tag_object extends DAO {
 		global $config;
 		
 		// apply stop words
-		$lowerWords = explode(' ', $content);
+		$lowerWords = preg_split("/[\s,.:]+/", $content);
 		array_walk($lowerWords, 'tag_object::lowercaseArrayElement');		
 		$stopwords = file($config->get('sysRoot').'config/stopwords.ini', FILE_IGNORE_NEW_LINES);
 		array_walk($stopwords, 'tag_object::lowercaseArrayElement');
@@ -159,7 +159,7 @@ class tag_object extends DAO {
 		$tagContents = array();
 		foreach($filtered as $tagContent) {
 			// just making sure that we haven't added this one in already
-			if(!in_array($tagContent, $tagContents)) {
+			if(!in_array($tagContent, $tagContents) && !empty($tagContent)) {
 				$tag = new tag_object();
 				$tag->set('content', trim(strtolower($tagContent)));
 				if(!empty($taggedClass))
