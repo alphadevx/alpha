@@ -234,7 +234,7 @@ class article_object extends DAO {
 	protected function after_save_callback() {
 		if($this->getVersion() == 1 && $this->tags instanceof Relation) {
 			foreach($this->taggedAttributes as $tagged) {
-				$tags = tag_object::tokenize($this->get($tagged)->getValue(), get_class($this), $this->getOID());
+				$tags = tag_object::tokenize($this->get($tagged), get_class($this), $this->getOID());
 				foreach($tags as $tag) {
 					try {
 						$tag->save();
