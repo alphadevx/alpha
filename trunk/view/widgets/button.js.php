@@ -71,7 +71,7 @@ class button
 	/**
 	 * renders the HTML and javascript for the button
 	 * 
-	 * @param int $width The width in pixels of the button, defaults to 0 meaning auto-width to fit text
+	 * @param int $width The width in pixels of the button (will also accept percentage values), defaults to 0 meaning auto-width to fit text
 	 * @return string
 	 */
 	function render($width=0) {
