@@ -275,8 +275,13 @@ class View {
 		$fields['formFields'] = $html;
 		
 		// View button
-		$button = new button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."'", 'View', 'viewBut');
-		$fields['viewButton'] = $button->render();
+		if(strpos($_SERVER['REQUEST_URI'], 'FC.php') !== false) {
+			$button = new button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."';", 'View', 'viewBut');
+			$fields['viewButton'] = $button->render();
+		}else{
+			$button = new button("document.location = '".$this->BO->get('URL')."';", 'View', 'viewBut');
+			$fields['viewButton'] = $button->render();
+		}
 
 		$html = '';
 		// render edit and delete buttons for admins only
