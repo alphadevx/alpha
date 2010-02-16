@@ -52,11 +52,11 @@ class ViewArticleTitle extends ViewArticle {
 			}
 						
 		}catch(IllegalArguementException $e) {
-			self::$logger->error($e->getMessage());
-			exit;
+			self::$logger->warn($e->getMessage());
+			throw new ResourceNotFoundException('The file that you have requested cannot be found!');
 		}catch(BONotFoundException $e) {
 			self::$logger->warn($e->getMessage());
-			echo '<p class="error"><br>Failed to load the requested article from the database!</p>';
+			throw new ResourceNotFoundException('The article that you have requested cannot be found!');
 		}
 		
 		$this->setTitle($this->BO->get('title'));
