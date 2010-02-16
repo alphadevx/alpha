@@ -569,13 +569,13 @@ abstract class DAO {
 					if (!in_array($propName, $this->transientAttributes)) {						
 						// Skip the OID, database auto number takes care of this.  Also skip empty strings.
 						if($this->get($propName) != '' && $propName != 'OID' && $propName != 'version_num') {
-							$sqlQuery .= "'".$this->get($propName)."',";
+							$sqlQuery .= "'".mysql_real_escape_string($this->get($propName))."',";
 						}
 						
 						if($propName == 'version_num') {
 							$temp = $this->version_num->getValue();
 							$this->version_num->setValue($temp+1);
-							$sqlQuery .= "'".$this->version_num->getValue()."',";
+							$sqlQuery .= "'".mysql_real_escape_string($this->version_num->getValue())."',";
 						}
 					}
 				}
@@ -598,13 +598,13 @@ abstract class DAO {
 					if(!in_array($propName, $this->transientAttributes)) {
 						// Skip the OID, database auto number takes care of this.  Also skip empty strings.
 						if($this->get($propName) != '' && $propName != 'OID' && $propName != 'version_num') {
-							$sqlQuery .= "$propName = '".$this->get($propName)."',";
+							$sqlQuery .= "$propName = '".mysql_real_escape_string($this->get($propName))."',";
 						}
 						
 						if ($propName == 'version_num') {					
 							$temp = $this->version_num->getValue();					
 							$this->version_num->setValue($temp+1);					
-							$sqlQuery .= "version_num = '".$this->version_num->getValue()."',";
+							$sqlQuery .= "version_num = '".mysql_real_escape_string($this->version_num->getValue())."',";
 						}
 					}
 				}
