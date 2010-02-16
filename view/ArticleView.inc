@@ -191,7 +191,6 @@ class ArticleView extends View {
 		
 		ob_start();
 		require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
-		require_once $config->get('sysRoot').'alpha/view/widgets/image.js.php';
 		$html.= ob_get_clean();
 		
 		// if we are working with a BO, render form validation Javascript rules
