@@ -122,7 +122,7 @@ class RecordSelector {
 					$html .= '<tr><td colspan="2">'.$this->label.': ';
 						
 					foreach($objects as $tag) {
-						$html .= ' <a href="'.$config->get('sysURL').'alpha/controller/Search.php?q='.$tag->get('content').'">'.$tag->get('content').'</a>';
+						$html .= ' <a href="'.$config->get('sysURL').'search/q/'.$tag->get('content').'">'.$tag->get('content').'</a>';
 					}					
 					
 					$html .= '</td></tr>';
