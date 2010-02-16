@@ -131,7 +131,7 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 				$html .= '<p>Tags:';
 				
 				foreach($tags as $tag)
-					$html .= ' <a href="'.$config->get('sysURL').'alpha/controller/Search.php?q='.$tag->get('content').'">'.$tag->get('content').'</a>';
+					$html .= ' <a href="'.$config->get('sysURL').'search/q/'.$tag->get('content').'">'.$tag->get('content').'</a>';
 				$html .= '</p>';
 			}
 		}
