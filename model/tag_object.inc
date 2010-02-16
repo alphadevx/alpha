@@ -1,6 +1,7 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/model/DAO.inc';
+require_once $config->get('sysRoot').'alpha/util/helpers/Validator.inc';
 
 /**
  *
@@ -190,17 +191,20 @@ class tag_object extends DAO {
 		$tagObjects = array();
 		$tagContents = array();
 		foreach($filtered as $tagContent) {
-			// just making sure that we haven't added this one in already
-			if(!in_array($tagContent, $tagContents) && !empty($tagContent)) {
-				$tag = new tag_object();
-				$tag->set('content', trim(strtolower($tagContent)));
-				if(!empty($taggedClass))
-					$tag->set('taggedClass', $taggedClass);
-				if(!empty($taggedOID))
-					$tag->set('taggedOID', $taggedOID);
-				
-				array_push($tagObjects, $tag);
-				array_push($tagContents, $tagContent);
+			// we only want to create alpha-numeric tags
+			if(Validator::isAlphaNum($tagContent)) {
+				// just making sure that we haven't added this one in already
+				if(!in_array($tagContent, $tagContents) && !empty($tagContent)) {
+					$tag = new tag_object();
+					$tag->set('content', trim(strtolower($tagContent)));
+					if(!empty($taggedClass))
+						$tag->set('taggedClass', $taggedClass);
+					if(!empty($taggedOID))
+						$tag->set('taggedOID', $taggedOID);
+					
+					array_push($tagObjects, $tag);
+					array_push($tagContents, $tagContent);
+				}
 			}
 		}
 		
