@@ -1,7 +1,7 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/lib/tcpdf/config/lang/eng.php';
-require_once $config->get('sysRoot').'alpha/lib/tcpdf/tcpdf.php';
+require_once $config->get('sysRoot').'alpha/util/AlphaTCPDF.inc';
 
 /**
  *
@@ -25,7 +25,7 @@ class TCPDFFacade {
 	/**
 	 * The PDF object that will be generated from the Markdown HTML content
 	 * 
-	 * @var TCPDF
+	 * @var AlphaTCPDF
 	 */
 	private $pdf;
 	
@@ -80,7 +80,7 @@ class TCPDFFacade {
 			$this->HTMLCache();
 		}
 		
-		$this->pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$this->pdf = new AlphaTCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		$this->pdf->SetCreator(PDF_CREATOR);
 		$this->pdf->SetAuthor($this->BO->get('author'));
 		$this->pdf->SetTitle($this->BO->get('title'));
@@ -190,12 +190,7 @@ class TCPDFFacade {
 	private function checkHTMLCache() {
 		global $config;
 		
-		/*
-		 * we can't use the HTML cahce contents if sysCMSImagesWidget is set to true, because images will
-		 * be Javascript calls to insertImage rather than regular HTML tags that the PDF parser understands
-		 */
-		if(!$config->get('sysCMSImagesWidget'))
-			return file_exists($this->HTMLFilename);
+		return file_exists($this->HTMLFilename);
 	}
 	
 	/**
