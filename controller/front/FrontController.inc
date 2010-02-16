@@ -197,6 +197,36 @@ class FrontController {
 	}
 	
 	/**
+	 * Static method to return the decoded GET paramters from an encrytpted tk value (excludes the act paramter)
+	 * as an array of key/value pairs.
+	 * 
+	 * @return array
+	 */
+	public static function getDecodeQueryParams($tk) {
+		global $config;		
+		
+		$td = mcrypt_module_open('tripledes', '', 'ecb', '');
+		$iv = mcrypt_create_iv(mcrypt_enc_get_iv_size ($td), MCRYPT_RAND);
+		// replace any troublesome characters from the URL with the original values
+		$token = strtr($tk, '-_', '+/');
+		$token = base64_decode($token);
+		$params = trim(mcrypt_decrypt('tripledes', $config->get('sysQSKey'), $token, 'ecb', $iv));
+		// now remove the first param ("act" the page controller action)			
+		$params = substr($params, strpos($params,'&')+1);
+		
+		$pairs = explode('&', $params);
+		
+		$parameters = array();
+		
+		foreach($pairs as $pair) {
+			$split = explode('=', $pair);
+			$parameters[$split[0]] = $split[1]; 
+		}
+		
+		return $parameters;
+	}
+	
+	/**
 	 * Method to load the page controller
 	 * 
 	 * @param bool $allowRedirects Defaults to true, set to false if you want to prevent the front controller from redirecting the request
