@@ -2,6 +2,7 @@
 
 require_once $config->get('sysRoot').'alpha/lib/markdown/markdown.php';
 require_once $config->get('sysRoot').'alpha/lib/geshi.php';
+require_once $config->get('sysRoot').'alpha/view/widgets/Image.inc';
 
 /**
  *
@@ -62,15 +63,17 @@ class AlphaMarkdown extends MarkdownExtra_Parser {
 	 * system is configured to do so, via sysCMSImagesWidget in the .ini, otherwise reverts to normal Markdown
 	 * behaviour for handling images.
 	 * 
+	 * @todo Update to use the new Image widget!
+	 * 
 	 */	
 	public function _doImages_inline_callback($matches) {
 		global $config;
 		
-		// just making sure that the option is configured, and that the controller is not the PDF one or preview one
-		if($config->get('sysCMSImagesWidget') && basename($_SERVER['PHP_SELF']) != 'view_article_pdf.php' && basename($_SERVER['PHP_SELF']) != 'PreviewArticle.php') {			
+		// just making sure that the controller is not the PDF one or preview one
+		if(basename($_SERVER['PHP_SELF']) != 'ViewArticlePDF.php' && basename($_SERVER['PHP_SELF']) != 'PreviewArticle.php') {			
 			// get the details of the source image
-			$url			= image::convertImageURLToPath($matches[3]);
-			$image_details = getimagesize($config->get('sysRoot').$url);
+			$path = Image::convertImageURLToPath($matches[3]);
+			$image_details = getimagesize($config->get('sysRoot').$path);
 			$imgType = $image_details[2];
 	    	if($imgType == 1)
 	    		$type = 'gif';
@@ -78,8 +81,9 @@ class AlphaMarkdown extends MarkdownExtra_Parser {
 	    		$type = 'jpg';
 	    	elseif($imgType == 3)
 	    		$type = 'png';
-			
-			$result = "<script language=\"javascript\">insertImage('$url', ".$image_details[0].", ".$image_details[1].", '$type', 0.95, 0, 1);</script>";
+	    		
+			$img = new Image($path, $image_details[0], $image_details[1], $type, 0.95, false, false);
+			$result = $img->renderHTMLLink();
 		}else{ // normal Markdown behaviour
 			$whole_match	= $matches[1];
 			$alt_text		= $matches[2];
