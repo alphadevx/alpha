@@ -64,6 +64,9 @@ class Search extends Controller implements AlphaControllerInterface {
 		echo View::displayPageHead($this);
 		
 		if(isset($params['q'])) {
+			// replace any %20 on the URL with spaces
+			$params['q'] = str_replace('%20', ' ', $params['q']);
+			
 			echo '<h2>Display results for &quot;'.$params['q'].'&quot;</h2>';
 			
 			// if a BO name is provided, only search tags on that class, otherwise search all BOs
@@ -92,7 +95,7 @@ class Search extends Controller implements AlphaControllerInterface {
 							$matchingTags = array_merge($matchingTags, $tags);
 						}
 						
-						self::$logger->info('There are ['.count($matchingTags).'] tag_objects matching the query ['.$params['q'].']');
+						self::$logger->debug('There are ['.count($matchingTags).'] tag_objects matching the query ['.$params['q'].']');
 						
 						/*
 						 * Build an array of BOs for the matching tags from the DB:
@@ -109,7 +112,7 @@ class Search extends Controller implements AlphaControllerInterface {
 								}else{
 									$BOIDs[$tag->get('taggedOID')] = 1;									
 								}
-								self::$logger->info('Found BO ['.$tag->get('taggedOID').'] has weight ['.$BOIDs[$tag->get('taggedOID')].']');								
+								self::$logger->debug('Found BO ['.$tag->get('taggedOID').'] has weight ['.$BOIDs[$tag->get('taggedOID')].']');								
 							}
 						}
 						
@@ -130,7 +133,7 @@ class Search extends Controller implements AlphaControllerInterface {
 								if(count($tags) > 0) {
 									echo '<p>Tags: ';
 									
-									$queryTerms = explode(' ', $params['q']);
+									$queryTerms = explode(' ', strtolower($params['q']));
 									
 									foreach($tags as $tag) {
 										echo (in_array($tag->get('content'), $queryTerms) ? '<strong>'.$tag->get('content').' </strong>' : $tag->get('content').' ');
@@ -168,10 +171,17 @@ class Search extends Controller implements AlphaControllerInterface {
 		self::$logger->debug('<<doPOST');
 	}
 	
+	/**
+	 * Displays a search form on the top of the page
+	 * 
+	 * @return string
+	 */
 	public function after_displayPageHead_callback() {
-		$html = '<div align="center"><form action="'.$_SERVER['PHP_SELF'].'" method="GET" id="search_form">';
-		$html .= 'Search for: <input type="text" size="80" name="q"/>&nbsp;';		
-		$button = new button('submit', 'Search', 'searchBut');
+		global $config;
+		
+		$html = '<div align="center"><form method="GET" id="search_form">';
+		$html .= 'Search for: <input type="text" size="80" name="q" id="q"/>&nbsp;';		
+		$button = new button('document.location = \''.$config->get('sysURL').'search/q/\'+document.getElementById(\'q\').value;', 'Search', 'searchButton');
 		$html .= $button->render();
 		$html .= '</form></div>';
 		
