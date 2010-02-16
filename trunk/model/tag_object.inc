@@ -107,7 +107,39 @@ class tag_object extends DAO {
 			$count++;
 		}
 		
-		return $objects;	
+		return $objects;
+	}
+	
+	/**
+	 * Returns a hash array of the most popular tags based on their occurence in the database, 
+	 * ordered by alphabet and restricted to the a count matching the $limit supplied.  The 
+	 * returned has array uses the tag content as a key and the database value as a value.
+	 *  
+	 * @param $limit
+	 * @return array
+	 */
+	public static function getPopularTagsArray($limit) {
+		global $config;		
+		
+		$sqlQuery = "SELECT content, count(*) as count FROM `tag` GROUP BY content ORDER BY count DESC LIMIT $limit";
+		
+		$result = mysql_query($sqlQuery);
+		
+		if(mysql_error() != '') {
+			throw new BONotFoundException('Failed to query the tags table, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+			return array();
+		}
+		
+		// now build an array of tags to be returned
+		$popTags = array();		
+		
+		while($row = mysql_fetch_assoc($result)) {			
+			$popTags[$row['content']] = $row['count'];			
+		}
+		
+		// sort the array by content key before returning
+		ksort($popTags);		
+		return $popTags;
 	}
 	
 	/**
