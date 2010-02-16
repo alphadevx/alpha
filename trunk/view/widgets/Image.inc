@@ -337,6 +337,21 @@ class Image {
 	private function loadCache() {		
 		readfile($this->filename);		
 	}
+	
+	/**
+	 * Converts a URL for an image to a relative path for the image, assuming it is
+	 * hosted on the same server as the application.
+	 * 
+	 * @param string $imgURL
+	 * @return string the path of the image
+	 */
+	public static function convertImageURLToPath($imgURL) {
+		global $config;
+		
+		$imgPath = str_replace($config->get('sysURL'), '', $imgURL);
+		
+		return $imgPath;
+	}
 }
 
 ?>
