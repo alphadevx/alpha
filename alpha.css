@@ -136,7 +136,7 @@ ul.potato-menu-group a {
 .potato-menu a {
     padding:5px 12px 5px 12px;
     background: #5C5959;
-    color: #ffffff;
+    color: #ffffff !important;
     padding-right:20px;
 }
 .potato-menu a:hover {
