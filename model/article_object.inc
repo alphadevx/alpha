@@ -99,7 +99,7 @@ class article_object extends DAO {
 	 *  
 	 * @var array
 	 */
-	protected $taggedAttributes = array('title', 'description');
+	protected $taggedAttributes = array('title', 'description', 'content');
 	
 	/**
 	 * Path to a .text file where the content of this article is stored (optional)
