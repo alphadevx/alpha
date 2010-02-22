@@ -86,7 +86,7 @@ class Search extends Controller implements AlphaControllerInterface {
 						$log->writeLine(array($params['q'], date('Y-m-d H:i:s'), $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
 					
 						// explode the user's query into a set of tokenized transient tag_objects
-						$queryTags = tag_object::tokenize($params['q']);			
+						$queryTags = tag_object::tokenize($params['q'], '', '', false);			
 						$matchingTags = array();
 						
 						// load tag_objects from the DB where content equals the content of one of our transient tag_objects
