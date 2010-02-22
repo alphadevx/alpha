@@ -176,23 +176,28 @@ class tag_object extends DAO {
 	 * @param $content
 	 * @param $taggedClass Optionally provide a BO class name
 	 * @param $taggedOID Optionally provide a BO instance OID
+	 * @param $applyStopwords Defaults true, set to false if you want to ignore the stopwords.
 	 * @return array
 	 */
-	public static function tokenize($content, $taggedClass='', $taggedOID='') {
+	public static function tokenize($content, $taggedClass='', $taggedOID='', $applyStopwords=true) {
 		global $config;
 		
 		// apply stop words
 		$lowerWords = preg_split("/[\s,.:]+/", $content);
-		array_walk($lowerWords, 'tag_object::lowercaseArrayElement');		
-		$stopwords = file($config->get('sysRoot').'config/stopwords.ini', FILE_IGNORE_NEW_LINES);
-		array_walk($stopwords, 'tag_object::lowercaseArrayElement');
-		$filtered = array_diff($lowerWords, $stopwords);		
+		array_walk($lowerWords, 'tag_object::lowercaseArrayElement');
+		if($applyStopwords) {		
+			$stopwords = file($config->get('sysRoot').'config/stopwords.ini', FILE_IGNORE_NEW_LINES);
+			array_walk($stopwords, 'tag_object::lowercaseArrayElement');
+			$filtered = array_diff($lowerWords, $stopwords);
+		}else{
+			$filtered = $lowerWords;
+		}
 		
 		$tagObjects = array();
 		$tagContents = array();
 		foreach($filtered as $tagContent) {
-			// we only want to create alpha-numeric tags
-			if(Validator::isAlphaNum($tagContent)) {
+			// we only want to create word tags
+			if(Validator::isAlpha($tagContent)) {
 				// just making sure that we haven't added this one in already
 				if(!in_array($tagContent, $tagContents) && !empty($tagContent)) {
 					$tag = new tag_object();
