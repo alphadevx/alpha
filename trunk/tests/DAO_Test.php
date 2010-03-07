@@ -191,6 +191,7 @@ class DAO_Test extends PHPUnit_Framework_TestCase
     	$this->assertEquals(0, count(get_object_vars($this->person)), 'testing the delete method');
     	// gone from the database
     	try {
+    		$this->person = new person_object();
     		$this->person->load($id);
     		$this->fail('testing the delete method');
     	}catch (BONotFoundException $e) {
