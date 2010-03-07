@@ -28,7 +28,7 @@ require_once $config->get('sysRoot').'alpha/model/types/Relation.inc';
  * 
  * @package alpha::model
  * @author John Collins <john@design-ireland.net>
- * @copyright 2009 John Collins
+ * @copyright 2010 John Collins
  * @version $Id$
  *  
  */
@@ -118,6 +118,13 @@ abstract class DAO {
 	private static $logger = null;
 	
 	/**
+	 * Datebase connection
+	 * 
+	 * @var mysqli
+	 */
+	private static $connection;
+	
+	/**
 	 * The constructor which sets up some housekeeping attributes
 	 */
 	public function __construct() {
@@ -136,6 +143,25 @@ abstract class DAO {
 	}
 	
 	/**
+	 * Gets the current connection singleton, or creates a new one if none exists
+	 *  
+	 * @return mysqli
+	 */
+	public static function getConnection() {
+		global $config;
+		
+		if (!isset(self::$connection)) {
+			self::$connection = new mysqli($config->get('sysDBHost'), $config->get('sysDBUsername'), $config->get('sysDBPassword'), $config->get('sysDB'));
+				
+			if (mysqli_connect_error()) {
+			    self::$logger->fatal('Could not connect to database: ['.mysqli_connect_errno().'] '.mysqli_connect_error());
+			}
+		}
+		
+		return self::$connection;
+	}
+	
+	/**
 	 * Populates the child object with the properties retrived from the database for the object $OID
 	 * 
 	 * @param integer $OID	
@@ -148,14 +174,32 @@ abstract class DAO {
 		
 		$this->OID = $OID;
 		
-		$sqlQuery = "SELECT * FROM ".$this->getTableName()." WHERE OID = '$OID';";
-					
-		$this->lastQuery = $sqlQuery;
-
-		$result = mysql_query($sqlQuery);
+		$attributes = $this->getPersistentAttributes();
+		$fields = '';
+		foreach($attributes as $att)
+			$fields .= $att.',';
+		$fields = substr($fields, 0, -1);
 		
-		// it is possible that the load failed due to the table not existing yet
-		if(!$result) {
+		$sqlQuery = 'SELECT '.$fields.' FROM '.$this->getTableName().' WHERE OID = ?;';					
+		$this->lastQuery = $sqlQuery;
+		$stmt = DAO::getConnection()->stmt_init();
+
+		$row = array();
+		
+		if($stmt->prepare($sqlQuery)) {
+			$stmt->bind_param('i', $OID);
+			$stmt->execute();
+			
+			$rowBindings = '';
+			foreach($attributes as $att)
+				$rowBindings .= '$row["'.$att.'"],';
+			$rowBindings = substr($rowBindings, 0, -1);
+		
+			eval('$stmt->bind_result('.$rowBindings.');');
+			
+			$stmt->fetch();			
+			$stmt->close();
+		}else{
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
 			if($this->checkTableExists()) {
 				$this->makeTable();
@@ -164,13 +208,11 @@ abstract class DAO {
 			return;
 		}
 		
-		if(mysql_num_rows($result) == 0) {
+		if(count($row) == 0) {
 			throw new BONotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');			
 			self::$logger->debug('<<load');
 			return;
 		}
-		
-		$row = mysql_fetch_assoc($result);
 		
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this));
@@ -208,13 +250,10 @@ abstract class DAO {
 			}
 		}
 		
-		if(mysql_error() == '') {
-			$this->setEnumOptions();	
-			if(method_exists($this, 'after_load_callback'))
-				$this->after_load_callback();			
-		}else{			
-			throw new BONotFoundException('Failed to load object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
-		}
+		$this->setEnumOptions();	
+		if(method_exists($this, 'after_load_callback'))
+			$this->after_load_callback();
+		
 		self::$logger->debug('<<load');
 	}
 	
@@ -2107,6 +2146,33 @@ abstract class DAO {
 		self::$logger->debug('>>getTransientAttributes()');
 		self::$logger->debug('<<getTransientAttributes ['.print_r($this->transientAttributes, true).']');
 		return $this->transientAttributes;
+	}
+	
+	/**
+	 * Get the array of persistent attribute names
+	 * 
+	 * @return array
+	 */
+	public function getPersistentAttributes() {
+		self::$logger->debug('>>getPersistentAttributes()');
+		
+		$attributes = array();
+		
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this));
+		$properties = $reflection->getProperties();
+	
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+											
+			// filter transient attributes
+			if(!in_array($propName, $this->transientAttributes)) {
+				array_push($attributes, $propName);
+			}
+		}
+		
+		self::$logger->debug('<<getPersistentAttributes ['.print_r($attributes, true).']');
+		return $attributes;
 	}
 	
 	/**
