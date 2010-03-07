@@ -1,8 +1,10 @@
 <?php
 
 // load config
-require_once 'configLoader.inc';
-$config =&configLoader::getInstance();
+if(!isset($config)) {
+	require_once 'AlphaConfig.inc';
+	$config = AlphaConfig::getInstance();
+}
 
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
 
@@ -26,17 +28,17 @@ class AlphaCronManager {
 	private static $logger = null;
 	
 	public function __construct() {
-		global $config;
+		global $config;		
 		
 		if(self::$logger == null) {
-			self::$logger = new Logger('AlphaCronManager');
+			self::$logger = new Logger('AlphaCronManager');			
 			self::$logger->setLogFile($config->get('sysRoot').'logs/tasks.log');
 		}
 		
 		self::$logger->debug('>>__construct()');
 		
 		self::$logger->info('New AlphaCronManager invoked');
-		
+
 		$taskList = self::getTaskClassNames();
 		
 		self::$logger->info('Found ['.count($taskList).'] tasks in the directory ['.$config->get('sysRoot').'tasks]');
