@@ -1,8 +1,10 @@
 <?php
 
 // load config
-require_once 'configLoader.inc';
-$config =&configLoader::getInstance();
+if(!isset($config)) {
+	require_once 'AlphaConfig.inc';
+	$config = AlphaConfig::getInstance();
+}
 
 require_once $config->get('sysRoot').'alpha/util/LogFile.inc';
 
@@ -42,7 +44,7 @@ class Logger {
 	 *
 	 * @param string $classname
 	 */
-	public function __construct($classname) {
+	public function __construct($classname) {		
 		global $config;
 		
 		$this->classname = $classname;
@@ -59,7 +61,7 @@ class Logger {
 	public function debug($message) {		
 		if($this->level == 'DEBUG') {
 			$dateTime = date("Y-m-d H:i:s");
-			$this->logfile->writeLine(array($dateTime, 'DEBUG', $this->classname, $message, $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
+			$this->logfile->writeLine(array($dateTime, 'DEBUG', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
 		}
 	}
 	
@@ -71,7 +73,7 @@ class Logger {
 	public function info($message) {
 		if($this->level == 'DEBUG' || $this->level == 'INFO') {
 			$dateTime = date("Y-m-d H:i:s");
-			$this->logfile->writeLine(array($dateTime, 'INFO', $this->classname, $message, $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
+			$this->logfile->writeLine(array($dateTime, 'INFO', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
 		}
 	}
 	
@@ -83,7 +85,7 @@ class Logger {
 	public function warn($message) {
 		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN') {
 			$dateTime = date("Y-m-d H:i:s");
-			$this->logfile->writeLine(array($dateTime, 'WARN', $this->classname, $message, $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
+			$this->logfile->writeLine(array($dateTime, 'WARN', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
 		}
 	}
 	
@@ -95,7 +97,7 @@ class Logger {
 	public function error($message) {
 		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR') {
 			$dateTime = date("Y-m-d H:i:s");		
-			$this->logfile->writeLine(array($dateTime, 'ERROR', $this->classname, $message, $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
+			$this->logfile->writeLine(array($dateTime, 'ERROR', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
 		}
 	}
 	
@@ -107,7 +109,7 @@ class Logger {
 	public function fatal($message) {
 		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' || $this->level == 'FATAL') {
 			$dateTime = date("Y-m-d H:i:s");
-			$this->logfile->writeLine(array($dateTime, 'FATAL', $this->classname, $message, $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
+			$this->logfile->writeLine(array($dateTime, 'FATAL', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
 		}
 	}
 	
