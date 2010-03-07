@@ -208,7 +208,7 @@ abstract class DAO {
 			return;
 		}
 		
-		if(count($row) == 0) {
+		if(!isset($row['OID']) || $row['OID'] < 1) {
 			throw new BONotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');			
 			self::$logger->debug('<<load');
 			return;
@@ -2372,13 +2372,10 @@ abstract class DAO {
 	public static function begin() {
 		if(self::$logger == null)
 			self::$logger = new Logger('DAO');
-		self::$logger->debug('>>begin()');
-		
-    	mysql_query('START TRANSACTION');
-     	mysql_query('BEGIN');
+		self::$logger->debug('>>begin()');     	
      	
-     	if (mysql_error() != '')
-     		throw new AlphaException('Error beginning a new transaction, error is ['.mysql_error().']');
+     	if (!DAO::getConnection()->autocommit(FALSE))
+     		throw new AlphaException('Error beginning a new transaction, error is ['.DAO::getConnection()->get_warnings().']');
      	
      	self::$logger->debug('<<begin');
 	}
@@ -2390,10 +2387,9 @@ abstract class DAO {
 		if(self::$logger == null)
 			self::$logger = new Logger('DAO');
 		self::$logger->debug('>>commit()');
-    	mysql_query('COMMIT');
-    	
-    	if (mysql_error() != '')
-     		throw new FailedSaveException('Error commiting a transaction, error is ['.mysql_error().']');
+		
+    	if (!DAO::getConnection()->commit())
+     		throw new FailedSaveException('Error commiting a transaction, error is ['.DAO::getConnection()->get_warnings().']');
     	
     	self::$logger->debug('<<commit');
   	}
@@ -2407,8 +2403,8 @@ abstract class DAO {
 		self::$logger->debug('>>rollback()');
     	mysql_query('ROLLBACK');
     	
-    	if (mysql_error() != '')
-     		throw new AlphaException('Error aborting a transaction, error is ['.mysql_error().']');
+    	if (!DAO::getConnection()->rollback())
+     		throw new AlphaException('Error aborting a transaction, error is ['.DAO::getConnection()->get_warnings().']');
     	
     	self::$logger->debug('<<rollback');
   	}
