@@ -108,6 +108,8 @@ class Image {
 		if(self::$logger == null)
 			self::$logger = new Logger('Image');
 			
+		self::$logger->debug('>>__construct(source=['.$source.'], width=['.$width.'], height=['.$height.'], sourceType=['.$sourceType.'], quality=['.$quality.'], scale=['.$scale.'], secure=['.$secure.'])');
+			
 		global $config;
 			
 		if(file_exists($source))
@@ -123,28 +125,12 @@ class Image {
 		$this->scale = new Boolean($scale);
 		$this->secure = new Boolean($secure);
 		
-		// if scaled, we need to compute the target image size
-		if($secure && isset($_COOKIE['screenSize'])) {
-				$originalScreenResolution = explode('x', $config->get('sysCMSImagesWidgetScreenResolution'));
-				$originalScreenX = $originalScreenResolution[0];
-				$originalScreenY = $originalScreenResolution[1];
-				
-				$targetScreenResolution = explode('x', $_COOKIE['screenSize']);
-				$targetScreenX = $targetScreenResolution[0];
-				$targetScreenY = $targetScreenResolution[1];
-				
-				// calculate the new units we will scale by 
-				$xu = $targetScreenX/$originalScreenX;
-				$yu = $targetScreenY/$originalScreenY;
-				
-				$this->width = new Integer(intval($width*$xu));
-				$this->height = new Integer(intval($height*$yu));
-		}else{
-			$this->width = new Integer($width);
-			$this->height = new Integer($height);
-		}
+		$this->width = new Integer($width);
+		$this->height = new Integer($height);
 		
 		$this->setFilename();
+		
+		self::$logger->debug('<<__construct');
 	}
 	
 	/**
@@ -234,6 +220,27 @@ class Image {
 				
 				self::$logger->warn('The client ['.$_SERVER['HTTP_USER_AGENT'].'] was blocked from accessing the file ['.$this->filename.'] due to bad security tokens being provided');
 			}
+		}
+		
+		// if scaled, we need to compute the target image size
+		if($this->scale->getBooleanValue() && isset($_COOKIE['screenSize'])) {
+			$originalScreenResolution = explode('x', $config->get('sysCMSImagesWidgetScreenResolution'));
+			$originalScreenX = $originalScreenResolution[0];
+			$originalScreenY = $originalScreenResolution[1];
+				
+			$targetScreenResolution = explode('x', $_COOKIE['screenSize']);
+			$targetScreenX = $targetScreenResolution[0];
+			$targetScreenY = $targetScreenResolution[1];
+				
+			// calculate the new units we will scale by 
+			$xu = $targetScreenX/$originalScreenX;
+			$yu = $targetScreenY/$originalScreenY;
+				
+			$this->width = new Integer(intval($this->width->getValue()*$xu));
+			$this->height = new Integer(intval($this->height->getValue()*$yu));
+			
+			// need to update the cache filename as the dimensions have changed
+			$this->setFilename();
 		}
 		
 		// check the image cache first before we proceed
