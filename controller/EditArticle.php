@@ -140,9 +140,7 @@ class EditArticle extends Controller implements AlphaControllerInterface {
 						echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
 							<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
 							<strong>Error:</strong> '.$e->getMessage().'</p></div>';
-					}
-					// needed by markItUp so that it does not include \'s in text box after saving
-					$this->BO->set('content', stripslashes($this->BO->get('content')));
+					}					
 					echo $BOView->editView();
 				}
 				
