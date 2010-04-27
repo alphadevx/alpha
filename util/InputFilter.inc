@@ -21,9 +21,9 @@ class InputFilter {
 	public static function encode($text, $allowHTML=false) {
 		if(!get_magic_quotes_gpc()) {
 			if($allowHTML)
-				return addslashes($text);
+				return $text;
 			else
-				return htmlentities(addslashes($text));
+				return htmlentities($text);
 		}else{
 			if($allowHTML)
 				return $text;
@@ -42,9 +42,9 @@ class InputFilter {
 	public static function decode($text, $allowHTML=false) {
 		if(!get_magic_quotes_gpc())
 			if($allowHTML)		
-				return stripslashes($text);
+				return $text;
 			else
-				return html_entity_decode(stripslashes($text));
+				return html_entity_decode($text);
 		else
 			if($allowHTML)
 				return $text;
