@@ -190,14 +190,10 @@ abstract class DAO {
 			$stmt->bind_param('i', $OID);
 			$stmt->execute();
 			
-			$rowBindings = '';
-			foreach($attributes as $att)
-				$rowBindings .= '$row["'.$att.'"],';
-			$rowBindings = substr($rowBindings, 0, -1);
-		
-			eval('$stmt->bind_result('.$rowBindings.');');
+			$result = $this->bindResult($stmt);
+			if(isset($result[0]))
+				$row = $result[0];
 			
-			$stmt->fetch();			
 			$stmt->close();
 		}else{
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
@@ -262,7 +258,8 @@ abstract class DAO {
 	 * 
 	 * @param string $atribute
 	 * @param string $value
-	 * @package boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
+	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
+	 * @todo convert to MySQLi
 	 */
 	public function loadByAttribute($attribute, $value, $ignoreClassType=false)	{
 		self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'], ignoreClassType=['.$ignoreClassType.'])');
@@ -325,6 +322,7 @@ abstract class DAO {
 	 * @param string $orderBy the name of the field to sort the BOs by
 	 * @param string $order the order to sort the BOs by, default is ASC
 	 * @return array an array containing objects of this type of business object.
+	 * @todo convert to MySQLi
 	 */
 	public function loadAll($start=0, $limit=0, $orderBy='OID', $order='ASC') {
 		self::$logger->debug('>>loadAll(start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
@@ -396,6 +394,7 @@ abstract class DAO {
 	 * @param string $orderBy the name of the field to sort the BOs by
 	 * @param string $order the order to sort the BOs by, default is ASC
 	 * @return array an array containing objects of this type of business object.
+	 * @todo convert to MySQLi
 	 */
 	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC") {
 		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
@@ -457,6 +456,7 @@ abstract class DAO {
 	 * @param string $orderBy the name of the field to sort the BOs by
 	 * @param string $order the order to sort the BOs by, default is ASC
 	 * @return array an array containing objects of this type of business object.
+	 * @todo convert to MySQLi
 	 */
 	public function loadAllByDayUpdated($date, $start=0, $limit=0, $orderBy="OID", $order="ASC") {
 		self::$logger->debug('>>loadAllByDayUpdated(date=['.$date.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
@@ -514,6 +514,7 @@ abstract class DAO {
 	 * @param string $returnAttribute The attribute to return
 	 * @param string $order the order to sort the BOs by, default is ASC
 	 * @return array
+	 * @todo convert to MySQLi
 	 */
 	public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order='ASC') {
 		self::$logger->debug('>>loadAllFieldValuesByAttribute(attribute=['.$attribute.'], value=['.$value.'], order=['.$order.']');
@@ -550,7 +551,7 @@ abstract class DAO {
 	}
 
 	/**
-	 * Saves the object.  If $this->OID is empty or null it will INSERT, otherwise UPDATE 	
+	 * Saves the object.  If $this->OID is empty or null it will INSERT, otherwise UPDATE
 	 */
 	public function save() {
 		self::$logger->debug('>>save()');
@@ -566,7 +567,8 @@ abstract class DAO {
 			// get the class attributes
 			$reflection = new ReflectionClass(get_class($this));
 			$properties = $reflection->getProperties();
-			$sqlQuery = "";
+			$sqlQuery = '';
+			$stmt = null;
 
 			if($this->getVersion() != $this->version_num->getValue()){
 				throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
@@ -581,6 +583,7 @@ abstract class DAO {
 			
 			// check to see if it is a transient object that needs to be inserted
 			if($this->isTransient()) {
+				$savedFieldsCount = 0;
 				$sqlQuery = 'INSERT INTO '.$this->getTableName().' (';
 	
 				foreach($properties as $propObj) {
@@ -589,10 +592,12 @@ abstract class DAO {
 						// Skip the OID, database auto number takes care of this.  Also skip empty strings.
 						if($this->get($propName) != '' && $propName != 'OID' && $propName != 'version_num') {
 							$sqlQuery .= "$propName,";
+							$savedFieldsCount++;
 						}
 						
 						if($propName == 'version_num') {
 							$sqlQuery .= 'version_num,';
+							$savedFieldsCount++;
 						}
 					}
 				}
@@ -601,72 +606,64 @@ abstract class DAO {
 	
 				$sqlQuery = rtrim($sqlQuery, ",");
 	
-				$sqlQuery .= ") VALUES (";
+				$sqlQuery .= ') VALUES (';
 				
+				for($i = 0; $i < $savedFieldsCount; $i++)
+					$sqlQuery.= '?,';
+				
+				$sqlQuery = rtrim($sqlQuery, ',').')';
+				
+				$this->lastQuery = $sqlQuery;
+				$stmt = DAO::getConnection()->stmt_init();
+			
+				if($stmt->prepare($sqlQuery)) {			
+					$stmt = $this->bindParams($stmt);					
+					$stmt->execute();					
+				}else{
+					throw new FailedSaveException('Failed to save object, error is ['.$stmt->error.'], query ['.$this->lastQuery.']');				
+				}
+			}else{
+				// assume that it is a persistent object that needs to be updated
+				$savedFieldsCount = 0;
+				$sqlQuery = 'UPDATE '.$this->getTableName().' SET ';
+	
 				foreach($properties as $propObj) {
 					$propName = $propObj->name;
-					if (!in_array($propName, $this->transientAttributes)) {						
+					if (!in_array($propName, $this->transientAttributes)) {
 						// Skip the OID, database auto number takes care of this.  Also skip empty strings.
-						if($this->get($propName) != '' && $propName != 'OID' && $propName != 'version_num') {
-							$sqlQuery .= "'".mysql_real_escape_string($this->get($propName))."',";
+						if($this->get($propName) != '' && $propName != 'OID' && $propName != 'version_num') {							
+							$sqlQuery .= "$propName = ?,";
+							$savedFieldsCount++;
 						}
 						
 						if($propName == 'version_num') {
-							$temp = $this->version_num->getValue();
-							$this->version_num->setValue($temp+1);
-							$sqlQuery .= "'".mysql_real_escape_string($this->version_num->getValue())."',";
+							$sqlQuery .= 'version_num = ?,';
+							$savedFieldsCount++;
 						}
 					}
 				}
-				if($this->isTableOverloaded()) {
-					if(isset($this->classname))
-						$sqlQuery .= "'".$this->classname."',";
-					else
-						$sqlQuery .= "'".get_class($this)."',";
-				}
+				if($this->isTableOverloaded())
+					$sqlQuery .= 'classname = ?,';
 	
 				$sqlQuery = rtrim($sqlQuery, ",");
 	
-				$sqlQuery .= ');';
-			}else{
-				// assume that it is a persistent object that needs to be updated
-				$sqlQuery = 'UPDATE '.$this->getTableName().' SET ';
+				$sqlQuery .= " WHERE OID=?;";
 				
-				foreach($properties as $propObj) {
-					$propName = $propObj->name;
-					if(!in_array($propName, $this->transientAttributes)) {
-						// Skip the OID, database auto number takes care of this.  Also skip empty strings.
-						if($this->get($propName) != '' && $propName != 'OID' && $propName != 'version_num') {
-							$sqlQuery .= "$propName = '".mysql_real_escape_string($this->get($propName))."',";
-						}
-						
-						if ($propName == 'version_num') {					
-							$temp = $this->version_num->getValue();					
-							$this->version_num->setValue($temp+1);					
-							$sqlQuery .= "version_num = '".mysql_real_escape_string($this->version_num->getValue())."',";
-						}
-					}
-				}
-				if($this->isTableOverloaded()) {
-					if(isset($this->classname))
-						$sqlQuery .= "classname = '".$this->classname."',";							
-					else
-						$sqlQuery .= "classname = '".get_class($this)."',";
-				}
-	
-				$sqlQuery = rtrim($sqlQuery, ",");
-
-				$sqlQuery .= " WHERE OID='".$this->OID."';";
+				$this->lastQuery = $sqlQuery;
+				$stmt = DAO::getConnection()->stmt_init();
+				
+				if($stmt->prepare($sqlQuery)) {							
+					$this->bindParams($stmt);					
+					$stmt->execute();					
+				}else{
+					throw new FailedSaveException('Failed to save object, error is ['.$stmt->error.'], query ['.$this->lastQuery.']');				
+				}				
 			}
 	
-			$this->lastQuery = $sqlQuery;
-			
-			$result = mysql_query($sqlQuery);
-	
-			if (mysql_error() == '') {
+			if ($stmt != null && $stmt->error == '') {
 				// populate the updated OID in case we just done an insert				
 				if($this->isTransient())
-					$this->setOID(mysql_insert_id());
+					$this->setOID(DAO::getConnection()->insert_id);
 
 				try {
 					foreach($properties as $propObj) {
@@ -688,13 +685,14 @@ abstract class DAO {
 									$lookUp = $prop->getLookup();									
 										
 									// first delete all of the old RelationLookup objects for this rel
-									if($side == 'left')
-										$lookUp->deleteAllByAttribute('leftID', $this->getID());
-									else
-										$lookUp->deleteAllByAttribute('rightID', $this->getID());
-						
-									if (mysql_error() != '')
+									try {
+										if($side == 'left')
+											$lookUp->deleteAllByAttribute('leftID', $this->getID());
+										else
+											$lookUp->deleteAllByAttribute('rightID', $this->getID());							
+									}catch (Exception $e) {
 										throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
+									}
 											
 									if(isset($_POST[$propName]) && $_POST[$propName] != '00000000000')
 										$OIDs = explode(',', $_POST[$propName]);
@@ -730,6 +728,8 @@ abstract class DAO {
 					return;
 				}
 				
+				$stmt->close();
+				
 				if(method_exists($this, 'after_save_callback'))
 					$this->after_save_callback();
 			}else{
@@ -738,7 +738,7 @@ abstract class DAO {
 				$this->version_num->setValue($temp-1);	
 				
 				// check for unique violations			
-				if(mysql_errno() == '1062') {					
+				if(DAO::getConnection()->errno == '1062') {					
 					throw new ValidationException('Failed to save, the value '.$this->findOffendingValue(mysql_error()).' is already in use!');
 					return;
 				}else{					
@@ -790,6 +790,7 @@ abstract class DAO {
 	
 	/**
 	 * Delete the current object from the database
+	 * @todo convert to MySQLi
 	 */
 	public function delete() {
 		self::$logger->debug('>>delete()');
@@ -915,6 +916,7 @@ abstract class DAO {
 	 * Gets the version_num of the object from the database (returns 0 if the BO is not saved yet)
 	 * 
 	 * @return int
+	 * @todo convert to MySQLi
 	 */
 	public function getVersion() {
 		self::$logger->debug('>>getVersion()');
@@ -948,6 +950,7 @@ abstract class DAO {
 
 	/**
 	 * Builds a new database table for the BO class
+	 * @todo convert to MySQLi
 	 */	
 	public function makeTable() {
 		self::$logger->debug('>>makeTable()');
@@ -1039,6 +1042,7 @@ abstract class DAO {
 
 	/**
 	 * Re-builds the table if the model requirements have changed.  All data is lost!
+	 * @todo convert to MySQLi
 	 */	
 	public function rebuildTable() {
 		self::$logger->debug('>>rebuildTable()');
@@ -1065,7 +1069,8 @@ abstract class DAO {
 	/**
 	 * Adds in a new class property without loosing existing data
 	 * 
-	 * @param string $propName 	 
+	 * @param string $propName
+	 * @todo convert to MySQLi 	 
 	 */
 	public function addProperty($propName) {
 		self::$logger->debug('>>addProperty(propName=['.$propName.'])');
@@ -1183,6 +1188,7 @@ abstract class DAO {
 	 * Gets the maximum OID value from the database for this class
 	 * 
 	 * @return integer
+	 * @todo convert to MySQLi
 	 */
 	public function getMAX() {
 		self::$logger->debug('>>getMAX()');
@@ -1215,6 +1221,7 @@ abstract class DAO {
 	 * Gets the count from the database for the amount of objects of this class
 	 * 
 	 * @return integer
+	 * @todo convert to MySQLi
 	 */
 	public function getCount() {
 		self::$logger->debug('>>getCount()');
@@ -1476,6 +1483,7 @@ abstract class DAO {
 	 * Checks to see if the table exists in the database for the current business class
 	 * 
 	 * @return boolean
+	 * @todo convert to MySQLi
 	 */
 	public function checkTableExists() {
 		self::$logger->debug('>>checkTableExists()');
@@ -1513,6 +1521,7 @@ abstract class DAO {
 	 * 
 	 * @param string $BOClassName
 	 * @return boolean
+	 * @todo convert to MySQLi
 	 */
 	public static function checkBOTableExists($BOClassName) {
 		if(self::$logger == null)
@@ -1549,6 +1558,7 @@ abstract class DAO {
 	 * Checks to see if the table in the database matches (for fields) the business class definition
 	 * 
 	 * @return boolean
+	 * @todo convert to MySQLi
 	 */
 	public function checkTableNeedsUpdate() {
 		self::$logger->debug('>>checkTableNeedsUpdate()');
@@ -1639,6 +1649,7 @@ abstract class DAO {
 	 * table yet
 	 * 
 	 * @return array
+	 * @todo convert to MySQLi
 	 */
 	public function findMissingFields() {
 		self::$logger->debug('>>findMissingFields()');
@@ -1810,6 +1821,7 @@ abstract class DAO {
 	 * Gets an array of all of the names of the active database indexes for this class
 	 *
 	 * @return array
+	 * @todo convert to MySQLi
 	 */
 	protected function getIndexes() {
 		self::$logger->debug('>>getIndexes()');
@@ -1943,6 +1955,7 @@ abstract class DAO {
 	 * @param string $relatedClass
 	 * @param string $relatedClassAttribute
 	 * @param bool $allowNullValues For foreign key indexes that don't allow null values, set this to false (default is true)
+	 * @todo convert to MySQLi
 	 */
 	protected function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute) {
 		self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.']');
@@ -1999,6 +2012,7 @@ abstract class DAO {
 	 * 
 	 * @param string attribute1Name
 	 * @param string attribute2Name (optional, use only for composite keys)
+	 * @todo convert to MySQLi
 	 */
 	protected function createUniqueIndex($attribute1Name, $attribute2Name = '') {
 		self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'])');
@@ -2274,6 +2288,7 @@ abstract class DAO {
 	 * 
 	 * @param int $OID
 	 * @return boolean
+	 * @todo convert to MySQLi
 	 */
 	public function checkRecordExists($OID) {
 		self::$logger->debug('>>checkRecordExists(OID=['.$OID.'])');
@@ -2311,6 +2326,7 @@ abstract class DAO {
 	 * multiple types of BOs.
 	 * 
 	 * @return bool
+	 * @todo convert to MySQLi
 	 */
 	public function isTableOverloaded() {
 		self::$logger->debug('>>isTableOverloaded()');
@@ -2368,6 +2384,7 @@ abstract class DAO {
 	
 	/**
 	 * Starts a new database transaction
+	 * @todo convert to MySQLi
 	 */
 	public static function begin() {
 		if(self::$logger == null)
@@ -2382,6 +2399,7 @@ abstract class DAO {
 	
 	/**
 	 * Commits the current transaction
+	 * @todo convert to MySQLi
 	 */
 	public static function commit() {
 		if(self::$logger == null)
@@ -2396,6 +2414,7 @@ abstract class DAO {
   	
 	/**
 	 * Aborts the current transaction
+	 * @todo convert to MySQLi
 	 */
 	public static function rollback() {
 		if(self::$logger == null)
@@ -2413,6 +2432,7 @@ abstract class DAO {
   	 * Static method that tries to determine if the system database has been installed or not
   	 *
   	 * @return boolean
+  	 * @todo convert to MySQLi
   	 */
   	public static function isInstalled() {
   		if(self::$logger == null)
@@ -2524,6 +2544,107 @@ abstract class DAO {
   		$name = explode('_', get_class($this));
   		return ucfirst($name[0]);
   	}
+  	
+  	/**
+  	 * Dynamically binds the attributes for the current BO to the supplied prepared statement parameters
+  	 *  
+  	 * @param $stmt mysqli_stmt
+  	 * @return mysqli_stmt
+  	 */
+	private function bindParams($stmt) {
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this));
+		$properties = $reflection->getProperties();
+		$bindingsTypes = '';
+		$params = array();
+
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			if (!in_array($propName, $this->transientAttributes)) {				
+				// Skip the OID, database auto number takes care of this.  Also skip empty strings.
+				if($this->get($propName) != '' && $propName != 'OID' && $propName != 'version_num') {
+					if($this->$propName instanceof Integer)
+						$bindingsTypes .= 'i';
+					else
+						$bindingsTypes .= 's';
+					array_push($params, $this->get($propName));
+				}
+							
+				if($propName == 'version_num') {
+					$temp = $this->version_num->getValue();
+					$this->version_num->setValue($temp+1);
+					$bindingsTypes .= 'i';
+					array_push($params, $this->version_num->getValue());
+				}
+			}
+		}
+			
+		if($this->isTableOverloaded()) {
+			if(isset($this->classname)) {
+				$bindingsTypes .= 's';
+				array_push($params, $this->classname);					
+			}else{					
+				$bindingsTypes .= 's';					
+				array_push($params, get_class($this));					
+			}
+		}
+		
+		// the OID may be on the WHERE clause for UPDATEs and DELETEs
+		if(!$this->isTransient()) {					
+			$bindingsTypes .= 'i';
+			array_push($params, $this->OID);
+		}
+					
+	    if ($params != null) {		 
+			$bind_names[] = $bindingsTypes;
+		 
+		    for ($i=0; $i<count($params); $i++) {
+		    	$bind_name = 'bind'.$i;
+		        $$bind_name = $params[$i];
+		        $bind_names[] = &$$bind_name;
+		    }		 
+
+		    call_user_func_array(array($stmt,'bind_param'), $bind_names);
+	   	}
+	    	
+	    return $stmt;
+	}
+	
+	/**
+	 * Dynamically binds the result of the supplied prepared statement to a 2d array, where each element in the array is another array
+	 * representing a database row.
+	 * 
+	 * @param $stmt mysqli_stmt
+	 * @return array
+	 */
+	private function bindResult($stmt) {
+		$result = array();
+     
+		$metadata = $stmt->result_metadata();
+      	$fields = $metadata->fetch_fields();
+
+      	while(true) {
+        	$pointers = array();
+        	$row = array();
+       
+        	$pointers[] = $stmt;
+        	foreach ($fields as $field) {
+          		$fieldname = $field->name;
+          		$pointers[] = &$row[$fieldname];
+        	}
+       
+        	call_user_func_array('mysqli_stmt_bind_result', $pointers);
+       
+        	if (!$stmt->fetch())
+          		break;
+       
+       		$result[] = $row;
+      	}
+     
+      	$metadata->free();
+     
+      	return $result;
+    } 
 }
 
 ?>
