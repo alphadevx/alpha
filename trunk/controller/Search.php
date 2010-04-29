@@ -32,6 +32,27 @@ class Search extends Controller implements AlphaControllerInterface {
 	private static $logger = null;
 	
 	/**
+	 * The start number for list pageination
+	 * 
+	 * @var integer 
+	 */
+	protected $startPoint;
+	
+	/**
+	 * The result count from the search
+	 * 
+	 * @var integer
+	 */
+	private $resultCount = 0;
+	
+	/**
+	 * The search query supplied
+	 * 
+	 * @var string
+	 */
+	private $query;
+	
+	/**
 	 * constructor to set up the object
 	 */
 	public function __construct() {
@@ -59,13 +80,23 @@ class Search extends Controller implements AlphaControllerInterface {
 	public function doGET($params) {
 		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
 		
+		if (isset($params['start']) ? $this->startPoint = $params['start']: $this->startPoint = 0);
+		
 		global $config;
 		
 		echo View::displayPageHead($this);
 		
 		if(isset($params['q'])) {
+			
+			$this->query = $params['q'];
+			
 			// replace any %20 on the URL with spaces
 			$params['q'] = str_replace('%20', ' ', $params['q']);
+			
+			// used to track when our pahination range ends
+			$end = ($this->startPoint+$config->get('sysListPageAmount'));
+			// used to track how many results have been displayed or skipped from the pagination range
+			$displayedCount = 0;
 			
 			echo '<h2>Display results for &quot;'.$params['q'].'&quot;</h2>';
 			
@@ -116,31 +147,42 @@ class Search extends Controller implements AlphaControllerInterface {
 							}
 						}
 						
+						$this->resultCount += count($BOIDs);
+						
 						// sort the BO IDs based on tag frequency weight						
 						arsort($BOIDs);						
 						
 						// render the list view for each BO
 						foreach(array_keys($BOIDs) as $oid) {
 							try {
-								$temp = new $BO;
-								$temp->load($oid);
-								
-								$view = View::getInstance($temp);
-								echo $view->listView();
-								
-								$tags = $temp->getPropObject('tags')->getRelatedObjects();
-			
-								if(count($tags) > 0) {
-									echo '<p>Tags: ';
+								// if we have reached the end of the pagination range then break out
+								if($displayedCount == $end)
+									break;
+							
+								// if our display count is >= the start but < the end...
+								if($displayedCount >= $this->startPoint) {
+									$temp = new $BO;
+									$temp->load($oid);
 									
-									$queryTerms = explode(' ', strtolower($params['q']));
+									$view = View::getInstance($temp);
+									echo $view->listView();
 									
-									foreach($tags as $tag) {
-										echo (in_array($tag->get('content'), $queryTerms) ? '<strong>'.$tag->get('content').' </strong>' : $tag->get('content').' ');
+									$tags = $temp->getPropObject('tags')->getRelatedObjects();
+				
+									if(count($tags) > 0) {
+										echo '<p>Tags: ';
+										
+										$queryTerms = explode(' ', strtolower($params['q']));
+										
+										foreach($tags as $tag) {
+											echo (in_array($tag->get('content'), $queryTerms) ? '<strong>'.$tag->get('content').' </strong>' : $tag->get('content').' ');
+										}
+										
+										echo '</p>';
 									}
-									
-									echo '</p>';
 								}
+								
+								$displayedCount++;
 							}catch(BONotFoundException $e) {
 								self::$logger->warn('Orpaned tag_object detected pointing to a non-existant BO of OID ['.$oid.'] and type ['.$BO.'].');
 							}
@@ -184,6 +226,72 @@ class Search extends Controller implements AlphaControllerInterface {
 		$button = new button('document.location = \''.$config->get('sysURL').'search/q/\'+document.getElementById(\'q\').value;', 'Search', 'searchButton');
 		$html .= $button->render();
 		$html .= '</form></div>';
+		
+		return $html;
+	}
+	
+	/**
+	 * Method to display the page footer with pageination links
+	 * 
+	 * @return string
+	 */
+	public function before_displayPageFoot_callback() {
+		$html = $this->renderPageLinks();
+		
+		$html .= '<br>';
+		
+		return $html;
+	}
+	
+	/**
+	 * Method for rendering the pagination links
+	 * 
+	 * @return string
+	 */
+	protected function renderPageLinks() {
+		global $config;
+		
+		$html = '';
+		
+		$end = ($this->startPoint+$config->get('sysListPageAmount'));
+		
+		if($end > $this->resultCount)
+			$end = $this->resultCount;
+		
+		$html .= '<p align="center">Displaying '.($this->startPoint+1).' to '.$end.' of <strong>'.$this->resultCount.'</strong>.&nbsp;&nbsp;';		
+				
+		if ($this->startPoint > 0) {
+			// handle secure URLs
+			if(isset($_GET['tk']))
+				$html .= '<a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint-$config->get('sysListPageAmount'))).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
+			else
+				$html .= '<a href="'.$config->get('sysURL').'search/q/'.$this->query.'/start/'.($this->startPoint-$config->get('sysListPageAmount')).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
+		}elseif($this->resultCount > $config->get('sysListPageAmount')){
+			$html .= '&lt;&lt;-Previous&nbsp;&nbsp;';
+		}
+		$page = 1;
+		for ($i = 0; $i < $this->resultCount; $i+=$config->get('sysListPageAmount')) {
+			if($i != $this->startPoint) {
+				// handle secure URLs
+				if(isset($_GET['tk']))
+					$html .= '&nbsp;<a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.$i).'">'.$page.'</a>&nbsp;';
+				else
+					$html .= '&nbsp;<a href="'.$config->get('sysURL').'search/q/'.$this->query.'/start/'.$i.'">'.$page.'</a>&nbsp;';
+			}elseif($this->resultCount > $config->get('sysListPageAmount')){
+				$html .= '&nbsp;'.$page.'&nbsp;';
+			}
+			$page++;
+		}
+		if ($this->resultCount > $end) {
+			// handle secure URLs
+			if(isset($_GET['tk']))
+				$html .= '&nbsp;&nbsp;<a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint+$config->get('sysListPageAmount'))).'">Next-&gt;&gt;</a>';
+			else
+				$html .= '&nbsp;&nbsp;<a href="'.$config->get('sysURL').'search/q/'.$this->query.'/start/'.($this->startPoint+$config->get('sysListPageAmount')).'">Next-&gt;&gt;</a>';
+		}elseif($this->resultCount > $config->get('sysListPageAmount')){
+			$html .= '&nbsp;&nbsp;Next-&gt;&gt;';
+		}
+		$html .= '</p>';
 		
 		return $html;
 	}
