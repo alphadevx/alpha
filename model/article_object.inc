@@ -259,7 +259,7 @@ class article_object extends DAO {
 	/**
 	 * set up the transient URL attributes for the article after it has loaded
 	 */
-	function after_load_callback() {
+	protected function after_load_callback() {
 		global $config;
 		global $front;
 		
