@@ -526,7 +526,17 @@ class View {
 			$html.= $controller->during_displayPageHead_callback();
 		
 		$html.= '</head>';
-		$html.= '<body>';
+		try {
+			if($controller->getBO() != null)
+				$html.= '<body'.($controller->getBO()->get('bodyOnload') != '' ? ' onload="'.$controller->getBO()->get('bodyOnload').'"' : '').'>';
+			else
+				$html.= '<body>';
+		} catch (AlphaException $e) {
+			$html.= '<body>';
+		}
+		
+		if(method_exists($controller, 'insert_CMSDisplayStandardHeader_callback'))
+			$html.= $controller->insert_CMSDisplayStandardHeader_callback();
 		
 		$html .= '<div id="recordSelector"></div>';
 			
