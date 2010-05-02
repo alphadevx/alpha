@@ -63,7 +63,7 @@ class ViewArticleTitle extends ViewArticle {
 		
 		$BOView = View::getInstance($this->BO);
 		
-		echo $BOView->displayArticlePageHead($this);
+		echo View::displayPageHead($this);
 		
 		echo $BOView->markdownView();
 		

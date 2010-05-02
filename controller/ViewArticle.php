@@ -86,7 +86,7 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 				$this->setTitle($this->BO->get('title'));
 				$this->setDescription($this->BO->get('description'));
 				
-				echo $BOView->displayArticlePageHead($this);
+				echo View::displayPageHead($this);
 		
 				echo $BOView->markdownView();
 			}else{
@@ -109,6 +109,31 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 	 */
 	public function during_displayPageHead_callback() {
 		return $this->BO->get('headerContent');
+	}
+	
+	/**
+	 * Callback that inserts the header
+	 * 
+	 * @return string
+	 */
+	public function insert_CMSDisplayStandardHeader_callback() {
+		global $config;
+		
+		$html = '';
+		
+		if($config->get('sysCMSDisplayStandardHeader')) {
+			$html.= '<p><a href="'.$config->get('sysURL').'">'.$config->get('sysTitle').'</a> &nbsp; &nbsp;';
+			$denum = $this->BO->getPropObject('section');
+			if(count($denum->getOptions()) > 1)
+				$html.= 'Site Section: <em>'.$denum->getDisplayValue().'</em> &nbsp; &nbsp;';
+			$html.= 'Date Added: <em>'.$this->BO->getCreateTS()->getDate().'</em> &nbsp; &nbsp;';
+			$html.= 'Last Updated: <em>'.$this->BO->getUpdateTS()->getDate().'</em> &nbsp; &nbsp;';
+			$html.= 'Revision: <em>'.$this->BO->getVersion().'</em></p>';
+		}
+		
+		$html.= $config->get('sysCMSHeader');
+		
+		return $html;
 	}
 	
 	/**
