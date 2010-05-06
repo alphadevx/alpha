@@ -137,16 +137,17 @@ class Image {
 	 * Renders the HTML <img> tag to the ViewImage controller, with all of the correct params to render the source
 	 * image in the desired resolution.
 	 * 
+	 * @param $altText Set this value to render alternate text as part of the HTML link (defaults to no alternate text)
 	 * @return string
 	 */
-	public function renderHTMLLink() {
+	public function renderHTMLLink($altText='') {
 		global $config;
 		
 		if($this->secure->getBooleanValue()) {
 			$params = View::generateSecurityFields();
-			return '<img src="'.FrontController::generateSecureURL('act=ViewImage&s='.$this->source.'&w='.$this->width->getValue().'&h='.$this->height->getValue().'&t='.$this->sourceType->getValue().'&q='.$this->quality->getValue().'&sc='.$this->scale->getValue().'&se='.$this->secure->getValue().'&var1='.$params[0].'&var2='.$params[1]).'"/>';
+			return '<img src="'.FrontController::generateSecureURL('act=ViewImage&s='.$this->source.'&w='.$this->width->getValue().'&h='.$this->height->getValue().'&t='.$this->sourceType->getValue().'&q='.$this->quality->getValue().'&sc='.$this->scale->getValue().'&se='.$this->secure->getValue().'&var1='.$params[0].'&var2='.$params[1]).'"'.(empty($altText) ? '' : ' alt="'.$altText.'"').'/>';
 		}else{
-			return '<img src="'.FrontController::generateSecureURL('act=ViewImage&s='.$this->source.'&w='.$this->width->getValue().'&h='.$this->height->getValue().'&t='.$this->sourceType->getValue().'&q='.$this->quality->getValue().'&sc='.$this->scale->getValue().'&se='.$this->secure->getValue()).'"/>';
+			return '<img src="'.FrontController::generateSecureURL('act=ViewImage&s='.$this->source.'&w='.$this->width->getValue().'&h='.$this->height->getValue().'&t='.$this->sourceType->getValue().'&q='.$this->quality->getValue().'&sc='.$this->scale->getValue().'&se='.$this->secure->getValue()).'"'.(empty($altText) ? '' : ' alt="'.$altText.'"').'/>';
 		}
 	}
 	
