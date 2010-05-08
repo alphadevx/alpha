@@ -1,6 +1,7 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
+require_once $config->get('sysRoot').'alpha/util/MarkdownFacade.inc';
 
 /**
  * Base feed class for generating syndication feeds
@@ -132,16 +133,26 @@ abstract class AlphaFeed {
 		foreach($BOs as $BO) {
 			$title = $BO->get($this->fieldNameMappings['title']);			
 			$link = $BO->get($this->fieldNameMappings['link']);
-			if(isset($this->fieldNameMappings['description']))
-				$description = $BO->get($this->fieldNameMappings['description']);
-			else
+			
+			if(isset($this->fieldNameMappings['description'])) {
+				// if its a news item, we want the raw HTML rather than the Markdown content in the feed
+				if(get_class($BO) == 'news_object') {
+					$markdown = new MarkdownFacade($BO);
+					$description = $markdown->getContent();
+				}else{
+					$description = $BO->get($this->fieldNameMappings['description']);
+				}
+			}else{
 				$description = '';
+			}
+			
 			if(isset($this->fieldNameMappings['pubDate'])) {
 				$dateTS = strtotime($BO->get($this->fieldNameMappings['pubDate']));
 				$pubDate = date(DATE_ATOM, $dateTS);
 			}else{
 				$pubDate = '';
 			}
+			
 			if(isset($this->fieldNameMappings['id']))
 				$id = $BO->get($this->fieldNameMappings['id']);
 			else
