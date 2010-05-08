@@ -50,11 +50,25 @@ class ViewArticlePrint extends ViewArticle {
 		
 		$BOView = View::getInstance($this->BO);
 		
-		echo $BOView->displayArticlePageHead($this, 'print');
+		// disabling force-frames
+		$_GET['no-forceframe'] = true;
+		
+		echo View::displayPageHead($this);
 		
 		echo $BOView->markdownView();
 		
 		echo View::displayPageFoot($this);
+	}
+	
+	/**
+	 * Injects the print CSS into the page header
+	 * 
+	 * @return string
+	 */
+	public function during_displayPageHead_callback() {
+		global $config;
+		
+		return '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/print.css">';
 	}
 	
 	/**
