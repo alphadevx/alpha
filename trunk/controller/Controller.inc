@@ -263,7 +263,7 @@ abstract class Controller {
 	  * @param string $name
 	  */ 
 	 public function setName($name) {			
-	 	self::$logger->info('>>setName(name=['.$name.'])');
+	 	self::$logger->debug('>>setName(name=['.$name.'])');
 	 	$this->name = $name;
 	 	self::$logger->debug('<<setName');
 	 }
@@ -308,7 +308,7 @@ abstract class Controller {
 	  */
 	 public function getNextJob() {
 	 	self::$logger->debug('>>getNextJob()');
-	 	self::$logger->info('<<getNextJob ['.$this->nextJob.']');
+	 	self::$logger->debug('<<getNextJob ['.$this->nextJob.']');
 	 	return $this->nextJob;
 	 }
 	 
@@ -341,7 +341,7 @@ abstract class Controller {
 	  * @param array $jobs
 	  */
 	 public function setUnitOfWork($jobs) {
-	 	self::$logger->info('>>setUnitOfWork(jobs=['.print_r($jobs, true).'])');
+	 	self::$logger->debug('>>setUnitOfWork(jobs=['.print_r($jobs, true).'])');
 	 	
 	 	if(method_exists($this, 'before_setUnitOfWork_callback'))
 			$this->before_setUnitOfWork_callback();
@@ -363,19 +363,19 @@ abstract class Controller {
 	 		// the first job in the sequence
 	 		if($i==0) {
 	 			$this->firstJob = $jobs[$i];
-	 			self::$logger->info('First job ['.$this->firstJob.']');
+	 			self::$logger->debug('First job ['.$this->firstJob.']');
 	 		}
 	 		// found the current job
 	 		if($this->name == $jobs[$i]) {
 	 			if(isset($jobs[$i-1])) {
 	 				// set the previous job if it exists
 	 				$this->previousJob = $jobs[$i-1];
-	 				self::$logger->info('Previous job ['.$this->previousJob.']');
+	 				self::$logger->debug('Previous job ['.$this->previousJob.']');
 	 			}
 	 			if(isset($jobs[$i+1])) {
 	 				// set the next job if it exists
 	 				$this->nextJob = $jobs[$i+1];
-	 				self::$logger->info('Next job ['.$this->nextJob.']');
+	 				self::$logger->debug('Next job ['.$this->nextJob.']');
 	 			}
 	 		}
 	 		// the last job in the sequence
