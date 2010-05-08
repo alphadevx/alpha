@@ -134,8 +134,6 @@ class Login extends Controller implements AlphaControllerInterface {
 						header('Location: '.$config->get('sysURL').'alpha/controller/Install.php');
 					}else{
 						throw new ValidationException('Failed to login user '.$params['email'].', the password is incorrect!');
-						self::$logger->debug('<<doPOST');
-						return;
 					}
 				}else{
 					// here we are attempting to load the person from the email address
@@ -143,9 +141,7 @@ class Login extends Controller implements AlphaControllerInterface {
 					
 					// checking to see if the account has been disabled
 					if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Disabled') {
-						throw new SecurityException('Failed to login user '.$params['email'].', that account has been disabled!');	
-						self::$logger->debug('<<doPOST');
-						return;
+						throw new SecurityException('Failed to login user '.$params['email'].', that account has been disabled!');
 					}
 					
 					// check the password
@@ -162,8 +158,6 @@ class Login extends Controller implements AlphaControllerInterface {
 							}
 						}else{
 							throw new ValidationException('Failed to login user '.$params['email'].', the password is incorrect!');
-							self::$logger->debug('<<doPOST');
-							return;
 						}
 					}
 				}
@@ -193,6 +187,8 @@ class Login extends Controller implements AlphaControllerInterface {
 				echo '<a href="'.$config->get('sysURL').'">Home Page</a>';
 			}
 		}catch(ValidationException $e) {
+			echo View::displayPageHead($this);
+			
 			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
 				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
 				<strong>Error:</strong> '.$e->getMessage().'</p>
@@ -201,14 +197,18 @@ class Login extends Controller implements AlphaControllerInterface {
 			$this->personView->display_login_form();
 											
 			self::$logger->warn($e->getMessage());
-		}catch(SecurityException $e) {			
+		}catch(SecurityException $e) {
+			echo View::displayPageHead($this);
+			
 			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
 				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
 				<strong>Error:</strong> '.$e->getMessage().'</p>
 				</div>';
 											
 			self::$logger->warn($e->getMessage());
-		}catch(BONotFoundException $e) {			
+		}catch(BONotFoundException $e) {
+			echo View::displayPageHead($this);
+			
 			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
 				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
 				<strong>Error:</strong> Failed to find the user \''.$params['email'].'\'.</p>
