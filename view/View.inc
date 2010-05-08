@@ -544,9 +544,9 @@ class View {
 			$html.= '<h1>'.$controller->getTitle().'</h1>';
 		
 		if (isset($_SESSION['currentUser'])) {	
-			$html.= '<p>You are logged in as '.$_SESSION['currentUser']->getDisplayname().'.  <a href="'.$config->get('sysURL').'alpha/controller/Logout.php">Logout</a></p>';
+			$html.= '<p>You are logged in as '.$_SESSION['currentUser']->getDisplayname().'.  <a href="'.FrontController::generateSecureURL('act=Logout').'">Logout</a></p>';
 		}else{
-			$html.= '<p>You are not logged in</p>';
+			$html.= '<p>You are not logged in.  <a href="'.FrontController::generateSecureURL('act=Login').'">Login</a></p>';
 		}
 		
 		if (isset($_SESSION['currentUser']) && DAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], 'FC.php') !== false) {
