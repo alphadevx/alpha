@@ -19,11 +19,10 @@ $config =&configLoader::getInstance();
 require_once $config->get('sysRoot').'alpha/controller/Login.php';
 
 $controller = new Login();
-$controller->setName(FrontController::generateSecureURL('act=Login'));
+$controller->setName(FrontController::generateSecureURL('act=Login&no-forceframe=true'));
+$controller->setUnitOfWork(array(FrontController::generateSecureURL('act=Login&no-forceframe=true'), FrontController::generateSecureURL('act=ListBusinessObjects')));
 
-$controller->setUnitOfWork(array(FrontController::generateSecureURL('act=Login'), FrontController::generateSecureURL('act=ListBusinessObjects')));
-
-if(!empty($_POST)) {			
+if(!empty($_POST)) {
 	$controller->doPOST($_POST);
 }else{
 	$controller->doGET($_GET);

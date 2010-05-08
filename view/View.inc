@@ -386,7 +386,7 @@ class View {
 		$fields['createButton'] = $button->render();
 		
 		// list all button
-		$button = new button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO).'&no-forceframe=true')."'", "List All", "listBut");
+		$button = new button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "List All", "listBut");
 		$fields['listButton'] = $button->render();
 		
 		// the create table button (if required)
@@ -476,7 +476,8 @@ class View {
 		
 		// handle force-frames
 		if($config->get('sysForceFrame')) {
-			if(!isset($_GET['no-forceframe'])) {
+			// if no-forceframe=true or we are in the admin backend, don't force frame
+			if(!isset($_GET['no-forceframe']) && strpos($_SERVER['REQUEST_URI'], 'FC.php') === false) {
 				$html.= '<script type="text/javascript">';
 				$html.= 'pageLoc = self.location;';
 				$html.= 'pageAdd = top.location;';
