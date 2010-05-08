@@ -473,6 +473,20 @@ class View {
 		
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery-ui-1.7.2.custom.min.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/ui.datepicker.js"></script>';
+		
+		// handle force-frames
+		if($config->get('sysForceFrame') && !isset($_GET['no-forceframe'])) {
+			$html.= '<script type="text/javascript">';
+			$html.= 'pageLoc = self.location;';
+			$html.= 'pageAdd = top.location;';
+	 
+			$html.= 'if (pageLoc == pageAdd) {';
+			$html.= '    contentSrc = escape(pageLoc);';
+			$html.= '    contPage = \''.$config->get('sysURL').'?\' + contentSrc;';
+			$html.= '    top.location.href = contPage;';
+			$html.= '}';
+			$html.= '</script>';
+		}
 				
 		ob_start();
 		require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
