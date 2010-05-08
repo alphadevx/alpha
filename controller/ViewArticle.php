@@ -208,9 +208,10 @@ class ViewArticle extends Controller implements AlphaControllerInterface {
 		if($config->get('sysCMSDisplayStandardFooter')) {
 			$html .= '<p>Article URL: <a href="'.$this->BO->get('URL').'">'.$this->BO->get('URL').'</a><br>';
 			$html .= 'Title: '.$this->BO->get('title').'<br>';
-			$html .= 'Author: '.$this->BO->get('author').'<br>';
+			$html .= 'Author: '.$this->BO->get('author').'</p>';
 		}
-		$html .= $config->get('sysCMSFooter').'</p>';
+		
+		$html .= $config->get('sysCMSFooter');
 		
 		return $html;
 	}
