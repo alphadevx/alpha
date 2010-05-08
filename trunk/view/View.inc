@@ -475,17 +475,19 @@ class View {
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/ui.datepicker.js"></script>';
 		
 		// handle force-frames
-		if($config->get('sysForceFrame') && !isset($_GET['no-forceframe'])) {
-			$html.= '<script type="text/javascript">';
-			$html.= 'pageLoc = self.location;';
-			$html.= 'pageAdd = top.location;';
-	 
-			$html.= 'if (pageLoc == pageAdd) {';
-			$html.= '    contentSrc = escape(pageLoc);';
-			$html.= '    contPage = \''.$config->get('sysURL').'?\' + contentSrc;';
-			$html.= '    top.location.href = contPage;';
-			$html.= '}';
-			$html.= '</script>';
+		if($config->get('sysForceFrame')) {
+			if(!isset($_GET['no-forceframe'])) {
+				$html.= '<script type="text/javascript">';
+				$html.= 'pageLoc = self.location;';
+				$html.= 'pageAdd = top.location;';
+		 
+				$html.= 'if (pageLoc == pageAdd) {';
+				$html.= '    contentSrc = escape(pageLoc);';
+				$html.= '    contPage = \''.$config->get('sysURL').'?\' + contentSrc;';
+				$html.= '    top.location.href = contPage;';
+				$html.= '}';
+				$html.= '</script>';
+			}
 		}
 				
 		ob_start();
