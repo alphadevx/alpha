@@ -57,8 +57,6 @@ class Login extends Controller implements AlphaControllerInterface {
 		// ensure that the super class constructor is called, indicating the rights group
 		parent::__construct('Public');
 		
-		$this->setName(FrontController::encodeQuery('act=login'));
-		
 		$this->personObject = new person_object();
 		$this->personView = new person($this->personObject);
 		$this->setBO($this->personObject);

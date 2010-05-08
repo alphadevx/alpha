@@ -34,7 +34,7 @@ class person extends View
 		
 		echo '<div class="bordered" style="text-align:center; padding:10px; margin:10px;">';
 		echo '<table cols="2" align="center">';
-		echo '<form action="'.FrontController::generateSecureURL('act=Login').'" method="POST">';
+		echo '<form action="'.FrontController::generateSecureURL('act=Login&no-forceframe=true').'" method="POST">';
 		echo '<tr>';
 		echo '	<td>E-mail Address</td> <td><input type="text" name="email" size="50" value="'.(isset($_POST["email"])? $_POST["email"] : '').'"/></td>';
 		echo '</tr>';
@@ -56,7 +56,7 @@ class person extends View
 		
 		echo '</form>';
 		echo '</table>';
-		echo '<p><a href="'.FrontController::generateSecureURL('act=Login&reset=true').'">Forgotten your password?</a></p>';
+		echo '<p><a href="'.FrontController::generateSecureURL('act=Login&reset=true&no-forceframe=true').'">Forgotten your password?</a></p>';
 		echo '</div>';
 	}
 	
@@ -68,7 +68,7 @@ class person extends View
 		
 		echo '<p>If you have forgotten your password, you can use this form to have a new password automatically generated and sent to your e-mail address.</p>';
 		echo '<table cols="2">';
-		echo '<form action="'.FrontController::generateSecureURL('act=Login&reset=true').'" method="POST">';
+		echo '<form action="'.FrontController::generateSecureURL('act=Login&reset=true&no-forceframe=true').'" method="POST">';
 		echo '<tr>';
 		echo '	<td>E-mail Address</td> <td><input type="text" name="email" size="50" value="'.(isset($_POST["email"])? $_POST["email"] : '').'"/></td>';
 		echo '</tr>';		
