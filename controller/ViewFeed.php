@@ -93,6 +93,8 @@ class ViewFeed extends Controller implements AlphaControllerInterface {
 	 * @param array $params
 	 */
 	public function doGET($params) {
+		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
+		
 		global $config;
 		
 		try {
@@ -167,7 +169,7 @@ class ViewFeed extends Controller implements AlphaControllerInterface {
 			case 'news_object':
 				$this->title = 'Latest news from '.$config->get('sysTitle');
 				$this->description = 'News feed containing all of the latest news items from '.$config->get('sysTitle').'.';
-				$this->fieldMappings = array('title', 'URL', 'content');
+				$this->fieldMappings = array('title', 'URL', 'content', 'created_ts', 'OID');
 			break;
 		}
 	}
