@@ -69,7 +69,7 @@ class ViewArticleFile extends ViewArticle {
 		
 		$BOView = View::getInstance($this->BO);
 		
-		echo $BOView->displayArticlePageHead($this);
+		echo View::displayPageHead($this, false);
 		
 		echo $BOView->markdownView();
 		
