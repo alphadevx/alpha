@@ -611,6 +611,9 @@ abstract class DAO {
 				for($i = 0; $i < $savedFieldsCount; $i++)
 					$sqlQuery.= '?,';
 				
+				if($this->isTableOverloaded())
+					$sqlQuery.= '?,';
+				
 				$sqlQuery = rtrim($sqlQuery, ',').')';
 				
 				$this->lastQuery = $sqlQuery;
