@@ -431,10 +431,11 @@ class View {
 	 * Method to render the page header HTML content
 	 * 
 	 * @param Controller $controller
+	 * @param bool $renderMenu Set to false to hide the default menu (default value is true)
 	 * @return string
 	 * @todo remove output buffering around form_validator instance
 	 */
-	public static function displayPageHead($controller) {
+	public static function displayPageHead($controller, $renderMenu = true) {
 		if(self::$logger == null)
 			self::$logger = new Logger('View');
 		self::$logger->debug('>>displayPageHead(controller=['.print_r($controller, true).'])');
@@ -566,7 +567,7 @@ class View {
 			$html.= '<p>You are not logged in.  <a href="'.FrontController::generateSecureURL('act=Login').'">Login</a></p>';
 		}
 		
-		if (isset($_SESSION['currentUser']) && DAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], 'FC.php') !== false) {
+		if ($renderMenu && isset($_SESSION['currentUser']) && DAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], 'FC.php') !== false) {
 			$html .= '<ul id="adminmenu" class="potato-menu">
 						<li><a href="'.$config->get('sysURL').'">Home</a></li>
 						<li><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Admin Home</a></li>
