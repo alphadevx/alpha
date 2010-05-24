@@ -65,10 +65,6 @@ class Search extends Controller implements AlphaControllerInterface {
 		// ensure that the super class constructor is called, indicating the rights group
 		parent::__construct('Public');
 		
-		$this->setTitle('Search results');
-		
-		//$this->BO = new article_object();
-		
 		self::$logger->debug('<<__construct');
 	}
 	
@@ -84,8 +80,6 @@ class Search extends Controller implements AlphaControllerInterface {
 		
 		global $config;
 		
-		echo View::displayPageHead($this);
-		
 		if(isset($params['q'])) {
 			
 			$this->query = $params['q'];
@@ -93,7 +87,14 @@ class Search extends Controller implements AlphaControllerInterface {
 			// replace any %20 on the URL with spaces
 			$params['q'] = str_replace('%20', ' ', $params['q']);
 			
-			// used to track when our pahination range ends
+			$this->setTitle('Search results - '.$params['q']);			
+			echo View::displayPageHead($this);
+			
+			// log the user's search query in a log file
+			$log = new LogFile($config->get('sysRoot').'logs/search.log');		
+			$log->writeLine(array($params['q'], date('Y-m-d H:i:s'), $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
+			
+			// used to track when our pagination range ends
 			$end = ($this->startPoint+$config->get('sysListPageAmount'));
 			// used to track how many results have been displayed or skipped from the pagination range
 			$displayedCount = 0;
@@ -111,11 +112,7 @@ class Search extends Controller implements AlphaControllerInterface {
 					DAO::loadClassDef($BO);
 					$temp = new $BO;
 					
-					if($temp->isTagged()) {
-						// log the user's search query in a log file
-						$log = new LogFile($config->get('sysRoot').'logs/search.log');		
-						$log->writeLine(array($params['q'], date('Y-m-d H:i:s'), $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
-					
+					if($temp->isTagged()) {					
 						// explode the user's query into a set of tokenized transient tag_objects
 						$queryTags = tag_object::tokenize($params['q'], '', '', false);			
 						$matchingTags = array();
@@ -194,6 +191,8 @@ class Search extends Controller implements AlphaControllerInterface {
 				echo '<p class="error"><br>Illegal search query provided!</p>';				
 			}
 		}else{
+			$this->setTitle('Search results');			
+			echo View::displayPageHead($this);
 			echo '<p class="error"><br>No search query provided!</p>';
 		}		
 		
