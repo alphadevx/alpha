@@ -471,12 +471,13 @@ abstract class DAO {
 			throw new IllegalArguementException('Illegal arrays attributes=['.print_r($attributes, true).'] and values=['.print_r($values, true).'] provided to loadAllByAttributes');
 		}
 		
-		$whereClause = 'WHERE ';
+		$whereClause = 'WHERE';
 		for($i = 0; $i < count($attributes); $i++) {
-			$whereClause .= $attributes[$i].' = \''.$values[$i].'\' AND';
+			$whereClause .= ' '.$attributes[$i].' = \''.$values[$i].'\' AND';
+			self::$logger->debug($whereClause);
 		}
 		// remove the last " AND"
-		$whereClause = substr($whereClause, -4);
+		$whereClause = substr($whereClause, 0, -4);
 		
 		if ($start != 0 && $limit != 0)
 			$limit = ' LIMIT '.$start.', '.$limit.';';
