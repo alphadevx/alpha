@@ -448,6 +448,80 @@ abstract class DAO {
 	}
 	
 	/**
+	 * Loads all of the objects of this class by the specified attributes into an array which is returned
+	 * 
+	 * @param array $atributes The attribute to load the object by
+	 * @param array $values The values of the attributes to load the object by
+	 * @param integer $start The start of the SQL LIMIT clause
+	 * @param integer $limit The amount (limit) of objects to load
+	 * @param string $orderBy the name of the field to sort the BOs by
+	 * @param string $order the order to sort the BOs by, default is ASC
+	 * @return array an array containing objects of this type of business object.
+	 * @todo convert to MySQLi
+	 */
+	public function loadAllByAttributes($attributes=array(), $values=array(), $start=0, $limit=0, $orderBy="OID", $order="ASC") {
+		self::$logger->debug('>>loadAllByAttributes(attributes=['.print_r($attributes, true).'], values=['.print_r($values, true).'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
+		
+		if(method_exists($this, 'before_loadAllByAttributes_callback'))
+			$this->before_loadAllByAttributes_callback();
+		
+		global $config;
+		
+		if(!is_array($attributes) || !is_array($values)) {
+			throw new IllegalArguementException('Illegal arrays attributes=['.print_r($attributes, true).'] and values=['.print_r($values, true).'] provided to loadAllByAttributes');
+		}
+		
+		$whereClause = 'WHERE ';
+		for($i = 0; $i < count($attributes); $i++) {
+			$whereClause .= $attributes[$i].' = \''.$values[$i].'\' AND';
+		}
+		// remove the last " AND"
+		$whereClause = substr($whereClause, -4);
+		
+		if ($start != 0 && $limit != 0)
+			$limit = ' LIMIT '.$start.', '.$limit.';';
+		else
+			$limit = ';';
+		
+		if(!$this->isTableOverloaded())
+			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." ".$whereClause." ORDER BY ".$orderBy." ".$order.$limit;
+		else
+			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." ".$whereClause." AND classname='".get_class($this)."' ORDER BY ".$orderBy." ".$order.$limit;
+			
+		$this->lastQuery = $sqlQuery;
+
+		$result = mysql_query($sqlQuery);
+		
+		if(mysql_error() != '') {
+			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+			self::$logger->debug('<<loadAllByAttributes []');
+			return array();
+		}
+		
+		// now build an array of objects to be returned
+		$objects = array();
+		$count = 0;
+		$BO_Class = get_class($this);
+		
+		while($row = mysql_fetch_assoc($result)) {
+			try {
+				$obj = new $BO_Class();
+				$obj->load($row["OID"]);
+				$objects[$count] = $obj;
+				$count++;
+			}catch(ResourceNotAllowedException $e) {
+				// the resource not allowed will be absent from the list
+			}
+		}
+		
+		if(method_exists($this, 'after_loadAllByAttributes_callback'))
+			$this->after_loadAllByAttributes_callback();
+		
+		self::$logger->debug('<<loadAllByAttributes ['.count($objects).']');
+		return $objects;	
+	}
+	
+	/**
 	 * Loads all of the objects of this class that where updated (updated_ts) on the date indicated
 	 * 
 	 * @param string $date The date for which to load the objects updated on	 
