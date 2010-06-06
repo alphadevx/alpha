@@ -404,7 +404,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 			
 			// load objects on the right from accessing on the left			
 			if($accessingClassName == $this->relatedClassLeft) {
-				DAO::loadClassDef($this->relatedClassLeft);
+				DAO::loadClassDef($this->relatedClassRight);
 				$obj = new $this->relatedClassRight;
 				
 				$lookupObjects = $this->lookup->loadAllByAttribute('leftID', $this->value);
@@ -420,7 +420,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 			}
 			// load objects on the left from accessing on the right
 			if($accessingClassName == $this->relatedClassRight) {
-				DAO::loadClassDef($this->relatedClassRight);
+				DAO::loadClassDef($this->relatedClassLeft);
 				$obj = new $this->relatedClassLeft;
 				
 				$lookupObjects = $this->lookup->loadAllByAttribute('rightID', $this->value);
@@ -448,27 +448,69 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	}
 	
 	/**
-	 * For one-to-many relations, get the objects on the many side
+	 * For one-to-many and many-to-many relations, get the objects on the other side
 	 * 
+	 * string $accessingClassName Used to indicate the reading side when accessing from MANY-TO-MANY relation (leave blank for other relation types)
 	 * @return array
 	 */
-	public function getRelatedObjects() {
+	public function getRelatedObjects($accessingClassName='') {
 		global $config;
 		
-		try {
-			DAO::loadClassDef($this->relatedClass);
-		}catch(IllegalArguementException $e) {		
-			throw new AlphaException('Could not load the definition for the BO class ['.$this->relatedClass.']');
+		if($this->relationType == 'ONE-TO-MANY') {
+			try {
+				DAO::loadClassDef($this->relatedClass);
+			}catch(IllegalArguementException $e) {		
+				throw new AlphaException('Could not load the definition for the BO class ['.$this->relatedClass.']');
+			}
+			
+			$obj = new $this->relatedClass;
+			if($this->relatedClass == 'tag_object') {
+				$objects = $obj->loadTags($this->taggedClass, $this->getValue());
+			}else{
+				$objects = $obj->loadAllByAttribute($this->getRelatedClassField(), $this->getValue());
+			}
+			
+			return $objects;
+		}else{ // MANY-TO-MANY
+			if(empty($this->lookup)) {
+				throw new AlphaException('Tried to load related MANY-TO-MANY objects but no RelationLookup set on the Relation object!');
+				return '';
+			}
+			
+			if(empty($accessingClassName)) {
+				throw new IllegalArguementException('Tried to load related MANY-TO-MANY objects but no accessingClassName parameter set on the call to getRelatedObjects!');
+				return '';
+			}
+			
+			$objects = array();
+			
+			// load objects on the right from accessing on the left			
+			if($accessingClassName == $this->relatedClassLeft) {
+				DAO::loadClassDef($this->relatedClassRight);
+				
+				$lookupObjects = $this->lookup->loadAllByAttribute('leftID', $this->value);
+				
+				foreach($lookupObjects as $lookupObject) {
+					$obj = new $this->relatedClassRight;
+					$obj->load($lookupObject->get('rightID'));
+					array_push($objects, $obj);
+				}
+			}
+			// load objects on the left from accessing on the right
+			if($accessingClassName == $this->relatedClassRight) {
+				DAO::loadClassDef($this->relatedClassLeft);
+				
+				$lookupObjects = $this->lookup->loadAllByAttribute('rightID', $this->value);
+
+				foreach($lookupObjects as $lookupObject) {
+					$obj = new $this->relatedClassLeft;
+					$obj->load($lookupObject->get('leftID'));
+					array_push($objects, $obj);
+				}				
+			}
+			
+			return $objects;
 		}
-		
-		$obj = new $this->relatedClass;
-		if($this->relatedClass == 'tag_object') {
-			$objects = $obj->loadTags($this->taggedClass, $this->getValue());
-		}else{
-			$objects = $obj->loadAllByAttribute($this->getRelatedClassField(), $this->getValue());
-		}
-		
-		return $objects;
 	}
 	
 	/**
