@@ -54,9 +54,8 @@ class ViewExcel extends Controller implements AlphaControllerInterface {
 		
 		try {
 			$BOname = $params['bo'];
-			$OID = $params['oid'];
 		}catch (Exception $e) {
-			self::$logger->fatal('No BO and/or OID parameter available for ViewExcel controller!');
+			self::$logger->fatal('No BO parameter available for ViewExcel controller!');
 			self::$logger->debug('<<__doGet');
 			exit;
 		}
@@ -64,10 +63,39 @@ class ViewExcel extends Controller implements AlphaControllerInterface {
 		try {
 			DAO::loadClassDef($BOname);
 			$BO = new $BOname();
-			$BO->load($OID);
 			
-			$convertor = new BO2Excel($BO);
-			$convertor->render();
+			// the name of the file download
+			if(isset($params['oid']))
+				$fileName = $BO->getTableName().'-'.$params['oid'];
+			else
+				$fileName = $BO->getTableName();
+			
+			//header info for browser
+			header('Content-Type: application/vnd.ms-excel');
+			header('Content-Disposition: attachment; filename='.$fileName.'.xls');
+			header('Pragma: no-cache');
+			header('Expires: 0');
+			
+			// handle a single BO
+			if(isset($params['oid'])) {
+				$BO->load($params['oid']);
+				$convertor = new BO2Excel($BO);
+				$convertor->render();
+			}else{
+				// handle all BOs of this type
+				$BOs = $BO->loadAll();
+				$first = true;
+				
+				foreach($BOs as $BO) {
+					$convertor = new BO2Excel($BO);
+					if($first) {
+						$convertor->render(true);
+						$first = false;
+					}else{
+						$convertor->render(false);
+					}
+				}
+			}
 		}catch (BONotFoundException $e) {
 			self::$logger->fatal($e->getMessage());
 			self::$logger->debug('<<__doGet');
