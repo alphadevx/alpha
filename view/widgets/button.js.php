@@ -2,11 +2,10 @@
 
 // $Id$
 
-if(!isset($config))
-	require_once '../../util/configLoader.inc';
-$config =&configLoader::getInstance();
-
-require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
+if(!isset($config)) {
+	require_once '../../util/AlphaConfig.inc';
+	$config = AlphaConfig::getInstance();
+}
 
 require_once $config->get('sysRoot').'alpha/model/types/String.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
@@ -276,6 +275,6 @@ EOS;
 if (isset($_GET["render_javascript"]))
 	button::render_javascript();
 else
-	echo '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/view/widgets/button.js.php?render_javascript"></script>';
+	echo '<script language="JavaScript" src="'.$config->get('sysURL').'alpha/view/widgets/button.js.php?render_javascript"></script>';
 
 ?>

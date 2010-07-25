@@ -95,11 +95,20 @@ class AlphaConfig {
 	 */
 	private function setRootPath() {
 		$currentScript = __FILE__;
+		
+		// reverse the slashes in case we are running on Windows
+		$currentScript = str_replace('\\', '/', $currentScript);
     
 		$rootPath = '';  
-    
-		// first check to see if it is a controller under /alpha
-		if(strrpos($currentScript, 'alpha/') !== false) {
+
+		if(strrpos($currentScript, 'alpha/view/widgets/') !== false) {
+			// set path for widgets
+			$rootPath = substr($currentScript, 0, strrpos($currentScript, 'alpha/view/widgets/'));
+		}elseif(strrpos($currentScript, 'alpha/util/') !== false) {
+			// set the path for util scripts
+			$rootPath = substr($currentScript, 0, strrpos($currentScript, 'alpha/util/'));
+		}elseif(strrpos($currentScript, 'alpha/') !== false) {
+			// check to see if it is a controller under /alpha
 			$rootPath = substr($currentScript, 0, strrpos($currentScript, 'alpha/'));
 		}elseif(!strrpos($currentScript, 'alpha/') && strrpos($currentScript, 'controller/') != false) {
 			// handle custom controllers at a lower level
@@ -113,9 +122,8 @@ class AlphaConfig {
 		}else{
 			$rootPath = '';
 		}
-    
-		$config = AlphaConfig::getInstance();
-		$config->set('rootPath', $rootPath);
+
+		$this->set('rootPath', $rootPath);
 	}
    
 	/**
@@ -134,8 +142,7 @@ class AlphaConfig {
 	 * 
 	 */
 	private function loadConfig() {
-		$config = AlphaConfig::getInstance();
-		$rootPath = $config->get('rootPath');    
+		$rootPath = $this->get('rootPath');
     
 		// first we need to see if we are in dev, pro or test environment
 		if(isset($_SERVER['SERVER_NAME'])) {
@@ -150,25 +157,24 @@ class AlphaConfig {
 		// Load the servers to see which environment the current server is set as    
 		$serverIni = $rootPath.'config/servers.ini';
 
-			if(file_exists($serverIni)) {
-				$envs = parse_ini_file($serverIni);
+		if(file_exists($serverIni)) {
+			$envs = parse_ini_file($serverIni);
+			
 			if(in_array($server, $envs)) {
 				$environment = array_search($server, $envs);
 			}else{
 				die('No environment configured for the server '.$server);
 			}
 		}else{     
-			die('Failed to load the config file '.$serverIni);
+			die('Failed to load the config file ['.$serverIni.']');
 		}
      
 		$envIni = $rootPath.'config/'.$environment.'.ini';
      
 		$configArray = parse_ini_file($envIni);
     
-		$config = AlphaConfig::getInstance();
-    
 		foreach(array_keys($configArray) as $key) {
-			$config->set($key, $configArray[$key]);
+			$this->set($key, $configArray[$key]);
 		}    
 	}
 }
