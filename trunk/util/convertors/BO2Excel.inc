@@ -63,8 +63,9 @@ class BO2Excel {
 		$properties = $reflection->getProperties();
 		
 		// print headers
+		echo $this->BO->getDataLabel('OID').$sep;
 		foreach($properties as $propObj) {
-			$propName = $propObj->name;//print_r($this->BO->getDefaultAttributes());
+			$propName = $propObj->name;
 			if (!in_array($propName, $this->BO->getTransientAttributes()) && !in_array($propName, $this->BO->getDefaultAttributes())) {
 				echo $this->BO->getDataLabel($propName).$sep;
 			}
@@ -73,14 +74,17 @@ class BO2Excel {
 		echo "\n";
 		
 		// print values
+		echo $this->BO->getOID().$sep;
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
 			$prop = $this->BO->getPropObject($propName);
 			if (!in_array($propName, $this->BO->getTransientAttributes()) && !in_array($propName, $this->BO->getDefaultAttributes())) {
 				if(get_class($prop) == 'DEnum')
 					echo $prop->getDisplayValue().$sep;
+				elseif(get_class($prop) == 'Relation')
+					echo $prop->getRelatedClassDisplayFieldValue().$sep;
 				else
-					echo $prop->getValue().$sep;
+					echo preg_replace("/[\n\r]/", "", $prop->getValue()).$sep;
 			}
 		}
 		
