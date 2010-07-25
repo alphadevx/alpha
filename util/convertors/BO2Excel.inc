@@ -42,18 +42,20 @@ class BO2Excel {
 	
 	/**
 	 * Sends the output as an Excel spreadsheet to standard output
+	 * 
+	 * @param bool $renderHeaders Set to false to supress headers in the spreadsheet (defaults to true)
 	 */
-	public function render() {
+	public function render($renderHeaders=true) {
 		self::$logger->debug('>>render()');
 		
 		// the name of the file download
-		$fileName = $this->BO->getTableName().'-'.$this->BO->getId();
+		//$fileName = $this->BO->getTableName().'-'.$this->BO->getId();
 		
 		//header info for browser
-		header('Content-Type: application/vnd.ms-excel');
-		header('Content-Disposition: attachment; filename='.$fileName.'.xls');
-		header('Pragma: no-cache');
-		header('Expires: 0');
+		//header('Content-Type: application/vnd.ms-excel');
+		//header('Content-Disposition: attachment; filename='.$fileName.'.xls');
+		//header('Pragma: no-cache');
+		//header('Expires: 0');
 		
 		//define separator (tabbed character)
 		$sep = "\t";
@@ -63,15 +65,17 @@ class BO2Excel {
 		$properties = $reflection->getProperties();
 		
 		// print headers
-		echo $this->BO->getDataLabel('OID').$sep;
-		foreach($properties as $propObj) {
-			$propName = $propObj->name;
-			if (!in_array($propName, $this->BO->getTransientAttributes()) && !in_array($propName, $this->BO->getDefaultAttributes())) {
-				echo $this->BO->getDataLabel($propName).$sep;
+		if($renderHeaders) {
+			echo $this->BO->getDataLabel('OID').$sep;
+			foreach($properties as $propObj) {
+				$propName = $propObj->name;
+				if (!in_array($propName, $this->BO->getTransientAttributes()) && !in_array($propName, $this->BO->getDefaultAttributes())) {
+					echo $this->BO->getDataLabel($propName).$sep;
+				}
 			}
+			
+			echo "\n";
 		}
-		
-		echo "\n";
 		
 		// print values
 		echo $this->BO->getOID().$sep;
