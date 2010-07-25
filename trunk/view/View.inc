@@ -453,7 +453,7 @@ class View {
 		$html.= '<title>'.$controller->getTitle().'</title>';
 		$html.= '<meta name="Keywords" content="'.$controller->getKeywords().'">';
 		$html.= '<meta name="Description" content="'.$controller->getDescription().'">';
-		$html.= '<meta name="identifier" content="http://'.$config->get('sysURL').'/">';
+		$html.= '<meta name="identifier" content="'.$config->get('sysURL').'">';
 		$html.= '<meta name="revisit-after" content="7 days">';
 		$html.= '<meta name="expires" content="never">';
 		$html.= '<meta name="language" content="en">';
