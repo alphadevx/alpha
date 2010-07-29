@@ -18,14 +18,14 @@ class ViewState {
 	 * 
 	 * @var string
 	 */
-	private $selectedTab;
+	protected $selectedTab;
 	
 	/**
 	 * The view state object singleton
 	 *
 	 * @var ViewState
 	 */
-	private static $instance;
+	protected static $instance;
 
 	/**
 	 * Private constructor means the class cannot be instantiated from elsewhere
@@ -61,10 +61,10 @@ class ViewState {
 	 * @return string
 	 */
 	public function get($key) {
-		if(property_exists('ViewState', $key))
+		if(property_exists(get_class($this), $key))
 			return $this->$key;
 		else
-			throw new IllegalArguementException('The property ['.$key.'] does not exist on the ViewState class');
+			throw new IllegalArguementException('The property ['.$key.'] does not exist on the ['.get_class($this).'] class');
 	}
 	
 	/**
@@ -75,11 +75,11 @@ class ViewState {
 	 * @throws IllegalArguementException
 	 */
 	public function set($key, $value) {
-		if(property_exists('ViewState', $key)) {
+		if(property_exists(get_class($this), $key)) {
 			$this->$key = $value;
-			$_SESSION['ViewState'] = serialize($this);
+			$_SESSION[get_class($this)] = serialize($this);
 		}else{
-			throw new IllegalArguementException('The property ['.$key.'] does not exist on the ViewState class');
+			throw new IllegalArguementException('The property ['.$key.'] does not exist on the ['.get_class($this).'] class');
 		}
 	}
 }
