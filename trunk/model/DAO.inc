@@ -471,7 +471,10 @@ abstract class DAO {
 			throw new IllegalArguementException('Illegal arrays attributes=['.print_r($attributes, true).'] and values=['.print_r($values, true).'] provided to loadAllByAttributes');
 		}
 		
-		$whereClause = 'WHERE';
+		if($this->isTableOverloaded())
+			$whereClause = ' WHERE classname = \''.get_class($this).'\' AND';
+		else
+			$whereClause = ' WHERE';
 		for($i = 0; $i < count($attributes); $i++) {
 			$whereClause .= ' '.$attributes[$i].' = \''.$values[$i].'\' AND';
 			self::$logger->debug($whereClause);
@@ -485,9 +488,9 @@ abstract class DAO {
 			$limit = ';';
 		
 		if(!$this->isTableOverloaded())
-			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." ".$whereClause." ORDER BY ".$orderBy." ".$order.$limit;
+			$sqlQuery = "SELECT OID FROM ".$this->getTableName().$whereClause." ORDER BY ".$orderBy." ".$order.$limit;
 		else
-			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." ".$whereClause." AND classname='".get_class($this)."' ORDER BY ".$orderBy." ".$order.$limit;
+			$sqlQuery = "SELECT OID FROM ".$this->getTableName().$whereClause." AND classname='".get_class($this)."' ORDER BY ".$orderBy." ".$order.$limit;
 			
 		$this->lastQuery = $sqlQuery;
 		
