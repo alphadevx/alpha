@@ -234,7 +234,7 @@ class ListAll extends Controller implements AlphaControllerInterface {
 		if(!isset($this->keywords))
 			$this->setKeywords('list,all,'.$this->BOname);
 		// set the start point for the list pagination
-		if (isset($_GET['start']) ? $this->startPoint = $_GET['start']: $this->startPoint = 0);
+		if (isset($_GET['start']) ? $this->startPoint = $_GET['start']: $this->startPoint = 1);
 	}
 	
 	/**
@@ -260,14 +260,14 @@ class ListAll extends Controller implements AlphaControllerInterface {
 		
 		$html = '';
 		
-		$end = ($this->startPoint+$config->get('sysListPageAmount'));
+		$end = (($this->startPoint-1)+$config->get('sysListPageAmount'));
 		
 		if($end > $this->BOCount)
 			$end = $this->BOCount;
 		
-		$html .= '<p align="center">Displaying '.($this->startPoint+1).' to '.$end.' of <strong>'.$this->BOCount.'</strong>.&nbsp;&nbsp;';		
+		$html .= '<p align="center">Displaying '.($this->startPoint).' to '.$end.' of <strong>'.$this->BOCount.'</strong>.&nbsp;&nbsp;';		
 				
-		if ($this->startPoint > 0) {
+		if ($this->startPoint > 1) {
 			// handle secure URLs
 			if(isset($_GET['tk']))
 				$html .= '<a href="'.FrontController::generateSecureURL('act=ListAll&bo='.$this->BOname.'&start='.($this->startPoint-$config->get('sysListPageAmount'))).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
@@ -278,12 +278,12 @@ class ListAll extends Controller implements AlphaControllerInterface {
 		}
 		$page = 1;
 		for ($i = 0; $i < $this->BOCount; $i+=$config->get('sysListPageAmount')) {
-			if($i != $this->startPoint) {
+			if($i != ($this->startPoint-1)) {
 				// handle secure URLs
 				if(isset($_GET['tk']))
-					$html .= '&nbsp;<a href="'.FrontController::generateSecureURL('act=ListAll&bo='.$this->BOname.'&start='.$i).'">'.$page.'</a>&nbsp;';
+					$html .= '&nbsp;<a href="'.FrontController::generateSecureURL('act=ListAll&bo='.$this->BOname.'&start='.($i+1)).'">'.$page.'</a>&nbsp;';
 				else
-					$html .= '&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".$i.'">'.$page.'</a>&nbsp;';
+					$html .= '&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($i+1).'">'.$page.'</a>&nbsp;';
 			}elseif($this->BOCount > $config->get('sysListPageAmount')){
 				$html .= '&nbsp;'.$page.'&nbsp;';
 			}
@@ -314,17 +314,19 @@ class ListAll extends Controller implements AlphaControllerInterface {
 		
 		if(isset($this->filterField) && isset($this->filterValue)) {
 			if(isset($this->sort) && isset($this->order))
-				$objects = $temp->loadAllByAttribute($this->filterField, $this->filterValue, $this->startPoint, $config->get('sysListPageAmount'), $this->sort, $this->order);
+				$objects = $temp->loadAllByAttribute($this->filterField, $this->filterValue, $this->startPoint-1, $config->get('sysListPageAmount'), $this->sort, $this->order);
 			else
-				$objects = $temp->loadAllByAttribute($this->filterField, $this->filterValue, $this->startPoint, $config->get('sysListPageAmount'));
+				$objects = $temp->loadAllByAttribute($this->filterField, $this->filterValue, $this->startPoint-1, $config->get('sysListPageAmount'));
+				
+			$this->BOCount = $temp->getCount(array($this->filterField), array($this->filterValue));
 		}else{
 			if(isset($this->sort) && isset($this->order))
-				$objects = $temp->loadAll($this->startPoint, $config->get('sysListPageAmount'), $this->sort, $this->order);
+				$objects = $temp->loadAll($this->startPoint-1, $config->get('sysListPageAmount'), $this->sort, $this->order);
 			else
-				$objects = $temp->loadAll($this->startPoint, $config->get('sysListPageAmount'));
+				$objects = $temp->loadAll($this->startPoint-1, $config->get('sysListPageAmount'));
+				
+			$this->BOCount = $temp->getCount();
 		}
-		
-		$this->BOCount = $temp->getCount();
 		
 		echo View::renderDeleteForm();
 		
