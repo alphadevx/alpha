@@ -479,7 +479,7 @@ abstract class DAO {
 		// remove the last " AND"
 		$whereClause = substr($whereClause, 0, -4);
 		
-		if ($start != 0 && $limit != 0)
+		if ($limit != 0)
 			$limit = ' LIMIT '.$start.', '.$limit.';';
 		else
 			$limit = ';';
@@ -490,6 +490,8 @@ abstract class DAO {
 			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." ".$whereClause." AND classname='".get_class($this)."' ORDER BY ".$orderBy." ".$order.$limit;
 			
 		$this->lastQuery = $sqlQuery;
+		
+		self::$logger->debug($sqlQuery);
 
 		$result = mysql_query($sqlQuery);
 		
@@ -1298,19 +1300,36 @@ abstract class DAO {
 	/**
 	 * Gets the count from the database for the amount of objects of this class
 	 * 
+	 * @param array $atributes The attribute to count the objects by (optional)
+	 * @param array $values The values of the attributes to count the objects by (optional)
 	 * @return integer
 	 * @todo convert to MySQLi
 	 */
-	public function getCount() {
-		self::$logger->debug('>>getCount()');
+	public function getCount($attributes=array(), $values=array()) {
+		self::$logger->debug('>>getCount(attributes=['.print_r($attributes, true).'], values=['.print_r($values, true).'])');
 		
 		if(method_exists($this, 'before_getCount_callback'))
 			$this->before_getCount_callback();
+			
+		if(!is_array($attributes) || !is_array($values)) {
+			throw new IllegalArguementException('Illegal arrays attributes=['.print_r($attributes, true).'] and values=['.print_r($values, true).'] provided to loadAllByAttributes');
+		}
 		
-		if(!$this->isTableOverloaded())
-			$sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->getTableName();
+		if($this->isTableOverloaded())
+			$whereClause = ' WHERE classname = \''.get_class($this).'\' AND';
 		else
-			$sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->getTableName().' WHERE classname = \''.get_class($this).'\'';
+			$whereClause = ' WHERE';
+		for($i = 0; $i < count($attributes); $i++) {
+			$whereClause .= ' '.$attributes[$i].' = \''.$values[$i].'\' AND';
+			self::$logger->debug($whereClause);
+		}
+		// remove the last " AND"
+		$whereClause = substr($whereClause, 0, -4);
+		
+		if($whereClause != ' WHERE')
+			$sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->getTableName().$whereClause;
+		else
+			$sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->getTableName();
 
 		$this->lastQuery = $sqlQuery;
 
