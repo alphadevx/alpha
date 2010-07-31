@@ -2,9 +2,10 @@
 
 // $Id$
 
-if(!isset($config))
-	require_once '../../util/configLoader.inc';
-$config =&configLoader::getInstance();
+if(!isset($config)) {
+	require_once '../../util/AlphaConfig.inc';
+	$config = AlphaConfig::getInstance();
+}
 
 require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 require_once $config->get('sysRoot').'alpha/model/types/String.inc';

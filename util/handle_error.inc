@@ -3,8 +3,10 @@
 // $Id$
 
 // load config
-require_once 'configLoader.inc';
-$config =&configLoader::getInstance();
+if(!isset($config)) {
+	require_once 'AlphaConfig.inc';
+	$config = AlphaConfig::getInstance();
+}
 
 require_once $config->get('sysRoot').'alpha/util/LogFile.inc';
 
