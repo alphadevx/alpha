@@ -249,9 +249,9 @@ class RecordSelector {
 			
 			// hidden field to store the OIDs of the related BOs on the other side of the rel (this is what we check for when saving)
 			if($this->relationObject->getSide($this->accessingClassName) == 'left')
-				$lookupOIDs = $this->relationObject->getLookup()->loadAllFieldValuesByAttribute('leftID', $this->relationObject->getValue(), 'rightID');
+				$lookupOIDs = $this->relationObject->getLookup()->loadAllFieldValuesByAttribute('leftID', $this->relationObject->getValue(), 'rightID', 'DESC');
 			else
-				$lookupOIDs = $this->relationObject->getLookup()->loadAllFieldValuesByAttribute('rightID', $this->relationObject->getValue(), 'leftID');
+				$lookupOIDs = $this->relationObject->getLookup()->loadAllFieldValuesByAttribute('rightID', $this->relationObject->getValue(), 'leftID', 'DESC');
 			$html .= '<input type="hidden" name="'.$this->name.'" id="'.$this->name.'" value="'.implode(',', $lookupOIDs).'"/>';
 		}
 		
@@ -278,7 +278,7 @@ class RecordSelector {
 				$fieldLabel = $tmpObject->getDataLabel($fieldName);
 				$oidLabel = $tmpObject->getDataLabel('OID');
 				
-				$objects = $tmpObject->loadAll();
+				$objects = $tmpObject->loadAll(0, 0, 'OID', 'DESC');
 			}else{
 				DAO::loadClassDef($classNameLeft);
 				$tmpObject = new $classNameLeft;
@@ -286,7 +286,7 @@ class RecordSelector {
 				$fieldLabel = $tmpObject->getDataLabel($fieldName);
 				$oidLabel = $tmpObject->getDataLabel('OID');
 				
-				$objects = $tmpObject->loadAll();
+				$objects = $tmpObject->loadAll(0, 0, 'OID', 'DESC');
 			}
 			
 			$lookupOIDs = explode(',',$_GET['lookupOIDs']);
@@ -335,7 +335,7 @@ class RecordSelector {
 			$label = $tmpObject->getDataLabel($this->relationObject->getRelatedClassDisplayField());
 			$oidLabel = $tmpObject->getDataLabel('OID');
 			
-			$objects = $tmpObject->loadAll();
+			$objects = $tmpObject->loadAll(0, 0, 'OID', 'DESC');
 			
 			$html = '<table cols="3" width="100%" class="bordered">';
 			$html .= '<tr>';		
