@@ -174,8 +174,9 @@ class DEnum extends DAO implements AlphaTypeInterface{
 		if(empty($this->options))
 			$this->getOptions();		
 		
-		if(isset($this->options[$this->value]))
-			return $this->options[$this->value];
+		$val = Integer::zeroPad($this->value);
+		if(isset($this->options[$val]))
+			return $this->options[$val];
 		else
 			return 'Unknown';		
 	}
