@@ -128,7 +128,16 @@ class Integer extends AlphaType implements AlphaTypeInterface {
 	 */
 	public function getSize(){
 		return $this->size;
-	}	
+	}
+	
+	/**
+	 * Returns the integer value provided but padded with zeros to MAX_SIZE
+	 * 
+	 * @param int $val
+	 */
+	public static function zeroPad($val) {
+		return str_pad($val, Integer::MAX_SIZE, '0', STR_PAD_LEFT);
+	}
 }
  
 ?>
