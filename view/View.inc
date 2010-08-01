@@ -1065,7 +1065,10 @@ class View {
 				$html .= '</th>';
 	
 				$html .= '<td>&nbsp;';
-				$html .= $value;
+				if(method_exists($this, 'during_renderDefaultField_callback'))
+					$html .= $this->during_renderDefaultField_callback($name, $mode, $value);
+				else
+					$html .= $value;
 				$html .= '</td></tr>';
 			}else{
 				$html .= $value;
