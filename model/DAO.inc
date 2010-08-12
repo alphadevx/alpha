@@ -713,8 +713,8 @@ abstract class DAO {
 				foreach($properties as $propObj) {
 					$propName = $propObj->name;
 					if (!in_array($propName, $this->transientAttributes)) {
-						// Skip the OID, database auto number takes care of this.  Also skip empty strings.
-						if($this->get($propName) != '' && $propName != 'OID' && $propName != 'version_num') {							
+						// Skip the OID, database auto number takes care of this.
+						if($propName != 'OID' && $propName != 'version_num') {							
 							$sqlQuery .= "$propName = ?,";
 							$savedFieldsCount++;
 						}
@@ -2661,8 +2661,8 @@ abstract class DAO {
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
 			if (!in_array($propName, $this->transientAttributes)) {				
-				// Skip the OID, database auto number takes care of this.  Also skip empty strings.
-				if($this->get($propName) != '' && $propName != 'OID' && $propName != 'version_num') {
+				// Skip the OID, database auto number takes care of this.
+				if($propName != 'OID' && $propName != 'version_num') {
 					if($this->$propName instanceof Integer)
 						$bindingsTypes .= 'i';
 					else
