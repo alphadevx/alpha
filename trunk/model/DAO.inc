@@ -22,6 +22,7 @@ require_once $config->get('sysRoot').'alpha/model/types/DEnum.inc';
 require_once $config->get('sysRoot').'alpha/model/types/DEnumItem.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Relation.inc';
+require_once $config->get('sysRoot').'alpha/model/types/Sequence.inc';
 
 /**
  * Base business object class definition
@@ -231,7 +232,7 @@ abstract class DAO {
 				}
 			}
 		}catch (IllegalArguementException $e) {
-			self::$logger->warn('Bad data stored in the table ['.$this->getTableName().'], field ['.$propObj->name.'] bad value['.$row[$propObj->name].']');
+			self::$logger->warn('Bad data stored in the table ['.$this->getTableName().'], field ['.$propObj->name.'] bad value['.$row[$propObj->name].'], exception ['.$e->getMessage().']');
 		}catch (PHPException $e) {
 			// it is possible that the load failed due to the table not being up-to-date
 			if($this->checkTableNeedsUpdate()) {				
@@ -832,6 +833,52 @@ abstract class DAO {
 	}
 	
 	/**
+	 * Saves the field specified with the value supplied.  Only works for persistent BOs.  Note that no Alpha type
+	 * validation is performed with this method!
+	 * 
+	 * @param string $attribute
+	 * @param mixed $value
+	 * @throws IllegalArguementException
+	 * @throws FailedSaveException
+	 */
+	public function saveAttribute($attribute, $value) {
+		self::$logger->debug('>>saveAttribute(attribute=['.$attribute.'], value=['.$value.'])');
+		
+		if(method_exists($this, 'before_saveAttribute_callback'))
+			$this->before_saveAttribute_callback();
+		
+		if(!isset($this->$attribute))
+			throw new IllegalArguementException('Could not perform save, as the attribute ['.$attribute.'] is not present on the class['.get_class($this).']');
+		
+		if($this->isTransient())
+			throw new FailedSaveException('Cannot perform saveAttribute method on transient BO!');
+
+		// assume that it is a persistent object that needs to be updated
+		$sqlQuery = 'UPDATE '.$this->getTableName().' SET '.$attribute.'=? WHERE OID=?;';
+				
+		$this->lastQuery = $sqlQuery;
+		$stmt = DAO::getConnection()->stmt_init();
+				
+		if($stmt->prepare($sqlQuery)) {
+			if($this->$attribute instanceof Integer)
+				$bindingsType = 'i';
+			else
+				$bindingsType = 's';
+			$stmt->bind_param($bindingsType.'i', $value, $this->getOID());			
+			$stmt->execute();					
+		}else{
+			throw new FailedSaveException('Failed to save attribute, error is ['.$stmt->error.'], query ['.$this->lastQuery.']');				
+		}
+				
+		$stmt->close();
+				
+		if(method_exists($this, 'after_saveAttribute_callback'))
+			$this->after_saveAttribute_callback();
+			
+		self::$logger->debug('<<saveAttribute');
+	}
+	
+	/**
 	 * Validates the object to be saved
 	 * 
 	 * @return boolean
@@ -856,7 +903,7 @@ abstract class DAO {
 				strtoupper($propClass) != "DENUM" &&
 				strtoupper($propClass) != "DENUMITEM" && 
 				strtoupper($propClass) != "BOOLEAN") {
-					if (!preg_match($this->getPropObject($propName)->getRule(), $this->getPropObject($propName)->getValue())) {
+					if ($this->getPropObject($propName) != false && !preg_match($this->getPropObject($propName)->getRule(), $this->getPropObject($propName)->getValue())) {
 						throw new ValidationException('Failed to save, validation error is: '.$this->getPropObject($propName)->getHelper());
 						$valid = false;
 					}
@@ -1179,6 +1226,9 @@ abstract class DAO {
 					case "STRING":
 						$sqlQuery .= "$propName VARCHAR(".$this->getPropObject($propName)->getSize().")";
 					break;
+					case "SEQUENCE":
+						$sqlQuery .= "$propName VARCHAR(".$this->getPropObject($propName)->getSize().")";
+					break;
 					case "TEXT":
 						$sqlQuery .= "$propName TEXT";
 					break;
@@ -1370,7 +1420,7 @@ abstract class DAO {
 	 * 
 	 * @return integer
 	 */
-	public function getOID() {
+	public final function getOID() {
 		self::$logger->debug('>>getOID()');
 		$oid = str_pad($this->OID, 11, '0', STR_PAD_LEFT);
 		self::$logger->debug('<<getOID ['.$oid.']');
@@ -1598,7 +1648,7 @@ abstract class DAO {
 		$result = mysql_list_tables($config->get('sysDB'));
 		
 		while ($row = mysql_fetch_row($result)) {    		
-    		if ($row[0] == $this->getTableName())
+    		if (strtolower($row[0]) == strtolower($this->getTableName()))
     			$tableExists = true;
 		}		
 		
