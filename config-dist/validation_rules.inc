@@ -15,8 +15,8 @@
  */
  
 // default validation rules for base complex types
-define("DEFAULT_BOOLEAN", "/[1|0]/");
 define("DEFAULT_DATE", "/.*/i");
+define("DEFAULT_TIMESTAMP", "/.*/i");
 define("DEFAULT_DOUBLE", "/^[0-9]*\.[0-9]{1,2}$/");
 define("DEFAULT_INTEGER", "/^[0-9]*$/");
 define("DEFAULT_STRING", "/.*/i");
@@ -24,8 +24,14 @@ define("DEFAULT_TEXT", "/.*/i");
 
 // additional validation rules and extraction rules
 
+// required integer
+define("REQUIRED_INTEGER", "/^[0-9]{1,11}$/");
 // required text field
 define("REQUIRED_TEXT", "/^[a-z\d\.,'][a-z\d\.,' ]{0,65535}$/i");
+// required text field
+define("REQUIRED_STRING", "/^[a-z\d\.,'][a-z\d\.,' ]{0,255}$/i");
+// uppercase alpha
+define("ALPHA_UPPER", "/^[A-Z]{0,255}$/");
 // extract a hostname from a URL
 define("PATTERN_URL_HOSTNAME", "/^(http:\/\/)?([^\/]+)/i");
 // extract a domain name from a URL
