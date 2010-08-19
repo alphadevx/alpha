@@ -584,6 +584,7 @@ class View {
 						<li><a href="'.FrontController::generateSecureURL('act=CacheManager').'">Manage Cache</a></li>
 						<li><a href="'.FrontController::generateSecureURL('act=TagManager').'">Manage Tags</a></li>
 						<li><a href="'.FrontController::generateSecureURL('act=ListDEnums').'">Manage DEnums</a></li>
+						<li><a href="'.FrontController::generateSecureURL('act=ListSequences').'">Manage Sequences</a></li>
 						<li><a href="'.FrontController::generateSecureURL('act=ViewTestResults').'">Unit Tests</a></li>
 					</ul>';
 		}
