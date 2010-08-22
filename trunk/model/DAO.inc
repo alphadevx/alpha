@@ -260,7 +260,6 @@ abstract class DAO {
 	 * @param string $atribute
 	 * @param string $value
 	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
-	 * @todo convert to MySQLi
 	 */
 	public function loadByAttribute($attribute, $value, $ignoreClassType=false)	{
 		self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'], ignoreClassType=['.$ignoreClassType.'])');
@@ -268,50 +267,101 @@ abstract class DAO {
 		if(method_exists($this, 'before_loadByAttribute_callback'))
 				$this->before_loadByAttribute_callback();
 		
-		if($ignoreClassType)
-			$sqlQuery = "SELECT * FROM ".$this->getTableName()." WHERE $attribute = '$value';";
-		elseif(!$this->isTableOverloaded())
-			$sqlQuery = "SELECT * FROM ".$this->getTableName()." WHERE $attribute = '$value';";
+		$attributes = $this->getPersistentAttributes();
+		$fields = '';
+		foreach($attributes as $att)
+			$fields .= $att.',';
+		$fields = substr($fields, 0, -1);
+		
+		if(!$ignoreClassType && $this->isTableOverloaded())
+			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->getTableName().' WHERE '.$attribute.' = ? AND classname=?;';
 		else
-			$sqlQuery = "SELECT * FROM ".$this->getTableName()." WHERE $attribute = '$value' AND classname='".get_class($this)."';";
-
+			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->getTableName().' WHERE '.$attribute.' = ?;';
+		
+		self::$logger->info('Query=['.$sqlQuery.']');	
+		
 		$this->lastQuery = $sqlQuery;
+		$stmt = DAO::getConnection()->stmt_init();
+
+		$row = array();
 		
-		$result = mysql_query($sqlQuery);
-		
-		if(mysql_num_rows($result) == 0) {
-			throw new BONotFoundException('Failed to load object where attribute ['.$attribute.'] equals ['.$value.'].');			
+		if($stmt->prepare($sqlQuery)) {
+			if($this->$attribute instanceof Integer) {
+				if(!$ignoreClassType && $this->isTableOverloaded()) {
+					$stmt->bind_param('is', $value, get_class($this));
+				}else{
+					$stmt->bind_param('i', $value);
+				}
+			}else{
+				if(!$ignoreClassType && $this->isTableOverloaded()) {
+					$stmt->bind_param('ss', $value, get_class($this));
+				}else{
+					$stmt->bind_param('s', $value);
+				}
+			}
+			
+			$stmt->execute();
+			
+			$result = $this->bindResult($stmt);
+			if(isset($result[0]))
+				$row = $result[0];
+				
+			$stmt->close();
+		}else{
+			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
+			if($this->checkTableExists()) {
+				$this->makeTable();
+				throw new BONotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table did not exist so had to create!');
+			}
+			return;
 		}
 		
-		$row = mysql_fetch_assoc($result);
+		if(!isset($row['OID']) || $row['OID'] < 1) {
+			throw new BONotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], not found in database.');			
+			self::$logger->debug('<<loadByAttribute');
+			return;
+		}
 		
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this));
 		$properties = $reflection->getProperties();
 
-		foreach($properties as $propObj) {
-			$propName = $propObj->name;
-			
-			// filter transient attributes
-			if(!in_array($propObj->name, $this->transientAttributes)) {
-				$this->set($propObj->name, $row[$propObj->name]);
-			}elseif(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {
-				$prop = $this->getPropObject($propName);
+		try {
+			foreach($properties as $propObj) {
+				$propName = $propObj->name;
+											
+				// filter transient attributes
+				if(!in_array($propName, $this->transientAttributes)) {
+					$this->set($propName, $row[$propName]);
+				}elseif(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {
+					$prop = $this->getPropObject($propName);
 					
-				// handle the setting of ONE-TO-MANY relation values
-				if($prop->getRelationType() == 'ONE-TO-MANY') {					
-					$this->set($propObj->name, $row['OID']);
+					// handle the setting of ONE-TO-MANY relation values
+					if($prop->getRelationType() == 'ONE-TO-MANY') {
+						$this->set($propObj->name, $this->getID());
+					}
 				}
+			}
+		}catch (IllegalArguementException $e) {
+			self::$logger->warn('Bad data stored in the table ['.$this->getTableName().'], field ['.$propObj->name.'] bad value['.$row[$propObj->name].'], exception ['.$e->getMessage().']');
+		}catch (PHPException $e) {
+			// it is possible that the load failed due to the table not being up-to-date
+			if($this->checkTableNeedsUpdate()) {				
+				$missingFields = $this->findMissingFields();
+	    	
+				for($i = 0; $i < count($missingFields); $i++)
+					$this->addProperty($missingFields[$i]);
+					
+				throw new BONotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table ['.$this->getTableName().'] was out of sync with the database so had to be updated!');
+				self::$logger->debug('<<loadByAttribute');
+				return;
 			}
 		}
 		
-		if(mysql_error() == '') {
-			$this->setEnumOptions();
-			if(method_exists($this, 'after_loadByAttribute_callback'))
-				$this->after_loadByAttribute_callback();			
-		}else{			
-			throw new BONotFoundException('Failed to load object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
-		}
+		$this->setEnumOptions();	
+		if(method_exists($this, 'after_load_callback'))
+			$this->after_loadByAttribute_callback();
+		
 		self::$logger->debug('<<loadByAttribute');
 	}
 	
@@ -670,8 +720,8 @@ abstract class DAO {
 				foreach($properties as $propObj) {
 					$propName = $propObj->name;
 					if (!in_array($propName, $this->transientAttributes)) {
-						// Skip the OID, database auto number takes care of this.  Also skip empty strings.
-						if($this->get($propName) != '' && $propName != 'OID' && $propName != 'version_num') {
+						// Skip the OID, database auto number takes care of this.
+						if($propName != 'OID' && $propName != 'version_num') {
 							$sqlQuery .= "$propName,";
 							$savedFieldsCount++;
 						}
@@ -698,6 +748,7 @@ abstract class DAO {
 				$sqlQuery = rtrim($sqlQuery, ',').')';
 				
 				$this->lastQuery = $sqlQuery;
+				self::$logger->debug('Query ['.$sqlQuery.']');
 				$stmt = DAO::getConnection()->stmt_init();
 			
 				if($stmt->prepare($sqlQuery)) {			
@@ -920,7 +971,6 @@ abstract class DAO {
 	
 	/**
 	 * Delete the current object from the database
-	 * @todo convert to MySQLi
 	 */
 	public function delete() {
 		self::$logger->debug('>>delete()');
@@ -986,20 +1036,24 @@ abstract class DAO {
 			}
 		}
 		
-		$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE OID = '".$this->OID."';";
+		$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE OID = ?;";
 			
 		$this->lastQuery = $sqlQuery;
-
-		$result = mysql_query($sqlQuery);		
 		
-		if(mysql_error() == '') {
-			if(method_exists($this, 'after_delete_callback'))
-				$this->after_delete_callback();			
-			
-			$this->clear();
-		}else{			
-			throw new FailedDeleteException('Failed to delete object, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+		$stmt = DAO::getConnection()->stmt_init();
+				
+		if($stmt->prepare($sqlQuery)) {
+			$stmt->bind_param('i', $this->getOID());			
+			$stmt->execute();					
+		}else{
+			throw new FailedDeleteException('Failed to delete object ['.$this->getOID().'], error is ['.$stmt->error.'], query ['.$this->lastQuery.']');				
 		}
+				
+		$stmt->close();
+		$this->clear();
+		
+		if(method_exists($this, 'after_delete_callback'))
+			$this->after_delete_callback();
 
 		self::$logger->debug('<<delete');
 	}
@@ -1046,7 +1100,6 @@ abstract class DAO {
 	 * Gets the version_num of the object from the database (returns 0 if the BO is not saved yet)
 	 * 
 	 * @return int
-	 * @todo convert to MySQLi
 	 */
 	public function getVersion() {
 		self::$logger->debug('>>getVersion()');
@@ -1054,27 +1107,44 @@ abstract class DAO {
 		if(method_exists($this, 'before_getVersion_callback'))
 			$this->before_getVersion_callback();
 		
-		$sqlQuery = 'SELECT version_num FROM '.$this->getTableName().' WHERE OID = \''.$this->OID.'\';';
+		$sqlQuery = 'SELECT version_num FROM '.$this->getTableName().' WHERE OID = ?;';
 		$this->lastQuery = $sqlQuery;
-
-		$result = mysql_query($sqlQuery);
 		
-		if (mysql_error() == '') {
+		$stmt = DAO::getConnection()->stmt_init();
+		
+		if($stmt->prepare($sqlQuery)) {
+			$stmt->bind_param('i', $this->OID);
+			
+			$stmt->execute();
+			
+			$result = $this->bindResult($stmt);
+			if(isset($result[0]))
+				$row = $result[0];
+				
+			$stmt->close();
+		}else{
+			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
+			if($this->checkTableExists()) {
+				$this->makeTable();
+				throw new BONotFoundException('Failed to get the version number, table did not exist so had to create!');
+			}
+			return;
+		}
+		
+		if(!isset($row['version_num']) || $row['version_num'] < 1) {
 			if(method_exists($this, 'after_getVersion_callback'))
 				$this->after_getVersion_callback();
 				
-			$row = mysql_fetch_assoc($result);
-		
-			if (isset($row['version_num']))
-				$version_num = $row['version_num'];
-			else
-				$version_num = 0;
+			self::$logger->debug('<<getVersion [0]');
+			return 0;
+		}else{
+			if(method_exists($this, 'after_getVersion_callback'))
+				$this->after_getVersion_callback();
+			
+			$version_num = $row['version_num'];
 			
 			self::$logger->debug('<<getVersion ['.$version_num.']');
 			return $version_num;
-		}else{			
-			self::$logger->debug('<<getVersion [0]');
-			return 0;
 		}
 	}
 
@@ -1321,7 +1391,6 @@ abstract class DAO {
 	 * Gets the maximum OID value from the database for this class
 	 * 
 	 * @return integer
-	 * @todo convert to MySQLi
 	 */
 	public function getMAX() {
 		self::$logger->debug('>>getMAX()');
@@ -1333,11 +1402,11 @@ abstract class DAO {
 
 		$this->lastQuery = $sqlQuery;
 
-		$result = mysql_query($sqlQuery);		
+		$result = DAO::getConnection()->query($sqlQuery);	
 
-		$row = mysql_fetch_assoc($result);
+		$row = $result->fetch_array(MYSQLI_ASSOC);
 
-		if (mysql_error() == '') {
+		if (isset($row['max_OID'])) {
 			if(method_exists($this, 'after_getMAX_callback'))
 				$this->after_getMAX_callback();
 
@@ -2149,7 +2218,7 @@ abstract class DAO {
 		if (mysql_error() == '') {
 			if(method_exists($this, 'after_createForeignIndex_callback'))
 				$this->after_createForeignIndex_callback();
-				self::$logger->info('Successfully created the foreign key index ['.$attributeName.'_fk_idx]');
+				self::$logger->debug('Successfully created the foreign key index ['.$attributeName.'_fk_idx]');
 		}else{			
 			throw new AlphaException('Failed to create the index ['.$attributeName.'_fk_idx] on ['.$this->getTableName().'], error is ['.mysql_error().'], query ['.$this->lastQuery.']');
 		}		
@@ -2534,14 +2603,13 @@ abstract class DAO {
 	
 	/**
 	 * Starts a new database transaction
-	 * @todo convert to MySQLi
 	 */
 	public static function begin() {
 		if(self::$logger == null)
 			self::$logger = new Logger('DAO');
 		self::$logger->debug('>>begin()');     	
      	
-     	if (!DAO::getConnection()->autocommit(FALSE))
+     	if (!DAO::getConnection()->autocommit(false))
      		throw new AlphaException('Error beginning a new transaction, error is ['.DAO::getConnection()->get_warnings().']');
      	
      	self::$logger->debug('<<begin');
@@ -2702,6 +2770,8 @@ abstract class DAO {
   	 * @return mysqli_stmt
   	 */
 	private function bindParams($stmt) {
+		self::$logger->debug('>>bindParams(stmt=['.print_r($stmt, true).'])');
+		
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this));
 		$properties = $reflection->getProperties();
@@ -2744,6 +2814,9 @@ abstract class DAO {
 			$bindingsTypes .= 'i';
 			array_push($params, $this->OID);
 		}
+		
+		self::$logger->debug('bindingsTypes=['.$bindingsTypes.']');
+		self::$logger->debug('params ['.print_r($params, true).']');
 					
 	    if ($params != null) {		 
 			$bind_names[] = $bindingsTypes;
@@ -2756,7 +2829,8 @@ abstract class DAO {
 
 		    call_user_func_array(array($stmt,'bind_param'), $bind_names);
 	   	}
-	    	
+	    
+	   	self::$logger->debug('<<bindParams ['.print_r($stmt, true).']');
 	    return $stmt;
 	}
 	

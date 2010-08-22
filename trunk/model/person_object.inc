@@ -78,11 +78,22 @@ class person_object extends DAO {
 	 * @var String
 	 */
 	protected $URL;
+	
+	/**
+	 * Trace logger
+	 * 
+	 * @var Logger
+	 */
+	private static $logger = null;
 
 	/**
 	 * constructor for the class that populates all of the complex types with default values
 	 */
 	public function __construct() {
+		if(self::$logger == null)
+			self::$logger = new Logger('person_object');
+		self::$logger->debug('>>__construct()');
+		
 		// ensure to call the parent constructor
 		parent::__construct();
 		$this->displayName = new String();
@@ -111,6 +122,8 @@ class person_object extends DAO {
 		$this->rights = new Relation();
 		$this->markTransient('rights');
 		$this->setupRels();
+		
+		self::$logger->debug('<<__construct');
 	}
 
 	/**
@@ -201,6 +214,9 @@ class person_object extends DAO {
 	 * @return bool
 	 */
 	public function inGroup($groupName) {
+		if(self::$logger == null)
+			self::$logger = new Logger('person_object');
+			
 		$group = new rights_object();
 			
 		try {
