@@ -7,7 +7,7 @@ if(!isset($config)) {
 }
 
 // add PHPUnit to the include_path
-ini_set('include_path', ini_get('include_path').':'.$config->get('sysRoot').'alpha/lib/PEAR/PHPUnit-3.2.9/');
+ini_set('include_path', ini_get('include_path').';'.$config->get('sysRoot').'alpha/lib/PEAR/PHPUnit-3.2.9');
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
