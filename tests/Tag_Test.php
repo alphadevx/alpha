@@ -24,7 +24,6 @@ class Tag_Test extends PHPUnit_Framework_TestCase {
      * here
      */
     protected function setUp() {
-    	DAO::begin();
     	$this->article = $this->createArticleObject('unitTestArticle');
         // just making sure no previous test article is in the DB
         $this->article->deleteAllByAttribute('title', 'unitTestArticle');        
@@ -36,7 +35,7 @@ class Tag_Test extends PHPUnit_Framework_TestCase {
      * here
      */    
     protected function tearDown() {
-    	DAO::rollback();    	
+    	$this->article->delete();
         unset($this->article);
     }
     
