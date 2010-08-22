@@ -91,7 +91,7 @@ class DAO_Test extends PHPUnit_Framework_TestCase
      */
     public function testLoadByAttribute() {
     	$this->person->save();
-    	$this->person->loadByAttribute('displayname','unitTestUser');
+    	$this->person->loadByAttribute('displayName','unitTestUser');
     	$this->assertEquals('unitTestUser@test.com', $this->person->get('email'), 'testing the loadByAttribute method');
     	$this->person->loadByAttribute('email','unitTestUser@test.com');
     	$this->assertEquals('unitTestUser', $this->person->getDisplayname()->getValue(), 'testing the loadByAttribute method');

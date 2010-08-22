@@ -23,7 +23,10 @@ class Timestamp_Test extends PHPUnit_Framework_TestCase
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
      */
-    protected function setUp() {        
+    protected function setUp() {
+    	global $config;
+    	
+    	$config->set('sysDefaultDateTime', 'now');
         $this->timestamp1 = new Timestamp();        
     }
     
