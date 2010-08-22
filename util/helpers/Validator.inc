@@ -55,6 +55,19 @@ class Validator {
 		else
 			return true;
 	}
+	
+	/**
+	 * Validate that the provided value is a valid Sequence string ([A-Z]-[0-9])
+	 *
+	 * @param $value
+	 * return boolean
+	 */
+	public static function isSequence($value) {
+		if (!filter_var($value, FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => "/^[A-Z]\-[0-9]$/"))))
+			return false;
+		else
+			return true;
+	}
 
 	/**
 	 * Validate that the provided value is a valid URL
