@@ -278,7 +278,7 @@ abstract class DAO {
 		else
 			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->getTableName().' WHERE '.$attribute.' = ?;';
 		
-		self::$logger->info('Query=['.$sqlQuery.']');	
+		self::$logger->debug('Query=['.$sqlQuery.']');	
 		
 		$this->lastQuery = $sqlQuery;
 		$stmt = DAO::getConnection()->stmt_init();
@@ -941,7 +941,8 @@ abstract class DAO {
 				$bindingsType = 'i';
 			else
 				$bindingsType = 's';
-			$stmt->bind_param($bindingsType.'i', $value, $this->getOID());			
+			$stmt->bind_param($bindingsType.'i', $value, $this->getOID());
+			self::$logger->debug('Binding params ['.$bindingsType.'i, '.$value.', '.$this->getOID().']');
 			$stmt->execute();					
 		}else{
 			throw new FailedSaveException('Failed to save attribute, error is ['.$stmt->error.'], query ['.$this->lastQuery.']');				

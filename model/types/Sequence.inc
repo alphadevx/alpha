@@ -146,7 +146,7 @@ class Sequence extends DAO implements AlphaTypeInterface{
 	 * @return string
 	 */
 	public function getValue() {
-		if($this->prefix->getValue() != '' && $this->sequence->getValue() != '')		
+		if($this->prefix->getValue() != '' && $this->sequence->getValue() != 0)		
 			return $this->prefix->getValue().'-'.$this->sequence->getValue();
 		else
 			return '';
