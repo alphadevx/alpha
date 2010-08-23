@@ -504,7 +504,26 @@ class DAO_Test extends PHPUnit_Framework_TestCase
 				}
 			}
     	}
-    }    
+    }
+    
+    /**
+     * Testing the saveAttribute method
+     */
+    public function testSaveAttribute() {
+    	$this->person->save();
+    	$this->person->saveAttribute('displayName', 'unitTestUserNew');
+    	
+    	$this->assertEquals('unitTestUserNew', $this->person->getDisplayName()->getValue(), 'Testing that the value was set on the object in memory along with saving to the database');
+    	
+    	$person = new person_object();
+    	
+    	try {
+    		$person->loadByAttribute('displayName', 'unitTestUserNew');
+    		$this->assertEquals('unitTestUserNew', $person->getDisplayName()->getValue(), 'Testing that the value was saved to the database');
+    	} catch (BONotFoundException $e) {
+    		$this->fail('Failed to load the BO that was updated with the saveAttribute method');
+    	}
+    }
 }
 
 ?>
