@@ -445,7 +445,6 @@ abstract class DAO {
 	 * @param string $orderBy the name of the field to sort the BOs by
 	 * @param string $order the order to sort the BOs by, default is ASC
 	 * @return array an array containing objects of this type of business object.
-	 * @todo convert to MySQLi
 	 */
 	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC") {
 		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
@@ -461,16 +460,42 @@ abstract class DAO {
 			$limit = ';';
 		
 		if(!$this->isTableOverloaded())
-			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = '$value' ORDER BY ".$orderBy." ".$order.$limit;
+			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = ? ORDER BY ".$orderBy." ".$order.$limit;
 		else
-			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = '$value' AND classname='".get_class($this)."' ORDER BY ".$orderBy." ".$order.$limit;
+			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = ? AND classname=? ORDER BY ".$orderBy." ".$order.$limit;
 			
 		$this->lastQuery = $sqlQuery;
-
-		$result = mysql_query($sqlQuery);
 		
-		if(mysql_error() != '') {
-			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+		$stmt = DAO::getConnection()->stmt_init();
+
+		$row = array();
+		
+		if($stmt->prepare($sqlQuery)) {
+			if($this->$attribute instanceof Integer) {
+				if($this->isTableOverloaded()) {
+					$stmt->bind_param('is', $value, get_class($this));
+				}else{
+					$stmt->bind_param('i', $value);
+				}
+			}else{
+				if($this->isTableOverloaded()) {
+					$stmt->bind_param('ss', $value, get_class($this));
+				}else{
+					$stmt->bind_param('s', $value);
+				}
+			}
+			
+			$stmt->execute();
+			
+			$result = $this->bindResult($stmt);
+				
+			$stmt->close();
+		}else{
+			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
+			if(!$this->checkTableExists()) {
+				$this->makeTable();
+				throw new BONotFoundException('Failed to load objects by attribute ['.$attribute.'] and value ['.$value.'], table did not exist so had to create!');
+			}
 			self::$logger->debug('<<loadAllByAttribute []');
 			return array();
 		}
@@ -480,7 +505,8 @@ abstract class DAO {
 		$count = 0;
 		$BO_Class = get_class($this);
 		
-		while($row = mysql_fetch_assoc($result)) {
+		//while($row = mysql_fetch_assoc($result)) {
+		foreach($result as $row) {
 			try {
 				$obj = new $BO_Class();
 				$obj->load($row["OID"]);
@@ -1425,7 +1451,6 @@ abstract class DAO {
 	 * @param array $atributes The attribute to count the objects by (optional)
 	 * @param array $values The values of the attributes to count the objects by (optional)
 	 * @return integer
-	 * @todo convert to MySQLi
 	 */
 	public function getCount($attributes=array(), $values=array()) {
 		self::$logger->debug('>>getCount(attributes=['.print_r($attributes, true).'], values=['.print_r($values, true).'])');
@@ -1454,14 +1479,14 @@ abstract class DAO {
 			$sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->getTableName();
 
 		$this->lastQuery = $sqlQuery;
+		
+		$result = DAO::getConnection()->query($sqlQuery);
 
-		$result = mysql_query($sqlQuery);		
-
-		if (mysql_error() == '') {
+		if ($result) {
 			if(method_exists($this, 'after_getCount_callback'))
 				$this->after_getCount_callback();
 				
-			$row = mysql_fetch_assoc($result);
+			$row = $result->fetch_array(MYSQLI_ASSOC);
 
 			self::$logger->debug('<<getCount ['.$row['class_count'].']');
 			return $row['class_count'];
@@ -2583,7 +2608,6 @@ abstract class DAO {
 			
 			$query = 'SHOW COLUMNS FROM '.$this->getTableName();
 			$result = mysql_query($query);
-			$this->lastQuery = $query;			
 			
 			if(mysql_error() == '') {
 				while ($row = mysql_fetch_assoc($result)) {						
