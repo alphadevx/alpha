@@ -948,6 +948,8 @@ abstract class DAO {
 		}
 				
 		$stmt->close();
+		
+		$this->set($attribute, $value);
 				
 		if(method_exists($this, 'after_saveAttribute_callback'))
 			$this->after_saveAttribute_callback();
