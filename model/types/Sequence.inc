@@ -86,6 +86,7 @@ class Sequence extends DAO implements AlphaTypeInterface{
 		
 		$this->prefix = new String();
 		$this->prefix->setRule(ALPHA_UPPER);
+		$this->prefix->setHelper('Sequence prefix must be uppercase string!');
 		$this->markUnique('prefix');
 		
 		$this->markTransient('helper');
@@ -108,7 +109,6 @@ class Sequence extends DAO implements AlphaTypeInterface{
 	 * 
 	 */
 	public function setSequenceToNext() {
-		DAO::begin();
 		
 		try {
 			$this->loadByAttribute('prefix', $this->prefix->getValue());
@@ -118,8 +118,6 @@ class Sequence extends DAO implements AlphaTypeInterface{
 		
 		$this->set('sequence', $this->get('sequence')+1);
 		$this->save();
-		
-		DAO::commit();
 	}
 	
 	/**
