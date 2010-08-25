@@ -20,6 +20,7 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 require_once $config->get('sysRoot').'alpha/tests/Enum_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/DEnum_Test.php';
+require_once $config->get('sysRoot').'alpha/tests/Sequence_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Boolean_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Date_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Timestamp_Test.php';
@@ -117,6 +118,19 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('DEnum_Test');
+		$result = $suite->run();
+		$runningTime+=$result->time();
+		$testCount+=$result->count();
+				
+		$this->printTestResult($result);
+		
+		echo '<p>Running time: '.$runningTime.'</p>';
+		
+		//------------------------------------------------
+		echo '<h3>Sequence:</h3>';
+		
+		$suite = new PHPUnit_Framework_TestSuite();
+		$suite->addTestSuite('Sequence_Test');
 		$result = $suite->run();
 		$runningTime+=$result->time();
 		$testCount+=$result->count();
