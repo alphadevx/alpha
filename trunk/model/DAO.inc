@@ -359,7 +359,7 @@ abstract class DAO {
 		}
 		
 		$this->setEnumOptions();	
-		if(method_exists($this, 'after_load_callback'))
+		if(method_exists($this, 'after_loadByAttribute_callback'))
 			$this->after_loadByAttribute_callback();
 		
 		self::$logger->debug('<<loadByAttribute');
@@ -670,20 +670,23 @@ abstract class DAO {
 	 * @param string $value The value of the attribute to load the object by
 	 * @param string $returnAttribute The attribute to return
 	 * @param string $order the order to sort the BOs by, default is ASC
+	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
 	 * @return array
 	 * @todo convert to MySQLi
 	 */
-	public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order='ASC') {
-		self::$logger->debug('>>loadAllFieldValuesByAttribute(attribute=['.$attribute.'], value=['.$value.'], order=['.$order.']');
+	public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order='ASC', $ignoreClassType=false) {
+		self::$logger->debug('>>loadAllFieldValuesByAttribute(attribute=['.$attribute.'], value=['.$value.'], returnAttribute=['.$returnAttribute.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 		
 		global $config;
 		
-		if(!$this->isTableOverloaded())
-			$sqlQuery = "SELECT ".$returnAttribute." FROM ".$this->getTableName()." WHERE $attribute = '$value' ORDER BY OID ".$order.";";
-		else
+		if(!$ignoreClassType && $this->isTableOverloaded())
 			$sqlQuery = "SELECT ".$returnAttribute." FROM ".$this->getTableName()." WHERE $attribute = '$value' AND classname='".get_class($this)."' ORDER BY OID ".$order.";";
+		else
+			$sqlQuery = "SELECT ".$returnAttribute." FROM ".$this->getTableName()." WHERE $attribute = '$value' ORDER BY OID ".$order.";";
+			
 			
 		$this->lastQuery = $sqlQuery;
+		self::$logger->debug('lastQuery ['.$sqlQuery.']');
 
 		$result = mysql_query($sqlQuery);
 		
@@ -2734,7 +2737,7 @@ abstract class DAO {
   	 * @param $versionNumber
   	 */
   	private function setVersion($versionNumber) {
-  		$this->version_num = $versionNumber;
+  		$this->version_num->setValue($versionNumber);
   	}
   	
   	/**
@@ -2743,15 +2746,15 @@ abstract class DAO {
   	 * values will be copied accross.
   	 * 
   	 * @param $targetClassName string
-  	 * @param $originalBO BO
+  	 * @param $originalBO DAO
   	 * @return BO
   	 */
   	public function cast($targetClassName, $originalBO) {  		
   		DAO::loadClassDef($targetClassName);
   		
   		$BO = new $targetClassName;
-  		$BO->setOID($this->OID);
-  		$BO->setVersion($this->version_num);
+  		$BO->setOID($originalBO->getOID());
+  		$BO->setVersion($originalBO->getVersion());
   		
   		// get the class attributes
 		$originalBOreflection = new ReflectionClass(get_class($originalBO));
