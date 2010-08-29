@@ -99,6 +99,18 @@ class Validator_Test extends PHPUnit_Framework_TestCase {
 		$this->assertFalse(Validator::isEmail('no body@alphaframework.org'));
 		$this->assertFalse(Validator::isEmail('nobody@alphaframework'));
     }
+    
+    /**
+     * Validate that the provided value is a valid Sequence value
+     */
+    public function testIsSequence() {
+    	$this->assertTrue(Validator::isSequence('BARS-150'));
+    	$this->assertTrue(Validator::isSequence('ALPH-15'));
+    	$this->assertTrue(Validator::isSequence('DESI-1'));
+    	$this->assertFalse(Validator::isSequence('1'));
+    	$this->assertFalse(Validator::isSequence('1.0'));
+    	$this->assertFalse(Validator::isSequence('DESI8'));
+    }
 }
 
 ?>
