@@ -63,7 +63,7 @@ class Validator {
 	 * return boolean
 	 */
 	public static function isSequence($value) {
-		if (!filter_var($value, FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => "/^[A-Z]\-[0-9]$/"))))
+		if (!filter_var($value, FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => "/^[A-Z]+\-[0-9]+$/"))))
 			return false;
 		else
 			return true;
