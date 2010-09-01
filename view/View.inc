@@ -451,15 +451,17 @@ class View {
 		$html.= '<head>';
 		$html.= '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">';
 		$html.= '<title>'.$controller->getTitle().'</title>';
-		$html.= '<meta name="Keywords" content="'.$controller->getKeywords().'">';
-		$html.= '<meta name="Description" content="'.$controller->getDescription().'">';
-		$html.= '<meta name="identifier" content="'.$config->get('sysURL').'">';
-		$html.= '<meta name="revisit-after" content="7 days">';
-		$html.= '<meta name="expires" content="never">';
-		$html.= '<meta name="language" content="en">';
-		$html.= '<meta name="distribution" content="global">';
+		if($controller->getKeywords() != '')
+			$html.= '<meta name="Keywords" content="'.$controller->getKeywords().'">';
+		if($controller->getDescription() != '')
+			$html.= '<meta name="Description" content="'.$controller->getDescription().'">';
 		$html.= '<meta name="title" content="'.$controller->getTitle().'">';
-		$html.= '<meta name="robots" content="index,follow">';
+		$html.= '<meta name="robots" content="index,follow,NOODP">';
+		if ($controller->getBO() != null && $controller->getBO()->hasAttribute('URL')) {
+			$URL = $controller->getBO()->get('URL');
+			if($URL != '')
+				$html.= '<link rel="canonical" href="'.$URL.'" />';
+		}
 		$html.= '<meta http-equiv="imagetoolbar" content="no">';
 
 		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/ui/themes/'.$config->get('sysTheme').'/ui.all.css">';
