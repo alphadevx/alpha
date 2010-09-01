@@ -1082,11 +1082,11 @@ abstract class DAO {
 		}
 				
 		$stmt->close();
-		$this->clear();
 		
 		if(method_exists($this, 'after_delete_callback'))
 			$this->after_delete_callback();
-
+			
+		$this->clear();
 		self::$logger->debug('<<delete');
 	}
 	
