@@ -135,7 +135,7 @@ abstract class DAO {
 		
 		$this->version_num = new Integer(0);
 		$this->created_ts = new Timestamp(date("Y-m-d H:i:s"));
-		$person_ID = (isset($_SESSION['currentUser'])? $_SESSION['currentUser']->getID(): 0);
+		$person_ID = (isset($_SESSION['currentUser'])? $_SESSION['currentUser']->getOID(): 0);
 		$this->created_by = new Integer($person_ID);
 		$this->updated_ts = new Timestamp(date("Y-m-d H:i:s"));
 		$this->updated_by = new Integer($person_ID);
@@ -227,7 +227,7 @@ abstract class DAO {
 					
 					// handle the setting of ONE-TO-MANY relation values
 					if($prop->getRelationType() == 'ONE-TO-MANY') {
-						$this->set($propObj->name, $this->getID());
+						$this->set($propObj->name, $this->getOID());
 					}
 				}
 			}
@@ -338,7 +338,7 @@ abstract class DAO {
 					
 					// handle the setting of ONE-TO-MANY relation values
 					if($prop->getRelationType() == 'ONE-TO-MANY') {
-						$this->set($propObj->name, $this->getID());
+						$this->set($propObj->name, $this->getOID());
 					}
 				}
 			}
@@ -851,9 +851,9 @@ abstract class DAO {
 									// first delete all of the old RelationLookup objects for this rel
 									try {
 										if($side == 'left')
-											$lookUp->deleteAllByAttribute('leftID', $this->getID());
+											$lookUp->deleteAllByAttribute('leftID', $this->getOID());
 										else
-											$lookUp->deleteAllByAttribute('rightID', $this->getID());							
+											$lookUp->deleteAllByAttribute('rightID', $this->getOID());							
 									}catch (Exception $e) {
 										throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
 									}
@@ -866,10 +866,10 @@ abstract class DAO {
 										foreach ($OIDs as $oid) {											
 											$newLookUp = new RelationLookup($lookUp->get('leftClassName'), $lookUp->get('rightClassName'));
 											if($side == 'left') {
-												$newLookUp->set('leftID', $this->getID());
+												$newLookUp->set('leftID', $this->getOID());
 												$newLookUp->set('rightID', $oid);
 											}else{
-												$newLookUp->set('rightID', $this->getID());
+												$newLookUp->set('rightID', $this->getOID());
 												$newLookUp->set('leftID', $oid);
 											}
 											$newLookUp->save();
@@ -883,7 +883,7 @@ abstract class DAO {
 							
 							// handle the saving of ONE-TO-MANY relation values
 							if($prop->getRelationType() == 'ONE-TO-MANY') {
-								$prop->setValue($this->getID());
+								$prop->setValue($this->getOID());
 							}
 						}						
 					}
@@ -1032,16 +1032,16 @@ abstract class DAO {
 						$side = $prop->getSide($this->getTableName().'_object');
 					}
 																
-					self::$logger->debug('Side is ['.$side.']'.$this->getID());
+					self::$logger->debug('Side is ['.$side.']'.$this->getOID());
 						
 					$lookUp = $prop->getLookup();
 					self::$logger->debug('Lookup object['.print_r($lookUp, true).']');
 										
 					// delete all of the old RelationLookup objects for this rel
 					if($side == 'left')
-						$lookUp->deleteAllByAttribute('leftID', $this->getID());
+						$lookUp->deleteAllByAttribute('leftID', $this->getOID());
 					else
-						$lookUp->deleteAllByAttribute('rightID', $this->getID());
+						$lookUp->deleteAllByAttribute('rightID', $this->getOID());
 					self::$logger->debug('...done deleting!');
 				}
 					
@@ -2504,7 +2504,7 @@ abstract class DAO {
 		self::$logger->debug('>>reload()');
 		
 		if(!$this->isTransient()) {
-			$this->load($this->getID());			
+			$this->load($this->getOID());			
 		}else{
 			throw new AlphaException('Cannot reload transient object from database!');
 		}		
@@ -2898,7 +2898,17 @@ abstract class DAO {
       	$metadata->free();
      
       	return $result;
-    } 
+    }
+    
+    /**
+     * Check to see if an attribute exists on the BO
+     * 
+     * @param $attribute
+     * @return bool
+     */
+    public function hasAttribute($attribute) {
+    	return property_exists(get_class($this), $attribute);
+    }
 }
 
 ?>
