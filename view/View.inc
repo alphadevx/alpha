@@ -128,7 +128,7 @@ class View {
 		$fields['formAction'] = $_SERVER['REQUEST_URI'];
 		
 		// the form ID
-		$fields['formID'] = get_class($this->BO).'_'.$this->BO->getID();
+		$fields['formID'] = get_class($this->BO).'_'.$this->BO->getOID();
 		
 		// buffer form fields to $formFields
 		$fields['formFields'] = $this->renderAllFields('create');
@@ -168,7 +168,7 @@ class View {
 		$fields['formAction'] = $_SERVER['REQUEST_URI'];
 		
 		// the form ID
-		$fields['formID'] = get_class($this->BO).'_'.$this->BO->getID();
+		$fields['formID'] = get_class($this->BO).'_'.$this->BO->getOID();
 		
 		// buffer form fields to $formFields
 		$fields['formFields'] = $this->renderAllFields('edit');
@@ -177,7 +177,7 @@ class View {
 		$button = new button('submit', 'Save', 'saveBut');
 		$fields['saveButton'] = $button->render();
 		
-		$button = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getID()."'; document.getElementById('delete_form').submit();}", "Delete", "deleteBut");
+		$button = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getOID()."'; document.getElementById('delete_form').submit();}", "Delete", "deleteBut");
 		$fields['deleteButton'] = $button->render();
 		
 		$button = new button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
@@ -267,7 +267,7 @@ class View {
 					}
 				}
 				if ($propName == 'OID')
-					$html .= '	<td>&nbsp;'.$this->BO->getID().'</td>';
+					$html .= '	<td>&nbsp;'.$this->BO->getOID().'</td>';
 			}
 		}
 		$html .= '</tr>';
@@ -276,7 +276,7 @@ class View {
 		
 		// View button
 		if(strpos($_SERVER['REQUEST_URI'], 'FC.php') !== false) {
-			$button = new button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."';", 'View', 'viewBut');
+			$button = new button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."';", 'View', 'viewBut');
 			$fields['viewButton'] = $button->render();
 		}else{
 			$button = new button("document.location = '".$this->BO->get('URL')."';", 'View', 'viewBut');
@@ -287,10 +287,10 @@ class View {
 		// render edit and delete buttons for admins only
 		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
 			$html .= '&nbsp;&nbsp;';
-			$button = new button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getID())."'", "Edit", "editBut");
+			$button = new button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "editBut");
 			$html .= $button->render();
 			$html .= '&nbsp;&nbsp;';
-			$button = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getID()."'; document.getElementById('delete_form').submit();}", "Delete", "deleteBut");
+			$button = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getOID()."'; document.getElementById('delete_form').submit();}", "Delete", "deleteBut");
 			$html .= $button->render();
 		}
 		$fields['adminButtons'] = $html;
@@ -321,7 +321,7 @@ class View {
 		
 		// we may want to display the OID regardless of class
 		$fields['OIDLabel'] = $this->BO->getDataLabel('OID');		
-		$fields['OID'] = $this->BO->getID();		
+		$fields['OID'] = $this->BO->getOID();		
 		
 		// buffer form fields to $formFields
 		$fields['formFields'] = $this->renderAllFields('view');
@@ -334,10 +334,10 @@ class View {
 		// render edit and delete buttons for admins only
 		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
 			$html .= '&nbsp;&nbsp;';
-			$button = new button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getID())."'", "Edit", "editBut");
+			$button = new button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "editBut");
 			$html .= $button->render();
 			$html .= '&nbsp;&nbsp;';
-			$button = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
+			$button = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getOID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
 			$html .= $button->render();
 		}
 		$fields['adminButtons'] = $html;
@@ -1100,18 +1100,18 @@ class View {
 		if ($mode == 'create') {
 			// give 10 rows for content fields (other 5 by default)
 			if($name == 'content')
-				$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getID(), 10);
+				$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getOID(), 10);
 			else
-				$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getID());
+				$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getOID());
 			$html .= $text->render($tableTags);
 		}
 		
 		if ($mode == 'edit') {
 			// give 10 rows for content fields (other 5 by default)
 			if($name == 'content')
-				$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getID(), 10);
+				$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getOID(), 10);
 			else
-				$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getID());
+				$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getOID());
 			$html .= $text->render($tableTags);
 		}
 		
@@ -1268,7 +1268,7 @@ class View {
 						if($mode == 'view') {
 							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
 						}else{
-							$string = new StringBox($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName, get_class($this->BO).'_'.$this->BO->getID());
+							$string = new StringBox($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName, get_class($this->BO).'_'.$this->BO->getOID());
 							$html .= $string->render();
 						}
 					break;
