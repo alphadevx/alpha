@@ -322,6 +322,8 @@ abstract class DAO {
 			return;
 		}
 		
+		$this->OID = $row['OID'];
+		
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this));
 		$properties = $reflection->getProperties();
