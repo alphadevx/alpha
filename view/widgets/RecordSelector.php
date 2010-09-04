@@ -147,24 +147,24 @@ class RecordSelector {
 						$html .= '<tr><td>';					
 						// check to see if we are in the admin back-end
 						if(strpos($_SERVER['REQUEST_URI'], 'FC.php') !== false) {					
-							$viewURL = FrontController::generateSecureURL('act=Detail&bo='.get_class($obj).'&oid='.$obj->getID());
-							$editURL = FrontController::generateSecureURL('act=Edit&bo='.get_class($obj).'&oid='.$obj->getID());
+							$viewURL = FrontController::generateSecureURL('act=Detail&bo='.get_class($obj).'&oid='.$obj->getOID());
+							$editURL = FrontController::generateSecureURL('act=Edit&bo='.get_class($obj).'&oid='.$obj->getOID());
 						}else{						
 							if(isset($customViewControllerName)) {
 								if($config->get('sysUseModRewrite'))
-									$viewURL = $config->get('sysURL').$customViewControllerName.'/oid/'.$obj->getID();
+									$viewURL = $config->get('sysURL').$customViewControllerName.'/oid/'.$obj->getOID();
 								else
-									$viewURL = $config->get('sysURL').'controller/'.$customViewControllerName.'.php?oid='.$obj->getID();
+									$viewURL = $config->get('sysURL').'controller/'.$customViewControllerName.'.php?oid='.$obj->getOID();
 							}else{
-								$viewURL = $config->get('sysURL').'alpha/controller/Detail.php?bo='.get_class($obj).'&oid='.$obj->getID();
+								$viewURL = $config->get('sysURL').'alpha/controller/Detail.php?bo='.get_class($obj).'&oid='.$obj->getOID();
 							}
 							if(isset($customEditControllerName)) {
 								if($config->get('sysUseModRewrite'))
-									$editURL = $config->get('sysURL').$customEditControllerName.'/oid/'.$obj->getID();
+									$editURL = $config->get('sysURL').$customEditControllerName.'/oid/'.$obj->getOID();
 								else
-									$editURL = $config->get('sysURL').'controller/'.$customEditControllerName.'.php?oid='.$obj->getID();
+									$editURL = $config->get('sysURL').'controller/'.$customEditControllerName.'.php?oid='.$obj->getOID();
 							}else{
-								$editURL = $config->get('sysURL').'alpha/controller/Edit.php?bo='.get_class($obj).'&oid='.$obj->getID();
+								$editURL = $config->get('sysURL').'alpha/controller/Edit.php?bo='.get_class($obj).'&oid='.$obj->getOID();
 							}
 						}						
 											
@@ -204,7 +204,7 @@ class RecordSelector {
 						$html .= '<div align="center">';
 						$html .= '<a href="'.$viewURL.'">View</a>';
 						// if the current user owns it, they get the edit link
-						if(isset($_SESSION['currentUser']) && $_SESSION['currentUser']->getID() == $obj->getCreatorId())
+						if(isset($_SESSION['currentUser']) && $_SESSION['currentUser']->getOID() == $obj->getCreatorId())
 							$html .= '&nbsp;&nbsp;&nbsp;&nbsp;<a href="'.$editURL.'">Edit</a></div>';
 						$html .= '</div>';					
 					}				
@@ -301,18 +301,18 @@ class RecordSelector {
 			foreach($objects as $obj){
 				$html .= '<tr>';
 				$html .= '<td width="20%">';
-				$html .= $obj->getID();
+				$html .= $obj->getOID();
 				$html .= '</td>';
 				$html .= '<td width="60%">';
 				$html .= $obj->get($fieldName);
 				$html .= '</td>';			
 				$html .= '<td width="20%">';
 				
-				if(in_array($obj->getID(), $lookupOIDs)) {
-					$this->onloadJS .= 'toggelOID(\''.$obj->getID().'\',\''.$obj->get($fieldName).'\',true);';
-					$html .= '<input name = "'.$obj->getID().'" type="checkbox" checked onclick="toggelOID(\''.$obj->getID().'\',\''.$obj->get($fieldName).'\',this.checked);"/>';
+				if(in_array($obj->getOID(), $lookupOIDs)) {
+					$this->onloadJS .= 'toggelOID(\''.$obj->getOID().'\',\''.$obj->get($fieldName).'\',true);';
+					$html .= '<input name = "'.$obj->getOID().'" type="checkbox" checked onclick="toggelOID(\''.$obj->getOID().'\',\''.$obj->get($fieldName).'\',this.checked);"/>';
 				}else{
-					$html .= '<input name = "'.$obj->getID().'" type="checkbox" onclick="toggelOID(\''.$obj->getID().'\',\''.$obj->get($fieldName).'\',this.checked);"/>';
+					$html .= '<input name = "'.$obj->getOID().'" type="checkbox" onclick="toggelOID(\''.$obj->getOID().'\',\''.$obj->get($fieldName).'\',this.checked);"/>';
 				}
 				$html .= '</td>';
 				$html .= '</tr>';
@@ -347,16 +347,16 @@ class RecordSelector {
 			foreach($objects as $obj){
 				$html .= '<tr>';
 				$html .= '<td width="20%">';
-				$html .= $obj->getID();
+				$html .= $obj->getOID();
 				$html .= '</td>';
 				$html .= '<td width="60%">';
 				$html .= $obj->get($this->relationObject->getRelatedClassDisplayField());
 				$html .= '</td>';			
 				$html .= '<td width="20%">';
-				if($obj->getID() == $this->relationObject->getValue()) {
+				if($obj->getOID() == $this->relationObject->getValue()) {
 					$html .= '<img src="'.$config->get('sysURL').'/alpha/images/icons/accept_ghost.png"/>';
 				}else{
-					$tmp = new button("document.getElementById('".$_GET['field']."').value = '".$obj->getID()."'; document.getElementById('".$_GET['field']."_display').value = '".$obj->get($this->relationObject->getRelatedClassDisplayField())."'; $('#recordSelector').dialog('close');", "", "selBut", $config->get('sysURL')."/alpha/images/icons/accept.png");
+					$tmp = new button("document.getElementById('".$_GET['field']."').value = '".$obj->getOID()."'; document.getElementById('".$_GET['field']."_display').value = '".$obj->get($this->relationObject->getRelatedClassDisplayField())."'; $('#recordSelector').dialog('close');", "", "selBut", $config->get('sysURL')."/alpha/images/icons/accept.png");
 					$html .= $tmp->render();
 				}
 				$html .= '</td>';
