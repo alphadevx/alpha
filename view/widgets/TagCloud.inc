@@ -56,7 +56,7 @@ class TagCloud {
 				$linkSize = $minLinkSize;
 			if ($linkSize > $maxLinkSize)
 				$linkSize = $maxLinkSize;
-			$html .= '<a href="'.$config->get('sysURL').'search/q/'.$key.'" style="font-size:'.$linkSize.'pt;"'.(empty($target) ? '' : ' target="'.$target.'"').'>'.$key.'</a> ';
+			$html .= '<a href="'.$config->get('sysURL').'search/q/'.$key.'" style="font-size:'.$linkSize.'pt;"'.(empty($target) ? '' : ' target="'.$target.'"').' rel="tag">'.$key.'</a> ';
 		}
 		
 		return $html.'</p>';
