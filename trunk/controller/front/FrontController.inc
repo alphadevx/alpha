@@ -257,7 +257,7 @@ class FrontController {
 			    		
 			    		$URL = $config->get('sysURL').'/'.$this->getControllerAlias($this->pageController).'/'.$this->getControllerParam($this->pageController).$param;
 			    	}else{
-			    		$URL = $config->get('sysURL').'/'.$this->getControllerAlias($this->pageController).'/'.$this->getControllerParam($this->pageController);
+			    		$URL = $config->get('sysURL').'/'.$this->getControllerAlias($this->pageController);
 			    	}
 			    	
 			    	header('Location: '.$URL);
@@ -307,9 +307,10 @@ class FrontController {
 	 * @param string $alias The URL alias for the page controller
 	 * @param string $param The name of the GET parameter on the alias URL request
 	 */
-	public function registerAlias($controller, $alias, $param) {
+	public function registerAlias($controller, $alias, $param=null) {
 		$this->controllerAlias[$alias] = $controller;
-		$this->controllerAlias[$alias.'_param'] = $param;
+		if(isset($param))
+			$this->controllerAlias[$alias.'_param'] = $param;
 		
 		// set up the page controller 
 		$this->handleModRewriteRequests();
@@ -375,6 +376,8 @@ class FrontController {
 	private function getAliasParam($alias) {
 		if(array_key_exists($alias.'_param', $this->controllerAlias))
 			return $this->controllerAlias[$alias.'_param'];
+		else
+			return '';
 	}
 	
 	/**
@@ -386,6 +389,8 @@ class FrontController {
 	private function getControllerParam($controller) {
 		if(in_array($controller.'_param', $this->controllerAlias))
 			return $this->controllerAlias[$controller.'_param'];
+		else
+			return '';
 	}
 	
 	/**
@@ -419,10 +424,12 @@ class FrontController {
 				$this->pageController = $this->getAliasController($this->currentAlias);
 				self::$logger->debug('Page controller name obtained from the URL alias is ['.$this->pageController.']');
 				
-				if(!empty($_POST))
-					$_REQUEST[$this->getAliasParam($this->currentAlias)] = $params[1];
-				else
-					$_GET[$this->getAliasParam($this->currentAlias)] = $params[1];
+				if(isset($params[1])) {
+					if(!empty($_POST))
+						$_REQUEST[$this->getAliasParam($this->currentAlias)] = $params[1];
+					else
+						$_GET[$this->getAliasParam($this->currentAlias)] = $params[1];
+				}
 			}
 		}
 		
