@@ -5,6 +5,7 @@ require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 require_once $config->get('sysRoot').'alpha/model/article_vote_object.inc';
 require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
 require_once $config->get('sysRoot').'alpha/model/tag_object.inc';
+require_once $config->get('sysRoot').'alpha/controller/front/FrontController.inc';
 
 /**
  *
@@ -344,6 +345,17 @@ class article_object extends DAO {
 		global $config;
 		
 		return $config->get('sysURL').'attachments/article_'.$this->getID();
+	}
+	
+	/**
+	 * Generates a secure URL for downloading an attachment file via the ViewAttachment controller
+	 * 
+	 * @param string $filename
+	 */
+	public function getAttachmentSecureURL($filename) {
+		global $config;
+		
+		return FrontController::generateSecureURL('act=ViewAttachment&dir='.$this->getAttachmentsLocation().'&filename='.$filename);
 	}
 	
 	/**
