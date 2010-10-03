@@ -184,7 +184,7 @@ abstract class Controller {
 	 		$this->accessError();
 	 	
 	 	// if configured to do so, force redirect to the front controller
-	 	if($config->get('sysForceFC') && basename($_SERVER['PHP_SELF']) != 'FC.php' && basename($_SERVER['PHP_SELF']) != 'index.php') {
+	 	if($config->get('sysForceFC') && strpos($_SERVER['REQUEST_URI'], 'FC.php') === false && basename($_SERVER['PHP_SELF']) != 'index.php') {
 	 		// set the correct HTTP header for the response
     		header('HTTP/1.1 301 Moved Permanently');
     		

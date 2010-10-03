@@ -87,7 +87,7 @@ class ViewMetrics extends Controller implements AlphaControllerInterface{
 	public function during_displayPageHead_callback() {
 		global $config;
 		
-		$html = '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jquery.pack.js"></script>'; 
+		$html = '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jquery-1.3.2.min.js"></script>'; 
 		
 		$html .= '<script type="text/javascript">'.
 			'$(document).ready(function(){'.

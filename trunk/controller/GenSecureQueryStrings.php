@@ -73,7 +73,7 @@ class GenSecureQueryStrings extends Controller implements AlphaControllerInterfa
 		
 		echo '<p style="width:90%; overflow:scroll;">';
 		if(isset($params['QS']))
-			echo $config->get('sysURL')."FC.php?tk=".FrontController::encodeQuery($params['QS']);
+			echo $config->get('sysURL')."tk/".FrontController::encodeQuery($params['QS']);
 		echo '</p>';
 		
 		$this->renderForm();
@@ -82,11 +82,13 @@ class GenSecureQueryStrings extends Controller implements AlphaControllerInterfa
 	}
 	
 	private function renderForm() {
+		global $config;
+		
 		echo '<p>Use this form to generate secure (encrypted) URLs which make use of the Front Controller.  Always be sure to specify an action controller (act) at a minimum.</p>';
 		echo '<p>Example 1: to generate a secure URL for viewing article object 00000000001, enter <em>act=ViewArticle&oid=00000000001</em></p>';
 		echo '<p>Example 2: to generate a secure URL for viewing an Atom news feed of the articles, enter <em>act=ViewFeed&bo=article_object&type=Atom</em</p>';
 
-		echo '<form action="'.$_SERVER["PHP_SELF"].(empty($_SERVER["QUERY_STRING"])? '':'?'.$_SERVER["QUERY_STRING"]).'" method="post">';
+		echo '<form action="'.$config->get('sysURL').'tk/'.$_GET['tk'].'" method="post">';
 		echo '<input type="text" name="QS" size="100"/>';
 		echo '<input type="submit" value="Generate"/>';
 		echo '</form>';
