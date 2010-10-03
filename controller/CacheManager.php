@@ -6,7 +6,7 @@ if(!isset($config))
 $config = AlphaConfig::getInstance();
 
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
-require_once $config->get('sysRoot').'alpha/util/FileUtil.inc';
+require_once $config->get('sysRoot').'alpha/util/AlphaFileUtil.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/view/View.inc';
@@ -74,11 +74,11 @@ class CacheManager extends Controller implements AlphaControllerInterface {
 		
 		echo '<h2>Listing contents of cache directory: '.$this->dataDir.'</h2>';
 		
-   		$fileCount = FileUtil::listDirectoryContents($this->dataDir);
+   		$fileCount = AlphaFileUtil::listDirectoryContents($this->dataDir);
    		
    		echo '<h2>Total of '.$fileCount.' files in the cache.</h2>';
    		
-   		echo '<form action="'.$_SERVER['PHP_SELF'].(empty($_SERVER['QUERY_STRING'])? '':'?'.$_SERVER['QUERY_STRING']).'" method="POST" name="clearForm">';
+   		echo '<form action="'.$config->get('sysURL').'tk/'.$_GET['tk'].'" method="post" name="clearForm">';
    		echo '<input type="hidden" name="clearCache" value="false"/>';
    		$temp = new button("if (confirm('Are you sure you want to delete all files in the cache?')) {document.forms['clearForm']['clearCache'].value = 'true'; document.forms['clearForm'].submit();}", "Clear cache", "clearBut");
    		echo $temp->render();
@@ -113,7 +113,7 @@ class CacheManager extends Controller implements AlphaControllerInterface {
 
 			if (isset($params['clearCache']) && $params['clearCache'] == 'true') {
 				try {
-					FileUtil::deleteDirectoryContents($this->dataDir);
+					AlphaFileUtil::deleteDirectoryContents($this->dataDir);
 							
 					$this->setStatusMessage('<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
 						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
