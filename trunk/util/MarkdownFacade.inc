@@ -1,6 +1,7 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/util/AlphaMarkdown.inc';
+require_once $config->get('sysRoot').'alpha/view/widgets/Image.inc';
 
 /**
  *
@@ -52,19 +53,60 @@ class MarkdownFacade {
 			$this->filename = $config->get('sysRoot').'cache/html/'.get_class($this->BO).'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.html';
 		}
 		
-		if(method_exists($this->BO, 'getAttachmentsURL'))
-			$attachURL = $this->BO->getAttachmentsURL();
-		else
-			$attachURL = "";
-		
 		if(!$useCache) {
-			$this->content = $this->markdown($this->BO->get('content', true), $attachURL);
+			$this->content = $this->markdown($this->BO->get('content', true));
 		}else{
 			if ($this->checkCache()) {
 				$this->loadCache();
 			}else{
-				$this->content = $this->markdown($this->BO->get('content', true), $attachURL);
+				$this->content = $this->markdown($this->BO->get('content', true));
 				$this->cache();
+			}
+		}
+		
+		// Replace all instances of $attachURL in link tags to links to the ViewAttachment controller
+		$attachments = array();		
+		preg_match_all('/href\=\"\$attachURL\/.*\"/', $this->content, $attachments);
+		
+		foreach($attachments[0] as $attachmentURL) {
+			$start = strpos($attachmentURL, '/');
+			$end = strrpos($attachmentURL, '"');
+			$fileName = substr($attachmentURL, $start+1, $end-($start+1));
+
+			if(method_exists($this->BO, 'getAttachmentSecureURL')) {
+				$this->content = str_replace($attachmentURL, 'href='.$this->BO->getAttachmentSecureURL($fileName), $this->content);
+			}
+		}
+		
+		// Handle image attachments		
+		$attachments = array();		
+		preg_match_all('/\<img\ src\=\"\$attachURL\/.*\".*\>/', $this->content, $attachments);
+			
+		foreach($attachments[0] as $attachmentURL) {
+			$start = strpos($attachmentURL, '/');
+			$end = strrpos($attachmentURL, '" alt');
+			$fileName = substr($attachmentURL, $start+1, $end-($start+1));
+	
+			if($config->get('sysCMSImagesWidget')) {
+				// get the details of the source image
+				$path = $this->BO->getAttachmentsLocation().'/'.$fileName;
+				$image_details = getimagesize($path);
+				$imgType = $image_details[2];
+		    	if($imgType == 1)
+		    		$type = 'gif';
+		    	elseif($imgType == 2)
+		    		$type = 'jpg';
+		    	elseif($imgType == 3)
+		    		$type = 'png';
+		    		
+				$img = new Image($path, $image_details[0], $image_details[1], $type, 0.95, false, $config->get('sysCMSImagesWidgetSecure'));
+				//$result = $img->renderHTMLLink();
+				$this->content = str_replace($attachmentURL, $img->renderHTMLLink(), $this->content);
+			}else{
+				// render a normal image link to the ViewAttachment controller				
+				if(method_exists($this->BO, 'getAttachmentSecureURL')) {
+					$this->content = str_replace($attachmentURL, '<img src="'.$this->BO->getAttachmentSecureURL($fileName).'">', $this->content);
+				}
 			}
 		}
 	}
@@ -74,7 +116,7 @@ class MarkdownFacade {
 	 * 
 	 * @return string
 	 */
-	public function markdown($text, $attachURL="") {
+	public function markdown($text) {
 	 	global $config;
 	 	
 		// Initialize the parser and return the result of its transform method.
@@ -84,12 +126,6 @@ class MarkdownFacade {
 			$parser_class = 'AlphaMarkdown';
 			$parser = new $parser_class;
 		}
-		
-		/*
-		 * Replace all instances of $attachURL in the text with the actual URL for the article's 
-		 * attachment directory
-		 */
-		$text = str_replace('$attachURL', $attachURL, $text);
 		
 		/*
 		 * Replace all instances of $sysURL in the text with the sysURL setting from config
