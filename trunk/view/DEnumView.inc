@@ -92,7 +92,7 @@ class DEnumView extends View {
 		$obj_type = '';
 
 		$html = '<table cols="2" class="edit_view">';
-		$html .= '<form action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'].'" method="POST">';
+		$html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
 		
 		$temp = new StringBox($this->BO->getPropObject('name'), $labels['name'], 'name', '', 0, true, true);
 		$html .= $temp->render();
