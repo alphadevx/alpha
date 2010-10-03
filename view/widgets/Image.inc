@@ -251,13 +251,13 @@ class Image {
 			// now get the old image
 			switch ($this->sourceType->getValue()) {
 				case "gif":
-					$old_image = imagecreatefromgif($config->get('sysRoot').$this->source);
+					$old_image = imagecreatefromgif($this->source);
 				break;
 				case "jpg":
-					$old_image = imagecreatefromjpeg($config->get('sysRoot').$this->source);
+					$old_image = imagecreatefromjpeg($this->source);
 				break;
 				case "png":
-					$old_image = imagecreatefrompng($config->get('sysRoot').$this->source);
+					$old_image = imagecreatefrompng($this->source);
 				break;
 			}
 			
