@@ -275,7 +275,7 @@ class View {
 		$fields['formFields'] = $html;
 		
 		// View button
-		if(strpos($_SERVER['REQUEST_URI'], 'FC.php') !== false) {
+		if(strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
 			$button = new button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."';", 'View', 'viewBut');
 			$fields['viewButton'] = $button->render();
 		}else{
@@ -480,7 +480,7 @@ class View {
 		// handle force-frames
 		if($config->get('sysForceFrame')) {
 			// if no-forceframe=true or we are in the admin backend, don't force frame
-			if(!isset($_GET['no-forceframe']) && strpos($_SERVER['REQUEST_URI'], 'FC.php') === false) {
+			if(!isset($_GET['no-forceframe']) && strpos($_SERVER['REQUEST_URI'], '/tk/') === false) {
 				$html.= '<script type="text/javascript">';
 				$html.= 'pageLoc = self.location;';
 				$html.= 'pageAdd = top.location;';
@@ -514,7 +514,7 @@ class View {
 			$html.= '</script>';
 		}
 		
-		if (isset($_SESSION['currentUser']) && DAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && basename($_SERVER['PHP_SELF']) == 'FC.php') {
+		if (isset($_SESSION['currentUser']) && DAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
 			$html.= '<script type="text/javascript">';
 			$html.= '	(function($) {';
 			$html.= '		$(document).ready(function(){';
@@ -569,7 +569,7 @@ class View {
 			$html.= '<p>You are not logged in.  <a href="'.FrontController::generateSecureURL('act=Login').'">Login</a></p>';
 		}
 		
-		if ($renderMenu && isset($_SESSION['currentUser']) && DAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], 'FC.php') !== false) {
+		if ($renderMenu && isset($_SESSION['currentUser']) && DAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
 			$html .= '<ul id="adminmenu" class="potato-menu">
 						<li><a href="'.$config->get('sysURL').'">Home</a></li>
 						<li><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Admin Home</a></li>
