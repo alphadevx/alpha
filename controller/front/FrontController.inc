@@ -132,7 +132,7 @@ class FrontController {
 	public static function generateSecureURL($params) {
 		global $config;
 		
-		return $config->get('sysURL').'FC.php?tk='.FrontController::encodeQuery($params);
+		return $config->get('sysURL').'tk/'.FrontController::encodeQuery($params);
 	}
 	
 	/**
