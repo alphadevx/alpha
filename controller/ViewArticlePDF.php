@@ -22,15 +22,35 @@ require_once $config->get('sysRoot').'alpha/model/article_object.inc';
  * @version $Id: ViewArticlePDF.php 238 2007-02-03 22:36:54Z john $
  * 
  */
-class ViewArticlePDF extends Controller {								
+class ViewArticlePDF extends Controller {
+	/**
+	 * Trace logger
+	 * 
+	 * @var Logger
+	 */
+	private static $logger = null;
+	
+	/**
+	 * The type of BO to serve as a PDF
+	 * 
+	 * @var string
+	 */
+	protected $BOName = 'article_object';
+							
 	/**
 	 * Constructor to set up the object
 	 */
-	public function __construct() {		
+	public function __construct() {
+		if(self::$logger == null)
+			self::$logger = new Logger('ViewArticlePDF');
+		self::$logger->debug('>>__construct()');
+		
 		global $config;
 		
 		// ensure that the super class constructor is called, indicating the rights group
 		parent::__construct('Public');
+		
+		self::$logger->debug('<<__construct');
 	}
 	
 	/**
@@ -49,7 +69,7 @@ class ViewArticlePDF extends Controller {
 				throw new IllegalArguementException('Could not load the article as a title was not supplied!');
 			}
 			
-			$this->BO = new article_object();
+			$this->BO = new $this->BOName;
 			$this->BO->loadByAttribute('title', $title);
 			
 			$pdf = new TCPDFFacade($this->BO);
