@@ -49,7 +49,7 @@ class CacheManager extends Controller implements AlphaControllerInterface {
 		parent::__construct('Admin');
 		
 		$this->setTitle('Cache Manager');
-		$this->dataDir  = $config->get('sysRoot').'cache/';
+		$this->dataDir  = $config->get('sysRoot').'alpha/cache/';
 		
 		self::$logger->debug('<<__construct');
 	}

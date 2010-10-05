@@ -333,7 +333,7 @@ class article_object extends DAO {
 	public function getAttachmentsLocation() {
 		global $config;
 		
-		return $config->get('sysRoot').'attachments/article_'.$this->getID();
+		return $config->get('sysRoot').'alpha/attachments/article_'.$this->getID();
 	}
 	
 	/**
@@ -344,7 +344,7 @@ class article_object extends DAO {
 	public function getAttachmentsURL() {
 		global $config;
 		
-		return $config->get('sysURL').'attachments/article_'.$this->getID();
+		return $config->get('sysURL').'alpha/attachments/article_'.$this->getID();
 	}
 	
 	/**
