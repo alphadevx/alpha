@@ -125,10 +125,10 @@ class Install extends Controller implements AlphaControllerInterface {
 		 */
 		try {
 			$cacheDir = $config->get('sysRoot').'cache';
-			$htmlDir = $config->get('sysRoot').'cache/html';
-			$imagesDir = $config->get('sysRoot').'cache/images';
-			$pdfDir = $config->get('sysRoot').'cache/pdf';
-			$xlsDir = $config->get('sysRoot').'cache/xls';
+			$htmlDir = $config->get('sysRoot').'alpha/cache/html';
+			$imagesDir = $config->get('sysRoot').'alpha/cache/images';
+			$pdfDir = $config->get('sysRoot').'alpha/cache/pdf';
+			$xlsDir = $config->get('sysRoot').'alpha/cache/xls';
 			
 			// cache
 			echo '<p>Attempting to create the cache directory <em>'.$cacheDir.'</em>...';
