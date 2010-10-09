@@ -2873,7 +2873,7 @@ abstract class DAO {
 	 * @param $stmt mysqli_stmt
 	 * @return array
 	 */
-	private function bindResult($stmt) {
+	protected function bindResult($stmt) {
 		$result = array();
      
 		$metadata = $stmt->result_metadata();
