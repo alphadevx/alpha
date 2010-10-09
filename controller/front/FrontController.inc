@@ -6,6 +6,7 @@ require_once $config->get('sysRoot').'alpha/exceptions/ResourceNotFoundException
 require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
 require_once $config->get('sysRoot').'alpha/util/filters/AlphaFilterInterface.inc';
+require_once $config->get('sysRoot').'alpha/model/badrequest_object.inc';
 
 /**
  * 
@@ -290,10 +291,32 @@ class FrontController {
 			return false;
 		}catch (IllegalArguementException $e) {
 			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".print_r($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
+			
+			if($config->get('sysEnableClientTempBlacklistFiler')) {
+				if(isset($_SERVER['HTTP_USER_AGENT']) && isset($_SERVER['REMOTE_ADDR']) && isset($_SERVER['REQUEST_URI'])) {
+					$request = new badrequest_object();
+					$request->set('client', $_SERVER['HTTP_USER_AGENT']);
+					$request->set('IP', $_SERVER['REMOTE_ADDR']);
+					$request->set('requestedResource', $_SERVER['REQUEST_URI']);
+					$request->save();
+				}
+			}
+			
 			throw new ResourceNotFoundException('The file that you have requested cannot be found!');
 			return false;
 		}catch (AlphaException $e) {
 			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".print_r($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
+			
+			if($config->get('sysEnableClientTempBlacklistFiler')) {
+				if(isset($_SERVER['HTTP_USER_AGENT']) && isset($_SERVER['REMOTE_ADDR']) && isset($_SERVER['REQUEST_URI'])) {
+					$request = new badrequest_object();
+					$request->set('client', $_SERVER['HTTP_USER_AGENT']);
+					$request->set('IP', $_SERVER['REMOTE_ADDR']);
+					$request->set('requestedResource', $_SERVER['REQUEST_URI']);
+					$request->save();
+				}
+			}
+			
 			throw new ResourceNotFoundException('The file that you have requested cannot be found!');
 			return false;
 		}
