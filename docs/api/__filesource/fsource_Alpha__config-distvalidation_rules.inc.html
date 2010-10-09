@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>File Source for validation_rules.inc</title>
+	<link rel="stylesheet" type="text/css" href="../media/style.css">
+	<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+</head>
+<body>
+
+<table border="0" cellspacing="0" cellpadding="0" height="48" width="100%">
+  <tr>
+	<td class="header-top-left"><a href="http://www.alphaframework.org/"><img src="../media/logo.png" border="0" alt="Alpha Framework" /></a></td>
+    <td class="header-top-right">Alpha<br /><div class="header-top-right-subpackage"></div></td>
+  </tr>
+  <tr><td colspan="2" class="header-line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+  <tr>
+    <td colspan="2" class="header-menu">
+      
+                                      
+                                                                                                                                                                                                                                                                                  		[ <a href="../classtrees_Alpha.html" class="menu">class tree: Alpha</a> ]
+		[ <a href="../elementindex_Alpha.html" class="menu">index: Alpha</a> ]
+            [ <a href="../elementindex.html" class="menu">all elements</a> ]
+    </td>
+  </tr>
+  <tr><td colspan="2" class="header-line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="195" class="menu">
+		<div class="package-title">Alpha</div>
+  <div class="package">
+	<div id="todolist">
+			<p><a href="../todolist.html">Todo List</a></p>
+	</div>
+	</div>
+      <b>Packages:</b><br />
+  <div class="package">
+              <a href="../li_default.html">default</a><br />
+              <a href="../li_Alpha.html">Alpha</a><br />
+              <a href="../li_alpha--controller.html">alpha--controller</a><br />
+              <a href="../li_alpha--controller--front.html">alpha--controller--front</a><br />
+              <a href="../li_alpha--exceptions.html">alpha--exceptions</a><br />
+              <a href="../li_alpha--model.html">alpha--model</a><br />
+              <a href="../li_alpha--model--types.html">alpha--model--types</a><br />
+              <a href="../li_alpha--service.html">alpha--service</a><br />
+              <a href="../li_alpha--tests.html">alpha--tests</a><br />
+              <a href="../li_alpha--util.html">alpha--util</a><br />
+              <a href="../li_alpha--util--convertors.html">alpha--util--convertors</a><br />
+              <a href="../li_alpha--util--feeds.html">alpha--util--feeds</a><br />
+              <a href="../li_alpha--util--filters.html">alpha--util--filters</a><br />
+              <a href="../li_alpha--util--helpers.html">alpha--util--helpers</a><br />
+              <a href="../li_alpha--util--LOC.html">alpha--util--LOC</a><br />
+              <a href="../li_alpha--view.html">alpha--view</a><br />
+              <a href="../li_alpha--view--widgets.html">alpha--view--widgets</a><br />
+              <a href="../li_Photo-Site.html">Photo-Site</a><br />
+              <a href="../li_SimpleMVC_Tests.html">SimpleMVC_Tests</a><br />
+              <a href="../li_util--graphs.html">util--graphs</a><br />
+      	</div>
+      <br />
+                        <br />
+                      </td>
+    <td>
+      <table cellpadding="10" cellspacing="0" width="100%" border="0"><tr><td valign="top">
+
+<h1 align="center">Source for file validation_rules.inc</h1>
+<p>Documentation is available at <a href="../Alpha/_config-dist---validation_rules.inc.html">validation_rules.inc</a></p>
+<div class="src-code"><span class="php">
+<ol><li><div class="src-line"><a name="a1"></a><span class="src-php">&lt;?php</span></div></li>
+<li><div class="src-line"><a name="a2"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a3"></a><span class="src-comm">//&nbsp;$Id:&nbsp;validation_rules.inc&nbsp;1114&nbsp;2010-08-19&nbsp;20:37:36Z&nbsp;jcollins&nbsp;$</span></div></li>
+<li><div class="src-line"><a name="a4"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a5"></a><span class="src-doc">/**</span></div></li>
+<li><div class="src-line"><a name="a6"></a><span class="src-doc">&nbsp;*</span></div></li>
+<li><div class="src-line"><a name="a7"></a><span class="src-doc">&nbsp;*&nbsp;A&nbsp;set&nbsp;of&nbsp;standard&nbsp;validation&nbsp;regualr&nbsp;expressions&nbsp;to&nbsp;be&nbsp;used&nbsp;throughout</span></div></li>
+<li><div class="src-line"><a name="a8"></a><span class="src-doc">&nbsp;*&nbsp;the&nbsp;application.</span></div></li>
+<li><div class="src-line"><a name="a9"></a><span class="src-doc">&nbsp;*&nbsp;</span></div></li>
+<li><div class="src-line"><a name="a10"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@package</span><span class="src-doc">&nbsp;Alpha&nbsp;Config</span></div></li>
+<li><div class="src-line"><a name="a11"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@author</span><span class="src-doc">&nbsp;John&nbsp;Collins&nbsp;&lt;john@design-ireland.net&gt;</span></div></li>
+<li><div class="src-line"><a name="a12"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@copyright</span><span class="src-doc">&nbsp;2006&nbsp;John&nbsp;Collins</span></div></li>
+<li><div class="src-line"><a name="a13"></a><span class="src-doc">&nbsp;*&nbsp;</span></div></li>
+<li><div class="src-line"><a name="a14"></a><span class="src-doc">&nbsp;*&nbsp;</span></div></li>
+<li><div class="src-line"><a name="a15"></a><span class="src-doc">&nbsp;*/</span></div></li>
+<li><div class="src-line"><a name="a16"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a17"></a><span class="src-comm">//&nbsp;default&nbsp;validation&nbsp;rules&nbsp;for&nbsp;base&nbsp;complex&nbsp;types</span></div></li>
+<li><div class="src-line"><a name="a18"></a><a href="http://www.php.net/define">define</a><span class="src-sym">(</span><span class="src-str">&quot;DEFAULT_DATE&quot;</span><span class="src-sym">,&nbsp;</span><span class="src-str">&quot;/.*/i&quot;</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a19"></a><a href="http://www.php.net/define">define</a><span class="src-sym">(</span><span class="src-str">&quot;DEFAULT_TIMESTAMP&quot;</span><span class="src-sym">,&nbsp;</span><span class="src-str">&quot;/.*/i&quot;</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a20"></a><a href="http://www.php.net/define">define</a><span class="src-sym">(</span><span class="src-str">&quot;DEFAULT_DOUBLE&quot;</span><span class="src-sym">,&nbsp;</span><span class="src-str">&quot;/^[0-9]*\.[0-9]{1,2}$/&quot;</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a21"></a><a href="http://www.php.net/define">define</a><span class="src-sym">(</span><span class="src-str">&quot;DEFAULT_INTEGER&quot;</span><span class="src-sym">,&nbsp;</span><span class="src-str">&quot;/^[0-9]*$/&quot;</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a22"></a><a href="http://www.php.net/define">define</a><span class="src-sym">(</span><span class="src-str">&quot;DEFAULT_STRING&quot;</span><span class="src-sym">,&nbsp;</span><span class="src-str">&quot;/.*/i&quot;</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a23"></a><a href="http://www.php.net/define">define</a><span class="src-sym">(</span><span class="src-str">&quot;DEFAULT_TEXT&quot;</span><span class="src-sym">,&nbsp;</span><span class="src-str">&quot;/.*/i&quot;</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a24"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a25"></a><span class="src-comm">//&nbsp;additional&nbsp;validation&nbsp;rules&nbsp;and&nbsp;extraction&nbsp;rules</span></div></li>
+<li><div class="src-line"><a name="a26"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a27"></a><span class="src-comm">//&nbsp;required&nbsp;integer</span></div></li>
+<li><div class="src-line"><a name="a28"></a><a href="http://www.php.net/define">define</a><span class="src-sym">(</span><span class="src-str">&quot;REQUIRED_INTEGER&quot;</span><span class="src-sym">,&nbsp;</span><span class="src-str">&quot;/^[0-9]{1,11}$/&quot;</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a29"></a><span class="src-comm">//&nbsp;required&nbsp;text&nbsp;field</span></div></li>
+<li><div class="src-line"><a name="a30"></a><a href="http://www.php.net/define">define</a><span class="src-sym">(</span><span class="src-str">&quot;REQUIRED_TEXT&quot;</span><span class="src-sym">,&nbsp;</span><span class="src-str">&quot;/^[a-z\d\.,'][a-z\d\.,'&nbsp;]{0,65535}$/i&quot;</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a31"></a><span class="src-comm">//&nbsp;required&nbsp;text&nbsp;field</span></div></li>
+<li><div class="src-line"><a name="a32"></a><a href="http://www.php.net/define">define</a><span class="src-sym">(</span><span class="src-str">&quot;REQUIRED_STRING&quot;</span><span class="src-sym">,&nbsp;</span><span class="src-str">&quot;/^[a-z\d\.,'][a-z\d\.,'&nbsp;]{0,255}$/i&quot;</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a33"></a><span class="src-comm">//&nbsp;uppercase&nbsp;alpha</span></div></li>
+<li><div class="src-line"><a name="a34"></a><a href="http://www.php.net/define">define</a><span class="src-sym">(</span><span class="src-str">&quot;ALPHA_UPPER&quot;</span><span class="src-sym">,&nbsp;</span><span class="src-str">&quot;/^[A-Z]{0,255}$/&quot;</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a35"></a><span class="src-comm">//&nbsp;extract&nbsp;a&nbsp;hostname&nbsp;from&nbsp;a&nbsp;URL</span></div></li>
+<li><div class="src-line"><a name="a36"></a><a href="http://www.php.net/define">define</a><span class="src-sym">(</span><span class="src-str">&quot;PATTERN_URL_HOSTNAME&quot;</span><span class="src-sym">,&nbsp;</span><span class="src-str">&quot;/^(http:\/\/)?([^\/]+)/i&quot;</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a37"></a><span class="src-comm">//&nbsp;extract&nbsp;a&nbsp;domain&nbsp;name&nbsp;from&nbsp;a&nbsp;URL</span></div></li>
+<li><div class="src-line"><a name="a38"></a><a href="http://www.php.net/define">define</a><span class="src-sym">(</span><span class="src-str">&quot;PATTERN_URL_DOMAINNAME&quot;</span><span class="src-sym">,&nbsp;</span><span class="src-str">&quot;/[^\.\/]+\.[^\.\/]+(\.[^\.\/]{2})?$/&quot;</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a39"></a><span class="src-comm">//&nbsp;validate&nbsp;an&nbsp;IP&nbsp;address</span></div></li>
+<li><div class="src-line"><a name="a40"></a><a href="http://www.php.net/define">define</a><span class="src-sym">(</span><span class="src-str">&quot;RULE_IP&quot;</span><span class="src-sym">,&nbsp;</span><span class="src-str">&quot;/^(((([1-9])|([1-9][\d])|(1[\d]{2})|(2[0-4][\d])|(25[0-4]))(\.(([\d])|([1-9][\d])|(1[\d]{2})|(2[0-4][\d])|(25[0-4]))){3})|(0(\.0){3}))$/&quot;</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a41"></a><span class="src-comm">//&nbsp;validate&nbsp;an&nbsp;email&nbsp;address</span></div></li>
+<li><div class="src-line"><a name="a42"></a><a href="http://www.php.net/define">define</a><span class="src-sym">(</span><span class="src-str">&quot;RULE_EMAIL&quot;</span><span class="src-sym">,&nbsp;</span><span class="src-str">&quot;/^[-_.a-zA-Z0-9]+@((([a-zA-Z0-9]|[-_.a-zA-Z0-9]*[a-zA-Z0-9])\.)+(ad|ae|aero|af|ag|ai|al|am|an|ao|aq|ar|arpa|as|at|au|aw|az|ba|bb|bd|be|bf|bg|bh|bi|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|com|coop|cr|cs|cu|cv|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|in|info|int|io|iq|ir|is|it|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|mg|mh|mil|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|museum|mv|mw|mx|my|mz|na|name|nc|ne|net|nf|ng|ni|nl|no|np|nr|nt|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|pro|ps|pt|pw|py|qa|re|ro|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|um|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)|(([0-9][0-9]?|[0-1][0-9][0-9]|[2][0-4][0-9]|[2][5][0-5])\.){3}([0-9][0-9]?|[0-1][0-9][0-9]|[2][0-4][0-9]|[2][5][0-5]))$/i&quot;</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a43"></a><span class="src-comm">//&nbsp;validate&nbsp;a&nbsp;username</span></div></li>
+<li><div class="src-line"><a name="a44"></a><a href="http://www.php.net/define">define</a><span class="src-sym">(</span><span class="src-str">&quot;RULE_USERNAME&quot;</span><span class="src-sym">,&nbsp;</span><span class="src-str">&quot;/^[-_.a-zA-Z0-9]*$/i&quot;</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a45"></a><span class="src-comm">//&nbsp;validate&nbsp;a&nbsp;URL&nbsp;(accepts&nbsp;blanks)</span></div></li>
+<li><div class="src-line"><a name="a46"></a><a href="http://www.php.net/define">define</a><span class="src-sym">(</span><span class="src-str">&quot;RULE_URL_BLANK&quot;</span><span class="src-sym">,&nbsp;</span><span class="src-str">&quot;/^(http:\/\/.*\/.*)$|^([.*]{0})$/i&quot;</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a47"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a48"></a><span class="src-php">?&gt;</span></div></li>
+</ol>
+</span></div>
+        <div class="credit">
+		    <hr class="separator" />
+		    Documentation generated on Sat, 09 Oct 2010 19:09:31 +0100 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+	      </div>
+      </td></tr></table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
