@@ -28,35 +28,43 @@ require_once $config->get('sysRoot').'alpha/model/types/Sequence.inc';
  * Base business object class definition
  * 
  * @package alpha::model
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  All 
- * rights reserved.
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
  * <pre>
- * Redistribution and use in source and binary forms, with or without modification, 
- * are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
  * 
- * * Redistributions of source code must retain the above copyright notice, this 
- *   list of conditions and the following disclaimer.
- * * Redistributions in binary form must reproduce the above copyright notice, 
- *   this list of conditions and the following disclaimer in the documentation 
- *   and/or other materials provided with the distribution.
- * * Neither the name of the Alpha Framework nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software without 
- *   specific prior written permission.
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
  *   
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE 
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  *  
  */
@@ -65,6 +73,7 @@ abstract class DAO {
 	 * The object ID
 	 * 
 	 * @var integer
+	 * @since 1.0
 	 */
 	protected $OID;
 	
@@ -72,6 +81,7 @@ abstract class DAO {
 	 * The last database query run by this object.  Useful for tracing an error.
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	protected $lastQuery;
 	
@@ -79,6 +89,7 @@ abstract class DAO {
 	 * The version number of the object, used for locking mechanism
 	 * 
 	 * @var Integer
+	 * @since 1.0
 	 */
 	protected $version_num;
 	
@@ -86,13 +97,15 @@ abstract class DAO {
 	 * The timestamp of creation
 	 * 
 	 * @var Timestamp
+	 * @since 1.0
 	 */
 	protected $created_ts;
 	
 	/**
 	 * The OID of the person who created this BO
 	 * 
-	 * @var Integer 
+	 * @var Integer
+	 * @since 1.0
 	 */
 	protected $created_by;
 	
@@ -100,13 +113,15 @@ abstract class DAO {
 	 * The timestamp of the last update
 	 * 
 	 * @var Timestamp
+	 * @since 1.0
 	 */
 	protected $updated_ts;
 	
 	/**
 	 * The OID of the person who last updated this BO
 	 * 
-	 * @var Integer 
+	 * @var Integer
+	 * @since 1.0
 	 */
 	protected $updated_by;
 	
@@ -114,6 +129,7 @@ abstract class DAO {
 	 * An array of the names of all of the default attributes of a persistent BO defined in this class
 	 * 
 	 * @var array
+	 * @since 1.0
 	 */
 	protected $defaultAttributes = array("OID","lastQuery","version_num","dataLabels","created_ts","created_by","updated_ts","updated_by","defaultAttributes","transientAttributes","uniqueAttributes","TABLE_NAME","logger");
 	
@@ -121,6 +137,7 @@ abstract class DAO {
 	 * An array of the names of all of the transient attributes of a persistent BO which are not saved to the DB
 	 * 
 	 * @var array
+	 * @since 1.0
 	 */
 	protected $transientAttributes = array("lastQuery","dataLabels","defaultAttributes","transientAttributes","uniqueAttributes","TABLE_NAME","logger");
 	
@@ -128,6 +145,7 @@ abstract class DAO {
 	 * An array of the uniquely-constained attributes of this persistent BO
 	 * 
 	 * @var array
+	 * @since 1.0
 	 */
 	protected $uniqueAttributes = array();
 	
@@ -135,6 +153,7 @@ abstract class DAO {
 	 * An array of the data labels used for displaying class attributes
 	 * 
 	 * @var array
+	 * @since 1.0
 	 */
 	protected $dataLabels = array();
 	
@@ -142,6 +161,7 @@ abstract class DAO {
 	 * Trace logger
 	 * 
 	 * @var Logger
+	 * @since 1.0
 	 */
 	private static $logger = null;
 	
@@ -149,11 +169,14 @@ abstract class DAO {
 	 * Datebase connection
 	 * 
 	 * @var mysqli
+	 * @since 1.0
 	 */
 	private static $connection;
 	
 	/**
 	 * The constructor which sets up some housekeeping attributes
+	 * 
+	 * @since 1.0
 	 */
 	public function __construct() {
 		if(self::$logger == null)
@@ -174,6 +197,7 @@ abstract class DAO {
 	 * Gets the current connection singleton, or creates a new one if none exists
 	 *  
 	 * @return mysqli
+	 * @since 1.0
 	 */
 	public static function getConnection() {
 		global $config;
@@ -190,9 +214,11 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Populates the child object with the properties retrived from the database for the object $OID
+	 * Populates the child object with the properties retrived from the database for the object $OID.
 	 * 
-	 * @param integer $OID	
+	 * @param integer $OID The object ID of the business object to load.
+	 * @since 1.0
+	 * @throws BONotFoundException
 	 */
 	public function load($OID) {
 		self::$logger->debug('>>load(OID=['.$OID.'])');
@@ -282,11 +308,13 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Populates the child object from the database table by the given attribute value
+	 * Populates the child object from the database table by the given attribute value.
 	 * 
-	 * @param string $atribute
-	 * @param string $value
+	 * @param string $atribute The name of the attribute to load the object by.
+	 * @param string $value The value of the attribute to load the object by.
 	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
+	 * @since 1.0
+	 * @throws BONotFoundException
 	 */
 	public function loadByAttribute($attribute, $value, $ignoreClassType=false)	{
 		self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'], ignoreClassType=['.$ignoreClassType.'])');
@@ -395,13 +423,15 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Loads all of the objects of this class into an array which is returned
+	 * Loads all of the objects of this class into an array which is returned.
 	 * 
-	 * @param integer $start The start of the SQL LIMIT clause
-	 * @param integer $limit The amount (limit) of objects to load
-	 * @param string $orderBy the name of the field to sort the BOs by
-	 * @param string $order the order to sort the BOs by, default is ASC
-	 * @return array an array containing objects of this type of business object.
+	 * @param integer $start The start of the SQL LIMIT clause, useful for pagination.
+	 * @param integer $limit The amount (limit) of objects to load, useful for pagination.
+	 * @param string $orderBy The name of the field to sort the objects by.
+	 * @param string $order The order to sort the objects by.
+	 * @return array An array containing objects of this type of business object.
+	 * @since 1.0
+	 * @throws BONotFoundException
 	 * @todo convert to MySQLi
 	 */
 	public function loadAll($start=0, $limit=0, $orderBy='OID', $order='ASC') {
@@ -465,15 +495,17 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Loads all of the objects of this class by the specified attribute into an array which is returned
+	 * Loads all of the objects of this class by the specified attribute into an array which is returned.
 	 * 
-	 * @param string $atribute The attribute to load the object by
-	 * @param string $value The value of the attribute to load the object by
-	 * @param integer $start The start of the SQL LIMIT clause
-	 * @param integer $limit The amount (limit) of objects to load
-	 * @param string $orderBy the name of the field to sort the BOs by
-	 * @param string $order the order to sort the BOs by, default is ASC
-	 * @return array an array containing objects of this type of business object.
+	 * @param string $atribute The attribute to load the objects by.
+	 * @param string $value The value of the attribute to load the objects by.
+	 * @param integer $start The start of the SQL LIMIT clause, useful for pagination.
+	 * @param integer $limit The amount (limit) of objects to load, useful for pagination.
+	 * @param string $orderBy The name of the field to sort the objects by.
+	 * @param string $order The order to sort the objects by.
+	 * @return array An array containing objects of this type of business object.
+	 * @since 1.0
+	 * @throws BONotFoundException
 	 */
 	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC") {
 		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
@@ -554,18 +586,21 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Loads all of the objects of this class by the specified attributes into an array which is returned
+	 * Loads all of the objects of this class by the specified attributes into an array which is returned.
 	 * 
-	 * @param array $atributes The attribute to load the object by
-	 * @param array $values The values of the attributes to load the object by
-	 * @param integer $start The start of the SQL LIMIT clause
-	 * @param integer $limit The amount (limit) of objects to load
-	 * @param string $orderBy the name of the field to sort the BOs by
-	 * @param string $order the order to sort the BOs by, default is ASC
-	 * @return array an array containing objects of this type of business object.
+	 * @param array $atributes The attributes to load the objects by.
+	 * @param array $values The values of the attributes to load the objects by.
+	 * @param integer $start The start of the SQL LIMIT clause, useful for pagination.
+	 * @param integer $limit The amount (limit) of objects to load, useful for pagination.
+	 * @param string $orderBy The name of the field to sort the objects by.
+	 * @param string $order The order to sort the objects by.
+	 * @return array An array containing objects of this type of business object.
+	 * @since 1.0
+	 * @throws BONotFoundException
+	 * @throws IllegalArguementException
 	 * @todo convert to MySQLi
 	 */
-	public function loadAllByAttributes($attributes=array(), $values=array(), $start=0, $limit=0, $orderBy="OID", $order="ASC") {
+	public function loadAllByAttributes($attributes=array(), $values=array(), $start=0, $limit=0, $orderBy='OID', $order='ASC') {
 		self::$logger->debug('>>loadAllByAttributes(attributes=['.print_r($attributes, true).'], values=['.print_r($values, true).'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
 		
 		if(method_exists($this, 'before_loadAllByAttributes_callback'))
@@ -634,14 +669,16 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Loads all of the objects of this class that where updated (updated_ts) on the date indicated
+	 * Loads all of the objects of this class that where updated (updated_ts value) on the date indicated.
 	 * 
-	 * @param string $date The date for which to load the objects updated on	 
-	 * @param integer $start The start of the SQL LIMIT clause
-	 * @param integer $limit The amount (limit) of objects to load
-	 * @param string $orderBy the name of the field to sort the BOs by
-	 * @param string $order the order to sort the BOs by, default is ASC
-	 * @return array an array containing objects of this type of business object.
+	 * @param string $date The date for which to load the objects updated on, in the format 'YYYY-MM-DD'.	 
+	 * @param integer $start The start of the SQL LIMIT clause, useful for pagination.
+	 * @param integer $limit The amount (limit) of objects to load, useful for pagination.
+	 * @param string $orderBy The name of the field to sort the objects by.
+	 * @param string $order The order to sort the objects by.
+	 * @return array An array containing objects of this type of business object.
+	 * @since 1.0
+	 * @throws BONotFoundException
 	 * @todo convert to MySQLi
 	 */
 	public function loadAllByDayUpdated($date, $start=0, $limit=0, $orderBy="OID", $order="ASC") {
@@ -695,12 +732,14 @@ abstract class DAO {
 	 * Loads all of the specified attribute values of this class by the specified attribute into an 
 	 * array which is returned. 
 	 * 
-	 * @param string $attribute The attribute to load the object by
-	 * @param string $value The value of the attribute to load the object by
-	 * @param string $returnAttribute The attribute to return
-	 * @param string $order the order to sort the BOs by, default is ASC
-	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
-	 * @return array
+	 * @param string $attribute The attribute name to load the field values by.
+	 * @param string $value The value of the attribute to load the field values by.
+	 * @param string $returnAttribute The name of the attribute to return.
+	 * @param string $order The order to sort the BOs by.
+	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type.
+	 * @return array An array of field values.
+	 * @since 1.0
+	 * @throws BONotFoundException
 	 * @todo convert to MySQLi
 	 */
 	public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order='ASC', $ignoreClassType=false) {
@@ -740,7 +779,12 @@ abstract class DAO {
 	}
 
 	/**
-	 * Saves the object.  If $this->OID is empty or null it will INSERT, otherwise UPDATE
+	 * Saves the object.  If $this->OID is empty or null it will INSERT, otherwise UPDATE.
+	 * 
+	 * @since 1.0
+	 * @throws FailedSaveException
+	 * @throws LockingException
+	 * @throws ValidationException
 	 */
 	public function save() {
 		self::$logger->debug('>>save()');
@@ -945,8 +989,9 @@ abstract class DAO {
 	 * Saves the field specified with the value supplied.  Only works for persistent BOs.  Note that no Alpha type
 	 * validation is performed with this method!
 	 * 
-	 * @param string $attribute
-	 * @param mixed $value
+	 * @param string $attribute The name of the attribute to save.
+	 * @param mixed $value The value of the attribute to save.
+	 * @since 1.0
 	 * @throws IllegalArguementException
 	 * @throws FailedSaveException
 	 */
@@ -991,9 +1036,11 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Validates the object to be saved
+	 * Validates the object to be saved.
 	 * 
 	 * @return boolean
+	 * @since 1.0
+	 * @throws ValidationException
 	 */
 	protected function validate() {
 		self::$logger->debug('>>validate()');
@@ -1031,7 +1078,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Delete the current object from the database
+	 * Deletes the current object from the database.
+	 * 
+	 * @since 1.0
+	 * @throws FailedDeleteException
 	 */
 	public function delete() {
 		self::$logger->debug('>>delete()');
@@ -1120,11 +1170,13 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Delete all object instances from the database by the specified attribute matching the value provided
+	 * Delete all object instances from the database by the specified attribute matching the value provided.
 	 *
-	 * @param string $attribute
-	 * @param mixed $value
-	 * @return int The number of rows deleted
+	 * @param string $attribute The name of the field to delete the objects by.
+	 * @param mixed $value The value of the field to delete the objects by.
+	 * @return integer The number of rows deleted.
+	 * @since 1.0
+	 * @throws FailedDeleteException
 	 */
 	public function deleteAllByAttribute($attribute, $value) {
 		self::$logger->debug('>>deleteAllByAttribute(attribute=['.$attribute.'], value=['.$value.'])');
@@ -1158,9 +1210,11 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Gets the version_num of the object from the database (returns 0 if the BO is not saved yet)
+	 * Gets the version_num of the object from the database (returns 0 if the BO is not saved yet).
 	 * 
-	 * @return int
+	 * @return integer
+	 * @since 1.0
+	 * @throws BONotFoundException
 	 */
 	public function getVersion() {
 		self::$logger->debug('>>getVersion()');
@@ -1210,7 +1264,10 @@ abstract class DAO {
 	}
 
 	/**
-	 * Builds a new database table for the BO class
+	 * Builds a new database table for the BO class.
+	 * 
+	 * @since 1.0
+	 * @throws AlphaException
 	 * @todo convert to MySQLi
 	 */	
 	public function makeTable() {
@@ -1303,6 +1360,9 @@ abstract class DAO {
 
 	/**
 	 * Re-builds the table if the model requirements have changed.  All data is lost!
+	 * 
+	 * @since 1.0
+	 * @throws AlphaException
 	 * @todo convert to MySQLi
 	 */	
 	public function rebuildTable() {
@@ -1328,9 +1388,12 @@ abstract class DAO {
 	}
 
 	/**
-	 * Adds in a new class property without loosing existing data
+	 * Adds in a new class property without loosing existing data (does an ALTER TABLE query on the
+	 * database).
 	 * 
-	 * @param string $propName
+	 * @param string $propName The name of the new field to add to the database table.
+	 * @since 1.0
+	 * @throws AlphaException
 	 * @todo convert to MySQLi 	 
 	 */
 	public function addProperty($propName) {
@@ -1410,7 +1473,9 @@ abstract class DAO {
 	}
 
 	/**
-	 * Populates the current business object from global POST data
+	 * Populates the current business object from global POST data.
+	 * 
+	 * @since 1.0
 	 */	
 	public function populateFromPost() {
 		self::$logger->debug('>>populateFromPost()');
@@ -1449,9 +1514,11 @@ abstract class DAO {
 	}
 
 	/**
-	 * Gets the maximum OID value from the database for this class
+	 * Gets the maximum OID value from the database for this class type.
 	 * 
-	 * @return integer
+	 * @return integer The maximum OID value in the class table.
+	 * @since 1.0
+	 * @throws AlphaException
 	 */
 	public function getMAX() {
 		self::$logger->debug('>>getMAX()');
@@ -1481,11 +1548,13 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Gets the count from the database for the amount of objects of this class
+	 * Gets the count from the database for the amount of objects of this class.
 	 * 
-	 * @param array $atributes The attribute to count the objects by (optional)
-	 * @param array $values The values of the attributes to count the objects by (optional)
+	 * @param array $atributes The attributes to count the objects by (optional).
+	 * @param array $values The values of the attributes to count the objects by (optional).
 	 * @return integer
+	 * @since 1.0
+	 * @throws AlphaException
 	 */
 	public function getCount($attributes=array(), $values=array()) {
 		self::$logger->debug('>>getCount(attributes=['.print_r($attributes, true).'], values=['.print_r($values, true).'])');
@@ -1533,9 +1602,12 @@ abstract class DAO {
 	}
 
 	/**
-	 * Gets the OID for the object in zero-padded format (same as getOID())
+	 * Gets the OID for the object in zero-padded format (same as getOID()).  This version is designed
+	 * to be overridden in case you want to do something different with the ID of your objects outside
+	 * of the standard 11 digit OID sequence used internally in Alpha.
 	 * 
-	 * @return integer
+	 * @return integer 11 digit zero-padded OID value.
+	 * @since 1.0
 	 */
 	public function getID() {
 		self::$logger->debug('>>getID()');
@@ -1545,9 +1617,11 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Gets the OID for the object in zero-padded format (same as getID())
+	 * Gets the OID for the object in zero-padded format (same as getID()).  This version is final so cannot
+	 * be overridden.
 	 * 
-	 * @return integer
+	 * @return integer 11 digit zero-padded OID value.
+	 * @since 1.0
 	 */
 	public final function getOID() {
 		self::$logger->debug('>>getOID()');
@@ -1557,9 +1631,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Method for getting version number of the object
+	 * Method for getting version number of the object.
 	 * 
-	 * @return Integer
+	 * @return Integer The object version number.
+	 * @since 1.0
 	 */
 	public function getVersionNumber() {
 		self::$logger->debug('>>getVersionNumber()');
@@ -1568,7 +1643,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Populate all of the enum options for this object from the database
+	 * Populate all of the enum options for this object from the database.
+	 * 
+	 * @since 1.0
+	 * @throws AlphaException
 	 */
 	protected function setEnumOptions() {
 		self::$logger->debug('>>setEnumOptions()');
@@ -1621,9 +1699,13 @@ abstract class DAO {
 	 * method exists at a child level (by default).  Set $noChildMethods to true if you don't want to use any 
 	 * get.ucfirst($prop) method even if it exists, false otherwise (default).
 	 * 
-	 * @param string $prop
-	 * @param boolean $noChildMethods
-	 * @return mixed
+	 * @param string $prop The name of the object property to get.
+	 * @param boolean $noChildMethods Set to true if you do not want to use getters in the child object, defaults
+	 * to false.
+	 * @return mixed The property value.
+	 * @since 1.0
+	 * @throws IllegalArguementException
+	 * @throws AlphaException
 	 */
 	public function get($prop, $noChildMethods = false) {
 		if(self::$logger == null)
@@ -1673,9 +1755,12 @@ abstract class DAO {
 	 * method exists at a child level (by default).  Set $noChildMethods to true if you don't want to use 
 	 * any get.ucfirst($prop) method even if it exists, false otherwise (default).
 	 * 
-	 * @param string $prop
-	 * @param mixed $value
-	 * @param boolean $noChildMethods
+	 * @param string $prop The name of the property to set.
+	 * @param mixed $value The value of the property to set.
+	 * @param boolean $noChildMethods Set to true if you do not want to use setters in the child object, defaults
+	 * to false.
+	 * @since 1.0
+	 * @throws AlphaException
 	 */
 	public function set($prop, $value, $noChildMethods = false) {
 		self::$logger->debug('>>set(prop=['.$prop.'], $value=['.$value.'], noChildMethods=['.$noChildMethods.'])');
@@ -1718,8 +1803,10 @@ abstract class DAO {
 	 * Gets the property object rather than the value for complex attributes.  Returns false if 
 	 * the property exists but is private.
 	 * 
-	 * @param string $prop
-	 * @return mixed
+	 * @param string $prop The name of the property we are getting.
+	 * @return AlphaType The complex type object found.
+	 * @since 1.0
+	 * @throws IllegalArguementException
 	 */
 	public function getPropObject($prop) {
 		self::$logger->debug('>>getPropObject(prop=['.$prop.'])');
@@ -1759,9 +1846,11 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Checks to see if the table exists in the database for the current business class
+	 * Checks to see if the table exists in the database for the current business class.
 	 * 
 	 * @return boolean
+	 * @since 1.0
+	 * @throws AlphaException
 	 * @todo convert to MySQLi
 	 */
 	public function checkTableExists() {
@@ -1796,10 +1885,12 @@ abstract class DAO {
 	
 	/**
 	 * Static method to check the database and see if the table for the indicated BO class name
-	 * exists (assumes table name will be $BOClassName - "_object").
+	 * exists (assumes table name will be $BOClassName less "_object").
 	 * 
-	 * @param string $BOClassName
+	 * @param string $BOClassName The name of the business object class we are checking.
 	 * @return boolean
+	 * @since 1.0
+	 * @throws AlphaException
 	 * @todo convert to MySQLi
 	 */
 	public static function checkBOTableExists($BOClassName) {
@@ -1834,9 +1925,12 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Checks to see if the table in the database matches (for fields) the business class definition
+	 * Checks to see if the table in the database matches (for fields) the business class definition, i.e. if the
+	 * database table is in sync with the class definition.
 	 * 
 	 * @return boolean
+	 * @since 1.0
+	 * @throws AlphaException
 	 * @todo convert to MySQLi
 	 */
 	public function checkTableNeedsUpdate() {
@@ -1925,9 +2019,11 @@ abstract class DAO {
 	
 	/**
 	 * Returns an array containing any properties on the class which have not been created on the database 
-	 * table yet
+	 * table yet.
 	 * 
-	 * @return array
+	 * @return array An array of missing fields in the database table.
+	 * @since 1.0
+	 * @throws AlphaException
 	 * @todo convert to MySQLi
 	 */
 	public function findMissingFields() {
@@ -1992,9 +2088,11 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Getter for the TABLE_NAME, which should be set by a child of this class
+	 * Getter for the TABLE_NAME, which should be set by a child of this class.
 	 * 
-	 * @return string
+	 * @return string The table name in the database.
+	 * @since 1.0
+	 * @throws AlphaException
 	 */
 	public function getTableName() {
 		self::$logger->debug('>>getTableName()');
@@ -2012,9 +2110,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Method for getting the OID of the person who created this BO
+	 * Method for getting the OID of the person who created this BO.
 	 * 
-	 * @return Integer
+	 * @return Integer The OID of the creator.
+	 * @since 1.0
 	 */
 	public function getCreatorId() {
 		self::$logger->debug('>>getCreatorId()');
@@ -2023,9 +2122,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Method for getting the OID of the person who updated this BO
+	 * Method for getting the OID of the person who updated this BO.
 	 * 
-	 * @return Integer
+	 * @return Integer The OID of the updator.
+	 * @since 1.0
 	 */
 	public function getUpdatorId() {
 		self::$logger->debug('>>getUpdatorId()');
@@ -2034,9 +2134,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Method for getting the date/time of when the BO was created
+	 * Method for getting the date/time of when the BO was created.
 	 * 
 	 * @return Timestamp
+	 * @since 1.0
 	 */
 	public function getCreateTS() {
 		self::$logger->debug('>>getCreateTS()');
@@ -2045,9 +2146,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Method for getting the date/time of when the BO was last updated
+	 * Method for getting the date/time of when the BO was last updated.
 	 * 
 	 * @return Timestamp
+	 * @since 1.0
 	 */
 	public function getUpdateTS() {
 		self::$logger->debug('>>getUpdateTS()');
@@ -2056,9 +2158,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Adds the name of the attribute provided to the list of transient (non-saved) attributes for this BO
+	 * Adds the name of the attribute provided to the list of transient (non-saved) attributes for this BO.
 	 * 
-	 * @param string attributeName
+	 * @param string $attributeName The name of the attribute to not save.
+	 * @since 1.0
 	 */
 	public function markTransient($attributeName) {
 		self::$logger->debug('>>markTransient(attributeName=['.$attributeName.'])');
@@ -2070,7 +2173,8 @@ abstract class DAO {
 	 * Removes the name of the attribute provided from the list of transient (non-saved) attributes for this BO, 
 	 * ensuring that it will be saved on the next attempt.
 	 * 
-	 * @param string attributeName
+	 * @param string $attributeName The name of the attribute to save.
+	 * @since 1.0
 	 */
 	public function markPersistent($attributeName) {
 		self::$logger->debug('>>markPersistent(attributeName=['.$attributeName.'])');
@@ -2079,10 +2183,11 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Adds the name of the attribute(s) provided to the list of unique (constrained) attributes for this BO
+	 * Adds the name of the attribute(s) provided to the list of unique (constrained) attributes for this BO.
 	 * 
-	 * @param string attribute1Name
-	 * @param string attribute2Name (optional, use only for composite keys)
+	 * @param string $attribute1Name The first attribute to mark unique in the database.
+	 * @param string $attribute2Name The second attribute to mark unique in the databse (optional, use only for composite keys).
+	 * @since 1.0
 	 */
 	protected function markUnique($attribute1Name, $attribute2Name='') {
 		self::$logger->debug('>>markUnique(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'])');
@@ -2097,9 +2202,11 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Gets an array of all of the names of the active database indexes for this class
+	 * Gets an array of all of the names of the active database indexes for this class.
 	 *
-	 * @return array
+	 * @return array An array of database indexes on this table.
+	 * @since 1.0
+	 * @throws AlphaException
 	 * @todo convert to MySQLi
 	 */
 	protected function getIndexes() {
@@ -2124,7 +2231,9 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Checks to see if all of the indexes are in place for the BO's table, creates those that are missing
+	 * Checks to see if all of the indexes are in place for the BO's table, creates those that are missing.
+	 * 
+	 * @since 1.0
 	 */
 	protected function checkIndexes() {
 		self::$logger->debug('>>checkIndexes()');		
@@ -2228,12 +2337,14 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Creates a foreign key constraint (index) in the database on the given attribute
+	 * Creates a foreign key constraint (index) in the database on the given attribute.
 	 * 
-	 * @param string $attributeName
-	 * @param string $relatedClass
-	 * @param string $relatedClassAttribute
-	 * @param bool $allowNullValues For foreign key indexes that don't allow null values, set this to false (default is true)
+	 * @param string $attributeName The name of the attribute to apply the index on.
+	 * @param string $relatedClass The name of the related class in the format "name_object".
+	 * @param string $relatedClassAttribute The name of the field to relate to on the related class.
+	 * @param bool $allowNullValues For foreign key indexes that don't allow null values, set this to false (default is true).
+	 * @since 1.0
+	 * @throws AlphaException
 	 * @todo convert to MySQLi
 	 */
 	protected function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute) {
@@ -2287,10 +2398,12 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Creates a unique index in the database on the given attribute(s)
+	 * Creates a unique index in the database on the given attribute(s).
 	 * 
-	 * @param string attribute1Name
-	 * @param string attribute2Name (optional, use only for composite keys)
+	 * @param string $attribute1Name The first attribute to mark unique in the database.
+	 * @param string $attribute2Name The second attribute to mark unique in the databse (optional, use only for composite keys).
+	 * @since 1.0
+	 * @throws AlphaException
 	 * @todo convert to MySQLi
 	 */
 	protected function createUniqueIndex($attribute1Name, $attribute2Name = '') {
@@ -2331,9 +2444,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Parses a MySQL error for the value that violated a unique constraint
+	 * Parses a MySQL error for the value that violated a unique constraint.
 	 * 
-	 * @param string $error
+	 * @param string $error The MySQL error string.
+	 * @since 1.0
 	 */
 	protected function findOffendingValue($error) {
 		self::$logger->debug('>>findOffendingValue(error=['.$error.'])');
@@ -2347,9 +2461,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Gets the data labels array
+	 * Gets the data labels array.
 	 * 
-	 * @return array
+	 * @return array An array of attribute labels.
+	 * @since 1.0
 	 */
 	public function getDataLabels() {
 		self::$logger->debug('>>getDataLabels()');
@@ -2358,9 +2473,12 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Gets the data label for the given attribute name
+	 * Gets the data label for the given attribute name.
 	 * 
+	 * @param $att The attribute name to get the label for.
 	 * @return string
+	 * @since 1.0
+	 * @throws IllegalArguementException
 	 */
 	public function getDataLabel($att) {
 		self::$logger->debug('>>getDataLabel(att=['.$att.'])');
@@ -2376,9 +2494,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Loops over the core and custom BO directories and builds an array of all of the BO class names in the system
+	 * Loops over the core and custom BO directories and builds an array of all of the BO class names in the system.
 	 *
-	 * @return array
+	 * @return array An array of business object class names.
+	 * @since 1.0
 	 */
 	public static function getBOClassNames() {
 		if(self::$logger == null)
@@ -2420,9 +2539,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Get the array of default attribute names
+	 * Get the array of default attribute names.
 	 *
-	 * @return array
+	 * @return array An array of attribute names.
+	 * @since 1.0
 	 */
 	public function getDefaultAttributes() {
 		self::$logger->debug('>>getDefaultAttributes()');
@@ -2431,9 +2551,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Get the array of transient attribute names
+	 * Get the array of transient attribute names.
 	 *
-	 * @return array
+	 * @return array An array of attribute names.
+	 * @since 1.0
 	 */
 	public function getTransientAttributes() {
 		self::$logger->debug('>>getTransientAttributes()');
@@ -2442,9 +2563,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Get the array of persistent attribute names
+	 * Get the array of persistent attribute names, i.e. those that are saved in the database.
 	 * 
-	 * @return array
+	 * @return array An array of attribute names.
+	 * @since 1.0
 	 */
 	public function getPersistentAttributes() {
 		self::$logger->debug('>>getPersistentAttributes()');
@@ -2469,9 +2591,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Private setter for the object ID, used from load methods
+	 * Private setter for the object ID, used from load methods.
 	 *
-	 * @param int $OID
+	 * @param integer $OID The Object ID.
+	 * @since 1.0
 	 */
 	private function setOID($OID) {
 		self::$logger->debug('>>setOID(OID=['.$OID.'])');
@@ -2480,9 +2603,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Inspector to see if the business object is transient (not presently stored in the database)
+	 * Inspector to see if the business object is transient (not presently stored in the database).
 	 * 
 	 * @return boolean
+	 * @since 1.0
 	 */
 	public function isTransient() {
 		self::$logger->debug('>>isTransient()');
@@ -2497,9 +2621,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Get the last database query run on this object
+	 * Get the last database query run on this object.
 	 *
-	 * @return string
+	 * @return string An SQL query string.
+	 * @since 1.0
 	 */
 	public function getLastQuery() {
 		self::$logger->debug('>>getLastQuery()');
@@ -2508,7 +2633,9 @@ abstract class DAO {
 	}
 	
 	/**
-	 * unsets all of the attributes of this object
+	 * Unsets all of the attributes of this object to null.
+	 * 
+	 * @since 1.0
 	 */
 	private function clear() {
 		self::$logger->debug('>>clear()');
@@ -2527,7 +2654,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Reloads the object from the database, overwritting any attribute values in memory 
+	 * Reloads the object from the database, overwritting any attribute values in memory.
+	 * 
+	 * @since 1.0
+	 * @throws AlphaException
 	 */
 	public function reload() {
 		self::$logger->debug('>>reload()');
@@ -2541,9 +2671,11 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Loads the definition for the BO classname provided
+	 * Loads the definition from the file system for the BO class name provided.
 	 * 
-	 * @param string $classname 
+	 * @param string $classname The name of the business object class name.
+	 * @since 1.0
+	 * @throws IllegalArguementException
 	 */
 	public static function loadClassDef($classname) {
 		if(self::$logger == null)
@@ -2563,10 +2695,12 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Checks that a record exists for the BO in the database
+	 * Checks that a record exists for the BO in the database.
 	 * 
-	 * @param int $OID
+	 * @param int $OID The Object ID of the object we want to see whether it exists or not.
 	 * @return boolean
+	 * @since 1.0
+	 * @throws AlphaException
 	 * @todo convert to MySQLi
 	 */
 	public function checkRecordExists($OID) {
@@ -2605,6 +2739,8 @@ abstract class DAO {
 	 * multiple types of BOs.
 	 * 
 	 * @return bool
+	 * @since 1.0
+	 * @throws BadBOTableNameException
 	 * @todo convert to MySQLi
 	 */
 	public function isTableOverloaded() {
@@ -2661,7 +2797,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Starts a new database transaction
+	 * Starts a new database transaction.
+	 * 
+	 * @since 1.0
+	 * @throws AlphaException
 	 */
 	public static function begin() {
 		if(self::$logger == null)
@@ -2675,7 +2814,10 @@ abstract class DAO {
 	}
 	
 	/**
-	 * Commits the current transaction
+	 * Commits the current database transaction.
+	 * 
+	 * @since 1.0
+	 * @throws FailedSaveException
 	 * @todo convert to MySQLi
 	 */
 	public static function commit() {
@@ -2690,7 +2832,10 @@ abstract class DAO {
   	}
   	
 	/**
-	 * Aborts the current transaction
+	 * Aborts the current database transaction.
+	 * 
+	 * @since 1.0
+	 * @throws AlphaException
 	 * @todo convert to MySQLi
 	 */
 	public static function rollback() {
@@ -2706,9 +2851,11 @@ abstract class DAO {
   	}
 
   	/**
-  	 * Static method that tries to determine if the system database has been installed or not
+  	 * Static method that tries to determine if the system database has been installed or not.
   	 *
   	 * @return boolean
+  	 * @since 1.0
+  	 * @throws AlphaException
   	 * @todo convert to MySQLi
   	 */
   	public static function isInstalled() {
@@ -2751,7 +2898,8 @@ abstract class DAO {
   	/**
   	 * Returns true if the BO has a Relation property called tags, false otherwise.
   	 * 
-  	 * @return bool
+  	 * @return boolean
+  	 * @since 1.0
   	 */
   	public function isTagged() {
   		if(isset($this->taggedAttributes) && isset($this->tags) && $this->tags instanceof Relation)
@@ -2761,9 +2909,10 @@ abstract class DAO {
   	}
 
   	/**
-  	 * Setter for the BO version number
+  	 * Setter for the BO version number.
   	 * 
-  	 * @param $versionNumber
+  	 * @param integer $versionNumber The version number.
+  	 * @since 1.0
   	 */
   	private function setVersion($versionNumber) {
   		$this->version_num->setValue($versionNumber);
@@ -2774,9 +2923,10 @@ abstract class DAO {
   	 * version_num as the old BO, so this is NOT a true cast but is a copy.  All attribute
   	 * values will be copied accross.
   	 * 
-  	 * @param $targetClassName string
-  	 * @param $originalBO DAO
-  	 * @return BO
+  	 * @param string $targetClassName The name of the target BO class.
+  	 * @param DAO $originalBO The original business object.
+  	 * @return DAO The new business object resulting from the cast.
+  	 * @since 1.0
   	 */
   	public function cast($targetClassName, $originalBO) {  		
   		DAO::loadClassDef($targetClassName);
@@ -2813,9 +2963,10 @@ abstract class DAO {
   	}
   	
   	/**
-  	 * Converts "business_object" to "Business" and returns
+  	 * Converts "business_object" to "Business" and returns.
   	 *  
   	 * @return string
+  	 * @since 1.0
   	 */
   	public function getFriendlyClassName() {
   		$name = explode('_', get_class($this));
@@ -2823,12 +2974,13 @@ abstract class DAO {
   	}
   	
   	/**
-  	 * Dynamically binds the attributes for the current BO to the supplied prepared statement parameters
+  	 * Dynamically binds the attributes for the current BO to the supplied prepared statement parameters.
   	 *  
-  	 * @param $stmt mysqli_stmt
+  	 * @param mysqli_stmt $stmt
   	 * @return mysqli_stmt
+  	 * @since 1.0
   	 */
-	private function bindParams($stmt) {
+	protected function bindParams($stmt) {
 		self::$logger->debug('>>bindParams(stmt=['.print_r($stmt, true).'])');
 		
 		// get the class attributes
@@ -2897,8 +3049,9 @@ abstract class DAO {
 	 * Dynamically binds the result of the supplied prepared statement to a 2d array, where each element in the array is another array
 	 * representing a database row.
 	 * 
-	 * @param $stmt mysqli_stmt
-	 * @return array
+	 * @param mysqli_stmt $stmt
+	 * @return array A 2D array containing the query result.
+	 * @since 1.0
 	 */
 	protected function bindResult($stmt) {
 		$result = array();
@@ -2930,10 +3083,11 @@ abstract class DAO {
     }
     
     /**
-     * Check to see if an attribute exists on the BO
+     * Check to see if an attribute exists on the BO.
      * 
-     * @param $attribute
-     * @return bool
+     * @param $attribute The attribute name.
+     * @return boolean
+     * @since 1.0
      */
     public function hasAttribute($attribute) {
     	return property_exists(get_class($this), $attribute);
