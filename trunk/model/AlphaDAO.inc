@@ -68,7 +68,7 @@ require_once $config->get('sysRoot').'alpha/model/types/Sequence.inc';
  * </pre>
  *  
  */
-abstract class DAO {
+abstract class AlphaDAO {
 	/**
 	 * The object ID
 	 * 
@@ -180,7 +180,7 @@ abstract class DAO {
 	 */
 	public function __construct() {
 		if(self::$logger == null)
-			self::$logger = new Logger('DAO');
+			self::$logger = new Logger('AlphaDAO');
 		self::$logger->debug('>>__construct()');
 		
 		$this->version_num = new Integer(0);
@@ -236,7 +236,7 @@ abstract class DAO {
 		
 		$sqlQuery = 'SELECT '.$fields.' FROM '.$this->getTableName().' WHERE OID = ?;';					
 		$this->lastQuery = $sqlQuery;
-		$stmt = DAO::getConnection()->stmt_init();
+		$stmt = AlphaDAO::getConnection()->stmt_init();
 
 		$row = array();
 		
@@ -336,7 +336,7 @@ abstract class DAO {
 		self::$logger->debug('Query=['.$sqlQuery.']');	
 		
 		$this->lastQuery = $sqlQuery;
-		$stmt = DAO::getConnection()->stmt_init();
+		$stmt = AlphaDAO::getConnection()->stmt_init();
 
 		$row = array();
 		
@@ -527,7 +527,7 @@ abstract class DAO {
 			
 		$this->lastQuery = $sqlQuery;
 		
-		$stmt = DAO::getConnection()->stmt_init();
+		$stmt = AlphaDAO::getConnection()->stmt_init();
 
 		$row = array();
 		
@@ -851,7 +851,7 @@ abstract class DAO {
 				
 				$this->lastQuery = $sqlQuery;
 				self::$logger->debug('Query ['.$sqlQuery.']');
-				$stmt = DAO::getConnection()->stmt_init();
+				$stmt = AlphaDAO::getConnection()->stmt_init();
 			
 				if($stmt->prepare($sqlQuery)) {			
 					$stmt = $this->bindParams($stmt);					
@@ -887,7 +887,7 @@ abstract class DAO {
 				$sqlQuery .= " WHERE OID=?;";
 				
 				$this->lastQuery = $sqlQuery;
-				$stmt = DAO::getConnection()->stmt_init();
+				$stmt = AlphaDAO::getConnection()->stmt_init();
 				
 				if($stmt->prepare($sqlQuery)) {							
 					$this->bindParams($stmt);					
@@ -900,7 +900,7 @@ abstract class DAO {
 			if ($stmt != null && $stmt->error == '') {
 				// populate the updated OID in case we just done an insert				
 				if($this->isTransient())
-					$this->setOID(DAO::getConnection()->insert_id);
+					$this->setOID(AlphaDAO::getConnection()->insert_id);
 
 				try {
 					foreach($properties as $propObj) {
@@ -975,7 +975,7 @@ abstract class DAO {
 				$this->version_num->setValue($temp-1);	
 				
 				// check for unique violations			
-				if(DAO::getConnection()->errno == '1062') {					
+				if(AlphaDAO::getConnection()->errno == '1062') {					
 					throw new ValidationException('Failed to save, the value '.$this->findOffendingValue(mysql_error()).' is already in use!');
 					return;
 				}else{					
@@ -1011,7 +1011,7 @@ abstract class DAO {
 		$sqlQuery = 'UPDATE '.$this->getTableName().' SET '.$attribute.'=? WHERE OID=?;';
 				
 		$this->lastQuery = $sqlQuery;
-		$stmt = DAO::getConnection()->stmt_init();
+		$stmt = AlphaDAO::getConnection()->stmt_init();
 				
 		if($stmt->prepare($sqlQuery)) {
 			if($this->$attribute instanceof Integer)
@@ -1151,7 +1151,7 @@ abstract class DAO {
 			
 		$this->lastQuery = $sqlQuery;
 		
-		$stmt = DAO::getConnection()->stmt_init();
+		$stmt = AlphaDAO::getConnection()->stmt_init();
 				
 		if($stmt->prepare($sqlQuery)) {
 			$stmt->bind_param('i', $this->getOID());			
@@ -1225,7 +1225,7 @@ abstract class DAO {
 		$sqlQuery = 'SELECT version_num FROM '.$this->getTableName().' WHERE OID = ?;';
 		$this->lastQuery = $sqlQuery;
 		
-		$stmt = DAO::getConnection()->stmt_init();
+		$stmt = AlphaDAO::getConnection()->stmt_init();
 		
 		if($stmt->prepare($sqlQuery)) {
 			$stmt->bind_param('i', $this->OID);
@@ -1530,7 +1530,7 @@ abstract class DAO {
 
 		$this->lastQuery = $sqlQuery;
 
-		$result = DAO::getConnection()->query($sqlQuery);	
+		$result = AlphaDAO::getConnection()->query($sqlQuery);	
 
 		$row = $result->fetch_array(MYSQLI_ASSOC);
 
@@ -1584,7 +1584,7 @@ abstract class DAO {
 
 		$this->lastQuery = $sqlQuery;
 		
-		$result = DAO::getConnection()->query($sqlQuery);
+		$result = AlphaDAO::getConnection()->query($sqlQuery);
 
 		if ($result) {
 			if(method_exists($this, 'after_getCount_callback'))
@@ -1709,7 +1709,7 @@ abstract class DAO {
 	 */
 	public function get($prop, $noChildMethods = false) {
 		if(self::$logger == null)
-			self::$logger = new Logger('DAO');
+			self::$logger = new Logger('AlphaDAO');
 			
 		self::$logger->debug('>>get(prop=['.$prop.'], noChildMethods=['.$noChildMethods.'])');
 		
@@ -1895,7 +1895,7 @@ abstract class DAO {
 	 */
 	public static function checkBOTableExists($BOClassName) {
 		if(self::$logger == null)
-			self::$logger = new Logger('DAO');
+			self::$logger = new Logger('AlphaDAO');
 		self::$logger->debug('>>checkBOTableExists(BOClassName=['.$BOClassName.'])');
 		
 		global $config;
@@ -2353,7 +2353,7 @@ abstract class DAO {
 		if(method_exists($this, 'before_createForeignIndex_callback'))
 			$this->before_createForeignIndex_callback();
 		
-		DAO::loadClassDef($relatedClass);		
+		AlphaDAO::loadClassDef($relatedClass);		
 		$relatedBO = new $relatedClass;		
 		$tableName = $relatedBO->getTableName();
 
@@ -2363,7 +2363,7 @@ abstract class DAO {
 			return;
 		}
 
-		if(DAO::checkBOTableExists($tableName.'_object')) {
+		if(AlphaDAO::checkBOTableExists($tableName.'_object')) {
 			$sqlQuery = '';
 			if($attributeName == 'leftID')
 				$sqlQuery = 'ALTER TABLE '.$this->getTableName().' ADD INDEX leftID_fk_idx (leftID);';
@@ -2501,7 +2501,7 @@ abstract class DAO {
 	 */
 	public static function getBOClassNames() {
 		if(self::$logger == null)
-			self::$logger = new Logger('DAO');
+			self::$logger = new Logger('AlphaDAO');
 		self::$logger->debug('>>getBOClassNames()');
 		
 		global $config;
@@ -2679,7 +2679,7 @@ abstract class DAO {
 	 */
 	public static function loadClassDef($classname) {
 		if(self::$logger == null)
-			self::$logger = new Logger('DAO');
+			self::$logger = new Logger('AlphaDAO');
 		self::$logger->debug('>>loadClassDef(classname=['.$classname.'])');
 		
 		global $config;
@@ -2804,11 +2804,11 @@ abstract class DAO {
 	 */
 	public static function begin() {
 		if(self::$logger == null)
-			self::$logger = new Logger('DAO');
+			self::$logger = new Logger('AlphaDAO');
 		self::$logger->debug('>>begin()');     	
      	
-     	if (!DAO::getConnection()->autocommit(false))
-     		throw new AlphaException('Error beginning a new transaction, error is ['.DAO::getConnection()->get_warnings().']');
+     	if (!AlphaDAO::getConnection()->autocommit(false))
+     		throw new AlphaException('Error beginning a new transaction, error is ['.AlphaDAO::getConnection()->get_warnings().']');
      	
      	self::$logger->debug('<<begin');
 	}
@@ -2822,11 +2822,11 @@ abstract class DAO {
 	 */
 	public static function commit() {
 		if(self::$logger == null)
-			self::$logger = new Logger('DAO');
+			self::$logger = new Logger('AlphaDAO');
 		self::$logger->debug('>>commit()');
 		
-    	if (!DAO::getConnection()->commit())
-     		throw new FailedSaveException('Error commiting a transaction, error is ['.DAO::getConnection()->get_warnings().']');
+    	if (!AlphaDAO::getConnection()->commit())
+     		throw new FailedSaveException('Error commiting a transaction, error is ['.AlphaDAO::getConnection()->get_warnings().']');
     	
     	self::$logger->debug('<<commit');
   	}
@@ -2840,12 +2840,12 @@ abstract class DAO {
 	 */
 	public static function rollback() {
 		if(self::$logger == null)
-			self::$logger = new Logger('DAO');
+			self::$logger = new Logger('AlphaDAO');
 		self::$logger->debug('>>rollback()');
     	mysql_query('ROLLBACK');
     	
-    	if (!DAO::getConnection()->rollback())
-     		throw new AlphaException('Error aborting a transaction, error is ['.DAO::getConnection()->get_warnings().']');
+    	if (!AlphaDAO::getConnection()->rollback())
+     		throw new AlphaException('Error aborting a transaction, error is ['.AlphaDAO::getConnection()->get_warnings().']');
     	
     	self::$logger->debug('<<rollback');
   	}
@@ -2860,7 +2860,7 @@ abstract class DAO {
   	 */
   	public static function isInstalled() {
   		if(self::$logger == null)
-			self::$logger = new Logger('DAO');
+			self::$logger = new Logger('AlphaDAO');
 		self::$logger->debug('>>isInstalled()');
 		
 		global $config;
@@ -2924,12 +2924,12 @@ abstract class DAO {
   	 * values will be copied accross.
   	 * 
   	 * @param string $targetClassName The name of the target BO class.
-  	 * @param DAO $originalBO The original business object.
-  	 * @return DAO The new business object resulting from the cast.
+  	 * @param AlphaDAO $originalBO The original business object.
+  	 * @return AlphaDAO The new business object resulting from the cast.
   	 * @since 1.0
   	 */
   	public function cast($targetClassName, $originalBO) {  		
-  		DAO::loadClassDef($targetClassName);
+  		AlphaDAO::loadClassDef($targetClassName);
   		
   		$BO = new $targetClassName;
   		$BO->setOID($originalBO->getOID());

@@ -1,6 +1,6 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/model/DAO.inc';
+require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
 require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 
 /**
@@ -14,7 +14,7 @@ require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
  * @version $Id$
  * 
  */ 
-class badrequest_object extends DAO {
+class badrequest_object extends AlphaDAO {
 	/**
 	 * The HTTP user-agent client string
 	 * 
@@ -78,7 +78,7 @@ class badrequest_object extends DAO {
 		$sqlQuery = 'SELECT COUNT(OID) AS request_count FROM '.$this->getTableName().' WHERE IP = ? AND client = ? AND created_ts > NOW()-INTERVAL ? MINUTE';
 		
 		$this->lastQuery = $sqlQuery;
-		$stmt = DAO::getConnection()->stmt_init();
+		$stmt = AlphaDAO::getConnection()->stmt_init();
 
 		$row = array();
 		

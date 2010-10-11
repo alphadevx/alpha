@@ -1,6 +1,6 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/model/DAO.inc';
+require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
 require_once $config->get('sysRoot').'alpha/util/helpers/Validator.inc';
 
 /**
@@ -13,7 +13,7 @@ require_once $config->get('sysRoot').'alpha/util/helpers/Validator.inc';
  * @version $Id$ 
  * 
  */ 
-class tag_object extends DAO {
+class tag_object extends AlphaDAO {
 	/**
 	 * The name of the class of the object which is tagged
 	 *
