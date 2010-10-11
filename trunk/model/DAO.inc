@@ -131,7 +131,7 @@ abstract class DAO {
 	 * @var array
 	 * @since 1.0
 	 */
-	protected $defaultAttributes = array("OID","lastQuery","version_num","dataLabels","created_ts","created_by","updated_ts","updated_by","defaultAttributes","transientAttributes","uniqueAttributes","TABLE_NAME","logger");
+	protected $defaultAttributes = array("OID", "lastQuery", "version_num", "dataLabels", "created_ts", "created_by", "updated_ts", "updated_by", "defaultAttributes", "transientAttributes", "uniqueAttributes", "TABLE_NAME", "logger");
 	
 	/**
 	 * An array of the names of all of the transient attributes of a persistent BO which are not saved to the DB
@@ -139,7 +139,7 @@ abstract class DAO {
 	 * @var array
 	 * @since 1.0
 	 */
-	protected $transientAttributes = array("lastQuery","dataLabels","defaultAttributes","transientAttributes","uniqueAttributes","TABLE_NAME","logger");
+	protected $transientAttributes = array("lastQuery", "dataLabels", "defaultAttributes", "transientAttributes", "uniqueAttributes", "TABLE_NAME", "logger");
 	
 	/**
 	 * An array of the uniquely-constained attributes of this persistent BO
