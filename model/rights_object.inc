@@ -1,6 +1,6 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/model/DAO.inc';
+require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 
 /**
@@ -13,7 +13,7 @@ require_once $config->get('sysRoot').'alpha/model/person_object.inc';
  * @version $Id$ 
  * 
  */ 
-class rights_object extends DAO {	
+class rights_object extends AlphaDAO {	
 	/**
 	 * The name of the rights
 	 * 

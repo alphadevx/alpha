@@ -1,6 +1,6 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/model/DAO.inc';
+require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
 require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 require_once $config->get('sysRoot').'alpha/model/article_vote_object.inc';
 require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
@@ -17,7 +17,7 @@ require_once $config->get('sysRoot').'alpha/controller/front/FrontController.inc
  * @version $Id$
  * 
  */ 
-class article_object extends DAO {
+class article_object extends AlphaDAO {
 	/**
 	 * The article title
 	 * 

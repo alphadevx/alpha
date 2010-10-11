@@ -1,6 +1,6 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/model/DAO.inc';
+require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
 require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 
 /**
@@ -13,7 +13,7 @@ require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
  * @version $Id$
  * 
  */ 
-class blacklisted_client_object extends DAO {
+class blacklisted_client_object extends AlphaDAO {
 	/**
 	 * The (unique) client string this is blocked
 	 * 
