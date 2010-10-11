@@ -23,7 +23,7 @@
   <tr><td colspan="2" class="header-line"><img src="media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
 </table>
 
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="table-layout:fixed;">
   <tr valign="top">
     <td width="195" class="menu">
 		<div class="package-title"></div>
@@ -34,9 +34,9 @@
 	</div>
       <b>Packages:</b><br />
   <div class="package">
-              <a href="li_default.html">default</a><br />
               <a href="li_Alpha.html">Alpha</a><br />
               <a href="li_alpha--controller.html">alpha--controller</a><br />
+              <a href="li_default.html">default</a><br />
               <a href="li_alpha--controller--front.html">alpha--controller--front</a><br />
               <a href="li_alpha--exceptions.html">alpha--exceptions</a><br />
               <a href="li_alpha--model.html">alpha--model</a><br />
@@ -57,16 +57,16 @@
       	</div>
       <br />
                 </td>
-    <td>
+    <td width="800">
       <table cellpadding="10" cellspacing="0" width="100%" border="0"><tr><td valign="top">
 
 <a name="top"></a>
 <h1>Index of All Elements</h1>
 <h3>Package Indexes</h3>
 <ul>
-	<li><a href="elementindex_default.html">default</a></li>
 	<li><a href="elementindex_Alpha.html">Alpha</a></li>
 	<li><a href="elementindex_alpha--controller.html">alpha--controller</a></li>
+	<li><a href="elementindex_default.html">default</a></li>
 	<li><a href="elementindex_alpha--controller--front.html">alpha--controller--front</a></li>
 	<li><a href="elementindex_alpha--exceptions.html">alpha--exceptions</a></li>
 	<li><a href="elementindex_alpha--model.html">alpha--model</a></li>
@@ -147,7 +147,7 @@
 							<dt><b>addItems</b></dt>
 				<dd>in file AlphaFeed.inc, method <a href="alpha--util--feeds/AlphaFeed.html#methodaddItems">AlphaFeed::addItems()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method to add all of the BO items to the feed, from the newest to the $limit provided</dd>
 							<dt><b>addProperty</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodaddProperty">DAO::addProperty()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Adds in a new class property without loosing existing data</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodaddProperty">DAO::addProperty()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Adds in a new class property without loosing existing data (does an ALTER TABLE query on the  database).</dd>
 							<dt><b>adminView</b></dt>
 				<dd>in file View.inc, method <a href="alpha--view/View.html#methodadminView">View::adminView()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Renders the admin view for the business object screen.</dd>
 							<dt><b>after_checkIndexes_callback</b></dt>
@@ -284,37 +284,37 @@
 							<dt><b>$B</b></dt>
 				<dd>in file AlphaFPDF.inc, variable <a href="Alpha/AlphaFPDF.html#var$B">AlphaFPDF::$B</a></dd>
 							<dt><b>$BO</b></dt>
-				<dd>in file Edit.php, variable <a href="alpha--controller/Edit.html#var$BO">Edit::$BO</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The business object to be edited</dd>
-							<dt><b>$BO</b></dt>
-				<dd>in file Detail.php, variable <a href="alpha--controller/Detail.html#var$BO">Detail::$BO</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The BO to be displayed</dd>
-							<dt><b>$BO</b></dt>
-				<dd>in file EditArticle.php, variable <a href="alpha--controller/EditArticle.html#var$BO">EditArticle::$BO</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The new article to be edited</dd>
-							<dt><b>$BO</b></dt>
-				<dd>in file Create.php, variable <a href="alpha--controller/Create.html#var$BO">Create::$BO</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The new BO to be created</dd>
-							<dt><b>$BO</b></dt>
-				<dd>in file edit_person_object.php, variable <a href="Alpha/edit_person_object.html#var$BO">edit_person_object::$BO</a><br>&nbsp;&nbsp;&nbsp;&nbsp;the new to be edited</dd>
-							<dt><b>$BO</b></dt>
-				<dd>in file ViewArticle.php, variable <a href="alpha--controller/ViewArticle.html#var$BO">ViewArticle::$BO</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The article to be rendered</dd>
-							<dt><b>$BO</b></dt>
 				<dd>in file View.inc, variable <a href="alpha--view/View.html#var$BO">View::$BO</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The business object that will be rendered</dd>
 							<dt><b>$BO</b></dt>
-				<dd>in file form_validator.js.php, variable <a href="Alpha/form_validator.html#var$BO">form_validator::$BO</a><br>&nbsp;&nbsp;&nbsp;&nbsp;the business object that will be validated</dd>
+				<dd>in file CreateArticle.php, variable <a href="alpha--controller/CreateArticle.html#var$BO">CreateArticle::$BO</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The new article to be created</dd>
 							<dt><b>$BO</b></dt>
 				<dd>in file Controller.inc, variable <a href="alpha--controller/Controller.html#var$BO">Controller::$BO</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Optionally, a BO may be set for the default validation form handling code to load in the displayPageHead()  method.  The defination of this BO class will need to be included in the child controller.</dd>
 							<dt><b>$BO</b></dt>
-				<dd>in file CreateArticle.php, variable <a href="alpha--controller/CreateArticle.html#var$BO">CreateArticle::$BO</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The new article to be created</dd>
+				<dd>in file form_validator.js.php, variable <a href="Alpha/form_validator.html#var$BO">form_validator::$BO</a><br>&nbsp;&nbsp;&nbsp;&nbsp;the business object that will be validated</dd>
+							<dt><b>$BO</b></dt>
+				<dd>in file Create.php, variable <a href="alpha--controller/Create.html#var$BO">Create::$BO</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The new BO to be created</dd>
+							<dt><b>$BO</b></dt>
+				<dd>in file ViewArticle.php, variable <a href="alpha--controller/ViewArticle.html#var$BO">ViewArticle::$BO</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The article to be rendered</dd>
+							<dt><b>$BO</b></dt>
+				<dd>in file Detail.php, variable <a href="alpha--controller/Detail.html#var$BO">Detail::$BO</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The BO to be displayed</dd>
+							<dt><b>$BO</b></dt>
+				<dd>in file edit_person_object.php, variable <a href="Alpha/edit_person_object.html#var$BO">edit_person_object::$BO</a><br>&nbsp;&nbsp;&nbsp;&nbsp;the new to be edited</dd>
+							<dt><b>$BO</b></dt>
+				<dd>in file EditArticle.php, variable <a href="alpha--controller/EditArticle.html#var$BO">EditArticle::$BO</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The new article to be edited</dd>
+							<dt><b>$BO</b></dt>
+				<dd>in file Edit.php, variable <a href="alpha--controller/Edit.html#var$BO">Edit::$BO</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The business object to be edited</dd>
 							<dt><b>$BOCount</b></dt>
 				<dd>in file ListAll.php, variable <a href="alpha--controller/ListAll.html#var$BOCount">ListAll::$BOCount</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The count of the BOs of this type in the database</dd>
 							<dt><b>$bodyOnload</b></dt>
 				<dd>in file article_object.inc, variable <a href="alpha--model/article_object.html#var$bodyOnload">article_object::$bodyOnload</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Optional custom body onload Javascript</dd>
-							<dt><b>$BOName</b></dt>
-				<dd>in file ViewArticlePDF.php, variable <a href="alpha--controller/ViewArticlePDF.html#var$BOName">ViewArticlePDF::$BOName</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The type of BO to serve as a PDF</dd>
 							<dt><b>$BOname</b></dt>
 				<dd>in file ListAll.php, variable <a href="alpha--controller/ListAll.html#var$BOname">ListAll::$BOname</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The name of the BO</dd>
+							<dt><b>$BOName</b></dt>
+				<dd>in file Edit.php, variable <a href="alpha--controller/Edit.html#var$BOName">Edit::$BOName</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The name of the BO</dd>
 							<dt><b>$BOname</b></dt>
 				<dd>in file Create.php, variable <a href="alpha--controller/Create.html#var$BOname">Create::$BOname</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The name of the BO</dd>
 							<dt><b>$BOName</b></dt>
-				<dd>in file Edit.php, variable <a href="alpha--controller/Edit.html#var$BOName">Edit::$BOName</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The name of the BO</dd>
+				<dd>in file ViewArticlePDF.php, variable <a href="alpha--controller/ViewArticlePDF.html#var$BOName">ViewArticlePDF::$BOName</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The type of BO to serve as a PDF</dd>
 							<dt><b>$BOView</b></dt>
 				<dd>in file ListAll.php, variable <a href="alpha--controller/ListAll.html#var$BOView">ListAll::$BOView</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The new default View object used for rendering the onjects to list</dd>
 							<dt><b>$BO_oid</b></dt>
@@ -326,17 +326,17 @@
 							<dt><b>badrequest_object</b></dt>
 				<dd>in file badrequest_object.inc, class <a href="alpha--model/badrequest_object.html">badrequest_object</a><br>&nbsp;&nbsp;&nbsp;&nbsp;A HTTP request that resulted in a 404 response.  The class is only used when the  sysEnableClientTempBlacklistFiler setting is set to true to enable the filter.</dd>
 							<dt><b>before_displayPageFoot_callback</b></dt>
-				<dd>in file Login.php, method <a href="alpha--controller/Login.html#methodbefore_displayPageFoot_callback">Login::before_displayPageFoot_callback()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Displays the application version number on the login screen.</dd>
+				<dd>in file ViewArticleFile.php, method <a href="alpha--controller/ViewArticleFile.html#methodbefore_displayPageFoot_callback">ViewArticleFile::before_displayPageFoot_callback()</a></dd>
+							<dt><b>before_displayPageFoot_callback</b></dt>
+				<dd>in file ViewArticlePrint.php, method <a href="alpha--controller/ViewArticlePrint.html#methodbefore_displayPageFoot_callback">ViewArticlePrint::before_displayPageFoot_callback()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Callback used to render footer content, including comments, votes and print/PDF buttons when  enabled to do so.</dd>
+							<dt><b>before_displayPageFoot_callback</b></dt>
+				<dd>in file ViewArticle.php, method <a href="alpha--controller/ViewArticle.html#methodbefore_displayPageFoot_callback">ViewArticle::before_displayPageFoot_callback()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Callback used to render footer content, including comments, votes and print/PDF buttons when  enabled to do so.</dd>
 							<dt><b>before_displayPageFoot_callback</b></dt>
 				<dd>in file Search.php, method <a href="alpha--controller/Search.html#methodbefore_displayPageFoot_callback">Search::before_displayPageFoot_callback()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method to display the page footer with pageination links</dd>
 							<dt><b>before_displayPageFoot_callback</b></dt>
 				<dd>in file ListAll.php, method <a href="alpha--controller/ListAll.html#methodbefore_displayPageFoot_callback">ListAll::before_displayPageFoot_callback()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method to display the page footer with pageination links</dd>
 							<dt><b>before_displayPageFoot_callback</b></dt>
-				<dd>in file ViewArticle.php, method <a href="alpha--controller/ViewArticle.html#methodbefore_displayPageFoot_callback">ViewArticle::before_displayPageFoot_callback()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Callback used to render footer content, including comments, votes and print/PDF buttons when  enabled to do so.</dd>
-							<dt><b>before_displayPageFoot_callback</b></dt>
-				<dd>in file ViewArticleFile.php, method <a href="alpha--controller/ViewArticleFile.html#methodbefore_displayPageFoot_callback">ViewArticleFile::before_displayPageFoot_callback()</a></dd>
-							<dt><b>before_displayPageFoot_callback</b></dt>
-				<dd>in file ViewArticlePrint.php, method <a href="alpha--controller/ViewArticlePrint.html#methodbefore_displayPageFoot_callback">ViewArticlePrint::before_displayPageFoot_callback()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Callback used to render footer content, including comments, votes and print/PDF buttons when  enabled to do so.</dd>
+				<dd>in file Login.php, method <a href="alpha--controller/Login.html#methodbefore_displayPageFoot_callback">Login::before_displayPageFoot_callback()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Displays the application version number on the login screen.</dd>
 							<dt><b>before_displayPageHead_callback</b></dt>
 				<dd>in file ListAll.php, method <a href="alpha--controller/ListAll.html#methodbefore_displayPageHead_callback">ListAll::before_displayPageHead_callback()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Sets up the title etc. and pagination start point</dd>
 							<dt><b>before_displayPageHead_callback</b></dt>
@@ -344,7 +344,9 @@
 							<dt><b>before_populateFromPost_callback</b></dt>
 				<dd>in file person_object.inc, method <a href="alpha--model/person_object.html#methodbefore_populateFromPost_callback">person_object::before_populateFromPost_callback()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Encrypts any fields called 'password' posted for the person_object</dd>
 							<dt><b>begin</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodbegin">DAO::begin()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Starts a new database transaction</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodbegin">DAO::begin()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Starts a new database transaction.</dd>
+							<dt><b>bindParams</b></dt>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodbindParams">DAO::bindParams()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Dynamically binds the attributes for the current BO to the supplied prepared statement parameters.</dd>
 							<dt><b>bindResult</b></dt>
 				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodbindResult">DAO::bindResult()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Dynamically binds the result of the supplied prepared statement to a 2d array, where each element in the array is another array  representing a database row.</dd>
 							<dt><b>blacklisted_client_object</b></dt>
@@ -358,9 +360,9 @@
 							<dt><b>Boolean_Test</b></dt>
 				<dd>in file Boolean_Test.php, class <a href="Alpha/Boolean_Test.html">Boolean_Test</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Test case for the Boolean data type</dd>
 							<dt><b>button</b></dt>
-				<dd>in file button.js.php, method <a href="Alpha/button.html#methodbutton">button::button()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;the constructor</dd>
-							<dt><b>button</b></dt>
 				<dd>in file button.js.php, class <a href="Alpha/button.html">button</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Button HTML custom widget</dd>
+							<dt><b>button</b></dt>
+				<dd>in file button.js.php, method <a href="Alpha/button.html#methodbutton">button::button()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;the constructor</dd>
 							<dt><b>BadBOTableNameException.inc</b></dt>
 				<dd>procedural page <a href="Alpha/_exceptions---BadBOTableNameException.inc.html">BadBOTableNameException.inc</a></dd>
 							<dt><b>BONotFoundException.inc</b></dt>
@@ -433,15 +435,15 @@
 							<dt><b>catchException</b></dt>
 				<dd>in file catch_error.inc, function <a href="default/_util---catch_error.inc.html#functioncatchException">catchException()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;A pair of static functions for capturing normal PHP errors and unhandled Alpha exceptions</dd>
 							<dt><b>checkBOTableExists</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckBOTableExists">DAO::checkBOTableExists()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Static method to check the database and see if the table for the indicated BO class name  exists (assumes table name will be $BOClassName - &quot;_object&quot;).</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckBOTableExists">DAO::checkBOTableExists()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Static method to check the database and see if the table for the indicated BO class name  exists (assumes table name will be $BOClassName less &quot;_object&quot;).</dd>
 							<dt><b>checkCache</b></dt>
 				<dd>in file MarkdownFacade.inc, method <a href="alpha--util/MarkdownFacade.html#methodcheckCache">MarkdownFacade::checkCache()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Used to check the HTML cache for the BO cache file</dd>
 							<dt><b>checkIndexes</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckIndexes">DAO::checkIndexes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Checks to see if all of the indexes are in place for the BO's table, creates those that are missing</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckIndexes">DAO::checkIndexes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Checks to see if all of the indexes are in place for the BO's table, creates those that are missing.</dd>
 							<dt><b>checkIsPassword</b></dt>
 				<dd>in file String.inc, method <a href="Alpha/String.html#methodcheckIsPassword">String::checkIsPassword()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Checks to see if the string is a password or not</dd>
 							<dt><b>checkRecordExists</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckRecordExists">DAO::checkRecordExists()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Checks that a record exists for the BO in the database</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckRecordExists">DAO::checkRecordExists()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Checks that a record exists for the BO in the database.</dd>
 							<dt><b>checkRights</b></dt>
 				<dd>in file Install.php, method <a href="alpha--controller/Install.html#methodcheckRights">Install::checkRights()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Custom version of the check rights method that only checks for a session for the config admin username/password,  when the system database is not set-up</dd>
 							<dt><b>checkRights</b></dt>
@@ -449,9 +451,9 @@
 							<dt><b>checkSecurityFields</b></dt>
 				<dd>in file Controller.inc, method <a href="alpha--controller/Controller.html#methodcheckSecurityFields">Controller::checkSecurityFields()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method to check the validity of the two hidden form security  fields which aim to ensure that a post to the controller is being sent from  the same server that is hosting it.</dd>
 							<dt><b>checkTableExists</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckTableExists">DAO::checkTableExists()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Checks to see if the table exists in the database for the current business class</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckTableExists">DAO::checkTableExists()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Checks to see if the table exists in the database for the current business class.</dd>
 							<dt><b>checkTableNeedsUpdate</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckTableNeedsUpdate">DAO::checkTableNeedsUpdate()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Checks to see if the table in the database matches (for fields) the business class definition</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckTableNeedsUpdate">DAO::checkTableNeedsUpdate()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Checks to see if the table in the database matches (for fields) the business class definition, i.e. if the  database table is in sync with the class definition.</dd>
 							<dt><b>checkUserVoted</b></dt>
 				<dd>in file article_object.inc, method <a href="alpha--model/article_object.html#methodcheckUserVoted">article_object::checkUserVoted()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method to determine if the logged-in user has already voted for this article</dd>
 							<dt><b>check_cache</b></dt>
@@ -467,7 +469,7 @@
 							<dt><b>CloseTag</b></dt>
 				<dd>in file AlphaFPDF.inc, method <a href="Alpha/AlphaFPDF.html#methodCloseTag">AlphaFPDF::CloseTag()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Closing tag</dd>
 							<dt><b>commit</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcommit">DAO::commit()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Commits the current transaction</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcommit">DAO::commit()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Commits the current database transaction.</dd>
 							<dt><b>commit</b></dt>
 				<dd>in file Controller.inc, method <a href="alpha--controller/Controller.html#methodcommit">Controller::commit()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Commits (saves) all of the new and modified (dirty) objects in the unit of work to the database</dd>
 							<dt><b>configLoader</b></dt>
@@ -501,7 +503,7 @@
 							<dt><b>createFeedElement</b></dt>
 				<dd>in file AlphaFeed.inc, method <a href="alpha--util--feeds/AlphaFeed.html#methodcreateFeedElement">AlphaFeed::createFeedElement()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for creating a new feed element</dd>
 							<dt><b>createForeignIndex</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcreateForeignIndex">DAO::createForeignIndex()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Creates a foreign key constraint (index) in the database on the given attribute</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcreateForeignIndex">DAO::createForeignIndex()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Creates a foreign key constraint (index) in the database on the given attribute.</dd>
 							<dt><b>createLink</b></dt>
 				<dd>in file AlphaFeed.inc, method <a href="alpha--util--feeds/AlphaFeed.html#methodcreateLink">AlphaFeed::createLink()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for creating link elements (note that Atom has a different format)</dd>
 							<dt><b>createLink</b></dt>
@@ -511,7 +513,7 @@
 							<dt><b>createRSSNode</b></dt>
 				<dd>in file RSS.inc, method <a href="alpha--util--feeds/RSS.html#methodcreateRSSNode">RSS::createRSSNode()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for creating an RSS node with a title, link and description</dd>
 							<dt><b>createUniqueIndex</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcreateUniqueIndex">DAO::createUniqueIndex()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Creates a unique index in the database on the given attribute(s)</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcreateUniqueIndex">DAO::createUniqueIndex()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Creates a unique index in the database on the given attribute(s).</dd>
 							<dt><b>createView</b></dt>
 				<dd>in file View.inc, method <a href="alpha--view/View.html#methodcreateView">View::createView()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Renders the default create view</dd>
 							<dt><b>createView</b></dt>
@@ -540,27 +542,27 @@
 		<h2>d</h2>
 		<dl>
 							<dt><b>$dataLabels</b></dt>
-				<dd>in file Sequence.inc, variable <a href="Alpha/Sequence.html#var$dataLabels">Sequence::$dataLabels</a><br>&nbsp;&nbsp;&nbsp;&nbsp;An array of data display labels for the class properties</dd>
+				<dd>in file blacklisted_client_object.inc, variable <a href="alpha--model/blacklisted_client_object.html#var$dataLabels">blacklisted_client_object::$dataLabels</a><br>&nbsp;&nbsp;&nbsp;&nbsp;An array of data display labels for the class properties</dd>
+							<dt><b>$dataLabels</b></dt>
+				<dd>in file badrequest_object.inc, variable <a href="alpha--model/badrequest_object.html#var$dataLabels">badrequest_object::$dataLabels</a><br>&nbsp;&nbsp;&nbsp;&nbsp;An array of data display labels for the class properties</dd>
+							<dt><b>$dataLabels</b></dt>
+				<dd>in file rights_object.inc, variable <a href="alpha--model/rights_object.html#var$dataLabels">rights_object::$dataLabels</a><br>&nbsp;&nbsp;&nbsp;&nbsp;An array of data display labels for the class properties</dd>
 							<dt><b>$dataLabels</b></dt>
 				<dd>in file DAO.inc, variable <a href="alpha--model/DAO.html#var$dataLabels">DAO::$dataLabels</a><br>&nbsp;&nbsp;&nbsp;&nbsp;An array of the data labels used for displaying class attributes</dd>
 							<dt><b>$dataLabels</b></dt>
-				<dd>in file blacklisted_client_object.inc, variable <a href="alpha--model/blacklisted_client_object.html#var$dataLabels">blacklisted_client_object::$dataLabels</a><br>&nbsp;&nbsp;&nbsp;&nbsp;An array of data display labels for the class properties</dd>
-							<dt><b>$dataLabels</b></dt>
 				<dd>in file DEnum.inc, variable <a href="Alpha/DEnum.html#var$dataLabels">DEnum::$dataLabels</a><br>&nbsp;&nbsp;&nbsp;&nbsp;An array of data display labels for the class properties</dd>
 							<dt><b>$dataLabels</b></dt>
-				<dd>in file DEnumItem.inc, variable <a href="Alpha/DEnumItem.html#var$dataLabels">DEnumItem::$dataLabels</a><br>&nbsp;&nbsp;&nbsp;&nbsp;an array of data display labels for the class properties</dd>
+				<dd>in file tag_object.inc, variable <a href="alpha--model/tag_object.html#var$dataLabels">tag_object::$dataLabels</a><br>&nbsp;&nbsp;&nbsp;&nbsp;An array of data display labels for the class properties</dd>
+							<dt><b>$dataLabels</b></dt>
+				<dd>in file Sequence.inc, variable <a href="Alpha/Sequence.html#var$dataLabels">Sequence::$dataLabels</a><br>&nbsp;&nbsp;&nbsp;&nbsp;An array of data display labels for the class properties</dd>
+							<dt><b>$dataLabels</b></dt>
+				<dd>in file article_vote_object.inc, variable <a href="alpha--model/article_vote_object.html#var$dataLabels">article_vote_object::$dataLabels</a><br>&nbsp;&nbsp;&nbsp;&nbsp;An array of data display labels for the class properties</dd>
 							<dt><b>$dataLabels</b></dt>
 				<dd>in file person_object.inc, variable <a href="alpha--model/person_object.html#var$dataLabels">person_object::$dataLabels</a><br>&nbsp;&nbsp;&nbsp;&nbsp;An array of data display labels for the class properties</dd>
 							<dt><b>$dataLabels</b></dt>
 				<dd>in file RelationLookup.inc, variable <a href="alpha--model--types/RelationLookup.html#var$dataLabels">RelationLookup::$dataLabels</a><br>&nbsp;&nbsp;&nbsp;&nbsp;an array of data display labels for the class properties</dd>
 							<dt><b>$dataLabels</b></dt>
-				<dd>in file rights_object.inc, variable <a href="alpha--model/rights_object.html#var$dataLabels">rights_object::$dataLabels</a><br>&nbsp;&nbsp;&nbsp;&nbsp;An array of data display labels for the class properties</dd>
-							<dt><b>$dataLabels</b></dt>
-				<dd>in file badrequest_object.inc, variable <a href="alpha--model/badrequest_object.html#var$dataLabels">badrequest_object::$dataLabels</a><br>&nbsp;&nbsp;&nbsp;&nbsp;An array of data display labels for the class properties</dd>
-							<dt><b>$dataLabels</b></dt>
-				<dd>in file tag_object.inc, variable <a href="alpha--model/tag_object.html#var$dataLabels">tag_object::$dataLabels</a><br>&nbsp;&nbsp;&nbsp;&nbsp;An array of data display labels for the class properties</dd>
-							<dt><b>$dataLabels</b></dt>
-				<dd>in file article_vote_object.inc, variable <a href="alpha--model/article_vote_object.html#var$dataLabels">article_vote_object::$dataLabels</a><br>&nbsp;&nbsp;&nbsp;&nbsp;An array of data display labels for the class properties</dd>
+				<dd>in file DEnumItem.inc, variable <a href="Alpha/DEnumItem.html#var$dataLabels">DEnumItem::$dataLabels</a><br>&nbsp;&nbsp;&nbsp;&nbsp;an array of data display labels for the class properties</dd>
 							<dt><b>$dataLabels</b></dt>
 				<dd>in file article_object.inc, variable <a href="alpha--model/article_object.html#var$dataLabels">article_object::$dataLabels</a><br>&nbsp;&nbsp;&nbsp;&nbsp;An array of data display labels for the class properties</dd>
 							<dt><b>$dataLabels</b></dt>
@@ -574,17 +576,15 @@
 							<dt><b>$description</b></dt>
 				<dd>in file Controller.inc, variable <a href="alpha--controller/Controller.html#var$description">Controller::$description</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Meta description for the controller page</dd>
 							<dt><b>$description</b></dt>
-				<dd>in file article_object.inc, variable <a href="alpha--model/article_object.html#var$description">article_object::$description</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The description of the article</dd>
-							<dt><b>$description</b></dt>
 				<dd>in file ViewFeed.php, variable <a href="alpha--controller/ViewFeed.html#var$description">ViewFeed::$description</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The description of the feed</dd>
+							<dt><b>$description</b></dt>
+				<dd>in file article_object.inc, variable <a href="alpha--model/article_object.html#var$description">article_object::$description</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The description of the article</dd>
 							<dt><b>$dirtyObjects</b></dt>
 				<dd>in file Controller.inc, variable <a href="alpha--controller/Controller.html#var$dirtyObjects">Controller::$dirtyObjects</a><br>&nbsp;&nbsp;&nbsp;&nbsp;An array for storing dirty objects in a session (i.e. persistent business  objects that have not been commited to the database yet)</dd>
 							<dt><b>$displayName</b></dt>
 				<dd>in file person_object.inc, variable <a href="alpha--model/person_object.html#var$displayName">person_object::$displayName</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The forum display name of the person</dd>
 							<dt><b>$docElement</b></dt>
 				<dd>in file AlphaFeed.inc, variable <a href="alpha--util--feeds/AlphaFeed.html#var$docElement">AlphaFeed::$docElement</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The DOMElement object used to hold the item or entry elements</dd>
-							<dt><b>default.css.php</b></dt>
-				<dd>procedural page <a href="default/_config-dist---css---default.css.php.html">default.css.php</a></dd>
 							<dt><b>db_connect.inc</b></dt>
 				<dd>procedural page <a href="Alpha/_config-dist---db_connect.inc.html">db_connect.inc</a></dd>
 							<dt><b>Detail.php</b></dt>
@@ -604,9 +604,9 @@
 							<dt><b>debug</b></dt>
 				<dd>in file Logger.inc, method <a href="alpha--util/Logger.html#methoddebug">Logger::debug()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Log a DEBUG message</dd>
 							<dt><b>decode</b></dt>
-				<dd>in file InputFilter.inc, method <a href="alpha--util/InputFilter.html#methoddecode">InputFilter::decode()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The decoding method which reverses the filters</dd>
-							<dt><b>decode</b></dt>
 				<dd>in file input_filter.inc, method <a href="Alpha/input_filter.html#methoddecode">input_filter::decode()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;the decoding method which reverses the filters</dd>
+							<dt><b>decode</b></dt>
+				<dd>in file InputFilter.inc, method <a href="alpha--util/InputFilter.html#methoddecode">InputFilter::decode()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The decoding method which reverses the filters</dd>
 							<dt><b>decodeQueryParams</b></dt>
 				<dd>in file FrontController.inc, method <a href="alpha--controller--front/FrontController.html#methoddecodeQueryParams">FrontController::decodeQueryParams()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Static method to return the decoded GET paramters from an encrytpted tk value (excludes the act paramter)</dd>
 							<dt><b>DEFAULT_DATE</b></dt>
@@ -622,9 +622,9 @@
 							<dt><b>DEFAULT_TIMESTAMP</b></dt>
 				<dd>in file validation_rules.inc, constant <a href="Alpha/_config-dist---validation_rules.inc.html#defineDEFAULT_TIMESTAMP">DEFAULT_TIMESTAMP</a></dd>
 							<dt><b>delete</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methoddelete">DAO::delete()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Delete the current object from the database</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methoddelete">DAO::delete()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Deletes the current object from the database.</dd>
 							<dt><b>deleteAllByAttribute</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methoddeleteAllByAttribute">DAO::deleteAllByAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Delete all object instances from the database by the specified attribute matching the value provided</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methoddeleteAllByAttribute">DAO::deleteAllByAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Delete all object instances from the database by the specified attribute matching the value provided.</dd>
 							<dt><b>deleteDirectoryContents</b></dt>
 				<dd>in file AlphaFileUtil.inc, method <a href="alpha--util/AlphaFileUtil.html#methoddeleteDirectoryContents">AlphaFileUtil::deleteDirectoryContents()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Recursively deletes the contents of the directory indicated</dd>
 							<dt><b>DEnum</b></dt>
@@ -656,25 +656,19 @@
 							<dt><b>display_reset_form</b></dt>
 				<dd>in file person.inc, method <a href="Photo-Site/person.html#methoddisplay_reset_form">person::display_reset_form()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;method to render the reset password HTML form</dd>
 							<dt><b>doGET</b></dt>
-				<dd>in file ListAll.php, method <a href="alpha--controller/ListAll.html#methoddoGET">ListAll::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
-							<dt><b>doGET</b></dt>
-				<dd>in file ListBusinessObjects.php, method <a href="alpha--controller/ListBusinessObjects.html#methoddoGET">ListBusinessObjects::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
+				<dd>in file CacheManager.php, method <a href="alpha--controller/CacheManager.html#methoddoGET">CacheManager::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
 							<dt><b>doGET</b></dt>
 				<dd>in file GenSecureQueryStrings.php, method <a href="alpha--controller/GenSecureQueryStrings.html#methoddoGET">GenSecureQueryStrings::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
 							<dt><b>doGET</b></dt>
-				<dd>in file ListDEnums.php, method <a href="alpha--controller/ListDEnums.html#methoddoGET">ListDEnums::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
+				<dd>in file Create.php, method <a href="alpha--controller/Create.html#methoddoGET">Create::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
 							<dt><b>doGET</b></dt>
-				<dd>in file Install.php, method <a href="alpha--controller/Install.html#methoddoGET">Install::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
-							<dt><b>doGET</b></dt>
-				<dd>in file ViewArticle.php, method <a href="alpha--controller/ViewArticle.html#methoddoGET">ViewArticle::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
-							<dt><b>doGET</b></dt>
-				<dd>in file ViewArticleFile.php, method <a href="alpha--controller/ViewArticleFile.html#methoddoGET">ViewArticleFile::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
+				<dd>in file ListAll.php, method <a href="alpha--controller/ListAll.html#methoddoGET">ListAll::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
 							<dt><b>doGET</b></dt>
 				<dd>in file Search.php, method <a href="alpha--controller/Search.html#methoddoGET">Search::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
 							<dt><b>doGET</b></dt>
-				<dd>in file TagManager.php, method <a href="alpha--controller/TagManager.html#methoddoGET">TagManager::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
+				<dd>in file Install.php, method <a href="alpha--controller/Install.html#methoddoGET">Install::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
 							<dt><b>doGET</b></dt>
-				<dd>in file PreviewArticle.php, method <a href="alpha--controller/PreviewArticle.html#methoddoGET">PreviewArticle::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
+				<dd>in file ListSequences.php, method <a href="alpha--controller/ListSequences.html#methoddoGET">ListSequences::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
 							<dt><b>doGET</b></dt>
 				<dd>in file ViewArticlePDF.php, method <a href="alpha--controller/ViewArticlePDF.html#methoddoGET">ViewArticlePDF::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
 							<dt><b>doGET</b></dt>
@@ -682,93 +676,61 @@
 							<dt><b>doGET</b></dt>
 				<dd>in file Logout.php, method <a href="Alpha/Logout.html#methoddoGET">Logout::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
 							<dt><b>doGET</b></dt>
-				<dd>in file ListSequences.php, method <a href="alpha--controller/ListSequences.html#methoddoGET">ListSequences::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
+				<dd>in file ViewArticle.php, method <a href="alpha--controller/ViewArticle.html#methoddoGET">ViewArticle::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
 							<dt><b>doGET</b></dt>
-				<dd>in file Edit.php, method <a href="alpha--controller/Edit.html#methoddoGET">Edit::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
-							<dt><b>doGet</b></dt>
-				<dd>in file ViewImage.php, method <a href="alpha--controller/ViewImage.html#methoddoGet">ViewImage::doGet()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handles get requests</dd>
+				<dd>in file PreviewArticle.php, method <a href="alpha--controller/PreviewArticle.html#methoddoGET">PreviewArticle::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
 							<dt><b>doGET</b></dt>
-				<dd>in file ViewFeed.php, method <a href="alpha--controller/ViewFeed.html#methoddoGET">ViewFeed::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
+				<dd>in file ListBusinessObjects.php, method <a href="alpha--controller/ListBusinessObjects.html#methoddoGET">ListBusinessObjects::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
 							<dt><b>doGET</b></dt>
-				<dd>in file AlphaControllerInterface.inc, method <a href="alpha--controller/AlphaControllerInterface.html#methoddoGET">AlphaControllerInterface::doGET()</a></dd>
+				<dd>in file ListDEnums.php, method <a href="alpha--controller/ListDEnums.html#methoddoGET">ListDEnums::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
+							<dt><b>doGET</b></dt>
+				<dd>in file ViewArticleFile.php, method <a href="alpha--controller/ViewArticleFile.html#methoddoGET">ViewArticleFile::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
+							<dt><b>doGET</b></dt>
+				<dd>in file EditDEnum.php, method <a href="alpha--controller/EditDEnum.html#methoddoGET">EditDEnum::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
+							<dt><b>doGET</b></dt>
+				<dd>in file ViewTestResults.php, method <a href="alpha--controller/ViewTestResults.html#methoddoGET">ViewTestResults::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
 							<dt><b>doGet</b></dt>
 				<dd>in file ViewExcel.php, method <a href="alpha--controller/ViewExcel.html#methoddoGet">ViewExcel::doGet()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads the BO indicated in the GET request and handles the conversion to Excel</dd>
 							<dt><b>doGET</b></dt>
-				<dd>in file ViewLog.php, method <a href="alpha--controller/ViewLog.html#methoddoGET">ViewLog::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
-							<dt><b>doGET</b></dt>
-				<dd>in file ViewMetrics.php, method <a href="alpha--controller/ViewMetrics.html#methoddoGET">ViewMetrics::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
-							<dt><b>doGET</b></dt>
-				<dd>in file CacheManager.php, method <a href="alpha--controller/CacheManager.html#methoddoGET">CacheManager::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
-							<dt><b>doGET</b></dt>
-				<dd>in file Create.php, method <a href="alpha--controller/Create.html#methoddoGET">Create::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
-							<dt><b>doGET</b></dt>
-				<dd>in file CreateArticle.php, method <a href="alpha--controller/CreateArticle.html#methoddoGET">CreateArticle::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
-							<dt><b>doGET</b></dt>
-				<dd>in file ViewTestResults.php, method <a href="alpha--controller/ViewTestResults.html#methoddoGET">ViewTestResults::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
-							<dt><b>doGET</b></dt>
-				<dd>in file ViewArticlePrint.php, method <a href="alpha--controller/ViewArticlePrint.html#methoddoGET">ViewArticlePrint::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
+				<dd>in file AlphaControllerInterface.inc, method <a href="alpha--controller/AlphaControllerInterface.html#methoddoGET">AlphaControllerInterface::doGET()</a></dd>
 							<dt><b>doGET</b></dt>
 				<dd>in file Detail.php, method <a href="alpha--controller/Detail.html#methoddoGET">Detail::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
 							<dt><b>doGET</b></dt>
-				<dd>in file ViewAttachment.php, method <a href="alpha--controller/ViewAttachment.html#methoddoGET">ViewAttachment::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
+				<dd>in file ViewFeed.php, method <a href="alpha--controller/ViewFeed.html#methoddoGET">ViewFeed::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
 							<dt><b>doGET</b></dt>
-				<dd>in file EditDEnum.php, method <a href="alpha--controller/EditDEnum.html#methoddoGET">EditDEnum::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
+				<dd>in file ViewLog.php, method <a href="alpha--controller/ViewLog.html#methoddoGET">ViewLog::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
+							<dt><b>doGet</b></dt>
+				<dd>in file ViewImage.php, method <a href="alpha--controller/ViewImage.html#methoddoGet">ViewImage::doGet()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handles get requests</dd>
+							<dt><b>doGET</b></dt>
+				<dd>in file ViewMetrics.php, method <a href="alpha--controller/ViewMetrics.html#methoddoGET">ViewMetrics::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
+							<dt><b>doGET</b></dt>
+				<dd>in file ViewArticlePrint.php, method <a href="alpha--controller/ViewArticlePrint.html#methoddoGET">ViewArticlePrint::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
+							<dt><b>doGET</b></dt>
+				<dd>in file Edit.php, method <a href="alpha--controller/Edit.html#methoddoGET">Edit::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
+							<dt><b>doGET</b></dt>
+				<dd>in file EditArticle.php, method <a href="alpha--controller/EditArticle.html#methoddoGET">EditArticle::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
 							<dt><b>doGET</b></dt>
 				<dd>in file ViewArticleTitle.php, method <a href="alpha--controller/ViewArticleTitle.html#methoddoGET">ViewArticleTitle::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
 							<dt><b>doGET</b></dt>
 				<dd>in file EditTags.php, method <a href="alpha--controller/EditTags.html#methoddoGET">EditTags::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
 							<dt><b>doGET</b></dt>
-				<dd>in file EditArticle.php, method <a href="alpha--controller/EditArticle.html#methoddoGET">EditArticle::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file EditDEnum.php, method <a href="alpha--controller/EditDEnum.html#methoddoPOST">EditDEnum::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests (adds $currentUser person_object to the session)</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file ViewMetrics.php, method <a href="alpha--controller/ViewMetrics.html#methoddoPOST">ViewMetrics::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file ViewLog.php, method <a href="alpha--controller/ViewLog.html#methoddoPOST">ViewLog::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file AlphaControllerInterface.inc, method <a href="alpha--controller/AlphaControllerInterface.html#methoddoPOST">AlphaControllerInterface::doPOST()</a></dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file ViewArticlePDF.php, method <a href="alpha--controller/ViewArticlePDF.html#methoddoPOST">ViewArticlePDF::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file TagManager.php, method <a href="alpha--controller/TagManager.html#methoddoPOST">TagManager::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file ViewTestResults.php, method <a href="alpha--controller/ViewTestResults.html#methoddoPOST">ViewTestResults::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file CacheManager.php, method <a href="alpha--controller/CacheManager.html#methoddoPOST">CacheManager::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests (adds $currentUser person_object to the session)</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file EditTags.php, method <a href="alpha--controller/EditTags.html#methoddoPOST">EditTags::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests (adds $currentUser person_object to the session)</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file GenSecureQueryStrings.php, method <a href="alpha--controller/GenSecureQueryStrings.html#methoddoPOST">GenSecureQueryStrings::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests (adds $currentUser person_object to the session)</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file Create.php, method <a href="alpha--controller/Create.html#methoddoPOST">Create::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method to handle POST requests</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file CreateArticle.php, method <a href="alpha--controller/CreateArticle.html#methoddoPOST">CreateArticle::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method to handle POST requests</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file ListBusinessObjects.php, method <a href="alpha--controller/ListBusinessObjects.html#methoddoPOST">ListBusinessObjects::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file ViewArticle.php, method <a href="alpha--controller/ViewArticle.html#methoddoPOST">ViewArticle::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method to handle POST requests</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file ViewImage.php, method <a href="alpha--controller/ViewImage.html#methoddoPOST">ViewImage::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file Login.php, method <a href="alpha--controller/Login.html#methoddoPOST">Login::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests (adds $currentUser person_object to the session)</dd>
+				<dd>in file ViewAttachment.php, method <a href="alpha--controller/ViewAttachment.html#methoddoGET">ViewAttachment::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
+							<dt><b>doGET</b></dt>
+				<dd>in file CreateArticle.php, method <a href="alpha--controller/CreateArticle.html#methoddoGET">CreateArticle::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
+							<dt><b>doGET</b></dt>
+				<dd>in file TagManager.php, method <a href="alpha--controller/TagManager.html#methoddoGET">TagManager::doGET()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle GET requests</dd>
 							<dt><b>doPOST</b></dt>
 				<dd>in file Search.php, method <a href="alpha--controller/Search.html#methoddoPOST">Search::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests (adds $currentUser person_object to the session)</dd>
 							<dt><b>doPOST</b></dt>
-				<dd>in file ViewAttachment.php, method <a href="alpha--controller/ViewAttachment.html#methoddoPOST">ViewAttachment::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
+				<dd>in file PreviewArticle.php, method <a href="alpha--controller/PreviewArticle.html#methoddoPOST">PreviewArticle::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests (adds $currentUser person_object to the session)</dd>
 							<dt><b>doPOST</b></dt>
-				<dd>in file ListSequences.php, method <a href="alpha--controller/ListSequences.html#methoddoPOST">ListSequences::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests (adds $currentUser person_object to the session)</dd>
+				<dd>in file TagManager.php, method <a href="alpha--controller/TagManager.html#methoddoPOST">TagManager::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file ViewArticle.php, method <a href="alpha--controller/ViewArticle.html#methoddoPOST">ViewArticle::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method to handle POST requests</dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file ViewArticlePDF.php, method <a href="alpha--controller/ViewArticlePDF.html#methoddoPOST">ViewArticlePDF::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
 							<dt><b>doPOST</b></dt>
 				<dd>in file Edit.php, method <a href="alpha--controller/Edit.html#methoddoPOST">Edit::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file ListDEnums.php, method <a href="alpha--controller/ListDEnums.html#methoddoPOST">ListDEnums::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests (adds $currentUser person_object to the session)</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file ListAll.php, method <a href="alpha--controller/ListAll.html#methoddoPOST">ListAll::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file Logout.php, method <a href="Alpha/Logout.html#methoddoPOST">Logout::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests (adds $currentUser person_object to the session)</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file EditArticle.php, method <a href="alpha--controller/EditArticle.html#methoddoPOST">EditArticle::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method to handle POST requests</dd>
-							<dt><b>doPOST</b></dt>
-				<dd>in file PreviewArticle.php, method <a href="alpha--controller/PreviewArticle.html#methoddoPOST">PreviewArticle::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests (adds $currentUser person_object to the session)</dd>
 							<dt><b>doPOST</b></dt>
 				<dd>in file ViewFeed.php, method <a href="alpha--controller/ViewFeed.html#methoddoPOST">ViewFeed::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method to handle POST requests</dd>
 							<dt><b>doPOST</b></dt>
@@ -776,7 +738,45 @@
 							<dt><b>doPOST</b></dt>
 				<dd>in file ViewExcel.php, method <a href="alpha--controller/ViewExcel.html#methoddoPOST">ViewExcel::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
 							<dt><b>doPOST</b></dt>
+				<dd>in file Logout.php, method <a href="Alpha/Logout.html#methoddoPOST">Logout::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests (adds $currentUser person_object to the session)</dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file ViewImage.php, method <a href="alpha--controller/ViewImage.html#methoddoPOST">ViewImage::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file ViewLog.php, method <a href="alpha--controller/ViewLog.html#methoddoPOST">ViewLog::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file CreateArticle.php, method <a href="alpha--controller/CreateArticle.html#methoddoPOST">CreateArticle::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method to handle POST requests</dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file ViewTestResults.php, method <a href="alpha--controller/ViewTestResults.html#methoddoPOST">ViewTestResults::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file CacheManager.php, method <a href="alpha--controller/CacheManager.html#methoddoPOST">CacheManager::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests (adds $currentUser person_object to the session)</dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file ViewMetrics.php, method <a href="alpha--controller/ViewMetrics.html#methoddoPOST">ViewMetrics::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file ViewAttachment.php, method <a href="alpha--controller/ViewAttachment.html#methoddoPOST">ViewAttachment::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file AlphaControllerInterface.inc, method <a href="alpha--controller/AlphaControllerInterface.html#methoddoPOST">AlphaControllerInterface::doPOST()</a></dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file ListBusinessObjects.php, method <a href="alpha--controller/ListBusinessObjects.html#methoddoPOST">ListBusinessObjects::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file ListAll.php, method <a href="alpha--controller/ListAll.html#methoddoPOST">ListAll::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file ListDEnums.php, method <a href="alpha--controller/ListDEnums.html#methoddoPOST">ListDEnums::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests (adds $currentUser person_object to the session)</dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file ListSequences.php, method <a href="alpha--controller/ListSequences.html#methoddoPOST">ListSequences::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests (adds $currentUser person_object to the session)</dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file Login.php, method <a href="alpha--controller/Login.html#methoddoPOST">Login::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests (adds $currentUser person_object to the session)</dd>
+							<dt><b>doPOST</b></dt>
 				<dd>in file Install.php, method <a href="alpha--controller/Install.html#methoddoPOST">Install::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests</dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file GenSecureQueryStrings.php, method <a href="alpha--controller/GenSecureQueryStrings.html#methoddoPOST">GenSecureQueryStrings::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests (adds $currentUser person_object to the session)</dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file EditArticle.php, method <a href="alpha--controller/EditArticle.html#methoddoPOST">EditArticle::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method to handle POST requests</dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file Create.php, method <a href="alpha--controller/Create.html#methoddoPOST">Create::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method to handle POST requests</dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file EditDEnum.php, method <a href="alpha--controller/EditDEnum.html#methoddoPOST">EditDEnum::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests (adds $currentUser person_object to the session)</dd>
+							<dt><b>doPOST</b></dt>
+				<dd>in file EditTags.php, method <a href="alpha--controller/EditTags.html#methoddoPOST">EditTags::doPOST()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Handle POST requests (adds $currentUser person_object to the session)</dd>
 							<dt><b>doTask</b></dt>
 				<dd>in file AlphaTaskInterface.inc, method <a href="alpha--util/AlphaTaskInterface.html#methoddoTask">AlphaTaskInterface::doTask()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Runs the functionalcode that makes up the task</dd>
 							<dt><b>Double</b></dt>
@@ -942,9 +942,9 @@
 							<dt><b>FileNotFoundException</b></dt>
 				<dd>in file FileNotFoundException.inc, class <a href="alpha--exceptions/FileNotFoundException.html">FileNotFoundException</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The exception class for a file/directory not being found</dd>
 							<dt><b>findMissingFields</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodfindMissingFields">DAO::findMissingFields()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Returns an array containing any properties on the class which have not been created on the database  table yet</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodfindMissingFields">DAO::findMissingFields()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Returns an array containing any properties on the class which have not been created on the database  table yet.</dd>
 							<dt><b>findOffendingValue</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodfindOffendingValue">DAO::findOffendingValue()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Parses a MySQL error for the value that violated a unique constraint</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodfindOffendingValue">DAO::findOffendingValue()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Parses a MySQL error for the value that violated a unique constraint.</dd>
 							<dt><b>Footer</b></dt>
 				<dd>in file AlphaFPDF.inc, method <a href="Alpha/AlphaFPDF.html#methodFooter">AlphaFPDF::Footer()</a></dd>
 							<dt><b>formParagraphs</b></dt>
@@ -1009,7 +1009,7 @@
 							<dt><b>getBO</b></dt>
 				<dd>in file Controller.inc, method <a href="alpha--controller/Controller.html#methodgetBO">Controller::getBO()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the BO for this controller (if any)</dd>
 							<dt><b>getBOClassNames</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetBOClassNames">DAO::getBOClassNames()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loops over the core and custom BO directories and builds an array of all of the BO class names in the system</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetBOClassNames">DAO::getBOClassNames()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loops over the core and custom BO directories and builds an array of all of the BO class names in the system.</dd>
 							<dt><b>getBooleanValue</b></dt>
 				<dd>in file Boolean.inc, method <a href="Alpha/Boolean.html#methodgetBooleanValue">Boolean::getBooleanValue()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Used to get the boolean value of the Boolean</dd>
 							<dt><b>getChildAt</b></dt>
@@ -1031,17 +1031,17 @@
 							<dt><b>getControllerAlias</b></dt>
 				<dd>in file FrontController.inc, method <a href="alpha--controller--front/FrontController.html#methodgetControllerAlias">FrontController::getControllerAlias()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the name of the alias for the given controller</dd>
 							<dt><b>getCount</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetCount">DAO::getCount()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the count from the database for the amount of objects of this class</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetCount">DAO::getCount()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the count from the database for the amount of objects of this class.</dd>
 							<dt><b>getCreateTS</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetCreateTS">DAO::getCreateTS()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting the date/time of when the BO was created</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetCreateTS">DAO::getCreateTS()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting the date/time of when the BO was created.</dd>
 							<dt><b>getCreatorId</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetCreatorId">DAO::getCreatorId()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting the OID of the person who created this BO</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetCreatorId">DAO::getCreatorId()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting the OID of the person who created this BO.</dd>
 							<dt><b>getCustomControllerName</b></dt>
 				<dd>in file Controller.inc, method <a href="alpha--controller/Controller.html#methodgetCustomControllerName">Controller::getCustomControllerName()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Returns the name of a custom controller if one is found, otherwise returns null</dd>
 							<dt><b>getDataLabel</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetDataLabel">DAO::getDataLabel()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the data label for the given attribute name</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetDataLabel">DAO::getDataLabel()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the data label for the given attribute name.</dd>
 							<dt><b>getDataLabels</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetDataLabels">DAO::getDataLabels()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the data labels array</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetDataLabels">DAO::getDataLabels()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the data labels array.</dd>
 							<dt><b>getDate</b></dt>
 				<dd>in file Timestamp.inc, method <a href="Alpha/Timestamp.html#methodgetDate">Timestamp::getDate()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Getter for the date part</dd>
 							<dt><b>getDay</b></dt>
@@ -1051,7 +1051,7 @@
 							<dt><b>getDecodeQueryParams</b></dt>
 				<dd>in file FrontController.inc, method <a href="alpha--controller--front/FrontController.html#methodgetDecodeQueryParams">FrontController::getDecodeQueryParams()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Static method to return the decoded GET paramters from an encrytpted tk value (excludes the act paramter)  as an array of key/value pairs.</dd>
 							<dt><b>getDefaultAttributes</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetDefaultAttributes">DAO::getDefaultAttributes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the array of default attribute names</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetDefaultAttributes">DAO::getDefaultAttributes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the array of default attribute names.</dd>
 							<dt><b>getDescription</b></dt>
 				<dd>in file Controller.inc, method <a href="alpha--controller/Controller.html#methodgetDescription">Controller::getDescription()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Getter for the page description</dd>
 							<dt><b>getDirtyObjects</b></dt>
@@ -1069,7 +1069,7 @@
 							<dt><b>getFirstJob</b></dt>
 				<dd>in file Controller.inc, method <a href="alpha--controller/Controller.html#methodgetFirstJob">Controller::getFirstJob()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the name of the first job in this unit of work</dd>
 							<dt><b>getFriendlyClassName</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetFriendlyClassName">DAO::getFriendlyClassName()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Converts &quot;business_object&quot; to &quot;Business&quot; and returns</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetFriendlyClassName">DAO::getFriendlyClassName()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Converts &quot;business_object&quot; to &quot;Business&quot; and returns.</dd>
 							<dt><b>getHeight</b></dt>
 				<dd>in file AlphaTreeGraph.inc, method <a href="util--graphs/AlphaTreeGraph.html#methodgetHeight">AlphaTreeGraph::getHeight()</a></dd>
 							<dt><b>getHelper</b></dt>
@@ -1089,9 +1089,9 @@
 							<dt><b>getHour</b></dt>
 				<dd>in file Timestamp.inc, method <a href="Alpha/Timestamp.html#methodgetHour">Timestamp::getHour()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Getter for the hour part</dd>
 							<dt><b>getID</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetID">DAO::getID()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the OID for the object in zero-padded format (same as getOID())</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetID">DAO::getID()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the OID for the object in zero-padded format (same as getOID()).  This version is designed  to be overridden in case you want to do something different with the ID of your objects outside  of the standard 11 digit OID sequence used internally in Alpha.</dd>
 							<dt><b>getIndexes</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetIndexes">DAO::getIndexes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets an array of all of the names of the active database indexes for this class</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetIndexes">DAO::getIndexes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets an array of all of the names of the active database indexes for this class.</dd>
 							<dt><b>getInstance</b></dt>
 				<dd>in file View.inc, method <a href="alpha--view/View.html#methodgetInstance">View::getInstance()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Static method which returns a View object or a custom child view for the BO specified  if one exists</dd>
 							<dt><b>getInstance</b></dt>
@@ -1107,7 +1107,7 @@
 							<dt><b>getLastJob</b></dt>
 				<dd>in file Controller.inc, method <a href="alpha--controller/Controller.html#methodgetLastJob">Controller::getLastJob()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the name of the last job in this unit of work</dd>
 							<dt><b>getLastQuery</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetLastQuery">DAO::getLastQuery()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the last database query run on this object</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetLastQuery">DAO::getLastQuery()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the last database query run on this object.</dd>
 							<dt><b>getLeftClassName</b></dt>
 				<dd>in file RelationLookup.inc, method <a href="alpha--model--types/RelationLookup.html#methodgetLeftClassName">RelationLookup::getLeftClassName()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the leftClassName value</dd>
 							<dt><b>getLeftSibling</b></dt>
@@ -1117,7 +1117,7 @@
 							<dt><b>getLookup</b></dt>
 				<dd>in file Relation.inc, method <a href="Alpha/Relation.html#methodgetLookup">Relation::getLookup()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the lookup object if available (only on MANY-TO-MANY relations, null otherwise)</dd>
 							<dt><b>getMAX</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetMAX">DAO::getMAX()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the maximum OID value from the database for this class</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetMAX">DAO::getMAX()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the maximum OID value from the database for this class type.</dd>
 							<dt><b>getMAXDuration</b></dt>
 				<dd>in file Controller.inc, method <a href="alpha--controller/Controller.html#methodgetMAXDuration">Controller::getMAXDuration()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Getter for the unit of work MAX duration</dd>
 							<dt><b>getMaxRunTime</b></dt>
@@ -1143,7 +1143,7 @@
 							<dt><b>getNodeAt</b></dt>
 				<dd>in file AlphaTreeGraph.inc, method <a href="util--graphs/AlphaTreeGraph.html#methodgetNodeAt">AlphaTreeGraph::getNodeAt()</a></dd>
 							<dt><b>getOID</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetOID">DAO::getOID()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the OID for the object in zero-padded format (same as getID())</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetOID">DAO::getOID()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the OID for the object in zero-padded format (same as getID()).  This version is final so cannot  be overridden.</dd>
 							<dt><b>getOptionID</b></dt>
 				<dd>in file DEnum.inc, method <a href="Alpha/DEnum.html#methodgetOptionID">DEnum::getOptionID()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Used to get the DenumItem ID for the given option name</dd>
 							<dt><b>getOptions</b></dt>
@@ -1153,7 +1153,7 @@
 							<dt><b>getPageController</b></dt>
 				<dd>in file FrontController.inc, method <a href="alpha--controller--front/FrontController.html#methodgetPageController">FrontController::getPageController()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Getter for the page controller</dd>
 							<dt><b>getPersistentAttributes</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetPersistentAttributes">DAO::getPersistentAttributes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the array of persistent attribute names</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetPersistentAttributes">DAO::getPersistentAttributes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the array of persistent attribute names, i.e. those that are saved in the database.</dd>
 							<dt><b>getPopularTagsArray</b></dt>
 				<dd>in file tag_object.inc, method <a href="alpha--model/tag_object.html#methodgetPopularTagsArray">tag_object::getPopularTagsArray()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Returns a hash array of the most popular tags based on their occurence in the database,  ordered by alphabet and restricted to the a count matching the $limit supplied.  The  returned has array uses the tag content as a key and the database value as a value.</dd>
 							<dt><b>getPreviousJob</b></dt>
@@ -1221,7 +1221,7 @@
 							<dt><b>getTableName</b></dt>
 				<dd>in file RelationLookup.inc, method <a href="alpha--model--types/RelationLookup.html#methodgetTableName">RelationLookup::getTableName()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Custom getter for the TABLE_NAME, which can't be static in this class due to  the lookup tablenames being different each time.</dd>
 							<dt><b>getTableName</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetTableName">DAO::getTableName()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Getter for the TABLE_NAME, which should be set by a child of this class</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetTableName">DAO::getTableName()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Getter for the TABLE_NAME, which should be set by a child of this class.</dd>
 							<dt><b>getTaskClassNames</b></dt>
 				<dd>in file AlphaCronManager.inc, method <a href="alpha--util/AlphaCronManager.html#methodgetTaskClassNames">AlphaCronManager::getTaskClassNames()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loops over the /tasks directory and builds an array of all of the task  class names in the system.</dd>
 							<dt><b>getTime</b></dt>
@@ -1229,7 +1229,7 @@
 							<dt><b>getTitle</b></dt>
 				<dd>in file Controller.inc, method <a href="alpha--controller/Controller.html#methodgetTitle">Controller::getTitle()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Getter for the page title</dd>
 							<dt><b>getTransientAttributes</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetTransientAttributes">DAO::getTransientAttributes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the array of transient attribute names</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetTransientAttributes">DAO::getTransientAttributes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the array of transient attribute names.</dd>
 							<dt><b>getUnitDuration</b></dt>
 				<dd>in file Controller.inc, method <a href="alpha--controller/Controller.html#methodgetUnitDuration">Controller::getUnitDuration()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Calculates and returns the unit of work current duration in seconds</dd>
 							<dt><b>getUnixValue</b></dt>
@@ -1237,9 +1237,9 @@
 							<dt><b>getUnixValue</b></dt>
 				<dd>in file Date.inc, method <a href="Alpha/Date.html#methodgetUnixValue">Date::getUnixValue()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Return the value in UNIX timestamp format</dd>
 							<dt><b>getUpdateTS</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetUpdateTS">DAO::getUpdateTS()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting the date/time of when the BO was last updated</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetUpdateTS">DAO::getUpdateTS()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting the date/time of when the BO was last updated.</dd>
 							<dt><b>getUpdatorId</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetUpdatorId">DAO::getUpdatorId()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting the OID of the person who updated this BO</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetUpdatorId">DAO::getUpdatorId()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting the OID of the person who updated this BO.</dd>
 							<dt><b>getValue</b></dt>
 				<dd>in file Text.inc, method <a href="Alpha/Text.html#methodgetValue">Text::getValue()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Getter for the value</dd>
 							<dt><b>getValue</b></dt>
@@ -1269,9 +1269,9 @@
 							<dt><b>getValue</b></dt>
 				<dd>in file Double.inc, method <a href="Alpha/Double.html#methodgetValue">Double::getValue()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Getter for the Double value</dd>
 							<dt><b>getVersion</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetVersion">DAO::getVersion()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the version_num of the object from the database (returns 0 if the BO is not saved yet)</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetVersion">DAO::getVersion()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the version_num of the object from the database (returns 0 if the BO is not saved yet).</dd>
 							<dt><b>getVersionNumber</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetVersionNumber">DAO::getVersionNumber()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting version number of the object</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetVersionNumber">DAO::getVersionNumber()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting version number of the object.</dd>
 							<dt><b>getVisibility</b></dt>
 				<dd>in file Controller.inc, method <a href="alpha--controller/Controller.html#methodgetVisibility">Controller::getVisibility()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the name of the rights group that has access to this controller</dd>
 							<dt><b>getWeekday</b></dt>
@@ -1370,7 +1370,7 @@
 							<dt><b>hasAlias</b></dt>
 				<dd>in file FrontController.inc, method <a href="alpha--controller--front/FrontController.html#methodhasAlias">FrontController::hasAlias()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Check to see if an alias exists for the given controller name</dd>
 							<dt><b>hasAttribute</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodhasAttribute">DAO::hasAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Check to see if an attribute exists on the BO</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodhasAttribute">DAO::hasAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Check to see if an attribute exists on the BO.</dd>
 							<dt><b>hasNext</b></dt>
 				<dd>in file AlphaTreeGraph.inc, method <a href="util--graphs/AlphaTreeGraph.html#methodhasNext">AlphaTreeGraph::hasNext()</a></dd>
 							<dt><b>html2rgb</b></dt>
@@ -1449,7 +1449,7 @@
 							<dt><b>isEmail</b></dt>
 				<dd>in file Validator.inc, method <a href="alpha--util--helpers/Validator.html#methodisEmail">Validator::isEmail()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Validate that the provided value is a valid email address</dd>
 							<dt><b>isInstalled</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodisInstalled">DAO::isInstalled()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Static method that tries to determine if the system database has been installed or not</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodisInstalled">DAO::isInstalled()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Static method that tries to determine if the system database has been installed or not.</dd>
 							<dt><b>isInteger</b></dt>
 				<dd>in file Validator.inc, method <a href="alpha--util--helpers/Validator.html#methodisInteger">Validator::isInteger()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Validate that the provided value is a valid integer</dd>
 							<dt><b>isIP</b></dt>
@@ -1467,7 +1467,7 @@
 							<dt><b>isTagged</b></dt>
 				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodisTagged">DAO::isTagged()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the BO has a Relation property called tags, false otherwise.</dd>
 							<dt><b>isTransient</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodisTransient">DAO::isTransient()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Inspector to see if the business object is transient (not presently stored in the database)</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodisTransient">DAO::isTransient()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Inspector to see if the business object is transient (not presently stored in the database).</dd>
 							<dt><b>isURL</b></dt>
 				<dd>in file Validator.inc, method <a href="alpha--util--helpers/Validator.html#methodisURL">Validator::isURL()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Validate that the provided value is a valid URL</dd>
 							<dt><b>ITEM</b></dt>
@@ -1565,27 +1565,27 @@
 							<dt><b>list_view</b></dt>
 				<dd>in file person.inc, method <a href="Photo-Site/person.html#methodlist_view">person::list_view()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Custom list view with no password field present.</dd>
 							<dt><b>load</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodload">DAO::load()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Populates the child object with the properties retrived from the database for the object $OID</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodload">DAO::load()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Populates the child object with the properties retrived from the database for the object $OID.</dd>
 							<dt><b>loadAll</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadAll">DAO::loadAll()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads all of the objects of this class into an array which is returned</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadAll">DAO::loadAll()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads all of the objects of this class into an array which is returned.</dd>
 							<dt><b>loadAllByAttribute</b></dt>
 				<dd>in file RelationLookup.inc, method <a href="alpha--model--types/RelationLookup.html#methodloadAllByAttribute">RelationLookup::loadAllByAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads all of the objects of this class by the specified attribute into an array which is returned.</dd>
 							<dt><b>loadAllByAttribute</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadAllByAttribute">DAO::loadAllByAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads all of the objects of this class by the specified attribute into an array which is returned</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadAllByAttribute">DAO::loadAllByAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads all of the objects of this class by the specified attribute into an array which is returned.</dd>
 							<dt><b>loadAllByAttributes</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadAllByAttributes">DAO::loadAllByAttributes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads all of the objects of this class by the specified attributes into an array which is returned</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadAllByAttributes">DAO::loadAllByAttributes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads all of the objects of this class by the specified attributes into an array which is returned.</dd>
 							<dt><b>loadAllByDayUpdated</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadAllByDayUpdated">DAO::loadAllByDayUpdated()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads all of the objects of this class that where updated (updated_ts) on the date indicated</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadAllByDayUpdated">DAO::loadAllByDayUpdated()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads all of the objects of this class that where updated (updated_ts value) on the date indicated.</dd>
 							<dt><b>loadAllFieldValuesByAttribute</b></dt>
 				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadAllFieldValuesByAttribute">DAO::loadAllFieldValuesByAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads all of the specified attribute values of this class by the specified attribute into an  array which is returned.</dd>
 							<dt><b>loadByAttribute</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadByAttribute">DAO::loadByAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Populates the child object from the database table by the given attribute value</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadByAttribute">DAO::loadByAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Populates the child object from the database table by the given attribute value.</dd>
 							<dt><b>loadCache</b></dt>
 				<dd>in file MarkdownFacade.inc, method <a href="alpha--util/MarkdownFacade.html#methodloadCache">MarkdownFacade::loadCache()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;method to load the content of the cache file to the $content attribute of this object</dd>
 							<dt><b>loadClassDef</b></dt>
 				<dd>in file AlphaCronManager.inc, method <a href="alpha--util/AlphaCronManager.html#methodloadClassDef">AlphaCronManager::loadClassDef()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads the definition for the task classname provided</dd>
 							<dt><b>loadClassDef</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadClassDef">DAO::loadClassDef()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads the definition for the BO classname provided</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadClassDef">DAO::loadClassDef()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads the definition from the file system for the BO class name provided.</dd>
 							<dt><b>loadConfig</b></dt>
 				<dd>in file configLoader.inc, method <a href="Alpha/configLoader.html#methodloadConfig">configLoader::loadConfig()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads the config from the relevent .ini file, dependant upon the current</dd>
 							<dt><b>loadContentFromFile</b></dt>
@@ -1648,7 +1648,7 @@
 							<dt><b>MailNotSentException</b></dt>
 				<dd>in file MailNotSentException.inc, class <a href="Alpha/MailNotSentException.html">MailNotSentException</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The exception class for errors sending email</dd>
 							<dt><b>makeTable</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodmakeTable">DAO::makeTable()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Builds a new database table for the BO class</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodmakeTable">DAO::makeTable()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Builds a new database table for the BO class.</dd>
 							<dt><b>markDirty</b></dt>
 				<dd>in file Controller.inc, method <a href="alpha--controller/Controller.html#methodmarkDirty">Controller::markDirty()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Adds the supplied business object to the dirtyObjects array in the session</dd>
 							<dt><b>markdown</b></dt>
@@ -1664,9 +1664,9 @@
 							<dt><b>markPersistent</b></dt>
 				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodmarkPersistent">DAO::markPersistent()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Removes the name of the attribute provided from the list of transient (non-saved) attributes for this BO,  ensuring that it will be saved on the next attempt.</dd>
 							<dt><b>markTransient</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodmarkTransient">DAO::markTransient()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Adds the name of the attribute provided to the list of transient (non-saved) attributes for this BO</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodmarkTransient">DAO::markTransient()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Adds the name of the attribute provided to the list of transient (non-saved) attributes for this BO.</dd>
 							<dt><b>markUnique</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodmarkUnique">DAO::markUnique()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Adds the name of the attribute(s) provided to the list of unique (constrained) attributes for this BO</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodmarkUnique">DAO::markUnique()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Adds the name of the attribute(s) provided to the list of unique (constrained) attributes for this BO.</dd>
 							<dt><b>MAX_SIZE</b></dt>
 				<dd>in file Sequence.inc, class constant <a href="Alpha/Sequence.html#constMAX_SIZE">Sequence::MAX_SIZE</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The absolute maximum size of the value for the this Sequence</dd>
 							<dt><b>MAX_SIZE</b></dt>
@@ -1771,13 +1771,13 @@
 							<dt><b>$person_view</b></dt>
 				<dd>in file register.php, variable <a href="Alpha/register.html#var$person_view">register::$person_view</a><br>&nbsp;&nbsp;&nbsp;&nbsp;the person view object</dd>
 							<dt><b>$photo1</b></dt>
-				<dd>in file Controller_Tests.php, variable <a href="SimpleMVC_Tests/Controller_Tests.html#var$photo1">Controller_Tests::$photo1</a><br>&nbsp;&nbsp;&nbsp;&nbsp;a business object for testing</dd>
-							<dt><b>$photo1</b></dt>
 				<dd>in file DAO_Tests.php, variable <a href="SimpleMVC_Tests/DAO_Tests.html#var$photo1">DAO_Tests::$photo1</a><br>&nbsp;&nbsp;&nbsp;&nbsp;a photo for testing</dd>
-							<dt><b>$photo2</b></dt>
-				<dd>in file Controller_Tests.php, variable <a href="SimpleMVC_Tests/Controller_Tests.html#var$photo2">Controller_Tests::$photo2</a><br>&nbsp;&nbsp;&nbsp;&nbsp;a business object for testing</dd>
+							<dt><b>$photo1</b></dt>
+				<dd>in file Controller_Tests.php, variable <a href="SimpleMVC_Tests/Controller_Tests.html#var$photo1">Controller_Tests::$photo1</a><br>&nbsp;&nbsp;&nbsp;&nbsp;a business object for testing</dd>
 							<dt><b>$photo2</b></dt>
 				<dd>in file DAO_Tests.php, variable <a href="SimpleMVC_Tests/DAO_Tests.html#var$photo2">DAO_Tests::$photo2</a><br>&nbsp;&nbsp;&nbsp;&nbsp;a photo for testing</dd>
+							<dt><b>$photo2</b></dt>
+				<dd>in file Controller_Tests.php, variable <a href="SimpleMVC_Tests/Controller_Tests.html#var$photo2">Controller_Tests::$photo2</a><br>&nbsp;&nbsp;&nbsp;&nbsp;a business object for testing</dd>
 							<dt><b>$prefix</b></dt>
 				<dd>in file Sequence.inc, variable <a href="Alpha/Sequence.html#var$prefix">Sequence::$prefix</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The string prefix (must be capital alphabet characters only)</dd>
 							<dt><b>$prelim</b></dt>
@@ -1788,8 +1788,6 @@
 				<dd>in file article_object.inc, variable <a href="alpha--model/article_object.html#var$printURL">article_object::$printURL</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The print URL for this article (transient)</dd>
 							<dt><b>$published</b></dt>
 				<dd>in file article_object.inc, variable <a href="alpha--model/article_object.html#var$published">article_object::$published</a><br>&nbsp;&nbsp;&nbsp;&nbsp;A boolean to control whether the artcile is publically accessible or not</dd>
-							<dt><b>print.css.php</b></dt>
-				<dd>procedural page <a href="default/_config-dist---css---print.css.php.html">print.css.php</a></dd>
 							<dt><b>PreviewArticle.php</b></dt>
 				<dd>procedural page <a href="alpha--controller/_controller---PreviewArticle.php.html">PreviewArticle.php</a></dd>
 							<dt><b>PHPException.inc</b></dt>
@@ -1801,27 +1799,27 @@
 							<dt><b>PATTERN_URL_HOSTNAME</b></dt>
 				<dd>in file validation_rules.inc, constant <a href="Alpha/_config-dist---validation_rules.inc.html#definePATTERN_URL_HOSTNAME">PATTERN_URL_HOSTNAME</a></dd>
 							<dt><b>person</b></dt>
-				<dd>in file person.inc, method <a href="Photo-Site/person.html#methodperson">person::person()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;constructor for the person</dd>
-							<dt><b>person</b></dt>
 				<dd>in file person.inc, class <a href="Photo-Site/person.html">person</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The rendering class for the person_object class</dd>
+							<dt><b>person</b></dt>
+				<dd>in file person.inc, method <a href="Photo-Site/person.html#methodperson">person::person()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;constructor for the person</dd>
 							<dt><b>person_object</b></dt>
 				<dd>in file person_object.inc, class <a href="alpha--model/person_object.html">person_object</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The main person/user class for the site</dd>
 							<dt><b>PHPException</b></dt>
 				<dd>in file PHPException.inc, class <a href="Alpha/PHPException.html">PHPException</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The exception class for handling generic PHP errors</dd>
 							<dt><b>populateFromPost</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodpopulateFromPost">DAO::populateFromPost()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Populates the current business object from global POST data</dd>
-							<dt><b>populateFromString</b></dt>
-				<dd>in file Date.inc, method <a href="Alpha/Date.html#methodpopulateFromString">Date::populateFromString()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Accepts a full date string in YYYY-mm-dd format and populates relevent Date attributes.</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodpopulateFromPost">DAO::populateFromPost()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Populates the current business object from global POST data.</dd>
 							<dt><b>populateFromString</b></dt>
 				<dd>in file Timestamp.inc, method <a href="Alpha/Timestamp.html#methodpopulateFromString">Timestamp::populateFromString()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Accepts a full date/time string in YYYY-mm-dd hh:ii:ss format</dd>
+							<dt><b>populateFromString</b></dt>
+				<dd>in file Date.inc, method <a href="Alpha/Date.html#methodpopulateFromString">Date::populateFromString()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Accepts a full date string in YYYY-mm-dd format and populates relevent Date attributes.</dd>
 							<dt><b>PreviewArticle</b></dt>
 				<dd>in file PreviewArticle.php, class <a href="alpha--controller/PreviewArticle.html">PreviewArticle</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Article for previewing Markdown content in the markItUp TextBox widget</dd>
 							<dt><b>process</b></dt>
-				<dd>in file AlphaFilterInterface.inc, method <a href="alpha--util--filters/AlphaFilterInterface.html#methodprocess">AlphaFilterInterface::process()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The method for doing the work of the filter</dd>
+				<dd>in file ClientBlacklistFilter.inc, method <a href="alpha--util--filters/ClientBlacklistFilter.html#methodprocess">ClientBlacklistFilter::process()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;(non-PHPdoc)</dd>
 							<dt><b>process</b></dt>
 				<dd>in file clientTempBlacklistFilter.inc, method <a href="alpha--util--filters/ClientTempBlacklistFilter.html#methodprocess">ClientTempBlacklistFilter::process()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;(non-PHPdoc)</dd>
 							<dt><b>process</b></dt>
-				<dd>in file ClientBlacklistFilter.inc, method <a href="alpha--util--filters/ClientBlacklistFilter.html#methodprocess">ClientBlacklistFilter::process()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;(non-PHPdoc)</dd>
+				<dd>in file AlphaFilterInterface.inc, method <a href="alpha--util--filters/AlphaFilterInterface.html#methodprocess">AlphaFilterInterface::process()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The method for doing the work of the filter</dd>
 							<dt><b>PutLink</b></dt>
 				<dd>in file AlphaFPDF.inc, method <a href="Alpha/AlphaFPDF.html#methodPutLink">AlphaFPDF::PutLink()</a></dd>
 							<dt><b>person.inc</b></dt>
@@ -1881,9 +1879,9 @@
 							<dt><b>RecordSelector</b></dt>
 				<dd>in file RecordSelector.php, class <a href="alpha--view--widgets/RecordSelector.html">RecordSelector</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Record selection HTML widget.</dd>
 							<dt><b>register</b></dt>
-				<dd>in file register.php, class <a href="Alpha/register.html">register</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Rehister controller to allow new users to register their details</dd>
-							<dt><b>register</b></dt>
 				<dd>in file register.php, method <a href="Alpha/register.html#methodregister">register::register()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;constructor to set up the object</dd>
+							<dt><b>register</b></dt>
+				<dd>in file register.php, class <a href="Alpha/register.html">register</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Rehister controller to allow new users to register their details</dd>
 							<dt><b>registerAlias</b></dt>
 				<dd>in file FrontController.inc, method <a href="alpha--controller--front/FrontController.html#methodregisterAlias">FrontController::registerAlias()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Used to register a controller alias to enable shorter URLs with mod_rewrite support enabled.  Note that  only controllers with a single parameter are supported.</dd>
 							<dt><b>registerFilter</b></dt>
@@ -1897,23 +1895,23 @@
 							<dt><b>Relation_Test</b></dt>
 				<dd>in file Relation_Test.php, class <a href="Alpha/Relation_Test.html">Relation_Test</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Test case for the Relation data type</dd>
 							<dt><b>reload</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodreload">DAO::reload()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Reloads the object from the database, overwritting any attribute values in memory</dd>
-							<dt><b>render</b></dt>
-				<dd>in file StringBox.js.php, method <a href="Alpha/StringBox.html#methodrender">StringBox::render()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Renders the HTML and javascript for the string box</dd>
-							<dt><b>render</b></dt>
-				<dd>in file image.js.php, method <a href="Alpha/image.html#methodrender">image::render()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;renders the JavaScript for the image</dd>
-							<dt><b>render</b></dt>
-				<dd>in file RecordSelector.php, method <a href="alpha--view--widgets/RecordSelector.html#methodrender">RecordSelector::render()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Renders the text boxes and buttons for the widget, that will appear in user forms.</dd>
-							<dt><b>render</b></dt>
-				<dd>in file TextBox.js.php, method <a href="Alpha/TextBox.html#methodrender">TextBox::render()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Renders the HTML and javascript for the text box</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodreload">DAO::reload()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Reloads the object from the database, overwritting any attribute values in memory.</dd>
 							<dt><b>render</b></dt>
 				<dd>in file BO2Excel.inc, method <a href="alpha--util--convertors/BO2Excel.html#methodrender">BO2Excel::render()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Sends the output as an Excel spreadsheet to standard output</dd>
 							<dt><b>render</b></dt>
-				<dd>in file calendar.php, method <a href="alpha--view--widgets/calendar.html#methodrender">calendar::render()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Renders the text box and icon to open the calendar pop-up</dd>
+				<dd>in file StringBox.js.php, method <a href="Alpha/StringBox.html#methodrender">StringBox::render()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Renders the HTML and javascript for the string box</dd>
+							<dt><b>render</b></dt>
+				<dd>in file RecordSelector.php, method <a href="alpha--view--widgets/RecordSelector.html#methodrender">RecordSelector::render()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Renders the text boxes and buttons for the widget, that will appear in user forms.</dd>
+							<dt><b>render</b></dt>
+				<dd>in file image.js.php, method <a href="Alpha/image.html#methodrender">image::render()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;renders the JavaScript for the image</dd>
+							<dt><b>render</b></dt>
+				<dd>in file TextBox.js.php, method <a href="Alpha/TextBox.html#methodrender">TextBox::render()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Renders the HTML and javascript for the text box</dd>
 							<dt><b>render</b></dt>
 				<dd>in file TagCloud.inc, method <a href="alpha--view--widgets/TagCloud.html#methodrender">TagCloud::render()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Render the tag cloud and return all of the HTML links in a single paragraph.</dd>
 							<dt><b>render</b></dt>
 				<dd>in file button.js.php, method <a href="Alpha/button.html#methodrender">button::render()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;renders the HTML and javascript for the button</dd>
+							<dt><b>render</b></dt>
+				<dd>in file calendar.php, method <a href="alpha--view--widgets/calendar.html#methodrender">calendar::render()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Renders the text box and icon to open the calendar pop-up</dd>
 							<dt><b>render</b></dt>
 				<dd>in file AlphaTreeGraph.inc, method <a href="util--graphs/AlphaTreeGraph.html#methodrender">AlphaTreeGraph::render()</a></dd>
 							<dt><b>renderAllFields</b></dt>
@@ -1959,13 +1957,13 @@
 							<dt><b>render_javascript</b></dt>
 				<dd>in file button.js.php, method <a href="Alpha/button.html#methodrender_javascript">button::render_javascript()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;renders the Javascript to control the behaviour of the button</dd>
 							<dt><b>render_javascript</b></dt>
+				<dd>in file image.js.php, method <a href="Alpha/image.html#methodrender_javascript">image::render_javascript()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;renders the Javascript to control the behaviour of the button</dd>
+							<dt><b>render_javascript</b></dt>
 				<dd>in file TextBox.js.php, method <a href="Alpha/TextBox.html#methodrender_javascript">TextBox::render_javascript()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;renders the Javascript to control the behaviour of the text box</dd>
 							<dt><b>render_javascript</b></dt>
 				<dd>in file StringBox.js.php, method <a href="Alpha/StringBox.html#methodrender_javascript">StringBox::render_javascript()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;renders the Javascript to control the behaviour of the text box</dd>
 							<dt><b>render_javascript</b></dt>
 				<dd>in file form_validator.js.php, method <a href="Alpha/form_validator.html#methodrender_javascript">form_validator::render_javascript()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;renders the Javascript to control the behaviour of the form validation</dd>
-							<dt><b>render_javascript</b></dt>
-				<dd>in file image.js.php, method <a href="Alpha/image.html#methodrender_javascript">image::render_javascript()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;renders the Javascript to control the behaviour of the button</dd>
 							<dt><b>REQUIRED_INTEGER</b></dt>
 				<dd>in file validation_rules.inc, constant <a href="Alpha/_config-dist---validation_rules.inc.html#defineREQUIRED_INTEGER">REQUIRED_INTEGER</a></dd>
 							<dt><b>REQUIRED_STRING</b></dt>
@@ -1981,7 +1979,7 @@
 							<dt><b>rights_object</b></dt>
 				<dd>in file rights_object.inc, class <a href="alpha--model/rights_object.html">rights_object</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The main person/user class for the site</dd>
 							<dt><b>rollback</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodrollback">DAO::rollback()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Aborts the current transaction</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodrollback">DAO::rollback()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Aborts the current database transaction.</dd>
 							<dt><b>RSS</b></dt>
 				<dd>in file RSS.inc, class <a href="alpha--util--feeds/RSS.html">RSS</a><br>&nbsp;&nbsp;&nbsp;&nbsp;RSS 1.0 class for synication</dd>
 							<dt><b>RSS2</b></dt>
@@ -2066,7 +2064,7 @@
 							<dt><b>String.inc</b></dt>
 				<dd>procedural page <a href="Alpha/_model---types---String.inc.html">String.inc</a></dd>
 							<dt><b>save</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodsave">DAO::save()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Saves the object.  If $this-&gt;OID is empty or null it will INSERT, otherwise UPDATE</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodsave">DAO::save()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Saves the object.  If $this-&gt;OID is empty or null it will INSERT, otherwise UPDATE.</dd>
 							<dt><b>saveAttribute</b></dt>
 				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodsaveAttribute">DAO::saveAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Saves the field specified with the value supplied.  Only works for persistent BOs.  Note that no Alpha type  validation is performed with this method!</dd>
 							<dt><b>Search</b></dt>
@@ -2104,7 +2102,7 @@
 							<dt><b>setEncrypt</b></dt>
 				<dd>in file FrontController.inc, method <a href="alpha--controller--front/FrontController.html#methodsetEncrypt">FrontController::setEncrypt()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Sets the encryption flag</dd>
 							<dt><b>setEnumOptions</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodsetEnumOptions">DAO::setEnumOptions()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Populate all of the enum options for this object from the database</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodsetEnumOptions">DAO::setEnumOptions()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Populate all of the enum options for this object from the database.</dd>
 							<dt><b>setFieldMappings</b></dt>
 				<dd>in file AlphaFeed.inc, method <a href="alpha--util--feeds/AlphaFeed.html#methodsetFieldMappings">AlphaFeed::setFieldMappings()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for mapping BO fieldnames to feed field names</dd>
 							<dt><b>setFile</b></dt>
@@ -2825,7 +2823,7 @@
 							<dt><b>Validator.inc</b></dt>
 				<dd>procedural page <a href="alpha--util--helpers/_util---helpers---Validator.inc.html">Validator.inc</a></dd>
 							<dt><b>validate</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodvalidate">DAO::validate()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Validates the object to be saved</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodvalidate">DAO::validate()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Validates the object to be saved.</dd>
 							<dt><b>ValidationException</b></dt>
 				<dd>in file ValidationException.inc, class <a href="Alpha/ValidationException.html">ValidationException</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The exception class for BO (Business Object) validation errors</dd>
 							<dt><b>Validator</b></dt>
@@ -3141,7 +3139,7 @@
 	</div>
         <div class="credit">
 		    <hr class="separator" />
-		    Documentation generated on Sat, 09 Oct 2010 19:07:37 +0100 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+		    Documentation generated on Mon, 11 Oct 2010 21:07:28 +0100 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
 	      </div>
       </td></tr></table>
     </td>
