@@ -31,7 +31,7 @@ class FPDFFacade {
 	/**
 	 * The business object that stores the content will be rendered to Markdown
 	 * 
-	 * @var DAO
+	 * @var AlphaDAO
 	 */
 	private $BO = null;
 	

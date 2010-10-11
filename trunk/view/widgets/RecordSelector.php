@@ -8,7 +8,7 @@ if(!isset($config)) {
 
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
-require_once $config->get('sysRoot').'alpha/model/DAO.inc';
+require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Relation.inc';
 
@@ -272,7 +272,7 @@ class RecordSelector {
 			$classNameRight = $this->relationObject->getRelatedClass('right');
 			
 			if($this->accessingClassName == $classNameLeft) {
-				DAO::loadClassDef($classNameRight);
+				AlphaDAO::loadClassDef($classNameRight);
 				$tmpObject = new $classNameRight;
 				$fieldName = $this->relationObject->getRelatedClassDisplayField('right');		
 				$fieldLabel = $tmpObject->getDataLabel($fieldName);
@@ -280,7 +280,7 @@ class RecordSelector {
 				
 				$objects = $tmpObject->loadAll(0, 0, 'OID', 'DESC');
 			}else{
-				DAO::loadClassDef($classNameLeft);
+				AlphaDAO::loadClassDef($classNameLeft);
 				$tmpObject = new $classNameLeft;
 				$fieldName = $this->relationObject->getRelatedClassDisplayField('left');
 				$fieldLabel = $tmpObject->getDataLabel($fieldName);
@@ -329,7 +329,7 @@ class RecordSelector {
 		}else{			
 			$className = $this->relationObject->getRelatedClass();
 			
-			DAO::loadClassDef($className);
+			AlphaDAO::loadClassDef($className);
 			
 			$tmpObject = new $className;		
 			$label = $tmpObject->getDataLabel($this->relationObject->getRelatedClassDisplayField());

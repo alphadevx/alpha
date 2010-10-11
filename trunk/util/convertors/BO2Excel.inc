@@ -14,7 +14,7 @@ class BO2Excel {
 	/**
 	 * The Business Object we will convert to an Excel sheet
 	 *
-	 * @var DAO
+	 * @var AlphaDAO
 	 */
 	private $BO;
 	
