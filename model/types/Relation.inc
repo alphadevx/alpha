@@ -153,9 +153,9 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * @param string $side Only required for MANY-TO-MANY relations
 	 */
 	public function setRelatedClass($RC, $side='') {		
-		if(in_array($RC, DAO::getBOClassNames())) {
+		if(in_array($RC, AlphaDAO::getBOClassNames())) {
 			// load the class definition if it has not been loaded already
-			DAO::loadClassDef($RC);
+			AlphaDAO::loadClassDef($RC);
 			switch($side) {
 				case '':
 					$this->relatedClass = $RC;
@@ -404,7 +404,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 			
 			// load objects on the right from accessing on the left			
 			if($accessingClassName == $this->relatedClassLeft) {
-				DAO::loadClassDef($this->relatedClassRight);
+				AlphaDAO::loadClassDef($this->relatedClassRight);
 				$obj = new $this->relatedClassRight;
 				
 				$lookupObjects = $this->lookup->loadAllByAttribute('leftID', $this->value);
@@ -420,7 +420,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 			}
 			// load objects on the left from accessing on the right
 			if($accessingClassName == $this->relatedClassRight) {
-				DAO::loadClassDef($this->relatedClassLeft);
+				AlphaDAO::loadClassDef($this->relatedClassLeft);
 				$obj = new $this->relatedClassLeft;
 				
 				$lookupObjects = $this->lookup->loadAllByAttribute('rightID', $this->value);
@@ -435,7 +435,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 				return implode(',', $values);
 			}
 		}else{
-			DAO::loadClassDef($this->relatedClass);
+			AlphaDAO::loadClassDef($this->relatedClass);
 			$obj = new $this->relatedClass;
 			// making sure we have an object to load
 			if(empty($this->value) || $this->value == '00000000000') {
@@ -458,7 +458,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 		
 		if($this->relationType == 'ONE-TO-MANY') {
 			try {
-				DAO::loadClassDef($this->relatedClass);
+				AlphaDAO::loadClassDef($this->relatedClass);
 			}catch(IllegalArguementException $e) {		
 				throw new AlphaException('Could not load the definition for the BO class ['.$this->relatedClass.']');
 			}
@@ -486,7 +486,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 			
 			// load objects on the right from accessing on the left			
 			if($accessingClassName == $this->relatedClassLeft) {
-				DAO::loadClassDef($this->relatedClassRight);
+				AlphaDAO::loadClassDef($this->relatedClassRight);
 				
 				$lookupObjects = $this->lookup->loadAllByAttribute('leftID', $this->value);
 				
@@ -498,7 +498,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 			}
 			// load objects on the left from accessing on the right
 			if($accessingClassName == $this->relatedClassRight) {
-				DAO::loadClassDef($this->relatedClassLeft);
+				AlphaDAO::loadClassDef($this->relatedClassLeft);
 				
 				$lookupObjects = $this->lookup->loadAllByAttribute('rightID', $this->value);
 
@@ -522,7 +522,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 		global $config;
 		
 		try {
-			DAO::loadClassDef($this->relatedClass);
+			AlphaDAO::loadClassDef($this->relatedClass);
 		}catch(IllegalArguementException $e) {		
 			throw new AlphaException('Could not load the definition for the BO class ['.$this->relatedClass.']');
 		}

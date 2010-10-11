@@ -12,7 +12,7 @@ require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
  * @version $Id$
  * 
  */
-class RelationLookup extends DAO implements AlphaTypeInterface {
+class RelationLookup extends AlphaDAO implements AlphaTypeInterface {
 	/**
 	 * The OID of the left business object in the relation
 	 * 
@@ -99,7 +99,7 @@ class RelationLookup extends DAO implements AlphaTypeInterface {
 		// make sure the lookup table exists
 		if(!$this->checkTableExists()) {			
 			// first make sure that the two BO tables exist before relating them with a lookup table
-			if(DAO::checkBOTableExists($leftClassName) && DAO::checkBOTableExists($rightClassName)) {
+			if(AlphaDAO::checkBOTableExists($leftClassName) && AlphaDAO::checkBOTableExists($rightClassName)) {
 				$this->makeTable();
 			}else{
 				throw new AlphaException('Error trying to create a lookup table ['.$this->getTableName().'], as tables for BOs ['.$leftClassName.'] or ['.$rightClassName.'] don\'t exist!');
