@@ -198,7 +198,7 @@ abstract class AlphaFeed {
 		
 		try {
 		
-			DAO::loadClassDef($BOName);
+			AlphaDAO::loadClassDef($BOName);
 			
 			$BO = new $BOName();
 			return $BO;

@@ -26,7 +26,7 @@ class View {
 	/**
 	 * The business object that will be rendered
 	 * 
-	 * @var DAO
+	 * @var AlphaDAO
 	 */
 	protected $BO;
 	
@@ -40,7 +40,7 @@ class View {
 	/**
 	 * Constructor for the View
 	 * 
-	 * @param DAO $BO
+	 * @param AlphaDAO $BO
 	 */
 	public function __construct($BO) {
 		if(self::$logger == null)
@@ -514,7 +514,7 @@ class View {
 			$html.= '</script>';
 		}
 		
-		if (isset($_SESSION['currentUser']) && DAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+		if (isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
 			$html.= '<script type="text/javascript">';
 			$html.= '	(function($) {';
 			$html.= '		$(document).ready(function(){';
@@ -569,7 +569,7 @@ class View {
 			$html.= '<p>You are not logged in.  <a href="'.FrontController::generateSecureURL('act=Login').'">Login</a></p>';
 		}
 		
-		if ($renderMenu && isset($_SESSION['currentUser']) && DAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+		if ($renderMenu && isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
 			$html .= '<ul id="adminmenu" class="potato-menu">
 						<li><a href="'.$config->get('sysURL').'">Home</a></li>
 						<li><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Admin Home</a></li>
