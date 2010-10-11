@@ -31,7 +31,7 @@ require_once $config->get('sysRoot').'alpha/tests/String_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Text_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Relation_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Tag_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/DAO_Test.php';
+require_once $config->get('sysRoot').'alpha/tests/AlphaDAO_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Validator_Test.php';
 
 /*
@@ -270,10 +270,10 @@ class ViewTestResults extends Controller implements AlphaControllerInterface {
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
 		//------------------------------------------------
-		echo '<h3>MySQL DAO:</h3>';
+		echo '<h3>MySQL AlphaDAO:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
-		$suite->addTestSuite('DAO_Test');
+		$suite->addTestSuite('AlphaDAO_Test');
 		$result = $suite->run();
 		$runningTime+=$result->time();
 		$testCount+=$result->count();

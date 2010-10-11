@@ -105,11 +105,11 @@ class Search extends Controller implements AlphaControllerInterface {
 			if(isset($params['bo']))
 				$BOs = array($params['bo']);
 			else			
-				$BOs = DAO::getBOClassNames();
+				$BOs = AlphaDAO::getBOClassNames();
 			
 			try {
 				foreach($BOs as $BO) {
-					DAO::loadClassDef($BO);
+					AlphaDAO::loadClassDef($BO);
 					$temp = new $BO;
 					
 					if($temp->isTagged()) {					

@@ -83,7 +83,7 @@ class Edit extends Controller implements AlphaControllerInterface {
 			// load the business object (BO) definition
 			if (isset($params['bo']) && isset($params['oid'])) {
 				$BOName = $params['bo'];
-				DAO::loadClassDef($BOName);
+				AlphaDAO::loadClassDef($BOName);
 				
 				/*
 				 *  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
@@ -138,7 +138,7 @@ class Edit extends Controller implements AlphaControllerInterface {
 			// load the business object (BO) definition
 			if (isset($params['bo']) && isset($params['oid'])) {
 				$BOName = $params['bo'];
-				DAO::loadClassDef($BOName);
+				AlphaDAO::loadClassDef($BOName);
 				
 				$this->BO = new $BOName();
 				$this->BO->load($params['oid']);

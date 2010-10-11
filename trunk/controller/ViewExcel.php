@@ -61,7 +61,7 @@ class ViewExcel extends Controller implements AlphaControllerInterface {
 		}
 		
 		try {
-			DAO::loadClassDef($BOname);
+			AlphaDAO::loadClassDef($BOname);
 			$BO = new $BOname();
 			
 			// the name of the file download

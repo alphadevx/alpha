@@ -130,7 +130,7 @@ class ListAll extends Controller implements AlphaControllerInterface {
 			if (isset($params['sort']))
 				$this->sort = $params['sort'];
 				
-			DAO::loadClassDef($BOname);
+			AlphaDAO::loadClassDef($BOname);
 			
 			/*
 			 *  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
@@ -183,7 +183,7 @@ class ListAll extends Controller implements AlphaControllerInterface {
 			if (isset($params['sort']))
 				$this->sort = $params['sort'];
 			
-			DAO::loadClassDef($BOname);
+			AlphaDAO::loadClassDef($BOname);
 				
 			$this->BO = new $BOname();		
 			$this->BOname = $BOname;		
@@ -199,9 +199,9 @@ class ListAll extends Controller implements AlphaControllerInterface {
 				$temp->load($params['delete_oid']);
 		
 				try {
-					DAO::begin();
+					AlphaDAO::begin();
 					$temp->delete();
-					DAO::commit();
+					AlphaDAO::commit();
 
 					echo View::displayUpdateMessage($BOname.' '.$params['delete_oid'].' deleted successfully.');
 							
@@ -209,7 +209,7 @@ class ListAll extends Controller implements AlphaControllerInterface {
 				}catch(AlphaException $e) {
 					self::$logger->error($e->getMessage());
 					echo View::displayErrorMessage('Error deleting the BO of OID ['.$params['delete_oid'].'], check the log!');
-					DAO::rollback();
+					AlphaDAO::rollback();
 				}
 			}
 		}catch(SecurityException $e) {

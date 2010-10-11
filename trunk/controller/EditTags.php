@@ -82,7 +82,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 		}
 		
 		try {
-			DAO::loadClassDef($BOName);
+			AlphaDAO::loadClassDef($BOName);
 			$this->BO = new $BOName;
 			$this->BO->load($BOoid);
 			
@@ -170,13 +170,13 @@ class EditTags extends Edit implements AlphaControllerInterface {
 			
 			if (isset($params['saveBut'])) {
 				try {
-					DAO::loadClassDef($BOName);
+					AlphaDAO::loadClassDef($BOName);
 					$this->BO = new $BOName;
 					$this->BO->load($BOoid);
 			
 					$tags = $this->BO->getPropObject('tags')->getRelatedObjects();
 			
-					DAO::begin();
+					AlphaDAO::begin();
 					
 					foreach ($tags as $tag) {
 						$tag->set('content', tag_object::cleanTagContent($params['content_'.$tag->getID()]));
@@ -192,7 +192,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 						$newTag->save();
 					}
 							
-					DAO::commit();					
+					AlphaDAO::commit();					
 					
 					$this->setStatusMessage('<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
 						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
@@ -205,7 +205,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 					 * The unique key has most-likely been violated because this BO is already tagged with this
 					 * value.
 					 */
-					DAO::rollback();
+					AlphaDAO::rollback();
 					
 					$this->setStatusMessage('<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
 						<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
@@ -215,7 +215,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 					$this->doGET($params);
 				}catch (FailedSaveException $e) {
 					self::$logger->error('Unable to save the tags of id ['.$params['oid'].'], error was ['.$e->getMessage().']');
-					DAO::rollback();
+					AlphaDAO::rollback();
 					
 					$this->setStatusMessage('<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
 						<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
@@ -228,7 +228,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 			
 			if (!empty($params['delete_oid'])) {					
 				try {
-					DAO::loadClassDef($BOName);
+					AlphaDAO::loadClassDef($BOName);
 					$this->BO = new $BOName;
 					$this->BO->load($BOoid);
 					
@@ -236,11 +236,11 @@ class EditTags extends Edit implements AlphaControllerInterface {
 					$tag->load($params['delete_oid']);
 					$content = $tag->get('content');
 					
-					DAO::begin();
+					AlphaDAO::begin();
 					
 					$tag->delete();
 								
-					DAO::commit();
+					AlphaDAO::commit();
 					
 					$this->setStatusMessage('<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
 						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
@@ -250,7 +250,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 					$this->doGET($params);									
 				}catch(AlphaException $e) {
 					self::$logger->error('Unable to delete the tag of id ['.$params['delete_oid'].'], error was ['.$e->getMessage().']');
-					DAO::rollback();
+					AlphaDAO::rollback();
 					
 					$this->setStatusMessage('<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
 						<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 

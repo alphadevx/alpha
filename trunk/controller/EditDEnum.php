@@ -121,7 +121,7 @@ class EditDEnum extends Edit implements AlphaControllerInterface {
 					// update the object from post data
 					$this->BO->populateFromPost();
 					
-					DAO::begin();
+					AlphaDAO::begin();
 					
 					$this->BO->save();
 					
@@ -142,7 +142,7 @@ class EditDEnum extends Edit implements AlphaControllerInterface {
 						$newItem->save();
 					}			
 							
-					DAO::commit();					
+					AlphaDAO::commit();					
 					
 					$this->setStatusMessage('<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
 						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
@@ -152,7 +152,7 @@ class EditDEnum extends Edit implements AlphaControllerInterface {
 					$this->doGET($params);
 				}catch (FailedSaveException $e) {
 					self::$logger->error('Unable to save the DEnum of id ['.$params['oid'].'], error was ['.$e->getMessage().']');
-					DAO::rollback();
+					AlphaDAO::rollback();
 				}
 			}
 		}catch(SecurityException $e) {
