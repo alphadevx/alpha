@@ -78,7 +78,7 @@ class Install extends Controller implements AlphaControllerInterface {
 		}catch (Exception $e) {
 			echo '<p class="error"><br>'.$e->getMessage().'</p>';			
 			echo '<p>Aborting.</p>';
-			DAO::rollback();
+			AlphaDAO::rollback();
 			exit;
 		}
 		
@@ -97,7 +97,7 @@ class Install extends Controller implements AlphaControllerInterface {
 		}catch (Exception $e) {
 			echo '<p class="error"><br>'.$e->getMessage().'</p>';			
 			echo '<p>Aborting.</p>';
-			DAO::rollback();
+			AlphaDAO::rollback();
 			exit;
 		}
 		
@@ -116,7 +116,7 @@ class Install extends Controller implements AlphaControllerInterface {
 		}catch (Exception $e) {
 			echo '<p class="error"><br>'.$e->getMessage().'</p>';			
 			echo '<p>Aborting.</p>';
-			DAO::rollback();
+			AlphaDAO::rollback();
 			exit;
 		}
 		
@@ -162,12 +162,12 @@ class Install extends Controller implements AlphaControllerInterface {
 		}catch (Exception $e) {
 			echo '<p class="error"><br>'.$e->getMessage().'</p>';			
 			echo '<p>Aborting.</p>';
-			DAO::rollback();
+			AlphaDAO::rollback();
 			exit;
 		}
 		
 		// start a new database transaction
-		DAO::begin();
+		AlphaDAO::begin();
 		
 		/*
 		 * Create DEnum tables
@@ -194,18 +194,18 @@ class Install extends Controller implements AlphaControllerInterface {
 			echo '<p class="error"><br>'.$e->getMessage().'</p>';											
 			self::$logger->error($e->getMessage());
 			echo '<p>Aborting.</p>';
-			DAO::rollback();
+			AlphaDAO::rollback();
 			exit;
 		}
 		
 		/*
 		 * Loop over each business object in the system, and create a table for it
 		 */
-		$classNames = DAO::getBOClassNames();
+		$classNames = AlphaDAO::getBOClassNames();
 		$loadedClasses = array();
 		
 		foreach($classNames as $classname) {
-			DAO::loadClassDef($classname);
+			AlphaDAO::loadClassDef($classname);
 			array_push($loadedClasses, $classname);
 		}
 		
@@ -229,7 +229,7 @@ class Install extends Controller implements AlphaControllerInterface {
 				echo '<p class="error"><br><pre>'.$e->getTraceAsString().'</pre></p>';											
 				self::$logger->error($e->getTraceAsString());
 				echo '<p>Aborting.</p>';
-				DAO::rollback();
+				AlphaDAO::rollback();
 				exit;				
 			}
 		}
@@ -251,7 +251,7 @@ class Install extends Controller implements AlphaControllerInterface {
 			echo '<p class="error"><br>'.$e->getMessage().'</p>';											
 			self::$logger->error($e->getMessage());
 			echo '<p>Aborting.</p>';
-			DAO::rollback();
+			AlphaDAO::rollback();
 			exit;				
 		}
 		
@@ -278,7 +278,7 @@ class Install extends Controller implements AlphaControllerInterface {
 			echo '<p class="error"><br>'.$e->getMessage().'</p>';											
 			self::$logger->error($e->getMessage());
 			echo '<p>Aborting.</p>';
-			DAO::rollback();
+			AlphaDAO::rollback();
 			exit;				
 		}		
 		
@@ -286,7 +286,7 @@ class Install extends Controller implements AlphaControllerInterface {
 		echo View::displayPageFoot($this);
 		
 		// commit
-		DAO::commit();
+		AlphaDAO::commit();
 		
 		self::$logger->info('Finished installation!');
 	}
@@ -313,7 +313,7 @@ class Install extends Controller implements AlphaControllerInterface {
 		
 		global $config;
 
-		if(DAO::isInstalled()) {
+		if(AlphaDAO::isInstalled()) {
 			self::$logger->debug('<<checkRights [false]');
 			return false;
 		}

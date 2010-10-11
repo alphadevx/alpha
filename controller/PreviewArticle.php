@@ -73,7 +73,7 @@ class PreviewArticle extends Controller implements AlphaControllerInterface {
 		
 		if(isset($params['data'])) {
 			if(isset($params['bo'])) {
-				DAO::loadClassDef($params['bo']);
+				AlphaDAO::loadClassDef($params['bo']);
 				$temp = new $params['bo'];
 			}else{
 				$temp = new article_object();

@@ -83,7 +83,7 @@ class ListBusinessObjects extends Controller implements AlphaControllerInterface
 			if(isset($params['createTableBut'])) {
 				try {					
 					$classname = $params['createTableClass'];
-					DAO::loadClassDef($classname);
+					AlphaDAO::loadClassDef($classname);
 			    		
 			    	$BO = new $classname();	
 					$BO->makeTable();
@@ -98,7 +98,7 @@ class ListBusinessObjects extends Controller implements AlphaControllerInterface
 			if(isset($params['recreateTableClass']) && $params['admin_'.$params['recreateTableClass'].'_button_pressed'] == 'recreateTableBut') {
 				try {					
 					$classname = $params['recreateTableClass'];
-					DAO::loadClassDef($classname);		    		
+					AlphaDAO::loadClassDef($classname);		    		
 			    	$BO = new $classname();	
 					$BO->rebuildTable();
 					
@@ -112,7 +112,7 @@ class ListBusinessObjects extends Controller implements AlphaControllerInterface
 			if(isset($params['updateTableClass']) && $params['admin_'.$params['updateTableClass'].'_button_pressed'] == 'updateTableBut') {
 				try {
 					$classname = $params['updateTableClass'];
-					DAO::loadClassDef($classname);
+					AlphaDAO::loadClassDef($classname);
 			    		
 			    	$BO = new $classname();
 			    	$missing_fields = $BO->findMissingFields();
@@ -140,11 +140,11 @@ class ListBusinessObjects extends Controller implements AlphaControllerInterface
 	 * Private method to display the main body HTML for this page
 	 */
 	private function displayBodyContent() {
-		$classNames = DAO::getBOClassNames();
+		$classNames = AlphaDAO::getBOClassNames();
 		$loadedClasses = array();
 		
 		foreach($classNames as $classname) {
-			DAO::loadClassDef($classname);
+			AlphaDAO::loadClassDef($classname);
 			array_push($loadedClasses, $classname);
 		}
 		

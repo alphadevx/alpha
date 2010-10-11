@@ -85,7 +85,7 @@ class Create extends Controller implements AlphaControllerInterface {
 				throw new IllegalArguementException('No BO available to create!');
 			}
 			
-			DAO::loadClassDef($BOname);
+			AlphaDAO::loadClassDef($BOname);
 		
 			/*
 			 *  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
@@ -137,7 +137,7 @@ class Create extends Controller implements AlphaControllerInterface {
 				throw new IllegalArguementException('No BO available to create!');
 			}
 			
-			DAO::loadClassDef($BOname);
+			AlphaDAO::loadClassDef($BOname);
 				
 			$this->BO = new $BOname();
 		

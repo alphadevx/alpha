@@ -121,7 +121,7 @@ class Login extends Controller implements AlphaControllerInterface {
 		
 			if (isset($params['loginBut'])) {
 				// if the database has not been set up yet, accept a login from the config admin username/password
-				if(!DAO::isInstalled()) {
+				if(!AlphaDAO::isInstalled()) {
 					if ($params['email'] == $config->get('sysInstallUsername') && crypt($params['password'], $config->get('sysInstallPassword')) == crypt($config->get('sysInstallPassword'), $config->get('sysInstallPassword'))) {
 						$admin = new person_object();
 						$admin->set('displayName', 'Admin');

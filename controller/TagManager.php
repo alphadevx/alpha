@@ -60,10 +60,10 @@ class TagManager extends Controller implements AlphaControllerInterface {
 		
 		echo '<h2>Listing business objects which are tagged</h2>';
 		
-		$BOs = DAO::getBOClassNames();
+		$BOs = AlphaDAO::getBOClassNames();
 		
 		foreach ($BOs as $BO) {
-			DAO::loadClassDef($BO);
+			AlphaDAO::loadClassDef($BO);
 			$temp = new $BO;
 			if($temp->isTagged()) {
 				$tag = new tag_object();
@@ -104,13 +104,13 @@ class TagManager extends Controller implements AlphaControllerInterface {
 					self::$logger->info('About to start rebuilding the tags for the class ['.$params['clearTaggedClass'].']');
 					$startTime = microtime(true);
 					
-					DAO::loadClassDef($params['clearTaggedClass']);
+					AlphaDAO::loadClassDef($params['clearTaggedClass']);
 					$temp = new $params['clearTaggedClass'];
 					$BOs = $temp->loadAll();
 					
 					self::$logger->info('Loaded all of the BOs (elapsed time ['.round(microtime(true)-$startTime, 5).'] seconds)');
 					
-					DAO::begin();
+					AlphaDAO::begin();
 					
 					$tag = new tag_object();
 					$tag->deleteAllByAttribute('taggedClass', $params['clearTaggedClass']);
@@ -135,13 +135,13 @@ class TagManager extends Controller implements AlphaControllerInterface {
 
 					self::$logger->info('Saved all of the new tags (elapsed time ['.round(microtime(true)-$startTime, 5).'] seconds)');
 					
-					DAO::commit();
+					AlphaDAO::commit();
 					$this->setStatusMessage(View::displayUpdateMessage('Tags recreated on the '.$temp->getFriendlyClassName().' class.'));
 					
 					self::$logger->info('Tags recreated on the ['.$params['clearTaggedClass'].'] class (time taken ['.round(microtime(true)-$startTime, 5).'] seconds).');
 				}catch (AlphaException $e) {
 					self::$logger->error($e->getMessage());
-					DAO::rollback();
+					AlphaDAO::rollback();
 				}				
 			}
 			

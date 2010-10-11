@@ -89,7 +89,7 @@ class Detail extends Controller implements AlphaControllerInterface {
 					throw new IllegalArguementException('Invalid oid ['.$params['oid'].'] provided on the request!');
 				
 				$BOName = $params['bo'];
-				DAO::loadClassDef($BOName);
+				AlphaDAO::loadClassDef($BOName);
 				
 				/*
 			 	*  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
@@ -142,7 +142,7 @@ class Detail extends Controller implements AlphaControllerInterface {
 			// load the business object (BO) definition
 			if (isset($params['bo'])) {
 				$BOName = $params['bo'];
-				DAO::loadClassDef($BOName);
+				AlphaDAO::loadClassDef($BOName);
 				
 				$this->BO = new $BOName();
 				$this->BOname = $BOName;		
@@ -156,9 +156,9 @@ class Detail extends Controller implements AlphaControllerInterface {
 					$temp->load($params['delete_oid']);
 					
 					try {
-						DAO::begin();
+						AlphaDAO::begin();
 						$temp->delete();
-						DAO::commit();
+						AlphaDAO::commit();
 
 						echo View::displayUpdateMessage($BOName.' '.$params['delete_oid'].' deleted successfully.');
 										
@@ -171,7 +171,7 @@ class Detail extends Controller implements AlphaControllerInterface {
 					}catch(AlphaException $e) {
 						self::$logger->error($e->getMessage());
 						echo View::displayErrorMessage('Error deleting the BO of OID ['.$params['delete_oid'].'], check the log!');
-						DAO::rollback();
+						AlphaDAO::rollback();
 					}
 				}
 			}else{
