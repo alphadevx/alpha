@@ -26,7 +26,7 @@
   <tr><td colspan="2" class="header-line"><img src="media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
 </table>
 
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="table-layout:fixed;">
   <tr valign="top">
     <td width="195" class="menu">
 		<div class="package-title">alpha--model</div>
@@ -37,9 +37,9 @@
 	</div>
       <b>Packages:</b><br />
   <div class="package">
-              <a href="li_default.html">default</a><br />
               <a href="li_Alpha.html">Alpha</a><br />
               <a href="li_alpha--controller.html">alpha--controller</a><br />
+              <a href="li_default.html">default</a><br />
               <a href="li_alpha--controller--front.html">alpha--controller--front</a><br />
               <a href="li_alpha--exceptions.html">alpha--exceptions</a><br />
               <a href="li_alpha--model.html">alpha--model</a><br />
@@ -85,16 +85,16 @@
 	    		<a href="alpha--model/tag_object.html">tag_object</a>    	 <br />
 	  </div>
                 </td>
-    <td>
+    <td width="800">
       <table cellpadding="10" cellspacing="0" width="100%" border="0"><tr><td valign="top">
 
 <a name="top"></a>
 <h1>Element index for package alpha--model</h1>
 	<h3>Package indexes</h3>
 	<ul>
-				<li><a href="elementindex_default.html">default</a></li>
-					<li><a href="elementindex_Alpha.html">Alpha</a></li>
+				<li><a href="elementindex_Alpha.html">Alpha</a></li>
 					<li><a href="elementindex_alpha--controller.html">alpha--controller</a></li>
+					<li><a href="elementindex_default.html">default</a></li>
 					<li><a href="elementindex_alpha--controller--front.html">alpha--controller--front</a></li>
 					<li><a href="elementindex_alpha--exceptions.html">alpha--exceptions</a></li>
 							<li><a href="elementindex_alpha--model--types.html">alpha--model--types</a></li>
@@ -178,7 +178,7 @@
 							<dt><b>$author</b></dt>
 				<dd>in file article_object.inc, variable <a href="alpha--model/article_object.html#var$author">article_object::$author</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The author of the article</dd>
 							<dt><b>addProperty</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodaddProperty">DAO::addProperty()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Adds in a new class property without loosing existing data</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodaddProperty">DAO::addProperty()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Adds in a new class property without loosing existing data (does an ALTER TABLE query on the  database).</dd>
 							<dt><b>after_checkIndexes_callback</b></dt>
 				<dd>in file tag_object.inc, method <a href="alpha--model/tag_object.html#methodafter_checkIndexes_callback">tag_object::after_checkIndexes_callback()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Use this callback to create the tclass_toid__tcontent unique table index</dd>
 							<dt><b>after_loadByAttribute_callback</b></dt>
@@ -227,7 +227,9 @@
 							<dt><b>before_populateFromPost_callback</b></dt>
 				<dd>in file person_object.inc, method <a href="alpha--model/person_object.html#methodbefore_populateFromPost_callback">person_object::before_populateFromPost_callback()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Encrypts any fields called 'password' posted for the person_object</dd>
 							<dt><b>begin</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodbegin">DAO::begin()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Starts a new database transaction</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodbegin">DAO::begin()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Starts a new database transaction.</dd>
+							<dt><b>bindParams</b></dt>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodbindParams">DAO::bindParams()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Dynamically binds the attributes for the current BO to the supplied prepared statement parameters.</dd>
 							<dt><b>bindResult</b></dt>
 				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodbindResult">DAO::bindResult()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Dynamically binds the result of the supplied prepared statement to a 2d array, where each element in the array is another array  representing a database row.</dd>
 							<dt><b>blacklisted_client_object</b></dt>
@@ -266,27 +268,27 @@
 							<dt><b>cast</b></dt>
 				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcast">DAO::cast()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Cast a BO to another type of BO.  A new BO will be returned with the same OID and  version_num as the old BO, so this is NOT a true cast but is a copy.  All attribute  values will be copied accross.</dd>
 							<dt><b>checkBOTableExists</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckBOTableExists">DAO::checkBOTableExists()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Static method to check the database and see if the table for the indicated BO class name  exists (assumes table name will be $BOClassName - &quot;_object&quot;).</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckBOTableExists">DAO::checkBOTableExists()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Static method to check the database and see if the table for the indicated BO class name  exists (assumes table name will be $BOClassName less &quot;_object&quot;).</dd>
 							<dt><b>checkIndexes</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckIndexes">DAO::checkIndexes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Checks to see if all of the indexes are in place for the BO's table, creates those that are missing</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckIndexes">DAO::checkIndexes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Checks to see if all of the indexes are in place for the BO's table, creates those that are missing.</dd>
 							<dt><b>checkRecordExists</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckRecordExists">DAO::checkRecordExists()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Checks that a record exists for the BO in the database</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckRecordExists">DAO::checkRecordExists()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Checks that a record exists for the BO in the database.</dd>
 							<dt><b>checkTableExists</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckTableExists">DAO::checkTableExists()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Checks to see if the table exists in the database for the current business class</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckTableExists">DAO::checkTableExists()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Checks to see if the table exists in the database for the current business class.</dd>
 							<dt><b>checkTableNeedsUpdate</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckTableNeedsUpdate">DAO::checkTableNeedsUpdate()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Checks to see if the table in the database matches (for fields) the business class definition</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcheckTableNeedsUpdate">DAO::checkTableNeedsUpdate()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Checks to see if the table in the database matches (for fields) the business class definition, i.e. if the  database table is in sync with the class definition.</dd>
 							<dt><b>checkUserVoted</b></dt>
 				<dd>in file article_object.inc, method <a href="alpha--model/article_object.html#methodcheckUserVoted">article_object::checkUserVoted()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method to determine if the logged-in user has already voted for this article</dd>
 							<dt><b>cleanTagContent</b></dt>
 				<dd>in file tag_object.inc, method <a href="alpha--model/tag_object.html#methodcleanTagContent">tag_object::cleanTagContent()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Cleans tag content by remocing white spaces and converting to lowercase.</dd>
 							<dt><b>commit</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcommit">DAO::commit()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Commits the current transaction</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcommit">DAO::commit()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Commits the current database transaction.</dd>
 							<dt><b>createAttachmentsFolder</b></dt>
 				<dd>in file article_object.inc, method <a href="alpha--model/article_object.html#methodcreateAttachmentsFolder">article_object::createAttachmentsFolder()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;creates the attachment folder for the article on the server</dd>
 							<dt><b>createForeignIndex</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcreateForeignIndex">DAO::createForeignIndex()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Creates a foreign key constraint (index) in the database on the given attribute</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcreateForeignIndex">DAO::createForeignIndex()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Creates a foreign key constraint (index) in the database on the given attribute.</dd>
 							<dt><b>createUniqueIndex</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcreateUniqueIndex">DAO::createUniqueIndex()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Creates a unique index in the database on the given attribute(s)</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodcreateUniqueIndex">DAO::createUniqueIndex()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Creates a unique index in the database on the given attribute(s).</dd>
 					</dl>
 	</div>
 	<a name="d"></a>
@@ -325,9 +327,9 @@
 							<dt><b>DAO</b></dt>
 				<dd>in file DAO.inc, class <a href="alpha--model/DAO.html">DAO</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Base business object class definition</dd>
 							<dt><b>delete</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methoddelete">DAO::delete()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Delete the current object from the database</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methoddelete">DAO::delete()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Deletes the current object from the database.</dd>
 							<dt><b>deleteAllByAttribute</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methoddeleteAllByAttribute">DAO::deleteAllByAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Delete all object instances from the database by the specified attribute matching the value provided</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methoddeleteAllByAttribute">DAO::deleteAllByAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Delete all object instances from the database by the specified attribute matching the value provided.</dd>
 							<dt><b>DAO.inc</b></dt>
 				<dd>procedural page <a href="alpha--model/_model---DAO.inc.html">DAO.inc</a></dd>
 					</dl>
@@ -355,9 +357,9 @@
 		<h2>f</h2>
 		<dl>
 							<dt><b>findMissingFields</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodfindMissingFields">DAO::findMissingFields()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Returns an array containing any properties on the class which have not been created on the database  table yet</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodfindMissingFields">DAO::findMissingFields()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Returns an array containing any properties on the class which have not been created on the database  table yet.</dd>
 							<dt><b>findOffendingValue</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodfindOffendingValue">DAO::findOffendingValue()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Parses a MySQL error for the value that violated a unique constraint</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodfindOffendingValue">DAO::findOffendingValue()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Parses a MySQL error for the value that violated a unique constraint.</dd>
 					</dl>
 	</div>
 	<a name="g"></a>
@@ -388,7 +390,7 @@
 							<dt><b>getBadRequestCount</b></dt>
 				<dd>in file badrequest_object.inc, method <a href="alpha--model/badrequest_object.html#methodgetBadRequestCount">badrequest_object::getBadRequestCount()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the count of bad requests for the client with this IP and client string in the past  configurable period (sysTempBlacklistFilerPeriod)</dd>
 							<dt><b>getBOClassNames</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetBOClassNames">DAO::getBOClassNames()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loops over the core and custom BO directories and builds an array of all of the BO class names in the system</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetBOClassNames">DAO::getBOClassNames()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loops over the core and custom BO directories and builds an array of all of the BO class names in the system.</dd>
 							<dt><b>getCommentCount</b></dt>
 				<dd>in file person_object.inc, method <a href="alpha--model/person_object.html#methodgetCommentCount">person_object::getCommentCount()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting a count of the amount of article comments posted by the user</dd>
 							<dt><b>getConnection</b></dt>
@@ -396,51 +398,51 @@
 							<dt><b>getContentFileDate</b></dt>
 				<dd>in file article_object.inc, method <a href="alpha--model/article_object.html#methodgetContentFileDate">article_object::getContentFileDate()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Returns the timestamp of when the content .text file for this article was last  modified.</dd>
 							<dt><b>getCount</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetCount">DAO::getCount()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the count from the database for the amount of objects of this class</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetCount">DAO::getCount()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the count from the database for the amount of objects of this class.</dd>
 							<dt><b>getCreateTS</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetCreateTS">DAO::getCreateTS()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting the date/time of when the BO was created</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetCreateTS">DAO::getCreateTS()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting the date/time of when the BO was created.</dd>
 							<dt><b>getCreatorId</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetCreatorId">DAO::getCreatorId()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting the OID of the person who created this BO</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetCreatorId">DAO::getCreatorId()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting the OID of the person who created this BO.</dd>
 							<dt><b>getDataLabel</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetDataLabel">DAO::getDataLabel()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the data label for the given attribute name</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetDataLabel">DAO::getDataLabel()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the data label for the given attribute name.</dd>
 							<dt><b>getDataLabels</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetDataLabels">DAO::getDataLabels()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the data labels array</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetDataLabels">DAO::getDataLabels()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the data labels array.</dd>
 							<dt><b>getDefaultAttributes</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetDefaultAttributes">DAO::getDefaultAttributes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the array of default attribute names</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetDefaultAttributes">DAO::getDefaultAttributes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the array of default attribute names.</dd>
 							<dt><b>getDisplayName</b></dt>
 				<dd>in file person_object.inc, method <a href="alpha--model/person_object.html#methodgetDisplayName">person_object::getDisplayName()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Getter for displayName</dd>
 							<dt><b>getFriendlyClassName</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetFriendlyClassName">DAO::getFriendlyClassName()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Converts &quot;business_object&quot; to &quot;Business&quot; and returns</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetFriendlyClassName">DAO::getFriendlyClassName()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Converts &quot;business_object&quot; to &quot;Business&quot; and returns.</dd>
 							<dt><b>getID</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetID">DAO::getID()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the OID for the object in zero-padded format (same as getOID())</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetID">DAO::getID()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the OID for the object in zero-padded format (same as getOID()).  This version is designed  to be overridden in case you want to do something different with the ID of your objects outside  of the standard 11 digit OID sequence used internally in Alpha.</dd>
 							<dt><b>getIndexes</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetIndexes">DAO::getIndexes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets an array of all of the names of the active database indexes for this class</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetIndexes">DAO::getIndexes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets an array of all of the names of the active database indexes for this class.</dd>
 							<dt><b>getLastQuery</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetLastQuery">DAO::getLastQuery()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the last database query run on this object</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetLastQuery">DAO::getLastQuery()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the last database query run on this object.</dd>
 							<dt><b>getMAX</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetMAX">DAO::getMAX()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the maximum OID value from the database for this class</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetMAX">DAO::getMAX()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the maximum OID value from the database for this class type.</dd>
 							<dt><b>getMembers</b></dt>
 				<dd>in file rights_object.inc, method <a href="alpha--model/rights_object.html#methodgetMembers">rights_object::getMembers()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the group members Relation</dd>
 							<dt><b>getOID</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetOID">DAO::getOID()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the OID for the object in zero-padded format (same as getID())</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetOID">DAO::getOID()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the OID for the object in zero-padded format (same as getID()).  This version is final so cannot  be overridden.</dd>
 							<dt><b>getPersistentAttributes</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetPersistentAttributes">DAO::getPersistentAttributes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the array of persistent attribute names</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetPersistentAttributes">DAO::getPersistentAttributes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the array of persistent attribute names, i.e. those that are saved in the database.</dd>
 							<dt><b>getPopularTagsArray</b></dt>
 				<dd>in file tag_object.inc, method <a href="alpha--model/tag_object.html#methodgetPopularTagsArray">tag_object::getPopularTagsArray()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Returns a hash array of the most popular tags based on their occurence in the database,  ordered by alphabet and restricted to the a count matching the $limit supplied.  The  returned has array uses the tag content as a key and the database value as a value.</dd>
 							<dt><b>getPropObject</b></dt>
 				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetPropObject">DAO::getPropObject()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the property object rather than the value for complex attributes.  Returns false if  the property exists but is private.</dd>
 							<dt><b>getTableName</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetTableName">DAO::getTableName()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Getter for the TABLE_NAME, which should be set by a child of this class</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetTableName">DAO::getTableName()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Getter for the TABLE_NAME, which should be set by a child of this class.</dd>
 							<dt><b>getTransientAttributes</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetTransientAttributes">DAO::getTransientAttributes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the array of transient attribute names</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetTransientAttributes">DAO::getTransientAttributes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the array of transient attribute names.</dd>
 							<dt><b>getUpdateTS</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetUpdateTS">DAO::getUpdateTS()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting the date/time of when the BO was last updated</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetUpdateTS">DAO::getUpdateTS()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting the date/time of when the BO was last updated.</dd>
 							<dt><b>getUpdatorId</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetUpdatorId">DAO::getUpdatorId()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting the OID of the person who updated this BO</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetUpdatorId">DAO::getUpdatorId()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting the OID of the person who updated this BO.</dd>
 							<dt><b>getVersion</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetVersion">DAO::getVersion()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the version_num of the object from the database (returns 0 if the BO is not saved yet)</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetVersion">DAO::getVersion()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Gets the version_num of the object from the database (returns 0 if the BO is not saved yet).</dd>
 							<dt><b>getVersionNumber</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetVersionNumber">DAO::getVersionNumber()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting version number of the object</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodgetVersionNumber">DAO::getVersionNumber()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Method for getting version number of the object.</dd>
 					</dl>
 	</div>
 	<a name="h"></a>
@@ -455,7 +457,7 @@
 							<dt><b>$headerContent</b></dt>
 				<dd>in file article_object.inc, variable <a href="alpha--model/article_object.html#var$headerContent">article_object::$headerContent</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Any custom HTML header content (e.g. Javascript) for the article</dd>
 							<dt><b>hasAttribute</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodhasAttribute">DAO::hasAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Check to see if an attribute exists on the BO</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodhasAttribute">DAO::hasAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Check to see if an attribute exists on the BO.</dd>
 					</dl>
 	</div>
 	<a name="i"></a>
@@ -472,7 +474,7 @@
 							<dt><b>inGroup</b></dt>
 				<dd>in file person_object.inc, method <a href="alpha--model/person_object.html#methodinGroup">person_object::inGroup()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Checks to see if the person is in the rights group specified</dd>
 							<dt><b>isInstalled</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodisInstalled">DAO::isInstalled()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Static method that tries to determine if the system database has been installed or not</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodisInstalled">DAO::isInstalled()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Static method that tries to determine if the system database has been installed or not.</dd>
 							<dt><b>isLoadedFromFile</b></dt>
 				<dd>in file article_object.inc, method <a href="alpha--model/article_object.html#methodisLoadedFromFile">article_object::isLoadedFromFile()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the article content was loaded from a .text file, false otherwise.</dd>
 							<dt><b>isTableOverloaded</b></dt>
@@ -480,7 +482,7 @@
 							<dt><b>isTagged</b></dt>
 				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodisTagged">DAO::isTagged()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the BO has a Relation property called tags, false otherwise.</dd>
 							<dt><b>isTransient</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodisTransient">DAO::isTransient()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Inspector to see if the business object is transient (not presently stored in the database)</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodisTransient">DAO::isTransient()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Inspector to see if the business object is transient (not presently stored in the database).</dd>
 					</dl>
 	</div>
 	<a name="l"></a>
@@ -495,21 +497,21 @@
 							<dt><b>$lastQuery</b></dt>
 				<dd>in file DAO.inc, variable <a href="alpha--model/DAO.html#var$lastQuery">DAO::$lastQuery</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The last database query run by this object.  Useful for tracing an error.</dd>
 							<dt><b>load</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodload">DAO::load()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Populates the child object with the properties retrived from the database for the object $OID</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodload">DAO::load()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Populates the child object with the properties retrived from the database for the object $OID.</dd>
 							<dt><b>loadAll</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadAll">DAO::loadAll()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads all of the objects of this class into an array which is returned</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadAll">DAO::loadAll()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads all of the objects of this class into an array which is returned.</dd>
 							<dt><b>loadAllByAttribute</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadAllByAttribute">DAO::loadAllByAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads all of the objects of this class by the specified attribute into an array which is returned</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadAllByAttribute">DAO::loadAllByAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads all of the objects of this class by the specified attribute into an array which is returned.</dd>
 							<dt><b>loadAllByAttributes</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadAllByAttributes">DAO::loadAllByAttributes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads all of the objects of this class by the specified attributes into an array which is returned</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadAllByAttributes">DAO::loadAllByAttributes()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads all of the objects of this class by the specified attributes into an array which is returned.</dd>
 							<dt><b>loadAllByDayUpdated</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadAllByDayUpdated">DAO::loadAllByDayUpdated()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads all of the objects of this class that where updated (updated_ts) on the date indicated</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadAllByDayUpdated">DAO::loadAllByDayUpdated()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads all of the objects of this class that where updated (updated_ts value) on the date indicated.</dd>
 							<dt><b>loadAllFieldValuesByAttribute</b></dt>
 				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadAllFieldValuesByAttribute">DAO::loadAllFieldValuesByAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads all of the specified attribute values of this class by the specified attribute into an  array which is returned.</dd>
 							<dt><b>loadByAttribute</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadByAttribute">DAO::loadByAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Populates the child object from the database table by the given attribute value</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadByAttribute">DAO::loadByAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Populates the child object from the database table by the given attribute value.</dd>
 							<dt><b>loadClassDef</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadClassDef">DAO::loadClassDef()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads the definition for the BO classname provided</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodloadClassDef">DAO::loadClassDef()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads the definition from the file system for the BO class name provided.</dd>
 							<dt><b>loadContentFromFile</b></dt>
 				<dd>in file article_object.inc, method <a href="alpha--model/article_object.html#methodloadContentFromFile">article_object::loadContentFromFile()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Loads the content of the article_object from the specified file path</dd>
 							<dt><b>loadRecentWithLimit</b></dt>
@@ -530,13 +532,13 @@
 							<dt><b>$members</b></dt>
 				<dd>in file rights_object.inc, variable <a href="alpha--model/rights_object.html#var$members">rights_object::$members</a><br>&nbsp;&nbsp;&nbsp;&nbsp;A Relation containing all of the person_objects that have these rights</dd>
 							<dt><b>makeTable</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodmakeTable">DAO::makeTable()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Builds a new database table for the BO class</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodmakeTable">DAO::makeTable()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Builds a new database table for the BO class.</dd>
 							<dt><b>markPersistent</b></dt>
 				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodmarkPersistent">DAO::markPersistent()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Removes the name of the attribute provided from the list of transient (non-saved) attributes for this BO,  ensuring that it will be saved on the next attempt.</dd>
 							<dt><b>markTransient</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodmarkTransient">DAO::markTransient()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Adds the name of the attribute provided to the list of transient (non-saved) attributes for this BO</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodmarkTransient">DAO::markTransient()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Adds the name of the attribute provided to the list of transient (non-saved) attributes for this BO.</dd>
 							<dt><b>markUnique</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodmarkUnique">DAO::markUnique()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Adds the name of the attribute(s) provided to the list of unique (constrained) attributes for this BO</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodmarkUnique">DAO::markUnique()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Adds the name of the attribute(s) provided to the list of unique (constrained) attributes for this BO.</dd>
 					</dl>
 	</div>
 	<a name="n"></a>
@@ -587,7 +589,7 @@
 							<dt><b>person_object</b></dt>
 				<dd>in file person_object.inc, class <a href="alpha--model/person_object.html">person_object</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The main person/user class for the site</dd>
 							<dt><b>populateFromPost</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodpopulateFromPost">DAO::populateFromPost()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Populates the current business object from global POST data</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodpopulateFromPost">DAO::populateFromPost()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Populates the current business object from global POST data.</dd>
 					</dl>
 	</div>
 	<a name="r"></a>
@@ -608,11 +610,11 @@
 							<dt><b>rebuildTable</b></dt>
 				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodrebuildTable">DAO::rebuildTable()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Re-builds the table if the model requirements have changed.  All data is lost!</dd>
 							<dt><b>reload</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodreload">DAO::reload()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Reloads the object from the database, overwritting any attribute values in memory</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodreload">DAO::reload()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Reloads the object from the database, overwritting any attribute values in memory.</dd>
 							<dt><b>rights_object</b></dt>
 				<dd>in file rights_object.inc, class <a href="alpha--model/rights_object.html">rights_object</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The main person/user class for the site</dd>
 							<dt><b>rollback</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodrollback">DAO::rollback()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Aborts the current transaction</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodrollback">DAO::rollback()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Aborts the current database transaction.</dd>
 					</dl>
 	</div>
 	<a name="s"></a>
@@ -631,7 +633,7 @@
 							<dt><b>$state</b></dt>
 				<dd>in file person_object.inc, variable <a href="alpha--model/person_object.html#var$state">person_object::$state</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The state of the person (account status)</dd>
 							<dt><b>save</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodsave">DAO::save()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Saves the object.  If $this-&gt;OID is empty or null it will INSERT, otherwise UPDATE</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodsave">DAO::save()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Saves the object.  If $this-&gt;OID is empty or null it will INSERT, otherwise UPDATE.</dd>
 							<dt><b>saveAttribute</b></dt>
 				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodsaveAttribute">DAO::saveAttribute()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Saves the field specified with the value supplied.  Only works for persistent BOs.  Note that no Alpha type  validation is performed with this method!</dd>
 							<dt><b>sendMail</b></dt>
@@ -641,7 +643,7 @@
 							<dt><b>setDisplayName</b></dt>
 				<dd>in file person_object.inc, method <a href="alpha--model/person_object.html#methodsetDisplayName">person_object::setDisplayName()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Setter for displayName</dd>
 							<dt><b>setEnumOptions</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodsetEnumOptions">DAO::setEnumOptions()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Populate all of the enum options for this object from the database</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodsetEnumOptions">DAO::setEnumOptions()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Populate all of the enum options for this object from the database.</dd>
 							<dt><b>setupRels</b></dt>
 				<dd>in file person_object.inc, method <a href="alpha--model/person_object.html#methodsetupRels">person_object::setupRels()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Sets up the Relation definitions on this BO</dd>
 					</dl>
@@ -726,12 +728,12 @@
 							<dt><b>$votes</b></dt>
 				<dd>in file article_object.inc, variable <a href="alpha--model/article_object.html#var$votes">article_object::$votes</a><br>&nbsp;&nbsp;&nbsp;&nbsp;A Relation containing all of the votes on this article</dd>
 							<dt><b>validate</b></dt>
-				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodvalidate">DAO::validate()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Validates the object to be saved</dd>
+				<dd>in file DAO.inc, method <a href="alpha--model/DAO.html#methodvalidate">DAO::validate()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Validates the object to be saved.</dd>
 					</dl>
 	</div>
         <div class="credit">
 		    <hr class="separator" />
-		    Documentation generated on Sat, 09 Oct 2010 19:07:36 +0100 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+		    Documentation generated on Mon, 11 Oct 2010 21:07:28 +0100 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
 	      </div>
       </td></tr></table>
     </td>
