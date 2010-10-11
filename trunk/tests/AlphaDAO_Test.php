@@ -2,7 +2,7 @@
 
 /**
  *
- * Test case for the DAO class
+ * Test case for the AlphaDAO class
  * 
  * @package Alpha Core Unit Tests
  * @author John Collins <john@design-ireland.net>
@@ -10,7 +10,7 @@
  * @version $Id$ 
  * 
  */
-class DAO_Test extends PHPUnit_Framework_TestCase
+class AlphaDAO_Test extends PHPUnit_Framework_TestCase
 {
 	/**
 	 * A person_object for testing (any business object will do)
@@ -25,7 +25,7 @@ class DAO_Test extends PHPUnit_Framework_TestCase
      * here
      */
     protected function setUp() {
-    	DAO::begin();
+    	AlphaDAO::begin();
     	$this->person = $this->createPersonObject('unitTestUser');
         // just making sure no previous test user is in the DB
         $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/');
@@ -38,7 +38,7 @@ class DAO_Test extends PHPUnit_Framework_TestCase
      * here
      */    
     protected function tearDown() {    	
-    	DAO::rollback();
+    	AlphaDAO::rollback();
         unset($this->person);
     }
     
