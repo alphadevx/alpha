@@ -12,7 +12,7 @@ require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
  * @version $Id$
  * 
  */
-class DEnum extends DAO implements AlphaTypeInterface{
+class DEnum extends AlphaDAO implements AlphaTypeInterface{
 	/**
 	 * An array of valid DEnum options
 	 * 

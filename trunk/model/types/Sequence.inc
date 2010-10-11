@@ -12,7 +12,7 @@ require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
  * @version $Id$
  * 
  */
-class Sequence extends DAO implements AlphaTypeInterface{	
+class Sequence extends AlphaDAO implements AlphaTypeInterface{	
 	/**
 	 * The string prefix (must be capital alphabet characters only)
 	 * 
