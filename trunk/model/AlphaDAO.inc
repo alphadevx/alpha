@@ -432,7 +432,6 @@ abstract class AlphaDAO {
 	 * @return array An array containing objects of this type of business object.
 	 * @since 1.0
 	 * @throws BONotFoundException
-	 * @todo convert to MySQLi
 	 */
 	public function loadAll($start=0, $limit=0, $orderBy='OID', $order='ASC') {
 		self::$logger->debug('>>loadAll(start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
@@ -462,11 +461,9 @@ abstract class AlphaDAO {
 		}
 		
 		$this->lastQuery = $sqlQuery;
-
-		$result = mysql_query($sqlQuery);
 		
-		if(mysql_error() != '') {
-			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
+			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$this->lastQuery.']');
 			self::$logger->debug('<<loadAll [0]');
 			return array();
 		}
@@ -476,10 +473,10 @@ abstract class AlphaDAO {
 		$count = 0;
 		$BO_Class = get_class($this);
 		
-		while($row = mysql_fetch_assoc($result)) {
+		while($row = $result->fetch_array(MYSQLI_ASSOC)) {
 			try {
 				$obj = new $BO_Class();
-				$obj->load($row["OID"]);
+				$obj->load($row['OID']);
 				$objects[$count] = $obj;
 				$count++;
 			}catch(ResourceNotAllowedException $e) {
