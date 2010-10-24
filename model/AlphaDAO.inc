@@ -520,7 +520,7 @@ abstract class AlphaDAO {
 		if(!$this->isTableOverloaded())
 			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = ? ORDER BY ".$orderBy." ".$order.$limit;
 		else
-			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = ? AND classname=? ORDER BY ".$orderBy." ".$order.$limit;
+			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = ? AND classname = ? ORDER BY ".$orderBy." ".$order.$limit;
 			
 		$this->lastQuery = $sqlQuery;
 		
@@ -563,11 +563,10 @@ abstract class AlphaDAO {
 		$count = 0;
 		$BO_Class = get_class($this);
 		
-		//while($row = mysql_fetch_assoc($result)) {
 		foreach($result as $row) {
 			try {
 				$obj = new $BO_Class();
-				$obj->load($row["OID"]);
+				$obj->load($row['OID']);
 				$objects[$count] = $obj;
 				$count++;
 			}catch(ResourceNotAllowedException $e) {
@@ -595,7 +594,6 @@ abstract class AlphaDAO {
 	 * @since 1.0
 	 * @throws BONotFoundException
 	 * @throws IllegalArguementException
-	 * @todo convert to MySQLi
 	 */
 	public function loadAllByAttributes($attributes=array(), $values=array(), $start=0, $limit=0, $orderBy='OID', $order='ASC') {
 		self::$logger->debug('>>loadAllByAttributes(attributes=['.print_r($attributes, true).'], values=['.print_r($values, true).'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
@@ -609,14 +607,16 @@ abstract class AlphaDAO {
 			throw new IllegalArguementException('Illegal arrays attributes=['.print_r($attributes, true).'] and values=['.print_r($values, true).'] provided to loadAllByAttributes');
 		}
 		
-		if($this->isTableOverloaded())
-			$whereClause = ' WHERE classname = \''.get_class($this).'\' AND';
-		else
-			$whereClause = ' WHERE';
+		$whereClause = ' WHERE';
+		
 		for($i = 0; $i < count($attributes); $i++) {
-			$whereClause .= ' '.$attributes[$i].' = \''.$values[$i].'\' AND';
+			$whereClause .= ' '.$attributes[$i].' = ? AND';
 			self::$logger->debug($whereClause);
 		}
+		
+		if($this->isTableOverloaded())
+			$whereClause .= ' classname = ? AND';
+		
 		// remove the last " AND"
 		$whereClause = substr($whereClause, 0, -4);
 		
@@ -625,19 +625,61 @@ abstract class AlphaDAO {
 		else
 			$limit = ';';
 		
-		if(!$this->isTableOverloaded())
-			$sqlQuery = "SELECT OID FROM ".$this->getTableName().$whereClause." ORDER BY ".$orderBy." ".$order.$limit;
-		else
-			$sqlQuery = "SELECT OID FROM ".$this->getTableName().$whereClause." AND classname='".get_class($this)."' ORDER BY ".$orderBy." ".$order.$limit;
+		$sqlQuery = "SELECT OID FROM ".$this->getTableName().$whereClause." ORDER BY ".$orderBy." ".$order.$limit;
 			
 		$this->lastQuery = $sqlQuery;
+		self::$logger->info($sqlQuery);
 		
-		self::$logger->debug($sqlQuery);
-
-		$result = mysql_query($sqlQuery);
+		$stmt = AlphaDAO::getConnection()->stmt_init();
 		
-		if(mysql_error() != '') {
-			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+		if($stmt->prepare($sqlQuery)) {
+			$bindingsTypes = '';
+			$params = array();
+	
+			for($i = 0; $i < count($values); $i++) {
+				if (Validator::isInteger($values[$i]))
+					$bindingsTypes .= 'i';
+				else
+					$bindingsTypes .= 's';
+				array_push($params, $values[$i]);
+			}
+				
+			if($this->isTableOverloaded()) {
+				if(isset($this->classname)) {
+					$bindingsTypes .= 's';
+					array_push($params, $this->classname);					
+				}else{					
+					$bindingsTypes .= 's';					
+					array_push($params, get_class($this));					
+				}
+			}
+			
+			self::$logger->info('bindingsTypes=['.$bindingsTypes.']');
+			self::$logger->info('params=['.print_r($params, true).']');
+						
+		    if ($params != null) {		 
+				$bind_names[] = $bindingsTypes;
+			 
+			    for ($i=0; $i<count($params); $i++) {
+			    	$bind_name = 'bind'.$i;
+			        $$bind_name = $params[$i];
+			        $bind_names[] = &$$bind_name;
+			    }		 
+	
+			    call_user_func_array(array($stmt,'bind_param'), $bind_names);
+		   	}   	
+			
+			$stmt->execute();
+			
+			$result = $this->bindResult($stmt);
+				
+			$stmt->close();
+		}else{
+			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
+			if(!$this->checkTableExists()) {
+				$this->makeTable();
+				throw new BONotFoundException('Failed to load objects by attributes ['.print_r($attributes, true).'] and values ['.print_r($values, true).'], table did not exist so had to create!');
+			}
 			self::$logger->debug('<<loadAllByAttributes []');
 			return array();
 		}
@@ -647,10 +689,10 @@ abstract class AlphaDAO {
 		$count = 0;
 		$BO_Class = get_class($this);
 		
-		while($row = mysql_fetch_assoc($result)) {
+		foreach($result as $row) {
 			try {
 				$obj = new $BO_Class();
-				$obj->load($row["OID"]);
+				$obj->load($row['OID']);
 				$objects[$count] = $obj;
 				$count++;
 			}catch(ResourceNotAllowedException $e) {
@@ -661,7 +703,7 @@ abstract class AlphaDAO {
 		if(method_exists($this, 'after_loadAllByAttributes_callback'))
 			$this->after_loadAllByAttributes_callback();
 		
-		self::$logger->debug('<<loadAllByAttributes ['.count($objects).']');
+		self::$logger->info('<<loadAllByAttributes ['.count($objects).']');
 		return $objects;	
 	}
 	

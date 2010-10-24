@@ -121,6 +121,17 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase
     }
     
     /**
+     * testing the loadAllByAttributes method
+     */
+    public function testLoadAllByAttributes() {
+    	$this->person->save();
+    	$people = $this->person->loadAllByAttributes(array('OID'),array($this->person->getOID()));
+    	$this->assertEquals(1, count($people), 'testing the loadAllByAttribute method');
+    	$this->assertEquals('unitTestUser', $people[0]->getDisplayname()->getValue(), 'testing the loadAllByAttributes method');
+    	$people[0]->delete();
+    }
+    
+    /**
      * testing the save method on transient and non-transient objects
      */
     public function testSaveTransientOrPersistent() {
