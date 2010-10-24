@@ -717,7 +717,7 @@ abstract class AlphaDAO {
 		
 		while($row = $result->fetch_array(MYSQLI_ASSOC)) {
 			$obj = new $BO_Class();
-			$obj->load($row["OID"]);
+			$obj->load($row['OID']);
 			$objects[$count] = $obj;
 			$count++;
 		}
@@ -741,7 +741,6 @@ abstract class AlphaDAO {
 	 * @return array An array of field values.
 	 * @since 1.0
 	 * @throws BONotFoundException
-	 * @todo convert to MySQLi
 	 */
 	public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order='ASC', $ignoreClassType=false) {
 		self::$logger->debug('>>loadAllFieldValuesByAttribute(attribute=['.$attribute.'], value=['.$value.'], returnAttribute=['.$returnAttribute.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
@@ -757,10 +756,8 @@ abstract class AlphaDAO {
 		$this->lastQuery = $sqlQuery;
 		self::$logger->debug('lastQuery ['.$sqlQuery.']');
 
-		$result = mysql_query($sqlQuery);
-		
-		if(mysql_error() != '') {
-			throw new BONotFoundException('Failed to load object ['.$returnAttribute.'] values, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
+			throw new BONotFoundException('Failed to load field ['.$returnAttribute.'] values, MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$this->lastQuery.']');
 			self::$logger->debug('<<loadAllFieldValuesByAttribute []');
 			return array();
 		}
@@ -770,7 +767,7 @@ abstract class AlphaDAO {
 		$count = 0;
 		$BO_Class = get_class($this);
 		
-		while($row = mysql_fetch_assoc($result)) {
+		while($row = $result->fetch_array(MYSQLI_ASSOC)) {
 			$values[$count] = $row[$returnAttribute];
 			$count++;
 		}
