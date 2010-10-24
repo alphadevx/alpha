@@ -251,7 +251,7 @@ abstract class AlphaDAO {
 			$stmt->close();
 		}else{
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
-			if($this->checkTableExists()) {
+			if(!$this->checkTableExists()) {
 				$this->makeTable();
 				throw new BONotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->getTableName().'] did not exist so had to create!');
 			}
@@ -364,7 +364,7 @@ abstract class AlphaDAO {
 			$stmt->close();
 		}else{
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
-			if($this->checkTableExists()) {
+			if(!$this->checkTableExists()) {
 				$this->makeTable();
 				throw new BONotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table did not exist so had to create!');
 			}
@@ -1237,7 +1237,7 @@ abstract class AlphaDAO {
 			$stmt->close();
 		}else{
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
-			if($this->checkTableExists()) {
+			if(!$this->checkTableExists()) {
 				$this->makeTable();
 				throw new BONotFoundException('Failed to get the version number, table did not exist so had to create!');
 			}
@@ -1266,7 +1266,6 @@ abstract class AlphaDAO {
 	 * 
 	 * @since 1.0
 	 * @throws AlphaException
-	 * @todo convert to MySQLi
 	 */	
 	public function makeTable() {
 		self::$logger->debug('>>makeTable()');
@@ -1342,17 +1341,17 @@ abstract class AlphaDAO {
 		
 		$this->lastQuery = $sqlQuery;
 		
-		$result = mysql_query($sqlQuery);
-
-		if (mysql_error() == '') {
-			if(method_exists($this, 'after_makeTable_callback'))
-				$this->after_makeTable_callback();
-				
-			// check the table indexes if any additional ones required
-			$this->checkIndexes();
-		}else{
+		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to create the table ['.$this->getTableName().'] for the class ['.get_class($this).'], query is ['.$this->lastQuery.']');
+			self::$logger->debug('<<makeTable');
 		}
+				
+		// check the table indexes if any additional ones required
+		$this->checkIndexes();
+		
+		if(method_exists($this, 'after_makeTable_callback'))
+			$this->after_makeTable_callback();
+		
 		self::$logger->debug('<<makeTable');
 	}
 
