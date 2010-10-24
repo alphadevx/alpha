@@ -131,6 +131,16 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase
     	$people[0]->delete();
     }
     
+	/**
+     * testing the loadAllByDayUpdated method
+     */
+    public function testLoadAllByDayUpdated() {
+    	$this->person->save();
+    	$people = $this->person->loadAllByDayUpdated(date('Y-m-d'));
+    	$this->assertGreaterThan(0, count($people), 'testing the loadAllByDayUpdated method');
+    	$people[0]->delete();
+    }
+    
     /**
      * testing the save method on transient and non-transient objects
      */

@@ -628,47 +628,12 @@ abstract class AlphaDAO {
 		$sqlQuery = "SELECT OID FROM ".$this->getTableName().$whereClause." ORDER BY ".$orderBy." ".$order.$limit;
 			
 		$this->lastQuery = $sqlQuery;
-		self::$logger->info($sqlQuery);
+		self::$logger->debug($sqlQuery);
 		
 		$stmt = AlphaDAO::getConnection()->stmt_init();
 		
-		if($stmt->prepare($sqlQuery)) {
-			$bindingsTypes = '';
-			$params = array();
-	
-			for($i = 0; $i < count($values); $i++) {
-				if (Validator::isInteger($values[$i]))
-					$bindingsTypes .= 'i';
-				else
-					$bindingsTypes .= 's';
-				array_push($params, $values[$i]);
-			}
-				
-			if($this->isTableOverloaded()) {
-				if(isset($this->classname)) {
-					$bindingsTypes .= 's';
-					array_push($params, $this->classname);					
-				}else{					
-					$bindingsTypes .= 's';					
-					array_push($params, get_class($this));					
-				}
-			}
-			
-			self::$logger->info('bindingsTypes=['.$bindingsTypes.']');
-			self::$logger->info('params=['.print_r($params, true).']');
-						
-		    if ($params != null) {		 
-				$bind_names[] = $bindingsTypes;
-			 
-			    for ($i=0; $i<count($params); $i++) {
-			    	$bind_name = 'bind'.$i;
-			        $$bind_name = $params[$i];
-			        $bind_names[] = &$$bind_name;
-			    }		 
-	
-			    call_user_func_array(array($stmt,'bind_param'), $bind_names);
-		   	}   	
-			
+		if($stmt->prepare($sqlQuery)) {			
+			$stmt = $this->bindParams($stmt, $attributes, $values);
 			$stmt->execute();
 			
 			$result = $this->bindResult($stmt);
@@ -703,7 +668,7 @@ abstract class AlphaDAO {
 		if(method_exists($this, 'after_loadAllByAttributes_callback'))
 			$this->after_loadAllByAttributes_callback();
 		
-		self::$logger->info('<<loadAllByAttributes ['.count($objects).']');
+		self::$logger->debug('<<loadAllByAttributes ['.count($objects).']');
 		return $objects;	
 	}
 	
@@ -718,7 +683,6 @@ abstract class AlphaDAO {
 	 * @return array An array containing objects of this type of business object.
 	 * @since 1.0
 	 * @throws BONotFoundException
-	 * @todo convert to MySQLi
 	 */
 	public function loadAllByDayUpdated($date, $start=0, $limit=0, $orderBy="OID", $order="ASC") {
 		self::$logger->debug('>>loadAllByDayUpdated(date=['.$date.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
@@ -740,10 +704,8 @@ abstract class AlphaDAO {
 			
 		$this->lastQuery = $sqlQuery;
 
-		$result = mysql_query($sqlQuery);
-		
-		if(mysql_error() != '') {
-			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
+			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$this->lastQuery.']');
 			self::$logger->debug('<<loadAllByDayUpdated []');
 			return array();
 		}
@@ -753,7 +715,7 @@ abstract class AlphaDAO {
 		$count = 0;
 		$BO_Class = get_class($this);
 		
-		while($row = mysql_fetch_assoc($result)) {
+		while($row = $result->fetch_array(MYSQLI_ASSOC)) {
 			$obj = new $BO_Class();
 			$obj->load($row["OID"]);
 			$objects[$count] = $obj;
@@ -3013,56 +2975,84 @@ abstract class AlphaDAO {
   	}
   	
   	/**
-  	 * Dynamically binds the attributes for the current BO to the supplied prepared statement parameters.
+  	 * Dynamically binds all of the attributes for the current BO to the supplied prepared statement 
+  	 * parameters.  If arrays of attribute names and values are provided, only those will be bound to
+  	 * the supplied statement.
   	 *  
-  	 * @param mysqli_stmt $stmt
+  	 * @param mysqli_stmt $stmt The SQL statement to bind to.
+  	 * @param array Optional array of BO attributes.
+  	 * @param array Optional array of BO values.
   	 * @return mysqli_stmt
   	 * @since 1.0
   	 */
-	protected function bindParams($stmt) {
+	protected function bindParams($stmt, $attributes=array(), $values=array()) {
 		self::$logger->debug('>>bindParams(stmt=['.print_r($stmt, true).'])');
 		
-		// get the class attributes
-		$reflection = new ReflectionClass(get_class($this));
-		$properties = $reflection->getProperties();
 		$bindingsTypes = '';
 		$params = array();
-
-		foreach($properties as $propObj) {
-			$propName = $propObj->name;
-			if (!in_array($propName, $this->transientAttributes)) {				
-				// Skip the OID, database auto number takes care of this.
-				if($propName != 'OID' && $propName != 'version_num') {
-					if($this->$propName instanceof Integer)
-						$bindingsTypes .= 'i';
-					else
-						$bindingsTypes .= 's';
-					array_push($params, $this->get($propName));
-				}
-							
-				if($propName == 'version_num') {
-					$temp = $this->version_num->getValue();
-					$this->version_num->setValue($temp+1);
-					$bindingsTypes .= 'i';
-					array_push($params, $this->version_num->getValue());
-				}
-			}
-		}
-			
-		if($this->isTableOverloaded()) {
-			if(isset($this->classname)) {
-				$bindingsTypes .= 's';
-				array_push($params, $this->classname);					
-			}else{					
-				$bindingsTypes .= 's';					
-				array_push($params, get_class($this));					
-			}
-		}
 		
-		// the OID may be on the WHERE clause for UPDATEs and DELETEs
-		if(!$this->isTransient()) {					
-			$bindingsTypes .= 'i';
-			array_push($params, $this->OID);
+		// here we are only binding the supplied attributes
+		if(count($attributes) > 0 && count($attributes) == count($values)) {
+	
+			for($i = 0; $i < count($values); $i++) {
+				if (Validator::isInteger($values[$i]))
+					$bindingsTypes .= 'i';
+				else
+					$bindingsTypes .= 's';
+				array_push($params, $values[$i]);
+			}
+				
+			if($this->isTableOverloaded()) {
+				if(isset($this->classname)) {
+					$bindingsTypes .= 's';
+					array_push($params, $this->classname);					
+				}else{					
+					$bindingsTypes .= 's';					
+					array_push($params, get_class($this));					
+				}
+			}
+		}else{ // bind all attributes on the business object
+		
+			// get the class attributes
+			$reflection = new ReflectionClass(get_class($this));
+			$properties = $reflection->getProperties();
+	
+			foreach($properties as $propObj) {
+				$propName = $propObj->name;
+				if (!in_array($propName, $this->transientAttributes)) {				
+					// Skip the OID, database auto number takes care of this.
+					if($propName != 'OID' && $propName != 'version_num') {
+						if($this->$propName instanceof Integer)
+							$bindingsTypes .= 'i';
+						else
+							$bindingsTypes .= 's';
+						array_push($params, $this->get($propName));
+					}
+								
+					if($propName == 'version_num') {
+						$temp = $this->version_num->getValue();
+						$this->version_num->setValue($temp+1);
+						$bindingsTypes .= 'i';
+						array_push($params, $this->version_num->getValue());
+					}
+				}
+			}
+				
+			if($this->isTableOverloaded()) {
+				if(isset($this->classname)) {
+					$bindingsTypes .= 's';
+					array_push($params, $this->classname);					
+				}else{					
+					$bindingsTypes .= 's';					
+					array_push($params, get_class($this));					
+				}
+			}
+			
+			// the OID may be on the WHERE clause for UPDATEs and DELETEs
+			if(!$this->isTransient()) {					
+				$bindingsTypes .= 'i';
+				array_push($params, $this->OID);
+			}
 		}
 		
 		self::$logger->debug('bindingsTypes=['.$bindingsTypes.']');
