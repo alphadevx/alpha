@@ -142,6 +142,15 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase
     }
     
     /**
+     * testing the loadAllFieldValuesByAttribute method
+     */
+    public function testLoadAllFieldValuesByAttribute() {
+    	$this->person->save();
+    	$emails = $this->person->loadAllFieldValuesByAttribute('email', $this->person->get('email'), 'email');
+    	$this->assertEquals($this->person->get('email'), $emails[0], 'testing the loadAllFieldValuesByAttribute method');
+    }
+    
+    /**
      * testing the save method on transient and non-transient objects
      */
     public function testSaveTransientOrPersistent() {
