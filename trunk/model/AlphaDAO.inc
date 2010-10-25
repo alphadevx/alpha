@@ -1390,8 +1390,7 @@ abstract class AlphaDAO {
 	 * 
 	 * @param string $propName The name of the new field to add to the database table.
 	 * @since 1.0
-	 * @throws AlphaException
-	 * @todo convert to MySQLi 	 
+	 * @throws AlphaException	 
 	 */
 	public function addProperty($propName) {
 		self::$logger->debug('>>addProperty(propName=['.$propName.'])');
@@ -1399,58 +1398,58 @@ abstract class AlphaDAO {
 		if(method_exists($this, 'before_addProperty_callback'))
 			$this->before_addProperty_callback();
 			
-		$sqlQuery = "ALTER TABLE ".$this->getTableName()." ADD ";
+		$sqlQuery = 'ALTER TABLE '.$this->getTableName().' ADD ';
 		
 		if($this->isTableOverloaded() && $propName == 'classname') {
-			$sqlQuery .= "classname VARCHAR(100)";
+			$sqlQuery .= 'classname VARCHAR(100)';
 		}else{
 			if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
 				$propClass = get_class($this->getPropObject($propName));
 	
 				switch (strtoupper($propClass)) {
-					case "INTEGER":
+					case 'INTEGER':
 						$sqlQuery .= "$propName INT(".$this->getPropObject($propName)->getSize().")";
 					break;
-					case "DOUBLE":
+					case 'DOUBLE':
 						$sqlQuery .= "$propName DOUBLE(".$this->getPropObject($propName)->getSize(true).")";
 					break;
-					case "STRING":
+					case 'STRING':
 						$sqlQuery .= "$propName VARCHAR(".$this->getPropObject($propName)->getSize().")";
 					break;
-					case "SEQUENCE":
+					case 'SEQUENCE':
 						$sqlQuery .= "$propName VARCHAR(".$this->getPropObject($propName)->getSize().")";
 					break;
-					case "TEXT":
+					case 'TEXT':
 						$sqlQuery .= "$propName TEXT";
 					break;
-					case "BOOLEAN":
+					case 'BOOLEAN':
 						$sqlQuery .= "$propName CHAR(1) DEFAULT '0'";
 					break;
-					case "DATE":
+					case 'DATE':
 						$sqlQuery .= "$propName DATE";
 					break;
-					case "TIMESTAMP":
+					case 'TIMESTAMP':
 						$sqlQuery .= "$propName DATETIME";
 					break;
-					case "ENUM":
+					case 'ENUM':
 						$sqlQuery .= "$propName ENUM(";
 						$enumVals = $this->getPropObject($propName)->getOptions();
 						foreach($enumVals as $val) {
 							$sqlQuery .= "'".$val."',";
 						}
 						$sqlQuery = rtrim($sqlQuery, ",");
-						$sqlQuery .= ")";
+						$sqlQuery .= ')';
 					break;
-					case "DENUM":
+					case 'DENUM':
 						$tmp = new DEnum(get_class($this).'::'.$propName);						
 						$tmp->save();
 						$sqlQuery .= "$propName INT(11) ZEROFILL";
 					break;
-					case "RELATION":						
+					case 'RELATION':						
 						$sqlQuery .= "$propName INT(11) ZEROFILL UNSIGNED";
 					break;
 					default:
-						$sqlQuery .= "";
+						$sqlQuery .= '';
 					break;
 				}
 			}
@@ -1458,14 +1457,14 @@ abstract class AlphaDAO {
 
 		$this->lastQuery = $sqlQuery;
 
-		$result = mysql_query($sqlQuery);
-
-		if (mysql_error() == '') {
-			if(method_exists($this, 'after_addProperty_callback'))
-				$this->after_addProperty_callback();			
-		}else{			
+		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to add the new attribute ['.$propName.'] to the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');
+			self::$logger->debug('<<addProperty');
 		}
+
+		if(method_exists($this, 'after_addProperty_callback'))
+			$this->after_addProperty_callback();			
+
 		self::$logger->debug('<<addProperty');
 	}
 
@@ -1501,8 +1500,8 @@ abstract class AlphaDAO {
 					}					
 				}
 			}
-			if ($propName == "version_num" && isset($_POST["version_num"]))
-				$this->version_num->setValue($_POST["version_num"]);
+			if ($propName == 'version_num' && isset($_POST['version_num']))
+				$this->version_num->setValue($_POST['version_num']);
 		}
 		if(method_exists($this, 'after_populateFromPost_callback'))
 			$this->after_populateFromPost_callback();
