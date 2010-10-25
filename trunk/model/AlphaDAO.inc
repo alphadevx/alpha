@@ -1360,7 +1360,6 @@ abstract class AlphaDAO {
 	 * 
 	 * @since 1.0
 	 * @throws AlphaException
-	 * @todo convert to MySQLi
 	 */	
 	public function rebuildTable() {
 		self::$logger->debug('>>rebuildTable()');
@@ -1368,20 +1367,21 @@ abstract class AlphaDAO {
 		if(method_exists($this, 'before_rebuildTable_callback'))
 			$this->before_rebuildTable_callback();
 		
-		$sqlQuery = "DROP TABLE IF EXISTS ".$this->getTableName().";";
+		$sqlQuery = 'DROP TABLE IF EXISTS '.$this->getTableName().';';
 
 		$this->lastQuery = $sqlQuery;
 
-		$result = mysql_query($sqlQuery);		
-
-		if (mysql_error() == '') {
-			$this->makeTable();
-			if(method_exists($this, 'after_rebuildTable_callback'))
-				$this->after_rebuildTable_callback();			
-		}else{			
+		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to drop the table ['.$this->getTableName().'] for the class ['.get_class($this).'], query is ['.$this->lastQuery.']');
+			self::$logger->debug('<<rebuildTable');
 		}
-		self::$logger->debug('<<rebuildTable()');		
+
+		$this->makeTable();
+		
+		if(method_exists($this, 'after_rebuildTable_callback'))
+			$this->after_rebuildTable_callback();			
+		
+		self::$logger->debug('<<rebuildTable');		
 	}
 
 	/**
