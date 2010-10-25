@@ -1662,14 +1662,14 @@ abstract class AlphaDAO {
 			if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
 				$propClass = get_class($this->getPropObject($propName));
 				if ($propClass == 'Enum') {
-					$sqlQuery = "SHOW COLUMNS FROM ".$this->getTableName()." LIKE '".$propName."'";
+					$sqlQuery = "SHOW COLUMNS FROM ".$this->getTableName()." LIKE '$propName'";
 					
 					$this->lastQuery = $sqlQuery;
 					
-					$result = mysql_query($sqlQuery);
+					$result = AlphaDAO::getConnection()->query($sqlQuery);
 					
-					if (mysql_error() == '') {							
-						$row = mysql_fetch_row($result);
+					if ($result) {							
+						$row = $result->fetch_array(MYSQLI_NUM);
 						$options = explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2",$row[1]));
 						
 						$this->getPropObject($propName)->setOptions($options);						
