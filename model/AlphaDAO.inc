@@ -1949,7 +1949,7 @@ abstract class AlphaDAO {
 			
 			$query = 'SHOW COLUMNS FROM '.$this->getTableName();
 			$result = AlphaDAO::getConnection()->query($query);
-			$this->lastQuery = $query;			
+			$this->lastQuery = $query;
 			
 			// get the class attributes
 			$reflection = new ReflectionClass(get_class($this));
@@ -2020,7 +2020,6 @@ abstract class AlphaDAO {
 	 * @return array An array of missing fields in the database table.
 	 * @since 1.0
 	 * @throws AlphaException
-	 * @todo convert to MySQLi
 	 */
 	public function findMissingFields() {
 		self::$logger->debug('>>findMissingFields()');
@@ -2031,7 +2030,11 @@ abstract class AlphaDAO {
 		$missingFields = array();			
 		$matchCount = 0;
 			
-		$result = mysql_query('SHOW COLUMNS FROM '.$this->getTableName());
+		$sqlQuery = 'SHOW COLUMNS FROM '.$this->getTableName();
+		
+		$result = AlphaDAO::getConnection()->query($sqlQuery);
+		
+		$this->lastQuery = $sqlQuery;
 			
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this));
@@ -2040,13 +2043,13 @@ abstract class AlphaDAO {
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
 			if (!in_array($propName, $this->transientAttributes)) {
-				while ($row = mysql_fetch_assoc($result)) {				
+				while ($row = $result->fetch_array(MYSQLI_ASSOC)) {				
 		    		if ($propName == $row['Field']) {		    			
 		    			$matchCount++;		    			
 		    			break;
 		    		}	    		
 				}				
-				mysql_data_seek($result, 0);					
+				$result->data_seek(0);
 			}else{
 				$matchCount++;
 			}
@@ -2062,7 +2065,7 @@ abstract class AlphaDAO {
 		if($this->isTableOverloaded()) {
 			$foundMatch = false;
 			
-			while ($row = mysql_fetch_assoc($result)) {
+			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
 				if ('classname' == $row['Field']) {
 					$foundMatch = true;
 		    		break;
@@ -2072,8 +2075,8 @@ abstract class AlphaDAO {
 				array_push($missingFields, 'classname');
 		}
 		
-		if (mysql_error() != '') {			
-			throw new AlphaException('Failed to access the system database correctly, error is ['.mysql_error().']');
+		if (!$result) {			
+			throw new AlphaException('Failed to access the system database correctly, error is ['.AlphaDAO::getConnection()->error.']');
 		}
 		
 		if(method_exists($this, 'after_findMissingFields_callback'))
