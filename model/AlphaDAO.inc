@@ -1889,7 +1889,6 @@ abstract class AlphaDAO {
 	 * @return boolean
 	 * @since 1.0
 	 * @throws AlphaException
-	 * @todo convert to MySQLi
 	 */
 	public static function checkBOTableExists($BOClassName) {
 		if(self::$logger == null)
@@ -1905,18 +1904,20 @@ abstract class AlphaDAO {
 				
 		$tableExists = false;
 		
-		$result = mysql_list_tables($config->get('sysDB'));
+		$sqlQuery = 'SHOW TABLES;';
 		
-		while ($row = mysql_fetch_row($result)) {    		
+		$result = AlphaDAO::getConnection()->query($sqlQuery);
+		
+		while ($row = $result->fetch_array(MYSQLI_NUM)) {    		
     		if ($row[0] == $tableName)
     			$tableExists = true;
 		}		
 		
-		if (mysql_error() == '') {			
+		if ($result) {			
 			self::$logger->debug('<<checkBOTableExists ['.($tableExists ? 'true' : 'false').']');
 			return $tableExists;
 		}else{			
-			throw new AlphaException('Failed to access the system database correctly, error is ['.mysql_error().']');
+			throw new AlphaException('Failed to access the system database correctly, error is ['.AlphaDAO::getConnection()->error.']');
 			self::$logger->debug('<<checkBOTableExists [false]');
 			return false;
 		}
