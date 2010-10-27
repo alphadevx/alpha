@@ -1930,7 +1930,6 @@ abstract class AlphaDAO {
 	 * @return boolean
 	 * @since 1.0
 	 * @throws AlphaException
-	 * @todo convert to MySQLi
 	 */
 	public function checkTableNeedsUpdate() {
 		self::$logger->debug('>>checkTableNeedsUpdate()');
@@ -1939,7 +1938,6 @@ abstract class AlphaDAO {
 			$this->before_checkTableNeedsUpdate_callback();
 		
 		$tableExists = $this->checkTableExists();
-		
 		
 		if (!$tableExists) {
 			self::$logger->debug('<<checkTableNeedsUpdate [true]');
@@ -1950,21 +1948,20 @@ abstract class AlphaDAO {
 			$matchCount = 0;
 			
 			$query = 'SHOW COLUMNS FROM '.$this->getTableName();
-			$result = mysql_query($query);
+			$result = AlphaDAO::getConnection()->query($query);
 			$this->lastQuery = $query;			
 			
 			// get the class attributes
 			$reflection = new ReflectionClass(get_class($this));
 			$properties = $reflection->getProperties();
 			
-		
 			foreach($properties as $propObj) {
 				$propName = $propObj->name;
 				if (!in_array($propName, $this->transientAttributes)) {
 				
 					$foundMatch = false;	
 					
-					while ($row = mysql_fetch_assoc($result)) {						
+					while ($row = $result->fetch_array(MYSQLI_ASSOC)) {						
 			    		if ($propName == $row['Field']) {
 			    			$foundMatch = true;
 			    			break;
@@ -1974,7 +1971,7 @@ abstract class AlphaDAO {
 					if(!$foundMatch)
 						$matchCount--;						
 					
-					mysql_data_seek($result, 0);					
+					$result->data_seek(0);					
 				}
 			}
 			
@@ -1982,7 +1979,7 @@ abstract class AlphaDAO {
 			if($this->isTableOverloaded()) {
 				$foundMatch = false;
 			
-				while ($row = mysql_fetch_assoc($result)) {
+				while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
 					if ('classname' == $row['Field']) {
 						$foundMatch = true;
 			    		break;
@@ -1995,7 +1992,7 @@ abstract class AlphaDAO {
 			if ($matchCount != 0)
 				$updateRequired = true;
 			
-			if (mysql_error() == '') {
+			if ($result) {
 				if(method_exists($this, 'before_checkTableNeedsUpdate_callback'))
 					$this->before_checkTableNeedsUpdate_callback();
 				
@@ -2009,7 +2006,7 @@ abstract class AlphaDAO {
 				self::$logger->debug('<<checkTableNeedsUpdate ['.$updateRequired.']');
 				return $updateRequired;
 			}else{				
-				throw new AlphaException('Failed to access the system database correctly, error is ['.mysql_error().']');
+				throw new AlphaException('Failed to access the system database correctly, error is ['.AlphaDAO::getConnection()->error.']');
 				self::$logger->debug('<<checkTableNeedsUpdate [false]');
 				return false;
 			}
