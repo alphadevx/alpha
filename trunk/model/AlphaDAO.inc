@@ -2753,7 +2753,6 @@ abstract class AlphaDAO {
 	 * @return bool
 	 * @since 1.0
 	 * @throws BadBOTableNameException
-	 * @todo convert to MySQLi
 	 */
 	public function isTableOverloaded() {
 		self::$logger->debug('>>isTableOverloaded()');
@@ -2790,17 +2789,18 @@ abstract class AlphaDAO {
 			// check to see if there is already a "classname" column in the database for this BO
 			
 			$query = 'SHOW COLUMNS FROM '.$this->getTableName();
-			$result = mysql_query($query);
 			
-			if(mysql_error() == '') {
-				while ($row = mysql_fetch_assoc($result)) {						
+			$result = AlphaDAO::getConnection()->query($query);
+			
+			if($result) {
+				while ($row = $result->fetch_array(MYSQLI_ASSOC)) {						
 					if ('classname' == $row['Field']) {
 						self::$logger->debug('<<isTableOverloaded [true]');
 						return true;
 					}
 				}
 			}else{
-				self::$logger->warn('Error during show columns ['.mysql_error().']');
+				self::$logger->warn('Error during show columns ['.AlphaDAO::getConnection()->error.']');
 			}
 			
 			self::$logger->debug('<<isTableOverloaded [false]');
