@@ -2864,8 +2864,6 @@ abstract class AlphaDAO {
   	 *
   	 * @return boolean
   	 * @since 1.0
-  	 * @throws AlphaException
-  	 * @todo convert to MySQLi
   	 */
   	public static function isInstalled() {
   		if(self::$logger == null)
@@ -2880,25 +2878,10 @@ abstract class AlphaDAO {
   		 * 1. person table exists
   		 * 2. rights table exists
   		 */
-  		$tableExistsCount = 0;
-		
-		$result = mysql_list_tables($config->get('sysDB'));
-		
-		while ($row = mysql_fetch_row($result)) {    		
-    		if ($row[0] == person_object::TABLE_NAME || $row[0] == rights_object::TABLE_NAME)
-    			$tableExistsCount++;
-		}		
-		
-		if (mysql_error() == '') {			
-			if($tableExistsCount == 2) {
-				self::$logger->debug('<<isInstalled [true]');
-				return true;
-			}else{
-				self::$logger->debug('<<isInstalled [false]');
-				return false;
-			}
-		}else{			
-			throw new AlphaException('Failed to access the system database correctly, error is ['.mysql_error().']');
+		if(AlphaDAO::checkBOTableExists('person_object') && AlphaDAO::checkBOTableExists('rights_object')) {
+			self::$logger->debug('<<isInstalled [true]');
+			return true;
+		}else{
 			self::$logger->debug('<<isInstalled [false]');
 			return false;
 		}
