@@ -2345,7 +2345,6 @@ abstract class AlphaDAO {
 	 * @param bool $allowNullValues For foreign key indexes that don't allow null values, set this to false (default is true).
 	 * @since 1.0
 	 * @throws AlphaException
-	 * @todo convert to MySQLi
 	 */
 	protected function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute) {
 		self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.']');
@@ -2373,25 +2372,25 @@ abstract class AlphaDAO {
 			if(!empty($sqlQuery)) {
 				$this->lastQuery = $sqlQuery;
 	
-				$result = mysql_query($sqlQuery);
+				$result = AlphaDAO::getConnection()->query($query);
 	
-				if (mysql_error() != '') {					
-					throw new AlphaException('Failed to create an index on ['.$this->getTableName().'], error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+				if (!$result) {
+					throw new AlphaException('Failed to create an index on ['.$this->getTableName().'], error is ['.AlphaDAO::getConnection()->error.'], query ['.$this->lastQuery.']');
 				}
 			}
 
 			$sqlQuery = 'ALTER TABLE '.$this->getTableName().' ADD FOREIGN KEY '.$attributeName.'_fk_idx ('.$attributeName.') REFERENCES '.$tableName.' ('.$relatedClassAttribute.') ON DELETE SET NULL;';
 			
 			$this->lastQuery = $sqlQuery;	
-			$result = mysql_query($sqlQuery);
+			$result = AlphaDAO::getConnection()->query($query);
 		}
 	
-		if (mysql_error() == '') {
+		if ($result) {
 			if(method_exists($this, 'after_createForeignIndex_callback'))
 				$this->after_createForeignIndex_callback();
-				self::$logger->debug('Successfully created the foreign key index ['.$attributeName.'_fk_idx]');
+			self::$logger->debug('Successfully created the foreign key index ['.$attributeName.'_fk_idx]');
 		}else{			
-			throw new AlphaException('Failed to create the index ['.$attributeName.'_fk_idx] on ['.$this->getTableName().'], error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+			throw new AlphaException('Failed to create the index ['.$attributeName.'_fk_idx] on ['.$this->getTableName().'], error is ['.AlphaDAO::getConnection()->error.'], query ['.$this->lastQuery.']');
 		}		
 		
 		self::$logger->debug('<<createForeignIndex');
