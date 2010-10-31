@@ -202,7 +202,7 @@ class Image {
 		 * Not required for the view_article_pdf.php controller.
 		 */
 		if($config->get('sysCMSImagesWidgetSecure') && basename($_SERVER["PHP_SELF"]) != 'ViewArticlePDF.php') {
-			$valid = Controller::checkSecurityFields();			
+			$valid = AlphaController::checkSecurityFields();			
 			
 			// if not valid, just return a blank black image of the same dimensions
 			if(!$valid) {

@@ -17,7 +17,7 @@ require_once $config->get('sysRoot').'alpha/model/tag_object.inc';
 require_once $config->get('sysRoot').'alpha/view/person.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
-require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/tests/Enum_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/DEnum_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Sequence_Test.php';
@@ -61,7 +61,7 @@ $config->set('sysErrorOtherLog', false);
  * @version $Id$
  * 
  */
-class ViewTestResults extends Controller implements AlphaControllerInterface {	
+class ViewTestResults extends AlphaController implements AlphaControllerInterface {	
 	/**
 	 * Trace logger
 	 * 

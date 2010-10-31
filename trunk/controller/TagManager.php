@@ -5,7 +5,7 @@ if(!isset($config))
 	require_once '../util/AlphaConfig.inc';
 $config = AlphaConfig::getInstance();
 
-require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/util/AlphaFileUtil.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
@@ -20,7 +20,7 @@ require_once $config->get('sysRoot').'alpha/view/View.inc';
  * @copyright 2010 John Collins
  * @version $Id$
  */
-class TagManager extends Controller implements AlphaControllerInterface {	
+class TagManager extends AlphaController implements AlphaControllerInterface {	
 	/**
 	 * Trace logger
 	 * 

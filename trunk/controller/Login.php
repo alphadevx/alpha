@@ -9,7 +9,7 @@ if(!isset($config)) {
 require_once $config->get('sysRoot').'alpha/util/Logger.inc';
 require_once $config->get('sysRoot').'alpha/view/person.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
-require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
 /**
@@ -22,7 +22,7 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.
  * @version $Id$
  * 
  */
-class Login extends Controller implements AlphaControllerInterface {
+class Login extends AlphaController implements AlphaControllerInterface {
 	/**
 	 * The person to be logged in
 	 * 

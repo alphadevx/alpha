@@ -9,7 +9,7 @@ if(!isset($config)) {
 require_once $config->get('sysRoot').'alpha/util/TCPDFFacade.inc';
 require_once $config->get('sysRoot').'alpha/util/AlphaMarkdown.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
-require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/model/article_object.inc';
 
 /**
@@ -22,7 +22,7 @@ require_once $config->get('sysRoot').'alpha/model/article_object.inc';
  * @version $Id: ViewArticlePDF.php 238 2007-02-03 22:36:54Z john $
  * 
  */
-class ViewArticlePDF extends Controller {
+class ViewArticlePDF extends AlphaController {
 	/**
 	 * Trace logger
 	 * 

@@ -9,7 +9,7 @@ if(!isset($config)) {
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/util/Logger.inc';
 require_once $config->get('sysRoot').'alpha/util/MarkdownFacade.inc';
-require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 require_once $config->get('sysRoot').'alpha/model/article_object.inc';
 
@@ -23,7 +23,7 @@ require_once $config->get('sysRoot').'alpha/model/article_object.inc';
  * @version $Id$
  * 
  */
-class PreviewArticle extends Controller implements AlphaControllerInterface {
+class PreviewArticle extends AlphaController implements AlphaControllerInterface {
 	/**
 	 * Trace logger
 	 * 

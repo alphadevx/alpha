@@ -140,8 +140,8 @@ class RecordSelector {
 					$html .= '<tr><td colspan="2">';				
 					$html .= '<table id="relation_field_'.$this->name.'" style="width:100%; display:'.($expanded ? '' : 'none').';" class="relationTable">';
 					
-					$customViewControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'view');
-					$customEditControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'edit');
+					$customViewControllerName = AlphaController::getCustomControllerName(get_class($objects[0]), 'view');
+					$customEditControllerName = AlphaController::getCustomControllerName(get_class($objects[0]), 'edit');
 					
 					foreach($objects as $obj) {
 						$html .= '<tr><td>';					

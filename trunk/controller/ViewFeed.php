@@ -7,7 +7,7 @@ if(!isset($config)) {
 }
 
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
-require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/util/feeds/RSS2.inc';
 require_once $config->get('sysRoot').'alpha/util/feeds/RSS.inc';
 require_once $config->get('sysRoot').'alpha/util/feeds/Atom.inc';
@@ -24,7 +24,7 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.
  * @version $Id$
  * 
  */
-class ViewFeed extends Controller implements AlphaControllerInterface {
+class ViewFeed extends AlphaController implements AlphaControllerInterface {
 	/**
 	 * The name of the BO to render as a feed
 	 * 

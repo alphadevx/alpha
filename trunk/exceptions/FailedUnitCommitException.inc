@@ -3,7 +3,7 @@
 require_once 'AlphaException.inc';
 
 /**
- * The exception class for Controller unit of work failed to save exceptions
+ * The exception class for AlphaController unit of work failed to save exceptions
  * 
  * @package alpha::exceptions
  * @author John Collins <john@design-ireland.net>
