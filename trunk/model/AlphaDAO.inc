@@ -2820,7 +2820,7 @@ abstract class AlphaDAO {
 		self::$logger->debug('>>begin()');     	
      	
      	if (!AlphaDAO::getConnection()->autocommit(false))
-     		throw new AlphaException('Error beginning a new transaction, error is ['.AlphaDAO::getConnection()->get_warnings().']');
+     		throw new AlphaException('Error beginning a new transaction, error is ['.AlphaDAO::getConnection()->error.']');
      	
      	self::$logger->debug('<<begin');
 	}
@@ -2830,7 +2830,6 @@ abstract class AlphaDAO {
 	 * 
 	 * @since 1.0
 	 * @throws FailedSaveException
-	 * @todo convert to MySQLi
 	 */
 	public static function commit() {
 		if(self::$logger == null)
@@ -2838,7 +2837,7 @@ abstract class AlphaDAO {
 		self::$logger->debug('>>commit()');
 		
     	if (!AlphaDAO::getConnection()->commit())
-     		throw new FailedSaveException('Error commiting a transaction, error is ['.AlphaDAO::getConnection()->get_warnings().']');
+     		throw new FailedSaveException('Error commiting a transaction, error is ['.AlphaDAO::getConnection()->error.']');
     	
     	self::$logger->debug('<<commit');
   	}
@@ -2848,16 +2847,14 @@ abstract class AlphaDAO {
 	 * 
 	 * @since 1.0
 	 * @throws AlphaException
-	 * @todo convert to MySQLi
 	 */
 	public static function rollback() {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaDAO');
 		self::$logger->debug('>>rollback()');
-    	mysql_query('ROLLBACK');
     	
     	if (!AlphaDAO::getConnection()->rollback())
-     		throw new AlphaException('Error aborting a transaction, error is ['.AlphaDAO::getConnection()->get_warnings().']');
+     		throw new AlphaException('Error aborting a transaction, error is ['.AlphaDAO::getConnection()->error.']');
     	
     	self::$logger->debug('<<rollback');
   	}
