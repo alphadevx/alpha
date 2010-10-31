@@ -2687,6 +2687,8 @@ abstract class AlphaDAO {
 			require_once $config->get('sysRoot').'model/'.$classname.'.inc';
 		elseif(file_exists($config->get('sysRoot').'alpha/model/'.$classname.'.inc'))
 			require_once $config->get('sysRoot').'alpha/model/'.$classname.'.inc';
+		elseif(file_exists($config->get('sysRoot').'alpha/model/types/'.$classname.'.inc'))
+			require_once $config->get('sysRoot').'alpha/model/types/'.$classname.'.inc';
 		else
 			throw new IllegalArguementException('The class ['.$classname.'] is not defined anywhere!');
 		
