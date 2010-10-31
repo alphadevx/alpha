@@ -7,7 +7,7 @@ if(!isset($config)) {
 }
 
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
-require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/view/View.inc';
 require_once $config->get('sysRoot').'alpha/model/article_object.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
@@ -23,7 +23,7 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.
  * @todo Validation must include checking the size of the uploaded file
  *
  */
-class CreateArticle extends Controller implements AlphaControllerInterface {
+class CreateArticle extends AlphaController implements AlphaControllerInterface {
 	/**
 	 * The new article to be created
 	 * 

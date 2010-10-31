@@ -26,7 +26,7 @@ require_once $config->get('sysRoot').'alpha/util/helpers/Validator.inc';
  * @TODO rename to AlphaController
  * @since 1.0
  */
-abstract class Controller {
+abstract class AlphaController {
 	/**
 	 * The name of the controller
 	 * 
@@ -182,7 +182,7 @@ abstract class Controller {
 	private static $logger = null;
 	
 	/**
-	 * Constructor for the Controller that starts a new session if required, and handles 
+	 * Constructor for the AlphaController that starts a new session if required, and handles 
 	 * the population of new/dirty objects from the session when available.  Accepts the name 
 	 * of the rights group that has access to this controller, 'Public' by default.
 	 * 
@@ -191,7 +191,7 @@ abstract class Controller {
 	 */
 	public function __construct($visibility='Public') {
 		if(self::$logger == null)
-			self::$logger = new Logger('Controller');
+			self::$logger = new Logger('AlphaController');
 		self::$logger->debug('>>__construct(visibility=['.$visibility.'])');
 		
 	 	global $config;
@@ -886,7 +886,7 @@ abstract class Controller {
 	 */
 	public static function checkSecurityFields() {
 		if(self::$logger == null)
-			self::$logger = new Logger('Controller');
+			self::$logger = new Logger('AlphaController');
 		self::$logger->debug('>>checkSecurityFields()');
 		
 		// the server hostname + today's date
@@ -934,7 +934,7 @@ abstract class Controller {
 	 */
 	public static function getCustomControllerName($BOName, $mode) {
 		if(self::$logger == null)
-			self::$logger = new Logger('Controller');
+			self::$logger = new Logger('AlphaController');
 		self::$logger->debug('>>getCustomControllerName(BOName=['.$BOName.'], mode=['.$mode.'])');
 		
 		global $config;

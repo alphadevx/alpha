@@ -10,7 +10,7 @@ require_once $config->get('sysRoot').'alpha/util/Logger.inc';
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 require_once $config->get('sysRoot').'alpha/view/person.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
-require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
 /**
@@ -24,7 +24,7 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.
  * @version $Id$
  * 
  */
-class Logout extends Controller implements AlphaControllerInterface {
+class Logout extends AlphaController implements AlphaControllerInterface {
 	/**
 	 * Trace logger
 	 * 

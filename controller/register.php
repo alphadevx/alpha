@@ -8,7 +8,7 @@ $config =&configLoader::getInstance();
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 require_once $config->get('sysRoot').'alpha/view/person.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
-require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
+require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 
 /**
  *
@@ -19,7 +19,7 @@ require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
  * @copyright 2006 John Collins
  * 
  */
-class register extends Controller
+class register extends AlphaController
 {
 	/**
 	 * the person to be created
@@ -38,7 +38,7 @@ class register extends Controller
 	 */
 	function register() {
 		// ensure that the super class constructor is called
-		$this->Controller();
+		$this->AlphaController();
 		
 		$this->person_object = new person_object();
 		$this->person_view = new person($this->person_object);
