@@ -855,7 +855,7 @@ abstract class AlphaDAO {
 					$stmt = $this->bindParams($stmt);					
 					$stmt->execute();					
 				}else{
-					throw new FailedSaveException('Failed to save object, error is ['.$stmt->error.'], query ['.$this->lastQuery.']');				
+					throw new FailedSaveException('Failed to save object, error is ['.$stmt->error.'], query ['.$this->lastQuery.']');
 				}
 			}else{
 				// assume that it is a persistent object that needs to be updated
@@ -2700,7 +2700,6 @@ abstract class AlphaDAO {
 	 * @return boolean
 	 * @since 1.0
 	 * @throws AlphaException
-	 * @todo convert to MySQLi
 	 */
 	public function checkRecordExists($OID) {
 		self::$logger->debug('>>checkRecordExists(OID=['.$OID.'])');
@@ -2708,20 +2707,34 @@ abstract class AlphaDAO {
 		if(method_exists($this, 'before_checkRecordExists_callback'))
 			$this->before_checkRecordExists_callback();
 		
-		$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE OID = '$OID';";
+		$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' WHERE OID = ?;';
 
 		$this->lastQuery = $sqlQuery;
-
-		$result = mysql_query($sqlQuery);		
-
-		if (mysql_error() == '') {
-			if(method_exists($this, 'after_checkRecordExists_callback'))
-				$this->after_checkRecordExists_callback();
+		
+		$stmt = AlphaDAO::getConnection()->stmt_init();
+		
+		if($stmt->prepare($sqlQuery)) {
+			$stmt->bind_param('i', $OID);
+			
+			$stmt->execute();
+			
+			$result = $this->bindResult($stmt);
 				
-			if(mysql_num_rows($result) > 0) {
-				self::$logger->debug('<<checkRecordExists [true]');
-				return true;
+			$stmt->close();
+
+			if ($result) {
+				if(method_exists($this, 'after_checkRecordExists_callback'))
+					$this->after_checkRecordExists_callback();
+					
+				if(count($result) > 0) {
+					self::$logger->debug('<<checkRecordExists [true]');
+					return true;
+				}else{
+					self::$logger->debug('<<checkRecordExists [false]');
+					return false;
+				}
 			}else{
+				throw new AlphaException('Failed to check for the record ['.$OID.'] on the class ['.get_class($this).'] from the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');			
 				self::$logger->debug('<<checkRecordExists [false]');
 				return false;
 			}
