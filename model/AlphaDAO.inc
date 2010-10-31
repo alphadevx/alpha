@@ -2206,21 +2206,22 @@ abstract class AlphaDAO {
 	 * @return array An array of database indexes on this table.
 	 * @since 1.0
 	 * @throws AlphaException
-	 * @todo convert to MySQLi
 	 */
 	protected function getIndexes() {
 		self::$logger->debug('>>getIndexes()');
 		
 		$query = 'SHOW INDEX FROM '.$this->getTableName();
-		$result = mysql_query($query);
+		
+		$result = AlphaDAO::getConnection()->query($query);
+		
 		$this->lastQuery = $query;
 		
 		$indexNames = array();
 		
-		if (mysql_error() != '') {
-			throw new AlphaException('Failed to access the system database correctly, error is ['.mysql_error().']');
+		if (!$result) {
+			throw new AlphaException('Failed to access the system database correctly, error is ['.AlphaDAO::getConnection()->error.']');
 		}else{			
-			while ($row = mysql_fetch_assoc($result)) {				
+			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {				
 				array_push($indexNames, $row['Key_name']);
 			}
 		}
