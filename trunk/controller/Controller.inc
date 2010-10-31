@@ -17,19 +17,21 @@ require_once $config->get('sysRoot').'alpha/util/helpers/Validator.inc';
 
 /**
  *
- * The master controller class for the framework
+ * The master controller class for the Alpha Framework.
  * 
  * @package alpha::controller
  * @author John Collins <john@design-ireland.net>
- * @copyright 2009 John Collins
+ * @copyright 2010 John Collins
  * @version $Id$
- * 
+ * @TODO rename to AlphaController
+ * @since 1.0
  */
 abstract class Controller {
 	/**
 	 * The name of the controller
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	protected $name;
 	
@@ -38,6 +40,8 @@ abstract class Controller {
 	 * allowed to access it.  'Public' by default.
 	 * 
 	 * @var string
+	 * @since 1.0
+	 * @TODO test to ensure that this works with a rights_group object name
 	 */ 
 	protected $visibility = 'Public';
 	
@@ -45,80 +49,92 @@ abstract class Controller {
 	 * Optionally, a BO may be set for the default validation form handling code to load in the displayPageHead()
 	 * method.  The defination of this BO class will need to be included in the child controller.
 	 * 
-	 * @var Object
+	 * @var AlphaDAO
+	 * @since 1.0
+	 * @TODO do we really need this as an attribute?
 	 */
 	protected $BO = null;
 	
 	/**
 	 * Used to determine if the controller is part of a unit of work sequence 
-	 * (either empty or the name of the unit)
+	 * (either empty or the name of the unit).
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	protected $unitOfWork;
 	
 	/**
-	 * Stores the start time of a unit of work transaction
+	 * Stores the start time of a unit of work transaction.
 	 * 
 	 * @var Timestamp
+	 * @since 1.0
 	 */
 	protected $unitStartTime;
 	
 	/**
-	 * Stores the end time of a unit of work transaction
+	 * Stores the end time of a unit of work transaction.
 	 * 
-	 * @var Timestamp
+	 * @var Timestamp.
+	 * @since 1.0
 	 */
 	protected $unitEndTime;
 	
 	/**
-	 * Stores the maximum allowed time duration (in seconds) of the unit of work
+	 * Stores the maximum allowed time duration (in seconds) of the unit of work.
 	 * 
 	 * @var Integer
+	 * @since 1.0
 	 */
 	protected $unitMAXDuration;
 	
 	/**
-	 * The name of the first controller that is used in this unit of work
+	 * The name of the first controller that is used in this unit of work.
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	protected $firstJob;
 	
 	/**
-	 * The name of the next controller that is used in this unit of work
+	 * The name of the next controller that is used in this unit of work.
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	protected $nextJob;
 	
 	/**
-	 * The name of the previous controller that is used in this unit of work
+	 * The name of the previous controller that is used in this unit of work.
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	protected $previousJob;
 	
 	/**
-	 * The name of the last controller that is used in this unit of work
+	 * The name of the last controller that is used in this unit of work.
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	protected $lastJob;
 	
 	/**
 	 * An array for storing dirty objects in a session (i.e. persistent business 
-	 * objects that have not been commited to the database yet)
+	 * objects that have not been updated in the database yet).
 	 * 
 	 * @var array
+	 * @since 1.0
 	 */
 	protected $dirtyObjects = array();
 	
 	/**
 	 * An array for storing new objects in a session (transient business objects that 
-	 * have no OID yet)
+	 * have no OID yet).
 	 * 
 	 * @var array
+	 * @since 1.0
 	 */
 	protected $newObjects = array();
 	
@@ -126,6 +142,7 @@ abstract class Controller {
 	 * The title to be displayed on the controller page
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	protected $title;
 	
@@ -133,21 +150,26 @@ abstract class Controller {
 	 * Meta keywords for the controller page, generally populated from tags
 	 * 
 	 * @var string
+	 * @since 1.0
+	 * @TODO should this automatically be tags when the $this->BO isTagged()?
 	 */
 	protected $keywords;
 	
 	/**
-	 * Meta description for the controller page
+	 * Meta description for the controller page.
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	protected $description;
 	
 	/**
 	 * Used to set status update messages to display to the user (messages stored between requests
-	 * in _SESSION)
+	 * in _SESSION).  Useful for when you want to display a message to a user after POSTing a request,
+	 * or when moving from one page to the next.
 	 *
 	 * @var string
+	 * @since 1.0
 	 */
 	protected $statusMessage;
 	
@@ -155,6 +177,7 @@ abstract class Controller {
 	 * Trace logger
 	 * 
 	 * @var Logger
+	 * @since 1.0
 	 */
 	private static $logger = null;
 	
@@ -163,7 +186,8 @@ abstract class Controller {
 	 * the population of new/dirty objects from the session when available.  Accepts the name 
 	 * of the rights group that has access to this controller, 'Public' by default.
 	 * 
-	 * @param string $visibility
+	 * @param string $visibility The name of the rights group that can access this controller.
+	 * @since 1.0
 	 */
 	public function __construct($visibility='Public') {
 		if(self::$logger == null)
@@ -184,36 +208,37 @@ abstract class Controller {
 	 		$this->accessError();
 	 	
 	 	// if configured to do so, force redirect to the front controller
-	 	if($config->get('sysForceFC') && strpos($_SERVER['REQUEST_URI'], 'FC.php') === false && basename($_SERVER['PHP_SELF']) != 'index.php') {
+	 	if($config->get('sysForceFC') && basename($_SERVER['PHP_SELF']) != 'FC.php' && basename($_SERVER['PHP_SELF']) != 'index.php') {
 	 		// set the correct HTTP header for the response
-    		header('HTTP/1.1 301 Moved Permanently');
+	    		header('HTTP/1.1 301 Moved Permanently');
     		
-    		if(empty($_SERVER['QUERY_STRING']))
-    			header('Location: '.$config->get('sysURL').'/FC.php?act='.get_class($this));
-    		else
-    			header('Location: '.$config->get('sysURL').'/FC.php?act='.get_class($this).'&'.$_SERVER['QUERY_STRING']);
+    			if(empty($_SERVER['QUERY_STRING']))
+    				header('Location: '.$config->get('sysURL').'/FC.php?act='.get_class($this));
+    			else
+    				header('Location: '.$config->get('sysURL').'/FC.php?act='.get_class($this).'&'.$_SERVER['QUERY_STRING']);
  
-		    // we're done here
-		    self::$logger->debug('<<__construct');
-    		return;
+			    // we're done here
+			    self::$logger->debug('<<__construct');
+    			return;
 	 	}
 	 	
 	 	$this->unitStartTime = new Timestamp();
 	 	$this->unitEndTime = new Timestamp();
 	 	$this->unitMAXDuration = new Integer();
 	 	
-	 	if($this->name == '')
+	 	// TODO: this should be a controller class name instead
+		if($this->name == '')
 	 		$this->setName('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 	 	
-	 	if(isset($_SESSION['unitOfWork'])) {	 		
+	 	if(isset($_SESSION['unitOfWork'])) { // TODO: check that it's an array?	
 	 		$this->setUnitOfWork($_SESSION['unitOfWork']);
 	 	}
 	 	
-	 	if(isset($_SESSION['dirtyObjects'])) {
+	 	if(isset($_SESSION['dirtyObjects'])) { // TODO: check that it's an array?
 	 		$this->dirtyObjects = $_SESSION['dirtyObjects'];
 	 	}
 	 	
-	 	if(isset($_SESSION['newObjects'])) {	 		
+	 	if(isset($_SESSION['newObjects'])) { // TODO: check that it's an array?
 	 		$this->newObjects = $_SESSION['newObjects'];
 	 	}
 	 	
@@ -225,9 +250,10 @@ abstract class Controller {
 	 }
 	 
 	 /**
-	  * Get the BO for this controller (if any)
+	  * Get the BO for this controller (if any).
 	  * 
 	  * @return mixed
+ 	 * @since 1.0
 	  */
 	 public function getBO() {
 	 	self::$logger->debug('>>getBO()');
@@ -236,9 +262,10 @@ abstract class Controller {
 	 }
 	 
 	 /**
-	  * Setter for the BO for this controller
+	  * Setter for the BO for this controller.
 	  * 
-	  * @param Object $BO
+	  * @param AlphaDAO $BO
+ 	 * @since 1.0
 	  */ 
 	 public function setBO($BO) {
 	 	self::$logger->debug('>>setBO(BO=['.print_r($BO, true).'])');
@@ -247,9 +274,10 @@ abstract class Controller {
 	 }
 	 
 	 /**
-	  * Get the name of the unit of work job
+	  * Get the name of the unit of work job.
 	  * 
 	  * @return string
+ 	 * @since 1.0
 	  */
 	 public function getName() {
 	 	self::$logger->debug('>>getName()');
@@ -258,9 +286,10 @@ abstract class Controller {
 	 }
 	 
 	 /**
-	  * Setter for the unit of work job name
+	  * Setter for the unit of work job name.
 	  * 
 	  * @param string $name
+ 	 * @since 1.0
 	  */ 
 	 public function setName($name) {			
 	 	self::$logger->debug('>>setName(name=['.$name.'])');
@@ -269,9 +298,10 @@ abstract class Controller {
 	 }
 	 
 	 /**
-	  * Get the name of the rights group that has access to this controller
+	  * Get the name of the rights group that has access to this controller.
 	  * 
-	  * @return string $visibility
+	  * @return string
+ 	 * @since 1.0
 	  */
 	 public function getVisibility() {
 	 	self::$logger->debug('>>getVisibility()');
@@ -280,9 +310,10 @@ abstract class Controller {
 	 }
 	 
 	 /**
-	  * Setter for the name of the rights group that has access to this controller
+	  * Setter for the name of the rights group that has access to this controller.
 	  * 
 	  * @param string $visibility
+ 	 * @since 1.0
 	  */
 	 public function setVisibility($visibility) {
 	 	self::$logger->debug('>>setVisibility(visibility=['.$visibility.'])');
@@ -291,9 +322,10 @@ abstract class Controller {
 	 }
 	 
 	 /**
-	  * Gets the name of the first job in this unit of work
+	  * Gets the name of the first job in this unit of work.
 	  * 
 	  * @return string
+ 	 * @since 1.0
 	  */
 	 public function getFirstJob() {
 	 	self::$logger->debug('>>getFirstJob()');
@@ -305,6 +337,7 @@ abstract class Controller {
 	  * Gets the name of the next job in this unit of work
 	  * 
 	  * @return string
+ 	 * @since 1.0
 	  */
 	 public function getNextJob() {
 	 	self::$logger->debug('>>getNextJob()');
@@ -316,6 +349,7 @@ abstract class Controller {
 	  * Gets the name of the previous job in this unit of work
 	  * 
 	  * @return string
+ 	 * @since 1.0
 	  */
 	 public function getPreviousJob() {
 	 	self::$logger->debug('>>getPreviousJob()');
@@ -324,9 +358,10 @@ abstract class Controller {
 	 }
 	 
 	 /**
-	  * Gets the name of the last job in this unit of work
+	  * Gets the name of the last job in this unit of work.
 	  * 
 	  * @return string
+ 	 * @since 1.0
 	  */
 	 public function getLastJob() {
 	 	self::$logger->debug('>>getLastJob()');
@@ -336,9 +371,11 @@ abstract class Controller {
 	 
 	 /**
 	  * Sets the name of the controller job sequence to the values in the supplied 
-	  * array (and stores the array in the session)
+	  * array (and stores the array in the session).
 	  * 
-	  * @param array $jobs
+	  * @param array $jobs The names of the controllers in this unit of work sequence.
+	  * @throws IllegalArguementException
+ 	 * @since 1.0
 	  */
 	 public function setUnitOfWork($jobs) {
 	 	self::$logger->debug('>>setUnitOfWork(jobs=['.print_r($jobs, true).'])');
@@ -351,7 +388,9 @@ abstract class Controller {
 			self::$logger->debug('<<setUnitOfWork');
 			return;
 		}
-			
+
+		// TODO: should we validate that each controller name in the array actually exists?
+
 		// clear out any previous unit of work from the session
 		$_SESSION['unitOfWork'] = null;		
 		$this->dirtyObjects = array();
@@ -392,9 +431,10 @@ abstract class Controller {
 	 }
 	 
 	 /**
-	  * Getter for the unit start time
+	  * Getter for the unit start time.
 	  * 
-	  * @return Timestamp $unitStartTime
+	  * @return Timestamp
+ 	 * @since 1.0
 	  */
 	 public function getStartTime() {
 	 	self::$logger->debug('>>getStartTime()');
@@ -403,14 +443,15 @@ abstract class Controller {
 	 }
 	 
 	 /**
-	  * Setter for the unit start time (value will be stored in the session as key unitStartTime)
+	  * Setter for the unit start time (value will be stored in the session as key unitStartTime).
 	  * 
-	  * @param int $year
-	  * @param int $month
-	  * @param int $day
-	  * @param int $hour
-	  * @param int $minute
-	  * @param int $second
+	  * @param integer $year
+	  * @param integer $month
+	  * @param integer $day
+	  * @param integer $hour
+	  * @param integer $minute
+	  * @param integer $second
+ 	 * @since 1.0
 	  */
 	 public function setUnitStartTime($year, $month, $day, $hour, $minute, $second) {
 	 	self::$logger->debug('>>setUnitStartTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'], second=['.$second.'])');
@@ -420,9 +461,10 @@ abstract class Controller {
 	 }
 	 
 	 /**
-	  * Getter for the unit end time
+	  * Getter for the unit end time.
 	  * 
-	  * @return Timestamp $unitEndTime
+	  * @return Timestamp
+ 	 * @since 1.0
 	  */
 	 public function getEndTime() {
 	 	self::$logger->debug('>>getEndTime()');
@@ -431,14 +473,15 @@ abstract class Controller {
 	 }
 	 
 	 /**
-	  * Setter for the unit end time (value will be stored in the session as key unitEndTime)
+	  * Setter for the unit end time (value will be stored in the session as key unitEndTime).
 	  * 
-	  * @param int $year
-	  * @param int $month
-	  * @param int $day
-	  * @param int $hour
-	  * @param int $minute
-	  * @param int $second
+	  * @param integer $year
+	  * @param integer $month
+	  * @param integer $day
+	  * @param integer $hour
+	  * @param integer $minute
+	  * @param integer $second
+ 	 * @since 1.0
 	  */
 	 public function setUnitEndTime($year, $month, $day, $hour, $minute, $second) {
 	 	self::$logger->debug('>>setUnitEndTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'], second=['.$second.'])');
@@ -448,9 +491,10 @@ abstract class Controller {
 	 }
 	 
 	 /**
-	  * Getter for the unit of work MAX duration
+	  * Getter for the unit of work MAX duration.
 	  * 
-	  * @return Integer $unitMAXDuration
+	  * @return Integer
+ 	 * @since 1.0
 	  */
 	 public function getMAXDuration() {
 	 	self::$logger->debug('>>getMAXDuration()');
@@ -459,9 +503,10 @@ abstract class Controller {
 	 }
 	 
 	 /**
-	  * Setter for the unit MAX duration
+	  * Setter for the unit MAX duration.
 	  * 
-	  * @param integer $unitMAXDuration
+	  * @param integer $duration The desired duration in seconds.
+ 	 * @since 1.0
 	  */
 	 public function setUnitMAXDuration($duration) {
 	 	self::$logger->debug('>>setUnitMAXDuration(duration=['.$duration.'])');
@@ -470,9 +515,10 @@ abstract class Controller {
 	 }
 	 
 	 /**
-	  * Calculates and returns the unit of work current duration in seconds
+	  * Calculates and returns the unit of work current duration in seconds.
 	  * 
-	  * @return integer $duration
+	  * @return integer
+ 	 * @since 1.0
 	  */
 	 public function getUnitDuration() {
 	 	self::$logger->debug('>>getUnitDuration()');
@@ -500,9 +546,10 @@ abstract class Controller {
 	 }
 	 
 	 /**
-	  * Adds the supplied business object to the dirtyObjects array in the session
+	  * Adds the supplied business object to the dirtyObjects array in the session.
 	  * 
-	  * @param Object $object
+	  * @param AlphaDAO $object
+ 	 * @since 1.0
 	  */
 	 public function markDirty($object) {
 	 	self::$logger->debug('>>markDirty(object=['.print_r($object, true).'])');
@@ -521,9 +568,10 @@ abstract class Controller {
 	 }
 	 
 	 /**
-	  * Getter for the dirty objects array
+	  * Getter for the dirty objects array.
 	  * 
-	  * @return array $dirtyObjects
+	  * @return array
+ 	 * @since 1.0
 	  */
 	 public function getDirtyObjects() {
 	 	self::$logger->debug('>>getDirtyObjects()');
@@ -532,9 +580,10 @@ abstract class Controller {
 	 }
 	 
 	 /**
-	  * Adds a newly created business object to the newObjects array in the session
+	  * Adds a newly created business object to the newObjects array in the session.
 	  * 
-	  * @param Object $object
+	  * @param AlphaDAO $object
+ 	 * @since 1.0
 	  */
 	 public function markNew($object) {
 	 	self::$logger->debug('>>markNew(object=['.print_r($object, true).'])');
@@ -553,9 +602,10 @@ abstract class Controller {
 	 }
 	 
 	 /**
-	  * Getter for the new objects array
+	  * Getter for the new objects array.
 	  * 
-	  * @return array $newObjects
+	  * @return array
+ 	 * @since 1.0
 	  */
 	 public function getNewObjects() {
 	 	self::$logger->debug('>>getNewObjects()');
@@ -564,7 +614,11 @@ abstract class Controller {
 	 }
 	 
 	/**
-	 * Commits (saves) all of the new and modified (dirty) objects in the unit of work to the database
+	 * Commits (saves) all of the new and modified (dirty) objects in the unit of work to the database.
+	 * @todo Modify to use AlphaDAO::commit() calls
+	 *
+	 * @throws FailedUnitCommitException
+ 	 * @since 1.0
 	 */
 	public function commit() {
 		self::$logger->debug('>>commit()');
@@ -612,7 +666,7 @@ abstract class Controller {
 			}
 		}
 		
-		$sqlQuery = 'COMMIT;';		
+		$sqlQuery = 'COMMIT;';
 
 		$result = mysql_query($sqlQuery);
 		
@@ -632,7 +686,11 @@ abstract class Controller {
 	}
 	
 	/**
-	 * Method to clearup a cancelled unit of work
+	 * Method to clearup a cancelled unit of work.
+	 * @todo Modify to use AlphaDAO::rollback() call
+	 *
+	 * @throws AlphaException
+	 * @since 1.0
 	 */
 	public function abort() {
 		self::$logger->debug('>>abort()');
@@ -660,9 +718,10 @@ abstract class Controller {
 	}
 	
 	/**
-	 * Getter for the page title
+	 * Getter for the page title.
 	 * 
 	 * @return string
+	 * @since 1.0
 	 */
 	public function getTitle() {
 		self::$logger->debug('>>getTitle()');
@@ -671,9 +730,10 @@ abstract class Controller {
 	}
 	
 	/**
-	 * Setter for the page title
+	 * Setter for the page title.
 	 * 
 	 * @param string $title
+	 * @since 1.0
 	 */
 	public function setTitle($title) {
 		self::$logger->debug('>>setTitle(title=['.$title.'])');
@@ -682,9 +742,10 @@ abstract class Controller {
 	}
 	
 	/**
-	 * Getter for the page description
+	 * Getter for the page description.
 	 * 
 	 * @return string
+	 * @since 1.0
 	 */
 	public function getDescription() {
 		self::$logger->debug('>>getDescription()');
@@ -693,9 +754,10 @@ abstract class Controller {
 	}
 	
 	/**
-	 * Setter for the page description
+	 * Setter for the page description.
 	 * 
 	 * @param string $description
+	 * @since 1.0
 	 */
 	public function setDescription($description) {
 		self::$logger->debug('>>setDescription(description=['.$description.'])');
@@ -704,9 +766,10 @@ abstract class Controller {
 	}
 	
 	/**
-	 * Getter for the page keywords
+	 * Getter for the page keywords.
 	 * 
-	 * @return string page keywords
+	 * @return string
+	 * @since 1.0
 	 */
 	public function getKeywords() {
 		self::$logger->debug('>>getKeywords()');
@@ -715,18 +778,21 @@ abstract class Controller {
 	}
 	
 	/**
-	 * Setter for the page keywords, should pass a comma-seperated list as a string
+	 * Setter for the page keywords, should pass a comma-seperated list as a string.
 	 * 
 	 * @param string $keywords
+	 * @since 1.0
 	 */
 	public function setKeywords($keywords) {
 		self::$logger->debug('>>setKeywords(keywords=['.$keywords.'])');
 		self::$logger->debug('<<setKeywords');
-		$this->keywords = $keywords;	
+		$this->keywords = $keywords;
 	}
 	
 	/**
-	 * Method to display an access error for trespassing users
+	 * Method to display an access error for trespassing users.
+         * 
+	 * @since 1.0
 	 */
 	public function accessError() {
 		self::$logger->debug('>>accessError()');
@@ -759,6 +825,7 @@ abstract class Controller {
 	 * not got the correct rights.
 	 * 
 	 * @return boolean
+	 * @since 1.0
 	 */
 	public function checkRights() {
 		self::$logger->debug('>>checkRights()');
@@ -797,12 +864,12 @@ abstract class Controller {
 					self::$logger->debug('<<checkRights [true]');
 					return true;
 				}else{
-					$this->accessError();
+					$this->accessError(); // TODO: this won't actually return as accessError() exits.  Should it exit?
 					self::$logger->debug('<<checkRights [false]');
 					return false;
 				}
 			}else{ // the person is NOT logged in
-				$this->accessError();
+				$this->accessError(); // TODO: this won't actually return as accessError() exits.  Should it exit?
 				self::$logger->debug('<<checkRights [false]');
 				return false;
 			}
@@ -815,6 +882,7 @@ abstract class Controller {
 	 * the same server that is hosting it.
 	 * 
 	 * @return boolean
+	 * @since 1.0
 	 */
 	public static function checkSecurityFields() {
 		if(self::$logger == null)
@@ -827,7 +895,7 @@ abstract class Controller {
 		$var2 = md5($_SERVER['REMOTE_ADDR'].$var1);
 		
 		if(empty($_REQUEST['var1']) || empty($_REQUEST['var2'])) {
-			self::$logger->debug('<<checkSecurityFields [false]');
+			self::$logger->debug('<<checkSecurityFields [false]'); // TODO: log a warning?
 			return false;
 		}
 		
@@ -850,18 +918,19 @@ abstract class Controller {
 				self::$logger->debug('<<checkSecurityFields [true]');
 				return true;
 			}else{
-				self::$logger->debug('<<checkSecurityFields [false]');
+				self::$logger->debug('<<checkSecurityFields [false]');  // TODO: log a warning?
 				return false;
 			}
 		}
 	}
 	
 	/**
-	 * Returns the name of a custom controller if one is found, otherwise returns null
+	 * Returns the name of a custom controller if one is found, otherwise returns null.
 	 *
 	 * @param string $BOName The classname of the business object
 	 * @param string $mode The mode of the controller (create, view, edit)
 	 * @return string
+	 * @since 1.0
 	 */
 	public static function getCustomControllerName($BOName, $mode) {
 		if(self::$logger == null)
@@ -889,10 +958,11 @@ abstract class Controller {
 	}
 	
 	/**
-	 * Does a HTTP redirect to a custom controller if one is found
+	 * Does a HTTP redirect to a custom controller if one is found.
 	 *
 	 * @param string $BOName The classname of the business object
 	 * @param string $mode The mode of the controller (create, view, edit)
+	 * @since 1.0
 	 */
 	protected function loadCustomController($BOName, $mode) {
 		self::$logger->debug('>>loadCustomController(BOName=['.$BOName.'], mode=['.$mode.'])');
@@ -920,7 +990,7 @@ abstract class Controller {
 					header('Location: '.$config->get('sysURL').'controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING']);
 				}
 			}
-	
+
 			if (file_exists($config->get('sysRoot').'alpha/controller/'.$controllerName.'.php')) {
 				self::$logger->debug('Custom controller found, redirecting...');
 				// handle secure URLs
@@ -933,13 +1003,15 @@ abstract class Controller {
 			}
 		}
 		
+		// TODO: throw an exception if we have gotten this far and no custom controller was found
 		self::$logger->debug('<<loadCustomController');
 	}
 	
 	/**
 	 * Set the status message in the _SESSION to the value provided.
 	 * 
-	 * @param $message
+	 * @param string $message
+     * @since 1.0
 	 */
 	public function setStatusMessage($message) {
 		$this->statusMessage = $message;
@@ -952,6 +1024,7 @@ abstract class Controller {
 	 * to get the status message once for display purposes.
 	 * 
 	 * @return string
+     * @since 1.0
 	 */
 	public function getStatusMessage() {
 		$_SESSION['statusMessage'] = null;
