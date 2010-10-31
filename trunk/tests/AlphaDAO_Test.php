@@ -87,6 +87,15 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase
     }
     
     /**
+     * testing the checkRecordExists method
+     */
+    public function testCheckRecordExists() {
+    	$this->person->save();
+    	$person = new person_object();
+    	$this->assertTrue($person->checkRecordExists($this->person->getOID()), 'testing the checkRecordExists method');
+    }
+    
+    /**
      * testing the loadByAttribute method
      */
     public function testLoadByAttribute() {
