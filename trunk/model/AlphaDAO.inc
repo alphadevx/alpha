@@ -2403,7 +2403,6 @@ abstract class AlphaDAO {
 	 * @param string $attribute2Name The second attribute to mark unique in the databse (optional, use only for composite keys).
 	 * @since 1.0
 	 * @throws AlphaException
-	 * @todo convert to MySQLi
 	 */
 	protected function createUniqueIndex($attribute1Name, $attribute2Name = '') {
 		self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'])');
@@ -2416,13 +2415,13 @@ abstract class AlphaDAO {
 			
 			$this->lastQuery = $sqlQuery;
 	
-			$result = mysql_query($sqlQuery);
+			$result = AlphaDAO::getConnection()->query($query);
 	
-			if (mysql_error() == '') {
+			if ($result) {
 				if(method_exists($this, 'after_createUniqueIndex_callback'))
 					$this->after_createUniqueIndex_callback();
 			}else{			
-				throw new AlphaException('Failed to create the index ['.$attribute1Name.'_unq_idx] on ['.$this->getTableName().'], error is ['.mysql_error().']');
+				throw new AlphaException('Failed to create the index ['.$attribute1Name.'_unq_idx] on ['.$this->getTableName().'], error is ['.AlphaDAO::getConnection()->error.']');
 			}
 		}else{
 			// process composite unique keys
@@ -2430,15 +2429,16 @@ abstract class AlphaDAO {
 			
 			$this->lastQuery = $sqlQuery;
 	
-			$result = mysql_query($sqlQuery);
+			$result = AlphaDAO::getConnection()->query($query);
 	
-			if (mysql_error() == '') {
+			if ($result) {
 				if(method_exists($this, 'after_create_unique_index_callback'))
 					$this->after_createUniqueIndex_callback();
 			}else{			
-				throw new AlphaException('Failed to create the index ['.$attribute1Name.'_'.$attribute2Name.'_unq_idx] on ['.$this->getTableName().'], error is ['.mysql_error().']');
+				throw new AlphaException('Failed to create the index ['.$attribute1Name.'_'.$attribute2Name.'_unq_idx] on ['.$this->getTableName().'], error is ['.AlphaDAO::getConnection()->error.']');
 			}
 		}
+		
 		self::$logger->debug('<<createUniqueIndex');
 	}
 	
