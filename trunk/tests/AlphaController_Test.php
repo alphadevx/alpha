@@ -2,6 +2,7 @@
 
 require_once $config->get('sysRoot').'alpha/controller/Search.php';
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
+require_once $config->get('sysRoot').'alpha/model/rights_object.inc';
 
 /**
  *
@@ -29,12 +30,21 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 	private $person;
 	
 	/**
+	 * Test rights group
+	 * 
+	 * @var rights_object
+	 */
+	private $group;
+	
+	/**
 	 * (non-PHPdoc)
 	 * @see alpha/lib/PEAR/PHPUnit-3.2.9/PHPUnit/Framework/PHPUnit_Framework_TestCase::setUp()
 	 */
     protected function setUp() {
+    	AlphaDAO::begin();
     	$this->controller = new Search();
     	$this->person = $this->createPersonObject('unitTestUser');
+    	$this->group = new rights_object();
     }
     
 	/**
@@ -42,8 +52,10 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 	 * @see alpha/lib/PEAR/PHPUnit-3.2.9/PHPUnit/Framework/PHPUnit_Framework_TestCase::tearDown()
 	 */
     protected function tearDown() {
+    	AlphaDAO::rollback();
     	unset($this->controller);
     	unset($this->person);
+    	unset($this->group);
     }
     
 	/**
@@ -64,12 +76,50 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     /**
      * testing that objects are being added to the dirtyObject array correctly
      */
-    function testMarkDirtyAdd() {
+    public function testMarkDirtyAdd() {
     	$this->controller->markDirty($this->person);
     	
     	$dirtyObjects = $this->controller->getDirtyObjects();
     	
     	$this->assertEquals('http://unitTestUser/', $dirtyObjects[0]->get('URL'), 'testing that objects are being added to the dirtyObject array correctly');	
+    }
+    
+    /**
+     * testing that objects are being added to the newObject array correctly
+     */
+    public function testMarkNewAdd() {
+    	$this->controller->markNew($this->person);
+    	
+    	$newObjects = $this->controller->getNewObjects();
+    	
+    	$this->assertEquals('http://unitTestUser/', $newObjects[0]->get('URL'), 'testing that objects are being added to the newObject array correctly');	
+    }
+    
+    /**
+     * test cases to see if access rights on controllers are working as expected
+     * 
+     * @todo add more test cases!
+     */
+    public function testRightsAccess() {
+    	$this->group->set('name', 'testgroup');
+    	$this->group->save();
+    	
+    	$this->person->save();
+    	
+    	$lookup = $this->person->getPropObject('rights')->getLookup();
+		$lookup->setValue(array($this->person->getOID(), $this->group->getOID()));
+		$lookup->save();
+		
+		$admin = $_SESSION['currentUser'];
+		$_SESSION['currentUser'] = $this->person;
+		
+		try {
+			$controller = new Search('testgroup');
+		}catch (PHPException $e) {
+			$this->fail('failed to access a controller that I have access to by rights group membership');
+		}
+		
+		$_SESSION['currentUser'] = $admin;
     }
 }
 
