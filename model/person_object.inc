@@ -216,6 +216,7 @@ class person_object extends AlphaDAO {
 	public function inGroup($groupName) {
 		if(self::$logger == null)
 			self::$logger = new Logger('person_object');
+		self::$logger->debug('>>inGroup(groupName=['.$groupName.'])');
 			
 		$group = new rights_object();
 			
@@ -223,6 +224,7 @@ class person_object extends AlphaDAO {
 			$group->loadByAttribute('name', $groupName);
 		}catch (BONotFoundException $e) {
 			self::$logger->error('Unable to load the group named ['.$groupName.']');
+			self::$logger->debug('<<inGroup [false]');
 			return false;
 		}
 			
@@ -234,13 +236,17 @@ class person_object extends AlphaDAO {
 				// the rightID (i.e. rights_object OID) will be on the right side of the value array
 				$ids = $lookUp->getValue();
 				// if we have found a match, return true right away
-				if($ids[1] == $group->getID())
+				if($ids[1] == $group->getID()) {
+					self::$logger->debug('<<inGroup [true]');
 					return true;
+				}
 			}				
 		}catch (BONotFoundException $e) {
+			self::$logger->debug('<<inGroup [false]');
 			return false;
 		}
-			
+		
+		self::$logger->debug('<<inGroup [false]');
 		return false;
 	}
 
