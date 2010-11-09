@@ -151,13 +151,15 @@ class RelationLookup extends AlphaDAO implements AlphaTypeInterface {
 	 * This custom version provides the left/right class names to the business object constructor, required 
 	 * for RelationLookup objects.
 	 * 
-	 * @param string $atribute The attribute to load the object by
-	 * @param string $value The value of the attribute to load the object by
-	 * @param integer $start The start of the SQL LIMIT clause
-	 * @param integer $limit The amount (limit) of objects to load
-	 * @param string $orderBy the name of the field to sort the BOs by
-	 * @param string $order the order to sort the BOs by, default is ASC
-	 * @return array an array containing objects of this type of business object.
+	 * @param string $atribute The attribute to load the objects by.
+	 * @param string $value The value of the attribute to load the objects by.
+	 * @param integer $start The start of the SQL LIMIT clause, useful for pagination.
+	 * @param integer $limit The amount (limit) of objects to load, useful for pagination.
+	 * @param string $orderBy The name of the field to sort the objects by.
+	 * @param string $order The order to sort the objects by.
+	 * @return array An array containing objects of this type of business object.
+	 * @since 1.0
+	 * @throws BONotFoundException
 	 */
 	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC") {
 		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
@@ -167,20 +169,48 @@ class RelationLookup extends AlphaDAO implements AlphaTypeInterface {
 		
 		global $config;
 		
-		if ($limit == 0)
-			$limit = $config->get('sysListPageAmount');
+		if ($start != 0 && $limit != 0)
+			$limit = ' LIMIT '.$start.', '.$limit.';';
+		else
+			$limit = ';';
 		
 		if(!$this->isTableOverloaded())
-			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = '$value' ORDER BY ".$orderBy." ".$order." LIMIT ".$start.", ".$limit.";";
+			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = ? ORDER BY ".$orderBy." ".$order.$limit;
 		else
-			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = '$value' AND classname='".get_class($this)."' ORDER BY ".$orderBy." ".$order." LIMIT ".$start.", ".$limit.";";
+			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = ? AND classname = ? ORDER BY ".$orderBy." ".$order.$limit;
 			
 		$this->lastQuery = $sqlQuery;
-
-		$result = mysql_query($sqlQuery);
 		
-		if(mysql_error() != '') {
-			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+		$stmt = AlphaDAO::getConnection()->stmt_init();
+
+		$row = array();
+		
+		if($stmt->prepare($sqlQuery)) {
+			if($this->$attribute instanceof Integer) {
+				if($this->isTableOverloaded()) {
+					$stmt->bind_param('is', $value, get_class($this));
+				}else{
+					$stmt->bind_param('i', $value);
+				}
+			}else{
+				if($this->isTableOverloaded()) {
+					$stmt->bind_param('ss', $value, get_class($this));
+				}else{
+					$stmt->bind_param('s', $value);
+				}
+			}
+			
+			$stmt->execute();
+			
+			$result = $this->bindResult($stmt);
+				
+			$stmt->close();
+		}else{
+			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
+			if(!$this->checkTableExists()) {
+				$this->makeTable();
+				throw new BONotFoundException('Failed to load objects by attribute ['.$attribute.'] and value ['.$value.'], table did not exist so had to create!');
+			}
 			self::$logger->debug('<<loadAllByAttribute []');
 			return array();
 		}
@@ -190,11 +220,15 @@ class RelationLookup extends AlphaDAO implements AlphaTypeInterface {
 		$count = 0;
 		$BO_Class = get_class($this);
 		
-		while($row = mysql_fetch_assoc($result)) {
-			$obj = new $BO_Class($this->leftClassName, $this->rightClassName);
-			$obj->load($row["OID"]);
-			$objects[$count] = $obj;
-			$count++;
+		foreach($result as $row) {
+			try {
+				$obj = new $BO_Class($this->leftClassName, $this->rightClassName);
+				$obj->load($row['OID']);
+				$objects[$count] = $obj;
+				$count++;
+			}catch(ResourceNotAllowedException $e) {
+				// the resource not allowed will be absent from the list
+			}
 		}
 		
 		if(method_exists($this, 'after_loadAllByAttribute_callback'))
