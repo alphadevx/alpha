@@ -121,6 +121,18 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 		
 		$_SESSION['currentUser'] = $admin;
     }
+    
+	/** 
+     * test the getUnitDuration method for equality
+     */
+    public function testGetUnitDurationEqual() {
+    	$controller1 = new Search();
+    	$controller2 = new Search();
+        $controller1->setUnitEndTime(2005, 10, 30, 21, 15, 15);
+    	$controller2->setUnitEndTime(2005, 10, 30, 21, 15, 15);
+    
+    	$this->assertEquals($controller1->getUnitDuration(), $controller2->getUnitDuration(), 'test the getUnitDuration method for equality');
+    }
 }
 
 ?>
