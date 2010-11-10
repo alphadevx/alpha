@@ -256,7 +256,7 @@ abstract class AlphaController {
     			return;
 	 	}
 	 	
-	 	$this->unitStartTime = new Timestamp();
+	 	$this->unitStartTime = new Timestamp(date("Y-m-d H:i:s"));
 	 	$this->unitEndTime = new Timestamp();
 	 	$this->unitMAXDuration = new Integer();
 	 	
@@ -287,7 +287,7 @@ abstract class AlphaController {
 	  * Get the BO for this controller (if any).
 	  * 
 	  * @return mixed
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function getBO() {
 	 	self::$logger->debug('>>getBO()');
@@ -299,7 +299,7 @@ abstract class AlphaController {
 	  * Setter for the BO for this controller.
 	  * 
 	  * @param AlphaDAO $BO
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */ 
 	 public function setBO($BO) {
 	 	self::$logger->debug('>>setBO(BO=['.print_r($BO, true).'])');
@@ -311,7 +311,7 @@ abstract class AlphaController {
 	  * Get the name of the unit of work job.
 	  * 
 	  * @return string
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function getName() {
 	 	self::$logger->debug('>>getName()');
@@ -323,7 +323,7 @@ abstract class AlphaController {
 	  * Setter for the unit of work job name.
 	  * 
 	  * @param string $name
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */ 
 	 public function setName($name) {			
 	 	self::$logger->debug('>>setName(name=['.$name.'])');
@@ -335,7 +335,7 @@ abstract class AlphaController {
 	  * Get the name of the rights group that has access to this controller.
 	  * 
 	  * @return string
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function getVisibility() {
 	 	self::$logger->debug('>>getVisibility()');
@@ -347,7 +347,7 @@ abstract class AlphaController {
 	  * Setter for the name of the rights group that has access to this controller.
 	  * 
 	  * @param string $visibility
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function setVisibility($visibility) {
 	 	self::$logger->debug('>>setVisibility(visibility=['.$visibility.'])');
@@ -359,7 +359,7 @@ abstract class AlphaController {
 	  * Gets the name of the first job in this unit of work.
 	  * 
 	  * @return string
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function getFirstJob() {
 	 	self::$logger->debug('>>getFirstJob()');
@@ -371,7 +371,7 @@ abstract class AlphaController {
 	  * Gets the name of the next job in this unit of work
 	  * 
 	  * @return string
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function getNextJob() {
 	 	self::$logger->debug('>>getNextJob()');
@@ -383,7 +383,7 @@ abstract class AlphaController {
 	  * Gets the name of the previous job in this unit of work
 	  * 
 	  * @return string
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function getPreviousJob() {
 	 	self::$logger->debug('>>getPreviousJob()');
@@ -395,7 +395,7 @@ abstract class AlphaController {
 	  * Gets the name of the last job in this unit of work.
 	  * 
 	  * @return string
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function getLastJob() {
 	 	self::$logger->debug('>>getLastJob()');
@@ -409,7 +409,7 @@ abstract class AlphaController {
 	  * 
 	  * @param array $jobs The names of the controllers in this unit of work sequence.
 	  * @throws IllegalArguementException
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function setUnitOfWork($jobs) {
 	 	self::$logger->debug('>>setUnitOfWork(jobs=['.print_r($jobs, true).'])');
@@ -468,7 +468,7 @@ abstract class AlphaController {
 	  * Getter for the unit start time.
 	  * 
 	  * @return Timestamp
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function getStartTime() {
 	 	self::$logger->debug('>>getStartTime()');
@@ -485,7 +485,7 @@ abstract class AlphaController {
 	  * @param integer $hour
 	  * @param integer $minute
 	  * @param integer $second
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function setUnitStartTime($year, $month, $day, $hour, $minute, $second) {
 	 	self::$logger->debug('>>setUnitStartTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'], second=['.$second.'])');
@@ -498,7 +498,7 @@ abstract class AlphaController {
 	  * Getter for the unit end time.
 	  * 
 	  * @return Timestamp
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function getEndTime() {
 	 	self::$logger->debug('>>getEndTime()');
@@ -515,7 +515,7 @@ abstract class AlphaController {
 	  * @param integer $hour
 	  * @param integer $minute
 	  * @param integer $second
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function setUnitEndTime($year, $month, $day, $hour, $minute, $second) {
 	 	self::$logger->debug('>>setUnitEndTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'], second=['.$second.'])');
@@ -528,7 +528,7 @@ abstract class AlphaController {
 	  * Getter for the unit of work MAX duration.
 	  * 
 	  * @return Integer
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function getMAXDuration() {
 	 	self::$logger->debug('>>getMAXDuration()');
@@ -540,7 +540,7 @@ abstract class AlphaController {
 	  * Setter for the unit MAX duration.
 	  * 
 	  * @param integer $duration The desired duration in seconds.
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function setUnitMAXDuration($duration) {
 	 	self::$logger->debug('>>setUnitMAXDuration(duration=['.$duration.'])');
@@ -552,7 +552,7 @@ abstract class AlphaController {
 	  * Calculates and returns the unit of work current duration in seconds.
 	  * 
 	  * @return integer
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function getUnitDuration() {
 	 	self::$logger->debug('>>getUnitDuration()');
@@ -562,7 +562,7 @@ abstract class AlphaController {
 	 		$this->unitStartTime->getMinute(),
 	 		$this->unitStartTime->getSecond(),
 	 		$this->unitStartTime->getMonth(),
-	 		$this->unitStartTime->getDate(),
+	 		$this->unitStartTime->getDay(),
 	 		$this->unitStartTime->getYear()
 	 		);
 	 	
@@ -571,7 +571,7 @@ abstract class AlphaController {
 	 		$this->unitEndTime->getMinute(),
 	 		$this->unitEndTime->getSecond(),
 	 		$this->unitEndTime->getMonth(),
-	 		$this->unitEndTime->getDate(),
+	 		$this->unitEndTime->getDay(),
 	 		$this->unitEndTime->getYear()
 	 		);
 	 	
@@ -583,7 +583,7 @@ abstract class AlphaController {
 	  * Adds the supplied business object to the dirtyObjects array in the session.
 	  * 
 	  * @param AlphaDAO $object
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function markDirty($object) {
 	 	self::$logger->debug('>>markDirty(object=['.print_r($object, true).'])');
@@ -605,7 +605,7 @@ abstract class AlphaController {
 	  * Getter for the dirty objects array.
 	  * 
 	  * @return array
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function getDirtyObjects() {
 	 	self::$logger->debug('>>getDirtyObjects()');
@@ -617,7 +617,7 @@ abstract class AlphaController {
 	  * Adds a newly created business object to the newObjects array in the session.
 	  * 
 	  * @param AlphaDAO $object
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function markNew($object) {
 	 	self::$logger->debug('>>markNew(object=['.print_r($object, true).'])');
@@ -639,7 +639,7 @@ abstract class AlphaController {
 	  * Getter for the new objects array.
 	  * 
 	  * @return array
- 	 * @since 1.0
+ 	  * @since 1.0
 	  */
 	 public function getNewObjects() {
 	 	self::$logger->debug('>>getNewObjects()');
@@ -825,7 +825,7 @@ abstract class AlphaController {
 	
 	/**
 	 * Method to display an access error for trespassing users.
-         * 
+     * 
 	 * @since 1.0
 	 */
 	public function accessError() {
