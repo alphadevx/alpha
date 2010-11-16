@@ -133,6 +133,38 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     
     	$this->assertEquals($controller1->getUnitDuration(), $controller2->getUnitDuration(), 'test the getUnitDuration method for equality');
     }
+    
+	/** 
+     * test the getUnitDuration method for greater than
+     */
+    public function testGetUnitDurationGreater() {
+        $controller1 = new Search();
+    	$controller2 = new Search();
+        $controller1->setUnitEndTime(2006, 10, 30, 21, 15, 15);
+    	$controller2->setUnitEndTime(2005, 10, 30, 21, 15, 15);
+    
+    	$this->assertTrue($controller1->getUnitDuration() > $controller2->getUnitDuration(), 'test the getUnitDuration method for greater than');
+    }
+    
+	/**
+     * testing the setUnitOfWork method and getNextJob
+     */
+    public function testSetUnitOfWorkNext() {
+    	$this->controller->setName('ControllerOne');
+    	$this->controller->setUnitOfWork(array('ControllerOne','ControllerTwo','ControllerThree','ControllerFour','ControllerFive'));
+    	
+    	$this->assertEquals('ControllerTwo', $this->controller->getNextJob(), 'testing the setUnitOfWork method and getNextJob');
+    }
+    
+	/**
+     * testing the setUnitOfWork method and getFirstJob
+     */
+    public function testSetUnitOfWorkFirst() {
+    	$this->controller->setName('ControllerFour');
+    	$this->controller->setUnitOfWork(array('ControllerOne','ControllerTwo','ControllerThree','ControllerFour','ControllerFive'));
+    	
+    	$this->assertEquals('ControllerOne', $this->controller->getFirstJob(), 'testing the setUnitOfWork method and getFirstJob');
+    }
 }
 
 ?>
