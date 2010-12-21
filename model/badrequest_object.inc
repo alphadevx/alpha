@@ -55,15 +55,28 @@ class badrequest_object extends AlphaDAO {
 	const TABLE_NAME = 'badrequest';
 	
 	/**
+	 * Trace logger
+	 * 
+	 * @var Logger
+	 */
+	private static $logger = null;
+	
+	/**
 	 * constructor for the class
 	 */
 	public function __construct() {
+		if(self::$logger == null)
+			self::$logger = new Logger('badrequest_object');
+		self::$logger->debug('>>__construct()');
+		
 		// ensure to call the parent constructor
 		parent::__construct();
 		
 		$this->client = new String();
 		$this->IP = new String();
 		$this->requestedResource = new String();
+		
+		self::$logger->debug('<<__construct');
 	}
 	
 	/**
