@@ -2415,7 +2415,7 @@ abstract class AlphaDAO {
 			
 			$this->lastQuery = $sqlQuery;
 	
-			$result = AlphaDAO::getConnection()->query($query);
+			$result = AlphaDAO::getConnection()->query($sqlQuery);
 	
 			if ($result) {
 				if(method_exists($this, 'after_createUniqueIndex_callback'))
@@ -2429,7 +2429,7 @@ abstract class AlphaDAO {
 			
 			$this->lastQuery = $sqlQuery;
 	
-			$result = AlphaDAO::getConnection()->query($query);
+			$result = AlphaDAO::getConnection()->query($sqlQuery);
 	
 			if ($result) {
 				if(method_exists($this, 'after_create_unique_index_callback'))
