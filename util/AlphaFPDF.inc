@@ -347,9 +347,9 @@ class AlphaFPDF extends FPDF {
 	{
 		global $config;
 		
-	    $tmp_alpha = tempnam($config->get('sysRoot').'alpha/cache/images/', 'mska');
+	    $tmp_alpha = tempnam($config->get('sysRoot').'cache/images/', 'mska');
 	    $this->tmpFiles[] = $tmp_alpha;
-	    $tmp_plain = tempnam($config->get('sysRoot').'alpha/cache/images/', 'mskp');
+	    $tmp_plain = tempnam($config->get('sysRoot').'cache/images/', 'mskp');
 	    $this->tmpFiles[] = $tmp_plain;
 	    
 	    list($wpx, $hpx) = getimagesize($file);
