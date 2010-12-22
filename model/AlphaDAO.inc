@@ -633,7 +633,14 @@ abstract class AlphaDAO {
 		$stmt = AlphaDAO::getConnection()->stmt_init();
 		
 		if($stmt->prepare($sqlQuery)) {			
-			$stmt = $this->bindParams($stmt, $attributes, $values);
+			// bind params where required attributes are provided
+			if(count($attributes) > 0 && count($attributes) == count($values)) {
+				$stmt = $this->bindParams($stmt, $attributes, $values);
+			}else{
+				// we'll still need to bind the "classname" for overloaded BOs...
+				if($this->isTableOverloaded())
+					$stmt->bind_param('s', get_class($this));
+			}
 			$stmt->execute();
 			
 			$result = $this->bindResult($stmt);
@@ -3048,7 +3055,7 @@ abstract class AlphaDAO {
 			}
 		}
 		
-		self::$logger->debug('bindingsTypes=['.$bindingsTypes.']');
+		self::$logger->debug('bindingsTypes=['.$bindingsTypes.'], count: ['.strlen($bindingsTypes).']');
 		self::$logger->debug('params ['.print_r($params, true).']');
 					
 	    if ($params != null) {		 
