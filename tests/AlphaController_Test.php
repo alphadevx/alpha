@@ -44,9 +44,6 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     	$this->controller = new Search();
     	$this->person = $this->createPersonObject('unitTestUser');
     	$this->group = new rights_object();
-    	// just making sure no previous test user is in the DB
-        $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/');
-        $this->person->deleteAllByAttribute('displayName', 'unitTestUser');
     }
     
 	/**
@@ -55,7 +52,13 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 	 */
     protected function tearDown() {
     	$this->controller->abort();
-    	unset($this->controller);
+    	// just making sure no previous test user is in the DB
+        $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/');
+        $this->person->deleteAllByAttribute('displayName', 'unitTestUser');
+        $this->person->deleteAllByAttribute('email', 'changed@test.com');
+        $this->person->deleteAllByAttribute('email', 'newuser@test.com');
+        $this->group->deleteAllByAttribute('name', 'testgroup');
+        unset($this->controller);
     	unset($this->person);
     	unset($this->group);
     }
@@ -125,7 +128,7 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     	// calling the constructor of the other controller will check the session
     	$controller2 = new Search();
     	
-    	$new = $this->controller->getNewObjects();    	
+    	$new = $controller2->getNewObjects();    	
     	
     	$this->assertEquals('newuser@test.com', $new[0]->get('email'), 'testing that objects are being added to the newObjects array correctly and that this array is in the session being shared by controllers');	
     }
@@ -247,6 +250,61 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     	}catch (FailedUnitCommitException $e) {
     		$this->fail('Failed to commit the unit of work transaction for new and dirty objects');
     	}
+    }
+    
+	/**
+     * testing that we can load dirty and new objects post commit
+     */
+    public function testPostCommitLoad() {
+    	$this->person->set('email', 'changed@test.com');
+    	$this->controller->markDirty($this->person);
+    	
+    	$person = $this->createPersonObject('newuser');
+    	$person->set('email', 'newuser@test.com'); 
+    	$this->controller->markNew($person);
+    	
+    	try {
+    		$this->controller->commit();
+    	}catch (FailedUnitCommitException $e) {
+    		$this->fail('Failed to commit the unit of work transaction for new and dirty objects');
+    	}
+    	
+    	$newPerson = new person_object();
+    	try {
+    		$newPerson->loadByAttribute('email', 'newuser@test.com');
+    	}catch (BONotFoundException $e) {
+    		$this->fail('Failed to load the new person that we commited in the unit of work');
+    	}
+    	
+    	$dirtyPerson = new person_object();
+    	try {
+    		$dirtyPerson->loadByAttribute('email', 'changed@test.com');
+    	}catch (BONotFoundException $e) {
+    		$this->fail('Failed to load the dirty person that we commited in the unit of work');
+    	}
+    }
+    
+    /**
+     * testing that aborting a unit of work clears the list of new objects
+     */
+    public function testAbort() {
+    	$person = $this->createPersonObject('newuser');
+    	$person->set('email', 'newuser@test.com'); 
+    	$this->controller->markNew($person);
+    	
+    	// calling the constructor of the other controller will check the session
+    	$controller2 = new Search();
+    	
+    	$new = $controller2->getNewObjects();
+    	
+    	$this->assertEquals('newuser@test.com', $new[0]->get('email'), 'testing that objects are being added to the newObjects array correctly and that this array is in the session being shared by controllers');
+
+    	// now abort the unit of work from the second controller, and confirm that the new object array is empty
+    	$controller2->abort();
+    	
+    	$new = $controller2->getNewObjects();
+    	
+    	$this->assertEquals(0, count($new), 'testing that aborting a unit of work clears the list of new objects');
     }
     
     /**
