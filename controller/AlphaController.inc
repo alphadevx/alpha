@@ -298,6 +298,10 @@ abstract class AlphaController {
 	 public function setBO($BO) {
 	 	self::$logger->debug('>>setBO(BO=['.print_r($BO, true).'])');
 	 	$this->BO = $BO;
+	 	// if the BO has tags, use these as the meta keywords for this controller
+	 	if($this->BO->isTagged()) {
+	 		
+	 	}
 	 	self::$logger->debug('<<setBO');
 	 }
 	 
@@ -1064,7 +1068,8 @@ abstract class AlphaController {
 	}
 	
 	/**
-	 * Checks that the definition for the controller classname provided exists
+	 * Checks that the definition for the controller classname provided exists.  Will also return true
+	 * if you pass "/" for the root of the web application.
 	 * 
 	 * @param string $controllerName
 	 * @return boolean
@@ -1079,6 +1084,8 @@ abstract class AlphaController {
 		
 		$exists = false;
 		
+		if($controllerName == '/')
+			$exists = true;
 		if(file_exists($config->get('sysRoot').'controller/'.$controllerName.'.php'))
 			$exists = true;
 		if(file_exists($config->get('sysRoot').'alpha/controller/'.$controllerName.'.php'))
