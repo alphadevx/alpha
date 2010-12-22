@@ -183,7 +183,6 @@ abstract class AlphaController {
 	 * 
 	 * @var string
 	 * @since 1.0
-	 * @TODO should this automatically be tags when the $this->BO isTagged()?
 	 */
 	protected $keywords;
 	
@@ -662,7 +661,6 @@ abstract class AlphaController {
 	 
 	/**
 	 * Commits (saves) all of the new and modified (dirty) objects in the unit of work to the database.
-	 * @todo Modify to use AlphaDAO::commit() calls
 	 *
 	 * @throws FailedUnitCommitException
  	 * @since 1.0
@@ -673,9 +671,7 @@ abstract class AlphaController {
 		if(method_exists($this, 'before_commit_callback'))
 			$this->before_commit_callback();
 		
-		$sqlQuery = 'BEGIN;';
-
-		$result = mysql_query($sqlQuery);		
+		AlphaDAO::begin();
 
 		$newObjects = $this->getNewObjects();
 
@@ -712,29 +708,24 @@ abstract class AlphaController {
 				return;
 			}
 		}
-		
-		$sqlQuery = 'COMMIT;';
 
-		$result = mysql_query($sqlQuery);
+		try{
+			AlphaDAO::commit();
+			
+			$this->clearUnitOfWorkAttributes();
 		
-		$_SESSION['unitOfWork'] = null;
-		$_SESSION['dirtyObjects'] = null;
-		$_SESSION['newObjects'] = null;
-		
-		if (mysql_error() == '') {
 			if(method_exists($this, 'after_commit_callback'))
 				$this->after_commit_callback();
 			
 			self::$logger->debug('<<commit');
-		}else{					
-			throw new FailedUnitCommitException('Failed to commit the transaction, MySQL error is ['.mysql_error().']');
+		}catch(FailedSaveException $e) {
+			throw new FailedUnitCommitException('Failed to commit the transaction, error is ['.$e->getMessage().']');
 			self::$logger->debug('<<commit');
 		}		
 	}
 	
 	/**
 	 * Method to clearup a cancelled unit of work.
-	 * @todo Modify to use AlphaDAO::rollback() call
 	 *
 	 * @throws AlphaException
 	 * @since 1.0
@@ -744,24 +735,32 @@ abstract class AlphaController {
 		
 		if(method_exists($this, 'before_abort_callback'))
 			$this->before_abort_callback();
-		
-		$_SESSION['unitOfWork'] = null;
-		$_SESSION['dirtyObjects'] = null;
-		$_SESSION['newObjects'] = null;
-		
-		$sqlQuery = 'ROLLBACK;';		
 
-		$result = mysql_query($sqlQuery);
+		try{
+			AlphaDAO::rollback();
+			
+			$this->clearUnitOfWorkAttributes();
 		
-		if (mysql_error() == '') {
 			if(method_exists($this, 'after_abort_callback'))
 				$this->after_abort_callback();
 			
 			self::$logger->debug('<<abort');
-		}else{
-			throw new AlphaException('Failed to rollback the transaction, MySQL error is ['.mysql_error().']');
+		}catch(AlphaException $e) {
+			throw new AlphaException('Failed to rollback the transaction, error is ['.$e->getMessage().']');
 			self::$logger->debug('<<abort');
 		}		
+	}
+	
+	/**
+	 * Clears the session and object attributes related to unit of work sessions
+	 */
+	private function clearUnitOfWorkAttributes() {
+		$_SESSION['unitOfWork'] = null;
+		$this->unitOfWork = null;
+		$_SESSION['dirtyObjects'] = null;
+		$this->dirtyObjects = array();
+		$_SESSION['newObjects'] = null;
+		$this->newObjects = array();
 	}
 	
 	/**
