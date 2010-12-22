@@ -248,7 +248,7 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 			<link rel="stylesheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/markitup/sets/markdown/style.css" />
 			<script type="text/javascript">
 			$(document).ready(function() {
-				$(\'#text_field_content_0\').markItUp(mySettings);
+				$("#text_field_content_0").markItUp(mySettings);
 				
 				var dialogCoords = [(screen.width/2)-400, (screen.height/2)-300];
 				
@@ -263,7 +263,7 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 			        position: dialogCoords,
 			        open: function() {
 			        	//display correct dialog content
-			        	$("#helpPage").load("'.$config->get('sysURL').'alpha/controller/ViewArticleFile.php?file=Markdown_Help.text");
+			        	$("#helpPage").load("'.$config->get('sysURL').'ViewArticleFile/file/Markdown_Help.text");
 					}
 			    };
 			        
