@@ -974,7 +974,7 @@ abstract class AlphaDAO {
 				
 				// check for unique violations			
 				if(AlphaDAO::getConnection()->errno == '1062') {					
-					throw new ValidationException('Failed to save, the value '.$this->findOffendingValue(mysql_error()).' is already in use!');
+					throw new ValidationException('Failed to save, the value '.$this->findOffendingValue(AlphaDAO::getConnection()->error).' is already in use!');
 					return;
 				}else{					
 					throw new FailedSaveException('Failed to save object, MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$this->lastQuery.']');
