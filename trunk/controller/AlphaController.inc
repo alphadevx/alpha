@@ -84,7 +84,6 @@ abstract class AlphaController {
 	 * 
 	 * @var AlphaDAO
 	 * @since 1.0
-	 * @TODO do we really need this as an attribute?
 	 */
 	protected $BO = null;
 	
@@ -259,25 +258,21 @@ abstract class AlphaController {
 	 	$this->unitEndTime = new Timestamp();
 	 	$this->unitMAXDuration = new Integer();
 	 	
-	 	// TODO: this should be a controller class name instead
+	 	// uses controller class name as the job name
 		if($this->name == '')
-	 		$this->setName('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+	 		$this->setName(get_class($this));
 	 	
-	 	if(isset($_SESSION['unitOfWork'])) { // TODO: check that it's an array?	
+	 	if(isset($_SESSION['unitOfWork']) && is_array($_SESSION['unitOfWork']))
 	 		$this->setUnitOfWork($_SESSION['unitOfWork']);
-	 	}
 	 	
-	 	if(isset($_SESSION['dirtyObjects'])) { // TODO: check that it's an array?
+	 	if(isset($_SESSION['dirtyObjects']) && is_array($_SESSION['dirtyObjects']))
 	 		$this->dirtyObjects = $_SESSION['dirtyObjects'];
-	 	}
 	 	
-	 	if(isset($_SESSION['newObjects'])) { // TODO: check that it's an array?
+	 	if(isset($_SESSION['newObjects']) && is_array($_SESSION['newObjects']))
 	 		$this->newObjects = $_SESSION['newObjects'];
-	 	}
 	 	
-	 	if(isset($_SESSION['statusMessage'])) {
+	 	if(isset($_SESSION['statusMessage']))
 	 		$this->setStatusMessage($_SESSION['statusMessage']);
-	 	}
 
 	 	self::$logger->debug('<<__construct');
 	 }
@@ -422,7 +417,11 @@ abstract class AlphaController {
 			return;
 		}
 
-		// TODO: should we validate that each controller name in the array actually exists?
+		// validate that each controller name in the array actually exists
+		foreach($jobs as $job) {
+			if(!AlphaController::checkControllerDefExists($job))
+				throw new IllegalArguementException('The controller name ['.$job.'] provided in the jobs array is not defined anywhere!');
+		}
 
 		// clear out any previous unit of work from the session
 		$_SESSION['unitOfWork'] = null;		
@@ -1062,6 +1061,31 @@ abstract class AlphaController {
 	public function getStatusMessage() {
 		$_SESSION['statusMessage'] = null;
 		return $this->statusMessage;
+	}
+	
+	/**
+	 * Checks that the definition for the controller classname provided exists
+	 * 
+	 * @param string $controllerName
+	 * @return boolean
+	 * @since 1.0
+	 */
+	public static function checkControllerDefExists($controllerName) {
+		if(self::$logger == null)
+			self::$logger = new Logger('AlphaController');
+		self::$logger->debug('>>checkControllerDefExists(controllerName=['.$controllerName.'])');
+		
+		global $config;
+		
+		$exists = false;
+		
+		if(file_exists($config->get('sysRoot').'controller/'.$controllerName.'.php'))
+			$exists = true;
+		if(file_exists($config->get('sysRoot').'alpha/controller/'.$controllerName.'.php'))
+			$exists = true;
+
+		self::$logger->debug('<<checkControllerDefExists ['.$exists.']');
+		return $exists;
 	}
 }
 
