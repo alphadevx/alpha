@@ -75,7 +75,9 @@ class ViewState {
 	 * @throws IllegalArguementException
 	 */
 	public function set($key, $value) {
-		if(property_exists(get_class($this), $key)) {
+		$attribute = new ReflectionProperty(get_class($this), $key);
+		
+		if($attribute != null) {
 			$this->$key = $value;
 			$_SESSION[get_class($this)] = serialize($this);
 		}else{
