@@ -41,10 +41,12 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 	 * @see alpha/lib/PEAR/PHPUnit-3.2.9/PHPUnit/Framework/PHPUnit_Framework_TestCase::setUp()
 	 */
     protected function setUp() {
-    	AlphaDAO::begin();
     	$this->controller = new Search();
     	$this->person = $this->createPersonObject('unitTestUser');
     	$this->group = new rights_object();
+    	// just making sure no previous test user is in the DB
+        $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/');
+        $this->person->deleteAllByAttribute('displayName', 'unitTestUser');
     }
     
 	/**
@@ -52,7 +54,7 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 	 * @see alpha/lib/PEAR/PHPUnit-3.2.9/PHPUnit/Framework/PHPUnit_Framework_TestCase::tearDown()
 	 */
     protected function tearDown() {
-    	AlphaDAO::rollback();
+    	$this->controller->abort();
     	unset($this->controller);
     	unset($this->person);
     	unset($this->group);
@@ -74,7 +76,7 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * testing that objects are being added to the dirtyObject array correctly
+     * testing that objects are being added to the dirtyObjects array correctly
      */
     public function testMarkDirtyAdd() {
     	$this->controller->markDirty($this->person);
@@ -84,8 +86,24 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     	$this->assertEquals('http://unitTestUser/', $dirtyObjects[0]->get('URL'), 'testing that objects are being added to the dirtyObject array correctly');	
     }
     
+	/**
+     * testing that objects are being added to the dirtyObject array correctly
+     * and that this array is in the session being shared by controllers
+     */
+    public function testMarkDirtySession() {
+    	$this->person->set('email', 'changed@test.com');
+    	$this->controller->markDirty($this->person);
+    	
+    	// calling the constructor of the other controller will check the session
+    	$controller2 = new Search();
+    	
+    	$dirty = $controller2->getDirtyObjects();    	
+    	
+    	$this->assertEquals('changed@test.com', $dirty[0]->get('email'), 'testing that objects are being added to the dirtyObject array correctly and that this array is in the session being shared by controllers');	
+    }
+    
     /**
-     * testing that objects are being added to the newObject array correctly
+     * testing that objects are being added to the newObjects array correctly
      */
     public function testMarkNewAdd() {
     	$this->controller->markNew($this->person);
@@ -95,10 +113,25 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     	$this->assertEquals('http://unitTestUser/', $newObjects[0]->get('URL'), 'testing that objects are being added to the newObject array correctly');	
     }
     
+	/**
+     * testing that objects are being added to the newObjects array correctly
+     * and that this array is in the session being shared by controllers
+     */
+    public function testMarkNewSession() {    	
+    	$person = $this->createPersonObject('newuser');
+    	$person->set('email', 'newuser@test.com'); 
+    	$this->controller->markNew($person);
+    	
+    	// calling the constructor of the other controller will check the session
+    	$controller2 = new Search();
+    	
+    	$new = $this->controller->getNewObjects();    	
+    	
+    	$this->assertEquals('newuser@test.com', $new[0]->get('email'), 'testing that objects are being added to the newObjects array correctly and that this array is in the session being shared by controllers');	
+    }
+    
     /**
      * test cases to see if access rights on controllers are working as expected
-     * 
-     * @todo add more test cases!
      */
     public function testRightsAccess() {
     	$this->group->set('name', 'testgroup');
@@ -164,6 +197,44 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     	$this->controller->setUnitOfWork(array('ControllerOne','ControllerTwo','ControllerThree','ControllerFour','ControllerFive'));
     	
     	$this->assertEquals('ControllerOne', $this->controller->getFirstJob(), 'testing the setUnitOfWork method and getFirstJob');
+    }
+    
+	/**
+     * testing the setUnitOfWork method and getPreviousJob
+     */
+    public function testSetUnitOfWorkPrevious() {
+    	$this->controller->setName('ControllerFour');
+    	$this->controller->setUnitOfWork(array('ControllerOne','ControllerTwo','ControllerThree','ControllerFour','ControllerFive'));
+    	
+    	$this->assertEquals('ControllerThree', $this->controller->getPreviousJob(), 'testing the setUnitOfWork method and getPreviousJob');
+    }
+    
+	/**
+     * testing the setUnitOfWork method and getLastJob
+     */
+    public function testSetUnitOfWorkLast() {
+    	$this->controller->setName('ControllerFour');
+    	$this->controller->setUnitOfWork(array('ControllerOne','ControllerTwo','ControllerThree','ControllerFour','ControllerFive'));
+    	
+    	$this->assertEquals('ControllerFive', $this->controller->getLastJob(), 'testing the setUnitOfWork method and getLastJob');
+    }
+    
+	/**
+     * testing the commit method for new and dirty objects
+     */
+    public function testCommit() {
+    	$this->person->set('email', 'changed@test.com');
+    	$this->controller->markDirty($this->person);
+    	
+    	$person = $this->createPersonObject('newuser');
+    	$person->set('email', 'newuser@test.com'); 
+    	$this->controller->markNew($person);
+    	
+    	try {
+    		$this->controller->commit();
+    	}catch (FailedUnitCommitException $e) {
+    		$this->fail('Failed to commit the unit of work transaction for new and dirty objects');
+    	}
     }
 }
 

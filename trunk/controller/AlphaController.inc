@@ -75,13 +75,12 @@ abstract class AlphaController {
 	 * 
 	 * @var string
 	 * @since 1.0
-	 * @TODO test to ensure that this works with a rights_group object name
 	 */ 
 	protected $visibility = 'Public';
 	
 	/**
 	 * Optionally, a BO may be set for the default validation form handling code to load in the displayPageHead()
-	 * method.  The defination of this BO class will need to be included in the child controller.
+	 * method.  The definition of this BO class will need to be included in the child controller.
 	 * 
 	 * @var AlphaDAO
 	 * @since 1.0
