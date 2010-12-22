@@ -61,7 +61,9 @@ class ViewState {
 	 * @return string
 	 */
 	public function get($key) {
-		if(property_exists(get_class($this), $key))
+		$attribute = new ReflectionProperty(get_class($this), $key);
+		
+		if($attribute != null)
 			return $this->$key;
 		else
 			throw new IllegalArguementException('The property ['.$key.'] does not exist on the ['.get_class($this).'] class');
