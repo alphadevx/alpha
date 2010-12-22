@@ -298,10 +298,21 @@ abstract class AlphaController {
 	 public function setBO($BO) {
 	 	self::$logger->debug('>>setBO(BO=['.print_r($BO, true).'])');
 	 	$this->BO = $BO;
+	 	
 	 	// if the BO has tags, use these as the meta keywords for this controller
 	 	if($this->BO->isTagged()) {
+	 		$tags = $this->BO->getPropObject('tags')->getRelatedObjects();
 	 		
+	 		$keywords = '';
+			
+			if(count($tags) > 0) {
+				foreach($tags as $tag)
+					$keywords .= ','.$tag;
+			}
+			
+			$this->setKeywords($keywords);
 	 	}
+	 	
 	 	self::$logger->debug('<<setBO');
 	 }
 	 
