@@ -333,7 +333,7 @@ class article_object extends AlphaDAO {
 	public function getAttachmentsLocation() {
 		global $config;
 		
-		return $config->get('sysRoot').'alpha/attachments/article_'.$this->getID();
+		return $config->get('sysRoot').'attachments/article_'.$this->getID();
 	}
 	
 	/**
@@ -344,7 +344,7 @@ class article_object extends AlphaDAO {
 	public function getAttachmentsURL() {
 		global $config;
 		
-		return $config->get('sysURL').'alpha/attachments/article_'.$this->getID();
+		return $config->get('sysURL').'attachments/article_'.$this->getID();
 	}
 	
 	/**
@@ -363,16 +363,16 @@ class article_object extends AlphaDAO {
 	 */
 	public function createAttachmentsFolder() {
 		// create the attachment directory for the article
-		$success = mkdir($this->getAttachmentsLocation());
-			
-		if (!$success) {
+		try{
+			mkdir($this->getAttachmentsLocation());
+		}catch (Exception $e) {
 			throw new AlphaException('Unable to create the folder ['.$this->getAttachmentsLocation().'] for the article.');
 		}
 			
 		// ...and set write permissions on the folder
-		$success = chmod($this->getAttachmentsLocation(), 0777);
-			
-		if (!$success) {
+		try{
+			chmod($this->getAttachmentsLocation(), 0777);
+		}catch (Exception $e) {
 			throw new AlphaException('Unable to set write permissions on the folder ['.$this->getAttachmentsLocation().'].');
 		}
 	}
