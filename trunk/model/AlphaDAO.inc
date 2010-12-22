@@ -523,6 +523,7 @@ abstract class AlphaDAO {
 			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = ? AND classname = ? ORDER BY ".$orderBy." ".$order.$limit;
 			
 		$this->lastQuery = $sqlQuery;
+		self::$logger->debug($sqlQuery);
 		
 		$stmt = AlphaDAO::getConnection()->stmt_init();
 
@@ -1160,7 +1161,8 @@ abstract class AlphaDAO {
 				
 		if($stmt->prepare($sqlQuery)) {
 			$stmt->bind_param('i', $this->getOID());			
-			$stmt->execute();					
+			$stmt->execute();
+			self::$logger->debug('Deleted the object ['.$this->getOID().'] of class ['.get_class($this).']');					
 		}else{
 			throw new FailedDeleteException('Failed to delete object ['.$this->getOID().'], error is ['.$stmt->error.'], query ['.$this->lastQuery.']');				
 		}
