@@ -180,43 +180,55 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     }
     
 	/**
+     * testing the setUnitOfWork method with a bad controller name
+     */
+    public function testSetUnitOfWorkBadControllerName() {
+    	try {
+    		$this->controller->setUnitOfWork(array('Search','Edit','Create','ListAll','BadControllerName'));
+    		$this->fail('Passed a bad controller name BadControllerName to setUnitOfWork() and did not get the expected exception!');
+    	}catch (IllegalArguementException $e) {
+    		$this->assertEquals('', $this->controller->getFirstJob(), 'testing the setUnitOfWork method with a bad controller name');
+    	}
+    }
+    
+	/**
      * testing the setUnitOfWork method and getNextJob
      */
     public function testSetUnitOfWorkNext() {
-    	$this->controller->setName('ControllerOne');
-    	$this->controller->setUnitOfWork(array('ControllerOne','ControllerTwo','ControllerThree','ControllerFour','ControllerFive'));
+    	$this->controller->setName('Search');
+    	$this->controller->setUnitOfWork(array('Search','Edit','Create','ListAll','Detail'));
     	
-    	$this->assertEquals('ControllerTwo', $this->controller->getNextJob(), 'testing the setUnitOfWork method and getNextJob');
+    	$this->assertEquals('Edit', $this->controller->getNextJob(), 'testing the setUnitOfWork method and getNextJob');
     }
     
 	/**
      * testing the setUnitOfWork method and getFirstJob
      */
     public function testSetUnitOfWorkFirst() {
-    	$this->controller->setName('ControllerFour');
-    	$this->controller->setUnitOfWork(array('ControllerOne','ControllerTwo','ControllerThree','ControllerFour','ControllerFive'));
+    	$this->controller->setName('ListAll');
+    	$this->controller->setUnitOfWork(array('Search','Edit','Create','ListAll','Detail'));
     	
-    	$this->assertEquals('ControllerOne', $this->controller->getFirstJob(), 'testing the setUnitOfWork method and getFirstJob');
+    	$this->assertEquals('Search', $this->controller->getFirstJob(), 'testing the setUnitOfWork method and getFirstJob');
     }
     
 	/**
      * testing the setUnitOfWork method and getPreviousJob
      */
     public function testSetUnitOfWorkPrevious() {
-    	$this->controller->setName('ControllerFour');
-    	$this->controller->setUnitOfWork(array('ControllerOne','ControllerTwo','ControllerThree','ControllerFour','ControllerFive'));
+    	$this->controller->setName('ListAll');
+    	$this->controller->setUnitOfWork(array('Search','Edit','Create','ListAll','Detail'));
     	
-    	$this->assertEquals('ControllerThree', $this->controller->getPreviousJob(), 'testing the setUnitOfWork method and getPreviousJob');
+    	$this->assertEquals('Create', $this->controller->getPreviousJob(), 'testing the setUnitOfWork method and getPreviousJob');
     }
     
 	/**
      * testing the setUnitOfWork method and getLastJob
      */
     public function testSetUnitOfWorkLast() {
-    	$this->controller->setName('ControllerFour');
-    	$this->controller->setUnitOfWork(array('ControllerOne','ControllerTwo','ControllerThree','ControllerFour','ControllerFive'));
+    	$this->controller->setName('ListAll');
+    	$this->controller->setUnitOfWork(array('Search','Edit','Create','ListAll','Detail'));
     	
-    	$this->assertEquals('ControllerFive', $this->controller->getLastJob(), 'testing the setUnitOfWork method and getLastJob');
+    	$this->assertEquals('Detail', $this->controller->getLastJob(), 'testing the setUnitOfWork method and getLastJob');
     }
     
 	/**
@@ -235,6 +247,13 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     	}catch (FailedUnitCommitException $e) {
     		$this->fail('Failed to commit the unit of work transaction for new and dirty objects');
     	}
+    }
+    
+    /**
+     * testing that the AlphaController constructor uses the controller name as the AlphaController->name (job) of the controller
+     */
+    public function testConstructorJobControllerName() {
+    	$this->assertEquals('Search', $this->controller->getName(), 'testing that the AlphaController constructor defaults to using the controller name as the AlphaController->name of the controller');
     }
 }
 

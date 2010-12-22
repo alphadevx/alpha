@@ -482,7 +482,8 @@ class FrontController {
 	/**
 	 * Loads the definition for the controller classname provided
 	 * 
-	 * @param string $controllerName 
+	 * @param string $controllerName
+	 * @todo move to AlphaController 
 	 */
 	public static function loadControllerDef($controllerName) {
 		if(self::$logger == null)
