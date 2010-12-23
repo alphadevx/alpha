@@ -180,6 +180,9 @@ class tag_object extends AlphaDAO {
 	 * @return array
 	 */
 	public static function tokenize($content, $taggedClass='', $taggedOID='', $applyStopwords=true) {
+		if(self::$logger == null)
+			self::$logger = new Logger('tag_object');
+			
 		global $config;
 		
 		// apply stop words
@@ -213,6 +216,7 @@ class tag_object extends AlphaDAO {
 			}
 		}
 		
+		self::$logger->debug('Tags generated: ['.print_r($tagContents, true).']');
 		return $tagObjects;
 	}
 	
