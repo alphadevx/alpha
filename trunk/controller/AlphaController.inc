@@ -310,10 +310,10 @@ abstract class AlphaController {
 			
 			if(count($tags) > 0) {
 				foreach($tags as $tag)
-					$keywords .= ','.$tag;
+					$keywords .= ','.$tag->get('content');
 			}
 			
-			$this->setKeywords($keywords);
+			$this->setKeywords(substr($keywords, 1));
 	 	}
 	 	
 	 	self::$logger->debug('<<setBO');
