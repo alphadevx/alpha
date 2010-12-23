@@ -144,7 +144,7 @@ class Image {
 		global $config;
 		
 		if($this->secure->getBooleanValue()) {
-			$params = View::generateSecurityFields();
+			$params = AlphaController::generateSecurityFields();
 			return '<img src="'.FrontController::generateSecureURL('act=ViewImage&s='.$this->source.'&w='.$this->width->getValue().'&h='.$this->height->getValue().'&t='.$this->sourceType->getValue().'&q='.$this->quality->getValue().'&sc='.$this->scale->getValue().'&se='.$this->secure->getValue().'&var1='.$params[0].'&var2='.$params[1]).'"'.(empty($altText) ? '' : ' alt="'.$altText.'"').'/>';
 		}else{
 			return '<img src="'.FrontController::generateSecureURL('act=ViewImage&s='.$this->source.'&w='.$this->width->getValue().'&h='.$this->height->getValue().'&t='.$this->sourceType->getValue().'&q='.$this->quality->getValue().'&sc='.$this->scale->getValue().'&se='.$this->secure->getValue()).'"'.(empty($altText) ? '' : ' alt="'.$altText.'"').'/>';
