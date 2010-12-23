@@ -63,7 +63,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 		
 		global $config;
 		
-		echo View::displayPageHead($this);
+		echo ViewAlpha::displayPageHead($this);
 		
 		// ensure that a bo is provided
 		if (isset($params['bo'])) {
@@ -123,17 +123,17 @@ class EditTags extends Edit implements AlphaControllerInterface {
 			echo $temp->render();
 			echo '</td></tr>';
 
-			echo View::renderSecurityFields();
+			echo AlphaView::renderSecurityFields();
 		
 			echo '</form></table>';
 			
-			echo View::renderDeleteForm();
+			echo AlphaView::renderDeleteForm();
 			
 		}catch(BONotFoundException $e) {
 			self::$logger->error('Unable to load the BO of id ['.$params['oid'].'], error was ['.$e->getMessage().']');
 		}
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 		
 		self::$logger->debug('<<doGET');		
 	}

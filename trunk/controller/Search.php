@@ -10,7 +10,7 @@ require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 require_once $config->get('sysRoot').'alpha/model/tag_object.inc';
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/util/LogFile.inc';
 
 /**
@@ -90,7 +90,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 			$params['q'] = str_replace('%20', ' ', $params['q']);
 			
 			$this->setTitle('Search results - '.$params['q']);			
-			echo View::displayPageHead($this);
+			echo AlphaView::displayPageHead($this);
 			
 			// log the user's search query in a log file
 			$log = new LogFile($config->get('sysRoot').'logs/search.log');		
@@ -163,7 +163,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 									$temp = new $BO;
 									$temp->load($oid);
 									
-									$view = View::getInstance($temp);
+									$view = AlphaView::getInstance($temp);
 									echo $view->listView();
 									
 									$tags = $temp->getPropObject('tags')->getRelatedObjects();
@@ -194,11 +194,11 @@ class Search extends AlphaController implements AlphaControllerInterface {
 			}
 		}else{
 			$this->setTitle('Search results');			
-			echo View::displayPageHead($this);
+			echo AlphaView::displayPageHead($this);
 			echo '<p class="error"><br>No search query provided!</p>';
 		}		
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 		
 		self::$logger->debug('<<doGET');
 	}

@@ -11,7 +11,7 @@ require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 require_once $config->get('sysRoot').'alpha/util/LOC/AlphaMetrics.inc';
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 
 /**
  * 
@@ -56,7 +56,7 @@ class ViewMetrics extends AlphaController implements AlphaControllerInterface{
 		
 		global $config;
 		
-		echo View::displayPageHead($this);
+		echo AlphaView::displayPageHead($this);
 
 		$dir = $config->get('sysRoot');
 		
@@ -64,7 +64,7 @@ class ViewMetrics extends AlphaController implements AlphaControllerInterface{
 		$metrics->calculateLOC();
 		echo $metrics->resultsToHTML();
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 		self::$logger->debug('<<doGET');
 	}
 	

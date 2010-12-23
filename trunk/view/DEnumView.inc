@@ -2,7 +2,7 @@
 
 require_once $config->get('sysRoot').'alpha/model/types/DEnum.inc';
 require_once $config->get('sysRoot').'alpha/model/types/DEnumItem.inc';
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 
 /**
  *
@@ -14,7 +14,7 @@ require_once $config->get('sysRoot').'alpha/view/View.inc';
  * @version $Id$
  * 
  */
-class DEnumView extends View {
+class DEnumView extends AlphaView {
 	/**
 	 * Custom list view
 	 * 
@@ -126,7 +126,7 @@ class DEnumView extends View {
 		$html .= $temp->render();
 		$html .= '</td></tr>';
 
-		$html .= View::renderSecurityFields();
+		$html .= AlphaView::renderSecurityFields();
 		
 		$html .= '</form></table>';
 		

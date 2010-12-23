@@ -8,7 +8,7 @@ if(!isset($config)) {
 
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
 /**
@@ -44,9 +44,9 @@ class Edit extends AlphaController implements AlphaControllerInterface {
 	private $BOoid;
 	
 	/**
-	 * The View object used for rendering the object to edit
+	 * The AlphaView object used for rendering the object to edit
 	 * 
-	 * @var View BOView
+	 * @var AlphaView BOView
 	 */
 	private $BOView;
 								
@@ -96,16 +96,16 @@ class Edit extends AlphaController implements AlphaControllerInterface {
 				
 				$this->BOName = $BOName;
 				
-				$this->BOView = View::getInstance($this->BO);
+				$this->BOView = AlphaView::getInstance($this->BO);
 				
 				// set up the title and meta details
 				$this->setTitle('Editing a '.$BOName);
 				$this->setDescription('Page to edit a '.$BOName.'.');
 				$this->setKeywords('edit,'.$BOName);
 				
-				echo View::displayPageHead($this);
+				echo AlphaView::displayPageHead($this);
 		
-				echo View::renderDeleteForm();
+				echo AlphaView::renderDeleteForm();
 		
 				echo $this->BOView->editView();		
 			}else{
@@ -118,7 +118,7 @@ class Edit extends AlphaController implements AlphaControllerInterface {
 			echo '<p class="error"><br>Failed to load the requested item from the database!</p>';
 		}
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 	}
 	
 	/**
@@ -144,14 +144,14 @@ class Edit extends AlphaController implements AlphaControllerInterface {
 				$this->BO = new $BOName();
 				$this->BO->load($params['oid']);
 				
-				$this->BOView = View::getInstance($this->BO);
+				$this->BOView = AlphaView::getInstance($this->BO);
 					
 				// set up the title and meta details
 				$this->setTitle('Editing a '.$BOName);
 				$this->setDescription('Page to edit a '.$BOName.'.');
 				$this->setKeywords('edit,'.$BOName);
 					
-				echo View::displayPageHead($this);
+				echo AlphaView::displayPageHead($this);
 		
 				if (isset($params['saveBut'])) {			
 					
@@ -160,10 +160,10 @@ class Edit extends AlphaController implements AlphaControllerInterface {
 					
 					try {
 						$this->BO->save();			
-						echo View::displayUpdateMessage(get_class($this->BO).' '.$this->BO->getID().' saved successfully.');
+						echo AlphaView::displayUpdateMessage(get_class($this->BO).' '.$this->BO->getID().' saved successfully.');
 					}catch (LockingException $e) {
 						$this->BO->reload();
-						echo View::displayErrorMessage($e->getMessage());
+						echo AlphaView::displayErrorMessage($e->getMessage());
 					}
 					
 					echo $this->BOView->editView();
@@ -202,7 +202,7 @@ class Edit extends AlphaController implements AlphaControllerInterface {
 			echo '<p class="error"><br>Failed to load the requested item from the database!</p>';
 		}
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 	}
 }
 

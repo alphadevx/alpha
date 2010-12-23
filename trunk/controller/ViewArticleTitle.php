@@ -62,13 +62,13 @@ class ViewArticleTitle extends ViewArticle {
 		$this->setTitle($this->BO->get('title'));
 		$this->setDescription($this->BO->get('description'));
 		
-		$BOView = View::getInstance($this->BO);
+		$BOView = AlphaView::getInstance($this->BO);
 		
-		echo View::displayPageHead($this);
+		echo AlphaView::displayPageHead($this);
 		
 		echo $BOView->markdownView();
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 	}	
 }
 

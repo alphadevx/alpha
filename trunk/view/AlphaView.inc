@@ -14,19 +14,57 @@ require_once $config->get('sysRoot').'alpha/view/widgets/calendar.php';
 require_once $config->get('sysRoot').'alpha/view/widgets/RecordSelector.php';
 
 /**
- * The master rendering view class for the framework
+ *
+ * The master rendering view class for the Alpha Framework.
  * 
- * @package alpha::view
+ * @package alpha::controller
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2009 John Collins
  * @version $Id$
+ * @todo make abstract!
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
-class View {
+class AlphaView {
 	/**
 	 * The business object that will be rendered
 	 * 
 	 * @var AlphaDAO
+	 * @since 1.0
 	 */
 	protected $BO;
 	
@@ -34,17 +72,19 @@ class View {
 	 * Trace logger
 	 * 
 	 * @var Logger
+	 * @since 1.0
 	 */
 	private static $logger = null;
 
 	/**
-	 * Constructor for the View
+	 * Constructor for the AlphaView
 	 * 
 	 * @param AlphaDAO $BO
+	 * @since 1.0
 	 */
 	public function __construct($BO) {
 		if(self::$logger == null)
-			self::$logger = new Logger('View');
+			self::$logger = new Logger('AlphaView');
 		self::$logger->debug('>>__construct(BO=['.print_r($BO, true).'])');
 				
 		$this->BO = $BO;
@@ -53,16 +93,17 @@ class View {
 	}
 	
 	/**
-	 * Static method which returns a View object or a custom child view for the BO specified
+	 * Static method which returns a AlphaView object or a custom child view for the BO specified
 	 * if one exists
 	 * 
 	 * @param object $BO the main business object that this view is going to render
 	 * @param bool $return_parent flag to enforce the return of this object instead of a child (defaults to false)
-	 * @return object returns a View object, or a child view object from the /view directory if one exists for this BO 
+	 * @return object returns a AlphaView object, or a child view object from the /view directory if one exists for this BO
+	 * @since 1.0
 	 */
 	public static function getInstance($BO, $returnParent=false) {
 		if(self::$logger == null)
-			self::$logger = new Logger('View');
+			self::$logger = new Logger('AlphaView');
 		self::$logger->debug('>>getInstance(BO=['.print_r($BO, true).'], returnParent=['.$returnParent.'])');
 		
 		global $config;
@@ -89,12 +130,12 @@ class View {
 				self::$logger->debug('<<getInstance [new '.$filename.'('.get_class($BO).')]');
 				return new $filename($BO);
 			}else{
-				self::$logger->debug('<<getInstance [new View('.get_class($BO).', true)]');
-				return new View($BO, true);
+				self::$logger->debug('<<getInstance [new AlphaView('.get_class($BO).', true)]');
+				return new AlphaView($BO, true);
 			}
 		}else{
-			self::$logger->debug('<<getInstance [new View('.get_class($BO).', true)]');
-			return new View($BO, true);
+			self::$logger->debug('<<getInstance [new AlphaView('.get_class($BO).', true)]');
+			return new AlphaView($BO, true);
 		}
 	}
 
@@ -102,6 +143,7 @@ class View {
 	 * Simple setter for the view business object
 	 * 
 	 * @param object $BO
+	 * @since 1.0
 	 */
 	public function setBO($BO) {		
 		self::$logger->debug('>>setBO(BO=['.print_r($BO, true).'])');
@@ -115,6 +157,7 @@ class View {
 	 * Renders the default create view
 	 * 
 	 * @param array $fields hash array of HTML fields to pass to the template
+	 * @since 1.0
 	 */
 	public function createView($fields=array()) {		
 		self::$logger->debug('>>createView(fields=['.print_r($fields, true).'])');
@@ -155,6 +198,7 @@ class View {
 	 * Renders a form to enable object editing
 	 * 
 	 * @param array $fields hash array of HTML fields to pass to the template
+	 * @since 1.0
 	 */
 	public function editView($fields=array()) {
 		self::$logger->debug('>>editView(fields=['.print_r($fields, true).'])');
@@ -201,6 +245,7 @@ class View {
 	 * Renders the list view
 	 * 
 	 * @param array $fields hash array of HTML fields to pass to the template
+	 * @since 1.0
 	 */
 	public function listView($fields=array()) {
 		self::$logger->debug('>>listView(fields=['.print_r($fields, true).'])');
@@ -310,6 +355,7 @@ class View {
 	 * Displays a detailed view of the object (read-only)
 	 * 
 	 * @param array $fields hash array of HTML fields to pass to the template
+	 * @since 1.0
 	 */
 	public function detailedView($fields=array()) {
 		self::$logger->debug('>>detailedView(fields=['.print_r($fields, true).'])');
@@ -354,6 +400,7 @@ class View {
 	 * Renders the admin view for the business object screen.
 	 * 
 	 * @param array $fields hash array of HTML fields to pass to the template
+	 * @since 1.0
 	 */
 	public function adminView($fields=array()) {
 		self::$logger->debug('>>adminView(fields=['.print_r($fields, true).'])');
@@ -433,11 +480,12 @@ class View {
 	 * @param Controller $controller
 	 * @param bool $renderMenu Set to false to hide the default menu (default value is true)
 	 * @return string
+	 * @since 1.0
 	 * @todo remove output buffering around form_validator instance
 	 */
 	public static function displayPageHead($controller, $renderMenu = true) {
 		if(self::$logger == null)
-			self::$logger = new Logger('View');
+			self::$logger = new Logger('AlphaView');
 		self::$logger->debug('>>displayPageHead(controller=['.print_r($controller, true).'])');
 		
 		if(method_exists($controller, 'before_displayPageHead_callback'))
@@ -608,10 +656,11 @@ class View {
 	 * 
 	 * @param Controller $controller
 	 * @return string
+	 * @since 1.0
 	 */
 	public static function displayPageFoot($controller) {
 		if(self::$logger == null)		
-			self::$logger = new Logger('View');
+			self::$logger = new Logger('AlphaView');
 		
 		self::$logger->debug('>>displayPageFoot(controller=['.get_class($controller).'])');
 		$html = '';
@@ -634,10 +683,11 @@ class View {
 	 * 
 	 * @param string $message
 	 * @return string
+	 * @since 1.0
 	 */
 	public static function displayUpdateMessage($message) {
 		if(self::$logger == null)
-			self::$logger = new Logger('View');
+			self::$logger = new Logger('AlphaView');
 		self::$logger->debug('>>displayUpdateMessage(message=['.$message.'])');
 		
 		$html = '<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
@@ -653,10 +703,11 @@ class View {
 	 * 
 	 * @param string $message
 	 * @return string
+	 * @since 1.0
 	 */
 	public static function displayErrorMessage($message) {
 		if(self::$logger == null)
-			self::$logger = new Logger('View');
+			self::$logger = new Logger('AlphaView');
 		self::$logger->debug('>>displayErrorMessage(message=['.$message.'])');
 		
 		$html = '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
@@ -671,10 +722,11 @@ class View {
 	 * Method to render a hidden form for posting the OID of an object to be deleted
 	 * 
 	 * @return string
+	 * @since 1.0
 	 */
 	public static function renderDeleteForm() {
 		if(self::$logger == null)
-			self::$logger = new Logger('View');
+			self::$logger = new Logger('AlphaView');
 		self::$logger->debug('>>renderDeleteForm()');
 		
 		$html = '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" id="delete_form">';		
@@ -691,11 +743,12 @@ class View {
 	 * a check to ensure that a post to the controller is being sent from 
 	 * the same server as hosting it.
 	 * 
-	 * @return string 
+	 * @return string
+	 * @since 1.0
 	 */
 	public static function renderSecurityFields() {
 		if(self::$logger == null)
-			self::$logger = new Logger('View');
+			self::$logger = new Logger('AlphaView');
 		self::$logger->debug('>>renderSecurityFields()');
 		
 		$html = '';
@@ -718,6 +771,7 @@ class View {
 	 * @param string $value The field value (optional)
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
+	 * @since 1.0
 	 */
 	public function renderIntegerField($name, $label, $mode, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderIntegerField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
@@ -765,6 +819,7 @@ class View {
 	 * @param string $value The field value (optional)
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
+	 * @since 1.0
 	 */
 	public static function renderDoubleField($name, $label, $mode, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderDoubleField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
@@ -812,6 +867,7 @@ class View {
 	 * @param string $value The field value (optional)
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
+	 * @since 1.0
 	 */
 	public function renderBooleanField($name, $label, $mode, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderBooleanField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
@@ -872,6 +928,7 @@ class View {
 	 * @param string $value The field value (optional)
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
+	 * @since 1.0
 	 */
 	public function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
@@ -940,6 +997,7 @@ class View {
 	 * @param string $value The field value (optional)
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
+	 * @since 1.0
 	 */
 	public function renderDEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderDEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
@@ -1007,6 +1065,7 @@ class View {
 	 * @param string $value The field value (optional)
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
+	 * @since 1.0
 	 */
 	public function renderDefaultField($name, $label, $mode, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderDefaultField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
@@ -1071,6 +1130,7 @@ class View {
 	 * @param string $value The field value (optional)
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
+	 * @since 1.0
 	 */
 	public function renderTextField($name, $label, $mode, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderTextField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
@@ -1123,6 +1183,7 @@ class View {
 	 * @param bool $expanded Render the related fields in expanded format or not (optional)
 	 * @param bool $buttons Render buttons for expanding/contacting the related fields (optional)
 	 * @return string
+	 * @since 1.0
 	 */
 	public function renderRelationField($name, $label, $mode, $value='', $tableTags=true, $expanded=false, $buttons=true) {
 		self::$logger->debug('>>renderRelationField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'], expanded=['.$expanded.'], buttons=['.$buttons.'])');
@@ -1179,8 +1240,8 @@ class View {
 	 * @param string $mode (view|edit|create)
 	 * @param array $filterFields Optional list of field names to exclude from rendering
 	 * @param array $readOnlyFields Optional list of fields to render in a readonly fashion when rendering in create or edit mode
-	 * 
 	 * @return string
+	 * @since 1.0
 	 */
 	public function renderAllFields($mode, $filterFields=array(), $readOnlyFields=array()) {
 		self::$logger->debug('>>renderAllFields(mode=['.$mode.'], filterFields=['.print_r($filterFields, true).'], readOnlyFields=['.print_r($readOnlyFields, true).'])');
@@ -1298,7 +1359,8 @@ class View {
 	 * 
 	 * @param object $BO
 	 * @param string $mode
-	 * @param array $fields 
+	 * @param array $fields
+	 * @since 1.0
 	 */
 	public function loadTemplate($BO, $mode, $fields) {
 		self::$logger->debug('>>loadTemplate(BO=['.print_r($BO, true).'], mode=['.$mode.'], fields=['.print_r($fields, true).'])');

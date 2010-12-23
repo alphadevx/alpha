@@ -8,7 +8,7 @@ if(!isset($config)) {
 
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
 /**
@@ -37,9 +37,9 @@ class Create extends AlphaController implements AlphaControllerInterface {
 	protected $BO;
 	
 	/**
-	 * The View object used for rendering the objects to create
+	 * The AlphaView object used for rendering the objects to create
 	 * 
-	 * @var View
+	 * @var AlphaView
 	 */
 	private $BOView;
 	
@@ -95,7 +95,7 @@ class Create extends AlphaController implements AlphaControllerInterface {
 		
 			$this->BO = new $BOname();
 				
-			$this->BOView = View::getInstance($this->BO);
+			$this->BOView = AlphaView::getInstance($this->BO);
 				
 			// set up the title and meta details
 			if(!isset($this->title))
@@ -105,14 +105,14 @@ class Create extends AlphaController implements AlphaControllerInterface {
 			if(!isset($this->keywords))
 				$this->setKeywords('create,new,'.$BOname);				
 						
-			echo View::displayPageHead($this);
+			echo AlphaView::displayPageHead($this);
 				
 			echo $this->BOView->createView();
 		}catch(IllegalArguementException $e) {
 			self::$logger->warn($e->getMessage());
 			throw new ResourceNotFoundException('The file that you have requested cannot be found!');
 		}
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 	}
 	
 	/**
@@ -154,9 +154,9 @@ class Create extends AlphaController implements AlphaControllerInterface {
 					else					
 						header('Location: '.FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID()));
 				}catch(AlphaException $e) {
-					echo View::displayPageHead($this);
+					echo AlphaView::displayPageHead($this);
 					self::$logger->error($e->getTraceAsString());
-					echo View::displayErrorMessage('Error creating the new ['.$BOname.'], check the log!');
+					echo AlphaView::displayErrorMessage('Error creating the new ['.$BOname.'], check the log!');
 				}
 			}
 			
@@ -165,15 +165,15 @@ class Create extends AlphaController implements AlphaControllerInterface {
 			}
 		}catch(SecurityException $e) {
 			self::$logger->warn($e->getMessage());
-			echo View::displayPageHead($this);
+			echo AlphaView::displayPageHead($this);
 			throw new ResourceNotAllowedException($e->getMessage());
 		}catch(IllegalArguementException $e) {
 			self::$logger->warn($e->getMessage());
-			echo View::displayPageHead($this);
+			echo AlphaView::displayPageHead($this);
 			throw new ResourceNotFoundException('The file that you have requested cannot be found!');
 		}catch(ValidationException $e) {
 			self::$logger->warn($e->getMessage().', query ['.$this->BO->getLastQuery().']');
-			$this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
+			$this->setStatusMessage(AlphaView::displayErrorMessage($e->getMessage()));
 			$this->doGET($params);
 		}
 	}
