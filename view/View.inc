@@ -700,33 +700,13 @@ class View {
 		
 		$html = '';
 		
-		$fields = View::generateSecurityFields();
+		$fields = AlphaController::generateSecurityFields();
 		
 		$html .= '<input type="hidden" name="var1" value="'.$fields[0].'"/>';
 		$html .= '<input type="hidden" name="var2" value="'.$fields[1].'"/>';
 		
 		self::$logger->debug('<<renderSecurityFields ['.$html.']');
 		return $html;
-	}
-	
-	/**
-	 * generates the two security fields to prevent remote form processing
-	 * 
-	 * @return array an array containing the two fields
-	 * @todo move to Controller
-	 */
-	public static function generateSecurityFields() {
-		if(self::$logger == null)
-			self::$logger = new Logger('View');
-		self::$logger->debug('>>generateSecurityFields()');
-		
-		// the server hostname + today's date
-		$var1 = md5($_SERVER['HTTP_HOST'].date("Ymd"));
-		// the server's IP plus $var1
-		$var2 = md5($_SERVER['REMOTE_ADDR'].$var1);
-		
-		self::$logger->debug('<<generateSecurityFields [array('.$var1.', '.$var2.')]');
-		return array($var1, $var2);
 	}
 	
 	/**
