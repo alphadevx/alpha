@@ -11,7 +11,7 @@ if(!isset($config)) {
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/controller/front/FrontController.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 
 /**
  *
@@ -54,11 +54,11 @@ class GenSecureQueryStrings extends AlphaController implements AlphaControllerIn
 	 * @param array $params
 	 */
 	public function doGET($params) {
-		echo View::displayPageHead($this);
+		echo AlphaView::displayPageHead($this);
 		
 		$this->renderForm();
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 	}
 	
 	/**
@@ -69,7 +69,7 @@ class GenSecureQueryStrings extends AlphaController implements AlphaControllerIn
 	public function doPOST($params) {
 		global $config;
 
-		echo View::displayPageHead($this);
+		echo AlphaView::displayPageHead($this);
 		
 		echo '<p style="width:90%; overflow:scroll;">';
 		if(isset($params['QS']))
@@ -78,7 +78,7 @@ class GenSecureQueryStrings extends AlphaController implements AlphaControllerIn
 		
 		$this->renderForm();
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 	}
 	
 	private function renderForm() {

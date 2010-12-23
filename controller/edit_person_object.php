@@ -9,7 +9,7 @@ $config =&configLoader::getInstance();
 
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 // load the business object (BO) definition
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 
@@ -37,8 +37,8 @@ class edit_person_object extends Controller
 	var $BO_oid;
 	
 	/**
-	 * the new default View object used for rendering the object to edit
-	 * @var View BO_view
+	 * the new default AlphaView object used for rendering the object to edit
+	 * @var AlphaView BO_view
 	 */
 	var $BO_View;
 								
@@ -62,7 +62,7 @@ class edit_person_object extends Controller
 		$this->BO = new person_object();
 		$this->BO->load_object($BO_oid);
 				
-		$this->BO_View = View::getInstance($this->BO);
+		$this->BO_View = AlphaView::getInstance($this->BO);
 		
 		// set up the title and meta details
 		$this->set_title("Editing the profile for ".$this->BO->get_displayname());

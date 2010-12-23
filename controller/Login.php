@@ -83,14 +83,14 @@ class Login extends AlphaController implements AlphaControllerInterface {
 			return;
 		}
 		
-		echo View::displayPageHead($this);
+		echo AlphaView::displayPageHead($this);
 		
 		if (isset($params['reset']))
 			$this->personView->display_reset_form();
 		else
 			$this->personView->display_login_form();	
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 		
 		self::$logger->debug('<<doGET');
 	}	
@@ -160,7 +160,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 					}
 				}
 				
-				echo View::displayPageHead($this);
+				echo AlphaView::displayPageHead($this);
 				
 				$this->personView->display_login_form();
 			}
@@ -185,7 +185,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 				echo '<a href="'.$config->get('sysURL').'">Home Page</a>';
 			}
 		}catch(ValidationException $e) {
-			echo View::displayPageHead($this);
+			echo AlphaView::displayPageHead($this);
 			
 			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
 				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
@@ -196,7 +196,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 											
 			self::$logger->warn($e->getMessage());
 		}catch(SecurityException $e) {
-			echo View::displayPageHead($this);
+			echo AlphaView::displayPageHead($this);
 			
 			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
 				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
@@ -205,7 +205,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 											
 			self::$logger->warn($e->getMessage());
 		}catch(BONotFoundException $e) {
-			echo View::displayPageHead($this);
+			echo AlphaView::displayPageHead($this);
 			
 			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
 				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
@@ -217,7 +217,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 			self::$logger->warn($e->getMessage());
 		}
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 		self::$logger->debug('<<doPOST');
 	}
 	

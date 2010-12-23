@@ -67,13 +67,13 @@ class ViewArticleFile extends ViewArticle {
 
 		$this->setTitle($this->BO->get('title'));
 		
-		$BOView = View::getInstance($this->BO);
+		$BOView = AlphaView::getInstance($this->BO);
 		
-		echo View::displayPageHead($this, false);
+		echo AlphaView::displayPageHead($this, false);
 		
 		echo $BOView->markdownView();
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 	}
 
 	public function before_displayPageFoot_callback() {

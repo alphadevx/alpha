@@ -6,7 +6,7 @@ if(!isset($config)) {
 	$config = AlphaConfig::getInstance();
 }
 
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/model/article_object.inc';
@@ -80,13 +80,13 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 			if (isset($params['oid'])) {
 				$this->BO->load($params['oid']);
 				
-				$BOView = View::getInstance($this->BO);
+				$BOView = AlphaView::getInstance($this->BO);
 				
 				// set up the title and meta details
 				$this->setTitle($this->BO->get('title'));
 				$this->setDescription($this->BO->get('description'));
 				
-				echo View::displayPageHead($this);
+				echo AlphaView::displayPageHead($this);
 		
 				echo $BOView->markdownView();
 			}else{
@@ -99,7 +99,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 			echo '<p class="error"><br>Failed to load the requested article from the database!</p>';
 		}
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 	}
 	
 	/**
@@ -184,7 +184,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 			$temp = new button('submit','Vote!','voteBut');
 			$html .= $temp->render();
 			
-			$html .= View::renderSecurityFields();
+			$html .= AlphaView::renderSecurityFields();
 			$html .= '<form>';
 		}
 		
@@ -331,7 +331,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 			
 			ob_start();
 			for($i = 0; $i < $comment_count; $i++) {
-				$view = View::getInstance($comments[$i]);
+				$view = AlphaView::getInstance($comments[$i]);
 				$view->markdownView();
 			}
 			$html.= ob_get_clean();
@@ -342,7 +342,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 			$comment->set('article_oid', $this->BO->getID());
 			
 			ob_start();
-			$view = View::getInstance($comment);
+			$view = AlphaView::getInstance($comment);
 			$view->createView();
 			$html.= ob_get_clean();
 		}

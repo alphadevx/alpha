@@ -48,16 +48,16 @@ class ViewArticlePrint extends ViewArticle {
 		
 		$this->setTitle($this->BO->get('title'));
 		
-		$BOView = View::getInstance($this->BO);
+		$BOView = AlphaView::getInstance($this->BO);
 		
 		// disabling force-frames
 		$_GET['no-forceframe'] = true;
 		
-		echo View::displayPageHead($this);
+		echo AlphaView::displayPageHead($this);
 		
 		echo $BOView->markdownView();
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 	}
 	
 	/**

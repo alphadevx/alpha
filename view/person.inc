@@ -3,7 +3,7 @@
 // $Id$
 
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 
 /**
  *
@@ -15,7 +15,7 @@ require_once $config->get('sysRoot').'alpha/view/View.inc';
  * 
  * 
  */
-class person extends View
+class person extends AlphaView
 {
 	/**
 	 * constructor for the person	

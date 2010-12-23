@@ -8,7 +8,7 @@ if(!isset($config)) {
 
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
 /**
@@ -30,9 +30,9 @@ class ListAll extends AlphaController implements AlphaControllerInterface {
 	protected $BOname;
 	
 	/**
-	 * The new default View object used for rendering the onjects to list
+	 * The new default AlphaView object used for rendering the onjects to list
 	 * 
-	 * @var View BOView
+	 * @var AlphaView BOView
 	 */
 	protected $BOView;
 	
@@ -139,16 +139,16 @@ class ListAll extends AlphaController implements AlphaControllerInterface {
 				$this->loadCustomController($BOname, 'list');
 				
 			$this->BO = new $BOname();
-			$this->BOView = View::getInstance($this->BO);
+			$this->BOView = AlphaView::getInstance($this->BO);
 				
-			echo View::displayPageHead($this);
+			echo AlphaView::displayPageHead($this);
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());
 		}
 		
 		$this->displayBodyContent();
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 	}
 	
 	/**
@@ -188,9 +188,9 @@ class ListAll extends AlphaController implements AlphaControllerInterface {
 				
 			$this->BO = new $BOname();		
 			$this->BOname = $BOname;		
-			$this->BOView = View::getInstance($this->BO);
+			$this->BOView = AlphaView::getInstance($this->BO);
 			
-			echo View::displayPageHead($this);
+			echo AlphaView::displayPageHead($this);
 				
 			if (!empty($params['delete_oid'])) {
 				if(!Validator::isInteger($params['delete_oid']))
@@ -204,12 +204,12 @@ class ListAll extends AlphaController implements AlphaControllerInterface {
 					$temp->delete();
 					AlphaDAO::commit();
 
-					echo View::displayUpdateMessage($BOname.' '.$params['delete_oid'].' deleted successfully.');
+					echo AlphaView::displayUpdateMessage($BOname.' '.$params['delete_oid'].' deleted successfully.');
 							
 					$this->displayBodyContent();
 				}catch(AlphaException $e) {
 					self::$logger->error($e->getMessage());
-					echo View::displayErrorMessage('Error deleting the BO of OID ['.$params['delete_oid'].'], check the log!');
+					echo AlphaView::displayErrorMessage('Error deleting the BO of OID ['.$params['delete_oid'].'], check the log!');
 					AlphaDAO::rollback();
 				}
 			}
@@ -220,7 +220,7 @@ class ListAll extends AlphaController implements AlphaControllerInterface {
 			self::$logger->error($e->getMessage());
 		}
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 	}
 	
 	/**
@@ -329,10 +329,10 @@ class ListAll extends AlphaController implements AlphaControllerInterface {
 			$this->BOCount = $temp->getCount();
 		}
 		
-		echo View::renderDeleteForm();
+		echo AlphaView::renderDeleteForm();
 		
 		foreach($objects as $object) {
-			$temp = View::getInstance($object);
+			$temp = AlphaView::getInstance($object);
 			$temp->listView();
 		}
 	}

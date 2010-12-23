@@ -47,10 +47,6 @@ class ListSequences extends ListAll implements AlphaControllerInterface {
 			$BO->makeTable();
 		}
 		
-		//$this->BOname = 'Sequence';
-		
-		//$this->BOView = new View($this->BO);		
-		
 		// set up the title and meta details
 		$this->setTitle('Listing all Sequences');
 		$this->setDescription('Page to list all Sequences.');
@@ -67,7 +63,7 @@ class ListSequences extends ListAll implements AlphaControllerInterface {
 	public function doGET($params) {
 		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
 		
-		echo View::displayPageHead($this);
+		echo AlphaView::displayPageHead($this);
 		
 		// get all of the BOs and invoke the list_view on each one
 		$temp = new Sequence();
@@ -79,14 +75,14 @@ class ListSequences extends ListAll implements AlphaControllerInterface {
 		$BO = new Sequence();
 		$this->BOCount = $BO->getCount();
 		
-		echo View::renderDeleteForm();
+		echo AlphaView::renderDeleteForm();
 		
 		foreach($objects as $object) {
-			$temp = new View($object);
+			$temp = new AlphaView($object);
 			echo $temp->listView();
 		}
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 		
 		self::$logger->debug('<<doGET');		
 	}

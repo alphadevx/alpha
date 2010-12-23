@@ -80,13 +80,13 @@ class Logout extends AlphaController implements AlphaControllerInterface {
 		
 		session_destroy();
 		
-		echo View::displayPageHead($this);
+		echo AlphaView::displayPageHead($this);
 		
 		echo '<center><p class="success">You have successfully logged out of the system.</p><br>';
 		
 		echo '<a href="'.$config->get('sysURL').'">Home Page</a></center>';
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 		
 		self::$logger->debug('<<doGET');		
 	}

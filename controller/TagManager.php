@@ -9,7 +9,7 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/util/AlphaFileUtil.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 
 /**
  * 
@@ -56,7 +56,7 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 		
 		global $config;
 		
-		echo View::displayPageHead($this);
+		echo AlphaView::displayPageHead($this);
 		
 		echo '<h2>Listing business objects which are tagged</h2>';
 		
@@ -76,10 +76,10 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 		
    		echo '<form action="'.$_SERVER['PHP_SELF'].(empty($_SERVER['QUERY_STRING'])? '':'?'.$_SERVER['QUERY_STRING']).'" method="POST" name="clearForm">';
    		echo '<input type="hidden" name="clearTaggedClass"/>';
-   		echo View::renderSecurityFields();
+   		echo AlphaView::renderSecurityFields();
    		echo '</form>';
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 		
 		self::$logger->debug('<<doGET');
 	}
@@ -136,7 +136,7 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 					self::$logger->info('Saved all of the new tags (elapsed time ['.round(microtime(true)-$startTime, 5).'] seconds)');
 					
 					AlphaDAO::commit();
-					$this->setStatusMessage(View::displayUpdateMessage('Tags recreated on the '.$temp->getFriendlyClassName().' class.'));
+					$this->setStatusMessage(AlphaView::displayUpdateMessage('Tags recreated on the '.$temp->getFriendlyClassName().' class.'));
 					
 					self::$logger->info('Tags recreated on the ['.$params['clearTaggedClass'].'] class (time taken ['.round(microtime(true)-$startTime, 5).'] seconds).');
 				}catch (AlphaException $e) {
@@ -154,7 +154,7 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 			self::$logger->error($e->getMessage());
 		}
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 		self::$logger->debug('<<doPOST');
 	}
 }

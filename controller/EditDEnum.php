@@ -64,7 +64,7 @@ class EditDEnum extends Edit implements AlphaControllerInterface {
 		
 		global $config;
 		
-		echo View::displayPageHead($this);
+		echo AlphaView::displayPageHead($this);
 		
 		// ensure that a OID is provided
 		if (isset($params['oid'])) {
@@ -81,14 +81,14 @@ class EditDEnum extends Edit implements AlphaControllerInterface {
 			
 			$this->BOView = new DEnumView($this->BO);			
 			
-			echo View::renderDeleteForm();			
+			echo AlphaView::renderDeleteForm();			
 			
 			echo $this->BOView->editView();
 		}catch(BONotFoundException $e) {
 			self::$logger->error('Unable to load the DEnum of id ['.$params['oid'].'], error was ['.$e->getMessage().']');
 		}
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 		
 		self::$logger->debug('<<doGET');		
 	}

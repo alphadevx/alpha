@@ -9,7 +9,7 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/util/AlphaFileUtil.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 
 /**
  * 
@@ -70,7 +70,7 @@ class CacheManager extends AlphaController implements AlphaControllerInterface {
 			return;
 		}
 		
-		echo View::displayPageHead($this);
+		echo AlphaView::displayPageHead($this);
 		
 		echo '<h2>Listing contents of cache directory: '.$this->dataDir.'</h2>';
 		
@@ -82,10 +82,10 @@ class CacheManager extends AlphaController implements AlphaControllerInterface {
    		echo '<input type="hidden" name="clearCache" value="false"/>';
    		$temp = new button("if (confirm('Are you sure you want to delete all files in the cache?')) {document.forms['clearForm']['clearCache'].value = 'true'; document.forms['clearForm'].submit();}", "Clear cache", "clearBut");
    		echo $temp->render();
-   		echo View::renderSecurityFields();
+   		echo AlphaView::renderSecurityFields();
    		echo '</form>';
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 		
 		self::$logger->debug('<<doGET');
 	}

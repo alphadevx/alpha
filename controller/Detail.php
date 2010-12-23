@@ -8,7 +8,7 @@ if(!isset($config)) {
 
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 require_once $config->get('sysRoot').'alpha/util/helpers/Validator.inc';
 
@@ -45,9 +45,9 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 	private $BOName;
 	
 	/**
-	 * The default View object used for rendering the business object
+	 * The default AlphaView object used for rendering the business object
 	 * 
-	 * @var View
+	 * @var AlphaView
 	 */
 	private $BOView;
 	
@@ -99,11 +99,11 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 				
 				$this->BO = new $BOName();						
 				$this->BOName = $BOName;		
-				$this->BOView = View::getInstance($this->BO);
+				$this->BOView = AlphaView::getInstance($this->BO);
 				
-				echo View::displayPageHead($this);
+				echo AlphaView::displayPageHead($this);
 				
-				echo View::renderDeleteForm();
+				echo AlphaView::renderDeleteForm();
 		
 				$this->BO->load($params['oid']);
 				
@@ -119,7 +119,7 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 			throw new ResourceNotFoundException('The item that you have requested cannot be found!');
 		}
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 		self::$logger->debug('<<doGET');
 	}
 	
@@ -133,7 +133,7 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 		
 		global $config;
 		
-		echo View::displayPageHead($this);
+		echo AlphaView::displayPageHead($this);
 		
 		try {
 			// check the hidden security fields before accepting the form POST data
@@ -147,7 +147,7 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 				
 				$this->BO = new $BOName();
 				$this->BOname = $BOName;		
-				$this->BOView = View::getInstance($this->BO);
+				$this->BOView = AlphaView::getInstance($this->BO);
 		
 				if (!empty($params['delete_oid'])) {
 					if(!Validator::isInteger($params['delete_oid']))
@@ -161,7 +161,7 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 						$temp->delete();
 						AlphaDAO::commit();
 
-						echo View::displayUpdateMessage($BOName.' '.$params['delete_oid'].' deleted successfully.');
+						echo AlphaView::displayUpdateMessage($BOName.' '.$params['delete_oid'].' deleted successfully.');
 										
 						echo '<center>';
 						
@@ -171,7 +171,7 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 						echo '</center>';
 					}catch(AlphaException $e) {
 						self::$logger->error($e->getMessage());
-						echo View::displayErrorMessage('Error deleting the BO of OID ['.$params['delete_oid'].'], check the log!');
+						echo AlphaView::displayErrorMessage('Error deleting the BO of OID ['.$params['delete_oid'].'], check the log!');
 						AlphaDAO::rollback();
 					}
 				}
@@ -189,7 +189,7 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 			throw new ResourceNotFoundException('The item that you have requested cannot be found!');
 		}
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 		self::$logger->debug('<<doPOST');
 	}
 	

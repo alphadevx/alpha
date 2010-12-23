@@ -6,7 +6,7 @@ if(!isset($config)) {
 	$config = AlphaConfig::getInstance();
 }
 
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/model/article_object.inc';
@@ -69,14 +69,14 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 				
 				$this->BO->load($params['oid']);
 				
-				$BOView = View::getInstance($this->BO);
+				$BOView = AlphaView::getInstance($this->BO);
 				
 				// set up the title and meta details
 				$this->setTitle($this->BO->get('title').' (editing)');
 				$this->setDescription('Page to edit '.$this->BO->get('title').'.');
 				$this->setKeywords('edit,article');
 				
-				echo View::displayPageHead($this);
+				echo AlphaView::displayPageHead($this);
 		
 				echo $BOView->editView();
 			}else{
@@ -91,9 +91,9 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 				<strong>Error:</strong> Failed to load the requested article from the database!</p></div>';
 		}
 		
-		echo View::renderDeleteForm();
+		echo AlphaView::renderDeleteForm();
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 	}
 	
 	/**
@@ -117,14 +117,14 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 									
 				$this->BO->load($params['oid']);
 				
-				$BOView = View::getInstance($this->BO);
+				$BOView = AlphaView::getInstance($this->BO);
 					
 				// set up the title and meta details
 				$this->setTitle($this->BO->get('title').' (editing)');
 				$this->setDescription('Page to edit '.$this->BO->get('title').'.');
 				$this->setKeywords('edit,article');
 					
-				echo View::displayPageHead($this);
+				echo AlphaView::displayPageHead($this);
 		
 				if (isset($params['saveBut'])) {					
 					// populate the transient object from post data
@@ -187,7 +187,7 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 						<strong>Update:</strong> File uploaded successfully.</p></div>';
 					}
 					
-					$view = View::getInstance($this->BO);
+					$view = AlphaView::getInstance($this->BO);
 				
 					echo $view->editView();
 				}
@@ -204,7 +204,7 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 						<strong>Update:</strong> '.$params['file_to_delete'].' deleted successfully.</p></div>';
 					}
 					
-					$view = View::getInstance($this->BO);
+					$view = AlphaView::getInstance($this->BO);
 				
 					echo $view->editView();
 				}
@@ -225,9 +225,9 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 				<strong>Error:</strong> Failed to load the requested article from the database!</p></div>';
 		}
 		
-		echo View::renderDeleteForm();
+		echo AlphaView::renderDeleteForm();
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 	}
 	
 	/**

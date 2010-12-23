@@ -8,7 +8,7 @@ if(!isset($config)) {
 
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/model/article_object.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
@@ -67,13 +67,13 @@ class CreateArticle extends AlphaController implements AlphaControllerInterface 
 	 * @param array $params
 	 */
 	public function doGET($params) {
-		echo View::displayPageHead($this);
+		echo AlphaView::displayPageHead($this);
 		
-		$view = View::getInstance($this->BO);
+		$view = AlphaView::getInstance($this->BO);
 		
 		echo $view->createView();		
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 	}
 	
 	/**
@@ -114,7 +114,7 @@ class CreateArticle extends AlphaController implements AlphaControllerInterface 
 				header('Location: '.FrontController::generateSecureURL('act=ListBusinessObjects'));
 			}
 		}catch(SecurityException $e) {
-			echo View::displayPageHead($this);
+			echo AlphaView::displayPageHead($this);
 			echo '<p class="error"><br>'.$e->getMessage().'</p>';								
 			self::$logger->warn($e->getMessage());
 		}

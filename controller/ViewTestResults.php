@@ -85,7 +85,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 	 */
 	public function doGET($params) {
 		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
-		echo View::displayPageHead($this);
+		echo AlphaView::displayPageHead($this);
 		
 		$runningTime = 0;
 		$testCount = 0;
@@ -303,7 +303,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		echo '<h3>Total tests ran: '.$testCount.'</h3>';
 		echo '<h3>Total running time: '.$runningTime.'</h3>';
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 		self::$logger->debug('<<doGET');
 	}
 	

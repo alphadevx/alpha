@@ -15,7 +15,7 @@ require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
 
 if($config->get('sysCMSImagesWidgetSecure')) {
-	require_once $config->get('sysRoot').'alpha/view/View.inc';
+	require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 	require_once $config->get('sysRoot').'alpha/controller/Controller.inc';
 }
 
@@ -348,7 +348,7 @@ EOS;
 // end of javascript
 // -----------------
 		if($config->get('sysCMSImagesWidgetSecure')) {
-			$secureFields = View::generateSecurityFields();
+			$secureFields = AlphaView::generateSecurityFields();
 			echo 'document.write(\'<img src="'.$config->get('sysURL').'/alpha/view/widgets/image.js.php?source=\'+source+\'&width=\'+new_width+\'&height=\'+new_height+\'&sourceType=\'+sourceType+\'&quality=\'+quality+\'&scale=\'+scale+\'&var1='.$secureFields[0].'&var2='.$secureFields[1].'" width="\'+new_width+\'" height="\'+new_height+\'" border="0"/>\')';
 		}else{
 			echo 'document.write(\'<img src="'.$config->get('sysURL').'/alpha/view/widgets/image.js.php?source=\'+source+\'&width=\'+new_width+\'&height=\'+new_height+\'&sourceType=\'+sourceType+\'&quality=\'+quality+\'&scale=\'+scale+\'" width="\'+new_width+\'" height="\'+new_height+\'" border="0"/>\')';

@@ -1,7 +1,7 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/util/MarkdownFacade.inc';
 
 /**
@@ -14,7 +14,7 @@ require_once $config->get('sysRoot').'alpha/util/MarkdownFacade.inc';
  * @version $Id$
  *
  */
-class ArticleView extends View {	
+class ArticleView extends AlphaView {	
 	/**
 	 * Method to generate the markdown HTML render of the article content
 	 * 

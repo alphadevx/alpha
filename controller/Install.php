@@ -8,7 +8,7 @@ if(!isset($config)) {
 
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
 /**
@@ -56,7 +56,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 	public function doGET($params) {
 		global $config;
 		
-		echo View::displayPageHead($this);
+		echo AlphaView::displayPageHead($this);
 		
 		// set the umask first before attempt mkdir
 		umask(0);
@@ -283,7 +283,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		}		
 		
 		echo '<p align="center"><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Administration Home Page</a></p>';
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 		
 		// commit
 		AlphaDAO::commit();

@@ -2,7 +2,7 @@
 
 require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/util/MarkdownFacade.inc';
 require_once $config->get('sysRoot').'alpha/util/InputFilter.inc';
 
@@ -16,7 +16,7 @@ require_once $config->get('sysRoot').'alpha/util/InputFilter.inc';
  * @version $Id$
  * 
  */
-class ArticleCommentView extends View {	
+class ArticleCommentView extends AlphaView {	
 	/**
 	 * method to generate the markdown HTML render of the ArticleComment content
 	 */
@@ -72,7 +72,7 @@ class ArticleCommentView extends View {
 			
 		echo '</td></tr>';
 
-		echo View::renderSecurityFields();
+		echo AlphaView::renderSecurityFields();
 		
 		echo '</form></table>';
 		echo '<p class="warning">Please note that any comment you post may be moderated for spam or offensive material.</p>';
@@ -109,7 +109,7 @@ class ArticleCommentView extends View {
 			echo $temp->render();
 			echo '</td></tr>';
 			
-			echo View::renderSecurityFields();
+			echo AlphaView::renderSecurityFields();
 		
 			echo '</form></table>';
 		}else{
@@ -120,7 +120,7 @@ class ArticleCommentView extends View {
 			echo $temp->render();
 			echo '</div>';
 			
-			echo View::renderSecurityFields();
+			echo AlphaView::renderSecurityFields();
 			
 			echo '</form>';
 		}		

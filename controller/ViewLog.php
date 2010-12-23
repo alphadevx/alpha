@@ -12,7 +12,7 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 require_once $config->get('sysRoot').'alpha/util/LogFile.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 
 /**
  * 
@@ -62,7 +62,7 @@ class ViewLog extends AlphaController implements AlphaControllerInterface{
 	public function doGET($params) {
 		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
 		
-		echo View::displayPageHead($this);
+		echo AlphaView::displayPageHead($this);
 
 		// load the business object (BO) definition
 		if (isset($params['logPath'])) {
@@ -84,7 +84,7 @@ class ViewLog extends AlphaController implements AlphaControllerInterface{
 		if(preg_match("/tasks.*/", basename($this->logPath)))
 			$log->renderLog(array('Date/time','Level','Class','Message'));
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 		self::$logger->debug('<<doGET');
 	}
 	

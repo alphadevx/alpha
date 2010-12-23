@@ -8,7 +8,7 @@ if(!isset($config)) {
 
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
-require_once $config->get('sysRoot').'alpha/view/View.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
 /**
@@ -56,11 +56,11 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 	 * @param array $params
 	 */
 	public function doGET($params) {
-		echo View::displayPageHead($this);
+		echo AlphaView::displayPageHead($this);
 		
 		$this->displayBodyContent();
 		
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 	}
 	
 	/**
@@ -71,7 +71,7 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 	public function doPOST($params) {
 		global $config;
 		
-		echo View::displayPageHead($this);
+		echo AlphaView::displayPageHead($this);
 		
 		try {
 			// check the hidden security fields before accepting the form POST data
@@ -133,7 +133,7 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 		
 		$this->displayBodyContent();
 				
-		echo View::displayPageFoot($this);
+		echo AlphaView::displayPageFoot($this);
 	}
 	
 	/**
@@ -152,7 +152,7 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 			try {
 				
 				$BO = new $classname();
-				$BO_View = View::getInstance($BO);				
+				$BO_View = AlphaView::getInstance($BO);				
 				$BO_View->adminView();				
 			}catch (AlphaException $e) {
 				self::$logger->error("[$classname]:".$e->getMessage());
@@ -165,7 +165,8 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 						
 					// now try again...
 					$BO = new $classname();
-					$BO_View = new View($BO);
+					// todo: cannot instaniate here!
+					$BO_View = new AlphaView($BO);
 					$BO_View->adminView();
 				}
 			}catch (Exception $e) {
