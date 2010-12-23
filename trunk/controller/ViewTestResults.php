@@ -40,16 +40,7 @@ require_once $config->get('sysRoot').'alpha/tests/AlphaController_Test.php';
  * are only interested in tests that fail and the reasons given for failing
  * 
  */
-$config->set('sysErrorValidationDisplay', false);
-$config->set('sysErrorValidationLog', false);
-$config->set('sysErrorWarningDisplay', false);
-$config->set('sysErrorWarningLog', false);
-$config->set('sysErrorPhpDisplay', false);
-$config->set('sysErrorPhpLog', false);
-$config->set('sysErrorFrameworkDisplay', false);
-$config->set('sysErrorFrameworkLog', false);
-$config->set('sysErrorOtherDisplay', false);
-$config->set('sysErrorOtherLog', false);
+$config->set('sysTraceLevel', 'FATAL');
 
 
 /**

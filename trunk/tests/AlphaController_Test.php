@@ -334,7 +334,23 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($controller->checkRights(), 'testing that a user with no session can access a Public controller');
 		
 		$_SESSION['currentUser'] = $admin;
+    }
+    
+    /**
+     * testing the checkSecurityFields method
+     */
+    public function testCheckSecurityFields() {
+    	$securityFields = AlphaController::generateSecurityFields();
     	
+    	$_REQUEST['var1'] = $securityFields[0];
+    	$_REQUEST['var2'] = $securityFields[1];
+    	
+    	$this->assertTrue(AlphaController::checkSecurityFields(), 'testing the checkSecurityFields method with valid security params');
+    	
+    	$_REQUEST['var1'] = null;
+    	$_REQUEST['var2'] = null;
+    	
+    	$this->assertFalse(AlphaController::checkSecurityFields(), 'testing the checkSecurityFields method with invalid security params');
     }
 }
 
