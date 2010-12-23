@@ -25,8 +25,6 @@ class Tag_Test extends PHPUnit_Framework_TestCase {
      */
     protected function setUp() {
     	$this->article = $this->createArticleObject('unitTestArticle');
-        // just making sure no previous test article is in the DB
-        $this->article->deleteAllByAttribute('title', 'unitTestArticle');        
     }
     
     /** 
@@ -108,7 +106,7 @@ class Tag_Test extends PHPUnit_Framework_TestCase {
      */
     public function testSaveArticleGeneratesDescriptionTags() {
     	$this->article->save();    	
-    	$tags = $this->article->getPropObject('tags')->getRelatedObjects();
+    	$tags = $this->article->getPropObject('tags')->getRelatedObjects();echo count($tags);
     	
     	$found = false;
     	foreach($tags as $tag) {

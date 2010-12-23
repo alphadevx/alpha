@@ -2,6 +2,7 @@
 
 require_once $config->get('sysRoot').'alpha/controller/Search.php';
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
+require_once $config->get('sysRoot').'alpha/model/article_object.inc';
 require_once $config->get('sysRoot').'alpha/model/rights_object.inc';
 
 /**
@@ -21,6 +22,13 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 	 * @var Search
 	 */
 	private $controller;
+	
+	/**
+	 * An article_object for testing
+	 * 
+	 * @var article_object
+	 */
+	private $article;
 	
 	/**
 	 * A person_object for testing (any business object will do)
@@ -43,6 +51,7 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     protected function setUp() {
     	$this->controller = new Search();
     	$this->person = $this->createPersonObject('unitTestUser');
+    	$this->article = $this->createArticleObject('unitTestArticle');
     	$this->group = new rights_object();
     }
     
@@ -53,11 +62,15 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     protected function tearDown() {
     	$this->controller->abort();
     	// just making sure no previous test user is in the DB
+    	AlphaDAO::begin();
         $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/');
         $this->person->deleteAllByAttribute('displayName', 'unitTestUser');
         $this->person->deleteAllByAttribute('email', 'changed@test.com');
         $this->person->deleteAllByAttribute('email', 'newuser@test.com');
         $this->group->deleteAllByAttribute('name', 'testgroup');
+        $this->article->delete();
+        AlphaDAO::commit();
+        unset($this->article);
         unset($this->controller);
     	unset($this->person);
     	unset($this->group);
@@ -76,6 +89,21 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
         $person->set('URL', 'http://unitTestUser/');
         
         return $person;
+    }
+    
+	/**
+     * creates an article object for testing
+     * 
+     * @return article_object
+     */
+	private function createArticleObject($name) {
+    	$article = new article_object();
+        $article->set('title', $name);
+        $article->set('description', 'unitTestArticleTagOne unitTestArticleTagTwo');
+        $article->set('author', 'unitTestArticleTagOne');
+        $article->set('content', 'unitTestArticleTagOne');        
+        
+        return $article;
     }
     
     /**
@@ -374,6 +402,30 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     	$controller = new Search();
     	
     	$this->assertEquals('test message', $controller->getStatusMessage(), 'testing that status messages can be shared between controllers via the session');
+    }
+    
+    /**
+     * testing that a BO attached to a controller that contains tags will have those tags mapped to the controller's keywords
+     */
+    public function testTagsMapToMetaKeywords() {
+    	AlphaDAO::begin();
+    	$this->article->save();
+    	AlphaDAO::commit();
+    	$tags = $this->article->getPropObject('tags')->getRelatedObjects();
+    	
+    	$found = false;
+    	foreach($tags as $tag) {
+    		if($tag->get('content') == 'unittestarticle') {
+    			$found = true;
+    			break;
+    		}
+    	}
+    	$this->assertTrue($found, 'Testing the tag_object::tokenize method returns a tag called "unittestarticle"');
+    	
+    	$this->controller->setBO($this->article);
+    	
+    	$this->assertEquals('unittestarticle,unittestarticletagone,unittestarticletagtwo', $this->controller->getKeywords(), 'testing that a BO attached to a controller that contains tags will have those tags mapped to the controller\'s keywords');
+    	
     }
 }
 
