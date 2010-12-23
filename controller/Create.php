@@ -90,7 +90,8 @@ class Create extends AlphaController implements AlphaControllerInterface {
 			/*
 			 *  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
 			 */
-			$this->loadCustomController($BOname, 'create');
+			if($this->getCustomControllerName($BOname, 'list') != null)
+				$this->loadCustomController($BOname, 'create');
 		
 			$this->BO = new $BOname();
 				

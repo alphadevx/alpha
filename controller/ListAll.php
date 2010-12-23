@@ -135,7 +135,8 @@ class ListAll extends AlphaController implements AlphaControllerInterface {
 			/*
 			 *  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
 			 */
-			$this->loadCustomController($BOname, 'list');
+			if($this->getCustomControllerName($BOname, 'list') != null)
+				$this->loadCustomController($BOname, 'list');
 				
 			$this->BO = new $BOname();
 			$this->BOView = View::getInstance($this->BO);
