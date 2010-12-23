@@ -320,6 +320,22 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     public function testGetCustomControllerName() {
     	$this->assertNull(AlphaController::getCustomControllerName('does_not_exist_object', 'view'), 'testing that providing a bad BO name returns null');
     }
+    
+    /**
+     * testing the checkRights method with various account types
+     */
+    public function testCheckRights() {
+    	$controller = new Search('Admin');
+    	$admin = $_SESSION['currentUser'];
+		$_SESSION['currentUser'] = null;
+		
+		$this->assertFalse($controller->checkRights(), 'testing that a user with no session cannot access an Admin controller');
+		$controller = new Search('Public');
+		$this->assertTrue($controller->checkRights(), 'testing that a user with no session can access a Public controller');
+		
+		$_SESSION['currentUser'] = $admin;
+    	
+    }
 }
 
 ?>
