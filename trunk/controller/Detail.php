@@ -94,7 +94,8 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 				/*
 			 	*  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
 			 	*/
-				$this->loadCustomController($BOName, 'view');
+				if($this->getCustomControllerName($BOName, 'list') != null)
+					$this->loadCustomController($BOName, 'view');
 				
 				$this->BO = new $BOName();						
 				$this->BOName = $BOName;		
