@@ -352,6 +352,18 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     	
     	$this->assertFalse(AlphaController::checkSecurityFields(), 'testing the checkSecurityFields method with invalid security params');
     }
+    
+    /**
+     * testing that a bad controller name passed to loadControllerDef will cause an exception
+     */
+    public function testLoadControllerDef() {
+    	try {
+    		$this->controller->loadControllerDef('DoesNotExist');
+    		$this->fail('testing that a bad controller name passed to loadControllerDef will cause an exception');
+    	}catch (IllegalArguementException $e) {
+    		$this->assertEquals('The class [DoesNotExist] is not defined anywhere!', $e->getMessage(), 'testing that a bad controller name passed to loadControllerDef will cause an exception');
+    	}
+    }
 }
 
 ?>

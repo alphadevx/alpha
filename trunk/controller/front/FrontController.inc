@@ -7,6 +7,7 @@ require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException
 require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
 require_once $config->get('sysRoot').'alpha/util/filters/AlphaFilterInterface.inc';
 require_once $config->get('sysRoot').'alpha/model/badrequest_object.inc';
+require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 
 /**
  * 
@@ -277,7 +278,7 @@ class FrontController {
 		}
 		
 		try {
-			self::loadControllerDef($this->pageController);
+			AlphaController::loadControllerDef($this->pageController);
 			$pageController = new $this->pageController();
 	    	if(!empty($_POST)) {			
 				$pageController->doPOST($_REQUEST);
@@ -435,7 +436,7 @@ class FrontController {
 				$this->currentAlias = $params[0];
 
 			// check to see if we can load the page controller without an alias
-			self::loadControllerDef($params[0]);
+			AlphaController::loadControllerDef($params[0]);
 			self::$logger->debug('Page controller name set on the request URL is ['.$params[0].']');
 			$this->pageController = $params[0];
 		}catch (IllegalArguementException $iae) {
@@ -477,29 +478,6 @@ class FrontController {
 	 */
 	public function getPageController() {
 		return $this->pageController;
-	}
-	
-	/**
-	 * Loads the definition for the controller classname provided
-	 * 
-	 * @param string $controllerName
-	 * @todo move to AlphaController 
-	 */
-	public static function loadControllerDef($controllerName) {
-		if(self::$logger == null)
-			self::$logger = new Logger('FrontController');
-		self::$logger->debug('>>loadControllerDef(controllerName=['.$controllerName.'])');
-		
-		global $config;
-		
-		if(file_exists($config->get('sysRoot').'controller/'.$controllerName.'.php'))
-			require_once $config->get('sysRoot').'controller/'.$controllerName.'.php';
-		elseif(file_exists($config->get('sysRoot').'alpha/controller/'.$controllerName.'.php'))
-			require_once $config->get('sysRoot').'alpha/controller/'.$controllerName.'.php';
-		else
-			throw new IllegalArguementException('The class ['.$controllerName.'] is not defined anywhere!');
-		
-		self::$logger->debug('<<loadControllerDef');
 	}
 	
 	/**
