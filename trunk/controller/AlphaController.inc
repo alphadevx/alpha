@@ -236,8 +236,11 @@ abstract class AlphaController {
 	 	$this->visibility = $visibility;
 	 	
 	 	// check the current user's rights on access to the page controller
-	 	if(!$this->checkRights())
+	 	if(!$this->checkRights()) {
 	 		$this->accessError();
+	 		// no more execution should take place
+	 		exit;
+	 	}
 	 	
 	 	// if configured to do so, force redirect to the front controller
 	 	if($config->get('sysForceFC') && basename($_SERVER['PHP_SELF']) != 'FC.php' && basename($_SERVER['PHP_SELF']) != 'index.php') {
@@ -837,7 +840,7 @@ abstract class AlphaController {
 	}
 	
 	/**
-	 * Method to display an access error for trespassing users.
+	 * Method to display an access error for trespassing users.  HTTP response header code will be 403.
      * 
 	 * @since 1.0
 	 */
@@ -862,13 +865,11 @@ abstract class AlphaController {
 			$this->after_accessError_callback();
 		
 		self::$logger->debug('<<accessError');
-		// no further execution should take place
-		exit;
 	}
 	
 	/**
 	 * Checks the user rights of the currently logged-in person against the page 
-	 * visibility set for this controller.  Will invoke accessError() if the user has
+	 * visibility set for this controller.  Will return false if the user has
 	 * not got the correct rights.
 	 * 
 	 * @return boolean
@@ -911,12 +912,10 @@ abstract class AlphaController {
 					self::$logger->debug('<<checkRights [true]');
 					return true;
 				}else{
-					$this->accessError(); // TODO: this won't actually return as accessError() exits.  Should it exit?
 					self::$logger->debug('<<checkRights [false]');
 					return false;
 				}
 			}else{ // the person is NOT logged in
-				$this->accessError(); // TODO: this won't actually return as accessError() exits.  Should it exit?
 				self::$logger->debug('<<checkRights [false]');
 				return false;
 			}
