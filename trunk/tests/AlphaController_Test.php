@@ -313,6 +313,13 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     public function testConstructorJobControllerName() {
     	$this->assertEquals('Search', $this->controller->getName(), 'testing that the AlphaController constructor defaults to using the controller name as the AlphaController->name of the controller');
     }
+    
+    /**
+     * testing that providing a bad BO name returns null
+     */
+    public function testGetCustomControllerName() {
+    	$this->assertNull(AlphaController::getCustomControllerName('does_not_exist_object', 'view'), 'testing that providing a bad BO name returns null');
+    }
 }
 
 ?>

@@ -13,6 +13,7 @@ require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/FailedUnitCommitException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/SecurityException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/FileNotFoundException.inc';
 require_once $config->get('sysRoot').'alpha/util/helpers/Validator.inc';
 
 /**
@@ -1008,6 +1009,7 @@ abstract class AlphaController {
 	 *
 	 * @param string $BOName The classname of the business object
 	 * @param string $mode The mode of the controller (create, view, edit)
+	 * @throws FileNotFoundException
 	 * @since 1.0
 	 */
 	protected function loadCustomController($BOName, $mode) {
@@ -1047,9 +1049,11 @@ abstract class AlphaController {
 					header('Location: '.$config->get('sysURL').'alpha/controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING']);
 				}	
 			}
+			
+			// throw an exception if we have gotten this far and no custom controller was found
+			throw new FileNotFoundException('The controller ['.$controllerName.'] could not be loaded as it does not exist');
 		}
 		
-		// TODO: throw an exception if we have gotten this far and no custom controller was found
 		self::$logger->debug('<<loadCustomController');
 	}
 	
