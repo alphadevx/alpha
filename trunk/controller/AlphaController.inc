@@ -941,7 +941,8 @@ abstract class AlphaController {
 		$var2 = md5($_SERVER['REMOTE_ADDR'].$var1);
 		
 		if(empty($_REQUEST['var1']) || empty($_REQUEST['var2'])) {
-			self::$logger->debug('<<checkSecurityFields [false]'); // TODO: log a warning?
+			self::$logger->warn('The required var1/var2 params where not provided on the HTTP request');
+			self::$logger->debug('<<checkSecurityFields [false]');
 			return false;
 		}
 		
@@ -964,10 +965,31 @@ abstract class AlphaController {
 				self::$logger->debug('<<checkSecurityFields [true]');
 				return true;
 			}else{
-				self::$logger->debug('<<checkSecurityFields [false]');  // TODO: log a warning?
+				self::$logger->warn('The var1/var2 params provided are invalid, values: var1=['.$_REQUEST['var1'].'] var2=['.$_REQUEST['var2'].']');
+				self::$logger->debug('<<checkSecurityFields [false]');
 				return false;
 			}
 		}
+	}
+	
+	/**
+	 * Generates the two security fields to prevent remote form processing.
+	 * 
+	 * @return array An array containing the two fields
+	 * @since 1.0
+	 */
+	public static function generateSecurityFields() {
+		if(self::$logger == null)
+			self::$logger = new Logger('AlphaController');
+		self::$logger->debug('>>generateSecurityFields()');
+		
+		// the server hostname + today's date
+		$var1 = md5($_SERVER['HTTP_HOST'].date("Ymd"));
+		// the server's IP plus $var1
+		$var2 = md5($_SERVER['REMOTE_ADDR'].$var1);
+		
+		self::$logger->debug('<<generateSecurityFields [array('.$var1.', '.$var2.')]');
+		return array($var1, $var2);
 	}
 	
 	/**
