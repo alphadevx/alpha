@@ -364,6 +364,17 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     		$this->assertEquals('The class [DoesNotExist] is not defined anywhere!', $e->getMessage(), 'testing that a bad controller name passed to loadControllerDef will cause an exception');
     	}
     }
+    
+    /**
+     * testing that status messages can be shared between controllers via the session
+     */
+    public function testStatusMessages() {
+    	$this->controller->setStatusMessage('test message');
+    	
+    	$controller = new Search();
+    	
+    	$this->assertEquals('test message', $controller->getStatusMessage(), 'testing that status messages can be shared between controllers via the session');
+    }
 }
 
 ?>
