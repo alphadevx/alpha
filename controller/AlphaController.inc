@@ -1129,6 +1129,30 @@ abstract class AlphaController {
 		self::$logger->debug('<<checkControllerDefExists ['.$exists.']');
 		return $exists;
 	}
+	
+	/**
+	 * Loads the definition for the controller classname provided.
+	 * 
+	 * @param string $controllerName
+	 * @throws IllegalArguementException
+	 * @since 1.0
+	 */
+	public static function loadControllerDef($controllerName) {
+		if(self::$logger == null)
+			self::$logger = new Logger('AlphaController');
+		self::$logger->debug('>>loadControllerDef(controllerName=['.$controllerName.'])');
+		
+		global $config;
+		
+		if(file_exists($config->get('sysRoot').'controller/'.$controllerName.'.php'))
+			require_once $config->get('sysRoot').'controller/'.$controllerName.'.php';
+		elseif(file_exists($config->get('sysRoot').'alpha/controller/'.$controllerName.'.php'))
+			require_once $config->get('sysRoot').'alpha/controller/'.$controllerName.'.php';
+		else
+			throw new IllegalArguementException('The class ['.$controllerName.'] is not defined anywhere!');
+		
+		self::$logger->debug('<<loadControllerDef');
+	}
 }
 
 ?>
