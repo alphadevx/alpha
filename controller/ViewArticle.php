@@ -181,7 +181,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 					'<option value="9">9' .
 					'<option value="10">10' .
 					'</select></p>&nbsp;&nbsp;';
-			$temp = new button('submit','Vote!','voteBut');
+			$temp = new Button('submit','Vote!','voteBut');
 			$html .= $temp->render();
 			
 			$html .= AlphaView::renderSecurityFields();
@@ -189,19 +189,19 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 		}
 		
 		$html .= '&nbsp;&nbsp;';
-		$temp = new button("window.open('".$this->BO->get('printURL')."')",'Open Printer Version','printBut');
+		$temp = new Button("window.open('".$this->BO->get('printURL')."')",'Open Printer Version','printBut');
 		$html .= $temp->render();
 		
 		$html .= '&nbsp;&nbsp;';
 		if($config->get('sysAllowPDFVersions')) {
-			$temp = new button("document.location = '".$config->get('sysURL')."alpha/controller/ViewArticlePDF.php?title=".$this->BO->get("title")."';",'Open PDF Version','pdfBut');
+			$temp = new Button("document.location = '".$config->get('sysURL')."alpha/controller/ViewArticlePDF.php?title=".$this->BO->get("title")."';",'Open PDF Version','pdfBut');
 			$html .= $temp->render();
 		}
 		
 		// render edit button for admins only
 		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
 			$html .= '&nbsp;&nbsp;';
-			$button = new button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."'",'Edit','editBut');
+			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."'",'Edit','editBut');
 			$html .= $button->render();
 		}
 		

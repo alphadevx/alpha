@@ -69,7 +69,7 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 				$tag = new tag_object();
 				$count = count($tag->loadAllByAttribute('taggedClass', $BO));
 				echo '<h3>'.$temp->getFriendlyClassName().' object is tagged ('.$count.' tags found)</h3>';
-				$button = new button("if (confirm('Are you sure you want to delete all tags attached to the ".$temp->getFriendlyClassName()." class, and have them re-created?')) {document.forms['clearForm']['clearTaggedClass'].value = '".$BO."'; document.forms['clearForm'].submit();}", "Re-create tags", "clearBut");
+				$button = new Button("if (confirm('Are you sure you want to delete all tags attached to the ".$temp->getFriendlyClassName()." class, and have them re-created?')) {document.forms['clearForm']['clearTaggedClass'].value = '".$BO."'; document.forms['clearForm'].submit();}", "Re-create tags", "clearBut");
    				echo $button->render();
 			}
 		}		

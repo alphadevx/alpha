@@ -2705,6 +2705,33 @@ abstract class AlphaDAO {
 	}
 	
 	/**
+	 * Checks if the definition for the BO class name provided exists on the file system.
+	 * 
+	 * @param string $classname The name of the business object class name.
+	 * @return boolean
+	 * @since 1.0
+	 */
+	public static function checkClassDefExists($classname) {
+		if(self::$logger == null)
+			self::$logger = new Logger('AlphaDAO');
+		self::$logger->debug('>>checkClassDefExists(classname=['.$classname.'])');
+		
+		global $config;
+		
+		$exists = false;
+		
+		if(file_exists($config->get('sysRoot').'model/'.$classname.'.inc'))
+			$exists = true;
+		if(file_exists($config->get('sysRoot').'alpha/model/'.$classname.'.inc'))
+			$exists = true;
+		if(file_exists($config->get('sysRoot').'alpha/model/types/'.$classname.'.inc'))
+			$exists = true;
+		
+		self::$logger->debug('<<checkClassDefExists ['.$exists.']');
+		return $exists;
+	}
+	
+	/**
 	 * Checks that a record exists for the BO in the database.
 	 * 
 	 * @param int $OID The Object ID of the object we want to see whether it exists or not.

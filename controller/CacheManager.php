@@ -80,7 +80,7 @@ class CacheManager extends AlphaController implements AlphaControllerInterface {
    		
    		echo '<form action="'.$config->get('sysURL').'tk/'.$_GET['tk'].'" method="post" name="clearForm">';
    		echo '<input type="hidden" name="clearCache" value="false"/>';
-   		$temp = new button("if (confirm('Are you sure you want to delete all files in the cache?')) {document.forms['clearForm']['clearCache'].value = 'true'; document.forms['clearForm'].submit();}", "Clear cache", "clearBut");
+   		$temp = new Button("if (confirm('Are you sure you want to delete all files in the cache?')) {document.forms['clearForm']['clearCache'].value = 'true'; document.forms['clearForm'].submit();}", "Clear cache", "clearBut");
    		echo $temp->render();
    		echo AlphaView::renderSecurityFields();
    		echo '</form>';

@@ -102,7 +102,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 				echo $temp->render(false);
 				echo '</td><td>';
 				
-				$button = new button("if(confirm('Are you sure you wish to delete this tag?')) {document.getElementById('delete_oid').value = '".$tag->getID()."'; document.getElementById('delete_form').submit();}", "Delete", "deleteBut");
+				$button = new Button("if(confirm('Are you sure you wish to delete this tag?')) {document.getElementById('delete_oid').value = '".$tag->getID()."'; document.getElementById('delete_form').submit();}", "Delete", "deleteBut");
 				echo $button->render().'</td></tr>';
 			}
 			
@@ -116,10 +116,10 @@ class EditTags extends Edit implements AlphaControllerInterface {
 		
 			echo '<tr><td colspan="3">';
 		
-			$temp = new button('submit', 'Save', 'saveBut');
+			$temp = new Button('submit', 'Save', 'saveBut');
 			echo $temp->render();
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.$params['bo'].'&oid='.$params['oid'])."'", 'Back to Object', 'cancelBut');
+			$temp = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.$params['bo'].'&oid='.$params['oid'])."'", 'Back to Object', 'cancelBut');
 			echo $temp->render();
 			echo '</td></tr>';
 
