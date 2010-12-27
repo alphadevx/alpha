@@ -224,7 +224,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 		
 		$html = '<div align="center"><form method="GET" id="search_form" onsubmit="document.location = \''.$config->get('sysURL').'search/q/\'+document.getElementById(\'q\').value; return false;">';
 		$html .= 'Search for: <input type="text" size="80" name="q" id="q"/>&nbsp;';		
-		$button = new button('document.location = \''.$config->get('sysURL').'search/q/\'+document.getElementById(\'q\').value', 'Search', 'searchButton');
+		$button = new Button('document.location = \''.$config->get('sysURL').'search/q/\'+document.getElementById(\'q\').value', 'Search', 'searchButton');
 		$html .= $button->render();
 		$html .= '</form></div>';
 		

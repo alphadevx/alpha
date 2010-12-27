@@ -165,7 +165,7 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 										
 						echo '<center>';
 						
-						$temp = new button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'",'Back to List','cancelBut');
+						$temp = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'",'Back to List','cancelBut');
 						echo $temp->render();
 						
 						echo '</center>';

@@ -9,7 +9,7 @@ require_once $config->get('sysRoot').'alpha/model/rights_object.inc';
  *
  * Test cases for the AlphaController class.
  * 
- * @package Alpha Core Unit Tests
+ * @package alpha::tests
  * @author John Collins <john@design-ireland.net>
  * @copyright 2010 John Collins
  * @version $Id$ 

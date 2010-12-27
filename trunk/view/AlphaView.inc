@@ -10,8 +10,10 @@ require_once $config->get('sysRoot').'alpha/model/types/String.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
-require_once $config->get('sysRoot').'alpha/view/widgets/calendar.php';
+require_once $config->get('sysRoot').'alpha/view/widgets/calendar.php'; // todo: still being used?
+require_once $config->get('sysRoot').'alpha/view/widgets/Button.inc';
 require_once $config->get('sysRoot').'alpha/view/widgets/RecordSelector.php';
+require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
 
 /**
  *
@@ -21,7 +23,6 @@ require_once $config->get('sysRoot').'alpha/view/widgets/RecordSelector.php';
  * @since 1.0
  * @author John Collins <john@design-ireland.net>
  * @version $Id$
- * @todo make abstract!
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
  * All rights reserved.
@@ -77,17 +78,21 @@ class AlphaView {
 	private static $logger = null;
 
 	/**
-	 * Constructor for the AlphaView
+	 * Constructor for the AlphaView.  As this is protected, use the AlphaView::getInstance method from a public scope.
 	 * 
 	 * @param AlphaDAO $BO
+	 * @throws IllegalArguementException
 	 * @since 1.0
 	 */
-	public function __construct($BO) {
+	protected function __construct($BO) {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaView');
 		self::$logger->debug('>>__construct(BO=['.print_r($BO, true).'])');
-				
-		$this->BO = $BO;
+		
+		if(AlphaDAO::checkClassDefExists(get_class($BO)))
+			$this->BO = $BO;
+		else
+			throw new IllegalArguementException('The BO provided ['.get_class($BO).'] is not defined anywhere!');
 		
 		self::$logger->debug('<<__construct');
 	}
@@ -96,9 +101,9 @@ class AlphaView {
 	 * Static method which returns a AlphaView object or a custom child view for the BO specified
 	 * if one exists
 	 * 
-	 * @param object $BO the main business object that this view is going to render
-	 * @param bool $return_parent flag to enforce the return of this object instead of a child (defaults to false)
-	 * @return object returns a AlphaView object, or a child view object from the /view directory if one exists for this BO
+	 * @param AlphaDAO $BO The main business object that this view is going to render
+	 * @param boolean $returnParent Flag to enforce the return of this object instead of a child (defaults to false)
+	 * @return AlphaView Returns a AlphaView object, or a child view object from the /view directory if one exists for this BO
 	 * @since 1.0
 	 */
 	public static function getInstance($BO, $returnParent=false) {
@@ -142,21 +147,25 @@ class AlphaView {
 	/**
 	 * Simple setter for the view business object
 	 * 
-	 * @param object $BO
+	 * @param AlphaDAO $BO
+	 * @throws IllegalArguementException
 	 * @since 1.0
 	 */
 	public function setBO($BO) {		
 		self::$logger->debug('>>setBO(BO=['.print_r($BO, true).'])');
 		
-		$this->BO = $BO;
+		if(AlphaDAO::checkClassDefExists(get_class($BO)))
+			$this->BO = $BO;
+		else
+			throw new IllegalArguementException('The BO provided ['.get_class($BO).'] is not defined anywhere!');
 		
 		self::$logger->debug('<<setBO');
 	}
 
 	/**
-	 * Renders the default create view
+	 * Renders the default create view to standard output
 	 * 
-	 * @param array $fields hash array of HTML fields to pass to the template
+	 * @param array $fields Hash array of HTML fields to pass to the template
 	 * @since 1.0
 	 */
 	public function createView($fields=array()) {		
@@ -177,10 +186,10 @@ class AlphaView {
 		$fields['formFields'] = $this->renderAllFields('create');
 		
 		// buffer HTML output for Create and Cancel buttons		
-		$button = new button('submit', 'Create', 'createBut');
+		$button = new Button('submit', 'Create', 'createBut');
 		$fields['createButton'] = $button->render();
 		
-		$button = new button("document.location.replace('".FrontController::generateSecureURL('act=ListBusinessObjects')."')", 'Cancel', 'cancelBut');
+		$button = new Button("document.location.replace('".FrontController::generateSecureURL('act=ListBusinessObjects')."')", 'Cancel', 'cancelBut');
 		$fields['cancelButton'] = $button->render();		
 		
 		// buffer security fields to $formSecurityFields variable		
@@ -195,9 +204,9 @@ class AlphaView {
 	}
 
 	/**
-	 * Renders a form to enable object editing
+	 * Renders a form to enable object editing to standard output
 	 * 
-	 * @param array $fields hash array of HTML fields to pass to the template
+	 * @param array $fields Hash array of HTML fields to pass to the template
 	 * @since 1.0
 	 */
 	public function editView($fields=array()) {
@@ -218,13 +227,13 @@ class AlphaView {
 		$fields['formFields'] = $this->renderAllFields('edit');
 		
 		// buffer HTML output for Create and Cancel buttons		
-		$button = new button('submit', 'Save', 'saveBut');
+		$button = new Button('submit', 'Save', 'saveBut');
 		$fields['saveButton'] = $button->render();
 		
-		$button = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getOID()."'; document.getElementById('delete_form').submit();}", "Delete", "deleteBut");
+		$button = new Button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getOID()."'; document.getElementById('delete_form').submit();}", "Delete", "deleteBut");
 		$fields['deleteButton'] = $button->render();
 		
-		$button = new button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
+		$button = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
 		$fields['cancelButton'] = $button->render();		
 				
 		// buffer security fields to $formSecurityFields variable		
@@ -242,9 +251,9 @@ class AlphaView {
 	}
 
 	/**
-	 * Renders the list view
+	 * Renders the list view to standard output
 	 * 
-	 * @param array $fields hash array of HTML fields to pass to the template
+	 * @param array $fields Hash array of HTML fields to pass to the template
 	 * @since 1.0
 	 */
 	public function listView($fields=array()) {
@@ -321,10 +330,10 @@ class AlphaView {
 		
 		// View button
 		if(strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
-			$button = new button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."';", 'View', 'viewBut');
+			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."';", 'View', 'viewBut');
 			$fields['viewButton'] = $button->render();
 		}else{
-			$button = new button("document.location = '".$this->BO->get('URL')."';", 'View', 'viewBut');
+			$button = new Button("document.location = '".$this->BO->get('URL')."';", 'View', 'viewBut');
 			$fields['viewButton'] = $button->render();
 		}
 
@@ -332,10 +341,10 @@ class AlphaView {
 		// render edit and delete buttons for admins only
 		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
 			$html .= '&nbsp;&nbsp;';
-			$button = new button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "editBut");
+			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "editBut");
 			$html .= $button->render();
 			$html .= '&nbsp;&nbsp;';
-			$button = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getOID()."'; document.getElementById('delete_form').submit();}", "Delete", "deleteBut");
+			$button = new Button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getOID()."'; document.getElementById('delete_form').submit();}", "Delete", "deleteBut");
 			$html .= $button->render();
 		}
 		$fields['adminButtons'] = $html;
@@ -352,9 +361,9 @@ class AlphaView {
 	}
 
 	/**
-	 * Displays a detailed view of the object (read-only)
+	 * Displays a detailed view of the object (read-only) to standard output
 	 * 
-	 * @param array $fields hash array of HTML fields to pass to the template
+	 * @param array $fields Hash array of HTML fields to pass to the template
 	 * @since 1.0
 	 */
 	public function detailedView($fields=array()) {
@@ -373,17 +382,17 @@ class AlphaView {
 		$fields['formFields'] = $this->renderAllFields('view');
 		
 		// Back button
-		$button = new button('history.back()', 'Back', 'backBut');
+		$button = new Button('history.back()', 'Back', 'backBut');
 		$fields['backButton'] = $button->render();
 		
 		$html = '';
 		// render edit and delete buttons for admins only
 		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
 			$html .= '&nbsp;&nbsp;';
-			$button = new button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "editBut");
+			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "editBut");
 			$html .= $button->render();
 			$html .= '&nbsp;&nbsp;';
-			$button = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getOID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
+			$button = new Button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getOID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
 			$html .= $button->render();
 		}
 		$fields['adminButtons'] = $html;
@@ -397,9 +406,9 @@ class AlphaView {
 	}
 
 	/**
-	 * Renders the admin view for the business object screen.
+	 * Renders the admin view for the business object screen to standard output
 	 * 
-	 * @param array $fields hash array of HTML fields to pass to the template
+	 * @param array $fields Hash array of HTML fields to pass to the template
 	 * @since 1.0
 	 */
 	public function adminView($fields=array()) {
@@ -429,17 +438,17 @@ class AlphaView {
 		$fields['tableNeedsUpdate'] = ($this->BO->checkTableNeedsUpdate() ? '<span class="warning">Yes</span>' : '<span class="success">No</span>');
 
 		// create button
-		$button = new button("document.location = '".FrontController::generateSecureURL('act=Create&bo='.get_class($this->BO))."'", "Create New", "createBut");
+		$button = new Button("document.location = '".FrontController::generateSecureURL('act=Create&bo='.get_class($this->BO))."'", "Create New", "createBut");
 		$fields['createButton'] = $button->render();
 		
 		// list all button
-		$button = new button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "List All", "listBut");
+		$button = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "List All", "listBut");
 		$fields['listButton'] = $button->render();
 		
 		// the create table button (if required)
 		$html = '';
 		if (!$this->BO->checkTableExists()) {			
-			$button = new button("submit", "Create Table", "createTableBut");
+			$button = new Button("submit", "Create Table", "createTableBut");
 			$html .= $button->render();
 			// hidden field so that we know which class to create the table for
 			$html .= '<input type="hidden" name="createTableClass" value="'.get_class($this->BO).'"/>';
@@ -449,12 +458,12 @@ class AlphaView {
 		// recreate and update table buttons (if required)
 		$html = '';
 		if ($this->BO->checkTableNeedsUpdate() && $this->BO->checkTableExists()) {			
-			$button = new button("if(confirm('Are you sure you wish to recreate this class table (all data will be lost)?')) {document.getElementById('admin_".get_class($this->BO)."_button_pressed').value = 'recreateTableBut'; document.getElementById('admin_".get_class($this->BO)."').submit();}" , "Recreate Table", "recreateTableBut");
+			$button = new Button("if(confirm('Are you sure you wish to recreate this class table (all data will be lost)?')) {document.getElementById('admin_".get_class($this->BO)."_button_pressed').value = 'recreateTableBut'; document.getElementById('admin_".get_class($this->BO)."').submit();}" , "Recreate Table", "recreateTableBut");
 			$html .= $button->render();
 			// hidden field so that we know which class to recreate the table for
 			$html .= '<input type="hidden" name="recreateTableClass" value="'.get_class($this->BO).'"/>';
 			$html .= '&nbsp;&nbsp;';
-			$button = new button("if(confirm('Are you sure you wish to attempt to modify this class table by adding new attributes?')) {document.getElementById('admin_".get_class($this->BO)."_button_pressed').value = 'updateTableBut'; document.getElementById('admin_".get_class($this->BO)."').submit();}" , "Update Table", "updateTableBut");
+			$button = new Button("if(confirm('Are you sure you wish to attempt to modify this class table by adding new attributes?')) {document.getElementById('admin_".get_class($this->BO)."_button_pressed').value = 'updateTableBut'; document.getElementById('admin_".get_class($this->BO)."').submit();}" , "Update Table", "updateTableBut");
 			$html .= $button->render();
 			// hidden field so that we know which class to update the table for
 			$html .= '<input type="hidden" name="updateTableClass" value="'.get_class($this->BO).'"/>';
@@ -477,9 +486,10 @@ class AlphaView {
 	/**
 	 * Method to render the page header HTML content
 	 * 
-	 * @param Controller $controller
+	 * @param AlphaController $controller
 	 * @param bool $renderMenu Set to false to hide the default menu (default value is true)
 	 * @return string
+	 * @throws IllegalArguementException
 	 * @since 1.0
 	 * @todo remove output buffering around form_validator instance
 	 */
@@ -492,6 +502,9 @@ class AlphaView {
 			$controller->before_displayPageHead_callback();
 		
 		global $config;
+		
+		if(!AlphaController::checkControllerDefExists(get_class($controller)))
+			throw new IllegalArguementException('The controller provided ['.get_class($controller).'] is not defined anywhere!');
 		
 		$html = '';
 		
@@ -542,9 +555,10 @@ class AlphaView {
 			}
 		}
 				
-		ob_start();
-		require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
-		$html.= ob_get_clean();
+		$html.= '<script type="text/javascript">';
+		$html .= Button::renderJavascript();
+		$html.= '</script>';
+		
 		
 		// if we are working with a BO, render form validation Javascript rules
 		if ($controller->getBO() != null) {
@@ -654,7 +668,7 @@ class AlphaView {
 	/**
 	 * Method to render the page footer HTML
 	 * 
-	 * @param Controller $controller
+	 * @param AlphaController $controller
 	 * @return string
 	 * @since 1.0
 	 */
@@ -739,9 +753,9 @@ class AlphaView {
 	}
 	
 	/**
-	 * Method to render two hidden, encrypted form fields to be used as
-	 * a check to ensure that a post to the controller is being sent from 
-	 * the same server as hosting it.
+	 * Method to render a HTML form with two hidden, hashed (MD5) form fields to be used as
+	 * a check to ensure that a post to the controller is being sent from the same server 
+	 * as hosting it.
 	 * 
 	 * @return string
 	 * @since 1.0
@@ -1357,7 +1371,7 @@ class AlphaView {
 	 * Loads a .phtml template for the BO specified if one exists.  Lower level custom templates
 	 * take precedence.
 	 * 
-	 * @param object $BO
+	 * @param AlphaDAO $BO
 	 * @param string $mode
 	 * @param array $fields
 	 * @since 1.0

@@ -4,9 +4,9 @@
  *
  * Test case for the AlphaDAO class
  * 
- * @package Alpha Core Unit Tests
+ * @package alpha::tests
  * @author John Collins <john@design-ireland.net>
- * @copyright 2008 John Collins
+ * @copyright 2010 John Collins
  * @version $Id$ 
  * 
  */
