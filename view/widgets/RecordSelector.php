@@ -11,6 +11,7 @@ require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Relation.inc';
+require_once $config->get('sysRoot').'alpha/view/widgets/Button.inc';
 
 /**
  * Record selection HTML widget.
@@ -99,12 +100,12 @@ class RecordSelector {
 					
 				$html .= '<td>';			
 				$html .= '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
-				$tmp = new button("$('#recordSelector').dialog('open'); $('#recordSelector').load('".$config->get('sysURL')."/alpha/view/widgets/RecordSelector.php?value='+document.getElementById('".$this->name."').value+'&field=".$this->name."&relatedClass=".$this->relationObject->getRelatedClass()."&relatedClassField=".$this->relationObject->getRelatedClassField()."&relatedClassDisplayField=".$this->relationObject->getRelatedClassDisplayField()."&relationType=".$this->relationObject->getRelationType()."');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
+				$tmp = new Button("$('#recordSelector').dialog('open'); $('#recordSelector').load('".$config->get('sysURL')."/alpha/view/widgets/RecordSelector.php?value='+document.getElementById('".$this->name."').value+'&field=".$this->name."&relatedClass=".$this->relationObject->getRelatedClass()."&relatedClassField=".$this->relationObject->getRelatedClassField()."&relatedClassDisplayField=".$this->relationObject->getRelatedClassDisplayField()."&relationType=".$this->relationObject->getRelationType()."');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
 				$html .= $tmp->render();
 				$html .= '</td></tr>';
 			}else{
 				$html .= '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
-				$tmp = new button("$('#recordSelector').dialog('open'); $('#recordSelector').load('".$config->get('sysURL')."/alpha/view/widgets/RecordSelector.php?value='+document.getElementById('".$this->name."').value+'&field=".$this->name."&relatedClass=".$this->relationObject->getRelatedClass()."&relatedClassField=".$this->relationObject->getRelatedClassField()."&relatedClassDisplayField=".$this->relationObject->getRelatedClassDisplayField()."&relationType=".$this->relationObject->getRelationType()."');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
+				$tmp = new Button("$('#recordSelector').dialog('open'); $('#recordSelector').load('".$config->get('sysURL')."/alpha/view/widgets/RecordSelector.php?value='+document.getElementById('".$this->name."').value+'&field=".$this->name."&relatedClass=".$this->relationObject->getRelatedClass()."&relatedClassField=".$this->relationObject->getRelatedClassField()."&relatedClassDisplayField=".$this->relationObject->getRelatedClassDisplayField()."&relationType=".$this->relationObject->getRelationType()."');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
 				$html .= $tmp->render();
 			}
 				
@@ -130,9 +131,9 @@ class RecordSelector {
 					$html .= '<tr><th style="text-align:center;" colspan="2">';
 					$html .= $this->label;
 					if($buttons) {
-						$tmp = new button("document.getElementById('relation_field_".$this->name."').style.display = '';", "Display related objects", $this->name."DisBut", $config->get('sysURL')."/alpha/images/icons/arrow_down.png");
+						$tmp = new Button("document.getElementById('relation_field_".$this->name."').style.display = '';", "Display related objects", $this->name."DisBut", $config->get('sysURL')."/alpha/images/icons/arrow_down.png");
 						$html .= $tmp->render();
-						$tmp = new button("document.getElementById('relation_field_".$this->name."').style.display = 'none';", "Hide related objects", $this->name."HidBut", $config->get('sysURL')."/alpha/images/icons/arrow_up.png");
+						$tmp = new Button("document.getElementById('relation_field_".$this->name."').style.display = 'none';", "Hide related objects", $this->name."HidBut", $config->get('sysURL')."/alpha/images/icons/arrow_up.png");
 						$html .= $tmp->render();
 					}
 					$html .= '</th></tr>';
@@ -232,7 +233,7 @@ class RecordSelector {
 				$html .= $inputBoxValue;
 				$html .= '</textarea>';
 				$html .= '<div align="center">';
-				$tmp = new button("$('#recordSelector').dialog('open'); $('#recordSelector').load('".$config->get('sysURL')."/alpha/view/widgets/RecordSelector.php?lookupOIDs='+document.getElementById('".$this->name."').value+'&value='+document.getElementById('".$this->name."_OID').value+'&field=".$this->name."&relatedClassLeft=".$this->relationObject->getRelatedClass('left')."&relatedClassLeftDisplayField=".$this->relationObject->getRelatedClassDisplayField('left')."&relatedClassRight=".$this->relationObject->getRelatedClass('right')."&relatedClassRightDisplayField=".$this->relationObject->getRelatedClassDisplayField('right')."&accessingClassName=".$this->accessingClassName."&relationType=".$this->relationObject->getRelationType()."');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
+				$tmp = new Button("$('#recordSelector').dialog('open'); $('#recordSelector').load('".$config->get('sysURL')."/alpha/view/widgets/RecordSelector.php?lookupOIDs='+document.getElementById('".$this->name."').value+'&value='+document.getElementById('".$this->name."_OID').value+'&field=".$this->name."&relatedClassLeft=".$this->relationObject->getRelatedClass('left')."&relatedClassLeftDisplayField=".$this->relationObject->getRelatedClassDisplayField('left')."&relatedClassRight=".$this->relationObject->getRelatedClass('right')."&relatedClassRightDisplayField=".$this->relationObject->getRelatedClassDisplayField('right')."&accessingClassName=".$this->accessingClassName."&relationType=".$this->relationObject->getRelationType()."');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
 				$html .= $tmp->render();
 				$html .= '</div>';
 				$html .= '</td></tr>';
@@ -240,7 +241,7 @@ class RecordSelector {
 				$html .= '<textarea id="'.$this->name.'_display" style="width:95%;" rows="5" readonly>';
 				$html .= $inputBoxValue;
 				$html .= '</textarea>';
-				$tmp = new button("$('#recordSelector').dialog('open'); $('#recordSelector').load('".$config->get('sysURL')."/alpha/view/widgets/RecordSelector.php?lookupOIDs='+document.getElementById('".$this->name."').value+'&value='+document.getElementById('".$this->name."_OID').value+'&field=".$this->name."&relatedClassLeft=".$this->relationObject->getRelatedClass('left')."&relatedClassLeftDisplayField=".$this->relationObject->getRelatedClassDisplayField('left')."&relatedClassRight=".$this->relationObject->getRelatedClass('right')."&relatedClassRightDisplayField=".$this->relationObject->getRelatedClassDisplayField('right')."&accessingClassName=".$this->accessingClassName."&relationType=".$this->relationObject->getRelationType()."');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
+				$tmp = new Button("$('#recordSelector').dialog('open'); $('#recordSelector').load('".$config->get('sysURL')."/alpha/view/widgets/RecordSelector.php?lookupOIDs='+document.getElementById('".$this->name."').value+'&value='+document.getElementById('".$this->name."_OID').value+'&field=".$this->name."&relatedClassLeft=".$this->relationObject->getRelatedClass('left')."&relatedClassLeftDisplayField=".$this->relationObject->getRelatedClassDisplayField('left')."&relatedClassRight=".$this->relationObject->getRelatedClass('right')."&relatedClassRightDisplayField=".$this->relationObject->getRelatedClassDisplayField('right')."&accessingClassName=".$this->accessingClassName."&relationType=".$this->relationObject->getRelationType()."');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
 				$html .= $tmp->render();
 			}
 			
@@ -320,10 +321,10 @@ class RecordSelector {
 			$html .= '</table>';
 			
 			$html .= '<div align="center" style="padding:10px;">';
-			$tmp = new button("$('#recordSelector').dialog('close');", "Cancel", "cancelBut", $config->get('sysURL')."/alpha/images/icons/cancel.png");
+			$tmp = new Button("$('#recordSelector').dialog('close');", "Cancel", "cancelBut", $config->get('sysURL')."/alpha/images/icons/cancel.png");
 			$html .= $tmp->render();
 			$html .= '&nbsp;&nbsp;&nbsp;';		
-			$tmp = new button("setParentFieldValues(); $('#recordSelector').dialog('close');", "Accept", "acceptBut", $config->get('sysURL')."/alpha/images/icons/accept.png");
+			$tmp = new Button("setParentFieldValues(); $('#recordSelector').dialog('close');", "Accept", "acceptBut", $config->get('sysURL')."/alpha/images/icons/accept.png");
 			$html .= $tmp->render();
 			$html .= '</div>';
 		}else{			
@@ -356,7 +357,7 @@ class RecordSelector {
 				if($obj->getOID() == $this->relationObject->getValue()) {
 					$html .= '<img src="'.$config->get('sysURL').'/alpha/images/icons/accept_ghost.png"/>';
 				}else{
-					$tmp = new button("document.getElementById('".$_GET['field']."').value = '".$obj->getOID()."'; document.getElementById('".$_GET['field']."_display').value = '".$obj->get($this->relationObject->getRelatedClassDisplayField())."'; $('#recordSelector').dialog('close');", "", "selBut", $config->get('sysURL')."/alpha/images/icons/accept.png");
+					$tmp = new Button("document.getElementById('".$_GET['field']."').value = '".$obj->getOID()."'; document.getElementById('".$_GET['field']."_display').value = '".$obj->get($this->relationObject->getRelatedClassDisplayField())."'; $('#recordSelector').dialog('close');", "", "selBut", $config->get('sysURL')."/alpha/images/icons/accept.png");
 					$html .= $tmp->render();
 				}
 				$html .= '</td>';
@@ -395,7 +396,9 @@ class RecordSelector {
 		
 		echo '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
 		
-		require_once $config->get('sysRoot').'alpha/view/widgets/button.js.php';
+		echo '<script type="text/javascript">';
+		echo Button::renderJavascript();
+		echo '</script>';
 		
 		echo '<script language="JavaScript">
 			var selectedOIDs = new Object();

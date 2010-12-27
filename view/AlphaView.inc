@@ -12,6 +12,7 @@ require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
 require_once $config->get('sysRoot').'alpha/view/widgets/calendar.php'; // todo: still being used?
 require_once $config->get('sysRoot').'alpha/view/widgets/Button.inc';
+require_once $config->get('sysRoot').'alpha/view/widgets/FormValidator.inc';
 require_once $config->get('sysRoot').'alpha/view/widgets/RecordSelector.php';
 require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
 
@@ -491,7 +492,6 @@ class AlphaView {
 	 * @return string
 	 * @throws IllegalArguementException
 	 * @since 1.0
-	 * @todo remove output buffering around form_validator instance
 	 */
 	public static function displayPageHead($controller, $renderMenu = true) {
 		if(self::$logger == null)
@@ -529,7 +529,7 @@ class AlphaView {
 		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/css/alpha.css">';
 		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
 
-		$html.= '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
+		$html.= '<script language="JavaScript" src="'.$config->get('sysURL').'alpha/scripts/addOnloadEvent.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jquery-1.3.2.min.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/contextMenu/jquery.contextMenu.js"></script>';
 		
@@ -564,15 +564,12 @@ class AlphaView {
 		if ($controller->getBO() != null) {
 			require_once $config->get('sysRoot').'alpha/view/widgets/StringBox.js.php';
 			require_once $config->get('sysRoot').'alpha/view/widgets/TextBox.js.php';
-		
-			ob_start();
-			require_once $config->get('sysRoot').'alpha/view/widgets/form_validator.js.php';
-			$html.= ob_get_clean();
 
 			$html.= '<script type="text/javascript">';
-			ob_start();
-			$validator = new form_validator($controller->getBO());
-			$html.= ob_get_clean();
+			$html .= FormValidator::renderJavascript();
+			
+			$validator = new FormValidator($controller->getBO());
+			$html.= $validator->renderJavascriptRules();
 			$html.= '</script>';
 		}
 		

@@ -1,72 +1,114 @@
 <?php
 
-// $Id$
-
-if(!isset($config)) {
-	require_once '../../util/AlphaConfig.inc';
-	$config = AlphaConfig::getInstance();
-}
-
-require_once $config->get('sysRoot').'alpha/model/types/String.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
+require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
 
 /**
  *
  * Renders the client-side form validation Javascript
  * 
- * @package Alpha Widgets
+ * @package alpha::view::widgets
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2006 John Collins
- * @todo add in an append_validator method to add support for additional BOs to the validation_rules array
- * @todo add support for field types other than text
+ * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
-class form_validator
-{
+class FormValidator {
 	/**
-	 * the business object that will be validated
-	 * @var object
+	 * The business object that will be validated
+	 * @var AlphaDAO
+	 * @since 1.0
 	 */
-	var $BO = null;
+	private $BO;
 	
 	/**
-	 * constructor that builds a new
-	 * @param object $BO the business object that we want to validate
+	 * Constructor
+	 * 
+	 * @param AlphaDAO $BO The business object that we want to validate
+	 * @throws IllegalArguementException
+	 * @since 1.0
 	 */
-	function form_validator($BO) {		
-		$this->BO = $BO;
-		
-		echo "// set up the validation rules used on the fields in this page\n";
-			
+	public function __construct($BO) {
+		if(AlphaDAO::checkClassDefExists(get_class($BO)))		
+			$this->BO = $BO;
+		else
+			throw new IllegalArguementException('The definition for the BO ['.get_class($BO).'] is not defined anywhere!');
+	}
+	
+	/**
+	 * Returns the Javascript reg-ex expressions for validating each attribute of this BO
+	 * 
+	 * @return string
+	 * @since 1.0
+	 */
+	public function renderJavascriptRules() {
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this->BO));
 		$properties = $reflection->getProperties();
 		
+		$javascript = '';
+
 		foreach($properties as $propObj) {			
 			$propName = $propObj->name;
+			// we con't validate default house keeping attributes, or transient (non-saved) attributes
 			if(!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
 				$propClass = get_class($this->BO->getPropObject($propName));
 				if (strtoupper($propClass) != "ENUM" &&
 				strtoupper($propClass) != "DENUM" &&
 				strtoupper($propClass) != "DENUMITEM" && 
 				strtoupper($propClass) != "BOOLEAN") {
-					echo " validation_rules[\"".$propName."\"] = ".$this->BO->getPropObject($propName)->getRule().";\n";
-					echo " validation_rules[\"".$propName."_msg\"] = \"".$this->BO->getPropObject($propName)->getHelper()."\";\n";
+					$javascript .= " validation_rules[\"".$propName."\"] = ".$this->BO->getPropObject($propName)->getRule().";\n";
+					$javascript .= " validation_rules[\"".$propName."_msg\"] = \"".$this->BO->getPropObject($propName)->getHelper()."\";\n";
 				}
 			}
-		}	
+		}
+		
+		return $javascript;
 	}
 	
 	/**
-	 * renders the Javascript to control the behaviour of the form validation
+	 * Returns the Javascript to control the behaviour of the form validation.
+	 * 
+	 * @return string
+	 * @todo JS will be converted to JQuery at some point, and make use of JQuery UI dialogs
+	 * @since 1.0
 	 */
-	function render_javascript() {
-		
-		header("Content-type: application/x-javascript");
-		
-		// begining of javascript
-		// ----------------------
-		echo <<<EOS
+	public function renderJavascript() {		
+		$javascript = "
 		
 		var validation_rules = new Array();
 		
@@ -83,13 +125,13 @@ class form_validator
 			var field_type = field.type;
 			
 			switch(field_type) {
-				case "text":
+				case 'text':
 					return check_text_field(field);
 				break;
-				case "password":
+				case 'password':
 					return check_text_field(field);
 				break;
-				case "textarea":					
+				case 'textarea':					
 					return check_text_area(field);
 				break;
 			}	
@@ -115,19 +157,19 @@ class form_validator
 				var field_type = field.type;				
 			
 				switch(field_type) {
-					case "text":						
+					case 'text':						
 						if(!check_text_field(field))
 							val_count--;
 					break;
-					case "hidden":						
+					case 'hidden':						
 						if(!check_hidden_field(field))
 							val_count--;
 					break;
-					case "password":						
+					case 'password':						
 						if(!check_text_field(field))
 							val_count--;
 					break;
-					case "textarea":						
+					case 'textarea':						
 						if(!check_text_field(field))
 							val_count--;
 					break;
@@ -149,7 +191,7 @@ class form_validator
 		
 		function check_text_field(field) {
 			// get the validation rule for this field
-			var rule = validation_rules[field.getAttribute("name")];
+			var rule = validation_rules[field.getAttribute('name')];
 			
 			// if no rule is defined for the field, return true
 				if(!rule)
@@ -157,11 +199,11 @@ class form_validator
 						
 			// now use the rule regular expression to validate the field
 			if (!field.value.match(rule)) {				
-				raise_error(validation_rules[field.name+"_msg"]);
+				raise_error(validation_rules[field.name+'_msg']);
 				field.style.backgroundColor = 'yellow';
 				return false;
 			}else{
-				if(field.style.className != "readonly")
+				if(field.style.className != 'readonly')
 					field.style.backgroundColor = 'white';
 				return true;
 			}
@@ -169,9 +211,9 @@ class form_validator
 		
 		function check_hidden_field(field) {
 			// get the validation rule for this field
-			var rule = validation_rules[field.getAttribute("name")];
+			var rule = validation_rules[field.getAttribute('name')];
 			
-			var displayField = document.getElementById(field.getAttribute("name")+"_display") 
+			var displayField = document.getElementById(field.getAttribute('name')+'_display') 
 			
 			// if no rule is defined for the field, return true
 				if(!rule)
@@ -179,11 +221,11 @@ class form_validator
 						
 			// now use the rule regular expression to validate the field
 			if (!field.value.match(rule)) {				
-				raise_error(validation_rules[field.name+"_msg"]);
+				raise_error(validation_rules[field.name+'_msg']);
 				displayField.style.backgroundColor = 'yellow';
 				return false;
 			}else{
-				if(field.style.className != "readonly")
+				if(field.style.className != 'readonly')
 					displayField.style.backgroundColor = 'white';
 				return true;
 			}
@@ -191,11 +233,11 @@ class form_validator
 		
 		function check_text_area(field) {
 			// get the validation rule for this field
-			var rule = validation_rules[field.getAttribute("name")];
+			var rule = validation_rules[field.getAttribute('name')];
 			
 			// now use the rule regular expression to validate the field
 			if (!field.value.match(rule)) {				
-				raise_error(validation_rules[field.name+"_msg"]);
+				raise_error(validation_rules[field.name+'_msg']);
 				field.style.backgroundColor = 'yellow';
 				return false;
 			}else{
@@ -232,23 +274,14 @@ class form_validator
 			
 			for(j=0; j<no_page_forms; j++) {
 				// add the submit listener per form
-				addFormEvent(document.forms[j], "submit", validate_form);				
+				addFormEvent(document.forms[j], 'submit', validate_form);
 			}
 		}
 		
-		addOnloadEvent(addFormListeners);
-EOS;
-// end of javascript
-// -----------------
+		addOnloadEvent(addFormListeners);";
+		
+		return $javascript;
 	}
 }
-
-// if called from a Javascript link, render the Javascript code, else render the HTML
-// link to the Javascript code contained here.
-if (isset($_GET["render_javascript"]))
-	form_validator::render_javascript();
-else
-	echo '<script type="text/javascript" src="'.$config->get('sysURL').'/alpha/view/widgets/form_validator.js.php?render_javascript"></script>';
-
 
 ?>

@@ -44,7 +44,7 @@
  * </pre>
  *  
  */
-class button {
+class Button {
 	/**
 	 * The Javascript action to carry out when the button is pressed.
 	 * 
