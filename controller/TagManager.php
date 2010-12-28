@@ -32,8 +32,7 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 	 * constructor to set up the object
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('TagManager');
+		self::$logger = new Logger('TagManager');
 		self::$logger->debug('>>__construct()');
 		
 		global $config;

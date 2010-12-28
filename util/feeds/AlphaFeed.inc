@@ -102,8 +102,7 @@ abstract class AlphaFeed {
 	 * @param integer $limit
 	 */
 	public function __construct($BOName, $title, $url, $description, $pubDate=null, $id=null, $limit = 10) {
-		if(self::$logger == null)
-			self::$logger = new Logger('AlphaFeed');
+		self::$logger = new Logger('AlphaFeed');
 		
 		$this->rssDoc = new DOMDocument();
 		$this->rssDoc->loadXML($this->shell);

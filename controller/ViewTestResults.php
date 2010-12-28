@@ -67,8 +67,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 	 * The constructor
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('ViewTestResults');
+		self::$logger = new Logger('ViewTestResults');
 		self::$logger->debug('>>__construct()');
 		
 		// ensure that the super class constructor is called, indicating the rights group

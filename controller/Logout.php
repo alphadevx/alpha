@@ -36,8 +36,7 @@ class Logout extends AlphaController implements AlphaControllerInterface {
 	 * constructor to set up the object
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('Logout');
+		self::$logger = new Logger('Logout');
 		self::$logger->debug('>>__construct()');
 		
 		// ensure that the super class constructor is called, indicating the rights group

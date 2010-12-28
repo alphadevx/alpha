@@ -34,8 +34,7 @@ class ViewMetrics extends AlphaController implements AlphaControllerInterface{
 	 * The constructor
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('ViewMetrics');
+		self::$logger = new Logger('ViewMetrics');
 		self::$logger->debug('>>__construct()');
 		
 		// ensure that the super class constructor is called, indicating the rights group

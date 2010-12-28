@@ -34,8 +34,7 @@ class ViewArticleTitle extends ViewArticle {
 	public function doGET($params) {
 		global $config;
 		
-		if(self::$logger == null)
-			self::$logger = new Logger('ViewArticleTitle');
+		self::$logger = new Logger('ViewArticleTitle');
 		
 		try {
 			// it may have already been loaded by a doPOST call

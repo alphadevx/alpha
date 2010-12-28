@@ -165,8 +165,7 @@ class article_object extends AlphaDAO {
 	 * The constructor which sets up some housekeeping attributes
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('article_object');
+		self::$logger = new Logger('article_object');
 		
 		// ensure to call the parent constructor
 		parent::__construct();

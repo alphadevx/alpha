@@ -48,8 +48,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 	 * constructor to set up the object
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('Login');
+		self::$logger = new Logger('Login');
 		self::$logger->debug('>>__construct()');
 		
 		global $config;

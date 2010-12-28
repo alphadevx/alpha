@@ -34,8 +34,7 @@ class ViewAttachment extends AlphaController implements AlphaControllerInterface
 	 * The constructor
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('ViewAttachment');
+		self::$logger = new Logger('ViewAttachment');
 		self::$logger->debug('>>__construct()');
 		
 		// ensure that the super class constructor is called, indicating the rights group

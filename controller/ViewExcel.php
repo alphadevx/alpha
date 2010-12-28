@@ -34,8 +34,7 @@ class ViewExcel extends AlphaController implements AlphaControllerInterface {
 	 * Constructor
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('ViewExcel');
+		self::$logger = new Logger('ViewExcel');
 		self::$logger->debug('>>__construct()');
 		
 		// ensure that the super class constructor is called, indicating the rights group

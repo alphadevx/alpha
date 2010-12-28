@@ -65,8 +65,7 @@ class badrequest_object extends AlphaDAO {
 	 * constructor for the class
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('badrequest_object');
+		self::$logger = new Logger('badrequest_object');
 		self::$logger->debug('>>__construct()');
 		
 		// ensure to call the parent constructor

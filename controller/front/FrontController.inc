@@ -119,8 +119,8 @@ class FrontController {
 	 * @since 1.0
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('FrontController');
+		self::$logger = new Logger('FrontController');
+		
 		self::$logger->debug('>>__construct()');
 		
 		global $config;
@@ -146,10 +146,13 @@ class FrontController {
 				try {
 					$this->decodeQuery();			
 					$this->populateGetVars();
-					$this->pageController = $_GET['act'];
+					if(isset($_GET['act']))
+						$this->pageController = $_GET['act'];
+					else
+						throw new SecurityException('No act param provided in the secure token!');
 				}catch (SecurityException $e) {
 					self::$logger->error('Error while attempting to decode a secure token in the FrontController: '.$e->getMessage());
-					throw new ResourceNotFoundException('Bad param provided on the request');
+					throw new ResourceNotFoundException('The file that you have requested cannot be found!');
 				}
 			}
 		}
@@ -401,7 +404,7 @@ class FrontController {
 	 * @return boolean
 	 * @since 1.0
 	 */
-	private function checkAlias($alias) {		
+	public function checkAlias($alias) {		
 		if(array_key_exists($alias, $this->controllerAlias))
 			return true;
 		else
@@ -429,7 +432,7 @@ class FrontController {
 	 * @return string
 	 * @since 1.0
 	 */
-	private function getAliasController($alias) {
+	public function getAliasController($alias) {
 		if(array_key_exists($alias, $this->controllerAlias))
 			return $this->controllerAlias[$alias];
 	}
@@ -456,7 +459,7 @@ class FrontController {
 	 * @return string
 	 * @since 1.0
 	 */
-	private function getAliasParam($alias) {
+	public function getAliasParam($alias) {
 		if(array_key_exists($alias.'_param', $this->controllerAlias))
 			return $this->controllerAlias[$alias.'_param'];
 		else
@@ -470,9 +473,10 @@ class FrontController {
 	 * @return string
 	 * @since 1.0
 	 */
-	private function getControllerParam($controller) {
-		if(in_array($controller.'_param', $this->controllerAlias))
-			return $this->controllerAlias[$controller.'_param'];
+	public function getControllerParam($controller) {
+		$alias = $this->getControllerAlias($controller);
+		if(array_key_exists($alias.'_param', $this->controllerAlias))
+			return $this->controllerAlias[$alias.'_param'];
 		else
 			return '';
 	}
@@ -555,33 +559,6 @@ class FrontController {
 	}
 	
 	/**
-	 * Renders a HTML error page with the supplied error code (typlically a HTTP code) and a message
-	 * 
-	 * @param string $code
-	 * @param string $message
-	 * @return string
-	 * @todo move to AlphaView
-	 * @since 1.0
-	 */
-	public function renderErrorPage($code, $message) {
-		global $config;		
-		
-		$html = '<html><head>';
-		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/ui/themes/'.$config->get('sysTheme').'/ui.all.css">';
-		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/css/alpha.css">';
-		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
-		$html .= '<title>'.$code.' - '.$message.'</title></head>';
-		$html .= '<body>';
-		$html .= '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
-				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
-				<strong>'.$code.':</strong> '.$message.'</p>
-				</div>';
-		$html .= '</body></html>';
-		
-		return $html;
-	}
-	
-	/**
 	 * Add the supplied filter object to the list of filters ran on each request to the front controller
 	 * 
 	 * @param AlphaFilterInterface $filterObject
@@ -593,6 +570,16 @@ class FrontController {
 			array_push($this->filters, $filterObject);
 		else
 			throw new IllegalArguementException('Supplied filter object is not a valid AlphaFilterInterface instance!');
+	}
+	
+	/**
+	 * Returns the array of filters currently attached to this FrontController
+	 * 
+	 * @return array
+	 * @since 1.0
+	 */
+	public function getFilters() {
+		return $this->filters;
 	}
 }
 

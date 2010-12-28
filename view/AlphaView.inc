@@ -86,8 +86,7 @@ class AlphaView {
 	 * @since 1.0
 	 */
 	protected function __construct($BO) {
-		if(self::$logger == null)
-			self::$logger = new Logger('AlphaView');
+		self::$logger = new Logger('AlphaView');
 		self::$logger->debug('>>__construct(BO=['.print_r($BO, true).'])');
 		
 		if(AlphaDAO::checkClassDefExists(get_class($BO)))
@@ -726,6 +725,32 @@ class AlphaView {
 				<strong>Error:</strong> '.$message.'</p></div>';
 		
 		self::$logger->debug('<<displayErrorMessage ['.$html.']');
+		return $html;
+	}
+	
+	/**
+	 * Renders a HTML error page with the supplied error code (typlically a HTTP code) and a message
+	 * 
+	 * @param string $code
+	 * @param string $message
+	 * @return string
+	 * @since 1.0
+	 */
+	public static function renderErrorPage($code, $message) {
+		global $config;		
+		
+		$html = '<html><head>';
+		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/ui/themes/'.$config->get('sysTheme').'/ui.all.css">';
+		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/css/alpha.css">';
+		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
+		$html .= '<title>'.$code.' - '.$message.'</title></head>';
+		$html .= '<body>';
+		$html .= '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
+				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+				<strong>'.$code.':</strong> '.$message.'</p>
+				</div>';
+		$html .= '</body></html>';
+		
 		return $html;
 	}
 	

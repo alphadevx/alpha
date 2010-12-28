@@ -41,8 +41,7 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 	 * constructor to set up the object
 	 */
 	public function __construct($visibility='Editor') {
-		if(self::$logger == null)
-			self::$logger = new Logger('EditArticle');
+		self::$logger = new Logger('EditArticle');
 		self::$logger->debug('>>__construct()');
 		
 		global $config;

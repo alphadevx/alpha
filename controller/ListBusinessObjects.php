@@ -33,8 +33,7 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 	 * the constructor
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('ListBusinessObjects');
+		self::$logger = new Logger('ListBusinessObjects');
 		self::$logger->debug('>>__construct()');
 		
 		global $config;

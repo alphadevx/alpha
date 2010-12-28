@@ -27,8 +27,7 @@ class ClientTempBlacklistFilter implements AlphaFilterInterface {
 	 * Constructor
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('ClientTempBlacklistFilter');		
+		self::$logger = new Logger('ClientTempBlacklistFilter');		
 	}
 	
 	/**

@@ -70,8 +70,7 @@ class RelationLookup extends AlphaDAO implements AlphaTypeInterface {
 	 * The constructor
 	 */
 	public function __construct($leftClassName, $rightClassName) {
-		if(self::$logger == null)
-			self::$logger = new Logger('RelationLookup');
+		self::$logger = new Logger('RelationLookup');
 		self::$logger->debug('>>__construct(leftClassName=['.$leftClassName.'], rightClassName=['. $rightClassName.'])');
 		
 		// ensure to call the parent constructor

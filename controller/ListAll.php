@@ -91,8 +91,7 @@ class ListAll extends AlphaController implements AlphaControllerInterface {
 	 * @param string $visibility
 	 */
 	public function __construct($visibility='Admin') {
-		if(self::$logger == null)
-			self::$logger = new Logger('ListAll');
+		self::$logger = new Logger('ListAll');
 		self::$logger->debug('>>__construct()');
 		
 		global $config;

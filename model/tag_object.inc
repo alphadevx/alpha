@@ -65,8 +65,7 @@ class tag_object extends AlphaDAO {
 	 * The constructor
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('tag_object');
+		self::$logger = new Logger('tag_object');
 			
 		// ensure to call the parent constructor
 		parent::__construct();

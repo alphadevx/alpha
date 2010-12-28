@@ -30,10 +30,8 @@ class AlphaCronManager {
 	public function __construct() {
 		global $config;		
 		
-		if(self::$logger == null) {
-			self::$logger = new Logger('AlphaCronManager');			
-			self::$logger->setLogFile($config->get('sysRoot').'logs/tasks.log');
-		}
+		self::$logger = new Logger('AlphaCronManager');			
+		self::$logger->setLogFile($config->get('sysRoot').'logs/tasks.log');
 		
 		self::$logger->debug('>>__construct()');
 		

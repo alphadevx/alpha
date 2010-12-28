@@ -90,8 +90,7 @@ class person_object extends AlphaDAO {
 	 * constructor for the class that populates all of the complex types with default values
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('person_object');
+		self::$logger = new Logger('person_object');
 		self::$logger->debug('>>__construct()');
 		
 		// ensure to call the parent constructor

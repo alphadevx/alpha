@@ -34,8 +34,7 @@ class ViewArticleFile extends ViewArticle {
 	 * @param array $params
 	 */
 	public function doGET($params) {
-		if(self::$logger == null)
-			self::$logger = new Logger('ViewArticleFile');
+		self::$logger = new Logger('ViewArticleFile');
 			
 		global $config;
 		
