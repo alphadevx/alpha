@@ -40,6 +40,13 @@ class Logger {
 	private $classname;
 	
 	/**
+	 * An array of class names that will be logged at debug level, regardless of the global Logger::level setting
+	 * 
+	 * @var array
+	 */
+	private $debugClasses = array();
+	
+	/**
 	 * The constructor
 	 *
 	 * @param string $classname
@@ -49,6 +56,7 @@ class Logger {
 		
 		$this->classname = $classname;
 		$this->level = $config->get('sysTraceLevel');
+		$this->debugClasses = explode(',', $config->get('sysTraceDebugClasses'));
 		$this->logfile = new LogFile($config->get('sysLogFile'));
 		$this->logfile->setMaxSize($config->get('sysLogFileMaxSize'));
 	}
@@ -59,7 +67,7 @@ class Logger {
 	 * @param string $message
 	 */
 	public function debug($message) {		
-		if($this->level == 'DEBUG') {
+		if($this->level == 'DEBUG' || in_array($this->classname, $this->debugClasses)) {
 			$dateTime = date("Y-m-d H:i:s");
 			$this->logfile->writeLine(array($dateTime, 'DEBUG', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
 		}
@@ -71,7 +79,7 @@ class Logger {
 	 * @param string $message
 	 */
 	public function info($message) {
-		if($this->level == 'DEBUG' || $this->level == 'INFO') {
+		if($this->level == 'DEBUG' || $this->level == 'INFO' || in_array($this->classname, $this->debugClasses)) {
 			$dateTime = date("Y-m-d H:i:s");
 			$this->logfile->writeLine(array($dateTime, 'INFO', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
 		}
@@ -83,7 +91,7 @@ class Logger {
 	 * @param string $message
 	 */
 	public function warn($message) {
-		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN') {
+		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || in_array($this->classname, $this->debugClasses)) {
 			$dateTime = date("Y-m-d H:i:s");
 			$this->logfile->writeLine(array($dateTime, 'WARN', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
 		}
@@ -95,7 +103,7 @@ class Logger {
 	 * @param string $message
 	 */
 	public function error($message) {
-		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR') {
+		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' || in_array($this->classname, $this->debugClasses)) {
 			$dateTime = date("Y-m-d H:i:s");		
 			$this->logfile->writeLine(array($dateTime, 'ERROR', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
 		}
@@ -107,7 +115,7 @@ class Logger {
 	 * @param string $message
 	 */
 	public function fatal($message) {
-		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' || $this->level == 'FATAL') {
+		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' || $this->level == 'FATAL' || in_array($this->classname, $this->debugClasses)) {
 			$dateTime = date("Y-m-d H:i:s");
 			$this->logfile->writeLine(array($dateTime, 'FATAL', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
 		}
