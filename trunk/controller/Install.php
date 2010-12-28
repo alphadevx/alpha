@@ -33,8 +33,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 	 * the constructor
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('Install');
+		self::$logger = new Logger('Install');
 		self::$logger->debug('>>__construct()');
 		
 		global $config;

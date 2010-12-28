@@ -58,8 +58,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 	 * @param string $visibility The name of the rights group that can access this controller.
 	 */
 	public function __construct($visibility='Public') {
-		if(self::$logger == null)
-			self::$logger = new Logger('Search');
+		self::$logger = new Logger('Search');
 		self::$logger->debug('>>__construct(visibility=['.$visibility.'])');
 		
 		global $config;

@@ -31,8 +31,7 @@ class BO2Excel {
 	 * @param object $BO
 	 */
 	public function __construct($BO) {
-		if(self::$logger == null)
-			self::$logger = new Logger('BO2Excel');
+		self::$logger = new Logger('BO2Excel');
 		self::$logger->debug('>>__construct(BO=['.print_r($BO, true).'])');
 		
 		$this->BO = $BO;

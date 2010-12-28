@@ -56,8 +56,7 @@ class Create extends AlphaController implements AlphaControllerInterface {
 	 * @param string $visibility
 	 */
 	public function __construct($visibility='Admin') {
-		if(self::$logger == null)
-			self::$logger = new Logger('Create');
+		self::$logger = new Logger('Create');
 		self::$logger->debug('>>__construct()');
 		
 		global $config;

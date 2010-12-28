@@ -222,8 +222,7 @@ abstract class AlphaController {
 	 * @since 1.0
 	 */
 	public function __construct($visibility='Public') {
-		if(self::$logger == null)
-			self::$logger = new Logger('AlphaController');
+		self::$logger = new Logger('AlphaController');
 		self::$logger->debug('>>__construct(visibility=['.$visibility.'])');
 		
 	 	global $config;

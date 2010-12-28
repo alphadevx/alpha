@@ -105,8 +105,7 @@ class Image {
 	 * @param $scale
 	 */
 	public function __construct($source, $width, $height, $sourceType, $quality=0.75, $scale=false, $secure=false) {
-		if(self::$logger == null)
-			self::$logger = new Logger('Image');
+		self::$logger = new Logger('Image');
 			
 		self::$logger->debug('>>__construct(source=['.$source.'], width=['.$width.'], height=['.$height.'], sourceType=['.$sourceType.'], quality=['.$quality.'], scale=['.$scale.'], secure=['.$secure.'])');
 			

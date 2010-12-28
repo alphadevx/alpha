@@ -34,8 +34,7 @@ class GenSecureQueryStrings extends AlphaController implements AlphaControllerIn
 	 * Constructor
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('CacheManager');
+		self::$logger = new Logger('CacheManager');
 		self::$logger->debug('>>__construct()');
 		
 		global $config;

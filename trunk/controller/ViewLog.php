@@ -42,8 +42,7 @@ class ViewLog extends AlphaController implements AlphaControllerInterface{
 	 * The constructor
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('ViewLog');
+		self::$logger = new Logger('ViewLog');
 		self::$logger->debug('>>__construct()');
 		
 		// ensure that the super class constructor is called, indicating the rights group

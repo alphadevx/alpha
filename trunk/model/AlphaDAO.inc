@@ -179,8 +179,7 @@ abstract class AlphaDAO {
 	 * @since 1.0
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('AlphaDAO');
+		self::$logger = new Logger('AlphaDAO');
 		self::$logger->debug('>>__construct()');
 		
 		$this->version_num = new Integer(0);

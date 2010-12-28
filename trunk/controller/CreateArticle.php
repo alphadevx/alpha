@@ -42,8 +42,7 @@ class CreateArticle extends AlphaController implements AlphaControllerInterface 
 	 * constructor to set up the object
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('CreateArticle');
+		self::$logger = new Logger('CreateArticle');
 		self::$logger->debug('>>__construct()');
 		
 		global $config;

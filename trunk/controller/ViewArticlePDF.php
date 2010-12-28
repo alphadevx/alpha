@@ -41,8 +41,7 @@ class ViewArticlePDF extends AlphaController {
 	 * Constructor to set up the object
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('ViewArticlePDF');
+		self::$logger = new Logger('ViewArticlePDF');
 		self::$logger->debug('>>__construct()');
 		
 		global $config;

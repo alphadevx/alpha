@@ -35,8 +35,7 @@ class PreviewArticle extends AlphaController implements AlphaControllerInterface
 	 * Constructor to set up the object
 	 */
 	public function __construct() {
-		if(self::$logger == null)
-			self::$logger = new Logger('PreviewArticle');
+		self::$logger = new Logger('PreviewArticle');
 		self::$logger->debug('>>__construct()');
 		
 		// ensure that the super class constructor is called, indicating the rights group
