@@ -14,15 +14,52 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
  * The front controller designed to optionally handle all requests
  * 
  * @package alpha::controller::front
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2009 John Collins
  * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
+ * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class FrontController {
 	/**
 	 * The GET query string
 	 *
 	 * @var string
+	 * @since 1.0
 	 */
 	private $queryString;
 	
@@ -30,13 +67,15 @@ class FrontController {
 	 * The name of the page controller we want to invoke
 	 *
 	 * @var string
+	 * @since 1.0
 	 */
 	private $pageController;
 	
 	/**
 	 * Boolean to flag if the GET query string is encrypted or not
 	 *
-	 * @var bool
+	 * @var boolean
+	 * @since 1.0
 	 */
 	private $encryptedQuery = false;
 	
@@ -44,6 +83,7 @@ class FrontController {
 	 * An array of controller alias
 	 *
 	 * @var array
+	 * @since 1.0
 	 */
 	private $controllerAlias = array();
 	
@@ -52,6 +92,7 @@ class FrontController {
 	 * member must implement AlphaFilterInterface!
 	 * 
 	 * @var array
+	 * @since 1.0
 	 */
 	private $filters = array();
 	
@@ -59,6 +100,7 @@ class FrontController {
 	 * The name of the current alias
 	 *
 	 * @var string
+	 * @since 1.0
 	 */
 	private $currentAlias;
 	
@@ -66,11 +108,15 @@ class FrontController {
 	 * Trace logger
 	 * 
 	 * @var Logger
+	 * @since 1.0
 	 */
 	private static $logger = null;
 	
 	/**
 	 * The constructor method
+	 * 
+	 * @throws ResourceNotFoundException
+	 * @since 1.0
 	 */
 	public function __construct() {
 		if(self::$logger == null)
@@ -78,6 +124,8 @@ class FrontController {
 		self::$logger->debug('>>__construct()');
 		
 		global $config;
+		
+		self::$logger->debug('Requested URL is ['.$_SERVER['REQUEST_URI'].']');
 		
 		// direct calls to the front controller
 		if (isset($_GET['act'])) {
@@ -104,7 +152,8 @@ class FrontController {
 	/**
 	 * Sets the encryption flag
 	 *
-	 * @param bool $encryptedQuery
+	 * @param boolean $encryptedQuery
+	 * @since 1.0
 	 */
 	public function setEncrypt($encryptedQuery) {
 		$this->encryptedQuery = $encryptedQuery;
@@ -113,6 +162,8 @@ class FrontController {
 	/**
 	 * Method to populate the global _GET and _REQUEST arrays with the decoded 
 	 * query string
+	 * 
+	 * @since 1.0
 	 */
 	private function populateGetVars() {
 				
@@ -130,11 +181,15 @@ class FrontController {
 	 * 
 	 * @param string $params
 	 * @return string
+	 * @since 1.0
 	 */
 	public static function generateSecureURL($params) {
 		global $config;
 		
-		return $config->get('sysURL').'tk/'.FrontController::encodeQuery($params);
+		if($config->get('sysUseModRewrite'))
+			return $config->get('sysURL').'tk/'.FrontController::encodeQuery($params);
+		else
+			return $config->get('sysURL').'FC.php?tk='.FrontController::encodeQuery($params);
 	}
 	
 	/**
@@ -142,6 +197,7 @@ class FrontController {
 	 * 
 	 * @param string $queryString
 	 * @return string
+	 * @since 1.0
 	 */
 	public static function encodeQuery($queryString) {
 		global $config;
@@ -162,6 +218,9 @@ class FrontController {
 	
 	/**
 	 * Method to decode the current query string
+	 * 
+	 * @throws SecurityException
+	 * @since 1.0
 	 */
 	private function decodeQuery() {
 		global $config;		
@@ -182,6 +241,7 @@ class FrontController {
 	 * Static method to return the decoded GET paramters from an encrytpted tk value (excludes the act paramter)
 	 * 
 	 * @return string
+	 * @since 1.0
 	 */
 	public static function decodeQueryParams($tk) {
 		global $config;		
@@ -203,6 +263,7 @@ class FrontController {
 	 * as an array of key/value pairs.
 	 * 
 	 * @return array
+	 * @since 1.0
 	 */
 	public static function getDecodeQueryParams($tk) {
 		global $config;		
@@ -231,8 +292,9 @@ class FrontController {
 	/**
 	 * Method to load the page controller
 	 * 
-	 * @param bool $allowRedirects Defaults to true, set to false if you want to prevent the front controller from redirecting the request
-	 * @return bool True if the controller loaded, false otherwise
+	 * @param boolean $allowRedirects Defaults to true, set to false if you want to prevent the front controller from redirecting the request
+	 * @throws ResourceNotFoundException
+	 * @since 1.0
 	 */
 	public function loadController($allowRedirects = true) {
 		global $config;
@@ -263,9 +325,6 @@ class FrontController {
 			    	}
 			    	
 			    	header('Location: '.$URL);
-			 
-				    // we're done here
-			    	return true;
 				}
 			}
 		}
@@ -285,11 +344,9 @@ class FrontController {
 			}else{				
 				$pageController->doGET($_GET);
 			}
-	    	return true;
 		}catch (ResourceNotAllowedException $e) {
 			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".print_r($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
 			throw new ResourceNotAllowedException($e->getMessage());
-			return false;
 		}catch (IllegalArguementException $e) {
 			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".print_r($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
 			
@@ -304,7 +361,6 @@ class FrontController {
 			}
 			
 			throw new ResourceNotFoundException('The file that you have requested cannot be found!');
-			return false;
 		}catch (AlphaException $e) {
 			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".print_r($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
 			
@@ -319,7 +375,6 @@ class FrontController {
 			}
 			
 			throw new ResourceNotFoundException('The file that you have requested cannot be found!');
-			return false;
 		}
 	}
 	
@@ -330,6 +385,7 @@ class FrontController {
 	 * @param string $controller The name of the page controller class
 	 * @param string $alias The URL alias for the page controller
 	 * @param string $param The name of the GET parameter on the alias URL request
+	 * @since 1.0
 	 */
 	public function registerAlias($controller, $alias, $param=null) {
 		$this->controllerAlias[$alias] = $controller;
@@ -344,7 +400,8 @@ class FrontController {
 	 * Check to see if an alias exists for the given alias name
 	 * 
 	 * @param string $alias
-	 * @return bool
+	 * @return boolean
+	 * @since 1.0
 	 */
 	private function checkAlias($alias) {		
 		if(array_key_exists($alias, $this->controllerAlias))
@@ -357,7 +414,8 @@ class FrontController {
 	 * Check to see if an alias exists for the given controller name
 	 * 
 	 * @param string $controller
-	 * @return bool
+	 * @return boolean
+	 * @since 1.0
 	 */
 	public function hasAlias($controller) {
 		if(in_array($controller, $this->controllerAlias))
@@ -371,6 +429,7 @@ class FrontController {
 	 * 
 	 * @param string $alias
 	 * @return string
+	 * @since 1.0
 	 */
 	private function getAliasController($alias) {
 		if(array_key_exists($alias, $this->controllerAlias))
@@ -382,6 +441,7 @@ class FrontController {
 	 * 
 	 * @param string $controller
 	 * @return string
+	 * @since 1.0
 	 */
 	public function getControllerAlias($controller) {
 		if(in_array($controller, $this->controllerAlias)) {
@@ -396,6 +456,7 @@ class FrontController {
 	 * 
 	 * @param string $alias
 	 * @return string
+	 * @since 1.0
 	 */
 	private function getAliasParam($alias) {
 		if(array_key_exists($alias.'_param', $this->controllerAlias))
@@ -409,6 +470,7 @@ class FrontController {
 	 * 
 	 * @param string $controller
 	 * @return string
+	 * @since 1.0
 	 */
 	private function getControllerParam($controller) {
 		if(in_array($controller.'_param', $this->controllerAlias))
@@ -419,6 +481,8 @@ class FrontController {
 	
 	/**
 	 * Handles all of the rules for mod_rewrite style URL parsing
+	 * 
+	 * @since 1.0
 	 */
 	private function handleModRewriteRequests() {
 		self::$logger->debug('>>handleModRewriteRequests');
@@ -475,6 +539,7 @@ class FrontController {
 	 * Getter for the page controller
 	 * 
 	 * @return string
+	 * @since 1.0
 	 */
 	public function getPageController() {
 		return $this->pageController;
@@ -483,9 +548,11 @@ class FrontController {
 	/**
 	 * Renders a HTML error page with the supplied error code (typlically a HTTP code) and a message
 	 * 
-	 * @param $code
-	 * @param $message
+	 * @param string $code
+	 * @param string $message
 	 * @return string
+	 * @todo move to AlphaView
+	 * @since 1.0
 	 */
 	public function renderErrorPage($code, $message) {
 		global $config;		
@@ -508,7 +575,9 @@ class FrontController {
 	/**
 	 * Add the supplied filter object to the list of filters ran on each request to the front controller
 	 * 
-	 * @param $filterObject AlphaFilterInterface
+	 * @param AlphaFilterInterface $filterObject
+	 * @throws IllegalArguementException
+	 * @since 1.0
 	 */
 	public function registerFilter($filterObject) {
 		if($filterObject instanceof AlphaFilterInterface)
