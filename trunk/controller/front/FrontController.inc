@@ -143,6 +143,14 @@ class FrontController {
 			}else{
 				self::$logger->debug('Processing a direct request to the front controller with an encrypted token param');
 				$this->setEncrypt(true);
+				try {
+					$this->decodeQuery();			
+					$this->populateGetVars();
+					$this->pageController = $_GET['act'];
+				}catch (SecurityException $e) {
+					self::$logger->error('Error while attempting to decode a secure token in the FrontController: '.$e->getMessage());
+					throw new ResourceNotFoundException('Bad param provided on the request');
+				}
 			}
 		}
 		
@@ -167,12 +175,14 @@ class FrontController {
 	 */
 	private function populateGetVars() {
 				
-		$pairs = explode('&', $this->queryString);		
+		$pairs = explode('&', $this->queryString);
 		
 		foreach($pairs as $pair) {
 			$keyValue = explode('=', $pair);
-			$_GET[$keyValue[0]] = $keyValue[1];
-			$_REQUEST[$keyValue[0]] = $keyValue[1];
+			if(count($keyValue) == 2) {
+				$_GET[$keyValue[0]] = $keyValue[1];
+				$_REQUEST[$keyValue[0]] = $keyValue[1];
+			}
 		}
 	}
 	
@@ -238,7 +248,7 @@ class FrontController {
 	}
 	
 	/**
-	 * Static method to return the decoded GET paramters from an encrytpted tk value (excludes the act paramter)
+	 * Static method to return the decoded GET paramters from an encrytpted tk value
 	 * 
 	 * @return string
 	 * @since 1.0
@@ -252,15 +262,12 @@ class FrontController {
 		$token = strtr($tk, '-_', '+/');
 		$token = base64_decode($token);
 		$params = trim(mcrypt_decrypt('tripledes', $config->get('sysQSKey'), $token, 'ecb', $iv));
-		// now remove the first param ("act" the page controller action)			
-		$params = substr($params, strpos($params,'&')+1);
 		
 		return $params;
 	}
 	
 	/**
-	 * Static method to return the decoded GET paramters from an encrytpted tk value (excludes the act paramter)
-	 * as an array of key/value pairs.
+	 * Static method to return the decoded GET paramters from an encrytpted tk value as an array of key/value pairs.
 	 * 
 	 * @return array
 	 * @since 1.0
@@ -274,8 +281,6 @@ class FrontController {
 		$token = strtr($tk, '-_', '+/');
 		$token = base64_decode($token);
 		$params = trim(mcrypt_decrypt('tripledes', $config->get('sysQSKey'), $token, 'ecb', $iv));
-		// now remove the first param ("act" the page controller action)			
-		$params = substr($params, strpos($params,'&')+1);
 		
 		$pairs = explode('&', $params);
 		
@@ -327,13 +332,6 @@ class FrontController {
 			    	header('Location: '.$URL);
 				}
 			}
-		}
-		
-		// handle encrypted query strings
-		if($this->encryptedQuery) {
-			$this->decodeQuery();			
-			$this->populateGetVars();
-			$this->pageController = $_GET['act'];
 		}
 		
 		try {
@@ -521,17 +519,28 @@ class FrontController {
 			}
 		}
 		
+		self::$logger->debug('$params are ['.print_r($params, true).']');
+		self::$logger->debug('currentAlias is ['.$this->currentAlias.']');
+		
 		// now populate the _GET vars
-		for($i = 1; $i < count($params); $i++) {
-			if(isset($params[$i+1])) {
-				if(!empty($_POST))
-					$_REQUEST[$params[$i]] = $params[$i+1];
-				else			
-					$_GET[$params[$i]] = $params[$i+1];
+		if($this->currentAlias == 'tk') {
+			self::$logger->debug('Setting the GET vars for a mod_rewrite request with a tk param');
+			$this->setEncrypt(true);
+			$this->queryString = FrontController::decodeQueryParams($params[1]);
+			$this->populateGetVars();
+			$this->pageController = $_GET['act'];
+		}else{
+			for($i = 1; $i < count($params); $i++) {
+				if(isset($params[$i+1])) {
+					if(!empty($_POST))
+						$_REQUEST[$params[$i]] = $params[$i+1];
+					else			
+						$_GET[$params[$i]] = $params[$i+1];
+				}
 			}
 		}
 		
-		self::$logger->debug('$params are ['.print_r($_GET, true).']');		
+		self::$logger->debug('$_GET is ['.print_r($_GET, true).']');		
 		self::$logger->debug('<<handleModRewriteRequests');
 	}
 	
