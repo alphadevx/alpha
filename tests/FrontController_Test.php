@@ -71,6 +71,33 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     	
     	$this->assertEquals('ViewArticleTitle', $front->getPageController(), 'testing that the constructor can parse the correct page controller action from a mod_rewrite style URL when a controller alias is used');
     }
+    
+    /**
+     * testing that the constructor can parse the correct page controller action from an encrypted token param
+     */
+    public function testConstructorWithEncryptedToken() {
+    	global $config;
+    	
+    	$params = 'act=ViewArticleTitle&title=Test_Title';
+    	$_GET['tk'] = FrontController::encodeQuery($params);
+    	$front = new FrontController();
+    	
+    	$this->assertEquals('ViewArticleTitle', $front->getPageController(), 'testing that the constructor can parse the correct page controller action from an encrypted token param');
+    }
+    
+	/**
+     * testing that the constructor can parse the correct page controller action from an encrypted token param provided on a mod-rewrite style URL
+     */
+    public function testConstructorModRewriteWithEncryptedToken() {
+    	global $config;
+    	
+    	$params = 'act=ViewArticleTitle&title=Test_Title';
+    	$request = $config->get('sysURL').'tk/'.FrontController::encodeQuery($params);
+    	$_SERVER['REQUEST_URI'] = str_replace('http://'.$_SERVER['HTTP_HOST'], '', $request);
+    	$front = new FrontController();
+    	
+    	$this->assertEquals('ViewArticleTitle', $front->getPageController(), 'testing that the constructor can parse the correct page controller action from an encrypted token param provided on a mod-rewrite style URL');
+    }
 }
 
 ?>
