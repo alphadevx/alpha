@@ -1018,6 +1018,9 @@ abstract class AlphaController {
 		if (file_exists($config->get('sysRoot').'controller/'.$controllerName.'.php')) {
 			self::$logger->debug('<<getCustomControllerName');
 			return $controllerName;
+		}elseif (file_exists($config->get('sysRoot').'alpha/controller/'.$controllerName.'.php')) {
+			self::$logger->debug('<<getCustomControllerName');
+			return $controllerName;
 		}else{
 			self::$logger->debug('<<getCustomControllerName');
 			return null;
@@ -1053,25 +1056,37 @@ abstract class AlphaController {
 				// handle secure URLs
 				if(isset($_GET['tk'])) {
 					$params = FrontController::decodeQueryParams($_GET['tk']);
-					header('Location: '.FrontController::generateSecureURL('act='.$controllerName.'&'.$params));
+					$params = preg_replace('/act=.*\&/', 'act='.$controllerName.'&', $params);
+					self::$logger->debug('Params are ['.$params.']');
+					
+					$url = FrontController::generateSecureURL($params);
+					self::$logger->debug('Redirecting to ['.$url.']');
+					header('Location: '.$url);
 				}else{
-					header('Location: '.$config->get('sysURL').'controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING']);
+					$url = $config->get('sysURL').'controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING'];
+					self::$logger->debug('Redirecting to ['.$url.']');
+					header('Location: '.$url);
 				}
-			}
-
-			if (file_exists($config->get('sysRoot').'alpha/controller/'.$controllerName.'.php')) {
+			}elseif (file_exists($config->get('sysRoot').'alpha/controller/'.$controllerName.'.php')) {
 				self::$logger->debug('Custom controller found, redirecting...');
 				// handle secure URLs
-				if(isset($_GET['tk'])) {
+				if(self::checkIfAccessingFromSecureURL()) {
 					$params = FrontController::decodeQueryParams($_GET['tk']);
-					header('Location: '.FrontController::generateSecureURL('act='.$controllerName.'&'.$params));
+					$params = preg_replace('/act=.*\&/', 'act='.$controllerName.'&', $params);
+					self::$logger->debug('Params are ['.$params.']');
+					
+					$url = FrontController::generateSecureURL($params);
+					self::$logger->debug('Redirecting to ['.$url.']');
+					header('Location: '.$url);
 				}else{
-					header('Location: '.$config->get('sysURL').'alpha/controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING']);
+					$url = $config->get('sysURL').'alpha/controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING'];
+					self::$logger->debug('Redirecting to ['.$url.']');
+					header('Location: '.$url);
 				}	
+			}else{
+				// throw an exception if we have gotten this far and no custom controller was found
+				throw new FileNotFoundException('The controller ['.$controllerName.'] could not be loaded as it does not exist');
 			}
-			
-			// throw an exception if we have gotten this far and no custom controller was found
-			throw new FileNotFoundException('The controller ['.$controllerName.'] could not be loaded as it does not exist');
 		}
 		
 		self::$logger->debug('<<loadCustomController');
@@ -1151,6 +1166,19 @@ abstract class AlphaController {
 			throw new IllegalArguementException('The class ['.$controllerName.'] is not defined anywhere!');
 		
 		self::$logger->debug('<<loadControllerDef');
+	}
+	
+	/**
+	 * Static function for determining if the current request URL is a secure one (has a tk string or not)
+	 * 
+	 * @return boolean True if the current URL contains a tk value, false otherwise
+	 * @since 1.0
+	 */
+	public static function checkIfAccessingFromSecureURL() {
+		if (isset($_GET['tk']) || strpos($_SERVER['REQUEST_URI'], '/tk/') !== false)
+			return true;
+		else
+			return false;
 	}
 }
 
