@@ -87,7 +87,7 @@ class Edit extends AlphaController implements AlphaControllerInterface {
 				/*
 				 *  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
 				 */
-				if($this->getCustomControllerName($BOName, 'list') != null)
+				if($this->getCustomControllerName($BOName, 'edit') != null)
 					$this->loadCustomController($BOName, 'edit');
 				
 				$this->BO = new $BOName();

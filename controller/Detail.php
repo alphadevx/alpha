@@ -17,23 +17,60 @@ require_once $config->get('sysRoot').'alpha/util/helpers/Validator.inc';
  * Controller used to display the details of a BO, which must be supplied in GET vars
  * 
  * @package alpha::controller
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2009 John Collins
  * @version $Id$
- *
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
+ * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class Detail extends AlphaController implements AlphaControllerInterface {
 	/**
 	 * The BO to be displayed
 	 * 
-	 * @var Object
+	 * @var AlphaDAO
+	 * @since 1.0
 	 */
 	protected $BO;
 	
 	/**
 	 * The OID of the BO to be displayed
 	 * 
-	 * @var int
+	 * @var integer
+	 * @since 1.0
 	 */
 	private $BOoid;
 	
@@ -41,6 +78,7 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 	 * The name of the BO
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	private $BOName;
 	
@@ -48,6 +86,7 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 	 * The default AlphaView object used for rendering the business object
 	 * 
 	 * @var AlphaView
+	 * @since 1.0
 	 */
 	private $BOView;
 	
@@ -55,11 +94,14 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 	 * Trace logger
 	 * 
 	 * @var Logger
+	 * @since 1.0
 	 */
 	private static $logger = null;
 	
 	/**
 	 * constructor to set up the object
+	 * 
+	 * @since 1.0
 	 */
 	public function __construct() {
 		self::$logger = new Logger('Detail');
@@ -77,6 +119,9 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 	 * Handle GET requests
 	 * 
 	 * @param array $params
+	 * @throws ResourceNotFoundException
+	 * @throws IllegalArguementException
+	 * @since 1.0
 	 */
 	public function doGET($params) {
 		self::$logger->debug('>>doGET(params=['.print_r($params, true).'])');
@@ -93,7 +138,7 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 				/*
 			 	*  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
 			 	*/
-				if($this->getCustomControllerName($BOName, 'list') != null)
+				if($this->getCustomControllerName($BOName, 'view') != null)
 					$this->loadCustomController($BOName, 'view');
 				
 				$this->BO = new $BOName();						
@@ -126,6 +171,9 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 	 * Method to handle POST requests
 	 * 
 	 * @param array $params
+	 * @throws IllegalArguementException
+	 * @throws SecurityException
+	 * @since 1.0
 	 */
 	public function doPOST($params) {
 		self::$logger->debug('>>doPOST(params=['.print_r($params, true).'])');
@@ -194,6 +242,8 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 	
 	/**
 	 * Sets up the title etc.
+	 * 
+	 * @since 1.0
 	 */
 	public function before_displayPageHead_callback() {
 		$this->setTitle('Displaying '.$this->BOName.' number '.$this->BOoid);
