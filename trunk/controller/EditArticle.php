@@ -17,16 +17,52 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.
  * Controller used to edit an existing article
  * 
  * @package alpha::controller
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2009 John Collins
  * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class EditArticle extends AlphaController implements AlphaControllerInterface {
 	/**
 	 * The new article to be edited
 	 * 
 	 * @var article_object
+	 * @since 1.0
 	 */
 	protected $BO;
 								
@@ -34,20 +70,23 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 	 * Trace logger
 	 * 
 	 * @var Logger
+	 * @since 1.0
 	 */
 	private static $logger = null;
 	
 	/**
 	 * constructor to set up the object
+	 * 
+	 * @since 1.0
 	 */
-	public function __construct($visibility='Editor') {
+	public function __construct() {
 		self::$logger = new Logger('EditArticle');
 		self::$logger->debug('>>__construct()');
 		
 		global $config;
 		
 		// ensure that the super class constructor is called, indicating the rights group
-		parent::__construct($visibility);
+		parent::__construct('Standard');
 		
 		$this->BO = new article_object();
 		
@@ -58,6 +97,7 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 	 * Handle GET requests
 	 * 
 	 * @param array $params
+	 * @since 1.0
 	 */
 	public function doGET($params) {
 		try{
@@ -99,6 +139,7 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 	 * Method to handle POST requests
 	 * 
 	 * @param array $params
+	 * @since 1.0
 	 */
 	public function doPOST($params) {
 		global $config;
@@ -233,13 +274,14 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 	 * Renders the Javascript required in the header by markItUp!
 	 *
 	 * @return string
+	 * @since 1.0
 	 */
 	public function during_displayPageHead_callback() {
 		global $config;
 		
 		$html = '
 			<script type="text/javascript">
-			var previewURL = "'.$config->get('sysURL').'alpha/controller/PreviewArticle.php?oid='.$this->BO->getID().'&bo='.get_class($this->BO).'";
+			var previewURL = "'.FrontController::generateSecureURL('act=PreviewArticle&bo=article_object').'";
 			</script>			
 			<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/markitup/jquery.markitup.js"></script>
 			<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/markitup/sets/markdown/set.js"></script>
