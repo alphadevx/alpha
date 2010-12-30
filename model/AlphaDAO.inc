@@ -11,6 +11,8 @@ require_once $config->get('sysRoot').'alpha/exceptions/ValidationException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/MailNotSentException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/BadBOTableNameException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/FailedIndexCreateException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/FailedLookupCreateException.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Date.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Timestamp.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Double.inc';
@@ -2304,34 +2306,37 @@ abstract class AlphaDAO {
 				
 				if($prop->getRelationType() == 'MANY-TO-MANY') {					
 					$lookup = $prop->getLookup();
-					try {					
-						$lookupIndexNames = $lookup->getIndexes();
-						
-						// handle index check/creation on left side of Relation
-						$indexExists = false;
-						foreach ($lookupIndexNames as $index) {
-							if ('leftID_fk_idx' == $index) {
-						    	$indexExists = true;
+					
+					if($lookup != null) {
+						try {					
+							$lookupIndexNames = $lookup->getIndexes();
+							
+							// handle index check/creation on left side of Relation
+							$indexExists = false;
+							foreach ($lookupIndexNames as $index) {
+								if ('leftID_fk_idx' == $index) {
+							    	$indexExists = true;
+								}
 							}
-						}
-						
-						if(!$indexExists) {
-							$lookup->createForeignIndex('leftID', $prop->getRelatedClass('left'), 'OID');
-						}
-						
-						// handle index check/creation on right side of Relation
-						$indexExists = false;
-						foreach ($lookupIndexNames as $index) {
-							if ('rightID_fk_idx' == $index) {
-						    	$indexExists = true;
+							
+							if(!$indexExists) {
+								$lookup->createForeignIndex('leftID', $prop->getRelatedClass('left'), 'OID');
 							}
+							
+							// handle index check/creation on right side of Relation
+							$indexExists = false;
+							foreach ($lookupIndexNames as $index) {
+								if ('rightID_fk_idx' == $index) {
+							    	$indexExists = true;
+								}
+							}
+							
+							if(!$indexExists) {
+								$lookup->createForeignIndex('rightID', $prop->getRelatedClass('right'), 'OID');
+							}
+						}catch(AlphaException $e) {
+							self::$logger->error($e->getMessage());
 						}
-						
-						if(!$indexExists) {
-							$lookup->createForeignIndex('rightID', $prop->getRelatedClass('right'), 'OID');
-						}
-					}catch(AlphaException $e) {
-						self::$logger->error($e->getMessage());
 					}
 				}
 				
@@ -2352,7 +2357,7 @@ abstract class AlphaDAO {
 	 * @param string $relatedClassAttribute The name of the field to relate to on the related class.
 	 * @param bool $allowNullValues For foreign key indexes that don't allow null values, set this to false (default is true).
 	 * @since 1.0
-	 * @throws AlphaException
+	 * @throws FailedIndexCreateException
 	 */
 	protected function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute) {
 		self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.']');
@@ -2370,6 +2375,8 @@ abstract class AlphaDAO {
 			return;
 		}
 
+		$result = false;
+		
 		if(AlphaDAO::checkBOTableExists($tableName.'_object')) {
 			$sqlQuery = '';
 			if($attributeName == 'leftID')
@@ -2380,7 +2387,7 @@ abstract class AlphaDAO {
 			if(!empty($sqlQuery)) {
 				$this->lastQuery = $sqlQuery;
 	
-				$result = AlphaDAO::getConnection()->query($query);
+				$result = AlphaDAO::getConnection()->query($sqlQuery);
 	
 				if (!$result) {
 					throw new AlphaException('Failed to create an index on ['.$this->getTableName().'], error is ['.AlphaDAO::getConnection()->error.'], query ['.$this->lastQuery.']');
@@ -2390,7 +2397,7 @@ abstract class AlphaDAO {
 			$sqlQuery = 'ALTER TABLE '.$this->getTableName().' ADD FOREIGN KEY '.$attributeName.'_fk_idx ('.$attributeName.') REFERENCES '.$tableName.' ('.$relatedClassAttribute.') ON DELETE SET NULL;';
 			
 			$this->lastQuery = $sqlQuery;	
-			$result = AlphaDAO::getConnection()->query($query);
+			$result = AlphaDAO::getConnection()->query($sqlQuery);
 		}
 	
 		if ($result) {
@@ -2398,7 +2405,7 @@ abstract class AlphaDAO {
 				$this->after_createForeignIndex_callback();
 			self::$logger->debug('Successfully created the foreign key index ['.$attributeName.'_fk_idx]');
 		}else{			
-			throw new AlphaException('Failed to create the index ['.$attributeName.'_fk_idx] on ['.$this->getTableName().'], error is ['.AlphaDAO::getConnection()->error.'], query ['.$this->lastQuery.']');
+			throw new FailedIndexCreateException('Failed to create the index ['.$attributeName.'_fk_idx] on ['.$this->getTableName().'], error is ['.AlphaDAO::getConnection()->error.'], query ['.$this->lastQuery.']');
 		}		
 		
 		self::$logger->debug('<<createForeignIndex');
@@ -2410,7 +2417,7 @@ abstract class AlphaDAO {
 	 * @param string $attribute1Name The first attribute to mark unique in the database.
 	 * @param string $attribute2Name The second attribute to mark unique in the databse (optional, use only for composite keys).
 	 * @since 1.0
-	 * @throws AlphaException
+	 * @throws FailedIndexCreateException
 	 */
 	protected function createUniqueIndex($attribute1Name, $attribute2Name = '') {
 		self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'])');
@@ -2429,7 +2436,7 @@ abstract class AlphaDAO {
 				if(method_exists($this, 'after_createUniqueIndex_callback'))
 					$this->after_createUniqueIndex_callback();
 			}else{			
-				throw new AlphaException('Failed to create the index ['.$attribute1Name.'_unq_idx] on ['.$this->getTableName().'], error is ['.AlphaDAO::getConnection()->error.']');
+				throw new FailedIndexCreateException('Failed to create the index ['.$attribute1Name.'_unq_idx] on ['.$this->getTableName().'], error is ['.AlphaDAO::getConnection()->error.']');
 			}
 		}else{
 			// process composite unique keys
@@ -2443,7 +2450,7 @@ abstract class AlphaDAO {
 				if(method_exists($this, 'after_create_unique_index_callback'))
 					$this->after_createUniqueIndex_callback();
 			}else{			
-				throw new AlphaException('Failed to create the index ['.$attribute1Name.'_'.$attribute2Name.'_unq_idx] on ['.$this->getTableName().'], error is ['.AlphaDAO::getConnection()->error.']');
+				throw new FailedIndexCreateException('Failed to create the index ['.$attribute1Name.'_'.$attribute2Name.'_unq_idx] on ['.$this->getTableName().'], error is ['.AlphaDAO::getConnection()->error.']');
 			}
 		}
 		

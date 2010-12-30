@@ -68,6 +68,9 @@ class RelationLookup extends AlphaDAO implements AlphaTypeInterface {
 	
 	/**
 	 * The constructor
+	 * 
+	 * @throws FailedLookupCreateException
+	 * @throws IllegalArguementException
 	 */
 	public function __construct($leftClassName, $rightClassName) {
 		self::$logger = new Logger('RelationLookup');
@@ -96,12 +99,12 @@ class RelationLookup extends AlphaDAO implements AlphaTypeInterface {
 		$this->markUnique('leftID','rightID');
 		
 		// make sure the lookup table exists
-		if(!$this->checkTableExists()) {			
+		if(!$this->checkTableExists() && AlphaDAO::isInstalled()) {			
 			// first make sure that the two BO tables exist before relating them with a lookup table
 			if(AlphaDAO::checkBOTableExists($leftClassName) && AlphaDAO::checkBOTableExists($rightClassName)) {
 				$this->makeTable();
 			}else{
-				throw new AlphaException('Error trying to create a lookup table ['.$this->getTableName().'], as tables for BOs ['.$leftClassName.'] or ['.$rightClassName.'] don\'t exist!');
+				throw new FailedLookupCreateException('Error trying to create a lookup table ['.$this->getTableName().'], as tables for BOs ['.$leftClassName.'] or ['.$rightClassName.'] don\'t exist!');
 				return;
 			}
 		}

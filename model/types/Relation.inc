@@ -302,6 +302,8 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * Setter for the relation type
 	 *
 	 * @param string $RT
+	 * @throws IllegalArguementException
+	 * @throws FailedLookupCreateException
 	 */
 	public function setRelationType($RT) {
 		if(in_array($RT, $this->allowableRelationTypes)) {
@@ -309,8 +311,10 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 			if($RT == 'MANY-TO-MANY') {
 				try {
 					$this->lookup = new RelationLookup($this->relatedClassLeft, $this->relatedClassRight);
-				}catch (Exception $e) {
-					throw new AlphaException($e->getMessage());
+				}catch (FailedLookupCreateException $flce) {
+					throw $flce;
+				}catch (IllegalArguementException $iae) {
+					throw $iae;
 				}
 			}
 		}else{
