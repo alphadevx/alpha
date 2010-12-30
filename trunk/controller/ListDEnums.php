@@ -50,7 +50,7 @@ class ListDEnums extends ListAll implements AlphaControllerInterface {
 		
 		$this->BOname = 'DEnum';
 		
-		$this->BOView = new AlphaView($this->BO);		
+		$this->BOView = AlphaView::getInstance($this->BO);
 		
 		// set up the title and meta details
 		$this->setTitle('Listing all DEnums');
@@ -82,7 +82,7 @@ class ListDEnums extends ListAll implements AlphaControllerInterface {
 		echo AlphaView::renderDeleteForm();
 		
 		foreach($objects as $object) {
-			$temp = new DEnumView($object);
+			$temp = AlphaView::getInstance($object);
 			echo $temp->listView();
 		}
 		
