@@ -246,10 +246,15 @@ abstract class AlphaController {
 	 		// set the correct HTTP header for the response
 	    		header('HTTP/1.1 301 Moved Permanently');
     		
-    			if(empty($_SERVER['QUERY_STRING']))
+    			if(empty($_SERVER['QUERY_STRING'])) {
     				header('Location: '.$config->get('sysURL').'/FC.php?act='.get_class($this));
-    			else
+    				self::$logger->debug('<<__construct');
+					exit;
+    			}else{
     				header('Location: '.$config->get('sysURL').'/FC.php?act='.get_class($this).'&'.$_SERVER['QUERY_STRING']);
+    				self::$logger->debug('<<__construct');
+					exit;
+    			}
  
 			    // we're done here
 			    self::$logger->debug('<<__construct');
@@ -858,7 +863,7 @@ abstract class AlphaController {
 			
 		header('HTTP/1.1 403 Forbidden');
 		$front = new FrontController();
-		echo $front->renderErrorPage(403, 'You do not have the correct access rights to view this page.  If you have not logged in yet, try going back to the home page and logging in from there.');
+		echo AlphaView::renderErrorPage(403, 'You do not have the correct access rights to view this page.  If you have not logged in yet, try going back to the home page and logging in from there.');
 		
 		if(method_exists($this, 'after_accessError_callback'))
 			$this->after_accessError_callback();
@@ -1062,10 +1067,14 @@ abstract class AlphaController {
 					$url = FrontController::generateSecureURL($params);
 					self::$logger->debug('Redirecting to ['.$url.']');
 					header('Location: '.$url);
+					self::$logger->debug('<<loadCustomController');
+					exit;
 				}else{
 					$url = $config->get('sysURL').'controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING'];
 					self::$logger->debug('Redirecting to ['.$url.']');
 					header('Location: '.$url);
+					self::$logger->debug('<<loadCustomController');
+					exit;
 				}
 			}elseif (file_exists($config->get('sysRoot').'alpha/controller/'.$controllerName.'.php')) {
 				self::$logger->debug('Custom controller found, redirecting...');
@@ -1078,10 +1087,14 @@ abstract class AlphaController {
 					$url = FrontController::generateSecureURL($params);
 					self::$logger->debug('Redirecting to ['.$url.']');
 					header('Location: '.$url);
+					self::$logger->debug('<<loadCustomController');
+					exit;
 				}else{
 					$url = $config->get('sysURL').'alpha/controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING'];
 					self::$logger->debug('Redirecting to ['.$url.']');
 					header('Location: '.$url);
+					self::$logger->debug('<<loadCustomController');
+					exit;
 				}	
 			}else{
 				// throw an exception if we have gotten this far and no custom controller was found
