@@ -149,7 +149,6 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 		
 		foreach($loadedClasses as $classname) {
 			try {
-				
 				$BO = new $classname();
 				$BO_View = AlphaView::getInstance($BO);				
 				$BO_View->adminView();				
@@ -164,8 +163,7 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 						
 					// now try again...
 					$BO = new $classname();
-					// todo: cannot instaniate here!
-					$BO_View = new AlphaView($BO);
+					$BO_View = AlphaView::getInstance($BO);
 					$BO_View->adminView();
 				}
 			}catch (Exception $e) {

@@ -122,13 +122,20 @@ class Login extends AlphaController implements AlphaControllerInterface {
 				// if the database has not been set up yet, accept a login from the config admin username/password
 				if(!AlphaDAO::isInstalled()) {
 					if ($params['email'] == $config->get('sysInstallUsername') && crypt($params['password'], $config->get('sysInstallPassword')) == crypt($config->get('sysInstallPassword'), $config->get('sysInstallPassword'))) {
+						self::$logger->info('Logging in ['.$params['email'].'] at ['.date("Y-m-d H:i:s").']');
 						$admin = new person_object();
 						$admin->set('displayName', 'Admin');
 						$admin->set('email', $params['email']);
 						$admin->set('password', crypt($params['password'], $config->get('sysInstallPassword')));
 						$admin->set('OID', '00000000001');
 						$_SESSION['currentUser'] = $admin;
-						header('Location: '.$config->get('sysURL').'alpha/controller/Install.php');
+						if ($this->getNextJob() != '') {
+							$url = FrontController::generateSecureURL('act='.$this->getNextJob());
+							self::$logger->info('Redirecting to ['.$url.']');
+							header('Location: '.$url);
+						}else{
+							header('Location: '.$config->get('sysURL').'alpha/controller/Install.php');
+						}
 					}else{
 						throw new ValidationException('Failed to login user '.$params['email'].', the password is incorrect!');
 					}

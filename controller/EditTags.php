@@ -12,6 +12,7 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.
 require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/BONotFoundException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/FailedSaveException.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 
 /**
  * 
@@ -19,21 +20,59 @@ require_once $config->get('sysRoot').'alpha/exceptions/FailedSaveException.inc';
  * GET vars (bo and oid).
  * 
  * @package alpha::controller
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2009 John Collins
  * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class EditTags extends Edit implements AlphaControllerInterface {
 	/**
 	 * Trace logger
 	 * 
 	 * @var Logger
+	 * @since 1.0
 	 */
 	private static $logger = null;
 	
 	/**
 	 * constructor to set up the object
+	 * 
+	 * @since 1.0
 	 */
 	public function __construct() {
 		self::$logger = new Logger('EditTags');
@@ -56,29 +95,27 @@ class EditTags extends Edit implements AlphaControllerInterface {
 	 * Handle GET requests
 	 * 
 	 * @param array $params
+	 * @throws IllegalArguementException
+	 * @since 1.0
 	 */
 	public function doGET($params) {
 		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
 		
 		global $config;
 		
-		echo ViewAlpha::displayPageHead($this);
+		echo AlphaView::displayPageHead($this);
 		
 		// ensure that a bo is provided
-		if (isset($params['bo'])) {
+		if (isset($params['bo']))
 			$BOName = $params['bo'];
-		}else{
+		else
 			throw new IllegalArguementException('Could not load the tag objects as a bo was not supplied!');
-			return;
-		}
 		
 		// ensure that a OID is provided
-		if (isset($params['oid'])) {
+		if (isset($params['oid']))
 			$BOoid = $params['oid'];
-		}else{
+		else
 			throw new IllegalArguementException('Could not load the tag objects as an oid was not supplied!');
-			return;
-		}
 		
 		try {
 			AlphaDAO::loadClassDef($BOName);
@@ -88,7 +125,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 			$tags = $this->BO->getPropObject('tags')->getRelatedObjects();
 			
 			echo '<table cols="3" class="edit_view">';
-			echo '<form action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'].'" method="POST">';
+			echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
 			echo '<tr><td colspan="3"><h3>The following tags were found:</h3></td></tr>';
 			
 			foreach($tags as $tag) {
@@ -134,38 +171,36 @@ class EditTags extends Edit implements AlphaControllerInterface {
 		
 		echo AlphaView::displayPageFoot($this);
 		
-		self::$logger->debug('<<doGET');		
+		self::$logger->debug('<<doGET');
 	}
 	
 	/**
 	 * Handle POST requests (adds $currentUser person_object to the session)
 	 * 
 	 * @param array $params
+	 * @throws SecurityException
+	 * @throws IllegalArguementException
+	 * @since 1.0
 	 */
 	public function doPOST($params) {
 		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');
 		
 		try {
 			// check the hidden security fields before accepting the form POST data
-			if(!$this->checkSecurityFields()) {
+			if(!$this->checkSecurityFields())
 				throw new SecurityException('This page cannot accept post data from remote servers!');
-				self::$logger->debug('<<doPOST');
-			}
 		
 			// ensure that a bo is provided
-			if (isset($params['bo'])) {
+			if (isset($params['bo']))
 				$BOName = $params['bo'];
-			}else{
+			else
 				throw new IllegalArguementException('Could not load the tag objects as a bo was not supplied!');
-				return;
-			}
 			
 			// ensure that a OID is provided
-			if (isset($params['oid'])) {
+			if (isset($params['oid']))
 				$BOoid = $params['oid'];
-			}else{
+			else
 				throw new IllegalArguementException('Could not load the tag objects as a bo was not supplied!');
-			}
 			
 			if (isset($params['saveBut'])) {
 				try {
@@ -193,10 +228,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 							
 					AlphaDAO::commit();					
 					
-					$this->setStatusMessage('<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
-						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
-						<strong>Update:</strong> Tags on '.get_class($this->BO).' '.$this->BO->getID().' saved successfully.</p>
-						</div>');
+					$this->setStatusMessage(AlphaView::displayUpdateMessage('Tags on '.get_class($this->BO).' '.$this->BO->getID().' saved successfully.'));
 										
 					$this->doGET($params);
 				}catch (ValidationException $e) {
@@ -206,20 +238,14 @@ class EditTags extends Edit implements AlphaControllerInterface {
 					 */
 					AlphaDAO::rollback();
 					
-					$this->setStatusMessage('<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
-						<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
-						<strong>Error:</strong> Tags on '.get_class($this->BO).' '.$this->BO->getID().' not saved due to duplicate tag values, please try again.</p>
-						</div>');
+					$this->setStatusMessage(AlphaView::displayErrorMessage('Tags on '.get_class($this->BO).' '.$this->BO->getID().' not saved due to duplicate tag values, please try again.'));
 					
 					$this->doGET($params);
 				}catch (FailedSaveException $e) {
 					self::$logger->error('Unable to save the tags of id ['.$params['oid'].'], error was ['.$e->getMessage().']');
 					AlphaDAO::rollback();
 					
-					$this->setStatusMessage('<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
-						<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
-						<strong>Error:</strong> Tags on '.get_class($this->BO).' '.$this->BO->getID().' not saved, please check the application logs.</p>
-						</div>');
+					$this->setStatusMessage(AlphaView::displayErrorMessage('Tags on '.get_class($this->BO).' '.$this->BO->getID().' not saved, please check the application logs.'));
 					
 					$this->doGET($params);
 				}
@@ -241,30 +267,21 @@ class EditTags extends Edit implements AlphaControllerInterface {
 								
 					AlphaDAO::commit();
 					
-					$this->setStatusMessage('<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
-						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
-						<strong>Update:</strong> Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' deleted successfully.</p>
-						</div>');					
+					$this->setStatusMessage(AlphaView::displayUpdateMessage('Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' deleted successfully.'));					
 					
 					$this->doGET($params);									
 				}catch(AlphaException $e) {
 					self::$logger->error('Unable to delete the tag of id ['.$params['delete_oid'].'], error was ['.$e->getMessage().']');
 					AlphaDAO::rollback();
 					
-					$this->setStatusMessage('<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
-						<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
-						<strong>Error:</strong> Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' not deleted, please check the application logs.</p>
-						</div>');
+					$this->setStatusMessage(AlphaView::displayErrorMessage('Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' not deleted, please check the application logs.'));
 					
 					$this->doGET($params);
 				}
 			}
 		}catch(SecurityException $e) {
 			
-			$this->setStatusMessage('<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
-				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
-				<strong>Error:</strong> '.$e->getMessage().'</p>
-				</div>');
+			$this->setStatusMessage(AlphaView::displayErrorMessage($e->getMessage()));
 											
 			self::$logger->warn($e->getMessage());
 		}catch(IllegalArguementException $e) {
@@ -272,19 +289,17 @@ class EditTags extends Edit implements AlphaControllerInterface {
 		}catch(BONotFoundException $e) {
 			self::$logger->warn($e->getMessage());
 			
-			$this->setStatusMessage('<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
-				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
-				<strong>Error:</strong> Failed to load the requested item from the database!</p>
-				</div>');
+			$this->setStatusMessage(AlphaView::displayErrorMessage('Failed to load the requested item from the database!'));
 		}
 				
-		self::$logger->debug('<<doPOST');		
+		self::$logger->debug('<<doPOST');
 	}
 	
 	/**
 	 * Using this callback to blank the new_value field when the page loads, regardless of anything being posted
 	 * 
 	 * @return string
+	 * @since 1.0
 	 */
 	public function during_displayPageHead_callback() {
 		$html = '';
