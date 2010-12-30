@@ -307,6 +307,16 @@ class FrontController {
 	public function loadController($allowRedirects = true) {
 		global $config;
 		
+		if($config->get('sysCheckInstalled') && $this->pageController != 'Install' && $this->pageController != 'Login') {
+			if(!AlphaDAO::isInstalled()) {
+				self::$logger->info('Invoking the Install controller as the system DB is not installed...');
+				$url = FrontController::generateSecureURL('act=Install');
+				self::$logger->info('Redirecting to ['.$url.']');
+				header('Location: '.$url);
+				exit;
+			}
+		}
+		
 		// first process any attached filters
 		foreach ($this->filters as $filter)
 			$filter->process();
@@ -333,6 +343,7 @@ class FrontController {
 			    	}
 			    	
 			    	header('Location: '.$URL);
+			    	exit;
 				}
 			}
 		}
