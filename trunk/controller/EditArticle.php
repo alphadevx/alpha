@@ -100,6 +100,8 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 	 * @since 1.0
 	 */
 	public function doGET($params) {
+		self::$logger->debug('>>doGET(params=['.print_r($params, true).'])');
+		
 		try{
 			// load the business object (BO) definition
 			if (isset($params['oid'])) {				
@@ -133,6 +135,8 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 		echo AlphaView::renderDeleteForm();
 		
 		echo AlphaView::displayPageFoot($this);
+		
+		self::$logger->debug('<<doGET');
 	}
 	
 	/**
@@ -142,6 +146,8 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 	 * @since 1.0
 	 */
 	public function doPOST($params) {
+		self::$logger->debug('>>doPOST(params=['.print_r($params, true).'])');
+		
 		global $config;
 		
 		try {
@@ -268,6 +274,8 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 		echo AlphaView::renderDeleteForm();
 		
 		echo AlphaView::displayPageFoot($this);
+		
+		self::$logger->debug('<<doPOST');
 	}
 	
 	/**

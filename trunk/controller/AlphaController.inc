@@ -242,16 +242,16 @@ abstract class AlphaController {
 	 	}
 	 	
 	 	// if configured to do so, force redirect to the front controller
-	 	if($config->get('sysForceFC') && basename($_SERVER['PHP_SELF']) != 'FC.php' && basename($_SERVER['PHP_SELF']) != 'index.php') {
+	 	if($config->get('sysForceFC') && basename($_SERVER['PHP_SELF']) != 'index.php') {
 	 		// set the correct HTTP header for the response
 	    		header('HTTP/1.1 301 Moved Permanently');
     		
     			if(empty($_SERVER['QUERY_STRING'])) {
-    				header('Location: '.$config->get('sysURL').'/FC.php?act='.get_class($this));
+    				header('Location: '.$config->get('sysURL').'?act='.get_class($this));
     				self::$logger->debug('<<__construct');
 					exit;
     			}else{
-    				header('Location: '.$config->get('sysURL').'/FC.php?act='.get_class($this).'&'.$_SERVER['QUERY_STRING']);
+    				header('Location: '.$config->get('sysURL').'?act='.get_class($this).'&'.$_SERVER['QUERY_STRING']);
     				self::$logger->debug('<<__construct');
 					exit;
     			}

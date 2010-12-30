@@ -202,7 +202,7 @@ class FrontController {
 		if($config->get('sysUseModRewrite'))
 			return $config->get('sysURL').'tk/'.FrontController::encodeQuery($params);
 		else
-			return $config->get('sysURL').'FC.php?tk='.FrontController::encodeQuery($params);
+			return $config->get('sysURL').'?tk='.FrontController::encodeQuery($params);
 	}
 	
 	/**

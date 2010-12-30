@@ -65,7 +65,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 		
 		try{
 			// check to see if we need to force a re-direct to the mod_rewrite alias URL for the article
-			if($config->get('sysForceModRewriteURLs') && (basename($_SERVER['PHP_SELF']) == 'ViewArticle.php' || strpos($_SERVER['REQUEST_URI'], 'FC.php') !== false)) {
+			if($config->get('sysForceModRewriteURLs') && basename($_SERVER['PHP_SELF']) == 'ViewArticle.php') {
 				// set the correct HTTP header for the response
 	    		header('HTTP/1.1 301 Moved Permanently');
 	    		
