@@ -226,7 +226,7 @@ class Edit extends AlphaController implements AlphaControllerInterface {
 					try {
 						$temp->delete();
 								
-						echo '<p class="success">'.$this->BOName.' '.$params['delete_oid'].' deleted successfully.</p>';
+						echo AlphaView::displayUpdateMessage($this->BOName.' '.$params['delete_oid'].' deleted successfully.');
 										
 						echo '<center>';
 						
