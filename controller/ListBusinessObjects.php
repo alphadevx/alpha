@@ -6,7 +6,6 @@ if(!isset($config)) {
 	$config = AlphaConfig::getInstance();
 }
 
-require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
@@ -16,21 +15,59 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.
  * Controller used to list all of the business objects for the system
  * 
  * @package alpha::controller
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2009 John Collins
  * @version $Id$
- *
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
+ * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class ListBusinessObjects extends AlphaController implements AlphaControllerInterface {
 	/**
 	 * Trace logger
 	 * 
 	 * @var Logger
+	 * @since 1.0
 	 */
 	private static $logger = null;
 	
 	/**
 	 * the constructor
+	 * 
+	 * @since 1.0
 	 */
 	public function __construct() {
 		self::$logger = new Logger('ListBusinessObjects');
@@ -53,31 +90,37 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 	 * Handle GET requests
 	 * 
 	 * @param array $params
+	 * @since 1.0
 	 */
 	public function doGET($params) {
+		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
+		
 		echo AlphaView::displayPageHead($this);
 		
 		$this->displayBodyContent();
 		
 		echo AlphaView::displayPageFoot($this);
+		
+		self::$logger->debug('<<doGET');
 	}
 	
 	/**
 	 * Handle POST requests
 	 * 
 	 * @param array $params
+	 * @since 1.0
 	 */
 	public function doPOST($params) {
+		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');
+		
 		global $config;
 		
 		echo AlphaView::displayPageHead($this);
 		
 		try {
 			// check the hidden security fields before accepting the form POST data
-			if(!$this->checkSecurityFields()) {
+			if(!$this->checkSecurityFields())
 				throw new SecurityException('This page cannot accept post data from remote servers!');
-				self::$logger->debug('<<doPOST');
-			}
 		
 			if(isset($params['createTableBut'])) {
 				try {					
@@ -87,10 +130,10 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 			    	$BO = new $classname();	
 					$BO->makeTable();
 				
-					echo '<p class="success">The table for the class '.$classname.' has been successfully created.</p>';
+					echo AlphaView::displayUpdateMessage('The table for the class '.$classname.' has been successfully created.');
 				}catch(AlphaException $e) {
-					self::$logger->error($e->getTraceAsString());
-					echo '<p class="error"><br>Error creating the table for the class '.$classname.', check the log!</p>';
+					self::$logger->error($e->getMessage());
+					echo AlphaView::displayErrorMessage('Error creating the table for the class '.$classname.', check the log!');
 				}
 			}
 			
@@ -101,10 +144,10 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 			    	$BO = new $classname();	
 					$BO->rebuildTable();
 					
-					echo '<p class="success">The table for the class '.$classname.' has been successfully recreated.</p>';
+					echo AlphaView::displayUpdateMessage('The table for the class '.$classname.' has been successfully recreated.');
 				}catch(AlphaException $e) {
 					self::$logger->error($e->getTraceAsString());
-					echo '<p class="error"><br>Error recreating the table for the class '.$classname.', check the log!</p>';
+					echo AlphaView::displayErrorMessage('Error recreating the table for the class '.$classname.', check the log!');
 				}
 			}
 			
@@ -119,24 +162,28 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 			    	for($i = 0; $i < count($missing_fields); $i++)
 						$BO->addProperty($missing_fields[$i]);
 					
-					echo '<p class="success">The table for the class '.$classname.' has been successfully updated.</p>';
+					echo AlphaView::displayUpdateMessage('The table for the class '.$classname.' has been successfully updated.');
 				}catch(AlphaException $e) {
 					self::$logger->error($e->getTraceAsString());
-					echo '<p class="error"><br>Error updating the table for the class '.$classname.', check the log!</p>';
+					echo AlphaView::displayErrorMessage('Error updating the table for the class '.$classname.', check the log!');
 				}
 			}
 		}catch(SecurityException $e) {
-			echo '<p class="error"><br>'.$e->getMessage().'</p>';								
+			echo AlphaView::displayErrorMessage($e->getMessage());
 			self::$logger->warn($e->getMessage());
 		}
 		
 		$this->displayBodyContent();
 				
 		echo AlphaView::displayPageFoot($this);
+		
+		self::$logger->debug('<<doPOST');
 	}
 	
 	/**
 	 * Private method to display the main body HTML for this page
+	 * 
+	 * @since 1.0
 	 */
 	private function displayBodyContent() {
 		$classNames = AlphaDAO::getBOClassNames();
@@ -167,8 +214,8 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 					$BO_View->adminView();
 				}
 			}catch (Exception $e) {
-				self::$logger->error($e->getTraceAsString());
-				echo '<p class="error"><br>Error accessing the class ['.$classname.'], check the log!</p>';
+				self::$logger->error($e->getMessage());
+				echo AlphaView::displayErrorMessage('Error accessing the class ['.$classname.'], check the log!');
 			}
 		}
 	}

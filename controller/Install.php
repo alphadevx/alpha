@@ -6,7 +6,6 @@ if(!isset($config)) {
 	$config = AlphaConfig::getInstance();
 }
 
-//require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
@@ -136,7 +135,6 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		}catch (Exception $e) {
 			echo AlphaView::displayErrorMessage($e->getMessage());
 			echo AlphaView::displayErrorMessage('Aborting.');
-			//AlphaDAO::rollback();
 			exit;
 		}
 		
@@ -156,7 +154,6 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		}catch (Exception $e) {
 			echo AlphaView::displayErrorMessage($e->getMessage());
 			echo AlphaView::displayErrorMessage('Aborting.');
-			//AlphaDAO::rollback();
 			exit;
 		}
 		
@@ -176,7 +173,6 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		}catch (Exception $e) {
 			echo AlphaView::displayErrorMessage($e->getMessage());
 			echo AlphaView::displayErrorMessage('Aborting.');
-			//AlphaDAO::rollback();
 			exit;
 		}
 		
@@ -227,7 +223,6 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		}catch (Exception $e) {
 			echo AlphaView::displayErrorMessage($e->getMessage());
 			echo AlphaView::displayErrorMessage('Aborting.');
-			//AlphaDAO::rollback();
 			exit;
 		}
 		
