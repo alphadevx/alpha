@@ -230,7 +230,21 @@ class AlphaView {
 		$button = new Button('submit', 'Save', 'saveBut');
 		$fields['saveButton'] = $button->render();
 		
-		$button = new Button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getOID()."'; document.getElementById('delete_form').submit();}", "Delete", "deleteBut");
+		$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
+				$('#dialogDiv').dialog({
+				buttons: {
+					'OK': function(event, ui) {						
+						$('#delete_oid').attr('value', '".$this->BO->getOID()."');
+						$('#delete_form').submit();
+					},
+					'Cancel': function(event, ui) {
+						$(this).dialog('close');
+					}
+				}
+			})
+			$('#dialogDiv').dialog('open');
+			return false;";
+		$button = new Button($js, "Delete", "deleteBut");
 		$fields['deleteButton'] = $button->render();
 		
 		$button = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
@@ -344,7 +358,21 @@ class AlphaView {
 			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "editBut");
 			$html .= $button->render();
 			$html .= '&nbsp;&nbsp;';
-			$button = new Button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getOID()."'; document.getElementById('delete_form').submit();}", "Delete", "deleteBut");
+			$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
+				$('#dialogDiv').dialog({
+				buttons: {
+					'OK': function(event, ui) {						
+						$('#delete_oid').attr('value', '".$this->BO->getOID()."');
+						$('#delete_form').submit();
+					},
+					'Cancel': function(event, ui) {
+						$(this).dialog('close');
+					}
+				}
+			})
+			$('#dialogDiv').dialog('open');
+			return false;";
+			$button = new Button($js, "Delete", "deleteBut");
 			$html .= $button->render();
 		}
 		$fields['adminButtons'] = $html;
@@ -392,7 +420,21 @@ class AlphaView {
 			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "editBut");
 			$html .= $button->render();
 			$html .= '&nbsp;&nbsp;';
-			$button = new Button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getOID()."'; document.forms[0].submit();}", "Delete", "deleteBut");
+			$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
+				$('#dialogDiv').dialog({
+				buttons: {
+					'OK': function(event, ui) {						
+						$('#delete_oid').attr('value', '".$this->BO->getOID()."');
+						$('#delete_form').submit();
+					},
+					'Cancel': function(event, ui) {
+						$(this).dialog('close');
+					}
+				}
+			})
+			$('#dialogDiv').dialog('open');
+			return false;";
+			$button = new Button($js, "Delete", "deleteBut");
 			$html .= $button->render();
 		}
 		$fields['adminButtons'] = $html;
@@ -458,12 +500,40 @@ class AlphaView {
 		// recreate and update table buttons (if required)
 		$html = '';
 		if ($this->BO->checkTableNeedsUpdate() && $this->BO->checkTableExists()) {			
-			$button = new Button("if(confirm('Are you sure you wish to recreate this class table (all data will be lost)?')) {document.getElementById('admin_".get_class($this->BO)."_button_pressed').value = 'recreateTableBut'; document.getElementById('admin_".get_class($this->BO)."').submit();}" , "Recreate Table", "recreateTableBut");
+			$js = "$('#dialogDiv').text('Are you sure you wish to recreate this class table (all data will be lost)?');
+				$('#dialogDiv').dialog({
+				buttons: {
+					'OK': function(event, ui) {
+						$('#admin_".get_class($this->BO)."_button_pressed').attr('value', 'recreateTableBut');
+						$('#admin_".get_class($this->BO)."').submit();
+					},
+					'Cancel': function(event, ui) {
+						$(this).dialog('close');
+					}
+				}
+			})
+			$('#dialogDiv').dialog('open');
+			return false;";
+			$button = new Button($js , "Recreate Table", "recreateTableBut");
 			$html .= $button->render();
 			// hidden field so that we know which class to recreate the table for
 			$html .= '<input type="hidden" name="recreateTableClass" value="'.get_class($this->BO).'"/>';
 			$html .= '&nbsp;&nbsp;';
-			$button = new Button("if(confirm('Are you sure you wish to attempt to modify this class table by adding new attributes?')) {document.getElementById('admin_".get_class($this->BO)."_button_pressed').value = 'updateTableBut'; document.getElementById('admin_".get_class($this->BO)."').submit();}" , "Update Table", "updateTableBut");
+			$js = "$('#dialogDiv').text('Are you sure you wish to attempt to modify this class table by adding new attributes?');
+				$('#dialogDiv').dialog({
+				buttons: {
+					'OK': function(event, ui) {
+						$('#admin_".get_class($this->BO)."_button_pressed').attr('value', 'updateTableBut');
+						$('#admin_".get_class($this->BO)."').submit();
+					},
+					'Cancel': function(event, ui) {
+						$(this).dialog('close');
+					}
+				}
+			})
+			$('#dialogDiv').dialog('open');
+			return false;";
+			$button = new Button($js , "Update Table", "updateTableBut");
 			$html .= $button->render();
 			// hidden field so that we know which class to update the table for
 			$html .= '<input type="hidden" name="updateTableClass" value="'.get_class($this->BO).'"/>';
@@ -582,6 +652,29 @@ class AlphaView {
 			$html.= '</script>';
 		}
 		
+		// general dialog defaults
+		$html.= '<script type="text/javascript">';
+		$html.= '	(function($) {';
+		$html.= '		var dialogCoords = [(screen.width/2)-200, (screen.height/2)-200];';
+		$html.= '		$(document).ready(function(){';
+		$html.= '			$.extend($.ui.dialog.defaults, {';
+		$html.= '				modal: true,';
+		$html.= '	        	resizable: false,';
+		$html.= '	        	draggable: false,';
+		$html.= '	        	autoOpen: false,';
+		$html.= '	        	height: 200,';
+		$html.= '	        	width: 400,';
+		$html.= '	        	position: dialogCoords,';
+		$html.= '	        	buttons: {';
+		$html.= '	        		"Cancel": function() {';
+		$html.= '						$(this).dialog("close");';
+		$html.= '					}';
+		$html.= '				}';
+		$html.= '			});';
+		$html.= '		});';
+		$html.= '	})(jQuery);';
+		$html.= '</script>';
+		
 		// record selector JS
 		$html.= '<script type="text/javascript">';
 		$html.= '	(function($) {';
@@ -678,6 +771,7 @@ class AlphaView {
 		if(method_exists($controller, 'before_displayPageFoot_callback'))
 			$html .= $controller->before_displayPageFoot_callback();
 		
+		$html .= '<div id="dialogDiv"></div>';
 		$html .= '</body>';
 		$html .= '</html>';
 		
