@@ -18,7 +18,7 @@ class StringBox
 {
 	/**
 	 * the string object that will be edited by this text box
-	 * @var string
+	 * @var String
 	 */
 	var $stringObject;
 	/**
@@ -49,10 +49,7 @@ class StringBox
 		$this->setStringObject($string);
 		$this->set_label($label);
 		$this->set_name($name);
-		if (!empty($form_id))
-			$this->set_form_id($form_id);
-		else
-			$this->render_javascript();
+		$this->set_form_id($form_id);
 		$this->set_size($size);
 	}
 	
@@ -79,20 +76,12 @@ class StringBox
 			$html .= '<input '.($string_obj->checkIsPassword()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.String::MAX_SIZE.'" name="'.$this->get_name().'" id="'.$this->get_name().'" value="'.((isset($_POST[$this->get_name()]) && $string_obj->getValue() == "")? $_POST[$this->get_name()] : $string_obj->getValue()).'"'.($readOnly ? 'readonly class="readonly"' : '').'/>';
 		}
 		
-		return $html;
-	}
-	
-	/**
-	 * renders the Javascript to control the behaviour of the text box
-	 */
-	function render_javascript() {		
-		// begining of javascript
-		// ----------------------
-		echo '<script language="javascript">';
+		if($this->getStringObject()->getRule() != '') {
+			$html .= '<input type="hidden" id="'.$this->get_name().'_msg" value="'.$this->getStringObject()->getHelper().'"/>';
+			$html .= '<input type="hidden" id="'.$this->get_name().'_rule" value="'.$this->getStringObject()->getRule().'"/>';
+		}
 		
-		echo " validation_rules[\"".$this->get_name()."\"] = ".$this->stringObject->getRule().";\n";
-		echo " validation_rules[\"".$this->get_name()."_msg\"] = \"".$this->stringObject->getHelper()."\";\n";
-		echo '</script>';
+		return $html;
 	}
 	
 	/**
@@ -106,7 +95,7 @@ class StringBox
 
 	/**
 	 * getter for string object
-	 * @return string string
+	 * @return String
 	 */
 	function getStringObject() {
 		return $this->stringObject;

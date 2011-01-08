@@ -111,6 +111,11 @@ class RecordSelector {
 				
 			// hidden field to store the actual value of the relation
 			$html .= '<input type="hidden" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->relationObject->getValue().'"/>';
+			
+			if($this->relationObject->getRule() != '') {
+				$html .= '<input type="hidden" id="'.$this->name.'_msg" value="'.$this->relationObject->getHelper().'"/>';
+				$html .= '<input type="hidden" id="'.$this->name.'_rule" value="'.$this->relationObject->getRule().'"/>';
+			}
 		}
 		
 		// render read-only list for one-to-many relations
@@ -324,7 +329,7 @@ class RecordSelector {
 			$tmp = new Button("$('#recordSelector').dialog('close');", "Cancel", "cancelBut", $config->get('sysURL')."/alpha/images/icons/cancel.png");
 			$html .= $tmp->render();
 			$html .= '&nbsp;&nbsp;&nbsp;';		
-			$tmp = new Button("setParentFieldValues(); $('#recordSelector').dialog('close');", "Accept", "acceptBut", $config->get('sysURL')."/alpha/images/icons/accept.png");
+			$tmp = new Button("setParentFieldValues(); $('#".$_GET['field']."_display').blur(); $('#recordSelector').dialog('close');", "Accept", "acceptBut", $config->get('sysURL')."/alpha/images/icons/accept.png");
 			$html .= $tmp->render();
 			$html .= '</div>';
 		}else{			
@@ -357,7 +362,7 @@ class RecordSelector {
 				if($obj->getOID() == $this->relationObject->getValue()) {
 					$html .= '<img src="'.$config->get('sysURL').'/alpha/images/icons/accept_ghost.png"/>';
 				}else{
-					$tmp = new Button("document.getElementById('".$_GET['field']."').value = '".$obj->getOID()."'; document.getElementById('".$_GET['field']."_display').value = '".$obj->get($this->relationObject->getRelatedClassDisplayField())."'; $('#recordSelector').dialog('close');", "", "selBut", $config->get('sysURL')."/alpha/images/icons/accept.png");
+					$tmp = new Button("document.getElementById('".$_GET['field']."').value = '".$obj->getOID()."'; document.getElementById('".$_GET['field']."_display').value = '".$obj->get($this->relationObject->getRelatedClassDisplayField())."'; $('#".$_GET['field']."_display').blur(); $('#recordSelector').dialog('close');", "", "selBut", $config->get('sysURL')."/alpha/images/icons/accept.png");
 					$html .= $tmp->render();
 				}
 				$html .= '</td>';

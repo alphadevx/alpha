@@ -57,10 +57,7 @@ class TextBox
 		$this->set_label($label);
 		$this->set_name($name);
 		$this->identifier = $identifier;
-		if (!empty($form_id))
-			$this->set_form_id($form_id);
-		else
-			$this->render_javascript();
+		$this->set_form_id($form_id);
 		$this->set_rows($rows);
 	}
 	
@@ -108,21 +105,12 @@ class TextBox
 		if($tableTags)
 			$html .= '</td></tr>';
 
+		if($this->text_object->getRule() != '') {
+			$html .= '<input type="hidden" id="'.$this->get_name().'_msg" value="'.$this->text_object->getHelper().'"/>';
+			$html .= '<input type="hidden" id="'.$this->get_name().'_rule" value="'.$this->text_object->getRule().'"/>';
+		}
+		
 		return $html;
-	}
-	
-	/**
-	 * renders the Javascript to control the behaviour of the text box
-	 */
-	function render_javascript() {		
-		// begining of javascript
-		// ----------------------
-		echo '<script language="javascript">';
-		
-		echo " validation_rules[\"".$this->get_name()."\"] = ".$this->text_object->getRule().";\n";
-		echo " validation_rules[\"".$this->get_name()."_msg\"] = \"".$this->text_object->getHelper()."\";\n";
-		
-		echo '</script>';
 	}
 	
 	/**
