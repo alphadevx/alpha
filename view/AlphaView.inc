@@ -12,7 +12,8 @@ require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
 require_once $config->get('sysRoot').'alpha/view/widgets/calendar.php'; // todo: still being used?
 require_once $config->get('sysRoot').'alpha/view/widgets/Button.inc';
-require_once $config->get('sysRoot').'alpha/view/widgets/FormValidator.inc';
+require_once $config->get('sysRoot').'alpha/view/widgets/StringBox.js.php';
+require_once $config->get('sysRoot').'alpha/view/widgets/TextBox.js.php';
 require_once $config->get('sysRoot').'alpha/view/widgets/RecordSelector.php';
 require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
 
@@ -20,7 +21,7 @@ require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
  *
  * The master rendering view class for the Alpha Framework.
  * 
- * @package alpha::controller
+ * @package alpha::view
  * @since 1.0
  * @author John Collins <john@design-ireland.net>
  * @version $Id$
@@ -599,7 +600,9 @@ class AlphaView {
 		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
 
 		$html.= '<script language="JavaScript" src="'.$config->get('sysURL').'alpha/scripts/addOnloadEvent.js"></script>';
+		
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jquery-1.3.2.min.js"></script>';
+		$html.= '<script language="JavaScript" src="'.$config->get('sysURL').'alpha/scripts/validation.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/contextMenu/jquery.contextMenu.js"></script>';
 		
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery.ui.potato.menu.js"></script>';
@@ -627,20 +630,6 @@ class AlphaView {
 		$html.= '<script type="text/javascript">';
 		$html .= Button::renderJavascript();
 		$html.= '</script>';
-		
-		
-		// if we are working with a BO, render form validation Javascript rules
-		if ($controller->getBO() != null) {
-			require_once $config->get('sysRoot').'alpha/view/widgets/StringBox.js.php';
-			require_once $config->get('sysRoot').'alpha/view/widgets/TextBox.js.php';
-
-			$html.= '<script type="text/javascript">';
-			$html .= FormValidator::renderJavascript();
-			
-			$validator = new FormValidator($controller->getBO());
-			$html.= $validator->renderJavascriptRules();
-			$html.= '</script>';
-		}
 		
 		if (isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
 			$html.= '<script type="text/javascript">';
