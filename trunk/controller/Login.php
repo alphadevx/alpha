@@ -7,8 +7,7 @@ if(!isset($config)) {
 }
 
 require_once $config->get('sysRoot').'alpha/util/Logger.inc';
-require_once $config->get('sysRoot').'alpha/view/person.inc';
-require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
+require_once $config->get('sysRoot').'alpha/view/PersonView.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
@@ -17,23 +16,60 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.
  * Login controller that adds the current user object to the session
  * 
  * @package alpha::controller
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2009 John Collins
  * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class Login extends AlphaController implements AlphaControllerInterface {
 	/**
 	 * The person to be logged in
 	 * 
 	 * @var person_object
+	 * @since 1.0
 	 */
 	private $personObject;
 	
 	/**
 	 * The person view object
 	 * 
-	 * @var person
+	 * @var PersonView
+	 * @since 1.0
 	 */
 	private $personView;
 	
@@ -41,11 +77,13 @@ class Login extends AlphaController implements AlphaControllerInterface {
 	 * Trace logger
 	 * 
 	 * @var Logger
+	 * @since 1.0
 	 */
 	private static $logger = null;
 	
 	/**
 	 * constructor to set up the object
+	 * @since 1.0
 	 */
 	public function __construct() {
 		self::$logger = new Logger('Login');
@@ -57,7 +95,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 		parent::__construct('Public');
 		
 		$this->personObject = new person_object();
-		$this->personView = new person($this->personObject);
+		$this->personView = AlphaView::getInstance($this->personObject);
 		$this->setBO($this->personObject);
 		
 		// set up the title and meta details
@@ -72,22 +110,21 @@ class Login extends AlphaController implements AlphaControllerInterface {
 	 * Handle GET requests
 	 * 
 	 * @param array $params
+	 * @throws IllegalArguementException
+	 * @since 1.0
 	 */
 	public function doGET($params) {
 		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
 		
-		if(!is_array($params)) {
+		if(!is_array($params))
 			throw new IllegalArguementException('Bad $params ['.var_export($params, true).'] passed to doGET method!');
-			self::$logger->debug('<<doGET');
-			return;
-		}
 		
 		echo AlphaView::displayPageHead($this);
 		
 		if (isset($params['reset']))
-			$this->personView->display_reset_form();
+			echo $this->personView->displayResetForm();
 		else
-			$this->personView->display_login_form();	
+			echo $this->personView->displayLoginForm();	
 		
 		echo AlphaView::displayPageFoot($this);
 		
@@ -98,25 +135,21 @@ class Login extends AlphaController implements AlphaControllerInterface {
 	 * Handle POST requests (adds $currentUser person_object to the session)
 	 * 
 	 * @param array $params
+	 * @throws IllegalArguementException
+	 * @since 1.0
 	 */
 	public function doPOST($params) {
 		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');
 		
-		if(!is_array($params)) {
+		if(!is_array($params))
 			throw new IllegalArguementException('Bad $params ['.var_export($params, true).'] passed to doPOST method!');
-			self::$logger->debug('<<doPOST');
-			return;
-		}
 				
 		global $config;
 		
 		try {
 			// check the hidden security fields before accepting the form POST data
-			if(!$this->checkSecurityFields()) {
+			if(!$this->checkSecurityFields())
 				throw new SecurityException('This page cannot accept post data from remote servers!');
-				self::$logger->debug('<<doPOST');
-				return;
-			}
 		
 			if (isset($params['loginBut'])) {
 				// if the database has not been set up yet, accept a login from the config admin username/password
@@ -133,8 +166,10 @@ class Login extends AlphaController implements AlphaControllerInterface {
 							$url = FrontController::generateSecureURL('act='.$this->getNextJob());
 							self::$logger->info('Redirecting to ['.$url.']');
 							header('Location: '.$url);
+							exit;
 						}else{
 							header('Location: '.$config->get('sysURL').'alpha/controller/Install.php');
+							exit;
 						}
 					}else{
 						throw new ValidationException('Failed to login user '.$params['email'].', the password is incorrect!');
@@ -144,9 +179,8 @@ class Login extends AlphaController implements AlphaControllerInterface {
 					$this->personObject->loadByAttribute('email', $params['email'], true);
 					
 					// checking to see if the account has been disabled
-					if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Disabled') {
+					if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Disabled')
 						throw new SecurityException('Failed to login user '.$params['email'].', that account has been disabled!');
-					}
 					
 					// check the password
 					if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Active') {
@@ -156,9 +190,11 @@ class Login extends AlphaController implements AlphaControllerInterface {
 							if ($this->getNextJob() != '') {
 								self::$logger->debug('<<doPOST');
 								header('Location: '.$this->getNextJob());
+								exit;
 							}else{
 								self::$logger->debug('<<doPOST');
 								header('Location: '.$config->get('sysURL'));
+								exit;
 							}
 						}else{
 							throw new ValidationException('Failed to login user '.$params['email'].', the password is incorrect!');
@@ -168,7 +204,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 				
 				echo AlphaView::displayPageHead($this);
 				
-				$this->personView->display_login_form();
+				echo $this->personView->displayLoginForm();
 			}
 			
 			if (isset($params['resetBut'])) {				
@@ -187,38 +223,29 @@ class Login extends AlphaController implements AlphaControllerInterface {
 					
 				$this->personObject->sendMail($message, $subject);				
 					
-				echo '<p class="success">The password for the user <strong>'.$params['email'].'</strong> has been reset, and the new password has been sent to that e-mail address.</p>';
+				echo AlphaView::displayUpdateMessage('The password for the user <strong>'.$params['email'].'</strong> has been reset, and the new password has been sent to that e-mail address.');
 				echo '<a href="'.$config->get('sysURL').'">Home Page</a>';
 			}
 		}catch(ValidationException $e) {
 			echo AlphaView::displayPageHead($this);
 			
-			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
-				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
-				<strong>Error:</strong> '.$e->getMessage().'</p>
-				</div>';
+			echo AlphaView::displayErrorMessage($e->getMessage());
 			
-			$this->personView->display_login_form();
+			echo $this->personView->displayLoginForm();
 											
 			self::$logger->warn($e->getMessage());
 		}catch(SecurityException $e) {
 			echo AlphaView::displayPageHead($this);
 			
-			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
-				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
-				<strong>Error:</strong> '.$e->getMessage().'</p>
-				</div>';
+			echo AlphaView::displayErrorMessage($e->getMessage());
 											
 			self::$logger->warn($e->getMessage());
 		}catch(BONotFoundException $e) {
 			echo AlphaView::displayPageHead($this);
 			
-			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
-				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
-				<strong>Error:</strong> Failed to find the user \''.$params['email'].'\'.</p>
-				</div>';
+			echo AlphaView::displayErrorMessage('Failed to find the user \''.$params['email'].'\'');
 			
-			$this->personView->display_login_form();
+			echo $this->personView->displayLoginForm();
 			
 			self::$logger->warn($e->getMessage());
 		}
@@ -231,6 +258,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 	 * Displays the application version number on the login screen.
 	 * 
 	 * @return string
+	 * @since 1.0
 	 */
 	public function before_displayPageFoot_callback() {
 		global $config;
