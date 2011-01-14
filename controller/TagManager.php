@@ -1,35 +1,74 @@
 <?php
 
 // include the config file
-if(!isset($config))
+if(!isset($config)) {
 	require_once '../util/AlphaConfig.inc';
-$config = AlphaConfig::getInstance();
+	$config = AlphaConfig::getInstance();
+}
 
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/util/AlphaFileUtil.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
-require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 
 /**
  * 
  * Controller used to allow an admin to manage tags in the database
  * 
- * @author John Collins <john@design-ireland.net>
  * @package alpha::controller
- * @copyright 2010 John Collins
+ * @since 1.0
+ * @author John Collins <john@design-ireland.net>
  * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
+ * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class TagManager extends AlphaController implements AlphaControllerInterface {	
 	/**
 	 * Trace logger
 	 * 
 	 * @var Logger
+	 * @since 1.0
 	 */
 	private static $logger = null;
 	
 	/**
 	 * constructor to set up the object
+	 * 
+	 * @since 1.0
 	 */
 	public function __construct() {
 		self::$logger = new Logger('TagManager');
@@ -49,6 +88,7 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 	 * Handle GET requests
 	 * 
 	 * @param array $params
+	 * @since 1.0
 	 */
 	public function doGET($params) {
 		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
@@ -68,13 +108,29 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 				$tag = new tag_object();
 				$count = count($tag->loadAllByAttribute('taggedClass', $BO));
 				echo '<h3>'.$temp->getFriendlyClassName().' object is tagged ('.$count.' tags found)</h3>';
-				$button = new Button("if (confirm('Are you sure you want to delete all tags attached to the ".$temp->getFriendlyClassName()." class, and have them re-created?')) {document.forms['clearForm']['clearTaggedClass'].value = '".$BO."'; document.forms['clearForm'].submit();}", "Re-create tags", "clearBut");
+				
+				$js = "$('#dialogDiv').text('Are you sure you want to delete all tags attached to the ".$temp->getFriendlyClassName()." class, and have them re-created?');
+						$('#dialogDiv').dialog({
+						buttons: {
+							'OK': function(event, ui) {						
+								$('#clearTaggedClass').attr('value', '".$BO."');
+								$('#clearForm').submit();
+							},
+							'Cancel': function(event, ui) {
+								$(this).dialog('close');
+							}
+						}
+					})
+					$('#dialogDiv').dialog('open');
+					return false;";
+				$button = new Button($js, "Re-create tags", "clearBut");
+				
    				echo $button->render();
 			}
 		}		
 		
-   		echo '<form action="'.$_SERVER['PHP_SELF'].(empty($_SERVER['QUERY_STRING'])? '':'?'.$_SERVER['QUERY_STRING']).'" method="POST" name="clearForm">';
-   		echo '<input type="hidden" name="clearTaggedClass"/>';
+   		echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" id="clearForm">';
+   		echo '<input type="hidden" name="clearTaggedClass" id="clearTaggedClass"/>';
    		echo AlphaView::renderSecurityFields();
    		echo '</form>';
 		
@@ -87,16 +143,16 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 	 * Handle POST requests
 	 * 
 	 * @param array $params
+	 * @since 1.0
+	 * @throws ResourceNotAllowedException
 	 */
 	public function doPOST($params) {
 		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');
 		
 		try {
 			// check the hidden security fields before accepting the form POST data
-			if(!$this->checkSecurityFields()) {
+			if(!$this->checkSecurityFields())
 				throw new SecurityException('This page cannot accept post data from remote servers!');
-				self::$logger->debug('<<doPOST');
-			}
 			
 			if (isset($params['clearTaggedClass']) && $params['clearTaggedClass'] != '') {
 				try {
@@ -146,11 +202,11 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 			
 			$this->doGET($params);
 		}catch(SecurityException $e) {
-			throw new ResourceNotAllowedException($e->getMessage());
-			
 			self::$logger->warn($e->getMessage());
+			throw new ResourceNotAllowedException($e->getMessage());
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());
+			throw new ResourceNotAllowedException($e->getMessage());
 		}
 		
 		echo AlphaView::displayPageFoot($this);
