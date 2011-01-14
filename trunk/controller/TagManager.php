@@ -206,7 +206,7 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 			throw new ResourceNotAllowedException($e->getMessage());
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());
-			throw new ResourceNotAllowedException($e->getMessage());
+			throw new ResourceNotFoundException($e->getMessage());
 		}
 		
 		echo AlphaView::displayPageFoot($this);

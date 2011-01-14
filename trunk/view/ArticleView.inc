@@ -59,7 +59,7 @@ class ArticleView extends AlphaView {
 		global $config;
 
 		// the form action
-		$fields['formAction'] = $_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"];
+		$fields['formAction'] = $_SERVER['REQUEST_URI'];
 		
 		// the form ID
 		$fields['formID'] = get_class($this->BO).'_'.$this->BO->getID();
