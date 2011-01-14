@@ -6,7 +6,6 @@ if(!isset($config)) {
 	$config = AlphaConfig::getInstance();
 }
 
-require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 require_once $config->get('sysRoot').'alpha/model/tag_object.inc';
@@ -18,23 +17,60 @@ require_once $config->get('sysRoot').'alpha/util/LogFile.inc';
  * Generic tag-based search engine controller
  * 
  * @package alpha::controller
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2009 John Collins
  * @version $Id$
- *
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
+ * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class Search extends AlphaController implements AlphaControllerInterface {
 	/**
 	 * Trace logger
 	 * 
 	 * @var Logger
+	 * @since 1.0
 	 */
 	private static $logger = null;
 	
 	/**
 	 * The start number for list pageination
 	 * 
-	 * @var integer 
+	 * @var integer
+	 * @since 1.0
 	 */
 	protected $startPoint;
 	
@@ -42,6 +78,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 	 * The result count from the search
 	 * 
 	 * @var integer
+	 * @since 1.0
 	 */
 	private $resultCount = 0;
 	
@@ -49,6 +86,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 	 * The search query supplied
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	private $query;
 	
@@ -56,6 +94,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 	 * constructor to set up the object
 	 * 
 	 * @param string $visibility The name of the rights group that can access this controller.
+	 * @since 1.0
 	 */
 	public function __construct($visibility='Public') {
 		self::$logger = new Logger('Search');
@@ -73,6 +112,8 @@ class Search extends AlphaController implements AlphaControllerInterface {
 	 * Handle GET requests
 	 * 
 	 * @param array $params
+	 * @since 1.0
+	 * @throws IllegalArguementException
 	 */
 	public function doGET($params) {
 		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
@@ -187,14 +228,14 @@ class Search extends AlphaController implements AlphaControllerInterface {
 						}
 					}
 				}
-			}catch(IllegalArguementException $e) {
-				self::$logger->fatal($e->getMessage());
-				echo '<p class="error"><br>Illegal search query provided!</p>';				
+			}catch(Exception $e) {
+				self::$logger->error($e->getMessage());
+				throw new IllegalArguementException('Error occured while searching for: ['.$params['q'].']');				
 			}
 		}else{
 			$this->setTitle('Search results');			
 			echo AlphaView::displayPageHead($this);
-			echo '<p class="error"><br>No search query provided!</p>';
+			self::$logger->warn('No search query provided!');
 		}		
 		
 		echo AlphaView::displayPageFoot($this);
@@ -206,6 +247,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 	 * Handle POST requests (adds $currentUser person_object to the session)
 	 * 
 	 * @param array $params
+	 * @since 1.0
 	 */
 	public function doPOST($params) {
 		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');
@@ -217,6 +259,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 	 * Displays a search form on the top of the page
 	 * 
 	 * @return string
+	 * @since 1.0
 	 */
 	public function after_displayPageHead_callback() {
 		global $config;
@@ -234,6 +277,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 	 * Method to display the page footer with pageination links
 	 * 
 	 * @return string
+	 * @since 1.0
 	 */
 	public function before_displayPageFoot_callback() {
 		$html = $this->renderPageLinks();
@@ -247,6 +291,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 	 * Method for rendering the pagination links
 	 * 
 	 * @return string
+	 * @since 1.0
 	 */
 	protected function renderPageLinks() {
 		global $config;
@@ -258,7 +303,10 @@ class Search extends AlphaController implements AlphaControllerInterface {
 		if($end > $this->resultCount)
 			$end = $this->resultCount;
 		
-		$html .= '<p align="center">Displaying '.($this->startPoint+1).' to '.$end.' of <strong>'.$this->resultCount.'</strong>.&nbsp;&nbsp;';		
+		if($this->resultCount > 0)
+			$html .= '<p align="center">Displaying '.($this->startPoint+1).' to '.$end.' of <strong>'.$this->resultCount.'</strong>.&nbsp;&nbsp;';
+		else
+			$html .= AlphaView::displayUpdateMessage('There were no search results for your query.');	
 				
 		if ($this->startPoint > 0) {
 			// handle secure URLs
