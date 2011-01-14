@@ -7,10 +7,10 @@ if(!isset($config)) {
 }
 
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
-require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/model/article_object.inc';
 require_once $config->get('sysRoot').'alpha/util/InputFilter.inc';
+require_once $config->get('sysRoot').'alpha/util/helpers/Validator.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
 /**
@@ -18,16 +18,52 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.
  * Controller used to display a Markdown version of an article
  * 
  * @package alpha::controller
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2009 John Collins
  * @version $Id$
- *
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
+ * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class ViewArticle extends AlphaController implements AlphaControllerInterface {
 	/**
 	 * The article to be rendered
 	 * 
 	 * @var article_object
+	 * @since 1.0
 	 */
 	protected $BO;
 	
@@ -35,11 +71,14 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 	 * Trace logger
 	 * 
 	 * @var Logger
+	 * @since 1.0
 	 */
 	private static $logger = null;
 	
 	/**
 	 * constructor to set up the object
+	 * 
+	 * @since 1.0
 	 */
 	public function __construct() {
 		self::$logger = new Logger('ViewArticle');
@@ -59,6 +98,8 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 	 * Handle GET requests
 	 * 
 	 * @param array $params
+	 * @since 1.0
+	 * @throws ResourceNotFoundException
 	 */
 	public function doGET($params) {
 		global $config;
@@ -76,7 +117,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 			}
 			
 			// load the business object (BO) definition
-			if (isset($params['oid'])) {
+			if (isset($params['oid']) && Validator::isInteger($params['oid'])) {
 				$this->BO->load($params['oid']);
 				
 				$BOView = AlphaView::getInstance($this->BO);
@@ -93,27 +134,30 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 			}
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());
+			throw new ResourceNotFoundException($e->getMessage());
 		}catch(BONotFoundException $e) {
 			self::$logger->warn($e->getMessage());
-			echo '<p class="error"><br>Failed to load the requested article from the database!</p>';
+			throw new ResourceNotFoundException('The article that you have requested cannot be found!');
 		}
 		
 		echo AlphaView::displayPageFoot($this);
 	}
 	
 	/**
-	 * Callback used to inject article_object header_content into the page
+	 * Callback used to inject article_object headerContent into the page
 	 *
 	 * @return string
+	 * @since 1.0
 	 */
 	public function during_displayPageHead_callback() {
 		return $this->BO->get('headerContent');
 	}
 	
 	/**
-	 * Callback that inserts the header
+	 * Callback that inserts the CMS level header
 	 * 
 	 * @return string
+	 * @since 1.0
 	 */
 	public function insert_CMSDisplayStandardHeader_callback() {
 		global $config;
@@ -140,6 +184,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 	 * enabled to do so.
 	 * 
 	 * @return string
+	 * @since 1.0
 	 */
 	public function before_displayPageFoot_callback() {
 		global $config;
@@ -219,15 +264,16 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 	 * Method to handle POST requests
 	 * 
 	 * @param array $params
+	 * @since 1.0
 	 */
 	public function doPOST($params) {
 		global $config;
 		
 		try {
 			// check the hidden security fields before accepting the form POST data
-			if(!$this->checkSecurityFields()) {
+			if(!$this->checkSecurityFields())
 				throw new SecurityException('This page cannot accept post data from remote servers!');
-			}
+
 			
 			if(isset($params['voteBut']) && !$this->BO->checkUserVoted()) {
 				$vote = new article_vote_object();
@@ -306,16 +352,16 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 				}
 			}
 		}catch(SecurityException $e) {
-			echo '<p class="error"><br>'.$e->getMessage().'</p>';								
 			self::$logger->warn($e->getMessage());
+			throw new ResourceNotAllowedException($e->getMessage());
 		}
 	}
 	
 	/**
 	 * Method for displaying the user comments for the article.
 	 * 
-	 * @todo remove output buffering around old article comment view objects
 	 * @return string
+	 * @since 1.0
 	 */
 	private function renderComments() {
 		global $config;
