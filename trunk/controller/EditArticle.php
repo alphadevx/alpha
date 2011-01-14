@@ -310,10 +310,22 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 			        height: 400,
 			        width: 800,
 			        position: dialogCoords,
+			        buttons: {},
 			        open: function() {
 			        	//display correct dialog content
-			        	$("#helpPage").load("'.$config->get('sysURL').'ViewArticleFile/file/Markdown_Help.text");
-					}
+			        	$("#helpPage").load("'.FrontController::generateSecureURL('act=ViewArticleFile&file=Markdown_Help.text').'");
+					},
+					close: function() {
+					
+						$("#helpPage").dialog(dialogOpts);
+						
+						$(".markItUpButton15").click(
+			        		function (){
+			            		$("#helpPage").dialog("open");
+			            		return false;
+			        		}
+			    		);
+			    	}
 			    };
 			        
 			    $("#helpPage").dialog(dialogOpts);

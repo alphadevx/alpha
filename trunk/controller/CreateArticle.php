@@ -8,6 +8,7 @@ if(!isset($config)) {
 
 require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
+require_once $config->get('sysRoot').'alpha/controller/EditArticle.php';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/model/article_object.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
@@ -198,10 +199,22 @@ class CreateArticle extends AlphaController implements AlphaControllerInterface 
 			        height: 400,
 			        width: 800,
 			        position: dialogCoords,
+			        buttons: {},
 			        open: function() {
 			        	//display correct dialog content
-			        	$("#helpPage").load("'.$config->get('sysURL').'ViewArticleFile/file/Markdown_Help.text");
-					}
+			        	$("#helpPage").load("'.FrontController::generateSecureURL('act=ViewArticleFile&file=Markdown_Help.text').'");
+					},
+					close: function() {
+					
+						$("#helpPage").dialog(dialogOpts);
+						
+						$(".markItUpButton15").click(
+			        		function (){
+			            		$("#helpPage").dialog("open");
+			            		return false;
+			        		}
+			    		);
+			    	}
 			    };
 			        
 			    $("#helpPage").dialog(dialogOpts);
