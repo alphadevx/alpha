@@ -159,12 +159,12 @@ class Image {
 		if(!strpos($this->source, 'attachments/article_')) {
 			// checking to see if we will write a jpg or png to the cache
 			if($this->sourceType->getValue() == 'png' && $config->get('sysImagesPerservePNG'))
-				$this->filename = $config->get('sysRoot').'alpha/cache/images/'.basename($this->source, ".".$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.png';
+				$this->filename = $config->get('sysRoot').'cache/images/'.basename($this->source, ".".$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.png';
 			else
-				$this->filename = $config->get('sysRoot').'alpha/cache/images/'.basename($this->source, ".".$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.jpg';
+				$this->filename = $config->get('sysRoot').'cache/images/'.basename($this->source, ".".$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.jpg';
 		}else{
 			// make a cache dir for the article
-			$cacheDir = $config->get('sysRoot').'alpha/cache/images/article_'.substr($this->source, strpos($this->source, 'attachments/article_')+20, 11);
+			$cacheDir = $config->get('sysRoot').'cache/images/article_'.substr($this->source, strpos($this->source, 'attachments/article_')+20, 11);
 			if(!file_exists($cacheDir)) {
 				$success = mkdir($cacheDir);
 			
