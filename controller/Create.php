@@ -6,7 +6,6 @@ if(!isset($config)) {
 	$config = AlphaConfig::getInstance();
 }
 
-require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
@@ -199,6 +198,8 @@ class Create extends AlphaController implements AlphaControllerInterface {
 							
 				$this->BO->save();
 	
+				AlphaDAO::disconnect();
+				
 				try {
 					if ($this->getNextJob() != '')					
 						header('Location: '.$this->getNextJob());

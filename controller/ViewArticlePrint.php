@@ -102,6 +102,8 @@ class ViewArticlePrint extends ViewArticle {
 			$this->BO = new article_object();
 			$this->BO->loadByAttribute('title', $title);
 			
+			AlphaDAO::disconnect();
+			
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());
 			throw new ResourceNotFoundException($e->getMessage());
@@ -163,12 +165,7 @@ class ViewArticlePrint extends ViewArticle {
 		$rating = $this->BO->getArticleScore();
 		$votes = $this->BO->getArticleVotes();
 		
-		$html = '';
-		
-		if($config->get('sysCMSDisplayVotes'))
-			$html .= '<p>Average Article User Rating: <strong>'.$rating.'</strong> out of 10 (based on <strong>'.count($votes).'</strong> votes)</p>';
-		
-		$html .= '<p>Article URL: <a href="'.$this->BO->get('URL').'">'.$this->BO->get('URL').'</a><br>';
+		$html = '<p>Article URL: <a href="'.$this->BO->get('URL').'">'.$this->BO->get('URL').'</a><br>';
 		$html .= 'Title: '.$this->BO->get('title').'<br>';
 		$html .= 'Author: '.$this->BO->get('author').'<br>';
 		$html .= $config->get('sysCMSFooter').'</p>';

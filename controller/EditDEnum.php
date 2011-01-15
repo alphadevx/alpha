@@ -115,6 +115,8 @@ class EditDEnum extends Edit implements AlphaControllerInterface {
 		try {
 			$this->BO->load($BOoid);
 			
+			AlphaDAO::disconnect();
+			
 			$this->BOName = 'DEnum';
 			
 			$this->BOView = AlphaView::getInstance($this->BO);			
@@ -183,25 +185,25 @@ class EditDEnum extends Edit implements AlphaControllerInterface {
 							
 					AlphaDAO::commit();					
 					
-					$this->setStatusMessage('<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
-						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
-						<strong>Update:</strong> '.get_class($this->BO).' '.$this->BO->getID().' saved successfully.</p>
-						</div>');
+					$this->setStatusMessage(AlphaView::displayUpdateMessage(get_class($this->BO).' '.$this->BO->getID().' saved successfully.'));
 					
 					$this->doGET($params);
 				}catch (FailedSaveException $e) {
 					self::$logger->error('Unable to save the DEnum of id ['.$params['oid'].'], error was ['.$e->getMessage().']');
 					AlphaDAO::rollback();
 				}
+				
+				AlphaDAO::disconnect();
 			}
 		}catch(SecurityException $e) {
-			echo '<p class="error"><br>'.$e->getMessage().'</p>';								
+			echo AlphaView::displayErrorMessage($e->getMessage());
 			self::$logger->warn($e->getMessage());
 		}catch(IllegalArguementException $e) {
+			echo AlphaView::displayErrorMessage($e->getMessage());
 			self::$logger->error($e->getMessage());
 		}catch(BONotFoundException $e) {
 			self::$logger->warn($e->getMessage());
-			echo '<p class="error"><br>Failed to load the requested item from the database!</p>';
+			echo AlphaView::displayErrorMessage('Failed to load the requested item from the database!');
 		}
 				
 		self::$logger->debug('<<doPOST');

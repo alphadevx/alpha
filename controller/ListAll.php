@@ -247,10 +247,10 @@ class ListAll extends AlphaController implements AlphaControllerInterface {
 				if(!Validator::isInteger($params['delete_oid']))
 						throw new IllegalArguementException('Invalid delete_oid ['.$params['delete_oid'].'] provided on the request!');
 				
-				$temp = new $BOname();
-				$temp->load($params['delete_oid']);
-		
 				try {
+					$temp = new $BOname();
+					$temp->load($params['delete_oid']);
+					
 					AlphaDAO::begin();
 					$temp->delete();
 					AlphaDAO::commit();
@@ -263,6 +263,8 @@ class ListAll extends AlphaController implements AlphaControllerInterface {
 					echo AlphaView::displayErrorMessage('Error deleting the BO of OID ['.$params['delete_oid'].'], check the log!');
 					AlphaDAO::rollback();
 				}
+				
+				AlphaDAO::disconnect();
 			}
 		}catch(SecurityException $e) {
 			echo AlphaView::displayErrorMessage($e->getMessage());
@@ -391,6 +393,8 @@ class ListAll extends AlphaController implements AlphaControllerInterface {
 				
 			$this->BOCount = $temp->getCount();
 		}
+		
+		AlphaDAO::disconnect();
 		
 		echo AlphaView::renderDeleteForm();
 		

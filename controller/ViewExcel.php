@@ -110,11 +110,15 @@ class ViewExcel extends AlphaController implements AlphaControllerInterface {
 				// handle a single BO
 				if(isset($params['oid'])) {
 					$BO->load($params['oid']);
+					AlphaDAO::disconnect();
+					
 					$convertor = new BO2Excel($BO);
 					$convertor->render();
 				}else{
 					// handle all BOs of this type
 					$BOs = $BO->loadAll();
+					AlphaDAO::disconnect();
+					
 					$first = true;
 					
 					foreach($BOs as $BO) {

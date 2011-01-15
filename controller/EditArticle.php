@@ -7,7 +7,6 @@ if(!isset($config)) {
 }
 
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
-require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/model/article_object.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
@@ -110,6 +109,8 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 				
 				$this->BO->load($params['oid']);
 				
+				AlphaDAO::disconnect();
+				
 				$BOView = AlphaView::getInstance($this->BO);
 				
 				// set up the title and meta details
@@ -169,36 +170,36 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 				$this->setTitle($this->BO->get('title').' (editing)');
 				$this->setDescription('Page to edit '.$this->BO->get('title').'.');
 				$this->setKeywords('edit,article');
-					
+				
 				echo AlphaView::displayPageHead($this);
 		
-				if (isset($params['saveBut'])) {					
+				if (isset($params['saveBut'])) {
+										
 					// populate the transient object from post data
 					$this->BO->populateFromPost();
 					
 					try {
 						$success = $this->BO->save();			
-						echo '<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
-							<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
-							<strong>Update:</strong> Article '.$this->BO->getID().' saved successfully.</p></div>';
+						echo AlphaView::displayUpdateMessage('Article '.$this->BO->getID().' saved successfully.');
 					}catch (LockingException $e) {
 						$this->BO->reload();						
-						echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
-							<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
-							<strong>Error:</strong> '.$e->getMessage().'</p></div>';
-					}					
+						echo AlphaView::displayErrorMessage($e->getMessage());
+					}
+
+					AlphaDAO::disconnect();
 					echo $BOView->editView();
 				}
 				
 				if (!empty($params['delete_oid'])) {
+					
 					$this->BO->load($params['delete_oid']);
 					
 					try {
 						$this->BO->delete();
+						
+						AlphaDAO::disconnect();
 								
-						echo '<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
-							<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
-							<strong>Update:</strong> Article '.$params['delete_oid'].' deleted successfully.</p></div>';
+						echo AlphaView::displayUpdateMessage('Article '.$params['delete_oid'].' deleted successfully.');
 										
 						echo '<center>';
 						
@@ -208,18 +209,17 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 						echo '</center>';
 					}catch(AlphaException $e) {
 						self::$logger->error($e->getTraceAsString());						
-						echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
-							<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
-							<strong>Error:</strong> Error deleting the article, check the log!</p></div>';
+						echo AlphaView::displayErrorMessage('Error deleting the article, check the log!');
 					}
 				}
 				
-				if(isset($params['uploadBut'])) {							
+				if(isset($params['uploadBut'])) {
+												
 					// upload the file to the attachments directory
 					$success = move_uploaded_file($_FILES['userfile']['tmp_name'], $this->BO->getAttachmentsLocation().'/'.$_FILES['userfile']['name']);
 					
 					if(!$success)
-						throw new AlphaException('Could not move the uploaded file ['.$success.']');
+						throw new AlphaException('Could not move the uploaded file ['.$_FILES['userfile']['name'].']');
 					
 					// set read/write permissions on the file
 					$success = chmod($this->BO->getAttachmentsLocation().'/'.$_FILES['userfile']['name'], 0666);
@@ -228,9 +228,7 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 						throw new AlphaException('Unable to set read/write permissions on the uploaded file ['.$this->BO->getAttachmentsLocation().'/'.$_FILES['userfile']['name'].'].');
 					
 					if($success) {						
-						echo '<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
-						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
-						<strong>Update:</strong> File uploaded successfully.</p></div>';
+						echo AlphaView::displayUpdateMessage('File uploaded successfully.');
 					}
 					
 					$view = AlphaView::getInstance($this->BO);
@@ -238,16 +236,15 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 					echo $view->editView();
 				}
 				
-				if (!empty($params['file_to_delete'])) {							
+				if (!empty($params['file_to_delete'])) {
+												
 					$success = unlink($this->BO->getAttachmentsLocation().'/'.$params['file_to_delete']);
 					
 					if(!$success)
 						throw new AlphaException('Could not delete the file ['.$params['file_to_delete'].']');
 					
 					if($success) {						
-						echo '<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
-						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
-						<strong>Update:</strong> '.$params['file_to_delete'].' deleted successfully.</p></div>';
+						echo AlphaView::displayUpdateMessage($params['file_to_delete'].' deleted successfully.');
 					}
 					
 					$view = AlphaView::getInstance($this->BO);
@@ -258,17 +255,17 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 				throw new IllegalArguementException('No valid article ID provided!');
 			}
 		}catch(SecurityException $e) {
-			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
-				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
-				<strong>Error:</strong> '.$e->getMessage().'</p></div>';
+			echo AlphaView::displayErrorMessage($e->getMessage());
 			self::$logger->warn($e->getMessage());
 		}catch(IllegalArguementException $e) {
+			echo AlphaView::displayErrorMessage($e->getMessage());
 			self::$logger->error($e->getMessage());
 		}catch(BONotFoundException $e) {
 			self::$logger->warn($e->getMessage());
-			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
-				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
-				<strong>Error:</strong> Failed to load the requested article from the database!</p></div>';
+			echo AlphaView::displayErrorMessage('Failed to load the requested article from the database!');
+		}catch(AlphaException $e) {
+			echo AlphaView::displayErrorMessage($e->getMessage());
+			self::$logger->error($e->getMessage());
 		}
 		
 		echo AlphaView::renderDeleteForm();

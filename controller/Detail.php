@@ -6,7 +6,6 @@ if(!isset($config)) {
 	$config = AlphaConfig::getInstance();
 }
 
-require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
@@ -151,6 +150,8 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 		
 				$this->BO->load($params['oid']);
 				
+				AlphaDAO::disconnect();
+				
 				echo $this->BOView->detailedView();
 			}else{
 				throw new IllegalArguementException('No BO available to display!');
@@ -221,6 +222,8 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 						echo AlphaView::displayErrorMessage('Error deleting the BO of OID ['.$params['delete_oid'].'], check the log!');
 						AlphaDAO::rollback();
 					}
+					
+					AlphaDAO::disconnect();
 				}
 			}else{
 				throw new IllegalArguementException('No BO available to display!');
