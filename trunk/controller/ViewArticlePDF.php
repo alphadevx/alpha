@@ -113,6 +113,8 @@ class ViewArticlePDF extends AlphaController {
 			$this->BO = new $this->BOName;
 			$this->BO->loadByAttribute('title', $title);
 			
+			AlphaDAO::disconnect();
+			
 			$pdf = new TCPDFFacade($this->BO);
 			
 		}catch(IllegalArguementException $e) {

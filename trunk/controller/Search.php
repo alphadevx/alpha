@@ -226,6 +226,8 @@ class Search extends AlphaController implements AlphaControllerInterface {
 								self::$logger->warn('Orpaned tag_object detected pointing to a non-existant BO of OID ['.$oid.'] and type ['.$BO.'].');
 							}
 						}
+						
+						AlphaDAO::disconnect();
 					}
 				}
 			}catch(Exception $e) {

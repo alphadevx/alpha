@@ -127,7 +127,9 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 				
    				echo $button->render();
 			}
-		}		
+		}
+
+		AlphaDAO::disconnect();
 		
    		echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" id="clearForm">';
    		echo '<input type="hidden" name="clearTaggedClass" id="clearTaggedClass"/>';
@@ -197,7 +199,9 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 				}catch (AlphaException $e) {
 					self::$logger->error($e->getMessage());
 					AlphaDAO::rollback();
-				}				
+				}
+				
+				AlphaDAO::disconnect();
 			}
 			
 			$this->doGET($params);

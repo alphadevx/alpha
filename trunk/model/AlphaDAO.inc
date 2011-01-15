@@ -215,6 +215,18 @@ abstract class AlphaDAO {
 	}
 	
 	/**
+	 * Disconnects the current database connection if one exists (self::$connection is set)
+	 * 
+	 * @since 1.0
+	 */
+	public static function disconnect() {
+		if (isset(self::$connection)) {
+			self::$connection->close();
+			self::$connection = null;
+		}
+	}
+	
+	/**
 	 * Populates the child object with the properties retrived from the database for the object $OID.
 	 * 
 	 * @param integer $OID The object ID of the business object to load.

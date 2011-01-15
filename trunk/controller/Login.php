@@ -178,6 +178,8 @@ class Login extends AlphaController implements AlphaControllerInterface {
 					// here we are attempting to load the person from the email address
 					$this->personObject->loadByAttribute('email', $params['email'], true);
 					
+					AlphaDAO::disconnect();
+					
 					// checking to see if the account has been disabled
 					if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Disabled')
 						throw new SecurityException('Failed to login user '.$params['email'].', that account has been disabled!');
@@ -210,6 +212,8 @@ class Login extends AlphaController implements AlphaControllerInterface {
 			if (isset($params['resetBut'])) {				
 				// here we are attempting to load the person from the email address			
 				$this->personObject->loadByAttribute('email', $params['email']);
+				
+				AlphaDAO::disconnect();
 				
 				// generate a new random password
 				$new_password = $this->personObject->generatePassword();

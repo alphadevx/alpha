@@ -71,7 +71,21 @@ class ArticleView extends AlphaView {
 		$button = new button('submit', 'Save', 'saveBut');
 		$fields['saveButton'] = $button->render();
 		
-		$button = new button("if(confirm('Are you sure you wish to delete this item?')) {document.getElementById('delete_oid').value = '".$this->BO->getID()."'; document.getElementById('delete_form').submit();}", "Delete", "deleteBut");
+		$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
+				$('#dialogDiv').dialog({
+				buttons: {
+					'OK': function(event, ui) {						
+						$('#delete_oid').attr('value', '".$this->BO->getOID()."');
+						$('#delete_form').submit();
+					},
+					'Cancel': function(event, ui) {
+						$(this).dialog('close');
+					}
+				}
+			})
+			$('#dialogDiv').dialog('open');
+			return false;";
+		$button = new Button($js, "Delete", "deleteBut");
 		$fields['deleteButton'] = $button->render();
 		
 		$button = new button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
@@ -117,8 +131,22 @@ class ArticleView extends AlphaView {
 					$html .= '&nbsp;'.$file.'&nbsp;<em>('.number_format(filesize($this->BO->getAttachmentsLocation().'/'.$file)/1024).' KB)</em>';
 					$html .= '</td>';
 					$html .= '<td>';
-					$temp = new button("if(confirm('Are you sure you want to delete the file ".$file."')) { document.forms[0]['file_to_delete'].value = '".$file."'; document.forms[0].submit();}", "Delete", "deleteBut");
-					$html .= $temp->render();
+					$js = "$('#dialogDiv').text('Are you sure you want to delete the file ".$file."');
+							$('#dialogDiv').dialog({
+							buttons: {
+								'OK': function(event, ui) {						
+									$('#file_to_delete').attr('value', '".$file."');
+									$('#".get_class($this->BO).'_'.$this->BO->getID()."').submit();
+								},
+								'Cancel': function(event, ui) {
+									$(this).dialog('close');
+								}
+							}
+						})
+						$('#dialogDiv').dialog('open');
+						return false;";
+					$button = new Button($js, "Delete", "deleteBut");
+					$html .= $button->render();
 					$html .= '</td></tr>';
 		    	}
 		    }
@@ -141,7 +169,7 @@ class ArticleView extends AlphaView {
 		$html .= $temp->render();
 		$html .= '</td></tr>';
 		
-		$html .= '<input type="hidden" name="file_to_delete" value=""/>';
+		$html .= '<input type="hidden" name="file_to_delete" id="file_to_delete" value=""/>';
 		
 		return $html;
 	}

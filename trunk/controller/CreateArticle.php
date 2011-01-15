@@ -6,7 +6,6 @@ if(!isset($config)) {
 	$config = AlphaConfig::getInstance();
 }
 
-require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/controller/EditArticle.php';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
@@ -142,7 +141,9 @@ class CreateArticle extends AlphaController implements AlphaControllerInterface 
 				// populate the transient object from post data
 				$this->BO->populateFromPost();
 					
-				$this->BO->save();			
+				$this->BO->save();
+
+				AlphaDAO::disconnect();
 	
 				try {
 					if ($this->getNextJob() != '')					

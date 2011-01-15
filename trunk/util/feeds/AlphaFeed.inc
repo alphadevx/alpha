@@ -129,6 +129,8 @@ abstract class AlphaFeed {
 		
 		$BOs = $this->BO->loadAll(0, $limit, $sortBy, 'DESC');
 		
+		AlphaDAO::disconnect();
+		
 		foreach($BOs as $BO) {
 			$title = $BO->get($this->fieldNameMappings['title']);			
 			$link = $BO->get($this->fieldNameMappings['link']);

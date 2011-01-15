@@ -97,6 +97,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 	 * @param array $params
 	 * @throws IllegalArguementException
 	 * @since 1.0
+	 * @throws FileNotFoundException
 	 */
 	public function doGET($params) {
 		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
@@ -124,6 +125,8 @@ class EditTags extends Edit implements AlphaControllerInterface {
 			
 			$tags = $this->BO->getPropObject('tags')->getRelatedObjects();
 			
+			AlphaDAO::disconnect();
+			
 			echo '<table cols="3" class="edit_view">';
 			echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
 			echo '<tr><td colspan="3"><h3>The following tags were found:</h3></td></tr>';
@@ -138,7 +141,21 @@ class EditTags extends Edit implements AlphaControllerInterface {
 				echo $temp->render(false);
 				echo '</td><td>';
 				
-				$button = new Button("if(confirm('Are you sure you wish to delete this tag?')) {document.getElementById('delete_oid').value = '".$tag->getID()."'; document.getElementById('delete_form').submit();}", "Delete", "deleteBut");
+				$js = "$('#dialogDiv').text('Are you sure you wish to delete this tag?');
+							$('#dialogDiv').dialog({
+							buttons: {
+								'OK': function(event, ui) {						
+									$('#delete_oid').attr('value', '".$tag->getID()."');
+									$('#delete_form').submit();
+								},
+								'Cancel': function(event, ui) {
+									$(this).dialog('close');
+								}
+							}
+						})
+						$('#dialogDiv').dialog('open');
+						return false;";
+				$button = new Button($js, "Delete", "deleteBut");
 				echo $button->render().'</td></tr>';
 			}
 			
@@ -166,7 +183,9 @@ class EditTags extends Edit implements AlphaControllerInterface {
 			echo AlphaView::renderDeleteForm();
 			
 		}catch(BONotFoundException $e) {
-			self::$logger->error('Unable to load the BO of id ['.$params['oid'].'], error was ['.$e->getMessage().']');
+			$msg = 'Unable to load the BO of id ['.$params['oid'].'], error was ['.$e->getMessage().']';
+			self::$logger->error($msg);
+			throw new FileNotFoundException($msg);
 		}
 		
 		echo AlphaView::displayPageFoot($this);
@@ -226,7 +245,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 						$newTag->save();
 					}
 							
-					AlphaDAO::commit();					
+					AlphaDAO::commit();
 					
 					$this->setStatusMessage(AlphaView::displayUpdateMessage('Tags on '.get_class($this->BO).' '.$this->BO->getID().' saved successfully.'));
 										
@@ -249,6 +268,8 @@ class EditTags extends Edit implements AlphaControllerInterface {
 					
 					$this->doGET($params);
 				}
+				
+				AlphaDAO::disconnect();
 			}
 			
 			if (!empty($params['delete_oid'])) {					
@@ -278,6 +299,8 @@ class EditTags extends Edit implements AlphaControllerInterface {
 					
 					$this->doGET($params);
 				}
+				
+				AlphaDAO::disconnect();
 			}
 		}catch(SecurityException $e) {
 			

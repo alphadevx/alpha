@@ -110,6 +110,8 @@ class ListSequences extends ListAll implements AlphaControllerInterface {
 			
 		$objects = $temp->loadAll($this->startPoint);
 		
+		AlphaDAO::disconnect();
+		
 		$BO = new Sequence();
 		$this->BOCount = $BO->getCount();
 		

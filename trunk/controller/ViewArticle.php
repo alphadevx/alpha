@@ -232,6 +232,8 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 			$html .= '<form>';
 		}
 		
+		AlphaDAO::disconnect();
+		
 		$html .= '&nbsp;&nbsp;';
 		$temp = new Button("window.open('".$this->BO->get('printURL')."')",'Open Printer Version','printBut');
 		$html .= $temp->render();
@@ -277,6 +279,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 			
 			if(isset($params['voteBut']) && !$this->BO->checkUserVoted()) {
 				$vote = new article_vote_object();
+				
 				if(isset($params['oid'])) {
 					$vote->set('article_oid', $params['oid']);
 				}else{
@@ -291,15 +294,16 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 					$this->BO->loadByAttribute('title', $title);
 					$vote->set('article_oid', $this->BO->getOID());
 				}
+				
 				$vote->set('person_oid', $_SESSION['currentUser']->getID());
 				$vote->set('score', $params['user_vote']);
+				
 				try {
-					$vote->save();					
+					$vote->save();
+
+					AlphaDAO::disconnect();
 					
-					$this->setStatusMessage('<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
-						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
-						<strong>Update:</strong> Thank you for rating this article!</p>
-						</div>');
+					$this->setStatusMessage(AlphaView::displayUpdateMessage('Thank you for rating this article!'));
 					
 					$this->doGET($params);
 				}catch (FailedSaveException $e) {
@@ -317,12 +321,11 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 				$comment->set('content', InputFilter::encode($comment->get('content')));
 				
 				try {
-					$success = $comment->save();			
+					$success = $comment->save();
 					
-					$this->setStatusMessage('<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
-						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
-						<strong>Update:</strong> Thank you for your comment!</p>
-						</div>');
+					AlphaDAO::disconnect();
+					
+					$this->setStatusMessage(AlphaView::displayUpdateMessage('Thank you for your comment!'));
 					
 					$this->doGET($params);
 				}catch (FailedSaveException $e) {
@@ -340,11 +343,10 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 					$comment->populateFromPost();			
 					
 					$success = $comment->save();
+					
+					AlphaDAO::disconnect();
 
-					$this->setStatusMessage('<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
-						<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
-						<strong>Update:</strong> Your comment has been updated.</p>
-						</div>');
+					$this->setStatusMessage(AlphaView::displayUpdateMessage('Your comment has been updated.'));
 					
 					$this->doGET($params);
 				}catch (AlphaException $e) {

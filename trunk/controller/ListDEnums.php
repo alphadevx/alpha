@@ -115,6 +115,8 @@ class ListDEnums extends ListAll implements AlphaControllerInterface {
 		if (isset($params['start']) ? $this->startPoint = $params['start']: $this->startPoint = 1);
 			
 		$objects = $temp->loadAll($this->startPoint);
+		
+		AlphaDAO::disconnect();
 			
 		$this->BOCount = $this->BO->getCount();
 		

@@ -6,7 +6,6 @@ if(!isset($config)) {
 	$config = AlphaConfig::getInstance();
 }
 
-require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
@@ -139,6 +138,8 @@ class Edit extends AlphaController implements AlphaControllerInterface {
 				$this->BO = new $BOName();
 				$this->BO->load($params['oid']);
 				
+				AlphaDAO::disconnect();
+				
 				$this->BOName = $BOName;
 				
 				$this->BOView = AlphaView::getInstance($this->BO);
@@ -203,7 +204,7 @@ class Edit extends AlphaController implements AlphaControllerInterface {
 					
 				echo AlphaView::displayPageHead($this);
 		
-				if (isset($params['saveBut'])) {			
+				if (isset($params['saveBut'])) {
 					
 					// populate the transient object from post data
 					$this->BO->populateFromPost();
@@ -216,6 +217,8 @@ class Edit extends AlphaController implements AlphaControllerInterface {
 						echo AlphaView::displayErrorMessage($e->getMessage());
 					}
 					
+					AlphaDAO::disconnect();
+					
 					echo $this->BOView->editView();
 				}
 				
@@ -225,6 +228,8 @@ class Edit extends AlphaController implements AlphaControllerInterface {
 					
 					try {
 						$temp->delete();
+						
+						AlphaDAO::disconnect();
 								
 						echo AlphaView::displayUpdateMessage($this->BOName.' '.$params['delete_oid'].' deleted successfully.');
 										
