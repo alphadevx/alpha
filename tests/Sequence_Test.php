@@ -41,16 +41,21 @@ class Sequence_Test extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Testing the validation on the setValue method
+     * Testing to ensure that a bad parameter will cause an IllegalArguementException
      */
-    public function testSetValueValidation() {
+    public function testSetValueBad() {
     	try {
     		$this->sequence->setValue('invalid');
     		$this->fail('Testing to ensure that a bad parameter will cause an IllegalArguementException');
     	}catch (IllegalArguementException $e) {
     		$this->assertEquals($this->sequence->getHelper(), $e->getMessage(), 'Testing to ensure that a bad parameter will cause an IllegalArguementException');
     	}
-    	
+    }
+    
+    /**
+     * Testing to ensure that a good parameter will not cause an IllegalArguementException
+     */
+    public function testSetValueGood() {
     	try {
     		$this->sequence->setValue('VALID-1');
     		$this->assertEquals('VALID', $this->sequence->get('prefix'), 'Testing to ensure that a good parameter will not cause an IllegalArguementException');
@@ -78,5 +83,12 @@ class Sequence_Test extends PHPUnit_Framework_TestCase
     	$this->sequence->setSequenceToNext();
     	
     	$this->assertEquals('TEST-2', $this->sequence->getValue(), 'Testing the setSequenceToNext methid increments the sequence number');
+    }
+    
+    /**
+     * Testing the toString method
+     */
+    public function testToString() {
+    	$this->assertEquals('TEST-1', $this->sequence->__toString(), 'Testing the toString method');
     }
 }

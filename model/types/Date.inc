@@ -8,31 +8,69 @@ require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
 /**
  * The Date complex data type
  * 
- * @package Alpha Core Datatype
+ * @package alpha::model::types
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2008 John Collins
  * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class Date extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * The year part
 	 *
-	 * @var int
+	 * @var integer
+	 * @since 1.0
 	 */
 	private $year;
 	
 	/**
 	 * The month part
 	 *
-	 * @var int
+	 * @var integer
+	 * @since 1.0
 	 */
 	private $month;
 	
 	/**
 	 * The day part
 	 *
-	 * @var int
+	 * @var integer
+	 * @since 1.0
 	 */
 	private $day;
 	
@@ -40,6 +78,7 @@ class Date extends AlphaType implements AlphaTypeInterface {
 	 * The textual version of the day, e.g. Monday
 	 *
 	 * @var string
+	 * @since 1.0
 	 */
 	private $weekday;
 	
@@ -47,6 +86,7 @@ class Date extends AlphaType implements AlphaTypeInterface {
 	 * The validation rule (reg-ex) applied to Date values
 	 *
 	 * @var string
+	 * @since 1.0
 	 */
  	private $validationRule;
  	
@@ -54,13 +94,16 @@ class Date extends AlphaType implements AlphaTypeInterface {
 	 * The error message returned for invalid values
 	 *
 	 * @var string
+	 * @since 1.0
 	 */
-	protected $helper= 'Error: not a valid date value!  A date should be in the format YYYY-MM-DD HH:MM:SS.';
+	protected $helper= 'Not a valid date value!  A date should be in the ISO format YYYY-MM-DD.';
  	
 	/**
 	 * Constructor.  Leave $date param empty to default to now.
 	 *
-	 * @param string $date
+	 * @param string $date Date string in the ISO format YYYY-MM-DD.
+	 * @since 1.0
+	 * @throws IllegalArguementException
 	 */
  	public function __construct($date='') {
  		global $config;
@@ -88,9 +131,11 @@ class Date extends AlphaType implements AlphaTypeInterface {
  	}
  	
  	/**
- 	 * Accepts a full date string in YYYY-mm-dd format and populates relevent Date attributes.
+ 	 * Accepts a full date string in ISO YYYY-mm-dd format and populates relevent Date attributes.
  	 * 
  	 * @param string $date
+ 	 * @since 1.0
+ 	 * @throws IllegalArguementException
  	 */
  	public function setValue($date) {
  		$this->populateFromString($date);
@@ -99,9 +144,11 @@ class Date extends AlphaType implements AlphaTypeInterface {
  	/**
  	 * Set the Date attributes to match the three values provided
  	 *
- 	 * @param int $year
- 	 * @param int $month
- 	 * @param int $day
+ 	 * @param integer $year
+ 	 * @param integer $month
+ 	 * @param integer $day
+ 	 * @throws IllegalArguementException
+ 	 * @since 1.0
  	 */
  	public function setDateValue($year, $month, $day) {
  		$valid = null;
@@ -130,6 +177,7 @@ class Date extends AlphaType implements AlphaTypeInterface {
  	 * Get the date value as a string in the format "YYYY-MM-DD"
  	 *
  	 * @return string
+ 	 * @since 1.0
  	 */
  	public function getValue() {
  		return $this->year.'-'.$this->month.'-'.$this->day;
@@ -138,7 +186,8 @@ class Date extends AlphaType implements AlphaTypeInterface {
 	/**
  	 * Return the value in UNIX timestamp format
  	 * 
- 	 * @return int
+ 	 * @return integer
+ 	 * @since 1.0
  	 */
  	public function getUnixValue() {
  		return mktime(0, 0, 0, $this->month, $this->day, $this->year);
@@ -148,15 +197,27 @@ class Date extends AlphaType implements AlphaTypeInterface {
  	 * Get the date value as a string in the format "DD/MM/YYYY"
  	 *
  	 * @return string
+ 	 * @since 1.0
  	 */
  	public function getEuroValue() {
  		return $this->day.'/'.$this->month.'/'.substr($this->year, 2, 2);
  	}
  	
+	/**
+ 	 * Get the date value as a string in the format "MM/DD/YYYY"
+ 	 *
+ 	 * @return string
+ 	 * @since 1.0
+ 	 */
+ 	public function getUSValue() {
+ 		return $this->month.'/'.$this->day.'/'.substr($this->year, 2, 2);
+ 	}
+ 	
  	/**
  	 * Get the year part
  	 *
- 	 * @return string
+ 	 * @return integer
+ 	 * @since 1.0
  	 */
  	public function getYear() {
  		return $this->year;	
@@ -165,7 +226,8 @@ class Date extends AlphaType implements AlphaTypeInterface {
  	/**
  	 * Get the month part
  	 *
- 	 * @return string
+ 	 * @return integer
+ 	 * @since 1.0
  	 */
  	public function getMonth() {
  		return $this->month;	
@@ -174,7 +236,8 @@ class Date extends AlphaType implements AlphaTypeInterface {
  	/**
  	 * Get the day part
  	 *
- 	 * @return string
+ 	 * @return integer
+ 	 * @since 1.0
  	 */
  	public function getDay() {
  		return $this->day;	
@@ -184,15 +247,18 @@ class Date extends AlphaType implements AlphaTypeInterface {
  	 * Get the textual weekday part, e.g. Monday
  	 *
  	 * @return string
+ 	 * @since 1.0
  	 */
  	public function getWeekday() {
  		return $this->weekday;
  	}
  	 	
  	/**
- 	 * Accepts a full date string in YYYY-mm-dd format and populates relevent Date attributes.
+ 	 * Accepts a full date string in YYYY-MM-DD format and populates relevent Date attributes.
  	 * 
  	 * @param string $date
+ 	 * @throws IllegalArguementException
+ 	 * @since 1.0
  	 */
  	public function populateFromString($date) { 		
  		$valid = null;
@@ -247,6 +313,7 @@ class Date extends AlphaType implements AlphaTypeInterface {
  	 * Get the validation rule
  	 *
  	 * @return string
+ 	 * @since 1.0
  	 */
  	public function getRule() {
 		return $this->validationRule;
@@ -256,6 +323,7 @@ class Date extends AlphaType implements AlphaTypeInterface {
 	 * Set the validation rule
 	 *
 	 * @param string $rule
+	 * @since 1.0
 	 */
 	public function setRule($rule) {
 		$this->validationRule = $rule;

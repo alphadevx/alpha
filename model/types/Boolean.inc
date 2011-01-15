@@ -8,24 +8,62 @@ require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
 /**
  * The Boolean complex data type
  * 
- * @package Alpha Core Datatype
+ * @package alpha::model::types
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2008 John Collins
  * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class Boolean extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * The value of the Boolean
 	 *
-	 * @var bool
+	 * @var boolean
+	 * @since 1.0
+	 * 
 	 */
 	private $booleanValue;
 	
 	/**
 	 * The binary (1/0) value of the Boolean.  This is the value stored in the database.
 	 *
-	 * @var int
+	 * @var integer
+	 * @since 1.0
 	 */
 	private $value;
 	
@@ -33,19 +71,22 @@ class Boolean extends AlphaType implements AlphaTypeInterface {
 	 * The error message returned for invalid values
 	 *
 	 * @var string
+	 * @since 1.0
 	 */
-	protected $helper = 'Error: not a valid Boolean value!';
+	protected $helper = 'Not a valid Boolean value!';
 	
 	/**
 	 * Constructor
 	 *
-	 * @param boolean $val	
+	 * @param boolean $val
+	 * @since 1.0
+	 * @throws IllegalArguementException
 	 */
 	public function __construct($val=true) {
-		if ($val === true || $val == 1) {
+		if ($val === true || $val === 1) {
 			$this->value = 1;
 			$this->booleanValue = true;
-		}elseif ($val === false || $val == 0) {
+		}elseif ($val === false || $val === 0) {
 			$this->value = 0;
 			$this->booleanValue = false;
 		}else{
@@ -54,9 +95,11 @@ class Boolean extends AlphaType implements AlphaTypeInterface {
 	}
 	
 	/**
-	 * Used to set the Boolean value
+	 * Used to set the Boolean value.
 	 *
-	 * @param boolean $val
+	 * @param mixed $val Will accept a boolean true/false or integer 1/0.
+	 * @since 1.0
+	 * @throws IllegalArguementException
 	 */
 	public function setValue($val) {
 		if ($val === true || $val == 1) {
@@ -73,7 +116,8 @@ class Boolean extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * Used to get the binary (1/0) value of the Boolean.  This is the value stored in the database.
 	 *
-	 * @return int
+	 * @return integer
+	 * @since 1.0
 	 */
 	public function getValue() {
 		return $this->value;
@@ -83,10 +127,21 @@ class Boolean extends AlphaType implements AlphaTypeInterface {
 	 * Used to get the boolean value of the Boolean
 	 *
 	 * @return boolean
+	 * @since 1.0
 	 */
 	public function getBooleanValue() {
 		return $this->booleanValue;
-	}	
+	}
+	
+	/**
+	 * Used to convert the object to a printable string
+	 *
+	 * @return string
+	 * @since 1.0
+	 */
+	public function __toString() {		
+		return ($this->value ? 'true' : 'false');
+	}
 }
 
 ?>
