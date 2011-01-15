@@ -188,7 +188,7 @@ class String_Test extends PHPUnit_Framework_TestCase
     		$this->str1->setValue('Too many characters!');
     		$this->fail('testing the setSize method to see if validation fails');
     	}catch (AlphaException $e) {
-    		$this->assertEquals('Error: not a valid string value!  A maximum of 4 characters is allowed.'
+    		$this->assertEquals('Not a valid string value!  A maximum of 4 characters is allowed.'
     			, $e->getMessage()
     			, 'testing the setSize method to see if validation fails');
     	}

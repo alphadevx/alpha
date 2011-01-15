@@ -8,17 +8,53 @@ require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
 /**
  * The String complex data type
  * 
- * @package Alpha Core Datatype
+ * @package alpha::model::types
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2008 John Collins
  * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class String extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * The value of the string
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	private $value;
 	
@@ -26,6 +62,7 @@ class String extends AlphaType implements AlphaTypeInterface {
 	 * The validation rule for the string type
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	private $validationRule;
 	
@@ -33,27 +70,31 @@ class String extends AlphaType implements AlphaTypeInterface {
 	 * The error message for the string type when validation fails
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	protected $helper;
 	
 	/**
 	 * The size of the value for the this String
 	 * 
-	 * @var int
+	 * @var integer
+	 * @since 1.0
 	 */
 	private $size = 255;
 	
 	/**
 	 * The absolute maximum size of the value for the this String
 	 * 
-	 * @var int
+	 * @var integer
+	 * @since 1.0
 	 */
 	const MAX_SIZE = 255;
 	
 	/**
 	 * Simple boolean to determine if the string is a password or not
 	 * 
-	 * @var bool
+	 * @var boolean
+	 * @since 1.0
 	 */
 	private $password = false;
 	
@@ -61,11 +102,13 @@ class String extends AlphaType implements AlphaTypeInterface {
 	 * Constructor
 	 *
 	 * @param string $val
+	 * @since 1.0
+	 * @throws IllegalArguementException
 	 */
 	public function __construct($val='') {		
 		
 		$this->validationRule = DEFAULT_STRING;		
-		$this->helper = 'Error: not a valid string value!  A maximum of '.$this->size.' characters is allowed.';
+		$this->helper = 'Not a valid string value!  A maximum of '.$this->size.' characters is allowed.';
 		
 		if (strlen($val) <= $this->size) {			
 			if (preg_match($this->validationRule, $val)) {				
@@ -82,6 +125,8 @@ class String extends AlphaType implements AlphaTypeInterface {
 	 * Setter for the value
 	 *
 	 * @param string $val
+	 * @since 1.0
+	 * @throws IllegalArguementException
 	 */
 	public function setValue($val) {		
 		
@@ -100,6 +145,7 @@ class String extends AlphaType implements AlphaTypeInterface {
 	 * Getter for the value
 	 *
 	 * @return string
+	 * @since 1.0
 	 */
 	public function getValue() {
 		return $this->value;
@@ -109,6 +155,7 @@ class String extends AlphaType implements AlphaTypeInterface {
 	 * Setter to override the default validation rule
 	 *
 	 * @param string $rule
+	 * @since 1.0
 	 */
 	public function setRule($rule) {
 		$this->validationRule = $rule;
@@ -118,6 +165,7 @@ class String extends AlphaType implements AlphaTypeInterface {
  	 * Get the validation rule
  	 *
  	 * @return string
+ 	 * @since 1.0
  	 */
  	public function getRule() {
 		return $this->validationRule;
@@ -126,12 +174,14 @@ class String extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * Used to set the allowable size of the String in the database field
 	 *
-	 * @param int $size
+	 * @param integer $size
+	 * @since 1.0
+	 * @throws IllegalArguementException
 	 */
 	public function setSize($size) {
 		if ($size <= self::MAX_SIZE) {
 			$this->size = $size;
-			$this->helper = 'Error: not a valid string value!  A maximum of '.$this->size.' characters is allowed.';
+			$this->helper = 'Not a valid string value!  A maximum of '.$this->size.' characters is allowed.';
 		}else{
 			throw new IllegalArguementException('Error: the value '.$size.' provided by setSize is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
 		}	
@@ -140,7 +190,8 @@ class String extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * Get the allowable size of the Double in the database field
 	 *	
-	 * @return int
+	 * @return integer
+	 * @since 1.0
 	 */
 	public function getSize(){
 		return $this->size;
@@ -150,6 +201,7 @@ class String extends AlphaType implements AlphaTypeInterface {
 	 * Sets up an appropriate validation rule for a required field
 	 * 
 	 * @param bool $req
+	 * @since 1.0
 	 */
 	public function isRequired($req=true) {
 		if ($req) {
@@ -163,7 +215,8 @@ class String extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * Define the string as a password (making it required by validation rule)
 	 * 
-	 * @param bool $pass
+	 * @param boolean $pass
+	 * @since 1.0
 	 */
 	public function isPassword($pass=true) {
 		$this->password = $pass;
@@ -177,7 +230,8 @@ class String extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * Checks to see if the string is a password or not
 	 * 
-	 * @return bool
+	 * @return boolean
+	 * @since 1.0
 	 */
 	public function checkIsPassword() {
 		return $this->password;

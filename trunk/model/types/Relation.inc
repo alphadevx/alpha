@@ -9,17 +9,53 @@ require_once $config->get('sysRoot').'alpha/model/types/RelationLookup.inc';
 /**
  * The Relation complex data type
  * 
- * @package Alpha Core Datatype
+ * @package alpha::model::types
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2008 John Collins
  * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class Relation extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * The name of the business object class which this class is related to
 	 *
 	 * @var string
+	 * @since 1.0
 	 */
 	private $relatedClass;
 	
@@ -27,6 +63,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * The name of the fields of the business object class by which this class is related by
 	 *
 	 * @var string
+	 * @since 1.0
 	 */
 	private $relatedClassField;
 	
@@ -34,6 +71,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * The name of the field from the related business object class which is displayed by the selection widget
 	 *
 	 * @var string
+	 * @since 1.0
 	 */
 	private $relatedClassDisplayField;
 	
@@ -41,6 +79,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * An array of fields to use the values of while rendering related display values via the selection widget
 	 * 
 	 * @var array
+	 * @since 1.0
 	 */
 	private $relatedClassHeaderFields = array();
 		
@@ -48,6 +87,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * The name of the business object class on the left of a MANY-TO-MANY relation 
 	 *
 	 * @var string
+	 * @since 1.0
 	 */
 	private $relatedClassLeft;
 	
@@ -56,6 +96,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * MANY-TO-MANY relation which is displayed by the selection widget
 	 *
 	 * @var string
+	 * @since 1.0
 	 */
 	private $relatedClassLeftDisplayField;
 	
@@ -63,6 +104,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * The name of the business object class on the right of a MANY-TO-MANY relation 
 	 *
 	 * @var string
+	 * @since 1.0
 	 */
 	private $relatedClassRight;
 	
@@ -71,6 +113,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * MANY-TO-MANY relation which is displayed by the selection widget
 	 *
 	 * @var string
+	 * @since 1.0
 	 */
 	private $relatedClassRightDisplayField;	
 	
@@ -78,6 +121,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * The type of relation ('MANY-TO-ONE','ONE-TO-MANY','ONE-TO-ONE','MANY-TO-MANY')
 	 *
 	 * @var string
+	 * @since 1.0
 	 */
 	private $relationType;
 	
@@ -85,6 +129,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * In the case of MANY-TO-MANY relationship, a lookup object will be required
 	 *
 	 * @var RelationLookup
+	 * @since 1.0
 	 */
 	private $lookup;
 	
@@ -92,6 +137,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * When building a relation with the tag_object BO, set this to the name of the tagged class
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	private $taggedClass;
 	
@@ -99,6 +145,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * An array of the allowable relationship types ('MANY-TO-ONE','ONE-TO-MANY','ONE-TO-ONE','MANY-TO-MANY')
 	 *
 	 * @var array
+	 * @since 1.0
 	 */
 	private $allowableRelationTypes = array('MANY-TO-ONE','ONE-TO-MANY','ONE-TO-ONE','MANY-TO-MANY');
 	
@@ -107,6 +154,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * relation, contains the OID of the object on the current, accessing side.  Can contain NULL.
 	 *
 	 * @var mixed
+	 * @since 1.0
 	 */
 	private $value = NULL;
 	
@@ -114,6 +162,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * The validation rule for the Relation type
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	private $validationRule;
 	
@@ -121,25 +170,30 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * The error message for the Relation type when validation fails
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	protected $helper;
 	
 	/**
 	 * The size of the value for the this Relation
 	 * 
-	 * @var int
+	 * @var integer
+	 * @since 1.0
 	 */
 	private $size = 11;
 	
 	/**
 	 * The absolute maximum size of the value for the this Relation
 	 * 
-	 * @var int
+	 * @var integer
+	 * @since 1.0
 	 */
 	const MAX_SIZE = 11;
 	
 	/**
 	 * Constructor
+	 * 
+	 * @since 1.0
 	 */
 	public function __construct() {
 		$this->validationRule = DEFAULT_INTEGER;		
@@ -151,6 +205,8 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 *
 	 * @param string $RC
 	 * @param string $side Only required for MANY-TO-MANY relations
+	 * @since 1.0
+	 * @throws IllegalArguementException
 	 */
 	public function setRelatedClass($RC, $side='') {		
 		if(in_array($RC, AlphaDAO::getBOClassNames())) {
@@ -179,6 +235,8 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 *
 	 * @param string $RC
 	 * @return string
+	 * @since 1.0
+	 * @throws IllegalArguementException
 	 */
 	public function getRelatedClass($side='') {		
 		switch($side) {
@@ -201,6 +259,9 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * Setter for the field of the related class
 	 *
 	 * @param string $RCF
+	 * @since 1.0
+	 * @throws IllegalArguementException
+	 * @throws AlphaException
 	 */
 	public function setRelatedClassField($RCF) {
 		try{
@@ -229,6 +290,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * Getter for the field of the related class
 	 *
 	 * @return string
+	 * @since 1.0
 	 */
 	public function getRelatedClassField() {
 		return $this->relatedClassField;
@@ -239,6 +301,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * render from the related class
 	 * 
 	 * @param array $fieldNames
+	 * @since 1.0
 	 */
 	public function setRelatedClassHeaderFields($fieldNames) {
 		$this->relatedClassHeaderFields = $fieldNames;
@@ -248,6 +311,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * Getter for the selection widget field headings of the related class
 	 *
 	 * @return array
+	 * @since 1.0
 	 */
 	public function getRelatedClassHeaderFields() {
 		return $this->relatedClassHeaderFields;
@@ -258,6 +322,8 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 *
 	 * @param string $RCDF
 	 * @param string $side Only required for MANY-TO-MANY relations
+	 * @since 1.0
+	 * @throws IllegalArguementException
 	 */
 	public function setRelatedClassDisplayField($RCDF, $side='') {
 		switch($side) {
@@ -280,6 +346,8 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 *
 	 * @param string $side Only required for MANY-TO-MANY relations
 	 * @return string
+	 * @since 1.0
+	 * @throws IllegalArguementException
 	 */
 	public function getRelatedClassDisplayField($side='') {
 		switch($side) {
@@ -304,6 +372,8 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * @param string $RT
 	 * @throws IllegalArguementException
 	 * @throws FailedLookupCreateException
+	 * @throws IllegalArguementException
+	 * @since 1.0
 	 */
 	public function setRelationType($RT) {
 		if(in_array($RT, $this->allowableRelationTypes)) {
@@ -326,6 +396,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * Getter for the relation type
 	 *
 	 * @return string
+	 * @since 1.0
 	 */
 	public function getRelationType() {
 		return $this->relationType;
@@ -334,7 +405,9 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * Setter for the value (OID of related object) of this relation
 	 *
-	 * @param int $val	 
+	 * @param integer $val
+	 * @since 1.0
+	 * @throws IllegalArguementException
 	 */
 	public function setValue($val) {
 		if(empty($val)) {
@@ -356,6 +429,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * Getter for the Relation value
 	 *
 	 * @return mixed
+	 * @since 1.0
 	 */
 	public function getValue() {
 		return $this->value;
@@ -365,6 +439,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
  	 * Get the validation rule
  	 *
  	 * @return string
+ 	 * @since 1.0
  	 */
  	public function getRule() {
 		return $this->validationRule;
@@ -374,6 +449,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * Setter to override the default validation rule
 	 *
 	 * @param string $rule
+	 * @since 1.0
 	 */
 	public function setRule($rule) {
 		$this->validationRule = $rule;
@@ -385,6 +461,9 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 *
 	 * @param string $accessingClassName Used to indicate the reading side when accessing from MANY-TO-MANY relation (leave blank for other relation types)
 	 * @return string
+	 * @since 1.0
+	 * @throws IllegalArguementException
+	 * @throws AlphaException
 	 */
 	public function getRelatedClassDisplayFieldValue($accessingClassName='') {
 		global $config;
@@ -396,15 +475,11 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 			 * 3. Access the value of the field on the object to build the
 			 * comma-seperated list.
 			 */
-			if(empty($this->lookup)) {
+			if(empty($this->lookup))
 				throw new AlphaException('Tried to load related MANY-TO-MANY fields but no RelationLookup set on the Relation object!');
-				return '';
-			}
 			
-			if(empty($accessingClassName)) {
+			if(empty($accessingClassName))
 				throw new IllegalArguementException('Tried to load related MANY-TO-MANY fields but no accessingClassName parameter set on the call to getRelatedClassDisplayFieldValue!');
-				return '';
-			}
 			
 			// load objects on the right from accessing on the left			
 			if($accessingClassName == $this->relatedClassLeft) {
@@ -456,6 +531,9 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * 
 	 * string $accessingClassName Used to indicate the reading side when accessing from MANY-TO-MANY relation (leave blank for other relation types)
 	 * @return array
+	 * @since 1.0
+	 * @throws IllegalArguementException
+	 * @throws AlphaException
 	 */
 	public function getRelatedObjects($accessingClassName='') {
 		global $config;
@@ -478,12 +556,10 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 		}else{ // MANY-TO-MANY
 			if(empty($this->lookup)) {
 				throw new AlphaException('Tried to load related MANY-TO-MANY objects but no RelationLookup set on the Relation object!');
-				return '';
 			}
 			
 			if(empty($accessingClassName)) {
 				throw new IllegalArguementException('Tried to load related MANY-TO-MANY objects but no accessingClassName parameter set on the call to getRelatedObjects!');
-				return '';
 			}
 			
 			$objects = array();
@@ -521,6 +597,8 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * For one-to-one relations, get the object on the other side
 	 * 
 	 * @return array
+	 * @since 1.0
+	 * @throws AlphaException
 	 */
 	public function getRelatedObject() {
 		global $config;
@@ -540,7 +618,8 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	/**
 	 * Get the allowable size of the Relation in the database field
 	 *	
-	 * @return int
+	 * @return integer
+	 * @since 1.0
 	 */
 	public function getSize() {
 		return $this->size;
@@ -550,6 +629,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * Get the lookup object if available (only on MANY-TO-MANY relations, null otherwise)
 	 * 
 	 * @return RelationLookup
+	 * @since 1.0
 	 */
 	public function getLookup() {
 		return $this->lookup;
@@ -560,6 +640,8 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 *
 	 * @param string $BOClassname
 	 * @return string
+	 * @since 1.0
+	 * @throws IllegalArguementException
 	 */
 	public function getSide($BOClassname) {		
 		if($BOClassname == $this->relatedClassLeft) { 
@@ -568,7 +650,6 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 			return 'right';
 		}else{
 			throw new IllegalArguementException('Error trying to determine the MANY-TO-MANY relationship side for the classname ['.$BOClassname.']');
-			return '';
 		}
 	}
 	
@@ -577,6 +658,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * to the tag_object BO.
 	 * 
 	 * @param $taggedClass
+	 * @since 1.0
 	 */
 	public function setTaggedClass($taggedClass) {
 		$this->taggedClass = $taggedClass;
