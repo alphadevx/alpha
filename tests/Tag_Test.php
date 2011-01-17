@@ -117,6 +117,19 @@ class Tag_Test extends PHPUnit_Framework_TestCase {
     	}
     	$this->assertTrue($found, 'Testing the tag_object::tokenize method returns a tag called "unittestarticle"');
     }
+    
+    /**
+     * testing the loadTags() method for accessing the tags on a given object type directly
+     */
+    public function testLoadTags() {
+    	$this->article->save();    	
+    	$tagsA = $this->article->getPropObject('tags')->getRelatedObjects();
+    	
+    	$tag = new tag_object();
+    	$tagsB = $tag->loadTags('article_object', $this->article->getOID());
+    	
+    	$this->assertEquals(count($tagsA), count($tagsB), 'testing the loadTags() method for accessing the tags on a given object type directly');
+    }
 }
 
 ?>
