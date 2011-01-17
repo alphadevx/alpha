@@ -1,6 +1,7 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
+require_once $config->get('sysRoot').'alpha/view/ArticleView.inc';
 require_once $config->get('sysRoot').'alpha/model/article_object.inc';
 
 /**
@@ -71,7 +72,53 @@ class AlphaView_Test extends PHPUnit_Framework_TestCase {
     		$this->fail($e->getMessage());
     	}
     }
-
+    
+    /**
+     * testing that we can attach a good BO to an existing view object
+     */
+    public function testSetBOGood() {
+    	try{
+    		$this->view->setBO(new article_object());
+    		$this->assertTrue(true);
+    	}catch (IllegalArguementException $e) {
+    		$this->fail($e->getMessage());
+    	}
+    }
+    
+	/**
+     * testing that attempting to attach a bad BO object to an existing view object will cause an exception
+     */
+    public function testSetBOBad() {
+    	try{
+    		$this->view->setBO(new AlphaView_Test());
+    		$this->fail('testing that attempting to attach a bad BO object to an existing view object will cause an exception');
+    	}catch (IllegalArguementException $e) {
+    		$this->assertTrue(true);
+    	}
+    }
+    
+    /**
+     * testing that a bad mode param provided to the loadTemplate method will throw an exception
+     */
+    public function testLoadTemplateBad() {
+    	try {
+    		$this->view->loadTemplate($this->view->getBO(), 'BadMode', array());
+    		$this->fail('testing that a bad mode param provided to the loadTemplate method will throw an exception');
+    	}catch (IllegalArguementException $e) {
+    		$this->assertEquals('No [BadMode] HTML template found for class [article_object]', $e->getMessage(), 'testing that a bad mode param provided to the loadTemplate method will throw an exception');
+    	}
+    }
+    
+    /**
+     * testing accessing the attached BO via getBO()
+     */
+    public function testGetBO() {
+    	$article = new article_object();
+    	$article->set('title', 'Test Article');
+    	$this->view->setBO($article);
+    	
+    	$this->assertEquals('Test Article', $this->view->getBO()->get('title'), 'testing accessing the attached BO via getBO()');
+    }
 }
 
 ?>
