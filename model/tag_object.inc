@@ -8,16 +8,52 @@ require_once $config->get('sysRoot').'alpha/util/helpers/Validator.inc';
  * The tag class used in tag clouds and search
  * 
  * @package alpha::model
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2009 John Collins
- * @version $Id$ 
+ * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
- */ 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
+ */
 class tag_object extends AlphaDAO {
 	/**
 	 * The name of the class of the object which is tagged
 	 *
 	 * @var String
+	 * @since 1.0
 	 */
 	protected $taggedClass;
 	
@@ -25,6 +61,7 @@ class tag_object extends AlphaDAO {
 	 * The OID of the object which is tagged
 	 *
 	 * @var Integer
+	 * @since 1.0
 	 */
 	protected $taggedOID;
 	
@@ -32,6 +69,7 @@ class tag_object extends AlphaDAO {
 	 * The content of the tag
 	 *
 	 * @var String
+	 * @since 1.0
 	 */
 	protected $content;
 	
@@ -39,6 +77,7 @@ class tag_object extends AlphaDAO {
 	 * An array of data display labels for the class properties
 	 * 
 	 * @var array
+	 * @since 1.0
 	 */
 	protected $dataLabels = array(
 		"OID"=>"Tag ID#",		
@@ -51,6 +90,7 @@ class tag_object extends AlphaDAO {
 	 * The name of the database table for the class
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	const TABLE_NAME = 'tag';
 	
@@ -58,11 +98,14 @@ class tag_object extends AlphaDAO {
 	 * Trace logger
 	 * 
 	 * @var Logger
+	 * @since 1.0
 	 */
 	private static $logger = null;
 	
 	/**
 	 * The constructor
+	 * 
+	 * @since 1.0
 	 */
 	public function __construct() {
 		self::$logger = new Logger('tag_object');
@@ -77,9 +120,11 @@ class tag_object extends AlphaDAO {
 	/**
 	 * Returns an array of tag_objects matching the class and OID provided
 	 * 
-	 * @param $taggedClass
-	 * @param $taggedOID
+	 * @param $taggedClass The class name of the DAO that has been tagged.
+	 * @param $taggedOID The Object ID of the DAO that has been tagged.
 	 * @return array
+	 * @since 1.0
+	 * @throws AlphaException
 	 */
 	public function loadTags($taggedClass, $taggedOID) {
 		global $config;		
@@ -87,21 +132,19 @@ class tag_object extends AlphaDAO {
 		$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE taggedOID='$taggedOID' AND taggedClass='$taggedClass' ORDER BY OID";
 		
 		$this->lastQuery = $sqlQuery;
-
-		$result = mysql_query($sqlQuery);
 		
-		if(mysql_error() != '') {
-			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
+			throw new AlphaException('Failed to object OIDs, MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$sqlQuery.']');
 			return array();
 		}
 		
 		// now build an array of objects to be returned
 		$objects = array();
 		$count = 0;
-		$BO_Class = get_class($this);
+		$BOClass = get_class($this);
 		
-		while($row = mysql_fetch_assoc($result)) {
-			$obj = new $BO_Class();
+		while($row = $result->fetch_array(MYSQLI_ASSOC)) {
+			$obj = new $BOClass();
 			$obj->load($row['OID']);
 			$objects[$count] = $obj;
 			$count++;
@@ -117,23 +160,25 @@ class tag_object extends AlphaDAO {
 	 *  
 	 * @param $limit
 	 * @return array
+	 * @since 1.0
+	 * @throws AlphaException
 	 */
 	public static function getPopularTagsArray($limit) {
 		global $config;		
 		
 		$sqlQuery = "SELECT content, count(*) as count FROM `tag` GROUP BY content ORDER BY count DESC LIMIT $limit";
 		
-		$result = mysql_query($sqlQuery);
+		$this->lastQuery = $sqlQuery;
 		
-		if(mysql_error() != '') {
-			throw new BONotFoundException('Failed to query the tags table, MySql error is ['.mysql_error().'], query ['.$this->lastQuery.']');
+		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
+			throw new AlphaException('Failed to query the tags table, MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$sqlQuery.']');
 			return array();
 		}
 		
 		// now build an array of tags to be returned
 		$popTags = array();		
 		
-		while($row = mysql_fetch_assoc($result)) {			
+		while($row = $result->fetch_array(MYSQLI_ASSOC)) {			
 			$popTags[$row['content']] = $row['count'];			
 		}
 		
@@ -144,6 +189,9 @@ class tag_object extends AlphaDAO {
 	
 	/**
 	 * Use this callback to create the tclass_toid__tcontent unique table index
+	 * 
+	 * @since 1.0
+	 * @throws AlphaException
 	 */
 	protected function after_checkIndexes_callback() {
 		$indexNames = $this->getIndexes();
@@ -160,10 +208,8 @@ class tag_object extends AlphaDAO {
 				
 			$this->lastQuery = $sqlQuery;
 		
-			$result = mysql_query($sqlQuery);
-		
-			if (mysql_error() != '') {				
-				throw new AlphaException('Failed to create the index [tclass_toid_tcontent_unq_idx] on ['.$this->getTableName().'], error is ['.mysql_error().']');
+			if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
+				throw new AlphaException('Failed to create the index [tclass_toid_tcontent_unq_idx] on ['.$this->getTableName().'], error is ['.AlphaDAO::getConnection()->error.']');
 			}
 		}
 	}
@@ -177,6 +223,7 @@ class tag_object extends AlphaDAO {
 	 * @param $taggedOID Optionally provide a BO instance OID
 	 * @param $applyStopwords Defaults true, set to false if you want to ignore the stopwords.
 	 * @return array
+	 * @since 1.0
 	 */
 	public static function tokenize($content, $taggedClass='', $taggedOID='', $applyStopwords=true) {
 		if(self::$logger == null)

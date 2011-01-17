@@ -96,8 +96,8 @@ class ViewImage extends AlphaController implements AlphaControllerInterface {
 			$imgHeight = $params['h'];
 			$imgType = $params['t'];
 			$imgQuality = $params['q'];
-			$imgScale = $params['sc'];
-			$imgSecure = $params['se'];
+			$imgScale = (boolean)$params['sc'];
+			$imgSecure = (boolean)$params['se'];
 		}catch (Exception $e) {
 			self::$logger->error('Required param missing for ViewImage controller['.$e->getMessage().']');
 			throw new ResourceNotFoundException('File not found');

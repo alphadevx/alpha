@@ -99,7 +99,7 @@ class MarkdownFacade {
 		    	elseif($imgType == 3)
 		    		$type = 'png';
 		    		
-				$img = new Image($path, $image_details[0], $image_details[1], $type, 0.95, false, $config->get('sysCMSImagesWidgetSecure'));
+				$img = new Image($path, $image_details[0], $image_details[1], $type, 0.95, false, (boolean)$config->get('sysCMSImagesWidgetSecure'));
 				//$result = $img->renderHTMLLink();
 				$this->content = str_replace($attachmentURL, $img->renderHTMLLink(), $this->content);
 			}else{
