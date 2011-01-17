@@ -162,6 +162,16 @@ class AlphaView {
 		
 		self::$logger->debug('<<setBO');
 	}
+	
+	/**
+	 * Gets the BO attached to this view (if any)
+	 * 
+	 * @return AlphaDAO
+	 * @since 1.0
+	 */
+	public function getBO() {
+		return $this->BO;
+	}
 
 	/**
 	 * Renders the default create view to standard output
@@ -1480,6 +1490,7 @@ class AlphaView {
 	 * @param string $mode
 	 * @param array $fields
 	 * @since 1.0
+	 * @throws IllegalArguementException
 	 */
 	public function loadTemplate($BO, $mode, $fields) {
 		self::$logger->debug('>>loadTemplate(BO=['.print_r($BO, true).'], mode=['.$mode.'], fields=['.print_r($fields, true).'])');
@@ -1521,7 +1532,7 @@ class AlphaView {
 		}elseif (file_exists($defaultPath2)) {
 			require $defaultPath2;	
 		}else{
-			throw new AlphaException('No ['.$mode.'] HTML template found for class ['.get_class($BO).']');
+			throw new IllegalArguementException('No ['.$mode.'] HTML template found for class ['.get_class($BO).']');
 		}
 		
 		self::$logger->debug('<<loadTemplate');
