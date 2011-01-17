@@ -9,16 +9,52 @@ require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
  * The main person/user class for the site
  *
  * @package alpha::model
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2009 John Collins
  * @version $Id$
- *
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
+ * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class person_object extends AlphaDAO {
 	/**
 	 * The forum display name of the person
 	 *
 	 * @var String
+	 * @since 1.0
 	 */
 	protected $displayName;
 
@@ -26,6 +62,7 @@ class person_object extends AlphaDAO {
 	 * The email address for the person
 	 *
 	 * @var String
+	 * @since 1.0
 	 */
 	protected $email;
 
@@ -33,6 +70,7 @@ class person_object extends AlphaDAO {
 	 * The password for the person
 	 *
 	 * @var String
+	 * @since 1.0
 	 */
 	protected $password;
 
@@ -40,6 +78,7 @@ class person_object extends AlphaDAO {
 	 * A Relation containing all of the rights groups that this person belongs to
 	 *
 	 * @var Relation
+	 * @since 1.0
 	 */
 	protected $rights;
 
@@ -47,6 +86,7 @@ class person_object extends AlphaDAO {
 	 * An array of data display labels for the class properties
 	 *
 	 * @var array
+	 * @since 1.0
 	 */
 	protected $dataLabels = array(
 		"OID"=>"Member ID#",		
@@ -62,6 +102,7 @@ class person_object extends AlphaDAO {
 	 * The name of the database table for the class
 	 *
 	 * @var string
+	 * @since 1.0
 	 */
 	const TABLE_NAME = 'person';
 
@@ -69,6 +110,7 @@ class person_object extends AlphaDAO {
 	 * The state of the person (account status)
 	 *
 	 * @var Enum
+	 * @since 1.0
 	 */
 	protected $state;
 
@@ -76,6 +118,7 @@ class person_object extends AlphaDAO {
 	 * The website URL of the person
 	 *
 	 * @var String
+	 * @since 1.0
 	 */
 	protected $URL;
 	
@@ -83,11 +126,14 @@ class person_object extends AlphaDAO {
 	 * Trace logger
 	 * 
 	 * @var Logger
+	 * @since 1.0
 	 */
 	private static $logger = null;
 
 	/**
-	 * constructor for the class that populates all of the complex types with default values
+	 * Constructor for the class that populates all of the complex types with default values
+	 * 
+	 * @since 1.0
 	 */
 	public function __construct() {
 		self::$logger = new Logger('person_object');
@@ -127,6 +173,8 @@ class person_object extends AlphaDAO {
 
 	/**
 	 * Set up the transient attributes for the rights group after it has loaded
+	 * 
+	 * @since 1.0
 	 */
 	protected function after_load_callback() {
 		$this->setupRels();		
@@ -134,6 +182,8 @@ class person_object extends AlphaDAO {
 	
 	/**
 	 * Set up the transient attributes for the site after it has loaded
+	 * 
+	 * @since 1.0
 	 */
 	protected function after_loadByAttribute_callback() {
 		$this->setupRels();
@@ -143,6 +193,8 @@ class person_object extends AlphaDAO {
 	 * Looks up the OID for the Standard rights group, then relates the new person
 	 * to that group if they are not in it already.  If that group does not exist it 
 	 * will be recreated!
+	 * 
+	 * @since 1.0
 	 */
 	protected function after_save_callback() {
 		if($this->getVersionNumber()->getValue() == 1) {
@@ -167,6 +219,8 @@ class person_object extends AlphaDAO {
 	
 	/**
 	 * Encrypts any fields called 'password' posted for the person_object 
+	 * 
+	 * @since 1.0
 	 */
 	protected function before_populateFromPost_callback() {
 		if(isset($_POST['password']) && preg_match(REQUIRED_STRING, $_POST['password']))
@@ -175,6 +229,8 @@ class person_object extends AlphaDAO {
 	
 	/**
 	 * Sets up the Relation definitions on this BO
+	 * 
+	 * @since 1.0
 	 */
 	protected function setupRels() {		
 		// set up MANY-TO-MANY relation person2rights
@@ -192,6 +248,7 @@ class person_object extends AlphaDAO {
 	 * Setter for displayName
 	 *
 	 * @param string $displayName
+	 * @since 1.0
 	 */
 	public function setDisplayName($displayName) {
 		$this->displayName->setValue($displayName);
@@ -201,6 +258,7 @@ class person_object extends AlphaDAO {
 	 * Getter for displayName
 	 *
 	 * @return String
+	 * @since 1.0
 	 */
 	public function getDisplayName() {
 		return $this->displayName;
@@ -211,6 +269,7 @@ class person_object extends AlphaDAO {
 	 *
 	 * @param string $groupName
 	 * @return bool
+	 * @since 1.0
 	 */
 	public function inGroup($groupName) {
 		if(self::$logger == null)
@@ -254,9 +313,10 @@ class person_object extends AlphaDAO {
 	 *
 	 * @param string $message
 	 * @param string $subject
-	 *
+	 * @since 1.0
+	 * @throws MailNotSentException
 	 */
-	function sendMail($message, $subject) {
+	public function sendMail($message, $subject) {
 		global $config;
 
 		$body = '<html><head></head><body><p>Dear '.$this->getDisplayName().',</p>';
@@ -280,6 +340,7 @@ class person_object extends AlphaDAO {
 	 * Generates a random password for the user
 	 *
 	 * @return string
+	 * @since 1.0
 	 */
 	public function generatePassword() {
 		$alphabet = array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
@@ -297,25 +358,28 @@ class person_object extends AlphaDAO {
 	/**
 	 * Method for getting a count of the amount of article comments posted by the user
 	 *
-	 * @return int
+	 * @return integer
+	 * @since 1.0
+	 * @throws AlphaException
 	 */
 	public function getCommentCount() {
 		$temp = new article_comment_object();
 
-		$sql_query = "SELECT COUNT(OID) AS post_count FROM ".article_comment_object::TABLE_NAME." WHERE created_by='".$this->OID."';";
+		$sqlQuery = "SELECT COUNT(OID) AS post_count FROM ".article_comment_object::TABLE_NAME." WHERE created_by='".$this->OID."';";
 
-		$this->lastQuery = $sql_query;
+		$this->lastQuery = $sqlQuery;
 
-		$result = mysql_query($sql_query);
-
-		$row = mysql_fetch_assoc($result);
-
-		if (mysql_error() == '') {
-			return $row['post_count'];
-		}else{
+		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to get the count of the comments posted for the person ['.$this->getDisplayName().'], query is ['.$this->lastQuery.']');
 			return 0;
 		}
+
+		$row = $result->fetch_array(MYSQLI_ASSOC);
+
+		if(isset($row['post_count']))
+			return $row['post_count'];
+		else
+			return 0;
 	}
 }
 

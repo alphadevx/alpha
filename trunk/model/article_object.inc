@@ -1,7 +1,6 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
-require_once $config->get('sysRoot').'alpha/util/handle_error.inc';
 require_once $config->get('sysRoot').'alpha/model/article_vote_object.inc';
 require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
 require_once $config->get('sysRoot').'alpha/model/tag_object.inc';
@@ -12,16 +11,52 @@ require_once $config->get('sysRoot').'alpha/controller/front/FrontController.inc
  * An article class for the CMS
  * 
  * @package alpha::model
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2009 John Collins
  * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
- */ 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
+ */
 class article_object extends AlphaDAO {
 	/**
 	 * The article title
 	 * 
 	 * @var String
+	 * @since 1.0
 	 */
 	protected $title;
 	
@@ -29,6 +64,7 @@ class article_object extends AlphaDAO {
 	 * The article site section
 	 * 
 	 * @var DEnum
+	 * @since 1.0
 	 */
 	protected $section;
 	
@@ -36,6 +72,7 @@ class article_object extends AlphaDAO {
 	 * The description of the article
 	 * 
 	 * @var String
+	 * @since 1.0
 	 */
 	protected $description;
 	
@@ -43,20 +80,23 @@ class article_object extends AlphaDAO {
 	 * Optional custom body onload Javascript
 	 * 
 	 * @var String
+	 * @since 1.0
 	 */
 	protected $bodyOnload;
 	
 	/**
 	 * Any custom HTML header content (e.g. Javascript) for the article
 	 * 
-	 * @var Text;
+	 * @var Text
+	 * @since 1.0
 	 */
 	protected $headerContent;
 	
 	/**
 	 * The article content
 	 * 
-	 * @var Text;
+	 * @var Text
+	 * @since 1.0
 	 */
 	protected $content;
 	
@@ -64,6 +104,7 @@ class article_object extends AlphaDAO {
 	 * The author of the article
 	 * 
 	 * @var String
+	 * @since 1.0
 	 */
 	protected $author;
 	
@@ -71,6 +112,7 @@ class article_object extends AlphaDAO {
 	 * A boolean to control whether the artcile is publically accessible or not
 	 * 
 	 * @var Boolean
+	 * @since 1.0
 	 */
 	protected $published;
 	
@@ -78,6 +120,7 @@ class article_object extends AlphaDAO {
 	 * A Relation containing all of the comments on this article
 	 *
 	 * @var Relation
+	 * @since 1.0
 	 */
 	protected $comments;
 	
@@ -85,6 +128,7 @@ class article_object extends AlphaDAO {
 	 * A Relation containing all of the votes on this article
 	 *
 	 * @var Relation
+	 * @since 1.0
 	 */
 	protected $votes;
 	
@@ -92,6 +136,7 @@ class article_object extends AlphaDAO {
 	 * A Relation containing all of the tags on this article
 	 *
 	 * @var Relation
+	 * @since 1.0
 	 */
 	protected $tags;
 	
@@ -99,6 +144,7 @@ class article_object extends AlphaDAO {
 	 * An array of all of the attributes on this BO which are tagged
 	 *  
 	 * @var array
+	 * @since 1.0
 	 */
 	protected $taggedAttributes = array('title', 'description', 'content');
 	
@@ -106,6 +152,7 @@ class article_object extends AlphaDAO {
 	 * Path to a .text file where the content of this article is stored (optional)
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	private $filePath;
 	
@@ -113,6 +160,7 @@ class article_object extends AlphaDAO {
 	 * An array of data display labels for the class properties
 	 * 
 	 * @var array
+	 * @since 1.0
 	 */
 	protected $dataLabels = array(
 		"OID"=>"Article ID#",		
@@ -137,6 +185,7 @@ class article_object extends AlphaDAO {
 	 * The name of the database table for the class
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	const TABLE_NAME = 'article';
 	
@@ -144,6 +193,7 @@ class article_object extends AlphaDAO {
 	 * The URL for this article (transient)
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	protected $URL;
 	
@@ -151,6 +201,7 @@ class article_object extends AlphaDAO {
 	 * The print URL for this article (transient)
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	protected $printURL;
 	
@@ -158,11 +209,14 @@ class article_object extends AlphaDAO {
 	 * Trace logger
 	 * 
 	 * @var Logger
+	 * @since 1.0
 	 */
 	private static $logger = null;
 	
 	/**
 	 * The constructor which sets up some housekeeping attributes
+	 * 
+	 * @since 1.0
 	 */
 	public function __construct() {
 		self::$logger = new Logger('article_object');
@@ -230,6 +284,8 @@ class article_object extends AlphaDAO {
 	/**
 	 * After creating a new article_object, tokenize the description field to form a set
 	 * of automated tags and save them.
+	 * 
+	 * @since 1.0
 	 */
 	protected function after_save_callback() {
 		if($this->getVersion() == 1 && $this->tags instanceof Relation) {
@@ -250,14 +306,18 @@ class article_object extends AlphaDAO {
 	}
 	
 	/**
-	 * set up the transient URL attributes for the artcile after it has loaded
+	 * Set up the transient URL attributes for the artcile after it has loaded
+	 * 
+	 * @since 1.0
 	 */
 	protected function after_loadByAttribute_callback() {
 		$this->after_load_callback();
 	}
 	
 	/**
-	 * set up the transient URL attributes for the article after it has loaded
+	 * Set up the transient URL attributes for the article after it has loaded
+	 * 
+	 * @since 1.0
 	 */
 	protected function after_load_callback() {
 		global $config;
@@ -297,26 +357,26 @@ class article_object extends AlphaDAO {
 	 * article to the amount specified by the $limit
 	 * 
 	 * @return array
+	 * @since 1.0
+	 * @throws AlphaException
 	 */
 	public function loadRecentWithLimit($limit){
 		$denum = new DEnum('article_object::section');
 		$excludeID = $denum->getOptionID('Main');
 		
-		$sql_query = "SELECT OID FROM ".self::TABLE_NAME." WHERE published='1' AND section!='$excludeID' ORDER BY dateAdded DESC LIMIT 0, $limit;";		
+		$sqlQuery = "SELECT OID FROM ".self::TABLE_NAME." WHERE published='1' AND section!='$excludeID' ORDER BY dateAdded DESC LIMIT 0, $limit;";		
 
-		$this->last_query = $sql_query;
-
-		$result = mysql_query($sql_query);
+		$this->lastQuery = $sqlQuery;
 		
-		if(mysql_error() != '') {
-			throw new AlphaException('Failed to load the OIDs for the most recent articles, MySql error is ['.mysql_error().'], query ['.$sql_query.']');
+		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
+			throw new AlphaException('Failed to load the OIDs for the most recent articles, MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$sqlQuery.']');
 			return array();
 		}
 		
 		$OIDs = array();
 		
 		$i = 0;
-		while ($row = mysql_fetch_assoc($result)) {
+		while($row = $result->fetch_array(MYSQLI_ASSOC)) {
 			$OIDs[$i] = $row['OID'];
 			$i++;
 		}
@@ -328,6 +388,7 @@ class article_object extends AlphaDAO {
 	 * Generates the location of the attachments folder for this article
 	 * 
 	 * @return string
+	 * @since 1.0
 	 */
 	public function getAttachmentsLocation() {
 		global $config;
@@ -339,6 +400,7 @@ class article_object extends AlphaDAO {
 	 * Generates the URL of the attachments folder for this article
 	 * 
 	 * @return string
+	 * @since 1.0
 	 */
 	public function getAttachmentsURL() {
 		global $config;
@@ -350,6 +412,7 @@ class article_object extends AlphaDAO {
 	 * Generates a secure URL for downloading an attachment file via the ViewAttachment controller
 	 * 
 	 * @param string $filename
+	 * @since 1.0
 	 */
 	public function getAttachmentSecureURL($filename) {
 		global $config;
@@ -358,7 +421,10 @@ class article_object extends AlphaDAO {
 	}
 	
 	/**
-	 * creates the attachment folder for the article on the server
+	 * Creates the attachment folder for the article on the server.
+	 * 
+	 * @since 1.0
+	 * @throws AlphaException
 	 */
 	public function createAttachmentsFolder() {
 		// create the attachment directory for the article
@@ -380,6 +446,7 @@ class article_object extends AlphaDAO {
 	 * Method for returning the calculated score for this article
 	 * 
 	 * @return double
+	 * @since 1.0
 	 */
 	public function getArticleScore() {
 		$votes = $this->getArticleVotes();
@@ -402,6 +469,7 @@ class article_object extends AlphaDAO {
 	 * Method for fetching all of the votes for this article
 	 * 
 	 * @return array An array of article_vote_object objects
+	 * @since 1.0
 	 */
 	public function getArticleVotes() {
 		$votes = $this->votes->getRelatedObjects();
@@ -412,7 +480,9 @@ class article_object extends AlphaDAO {
 	/**
 	 * Method to determine if the logged-in user has already voted for this article
 	 * 
-	 * @return boolean true if they have voted already, false otherwise
+	 * @return boolean True if they have voted already, false otherwise
+	 * @since 1.0
+	 * @throws AlphaException
 	 */
 	public function checkUserVoted() {
 		// just going to return true if nobody is logged in
@@ -421,18 +491,16 @@ class article_object extends AlphaDAO {
 		
 		$userID = $_SESSION['currentUser']->getID();
 		
-		$sql_query = "SELECT COUNT(*) AS users_vote FROM article_vote WHERE article_oid='".$this->OID."' AND person_oid='".$userID."';";		
+		$sqlQuery = "SELECT COUNT(*) AS users_vote FROM article_vote WHERE article_oid='".$this->OID."' AND person_oid='".$userID."';";		
 
-		$this->last_query = $sql_query;
-
-		$result = mysql_query($sql_query);
+		$this->lastQuery = $sqlQuery;
 		
-		if(mysql_error() != '') {
-			throw new AlphaException('Failed to check if the current user voted for the article ['.$this->OID.'], MySql error is ['.mysql_error().'], query ['.$sql_query.']');
+		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
+			throw new AlphaException('Failed to check if the current user voted for the article ['.$this->OID.'], MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$sqlQuery.']');
 			return false;
 		}
 		
-		$row = mysql_fetch_assoc($result);
+		$row = $result->fetch_array(MYSQLI_ASSOC);
 		
 		if($row['users_vote'] == "0")
 			return false;
@@ -443,7 +511,8 @@ class article_object extends AlphaDAO {
 	/**
 	 * Method for fetching all of the comments for this article
 	 * 
-	 * @return array an array of article_comment_object objects
+	 * @return array An array of article_comment_object objects
+	 * @since 1.0
 	 */
 	public function getArticleComments() {
 		$comments = $this->comments->getRelatedObjects();		
@@ -455,6 +524,8 @@ class article_object extends AlphaDAO {
 	 * Loads the content of the article_object from the specified file path
 	 * 
 	 * @param $filePath
+	 * @since 1.0
+	 * @throws FileNotFoundException
 	 */
 	public function loadContentFromFile($filePath) {
 		try{
@@ -468,7 +539,8 @@ class article_object extends AlphaDAO {
 	/**
 	 * Returns true if the article content was loaded from a .text file, false otherwise.
 	 * 
-	 * @return bool
+	 * @return boolean
+	 * @since 1.0
 	 */
 	public function isLoadedFromFile() {
 		return ($this->filePath == '' ? false: true);
@@ -479,6 +551,8 @@ class article_object extends AlphaDAO {
 	 * modified.
 	 * 
 	 * @return string
+	 * @since 1.0
+	 * @throws FileNotFoundException
 	 */
 	public function getContentFileDate() {
 		if($this->filePath != '') {
