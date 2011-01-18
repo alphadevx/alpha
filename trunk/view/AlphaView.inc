@@ -10,7 +10,6 @@ require_once $config->get('sysRoot').'alpha/model/types/String.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
-require_once $config->get('sysRoot').'alpha/view/widgets/calendar.php'; // todo: still being used?
 require_once $config->get('sysRoot').'alpha/view/widgets/Button.inc';
 require_once $config->get('sysRoot').'alpha/view/widgets/StringBox.js.php';
 require_once $config->get('sysRoot').'alpha/view/widgets/TextBox.js.php';
