@@ -34,6 +34,7 @@ require_once $config->get('sysRoot').'alpha/tests/Validator_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/AlphaController_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/FrontController_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/AlphaView_Test.php';
+require_once $config->get('sysRoot').'alpha/tests/Image_Test.php';
 
 /*
  * we are supressing the display and logging of errors on this page, as we 
@@ -357,6 +358,19 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('AlphaView_Test');
+		$result = $suite->run();
+		$runningTime+=$result->time();
+		$testCount+=$result->count();
+				
+		$this->printTestResult($result);
+		
+		echo '<p>Running time: '.$runningTime.'</p>';
+		
+		//------------------------------------------------
+		echo '<h3>Image:</h3>';
+		
+		$suite = new PHPUnit_Framework_TestSuite();
+		$suite->addTestSuite('Image_Test');
 		$result = $suite->run();
 		$runningTime+=$result->time();
 		$testCount+=$result->count();

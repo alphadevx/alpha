@@ -12,20 +12,56 @@ require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 
 /**
  * A widget that can generate an image which is scaled to the screen resolution of the
- * user, and can be made secure to prevent hot-linking from remote sites.  Note that by
+ * user, and can be made secured to prevent hot-linking from remote sites.  Note that by
  * default, a jpg file will be returned (the source file can be jpg, png, or gif).
  * 
  * @package alpha::view::widgets
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2010 John Collins
  * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class Image {
 	/**
 	 * The title of the image for alt text (optional).
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	private $title;
 	
@@ -33,6 +69,7 @@ class Image {
 	 * The absolute path to the source image.
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	private $source;
 	
@@ -40,6 +77,7 @@ class Image {
 	 * The width of the image (can differ from the source file when scale=true).
 	 * 
 	 * @var Integer
+	 * @since 1.0
 	 */
 	private $width;
 	
@@ -47,6 +85,7 @@ class Image {
 	 * The height of the image (can differ from the source file when scale=true).
 	 * 
 	 * @var Integer
+	 * @since 1.0
 	 */
 	private $height;
 	
@@ -54,6 +93,7 @@ class Image {
 	 * The file type of the source image (gif, jpg, or png supported)
 	 * 
 	 * @var Enum
+	 * @since 1.0
 	 */
 	private $sourceType;
 	
@@ -61,6 +101,7 @@ class Image {
 	 * The quality of the jpg image generated (0.00 to 1.00, 0.75 by default).
 	 * 
 	 * @var Double
+	 * @since 1.0
 	 */
 	private $quality;
 	
@@ -68,7 +109,8 @@ class Image {
 	 * Flag to determine if the image will scale to match the target resolution (false
 	 * by default).
 	 * 
-	 * @var Boolean 
+	 * @var Boolean
+	 * @since 1.0
 	 */
 	private $scale;
 	
@@ -77,6 +119,7 @@ class Image {
 	 * to the image difficult (false by default).
 	 * 
 	 * @var Boolean
+	 * @since 1.0
 	 */
 	private $secure;
 	
@@ -84,6 +127,7 @@ class Image {
 	 * The auto-generated name of the cache file for the image.
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	private $filename;
 	
@@ -91,6 +135,7 @@ class Image {
 	 * Trace logger
 	 * 
 	 * @var Logger
+	 * @since 1.0
 	 */
 	private static $logger = null;
 	
@@ -103,6 +148,8 @@ class Image {
 	 * @param $sourceType
 	 * @param $quality
 	 * @param $scale
+	 * @throws IllegalArguementException
+	 * @since 1.0
 	 */
 	public function __construct($source, $width, $height, $sourceType, $quality=0.75, $scale=false, $secure=false) {
 		self::$logger = new Logger('Image');
@@ -119,6 +166,9 @@ class Image {
 		$this->sourceType = new Enum();
 		$this->sourceType->setOptions(array('jpg','png','gif'));
 		$this->sourceType->setValue($sourceType);
+		
+		if($quality < 0.0 || $quality > 1.0)
+			throw new IllegalArguementException('The quality setting of ['.$quality.'] is outside of the allowable range of 0.0 to 1.0');
 		
 		$this->quality = new Double($quality);
 		$this->scale = new Boolean($scale);
@@ -138,6 +188,7 @@ class Image {
 	 * 
 	 * @param $altText Set this value to render alternate text as part of the HTML link (defaults to no alternate text)
 	 * @return string
+	 * @since 1.0
 	 */
 	public function renderHTMLLink($altText='') {
 		global $config;
@@ -152,6 +203,9 @@ class Image {
 	
 	/**
 	 * Setter for the filename, which also creates a sub-directory under /cache for images when required
+	 * 
+	 * @since 1.0
+	 * @throws AlphaException
 	 */
 	private function setFilename() {
 		global $config;
@@ -169,7 +223,7 @@ class Image {
 				$success = mkdir($cacheDir);
 			
 				if (!$success) {
-					$error = new handle_error($_SERVER["PHP_SELF"],'Unable to create the folder '.$cacheDir.' for the cache image, source file is '.$this->source.'.' ,'set_filename()','framework');
+					throw new AlphaException('Unable to create the folder '.$cacheDir.' for the cache image, source file is '.$this->source);
 				}
 				
 				// ...and set write permissions on the folder
@@ -191,7 +245,18 @@ class Image {
 	}
 	
 	/**
-	 * Renders the actual binary image using GD library calls.	 
+	 * Gets the auto-generated filename for the image in the /cache directory
+	 * 
+	 * @since 1.0
+	 */
+	public function getFilename() {
+		return $this->filename;
+	}
+	
+	/**
+	 * Renders the actual binary image using GD library calls.
+	 * 
+	 *  @since 1.0
 	 */
 	public function renderImage() {
 		global $config;
@@ -216,6 +281,7 @@ class Image {
 				    header("Content-Type: image/jpeg");
 					imagejpeg($im);
 			    }
+			    
 				imagedestroy($im);
 				
 				self::$logger->warn('The client ['.$_SERVER['HTTP_USER_AGENT'].'] was blocked from accessing the file ['.$this->filename.'] due to bad security tokens being provided');
@@ -319,6 +385,7 @@ class Image {
 	 * Caches the image to the cache directory
 	 * 
 	 * @param image $image the binary GD image stream to save
+	 * @since 1.0
 	 */
 	private function cache($image) {
 		global $config;
@@ -333,29 +400,33 @@ class Image {
 	 * Used to check the image cache for the image jpeg cache file.
 	 * 	 
 	 * @return bool
+	 * @since 1.0
 	 */
 	private function checkCache() {
 		return file_exists($this->filename);
 	}
 	
 	/**
-	 * Method to load the content of the image cache file to the standard output stream (the browser)	 
+	 * Method to load the content of the image cache file to the standard output stream (the browser)
+	 * 
+	 * @since 1.0
 	 */
 	private function loadCache() {		
 		readfile($this->filename);		
 	}
 	
 	/**
-	 * Converts a URL for an image to a relative path for the image, assuming it is
+	 * Converts a URL for an image to a relative file system path for the image, assuming it is
 	 * hosted on the same server as the application.
 	 * 
 	 * @param string $imgURL
 	 * @return string the path of the image
+	 * @since 1.0
 	 */
 	public static function convertImageURLToPath($imgURL) {
 		global $config;
 		
-		$imgPath = str_replace($config->get('sysURL'), '', $imgURL);
+		$imgPath = str_replace($config->get('sysURL').'/', '', $imgURL);
 		
 		return $imgPath;
 	}
