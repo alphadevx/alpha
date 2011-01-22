@@ -153,7 +153,6 @@ class Image {
 	 */
 	public function __construct($source, $width, $height, $sourceType, $quality=0.75, $scale=false, $secure=false) {
 		self::$logger = new Logger('Image');
-			
 		self::$logger->debug('>>__construct(source=['.$source.'], width=['.$width.'], height=['.$height.'], sourceType=['.$sourceType.'], quality=['.$quality.'], scale=['.$scale.'], secure=['.$secure.'])');
 			
 		global $config;
