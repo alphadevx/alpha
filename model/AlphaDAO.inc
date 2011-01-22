@@ -514,7 +514,7 @@ abstract class AlphaDAO {
 	 * @param integer $limit The amount (limit) of objects to load, useful for pagination.
 	 * @param string $orderBy The name of the field to sort the objects by.
 	 * @param string $order The order to sort the objects by.
-	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type TODO
+	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
 	 * @return array An array containing objects of this type of business object.
 	 * @since 1.0
 	 * @throws BONotFoundException
@@ -606,7 +606,7 @@ abstract class AlphaDAO {
 	 * @param integer $limit The amount (limit) of objects to load, useful for pagination.
 	 * @param string $orderBy The name of the field to sort the objects by.
 	 * @param string $order The order to sort the objects by.
-	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type TODO
+	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
 	 * @return array An array containing objects of this type of business object.
 	 * @since 1.0
 	 * @throws BONotFoundException
@@ -704,7 +704,7 @@ abstract class AlphaDAO {
 	 * @param integer $limit The amount (limit) of objects to load, useful for pagination.
 	 * @param string $orderBy The name of the field to sort the objects by.
 	 * @param string $order The order to sort the objects by.
-	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type TODO
+	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
 	 * @return array An array containing objects of this type of business object.
 	 * @since 1.0
 	 * @throws BONotFoundException
