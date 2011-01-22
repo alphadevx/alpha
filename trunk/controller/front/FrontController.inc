@@ -548,7 +548,7 @@ class FrontController {
 			$this->populateGetVars();
 			$this->pageController = $_GET['act'];
 		}else{
-			for($i = 1; $i < count($params); $i++) {
+			for($i = 1; $i < count($params); $i+=2) {
 				if(isset($params[$i+1])) {
 					if(!empty($_POST))
 						$_REQUEST[$params[$i]] = $params[$i+1];
