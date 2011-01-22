@@ -13,7 +13,7 @@ require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
 require_once $config->get('sysRoot').'alpha/view/widgets/Button.inc';
 require_once $config->get('sysRoot').'alpha/view/widgets/StringBox.js.php';
 require_once $config->get('sysRoot').'alpha/view/widgets/TextBox.js.php';
-require_once $config->get('sysRoot').'alpha/view/widgets/RecordSelector.php';
+require_once $config->get('sysRoot').'alpha/view/widgets/RecordSelector.inc';
 require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
 
 /**
@@ -1325,12 +1325,12 @@ class AlphaView {
 				try{
 					// check to see if the rel is on this class
 					$rel->getSide(get_class($this->BO));
-					$widget = new RecordSelector($rel, $label, $name, true, get_class($this->BO));
+					$widget = new RecordSelector($rel, $label, $name, get_class($this->BO));
 					$html .= $widget->render($tableTags, $expanded, $buttons);
 				}catch (IllegalArguementException $iae) {
 					// the rel may be on a parent class
 					$parentClassName = $this->BO->getTableName().'_object';
-					$widget = new RecordSelector($rel, $label, $name, true, $parentClassName);
+					$widget = new RecordSelector($rel, $label, $name, $parentClassName);
 					$html .= $widget->render($tableTags, $expanded, $buttons);
 				}
 			}else{

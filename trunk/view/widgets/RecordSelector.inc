@@ -6,8 +6,6 @@ if(!isset($config)) {
 	$config = AlphaConfig::getInstance();
 }
 
-require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
-require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
 require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Relation.inc';
@@ -17,9 +15,44 @@ require_once $config->get('sysRoot').'alpha/view/widgets/Button.inc';
  * Record selection HTML widget.
  * 
  * @package alpha::view::widgets
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2009 John Collins
  * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
+ * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
  *  
  */
 class RecordSelector {
@@ -27,6 +60,7 @@ class RecordSelector {
 	 * The relation object that we are going to render a view for.
 	 * 
 	 * @var Relation
+	 * @since 1.0
 	 */
 	private $relationObject = null;
 
@@ -34,6 +68,7 @@ class RecordSelector {
 	 * The label text to use where required.
 	 *  
 	 * @var string
+	 * @since 1.0
 	 */
 	private $label;
 	
@@ -42,6 +77,7 @@ class RecordSelector {
 	 * (leave blank for other relation types).
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	private $accessingClassName;
 	
@@ -49,6 +85,7 @@ class RecordSelector {
 	 * Javascript to run when the widget opens in a new window.
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	private $onloadJS = '';
 	
@@ -56,34 +93,55 @@ class RecordSelector {
 	 * The name of the HTML input box for storing the hidden and display values.
 	 * 
 	 * @var string
+	 * @since 1.0
 	 */
 	private $name;
 	
 	/**
+	 * Trace logger
+	 * 
+	 * @var Logger
+	 * @since 1.0
+	 */
+	private static $logger = null;
+	
+	/**
 	 * The constructor.
 	 * 
-	 * @param Relation $object
+	 * @param Relation $relation
 	 * @param string $label
 	 * @param string $name
-	 * @param bool $TableTags
 	 * @param string $accessingClassName
+	 * @since 1.0
+	 * @throws IllegalArguementException
 	 */
-	public function __construct($object, $label='', $name='', $TableTags=true, $accessingClassName='') {
-		$this->relationObject = $object;		
+	public function __construct($relation, $label='', $name='', $accessingClassName='') {
+		self::$logger = new Logger('RecordSelector');
+		self::$logger->debug('>>__construct(relation=['.$relation.'], label=['.$label.'], name=['.$name.'], accessingClassName=['.$accessingClassName.'])');
+		
+		if(!$relation instanceof Relation)
+			throw new IllegalArguementException('Invalid Relation object provided to the RecordSelector constructor!');
+		
+		$this->relationObject = $relation;		
 		$this->label = $label;
 		$this->name = $name;
 		$this->accessingClassName = $accessingClassName;
+		
+		self::$logger->debug('<<__construct');
 	}
 	
 	/**
 	 * Renders the text boxes and buttons for the widget, that will appear in user forms.
 	 * 
-	 * @param bool $TableTags Include table tags and label (optional)
+	 * @param bool $tableTags Include table tags and label (optional)
 	 * @param bool $expanded Render the related fields in expanded format or not (optional)
 	 * @param bool $buttons Render buttons for expanding/contacting the related fields (optional)
 	 * @return string
+	 * @since 1.0
 	 */
-	public function render($TableTags=true, $expanded=false, $buttons=true) {
+	public function render($tableTags=true, $expanded=false, $buttons=true) {
+		self::$logger->debug('>>render(tableTags=['.$tableTags.'], expanded=['.$expanded.'], buttons=['.$buttons.'])');
+		
 		global $config;
 		
 		$html = '';
@@ -93,19 +151,23 @@ class RecordSelector {
 			// value to appear in the text-box
 			$inputBoxValue = $this->relationObject->getRelatedClassDisplayFieldValue();		
 				
-			if($TableTags) {
+			if($tableTags) {
 				$html .= '<tr><th style="width:25%;">';
 				$html .= $this->label;
 				$html .= '</th>';
 					
 				$html .= '<td>';			
 				$html .= '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
-				$tmp = new Button("$('#recordSelector').dialog('open'); $('#recordSelector').load('".$config->get('sysURL')."/alpha/view/widgets/RecordSelector.php?value='+document.getElementById('".$this->name."').value+'&field=".$this->name."&relatedClass=".$this->relationObject->getRelatedClass()."&relatedClassField=".$this->relationObject->getRelatedClassField()."&relatedClassDisplayField=".$this->relationObject->getRelatedClassDisplayField()."&relationType=".$this->relationObject->getRelationType()."');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
+				$js = "$('#recordSelector').dialog('open');
+				 $('#recordSelector').load('".$config->get('sysURL')."ViewRecordSelector/value/'+document.getElementById('".$this->name."').value+'/field/".$this->name."/relatedClass/".$this->relationObject->getRelatedClass()."/relatedClassField/".$this->relationObject->getRelatedClassField()."/relatedClassDisplayField/".$this->relationObject->getRelatedClassDisplayField()."/relationType/".$this->relationObject->getRelationType()."');";
+				$tmp = new Button($js, "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
 				$html .= $tmp->render();
 				$html .= '</td></tr>';
 			}else{
 				$html .= '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
-				$tmp = new Button("$('#recordSelector').dialog('open'); $('#recordSelector').load('".$config->get('sysURL')."/alpha/view/widgets/RecordSelector.php?value='+document.getElementById('".$this->name."').value+'&field=".$this->name."&relatedClass=".$this->relationObject->getRelatedClass()."&relatedClassField=".$this->relationObject->getRelatedClassField()."&relatedClassDisplayField=".$this->relationObject->getRelatedClassDisplayField()."&relationType=".$this->relationObject->getRelationType()."');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
+				$js = "$('#recordSelector').dialog('open');
+				 $('#recordSelector').load('".$config->get('sysURL')."ViewRecordSelector/value/'+document.getElementById('".$this->name."').value+'/field/".$this->name."/relatedClass/".$this->relationObject->getRelatedClass()."/relatedClassField/".$this->relationObject->getRelatedClassField()."/relatedClassDisplayField/".$this->relationObject->getRelatedClassDisplayField()."/relationType/".$this->relationObject->getRelationType()."');";
+				$tmp = new Button($js, "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
 				$html .= $tmp->render();
 			}
 				
@@ -122,7 +184,7 @@ class RecordSelector {
 		if($this->relationObject->getRelationType() == 'ONE-TO-MANY') {
 			$objects = $this->relationObject->getRelatedObjects();			
 			
-			if(count($objects) > 0 && $TableTags) {
+			if(count($objects) > 0 && $tableTags) {
 				// render tags differently			
 				if($this->name == 'tags' && $this->relationObject->getRelatedClass() == 'tag_object') {
 					$html .= '<tr><td colspan="2">'.$this->label.': ';
@@ -228,7 +290,7 @@ class RecordSelector {
 			// replace commas with line returns
 			$inputBoxValue = str_replace(",", "\n", $inputBoxValue);
 			
-			if($TableTags) {
+			if($tableTags) {
 				$html .= '<tr><th style="width:25%;">';
 				$html .= $this->label;
 				$html .= '</th>';
@@ -238,7 +300,9 @@ class RecordSelector {
 				$html .= $inputBoxValue;
 				$html .= '</textarea>';
 				$html .= '<div align="center">';
-				$tmp = new Button("$('#recordSelector').dialog('open'); $('#recordSelector').load('".$config->get('sysURL')."/alpha/view/widgets/RecordSelector.php?lookupOIDs='+document.getElementById('".$this->name."').value+'&value='+document.getElementById('".$this->name."_OID').value+'&field=".$this->name."&relatedClassLeft=".$this->relationObject->getRelatedClass('left')."&relatedClassLeftDisplayField=".$this->relationObject->getRelatedClassDisplayField('left')."&relatedClassRight=".$this->relationObject->getRelatedClass('right')."&relatedClassRightDisplayField=".$this->relationObject->getRelatedClassDisplayField('right')."&accessingClassName=".$this->accessingClassName."&relationType=".$this->relationObject->getRelationType()."');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
+				$js = "$('#recordSelector').dialog('open');
+				 $('#recordSelector').load('".$config->get('sysURL')."ViewRecordSelector/lookupOIDs/'+document.getElementById('".$this->name."').value+'/value/'+document.getElementById('".$this->name."_OID').value+'/field/".$this->name."/relatedClassLeft/".$this->relationObject->getRelatedClass('left')."/relatedClassLeftDisplayField/".$this->relationObject->getRelatedClassDisplayField('left')."/relatedClassRight/".$this->relationObject->getRelatedClass('right')."/relatedClassRightDisplayField/".$this->relationObject->getRelatedClassDisplayField('right')."/accessingClassName/".$this->accessingClassName."/relationType/".$this->relationObject->getRelationType()."');";
+				$tmp = new Button($js, "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
 				$html .= $tmp->render();
 				$html .= '</div>';
 				$html .= '</td></tr>';
@@ -246,7 +310,9 @@ class RecordSelector {
 				$html .= '<textarea id="'.$this->name.'_display" style="width:95%;" rows="5" readonly>';
 				$html .= $inputBoxValue;
 				$html .= '</textarea>';
-				$tmp = new Button("$('#recordSelector').dialog('open'); $('#recordSelector').load('".$config->get('sysURL')."/alpha/view/widgets/RecordSelector.php?lookupOIDs='+document.getElementById('".$this->name."').value+'&value='+document.getElementById('".$this->name."_OID').value+'&field=".$this->name."&relatedClassLeft=".$this->relationObject->getRelatedClass('left')."&relatedClassLeftDisplayField=".$this->relationObject->getRelatedClassDisplayField('left')."&relatedClassRight=".$this->relationObject->getRelatedClass('right')."&relatedClassRightDisplayField=".$this->relationObject->getRelatedClassDisplayField('right')."&accessingClassName=".$this->accessingClassName."&relationType=".$this->relationObject->getRelationType()."');", "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
+				$js = "$('#recordSelector').dialog('open');
+				 $('#recordSelector').load('".$config->get('sysURL')."ViewRecordSelector/lookupOIDs/'+document.getElementById('".$this->name."').value+'/value/'+document.getElementById('".$this->name."_OID').value+'/field/".$this->name."/relatedClassLeft/".$this->relationObject->getRelatedClass('left')."/relatedClassLeftDisplayField/".$this->relationObject->getRelatedClassDisplayField('left')."/relatedClassRight/".$this->relationObject->getRelatedClass('right')."/relatedClassRightDisplayField/".$this->relationObject->getRelatedClassDisplayField('right')."/accessingClassName/".$this->accessingClassName."/relationType/".$this->relationObject->getRelationType()."');";
+				$tmp = new Button($js, "Insert record link", "relBut", $config->get('sysURL')."/alpha/images/icons/application_link.png");
 				$html .= $tmp->render();
 			}
 			
@@ -261,16 +327,23 @@ class RecordSelector {
 			$html .= '<input type="hidden" name="'.$this->name.'" id="'.$this->name.'" value="'.implode(',', $lookupOIDs).'"/>';
 		}
 		
+		self::$logger->debug('<<__render [html]');
 		return $html;
 	}
 	
 	/**
-	 * Renders the HTML for the record selector that will appear in a pop-up window.
+	 * Returns the HTML for the record selector that will appear in a pop-up window.
+	 * 
+	 * @param array $lookupOIDs An optional array of related look-up OIDs, only required for rendering MANY-TO-MANY rels
+	 * @since 1.0
+	 * @return string
 	 */
-	public function renderSelector() {
+	public function renderSelector($lookupOIDs=array()) {
+		self::$logger->debug('>>renderSelector(lookupOIDs=['.print_r($lookupOIDs, true).'])');
+		
 		global $config;
 		
-		$this->displayPageHead();
+		$html = $this->displayPageHead();
 		
 		if($this->relationObject->getRelationType() == 'MANY-TO-MANY') {
 			
@@ -284,7 +357,9 @@ class RecordSelector {
 				$fieldLabel = $tmpObject->getDataLabel($fieldName);
 				$oidLabel = $tmpObject->getDataLabel('OID');
 				
-				$objects = $tmpObject->loadAll(0, 0, 'OID', 'DESC');
+				$objects = $tmpObject->loadAll(0, 0, 'OID', 'ASC', true);
+				
+				self::$logger->debug('['.count($objects).'] related ['.$classNameLeft.'] objects loaded');
 			}else{
 				AlphaDAO::loadClassDef($classNameLeft);
 				$tmpObject = new $classNameLeft;
@@ -292,12 +367,12 @@ class RecordSelector {
 				$fieldLabel = $tmpObject->getDataLabel($fieldName);
 				$oidLabel = $tmpObject->getDataLabel('OID');
 				
-				$objects = $tmpObject->loadAll(0, 0, 'OID', 'DESC');
+				$objects = $tmpObject->loadAll(0, 0, 'OID', 'ASC', true);
+				
+				self::$logger->debug('['.count($objects).'] related ['.$classNameLeft.'] objects loaded');
 			}
 			
-			$lookupOIDs = explode(',',$_GET['lookupOIDs']);
-			
-			$html = '<table cols="3" width="100%" class="bordered">';
+			$html .= '<table cols="3" width="100%" class="bordered">';
 			$html .= '<tr>';		
 			$html .= '<th>'.$oidLabel.'</th>';
 			$html .= '<th>'.$fieldLabel.'</th>';
@@ -371,7 +446,7 @@ class RecordSelector {
 			$html .= '</table>';
 		}
 		
-		echo '<body>';
+		$html .= '<body>';
 		$html .= '<script type="text/javascript">'.
 				'$(document).ready(function() {';
 			
@@ -379,33 +454,39 @@ class RecordSelector {
 			
 		$html .= '});</script>';
 		
-		echo $html;
+		$html .= $this->displayPageFoot();
 		
-		$this->displayPageFoot();
+		self::$logger->debug('<<renderSelector[html]');
+		return $html;
 	}
 	
 	/**
 	 * Renders the header HTML and JS for the record selector pop-up page.
+	 * 
+	 * @since 1.0
+	 * @return string
 	 */
 	private function displayPageHead() {
+		self::$logger->debug('>>displayPageHead()');
+		
 		global $config;		
 		
-		echo '<html>';
-		echo '<head>';
-		echo '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">';
-		echo '<title>Record Selector</title>';		
+		$html = '<html>';
+		$html .= '<head>';
+		$html .= '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">';
+		$html .= '<title>Record Selector</title>';		
 		
-		echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/ui/themes/'.$config->get('sysTheme').'/ui.all.css">';
-		echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/css/alpha.css">';
-		echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
+		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/ui/themes/'.$config->get('sysTheme').'/ui.all.css">';
+		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/css/alpha.css">';
+		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
 		
-		echo '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
+		$html .= '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
 		
-		echo '<script type="text/javascript">';
-		echo Button::renderJavascript();
-		echo '</script>';
+		$html .= '<script type="text/javascript">';
+		$html .= Button::renderJavascript();
+		$html .= '</script>';
 		
-		echo '<script language="JavaScript">
+		$html .= '<script language="JavaScript">
 			var selectedOIDs = new Object();
 			
 			function toggelOID(oid, displayValue, isSelected) {			
@@ -442,42 +523,25 @@ class RecordSelector {
 			
 			</script>';
 		
-		echo '</head>';
+		$html .= '</head>';
+		
+		self::$logger->debug('<<displayPageHead [html]');
+		return $html;
 	}
 	
 	/**
 	 * Renders the footer HTML and JS for the record selector pop-up page.
+	 * 
+	 * @since 1.0
+	 * @return string
 	 */
 	private function displayPageFoot() {
-		echo '</body>';
-		echo '</html>';
+		$html = '</body>';
+		$html .= '</html>';
+		
+		return $html;
 	}
 }
 
-// checking to see if the RecordSelector has been accessed directly via a pop-up
-if(basename($_SERVER['PHP_SELF']) == 'RecordSelector.php') {
-	$relationObject = new Relation();
-
-	if($_GET['relationType'] == 'MANY-TO-MANY') {
-		$relationObject->setRelatedClass($_GET['relatedClassLeft'], 'left');
-		$relationObject->setRelatedClassDisplayField($_GET['relatedClassLeftDisplayField'], 'left');
-		$relationObject->setRelatedClass($_GET['relatedClassRight'], 'right');
-		$relationObject->setRelatedClassDisplayField($_GET['relatedClassRightDisplayField'], 'right');
-		$relationObject->setRelationType($_GET['relationType']);
-		$relationObject->setValue($_GET['value']);
-		
-		$recSelector = new RecordSelector($relationObject,'',$_GET['field'],true,$_GET['accessingClassName']);
-		$recSelector->renderSelector();
-	}else{
-		$relationObject->setRelatedClass($_GET['relatedClass']);
-		$relationObject->setRelatedClassField($_GET['relatedClassField']);
-		$relationObject->setRelatedClassDisplayField($_GET['relatedClassDisplayField']);
-		$relationObject->setRelationType($_GET['relationType']);
-		$relationObject->setValue($_GET['value']);
-		
-		$recSelector = new RecordSelector($relationObject);
-		$recSelector->renderSelector();
-	}
-}
 
 ?>
