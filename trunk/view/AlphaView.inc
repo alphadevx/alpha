@@ -11,8 +11,9 @@ require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
 require_once $config->get('sysRoot').'alpha/view/widgets/Button.inc';
-require_once $config->get('sysRoot').'alpha/view/widgets/StringBox.js.php';
-require_once $config->get('sysRoot').'alpha/view/widgets/TextBox.js.php';
+require_once $config->get('sysRoot').'alpha/view/widgets/StringBox.inc';
+require_once $config->get('sysRoot').'alpha/view/widgets/DateBox.inc';
+require_once $config->get('sysRoot').'alpha/view/widgets/TextBox.inc';
 require_once $config->get('sysRoot').'alpha/view/widgets/RecordSelector.inc';
 require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
 
@@ -1268,18 +1269,18 @@ class AlphaView {
 		if ($mode == 'create') {
 			// give 10 rows for content fields (other 5 by default)
 			if($name == 'content')
-				$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getOID(), 10);
+				$text = new TextBox($this->BO->getPropObject($name), $label, $name, 10);
 			else
-				$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getOID());
+				$text = new TextBox($this->BO->getPropObject($name), $label, $name);
 			$html .= $text->render($tableTags);
 		}
 		
 		if ($mode == 'edit') {
 			// give 10 rows for content fields (other 5 by default)
 			if($name == 'content')
-				$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getOID(), 10);
+				$text = new TextBox($this->BO->getPropObject($name), $label, $name, 10);
 			else
-				$text = new TextBox($this->BO->getPropObject($name), $label, $name, get_class($this->BO).'_'.$this->BO->getOID());
+				$text = new TextBox($this->BO->getPropObject($name), $label, $name);
 			$html .= $text->render($tableTags);
 		}
 		
@@ -1418,7 +1419,7 @@ class AlphaView {
 								$value = '';
 							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $value);
 						}else{
-							$date = new calendar($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
+							$date = new DateBox($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
 							$html .= $date->render();
 						}
 					break;
@@ -1429,7 +1430,7 @@ class AlphaView {
 								$value = '';
 							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $value);
 						}else{
-							$timestamp = new calendar($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
+							$timestamp = new DateBox($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
 							$html .= $timestamp->render();
 						}
 					break;
@@ -1437,7 +1438,7 @@ class AlphaView {
 						if($mode == 'view') {
 							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
 						}else{
-							$string = new StringBox($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName, get_class($this->BO).'_'.$this->BO->getOID());
+							$string = new StringBox($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
 							$html .= $string->render();
 						}
 					break;
