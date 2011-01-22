@@ -442,12 +442,13 @@ abstract class AlphaDAO {
 	 * @param integer $limit The amount (limit) of objects to load, useful for pagination.
 	 * @param string $orderBy The name of the field to sort the objects by.
 	 * @param string $order The order to sort the objects by.
+	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
 	 * @return array An array containing objects of this type of business object.
 	 * @since 1.0
 	 * @throws BONotFoundException
 	 */
-	public function loadAll($start=0, $limit=0, $orderBy='OID', $order='ASC') {
-		self::$logger->debug('>>loadAll(start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
+	public function loadAll($start=0, $limit=0, $orderBy='OID', $order='ASC', $ignoreClassType=false) {
+		self::$logger->debug('>>loadAll(start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 		
 		if(method_exists($this, 'before_loadAll_callback'))
 			$this->before_loadAll_callback();
@@ -461,16 +462,16 @@ abstract class AlphaDAO {
 			throw new AlphaException('The field name ['.$orderBy.'] provided in the param orderBy does not exist on the class ['.get_class($this).']');
 		}
 		
-		if(!$this->isTableOverloaded()) {
-			if($limit == 0)
-				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' ORDER BY '.$orderBy.' '.$order.';';
-			else
-				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' ORDER BY '.$orderBy.' '.$order.' LIMIT '.$start.', '.$limit.';';
-		}else{
+		if(!$ignoreClassType && $this->isTableOverloaded()) {
 			if($limit == 0)
 				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' WHERE classname=\''.get_class($this).'\' ORDER BY '.$orderBy.' '.$order.';';
 			else
 				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' WHERE classname=\''.get_class($this).'\' ORDER BY '.$orderBy.' '.$order.' LIMIT '.$start.', '.$limit.';';
+		}else{				
+			if($limit == 0)
+				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' ORDER BY '.$orderBy.' '.$order.';';
+			else
+				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' ORDER BY '.$orderBy.' '.$order.' LIMIT '.$start.', '.$limit.';';
 		}
 		
 		$this->lastQuery = $sqlQuery;
@@ -513,12 +514,13 @@ abstract class AlphaDAO {
 	 * @param integer $limit The amount (limit) of objects to load, useful for pagination.
 	 * @param string $orderBy The name of the field to sort the objects by.
 	 * @param string $order The order to sort the objects by.
+	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type TODO
 	 * @return array An array containing objects of this type of business object.
 	 * @since 1.0
 	 * @throws BONotFoundException
 	 */
-	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC") {
-		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
+	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC", $ignoreClassType=false) {
+		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 		
 		if(method_exists($this, 'before_loadAllByAttribute_callback'))
 			$this->before_loadAllByAttribute_callback();
@@ -530,10 +532,10 @@ abstract class AlphaDAO {
 		else
 			$limit = ';';
 		
-		if(!$this->isTableOverloaded())
-			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = ? ORDER BY ".$orderBy." ".$order.$limit;
-		else
+		if(!$ignoreClassType && $this->isTableOverloaded())
 			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = ? AND classname = ? ORDER BY ".$orderBy." ".$order.$limit;
+		else
+			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = ? ORDER BY ".$orderBy." ".$order.$limit;			
 			
 		$this->lastQuery = $sqlQuery;
 		self::$logger->debug($sqlQuery);
@@ -604,13 +606,14 @@ abstract class AlphaDAO {
 	 * @param integer $limit The amount (limit) of objects to load, useful for pagination.
 	 * @param string $orderBy The name of the field to sort the objects by.
 	 * @param string $order The order to sort the objects by.
+	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type TODO
 	 * @return array An array containing objects of this type of business object.
 	 * @since 1.0
 	 * @throws BONotFoundException
 	 * @throws IllegalArguementException
 	 */
-	public function loadAllByAttributes($attributes=array(), $values=array(), $start=0, $limit=0, $orderBy='OID', $order='ASC') {
-		self::$logger->debug('>>loadAllByAttributes(attributes=['.print_r($attributes, true).'], values=['.print_r($values, true).'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
+	public function loadAllByAttributes($attributes=array(), $values=array(), $start=0, $limit=0, $orderBy='OID', $order='ASC', $ignoreClassType=false) {
+		self::$logger->debug('>>loadAllByAttributes(attributes=['.print_r($attributes, true).'], values=['.print_r($values, true).'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 		
 		if(method_exists($this, 'before_loadAllByAttributes_callback'))
 			$this->before_loadAllByAttributes_callback();
@@ -628,7 +631,7 @@ abstract class AlphaDAO {
 			self::$logger->debug($whereClause);
 		}
 		
-		if($this->isTableOverloaded())
+		if(!$ignoreClassType && $this->isTableOverloaded())
 			$whereClause .= ' classname = ? AND';
 		
 		// remove the last " AND"
@@ -701,12 +704,13 @@ abstract class AlphaDAO {
 	 * @param integer $limit The amount (limit) of objects to load, useful for pagination.
 	 * @param string $orderBy The name of the field to sort the objects by.
 	 * @param string $order The order to sort the objects by.
+	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type TODO
 	 * @return array An array containing objects of this type of business object.
 	 * @since 1.0
 	 * @throws BONotFoundException
 	 */
-	public function loadAllByDayUpdated($date, $start=0, $limit=0, $orderBy="OID", $order="ASC") {
-		self::$logger->debug('>>loadAllByDayUpdated(date=['.$date.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
+	public function loadAllByDayUpdated($date, $start=0, $limit=0, $orderBy="OID", $order="ASC", $ignoreClassType=false) {
+		self::$logger->debug('>>loadAllByDayUpdated(date=['.$date.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 		
 		if(method_exists($this, 'before_loadAllByDayUpdated_callback'))
 			$this->before_loadAllByDayUpdated_callback();
@@ -718,10 +722,10 @@ abstract class AlphaDAO {
 		else
 			$limit = ';';
 		
-		if(!$this->isTableOverloaded())
-			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' ORDER BY ".$orderBy." ".$order.$limit;
-		else
+		if(!$ignoreClassType && $this->isTableOverloaded())
 			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' AND classname='".get_class($this)."' ORDER BY ".$orderBy." ".$order.$limit;
+		else
+			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' ORDER BY ".$orderBy." ".$order.$limit;
 			
 		$this->lastQuery = $sqlQuery;
 
