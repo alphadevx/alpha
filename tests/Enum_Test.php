@@ -4,30 +4,70 @@
  *
  * Test case for the Enum data type
  * 
- * @package Alpha Core Unit Tests
+ * @package alpha::tests
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2008 John Collins
  * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
-class Enum_Test extends PHPUnit_Framework_TestCase
-{
+class Enum_Test extends PHPUnit_Framework_TestCase {
 	/**
-	 * an Enum for testing
+	 * An Enum for testing
+	 * 
 	 * @var Enum
+	 * @since 1.0
 	 */
 	private $enum1;
 	
 	/**
-	 * a person for testing
+	 * A person for testing
+	 * 
 	 * @var person_object
+	 * @since 1.0
 	 */
 	private $person;
 	
 	/**
-     * called before the test functions will be executed
+     * Called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
+     * 
+     * @since 1.0
      */
     protected function setUp() {        
         $this->enum1 = new Enum();
@@ -35,9 +75,11 @@ class Enum_Test extends PHPUnit_Framework_TestCase
     }
     
     /** 
-     * called after the test functions are executed
+     * Called after the test functions are executed
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
+     * 
+     * @since 1.0
      */    
     protected function tearDown() {        
         unset($this->enum1);
@@ -45,7 +87,9 @@ class Enum_Test extends PHPUnit_Framework_TestCase
     }    
     
     /**
-     * testing that enum options are loaded correctly from the database
+     * Testing that enum options are loaded correctly from the database
+     * 
+     * @since 1.0
      */
     public function testLoadEnumOptions() {
     	$this->person->loadByAttribute('displayName', $_SESSION['currentUser']->getDisplayName(), true);
@@ -54,7 +98,9 @@ class Enum_Test extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * testing the set/get enum option methods
+     * Testing the set/get enum option methods
+     * 
+     * @since 1.0
      */
     public function testSetEnumOptions() {
     	$this->enum1->setOptions(array('a','b','c'));
@@ -63,7 +109,9 @@ class Enum_Test extends PHPUnit_Framework_TestCase
     }
     
 	/**
-     * testing the setValue method with good and bad values
+     * Testing the setValue method with good and bad values
+     * 
+     * @since 1.0
      */
     public function testSetValue() {
     	$this->enum1->setOptions(array('a','b','c'));
@@ -85,7 +133,9 @@ class Enum_Test extends PHPUnit_Framework_TestCase
     }
     
 	/**
-     * testing the getValue method
+     * Testing the getValue method
+     * 
+     * @since 1.0
      */
     public function testGetValue() {
     	$this->enum1->setOptions(array('a','b','c'));
@@ -100,7 +150,9 @@ class Enum_Test extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * test the constructor failing when a bad array is provided
+     * Test the constructor failing when a bad array is provided
+     * 
+     * @since 1.0
      */
     public function testConstructorFail() {
     	try {    	
@@ -114,7 +166,9 @@ class Enum_Test extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * testing the default (non-alphabetical) sort order on the enum
+     * Testing the default (non-alphabetical) sort order on the enum
+     * 
+     * @since 1.0
      */
     public function testDefaultSortOrder() {
     	$this->enum1 = new Enum(array("alpha","gamma","beta"));
@@ -125,7 +179,9 @@ class Enum_Test extends PHPUnit_Framework_TestCase
     }
     
 	/**
-     * testing the alphabetical sort order on the enum
+     * Testing the alphabetical sort order on the enum
+     * 
+     * @since 1.0
      */
     public function testAlphaSortOrder() {
     	$this->enum1 = new Enum(array("alpha","gamma","beta"));

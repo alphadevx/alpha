@@ -10,30 +10,68 @@ require_once $config->get('sysRoot').'alpha/model/rights_object.inc';
  * Test cases for the AlphaController class.
  * 
  * @package alpha::tests
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2010 John Collins
- * @version $Id$ 
+ * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class AlphaController_Test extends PHPUnit_Framework_TestCase {
 	/**
-	 * Sample controller for testing with
+	 * Sample controller for Testing with
 	 * 
 	 * @var Search
+	 * @since 1.0
 	 */
 	private $controller;
 	
 	/**
-	 * An article_object for testing
+	 * An article_object for Testing
 	 * 
 	 * @var article_object
+	 * @since 1.0
 	 */
 	private $article;
 	
 	/**
-	 * A person_object for testing (any business object will do)
+	 * A person_object for Testing (any business object will do)
 	 * 
 	 * @var person_object
+	 * @since 1.0
 	 */
 	private $person;
 	
@@ -41,12 +79,15 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 	 * Test rights group
 	 * 
 	 * @var rights_object
+	 * @since 1.0
 	 */
 	private $group;
 	
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/lib/PEAR/PHPUnit-3.2.9/PHPUnit/Framework/PHPUnit_Framework_TestCase::setUp()
+	 * 
+	 * @since 1.0
 	 */
     protected function setUp() {
     	$this->controller = new Search();
@@ -58,6 +99,8 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/lib/PEAR/PHPUnit-3.2.9/PHPUnit/Framework/PHPUnit_Framework_TestCase::tearDown()
+	 * 
+	 * @since 1.0
 	 */
     protected function tearDown() {
     	$this->controller->abort();
@@ -77,9 +120,10 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     }
     
 	/**
-     * creates a person object for testing
+     * Creates a person object for Testing
      * 
      * @return person_object
+     * @since 1.0
      */
     private function createPersonObject($name) {
     	$person = new person_object();
@@ -92,9 +136,10 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     }
     
 	/**
-     * creates an article object for testing
+     * Creates an article object for Testing
      * 
      * @return article_object
+     * @since 1.0
      */
 	private function createArticleObject($name) {
     	$article = new article_object();
@@ -107,19 +152,23 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * testing that objects are being added to the dirtyObjects array correctly
+     * Testing that objects are being added to the dirtyObjects array correctly
+     * 
+     * @since 1.0
      */
     public function testMarkDirtyAdd() {
     	$this->controller->markDirty($this->person);
     	
     	$dirtyObjects = $this->controller->getDirtyObjects();
     	
-    	$this->assertEquals('http://unitTestUser/', $dirtyObjects[0]->get('URL'), 'testing that objects are being added to the dirtyObject array correctly');	
+    	$this->assertEquals('http://unitTestUser/', $dirtyObjects[0]->get('URL'), 'Testing that objects are being added to the dirtyObject array correctly');	
     }
     
 	/**
-     * testing that objects are being added to the dirtyObject array correctly
+     * Testing that objects are being added to the dirtyObject array correctly
      * and that this array is in the session being shared by controllers
+     * 
+     * @since 1.0
      */
     public function testMarkDirtySession() {
     	$this->person->set('email', 'changed@test.com');
@@ -130,23 +179,27 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     	
     	$dirty = $controller2->getDirtyObjects();    	
     	
-    	$this->assertEquals('changed@test.com', $dirty[0]->get('email'), 'testing that objects are being added to the dirtyObject array correctly and that this array is in the session being shared by controllers');	
+    	$this->assertEquals('changed@test.com', $dirty[0]->get('email'), 'Testing that objects are being added to the dirtyObject array correctly and that this array is in the session being shared by controllers');	
     }
     
     /**
-     * testing that objects are being added to the newObjects array correctly
+     * Testing that objects are being added to the newObjects array correctly
+     * 
+     * @since 1.0
      */
     public function testMarkNewAdd() {
     	$this->controller->markNew($this->person);
     	
     	$newObjects = $this->controller->getNewObjects();
     	
-    	$this->assertEquals('http://unitTestUser/', $newObjects[0]->get('URL'), 'testing that objects are being added to the newObject array correctly');	
+    	$this->assertEquals('http://unitTestUser/', $newObjects[0]->get('URL'), 'Testing that objects are being added to the newObject array correctly');	
     }
     
 	/**
-     * testing that objects are being added to the newObjects array correctly
+     * Testing that objects are being added to the newObjects array correctly
      * and that this array is in the session being shared by controllers
+     * 
+     * @since 1.0
      */
     public function testMarkNewSession() {    	
     	$person = $this->createPersonObject('newuser');
@@ -158,11 +211,13 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     	
     	$new = $controller2->getNewObjects();    	
     	
-    	$this->assertEquals('newuser@test.com', $new[0]->get('email'), 'testing that objects are being added to the newObjects array correctly and that this array is in the session being shared by controllers');	
+    	$this->assertEquals('newuser@test.com', $new[0]->get('email'), 'Testing that objects are being added to the newObjects array correctly and that this array is in the session being shared by controllers');	
     }
     
     /**
      * test cases to see if access rights on controllers are working as expected
+     * 
+     * @since 1.0
      */
     public function testRightsAccess() {
     	$this->group->set('name', 'testgroup');
@@ -188,6 +243,8 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     
 	/** 
      * test the getUnitDuration method for equality
+     * 
+     * @since 1.0
      */
     public function testGetUnitDurationEqual() {
     	$controller1 = new Search();
@@ -199,7 +256,9 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     }
     
 	/** 
-     * test the getUnitDuration method for greater than
+     * Test the getUnitDuration method for greater than
+     * 
+     * @since 1.0
      */
     public function testGetUnitDurationGreater() {
         $controller1 = new Search();
@@ -207,63 +266,75 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
         $controller1->setUnitEndTime(2006, 10, 30, 21, 15, 15);
     	$controller2->setUnitEndTime(2005, 10, 30, 21, 15, 15);
     
-    	$this->assertTrue($controller1->getUnitDuration() > $controller2->getUnitDuration(), 'test the getUnitDuration method for greater than');
+    	$this->assertTrue($controller1->getUnitDuration() > $controller2->getUnitDuration(), 'Test the getUnitDuration method for greater than');
     }
     
 	/**
-     * testing the setUnitOfWork method with a bad controller name
+     * Testing the setUnitOfWork method with a bad controller name
+     * 
+     * @since 1.0
      */
     public function testSetUnitOfWorkBadControllerName() {
     	try {
     		$this->controller->setUnitOfWork(array('Search','Edit','Create','ListAll','BadControllerName'));
     		$this->fail('Passed a bad controller name BadControllerName to setUnitOfWork() and did not get the expected exception!');
     	}catch (IllegalArguementException $e) {
-    		$this->assertEquals('', $this->controller->getFirstJob(), 'testing the setUnitOfWork method with a bad controller name');
+    		$this->assertEquals('', $this->controller->getFirstJob(), 'Testing the setUnitOfWork method with a bad controller name');
     	}
     }
     
 	/**
-     * testing the setUnitOfWork method and getNextJob
+     * Testing the setUnitOfWork method and getNextJob
+     * 
+     * @since 1.0
      */
     public function testSetUnitOfWorkNext() {
     	$this->controller->setName('Search');
     	$this->controller->setUnitOfWork(array('Search','Edit','Create','ListAll','Detail'));
     	
-    	$this->assertEquals('Edit', $this->controller->getNextJob(), 'testing the setUnitOfWork method and getNextJob');
+    	$this->assertEquals('Edit', $this->controller->getNextJob(), 'Testing the setUnitOfWork method and getNextJob');
     }
     
 	/**
-     * testing the setUnitOfWork method and getFirstJob
+     * Testing the setUnitOfWork method and getFirstJob
+     * 
+     * @since 1.0
      */
     public function testSetUnitOfWorkFirst() {
     	$this->controller->setName('ListAll');
     	$this->controller->setUnitOfWork(array('Search','Edit','Create','ListAll','Detail'));
     	
-    	$this->assertEquals('Search', $this->controller->getFirstJob(), 'testing the setUnitOfWork method and getFirstJob');
+    	$this->assertEquals('Search', $this->controller->getFirstJob(), 'Testing the setUnitOfWork method and getFirstJob');
     }
     
 	/**
-     * testing the setUnitOfWork method and getPreviousJob
+     * Testing the setUnitOfWork method and getPreviousJob
+     * 
+     * @since 1.0
      */
     public function testSetUnitOfWorkPrevious() {
     	$this->controller->setName('ListAll');
     	$this->controller->setUnitOfWork(array('Search','Edit','Create','ListAll','Detail'));
     	
-    	$this->assertEquals('Create', $this->controller->getPreviousJob(), 'testing the setUnitOfWork method and getPreviousJob');
+    	$this->assertEquals('Create', $this->controller->getPreviousJob(), 'Testing the setUnitOfWork method and getPreviousJob');
     }
     
 	/**
-     * testing the setUnitOfWork method and getLastJob
+     * Testing the setUnitOfWork method and getLastJob
+     * 
+     * @since 1.0
      */
     public function testSetUnitOfWorkLast() {
     	$this->controller->setName('ListAll');
     	$this->controller->setUnitOfWork(array('Search','Edit','Create','ListAll','Detail'));
     	
-    	$this->assertEquals('Detail', $this->controller->getLastJob(), 'testing the setUnitOfWork method and getLastJob');
+    	$this->assertEquals('Detail', $this->controller->getLastJob(), 'Testing the setUnitOfWork method and getLastJob');
     }
     
 	/**
-     * testing the commit method for new and dirty objects
+     * Testing the commit method for new and dirty objects
+     * 
+     * @since 1.0
      */
     public function testCommit() {
     	$this->person->set('email', 'changed@test.com');
@@ -281,7 +352,9 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     }
     
 	/**
-     * testing that we can load dirty and new objects post commit
+     * Testing that we can load dirty and new objects post commit
+     * 
+     * @since 1.0
      */
     public function testPostCommitLoad() {
     	$this->person->set('email', 'changed@test.com');
@@ -313,7 +386,9 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * testing that aborting a unit of work clears the list of new objects
+     * Testing that aborting a unit of work clears the list of new objects
+     * 
+     * @since 1.0
      */
     public function testAbort() {
     	$person = $this->createPersonObject('newuser');
@@ -325,47 +400,55 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     	
     	$new = $controller2->getNewObjects();
     	
-    	$this->assertEquals('newuser@test.com', $new[0]->get('email'), 'testing that objects are being added to the newObjects array correctly and that this array is in the session being shared by controllers');
+    	$this->assertEquals('newuser@test.com', $new[0]->get('email'), 'Testing that objects are being added to the newObjects array correctly and that this array is in the session being shared by controllers');
 
     	// now abort the unit of work from the second controller, and confirm that the new object array is empty
     	$controller2->abort();
     	
     	$new = $controller2->getNewObjects();
     	
-    	$this->assertEquals(0, count($new), 'testing that aborting a unit of work clears the list of new objects');
+    	$this->assertEquals(0, count($new), 'Testing that aborting a unit of work clears the list of new objects');
     }
     
     /**
-     * testing that the AlphaController constructor uses the controller name as the AlphaController->name (job) of the controller
+     * Testing that the AlphaController constructor uses the controller name as the AlphaController->name (job) of the controller
+     * 
+     * @since 1.0
      */
     public function testConstructorJobControllerName() {
-    	$this->assertEquals('Search', $this->controller->getName(), 'testing that the AlphaController constructor defaults to using the controller name as the AlphaController->name of the controller');
+    	$this->assertEquals('Search', $this->controller->getName(), 'Testing that the AlphaController constructor defaults to using the controller name as the AlphaController->name of the controller');
     }
     
     /**
-     * testing that providing a bad BO name returns null
+     * Testing that providing a bad BO name returns null
+     * 
+     * @since 1.0
      */
     public function testGetCustomControllerName() {
-    	$this->assertNull(AlphaController::getCustomControllerName('does_not_exist_object', 'view'), 'testing that providing a bad BO name returns null');
+    	$this->assertNull(AlphaController::getCustomControllerName('does_not_exist_object', 'view'), 'Testing that providing a bad BO name returns null');
     }
     
     /**
-     * testing the checkRights method with various account types
+     * Testing the checkRights method with various account types
+     * 
+     * @since 1.0
      */
     public function testCheckRights() {
     	$controller = new Search('Admin');
     	$admin = $_SESSION['currentUser'];
 		$_SESSION['currentUser'] = null;
 		
-		$this->assertFalse($controller->checkRights(), 'testing that a user with no session cannot access an Admin controller');
+		$this->assertFalse($controller->checkRights(), 'Testing that a user with no session cannot access an Admin controller');
 		$controller = new Search('Public');
-		$this->assertTrue($controller->checkRights(), 'testing that a user with no session can access a Public controller');
+		$this->assertTrue($controller->checkRights(), 'Testing that a user with no session can access a Public controller');
 		
 		$_SESSION['currentUser'] = $admin;
     }
     
     /**
-     * testing the checkSecurityFields method
+     * Testing the checkSecurityFields method
+     * 
+     * @since 1.0
      */
     public function testCheckSecurityFields() {
     	$securityFields = AlphaController::generateSecurityFields();
@@ -373,39 +456,45 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     	$_REQUEST['var1'] = $securityFields[0];
     	$_REQUEST['var2'] = $securityFields[1];
     	
-    	$this->assertTrue(AlphaController::checkSecurityFields(), 'testing the checkSecurityFields method with valid security params');
+    	$this->assertTrue(AlphaController::checkSecurityFields(), 'Testing the checkSecurityFields method with valid security params');
     	
     	$_REQUEST['var1'] = null;
     	$_REQUEST['var2'] = null;
     	
-    	$this->assertFalse(AlphaController::checkSecurityFields(), 'testing the checkSecurityFields method with invalid security params');
+    	$this->assertFalse(AlphaController::checkSecurityFields(), 'Testing the checkSecurityFields method with invalid security params');
     }
     
     /**
-     * testing that a bad controller name passed to loadControllerDef will cause an exception
+     * Testing that a bad controller name passed to loadControllerDef will cause an exception
+     * 
+     * @since 1.0
      */
     public function testLoadControllerDef() {
     	try {
     		$this->controller->loadControllerDef('DoesNotExist');
-    		$this->fail('testing that a bad controller name passed to loadControllerDef will cause an exception');
+    		$this->fail('Testing that a bad controller name passed to loadControllerDef will cause an exception');
     	}catch (IllegalArguementException $e) {
-    		$this->assertEquals('The class [DoesNotExist] is not defined anywhere!', $e->getMessage(), 'testing that a bad controller name passed to loadControllerDef will cause an exception');
+    		$this->assertEquals('The class [DoesNotExist] is not defined anywhere!', $e->getMessage(), 'Testing that a bad controller name passed to loadControllerDef will cause an exception');
     	}
     }
     
     /**
-     * testing that status messages can be shared between controllers via the session
+     * Testing that status messages can be shared between controllers via the session
+     * 
+     * @since 1.0
      */
     public function testStatusMessages() {
     	$this->controller->setStatusMessage('test message');
     	
     	$controller = new Search();
     	
-    	$this->assertEquals('test message', $controller->getStatusMessage(), 'testing that status messages can be shared between controllers via the session');
+    	$this->assertEquals('test message', $controller->getStatusMessage(), 'Testing that status messages can be shared between controllers via the session');
     }
     
     /**
-     * testing that a BO attached to a controller that contains tags will have those tags mapped to the controller's keywords
+     * Testing that a BO attached to a controller that contains tags will have those tags mapped to the controller's keywords
+     * 
+     * @since 1.0
      */
     public function testTagsMapToMetaKeywords() {
     	AlphaDAO::begin();
@@ -424,7 +513,7 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     	
     	$this->controller->setBO($this->article);
     	
-    	$this->assertEquals('unittestarticle,unittestarticletagone,unittestarticletagtwo', $this->controller->getKeywords(), 'testing that a BO attached to a controller that contains tags will have those tags mapped to the controller\'s keywords');
+    	$this->assertEquals('unittestarticle,unittestarticletagone,unittestarticletagtwo', $this->controller->getKeywords(), 'Testing that a BO attached to a controller that contains tags will have those tags mapped to the controller\'s keywords');
     	
     }
 }

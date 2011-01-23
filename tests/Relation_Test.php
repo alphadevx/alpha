@@ -4,33 +4,73 @@
  *
  * Test case for the Relation data type
  * 
- * @package Alpha Core Unit Tests
+ * @package alpha::tests
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2008 John Collins
- * @version $Id$ 
+ * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
-class Relation_Test extends PHPUnit_Framework_TestCase
-{
+class Relation_Test extends PHPUnit_Framework_TestCase {
 	/**
 	 * A Relation for testing
+	 * 
 	 * @var Relation
+	 * @since 1.0
 	 */
 	private $rel1;	
 	
 	/**
-     * called before the test functions will be executed
+     * Called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
+     * 
+     * @since 1.0
      */
     protected function setUp() {        
         $this->rel1 = new Relation();        
     }
     
     /** 
-     * called after the test functions are executed
+     * Called after the test functions are executed
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
+     * 
+     * @since 1.0
      */    
     protected function tearDown() {        
         unset($this->rel1);        
@@ -38,6 +78,8 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     
     /**
      * Testing passing a valid BO name to setRelatedClass
+     * 
+     * @since 1.0
      */
     public function testSetRelatedClassPass() {
     	try {
@@ -49,6 +91,8 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     
 	/**
      * Testing passing an invalid BO name to setRelatedClass
+     * 
+     * @since 1.0
      */
     public function testSetRelatedClassFail() {
     	try {
@@ -63,6 +107,8 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     
 	/**
      * Testing passing a valid field name to setRelatedClassField
+     * 
+     * @since 1.0
      */
     public function testSetRelatedClassFieldPass() {
     	try {
@@ -75,6 +121,8 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     
 	/**
      * Testing passing an invalid field name to setRelatedClassField
+     * 
+     * @since 1.0
      */
     public function testSetRelatedClassFieldFail() {
     	try {
@@ -90,6 +138,8 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     
     /**
      * Testing passing a valid type name to setRelationType
+     * 
+     * @since 1.0
      */
     public function testSetRelationTypePass() {
     	try {
@@ -101,6 +151,8 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     
 	/**
      * Testing passing an invalid type name to setRelationType
+     * 
+     * @since 1.0
      */
     public function testSetRelationTypeFail() {
     	try {
@@ -115,6 +167,8 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     
 	/**
      * Testing setValue method with a valid value
+     * 
+     * @since 1.0
      */
     public function testSetValuePass() {
     	try {
@@ -127,6 +181,8 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     
 	/**
      * Testing setValue method with an invalid value
+     * 
+     * @since 1.0
      */
     public function testSetValueFail() {
     	try {
@@ -141,6 +197,8 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     
     /**
      * Testing that the display field value of the related class is accessed correctly
+     * 
+     * @since 1.0
      */
     public function testSetRelatedClassDisplayFieldPass() {
     	try {
@@ -156,6 +214,8 @@ class Relation_Test extends PHPUnit_Framework_TestCase
     
 	/**
      * Testing that getRelatedClassDisplayFieldValue() will fail to load an invalid class definition
+     * 
+     * @since 1.0
      */
     public function testGetRelatedClassDisplayFieldValueFail() {
     	try {    		
