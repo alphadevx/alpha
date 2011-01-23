@@ -286,7 +286,7 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 		
 		$html = '
 			<script type="text/javascript">
-			var previewURL = "'.FrontController::generateSecureURL('act=PreviewArticle&bo=article_object').'";
+			var previewURL = "'.FrontController::generateSecureURL('act=PreviewArticle&bo=article_object&oid='.$this->BO->getOID()).'";
 			</script>			
 			<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/markitup/jquery.markitup.js"></script>
 			<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/markitup/sets/markdown/set.js"></script>
