@@ -4,7 +4,6 @@ require_once $config->get('sysRoot').'alpha/util/filters/AlphaFilterInterface.in
 require_once $config->get('sysRoot').'alpha/model/blacklisted_client_object.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/BONotFoundException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/ResourceNotAllowedException.inc';
-require_once $config->get('sysRoot').'alpha/util/db_connect.inc';
 
 /**
  * Class for filtering requests from blacklisted HTTP clients
