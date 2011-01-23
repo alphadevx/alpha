@@ -6,7 +6,7 @@ if(!isset($config)) {
 	$config = AlphaConfig::getInstance();
 }
 
-require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
+require_once $config->get('sysRoot').'alpha/util/CatchError.inc';
 
 /**
  *
