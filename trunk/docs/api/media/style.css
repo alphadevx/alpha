@@ -13,6 +13,7 @@ li { list-style-type: square; }
 td{ font-size: 10pt; vertical-align: top; }
 td.class-overview{ padding: 2px; padding-left: 1em; }
 td.code{ background-color: #009543; color: #ffffff; padding-left: 3em; padding-right: 1em; text-indent: -2em; }
+td.code a {color:#ffffff;}
 td.code-border{ background-color: #FF9900; color: #000000; }
 td.header-line{ background-color: #FF9900; color: #ffffff; }
 td.header-menu{ background-color: #009543; color: #FF9900; font-size: 8pt; padding: 2px; padding-right: 5px; text-align: right; }
