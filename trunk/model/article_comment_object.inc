@@ -70,11 +70,7 @@ class article_comment_object extends AlphaDAO {
 	 * @var array
 	 * @since 1.0
 	 */
-	protected $dataLabels = array(
-		"OID"=>"Article Comment ID#",
-		"article_oid"=>"Article",		
-		"content"=>"Comment"
-	);
+	protected $dataLabels = array("OID"=>"Article Comment ID#","article_oid"=>"Article","content"=>"Comment");
 	
 	/**
 	 * The name of the database table for the class

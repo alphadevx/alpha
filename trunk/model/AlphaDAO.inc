@@ -1,7 +1,7 @@
 <?php
 
+require_once $config->get('sysRoot').'alpha/util/CatchError.inc';
 require_once $config->get('sysRoot').'alpha/util/Logger.inc';
-require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
 require_once $config->get('sysRoot').'alpha/util/InputFilter.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/BONotFoundException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/FailedSaveException.inc';

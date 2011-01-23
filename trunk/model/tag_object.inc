@@ -79,12 +79,7 @@ class tag_object extends AlphaDAO {
 	 * @var array
 	 * @since 1.0
 	 */
-	protected $dataLabels = array(
-		"OID"=>"Tag ID#",		
-		"taggedClass"=>"Class Name",
-		"taggedOID"=>"Tagged Object ID#",
-		"content"=>"Tag"
-	);
+	protected $dataLabels = array("OID"=>"Tag ID#","taggedClass"=>"Class Name","taggedOID"=>"Tagged Object ID#","content"=>"Tag");
 	
 	/**
 	 * The name of the database table for the class

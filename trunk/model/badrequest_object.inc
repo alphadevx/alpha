@@ -79,12 +79,7 @@ class badrequest_object extends AlphaDAO {
 	 * @var array
 	 * @since 1.0
 	 */
-	protected $dataLabels = array(
-		'OID'=>"Bad request ID#",		
-		'client'=>'Client string',
-		'IP'=>'IP',
-		'requestedResource'=>'Requested resource'
-	);
+	protected $dataLabels = array('OID'=>'Bad request ID#','client'=>'Client string','IP'=>'IP','requestedResource'=>'Requested resource');
 	
 	/**
 	 * The name of the database table for the class

@@ -78,10 +78,7 @@ class DEnumItem extends AlphaDAO implements AlphaTypeInterface{
 	 * @var array
 	 * @since 1.0
 	 */
-	protected $dataLabels = array(
-		"OID"=>"DEnumItem ID#",
-		"value"=>"Dropdown value"		
-	);
+	protected $dataLabels = array("OID"=>"DEnumItem ID#","value"=>"Dropdown value");
 	
 	/**
 	 * The message to display to the user when validation fails

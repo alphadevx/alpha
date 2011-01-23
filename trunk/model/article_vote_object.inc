@@ -78,12 +78,7 @@ class article_vote_object extends AlphaDAO {
 	 * @var array
 	 * @since 1.0
 	 */
-	protected $dataLabels = array(
-		"OID"=>"Article Vote ID#",
-		"article_oid"=>"Article",
-		"person_oid"=>"Voter",
-		"score"=>"Article Score"
-	);
+	protected $dataLabels = array("OID"=>"Article Vote ID#","article_oid"=>"Article","person_oid"=>"Voter","score"=>"Article Score");
 	
 	/**
 	 * The name of the database table for the class

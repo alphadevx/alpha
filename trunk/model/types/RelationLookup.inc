@@ -94,11 +94,7 @@ class RelationLookup extends AlphaDAO implements AlphaTypeInterface {
 	 * @var array
 	 * @since 1.0
 	 */
-	protected $dataLabels = array(
-		"OID"=>"RelationLookup ID#",
-		"leftID"=>"Left BO ID#",
-		"rightID"=>"Right BO ID#"
-	);
+	protected $dataLabels = array("OID"=>"RelationLookup ID#","leftID"=>"Left BO ID#","rightID"=>"Right BO ID#");
 	
 	/**
 	 * The message to display to the user when validation fails
