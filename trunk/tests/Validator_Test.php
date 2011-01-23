@@ -7,14 +7,51 @@ require_once $config->get('sysRoot').'alpha/util/helpers/Validator.inc';
  * Test case for the Validator helper class
  * 
  * @package alpha::tests
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2009 John Collins
  * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class Validator_Test extends PHPUnit_Framework_TestCase {
     /**
      * Validate that the provided value is a valid integer
+     * 
+     * @since 1.0
      */
     public function testIsInteger() {
         $this->assertTrue(Validator::isInteger(100));
@@ -30,6 +67,8 @@ class Validator_Test extends PHPUnit_Framework_TestCase {
 
     /**
      * Validate that the provided value is a valid double
+     * 
+     * @since 1.0
      */
     public function testIsDouble() {
         $this->assertTrue(Validator::isDouble(10.0));
@@ -42,6 +81,8 @@ class Validator_Test extends PHPUnit_Framework_TestCase {
 
     /**
      * Validate that the provided value is a valid alphabetic string (strictly a-zA-Z)
+     * 
+     * @since 1.0
      */
     public function testIsAlpha() {
         $this->assertTrue(Validator::isAlpha('test'));
@@ -54,6 +95,8 @@ class Validator_Test extends PHPUnit_Framework_TestCase {
 
     /**
      * Validate that the provided value is a valid alpha-numeric string (strictly a-zA-Z0-9)
+     * 
+     * @since 1.0
      */
     public function testIsAlphaNum() {
         $this->assertTrue(Validator::isAlphaNum('test1'));
@@ -66,6 +109,8 @@ class Validator_Test extends PHPUnit_Framework_TestCase {
 
     /**
      * Validate that the provided value is a valid URL
+     * 
+     * @since 1.0
      */
     public function testIsURL() {
         $this->assertTrue(Validator::isURL('http://www.alphaframework.org'));
@@ -78,6 +123,8 @@ class Validator_Test extends PHPUnit_Framework_TestCase {
 
     /**
      * Validate that the provided value is a valid IP address
+     * 
+     * @since 1.0
      */
     public function testIsIP() {
         $this->assertTrue(Validator::isIP('127.0.0.1'));
@@ -90,6 +137,8 @@ class Validator_Test extends PHPUnit_Framework_TestCase {
 
     /**
      * Validate that the provided value is a valid email address
+     * 
+     * @since 1.0
      */
     public function testIsEmail() {
         $this->assertTrue(Validator::isEmail('nobody@alphaframework.org'));
@@ -102,6 +151,8 @@ class Validator_Test extends PHPUnit_Framework_TestCase {
     
     /**
      * Validate that the provided value is a valid Sequence value
+     * 
+     * @since 1.0
      */
     public function testIsSequence() {
     	$this->assertTrue(Validator::isSequence('BARS-150'));

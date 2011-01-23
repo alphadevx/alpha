@@ -4,17 +4,53 @@
  *
  * Test case for the String data type
  * 
- * @package Alpha Core Unit Tests
+ * @package alpha::tests
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2008 John Collins
- * @version $Id$ 
+ * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
-class String_Test extends PHPUnit_Framework_TestCase
-{
+class String_Test extends PHPUnit_Framework_TestCase {
 	/**
 	 * A String for testing
+	 * 
 	 * @var String
+	 * @since 1.0
 	 */
 	private $str1;
 	
@@ -22,6 +58,7 @@ class String_Test extends PHPUnit_Framework_TestCase
 	 * A helper string for username reg-ex validation tests
 	 *
 	 * @var string
+	 * @since 1.0
 	 */
 	private $usernameHelper = 'Please provide a name for display on the website (only letters, numbers, and .-_ characters are allowed!).';
 
@@ -29,6 +66,7 @@ class String_Test extends PHPUnit_Framework_TestCase
 	 * A helper string for email reg-ex validation tests
 	 *
 	 * @var string
+	 * @since 1.0
 	 */	
 	private $emailHelper = 'Please provide a valid e-mail address as your username';
 	
@@ -36,29 +74,36 @@ class String_Test extends PHPUnit_Framework_TestCase
 	 * A helper string for URL reg-ex validation tests
 	 *
 	 * @var string
+	 * @since 1.0
 	 */	
 	private $urlHelper = 'URLs must be in the format http://some_domain/ or left blank!';
 	
 	/**
-     * called before the test functions will be executed
+     * Called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
+     * 
+     * @since 1.0
      */
     protected function setUp() {        
         $this->str1 = new String();        
     }
     
     /** 
-     * called after the test functions are executed
+     * Called after the test functions are executed
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
+     * 
+     * @since 1.0
      */    
     protected function tearDown() {        
         unset($this->str1);        
     }
     
     /**
-     * testing the str constructor for acceptance of correct data
+     * Testing the str constructor for acceptance of correct data
+     * 
+     * @since 1.0
      */
     public function testConstructorPass() {
     	$this->str1 = new String('A String Value!');
@@ -67,7 +112,9 @@ class String_Test extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * testing passing an invalid username string
+     * Testing passing an invalid username string
+     * 
+     * @since 1.0
      */
     public function testSetUsernameValueInvalid() {
     	try {
@@ -85,7 +132,9 @@ class String_Test extends PHPUnit_Framework_TestCase
     }
     
 	/**
-     * testing passing a valid username string
+     * Testing passing a valid username string
+     * 
+     * @since 1.0
      */
     public function testSetUsernameValueValid() {
     	try {
@@ -100,7 +149,9 @@ class String_Test extends PHPUnit_Framework_TestCase
     }
     
 	/**
-     * testing passing an invalid email string
+     * Testing passing an invalid email string
+     * 
+     * @since 1.0
      */
     public function testSetEmailValueInvalid() {
     	try {
@@ -118,7 +169,9 @@ class String_Test extends PHPUnit_Framework_TestCase
     }
     
 	/**
-     * testing passing a valid email string
+     * Testing passing a valid email string
+     * 
+     * @since 1.0
      */
     public function testSetEmailValueValid() {
     	try {
@@ -142,7 +195,9 @@ class String_Test extends PHPUnit_Framework_TestCase
     }
     
 	/**
-     * testing passing an invalid URL string
+     * Testing passing an invalid URL string
+     * 
+     * @since 1.0
      */
     public function testSetURLValueInvalid() {
     	try {
@@ -159,7 +214,9 @@ class String_Test extends PHPUnit_Framework_TestCase
     }
     
 	/**
-     * testing passing a valid URL string
+     * Testing passing a valid URL string
+     * 
+     * @since 1.0
      */
     public function testSetURLValueValid() {
     	try {
@@ -178,7 +235,9 @@ class String_Test extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * testing the setSize method to see if validation fails
+     * Testing the setSize method to see if validation fails
+     * 
+     * @since 1.0
      */
     public function testSetSizeInvalid() {
     	$this->str1 = new String();
@@ -195,7 +254,9 @@ class String_Test extends PHPUnit_Framework_TestCase
     }    
 	    
 	/**
-     * testing the __toString method
+     * Testing the __toString method
+     * 
+     * @since 1.0
      */
     public function testToString() {
     	$this->str1 = new String('__toString result');    	
@@ -204,7 +265,9 @@ class String_Test extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * testing to see if the password setter/inspector is working
+     * Testing to see if the password setter/inspector is working
+     * 
+     * @since 1.0
      */
     public function testIsPassword() {
     	$this->str1->isPassword();
@@ -213,7 +276,9 @@ class String_Test extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * testing to see that isPassword makes the string required
+     * Testing to see that isPassword makes the string required
+     * 
+     * @since 1.0
      */
     public function testIsPasswordRequired() {
     	$this->str1->isPassword();

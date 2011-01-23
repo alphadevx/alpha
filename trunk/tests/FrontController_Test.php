@@ -8,18 +8,60 @@ require_once $config->get('sysRoot').'alpha/util/filters/ClientBlacklistFilter.i
  * Test cases for the AlphaController class.
  * 
  * @package alpha::tests
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2010 John Collins
- * @version $Id$ 
+ * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class FrontController_Test extends PHPUnit_Framework_TestCase {
-	
+	/**
+	 * A controller token to test with
+	 * 
+	 * @var string
+	 * @since 1.0
+	 */
 	private $token;
 		
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/lib/PEAR/PHPUnit-3.2.9/PHPUnit/Framework/PHPUnit_Framework_TestCase::setUp()
+	 * 
+	 * @since 1.0
 	 */
     protected function setUp() {
     	if(!isset($this->token))
@@ -31,13 +73,17 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/lib/PEAR/PHPUnit-3.2.9/PHPUnit/Framework/PHPUnit_Framework_TestCase::tearDown()
+	 * 
+	 * @since 1.0
 	 */
     protected function tearDown() {
     	$_GET['tk'] = $this->token;
     }
     
     /**
-     * testing that the constructor will detect the page controller action we want to invoke from the global _GET array
+     * Testing that the constructor will detect the page controller action we want to invoke from the global _GET array
+     * 
+     * @since 1.0
      */
     public function testConstructActParam() {
     	$_GET['act'] = 'ViewArticle';
@@ -47,7 +93,9 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * testing that the constructor can parse the correct page controller action from a mod_rewrite style URL
+     * Testing that the constructor can parse the correct page controller action from a mod_rewrite style URL
+     * 
+     * @since 1.0
      */
     public function testConstructModRewrite() {
     	global $config;
@@ -60,7 +108,9 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * testing that the constructor can parse the correct page controller action from a mod_rewrite style URL when a controller alias is used
+     * Testing that the constructor can parse the correct page controller action from a mod_rewrite style URL when a controller alias is used
+     * 
+     * @since 1.0
      */
     public function testConstructModRewriteWithAlias() {
     	global $config;
@@ -74,7 +124,9 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * testing that the constructor can parse the correct page controller action from an encrypted token param
+     * Testing that the constructor can parse the correct page controller action from an encrypted token param
+     * 
+     * @since 1.0
      */
     public function testConstructorWithEncryptedToken() {
     	global $config;
@@ -87,7 +139,9 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     }
     
 	/**
-     * testing that the constructor can parse the correct page controller action from an encrypted token param provided on a mod-rewrite style URL
+     * Testing that the constructor can parse the correct page controller action from an encrypted token param provided on a mod-rewrite style URL
+     * 
+     * @since 1.0
      */
     public function testConstructorModRewriteWithEncryptedToken() {
     	global $config;
@@ -101,7 +155,9 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * testing the encodeQuery method with a known encrypted result for a test key
+     * Testing the encodeQuery method with a known encrypted result for a test key
+     * 
+     * @since 1.0
      */
     public function testEncodeQuery() {
     	global $config;
@@ -116,7 +172,9 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * testing the decodeQueryParams method with a known encrypted result for a test key
+     * Testing the decodeQueryParams method with a known encrypted result for a test key
+     * 
+     * @since 1.0
      */
     public function testDecodeQueryParams() {
     	global $config;
@@ -129,7 +187,9 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * testing that the getDecodeQueryParams method will return the known params with a known encrypted result for a test key
+     * Testing that the getDecodeQueryParams method will return the known params with a known encrypted result for a test key
+     * 
+     * @since 1.0
      */
     public function testGetDecodeQueryParams() {
     	global $config;
@@ -145,7 +205,9 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * testing that a request to a bad URL will result in a ResourceNotFoundException exception
+     * Testing that a request to a bad URL will result in a ResourceNotFoundException exception
+     * 
+     * @since 1.0
      */
     public function testLoadControllerFileNotFound() {
     	global $config;
@@ -163,7 +225,9 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * testing the setting up and checking for the existence of a controller alias
+     * Testing the setting up and checking for the existence of a controller alias
+     * 
+     * @since 1.0
      */
     public function testDefineAlias() {
     	$front = new FrontController();
@@ -176,7 +240,9 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * testing the accessing of the expected param for a given alias/controller
+     * Testing the accessing of the expected param for a given alias/controller
+     * 
+     * @since 1.0
      */
     public function testAccessingAliasParamNames() {
     	$front = new FrontController();
@@ -187,7 +253,9 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * testing the registerFilter method with a valid filter object
+     * Testing the registerFilter method with a valid filter object
+     * 
+     * @since 1.0
      */
     public function testRegisterFilterGood() {
     	try {
@@ -207,7 +275,9 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     }
     
 	/**
-     * testing the registerFilter method with a bad filter object
+     * Testing the registerFilter method with a bad filter object
+     * 
+     * @since 1.0
      */
     public function testRegisterFilterBad() {
     	try {

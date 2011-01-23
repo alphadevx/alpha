@@ -4,30 +4,70 @@
  *
  * Test case for the Double data type
  * 
- * @package Alpha Core Unit Tests
+ * @package alpha::tests
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2008 John Collins
- * @version $Id$ 
+ * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
-class Double_Test extends PHPUnit_Framework_TestCase
-{
+class Double_Test extends PHPUnit_Framework_TestCase {
 	/**
-	 * an Double for testing
+	 * An Double for testing
+	 * 
 	 * @var Double
+	 * @since 1.0
 	 */
 	private $dbl1;
 	
 	/**
-	 * an Double for testing
+	 * An Double for testing
+	 * 
 	 * @var Double
+	 * @since 1.0
 	 */
 	private $dbl2;
 		
 	/**
-     * called before the test functions will be executed
+     * Called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
+     * 
+     * @since 1.0
      */
     protected function setUp() {        
         $this->dbl1 = new Double();
@@ -35,9 +75,11 @@ class Double_Test extends PHPUnit_Framework_TestCase
     }
     
     /** 
-     * called after the test functions are executed
+     * Called after the test functions are executed
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
+     * 
+     * @since 1.0
      */    
     protected function tearDown() {        
         unset($this->dbl1);
@@ -45,7 +87,9 @@ class Double_Test extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * testing the Double constructor for acceptance of correct data
+     * Testing the Double constructor for acceptance of correct data
+     * 
+     * @since 1.0
      */
     public function testConstructorPass() {
     	$this->dbl1 = new Double(5.77);
@@ -54,7 +98,9 @@ class Double_Test extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * testing passing invalid data to setValue
+     * Testing passing invalid data to setValue
+     * 
+     * @since 1.0
      */
     public function testSetValueInvalid() {
     	try {
@@ -68,7 +114,9 @@ class Double_Test extends PHPUnit_Framework_TestCase
     }
     
 	/**
-     * testing passing valid data to setValue
+     * Testing passing valid data to setValue
+     * 
+     * @since 1.0
      */
     public function testSetValueValid() {
     	$this->dbl1->setValue(0.25);
@@ -77,7 +125,9 @@ class Double_Test extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * testing the setSize method to see if validation fails
+     * Testing the setSize method to see if validation fails
+     * 
+     * @since 1.0
      */
     public function testSetSizeInvalid() {
     	$this->dbl1 = new Double();
@@ -94,7 +144,9 @@ class Double_Test extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * testing addition of two Double values
+     * Testing addition of two Double values
+     * 
+     * @since 1.0
      */
     public function testAddDoubles() {
     	$this->dbl1 = new Double(1.25);
@@ -104,7 +156,9 @@ class Double_Test extends PHPUnit_Framework_TestCase
     }	
     
 	/**
-     * testing the __toString method
+     * Testing the __toString method
+     * 
+     * @since 1.0
      */
     public function testToString() {
     	$this->dbl1 = new Double(5.5);
