@@ -1,10 +1,10 @@
 <?php
 
+require_once $config->get('sysRoot').'alpha/util/CatchError.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/SecurityException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/ResourceNotFoundException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
-require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
 require_once $config->get('sysRoot').'alpha/util/filters/AlphaFilterInterface.inc';
 require_once $config->get('sysRoot').'alpha/model/badrequest_object.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';

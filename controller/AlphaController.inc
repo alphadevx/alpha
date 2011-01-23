@@ -1,6 +1,6 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/util/catch_error.inc';
+require_once $config->get('sysRoot').'alpha/util/CatchError.inc';
 require_once $config->get('sysRoot').'alpha/controller/front/FrontController.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Date.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Timestamp.inc';

@@ -128,7 +128,6 @@ class Button {
 	 * Returns the Javascript for injecting into <head> to control the behaviour of the buttons.
 	 * 
 	 * @since 1.0
-	 * @todo JS will be converted to JQuery at some point
 	 * @return string
 	 */
 	public static function renderJavascript() {
