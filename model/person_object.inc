@@ -88,15 +88,7 @@ class person_object extends AlphaDAO {
 	 * @var array
 	 * @since 1.0
 	 */
-	protected $dataLabels = array(
-		"OID"=>"Member ID#",		
-		"displayName"=>"Forum Name",		
-		"email"=>"E-mail Address",
-		"password"=>"Password",
-		"state"=>"Account state",
-		"URL"=>"Your site address",
-		"rights"=>"Rights Group Membership"
-		);
+	protected $dataLabels = array("OID"=>"Member ID#","displayName"=>"Forum Name","email"=>"E-mail Address","password"=>"Password","state"=>"Account state","URL"=>"Your site address","rights"=>"Rights Group Membership");
 
 	/**
 	 * The name of the database table for the class

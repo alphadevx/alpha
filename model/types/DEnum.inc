@@ -86,10 +86,7 @@ class DEnum extends AlphaDAO implements AlphaTypeInterface{
 	 * @var array
 	 * @since 1.0
 	 */
-	protected $dataLabels = array(
-		"OID"=>"DEnum ID#",
-		"name"=>"Name"		
-	);
+	protected $dataLabels = array("OID"=>"DEnum ID#","name"=>"Name");
 	
 	/**
 	 * The message to display to the user when validation fails

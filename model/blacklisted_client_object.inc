@@ -62,10 +62,7 @@ class blacklisted_client_object extends AlphaDAO {
 	 * @var array
 	 * @since 1.0
 	 */
-	protected $dataLabels = array(
-		'OID'=>"Blacklisted Client ID#",		
-		'client'=>'Client string'
-	);
+	protected $dataLabels = array('OID'=>'Blacklisted Client ID#','client'=>'Client string');
 	
 	/**
 	 * The name of the database table for the class
