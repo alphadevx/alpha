@@ -35,6 +35,8 @@ require_once $config->get('sysRoot').'alpha/tests/AlphaController_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/FrontController_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/AlphaView_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Image_Test.php';
+require_once $config->get('sysRoot').'alpha/tests/AlphaAgentUtils_Test.php';
+require_once $config->get('sysRoot').'alpha/tests/AlphaConfig_Test.php';
 
 /*
  * we are supressing the display and logging of errors on this page, as we 
@@ -371,6 +373,32 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('Image_Test');
+		$result = $suite->run();
+		$runningTime+=$result->time();
+		$testCount+=$result->count();
+				
+		$this->printTestResult($result);
+		
+		echo '<p>Running time: '.$runningTime.'</p>';
+		
+		//------------------------------------------------
+		echo '<h3>AlphaAgentUtils:</h3>';
+		
+		$suite = new PHPUnit_Framework_TestSuite();
+		$suite->addTestSuite('AlphaAgentUtils_Test');
+		$result = $suite->run();
+		$runningTime+=$result->time();
+		$testCount+=$result->count();
+				
+		$this->printTestResult($result);
+		
+		echo '<p>Running time: '.$runningTime.'</p>';
+		
+		//------------------------------------------------
+		echo '<h3>AlphaConfig:</h3>';
+		
+		$suite = new PHPUnit_Framework_TestSuite();
+		$suite->addTestSuite('AlphaConfig_Test');
 		$result = $suite->run();
 		$runningTime+=$result->time();
 		$testCount+=$result->count();

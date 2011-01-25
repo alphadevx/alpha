@@ -112,6 +112,7 @@ class AlphaAgentUtils {
 	 * 
 	 * @param string $userAgent The user agent string that we want to check.
 	 * @return boolean
+	 * @since 1.0
 	 */
 	public static function isBot($userAgent) {
 		$isBot = false;

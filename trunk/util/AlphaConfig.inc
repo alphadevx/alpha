@@ -4,44 +4,76 @@
  *
  * A singleton config class
  *
- * <code>
- * // include the config file
- * if(!isset($config)) {
- * 	require_once 'AlphaConfig.inc';
- * 	$config = AlphaConfig::getInstance();
- * }
- * </code>
- * 
  * @package alpha::util
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2009 John Collins
- * @version $Id: configLoader.inc 901 2009-06-02 21:03:09Z johnc $ 
+ * @version $Id: AlphaAgentUtils.inc 1200 2010-12-21 15:45:44Z johnc $
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class AlphaConfig {
 	/**
 	 * Array to store the config variables
 	 *
 	 * @var array
+	 * @since 1.0
 	 */
 	private $configVars = array();
 
 	/**
 	 * The config object singleton
 	 *
-	 * @var Config
+	 * @var AlphaConfig
+	 * @since 1.0
 	 */
 	private static $instance;
 
 	/**
 	 * Private constructor means the class cannot be instantiated from elsewhere
+	 * 
+	 * @since 1.0
 	 */
 	private function __construct () {}
   
 	/**
 	 * Get the config object instance
 	 *
-	 * @return Config
+	 * @return AlphaConfig 
+	 * @since 1.0
 	 */
 	public static function getInstance() {
 		if (!isset(self::$instance)) {
@@ -69,9 +101,14 @@ class AlphaConfig {
 	 *
 	 * @param $key string
 	 * @return string
+	 * @throws IllegalArguementException
+	 * @since 1.0
 	 */
 	public function get($key) {
-		return $this->configVars[$key];
+		if(array_key_exists($key, $this->configVars))
+			return $this->configVars[$key];
+		else
+			throw new IllegalArguementException('The config property ['.$key.'] is not set in the .ini config file');
 	}
   
 	/**
@@ -79,6 +116,7 @@ class AlphaConfig {
 	 *
 	 * @param $key string
 	 * @param $val string
+	 * @since 1.0
 	 */
 	public function set($key, $val) {
 		/*
@@ -87,11 +125,14 @@ class AlphaConfig {
 		 */
 		if(method_exists($this, 'before_set_callback'))
 			$val = $this->before_set_callback($key, $val, $this->configVars);
+			
 		$this->configVars[$key] = $val;  
 	}
 
 	/**
 	 * Sets the root directory of the application
+	 * 
+	 * @since 1.0
 	 */
 	private function setRootPath() {
 		$currentScript = __FILE__;
@@ -128,6 +169,8 @@ class AlphaConfig {
    
 	/**
 	 * Attempt to set the include_path to include the alpha/lib directory
+	 * 
+	 * @since 1.0
 	 */
 	private function setIncludePath() {
 		$config = AlphaConfig::getInstance();
@@ -138,8 +181,9 @@ class AlphaConfig {
    
 	/**
 	 * Loads the config from the relevent .ini file, dependant upon the current
-	 * environment (hostname).
+	 * environment (hostname).  Note that this method will die() on failure!
 	 * 
+	 * @since 1.0
 	 */
 	private function loadConfig() {
 		$rootPath = $this->get('rootPath');
@@ -150,8 +194,8 @@ class AlphaConfig {
 		}elseif(isset($_ENV['HOSTNAME'])){
 			// we may be running in CLI mode
 			$server = $_ENV['HOSTNAME'];
-		}else{ // TODO why is this hard-coded?!?
-			$server = 'agileopensource.com';
+		}else{
+			die('Unable to determine the server name');
 		}
 
 		// Load the servers to see which environment the current server is set as    
