@@ -8,7 +8,7 @@ if(!isset($config)) {
 
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/util/Logger.inc';
-require_once $config->get('sysRoot').'alpha/util/convertors/BO2Excel.inc';
+require_once $config->get('sysRoot').'alpha/util/convertors/AlphaDAO2Excel.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
 /**
@@ -112,7 +112,7 @@ class ViewExcel extends AlphaController implements AlphaControllerInterface {
 					$BO->load($params['oid']);
 					AlphaDAO::disconnect();
 					
-					$convertor = new BO2Excel($BO);
+					$convertor = new AlphaDAO2Excel($BO);
 					$convertor->render();
 				}else{
 					// handle all BOs of this type
@@ -122,7 +122,7 @@ class ViewExcel extends AlphaController implements AlphaControllerInterface {
 					$first = true;
 					
 					foreach($BOs as $BO) {
-						$convertor = new BO2Excel($BO);
+						$convertor = new AlphaDAO2Excel($BO);
 						if($first) {
 							$convertor->render(true);
 							$first = false;
