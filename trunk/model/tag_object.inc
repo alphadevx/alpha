@@ -1,7 +1,7 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
-require_once $config->get('sysRoot').'alpha/util/helpers/Validator.inc';
+require_once $config->get('sysRoot').'alpha/util/helpers/AlphaValidator.inc';
 
 /**
  *
@@ -241,7 +241,7 @@ class tag_object extends AlphaDAO {
 		$tagContents = array();
 		foreach($filtered as $tagContent) {
 			// we only want to create word tags
-			if(Validator::isAlpha($tagContent)) {
+			if(AlphaValidator::isAlpha($tagContent)) {
 				// just making sure that we haven't added this one in already
 				if(!in_array($tagContent, $tagContents) && !empty($tagContent)) {
 					$tag = new tag_object();

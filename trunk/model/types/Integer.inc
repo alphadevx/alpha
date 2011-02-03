@@ -1,6 +1,5 @@
 <?php
 
-require_once $config->get('sysRoot').'config/validation_rules.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
@@ -72,7 +71,7 @@ class Integer extends AlphaType implements AlphaTypeInterface {
 	 * @var string
 	 * @since 1.0
 	 */
-	protected $helper;
+	protected $helper = 'Not a valid integer value!';
 	
 	/**
 	 * The size of the value for the Integer
@@ -97,17 +96,14 @@ class Integer extends AlphaType implements AlphaTypeInterface {
 	 * @since 1.0
 	 * @throws IllegalArguementException
 	 */
-	public function __construct($val=0) {		
+	public function __construct($val=0) {
+		$this->validationRule = AlphaValidator::REQUIRED_INTEGER;
 		
-		$this->validationRule = DEFAULT_INTEGER;
-		$this->helper = 'Not a valid integer value!  A maximum of '.$this->size.' characters is allowed';
+		if(!AlphaValidator::isInteger($val))
+			throw new IllegalArguementException($this->helper);
 		
 		if (strlen($val) <= $this->size) {			
-			if (preg_match($this->validationRule, $val)) {				
-				$this->value = $val;				
-			}else{
-				throw new IllegalArguementException($this->helper);
-			}
+			$this->value = $val;
 		}else{
 			throw new IllegalArguementException($this->helper);
 		}
@@ -121,13 +117,11 @@ class Integer extends AlphaType implements AlphaTypeInterface {
 	 * @throws IllegalArguementException
 	 */
 	public function setValue($val) {		
-				
+		if(!AlphaValidator::isInteger($val))
+			throw new IllegalArguementException($this->helper);
+		
 		if (strlen($val) <= $this->size) {			
-			if (preg_match($this->validationRule, $val)) {				
-				$this->value = $val;				
-			}else{
-				throw new IllegalArguementException($this->helper);
-			}
+			$this->value = $val;
 		}else{
 			throw new IllegalArguementException($this->helper);
 		}

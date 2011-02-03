@@ -1,6 +1,5 @@
 <?php
 
-require_once $config->get('sysRoot').'config/validation_rules.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
@@ -196,7 +195,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	 * @since 1.0
 	 */
 	public function __construct() {
-		$this->validationRule = DEFAULT_INTEGER;		
+		$this->validationRule = AlphaValidator::REQUIRED_INTEGER;		
 		$this->helper = ' not a valid Relation value!  A maximum of '.$this->size.' characters is allowed.';		
 	}
 	
@@ -412,13 +411,12 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	public function setValue($val) {
 		if(empty($val)) {
 			$this->value = NULL;
-		}else{					
+		}else{
+			if(!AlphaValidator::isInteger($val))
+				throw new IllegalArguementException("[$val]".$this->helper);
+									
 			if (strlen($val) <= $this->size) {			
-				if (preg_match($this->validationRule, $val)) {				
-					$this->value = str_pad($val, 11, '0', STR_PAD_LEFT);				
-				}else{			
-					throw new IllegalArguementException("[$val]".$this->helper);
-				}
+				$this->value = str_pad($val, 11, '0', STR_PAD_LEFT);				
 			}else{
 				throw new IllegalArguementException("[$val]".$this->helper);
 			}

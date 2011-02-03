@@ -3046,7 +3046,7 @@ abstract class AlphaDAO {
 		if(count($attributes) > 0 && count($attributes) == count($values)) {
 	
 			for($i = 0; $i < count($values); $i++) {
-				if (Validator::isInteger($values[$i]))
+				if (AlphaValidator::isInteger($values[$i]))
 					$bindingsTypes .= 'i';
 				else
 					$bindingsTypes .= 's';

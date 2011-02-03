@@ -93,7 +93,7 @@ class Text_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */
     public function testSetValueFail() {
-    	$this->txt->setRule(REQUIRED_TEXT);
+    	$this->txt->setRule(AlphaValidator::REQUIRED_TEXT);
     	
     	try {
     		$this->txt->setValue('');
@@ -109,7 +109,7 @@ class Text_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */
     public function testSetValuePass() {
-    	$this->txt->setRule(REQUIRED_TEXT);
+    	$this->txt->setRule(AlphaValidator::REQUIRED_TEXT);
     	
     	try {
     		$this->txt->setValue('Some text');
@@ -133,7 +133,7 @@ class Text_Test extends PHPUnit_Framework_TestCase {
     		$this->txt->setValue('Too many characters!');
     		$this->fail('testing the setSize method to see if validation fails');
     	}catch (AlphaException $e) {
-    		$this->assertEquals('Not a valid text value!  A maximum of 4 characters is allowed.'
+    		$this->assertEquals('Not a valid text value!'
     			, $e->getMessage()
     			, 'testing the setSize method to see if validation fails');
     	}

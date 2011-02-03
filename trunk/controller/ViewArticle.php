@@ -10,7 +10,7 @@ require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/model/article_object.inc';
 require_once $config->get('sysRoot').'alpha/util/InputFilter.inc';
-require_once $config->get('sysRoot').'alpha/util/helpers/Validator.inc';
+require_once $config->get('sysRoot').'alpha/util/helpers/AlphaValidator.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
 /**
@@ -117,7 +117,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 			}
 			
 			// load the business object (BO) definition
-			if (isset($params['oid']) && Validator::isInteger($params['oid'])) {
+			if (isset($params['oid']) && AlphaValidator::isInteger($params['oid'])) {
 				$this->BO->load($params['oid']);
 				
 				$BOView = AlphaView::getInstance($this->BO);

@@ -1,6 +1,5 @@
 <?php
 
-require_once $config->get('sysRoot').'config/validation_rules.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
@@ -108,7 +107,7 @@ class Date extends AlphaType implements AlphaTypeInterface {
  	public function __construct($date='') {
  		global $config;
  		
- 		$this->validationRule = DEFAULT_DATE;
+ 		$this->validationRule = AlphaValidator::ALLOW_ALL;
 		
  		if(empty($date)) {
  			if($config->get('sysDefaultDateTime') == 'now') {

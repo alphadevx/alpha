@@ -1,6 +1,5 @@
 <?php
 
-require_once $config->get('sysRoot').'config/validation_rules.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
@@ -83,14 +82,15 @@ class Boolean extends AlphaType implements AlphaTypeInterface {
 	 * @throws IllegalArguementException
 	 */
 	public function __construct($val=true) {
+		if(!AlphaValidator::isBoolean($val))
+			throw new IllegalArguementException($this->helper);
+			
 		if ($val === true || $val === 1) {
 			$this->value = 1;
 			$this->booleanValue = true;
 		}elseif ($val === false || $val === 0) {
 			$this->value = 0;
 			$this->booleanValue = false;
-		}else{
-			throw new IllegalArguementException($this->helper);
 		}
 	}
 	
@@ -102,14 +102,15 @@ class Boolean extends AlphaType implements AlphaTypeInterface {
 	 * @throws IllegalArguementException
 	 */
 	public function setValue($val) {
-		if ($val === true || $val == 1) {
-			$this->value = 1;
-			$this->booleanValue = true;			
-		}elseif ($val === false || $val == 0) {
-			$this->value = 0;
-			$this->booleanValue = false;					
-		}else{
+		if(!AlphaValidator::isBoolean($val))
 			throw new IllegalArguementException($this->helper);
+			
+		if ($val === true || $val === 1) {
+			$this->value = 1;
+			$this->booleanValue = true;
+		}elseif ($val === false || $val === 0) {
+			$this->value = 0;
+			$this->booleanValue = false;
 		}
 	}
 	

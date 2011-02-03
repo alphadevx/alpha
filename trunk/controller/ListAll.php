@@ -9,6 +9,7 @@ if(!isset($config)) {
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
+require_once $config->get('sysRoot').'alpha/util/helpers/AlphaValidator.inc';
 
 /**
  * 
@@ -244,7 +245,7 @@ class ListAll extends AlphaController implements AlphaControllerInterface {
 			echo AlphaView::displayPageHead($this);
 				
 			if (!empty($params['delete_oid'])) {
-				if(!Validator::isInteger($params['delete_oid']))
+				if(!AlphaValidator::isInteger($params['delete_oid']))
 						throw new IllegalArguementException('Invalid delete_oid ['.$params['delete_oid'].'] provided on the request!');
 				
 				try {
