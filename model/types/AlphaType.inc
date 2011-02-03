@@ -1,6 +1,7 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
+require_once $config->get('sysRoot').'alpha/util/helpers/AlphaValidator.inc';
 
 /**
  * The base (abstract) complex data type

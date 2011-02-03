@@ -9,7 +9,7 @@ if(!isset($config)) {
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
-require_once $config->get('sysRoot').'alpha/util/helpers/Validator.inc';
+require_once $config->get('sysRoot').'alpha/util/helpers/AlphaValidator.inc';
 
 /**
  * 
@@ -128,7 +128,7 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 		try{
 			// load the business object (BO) definition
 			if (isset($params['bo']) && isset($params['oid'])) {
-				if(!Validator::isInteger($params['oid']))
+				if(!AlphaValidator::isInteger($params['oid']))
 					throw new IllegalArguementException('Invalid oid ['.$params['oid'].'] provided on the request!');
 				
 				$BOName = $params['bo'];
@@ -198,7 +198,7 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 				$this->BOView = AlphaView::getInstance($this->BO);
 		
 				if (!empty($params['delete_oid'])) {
-					if(!Validator::isInteger($params['delete_oid']))
+					if(!AlphaValidator::isInteger($params['delete_oid']))
 						throw new IllegalArguementException('Invalid delete_oid ['.$params['delete_oid'].'] provided on the request!');
 					
 					$temp = new $BOName();

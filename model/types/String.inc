@@ -1,6 +1,5 @@
 <?php
 
-require_once $config->get('sysRoot').'config/validation_rules.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
@@ -72,7 +71,7 @@ class String extends AlphaType implements AlphaTypeInterface {
 	 * @var string
 	 * @since 1.0
 	 */
-	protected $helper;
+	protected $helper = 'Not a valid string value!';
 	
 	/**
 	 * The size of the value for the this String
@@ -107,8 +106,7 @@ class String extends AlphaType implements AlphaTypeInterface {
 	 */
 	public function __construct($val='') {		
 		
-		$this->validationRule = DEFAULT_STRING;		
-		$this->helper = 'Not a valid string value!  A maximum of '.$this->size.' characters is allowed.';
+		$this->validationRule = AlphaValidator::ALLOW_ALL;
 		
 		if (strlen($val) <= $this->size) {			
 			if (preg_match($this->validationRule, $val)) {				
@@ -128,7 +126,7 @@ class String extends AlphaType implements AlphaTypeInterface {
 	 * @since 1.0
 	 * @throws IllegalArguementException
 	 */
-	public function setValue($val) {		
+	public function setValue($val) {	
 		
 		if (strlen($val) <= $this->size) {			
 			if (preg_match($this->validationRule, $val)) {				
@@ -181,7 +179,6 @@ class String extends AlphaType implements AlphaTypeInterface {
 	public function setSize($size) {
 		if ($size <= self::MAX_SIZE) {
 			$this->size = $size;
-			$this->helper = 'Not a valid string value!  A maximum of '.$this->size.' characters is allowed.';
 		}else{
 			throw new IllegalArguementException('Error: the value '.$size.' provided by setSize is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
 		}	

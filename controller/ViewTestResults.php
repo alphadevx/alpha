@@ -30,7 +30,7 @@ require_once $config->get('sysRoot').'alpha/tests/Text_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Relation_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/Tag_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/AlphaDAO_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/Validator_Test.php';
+require_once $config->get('sysRoot').'alpha/tests/AlphaValidator_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/AlphaController_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/FrontController_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/AlphaView_Test.php';
@@ -317,10 +317,10 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
 		//------------------------------------------------
-		echo '<h3>Validator helper:</h3>';
+		echo '<h3>AlphaValidator helper:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
-		$suite->addTestSuite('Validator_Test');
+		$suite->addTestSuite('AlphaValidator_Test');
 		$result = $suite->run();
 		$runningTime+=$result->time();
 		$testCount+=$result->count();

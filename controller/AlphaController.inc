@@ -14,7 +14,7 @@ require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/FailedUnitCommitException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/SecurityException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/FileNotFoundException.inc';
-require_once $config->get('sysRoot').'alpha/util/helpers/Validator.inc';
+require_once $config->get('sysRoot').'alpha/util/helpers/AlphaValidator.inc';
 
 /**
  *

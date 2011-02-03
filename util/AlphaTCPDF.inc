@@ -2,7 +2,7 @@
 
 require_once $config->get('sysRoot').'alpha/lib/tcpdf/tcpdf.php';
 require_once $config->get('sysRoot').'alpha/controller/front/FrontController.inc';
-require_once $config->get('sysRoot').'alpha/util/helpers/Validator.inc';
+require_once $config->get('sysRoot').'alpha/util/helpers/AlphaValidator.inc';
 require_once $config->get('sysRoot').'alpha/view/widgets/Image.inc';
 
 /**
@@ -46,7 +46,7 @@ class AlphaTCPDF extends TCPDF {
 				parent::Image($decoded['s'], $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border);
 			}else {
 				// it has no query string, so threat as a regular image URL
-				if(Validator::isURL($file))
+				if(AlphaValidator::isURL($file))
 					parent::Image($config->get('sysRoot').'/'.Image::convertImageURLToPath($file), $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border);
 				else
 					parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border);

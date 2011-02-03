@@ -121,12 +121,12 @@ class Sequence extends AlphaDAO implements AlphaTypeInterface{
 		// ensure to call the parent constructor
 		parent::__construct();
 		
-		$this->validationRule = DEFAULT_STRING;
+		$this->validationRule = AlphaValidator::ALLOW_ALL;
 		
 		$this->sequence = new Integer();
 		
 		$this->prefix = new String();
-		$this->prefix->setRule(ALPHA_UPPER);
+		$this->prefix->setRule(AlphaValidator::REQUIRED_ALPHA_UPPER);
 		$this->prefix->setHelper('Sequence prefix must be uppercase string!');
 		$this->markUnique('prefix');
 		
@@ -207,9 +207,10 @@ class Sequence extends AlphaDAO implements AlphaTypeInterface{
 	public function setValue($val) {
 		if (strlen($val) <= $this->size) {
 			if(!empty($val)) {
-				$parts = explode('-', $val);
-				if(count($parts) != 2)
+				if(!AlphaValidator::isSequence($val))
 					throw new IllegalArguementException($this->helper);
+					
+				$parts = explode('-', $val);				
 				$this->prefix->setValue($parts[0]);
 				$this->sequence->setValue($parts[1]);
 			}

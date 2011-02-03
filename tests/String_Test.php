@@ -118,7 +118,7 @@ class String_Test extends PHPUnit_Framework_TestCase {
      */
     public function testSetUsernameValueInvalid() {
     	try {
-    		$this->str1->setRule(RULE_USERNAME);
+    		$this->str1->setRule(AlphaValidator::REQUIRED_USERNAME);
     		$this->str1->setSize(70);
 			$this->str1->setHelper($this->usernameHelper);
 			
@@ -138,7 +138,7 @@ class String_Test extends PHPUnit_Framework_TestCase {
      */
     public function testSetUsernameValueValid() {
     	try {
-    		$this->str1->setRule(RULE_USERNAME);
+    		$this->str1->setRule(AlphaValidator::REQUIRED_USERNAME);
     		$this->str1->setSize(70);
 			$this->str1->setHelper($this->usernameHelper);
 			
@@ -155,7 +155,7 @@ class String_Test extends PHPUnit_Framework_TestCase {
      */
     public function testSetEmailValueInvalid() {
     	try {
-    		$this->str1->setRule(RULE_EMAIL);
+    		$this->str1->setRule(AlphaValidator::REQUIRED_EMAIL);
     		$this->str1->setSize(70);
 			$this->str1->setHelper($this->emailHelper);
 			
@@ -175,7 +175,7 @@ class String_Test extends PHPUnit_Framework_TestCase {
      */
     public function testSetEmailValueValid() {
     	try {
-    		$this->str1->setRule(RULE_EMAIL);
+    		$this->str1->setRule(AlphaValidator::REQUIRED_EMAIL);
     		$this->str1->setSize(70);
 			$this->str1->setHelper($this->emailHelper);
 			
@@ -201,7 +201,7 @@ class String_Test extends PHPUnit_Framework_TestCase {
      */
     public function testSetURLValueInvalid() {
     	try {
-    		$this->str1->setRule(RULE_URL_BLANK);    		
+    		$this->str1->setRule(AlphaValidator::OPTIONAL_HTTP_URL);    		
 			$this->str1->setHelper($this->urlHelper);
 			
 			$this->str1->setValue('invalid url');
@@ -220,7 +220,7 @@ class String_Test extends PHPUnit_Framework_TestCase {
      */
     public function testSetURLValueValid() {
     	try {
-    		$this->str1->setRule(RULE_URL_BLANK);    		
+    		$this->str1->setRule(AlphaValidator::OPTIONAL_HTTP_URL);    		
 			$this->str1->setHelper($this->urlHelper);
 			
 			$this->str1->setValue('http://www.google.com/');
@@ -247,7 +247,7 @@ class String_Test extends PHPUnit_Framework_TestCase {
     		$this->str1->setValue('Too many characters!');
     		$this->fail('testing the setSize method to see if validation fails');
     	}catch (AlphaException $e) {
-    		$this->assertEquals('Not a valid string value!  A maximum of 4 characters is allowed.'
+    		$this->assertEquals('Not a valid string value!'
     			, $e->getMessage()
     			, 'testing the setSize method to see if validation fails');
     	}

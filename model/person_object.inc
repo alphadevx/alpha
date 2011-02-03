@@ -134,11 +134,11 @@ class person_object extends AlphaDAO {
 		// ensure to call the parent constructor
 		parent::__construct();
 		$this->displayName = new String();
-		$this->displayName->setRule(RULE_USERNAME);
+		$this->displayName->setRule(AlphaValidator::REQUIRED_USERNAME);
 		$this->displayName->setSize(70);
 		$this->displayName->setHelper('Please provide a name for display on the website (only letters, numbers, and .-_ characters are allowed!).');
 		$this->email = new String();
-		$this->email->setRule(RULE_EMAIL);
+		$this->email->setRule(AlphaValidator::REQUIRED_EMAIL);
 		$this->email->setSize(70);
 		$this->email->setHelper('Please provide a valid e-mail address as your username.');
 		$this->password = new String();
@@ -150,7 +150,7 @@ class person_object extends AlphaDAO {
 									'Disabled'));
 		$this->state->setValue('Active');
 		$this->URL = new String();
-		$this->URL->setRule(RULE_URL_BLANK);
+		$this->URL->setRule(AlphaValidator::OPTIONAL_HTTP_URL);
 		$this->URL->setHelper('URLs must be in the format http://some_domain/ or left blank!');
 		// add unique keys to displayName and email (which is effectively the username in Alpha)
 		$this->markUnique('displayName');

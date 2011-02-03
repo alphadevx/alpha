@@ -104,7 +104,7 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 		try{
 			// load the business object (BO) definition
 			if (isset($params['oid'])) {				
-				if(!Validator::isInteger($params['oid']))
+				if(!AlphaValidator::isInteger($params['oid']))
 					throw new IllegalArguementException('Article ID provided ['.$params['oid'].'] is not valid!');
 				
 				$this->BO->load($params['oid']);
@@ -159,7 +159,7 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 			}
 
 			if (isset($params['oid'])) {
-				if(!Validator::isInteger($params['oid']))
+				if(!AlphaValidator::isInteger($params['oid']))
 					throw new IllegalArguementException('Article ID provided ['.$params['oid'].'] is not valid!');
 									
 				$this->BO->load($params['oid']);

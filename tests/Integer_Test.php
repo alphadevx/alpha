@@ -107,7 +107,7 @@ class Integer_Test extends PHPUnit_Framework_TestCase {
     		$this->int1->setValue("blah");
     		$this->fail('testing passing invalid data to setValue');
     	}catch (AlphaException $e) {
-    		$this->assertEquals('Not a valid integer value!  A maximum of 11 characters is allowed'
+    		$this->assertEquals('Not a valid integer value!'
     			, $e->getMessage()
     			, 'testing passing invalid data to setValue');
     	}

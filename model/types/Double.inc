@@ -1,6 +1,5 @@
 <?php
 
-require_once $config->get('sysRoot').'config/validation_rules.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaType.inc';
 require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
@@ -72,7 +71,7 @@ class Double extends AlphaType implements AlphaTypeInterface {
 	 * @var string
 	 * @since 1.0
 	 */
-	protected $helper = 'Error: not a valid Double value!';
+	protected $helper = 'Not a valid double value!';
 	
 	/**
 	 * The size of the value for the Double
@@ -98,15 +97,13 @@ class Double extends AlphaType implements AlphaTypeInterface {
 	 * @throws IllegalArguementException
 	 */
 	public function __construct($val=0.0) {	
-		$this->validationRule = DEFAULT_DOUBLE;
-		$this->helper = 'Not a valid double value!  A maximum of '.$this->size.' characters is allowed, in the format 0.00';
+		$this->validationRule = AlphaValidator::REQUIRED_DOUBLE;
+		
+		if(!AlphaValidator::isDouble($val))
+			throw new IllegalArguementException($this->helper);
 		
 		if (strlen($val) <= $this->size) {
-			if ($val == 0 || preg_match($this->validationRule, strval($val))) {				
-				$this->value = $val;					
-			}else{
-				throw new IllegalArguementException($this->helper);
-			}
+			$this->value = $val;
 		}else{
 			throw new IllegalArguementException($this->helper);
 		}
@@ -120,12 +117,11 @@ class Double extends AlphaType implements AlphaTypeInterface {
 	 * @throws IllegalArguementException
 	 */
 	public function setValue($val) {				
-		if (strlen($val) <= $this->size) {			
-			if (preg_match($this->validationRule, $val)) {				
-				$this->value = $val;				
-			}else{
-				throw new IllegalArguementException($this->helper);
-			}
+		if(!AlphaValidator::isDouble($val))
+			throw new IllegalArguementException($this->helper);
+		
+		if (strlen($val) <= $this->size) {
+			$this->value = $val;
 		}else{
 			throw new IllegalArguementException($this->helper);
 		}
@@ -161,9 +157,8 @@ class Double extends AlphaType implements AlphaTypeInterface {
 	public function setSize($size) {
 		if ($size <= self::MAX_SIZE) {
 			$this->size = $size;
-			$this->helper = 'Not a valid double value!  A maximum of '.$this->size.' characters is allowed, in the format 0.00';
 		}else{
-			throw new IllegalArguementException('Error: the value '.$size.' provided by setSize is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
+			throw new IllegalArguementException('The value '.$size.' provided by setSize is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
 		}	
 	}
 	

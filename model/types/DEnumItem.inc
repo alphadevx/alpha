@@ -86,7 +86,7 @@ class DEnumItem extends AlphaDAO implements AlphaTypeInterface{
 	 * @var string
 	 * @since 1.0
 	 */
-	protected $helper = 'Error: not a valid DEnumItem value!';
+	protected $helper = 'Not a valid DEnumItem value!';
 	
 	/**
 	 * The constructor
@@ -98,7 +98,7 @@ class DEnumItem extends AlphaDAO implements AlphaTypeInterface{
 		parent::__construct();
 		
 		$this->value = new String();
-		$this->value->setRule(REQUIRED_TEXT);
+		$this->value->setRule(AlphaValidator::REQUIRED_STRING);
 		$this->value->setHelper("A blank dropdown value is not allowed!");
 		$this->DEnumID = new Integer();
 		$this->markTransient('helper');		
