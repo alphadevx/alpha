@@ -176,42 +176,52 @@ abstract class AlphaFeed {
 	}
 	
 	/**
-	 * Method to add all of the BO items to the feed, from the newest to the $limit provided 
+	 * Method to load all of the BO items to the feed from the database, from the newest to the 
+	 * $limit provided 
 	 * 
 	 * @param integer $limit The amount of items to render in the feed.
 	 * @param string $sortBy The name of the field to sort the feed by.
 	 * @since 1.0
 	 */
-	public function addItems($limit, $sortBy) {		
+	public function loadBOs($limit, $sortBy) {		
 		
 		$BOs = $this->BO->loadAll(0, $limit, $sortBy, 'DESC');
 		
 		AlphaDAO::disconnect();
 		
 		foreach($BOs as $BO) {
-			$title = $BO->get($this->fieldNameMappings['title']);			
-			$url = $BO->get($this->fieldNameMappings['url']);
-			
-			if(isset($this->fieldNameMappings['description'])) {
-				$description = $BO->get($this->fieldNameMappings['description']);
-			}else{
-				$description = '';
-			}
-			
-			if(isset($this->fieldNameMappings['pubDate'])) {
-				$dateTS = strtotime($BO->get($this->fieldNameMappings['pubDate']));
-				$pubDate = date(DATE_ATOM, $dateTS);
-			}else{
-				$pubDate = '';
-			}
-			
-			if(isset($this->fieldNameMappings['id']))
-				$id = $BO->get($this->fieldNameMappings['id']);
-			else
-				$id = '';
-			
-			$this->addItem($title, $url, $description, $pubDate, $id);
+			$this->addBO($BO);
 		}
+	}
+	
+	/**
+	 * Method for adding a BO to the current feed 
+	 * 
+	 * @param AlphaDAO $BO
+	 */
+	public function addBO($BO) {
+		$title = $BO->get($this->fieldNameMappings['title']);			
+		$url = $BO->get($this->fieldNameMappings['url']);
+			
+		if(isset($this->fieldNameMappings['description'])) {
+			$description = $BO->get($this->fieldNameMappings['description']);
+		}else{
+			$description = '';
+		}
+			
+		if(isset($this->fieldNameMappings['pubDate'])) {
+			$dateTS = strtotime($BO->get($this->fieldNameMappings['pubDate']));
+			$pubDate = date(DATE_ATOM, $dateTS);
+		}else{
+			$pubDate = '';
+		}
+			
+		if(isset($this->fieldNameMappings['id']))
+			$id = $BO->get($this->fieldNameMappings['id']);
+		else
+			$id = '';
+			
+		$this->addItem($title, $url, $description, $pubDate, $id);
 	}
 	
 	/**
