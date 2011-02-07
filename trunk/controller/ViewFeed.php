@@ -181,7 +181,7 @@ class ViewFeed extends AlphaController implements AlphaControllerInterface {
 			
 			// now add the twenty last items (from newest to oldest) to the feed, and render
 			$feed->addItems(20, $this->sortBy);
-			echo $feed->dump();
+			echo $feed->render();
 			
 			// log the request for this news feed
 			$feedLog = new LogFile($config->get('sysRoot').'logs/feeds.log');		
