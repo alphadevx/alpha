@@ -3,7 +3,6 @@
 require_once $config->get('sysRoot').'alpha/util/feeds/AlphaFeed.inc';
 
 /**
- * 
  * RSS 1.0 class for synication
  * 
  * @package alpha::util::feeds

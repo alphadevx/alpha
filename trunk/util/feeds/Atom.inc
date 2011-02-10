@@ -3,7 +3,6 @@
 require_once $config->get('sysRoot').'alpha/util/feeds/AlphaFeed.inc';
 
 /**
- * 
  * Atom class for syndication
  * 
  * @package alpha::util::feeds

@@ -1,7 +1,6 @@
 <?php
 
 /**
- *
  * Class for converting a Business Object to an Excel spreadsheet
  * 
  * @package alpha::util::convertors
