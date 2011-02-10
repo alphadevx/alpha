@@ -38,6 +38,7 @@ require_once $config->get('sysRoot').'alpha/tests/Image_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/AlphaAgentUtils_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/AlphaConfig_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/AlphaFeed_Test.php';
+require_once $config->get('sysRoot').'alpha/tests/AlphaFilters_Test.php';
 
 /*
  * we are supressing the display and logging of errors on this page, as we 
@@ -48,7 +49,6 @@ $config->set('sysTraceLevel', 'FATAL');
 
 
 /**
- *
  * Controller which displays all of the unit test results
  * 
  * @package alpha::controller
@@ -413,6 +413,19 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('AlphaFeed_Test');
+		$result = $suite->run();
+		$runningTime+=$result->time();
+		$testCount+=$result->count();
+				
+		$this->printTestResult($result);
+		
+		echo '<p>Running time: '.$runningTime.'</p>';
+		
+		//------------------------------------------------
+		echo '<h3>AlphaFilters:</h3>';
+		
+		$suite = new PHPUnit_Framework_TestSuite();
+		$suite->addTestSuite('AlphaFilters_Test');
 		$result = $suite->run();
 		$runningTime+=$result->time();
 		$testCount+=$result->count();

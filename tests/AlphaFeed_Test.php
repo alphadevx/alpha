@@ -6,7 +6,6 @@ require_once $config->get('sysRoot').'alpha/util/feeds/Atom.inc';
 require_once $config->get('sysRoot').'alpha/model/article_object.inc';
 
 /**
- *
  * Test cases for the AlphaFeed class and its children
  * 
  * @package alpha::tests

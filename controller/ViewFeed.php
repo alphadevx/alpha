@@ -14,7 +14,6 @@ require_once $config->get('sysRoot').'alpha/util/LogFile.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
 /**
- *
  * Controller for viewing news feeds
  * 
  * @package alpha::controller
