@@ -47,12 +47,12 @@ class AlphaTreeGraph {
 		$node = new AlphaGraphNode($id, $pid, $w, $h, $message, $nodeColour, $URL);
 		if(isset($this->nodes[$pid])) {
 			$pnode = $this->nodes[$pid];
-			$node->nodeParent = $pnode;
-			$pnode->childs[] = $node;
+			$node->setParentNode($pnode);
+			$pnode->addChild($node);
 		}else{
 			$pnode = $this->root;
-			$node->nodeParent = $pnode;
-			$this->root->childs[] = $node;		
+			$node->setParentNode($pnode);
+			$this->root->addChild($node);		
 		}
 		$this->nodes[$id] = $node;
 	}
@@ -60,14 +60,14 @@ class AlphaTreeGraph {
 	private function firstScan($node, $level) {
 		$this->setLevelHeight($node, $level);
         $this->setLevelWidth($node, $level);
-        $this->setNeighbors($node, $level);
+        $this->setNeighbours($node, $level);
         
 		if($node->numChilds()==0) {
             $leftSibling = $node->getLeftSibling();
             if($leftSibling) {
-				$node->prelim = $leftSibling->prelim + $leftSibling->w + $this->colSpace;
+				$node->setOffset($leftSibling->getOffset() + $leftSibling->getWidth() + $this->colSpace);
 			}else{
-                $node->prelim = 0;
+                $node->setOffset(0);
 			}
         }else{
 			$n = $node->numChilds();
@@ -76,15 +76,15 @@ class AlphaTreeGraph {
             }
 
             $midPoint = $node->getChildrenCenter();
-            $midPoint -= $node->w/2;
+            $midPoint -= $node->getWidth()/2;
             $leftSibling = $node->getLeftSibling();
             if($leftSibling) {
-				$node->prelim = $leftSibling->prelim + $leftSibling->w + $this->colSpace;
-                $node->modifier = $node->prelim - $midPoint;
+				$node->setOffset($leftSibling->getOffset() + $leftSibling->getWidth() + $this->colSpace);
+                $node->setModifier($node->getOffset() - $midPoint);
 
                 $this->apportion($node, $level);
             }else{            	
-                $node->prelim = $midPoint;
+                $node->setOffset($midPoint);
             }
         }
 
@@ -92,17 +92,17 @@ class AlphaTreeGraph {
 	}
 	
 	private function secondScan($node, $level, $x=0, $y=0) {
-		$xTmp = $node->prelim+$x;
+		$xTmp = $node->getOffset()+$x;
 		$yTmp = $y;
 		$maxsizeTmp = $this->maxLevelHeight[$level];
-		$nodesizeTmp = $node->h;
-		$node->x = $xTmp+5;        
-        $node->y = $yTmp;
-		$this->height = ($this->height > $node->y+$node->w) ? $this->height : $node->y+$node->w;
-		$this->width = ($this->width > $xTmp + $node->w) ? $this->width : $xTmp+$node->w+10;
+		$nodesizeTmp = $node->getHeight();
+		$node->setX($xTmp+5);
+        $node->setY($yTmp);
+		$this->height = ($this->height > $node->getY()+$node->getWidth()) ? $this->height : $node->getY()+$node->getWidth();
+		$this->width = ($this->width > $xTmp + $node->getWidth()) ? $this->width : $xTmp+$node->getWidth()+10;
 
         if($node->numChilds()) {
-            $this->secondScan($node->getChildAt(0), $level + 1, $x + $node->modifier, $y + $maxsizeTmp + $this->rowSpace);
+            $this->secondScan($node->getChildAt(0), $level + 1, $x + $node->getModifier(), $y + $maxsizeTmp + $this->rowSpace);
         }
         $rightSibling = $node->getRightSibling();
         if($rightSibling) {
@@ -114,20 +114,20 @@ class AlphaTreeGraph {
 	
 	private function apportion($node, $level) {
 		$firstChild = $node->getChildAt(0);
-        $firstChildLeftNeighbor = $firstChild->leftNeighbor;
+        $firstChildLeftNeighbor = $firstChild->getLeftSibling();
         for($j = 1; $firstChild && $firstChildLeftNeighbor && $j <= $level;) {
 			$modifierSumRight = 0;
             $modifierSumLeft = 0;
             $rightAncestor = $firstChild;
             $leftAncestor = $firstChildLeftNeighbor;
             for($l = 0; $l < $j; $l++) {
-				$rightAncestor = $rightAncestor->nodeParent;
-                $leftAncestor = $leftAncestor->nodeParent;
-                $modifierSumRight += $rightAncestor->modifier;
-                $modifierSumLeft += $leftAncestor->modifier;
+				$rightAncestor = $rightAncestor->getParentNode();
+                $leftAncestor = $leftAncestor->getParentNode();
+                $modifierSumRight += $rightAncestor->getModifier();
+                $modifierSumLeft += $leftAncestor->getModifier();
             }
 
-            $totalGap = ($firstChildLeftNeighbor->prelim + $modifierSumLeft + $firstChildLeftNeighbor->w + $this->branchSpace) - ($firstChild->prelim + $modifierSumRight);
+            $totalGap = ($firstChildLeftNeighbor->getOffset() + $modifierSumLeft + $firstChildLeftNeighbor->getWidth() + $this->branchSpace) - ($firstChild->getOffset() + $modifierSumRight);
 			if($totalGap > 0) {
                 $subtreeAux = $node;
                 $numSubtrees = 0;
@@ -140,8 +140,10 @@ class AlphaTreeGraph {
 					$subtreeMoveAux = $node;
                     $singleGap = $totalGap / $numSubtrees;
                     for(; $subtreeMoveAux !== $leftAncestor; $subtreeMoveAux = $subtreeMoveAux->getLeftSibling()) {
-                        $subtreeMoveAux->prelim += $totalGap;
-                        $subtreeMoveAux->modifier += $totalGap;
+                        $subtreeMoveAux->setOffset($subtreeMoveAux->getOffset() + $totalGap);
+                        $subtreeMoveAux->setModifier($subtreeMoveAux->getModifier() + $totalGap);
+                        //$subtreeMoveAux->offset += $totalGap;
+                        //$subtreeMoveAux->modifier += $totalGap;
                         $totalGap -= $singleGap;
                     }
                 }
@@ -153,7 +155,7 @@ class AlphaTreeGraph {
                 $firstChild = $firstChild->getChildAt(0);
             }
 			if($firstChild)	{
-                $firstChildLeftNeighbor = $firstChild->leftNeighbor;
+                $firstChildLeftNeighbor = $firstChild->getLeftSibling();
 			}
         }
 }
@@ -162,8 +164,8 @@ class AlphaTreeGraph {
 		if (!isset($this->maxLevelHeight[$level])) {
 			$this->maxLevelHeight[$level] = 0;
 		}
-		if($this->maxLevelHeight[$level] < $node->h) {
-			$this->maxLevelHeight[$level] = $node->h;
+		if($this->maxLevelHeight[$level] < $node->getHeight()) {
+			$this->maxLevelHeight[$level] = $node->getHeight();
 		}
 	}
 	
@@ -171,15 +173,15 @@ class AlphaTreeGraph {
 		if (!isset($this->maxLevelWidth[$level])) {
 			$this->maxLevelWidth[$level] = 0;
 		}
-		if($this->maxLevelWidth[$level] < $node->w) {
-			$this->maxLevelWidth[$level] = $node->w;		
+		if($this->maxLevelWidth[$level] < $node->getWidth()) {
+			$this->maxLevelWidth[$level] = $node->getWidth();		
 		}
 	}
 	
-	private function setNeighbors($node, $level) {
-		$node->leftNeighbor = (isset($this->previousLevelNode[$level])) ? $this->previousLevelNode[$level] : 0 ;
-		if($node->leftNeighbor)	{
-			$node->leftNeighbor->rightNeighbor = $node;
+	private function setNeighbours($node, $level) {
+		$node->setLeftSibling((isset($this->previousLevelNode[$level])) ? $this->previousLevelNode[$level] : 0 );
+		if($node->getLeftSibling())	{
+			$node->getLeftSibling()->setRightSibling($node);
 		}
 		$this->previousLevelNode[$level] = $node;	
 	}
