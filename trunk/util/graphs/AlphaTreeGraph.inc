@@ -6,15 +6,48 @@ require_once $config->get('sysRoot').'alpha/util/graphs/AlphaGraphNode.inc';
  *
  * Maintains the geometry for a tree graph
  * 
- * @package util::graphs
+ * @package alpha::util::graphs
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2009 John Collins
  * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class AlphaTreeGraph {
-	private $maxLevelHeight = array();
-	private $maxLevelWidth = array();
 	private $previousLevelNode = array();
 	private $nodes = array();
 	private $root;
@@ -36,15 +69,15 @@ class AlphaTreeGraph {
 	public function __construct($rowSpace=40, $colSpace=40, $branchSpace=80) {
 		self::$logger = new Logger('AlphaTreeGraph');
 		
-		$this->root = new AlphaGraphNode(0, 0, 0, 0);
+		$this->root = new AlphaGraphNode(0, 0, 0);
 		$this->rowSpace = $rowSpace;
 		$this->colSpace = $colSpace;
 		$this->branchSpace = $branchSpace;
 	}
 
 
-	public function add($id, $pid, $message='', $w=0, $h=0, $nodeColour=null , $URL=null) {
-		$node = new AlphaGraphNode($id, $pid, $w, $h, $message, $nodeColour, $URL);
+	public function add($id, $pid, $message = '', $w = 0, $h = 0, $nodeColour, $URL) {
+		$node = new AlphaGraphNode($id, $w, $h, $message, $nodeColour, $URL);
 		if(isset($this->nodes[$pid])) {
 			$pnode = $this->nodes[$pid];
 			$node->setParentNode($pnode);
@@ -58,8 +91,6 @@ class AlphaTreeGraph {
 	}
 	
 	private function firstScan($node, $level) {
-		$this->setLevelHeight($node, $level);
-        $this->setLevelWidth($node, $level);
         $this->setNeighbours($node, $level);
         
 		if($node->numChilds()==0) {
@@ -94,7 +125,6 @@ class AlphaTreeGraph {
 	private function secondScan($node, $level, $x=0, $y=0) {
 		$xTmp = $node->getOffset()+$x;
 		$yTmp = $y;
-		$maxsizeTmp = $this->maxLevelHeight[$level];
 		$nodesizeTmp = $node->getHeight();
 		$node->setX($xTmp+5);
         $node->setY($yTmp);
@@ -102,7 +132,7 @@ class AlphaTreeGraph {
 		$this->width = ($this->width > $xTmp + $node->getWidth()) ? $this->width : $xTmp+$node->getWidth()+10;
 
         if($node->numChilds()) {
-            $this->secondScan($node->getChildAt(0), $level + 1, $x + $node->getModifier(), $y + $maxsizeTmp + $this->rowSpace);
+            $this->secondScan($node->getChildAt(0), $level + 1, $x + $node->getModifier(), $y + $node->getHeight() + $this->rowSpace);
         }
         $rightSibling = $node->getRightSibling();
         if($rightSibling) {
@@ -142,8 +172,6 @@ class AlphaTreeGraph {
                     for(; $subtreeMoveAux !== $leftAncestor; $subtreeMoveAux = $subtreeMoveAux->getLeftSibling()) {
                         $subtreeMoveAux->setOffset($subtreeMoveAux->getOffset() + $totalGap);
                         $subtreeMoveAux->setModifier($subtreeMoveAux->getModifier() + $totalGap);
-                        //$subtreeMoveAux->offset += $totalGap;
-                        //$subtreeMoveAux->modifier += $totalGap;
                         $totalGap -= $singleGap;
                     }
                 }
@@ -158,28 +186,12 @@ class AlphaTreeGraph {
                 $firstChildLeftNeighbor = $firstChild->getLeftSibling();
 			}
         }
-}
-	
-	private function setLevelHeight($node, $level) {	
-		if (!isset($this->maxLevelHeight[$level])) {
-			$this->maxLevelHeight[$level] = 0;
-		}
-		if($this->maxLevelHeight[$level] < $node->getHeight()) {
-			$this->maxLevelHeight[$level] = $node->getHeight();
-		}
-	}
-	
-	private function setLevelWidth($node, $level) {
-		if (!isset($this->maxLevelWidth[$level])) {
-			$this->maxLevelWidth[$level] = 0;
-		}
-		if($this->maxLevelWidth[$level] < $node->getWidth()) {
-			$this->maxLevelWidth[$level] = $node->getWidth();		
-		}
 	}
 	
 	private function setNeighbours($node, $level) {
-		$node->setLeftSibling((isset($this->previousLevelNode[$level])) ? $this->previousLevelNode[$level] : 0 );
+		if(isset($this->previousLevelNode[$level]))
+			$node->setLeftSibling($this->previousLevelNode[$level]);
+			
 		if($node->getLeftSibling())	{
 			$node->getLeftSibling()->setRightSibling($node);
 		}
@@ -207,7 +219,7 @@ class AlphaTreeGraph {
 		$this->firstScan($this->root, 0);
 		$this->secondScan($this->root, 0);
 		foreach($this->nodes as $node) {
-			$node->getLinks();
+			$node->setUpLinks();
 		}
 		$this->isRendered = true;
 	}
