@@ -48,25 +48,103 @@ require_once $config->get('sysRoot').'alpha/util/graphs/AlphaGraphNode.inc';
  *  
  */
 class AlphaTreeGraph {
-	private $previousLevelNode = array();
+	/**
+	 * An array of nodes on the previous level
+	 * 
+	 * @var array
+	 * @since 1.0
+	 */
+	private $previousLevelNodes = array();
+	
+	/**
+	 * An array of nodes in this graph
+	 * 
+	 * @var array
+	 * @since 1.0
+	 */
 	private $nodes = array();
+	
+	/**
+	 * The root node of the graph
+	 * 
+	 * @var AlphaGraphNode
+	 * @since 1.0
+	 */
 	private $root;
+	
+	/**
+	 * The amount of space between graph rows
+	 * 
+	 * @var integer
+	 * @since 1.0
+	 */
 	private $rowSpace;
+	
+	/**
+	 * The amount of space between graph columns
+	 * 
+	 * @var integer
+	 * @since 1.0
+	 */
 	private $colSpace;
+	
+	/**
+	 * The amount of space between graph branches
+	 * 
+	 * @var integer
+	 * @since 1.0
+	 */
 	private $branchSpace;
+	
+	/**
+	 * Flag to track whether the chart is rendered or not
+	 * 
+	 * @var boolean
+	 * @since 1.0
+	 */
 	private $isRendered = false;
+	
+	/**
+	 * The index of the current node in the graph we are inspecting
+	 * 
+	 * @var integer
+	 * @since 1.0
+	 */
 	private $position = 0;
+	
+	/**
+	 * The height of the graph
+	 * 
+	 * @var integer
+	 * @since 1.0
+	 */
 	private $height = 0;
+	
+	/**
+	 * The width of the graph
+	 * 
+	 * @var integer
+	 * @since 1.0
+	 */
 	private $width = 0;
 
 	/**
 	 * Trace logger
 	 * 
 	 * @var Logger
+	 * @since 1.0
 	 */
 	private static $logger = null;
 	
-	public function __construct($rowSpace=40, $colSpace=40, $branchSpace=80) {
+	/**
+	 * Constructor
+	 * 
+	 * @param integer $rowSpace
+	 * @param integer $colSpace
+	 * @param integer $branchSpace
+	 * @since 1.0
+	 */
+	public function __construct($rowSpace = 40 , $colSpace = 40, $branchSpace = 80) {
 		self::$logger = new Logger('AlphaTreeGraph');
 		
 		$this->root = new AlphaGraphNode(0, 0, 0);
@@ -76,8 +154,21 @@ class AlphaTreeGraph {
 	}
 
 
+	/**
+	 * Add a new node to the graph
+	 * 
+	 * @param integer $id
+	 * @param integer $pid
+	 * @param string $message
+	 * @param integer $w
+	 * @param integer $h
+	 * @param string $nodeColour
+	 * @param string $URL
+	 * @since 1.0
+	 */
 	public function add($id, $pid, $message = '', $w = 0, $h = 0, $nodeColour, $URL) {
 		$node = new AlphaGraphNode($id, $w, $h, $message, $nodeColour, $URL);
+		
 		if(isset($this->nodes[$pid])) {
 			$pnode = $this->nodes[$pid];
 			$node->setParentNode($pnode);
@@ -87,33 +178,44 @@ class AlphaTreeGraph {
 			$node->setParentNode($pnode);
 			$this->root->addChild($node);		
 		}
+		
 		$this->nodes[$id] = $node;
 	}
 	
-	private function firstScan($node, $level) {
+	/**
+	 * The first pass of the graph
+	 * 
+	 * @param AlphaGraphNode $node
+	 * @param integer $level
+	 * @since 1.0
+	 */
+	private function firstPass($node, $level) {
         $this->setNeighbours($node, $level);
         
-		if($node->numChilds()==0) {
+		if($node->childCount() == 0) {
             $leftSibling = $node->getLeftSibling();
-            if($leftSibling) {
+            
+            if(isset($leftSibling)) {
 				$node->setOffset($leftSibling->getOffset() + $leftSibling->getWidth() + $this->colSpace);
 			}else{
                 $node->setOffset(0);
 			}
         }else{
-			$n = $node->numChilds();
-			for($i = 0; $i < $n; $i++) {
-				$this->firstScan($node->getChildAt($i), $level + 1);
+			$childCount = $node->childCount();
+			
+			for($i = 0; $i < $childCount; $i++) {
+				$this->firstPass($node->getChildAt($i), $level + 1);
             }
 
             $midPoint = $node->getChildrenCenter();
             $midPoint -= $node->getWidth()/2;
             $leftSibling = $node->getLeftSibling();
-            if($leftSibling) {
+            
+            if(isset($leftSibling)) {
 				$node->setOffset($leftSibling->getOffset() + $leftSibling->getWidth() + $this->colSpace);
                 $node->setModifier($node->getOffset() - $midPoint);
 
-                $this->apportion($node, $level);
+                $this->layout($node, $level);
             }else{            	
                 $node->setOffset($midPoint);
             }
@@ -122,34 +224,56 @@ class AlphaTreeGraph {
         self::$logger->debug('Memory usage at first scan ['.((memory_get_usage(true)/1024)/1024).' MB]');
 	}
 	
-	private function secondScan($node, $level, $x=0, $y=0) {
-		$xTmp = $node->getOffset()+$x;
-		$yTmp = $y;
-		$nodesizeTmp = $node->getHeight();
-		$node->setX($xTmp+5);
-        $node->setY($yTmp);
-		$this->height = ($this->height > $node->getY()+$node->getWidth()) ? $this->height : $node->getY()+$node->getWidth();
-		$this->width = ($this->width > $xTmp + $node->getWidth()) ? $this->width : $xTmp+$node->getWidth()+10;
+	/**
+	 * The second pass of the graph
+	 * 
+	 * @param AlphaGraphNode $node
+	 * @param integer $level
+	 * @param integer $x
+	 * @param integer $y
+	 * @since 1.0
+	 */
+	private function secondPass($node, $level, $x = 0, $y = 0) {
+		$nodeX = $node->getOffset()+$x;
+		$nodeY = $y;
+		
+		$node->setX($nodeX);
+        $node->setY($nodeY);
+        
+		$this->height = ($this->height > $node->getY() + $node->getWidth()) ? $this->height : $node->getY() + $node->getWidth();
+		$this->width = ($this->width > $nodeX + $node->getWidth()) ? $this->width : $nodeX + $node->getWidth()+10;
 
-        if($node->numChilds()) {
-            $this->secondScan($node->getChildAt(0), $level + 1, $x + $node->getModifier(), $y + $node->getHeight() + $this->rowSpace);
+        if($node->childCount() > 0) {
+            $this->secondPass($node->getChildAt(0), $level + 1, $x + $node->getModifier(), $y + $node->getHeight() + $this->rowSpace);
         }
+        
         $rightSibling = $node->getRightSibling();
-        if($rightSibling) {
-            $this->secondScan($rightSibling, $level, $x, $y);
+        
+        if(isset($rightSibling)) {
+            $this->secondPass($rightSibling, $level, $x, $y);
 		}
 		
 		self::$logger->debug('Memory usage at second scan ['.((memory_get_usage(true)/1024)/1024).' MB]');
 	}
 	
-	private function apportion($node, $level) {
+	/**
+	 * Handles the laying out of multi-branch trees
+	 * 
+	 * @param AlphaGraphNode $node
+	 * @param integer $level
+	 * @since 1.0
+	 * @todo refactor!
+	 */
+	private function layout($node, $level) {
 		$firstChild = $node->getChildAt(0);
         $firstChildLeftNeighbor = $firstChild->getLeftSibling();
+        
         for($j = 1; $firstChild && $firstChildLeftNeighbor && $j <= $level;) {
 			$modifierSumRight = 0;
             $modifierSumLeft = 0;
             $rightAncestor = $firstChild;
             $leftAncestor = $firstChildLeftNeighbor;
+            
             for($l = 0; $l < $j; $l++) {
 				$rightAncestor = $rightAncestor->getParentNode();
                 $leftAncestor = $leftAncestor->getParentNode();
@@ -158,6 +282,7 @@ class AlphaTreeGraph {
             }
 
             $totalGap = ($firstChildLeftNeighbor->getOffset() + $modifierSumLeft + $firstChildLeftNeighbor->getWidth() + $this->branchSpace) - ($firstChild->getOffset() + $modifierSumRight);
+            
 			if($totalGap > 0) {
                 $subtreeAux = $node;
                 $numSubtrees = 0;
@@ -176,54 +301,92 @@ class AlphaTreeGraph {
                     }
                 }
             }
+            
 			$j++;
-            if($firstChild->numChilds() == 0) {
+			
+            if($firstChild->childCount() == 0) {
                 $firstChild = $this->getLeftmost($node, 0, $j);
             }else{
                 $firstChild = $firstChild->getChildAt(0);
             }
-			if($firstChild)	{
+            
+			if(isset($firstChild))	{
                 $firstChildLeftNeighbor = $firstChild->getLeftSibling();
 			}
         }
 	}
 	
+	/**
+	 * Setup neighbour nodes
+	 * 
+	 * @param AlphaGraphNode $node
+	 * @param integer $level
+	 * @since 1.0
+	 */
 	private function setNeighbours($node, $level) {
-		if(isset($this->previousLevelNode[$level]))
-			$node->setLeftSibling($this->previousLevelNode[$level]);
+		if(isset($this->previousLevelNodes[$level]))
+			$node->setLeftSibling($this->previousLevelNodes[$level]);
 			
 		if($node->getLeftSibling())	{
 			$node->getLeftSibling()->setRightSibling($node);
 		}
-		$this->previousLevelNode[$level] = $node;	
+		$this->previousLevelNodes[$level] = $node;	
 	}
 	
+	/**
+	 * Get left most node in the branch
+	 * 
+	 * @param AlphaGraphNode $node
+	 * @param integer $level
+	 * @param integer $maxlevel
+	 * @return AlphaGraphNode
+	 * @since 1.0
+	 */
 	private function getLeftmost($node, $level, $maxlevel) {
 		if($level >= $maxlevel)	{
 			return $node;
 		}
-		if(($n=$node->numChilds())==0) {
-			return false;
+		
+		$childCount = $node->childCount();
+		
+		if($childCount == 0) {
+			return null;
 		}
-		for($i = 0; $i < $n; $i++) {
-			$iChild = $node->getChildAt($i);
-			$leftmostDescendant = $this->getLeftmost($iChild, $level + 1, $maxlevel);
-			if($leftmostDescendant)	{
+		
+		for($i = 0; $i < $childCount; $i++) {
+			$child = $node->getChildAt($i);
+			
+			$leftmostDescendant = $this->getLeftmost($child, $level + 1, $maxlevel);
+			
+			if(isset($leftmostDescendant)) {
 				return $leftmostDescendant;
 			}
 		}
-		return 0;	
+		
+		return null;
 	}
 	
+	/**
+	 * Render the chart in memory
+	 * 
+	 * @since 1.0
+	 */
 	protected function render()	{
-		$this->firstScan($this->root, 0);
-		$this->secondScan($this->root, 0);
+		$this->firstPass($this->root, 0);
+		$this->secondPass($this->root, 0);
+		
 		foreach($this->nodes as $node) {
 			$node->setUpLinks();
 		}
+		
 		$this->isRendered = true;
 	}
 	
+	/**
+	 * Get the width of the graph, will invoke render() if not already rendered
+	 * 
+	 * @since 1.0
+	 */
 	public function getWidth() {
 		if(!$this->isRendered) {
 			$this->render();
@@ -231,43 +394,48 @@ class AlphaTreeGraph {
 		return $this->width;
 	}
 	
+	/**
+	 * Get the heith of the graph, will invoke render() if not already rendered
+	 * 
+	 * @since 1.0
+	 */
 	public function getHeight()	{
 		if(!$this->isRendered)
 			$this->render();
 
 		return $this->height;
-	}
+	}	
 	
-	public function count() {
-        return count($this->nodes);
-    }
-	
-	
+	/**
+	 * Get the next AlphaGraphNode instance in the graph, will invoke render() if not already rendered
+	 * 
+	 * @return AlphaGraphNode
+	 * @since 1.0
+	 */
 	public function next() {
 		if(!$this->isRendered) {
 			$this->render();
 		}
+		
 		if(isset($this->nodes[$this->position+1])) {
 			$this->position++;
 			return $this->nodes[$this->position];
 		}else{
-			return false;
+			return null;
 		}
 	}
 
+	/**
+	 * Check to see if another AlphaGraphNode instance in the graph is available
+	 * 
+	 * @return boolean
+	 * @since 1.0
+	 */
 	public function hasNext() {
-		if(!isset($this->nodes[$this->position+1])) {
+		if(isset($this->nodes[$this->position+1]))
+			return true;
+		else		
 			return false;
-		}
-		return true;
-	}
-  
-	public function getNodeAt($i) {
-		if(!isset($this->nodes[$i])) {
-			return false;
-		}else{
-			return $this->nodes[$i];
-		}
 	}
 }
 
