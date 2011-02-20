@@ -5,6 +5,7 @@ require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/SecurityException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/ResourceNotFoundException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/LibraryNotInstalledException.inc';
 require_once $config->get('sysRoot').'alpha/util/filters/AlphaFilterInterface.inc';
 require_once $config->get('sysRoot').'alpha/model/badrequest_object.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
@@ -356,6 +357,9 @@ class FrontController {
 			}else{				
 				$pageController->doGET($_GET);
 			}
+		}catch (LibraryNotInstalledException $e) {
+			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".print_r($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
+			throw new LibraryNotInstalledException($e->getMessage());
 		}catch (ResourceNotAllowedException $e) {
 			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".print_r($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
 			throw new ResourceNotAllowedException($e->getMessage());

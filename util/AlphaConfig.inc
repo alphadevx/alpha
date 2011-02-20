@@ -176,7 +176,7 @@ class AlphaConfig {
 		$config = AlphaConfig::getInstance();
 		$rootPath = $config->get('rootPath');
     
-		ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.$rootPath.'alpha/lib');
+		ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.$rootPath.'alpha/lib/');
 	}
    
 	/**
