@@ -1080,7 +1080,15 @@ abstract class AlphaController {
 				self::$logger->debug('Custom controller found, redirecting...');
 				// handle secure URLs
 				if(self::checkIfAccessingFromSecureURL()) {
-					$params = FrontController::decodeQueryParams($_GET['tk']);
+					if(isset($_GET['tk'])) {
+						$params = FrontController::decodeQueryParams($_GET['tk']);
+					}else{
+						$start = strpos($_SERVER['REQUEST_URI'], '/tk/')+3;
+						$end = strlen($_SERVER['REQUEST_URI']);
+						$tk = substr($_SERVER['REQUEST_URI'], $start+1, $end-($start+1));
+						$params = FrontController::decodeQueryParams($tk);
+					}
+					
 					$params = preg_replace('/act=.*\&/', 'act='.$controllerName.'&', $params);
 					self::$logger->debug('Params are ['.$params.']');
 					
