@@ -297,7 +297,7 @@ class AlphaGraphNode {
 	 * @return integer
 	 * @since 1.0
 	 */
-	public function numChilds()	{
+	public function childCount() {
 		return count($this->children);
 	}
 	
@@ -332,10 +332,10 @@ class AlphaGraphNode {
 	 * @since 1.0
 	 */
 	public function getLeftSibling() {
-		if($this->leftNode && $this->leftNode->getParentNode() === $this->parentNode) {
+		if($this->leftNode){
 			return $this->leftNode;
 		}else{
-			return false;	
+			return null;	
 		}
 	}
 	
@@ -360,10 +360,10 @@ class AlphaGraphNode {
 	 * @since 1.0
 	 */
 	public function getRightSibling() {
-		if($this->rightNode && $this->rightNode->getParentNode() === $this->parentNode) {
+		if($this->rightNode) {
 			return $this->rightNode;
 		}else{
-			return false;
+			return null;
 		}
 	}
 	
