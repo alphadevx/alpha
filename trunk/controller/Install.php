@@ -89,6 +89,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 			$controller->doGET(array());
 			
 			self::$logger->debug('<<__construct');
+			exit;
 		}else{
 			
 			// ensure that the super class constructor is called, indicating the rights group
@@ -278,17 +279,17 @@ class Install extends AlphaController implements AlphaControllerInterface {
 							
 				try {echo '1<br>';
 					$BO = new $classname();
-					echo '2<br>';
+					
 					if(!$BO->checkTableExists()) {
-						$BO->makeTable();echo '3<br>';
+						$BO->makeTable();
 					}else{
 						if($BO->checkTableNeedsUpdate()) {		
-							$missingFields = $BO->findMissingFields();echo '4<br>';		
+							$missingFields = $BO->findMissingFields();
 		    	
 							for($i = 0; $i < count($missingFields); $i++)
-								$BO->addProperty($missingFields[$i]);echo '5<br>';
+								$BO->addProperty($missingFields[$i]);
 						}
-					}echo '6<br>';
+					}
 				}catch (FailedIndexCreateException $eice) {
 					// this are safe to ignore for now as they will be auto-created later once all of the tables are in place
 					self::$logger->warn($eice->getMessage());
@@ -409,7 +410,12 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		self::$logger->debug('>>checkRights()');
 		
 		global $config;
-
+		
+		if ($this->getVisibility() == 'Public') {
+			self::$logger->debug('<<checkRights [true]');
+			return true;
+		}
+		
 		if(AlphaDAO::isInstalled()) {
 			self::$logger->debug('<<checkRights [false]');
 			return false;
