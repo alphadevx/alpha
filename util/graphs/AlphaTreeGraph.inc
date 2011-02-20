@@ -262,17 +262,17 @@ class AlphaTreeGraph {
 	 * @param AlphaGraphNode $node
 	 * @param integer $level
 	 * @since 1.0
-	 * @todo refactor!
 	 */
 	private function layout($node, $level) {
+		
 		$firstChild = $node->getChildAt(0);
-        $firstChildLeftNeighbor = $firstChild->getLeftSibling();
+        $firstChildLeftNeighbour = $firstChild->getLeftSibling();
         
-        for($j = 1; $firstChild && $firstChildLeftNeighbor && $j <= $level;) {
+        for($j = 1; $j <= $level; $j++) {
 			$modifierSumRight = 0;
             $modifierSumLeft = 0;
             $rightAncestor = $firstChild;
-            $leftAncestor = $firstChildLeftNeighbor;
+            $leftAncestor = $firstChildLeftNeighbour;
             
             for($l = 0; $l < $j; $l++) {
 				$rightAncestor = $rightAncestor->getParentNode();
@@ -281,29 +281,31 @@ class AlphaTreeGraph {
                 $modifierSumLeft += $leftAncestor->getModifier();
             }
 
-            $totalGap = ($firstChildLeftNeighbor->getOffset() + $modifierSumLeft + $firstChildLeftNeighbor->getWidth() + $this->branchSpace) - ($firstChild->getOffset() + $modifierSumRight);
+            $totalGap = ($firstChildLeftNeighbour->getOffset() + $modifierSumLeft + $firstChildLeftNeighbour->getWidth() + $this->branchSpace) - ($firstChild->getOffset() + $modifierSumRight);
             
 			if($totalGap > 0) {
-                $subtreeAux = $node;
-                $numSubtrees = 0;
+                $subTree = $node;
+                $subTreesCount = 0;
 
-                for(; $subtreeAux && $subtreeAux !== $leftAncestor; $subtreeAux = $subtreeAux->getLeftSibling()) {
-					$numSubtrees++;
+                while(isset($subTree) && $subTree !== $leftAncestor) {
+                	$subTree = $subTree->getLeftSibling();
+					$subTreesCount++;
 				}
 
-                if($subtreeAux) {
-					$subtreeMoveAux = $node;
-                    $singleGap = $totalGap / $numSubtrees;
-                    for(; $subtreeMoveAux !== $leftAncestor; $subtreeMoveAux = $subtreeMoveAux->getLeftSibling()) {
-                        $subtreeMoveAux->setOffset($subtreeMoveAux->getOffset() + $totalGap);
-                        $subtreeMoveAux->setModifier($subtreeMoveAux->getModifier() + $totalGap);
-                        $totalGap -= $singleGap;
-                    }
+                $subTreeMove = $node;
+                $singleGap = $totalGap / $subTreesCount;
+                
+                while(isset($subTreeMove) && $subTreeMove !== $leftAncestor){
+                	$subTreeMove = $subTreeMove->getLeftSibling();
+                	
+                	if(isset($subTreeMove)) {
+                		$subTreeMove->setOffset($subTreeMove->getOffset() + $totalGap);
+                    	$subTreeMove->setModifier($subTreeMove->getModifier() + $totalGap);
+                    	$totalGap -= $singleGap;
+                	}
                 }
             }
             
-			$j++;
-			
             if($firstChild->childCount() == 0) {
                 $firstChild = $this->getLeftmost($node, 0, $j);
             }else{
@@ -311,7 +313,7 @@ class AlphaTreeGraph {
             }
             
 			if(isset($firstChild))	{
-                $firstChildLeftNeighbor = $firstChild->getLeftSibling();
+                $firstChildLeftNeighbour = $firstChild->getLeftSibling();
 			}
         }
 	}
