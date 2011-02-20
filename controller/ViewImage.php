@@ -95,7 +95,7 @@ class ViewImage extends AlphaController implements AlphaControllerInterface {
 			$imgWidth = $params['w'];
 			$imgHeight = $params['h'];
 			$imgType = $params['t'];
-			$imgQuality = $params['q'];
+			$imgQuality = (double)$params['q'];
 			$imgScale = (boolean)$params['sc'];
 			$imgSecure = (boolean)$params['se'];
 		}catch (Exception $e) {
