@@ -218,6 +218,7 @@ class tag_object extends AlphaDAO {
 	 * @param $taggedOID Optionally provide a BO instance OID
 	 * @param $applyStopwords Defaults true, set to false if you want to ignore the stopwords.
 	 * @return array
+	 * @throws AlphaException
 	 * @since 1.0
 	 */
 	public static function tokenize($content, $taggedClass='', $taggedOID='', $applyStopwords=true) {
@@ -229,8 +230,15 @@ class tag_object extends AlphaDAO {
 		// apply stop words
 		$lowerWords = preg_split("/[\s,.:]+/", $content);
 		array_walk($lowerWords, 'tag_object::lowercaseArrayElement');
-		if($applyStopwords) {		
-			$stopwords = file($config->get('sysRoot').'config/stopwords.ini', FILE_IGNORE_NEW_LINES);
+		if($applyStopwords) {
+			if(file_exists($config->get('sysRoot').'config/stopwords.ini')) {		
+				$stopwords = file($config->get('sysRoot').'config/stopwords.ini', FILE_IGNORE_NEW_LINES);
+			}elseif(file_exists($config->get('sysRoot').'alpha/stopwords.ini')) {
+				$stopwords = file($config->get('sysRoot').'alpha/stopwords.ini', FILE_IGNORE_NEW_LINES);
+			}else{
+				throw new AlphaException('Unable to find a stopwords.ini file in the application!');
+			}
+			
 			array_walk($stopwords, 'tag_object::lowercaseArrayElement');
 			$filtered = array_diff($lowerWords, $stopwords);
 		}else{
