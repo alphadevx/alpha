@@ -84,11 +84,13 @@ class Boolean extends AlphaType implements AlphaTypeInterface {
 	public function __construct($val=true) {
 		if(!AlphaValidator::isBoolean($val))
 			throw new IllegalArguementException($this->helper);
-			
-		if ($val === true || $val === 1) {
+
+		$acceptableTrueValues = array(true, "true", 1, "1");
+		
+		if(in_array($val, $acceptableTrueValues, true)) {
 			$this->value = 1;
 			$this->booleanValue = true;
-		}elseif ($val === false || $val === 0) {
+		}else {
 			$this->value = 0;
 			$this->booleanValue = false;
 		}
@@ -105,10 +107,12 @@ class Boolean extends AlphaType implements AlphaTypeInterface {
 		if(!AlphaValidator::isBoolean($val))
 			throw new IllegalArguementException($this->helper);
 			
-		if ($val === true || $val === 1) {
+		$acceptableTrueValues = array(true, "true", 1, "1");
+		
+		if(in_array($val, $acceptableTrueValues, true)) {
 			$this->value = 1;
 			$this->booleanValue = true;
-		}elseif ($val === false || $val === 0) {
+		}else {
 			$this->value = 0;
 			$this->booleanValue = false;
 		}
