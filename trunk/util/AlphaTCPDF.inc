@@ -40,7 +40,7 @@ class AlphaTCPDF extends TCPDF {
 			if(strpos($file, '/tk/') !== false) {
 				$start = strpos($file, '/tk/')+3;
 				$end = strlen($file);
-				$tk = substr($file, $start+1, $end-($start+1)); //echo $tk.'<br>';
+				$tk = substr($file, $start+1, $end-($start+1));
 				$decoded = FrontController::getDecodeQueryParams($tk);
 				
 				parent::Image($decoded['s'], $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border);
