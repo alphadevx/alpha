@@ -549,6 +549,7 @@ class FrontController {
 			self::$logger->debug('Setting the GET vars for a mod_rewrite request with a tk param');
 			$this->setEncrypt(true);
 			$this->queryString = FrontController::decodeQueryParams($params[1]);
+			$_GET['tk'] = $params[1];
 			$this->populateGetVars();
 			$this->pageController = $_GET['act'];
 		}else{
