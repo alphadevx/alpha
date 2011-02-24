@@ -50,6 +50,7 @@ class AlphaFileUtil {
 	 * A hash array for mapping file extensions to MIME types.
 	 * 
 	 * @var array
+	 * @since 1.0
 	 */
 	private static $extensionToMIMEMappings = array (
 		'3dm' => 'x-world/x-3dmf',
