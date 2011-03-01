@@ -18,7 +18,7 @@ require_once $config->get('sysRoot').'alpha/model/article_object.inc';
  * @package alpha::controller
  * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @version $Id: TagManager.php 1255 2011-01-14 13:47:38Z johnc $
+ * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
  * All rights reserved.
