@@ -58,7 +58,8 @@ class AlphaTCPDF extends TCPDF {
 	}
 	
 		/**
-		 * Process opening tags.  Overridden here to file a bug when the image type can't be determined from the URL.
+		 * Process opening tags.  Overridden here to fix a bug when the image type can't be determined from the URL.
+		 * 
 		 * @param array $dom html dom array 
 		 * @param int $key current element id
 		 * @param boolean $cell if true add the default cMargin space to each new line (default false).
@@ -156,9 +157,9 @@ class AlphaTCPDF extends TCPDF {
 						// replace relative path with real server path
 						if ($tag['attribute']['src'][0] == '/') {
 							$tag['attribute']['src'] = $_SERVER['DOCUMENT_ROOT'].$tag['attribute']['src'];
-						}
+						}						
 						$tag['attribute']['src'] = urldecode($tag['attribute']['src']);
-						$tag['attribute']['src'] = str_replace(K_PATH_URL, K_PATH_MAIN, $tag['attribute']['src']);
+						//$tag['attribute']['src'] = str_replace(K_PATH_URL, K_PATH_MAIN, $tag['attribute']['src']);
 						if (!isset($tag['attribute']['width'])) {
 							$tag['attribute']['width'] = 0;
 						}

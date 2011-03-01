@@ -425,8 +425,8 @@ class Image {
 	public static function convertImageURLToPath($imgURL) {
 		global $config;
 		
-		$imgPath = str_replace($config->get('sysURL').'/', '', $imgURL);
-		
+		$imgPath = str_replace($config->get('sysURL'), '', $imgURL);
+
 		return $imgPath;
 	}
 }
