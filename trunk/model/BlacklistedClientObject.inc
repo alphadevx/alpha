@@ -47,7 +47,7 @@ require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
  * </pre>
  *  
  */
-class blacklisted_client_object extends AlphaDAO {
+class BlacklistedClientObject extends AlphaDAO {
 	/**
 	 * The (unique) client string this is blocked
 	 * 
@@ -70,7 +70,7 @@ class blacklisted_client_object extends AlphaDAO {
 	 * @var string
 	 * @since 1.0
 	 */
-	const TABLE_NAME = 'blacklisted_client';
+	const TABLE_NAME = 'BlacklistedClient';
 	
 	/**
 	 * Constructor for the class

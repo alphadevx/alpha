@@ -8,7 +8,7 @@ if(!isset($config)) {
 
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
-require_once $config->get('sysRoot').'alpha/model/tag_object.inc';
+require_once $config->get('sysRoot').'alpha/model/TagObject.inc';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/util/LogFile.inc';
 
@@ -155,17 +155,17 @@ class Search extends AlphaController implements AlphaControllerInterface {
 					$temp = new $BO;
 					
 					if($temp->isTagged()) {					
-						// explode the user's query into a set of tokenized transient tag_objects
-						$queryTags = tag_object::tokenize($params['q'], '', '', false);			
+						// explode the user's query into a set of tokenized transient TagObjects
+						$queryTags = TagObject::tokenize($params['q'], '', '', false);			
 						$matchingTags = array();
 						
-						// load tag_objects from the DB where content equals the content of one of our transient tag_objects
+						// load TagObjects from the DB where content equals the content of one of our transient TagObjects
 						foreach($queryTags as $queryTag) {
 							$tags = $queryTag->loadAllByAttribute('content', $queryTag->get('content'));
 							$matchingTags = array_merge($matchingTags, $tags);
 						}
 						
-						self::$logger->debug('There are ['.count($matchingTags).'] tag_objects matching the query ['.$params['q'].']');
+						self::$logger->debug('There are ['.count($matchingTags).'] TagObjects matching the query ['.$params['q'].']');
 						
 						/*
 						 * Build an array of BOs for the matching tags from the DB:
@@ -223,7 +223,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 								
 								$displayedCount++;
 							}catch(BONotFoundException $e) {
-								self::$logger->warn('Orpaned tag_object detected pointing to a non-existant BO of OID ['.$oid.'] and type ['.$BO.'].');
+								self::$logger->warn('Orpaned TagObject detected pointing to a non-existant BO of OID ['.$oid.'] and type ['.$BO.'].');
 							}
 						}
 						
@@ -246,7 +246,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 	}
 	
 	/**
-	 * Handle POST requests (adds $currentUser person_object to the session)
+	 * Handle POST requests
 	 * 
 	 * @param array $params
 	 * @since 1.0

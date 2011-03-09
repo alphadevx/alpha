@@ -1,11 +1,10 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
-require_once $config->get('sysRoot').'alpha/model/person_object.inc';
 
 /**
  *
- * The group level rights object for the application permissions
+ * An article vote class for user ratings
  * 
  * @package alpha::model
  * @since 1.0
@@ -48,30 +47,38 @@ require_once $config->get('sysRoot').'alpha/model/person_object.inc';
  * </pre>
  *  
  */
-class rights_object extends AlphaDAO {	
+class ArticleVoteObject extends AlphaDAO {
 	/**
-	 * The name of the rights
+	 * The article this comment belongs to
 	 * 
-	 * @var String
-	 * @since 1.0
-	 */
-	protected $name;
-	
-	/**
-	 * A Relation containing all of the person_objects that have these rights
-	 *
 	 * @var Relation
 	 * @since 1.0
 	 */
-	protected $members;
-		
+	protected $articleOID;
+	
+	/**
+	 * The person who cast the vote
+	 * 
+	 * @var Relation
+	 * @since 1.0
+	 */
+	protected $personOID;
+	
+	/**
+	 * The actual vote score (default 1-10)
+	 * 
+	 * @var Integer
+	 * @since 1.0
+	 */	
+	protected $score;
+	
 	/**
 	 * An array of data display labels for the class properties
 	 * 
 	 * @var array
 	 * @since 1.0
 	 */
-	protected $dataLabels = array("OID"=>"Rights Group ID#","name"=>"Rights Group Name","members"=>"Rights Group Members");
+	protected $dataLabels = array("OID"=>"Article Vote ID#","articleOID"=>"Article","personOID"=>"Voter","score"=>"Article Score");
 	
 	/**
 	 * The name of the database table for the class
@@ -79,68 +86,31 @@ class rights_object extends AlphaDAO {
 	 * @var string
 	 * @since 1.0
 	 */
-	const TABLE_NAME = 'rights';
+	const TABLE_NAME = 'ArticleVote';
 	
 	/**
-	 * Constructor
+	 * Constructor for the class
 	 * 
 	 * @since 1.0
 	 */
 	public function __construct() {
 		// ensure to call the parent constructor
 		parent::__construct();
-		$this->name = new String();
 		
-		// add unique key to name field
-		$this->markUnique('name');
+		$this->articleOID = new Relation();
+		$this->articleOID->setRelatedClass('ArticleObject');
+		$this->articleOID->setRelatedClassField('OID');
+		$this->articleOID->setRelatedClassDisplayField('description');
+		$this->articleOID->setRelationType('MANY-TO-ONE');
 		
-		$this->members = new Relation();
-		$this->markTransient('members');
-		$this->setupRels();
-	}
-	
-	/**
-	 * Get the group members Relation
-	 *
-	 * @return Relation
-	 * @since 1.0
-	 */
-	public function getMembers() {
-		return $this->members;
-	}
-	
-	/**
-	 * Set up the transient attributes for the rights group after it has loaded
-	 * 
-	 * @since 1.0
-	 */
-	protected function after_load_callback() {
-		$this->setupRels();
-	}
-	
-	/**
-	 * Set up the transient attributes for the rights group after it has loaded
-	 * 
-	 * @since 1.0
-	 */
-	protected function after_loadByAttribute_callback() {
-		$this->setupRels();
-	}
-	
-	/**
-	 * Sets up the Relation definitions on this BO
-	 * 
-	 * @since 1.0
-	 */
-	private function setupRels() {
-		// set up MANY-TO-MANY relation person2rights
-		$this->members->setRelatedClass('person_object', 'left');
-		$this->members->setRelatedClassDisplayField('email', 'left');
-		$this->members->setRelatedClass('rights_object', 'right');
-		$this->members->setRelatedClassDisplayField('name', 'right');
-		$this->members->setRelationType('MANY-TO-MANY');
-		$this->members->setValue($this->getID());
-	}
+		$this->personOID = new Relation();
+		$this->personOID->setRelatedClass('PersonObject');
+		$this->personOID->setRelatedClassField('OID');
+		$this->personOID->setRelatedClassDisplayField('email');
+		$this->personOID->setRelationType('MANY-TO-ONE');
+		
+		$this->score = new Integer();
+	}	
 }
 
 ?>

@@ -1,7 +1,7 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/util/filters/AlphaFilterInterface.inc';
-require_once $config->get('sysRoot').'alpha/model/blacklisted_client_object.inc';
+require_once $config->get('sysRoot').'alpha/model/BlacklistedClientObject.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/BONotFoundException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/ResourceNotAllowedException.inc';
 
@@ -77,7 +77,7 @@ class ClientBlacklistFilter implements AlphaFilterInterface {
 		$client = $_SERVER['HTTP_USER_AGENT'];
 		
 		if(!empty($client)) {
-			$badClient = new blacklisted_client_object();
+			$badClient = new BlacklistedClientObject();
 			try {
 				$badClient->loadByAttribute('client', $client);
 			}catch (BONotFoundException $bonf) {

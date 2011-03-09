@@ -9,7 +9,7 @@ if(!isset($config)) {
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/controller/EditArticle.php';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
-require_once $config->get('sysRoot').'alpha/model/article_object.inc';
+require_once $config->get('sysRoot').'alpha/model/ArticleObject.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
 /**
@@ -61,7 +61,7 @@ class CreateArticle extends AlphaController implements AlphaControllerInterface 
 	/**
 	 * The new article to be created
 	 * 
-	 * @var article_object
+	 * @var ArticleObject
 	 * @since 1.0
 	 */
 	protected $BO;
@@ -88,7 +88,7 @@ class CreateArticle extends AlphaController implements AlphaControllerInterface 
 		// ensure that the super class constructor is called, indicating the rights group
 		parent::__construct('Standard');
 		
-		$this->BO = new article_object();
+		$this->BO = new ArticleObject();
 		
 		// set up the title and meta details
 		$this->setTitle('Create a new Article');
@@ -135,7 +135,7 @@ class CreateArticle extends AlphaController implements AlphaControllerInterface 
 			if(!$this->checkSecurityFields())
 				throw new SecurityException('This page cannot accept post data from remote servers!');
 			
-			$this->BO = new article_object();
+			$this->BO = new ArticleObject();
 		
 			if (isset($params['createBut'])) {			
 				// populate the transient object from post data
@@ -179,7 +179,7 @@ class CreateArticle extends AlphaController implements AlphaControllerInterface 
 		
 		$html = '
 			<script type="text/javascript">
-			var previewURL = "'.FrontController::generateSecureURL('act=PreviewArticle&bo=article_object').'";
+			var previewURL = "'.FrontController::generateSecureURL('act=PreviewArticle&bo=ArticleObject').'";
 			</script>			
 			<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/markitup/jquery.markitup.js"></script>
 			<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/markitup/sets/markdown/set.js"></script>

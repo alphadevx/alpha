@@ -3,7 +3,7 @@
 require_once $config->get('sysRoot').'alpha/util/feeds/RSS.inc';
 require_once $config->get('sysRoot').'alpha/util/feeds/RSS2.inc';
 require_once $config->get('sysRoot').'alpha/util/feeds/Atom.inc';
-require_once $config->get('sysRoot').'alpha/model/article_object.inc';
+require_once $config->get('sysRoot').'alpha/model/ArticleObject.inc';
 
 /**
  * Test cases for the AlphaFeed class and its children
@@ -53,7 +53,7 @@ class AlphaFeed_Test extends PHPUnit_Framework_TestCase {
 	/**
 	 * Test object to inject into a feed
 	 * 
-	 * @var article_object
+	 * @var ArticleObject
 	 */
 	private $BO;
 	
@@ -65,7 +65,7 @@ class AlphaFeed_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */
     protected function setUp() {
-    	$this->BO = new article_object();
+    	$this->BO = new ArticleObject();
     	$this->BO->set('title', 'Test Article Title');
     	$this->BO->set('description', 'Test Article Description');
     	$this->BO->set('created_ts', '2011-01-01 00:00:00');
@@ -83,7 +83,7 @@ class AlphaFeed_Test extends PHPUnit_Framework_TestCase {
     }
     
     public function testAddItemToRSSandParse() {
-    	$feed = new RSS('article_object', 'Test Feed Title', 'http://www.alphaframework.org/', 'Test Feed Description');
+    	$feed = new RSS('ArticleObject', 'Test Feed Title', 'http://www.alphaframework.org/', 'Test Feed Description');
 		$feed->setFieldMappings('title', 'URL', 'description', 'created_ts', 'OID');
 		$feed->addBO($this->BO);
 		$xml = $feed->render();
@@ -107,7 +107,7 @@ class AlphaFeed_Test extends PHPUnit_Framework_TestCase {
     }
     
 	public function testAddItemToRSS2andParse() {
-    	$feed = new RSS2('article_object', 'Test Feed Title', 'http://www.alphaframework.org/', 'Test Feed Description');
+    	$feed = new RSS2('ArticleObject', 'Test Feed Title', 'http://www.alphaframework.org/', 'Test Feed Description');
 		$feed->setFieldMappings('title', 'URL', 'description', 'created_ts', 'OID');
 		$feed->addBO($this->BO);
 		$xml = $feed->render();
@@ -130,7 +130,7 @@ class AlphaFeed_Test extends PHPUnit_Framework_TestCase {
     }
     
 	public function testAddItemToAtomandParse() {
-    	$feed = new Atom('article_object', 'Test Feed Title', 'http://www.alphaframework.org/', 'Test Feed Description');
+    	$feed = new Atom('ArticleObject', 'Test Feed Title', 'http://www.alphaframework.org/', 'Test Feed Description');
 		$feed->setFieldMappings('title', 'URL', 'description', 'created_ts', 'OID');
 		$feed->addBO($this->BO);
 		$xml = $feed->render();

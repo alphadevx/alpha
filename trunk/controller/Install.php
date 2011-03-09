@@ -247,7 +247,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 			
 			
 			// create a default article DEnum category
-			$DEnum = new DEnum('article_object::section');
+			$DEnum = new DEnum('ArticleObject::section');
 			$DEnumItem = new DEnumItem();
 			$DEnumItem->set('value', 'Main');
 			$DEnumItem->set('DEnumID', $DEnum->getID());
@@ -314,9 +314,9 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		/*
 		 * Create the Admin and Standard groups
 		 */
-		$adminGroup = new rights_object();
+		$adminGroup = new RightsObject();
 		$adminGroup->set('name', 'Admin');
-		$standardGroup = new rights_object();
+		$standardGroup = new RightsObject();
 		$standardGroup->set('name', 'Standard');
 		try{
 			try{
@@ -347,7 +347,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		try{
 			try {
 				echo '<p>Attempting to save the Admin account...';
-				$admin = new person_object();
+				$admin = new PersonObject();
 				$admin->set('displayName', 'Admin');
 				$admin->set('email', $_SESSION['currentUser']->get('email'));
 				$admin->set('password', $_SESSION['currentUser']->get('password'));

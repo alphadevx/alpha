@@ -62,7 +62,7 @@ class DEnum_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */
     protected function setUp() {        
-        $this->denum1 = new DEnum('article_object::section');        
+        $this->denum1 = new DEnum('ArticleObject::section');        
     }
     
     /** 

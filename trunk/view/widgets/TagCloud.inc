@@ -2,10 +2,10 @@
 
 require_once $config->get('sysRoot').'alpha/util/CatchError.inc';
 require_once $config->get('sysRoot').'alpha/util/Logger.inc';
-require_once $config->get('sysRoot').'alpha/model/tag_object.inc';
+require_once $config->get('sysRoot').'alpha/model/TagObject.inc';
 
 /**
- * A widget for rendering a tag cloud, based off the tag_object instances in the
+ * A widget for rendering a tag cloud, based off the TagObject instances in the
  * database.
  * 
  * @package alpha::view::widgets
@@ -34,7 +34,7 @@ class TagCloud {
 	 * Constructor
 	 */
 	public function __construct($limit) {
-		$this->popTags = tag_object::getPopularTagsArray($limit);
+		$this->popTags = TagObject::getPopularTagsArray($limit);
 	}
 	
 	/**

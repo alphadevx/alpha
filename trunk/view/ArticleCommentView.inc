@@ -1,13 +1,13 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
-require_once $config->get('sysRoot').'alpha/model/person_object.inc';
+require_once $config->get('sysRoot').'alpha/model/ArticleCommentObject.inc';
+require_once $config->get('sysRoot').'alpha/model/PersonObject.inc';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/util/MarkdownFacade.inc';
 
 /**
  *
- * The rendering class for the article_comment_object class
+ * The rendering class for the ArticleCommentObject class
  * 
  * @package alpha::view
  * @since 1.0
@@ -60,7 +60,7 @@ class ArticleCommentView extends AlphaView {
 		global $config;
 		
 		$markdown = new MarkdownFacade($this->BO);
-		$author = new person_object();
+		$author = new PersonObject();
 		$id = $this->BO->getCreatorID();
 		$author->load($id->getValue());
 		
@@ -78,7 +78,7 @@ class ArticleCommentView extends AlphaView {
 			echo $markdown->getContent();
 		
 		if($createTS->getValue() != $updateTS->getValue()) {
-			$updator = new person_object();
+			$updator = new PersonObject();
 			$id = $this->BO->getCreatorID();
 			$updator->load($id->getValue());
 			echo '<p>Updated by '.($updator->get('URL') == ''? $updator->get('displayname') : '<a href="'.$updator->get('URL').'" target="new window">'.$updator->get('displayname').'</a>').' at '.$updateTS->getValue().'.</p>';
@@ -101,7 +101,7 @@ class ArticleCommentView extends AlphaView {
 		$textBox = new textBox($this->BO->getPropObject('content'), $this->BO->getDataLabel('content'), 'content', '', 10);
 		echo $textBox->render();		
 		
-		echo '<input type="hidden" name="article_oid" value="'.$this->BO->get('article_oid').'"/>';
+		echo '<input type="hidden" name="articleOID" value="'.$this->BO->get('articleOID').'"/>';
 		echo '<tr><td colspan="2">';
 		
 		$button = new button('submit', 'Post Comment', 'createBut');
@@ -144,8 +144,8 @@ class ArticleCommentView extends AlphaView {
 				$('#dialogDiv').dialog({
 				buttons: {
 					'OK': function(event, ui) {						
-						$('#delete_oid').attr('value', '".$this->BO->getOID()."');
-						$('#delete_form').submit();
+						$('#deleteOID').attr('value', '".$this->BO->getOID()."');
+						$('#deleteForm').submit();
 					},
 					'Cancel': function(event, ui) {
 						$(this).dialog('close');

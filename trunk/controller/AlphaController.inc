@@ -10,7 +10,7 @@ require_once $config->get('sysRoot').'alpha/model/types/String.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
-require_once $config->get('sysRoot').'alpha/model/person_object.inc';
+require_once $config->get('sysRoot').'alpha/model/PersonObject.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/FailedUnitCommitException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/SecurityException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/FileNotFoundException.inc';
@@ -909,7 +909,7 @@ abstract class AlphaController {
 					self::$logger->debug('<<checkRights [true]');
 					return true;
 				// the person is editing their own profile which is allowed
-				} elseif (get_class($this->BO) == 'person_object' && $_SESSION['currentUser']->getDisplayName() == $this->BO->getDisplayName()) {
+				} elseif (get_class($this->BO) == 'PersonObject' && $_SESSION['currentUser']->getDisplayName() == $this->BO->getDisplayName()) {
 					if(method_exists($this, 'after_checkRights_callback'))
 						$this->after_checkRights_callback();
 					
@@ -1011,8 +1011,8 @@ abstract class AlphaController {
 		
 		global $config;
 		
-		// strip the _object part from the class name
-		$BOName = substr($BOName, 0, strpos($BOName, '_object'));
+		// strip the Object part from the class name
+		$BOName = substr($BOName, 0, strpos($BOName, 'Object'));
 		// uppercase the first letter of each word, e.g. create cart becomes Create Cart
 		$controllerName = ucwords($mode.' '.$BOName);
 		// remove spaces
@@ -1045,8 +1045,8 @@ abstract class AlphaController {
 		
 		global $config;
 		
-		// strip the _object part from the class name
-		$BOName = substr($BOName, 0, strpos($BOName, '_object'));
+		// strip the Object part from the class name
+		$BOName = substr($BOName, 0, strpos($BOName, 'Object'));
 		// uppercase the first letter of each word, e.g. create cart becomes Create Cart
 		$controllerName = ucwords($mode.' '.$BOName);
 		// remove spaces

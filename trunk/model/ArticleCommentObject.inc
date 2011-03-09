@@ -4,7 +4,7 @@ require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
 
 /**
  *
- * An article vote class for user ratings
+ * An article comment class for user comments
  * 
  * @package alpha::model
  * @since 1.0
@@ -47,30 +47,22 @@ require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
  * </pre>
  *  
  */
-class article_vote_object extends AlphaDAO {
+class ArticleCommentObject extends AlphaDAO {
 	/**
 	 * The article this comment belongs to
 	 * 
 	 * @var Relation
 	 * @since 1.0
 	 */
-	protected $article_oid;
+	protected $articleOID;
 	
 	/**
-	 * The person who cast the vote
+	 * The content of the comment posted by the user
 	 * 
-	 * @var Relation
-	 * @since 1.0
-	 */
-	protected $person_oid;
-	
-	/**
-	 * The actual vote score (default 1-10)
-	 * 
-	 * @var Integer
+	 * @var Text
 	 * @since 1.0
 	 */	
-	protected $score;
+	protected $content;
 	
 	/**
 	 * An array of data display labels for the class properties
@@ -78,7 +70,7 @@ class article_vote_object extends AlphaDAO {
 	 * @var array
 	 * @since 1.0
 	 */
-	protected $dataLabels = array("OID"=>"Article Vote ID#","article_oid"=>"Article","person_oid"=>"Voter","score"=>"Article Score");
+	protected $dataLabels = array("OID"=>"Article Comment ID#","articleOID"=>"Article","content"=>"Comment");
 	
 	/**
 	 * The name of the database table for the class
@@ -86,10 +78,10 @@ class article_vote_object extends AlphaDAO {
 	 * @var string
 	 * @since 1.0
 	 */
-	const TABLE_NAME = 'article_vote';
+	const TABLE_NAME = 'ArticleComment';
 	
 	/**
-	 * Constructor for the class
+	 * constructor for the class
 	 * 
 	 * @since 1.0
 	 */
@@ -97,19 +89,14 @@ class article_vote_object extends AlphaDAO {
 		// ensure to call the parent constructor
 		parent::__construct();
 		
-		$this->article_oid = new Relation();
-		$this->article_oid->setRelatedClass('article_object');
-		$this->article_oid->setRelatedClassField('OID');
-		$this->article_oid->setRelatedClassDisplayField('description');
-		$this->article_oid->setRelationType('MANY-TO-ONE');
-		
-		$this->person_oid = new Relation();
-		$this->person_oid->setRelatedClass('person_object');
-		$this->person_oid->setRelatedClassField('OID');
-		$this->person_oid->setRelatedClassDisplayField('email');
-		$this->person_oid->setRelationType('MANY-TO-ONE');
-		
-		$this->score = new Integer();
+		$this->articleOID = new Relation();
+		$this->articleOID->setRelatedClass('ArticleObject');
+		$this->articleOID->setRelatedClassField('OID');
+		$this->articleOID->setRelatedClassDisplayField('description');
+		$this->articleOID->setRelationType('MANY-TO-ONE');
+				
+		$this->content = new Text();
+		$this->content->setAllowHTML(false);
 	}	
 }
 

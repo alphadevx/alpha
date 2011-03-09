@@ -10,7 +10,7 @@ require_once $config->get('sysRoot').'alpha/util/Logger.inc';
 require_once $config->get('sysRoot').'alpha/util/MarkdownFacade.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
-require_once $config->get('sysRoot').'alpha/model/article_object.inc';
+require_once $config->get('sysRoot').'alpha/model/ArticleObject.inc';
 
 /**
  *
@@ -111,12 +111,12 @@ class PreviewArticle extends AlphaController implements AlphaControllerInterface
 		global $config;
 		
 		if(isset($params['data'])) {
-			// allow the consumer to optionally indicate another BO than article_object
+			// allow the consumer to optionally indicate another BO than ArticleObject
 			if(isset($params['bo'])) {
 				AlphaDAO::loadClassDef($params['bo']);
 				$temp = new $params['bo'];
 			}else{
-				$temp = new article_object();
+				$temp = new ArticleObject();
 			}
 			
 			$temp->set('content', $params['data']);

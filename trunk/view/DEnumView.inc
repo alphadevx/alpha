@@ -124,7 +124,6 @@ class DEnumView extends AlphaView {
 	public function editView() {		
 		global $config;
 
-		//$properties = get_object_vars($this->BO);
 		$labels = $this->BO->getDataLabels();
 		$obj_type = '';
 

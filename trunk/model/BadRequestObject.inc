@@ -48,7 +48,7 @@ require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
  * </pre>
  *  
  */
-class badrequest_object extends AlphaDAO {
+class BadRequestObject extends AlphaDAO {
 	/**
 	 * The HTTP user-agent client string
 	 * 
@@ -87,7 +87,7 @@ class badrequest_object extends AlphaDAO {
 	 * @var string
 	 * @since 1.0
 	 */
-	const TABLE_NAME = 'badrequest';
+	const TABLE_NAME = 'BadRequest';
 	
 	/**
 	 * Trace logger
@@ -103,7 +103,7 @@ class badrequest_object extends AlphaDAO {
 	 * @since 1.0
 	 */
 	public function __construct() {
-		self::$logger = new Logger('badrequest_object');
+		self::$logger = new Logger('BadRequestObject');
 		self::$logger->debug('>>__construct()');
 		
 		// ensure to call the parent constructor

@@ -60,7 +60,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 	/**
 	 * The person to be logged in
 	 * 
-	 * @var person_object
+	 * @var PersonObject
 	 * @since 1.0
 	 */
 	private $personObject;
@@ -94,7 +94,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 		// ensure that the super class constructor is called, indicating the rights group
 		parent::__construct('Public');
 		
-		$this->personObject = new person_object();
+		$this->personObject = new PersonObject();
 		$this->personView = AlphaView::getInstance($this->personObject);
 		$this->setBO($this->personObject);
 		
@@ -132,7 +132,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 	}	
 	
 	/**
-	 * Handle POST requests (adds $currentUser person_object to the session)
+	 * Handle POST requests (adds $currentUser PersonObject to the session)
 	 * 
 	 * @param array $params
 	 * @throws IllegalArguementException
@@ -156,7 +156,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 				if(!AlphaDAO::isInstalled()) {
 					if ($params['email'] == $config->get('sysInstallUsername') && crypt($params['password'], $config->get('sysInstallPassword')) == crypt($config->get('sysInstallPassword'), $config->get('sysInstallPassword'))) {
 						self::$logger->info('Logging in ['.$params['email'].'] at ['.date("Y-m-d H:i:s").']');
-						$admin = new person_object();
+						$admin = new PersonObject();
 						$admin->set('displayName', 'Admin');
 						$admin->set('email', $params['email']);
 						$admin->set('password', crypt($params['password'], $config->get('sysInstallPassword')));

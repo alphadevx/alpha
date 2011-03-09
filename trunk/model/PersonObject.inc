@@ -1,8 +1,8 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
-require_once $config->get('sysRoot').'alpha/model/rights_object.inc';
-require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
+require_once $config->get('sysRoot').'alpha/model/RightsObject.inc';
+require_once $config->get('sysRoot').'alpha/model/ArticleCommentObject.inc';
 
 /**
  *
@@ -49,7 +49,7 @@ require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
  * </pre>
  *  
  */
-class person_object extends AlphaDAO {
+class PersonObject extends AlphaDAO {
 	/**
 	 * The forum display name of the person
 	 *
@@ -96,7 +96,7 @@ class person_object extends AlphaDAO {
 	 * @var string
 	 * @since 1.0
 	 */
-	const TABLE_NAME = 'person';
+	const TABLE_NAME = 'Person';
 
 	/**
 	 * The state of the person (account status)
@@ -128,7 +128,7 @@ class person_object extends AlphaDAO {
 	 * @since 1.0
 	 */
 	public function __construct() {
-		self::$logger = new Logger('person_object');
+		self::$logger = new Logger('PersonObject');
 		self::$logger->debug('>>__construct()');
 		
 		// ensure to call the parent constructor
@@ -190,7 +190,7 @@ class person_object extends AlphaDAO {
 	 */
 	protected function after_save_callback() {
 		if($this->getVersionNumber()->getValue() == 1) {
-			$standardGroup = new rights_object();
+			$standardGroup = new RightsObject();
 			
 			$this->setupRels();
 
@@ -210,7 +210,7 @@ class person_object extends AlphaDAO {
 	}
 	
 	/**
-	 * Encrypts any fields called 'password' posted for the person_object 
+	 * Encrypts any fields called 'password' posted for the PersonObject 
 	 * 
 	 * @since 1.0
 	 */
@@ -227,9 +227,9 @@ class person_object extends AlphaDAO {
 	protected function setupRels() {		
 		// set up MANY-TO-MANY relation person2rights
 		if(isset($this->rights)) {
-			$this->rights->setRelatedClass('person_object', 'left');
+			$this->rights->setRelatedClass('PersonObject', 'left');
 			$this->rights->setRelatedClassDisplayField('email', 'left');
-			$this->rights->setRelatedClass('rights_object', 'right');
+			$this->rights->setRelatedClass('RightsObject', 'right');
 			$this->rights->setRelatedClassDisplayField('name', 'right');
 			$this->rights->setRelationType('MANY-TO-MANY');
 			$this->rights->setValue($this->getID());
@@ -265,10 +265,10 @@ class person_object extends AlphaDAO {
 	 */
 	public function inGroup($groupName) {
 		if(self::$logger == null)
-			self::$logger = new Logger('person_object');
+			self::$logger = new Logger('PersonObject');
 		self::$logger->debug('>>inGroup(groupName=['.$groupName.'])');
 			
-		$group = new rights_object();
+		$group = new RightsObject();
 			
 		try {
 			$group->loadByAttribute('name', $groupName);
@@ -279,11 +279,12 @@ class person_object extends AlphaDAO {
 		}
 			
 		$rel = $group->getMembers();
+		
 		try {
 			// load all person2rights RelationLookup objects for this person
 			$lookUps = $rel->getLookup()->loadAllByAttribute('leftID', $this->getID());
 			foreach($lookUps as $lookUp) {
-				// the rightID (i.e. rights_object OID) will be on the right side of the value array
+				// the rightID (i.e. RightsObject OID) will be on the right side of the value array
 				$ids = $lookUp->getValue();
 				// if we have found a match, return true right away
 				if($ids[1] == $group->getID()) {
@@ -355,9 +356,9 @@ class person_object extends AlphaDAO {
 	 * @throws AlphaException
 	 */
 	public function getCommentCount() {
-		$temp = new article_comment_object();
+		$temp = new ArticleCommentObject();
 
-		$sqlQuery = "SELECT COUNT(OID) AS post_count FROM ".article_comment_object::TABLE_NAME." WHERE created_by='".$this->OID."';";
+		$sqlQuery = "SELECT COUNT(OID) AS post_count FROM ".ArticleCommentObject::TABLE_NAME." WHERE created_by='".$this->OID."';";
 
 		$this->lastQuery = $sqlQuery;
 

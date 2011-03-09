@@ -46,7 +46,7 @@ class MarkdownFacade {
 		global $config;
 		
 		$this->BO = $BO;
-		if($this->BO instanceof article_object && $this->BO->isLoadedFromFile()) {
+		if($this->BO instanceof ArticleObject && $this->BO->isLoadedFromFile()) {
 			$underscoreTimeStamp = str_replace(array('-',' ',':'), '_', $this->BO->getContentFileDate());
 			$this->filename = $config->get('sysRoot').'cache/html/'.get_class($this->BO).'_'.$this->BO->get('title').'_'.$underscoreTimeStamp.'.html';
 		}else{

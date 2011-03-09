@@ -15,7 +15,7 @@ require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 
 /**
  * 
- * Controller used to view (download) an attachment file on an article_object
+ * Controller used to view (download) an attachment file on an ArticleObject
  * 
  * @package alpha::controller
  * @since 1.0

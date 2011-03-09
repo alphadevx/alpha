@@ -1,12 +1,12 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/model/person_object.inc';
+require_once $config->get('sysRoot').'alpha/model/PersonObject.inc';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/util/MarkdownFacade.inc';
 
 /**
  *
- * The rendering class for the article_object class
+ * The rendering class for the ArticleObject class
  * 
  * @package alpha::view
  * @since 1.0
@@ -115,8 +115,8 @@ class ArticleView extends AlphaView {
 				$('#dialogDiv').dialog({
 				buttons: {
 					'OK': function(event, ui) {						
-						$('#delete_oid').attr('value', '".$this->BO->getOID()."');
-						$('#delete_form').submit();
+						$('#deleteOID').attr('value', '".$this->BO->getOID()."');
+						$('#deleteForm').submit();
 					},
 					'Cancel': function(event, ui) {
 						$(this).dialog('close');

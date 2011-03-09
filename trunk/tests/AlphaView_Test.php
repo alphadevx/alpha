@@ -2,7 +2,7 @@
 
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/view/ArticleView.inc';
-require_once $config->get('sysRoot').'alpha/model/article_object.inc';
+require_once $config->get('sysRoot').'alpha/model/ArticleObject.inc';
 
 /**
  *
@@ -65,7 +65,7 @@ class AlphaView_Test extends PHPUnit_Framework_TestCase {
 	 * @since 1.0
 	 */
     protected function setUp() {
-    	$this->view = AlphaView::getInstance(new article_object());
+    	$this->view = AlphaView::getInstance(new ArticleObject());
     }
     
 	/**
@@ -99,7 +99,7 @@ class AlphaView_Test extends PHPUnit_Framework_TestCase {
      */
     public function testGetInstanceGood() {
     	try{
-    		$good = AlphaView::getInstance(new article_object());
+    		$good = AlphaView::getInstance(new ArticleObject());
     		$this->assertTrue($good instanceof ArticleView, 'testing that passing a good object to the getInstance method will return the child view object');
     	}catch (IllegalArguementException $e) {
     		$this->fail($e->getMessage());
@@ -113,7 +113,7 @@ class AlphaView_Test extends PHPUnit_Framework_TestCase {
      */
     public function testGetInstanceForceParent() {
     	try{
-    		$good = AlphaView::getInstance(new article_object(), true);
+    		$good = AlphaView::getInstance(new ArticleObject(), true);
     		$this->assertTrue($good instanceof AlphaView, 'testing that we can force the return of an AlphaView object even when a child definition for the provided BO exists');
     	}catch (IllegalArguementException $e) {
     		$this->fail($e->getMessage());
@@ -127,7 +127,7 @@ class AlphaView_Test extends PHPUnit_Framework_TestCase {
      */
     public function testSetBOGood() {
     	try{
-    		$this->view->setBO(new article_object());
+    		$this->view->setBO(new ArticleObject());
     		$this->assertTrue(true);
     	}catch (IllegalArguementException $e) {
     		$this->fail($e->getMessage());
@@ -158,7 +158,7 @@ class AlphaView_Test extends PHPUnit_Framework_TestCase {
     		$this->view->loadTemplate($this->view->getBO(), 'BadMode', array());
     		$this->fail('testing that a bad mode param provided to the loadTemplate method will throw an exception');
     	}catch (IllegalArguementException $e) {
-    		$this->assertEquals('No [BadMode] HTML template found for class [article_object]', $e->getMessage(), 'testing that a bad mode param provided to the loadTemplate method will throw an exception');
+    		$this->assertEquals('No [BadMode] HTML template found for class [ArticleObject]', $e->getMessage(), 'testing that a bad mode param provided to the loadTemplate method will throw an exception');
     	}
     }
     
@@ -168,7 +168,7 @@ class AlphaView_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */
     public function testGetBO() {
-    	$article = new article_object();
+    	$article = new ArticleObject();
     	$article->set('title', 'Test Article');
     	$this->view->setBO($article);
     	

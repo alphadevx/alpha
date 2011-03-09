@@ -7,7 +7,7 @@ if(!isset($config)) {
 }
 
 require_once $config->get('sysRoot').'alpha/util/Logger.inc';
-require_once $config->get('sysRoot').'alpha/model/person_object.inc';
+require_once $config->get('sysRoot').'alpha/model/PersonObject.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
@@ -91,7 +91,7 @@ class Logout extends AlphaController implements AlphaControllerInterface {
 	}
 	
 	/**
-	 * Handle POST requests (adds $currentUser person_object to the session)
+	 * Handle POST requests (adds $currentUser PersonObject to the session)
 	 * 
 	 * @param array $params
 	 * @since 1.0
@@ -114,7 +114,7 @@ class Logout extends AlphaController implements AlphaControllerInterface {
 		
 		global $config;
 		
-		if($this->BO instanceof person_object)
+		if($this->BO instanceof PersonObject)
 			self::$logger->info('Logging out ['.$this->BO->get('email').'] at ['.date("Y-m-d H:i:s").']');
 		
 		$_SESSION = array();

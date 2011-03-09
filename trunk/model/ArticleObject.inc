@@ -1,9 +1,9 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
-require_once $config->get('sysRoot').'alpha/model/article_vote_object.inc';
-require_once $config->get('sysRoot').'alpha/model/article_comment_object.inc';
-require_once $config->get('sysRoot').'alpha/model/tag_object.inc';
+require_once $config->get('sysRoot').'alpha/model/ArticleVoteObject.inc';
+require_once $config->get('sysRoot').'alpha/model/ArticleCommentObject.inc';
+require_once $config->get('sysRoot').'alpha/model/TagObject.inc';
 require_once $config->get('sysRoot').'alpha/controller/front/FrontController.inc';
 
 /**
@@ -51,7 +51,7 @@ require_once $config->get('sysRoot').'alpha/controller/front/FrontController.inc
  * </pre>
  *  
  */
-class article_object extends AlphaDAO {
+class ArticleObject extends AlphaDAO {
 	/**
 	 * The article title
 	 * 
@@ -170,7 +170,7 @@ class article_object extends AlphaDAO {
 	 * @var string
 	 * @since 1.0
 	 */
-	const TABLE_NAME = 'article';
+	const TABLE_NAME = 'Article';
 	
 	/**
 	 * The URL for this article (transient)
@@ -202,7 +202,7 @@ class article_object extends AlphaDAO {
 	 * @since 1.0
 	 */
 	public function __construct() {
-		self::$logger = new Logger('article_object');
+		self::$logger = new Logger('ArticleObject');
 		
 		// ensure to call the parent constructor
 		parent::__construct();
@@ -212,7 +212,7 @@ class article_object extends AlphaDAO {
 		$this->title->setSize(100);
 		$this->title->setRule("/\w+/");
 		
-		$this->section = new DEnum('article_object::section');		
+		$this->section = new DEnum('ArticleObject::section');		
 		
 		$this->description = new String();
 		$this->description->setHelper('Please provide a brief description of the article.');
@@ -231,21 +231,21 @@ class article_object extends AlphaDAO {
 		
 		$this->comments = new Relation();
 		$this->markTransient('comments');
-		$this->comments->setRelatedClass('article_comment_object');
-		$this->comments->setRelatedClassField('article_oid');
+		$this->comments->setRelatedClass('ArticleCommentObject');
+		$this->comments->setRelatedClassField('articleOID');
 		$this->comments->setRelatedClassDisplayField('content');
 		$this->comments->setRelationType('ONE-TO-MANY');
 		
 		$this->votes = new Relation();
 		$this->markTransient('votes');
-		$this->votes->setRelatedClass('article_vote_object');
-		$this->votes->setRelatedClassField('article_oid');
+		$this->votes->setRelatedClass('ArticleVoteObject');
+		$this->votes->setRelatedClassField('articleOID');
 		$this->votes->setRelatedClassDisplayField('score');
 		$this->votes->setRelationType('ONE-TO-MANY');
 		
 		$this->tags = new Relation();		
 		$this->markTransient('tags');
-		$this->tags->setRelatedClass('tag_object');
+		$this->tags->setRelatedClass('TagObject');
 		$this->tags->setRelatedClassField('taggedOID');
 		$this->tags->setRelatedClassDisplayField('content');
 		$this->tags->setRelationType('ONE-TO-MANY');
@@ -265,7 +265,7 @@ class article_object extends AlphaDAO {
 	}
 	
 	/**
-	 * After creating a new article_object, tokenize the description field to form a set
+	 * After creating a new ArticleObject, tokenize the description field to form a set
 	 * of automated tags and save them.
 	 * 
 	 * @since 1.0
@@ -273,7 +273,7 @@ class article_object extends AlphaDAO {
 	protected function after_save_callback() {
 		if($this->getVersion() == 1 && $this->tags instanceof Relation) {
 			foreach($this->taggedAttributes as $tagged) {
-				$tags = tag_object::tokenize($this->get($tagged), get_class($this), $this->getOID());
+				$tags = TagObject::tokenize($this->get($tagged), get_class($this), $this->getOID());
 				foreach($tags as $tag) {
 					try {
 						$tag->save();
@@ -344,7 +344,7 @@ class article_object extends AlphaDAO {
 	 * @throws AlphaException
 	 */
 	public function loadRecentWithLimit($limit){
-		$denum = new DEnum('article_object::section');
+		$denum = new DEnum('ArticleObject::section');
 		$excludeID = $denum->getOptionID('Main');
 		
 		$sqlQuery = "SELECT OID FROM ".self::TABLE_NAME." WHERE published='1' AND section!='$excludeID' ORDER BY dateAdded DESC LIMIT 0, $limit;";		
@@ -451,7 +451,7 @@ class article_object extends AlphaDAO {
 	/**
 	 * Method for fetching all of the votes for this article
 	 * 
-	 * @return array An array of article_vote_object objects
+	 * @return array An array of ArticleVoteObject objects
 	 * @since 1.0
 	 */
 	public function getArticleVotes() {
@@ -474,7 +474,7 @@ class article_object extends AlphaDAO {
 		
 		$userID = $_SESSION['currentUser']->getID();
 		
-		$sqlQuery = "SELECT COUNT(*) AS users_vote FROM article_vote WHERE article_oid='".$this->OID."' AND person_oid='".$userID."';";		
+		$sqlQuery = "SELECT COUNT(*) AS usersVote FROM ".ArticleVoteObject::TABLE_NAME." WHERE articleOID='".$this->OID."' AND personOID='".$userID."';";		
 
 		$this->lastQuery = $sqlQuery;
 		
@@ -485,7 +485,7 @@ class article_object extends AlphaDAO {
 		
 		$row = $result->fetch_array(MYSQLI_ASSOC);
 		
-		if($row['users_vote'] == "0")
+		if($row['usersVote'] == "0")
 			return false;
 		else
 			return true;			
@@ -494,7 +494,7 @@ class article_object extends AlphaDAO {
 	/**
 	 * Method for fetching all of the comments for this article
 	 * 
-	 * @return array An array of article_comment_object objects
+	 * @return array An array of ArticleCommentObject objects
 	 * @since 1.0
 	 */
 	public function getArticleComments() {
@@ -504,7 +504,7 @@ class article_object extends AlphaDAO {
 	}
 	
 	/**
-	 * Loads the content of the article_object from the specified file path
+	 * Loads the content of the ArticleObject from the specified file path
 	 * 
 	 * @param $filePath
 	 * @since 1.0

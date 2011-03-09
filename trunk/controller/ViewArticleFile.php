@@ -86,7 +86,7 @@ class ViewArticleFile extends ViewArticle {
 				throw new IllegalArguementException('Could not load the article as a file name was not supplied!');
 			}
 			
-			$this->BO = new article_object();
+			$this->BO = new ArticleObject();
 			$this->BO->set('title', $title);
 			// just checking to see if the file path is absolute or not
 			if(substr($params['file'], 0, 1) == '/')

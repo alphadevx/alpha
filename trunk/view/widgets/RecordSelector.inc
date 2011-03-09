@@ -7,7 +7,7 @@ if(!isset($config)) {
 }
 
 require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
-require_once $config->get('sysRoot').'alpha/model/person_object.inc';
+require_once $config->get('sysRoot').'alpha/model/PersonObject.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Relation.inc';
 require_once $config->get('sysRoot').'alpha/view/widgets/Button.inc';
 
@@ -186,7 +186,7 @@ class RecordSelector {
 			
 			if(count($objects) > 0 && $tableTags) {
 				// render tags differently			
-				if($this->name == 'tags' && $this->relationObject->getRelatedClass() == 'tag_object') {
+				if($this->name == 'tags' && $this->relationObject->getRelatedClass() == 'TagObject') {
 					$html .= '<tr><td colspan="2">'.$this->label.': ';
 						
 					foreach($objects as $tag) {
@@ -247,7 +247,7 @@ class RecordSelector {
 								$value = $obj->get($field);
 								
 								if($field == 'created_by' || $field == 'updated_by') {
-									$person = new person_object();
+									$person = new PersonObject();
 									$person->load($value);
 									$value = $person->getDisplayName();
 								}

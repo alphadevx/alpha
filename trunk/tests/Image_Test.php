@@ -145,7 +145,7 @@ class Image_Test extends PHPUnit_Framework_TestCase {
     public function testConvertImageURLToPath() {
     	global $config;
     	
-    	$this->assertEquals('images/testimage.png', Image::convertImageURLToPath($config->get('sysURL').'/images/testimage.png'), 'testing the convertImageURLToPath method');
+    	$this->assertEquals('images/testimage.png', Image::convertImageURLToPath($config->get('sysURL').'images/testimage.png'), 'testing the convertImageURLToPath method');
     }
 }
 

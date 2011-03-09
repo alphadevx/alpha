@@ -99,7 +99,7 @@ class ViewArticlePrint extends ViewArticle {
 				throw new IllegalArguementException('Could not load the article as a title was not supplied!');
 			}
 			
-			$this->BO = new article_object();
+			$this->BO = new ArticleObject();
 			$this->BO->loadByAttribute('title', $title);
 			
 			AlphaDAO::disconnect();

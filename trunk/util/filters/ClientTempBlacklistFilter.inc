@@ -1,7 +1,7 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/util/filters/AlphaFilterInterface.inc';
-require_once $config->get('sysRoot').'alpha/model/badrequest_object.inc';
+require_once $config->get('sysRoot').'alpha/model/BadRequestObject.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/BONotFoundException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/ResourceNotAllowedException.inc';
 
@@ -80,7 +80,7 @@ class ClientTempBlacklistFilter implements AlphaFilterInterface {
 		$IP = $_SERVER['REMOTE_ADDR'];
 		
 		if(!empty($client) && !empty($IP)) {
-			$request = new badrequest_object();
+			$request = new BadRequestObject();
 			$request->set('client', $client);
 			$request->set('IP', $IP);
 			$badRequestCount = $request->getBadRequestCount();

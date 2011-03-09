@@ -133,7 +133,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	private $lookup;
 	
 	/**
-	 * When building a relation with the tag_object BO, set this to the name of the tagged class
+	 * When building a relation with the TagObject BO, set this to the name of the tagged class
 	 * 
 	 * @var string
 	 * @since 1.0
@@ -544,7 +544,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 			}
 			
 			$obj = new $this->relatedClass;
-			if($this->relatedClass == 'tag_object') {
+			if($this->relatedClass == 'TagObject') {
 				$objects = $obj->loadTags($this->taggedClass, $this->getValue());
 			}else{
 				$objects = $obj->loadAllByAttribute($this->getRelatedClassField(), $this->getValue());
@@ -653,7 +653,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	
 	/**
 	 * Set the taggedClass property to the name of the tagged class when building relations
-	 * to the tag_object BO.
+	 * to the TagObject BO.
 	 * 
 	 * @param $taggedClass
 	 * @since 1.0
