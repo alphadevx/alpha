@@ -17,7 +17,7 @@
   <tr>
     <td colspan="2" class="header-menu">
       
-                                                                                                                                        
+                                                                                                                          
                                                                                                                                       		[ <a href="../classtrees_alpha--util.html" class="menu">class tree: alpha--util</a> ]
 		[ <a href="../elementindex_alpha--util.html" class="menu">index: alpha--util</a> ]
             [ <a href="../elementindex.html" class="menu">all elements</a> ]
@@ -32,23 +32,22 @@
 		<div class="package-title">alpha--util</div>
       <b>Packages:</b><br />
   <div class="package">
-              <a href="../li_Alpha.html">Alpha</a><br />
+              <a href="../li_default.html">default</a><br />
               <a href="../li_alpha--controller.html">alpha--controller</a><br />
               <a href="../li_alpha--controller--front.html">alpha--controller--front</a><br />
               <a href="../li_alpha--exceptions.html">alpha--exceptions</a><br />
               <a href="../li_alpha--model.html">alpha--model</a><br />
               <a href="../li_alpha--model--types.html">alpha--model--types</a><br />
-              <a href="../li_alpha--service.html">alpha--service</a><br />
               <a href="../li_alpha--tests.html">alpha--tests</a><br />
               <a href="../li_alpha--util.html">alpha--util</a><br />
               <a href="../li_alpha--util--convertors.html">alpha--util--convertors</a><br />
               <a href="../li_alpha--util--feeds.html">alpha--util--feeds</a><br />
               <a href="../li_alpha--util--filters.html">alpha--util--filters</a><br />
+              <a href="../li_alpha--util--graphs.html">alpha--util--graphs</a><br />
               <a href="../li_alpha--util--helpers.html">alpha--util--helpers</a><br />
-              <a href="../li_alpha--util--LOC.html">alpha--util--LOC</a><br />
+              <a href="../li_alpha--util--metrics.html">alpha--util--metrics</a><br />
               <a href="../li_alpha--view.html">alpha--view</a><br />
               <a href="../li_alpha--view--widgets.html">alpha--view--widgets</a><br />
-              <a href="../li_util--graphs.html">util--graphs</a><br />
       	</div>
       <br />
                         <b>Files:</b><br />
@@ -111,7 +110,7 @@ Source Location: /util/AlphaTCPDF.inc<br /><br />
 </strong></p>
 
 		<p class="notes">
-			Located in <a class="field" href="_util---AlphaTCPDF.inc.html">/util/AlphaTCPDF.inc</a> [<span class="field">line <a href="../__filesource/fsource_alpha--util__utilAlphaTCPDF.inc.html#a16">16</a></span>]
+			Located in <a class="field" href="_util---AlphaTCPDF.inc.html">/util/AlphaTCPDF.inc</a> [<span class="field">line <a href="../__filesource/fsource_alpha--util__utilAlphaTCPDF.inc.html#a52">52</a></span>]
 		</p>
 
 		
@@ -123,13 +122,43 @@ Source Location: /util/AlphaTCPDF.inc<br /><br />
 				<strong>Author(s):</strong>
 		<ul>
 		  			 			 <li>John Collins &lt;<a href="mailto:john@design-ireland.net">john@design-ireland.net</a>&gt;</li>
-			 		  			 		  			 		  		</ul>
+			 		  			 		  			 		  			 		  			 		  		</ul>
 		
 		
 <strong>Information Tags:</strong><br />
 <table border="0" cellspacing="0" cellpadding="0">
-				<tr><td><strong>Version:</strong>&nbsp;&nbsp;</td><td>$Id: AlphaTCPDF.inc 1147 2010-10-04 20:50:53Z jcollins $</td></tr>
-				<tr><td><strong>Copyright:</strong>&nbsp;&nbsp;</td><td>2010 John Collins</td></tr>
+				<tr><td><strong>Version:</strong>&nbsp;&nbsp;</td><td>$Id: AlphaTCPDF.inc 1306 2011-03-09 10:46:13Z johnc $</td></tr>
+				<tr><td><strong>Copyright:</strong>&nbsp;&nbsp;</td><td><p>Copyright (c) 2010, John Collins (founder of Alpha Framework).  All rights reserved.</p><p><pre> Redistribution and use in source and binary forms, with or
+ without modification, are permitted provided that the
+ following conditions are met:
+
+ * Redistributions of source code must retain the above
+   copyright notice, this list of conditions and the
+   following disclaimer.
+ * Redistributions in binary form must reproduce the above
+   copyright notice, this list of conditions and the
+   following disclaimer in the documentation and/or other
+   materials provided with the distribution.
+ * Neither the name of the Alpha Framework nor the names
+   of its contributors may be used to endorse or promote
+   products derived from this software without specific
+   prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+ CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</pre></p></td></tr>
+				<tr><td><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td></tr>
+				<tr><td><strong>License:</strong>&nbsp;&nbsp;</td><td><a href="http://www.opensource.org/licenses/bsd-license.php">The BSD License</a></td></tr>
 	</table>
 		</td>
 
@@ -169,7 +198,7 @@ Source Location: /util/AlphaTCPDF.inc<br /><br />
 																<div class="method-definition">
 											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
 										<td class="method-definition"><a href="#openHTMLTagHandler" title="details" class="method-name">openHTMLTagHandler</a>()&nbsp;&nbsp;</td>
-					<td class="method-definition">Process opening tags.  Overridden here to file a bug when the image type can't be determined from the URL.</td></tr>
+					<td class="method-definition">Process opening tags.  Overridden here to fix a bug when the image type can't be determined from the URL.</td></tr>
 				</div>
 												</table>
 			</div>
@@ -189,10 +218,10 @@ Source Location: /util/AlphaTCPDF.inc<br /><br />
 			<a name='method_detail'></a>
 
 <a name="methodImage" id="Image"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">Image</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util__utilAlphaTCPDF.inc.html#a31">31</a>]</span>
+	<span class="method-title">Image</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util__utilAlphaTCPDF.inc.html#a81">81</a>]</span>
 </div>
 <br />
 
@@ -200,20 +229,20 @@ Source Location: /util/AlphaTCPDF.inc<br /><br />
     <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
     <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
 		<code>void Image(
-
-$file, [
-$x = ''], [
-$y = ''], [
-$w = 0], [
-$h = 0], [
-$type = ''], [
-$link = ''], [
-$align = ''], [
-$resize = false], [
-$dpi = 300], [
-$palign = ''], [
-$ismask = false], [
-$imgmask = false], [
+string
+$file, [float
+$x = ''], [float
+$y = ''], [float
+$w = 0], [float
+$h = 0], [string
+$type = ''], [mixed
+$link = ''], [string
+$align = ''], [boolean
+$resize = false], [int
+$dpi = 300], [string
+$palign = ''], [boolean
+$ismask = false], [mixed
+$imgmask = false], [mixed
 $border = 0]&nbsp;
 )</code>
     </td></tr></table>
@@ -221,117 +250,120 @@ $border = 0]&nbsp;
 
 	<p class="short-description"><strong>Overrides the TCPDF::Image method to decrypt encrypted $file paths from the Image widget, then pass  them to the normal TCPDF::Image along with all of the other (unmodified) parameters.
 </strong></p>
-<span class="description"><p>(non-PHPdoc)</p></span>
+
 			<strong>Parameters:</strong><br />
 			<table border="0" cellspacing="0" cellpadding="0">
 					<tr><td class="indent">
-				<span class="var-type"></span>&nbsp;&nbsp;</td>
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$file:&nbsp;</span></td>
 				<td>
-							</td></tr>
+				<span class="var-description"> Name of the file containing the image.</span>			</td></tr>
 					<tr><td class="indent">
-				<span class="var-type"></span>&nbsp;&nbsp;</td>
+				<span class="var-type">float</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$x:&nbsp;</span></td>
 				<td>
-							</td></tr>
+				<span class="var-description"> Abscissa of the upper-left corner.</span>			</td></tr>
 					<tr><td class="indent">
-				<span class="var-type"></span>&nbsp;&nbsp;</td>
+				<span class="var-type">float</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$y:&nbsp;</span></td>
 				<td>
-							</td></tr>
+				<span class="var-description"> Ordinate of the upper-left corner.</span>			</td></tr>
 					<tr><td class="indent">
-				<span class="var-type"></span>&nbsp;&nbsp;</td>
+				<span class="var-type">float</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$w:&nbsp;</span></td>
 				<td>
-							</td></tr>
+				<span class="var-description"> Width of the image in the page. If not specified or equal to zero, it is automatically calculated.</span>			</td></tr>
 					<tr><td class="indent">
-				<span class="var-type"></span>&nbsp;&nbsp;</td>
+				<span class="var-type">float</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$h:&nbsp;</span></td>
 				<td>
-							</td></tr>
+				<span class="var-description"> Height of the image in the page. If not specified or equal to zero, it is automatically calculated.</span>			</td></tr>
 					<tr><td class="indent">
-				<span class="var-type"></span>&nbsp;&nbsp;</td>
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$type:&nbsp;</span></td>
 				<td>
-							</td></tr>
+				<span class="var-description"> Image format. Possible values are (case insensitive): JPEG and PNG (whitout GD library) and all images supported by GD: GD, GD2, GD2PART, GIF, JPEG, PNG, BMP, XBM, XPM;. If not specified, the type is inferred from the file extension.</span>			</td></tr>
 					<tr><td class="indent">
-				<span class="var-type"></span>&nbsp;&nbsp;</td>
+				<span class="var-type">mixed</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$link:&nbsp;</span></td>
 				<td>
-							</td></tr>
+				<span class="var-description"> URL or identifier returned by AddLink().</span>			</td></tr>
 					<tr><td class="indent">
-				<span class="var-type"></span>&nbsp;&nbsp;</td>
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$align:&nbsp;</span></td>
 				<td>
-							</td></tr>
+				<span class="var-description"> Indicates the alignment of the pointer next to image insertion relative to image height. The value can be:<ul><li>T: top-right for LTR or top-left for RTL</li><li>M: middle-right for LTR or middle-left for RTL</li><li>B: bottom-right for LTR or bottom-left for RTL</li><li>N: next line</li></ul></span>			</td></tr>
 					<tr><td class="indent">
-				<span class="var-type"></span>&nbsp;&nbsp;</td>
+				<span class="var-type">boolean</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$resize:&nbsp;</span></td>
 				<td>
-							</td></tr>
+				<span class="var-description"> If true resize (reduce) the image to fit $w and $h (requires GD library).</span>			</td></tr>
 					<tr><td class="indent">
-				<span class="var-type"></span>&nbsp;&nbsp;</td>
+				<span class="var-type">int</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$dpi:&nbsp;</span></td>
 				<td>
-							</td></tr>
+				<span class="var-description"> dot-per-inch resolution used on resize</span>			</td></tr>
 					<tr><td class="indent">
-				<span class="var-type"></span>&nbsp;&nbsp;</td>
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$palign:&nbsp;</span></td>
 				<td>
-							</td></tr>
+				<span class="var-description"> Allows to center or align the image on the current line. Possible values are:<ul><li>L : left align</li><li>C : center</li><li>R : right align</li><li>'' : empty string : left for LTR or right for RTL</li></ul></span>			</td></tr>
 					<tr><td class="indent">
-				<span class="var-type"></span>&nbsp;&nbsp;</td>
+				<span class="var-type">boolean</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$ismask:&nbsp;</span></td>
 				<td>
-							</td></tr>
+				<span class="var-description"> true if this image is a mask, false otherwise</span>			</td></tr>
 					<tr><td class="indent">
-				<span class="var-type"></span>&nbsp;&nbsp;</td>
+				<span class="var-type">mixed</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$imgmask:&nbsp;</span></td>
 				<td>
-							</td></tr>
+				<span class="var-description"> image object returned by this function or false</span>			</td></tr>
 					<tr><td class="indent">
-				<span class="var-type"></span>&nbsp;&nbsp;</td>
+				<span class="var-type">mixed</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$border:&nbsp;</span></td>
 				<td>
-							</td></tr>
+				<span class="var-description"> Indicates if borders must be drawn around the image. The value can be either a number:<ul><li>0: no border (default)</li><li>1: frame</li></ul>or a string containing some or all of the following characters (in any order):<ul><li>L: left</li><li>T: top</li><li>R: right</li><li>B: bottom</li></ul></span>			</td></tr>
 				</table>
 
 	<br />
 	<strong>API Tags:</strong><br />
 <table border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td class="indent"><strong>See:</strong>&nbsp;&nbsp;</td><td>Image()</td>
-  </tr>
-  <tr>
     <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
   </tr>
 </table>
 <br />
 
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
 
 		
 		<br />
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodopenHTMLTagHandler" id="openHTMLTagHandler"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">openHTMLTagHandler</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util__utilAlphaTCPDF.inc.html#a67">67</a>]</span>
+	<span class="method-title">openHTMLTagHandler</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util__utilAlphaTCPDF.inc.html#a118">118</a>]</span>
 </div>
 <br />
 
@@ -348,7 +380,7 @@ $dom&nbsp;
     </td></tr></table>
     </td></tr></table><br /></div>
 
-	<p class="short-description"><strong>Process opening tags.  Overridden here to file a bug when the image type can't be determined from the URL.
+	<p class="short-description"><strong>Process opening tags.  Overridden here to fix a bug when the image type can't be determined from the URL.
 </strong></p>
 
 			<strong>Parameters:</strong><br />
@@ -399,7 +431,7 @@ $dom&nbsp;
 
         <div class="credit">
 		    <hr class="separator" />
-		    Documentation generated on Sun, 23 Jan 2011 17:18:54 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+		    Documentation generated on Wed, 09 Mar 2011 13:44:49 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
 	      </div>
       </td></tr></table>
     </td>

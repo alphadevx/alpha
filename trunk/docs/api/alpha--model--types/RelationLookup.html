@@ -18,7 +18,7 @@
     <td colspan="2" class="header-menu">
       
                                                                                               
-                                                                                                                                                                                		[ <a href="../classtrees_alpha--model--types.html" class="menu">class tree: alpha--model--types</a> ]
+                                                                                                                                                                  		[ <a href="../classtrees_alpha--model--types.html" class="menu">class tree: alpha--model--types</a> ]
 		[ <a href="../elementindex_alpha--model--types.html" class="menu">index: alpha--model--types</a> ]
             [ <a href="../elementindex.html" class="menu">all elements</a> ]
     </td>
@@ -32,23 +32,22 @@
 		<div class="package-title">alpha--model--types</div>
       <b>Packages:</b><br />
   <div class="package">
-              <a href="../li_Alpha.html">Alpha</a><br />
+              <a href="../li_default.html">default</a><br />
               <a href="../li_alpha--controller.html">alpha--controller</a><br />
               <a href="../li_alpha--controller--front.html">alpha--controller--front</a><br />
               <a href="../li_alpha--exceptions.html">alpha--exceptions</a><br />
               <a href="../li_alpha--model.html">alpha--model</a><br />
               <a href="../li_alpha--model--types.html">alpha--model--types</a><br />
-              <a href="../li_alpha--service.html">alpha--service</a><br />
               <a href="../li_alpha--tests.html">alpha--tests</a><br />
               <a href="../li_alpha--util.html">alpha--util</a><br />
               <a href="../li_alpha--util--convertors.html">alpha--util--convertors</a><br />
               <a href="../li_alpha--util--feeds.html">alpha--util--feeds</a><br />
               <a href="../li_alpha--util--filters.html">alpha--util--filters</a><br />
+              <a href="../li_alpha--util--graphs.html">alpha--util--graphs</a><br />
               <a href="../li_alpha--util--helpers.html">alpha--util--helpers</a><br />
-              <a href="../li_alpha--util--LOC.html">alpha--util--LOC</a><br />
+              <a href="../li_alpha--util--metrics.html">alpha--util--metrics</a><br />
               <a href="../li_alpha--view.html">alpha--view</a><br />
               <a href="../li_alpha--view--widgets.html">alpha--view--widgets</a><br />
-              <a href="../li_util--graphs.html">util--graphs</a><br />
       	</div>
       <br />
                         <b>Files:</b><br />
@@ -140,7 +139,7 @@ Source Location: /model/types/RelationLookup.inc<br /><br />
 		
 <strong>Information Tags:</strong><br />
 <table border="0" cellspacing="0" cellpadding="0">
-				<tr><td><strong>Version:</strong>&nbsp;&nbsp;</td><td>$Id: RelationLookup.inc 1259 2011-01-15 17:55:17Z johnc $</td></tr>
+				<tr><td><strong>Version:</strong>&nbsp;&nbsp;</td><td>$Id: RelationLookup.inc 1310 2011-03-09 13:18:07Z johnc $</td></tr>
 				<tr><td><strong>Copyright:</strong>&nbsp;&nbsp;</td><td><p>Copyright (c) 2010, John Collins (founder of Alpha Framework).  All rights reserved.</p><p><pre> Redistribution and use in source and binary forms, with or
  without modification, are permitted provided that the
  following conditions are met:
@@ -335,7 +334,7 @@ Source Location: /model/types/RelationLookup.inc<br /><br />
 											<span class="method-definition"><a href="../alpha--model/AlphaDAO.html#methodcheckBOTableExists">AlphaDAO::checkBOTableExists()</a></span>
 										</dt>
 										<dd>
-											<span class="method-definition">Static method to check the database and see if the table for the indicated BO class name  exists (assumes table name will be $BOClassName less &quot;_object&quot;).</span>
+											<span class="method-definition">Static method to check the database and see if the table for the indicated BO class name  exists (assumes table name will be $BOClassName less &quot;Object&quot;).</span>
 										</dd>
 																			<dt>
 											<span class="method-definition"><a href="../alpha--model/AlphaDAO.html#methodcheckClassDefExists">AlphaDAO::checkClassDefExists()</a></span>
@@ -473,7 +472,7 @@ Source Location: /model/types/RelationLookup.inc<br /><br />
 											<span class="method-definition"><a href="../alpha--model/AlphaDAO.html#methodgetFriendlyClassName">AlphaDAO::getFriendlyClassName()</a></span>
 										</dt>
 										<dd>
-											<span class="method-definition">Converts &quot;business_object&quot; to &quot;Business&quot; and returns.</span>
+											<span class="method-definition">Converts &quot;BusinessObject&quot; to &quot;Business&quot; and returns.</span>
 										</dd>
 																			<dt>
 											<span class="method-definition"><a href="../alpha--model/AlphaDAO.html#methodgetID">AlphaDAO::getID()</a></span>
@@ -838,7 +837,7 @@ Source Location: /model/types/RelationLookup.inc<br /><br />
 												</div>
 		<div class="info-box-body">
 			<a name="var$dataLabels" id="$dataLabels"><!-- --></A>
-<div class="evenrow">
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -876,13 +875,13 @@ Source Location: /model/types/RelationLookup.inc<br /><br />
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="var$helper" id="$helper"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
 			<span class="var-type">string</span>&nbsp;&nbsp;
 			<span class="var-name">$helper</span>
-			 = <span class="var-default"> 'Not a valid RelationLookup value!'</span>			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a105">105</a>]</span>
+			 = <span class="var-default"> 'Not a valid RelationLookup value!'</span>			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a106">106</a>]</span>
 		</span>
 	</div>
 
@@ -901,6 +900,9 @@ Source Location: /model/types/RelationLookup.inc<br /><br />
   <tr>
     <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
   </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>IllegalArguementException</td>
+  </tr>
 </table>
 
 	
@@ -908,7 +910,7 @@ Source Location: /model/types/RelationLookup.inc<br /><br />
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="var$leftID" id="$leftID"><!-- --></A>
-<div class="evenrow">
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -940,7 +942,7 @@ Source Location: /model/types/RelationLookup.inc<br /><br />
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="var$rightID" id="$rightID"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -987,10 +989,10 @@ Source Location: /model/types/RelationLookup.inc<br /><br />
 			<a name='method_detail'></a>
 
 <a name="method__construct" id="__construct"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">Constructor __construct</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a114">114</a>]</span>
+	<span class="method-title">Constructor __construct</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a115">115</a>]</span>
 </div>
 <br />
 
@@ -1057,10 +1059,10 @@ $rightClassName&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodgetHelper" id="getHelper"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">getHelper</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a290">290</a>]</span>
+	<span class="method-title">getHelper</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a291">291</a>]</span>
 </div>
 <br />
 
@@ -1102,10 +1104,10 @@ $rightClassName&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodgetLeftClassName" id="getLeftClassName"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">getLeftClassName</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a158">158</a>]</span>
+	<span class="method-title">getLeftClassName</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a159">159</a>]</span>
 </div>
 <br />
 
@@ -1141,10 +1143,10 @@ $rightClassName&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodgetRightClassName" id="getRightClassName"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">getRightClassName</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a168">168</a>]</span>
+	<span class="method-title">getRightClassName</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a169">169</a>]</span>
 </div>
 <br />
 
@@ -1180,10 +1182,10 @@ $rightClassName&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodgetTableName" id="getTableName"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">getTableName</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a180">180</a>]</span>
+	<span class="method-title">getTableName</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a181">181</a>]</span>
 </div>
 <br />
 
@@ -1228,10 +1230,10 @@ $rightClassName&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodgetValue" id="getValue"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">getValue</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a310">310</a>]</span>
+	<span class="method-title">getValue</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a311">311</a>]</span>
 </div>
 <br />
 
@@ -1273,10 +1275,10 @@ $rightClassName&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodloadAllByAttribute" id="loadAllByAttribute"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">loadAllByAttribute</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a207">207</a>]</span>
+	<span class="method-title">loadAllByAttribute</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a208">208</a>]</span>
 </div>
 <br />
 
@@ -1381,10 +1383,10 @@ $atribute&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodsetHelper" id="setHelper"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">setHelper</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a300">300</a>]</span>
+	<span class="method-title">setHelper</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a301">301</a>]</span>
 </div>
 <br />
 
@@ -1438,10 +1440,10 @@ $helper&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodsetValue" id="setValue"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">setValue</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a322">322</a>]</span>
+	<span class="method-title">setValue</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a323">323</a>]</span>
 </div>
 <br />
 
@@ -1498,10 +1500,10 @@ $OIDs&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="method__toString" id="__toString"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">__toString</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a337">337</a>]</span>
+	<span class="method-title">__toString</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model--types__modeltypesRelationLookup.inc.html#a338">338</a>]</span>
 </div>
 <br />
 
@@ -1548,7 +1550,7 @@ $OIDs&nbsp;
 
         <div class="credit">
 		    <hr class="separator" />
-		    Documentation generated on Sun, 23 Jan 2011 17:19:59 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+		    Documentation generated on Wed, 09 Mar 2011 13:45:54 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
 	      </div>
       </td></tr></table>
     </td>

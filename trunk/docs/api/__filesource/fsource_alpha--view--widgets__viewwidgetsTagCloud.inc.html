@@ -18,7 +18,7 @@
     <td colspan="2" class="header-menu">
       
                                                                                                                                                                                                                                           
-                                    		[ <a href="../classtrees_alpha--view--widgets.html" class="menu">class tree: alpha--view--widgets</a> ]
+                      		[ <a href="../classtrees_alpha--view--widgets.html" class="menu">class tree: alpha--view--widgets</a> ]
 		[ <a href="../elementindex_alpha--view--widgets.html" class="menu">index: alpha--view--widgets</a> ]
             [ <a href="../elementindex.html" class="menu">all elements</a> ]
     </td>
@@ -32,23 +32,22 @@
 		<div class="package-title">alpha--view--widgets</div>
       <b>Packages:</b><br />
   <div class="package">
-              <a href="../li_Alpha.html">Alpha</a><br />
+              <a href="../li_default.html">default</a><br />
               <a href="../li_alpha--controller.html">alpha--controller</a><br />
               <a href="../li_alpha--controller--front.html">alpha--controller--front</a><br />
               <a href="../li_alpha--exceptions.html">alpha--exceptions</a><br />
               <a href="../li_alpha--model.html">alpha--model</a><br />
               <a href="../li_alpha--model--types.html">alpha--model--types</a><br />
-              <a href="../li_alpha--service.html">alpha--service</a><br />
               <a href="../li_alpha--tests.html">alpha--tests</a><br />
               <a href="../li_alpha--util.html">alpha--util</a><br />
               <a href="../li_alpha--util--convertors.html">alpha--util--convertors</a><br />
               <a href="../li_alpha--util--feeds.html">alpha--util--feeds</a><br />
               <a href="../li_alpha--util--filters.html">alpha--util--filters</a><br />
+              <a href="../li_alpha--util--graphs.html">alpha--util--graphs</a><br />
               <a href="../li_alpha--util--helpers.html">alpha--util--helpers</a><br />
-              <a href="../li_alpha--util--LOC.html">alpha--util--LOC</a><br />
+              <a href="../li_alpha--util--metrics.html">alpha--util--metrics</a><br />
               <a href="../li_alpha--view.html">alpha--view</a><br />
               <a href="../li_alpha--view--widgets.html">alpha--view--widgets</a><br />
-              <a href="../li_util--graphs.html">util--graphs</a><br />
       	</div>
       <br />
                         <br />
@@ -63,16 +62,16 @@
 <li><div class="src-line"><a name="a2"></a>&nbsp;</div></li>
 <li><div class="src-line"><a name="a3"></a><span class="src-inc">require_once&nbsp;</span><span class="src-var">$config</span><span class="src-sym">-&gt;</span><span class="src-id">get</span><span class="src-sym">(</span><span class="src-str">'sysRoot'</span><span class="src-sym">)</span>.<span class="src-str">'alpha/util/CatchError.inc'</span><span class="src-sym">;</span></div></li>
 <li><div class="src-line"><a name="a4"></a><span class="src-inc">require_once&nbsp;</span><span class="src-var">$config</span><span class="src-sym">-&gt;</span><span class="src-id">get</span><span class="src-sym">(</span><span class="src-str">'sysRoot'</span><span class="src-sym">)</span>.<span class="src-str">'alpha/util/Logger.inc'</span><span class="src-sym">;</span></div></li>
-<li><div class="src-line"><a name="a5"></a><span class="src-inc">require_once&nbsp;</span><span class="src-var">$config</span><span class="src-sym">-&gt;</span><span class="src-id">get</span><span class="src-sym">(</span><span class="src-str">'sysRoot'</span><span class="src-sym">)</span>.<span class="src-str">'alpha/model/tag_object.inc'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a5"></a><span class="src-inc">require_once&nbsp;</span><span class="src-var">$config</span><span class="src-sym">-&gt;</span><span class="src-id">get</span><span class="src-sym">(</span><span class="src-str">'sysRoot'</span><span class="src-sym">)</span>.<span class="src-str">'alpha/model/TagObject.inc'</span><span class="src-sym">;</span></div></li>
 <li><div class="src-line"><a name="a6"></a>&nbsp;</div></li>
 <li><div class="src-line"><a name="a7"></a><span class="src-doc">/**</span></div></li>
-<li><div class="src-line"><a name="a8"></a><span class="src-doc">&nbsp;*&nbsp;A&nbsp;widget&nbsp;for&nbsp;rendering&nbsp;a&nbsp;tag&nbsp;cloud,&nbsp;based&nbsp;off&nbsp;the&nbsp;tag_object&nbsp;instances&nbsp;in&nbsp;the</span></div></li>
+<li><div class="src-line"><a name="a8"></a><span class="src-doc">&nbsp;*&nbsp;A&nbsp;widget&nbsp;for&nbsp;rendering&nbsp;a&nbsp;tag&nbsp;cloud,&nbsp;based&nbsp;off&nbsp;the&nbsp;TagObject&nbsp;instances&nbsp;in&nbsp;the</span></div></li>
 <li><div class="src-line"><a name="a9"></a><span class="src-doc">&nbsp;*&nbsp;database.</span></div></li>
 <li><div class="src-line"><a name="a10"></a><span class="src-doc">&nbsp;*&nbsp;</span></div></li>
 <li><div class="src-line"><a name="a11"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@package</span><span class="src-doc">&nbsp;alpha::view::widgets</span></div></li>
 <li><div class="src-line"><a name="a12"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@author</span><span class="src-doc">&nbsp;John&nbsp;Collins&nbsp;&lt;john@design-ireland.net&gt;</span></div></li>
 <li><div class="src-line"><a name="a13"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@copyright</span><span class="src-doc">&nbsp;2010&nbsp;John&nbsp;Collins</span></div></li>
-<li><div class="src-line"><a name="a14"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@version</span><span class="src-doc">&nbsp;$Id:&nbsp;TagCloud.inc&nbsp;1138&nbsp;2010-09-28&nbsp;18:58:39Z&nbsp;jcollins&nbsp;$</span></div></li>
+<li><div class="src-line"><a name="a14"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@version</span><span class="src-doc">&nbsp;$Id:&nbsp;TagCloud.inc&nbsp;1310&nbsp;2011-03-09&nbsp;13:18:07Z&nbsp;johnc&nbsp;$</span></div></li>
 <li><div class="src-line"><a name="a15"></a><span class="src-doc">&nbsp;*&nbsp;</span></div></li>
 <li><div class="src-line"><a name="a16"></a><span class="src-doc">&nbsp;*/</span></div></li>
 <li><div class="src-line"><a name="a17"></a><span class="src-key">class&nbsp;</span><a href="../alpha--view--widgets/TagCloud.html">TagCloud</a>&nbsp;<span class="src-sym">{</span></div></li>
@@ -95,7 +94,7 @@
 <li><div class="src-line"><a name="a34"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Constructor</span></div></li>
 <li><div class="src-line"><a name="a35"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/</span></div></li>
 <li><div class="src-line"><a name="a36"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../alpha--view--widgets/TagCloud.html#method__construct">__construct</a><span class="src-sym">(</span><span class="src-var">$limit</span><span class="src-sym">)&nbsp;</span><span class="src-sym">{</span></div></li>
-<li><div class="src-line"><a name="a37"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$this</span><span class="src-sym">-&gt;</span><span class="src-var">popTags&nbsp;</span>=&nbsp;<span class="src-id"><a href="../alpha--model/tag_object.html">tag_object</a></span><span class="src-sym">::</span><a href="../alpha--model/tag_object.html#methodgetPopularTagsArray">getPopularTagsArray</a><span class="src-sym">(</span><span class="src-var">$limit</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a37"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$this</span><span class="src-sym">-&gt;</span><span class="src-var">popTags&nbsp;</span>=&nbsp;<span class="src-id"><a href="../alpha--model/TagObject.html">TagObject</a></span><span class="src-sym">::</span><a href="../alpha--model/TagObject.html#methodgetPopularTagsArray">getPopularTagsArray</a><span class="src-sym">(</span><span class="src-var">$limit</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
 <li><div class="src-line"><a name="a38"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
 <li><div class="src-line"><a name="a39"></a>&nbsp;&nbsp;&nbsp;&nbsp;</div></li>
 <li><div class="src-line"><a name="a40"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-doc">/**</span></div></li>
@@ -129,7 +128,7 @@
 </span></div>
         <div class="credit">
 		    <hr class="separator" />
-		    Documentation generated on Sun, 23 Jan 2011 17:20:10 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+		    Documentation generated on Wed, 09 Mar 2011 13:46:05 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
 	      </div>
       </td></tr></table>
     </td>

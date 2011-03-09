@@ -18,7 +18,7 @@
     <td colspan="2" class="header-menu">
       
                                                                   
-                                                                                                                                                                                                            		[ <a href="classtrees_alpha--exceptions.html" class="menu">class tree: alpha--exceptions</a> ]
+                                                                                                                                                                                              		[ <a href="classtrees_alpha--exceptions.html" class="menu">class tree: alpha--exceptions</a> ]
 		[ <a href="elementindex_alpha--exceptions.html" class="menu">index: alpha--exceptions</a> ]
             [ <a href="elementindex.html" class="menu">all elements</a> ]
     </td>
@@ -32,21 +32,20 @@
 		<div class="package-title">alpha--exceptions</div>
       <b>Packages:</b><br />
   <div class="package">
-              <a href="li_Alpha.html">Alpha</a><br />
               <a href="li_alpha--controller.html">alpha--controller</a><br />
+              <a href="li_default.html">default</a><br />
               <a href="li_alpha--controller--front.html">alpha--controller--front</a><br />
               <a href="li_alpha--exceptions.html">alpha--exceptions</a><br />
               <a href="li_alpha--model.html">alpha--model</a><br />
               <a href="li_alpha--model--types.html">alpha--model--types</a><br />
-              <a href="li_alpha--service.html">alpha--service</a><br />
               <a href="li_alpha--tests.html">alpha--tests</a><br />
               <a href="li_alpha--util.html">alpha--util</a><br />
               <a href="li_alpha--util--convertors.html">alpha--util--convertors</a><br />
               <a href="li_alpha--util--feeds.html">alpha--util--feeds</a><br />
               <a href="li_alpha--util--filters.html">alpha--util--filters</a><br />
-              <a href="li_util--graphs.html">util--graphs</a><br />
+              <a href="li_alpha--util--graphs.html">alpha--util--graphs</a><br />
               <a href="li_alpha--util--helpers.html">alpha--util--helpers</a><br />
-              <a href="li_alpha--util--LOC.html">alpha--util--LOC</a><br />
+              <a href="li_alpha--util--metrics.html">alpha--util--metrics</a><br />
               <a href="li_alpha--view.html">alpha--view</a><br />
               <a href="li_alpha--view--widgets.html">alpha--view--widgets</a><br />
       	</div>
@@ -63,6 +62,7 @@
 			<span style="padding-left: 1em;"><a href="alpha--exceptions/_exceptions---FailedUnitCommitException.inc.html">FailedUnitCommitException.inc</a></span><br />
 			<span style="padding-left: 1em;"><a href="alpha--exceptions/_exceptions---FileNotFoundException.inc.html">FileNotFoundException.inc</a></span><br />
 			<span style="padding-left: 1em;"><a href="alpha--exceptions/_exceptions---IllegalArguementException.inc.html">IllegalArguementException.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="alpha--exceptions/_exceptions---LibraryNotInstalledException.inc.html">LibraryNotInstalledException.inc</a></span><br />
 			<span style="padding-left: 1em;"><a href="alpha--exceptions/_exceptions---LockingException.inc.html">LockingException.inc</a></span><br />
 			<span style="padding-left: 1em;"><a href="alpha--exceptions/_exceptions---MailNotSentException.inc.html">MailNotSentException.inc</a></span><br />
 			<span style="padding-left: 1em;"><a href="alpha--exceptions/_exceptions---PHPException.inc.html">PHPException.inc</a></span><br />
@@ -84,6 +84,7 @@
 	    		<a href="alpha--exceptions/FailedUnitCommitException.html">FailedUnitCommitException</a>    	 <br />
 	    		<a href="alpha--exceptions/FileNotFoundException.html">FileNotFoundException</a>    	 <br />
 	    		<a href="alpha--exceptions/IllegalArguementException.html">IllegalArguementException</a>    	 <br />
+	    		<a href="alpha--exceptions/LibraryNotInstalledException.html">LibraryNotInstalledException</a>    	 <br />
 	    		<a href="alpha--exceptions/LockingException.html">LockingException</a>    	 <br />
 	    		<a href="alpha--exceptions/MailNotSentException.html">MailNotSentException</a>    	 <br />
 	    		<a href="alpha--exceptions/PHPException.html">PHPException</a>    	 <br />
@@ -100,20 +101,19 @@
 <h1>Element index for package alpha--exceptions</h1>
 	<h3>Package indexes</h3>
 	<ul>
-				<li><a href="elementindex_Alpha.html">Alpha</a></li>
-					<li><a href="elementindex_alpha--controller.html">alpha--controller</a></li>
+				<li><a href="elementindex_alpha--controller.html">alpha--controller</a></li>
+					<li><a href="elementindex_default.html">default</a></li>
 					<li><a href="elementindex_alpha--controller--front.html">alpha--controller--front</a></li>
 							<li><a href="elementindex_alpha--model.html">alpha--model</a></li>
 					<li><a href="elementindex_alpha--model--types.html">alpha--model--types</a></li>
-					<li><a href="elementindex_alpha--service.html">alpha--service</a></li>
 					<li><a href="elementindex_alpha--tests.html">alpha--tests</a></li>
 					<li><a href="elementindex_alpha--util.html">alpha--util</a></li>
 					<li><a href="elementindex_alpha--util--convertors.html">alpha--util--convertors</a></li>
 					<li><a href="elementindex_alpha--util--feeds.html">alpha--util--feeds</a></li>
 					<li><a href="elementindex_alpha--util--filters.html">alpha--util--filters</a></li>
-					<li><a href="elementindex_util--graphs.html">util--graphs</a></li>
+					<li><a href="elementindex_alpha--util--graphs.html">alpha--util--graphs</a></li>
 					<li><a href="elementindex_alpha--util--helpers.html">alpha--util--helpers</a></li>
-					<li><a href="elementindex_alpha--util--LOC.html">alpha--util--LOC</a></li>
+					<li><a href="elementindex_alpha--util--metrics.html">alpha--util--metrics</a></li>
 					<li><a href="elementindex_alpha--view.html">alpha--view</a></li>
 					<li><a href="elementindex_alpha--view--widgets.html">alpha--view--widgets</a></li>
 			</ul>
@@ -139,19 +139,21 @@
 		<h2>_</h2>
 		<dl>
 							<dt><b>__construct</b></dt>
-				<dd>in file PHPException.inc, method <a href="alpha--exceptions/PHPException.html#method__construct">PHPException::__construct()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The constructor</dd>
-							<dt><b>__construct</b></dt>
 				<dd>in file MailNotSentException.inc, method <a href="alpha--exceptions/MailNotSentException.html#method__construct">MailNotSentException::__construct()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The constructor</dd>
 							<dt><b>__construct</b></dt>
 				<dd>in file LockingException.inc, method <a href="alpha--exceptions/LockingException.html#method__construct">LockingException::__construct()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The constructor</dd>
 							<dt><b>__construct</b></dt>
-				<dd>in file ResourceNotAllowedException.inc, method <a href="alpha--exceptions/ResourceNotAllowedException.html#method__construct">ResourceNotAllowedException::__construct()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The constructor</dd>
+				<dd>in file LibraryNotInstalledException.inc, method <a href="alpha--exceptions/LibraryNotInstalledException.html#method__construct">LibraryNotInstalledException::__construct()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The constructor</dd>
 							<dt><b>__construct</b></dt>
-				<dd>in file ResourceNotFoundException.inc, method <a href="alpha--exceptions/ResourceNotFoundException.html#method__construct">ResourceNotFoundException::__construct()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The constructor</dd>
+				<dd>in file PHPException.inc, method <a href="alpha--exceptions/PHPException.html#method__construct">PHPException::__construct()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The constructor</dd>
+							<dt><b>__construct</b></dt>
+				<dd>in file ResourceNotAllowedException.inc, method <a href="alpha--exceptions/ResourceNotAllowedException.html#method__construct">ResourceNotAllowedException::__construct()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The constructor</dd>
 							<dt><b>__construct</b></dt>
 				<dd>in file ValidationException.inc, method <a href="alpha--exceptions/ValidationException.html#method__construct">ValidationException::__construct()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The constructor</dd>
 							<dt><b>__construct</b></dt>
 				<dd>in file SecurityException.inc, method <a href="alpha--exceptions/SecurityException.html#method__construct">SecurityException::__construct()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The constructor</dd>
+							<dt><b>__construct</b></dt>
+				<dd>in file ResourceNotFoundException.inc, method <a href="alpha--exceptions/ResourceNotFoundException.html#method__construct">ResourceNotFoundException::__construct()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The constructor</dd>
 							<dt><b>__construct</b></dt>
 				<dd>in file IllegalArguementException.inc, method <a href="alpha--exceptions/IllegalArguementException.html#method__construct">IllegalArguementException::__construct()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The constructor</dd>
 							<dt><b>__construct</b></dt>
@@ -267,8 +269,12 @@
 	<div>
 		<h2>l</h2>
 		<dl>
+							<dt><b>LibraryNotInstalledException.inc</b></dt>
+				<dd>procedural page <a href="alpha--exceptions/_exceptions---LibraryNotInstalledException.inc.html">LibraryNotInstalledException.inc</a></dd>
 							<dt><b>LockingException.inc</b></dt>
 				<dd>procedural page <a href="alpha--exceptions/_exceptions---LockingException.inc.html">LockingException.inc</a></dd>
+							<dt><b>LibraryNotInstalledException</b></dt>
+				<dd>in file LibraryNotInstalledException.inc, class <a href="alpha--exceptions/LibraryNotInstalledException.html">LibraryNotInstalledException</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The exception class for instances where required libraries are not installed</dd>
 							<dt><b>LockingException</b></dt>
 				<dd>in file LockingException.inc, class <a href="alpha--exceptions/LockingException.html">LockingException</a><br>&nbsp;&nbsp;&nbsp;&nbsp;The exception class for BO (Business Object) object locking errors</dd>
 					</dl>
@@ -358,7 +364,7 @@
 	</div>
         <div class="credit">
 		    <hr class="separator" />
-		    Documentation generated on Sun, 23 Jan 2011 17:18:20 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+		    Documentation generated on Wed, 09 Mar 2011 13:44:14 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
 	      </div>
       </td></tr></table>
     </td>
