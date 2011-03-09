@@ -5,16 +5,52 @@
  * Generic log file class to encapsulate common file I/O and rendering calls 
  * 
  * @package alpha::util
+ * @since 1.0
  * @author John Collins <john@design-ireland.net>
- * @copyright 2009 John Collins
  * @version $Id$
+ * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * All rights reserved.
  * 
+ * <pre>
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer.
+ * * Redistributions in binary form must reproduce the above 
+ *   copyright notice, this list of conditions and the 
+ *   following disclaimer in the documentation and/or other 
+ *   materials provided with the distribution.
+ * * Neither the name of the Alpha Framework nor the names 
+ *   of its contributors may be used to endorse or promote 
+ *   products derived from this software without specific 
+ *   prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * </pre>
+ *  
  */
 class LogFile {
  	/**
  	 * The log file path
  	 * 
  	 * @var string
+ 	 * @since 1.0
  	 */
  	private $path;
  	 	
@@ -22,6 +58,7 @@ class LogFile {
  	 * An array of column headers use when rendering the log file
  	 * 
  	 * @var array
+ 	 * @since 1.0
  	 */
  	private $columnHeadings;
  	
@@ -29,6 +66,7 @@ class LogFile {
  	 * The value seperator to use in the file (default is a pipe)
  	 * 
  	 * @var string
+ 	 * @since 1.0
  	 */
  	private $seperator = '|';
  	
@@ -36,7 +74,8 @@ class LogFile {
  	 * The maximum size of the log file in megabytes before a backup is created and a 
  	 * new file is created, default is 5
  	 * 
- 	 * @var int
+ 	 * @var integer
+ 	 * @since 1.0
  	 */
  	private $MaxSize = 5;
  	
@@ -44,6 +83,7 @@ class LogFile {
  	 * The constructor
  	 * 
  	 * @param string $path
+ 	 * @since 1.0
  	 */
  	public function __construct($path) {
  		$this->path = $path; 		
@@ -52,7 +92,8 @@ class LogFile {
  	/**
  	 * Set the max log size in megabytes
  	 * 
- 	 * @param int $MaxSize
+ 	 * @param integer $MaxSize
+ 	 * @since 1.0
  	 */
  	public function setMaxSize($MaxSize) {
  		$this->MaxSize = $MaxSize;
@@ -62,6 +103,7 @@ class LogFile {
  	 * Set the value seperator
  	 * 
  	 * @param string $seperator
+ 	 * @since 1.0
  	 */
  	public function setSeperator($seperator) {
  		$this->seperator = $seperator;
@@ -71,6 +113,7 @@ class LogFile {
  	 * Writes a line of data to the log file
  	 * 
  	 * $param array $line
+ 	 * @since 1.0
  	 */
  	public function writeLine($line) {
  		$mergedLine = '';
@@ -105,6 +148,7 @@ class LogFile {
  	 * Returns the size in megabytes of the log file on disc
  	 * 
  	 * @return float
+ 	 * @since 1.0
  	 */
  	private function checkFileSize() {		
 		$size = filesize($this->path);
@@ -115,6 +159,8 @@ class LogFile {
  	/**
  	 * Creates a backup of the log file, which has the same file name and location as the 
  	 * current file plus a timestamp appended
+ 	 * 
+ 	 * @since 1.0
  	 */
  	private function backupFile() {
  		// generate the name of the backup file name to contain a timestampe
@@ -133,6 +179,7 @@ class LogFile {
  	 * Renders a log file as a HTML table
  	 * 
  	 * $param array $cols The headings to use when rendering the log file
+ 	 * @since 1.0
  	 */
  	public function renderLog($cols) {
  		// render the start of the table
