@@ -103,7 +103,7 @@ class TextBox {
 		if($text instanceof Text)
 			$this->textObject = $text;
 		else
-			throw new IllegalArguementException('Text object passed ['.print_r($text, true).'] is not a valid Text object!');
+			throw new IllegalArguementException('Text object passed ['.var_export($text, true).'] is not a valid Text object!');
 			
 		$this->label = $label;
 		$this->name = $name;
@@ -177,7 +177,7 @@ class TextBox {
 		if($text instanceof Text)
 			$this->text = $text;
 		else
-			throw new IllegalArguementException('Text object passed ['.print_r($text, true).'] is not a valid Text object!');
+			throw new IllegalArguementException('Text object passed ['.var_export($text, true).'] is not a valid Text object!');
 	}
 
 	/**

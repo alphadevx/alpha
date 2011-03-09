@@ -139,7 +139,7 @@ class ViewFeed extends AlphaController implements AlphaControllerInterface {
 	 * @throws ResourceNotFoundException
 	 */
 	public function doGET($params) {
-		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
 		
 		global $config;
 		
@@ -172,7 +172,8 @@ class ViewFeed extends AlphaController implements AlphaControllerInterface {
 				break;
 				case 'Atom':
 					$feed = new Atom($BOName, $this->title, str_replace('&', '&amp;', $_SERVER['REQUEST_URI']), $this->description);
-					$feed->setFieldMappings($this->fieldMappings[0], $this->fieldMappings[1], $this->fieldMappings[2], $this->fieldMappings[3], $this->fieldMappings[4]);
+					$feed->setFieldMappings($this->fieldMappings[0], $this->fieldMappings[1], $this->fieldMappings[2], $this->fieldMappings[3],
+						$this->fieldMappings[4]);
 					if($config->get('sysAtomFeedAuthor') != '')
 						$feed->addAuthor($config->get('sysAtomFeedAuthor'));
 				break;
@@ -200,7 +201,7 @@ class ViewFeed extends AlphaController implements AlphaControllerInterface {
 	 * @since 1.0
 	 */
 	public function doPOST($params) {
-		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
 		
 		self::$logger->debug('<<doPOST');
 	}

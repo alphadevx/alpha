@@ -88,7 +88,7 @@ class ViewRecordSelector extends AlphaController implements AlphaControllerInter
 	 * @throws ResourceNotFoundException
 	 */
 	public function doGet($params) {
-		self::$logger->debug('>>doGet(params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doGet(params=['.var_export($params, true).'])');
 		
 		$relationObject = new Relation();
 		
@@ -153,7 +153,7 @@ class ViewRecordSelector extends AlphaController implements AlphaControllerInter
 	 * @since 1.0
 	 */
 	public function doPOST($params) {
-		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');		
+		self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');		
 		
 		self::$logger->debug('<<doPOST');
 	}

@@ -123,7 +123,7 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 	 * @since 1.0
 	 */
 	public function doGET($params) {
-		self::$logger->debug('>>doGET(params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doGET(params=['.var_export($params, true).'])');
 		
 		try{
 			// load the business object (BO) definition
@@ -177,7 +177,7 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 	 * @since 1.0
 	 */
 	public function doPOST($params) {
-		self::$logger->debug('>>doPOST(params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doPOST(params=['.var_export($params, true).'])');
 		
 		global $config;
 		
@@ -213,7 +213,8 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 										
 						echo '<center>';
 						
-						$temp = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'",'Back to List','cancelBut');
+						$temp = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'",
+							'Back to List','cancelBut');
 						echo $temp->render();
 						
 						echo '</center>';

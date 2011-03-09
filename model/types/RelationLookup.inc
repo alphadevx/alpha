@@ -325,7 +325,7 @@ class RelationLookup extends AlphaDAO implements AlphaTypeInterface {
 			$this->leftID->setValue($OIDs[0]);
 			$this->rightID->setValue($OIDs[1]);
 		}catch(Exception $e) {
-			throw new IllegalArguementException('Array value passed to setValue is not valid ['.print_r($OIDs, true).'], array should contain two OIDs');
+			throw new IllegalArguementException('Array value passed to setValue is not valid ['.var_export($OIDs, true).'], array should contain two OIDs');
 		}
 	}
 	

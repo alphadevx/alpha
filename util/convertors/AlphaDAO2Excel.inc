@@ -69,7 +69,7 @@ class AlphaDAO2Excel {
 	 */
 	public function __construct($BO) {
 		self::$logger = new Logger('AlphaDAO2Excel');
-		self::$logger->debug('>>__construct(BO=['.print_r($BO, true).'])');
+		self::$logger->debug('>>__construct(BO=['.var_export($BO, true).'])');
 		
 		$this->BO = $BO;
 		

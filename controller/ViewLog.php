@@ -100,7 +100,7 @@ class ViewLog extends AlphaController implements AlphaControllerInterface{
 	 * @throws ResourceNotFoundException
 	 */
 	public function doGET($params) {
-		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
 		
 		
 		try{
@@ -141,7 +141,7 @@ class ViewLog extends AlphaController implements AlphaControllerInterface{
 	 * @since 1.0
 	 */
 	public function doPOST($params) {
-		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
 		
 		self::$logger->debug('<<doPOST');
 	}

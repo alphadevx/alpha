@@ -88,7 +88,7 @@ class ViewImage extends AlphaController implements AlphaControllerInterface {
 	 * @throws ResourceNotFoundException
 	 */
 	public function doGet($params) {
-		self::$logger->debug('>>doGet(params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doGet(params=['.var_export($params, true).'])');
 		
 		try {
 			$imgSource = $params['s'];
@@ -121,7 +121,7 @@ class ViewImage extends AlphaController implements AlphaControllerInterface {
 	 * @since 1.0
 	 */
 	public function doPOST($params) {
-		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');		
+		self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');		
 		
 		self::$logger->debug('<<doPOST');
 	}

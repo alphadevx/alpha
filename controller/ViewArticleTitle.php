@@ -86,7 +86,7 @@ class ViewArticleTitle extends ViewArticle {
 	 * @throws ResourceNotFoundException
 	 */
 	public function doGET($params) {
-		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
 		
 		global $config;
 		

@@ -231,15 +231,16 @@ class TagObject extends AlphaDAO {
 		$lowerWords = preg_split("/[\s,.:]+/", $content);
 		array_walk($lowerWords, 'TagObject::lowercaseArrayElement');
 		if($applyStopwords) {
-			if(file_exists($config->get('sysRoot').'config/stopwords.ini')) {		
-				$stopwords = file($config->get('sysRoot').'config/stopwords.ini', FILE_IGNORE_NEW_LINES);
-			}elseif(file_exists($config->get('sysRoot').'alpha/stopwords.ini')) {
-				$stopwords = file($config->get('sysRoot').'alpha/stopwords.ini', FILE_IGNORE_NEW_LINES);
+			if(file_exists($config->get('sysRoot').'config/stopwords-'.$config->get('sysStopwordsSize').'.ini')) {		
+				$stopwords = file($config->get('sysRoot').'config/stopwords-'.$config->get('sysStopwordsSize').'.ini', FILE_IGNORE_NEW_LINES);
+			}elseif(file_exists($config->get('sysRoot').'alpha/stopwords-'.$config->get('sysStopwordsSize').'.ini')) {
+				$stopwords = file($config->get('sysRoot').'alpha/stopwords-'.$config->get('sysStopwordsSize').'.ini', FILE_IGNORE_NEW_LINES);
 			}else{
-				throw new AlphaException('Unable to find a stopwords.ini file in the application!');
+				throw new AlphaException('Unable to find a stopwords-'.$config->get('sysStopwordsSize').'.ini file in the application!');
 			}
 			
 			array_walk($stopwords, 'TagObject::lowercaseArrayElement');
+			
 			$filtered = array_diff($lowerWords, $stopwords);
 		}else{
 			$filtered = $lowerWords;
@@ -265,7 +266,7 @@ class TagObject extends AlphaDAO {
 			}
 		}
 		
-		self::$logger->debug('Tags generated: ['.print_r($tagContents, true).']');
+		self::$logger->debug('Tags generated: ['.var_export($tagContents, true).']');
 		return $tagObjects;
 	}
 	

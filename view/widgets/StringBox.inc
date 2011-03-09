@@ -94,7 +94,7 @@ class StringBox {
 		if($string instanceof String)
 			$this->stringObject = $string;
 		else
-			throw new IllegalArguementException('String object passed ['.print_r($string, true).'] is not a valid String object!');
+			throw new IllegalArguementException('String object passed ['.var_export($string, true).'] is not a valid String object!');
 		
 		$this->label = $label;
 		$this->name = $name;
@@ -143,7 +143,7 @@ class StringBox {
 		if($string instanceof String)
 			$this->stringObject = $string;
 		else
-			throw new IllegalArguementException('String object passed ['.print_r($string, true).'] is not a valid String object!');
+			throw new IllegalArguementException('String object passed ['.var_export($string, true).'] is not a valid String object!');
 	}
 
 	/**

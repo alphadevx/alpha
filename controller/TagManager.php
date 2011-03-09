@@ -91,7 +91,7 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 	 * @since 1.0
 	 */
 	public function doGET($params) {
-		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
 		
 		global $config;
 		
@@ -109,7 +109,8 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 				$count = count($tag->loadAllByAttribute('taggedClass', $BO));
 				echo '<h3>'.$temp->getFriendlyClassName().' object is tagged ('.$count.' tags found)</h3>';
 				
-				$js = "$('#dialogDiv').text('Are you sure you want to delete all tags attached to the ".$temp->getFriendlyClassName()." class, and have them re-created?');
+				$js = "$('#dialogDiv').text('Are you sure you want to delete all tags attached to the ".$temp->getFriendlyClassName().
+					" class, and have them re-created?');
 						$('#dialogDiv').dialog({
 						buttons: {
 							'OK': function(event, ui) {						
@@ -149,7 +150,7 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 	 * @throws ResourceNotAllowedException
 	 */
 	public function doPOST($params) {
-		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
 		
 		try {
 			// check the hidden security fields before accepting the form POST data
@@ -174,21 +175,7 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 					
 					self::$logger->info('Deleted all of the old tags (elapsed time ['.round(microtime(true)-$startTime, 5).'] seconds)');
 					
-					foreach ($BOs as $BO) {
-						foreach($BO->get('taggedAttributes') as $tagged) {
-							$tags = TagObject::tokenize($BO->get($tagged), get_class($BO), $BO->getOID());
-							foreach($tags as $tag) {
-								try {
-									$tag->save();
-								}catch(ValidationException $e){
-									/*
-									 * The unique key has most-likely been violated because this BO is already tagged with this
-									 * value, so we can ignore in this case.
-									 */
-								}
-							}
-						}
-					}
+					$this->regenerateTagsOnBOs($BOs);
 
 					self::$logger->info('Saved all of the new tags (elapsed time ['.round(microtime(true)-$startTime, 5).'] seconds)');
 					
@@ -215,6 +202,32 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 		
 		echo AlphaView::displayPageFoot($this);
 		self::$logger->debug('<<doPOST');
+	}
+	
+	/**
+	 * Regenerates the tags on the supplied list of BOs
+	 * 
+	 * @param array $BOs
+	 * @since 1.0
+	 */
+	private function regenerateTagsOnBOs($BOs) {
+		foreach ($BOs as $BO) {
+			foreach($BO->get('taggedAttributes') as $tagged) {
+				
+				$tags = TagObject::tokenize($BO->get($tagged), get_class($BO), $BO->getOID());
+				
+				foreach($tags as $tag) {
+					try {
+						$tag->save();
+					}catch(ValidationException $e){
+						/*
+						 * The unique key has most-likely been violated because this BO is already tagged with this
+						 * value, so we can ignore in this case.
+						 */
+					}
+				}
+			}
+		}
 	}
 }
 

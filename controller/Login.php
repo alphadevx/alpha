@@ -114,7 +114,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 	 * @since 1.0
 	 */
 	public function doGET($params) {
-		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
 		
 		if(!is_array($params))
 			throw new IllegalArguementException('Bad $params ['.var_export($params, true).'] passed to doGET method!');
@@ -139,7 +139,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 	 * @since 1.0
 	 */
 	public function doPOST($params) {
-		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
 		
 		if(!is_array($params))
 			throw new IllegalArguementException('Bad $params ['.var_export($params, true).'] passed to doPOST method!');
@@ -185,24 +185,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 						throw new SecurityException('Failed to login user '.$params['email'].', that account has been disabled!');
 					
 					// check the password
-					if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Active') {
-						if (crypt($params['password'], $this->personObject->get('password')) == $this->personObject->get('password')) {				
-							self::$logger->info('Logging in ['.$this->personObject->get('email').'] at ['.date("Y-m-d H:i:s").']');
-							$_SESSION['currentUser'] = $this->personObject;
-							if ($this->getNextJob() != '') {
-								self::$logger->debug('<<doPOST');
-								$url = FrontController::generateSecureURL('act='.$this->getNextJob());
-								header('Location: '.$url);
-								exit;
-							}else{
-								self::$logger->debug('<<doPOST');
-								header('Location: '.$config->get('sysURL'));
-								exit;
-							}
-						}else{
-							throw new ValidationException('Failed to login user '.$params['email'].', the password is incorrect!');
-						}
-					}
+					$this->doLoginAndRedirect($params['password']);
 				}
 				
 				echo AlphaView::displayPageHead($this);
@@ -257,6 +240,40 @@ class Login extends AlphaController implements AlphaControllerInterface {
 		
 		echo AlphaView::displayPageFoot($this);
 		self::$logger->debug('<<doPOST');
+	}
+	
+	/**
+	 * Login the user and re-direct to the defined destination
+	 * 
+	 * @param string $password The password supplied by the user logging in
+	 * @throws ValidationException
+	 * @since 1.0
+	 */
+	private function doLoginAndRedirect($password) {
+		self::$logger->debug('>>doLoginAndRedirect(password=['.$password.'])');
+		
+		if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Active') {
+			if (crypt($password, $this->personObject->get('password')) == $this->personObject->get('password')) {
+								
+				self::$logger->info('Logging in ['.$this->personObject->get('email').'] at ['.date("Y-m-d H:i:s").']');
+				
+				$_SESSION['currentUser'] = $this->personObject;
+				
+				if ($this->getNextJob() != '') {
+					self::$logger->debug('<<doLoginAndRedirect');
+					$url = FrontController::generateSecureURL('act='.$this->getNextJob());
+					header('Location: '.$url);
+					exit;
+				}else{
+					self::$logger->debug('<<doLoginAndRedirect');
+					header('Location: '.$config->get('sysURL'));
+					exit;
+				}
+			}else{
+				throw new ValidationException('Failed to login user '.$this->personObject->get('email').', the password is incorrect!');
+				self::$logger->debug('<<doLoginAndRedirect');
+			}
+		}
 	}
 	
 	/**

@@ -613,7 +613,7 @@ abstract class AlphaDAO {
 	 * @throws IllegalArguementException
 	 */
 	public function loadAllByAttributes($attributes=array(), $values=array(), $start=0, $limit=0, $orderBy='OID', $order='ASC', $ignoreClassType=false) {
-		self::$logger->debug('>>loadAllByAttributes(attributes=['.print_r($attributes, true).'], values=['.print_r($values, true).'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
+		self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 		
 		if(method_exists($this, 'before_loadAllByAttributes_callback'))
 			$this->before_loadAllByAttributes_callback();
@@ -621,7 +621,7 @@ abstract class AlphaDAO {
 		global $config;
 		
 		if(!is_array($attributes) || !is_array($values)) {
-			throw new IllegalArguementException('Illegal arrays attributes=['.print_r($attributes, true).'] and values=['.print_r($values, true).'] provided to loadAllByAttributes');
+			throw new IllegalArguementException('Illegal arrays attributes=['.var_export($attributes, true).'] and values=['.var_export($values, true).'] provided to loadAllByAttributes');
 		}
 		
 		$whereClause = ' WHERE';
@@ -667,7 +667,7 @@ abstract class AlphaDAO {
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
 			if(!$this->checkTableExists()) {
 				$this->makeTable();
-				throw new BONotFoundException('Failed to load objects by attributes ['.print_r($attributes, true).'] and values ['.print_r($values, true).'], table did not exist so had to create!');
+				throw new BONotFoundException('Failed to load objects by attributes ['.var_export($attributes, true).'] and values ['.var_export($values, true).'], table did not exist so had to create!');
 			}
 			self::$logger->debug('<<loadAllByAttributes []');
 			return array();
@@ -1137,7 +1137,7 @@ abstract class AlphaDAO {
 					self::$logger->debug('Side is ['.$side.']'.$this->getOID());
 						
 					$lookUp = $prop->getLookup();
-					self::$logger->debug('Lookup object['.print_r($lookUp, true).']');
+					self::$logger->debug('Lookup object['.var_export($lookUp, true).']');
 										
 					// delete all of the old RelationLookup objects for this rel
 					if($side == 'left')
@@ -1579,13 +1579,13 @@ abstract class AlphaDAO {
 	 * @throws AlphaException
 	 */
 	public function getCount($attributes=array(), $values=array()) {
-		self::$logger->debug('>>getCount(attributes=['.print_r($attributes, true).'], values=['.print_r($values, true).'])');
+		self::$logger->debug('>>getCount(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'])');
 		
 		if(method_exists($this, 'before_getCount_callback'))
 			$this->before_getCount_callback();
 			
 		if(!is_array($attributes) || !is_array($values)) {
-			throw new IllegalArguementException('Illegal arrays attributes=['.print_r($attributes, true).'] and values=['.print_r($values, true).'] provided to loadAllByAttributes');
+			throw new IllegalArguementException('Illegal arrays attributes=['.var_export($attributes, true).'] and values=['.var_export($values, true).'] provided to loadAllByAttributes');
 		}
 		
 		if($this->isTableOverloaded())
@@ -1858,7 +1858,7 @@ abstract class AlphaDAO {
 				if(method_exists($this, 'after_getPropObject_callback'))
 					$this->after_getPropObject_callback();
 				
-				self::$logger->debug('<<getPropObject ['.print_r($this->$prop, true).']');
+				self::$logger->debug('<<getPropObject ['.var_export($this->$prop, true).']');
 				return $this->$prop;				
 			}
 		}		
@@ -2108,7 +2108,7 @@ abstract class AlphaDAO {
 		if(method_exists($this, 'after_findMissingFields_callback'))
 			$this->after_findMissingFields_callback();
 		
-		self::$logger->debug('<<findMissingFields ['.print_r($missingFields, true).']');
+		self::$logger->debug('<<findMissingFields ['.var_export($missingFields, true).']');
 		return $missingFields;	
 	}
 	
@@ -2498,7 +2498,7 @@ abstract class AlphaDAO {
 	 */
 	public function getDataLabels() {
 		self::$logger->debug('>>getDataLabels()');
-		self::$logger->debug('<<getDataLabels() ['.print_r($this->dataLabels, true).'])');		
+		self::$logger->debug('<<getDataLabels() ['.var_export($this->dataLabels, true).'])');		
 		return $this->dataLabels;
 	}
 	
@@ -2564,7 +2564,7 @@ abstract class AlphaDAO {
 	    }
 
 	    asort($classNameArray);
-	    self::$logger->debug('<<getBOClassNames ['.print_r($classNameArray, true).']');
+	    self::$logger->debug('<<getBOClassNames ['.var_export($classNameArray, true).']');
 	    return $classNameArray;
 	}
 	
@@ -2576,7 +2576,7 @@ abstract class AlphaDAO {
 	 */
 	public function getDefaultAttributes() {
 		self::$logger->debug('>>getDefaultAttributes()');
-		self::$logger->debug('<<getDefaultAttributes ['.print_r($this->defaultAttributes, true).']');
+		self::$logger->debug('<<getDefaultAttributes ['.var_export($this->defaultAttributes, true).']');
 		return $this->defaultAttributes;
 	}
 	
@@ -2588,7 +2588,7 @@ abstract class AlphaDAO {
 	 */
 	public function getTransientAttributes() {
 		self::$logger->debug('>>getTransientAttributes()');
-		self::$logger->debug('<<getTransientAttributes ['.print_r($this->transientAttributes, true).']');
+		self::$logger->debug('<<getTransientAttributes ['.var_export($this->transientAttributes, true).']');
 		return $this->transientAttributes;
 	}
 	
@@ -2616,7 +2616,7 @@ abstract class AlphaDAO {
 			}
 		}
 		
-		self::$logger->debug('<<getPersistentAttributes ['.print_r($attributes, true).']');
+		self::$logger->debug('<<getPersistentAttributes ['.var_export($attributes, true).']');
 		return $attributes;
 	}
 	
@@ -3021,7 +3021,8 @@ abstract class AlphaDAO {
   	 * @since 1.0
   	 */
   	public function getFriendlyClassName() {
-  		$name = rtrim(get_class($this), 'Object');
+  		$name = substr(get_class($this), 0, -6);
+  		
   		return $name;
   	}
   	
@@ -3037,7 +3038,7 @@ abstract class AlphaDAO {
   	 * @since 1.0
   	 */
 	protected function bindParams($stmt, $attributes=array(), $values=array()) {
-		self::$logger->debug('>>bindParams(stmt=['.print_r($stmt, true).'])');
+		self::$logger->debug('>>bindParams(stmt=['.var_export($stmt, true).'])');
 		
 		$bindingsTypes = '';
 		$params = array();
@@ -3107,7 +3108,7 @@ abstract class AlphaDAO {
 		}
 		
 		self::$logger->debug('bindingsTypes=['.$bindingsTypes.'], count: ['.strlen($bindingsTypes).']');
-		self::$logger->debug('params ['.print_r($params, true).']');
+		self::$logger->debug('params ['.var_export($params, true).']');
 					
 	    if ($params != null) {		 
 			$bind_names[] = $bindingsTypes;
@@ -3121,7 +3122,7 @@ abstract class AlphaDAO {
 		    call_user_func_array(array($stmt,'bind_param'), $bind_names);
 	   	}
 	    
-	   	self::$logger->debug('<<bindParams ['.print_r($stmt, true).']');
+	   	self::$logger->debug('<<bindParams ['.var_export($stmt, true).']');
 	    return $stmt;
 	}
 	

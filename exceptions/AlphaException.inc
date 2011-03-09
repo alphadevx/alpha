@@ -46,16 +46,6 @@
  */
 class AlphaException extends Exception {	
 	/**
-	 * The constructor
-	 *
-	 * @param string $message
-	 * @since 1.0
-	 */
-	public function __construct($message) {
-		parent::__construct($message);
-	}
-	
-	/**
 	 * Set the message for the exception
 	 *
 	 * @param string $message

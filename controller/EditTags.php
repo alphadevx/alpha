@@ -100,7 +100,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 	 * @throws FileNotFoundException
 	 */
 	public function doGET($params) {
-		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
 		
 		global $config;
 		
@@ -202,7 +202,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 	 * @since 1.0
 	 */
 	public function doPOST($params) {
-		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
 		
 		try {
 			// check the hidden security fields before accepting the form POST data
