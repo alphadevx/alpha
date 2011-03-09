@@ -46,16 +46,7 @@ require_once 'AlphaException.inc';
  * </pre>
  *  
  */
-class SecurityException extends AlphaException {
-	/**
-	 * The constructor
-	 *
-	 * @param string $message
-	 * @since 1.0
-	 */
-	public function __construct($message) {		
-		parent::__construct($message);
-	}	
+class SecurityException extends AlphaException {	
 }
 
 ?>

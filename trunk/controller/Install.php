@@ -109,7 +109,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 	 * @since 1.0
 	 */
 	public function doGET($params) {
-		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
 		
 		global $config;
 		
@@ -285,8 +285,10 @@ class Install extends AlphaController implements AlphaControllerInterface {
 					}else{
 						if($BO->checkTableNeedsUpdate()) {		
 							$missingFields = $BO->findMissingFields();
+							
+							$count = count($missingFields);
 		    	
-							for($i = 0; $i < count($missingFields); $i++)
+							for($i = 0; $i < $count; $i++)
 								$BO->addProperty($missingFields[$i]);
 						}
 					}
@@ -394,7 +396,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 	 * @since 1.0
 	 */
 	public function doPOST($params) {
-		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
 		
 		self::$logger->debug('<<doPOST');
 	}

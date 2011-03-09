@@ -66,7 +66,7 @@ class SequenceView extends AlphaView {
 	 */
 	protected function __construct($BO) {
 		self::$logger = new Logger('SequenceView');
-		self::$logger->debug('>>__construct(BO=['.print_r($BO, true).'])');
+		self::$logger->debug('>>__construct(BO=['.var_export($BO, true).'])');
 		
 		parent::__construct($BO);
 		
@@ -80,7 +80,7 @@ class SequenceView extends AlphaView {
 	 * @since 1.0
 	 */
 	public function listView($fields=array()) {
-		self::$logger->debug('>>listView(fields=['.print_r($fields, true).'])');
+		self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
 		
 		if(method_exists($this, 'before_listView_callback'))
 			$this->before_listView_callback();
@@ -181,7 +181,7 @@ class SequenceView extends AlphaView {
 	 * @since 1.0
 	 */
 	public function detailedView($fields=array()) {
-		self::$logger->debug('>>detailedView(fields=['.print_r($fields, true).'])');
+		self::$logger->debug('>>detailedView(fields=['.var_export($fields, true).'])');
 		
 		if(method_exists($this, 'before_detailedView_callback'))
 			$this->before_detailedView_callback();

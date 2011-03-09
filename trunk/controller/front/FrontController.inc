@@ -338,7 +338,8 @@ class FrontController {
 			    		if($keys[1] == 'title')
 			    			$param = str_replace(' ','_',$param);
 			    		
-			    		$URL = $config->get('sysURL').'/'.$this->getControllerAlias($this->pageController).'/'.$this->getControllerParam($this->pageController).$param;
+			    		$URL = $config->get('sysURL').'/'.$this->getControllerAlias($this->pageController).'/'.
+			    			$this->getControllerParam($this->pageController).$param;
 			    	}else{
 			    		$URL = $config->get('sysURL').'/'.$this->getControllerAlias($this->pageController);
 			    	}
@@ -358,16 +359,16 @@ class FrontController {
 				$pageController->doGET($_GET);
 			}
 		}catch (LibraryNotInstalledException $e) {
-			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".print_r($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
+			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".var_export($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
 			throw new LibraryNotInstalledException($e->getMessage());
 		}catch (ResourceNotAllowedException $e) {
-			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".print_r($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
+			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".var_export($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
 			throw new ResourceNotAllowedException($e->getMessage());
 		}catch (ResourceNotFoundException $e) {
-			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".print_r($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
+			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".var_export($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
 			throw new ResourceNotFoundException($e->getMessage());
 		}catch (IllegalArguementException $e) {
-			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".print_r($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
+			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".var_export($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
 			
 			if($config->get('sysEnableClientTempBlacklistFiler')) {
 				if(isset($_SERVER['HTTP_USER_AGENT']) && isset($_SERVER['REMOTE_ADDR']) && isset($_SERVER['REQUEST_URI'])) {
@@ -381,7 +382,7 @@ class FrontController {
 			
 			throw new ResourceNotFoundException('The file that you have requested cannot be found!');
 		}catch (AlphaException $e) {
-			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".print_r($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
+			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".var_export($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
 			
 			if($config->get('sysEnableClientTempBlacklistFiler')) {
 				if(isset($_SERVER['HTTP_USER_AGENT']) && isset($_SERVER['REMOTE_ADDR']) && isset($_SERVER['REQUEST_URI'])) {
@@ -512,7 +513,7 @@ class FrontController {
 		$request = str_replace($config->get('sysURL'), '', 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 		self::$logger->debug('$request is ['.$request.']');
 		$params = explode('/', $request);
-		self::$logger->debug('$params are ['.print_r($params, true).']');
+		self::$logger->debug('$params are ['.var_export($params, true).']');
 		
 		try {
 			// first param will always be the controller alias
@@ -541,7 +542,7 @@ class FrontController {
 			}
 		}
 		
-		self::$logger->debug('$params are ['.print_r($params, true).']');
+		self::$logger->debug('$params are ['.var_export($params, true).']');
 		self::$logger->debug('currentAlias is ['.$this->currentAlias.']');
 		
 		// now populate the _GET vars
@@ -553,7 +554,9 @@ class FrontController {
 			$this->populateGetVars();
 			$this->pageController = $_GET['act'];
 		}else{
-			for($i = 1; $i < count($params); $i+=2) {
+			$count = count($params);
+			
+			for($i = 1; $i < $count; $i+=2) {
 				if(isset($params[$i+1])) {
 					if(!empty($_POST))
 						$_REQUEST[$params[$i]] = $params[$i+1];
@@ -563,7 +566,7 @@ class FrontController {
 			}
 		}
 		
-		self::$logger->debug('$_GET is ['.print_r($_GET, true).']');		
+		self::$logger->debug('$_GET is ['.var_export($_GET, true).']');		
 		self::$logger->debug('<<handleModRewriteRequests');
 	}
 	

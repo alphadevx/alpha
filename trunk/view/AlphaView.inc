@@ -88,7 +88,7 @@ class AlphaView {
 	 */
 	protected function __construct($BO) {
 		self::$logger = new Logger('AlphaView');
-		self::$logger->debug('>>__construct(BO=['.print_r($BO, true).'])');
+		self::$logger->debug('>>__construct(BO=['.var_export($BO, true).'])');
 		
 		if(AlphaDAO::checkClassDefExists(get_class($BO)))
 			$this->BO = $BO;
@@ -110,7 +110,7 @@ class AlphaView {
 	public static function getInstance($BO, $returnParent=false) {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaView');
-		self::$logger->debug('>>getInstance(BO=['.print_r($BO, true).'], returnParent=['.$returnParent.'])');
+		self::$logger->debug('>>getInstance(BO=['.var_export($BO, true).'], returnParent=['.$returnParent.'])');
 		
 		global $config;
 		
@@ -153,7 +153,7 @@ class AlphaView {
 	 * @since 1.0
 	 */
 	public function setBO($BO) {		
-		self::$logger->debug('>>setBO(BO=['.print_r($BO, true).'])');
+		self::$logger->debug('>>setBO(BO=['.var_export($BO, true).'])');
 		
 		if(AlphaDAO::checkClassDefExists(get_class($BO)))
 			$this->BO = $BO;
@@ -180,7 +180,7 @@ class AlphaView {
 	 * @since 1.0
 	 */
 	public function createView($fields=array()) {		
-		self::$logger->debug('>>createView(fields=['.print_r($fields, true).'])');
+		self::$logger->debug('>>createView(fields=['.var_export($fields, true).'])');
 		
 		if(method_exists($this, 'before_createView_callback'))
 			$this->before_createView_callback();
@@ -221,7 +221,7 @@ class AlphaView {
 	 * @since 1.0
 	 */
 	public function editView($fields=array()) {
-		self::$logger->debug('>>editView(fields=['.print_r($fields, true).'])');
+		self::$logger->debug('>>editView(fields=['.var_export($fields, true).'])');
 		
 		if(method_exists($this, 'before_editView_callback'))
 			$this->before_editView_callback();
@@ -282,7 +282,7 @@ class AlphaView {
 	 * @since 1.0
 	 */
 	public function listView($fields=array()) {
-		self::$logger->debug('>>listView(fields=['.print_r($fields, true).'])');
+		self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
 		
 		if(method_exists($this, 'before_listView_callback'))
 			$this->before_listView_callback();
@@ -406,7 +406,7 @@ class AlphaView {
 	 * @since 1.0
 	 */
 	public function detailedView($fields=array()) {
-		self::$logger->debug('>>detailedView(fields=['.print_r($fields, true).'])');
+		self::$logger->debug('>>detailedView(fields=['.var_export($fields, true).'])');
 		
 		if(method_exists($this, 'before_detailedView_callback'))
 			$this->before_detailedView_callback();
@@ -465,7 +465,7 @@ class AlphaView {
 	 * @since 1.0
 	 */
 	public function adminView($fields=array()) {
-		self::$logger->debug('>>adminView(fields=['.print_r($fields, true).'])');
+		self::$logger->debug('>>adminView(fields=['.var_export($fields, true).'])');
 		
 		if(method_exists($this, 'before_adminView_callback'))
 			$this->before_adminView_callback();
@@ -576,7 +576,7 @@ class AlphaView {
 	public static function displayPageHead($controller, $renderMenu = true) {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaView');
-		self::$logger->debug('>>displayPageHead(controller=['.print_r($controller, true).'])');
+		self::$logger->debug('>>displayPageHead(controller=['.var_export($controller, true).'])');
 		
 		if(method_exists($controller, 'before_displayPageHead_callback'))
 			$controller->before_displayPageHead_callback();
@@ -1373,7 +1373,7 @@ class AlphaView {
 	 * @since 1.0
 	 */
 	public function renderAllFields($mode, $filterFields=array(), $readOnlyFields=array()) {
-		self::$logger->debug('>>renderAllFields(mode=['.$mode.'], filterFields=['.print_r($filterFields, true).'], readOnlyFields=['.print_r($readOnlyFields, true).'])');
+		self::$logger->debug('>>renderAllFields(mode=['.$mode.'], filterFields=['.var_export($filterFields, true).'], readOnlyFields=['.var_export($readOnlyFields, true).'])');
 		
 		$html = '';
 				
@@ -1493,7 +1493,7 @@ class AlphaView {
 	 * @throws IllegalArguementException
 	 */
 	public function loadTemplate($BO, $mode, $fields) {
-		self::$logger->debug('>>loadTemplate(BO=['.print_r($BO, true).'], mode=['.$mode.'], fields=['.print_r($fields, true).'])');
+		self::$logger->debug('>>loadTemplate(BO=['.var_export($BO, true).'], mode=['.$mode.'], fields=['.var_export($fields, true).'])');
 		
 		global $config;
 		

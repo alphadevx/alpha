@@ -135,7 +135,7 @@ class AlphaCronManager {
 	    	}
 	    }
 
-	    self::$logger->debug('<<getTaskClassNames ['.print_r($classNameArray, true).']');
+	    self::$logger->debug('<<getTaskClassNames ['.var_export($classNameArray, true).']');
 	    return $classNameArray;
 	}
 	

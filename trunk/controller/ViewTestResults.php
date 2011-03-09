@@ -126,7 +126,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 	 * @since 1.0
 	 */
 	public function doGET($params) {
-		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
 		
 		echo AlphaView::displayPageHead($this);
 		
@@ -448,7 +448,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 	 * @since 1.0
 	 */
 	public function doPOST($params) {
-		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
 		
 		self::$logger->debug('<<doPOST');
 	}

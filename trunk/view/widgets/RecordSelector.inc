@@ -339,7 +339,7 @@ class RecordSelector {
 	 * @return string
 	 */
 	public function renderSelector($lookupOIDs=array()) {
-		self::$logger->debug('>>renderSelector(lookupOIDs=['.print_r($lookupOIDs, true).'])');
+		self::$logger->debug('>>renderSelector(lookupOIDs=['.var_export($lookupOIDs, true).'])');
 		
 		global $config;
 		

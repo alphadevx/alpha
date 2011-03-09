@@ -292,7 +292,7 @@ abstract class AlphaController {
 	  */
 	 public function getBO() {
 	 	self::$logger->debug('>>getBO()');
-	 	self::$logger->debug('<<getBO ['.print_r($this->BO, true).']');
+	 	self::$logger->debug('<<getBO ['.var_export($this->BO, true).']');
 	 	return $this->BO;
 	 }
 	 
@@ -303,7 +303,7 @@ abstract class AlphaController {
  	  * @since 1.0
 	  */ 
 	 public function setBO($BO) {
-	 	self::$logger->debug('>>setBO(BO=['.print_r($BO, true).'])');
+	 	self::$logger->debug('>>setBO(BO=['.var_export($BO, true).'])');
 	 	$this->BO = $BO;
 	 	
 	 	// if the BO has tags, use these as the meta keywords for this controller
@@ -428,7 +428,7 @@ abstract class AlphaController {
  	  * @since 1.0
 	  */
 	 public function setUnitOfWork($jobs) {
-	 	self::$logger->debug('>>setUnitOfWork(jobs=['.print_r($jobs, true).'])');
+	 	self::$logger->debug('>>setUnitOfWork(jobs=['.var_export($jobs, true).'])');
 	 	
 	 	if(method_exists($this, 'before_setUnitOfWork_callback'))
 			$this->before_setUnitOfWork_callback();
@@ -476,6 +476,7 @@ abstract class AlphaController {
 	 			$this->lastJob = $jobs[$i];
 	 		}	
 	 	}
+	 	
 	 	$_SESSION['unitOfWork'] = $jobs;
 	 	
 	 	if(method_exists($this, 'after_setUnitOfWork_callback'))
@@ -538,9 +539,12 @@ abstract class AlphaController {
  	  * @since 1.0
 	  */
 	 public function setUnitEndTime($year, $month, $day, $hour, $minute, $second) {
-	 	self::$logger->debug('>>setUnitEndTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'], second=['.$second.'])');
+	 	self::$logger->debug('>>setUnitEndTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'],
+	 	 second=['.$second.'])');
+	 	
 	 	$this->unitEndTime->setTimestampValue($year, $month, $day, $hour, $minute, $second);
 	 	$_SESSION['unitEndTime'] = $this->unitEndTime->getValue();
+	 	
 	 	self::$logger->debug('<<setUnitEndTime');
 	 }
 	 
@@ -606,7 +610,7 @@ abstract class AlphaController {
  	  * @since 1.0
 	  */
 	 public function markDirty($object) {
-	 	self::$logger->debug('>>markDirty(object=['.print_r($object, true).'])');
+	 	self::$logger->debug('>>markDirty(object=['.var_export($object, true).'])');
 	 	
 	 	if(method_exists($this, 'before_markDirty_callback'))
 			$this->before_markDirty_callback();
@@ -629,7 +633,7 @@ abstract class AlphaController {
 	  */
 	 public function getDirtyObjects() {
 	 	self::$logger->debug('>>getDirtyObjects()');
-	 	self::$logger->debug('<<getDirtyObjects ['.print_r($this->dirtyObjects, true).']');
+	 	self::$logger->debug('<<getDirtyObjects ['.var_export($this->dirtyObjects, true).']');
 	 	return $this->dirtyObjects;
 	 }
 	 
@@ -640,7 +644,7 @@ abstract class AlphaController {
  	  * @since 1.0
 	  */
 	 public function markNew($object) {
-	 	self::$logger->debug('>>markNew(object=['.print_r($object, true).'])');
+	 	self::$logger->debug('>>markNew(object=['.var_export($object, true).'])');
 	 	
 	 	if(method_exists($this, 'before_markNew_callback'))
 			$this->before_markNew_callback();
@@ -663,7 +667,7 @@ abstract class AlphaController {
 	  */
 	 public function getNewObjects() {
 	 	self::$logger->debug('>>getNewObjects()');
-	 	self::$logger->debug('<<getNewObjects ['.print_r($this->newObjects, true).']');
+	 	self::$logger->debug('<<getNewObjects ['.var_export($this->newObjects, true).']');
 	 	return $this->newObjects;
 	 }
 	 
@@ -682,8 +686,10 @@ abstract class AlphaController {
 		AlphaDAO::begin();
 
 		$newObjects = $this->getNewObjects();
+		
+		$count = count($newObjects);
 
-		for ($i = 0; $i < count($newObjects); $i++) {
+		for ($i = 0; $i < $count; $i++) {
 			try {
 				$newObjects[$i]->save();
 			}catch (FailedSaveException $e) {
@@ -700,8 +706,10 @@ abstract class AlphaController {
 		}
 		
 		$dirtyObjects = $this->getDirtyObjects();
+		
+		$count = count($dirtyObjects);
 
-		for ($i = 0; $i < count($dirtyObjects); $i++) {
+		for ($i = 0; $i < $count; $i++) {
 			try {
 				$dirtyObjects[$i]->save();
 			}catch (FailedSaveException $e) {

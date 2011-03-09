@@ -116,7 +116,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 	 * @throws IllegalArguementException
 	 */
 	public function doGET($params) {
-		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
 		
 		if (isset($params['start']) ? $this->startPoint = $params['start']: $this->startPoint = 0);
 		
@@ -136,11 +136,6 @@ class Search extends AlphaController implements AlphaControllerInterface {
 			$log = new LogFile($config->get('sysRoot').'logs/search.log');		
 			$log->writeLine(array($params['q'], date('Y-m-d H:i:s'), $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
 			
-			// used to track when our pagination range ends
-			$end = ($this->startPoint+$config->get('sysListPageAmount'));
-			// used to track how many results have been displayed or skipped from the pagination range
-			$displayedCount = 0;
-			
 			echo '<h2>Display results for &quot;'.$params['q'].'&quot;</h2>';
 			
 			// if a BO name is provided, only search tags on that class, otherwise search all BOs
@@ -154,7 +149,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 					AlphaDAO::loadClassDef($BO);
 					$temp = new $BO;
 					
-					if($temp->isTagged()) {					
+					if($temp->isTagged()) {
 						// explode the user's query into a set of tokenized transient TagObjects
 						$queryTags = TagObject::tokenize($params['q'], '', '', false);			
 						$matchingTags = array();
@@ -173,6 +168,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 						 * array value = weight (the amount of tags matching the BO)
 						 */
 						$BOIDs = array();
+						
 						foreach($matchingTags as $tag) {							
 							if($tag->get('taggedClass') == $BO) {
 								if(isset($BOIDs[$tag->get('taggedOID')])) {
@@ -192,40 +188,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 						arsort($BOIDs);						
 						
 						// render the list view for each BO
-						foreach(array_keys($BOIDs) as $oid) {
-							try {
-								// if we have reached the end of the pagination range then break out
-								if($displayedCount == $end)
-									break;
-							
-								// if our display count is >= the start but < the end...
-								if($displayedCount >= $this->startPoint) {
-									$temp = new $BO;
-									$temp->load($oid);
-									
-									$view = AlphaView::getInstance($temp);
-									echo $view->listView();
-									
-									$tags = $temp->getPropObject('tags')->getRelatedObjects();
-				
-									if(count($tags) > 0) {
-										echo '<p>Tags: ';
-										
-										$queryTerms = explode(' ', strtolower($params['q']));
-										
-										foreach($tags as $tag) {
-											echo (in_array($tag->get('content'), $queryTerms) ? '<strong>'.$tag->get('content').' </strong>' : $tag->get('content').' ');
-										}
-										
-										echo '</p>';
-									}
-								}
-								
-								$displayedCount++;
-							}catch(BONotFoundException $e) {
-								self::$logger->warn('Orpaned TagObject detected pointing to a non-existant BO of OID ['.$oid.'] and type ['.$BO.'].');
-							}
-						}
+						$this->renderResultList($BOIDs, $BO, $params['q']);						
 						
 						AlphaDAO::disconnect();
 					}
@@ -246,13 +209,65 @@ class Search extends AlphaController implements AlphaControllerInterface {
 	}
 	
 	/**
+	 * Renders the search result list
+	 * 
+	 * @param array $BOIDs
+	 * @param string $BO
+	 * @param string $query
+	 * @since 1.0
+	 */
+	private function renderResultList($BOIDs, $BO, $query) {
+		global $config;
+		
+		// used to track when our pagination range ends
+		$end = ($this->startPoint+$config->get('sysListPageAmount'));
+		// used to track how many results have been displayed or skipped from the pagination range
+		$displayedCount = 0;
+			
+		foreach(array_keys($BOIDs) as $oid) {
+			try {
+				// if we have reached the end of the pagination range then break out
+				if($displayedCount == $end)
+					break;
+							
+				// if our display count is >= the start but < the end...
+				if($displayedCount >= $this->startPoint) {
+					$temp = new $BO;
+					$temp->load($oid);
+									
+					$view = AlphaView::getInstance($temp);
+					echo $view->listView();
+									
+					$tags = $temp->getPropObject('tags')->getRelatedObjects();
+				
+					if(count($tags) > 0) {
+						echo '<p>Tags: ';
+										
+						$queryTerms = explode(' ', strtolower($query));
+										
+						foreach($tags as $tag) {
+							echo (in_array($tag->get('content'), $queryTerms) ? '<strong>'.$tag->get('content').' </strong>' : $tag->get('content').' ');
+						}
+									
+						echo '</p>';
+					}
+				}
+							
+				$displayedCount++;
+			}catch(BONotFoundException $e) {
+				self::$logger->warn('Orpaned TagObject detected pointing to a non-existant BO of OID ['.$oid.'] and type ['.$BO.'].');
+			}
+		}
+	}
+	
+	/**
 	 * Handle POST requests
 	 * 
 	 * @param array $params
 	 * @since 1.0
 	 */
 	public function doPOST($params) {
-		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
 		
 		self::$logger->debug('<<doPOST');
 	}

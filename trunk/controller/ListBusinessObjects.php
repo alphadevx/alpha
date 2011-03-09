@@ -93,7 +93,7 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 	 * @since 1.0
 	 */
 	public function doGET($params) {
-		self::$logger->debug('>>doGET($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
 		
 		echo AlphaView::displayPageHead($this);
 		
@@ -111,7 +111,7 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 	 * @since 1.0
 	 */
 	public function doPOST($params) {
-		self::$logger->debug('>>doPOST($params=['.print_r($params, true).'])');
+		self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
 		
 		global $config;
 		
@@ -157,10 +157,12 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 					AlphaDAO::loadClassDef($classname);
 			    		
 			    	$BO = new $classname();
-			    	$missing_fields = $BO->findMissingFields();
+			    	$missingFields = $BO->findMissingFields();
 			    	
-			    	for($i = 0; $i < count($missing_fields); $i++)
-						$BO->addProperty($missing_fields[$i]);
+			    	$count = count($missingFields);
+			    	
+			    	for($i = 0; $i < $count; $i++)
+						$BO->addProperty($missingFields[$i]);
 					
 					echo AlphaView::displayUpdateMessage('The table for the class '.$classname.' has been successfully updated.');
 				}catch(AlphaException $e) {
@@ -205,7 +207,9 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 				if($BO->checkTableNeedsUpdate()) {				
 					$missingFields = $BO->findMissingFields();
 		    	
-					for($i = 0; $i < count($missingFields); $i++)
+					$count = count($missingFields);
+					
+					for($i = 0; $i < $count; $i++)
 						$BO->addProperty($missingFields[$i]);
 						
 					// now try again...
