@@ -215,13 +215,13 @@ class ViewFeed extends AlphaController implements AlphaControllerInterface {
 		
 		// set up some BO to feed fields mappings based on common BO types
 		switch($this->BOName) {
-			case 'article_object':
+			case 'ArticleObject':
 				$this->title = 'Latest articles from '.$config->get('sysTitle');
 				$this->description = 'News feed containing all of the details on the latest articles published on '.$config->get('sysTitle').'.';
 				$this->fieldMappings = array('title', 'URL', 'description', 'created_ts', 'OID');
 				$this->sortBy = 'created_ts';
 			break;
-			case 'news_object':
+			case 'NewsObject':
 				$this->title = 'Latest news from '.$config->get('sysTitle');
 				$this->description = 'News feed containing all of the latest news items from '.$config->get('sysTitle').'.';
 				$this->fieldMappings = array('title', 'URL', 'content', 'created_ts', 'OID');

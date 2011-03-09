@@ -1,9 +1,9 @@
 <?php
 
 require_once $config->get('sysRoot').'alpha/controller/Search.php';
-require_once $config->get('sysRoot').'alpha/model/person_object.inc';
-require_once $config->get('sysRoot').'alpha/model/article_object.inc';
-require_once $config->get('sysRoot').'alpha/model/rights_object.inc';
+require_once $config->get('sysRoot').'alpha/model/PersonObject.inc';
+require_once $config->get('sysRoot').'alpha/model/ArticleObject.inc';
+require_once $config->get('sysRoot').'alpha/model/RightsObject.inc';
 
 /**
  *
@@ -60,17 +60,17 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 	private $controller;
 	
 	/**
-	 * An article_object for Testing
+	 * An ArticleObject for Testing
 	 * 
-	 * @var article_object
+	 * @var ArticleObject
 	 * @since 1.0
 	 */
 	private $article;
 	
 	/**
-	 * A person_object for Testing (any business object will do)
+	 * A PersonObject for Testing (any business object will do)
 	 * 
-	 * @var person_object
+	 * @var PersonObject
 	 * @since 1.0
 	 */
 	private $person;
@@ -78,7 +78,7 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 	/**
 	 * Test rights group
 	 * 
-	 * @var rights_object
+	 * @var RightsObject
 	 * @since 1.0
 	 */
 	private $group;
@@ -93,7 +93,7 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     	$this->controller = new Search();
     	$this->person = $this->createPersonObject('unitTestUser');
     	$this->article = $this->createArticleObject('unitTestArticle');
-    	$this->group = new rights_object();
+    	$this->group = new RightsObject();
     }
     
 	/**
@@ -122,11 +122,11 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 	/**
      * Creates a person object for Testing
      * 
-     * @return person_object
+     * @return PersonObject
      * @since 1.0
      */
     private function createPersonObject($name) {
-    	$person = new person_object();
+    	$person = new PersonObject();
         $person->setDisplayname($name);        
         $person->set('email', $name.'@test.com');
         $person->set('password', 'passwordTest');
@@ -138,11 +138,11 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 	/**
      * Creates an article object for Testing
      * 
-     * @return article_object
+     * @return ArticleObject
      * @since 1.0
      */
 	private function createArticleObject($name) {
-    	$article = new article_object();
+    	$article = new ArticleObject();
         $article->set('title', $name);
         $article->set('description', 'unitTestArticleTagOne unitTestArticleTagTwo');
         $article->set('author', 'unitTestArticleTagOne');
@@ -370,14 +370,14 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     		$this->fail('Failed to commit the unit of work transaction for new and dirty objects');
     	}
     	
-    	$newPerson = new person_object();
+    	$newPerson = new PersonObject();
     	try {
     		$newPerson->loadByAttribute('email', 'newuser@test.com');
     	}catch (BONotFoundException $e) {
     		$this->fail('Failed to load the new person that we commited in the unit of work');
     	}
     	
-    	$dirtyPerson = new person_object();
+    	$dirtyPerson = new PersonObject();
     	try {
     		$dirtyPerson->loadByAttribute('email', 'changed@test.com');
     	}catch (BONotFoundException $e) {
@@ -425,7 +425,7 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */
     public function testGetCustomControllerName() {
-    	$this->assertNull(AlphaController::getCustomControllerName('does_not_exist_object', 'view'), 'Testing that providing a bad BO name returns null');
+    	$this->assertNull(AlphaController::getCustomControllerName('DoesNotExistObject', 'view'), 'Testing that providing a bad BO name returns null');
     }
     
     /**
@@ -509,7 +509,7 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
     			break;
     		}
     	}
-    	$this->assertTrue($found, 'Testing the tag_object::tokenize method returns a tag called "unittestarticle"');
+    	$this->assertTrue($found, 'Testing the TagObject::tokenize method returns a tag called "unittestarticle"');
     	
     	$this->controller->setBO($this->article);
     	

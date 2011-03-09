@@ -57,7 +57,7 @@ class Enum_Test extends PHPUnit_Framework_TestCase {
 	/**
 	 * A person for testing
 	 * 
-	 * @var person_object
+	 * @var PersonObject
 	 * @since 1.0
 	 */
 	private $person;
@@ -71,7 +71,7 @@ class Enum_Test extends PHPUnit_Framework_TestCase {
      */
     protected function setUp() {        
         $this->enum1 = new Enum();
-        $this->person = new person_object();
+        $this->person = new PersonObject();
     }
     
     /** 

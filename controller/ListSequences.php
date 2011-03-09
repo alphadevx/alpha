@@ -128,7 +128,7 @@ class ListSequences extends ListAll implements AlphaControllerInterface {
 	}
 	
 	/**
-	 * Handle POST requests (adds $currentUser person_object to the session)
+	 * Handle POST requests
 	 * 
 	 * @param array $params
 	 * @since 1.0

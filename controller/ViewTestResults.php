@@ -12,8 +12,8 @@ require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
 require_once $config->get('sysRoot').'alpha/util/Logger.inc';
-require_once $config->get('sysRoot').'alpha/model/person_object.inc';
-require_once $config->get('sysRoot').'alpha/model/tag_object.inc';
+require_once $config->get('sysRoot').'alpha/model/PersonObject.inc';
+require_once $config->get('sysRoot').'alpha/model/TagObject.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/tests/Enum_Test.php';

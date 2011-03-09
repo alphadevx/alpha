@@ -115,8 +115,8 @@ class AlphaView {
 		global $config;
 		
 		$filename = get_class($BO);
-		// remove the _object part
-		$filename = str_replace('_object', '', $filename);
+		// remove the Object part
+		$filename = str_replace('Object', '', $filename);
 		// replace _ with space, then uppercase words
 		$filename = str_replace('_', ' ', $filename);
 		$filename = ucwords($filename).'View';
@@ -245,8 +245,8 @@ class AlphaView {
 				$('#dialogDiv').dialog({
 				buttons: {
 					'OK': function(event, ui) {						
-						$('#delete_oid').attr('value', '".$this->BO->getOID()."');
-						$('#delete_form').submit();
+						$('#deleteOID').attr('value', '".$this->BO->getOID()."');
+						$('#deleteForm').submit();
 					},
 					'Cancel': function(event, ui) {
 						$(this).dialog('close');
@@ -373,8 +373,8 @@ class AlphaView {
 				$('#dialogDiv').dialog({
 				buttons: {
 					'OK': function(event, ui) {						
-						$('#delete_oid').attr('value', '".$this->BO->getOID()."');
-						$('#delete_form').submit();
+						$('#deleteOID').attr('value', '".$this->BO->getOID()."');
+						$('#deleteForm').submit();
 					},
 					'Cancel': function(event, ui) {
 						$(this).dialog('close');
@@ -435,8 +435,8 @@ class AlphaView {
 				$('#dialogDiv').dialog({
 				buttons: {
 					'OK': function(event, ui) {						
-						$('#delete_oid').attr('value', '".$this->BO->getOID()."');
-						$('#delete_form').submit();
+						$('#deleteOID').attr('value', '".$this->BO->getOID()."');
+						$('#deleteForm').submit();
 					},
 					'Cancel': function(event, ui) {
 						$(this).dialog('close');
@@ -858,8 +858,8 @@ class AlphaView {
 			self::$logger = new Logger('AlphaView');
 		self::$logger->debug('>>renderDeleteForm()');
 		
-		$html = '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" id="delete_form">';		
-		$html .= '<input type="hidden" name="delete_oid" id="delete_oid" value=""/>';
+		$html = '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" id="deleteForm">';		
+		$html .= '<input type="hidden" name="deleteOID" id="deleteOID" value=""/>';
 		$html .= self::renderSecurityFields();
 		$html .= '</form>';
 		
@@ -1330,7 +1330,7 @@ class AlphaView {
 					$html .= $widget->render($tableTags, $expanded, $buttons);
 				}catch (IllegalArguementException $iae) {
 					// the rel may be on a parent class
-					$parentClassName = $this->BO->getTableName().'_object';
+					$parentClassName = ucfirst($this->BO->getTableName()).'Object';
 					$widget = new RecordSelector($rel, $label, $name, $parentClassName);
 					$html .= $widget->render($tableTags, $expanded, $buttons);
 				}
@@ -1350,7 +1350,7 @@ class AlphaView {
 					$html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue(get_class($this->BO)));
 				}catch (IllegalArguementException $iae) {
 					// the rel may be on a parent class
-					$parentClassName = $this->BO->getTableName().'_object';
+					$parentClassName = ucfirst($this->BO->getTableName()).'Object';
 					$html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue($parentClassName));
 				}
 			}else{
@@ -1526,10 +1526,13 @@ class AlphaView {
 
 		// Check to see if a custom template exists for this BO, and if it does load that		
 		if (file_exists($customPath)) {
+			self::$logger->debug('Loading template ['.$customPath.']');
 			require $customPath;				
 		}elseif (file_exists($defaultPath1)) {
+			self::$logger->debug('Loading template ['.$defaultPath1.']');
 			require $defaultPath1;
 		}elseif (file_exists($defaultPath2)) {
+			self::$logger->debug('Loading template ['.$defaultPath2.']');
 			require $defaultPath2;	
 		}else{
 			throw new IllegalArguementException('No ['.$mode.'] HTML template found for class ['.get_class($BO).']');

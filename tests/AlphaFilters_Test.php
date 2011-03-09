@@ -52,7 +52,7 @@ class AlphaFilters_Test extends PHPUnit_Framework_TestCase {
 	/**
 	 * Blacklisted client string
 	 * 
-	 * @var blacklisted_client_object
+	 * @var BlacklistedClientObject
 	 * @since 1.0
 	 */
 	private $blacklistedClient;
@@ -82,25 +82,25 @@ class AlphaFilters_Test extends PHPUnit_Framework_TestCase {
 	private $oldIP;
 	
 	/**
-	 * A test badrequest_object
+	 * A test BadRequestObject
 	 * 
-	 * @var badrequest_object
+	 * @var BadRequestObject
 	 * @since 1.0
 	 */
 	private $badRequest1;
 	
 	/**
-	 * A test badrequest_object
+	 * A test BadRequestObject
 	 * 
-	 * @var badrequest_object
+	 * @var BadRequestObject
 	 * @since 1.0
 	 */
 	private $badRequest2;
 	
 	/**
-	 * A test badrequest_object
+	 * A test BadRequestObject
 	 * 
-	 * @var badrequest_object
+	 * @var BadRequestObject
 	 * @since 1.0
 	 */
 	private $badRequest3;
@@ -121,23 +121,23 @@ class AlphaFilters_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */
     protected function setUp() {
-    	$this->blacklistedClient = new blacklisted_client_object();
+    	$this->blacklistedClient = new BlacklistedClientObject();
     	$this->blacklistedClient->set('client', $this->badAgent);
     	$this->blacklistedClient->save();
     	
-    	$this->badRequest1 = new badrequest_object();
+    	$this->badRequest1 = new BadRequestObject();
     	$this->badRequest1->set('client', $this->badAgent);
 		$this->badRequest1->set('IP', $this->badIP);
 		$this->badRequest1->set('requestedResource', '/doesNotExist');
 		$this->badRequest1->save();
 		
-		$this->badRequest2 = new badrequest_object();
+		$this->badRequest2 = new BadRequestObject();
     	$this->badRequest2->set('client', $this->badAgent);
 		$this->badRequest2->set('IP', $this->badIP);
 		$this->badRequest2->set('requestedResource', '/doesNotExist');
 		$this->badRequest2->save();
 		
-		$this->badRequest3 = new badrequest_object();
+		$this->badRequest3 = new BadRequestObject();
     	$this->badRequest3->set('client', $this->badAgent);
 		$this->badRequest3->set('IP', $this->badIP);
 		$this->badRequest3->set('requestedResource', '/doesNotExist');

@@ -48,7 +48,7 @@ require_once $config->get('sysRoot').'alpha/util/helpers/AlphaValidator.inc';
  * </pre>
  *  
  */
-class tag_object extends AlphaDAO {
+class TagObject extends AlphaDAO {
 	/**
 	 * The name of the class of the object which is tagged
 	 *
@@ -87,7 +87,7 @@ class tag_object extends AlphaDAO {
 	 * @var string
 	 * @since 1.0
 	 */
-	const TABLE_NAME = 'tag';
+	const TABLE_NAME = 'Tag';
 	
 	/**
 	 * Trace logger
@@ -103,7 +103,7 @@ class tag_object extends AlphaDAO {
 	 * @since 1.0
 	 */
 	public function __construct() {
-		self::$logger = new Logger('tag_object');
+		self::$logger = new Logger('TagObject');
 			
 		// ensure to call the parent constructor
 		parent::__construct();
@@ -113,7 +113,7 @@ class tag_object extends AlphaDAO {
 	}
 	
 	/**
-	 * Returns an array of tag_objects matching the class and OID provided
+	 * Returns an array of TagObjects matching the class and OID provided
 	 * 
 	 * @param $taggedClass The class name of the DAO that has been tagged.
 	 * @param $taggedOID The Object ID of the DAO that has been tagged.
@@ -211,7 +211,7 @@ class tag_object extends AlphaDAO {
 
 	/**
 	 * Splits the passed content by spaces, filters (removes) stop words from stopwords.ini, 
-	 * and returns an array of tag_object instances.
+	 * and returns an array of TagObject instances.
 	 * 
 	 * @param $content
 	 * @param $taggedClass Optionally provide a BO class name
@@ -223,13 +223,13 @@ class tag_object extends AlphaDAO {
 	 */
 	public static function tokenize($content, $taggedClass='', $taggedOID='', $applyStopwords=true) {
 		if(self::$logger == null)
-			self::$logger = new Logger('tag_object');
+			self::$logger = new Logger('TagObject');
 			
 		global $config;
 		
 		// apply stop words
 		$lowerWords = preg_split("/[\s,.:]+/", $content);
-		array_walk($lowerWords, 'tag_object::lowercaseArrayElement');
+		array_walk($lowerWords, 'TagObject::lowercaseArrayElement');
 		if($applyStopwords) {
 			if(file_exists($config->get('sysRoot').'config/stopwords.ini')) {		
 				$stopwords = file($config->get('sysRoot').'config/stopwords.ini', FILE_IGNORE_NEW_LINES);
@@ -239,7 +239,7 @@ class tag_object extends AlphaDAO {
 				throw new AlphaException('Unable to find a stopwords.ini file in the application!');
 			}
 			
-			array_walk($stopwords, 'tag_object::lowercaseArrayElement');
+			array_walk($stopwords, 'TagObject::lowercaseArrayElement');
 			$filtered = array_diff($lowerWords, $stopwords);
 		}else{
 			$filtered = $lowerWords;
@@ -252,7 +252,7 @@ class tag_object extends AlphaDAO {
 			if(AlphaValidator::isAlpha($tagContent)) {
 				// just making sure that we haven't added this one in already
 				if(!in_array($tagContent, $tagContents) && !empty($tagContent)) {
-					$tag = new tag_object();
+					$tag = new TagObject();
 					$tag->set('content', trim(strtolower($tagContent)));
 					if(!empty($taggedClass))
 						$tag->set('taggedClass', $taggedClass);

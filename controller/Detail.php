@@ -197,19 +197,19 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 				$this->BOname = $BOName;		
 				$this->BOView = AlphaView::getInstance($this->BO);
 		
-				if (!empty($params['delete_oid'])) {
-					if(!AlphaValidator::isInteger($params['delete_oid']))
-						throw new IllegalArguementException('Invalid delete_oid ['.$params['delete_oid'].'] provided on the request!');
+				if (!empty($params['deleteOID'])) {
+					if(!AlphaValidator::isInteger($params['deleteOID']))
+						throw new IllegalArguementException('Invalid deleteOID ['.$params['deleteOID'].'] provided on the request!');
 					
 					$temp = new $BOName();
-					$temp->load($params['delete_oid']);
+					$temp->load($params['deleteOID']);
 					
 					try {
 						AlphaDAO::begin();
 						$temp->delete();
 						AlphaDAO::commit();
 
-						echo AlphaView::displayUpdateMessage($BOName.' '.$params['delete_oid'].' deleted successfully.');
+						echo AlphaView::displayUpdateMessage($BOName.' '.$params['deleteOID'].' deleted successfully.');
 										
 						echo '<center>';
 						
@@ -219,7 +219,7 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 						echo '</center>';
 					}catch(AlphaException $e) {
 						self::$logger->error($e->getMessage());
-						echo AlphaView::displayErrorMessage('Error deleting the BO of OID ['.$params['delete_oid'].'], check the log!');
+						echo AlphaView::displayErrorMessage('Error deleting the BO of OID ['.$params['deleteOID'].'], check the log!');
 						AlphaDAO::rollback();
 					}
 					

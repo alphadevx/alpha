@@ -7,7 +7,7 @@ if(!isset($config)) {
 }
 
 require_once $config->get('sysRoot').'alpha/controller/Edit.php';
-require_once $config->get('sysRoot').'alpha/model/tag_object.inc';
+require_once $config->get('sysRoot').'alpha/model/TagObject.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/BONotFoundException.inc';
@@ -16,7 +16,7 @@ require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 
 /**
  * 
- * Controller used to edit tag_objects related to the BO indicated in the supplied 
+ * Controller used to edit TagObjects related to the BO indicated in the supplied 
  * GET vars (bo and oid).
  * 
  * @package alpha::controller
@@ -86,7 +86,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 		$this->setDescription('Page to edit tags.');
 		$this->setKeywords('edit,tags');
 		
-		$this->BO = new tag_object();
+		$this->BO = new TagObject();
 				
 		self::$logger->debug('<<__construct');
 	}
@@ -145,8 +145,8 @@ class EditTags extends Edit implements AlphaControllerInterface {
 							$('#dialogDiv').dialog({
 							buttons: {
 								'OK': function(event, ui) {						
-									$('#delete_oid').attr('value', '".$tag->getID()."');
-									$('#delete_form').submit();
+									$('#deleteOID').attr('value', '".$tag->getID()."');
+									$('#deleteForm').submit();
 								},
 								'Cancel': function(event, ui) {
 									$(this).dialog('close');
@@ -194,7 +194,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 	}
 	
 	/**
-	 * Handle POST requests (adds $currentUser person_object to the session)
+	 * Handle POST requests
 	 * 
 	 * @param array $params
 	 * @throws SecurityException
@@ -232,14 +232,14 @@ class EditTags extends Edit implements AlphaControllerInterface {
 					AlphaDAO::begin();
 					
 					foreach ($tags as $tag) {
-						$tag->set('content', tag_object::cleanTagContent($params['content_'.$tag->getID()]));
+						$tag->set('content', TagObject::cleanTagContent($params['content_'.$tag->getID()]));
 						$tag->save();
 					}
 	
 					// handle new tag if posted
 					if(isset($params['new_value']) && trim($params['new_value']) != '') {
-						$newTag = new tag_object();
-						$newTag->set('content', tag_object::cleanTagContent($params['new_value']));
+						$newTag = new TagObject();
+						$newTag->set('content', TagObject::cleanTagContent($params['new_value']));
 						$newTag->set('taggedOID', $BOoid);
 						$newTag->set('taggedClass', $BOName);
 						$newTag->save();
@@ -272,14 +272,14 @@ class EditTags extends Edit implements AlphaControllerInterface {
 				AlphaDAO::disconnect();
 			}
 			
-			if (!empty($params['delete_oid'])) {					
+			if (!empty($params['deleteOID'])) {					
 				try {
 					AlphaDAO::loadClassDef($BOName);
 					$this->BO = new $BOName;
 					$this->BO->load($BOoid);
 					
-					$tag = new tag_object();
-					$tag->load($params['delete_oid']);
+					$tag = new TagObject();
+					$tag->load($params['deleteOID']);
 					$content = $tag->get('content');
 					
 					AlphaDAO::begin();
@@ -292,7 +292,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 					
 					$this->doGET($params);									
 				}catch(AlphaException $e) {
-					self::$logger->error('Unable to delete the tag of id ['.$params['delete_oid'].'], error was ['.$e->getMessage().']');
+					self::$logger->error('Unable to delete the tag of id ['.$params['deleteOID'].'], error was ['.$e->getMessage().']');
 					AlphaDAO::rollback();
 					
 					$this->setStatusMessage(AlphaView::displayErrorMessage('Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' not deleted, please check the application logs.'));

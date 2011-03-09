@@ -222,16 +222,16 @@ class Edit extends AlphaController implements AlphaControllerInterface {
 					echo $this->BOView->editView();
 				}
 				
-				if (!empty($params['delete_oid'])) {
+				if (!empty($params['deleteOID'])) {
 					$temp = new $BOName();
-					$temp->load($params['delete_oid']);
+					$temp->load($params['deleteOID']);
 					
 					try {
 						$temp->delete();
 						
 						AlphaDAO::disconnect();
 								
-						echo AlphaView::displayUpdateMessage($this->BOName.' '.$params['delete_oid'].' deleted successfully.');
+						echo AlphaView::displayUpdateMessage($this->BOName.' '.$params['deleteOID'].' deleted successfully.');
 										
 						echo '<center>';
 						
@@ -241,7 +241,7 @@ class Edit extends AlphaController implements AlphaControllerInterface {
 						echo '</center>';
 					}catch(AlphaException $e) {
 						self::$logger->error($e->getMessage());
-						echo AlphaView::displayErrorMessage('Error deleting the OID ['.$params['delete_oid'].'], check the log!');
+						echo AlphaView::displayErrorMessage('Error deleting the OID ['.$params['deleteOID'].'], check the log!');
 					}
 				}
 			}else{

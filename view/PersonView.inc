@@ -1,11 +1,11 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/model/person_object.inc';
+require_once $config->get('sysRoot').'alpha/model/PersonObject.inc';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 
 /**
  *
- * The rendering class for the person_object class
+ * The rendering class for the PersonObject class
  * 
  * @package alpha::view
  * @since 1.0

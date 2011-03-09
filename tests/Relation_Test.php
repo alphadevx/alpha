@@ -83,7 +83,7 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
      */
     public function testSetRelatedClassPass() {
     	try {
-    		$this->rel1->setRelatedClass('article_object');
+    		$this->rel1->setRelatedClass('ArticleObject');
     	}catch (AlphaException $e) {
     		$this->fail('Testing passing a valid BO name to setRelatedClass');
     	}
@@ -96,10 +96,10 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
      */
     public function testSetRelatedClassFail() {
     	try {
-    		$this->rel1->setRelatedClass('xyz_object');
+    		$this->rel1->setRelatedClass('XyzObject');
     		$this->fail('Testing passing an invalid BO name to setRelatedClass');
     	}catch (AlphaException $e) {
-    		$this->assertEquals('The class [xyz_object] is not defined anywhere!'
+    		$this->assertEquals('The class [XyzObject] is not defined anywhere!'
     			, $e->getMessage()
     			, 'Testing passing an invalid BO name to setRelatedClass');
     	}
@@ -112,7 +112,7 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
      */
     public function testSetRelatedClassFieldPass() {
     	try {
-    		$this->rel1->setRelatedClass('person_object');
+    		$this->rel1->setRelatedClass('PersonObject');
     		$this->rel1->setRelatedClassField('email');
     	}catch (AlphaException $e) {
     		$this->fail('Testing passing a valid field name to setRelatedClassField');
@@ -126,11 +126,11 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
      */
     public function testSetRelatedClassFieldFail() {
     	try {
-    		$this->rel1->setRelatedClass('person_object');
+    		$this->rel1->setRelatedClass('PersonObject');
     		$this->rel1->setRelatedClassField('doesNotExist');
     		$this->fail('Testing passing an invalid field name to setRelatedClassField');
     	}catch (AlphaException $e) {
-    		$this->assertEquals('The field [doesNotExist] was not found in the class [person_object]'
+    		$this->assertEquals('The field [doesNotExist] was not found in the class [PersonObject]'
     			, $e->getMessage()
     			, 'Testing passing an invalid field name to setRelatedClassField');
     	}
@@ -202,7 +202,7 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
      */
     public function testSetRelatedClassDisplayFieldPass() {
     	try {
-    		$this->rel1->setRelatedClass('person_object');
+    		$this->rel1->setRelatedClass('PersonObject');
     		// assuming here that user #1 is the default Administrator account
     		$this->rel1->setValue(1);
     		$this->rel1->setRelatedClassDisplayField('state');

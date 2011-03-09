@@ -47,9 +47,9 @@
  */
 class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
 	/**
-	 * A person_object for Testing (any business object will do)
+	 * A PersonObject for Testing (any business object will do)
 	 * 
-	 * @var person_object
+	 * @var PersonObject
 	 * @since 1.0
 	 */
 	private $person;
@@ -84,11 +84,11 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
     /**
      * Creates a person object for Testing
      * 
-     * @return person_object
+     * @return PersonObject
      * @since 1.0
      */
     private function createPersonObject($name) {
-    	$person = new person_object();
+    	$person = new PersonObject();
         $person->setDisplayname($name);        
         $person->set('email', $name.'@test.com');
         $person->set('password', 'passwordTest');
@@ -137,7 +137,7 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
      */
     public function testCheckRecordExists() {
     	$this->person->save();
-    	$person = new person_object();
+    	$person = new PersonObject();
     	$this->assertTrue($person->checkRecordExists($this->person->getOID()), 'Testing the checkRecordExists method');
     }
     
@@ -252,9 +252,9 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
     	try {
     		$this->person->save();
     		
-    		$personInstance1 = new person_object();
+    		$personInstance1 = new PersonObject();
     		$personInstance1->load($this->person->getID());
-    		$personInstance2 = new person_object();
+    		$personInstance2 = new PersonObject();
     		$personInstance2->load($this->person->getID());
     		
     		$personInstance1->save();
@@ -274,7 +274,7 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
      */
     public function testValidation() {    	
     	try {
-    		$person = new person_object();
+    		$person = new PersonObject();
     		$person->save();
     		$this->fail('Testing the validation method');
     	}catch (ValidationException $e) {
@@ -298,7 +298,7 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
     	$this->assertEquals(0, count(get_object_vars($this->person)), 'Testing the delete method');
     	// gone from the database
     	try {
-    		$this->person = new person_object();
+    		$this->person = new PersonObject();
     		$this->person->load($id);
     		$this->fail('Testing the delete method');
     	}catch (BONotFoundException $e) {
@@ -314,19 +314,19 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */
     public function testDeleteAllByAttribute() {
-    	$person1 = new person_object();
+    	$person1 = new PersonObject();
         $person1->setDisplayname('unitTestUser1');        
         $person1->set('email', 'unitTestUser1@test.com');
         $person1->set('password', 'passwordTest');
         $person1->set('URL', 'http://unitTestUser/');
     	
-        $person2 = new person_object();
+        $person2 = new PersonObject();
         $person2->setDisplayname('unitTestUser2');        
         $person2->set('email', 'unitTestUser2@test.com');
         $person2->set('password', 'passwordTest');
         $person2->set('URL', 'http://unitTestUser/');
         
-        $person3 = new person_object();
+        $person3 = new PersonObject();
         $person3->setDisplayname('unitTestUser3');        
         $person3->set('email', 'unitTestUser3@test.com');
         $person3->set('password', 'passwordTest');
@@ -414,7 +414,7 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */
     public function testGetTableName() {
-    	$this->assertEquals('person', $this->person->getTableName(), 'Testing to ensure that the getTableName method can read the TABLE_NAME constant declared in the child class'); 
+    	$this->assertEquals('Person', $this->person->getTableName(), 'Testing to ensure that the getTableName method can read the TABLE_NAME constant declared in the child class'); 
     }
     
     /**
@@ -609,15 +609,15 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
      */
     public function testGetLastQuery() {
     	$this->person->save();
-    	$this->assertEquals('INSERT INTO person', substr($this->person->getLastQuery(), 0, 18), 'Testing the getLastQuery method after various persistance calls');
+    	$this->assertEquals('INSERT INTO Person', substr($this->person->getLastQuery(), 0, 18), 'Testing the getLastQuery method after various persistance calls');
     	$this->person->checkTableNeedsUpdate();
-    	$this->assertEquals('SHOW INDEX FROM person', substr($this->person->getLastQuery(), 0, 22), 'Testing the getLastQuery method after various persistance calls');
+    	$this->assertEquals('SHOW INDEX FROM Person', substr($this->person->getLastQuery(), 0, 22), 'Testing the getLastQuery method after various persistance calls');
     	$this->person->getCount();
     	$this->assertEquals('SELECT COUNT(OID)', substr($this->person->getLastQuery(), 0, 17), 'Testing the getLastQuery method after various persistance calls');
     	$this->person->getMAX();
     	$this->assertEquals('SELECT MAX(OID)', substr($this->person->getLastQuery(), 0, 15), 'Testing the getLastQuery method after various persistance calls');
     	$this->person->load($this->person->getID());
-    	$this->assertEquals('SHOW COLUMNS FROM person', substr($this->person->getLastQuery(), 0, 24), 'Testing the getLastQuery method after various persistance calls');
+    	$this->assertEquals('SHOW COLUMNS FROM Person', substr($this->person->getLastQuery(), 0, 24), 'Testing the getLastQuery method after various persistance calls');
     }
     
     /**
@@ -655,9 +655,9 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
 				try {
 					$this->person->get($propName);
 				} catch (PHPException $e) {
-					$this->assertEquals('[PHP error]: Undefined property:  person_object::$'.$propName, $e->getMessage(), 'Testing the clear method for unsetting the attributes of an object');
+					$this->assertEquals('[PHP error]: Undefined property:  PersonObject::$'.$propName, $e->getMessage(), 'Testing the clear method for unsetting the attributes of an object');
 				} catch (AlphaException $e) {
-					$this->assertEquals('Could not access the property ['.$propName.'] on the object of class [person_object]', $e->getMessage(), 'Testing the clear method for unsetting the attributes of an object');
+					$this->assertEquals('Could not access the property ['.$propName.'] on the object of class [PersonObject]', $e->getMessage(), 'Testing the clear method for unsetting the attributes of an object');
 				}
 			}
     	}
@@ -674,7 +674,7 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
     	
     	$this->assertEquals('unitTestUserNew', $this->person->getDisplayName()->getValue(), 'Testing that the value was set on the object in memory along with saving to the database');
     	
-    	$person = new person_object();
+    	$person = new PersonObject();
     	
     	try {
     		$person->loadByAttribute('displayName', 'unitTestUserNew');

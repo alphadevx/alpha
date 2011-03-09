@@ -8,7 +8,7 @@ if(!isset($config)) {
 
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
-require_once $config->get('sysRoot').'alpha/model/article_object.inc';
+require_once $config->get('sysRoot').'alpha/model/ArticleObject.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 
 /**
@@ -60,7 +60,7 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 	/**
 	 * The new article to be edited
 	 * 
-	 * @var article_object
+	 * @var ArticleObject
 	 * @since 1.0
 	 */
 	protected $BO;
@@ -87,7 +87,7 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 		// ensure that the super class constructor is called, indicating the rights group
 		parent::__construct('Standard');
 		
-		$this->BO = new article_object();
+		$this->BO = new ArticleObject();
 		
 		self::$logger->debug('<<__construct');
 	}
@@ -190,16 +190,16 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 					echo $BOView->editView();
 				}
 				
-				if (!empty($params['delete_oid'])) {
+				if (!empty($params['deleteOID'])) {
 					
-					$this->BO->load($params['delete_oid']);
+					$this->BO->load($params['deleteOID']);
 					
 					try {
 						$this->BO->delete();
 						
 						AlphaDAO::disconnect();
 								
-						echo AlphaView::displayUpdateMessage('Article '.$params['delete_oid'].' deleted successfully.');
+						echo AlphaView::displayUpdateMessage('Article '.$params['deleteOID'].' deleted successfully.');
 										
 						echo '<center>';
 						
@@ -286,7 +286,7 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 		
 		$html = '
 			<script type="text/javascript">
-			var previewURL = "'.FrontController::generateSecureURL('act=PreviewArticle&bo=article_object&oid='.$this->BO->getOID()).'";
+			var previewURL = "'.FrontController::generateSecureURL('act=PreviewArticle&bo=ArticleObject&oid='.$this->BO->getOID()).'";
 			</script>			
 			<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/markitup/jquery.markitup.js"></script>
 			<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/markitup/sets/markdown/set.js"></script>

@@ -13,7 +13,7 @@ try{
 /**
  * Utility class for calcualting some software metics related to a project
  *
- * @package alpha::util
+ * @package alpha::util::metrics
  * @since 1.0
  * @author John Collins <john@design-ireland.net>
  * @version $Id$

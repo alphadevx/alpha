@@ -8,7 +8,7 @@ if(!isset($config)) {
 
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
-require_once $config->get('sysRoot').'alpha/model/article_object.inc';
+require_once $config->get('sysRoot').'alpha/model/ArticleObject.inc';
 require_once $config->get('sysRoot').'alpha/util/InputFilter.inc';
 require_once $config->get('sysRoot').'alpha/util/helpers/AlphaValidator.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
@@ -62,7 +62,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 	/**
 	 * The article to be rendered
 	 * 
-	 * @var article_object
+	 * @var ArticleObject
 	 * @since 1.0
 	 */
 	protected $BO;
@@ -89,7 +89,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 		// ensure that the super class constructor is called, indicating the rights group
 		parent::__construct('Public');
 		
-		$this->BO = new article_object();
+		$this->BO = new ArticleObject();
 		
 		self::$logger->debug('<<__construct');
 	}
@@ -144,7 +144,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 	}
 	
 	/**
-	 * Callback used to inject article_object headerContent into the page
+	 * Callback used to inject ArticleObject headerContent into the page
 	 *
 	 * @return string
 	 * @since 1.0
@@ -278,10 +278,10 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 
 			
 			if(isset($params['voteBut']) && !$this->BO->checkUserVoted()) {
-				$vote = new article_vote_object();
+				$vote = new ArticleVoteObject();
 				
 				if(isset($params['oid'])) {
-					$vote->set('article_oid', $params['oid']);
+					$vote->set('articleOID', $params['oid']);
 				}else{
 					// load article by title?					
 					if (isset($params['title'])) {
@@ -290,12 +290,12 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 						throw new IllegalArguementException('Could not load the article as a title or OID was not supplied!');
 					}
 					
-					$this->BO = new article_object();
+					$this->BO = new ArticleObject();
 					$this->BO->loadByAttribute('title', $title);
-					$vote->set('article_oid', $this->BO->getOID());
+					$vote->set('articleOID', $this->BO->getOID());
 				}
 				
-				$vote->set('person_oid', $_SESSION['currentUser']->getID());
+				$vote->set('personOID', $_SESSION['currentUser']->getID());
 				$vote->set('score', $params['user_vote']);
 				
 				try {
@@ -312,7 +312,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 			}
 			
 			if(isset($params['createBut'])) {
-				$comment = new article_comment_object();
+				$comment = new ArticleCommentObject();
 				
 				// populate the transient object from post data
 				$comment->populateFromPost();
@@ -334,7 +334,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 			}
 			
 			if(isset($params['saveBut'])) {			
-				$comment = new article_comment_object();
+				$comment = new ArticleCommentObject();
 				
 				try {
 					$comment->load($params['article_comment_id']);
@@ -385,8 +385,8 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 		}
 		
 		if(isset($_SESSION['currentUser']) && $config->get('sysCMSCommentsAllowed')) {
-			$comment = new article_comment_object();
-			$comment->set('article_oid', $this->BO->getID());
+			$comment = new ArticleCommentObject();
+			$comment->set('articleOID', $this->BO->getID());
 			
 			ob_start();
 			$view = AlphaView::getInstance($comment);

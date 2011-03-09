@@ -105,7 +105,7 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 			AlphaDAO::loadClassDef($BO);
 			$temp = new $BO;
 			if($temp->isTagged()) {
-				$tag = new tag_object();
+				$tag = new TagObject();
 				$count = count($tag->loadAllByAttribute('taggedClass', $BO));
 				echo '<h3>'.$temp->getFriendlyClassName().' object is tagged ('.$count.' tags found)</h3>';
 				
@@ -169,14 +169,14 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 					
 					AlphaDAO::begin();
 					
-					$tag = new tag_object();
+					$tag = new TagObject();
 					$tag->deleteAllByAttribute('taggedClass', $params['clearTaggedClass']);
 					
 					self::$logger->info('Deleted all of the old tags (elapsed time ['.round(microtime(true)-$startTime, 5).'] seconds)');
 					
 					foreach ($BOs as $BO) {
 						foreach($BO->get('taggedAttributes') as $tagged) {
-							$tags = tag_object::tokenize($BO->get($tagged), get_class($BO), $BO->getOID());
+							$tags = TagObject::tokenize($BO->get($tagged), get_class($BO), $BO->getOID());
 							foreach($tags as $tag) {
 								try {
 									$tag->save();

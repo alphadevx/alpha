@@ -9,7 +9,7 @@ if(!isset($config)) {
 require_once $config->get('sysRoot').'alpha/util/TCPDFFacade.inc';
 require_once $config->get('sysRoot').'alpha/util/AlphaMarkdown.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
-require_once $config->get('sysRoot').'alpha/model/article_object.inc';
+require_once $config->get('sysRoot').'alpha/model/ArticleObject.inc';
 
 /**
  * 
@@ -71,7 +71,7 @@ class ViewArticlePDF extends AlphaController {
 	 * @var string
 	 * @since 1.0
 	 */
-	protected $BOName = 'article_object';
+	protected $BOName = 'ArticleObject';
 							
 	/**
 	 * Constructor to set up the object

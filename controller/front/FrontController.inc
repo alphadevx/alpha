@@ -7,7 +7,7 @@ require_once $config->get('sysRoot').'alpha/exceptions/ResourceNotFoundException
 require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/LibraryNotInstalledException.inc';
 require_once $config->get('sysRoot').'alpha/util/filters/AlphaFilterInterface.inc';
-require_once $config->get('sysRoot').'alpha/model/badrequest_object.inc';
+require_once $config->get('sysRoot').'alpha/model/BadRequestObject.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 
 /**
@@ -371,7 +371,7 @@ class FrontController {
 			
 			if($config->get('sysEnableClientTempBlacklistFiler')) {
 				if(isset($_SERVER['HTTP_USER_AGENT']) && isset($_SERVER['REMOTE_ADDR']) && isset($_SERVER['REQUEST_URI'])) {
-					$request = new badrequest_object();
+					$request = new BadRequestObject();
 					$request->set('client', $_SERVER['HTTP_USER_AGENT']);
 					$request->set('IP', $_SERVER['REMOTE_ADDR']);
 					$request->set('requestedResource', $_SERVER['REQUEST_URI']);
@@ -385,7 +385,7 @@ class FrontController {
 			
 			if($config->get('sysEnableClientTempBlacklistFiler')) {
 				if(isset($_SERVER['HTTP_USER_AGENT']) && isset($_SERVER['REMOTE_ADDR']) && isset($_SERVER['REQUEST_URI'])) {
-					$request = new badrequest_object();
+					$request = new BadRequestObject();
 					$request->set('client', $_SERVER['HTTP_USER_AGENT']);
 					$request->set('IP', $_SERVER['REMOTE_ADDR']);
 					$request->set('requestedResource', $_SERVER['REQUEST_URI']);

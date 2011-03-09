@@ -103,7 +103,7 @@ class GenSecureQueryStrings extends AlphaController implements AlphaControllerIn
 	}
 	
 	/**
-	 * Handle POST requests (adds $currentUser person_object to the session)
+	 * Handle POST requests
 	 * 
 	 * @param array $params
 	 * @since 1.0
@@ -138,7 +138,7 @@ class GenSecureQueryStrings extends AlphaController implements AlphaControllerIn
 		
 		$html = '<p>Use this form to generate secure (encrypted) URLs which make use of the Front Controller.  Always be sure to specify an action controller (act) at a minimum.</p>';
 		$html .= '<p>Example 1: to generate a secure URL for viewing article object 00000000001, enter <em>act=ViewArticle&oid=00000000001</em></p>';
-		$html .= '<p>Example 2: to generate a secure URL for viewing an Atom news feed of the articles, enter <em>act=ViewFeed&bo=article_object&type=Atom</em</p>';
+		$html .= '<p>Example 2: to generate a secure URL for viewing an Atom news feed of the articles, enter <em>act=ViewFeed&bo=ArticleObject&type=Atom</em</p>';
 
 		$html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="post">';
 		$html .= '<input type="text" name="QS" size="100"/>';

@@ -939,7 +939,7 @@ abstract class AlphaDAO {
 										// check to see if the rel is on this class
 										$side = $prop->getSide(get_class($this));											
 									}catch (IllegalArguementException $iae) {
-										$side = $prop->getSide($this->getTableName().'_object');
+										$side = $prop->getSide(ucfirst($this->getTableName()).'Object');
 									}
 										
 									$lookUp = $prop->getLookup();									
@@ -1131,7 +1131,7 @@ abstract class AlphaDAO {
 						// check to see if the rel is on this class
 						$side = $prop->getSide(get_class($this));											
 					}catch (IllegalArguementException $iae) {
-						$side = $prop->getSide($this->getTableName().'_object');
+						$side = $prop->getSide(ucfirst($this->getTableName()).'Object');
 					}
 																
 					self::$logger->debug('Side is ['.$side.']'.$this->getOID());
@@ -1148,7 +1148,7 @@ abstract class AlphaDAO {
 				}
 					
 				// should set related field values to null (MySQL is doing this for us as-is)
-				if($prop->getRelationType() == 'ONE-TO-MANY' && !$prop->getRelatedClass() == 'tag_object') {
+				if($prop->getRelationType() == 'ONE-TO-MANY' && !$prop->getRelatedClass() == 'TagObject') {
 					$relatedObjects = $prop->getRelatedObjects();
 					
 					foreach($relatedObjects as $object) {
@@ -1158,7 +1158,7 @@ abstract class AlphaDAO {
 				}
 				
 				// in the case of tags, we will always remove the related tags once the BO is deleted
-				if($prop->getRelationType() == 'ONE-TO-MANY' && $prop->getRelatedClass() == 'tag_object') {
+				if($prop->getRelationType() == 'ONE-TO-MANY' && $prop->getRelatedClass() == 'TagObject') {
 					// just making sure that the Relation is set to current OID as its transient
 					$prop->setValue($this->getOID());
 					$relatedObjects = $prop->getRelatedObjects();					
@@ -1909,7 +1909,7 @@ abstract class AlphaDAO {
 	
 	/**
 	 * Static method to check the database and see if the table for the indicated BO class name
-	 * exists (assumes table name will be $BOClassName less "_object").
+	 * exists (assumes table name will be $BOClassName less "Object").
 	 * 
 	 * @param string $BOClassName The name of the business object class we are checking.
 	 * @return boolean
@@ -2369,7 +2369,7 @@ abstract class AlphaDAO {
 	 * Creates a foreign key constraint (index) in the database on the given attribute.
 	 * 
 	 * @param string $attributeName The name of the attribute to apply the index on.
-	 * @param string $relatedClass The name of the related class in the format "name_object".
+	 * @param string $relatedClass The name of the related class in the format "NameObject".
 	 * @param string $relatedClassAttribute The name of the field to relate to on the related class.
 	 * @param bool $allowNullValues For foreign key indexes that don't allow null values, set this to false (default is true).
 	 * @since 1.0
@@ -2393,7 +2393,7 @@ abstract class AlphaDAO {
 
 		$result = false;
 		
-		if(AlphaDAO::checkBOTableExists($tableName.'_object')) {
+		if(AlphaDAO::checkBOTableExists(ucfirst($tableName).'Object')) {
 			$sqlQuery = '';
 			if($attributeName == 'leftID')
 				$sqlQuery = 'ALTER TABLE '.$this->getTableName().' ADD INDEX leftID_fk_idx (leftID);';
@@ -2543,7 +2543,7 @@ abstract class AlphaDAO {
    		
         // loop over the business object directory
 	    while (false !== ($file = readdir($handle))) {
-	    	if (preg_match("/_object.inc/", $file)) {
+	    	if (preg_match("/Object.inc/", $file)) {
 	    		$classname = substr($file, 0, -4);
 	    		
 	    		array_push($classNameArray, $classname);
@@ -2556,7 +2556,7 @@ abstract class AlphaDAO {
    		
         // loop over the business object directory
 	    while (false !== ($file = readdir($handle))) {
-	    	if (preg_match("/_object.inc/", $file)) {
+	    	if (preg_match("/Object.inc/", $file)) {
 	    		$classname = substr($file, 0, -4);	    		
 	    		
 	    		array_push($classNameArray, $classname);
@@ -2818,7 +2818,7 @@ abstract class AlphaDAO {
 		self::$logger->debug('>>isTableOverloaded()');
 		
 		$classname = get_class($this);
-		$tablename = $this->getTableName().'_object';
+		$tablename = ucfirst($this->getTableName()).'Object';
 		
 		// use reflection to check to see if we are dealing with a persistent type (e.g. DEnum) which are never overloaded
 		$reflection = new ReflectionClass($classname);
@@ -2938,7 +2938,7 @@ abstract class AlphaDAO {
   		 * 1. person table exists
   		 * 2. rights table exists
   		 */
-		if(AlphaDAO::checkBOTableExists('person_object') && AlphaDAO::checkBOTableExists('rights_object')) {
+		if(AlphaDAO::checkBOTableExists('PersonObject') && AlphaDAO::checkBOTableExists('RightsObject')) {
 			self::$logger->debug('<<isInstalled [true]');
 			return true;
 		}else{
@@ -3015,14 +3015,14 @@ abstract class AlphaDAO {
   	}
   	
   	/**
-  	 * Converts "business_object" to "Business" and returns.
+  	 * Converts "BusinessObject" to "Business" and returns.
   	 *  
   	 * @return string
   	 * @since 1.0
   	 */
   	public function getFriendlyClassName() {
-  		$name = explode('_', get_class($this));
-  		return ucfirst($name[0]);
+  		$name = rtrim(get_class($this), 'Object');
+  		return $name;
   	}
   	
   	/**
