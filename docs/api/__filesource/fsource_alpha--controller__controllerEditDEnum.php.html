@@ -18,7 +18,7 @@
     <td colspan="2" class="header-menu">
       
                                       
-                                                                                                                                                                                                                                        		[ <a href="../classtrees_alpha--controller.html" class="menu">class tree: alpha--controller</a> ]
+                                                                                                                                                                                                                          		[ <a href="../classtrees_alpha--controller.html" class="menu">class tree: alpha--controller</a> ]
 		[ <a href="../elementindex_alpha--controller.html" class="menu">index: alpha--controller</a> ]
             [ <a href="../elementindex.html" class="menu">all elements</a> ]
     </td>
@@ -32,23 +32,22 @@
 		<div class="package-title">alpha--controller</div>
       <b>Packages:</b><br />
   <div class="package">
-              <a href="../li_Alpha.html">Alpha</a><br />
+              <a href="../li_default.html">default</a><br />
               <a href="../li_alpha--controller.html">alpha--controller</a><br />
               <a href="../li_alpha--controller--front.html">alpha--controller--front</a><br />
               <a href="../li_alpha--exceptions.html">alpha--exceptions</a><br />
               <a href="../li_alpha--model.html">alpha--model</a><br />
               <a href="../li_alpha--model--types.html">alpha--model--types</a><br />
-              <a href="../li_alpha--service.html">alpha--service</a><br />
               <a href="../li_alpha--tests.html">alpha--tests</a><br />
               <a href="../li_alpha--util.html">alpha--util</a><br />
               <a href="../li_alpha--util--convertors.html">alpha--util--convertors</a><br />
               <a href="../li_alpha--util--feeds.html">alpha--util--feeds</a><br />
               <a href="../li_alpha--util--filters.html">alpha--util--filters</a><br />
+              <a href="../li_alpha--util--graphs.html">alpha--util--graphs</a><br />
               <a href="../li_alpha--util--helpers.html">alpha--util--helpers</a><br />
-              <a href="../li_alpha--util--LOC.html">alpha--util--LOC</a><br />
+              <a href="../li_alpha--util--metrics.html">alpha--util--metrics</a><br />
               <a href="../li_alpha--view.html">alpha--view</a><br />
               <a href="../li_alpha--view--widgets.html">alpha--view--widgets</a><br />
-              <a href="../li_util--graphs.html">util--graphs</a><br />
       	</div>
       <br />
                         <br />
@@ -83,7 +82,7 @@
 <li><div class="src-line"><a name="a22"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@package</span><span class="src-doc">&nbsp;alpha::controller</span></div></li>
 <li><div class="src-line"><a name="a23"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@since</span><span class="src-doc">&nbsp;1.0</span></div></li>
 <li><div class="src-line"><a name="a24"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@author</span><span class="src-doc">&nbsp;John&nbsp;Collins&nbsp;&lt;john@design-ireland.net&gt;</span></div></li>
-<li><div class="src-line"><a name="a25"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@version</span><span class="src-doc">&nbsp;$Id:&nbsp;EditDEnum.php&nbsp;1258&nbsp;2011-01-15&nbsp;13:33:42Z&nbsp;johnc&nbsp;$</span></div></li>
+<li><div class="src-line"><a name="a25"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@version</span><span class="src-doc">&nbsp;$Id:&nbsp;EditDEnum.php&nbsp;1310&nbsp;2011-03-09&nbsp;13:18:07Z&nbsp;johnc&nbsp;$</span></div></li>
 <li><div class="src-line"><a name="a26"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@license</span><span class="src-doc">&nbsp;http://www.opensource.org/licenses/bsd-license.php&nbsp;The&nbsp;BSD&nbsp;License</span></div></li>
 <li><div class="src-line"><a name="a27"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@copyright</span><span class="src-doc">&nbsp;Copyright&nbsp;(c)&nbsp;2010,&nbsp;John&nbsp;Collins&nbsp;(founder&nbsp;of&nbsp;Alpha&nbsp;Framework).</span></div></li>
 <li><div class="src-line"><a name="a28"></a><span class="src-doc">&nbsp;*&nbsp;&nbsp;All&nbsp;rights&nbsp;reserved.</span></div></li>
@@ -195,7 +194,7 @@
 <li><div class="src-line"><a name="a134"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
 <li><div class="src-line"><a name="a135"></a>&nbsp;&nbsp;&nbsp;&nbsp;</div></li>
 <li><div class="src-line"><a name="a136"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-doc">/**</span></div></li>
-<li><div class="src-line"><a name="a137"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Handle&nbsp;POST&nbsp;requests&nbsp;(adds&nbsp;$currentUser&nbsp;person_object&nbsp;to&nbsp;the&nbsp;session)</span></div></li>
+<li><div class="src-line"><a name="a137"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Handle&nbsp;POST&nbsp;requests</span></div></li>
 <li><div class="src-line"><a name="a138"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span></div></li>
 <li><div class="src-line"><a name="a139"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@param&nbsp;</span><span class="src-doc-type">array&nbsp;</span><span class="src-doc-var">$params&nbsp;</span></div></li>
 <li><div class="src-line"><a name="a140"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@since</span><span class="src-doc">&nbsp;1.0</span></div></li>
@@ -304,7 +303,7 @@
 </span></div>
         <div class="credit">
 		    <hr class="separator" />
-		    Documentation generated on Sun, 23 Jan 2011 17:19:26 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+		    Documentation generated on Wed, 09 Mar 2011 13:45:22 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
 	      </div>
       </td></tr></table>
     </td>

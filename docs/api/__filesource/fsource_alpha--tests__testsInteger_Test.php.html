@@ -17,7 +17,7 @@
   <tr>
     <td colspan="2" class="header-menu">
       
-                                                                                                                          
+                                                                                                            
                                                                                                                                                     		[ <a href="../classtrees_alpha--tests.html" class="menu">class tree: alpha--tests</a> ]
 		[ <a href="../elementindex_alpha--tests.html" class="menu">index: alpha--tests</a> ]
             [ <a href="../elementindex.html" class="menu">all elements</a> ]
@@ -32,23 +32,22 @@
 		<div class="package-title">alpha--tests</div>
       <b>Packages:</b><br />
   <div class="package">
-              <a href="../li_Alpha.html">Alpha</a><br />
+              <a href="../li_default.html">default</a><br />
               <a href="../li_alpha--controller.html">alpha--controller</a><br />
               <a href="../li_alpha--controller--front.html">alpha--controller--front</a><br />
               <a href="../li_alpha--exceptions.html">alpha--exceptions</a><br />
               <a href="../li_alpha--model.html">alpha--model</a><br />
               <a href="../li_alpha--model--types.html">alpha--model--types</a><br />
-              <a href="../li_alpha--service.html">alpha--service</a><br />
               <a href="../li_alpha--tests.html">alpha--tests</a><br />
               <a href="../li_alpha--util.html">alpha--util</a><br />
               <a href="../li_alpha--util--convertors.html">alpha--util--convertors</a><br />
               <a href="../li_alpha--util--feeds.html">alpha--util--feeds</a><br />
               <a href="../li_alpha--util--filters.html">alpha--util--filters</a><br />
+              <a href="../li_alpha--util--graphs.html">alpha--util--graphs</a><br />
               <a href="../li_alpha--util--helpers.html">alpha--util--helpers</a><br />
-              <a href="../li_alpha--util--LOC.html">alpha--util--LOC</a><br />
+              <a href="../li_alpha--util--metrics.html">alpha--util--metrics</a><br />
               <a href="../li_alpha--view.html">alpha--view</a><br />
               <a href="../li_alpha--view--widgets.html">alpha--view--widgets</a><br />
-              <a href="../li_util--graphs.html">util--graphs</a><br />
       	</div>
       <br />
                         <br />
@@ -68,7 +67,7 @@
 <li><div class="src-line"><a name="a7"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@package</span><span class="src-doc">&nbsp;alpha::tests</span></div></li>
 <li><div class="src-line"><a name="a8"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@since</span><span class="src-doc">&nbsp;1.0</span></div></li>
 <li><div class="src-line"><a name="a9"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@author</span><span class="src-doc">&nbsp;John&nbsp;Collins&nbsp;&lt;john@design-ireland.net&gt;</span></div></li>
-<li><div class="src-line"><a name="a10"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@version</span><span class="src-doc">&nbsp;$Id:&nbsp;Integer_Test.php&nbsp;1271&nbsp;2011-01-23&nbsp;12:14:21Z&nbsp;johnc&nbsp;$</span></div></li>
+<li><div class="src-line"><a name="a10"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@version</span><span class="src-doc">&nbsp;$Id:&nbsp;Integer_Test.php&nbsp;1284&nbsp;2011-02-03&nbsp;21:05:07Z&nbsp;johnc&nbsp;$</span></div></li>
 <li><div class="src-line"><a name="a11"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@license</span><span class="src-doc">&nbsp;http://www.opensource.org/licenses/bsd-license.php&nbsp;The&nbsp;BSD&nbsp;License</span></div></li>
 <li><div class="src-line"><a name="a12"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@copyright</span><span class="src-doc">&nbsp;Copyright&nbsp;(c)&nbsp;2010,&nbsp;John&nbsp;Collins&nbsp;(founder&nbsp;of&nbsp;Alpha&nbsp;Framework).</span></div></li>
 <li><div class="src-line"><a name="a13"></a><span class="src-doc">&nbsp;*&nbsp;&nbsp;All&nbsp;rights&nbsp;reserved.</span></div></li>
@@ -168,7 +167,7 @@
 <li><div class="src-line"><a name="a107"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$this</span><span class="src-sym">-&gt;</span><span class="src-var">int1</span><span class="src-sym">-&gt;</span><span class="src-id">setValue</span><span class="src-sym">(</span><span class="src-str">&quot;blah&quot;</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
 <li><div class="src-line"><a name="a108"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$this</span><span class="src-sym">-&gt;</span><span class="src-id">fail</span><span class="src-sym">(</span><span class="src-str">'testing&nbsp;passing&nbsp;invalid&nbsp;data&nbsp;to&nbsp;setValue'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
 <li><div class="src-line"><a name="a109"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span>catch&nbsp;<span class="src-sym">(</span><span class="src-id"><a href="../alpha--exceptions/AlphaException.html">AlphaException</a>&nbsp;</span><span class="src-var">$e</span><span class="src-sym">)&nbsp;</span><span class="src-sym">{</span></div></li>
-<li><div class="src-line"><a name="a110"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$this</span><span class="src-sym">-&gt;</span><span class="src-id">assertEquals</span><span class="src-sym">(</span><span class="src-str">'Not&nbsp;a&nbsp;valid&nbsp;integer&nbsp;value!&nbsp;&nbsp;A&nbsp;maximum&nbsp;of&nbsp;11&nbsp;characters&nbsp;is&nbsp;allowed'</span></div></li>
+<li><div class="src-line"><a name="a110"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$this</span><span class="src-sym">-&gt;</span><span class="src-id">assertEquals</span><span class="src-sym">(</span><span class="src-str">'Not&nbsp;a&nbsp;valid&nbsp;integer&nbsp;value!'</span></div></li>
 <li><div class="src-line"><a name="a111"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">,&nbsp;</span><span class="src-var">$e</span><span class="src-sym">-&gt;</span><span class="src-id">getMessage</span><span class="src-sym">(</span><span class="src-sym">)</span></div></li>
 <li><div class="src-line"><a name="a112"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">,&nbsp;</span><span class="src-str">'testing&nbsp;passing&nbsp;invalid&nbsp;data&nbsp;to&nbsp;setValue'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
 <li><div class="src-line"><a name="a113"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
@@ -232,7 +231,7 @@
 </span></div>
         <div class="credit">
 		    <hr class="separator" />
-		    Documentation generated on Sun, 23 Jan 2011 17:19:42 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+		    Documentation generated on Wed, 09 Mar 2011 13:45:37 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
 	      </div>
       </td></tr></table>
     </td>

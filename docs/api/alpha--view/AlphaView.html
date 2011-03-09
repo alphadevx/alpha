@@ -18,7 +18,7 @@
     <td colspan="2" class="header-menu">
       
                                                                                                                                                                                                                             
-                                                  		[ <a href="../classtrees_alpha--view.html" class="menu">class tree: alpha--view</a> ]
+                                    		[ <a href="../classtrees_alpha--view.html" class="menu">class tree: alpha--view</a> ]
 		[ <a href="../elementindex_alpha--view.html" class="menu">index: alpha--view</a> ]
             [ <a href="../elementindex.html" class="menu">all elements</a> ]
     </td>
@@ -32,23 +32,22 @@
 		<div class="package-title">alpha--view</div>
       <b>Packages:</b><br />
   <div class="package">
-              <a href="../li_Alpha.html">Alpha</a><br />
+              <a href="../li_default.html">default</a><br />
               <a href="../li_alpha--controller.html">alpha--controller</a><br />
               <a href="../li_alpha--controller--front.html">alpha--controller--front</a><br />
               <a href="../li_alpha--exceptions.html">alpha--exceptions</a><br />
               <a href="../li_alpha--model.html">alpha--model</a><br />
               <a href="../li_alpha--model--types.html">alpha--model--types</a><br />
-              <a href="../li_alpha--service.html">alpha--service</a><br />
               <a href="../li_alpha--tests.html">alpha--tests</a><br />
               <a href="../li_alpha--util.html">alpha--util</a><br />
               <a href="../li_alpha--util--convertors.html">alpha--util--convertors</a><br />
               <a href="../li_alpha--util--feeds.html">alpha--util--feeds</a><br />
               <a href="../li_alpha--util--filters.html">alpha--util--filters</a><br />
+              <a href="../li_alpha--util--graphs.html">alpha--util--graphs</a><br />
               <a href="../li_alpha--util--helpers.html">alpha--util--helpers</a><br />
-              <a href="../li_alpha--util--LOC.html">alpha--util--LOC</a><br />
+              <a href="../li_alpha--util--metrics.html">alpha--util--metrics</a><br />
               <a href="../li_alpha--view.html">alpha--view</a><br />
               <a href="../li_alpha--view--widgets.html">alpha--view--widgets</a><br />
-              <a href="../li_util--graphs.html">util--graphs</a><br />
       	</div>
       <br />
                         <b>Files:</b><br />
@@ -114,7 +113,7 @@ Source Location: /view/AlphaView.inc<br /><br />
 		
 <strong>Information Tags:</strong><br />
 <table border="0" cellspacing="0" cellpadding="0">
-				<tr><td><strong>Version:</strong>&nbsp;&nbsp;</td><td>$Id: AlphaView.inc 1267 2011-01-22 18:41:45Z johnc $</td></tr>
+				<tr><td><strong>Version:</strong>&nbsp;&nbsp;</td><td>$Id: AlphaView.inc 1310 2011-03-09 13:18:07Z johnc $</td></tr>
 				<tr><td><strong>Copyright:</strong>&nbsp;&nbsp;</td><td><p>Copyright (c) 2010, John Collins (founder of Alpha Framework).  All rights reserved.</p><p><pre> Redistribution and use in source and binary forms, with or
  without modification, are permitted provided that the
  following conditions are met:
@@ -211,13 +210,13 @@ Source Location: /view/AlphaView.inc<br /><br />
 								<tr>
 					<td style="padding-right: 2em"><a href="../alpha--view/ArticleCommentView.html">ArticleCommentView</a></td>
 					<td>
-											The rendering class for the article_comment_object class
+											The rendering class for the ArticleCommentObject class
 										</td>
 				</tr>
 								<tr>
 					<td style="padding-right: 2em"><a href="../alpha--view/ArticleView.html">ArticleView</a></td>
 					<td>
-											The rendering class for the article_object class
+											The rendering class for the ArticleObject class
 										</td>
 				</tr>
 								<tr>
@@ -229,7 +228,7 @@ Source Location: /view/AlphaView.inc<br /><br />
 								<tr>
 					<td style="padding-right: 2em"><a href="../alpha--view/PersonView.html">PersonView</a></td>
 					<td>
-											The rendering class for the person_object class
+											The rendering class for the PersonObject class
 										</td>
 				</tr>
 								<tr>
@@ -445,7 +444,7 @@ Source Location: /view/AlphaView.inc<br /><br />
 												</div>
 		<div class="info-box-body">
 			<a name="var$BO" id="$BO"><!-- --></A>
-<div class="evenrow">
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -491,7 +490,7 @@ Source Location: /view/AlphaView.inc<br /><br />
 		<div class="info-box-body">
 			<a name='method_detail'></a>
 <a name="methoddisplayErrorMessage" id="displayErrorMessage"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
 	<span class="method-title">static method displayErrorMessage</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a811">811</a>]</span>
@@ -542,7 +541,7 @@ $message&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methoddisplayPageFoot" id="displayPageFoot"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
 	<span class="method-title">static method displayPageFoot</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a763">763</a>]</span>
@@ -593,7 +592,7 @@ $controller&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methoddisplayPageHead" id="displayPageHead"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
 	<span class="method-title">static method displayPageHead</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a576">576</a>]</span>
@@ -654,7 +653,7 @@ $renderMenu = true]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methoddisplayUpdateMessage" id="displayUpdateMessage"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
 	<span class="method-title">static method displayUpdateMessage</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a791">791</a>]</span>
@@ -705,7 +704,7 @@ $message&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodgetInstance" id="getInstance"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
 	<span class="method-title">static method getInstance</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a110">110</a>]</span>
@@ -766,7 +765,7 @@ $returnParent = false]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodrenderDeleteForm" id="renderDeleteForm"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
 	<span class="method-title">static method renderDeleteForm</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a856">856</a>]</span>
@@ -805,7 +804,7 @@ $returnParent = false]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodrenderDoubleField" id="renderDoubleField"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
 	<span class="method-title">static method renderDoubleField</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a953">953</a>]</span>
@@ -884,7 +883,7 @@ $tableTags = true]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodrenderErrorPage" id="renderErrorPage"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
 	<span class="method-title">static method renderErrorPage</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a832">832</a>]</span>
@@ -942,7 +941,7 @@ $message&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodrenderSecurityFields" id="renderSecurityFields"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
 	<span class="method-title">static method renderSecurityFields</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a878">878</a>]</span>
@@ -982,7 +981,7 @@ $message&nbsp;
 </div>
 
 <a name="method__construct" id="__construct"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
 	<span class="method-title">Constructor __construct</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a89">89</a>]</span>
@@ -1044,7 +1043,7 @@ $BO&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodadminView" id="adminView"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
 	<span class="method-title">adminView</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a467">467</a>]</span>
@@ -1095,7 +1094,7 @@ $fields = array()]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodcreateView" id="createView"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
 	<span class="method-title">createView</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a182">182</a>]</span>
@@ -1154,7 +1153,7 @@ $fields = array()]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methoddetailedView" id="detailedView"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
 	<span class="method-title">detailedView</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a408">408</a>]</span>
@@ -1213,7 +1212,7 @@ $fields = array()]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodeditView" id="editView"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
 	<span class="method-title">editView</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a223">223</a>]</span>
@@ -1280,7 +1279,7 @@ $fields = array()]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodgetBO" id="getBO"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
 	<span class="method-title">getBO</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a172">172</a>]</span>
@@ -1319,7 +1318,7 @@ $fields = array()]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodlistView" id="listView"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
 	<span class="method-title">listView</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a284">284</a>]</span>
@@ -1386,7 +1385,7 @@ $fields = array()]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodloadTemplate" id="loadTemplate"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
 	<span class="method-title">loadTemplate</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a1495">1495</a>]</span>
@@ -1454,7 +1453,7 @@ $fields&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodrenderAllFields" id="renderAllFields"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
 	<span class="method-title">renderAllFields</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a1375">1375</a>]</span>
@@ -1519,7 +1518,7 @@ $readOnlyFields = array()]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodrenderBooleanField" id="renderBooleanField"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
 	<span class="method-title">renderBooleanField</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a1001">1001</a>]</span>
@@ -1598,7 +1597,7 @@ $tableTags = true]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodrenderDefaultField" id="renderDefaultField"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
 	<span class="method-title">renderDefaultField</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a1199">1199</a>]</span>
@@ -1677,7 +1676,7 @@ $tableTags = true]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodrenderDEnumField" id="renderDEnumField"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
 	<span class="method-title">renderDEnumField</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a1131">1131</a>]</span>
@@ -1763,7 +1762,7 @@ $tableTags = true]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodrenderEnumField" id="renderEnumField"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
 	<span class="method-title">renderEnumField</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a1062">1062</a>]</span>
@@ -1849,7 +1848,7 @@ $tableTags = true]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodrenderIntegerField" id="renderIntegerField"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
 	<span class="method-title">renderIntegerField</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a905">905</a>]</span>
@@ -1928,7 +1927,7 @@ $tableTags = true]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodrenderRelationField" id="renderRelationField"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
 	<span class="method-title">renderRelationField</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a1317">1317</a>]</span>
@@ -2021,7 +2020,7 @@ $buttons = true]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodrenderTextField" id="renderTextField"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
 	<span class="method-title">renderTextField</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a1264">1264</a>]</span>
@@ -2100,7 +2099,7 @@ $tableTags = true]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodsetBO" id="setBO"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
 	<span class="method-title">setBO</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewAlphaView.inc.html#a155">155</a>]</span>
@@ -2159,7 +2158,7 @@ $BO&nbsp;
 
         <div class="credit">
 		    <hr class="separator" />
-		    Documentation generated on Sun, 23 Jan 2011 17:18:59 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+		    Documentation generated on Wed, 09 Mar 2011 13:44:57 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
 	      </div>
       </td></tr></table>
     </td>
