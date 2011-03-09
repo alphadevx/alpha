@@ -1,8 +1,11 @@
 <?php
 
+require_once $config->get('sysRoot').'alpha/util/Logger.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/PHPException.inc';
+
 /**
  *
- * A pair of static functions for capturing normal PHP errors and unhandled Alpha exceptions
+ * A pair of static methods for capturing normal PHP errors and unhandled Alpha exceptions
  * 
  * @package alpha::util
  * @since 1.0
@@ -45,26 +48,25 @@
  * </pre>
  *  
  */
-
-require_once $config->get('sysRoot').'alpha/util/Logger.inc';
-
-function catchException($e) {
-	$logger = new Logger(get_class($e));		
-	$logger->error($e->getMessage()."\n [stacktrace]: \n".$e->getTraceAsString());
+abstract class AlphaErrorHandlers {
+	public static function catchException($e) {
+		$logger = new Logger(get_class($e));		
+		$logger->error($e->getMessage()."\n [stacktrace]: \n".$e->getTraceAsString());
+		header('HTTP/1.1 404 Not Found');
+		echo AlphaView::renderErrorPage(404, 'The file that you have requested cannot be found!');
+	}
+	
+	public static function catchError($error_no, $msg, $file, $line) {	
+		$e = new PHPException();
+		$e->setMessage('[PHP error '.$error_no.'] on line ['.$line.']: '.$msg);
+		$e->setFile($file);
+		 
+		throw $e;
+	}
 }
 
-require_once $config->get('sysRoot').'alpha/exceptions/PHPException.inc';
-
-function catchError($error_no, $msg, $file, $line) {	
-	$e = new PHPException();
-	$e->setMessage('[PHP error]: '.$msg);
-	$e->setFile($file);
-	 
-	throw $e;
-}
-
-set_exception_handler('catchException');
-set_error_handler('catchError', $config->get('sysPHPErrorLogLevel'));
+set_exception_handler('AlphaErrorHandlers::catchException');
+set_error_handler('AlphaErrorHandlers::catchError', $config->get('sysPHPErrorLogLevel'));
 
 
 ?>
