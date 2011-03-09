@@ -1,6 +1,6 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/util/CatchError.inc';
+require_once $config->get('sysRoot').'alpha/util/AlphaErrorHandlers.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/SecurityException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/ResourceNotFoundException.inc';
@@ -353,6 +353,7 @@ class FrontController {
 		try {
 			AlphaController::loadControllerDef($this->pageController);
 			$pageController = new $this->pageController();
+			
 	    	if(!empty($_POST)) {			
 				$pageController->doPOST($_REQUEST);
 			}else{				
