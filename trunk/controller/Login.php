@@ -191,7 +191,8 @@ class Login extends AlphaController implements AlphaControllerInterface {
 							$_SESSION['currentUser'] = $this->personObject;
 							if ($this->getNextJob() != '') {
 								self::$logger->debug('<<doPOST');
-								header('Location: '.$this->getNextJob());
+								$url = FrontController::generateSecureURL('act='.$this->getNextJob());
+								header('Location: '.$url);
 								exit;
 							}else{
 								self::$logger->debug('<<doPOST');
