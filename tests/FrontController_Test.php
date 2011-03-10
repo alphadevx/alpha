@@ -235,8 +235,10 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     	
     	$this->assertTrue($front->hasAlias('ViewArticleTitle'), 'testing the setting up and checking for the existence of a controller alias');
     	$this->assertTrue($front->checkAlias('article'), 'testing the setting up and checking for the existence of a controller alias');
-    	$this->assertEquals('ViewArticleTitle', $front->getAliasController('article'), 'testing the setting up and checking for the existence of a controller alias');
-    	$this->assertEquals('article', $front->getControllerAlias('ViewArticleTitle'), 'testing the setting up and checking for the existence of a controller alias');
+    	$this->assertEquals('ViewArticleTitle', $front->getAliasController('article'), 
+    		'testing the setting up and checking for the existence of a controller alias');
+    	$this->assertEquals('article', $front->getControllerAlias('ViewArticleTitle'), 
+    		'testing the setting up and checking for the existence of a controller alias');
     }
     
     /**

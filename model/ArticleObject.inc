@@ -352,7 +352,8 @@ class ArticleObject extends AlphaDAO {
 		$this->lastQuery = $sqlQuery;
 		
 		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
-			throw new AlphaException('Failed to load the OIDs for the most recent articles, MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$sqlQuery.']');
+			throw new AlphaException('Failed to load the OIDs for the most recent articles, MySql error is ['.AlphaDAO::getConnection()->error.
+				'], query ['.$sqlQuery.']');
 			return array();
 		}
 		

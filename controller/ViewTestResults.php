@@ -135,7 +135,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<h2>Core Complex Data Types</h2>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>Enum:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -148,7 +148,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>DEnum:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -161,7 +161,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>Sequence:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -174,7 +174,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>Boolean:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -187,7 +187,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>Date:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -200,7 +200,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>Timestamp:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -213,7 +213,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>Integer:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -226,7 +226,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>Double:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -239,7 +239,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>String:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -252,7 +252,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>Text:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -265,7 +265,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>Relation:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -278,7 +278,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>Exception Handling:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -291,7 +291,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>Tag:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -304,7 +304,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>MySQL AlphaDAO:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -317,7 +317,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>AlphaValidator helper:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -330,7 +330,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>AlphaController:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -343,7 +343,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>FrontController:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -356,7 +356,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>AlphaView:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -369,7 +369,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>Image:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -382,7 +382,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>AlphaAgentUtils:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -395,7 +395,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>AlphaConfig:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -408,7 +408,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>AlphaFeed:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
@@ -421,7 +421,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
-		//------------------------------------------------
+		// **** begin test suite ****
 		echo '<h3>AlphaFilters:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();

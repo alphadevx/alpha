@@ -117,7 +117,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	private $relatedClassRightDisplayField;	
 	
 	/**
-	 * The type of relation ('MANY-TO-ONE','ONE-TO-MANY','ONE-TO-ONE','MANY-TO-MANY')
+	 * The type of relation ('MANY-TO-ONE' or 'ONE-TO-MANY' or 'ONE-TO-ONE' or 'MANY-TO-MANY')
 	 *
 	 * @var string
 	 * @since 1.0
@@ -141,7 +141,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 	private $taggedClass;
 	
 	/**
-	 * An array of the allowable relationship types ('MANY-TO-ONE','ONE-TO-MANY','ONE-TO-ONE','MANY-TO-MANY')
+	 * An array of the allowable relationship types ('MANY-TO-ONE' or 'ONE-TO-MANY' or 'ONE-TO-ONE' or 'MANY-TO-MANY')
 	 *
 	 * @var array
 	 * @since 1.0

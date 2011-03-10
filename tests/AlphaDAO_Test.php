@@ -104,15 +104,20 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
      */
     public function testDefaultHouseKeepingValues() {
     	// make sure the person logged in is the same person to create/update the object
-    	$this->assertEquals($_SESSION['currentUser']->getID(), $this->person->getCreatorId()->getValue(), 'test that the constructor sets the correct values of the "house keeping" attributes');
-    	$this->assertEquals($_SESSION['currentUser']->getID(), $this->person->getUpdatorId()->getValue(), 'test that the constructor sets the correct values of the "house keeping" attributes');
+    	$this->assertEquals($_SESSION['currentUser']->getID(), $this->person->getCreatorId()->getValue(), 
+    		'test that the constructor sets the correct values of the "house keeping" attributes');
+    	$this->assertEquals($_SESSION['currentUser']->getID(), $this->person->getUpdatorId()->getValue(), 
+    		'test that the constructor sets the correct values of the "house keeping" attributes');
     	// as it is a new object, make sure the version number is zero
-    	$this->assertEquals(0, $this->person->getVersionNumber()->getValue(), 'test that the constructor sets the correct values of the "house keeping" attributes');
+    	$this->assertEquals(0, $this->person->getVersionNumber()->getValue(), 
+    		'test that the constructor sets the correct values of the "house keeping" attributes');
     
     	// check that the date created and updated equal to today
     	$today = date('Y-m-d');
-    	$this->assertEquals($today, $this->person->getCreateTS()->getDate(), 'test that the constructor sets the correct values of the "house keeping" attributes');
-    	$this->assertEquals($today, $this->person->getUpdateTS()->getDate(), 'test that the constructor sets the correct values of the "house keeping" attributes');
+    	$this->assertEquals($today, $this->person->getCreateTS()->getDate(), 
+    		'test that the constructor sets the correct values of the "house keeping" attributes');
+    	$this->assertEquals($today, $this->person->getUpdateTS()->getDate(), 
+    		'test that the constructor sets the correct values of the "house keeping" attributes');
     
     	// make sure the object is transient
     	$this->assertTrue($this->person->isTransient(), 'test that the constructor sets the correct values of the "house keeping" attributes');
@@ -225,10 +230,12 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
     public function testSaveTransientOrPersistent() {
     	// its transient, so query will insert
     	$this->person->save();
-    	$this->assertEquals('INSERT', substr($this->person->getLastQuery(), 0, 6), 'Testing the save method on transient and non-transient objects');
+    	$this->assertEquals('INSERT', substr($this->person->getLastQuery(), 0, 6), 
+    		'Testing the save method on transient and non-transient objects');
     	// its now persistent, so query will update
     	$this->person->save();
-    	$this->assertEquals('UPDATE', substr($this->person->getLastQuery(), 0, 6), 'Testing the save method on transient and non-transient objects');
+    	$this->assertEquals('UPDATE', substr($this->person->getLastQuery(), 0, 6), 
+    		'Testing the save method on transient and non-transient objects');
     }
     
     /**
@@ -387,7 +394,8 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
     	$this->person->save();
     	$id = $this->person->getMAX();
     	$this->person->load($id);
-    	$this->assertTrue(in_array('Active', $this->person->getPropObject('state')->getOptions()), 'Testing the setEnumOptions method is loading enum options correctly');
+    	$this->assertTrue(in_array('Active', $this->person->getPropObject('state')->getOptions()), 
+    		'Testing the setEnumOptions method is loading enum options correctly');
     }
     
     /**
@@ -414,7 +422,8 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */
     public function testGetTableName() {
-    	$this->assertEquals('Person', $this->person->getTableName(), 'Testing to ensure that the getTableName method can read the TABLE_NAME constant declared in the child class'); 
+    	$this->assertEquals('Person', $this->person->getTableName(), 
+    		'Testing to ensure that the getTableName method can read the TABLE_NAME constant declared in the child class');
     }
     
     /**
@@ -445,8 +454,10 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
     public function testGetNoChildMethodsDisabled() {
     	$state = $this->person->getPropObject('state');
     	
-    	$this->assertEquals('Enum', get_class($state), 'Testing get on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
-    	$this->assertEquals('Active', $state->getValue(), 'Testing get on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
+    	$this->assertEquals('Enum', get_class($state), 
+    		'Testing get on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
+    	$this->assertEquals('Active', $state->getValue(), 
+    		'Testing get on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
     }
     
 	/**
@@ -490,7 +501,8 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
     public function testSetNoChildMethodsDisabled() {
     	$this->person->set('state','Active');
 
-    	$this->assertEquals('Active', $this->person->get('state'), 'Testing set on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
+    	$this->assertEquals('Active', $this->person->get('state'), 
+    		'Testing set on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
     }
     
 	/**
@@ -501,7 +513,8 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
     public function testSetNoChildMethodsEnabled() {
     	$this->person->set('state','Active', true);
     	    	
-    	$this->assertEquals('Active', $this->person->get('state'), 'Testing set on an Enum attribute with a child method avaialble, with $noChildMethods enabled');
+    	$this->assertEquals('Active', $this->person->get('state'), 
+    		'Testing set on an Enum attribute with a child method avaialble, with $noChildMethods enabled');
     }
     
     /**
@@ -559,7 +572,7 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
     	
     	// used to ensure that we attempt to reload it from the DB
     	$this->person->markPersistent('URL');
-    	$this->assertFalse(in_array('URL', $this->person->getTransientAttributes()), 'Testing that markTransient and markPersistent methods');  	
+    	$this->assertFalse(in_array('URL', $this->person->getTransientAttributes()), 'Testing that markTransient and markPersistent methods'); 	
     	// reload from DB
     	$this->person->reload();
     	
@@ -584,11 +597,14 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */
     public function testGetTransientAttributes() {
-    	$this->assertTrue(is_array($this->person->getTransientAttributes()), 'Testing the getTransientAttributes method in conjunction with markTransient/markPersistent');
+    	$this->assertTrue(is_array($this->person->getTransientAttributes()), 
+    		'Testing the getTransientAttributes method in conjunction with markTransient/markPersistent');
     	$this->person->markTransient('URL');
-    	$this->assertTrue(in_array('URL', $this->person->getTransientAttributes()), 'Testing the getTransientAttributes method in conjunction with markTransient/markPersistent');
+    	$this->assertTrue(in_array('URL', $this->person->getTransientAttributes()), 
+    		'Testing the getTransientAttributes method in conjunction with markTransient/markPersistent');
     	$this->person->markPersistent('URL');
-    	$this->assertFalse(in_array('URL', $this->person->getTransientAttributes()), 'Testing the getTransientAttributes method in conjunction with markTransient/markPersistent');
+    	$this->assertFalse(in_array('URL', $this->person->getTransientAttributes()), 
+    		'Testing the getTransientAttributes method in conjunction with markTransient/markPersistent');
     }
     
     /**
@@ -609,15 +625,20 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
      */
     public function testGetLastQuery() {
     	$this->person->save();
-    	$this->assertEquals('INSERT INTO Person', substr($this->person->getLastQuery(), 0, 18), 'Testing the getLastQuery method after various persistance calls');
+    	$this->assertEquals('INSERT INTO Person', substr($this->person->getLastQuery(), 0, 18), 
+    		'Testing the getLastQuery method after various persistance calls');
     	$this->person->checkTableNeedsUpdate();
-    	$this->assertEquals('SHOW INDEX FROM Person', substr($this->person->getLastQuery(), 0, 22), 'Testing the getLastQuery method after various persistance calls');
+    	$this->assertEquals('SHOW INDEX FROM Person', substr($this->person->getLastQuery(), 0, 22), 
+    		'Testing the getLastQuery method after various persistance calls');
     	$this->person->getCount();
-    	$this->assertEquals('SELECT COUNT(OID)', substr($this->person->getLastQuery(), 0, 17), 'Testing the getLastQuery method after various persistance calls');
+    	$this->assertEquals('SELECT COUNT(OID)', substr($this->person->getLastQuery(), 0, 17), 
+    		'Testing the getLastQuery method after various persistance calls');
     	$this->person->getMAX();
-    	$this->assertEquals('SELECT MAX(OID)', substr($this->person->getLastQuery(), 0, 15), 'Testing the getLastQuery method after various persistance calls');
+    	$this->assertEquals('SELECT MAX(OID)', substr($this->person->getLastQuery(), 0, 15), 
+    		'Testing the getLastQuery method after various persistance calls');
     	$this->person->load($this->person->getID());
-    	$this->assertEquals('SHOW COLUMNS FROM Person', substr($this->person->getLastQuery(), 0, 24), 'Testing the getLastQuery method after various persistance calls');
+    	$this->assertEquals('SHOW COLUMNS FROM Person', substr($this->person->getLastQuery(), 0, 24), 
+    		'Testing the getLastQuery method after various persistance calls');
     }
     
     /**
@@ -655,9 +676,11 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
 				try {
 					$this->person->get($propName);
 				} catch (PHPException $e) {
-					$this->assertEquals('[PHP error]: Undefined property:  PersonObject::$'.$propName, $e->getMessage(), 'Testing the clear method for unsetting the attributes of an object');
+					$this->assertEquals(preg_match("/Undefined property/", $e->getMessage()), 1, 
+						'Testing the clear method for unsetting the attributes of an object');
 				} catch (AlphaException $e) {
-					$this->assertEquals('Could not access the property ['.$propName.'] on the object of class [PersonObject]', $e->getMessage(), 'Testing the clear method for unsetting the attributes of an object');
+					$this->assertEquals('Could not access the property ['.$propName.'] on the object of class [PersonObject]', $e->getMessage(), 
+						'Testing the clear method for unsetting the attributes of an object');
 				}
 			}
     	}
@@ -672,7 +695,8 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
     	$this->person->save();
     	$this->person->saveAttribute('displayName', 'unitTestUserNew');
     	
-    	$this->assertEquals('unitTestUserNew', $this->person->getDisplayName()->getValue(), 'Testing that the value was set on the object in memory along with saving to the database');
+    	$this->assertEquals('unitTestUserNew', $this->person->getDisplayName()->getValue(), 
+    		'Testing that the value was set on the object in memory along with saving to the database');
     	
     	$person = new PersonObject();
     	

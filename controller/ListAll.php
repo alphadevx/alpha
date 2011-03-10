@@ -359,7 +359,8 @@ class ListAll extends AlphaController implements AlphaControllerInterface {
 			if(isset($_GET['tk']))
 				$html .= '&nbsp;&nbsp;<a href="'.FrontController::generateSecureURL('act=ListAll&bo='.$this->BOname.'&start='.($this->startPoint+$config->get('sysListPageAmount'))).'">Next-&gt;&gt;</a>';
 			else
-				$html .= '&nbsp;&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($this->startPoint+$config->get('sysListPageAmount')).'">Next-&gt;&gt;</a>';
+				$html .= '&nbsp;&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($this->startPoint+$config->get('sysListPageAmount')).
+					'">Next-&gt;&gt;</a>';
 		}elseif($this->BOCount > $config->get('sysListPageAmount')){
 			$html .= '&nbsp;&nbsp;Next-&gt;&gt;';
 		}
@@ -380,10 +381,12 @@ class ListAll extends AlphaController implements AlphaControllerInterface {
 		$temp = new $this->BOname;
 		
 		if(isset($this->filterField) && isset($this->filterValue)) {
-			if(isset($this->sort) && isset($this->order))
-				$objects = $temp->loadAllByAttribute($this->filterField, $this->filterValue, $this->startPoint-1, $config->get('sysListPageAmount'), $this->sort, $this->order);
-			else
+			if(isset($this->sort) && isset($this->order)) {
+				$objects = $temp->loadAllByAttribute($this->filterField, $this->filterValue, $this->startPoint-1, $config->get('sysListPageAmount'),
+					$this->sort, $this->order);
+			}else{
 				$objects = $temp->loadAllByAttribute($this->filterField, $this->filterValue, $this->startPoint-1, $config->get('sysListPageAmount'));
+			}
 				
 			$this->BOCount = $temp->getCount(array($this->filterField), array($this->filterValue));
 		}else{

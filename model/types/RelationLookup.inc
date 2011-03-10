@@ -101,7 +101,6 @@ class RelationLookup extends AlphaDAO implements AlphaTypeInterface {
 	 *
 	 * @var string
 	 * @since 1.0
-	 * @throws IllegalArguementException
 	 */
 	protected $helper = 'Not a valid RelationLookup value!';
 	

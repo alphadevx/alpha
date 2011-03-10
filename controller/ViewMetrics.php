@@ -9,7 +9,7 @@ if(!isset($config)) {
 require_once $config->get('sysRoot').'alpha/util/Logger.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
-require_once $config->get('sysRoot').'alpha/util/LOC/AlphaMetrics.inc';
+require_once $config->get('sysRoot').'alpha/util/metrics/AlphaMetrics.inc';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 
 /**
