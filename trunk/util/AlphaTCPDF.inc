@@ -207,20 +207,19 @@ class AlphaTCPDF extends TCPDF {
 					// replace relative path with real server path
 					if ($tag['attribute']['src'][0] == '/') {
 						$tag['attribute']['src'] = $_SERVER['DOCUMENT_ROOT'].$tag['attribute']['src'];
-					}						
+					}
+					
 					$tag['attribute']['src'] = urldecode($tag['attribute']['src']);
-					//$tag['attribute']['src'] = str_replace(K_PATH_URL, K_PATH_MAIN, $tag['attribute']['src']);
+					
 					if (!isset($tag['attribute']['width'])) {
 						$tag['attribute']['width'] = 0;
 					}
 					if (!isset($tag['attribute']['height'])) {
 						$tag['attribute']['height'] = 0;
 					}
-					//if (!isset($tag['attribute']['align'])) {
-						// the only alignment supported is "bottom"
-						// further development is required for other modes.
-						$tag['attribute']['align'] = 'bottom';
-					//} 
+					
+					$tag['attribute']['align'] = 'bottom';
+					
 					switch($tag['attribute']['align']) {
 						case 'top': {
 						$align = 'T';

@@ -77,7 +77,7 @@ class MarkdownFacade {
 	 * The constructor
 	 * 
 	 * @param AlphaDAO $BO
-	 * @package boolean $useCache
+	 * @param boolean $useCache
 	 * @since 1.0
 	 */
 	public function __construct($BO, $useCache = true) {
@@ -138,7 +138,7 @@ class MarkdownFacade {
 		    		$type = 'png';
 		    		
 				$img = new Image($path, $image_details[0], $image_details[1], $type, 0.95, false, (boolean)$config->get('sysCMSImagesWidgetSecure'));
-				//$result = $img->renderHTMLLink();
+				
 				$this->content = str_replace($attachmentURL, $img->renderHTMLLink(), $this->content);
 			}else{
 				// render a normal image link to the ViewAttachment controller				

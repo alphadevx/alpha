@@ -229,7 +229,9 @@ class TagObject extends AlphaDAO {
 		
 		// apply stop words
 		$lowerWords = preg_split("/[\s,.:]+/", $content);
+		
 		array_walk($lowerWords, 'TagObject::lowercaseArrayElement');
+		
 		if($applyStopwords) {
 			if(file_exists($config->get('sysRoot').'config/stopwords-'.$config->get('sysStopwordsSize').'.ini')) {		
 				$stopwords = file($config->get('sysRoot').'config/stopwords-'.$config->get('sysStopwordsSize').'.ini', FILE_IGNORE_NEW_LINES);

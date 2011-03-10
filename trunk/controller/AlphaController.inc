@@ -509,9 +509,12 @@ abstract class AlphaController {
  	  * @since 1.0
 	  */
 	 public function setUnitStartTime($year, $month, $day, $hour, $minute, $second) {
-	 	self::$logger->debug('>>setUnitStartTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'], second=['.$second.'])');
+	 	self::$logger->debug('>>setUnitStartTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'],
+	 		second=['.$second.'])');
+	 	
 	 	$this->unitStartTime->setTimestampValue($year, $month, $day, $hour, $minute, $second);
 	 	$_SESSION['unitStartTime'] = $this->unitStartTime->getValue();
+	 	
 	 	self::$logger->debug('<<setUnitStartTime');
 	 }
 	 

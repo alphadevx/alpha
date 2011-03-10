@@ -195,7 +195,9 @@ class LogFile {
 		$totalLines = (count($fields)-1)/count($cols);
  		
  		for($line = 0; $line < $totalLines; $line++) {
-	 		for($col = 0; $col < count($cols); $col++) {
+ 			$count = count($cols);
+ 			
+	 		for($col = 0; $col < $count; $col++) {
 	 			$index = ($line*count($cols))+$col;
 	 			
 	 			// if it is an error log, render the error types field in different colours

@@ -304,7 +304,9 @@ abstract class AlphaDAO {
 			if($this->checkTableNeedsUpdate()) {				
 				$missingFields = $this->findMissingFields();
 	    	
-				for($i = 0; $i < count($missingFields); $i++)
+				$count = count($missingFields);
+				
+				for($i = 0; $i < $count; $i++)
 					$this->addProperty($missingFields[$i]);
 					
 				throw new BONotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->getTableName().'] was out of sync with the database so had to be updated!');
@@ -419,7 +421,9 @@ abstract class AlphaDAO {
 			if($this->checkTableNeedsUpdate()) {				
 				$missingFields = $this->findMissingFields();
 	    	
-				for($i = 0; $i < count($missingFields); $i++)
+				$count = count($missingFields);
+				
+				for($i = 0; $i < $count; $i++)
 					$this->addProperty($missingFields[$i]);
 					
 				throw new BONotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table ['.$this->getTableName().'] was out of sync with the database so had to be updated!');
@@ -463,10 +467,12 @@ abstract class AlphaDAO {
 		}
 		
 		if(!$ignoreClassType && $this->isTableOverloaded()) {
-			if($limit == 0)
+			if($limit == 0) {
 				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' WHERE classname=\''.get_class($this).'\' ORDER BY '.$orderBy.' '.$order.';';
-			else
-				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' WHERE classname=\''.get_class($this).'\' ORDER BY '.$orderBy.' '.$order.' LIMIT '.$start.', '.$limit.';';
+			}else{
+				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' WHERE classname=\''.get_class($this).'\' ORDER BY '.$orderBy.' '.$order.' LIMIT '.
+					$start.', '.$limit.';';
+			}
 		}else{				
 			if($limit == 0)
 				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' ORDER BY '.$orderBy.' '.$order.';';
@@ -613,7 +619,8 @@ abstract class AlphaDAO {
 	 * @throws IllegalArguementException
 	 */
 	public function loadAllByAttributes($attributes=array(), $values=array(), $start=0, $limit=0, $orderBy='OID', $order='ASC', $ignoreClassType=false) {
-		self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
+		self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.
+			$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 		
 		if(method_exists($this, 'before_loadAllByAttributes_callback'))
 			$this->before_loadAllByAttributes_callback();
@@ -621,12 +628,15 @@ abstract class AlphaDAO {
 		global $config;
 		
 		if(!is_array($attributes) || !is_array($values)) {
-			throw new IllegalArguementException('Illegal arrays attributes=['.var_export($attributes, true).'] and values=['.var_export($values, true).'] provided to loadAllByAttributes');
+			throw new IllegalArguementException('Illegal arrays attributes=['.var_export($attributes, true).'] and values=['.var_export($values, true).
+				'] provided to loadAllByAttributes');
 		}
 		
 		$whereClause = ' WHERE';
 		
-		for($i = 0; $i < count($attributes); $i++) {
+		$count = count($attributes);
+		
+		for($i = 0; $i < $count; $i++) {
 			$whereClause .= ' '.$attributes[$i].' = ? AND';
 			self::$logger->debug($whereClause);
 		}
@@ -665,10 +675,13 @@ abstract class AlphaDAO {
 			$stmt->close();
 		}else{
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
+			
 			if(!$this->checkTableExists()) {
 				$this->makeTable();
-				throw new BONotFoundException('Failed to load objects by attributes ['.var_export($attributes, true).'] and values ['.var_export($values, true).'], table did not exist so had to create!');
+				throw new BONotFoundException('Failed to load objects by attributes ['.var_export($attributes, true).'] and values ['.
+					var_export($values, true).'], table did not exist so had to create!');
 			}
+			
 			self::$logger->debug('<<loadAllByAttributes []');
 			return array();
 		}
@@ -1592,7 +1605,10 @@ abstract class AlphaDAO {
 			$whereClause = ' WHERE classname = \''.get_class($this).'\' AND';
 		else
 			$whereClause = ' WHERE';
-		for($i = 0; $i < count($attributes); $i++) {
+			
+		$count = count($attributes);
+		
+		for($i = 0; $i < $count; $i++) {
 			$whereClause .= ' '.$attributes[$i].' = \''.$values[$i].'\' AND';
 			self::$logger->debug($whereClause);
 		}
@@ -3046,7 +3062,9 @@ abstract class AlphaDAO {
 		// here we are only binding the supplied attributes
 		if(count($attributes) > 0 && count($attributes) == count($values)) {
 	
-			for($i = 0; $i < count($values); $i++) {
+			$count = count($values);
+			
+			for($i = 0; $i < $count; $i++) {
 				if (AlphaValidator::isInteger($values[$i]))
 					$bindingsTypes .= 'i';
 				else
@@ -3112,8 +3130,10 @@ abstract class AlphaDAO {
 					
 	    if ($params != null) {		 
 			$bind_names[] = $bindingsTypes;
-		 
-		    for ($i=0; $i<count($params); $i++) {
+
+			$count = count($params);
+			
+		    for ($i = 0; $i < $count; $i++) {
 		    	$bind_name = 'bind'.$i;
 		        $$bind_name = $params[$i];
 		        $bind_names[] = &$$bind_name;
