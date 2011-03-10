@@ -115,117 +115,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		
 		echo AlphaView::displayPageHead($this);
 		
-		// set the umask first before attempt mkdir
-		umask(0);
-		
-		/*
-		 * Create the logs directory, then instantiate a new logger
-		 */
-		try {
-			$logsDir = $config->get('sysRoot').'logs';
-			
-			echo '<p>Attempting to create the logs directory <em>'.$logsDir.'</em>...';
-			
-			if(!file_exists($logsDir))
-				mkdir($logsDir, 0766);
-			
-			self::$logger = new Logger('Install');
-			self::$logger->info('Started installation process!');
-			self::$logger->info('Logs directory ['.$logsDir.'] successfully created');
-			echo AlphaView::displayUpdateMessage('Logs directory ['.$logsDir.'] successfully created');
-		}catch (Exception $e) {
-			echo AlphaView::displayErrorMessage($e->getMessage());
-			echo AlphaView::displayErrorMessage('Aborting.');
-			exit;
-		}
-		
-		/*
-		 * Create the cron tasks directory
-		 */
-		try {
-			$tasksDir = $config->get('sysRoot').'tasks';
-			
-			echo '<p>Attempting to create the tasks directory <em>'.$tasksDir.'</em>...';
-			
-			if(!file_exists($tasksDir))
-				mkdir($tasksDir, 0766);			
-			
-			self::$logger->info('Tasks directory ['.$tasksDir.'] successfully created');
-			echo AlphaView::displayUpdateMessage('Tasks directory ['.$tasksDir.'] successfully created');
-		}catch (Exception $e) {
-			echo AlphaView::displayErrorMessage($e->getMessage());
-			echo AlphaView::displayErrorMessage('Aborting.');
-			exit;
-		}
-		
-		/*
-		 * Create the attachments directory
-		 */
-		try {
-			$attachmentsDir = $config->get('sysRoot').'attachments';
-			
-			echo '<p>Attempting to create the attachments directory <em>'.$attachmentsDir.'</em>...';
-			
-			if(!file_exists($attachmentsDir))
-				mkdir($attachmentsDir, 0766);			
-			
-			self::$logger->info('Attachments directory ['.$attachmentsDir.'] successfully created');
-			echo AlphaView::displayUpdateMessage('Attachments directory ['.$attachmentsDir.'] successfully created');
-		}catch (Exception $e) {
-			echo AlphaView::displayErrorMessage($e->getMessage());
-			echo AlphaView::displayErrorMessage('Aborting.');
-			exit;
-		}
-		
-		/*
-		 * Create the cache directory and sub-directories
-		 */
-		try {
-			$cacheDir = $config->get('sysRoot').'cache';
-			$htmlDir = $config->get('sysRoot').'cache/html';
-			$imagesDir = $config->get('sysRoot').'cache/images';
-			$pdfDir = $config->get('sysRoot').'cache/pdf';
-			$xlsDir = $config->get('sysRoot').'cache/xls';
-			
-			// cache
-			echo '<p>Attempting to create the cache directory <em>'.$cacheDir.'</em>...';
-			if(!file_exists($cacheDir))			
-				mkdir($cacheDir, 0766);			
-			self::$logger->info('Cache directory ['.$cacheDir.'] successfully created');
-			echo AlphaView::displayUpdateMessage('Cache directory ['.$cacheDir.'] successfully created');
-			
-			// cache/html
-			echo '<p>Attempting to create the HTML cache directory <em>'.$htmlDir.'</em>...';
-			if(!file_exists($htmlDir))			
-				mkdir($htmlDir, 0766);			
-			self::$logger->info('Cache directory ['.$htmlDir.'] successfully created');
-			echo AlphaView::displayUpdateMessage('Cache directory ['.$htmlDir.'] successfully created');
-			
-			// cache/images
-			echo '<p>Attempting to create the cache directory <em>'.$imagesDir.'</em>...';
-			if(!file_exists($imagesDir))			
-				mkdir($imagesDir, 0766);			
-			self::$logger->info('Cache directory ['.$imagesDir.'] successfully created');
-			echo AlphaView::displayUpdateMessage('Cache directory ['.$imagesDir.'] successfully created');
-			
-			// cache/pdf
-			echo '<p>Attempting to create the cache directory <em>'.$pdfDir.'</em>...';
-			if(!file_exists($pdfDir))			
-				mkdir($pdfDir, 0766);			
-			self::$logger->info('Cache directory ['.$pdfDir.'] successfully created');
-			echo AlphaView::displayUpdateMessage('Cache directory ['.$pdfDir.'] successfully created');
-			
-			// cache/xls
-			echo '<p>Attempting to create the cache directory <em>'.$xlsDir.'</em>...';
-			if(!file_exists($xlsDir))			
-				mkdir($xlsDir, 0766);			
-			self::$logger->info('Cache directory ['.$xlsDir.'] successfully created');
-			echo AlphaView::displayUpdateMessage('Cache directory ['.$xlsDir.'] successfully created');
-		}catch (Exception $e) {
-			echo AlphaView::displayErrorMessage($e->getMessage());
-			echo AlphaView::displayErrorMessage('Aborting.');
-			exit;
-		}
+		$this->createAppDirectories();
 		
 		// start a new database transaction
 		AlphaDAO::begin();
@@ -387,6 +277,219 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		
 		self::$logger->info('Finished installation!');
 		self::$logger->debug('<<doGET');
+	}
+	
+	/**
+	 * Copies a .htaccess file that restricts public access to the target directory
+	 * 
+	 * @param string $dir
+	 * @since 1.0
+	 */
+	private function copyRestrictedAccessFileToDirectory($dir) {
+		global $config;
+		
+		copy($config->get('sysRoot').'alpha/.htaccess', $dir.'/.htaccess');
+	}
+	
+	/**
+	 * Creates the standard application directories
+	 * 
+	 * @since 1.0
+	 */
+	private function createAppDirectories() {
+		// set the umask first before attempt mkdir
+		umask(0);
+		
+		/*
+		 * Create the logs directory, then instantiate a new logger
+		 */
+		try {
+			$logsDir = $config->get('sysRoot').'logs';
+			
+			echo '<p>Attempting to create the logs directory <em>'.$logsDir.'</em>...';
+			
+			if(!file_exists($logsDir))
+				mkdir($logsDir, 0766);
+				
+			$this->copyRestrictedAccessFileToDirectory($logsDir);
+			
+			self::$logger = new Logger('Install');
+			self::$logger->info('Started installation process!');
+			self::$logger->info('Logs directory ['.$logsDir.'] successfully created');
+			echo AlphaView::displayUpdateMessage('Logs directory ['.$logsDir.'] successfully created');
+		}catch (Exception $e) {
+			echo AlphaView::displayErrorMessage($e->getMessage());
+			echo AlphaView::displayErrorMessage('Aborting.');
+			exit;
+		}
+		
+		/*
+		 * Create the cron tasks directory
+		 */
+		try {
+			$tasksDir = $config->get('sysRoot').'tasks';
+			
+			echo '<p>Attempting to create the tasks directory <em>'.$tasksDir.'</em>...';
+			
+			if(!file_exists($tasksDir))
+				mkdir($tasksDir, 0766);
+				
+			$this->copyRestrictedAccessFileToDirectory($logsDir);
+			
+			self::$logger->info('Tasks directory ['.$tasksDir.'] successfully created');
+			echo AlphaView::displayUpdateMessage('Tasks directory ['.$tasksDir.'] successfully created');
+		}catch (Exception $e) {
+			echo AlphaView::displayErrorMessage($e->getMessage());
+			echo AlphaView::displayErrorMessage('Aborting.');
+			exit;
+		}
+		
+		/*
+		 * Create the controller directory
+		 */
+		try {
+			$controllerDir = $config->get('sysRoot').'controller';
+			
+			echo '<p>Attempting to create the controller directory <em>'.$controllerDir.'</em>...';
+			
+			if(!file_exists($controllerDir))
+				mkdir($controllerDir, 0766);
+			
+			self::$logger->info('Controller directory ['.$controllerDir.'] successfully created');
+			echo AlphaView::displayUpdateMessage('Controllers directory ['.$controllerDir.'] successfully created');
+		}catch (Exception $e) {
+			echo AlphaView::displayErrorMessage($e->getMessage());
+			echo AlphaView::displayErrorMessage('Aborting.');
+			exit;
+		}
+		
+		/*
+		 * Create the model directory
+		 */
+		try {
+			$modelDir = $config->get('sysRoot').'model';
+			
+			echo '<p>Attempting to create the model directory <em>'.$modelDir.'</em>...';
+			
+			if(!file_exists($modelDir))
+				mkdir($modelDir, 0766);
+				
+			$this->copyRestrictedAccessFileToDirectory($modelDir);
+			
+			self::$logger->info('Model directory ['.$modelDir.'] successfully created');
+			echo AlphaView::displayUpdateMessage('Model directory ['.$modelDir.'] successfully created');
+		}catch (Exception $e) {
+			echo AlphaView::displayErrorMessage($e->getMessage());
+			echo AlphaView::displayErrorMessage('Aborting.');
+			exit;
+		}
+		
+		/*
+		 * Create the view directory
+		 */
+		try {
+			$viewDir = $config->get('sysRoot').'view';
+			
+			echo '<p>Attempting to create the view directory <em>'.$viewDir.'</em>...';
+			
+			if(!file_exists($viewDir))
+				mkdir($viewDir, 0766);
+				
+			$this->copyRestrictedAccessFileToDirectory($viewDir);
+			
+			self::$logger->info('View directory ['.$viewDir.'] successfully created');
+			echo AlphaView::displayUpdateMessage('View directory ['.$viewDir.'] successfully created');
+		}catch (Exception $e) {
+			echo AlphaView::displayErrorMessage($e->getMessage());
+			echo AlphaView::displayErrorMessage('Aborting.');
+			exit;
+		}
+		
+		/*
+		 * Create the attachments directory
+		 */
+		try {
+			$attachmentsDir = $config->get('sysRoot').'attachments';
+			
+			echo '<p>Attempting to create the attachments directory <em>'.$attachmentsDir.'</em>...';
+			
+			if(!file_exists($attachmentsDir))
+				mkdir($attachmentsDir, 0766);
+				
+			$this->copyRestrictedAccessFileToDirectory($attachmentsDir);
+			
+			self::$logger->info('Attachments directory ['.$attachmentsDir.'] successfully created');
+			echo AlphaView::displayUpdateMessage('Attachments directory ['.$attachmentsDir.'] successfully created');
+		}catch (Exception $e) {
+			echo AlphaView::displayErrorMessage($e->getMessage());
+			echo AlphaView::displayErrorMessage('Aborting.');
+			exit;
+		}
+		
+		/*
+		 * Create the cache directory and sub-directories
+		 */
+		try {
+			$cacheDir = $config->get('sysRoot').'cache';
+			$htmlDir = $config->get('sysRoot').'cache/html';
+			$imagesDir = $config->get('sysRoot').'cache/images';
+			$pdfDir = $config->get('sysRoot').'cache/pdf';
+			$xlsDir = $config->get('sysRoot').'cache/xls';
+			
+			// cache
+			echo '<p>Attempting to create the cache directory <em>'.$cacheDir.'</em>...';
+			if(!file_exists($cacheDir))			
+				mkdir($cacheDir, 0766);
+				
+			$this->copyRestrictedAccessFileToDirectory($cacheDir);
+			
+			self::$logger->info('Cache directory ['.$cacheDir.'] successfully created');
+			echo AlphaView::displayUpdateMessage('Cache directory ['.$cacheDir.'] successfully created');
+			
+			// cache/html
+			echo '<p>Attempting to create the HTML cache directory <em>'.$htmlDir.'</em>...';
+			if(!file_exists($htmlDir))			
+				mkdir($htmlDir, 0766);
+				
+			$this->copyRestrictedAccessFileToDirectory($htmlDir);
+			
+			self::$logger->info('Cache directory ['.$htmlDir.'] successfully created');
+			echo AlphaView::displayUpdateMessage('Cache directory ['.$htmlDir.'] successfully created');
+			
+			// cache/images
+			echo '<p>Attempting to create the cache directory <em>'.$imagesDir.'</em>...';
+			if(!file_exists($imagesDir))			
+				mkdir($imagesDir, 0766);
+			
+			$this->copyRestrictedAccessFileToDirectory($imagesDir);
+			
+			self::$logger->info('Cache directory ['.$imagesDir.'] successfully created');
+			echo AlphaView::displayUpdateMessage('Cache directory ['.$imagesDir.'] successfully created');
+			
+			// cache/pdf
+			echo '<p>Attempting to create the cache directory <em>'.$pdfDir.'</em>...';
+			if(!file_exists($pdfDir))			
+				mkdir($pdfDir, 0766);
+				
+			$this->copyRestrictedAccessFileToDirectory($pdfDir);
+			
+			self::$logger->info('Cache directory ['.$pdfDir.'] successfully created');
+			echo AlphaView::displayUpdateMessage('Cache directory ['.$pdfDir.'] successfully created');
+			
+			// cache/xls
+			echo '<p>Attempting to create the cache directory <em>'.$xlsDir.'</em>...';
+			if(!file_exists($xlsDir))			
+				mkdir($xlsDir, 0766);
+				
+			$this->copyRestrictedAccessFileToDirectory($xlsDir);
+			
+			self::$logger->info('Cache directory ['.$xlsDir.'] successfully created');
+			echo AlphaView::displayUpdateMessage('Cache directory ['.$xlsDir.'] successfully created');
+		}catch (Exception $e) {
+			echo AlphaView::displayErrorMessage($e->getMessage());
+			echo AlphaView::displayErrorMessage('Aborting.');
+			exit;
+		}
 	}
 	
 	/**
