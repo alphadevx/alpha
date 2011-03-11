@@ -62,6 +62,23 @@ class Tag_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */
     protected function setUp() {
+    	$tag = new TagObject();
+        $tag->rebuildTable();
+        
+    	$denum = new DEnum();
+        $denum->rebuildTable();
+        
+        $item = new DEnumItem();
+        $item->rebuildTable();
+        
+        $article = new ArticleObject();
+        $article->rebuildTable();
+        
+        $denum = new DEnum('ArticleObject::section');
+        $item->set('DEnumID', $denum->getOID());
+        $item->set('value', 'Test');
+        $item->save();
+        
     	$this->article = $this->createArticleObject('unitTestArticle');
     }
     
@@ -72,8 +89,19 @@ class Tag_Test extends PHPUnit_Framework_TestCase {
      * 
      * @since 1.0
      */    
-    protected function tearDown() {
-    	$this->article->delete();
+    protected function tearDown() {    	
+    	$article = new ArticleObject();
+        $article->dropTable();
+        
+        $tag = new TagObject();
+        $tag->dropTable();
+        
+        $denum = new DEnum();
+    	$denum->dropTable();
+        
+        $item = new DEnumItem();
+        $item->dropTable();
+
         unset($this->article);
     }
     

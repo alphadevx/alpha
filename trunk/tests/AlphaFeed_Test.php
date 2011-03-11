@@ -65,6 +65,12 @@ class AlphaFeed_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */
     protected function setUp() {
+    	$denum = new DEnum();
+        $denum->rebuildTable();
+        
+        $item = new DEnumItem();
+        $item->rebuildTable();
+        
     	$this->BO = new ArticleObject();
     	$this->BO->set('title', 'Test Article Title');
     	$this->BO->set('description', 'Test Article Description');
@@ -80,6 +86,12 @@ class AlphaFeed_Test extends PHPUnit_Framework_TestCase {
      */    
     protected function tearDown() {
     	unset($this->BO);
+    	
+    	$denum = new DEnum();
+    	$denum->dropTable();
+        
+        $item = new DEnumItem();
+        $item->dropTable();
     }
     
     public function testAddItemToRSSandParse() {

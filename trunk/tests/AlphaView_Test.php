@@ -65,6 +65,12 @@ class AlphaView_Test extends PHPUnit_Framework_TestCase {
 	 * @since 1.0
 	 */
     protected function setUp() {
+    	$denum = new DEnum();
+        $denum->rebuildTable();
+        
+        $item = new DEnumItem();
+        $item->rebuildTable();
+        
     	$this->view = AlphaView::getInstance(new ArticleObject());
     }
     
@@ -76,6 +82,12 @@ class AlphaView_Test extends PHPUnit_Framework_TestCase {
 	 */
     protected function tearDown() {
     	unset($this->view);
+    	
+    	$denum = new DEnum();
+    	$denum->dropTable();
+        
+        $item = new DEnumItem();
+        $item->dropTable();
     }
     
     /**

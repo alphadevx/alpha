@@ -63,7 +63,10 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
      */
     protected function setUp() {
     	AlphaDAO::begin();
+        
     	$this->person = $this->createPersonObject('unitTestUser');
+    	$this->person->rebuildTable();
+    	
         // just making sure no previous test user is in the DB
         $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/');
         $this->person->deleteAllByAttribute('displayName', 'unitTestUser');
@@ -78,7 +81,11 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
      */    
     protected function tearDown() {    	
     	AlphaDAO::rollback();
+    	$this->person->dropTable();
         unset($this->person);
+        $rights = new RightsObject();
+        $rights->dropTable();
+        $rights->dropTable('Person2Rights');
     }
     
     /**
@@ -165,6 +172,7 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */
     public function testLoadAll() {
+    	$this->person->save();
     	$peopleCount = $this->person->getCount();
     	$people = $this->person->loadAll();
     	$this->assertEquals($peopleCount, count($people), 'Testing loadAll method');

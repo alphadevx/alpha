@@ -308,7 +308,7 @@ class FrontController {
 	public function loadController($allowRedirects = true) {
 		global $config;
 		
-		if($config->get('sysCheckInstalled') && $this->pageController != 'Install' && $this->pageController != 'Login') {
+		if($allowRedirects && $config->get('sysCheckInstalled') && $this->pageController != 'Install' && $this->pageController != 'Login') {
 			if(!AlphaDAO::isInstalled()) {
 				self::$logger->info('Invoking the Install controller as the system DB is not installed...');
 				$url = FrontController::generateSecureURL('act=Install');

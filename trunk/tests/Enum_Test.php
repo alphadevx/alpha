@@ -72,6 +72,11 @@ class Enum_Test extends PHPUnit_Framework_TestCase {
     protected function setUp() {        
         $this->enum1 = new Enum();
         $this->person = new PersonObject();
+        $this->person->set('displayName', $_SESSION['currentUser']->getDisplayName());
+        $this->person->set('email', $_SESSION['currentUser']->get('email'));
+        $this->person->set('password', 'password');
+        $this->person->rebuildTable();
+        $this->person->save();
     }
     
     /** 
@@ -83,6 +88,10 @@ class Enum_Test extends PHPUnit_Framework_TestCase {
      */    
     protected function tearDown() {        
         unset($this->enum1);
+        $this->person->dropTable();
+        $rights = new RightsObject();
+        $rights->dropTable();
+        $rights->dropTable('Person2Rights');
         unset($this->person);
     }    
     

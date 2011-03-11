@@ -90,10 +90,35 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 	 * @since 1.0
 	 */
     protected function setUp() {
+    	$tag = new TagObject();
+        $tag->rebuildTable();
+        
+    	$denum = new DEnum();
+        $denum->rebuildTable();
+        
+        $item = new DEnumItem();
+        $item->rebuildTable();
+        
+        $article = new ArticleObject();
+        $article->rebuildTable();
+        
     	$this->controller = new Search();
+    	
     	$this->person = $this->createPersonObject('unitTestUser');
+    	$this->person->rebuildTable();
+    	
     	$this->article = $this->createArticleObject('unitTestArticle');
+    	$this->article->rebuildTable();
+    	
     	$this->group = new RightsObject();
+    	$this->group->rebuildTable();
+    	$this->group->set('name', 'Admin');
+    	$this->group->save();
+    	
+    	
+    	$lookup = $this->group->getMembers()->getLookup();
+		$lookup->setValue(array($_SESSION['currentUser']->getOID(), $this->group->getOID()));
+		$lookup->save();
     }
     
 	/**
@@ -103,20 +128,31 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 	 * @since 1.0
 	 */
     protected function tearDown() {
-    	$this->controller->abort();
-    	// just making sure no previous test user is in the DB
-    	AlphaDAO::begin();
-        $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/');
-        $this->person->deleteAllByAttribute('displayName', 'unitTestUser');
-        $this->person->deleteAllByAttribute('email', 'changed@test.com');
-        $this->person->deleteAllByAttribute('email', 'newuser@test.com');
-        $this->group->deleteAllByAttribute('name', 'testgroup');
-        $this->article->delete();
-        AlphaDAO::commit();
+		$this->controller->abort();
+		
+    	$this->article->dropTable();
         unset($this->article);
+        
         unset($this->controller);
+        
+    	$this->person->dropTable();
     	unset($this->person);
+    	
+    	$this->group->dropTable();
+    	$this->group->dropTable('Person2Rights');
     	unset($this->group);
+    	
+    	$article = new ArticleObject();
+        $article->dropTable();
+    	
+    	$tag = new TagObject();
+        $tag->dropTable();
+    	
+    	$denum = new DEnum();
+    	$denum->dropTable();
+        
+        $item = new DEnumItem();
+        $item->dropTable();
     }
     
 	/**

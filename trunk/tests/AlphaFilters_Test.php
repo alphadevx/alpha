@@ -122,10 +122,12 @@ class AlphaFilters_Test extends PHPUnit_Framework_TestCase {
      */
     protected function setUp() {
     	$this->blacklistedClient = new BlacklistedClientObject();
+    	$this->blacklistedClient->rebuildTable();
     	$this->blacklistedClient->set('client', $this->badAgent);
     	$this->blacklistedClient->save();
     	
     	$this->badRequest1 = new BadRequestObject();
+    	$this->badRequest1->rebuildTable();
     	$this->badRequest1->set('client', $this->badAgent);
 		$this->badRequest1->set('IP', $this->badIP);
 		$this->badRequest1->set('requestedResource', '/doesNotExist');
@@ -155,16 +157,14 @@ class AlphaFilters_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */    
     protected function tearDown() {
-    	$this->blacklistedClient->delete();
+    	$this->blacklistedClient->dropTable();
     	unset($this->blacklistedClient);
     	
-    	$this->badRequest1->delete();
+    	$this->badRequest1->dropTable();
     	unset($this->badRequest1);
     	
-    	$this->badRequest2->delete();
     	unset($this->badRequest2);
     	
-    	$this->badRequest3->delete();
     	unset($this->badRequest3);
     	
     	$_SERVER['HTTP_USER_AGENT'] = $this->oldAgent;
@@ -183,7 +183,7 @@ class AlphaFilters_Test extends PHPUnit_Framework_TestCase {
     	try {
     		$front = new FrontController();
     		$front->registerFilter(new ClientBlacklistFilter());
-    		$front->loadController();
+    		$front->loadController(false);
     		$this->fail('Testing that a blacklisted user agent string cannot pass the ClientBlacklistFilter filter');
     	}catch (ResourceNotAllowedException $e) {
     		$this->assertEquals('Not allowed!', $e->getMessage(), 'Testing that a blacklisted user agent string cannot pass the ClientBlacklistFilter filter');
@@ -206,7 +206,7 @@ class AlphaFilters_Test extends PHPUnit_Framework_TestCase {
     	try {
     		$front = new FrontController();
     		$front->registerFilter(new ClientTempBlacklistFilter());
-    		$front->loadController();
+    		$front->loadController(false);
     		$this->fail('Testing that a user agent string/IP compbo cannot pass the ClientTempBlacklistFilter filter beyond the config limit');
     	}catch (ResourceNotAllowedException $e) {
     		$this->assertEquals('Not allowed!', $e->getMessage(), 'Testing that a user agent string/IP compbo cannot pass the ClientTempBlacklistFilter filter beyond the config limit');

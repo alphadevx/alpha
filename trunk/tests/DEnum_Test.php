@@ -62,7 +62,15 @@ class DEnum_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */
     protected function setUp() {        
-        $this->denum1 = new DEnum('ArticleObject::section');        
+        $denum = new DEnum();
+        $denum->rebuildTable();
+        $item = new DEnumItem();
+        $item->rebuildTable();
+        
+        $this->denum1 = new DEnum('ArticleObject::section');
+        $item->set('DEnumID', $this->denum1->getOID());
+        $item->set('value', 'Test');
+        $item->save();
     }
     
     /** 
@@ -72,7 +80,10 @@ class DEnum_Test extends PHPUnit_Framework_TestCase {
      * 
      * @since 1.0
      */    
-    protected function tearDown() {        
+    protected function tearDown() {
+    	$item = new DEnumItem();
+        $item->dropTable();
+    	$this->denum1->dropTable();
         unset($this->denum1);        
     }    
     

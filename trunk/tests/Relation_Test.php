@@ -62,7 +62,14 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */
     protected function setUp() {        
-        $this->rel1 = new Relation();        
+        $this->rel1 = new Relation();
+        
+        $person = new PersonObject();
+        $person->set('displayName', $_SESSION['currentUser']->getDisplayName());
+        $person->set('email', $_SESSION['currentUser']->get('email'));
+        $person->set('password', 'password');
+        $person->rebuildTable();
+        $person->save();
     }
     
     /** 
@@ -73,7 +80,13 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */    
     protected function tearDown() {        
-        unset($this->rel1);        
+        unset($this->rel1);
+        $person = new PersonObject();
+        $person->dropTable();
+        
+        $rights = new RightsObject();
+        $rights->dropTable();
+        $rights->dropTable('Person2Rights');
     }
     
     /**
