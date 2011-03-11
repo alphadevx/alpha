@@ -97,7 +97,13 @@ class MarkdownFacade {
 			if ($this->checkCache()) {
 				$this->loadCache();
 			}else{
+				if($this->BO->get('content', true) == '') {
+					// the content may not be loaded from the DB at this stage due to a previous soft-load
+					$this->BO->reload();
+				}
+				
 				$this->content = $this->markdown($this->BO->get('content', true));
+				
 				$this->cache();
 			}
 		}
@@ -211,7 +217,7 @@ class MarkdownFacade {
 	 * @return boolean
 	 * @since 1.0
 	 */
-	function checkCache() {
+	public function checkCache() {
 		return file_exists($this->filename);
 	}
 	
@@ -220,8 +226,9 @@ class MarkdownFacade {
 	 * 
 	 * @since 1.0	 
 	 */
-	function loadCache() {		
-		$fp=fopen($this->filename,"r");
+	public function loadCache() {		
+		$fp = fopen($this->filename,"r");
+		
 		if (!$fp) {
 			throw new AlphaException('Failed to open the cache file for reading, directory permissions my not be set correctly!');
 		}else{				    
