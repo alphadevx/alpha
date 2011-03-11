@@ -101,7 +101,9 @@ class ViewArticleTitle extends ViewArticle {
 				}
 				
 				$this->BO = new ArticleObject();
-				$this->BO->loadByAttribute('title', $title);
+				$this->BO->set('title', $title);
+				// this is effectively a lazy-load
+				$this->BO->loadByAttribute('title', $title, false, array('OID', 'version_num', 'created_ts', 'updated_ts', 'author'));
 			}
 						
 		}catch(IllegalArguementException $e) {

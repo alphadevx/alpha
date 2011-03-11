@@ -247,7 +247,7 @@ abstract class AlphaDAO {
 			$fields .= $att.',';
 		$fields = substr($fields, 0, -1);
 		
-		$sqlQuery = 'SELECT '.$fields.' FROM '.$this->getTableName().' WHERE OID = ?;';					
+		$sqlQuery = 'SELECT '.$fields.' FROM '.$this->getTableName().' WHERE OID = ? LIMIT 1;';					
 		$this->lastQuery = $sqlQuery;
 		$stmt = AlphaDAO::getConnection()->stmt_init();
 
@@ -328,27 +328,31 @@ abstract class AlphaDAO {
 	 * @param string $atribute The name of the attribute to load the object by.
 	 * @param string $value The value of the attribute to load the object by.
 	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
+	 * @param array $attributes The attributes to load from the database to this object (leave blank to load all attributes)
 	 * @since 1.0
 	 * @throws BONotFoundException
 	 */
-	public function loadByAttribute($attribute, $value, $ignoreClassType=false)	{
-		self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'], ignoreClassType=['.$ignoreClassType.'])');
+	public function loadByAttribute($attribute, $value, $ignoreClassType=false, $attributes=array()) {
+		self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'], ignoreClassType=['.$ignoreClassType.'], 
+			attributes=['.var_export($attributes, true).'])');
 		
 		if(method_exists($this, 'before_loadByAttribute_callback'))
 				$this->before_loadByAttribute_callback();
 		
-		$attributes = $this->getPersistentAttributes();
+		if(count($attributes) == 0)
+			$attributes = $this->getPersistentAttributes();
+		
 		$fields = '';
 		foreach($attributes as $att)
 			$fields .= $att.',';
 		$fields = substr($fields, 0, -1);
 		
 		if(!$ignoreClassType && $this->isTableOverloaded())
-			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->getTableName().' WHERE '.$attribute.' = ? AND classname=?;';
+			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->getTableName().' WHERE '.$attribute.' = ? AND classname = ? LIMIT 1;';
 		else
-			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->getTableName().' WHERE '.$attribute.' = ?;';
+			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->getTableName().' WHERE '.$attribute.' = ? LIMIT 1;';
 		
-		self::$logger->debug('Query=['.$sqlQuery.']');	
+		self::$logger->info('Query=['.$sqlQuery.']');	
 		
 		$this->lastQuery = $sqlQuery;
 		$stmt = AlphaDAO::getConnection()->stmt_init();
@@ -373,6 +377,7 @@ abstract class AlphaDAO {
 			$stmt->execute();
 			
 			$result = $this->bindResult($stmt);
+			
 			if(isset($result[0]))
 				$row = $result[0];
 				
@@ -401,16 +406,18 @@ abstract class AlphaDAO {
 		try {
 			foreach($properties as $propObj) {
 				$propName = $propObj->name;
-											
-				// filter transient attributes
-				if(!in_array($propName, $this->transientAttributes)) {
-					$this->set($propName, $row[$propName]);
-				}elseif(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {
-					$prop = $this->getPropObject($propName);
-					
-					// handle the setting of ONE-TO-MANY relation values
-					if($prop->getRelationType() == 'ONE-TO-MANY') {
-						$this->set($propObj->name, $this->getOID());
+
+				if(isset($row[$propName])) {
+					// filter transient attributes
+					if(!in_array($propName, $this->transientAttributes)) {
+						$this->set($propName, $row[$propName]);
+					}elseif(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {
+						$prop = $this->getPropObject($propName);
+						
+						// handle the setting of ONE-TO-MANY relation values
+						if($prop->getRelationType() == 'ONE-TO-MANY') {
+							$this->set($propObj->name, $this->getOID());
+						}
 					}
 				}
 			}

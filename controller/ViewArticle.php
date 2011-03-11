@@ -166,9 +166,6 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 		
 		if($config->get('sysCMSDisplayStandardHeader')) {
 			$html.= '<p><a href="'.$config->get('sysURL').'">'.$config->get('sysTitle').'</a> &nbsp; &nbsp;';
-			$denum = $this->BO->getPropObject('section');
-			if(count($denum->getOptions()) > 1)
-				$html.= 'Site Section: <em>'.$denum->getDisplayValue().'</em> &nbsp; &nbsp;';
 			$html.= 'Date Added: <em>'.$this->BO->getCreateTS()->getDate().'</em> &nbsp; &nbsp;';
 			$html.= 'Last Updated: <em>'.$this->BO->getUpdateTS()->getDate().'</em> &nbsp; &nbsp;';
 			$html.= 'Revision: <em>'.$this->BO->getVersion().'</em></p>';
