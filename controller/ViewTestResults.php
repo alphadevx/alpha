@@ -40,14 +40,6 @@ require_once $config->get('sysRoot').'alpha/tests/AlphaConfig_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/AlphaFeed_Test.php';
 require_once $config->get('sysRoot').'alpha/tests/AlphaFilters_Test.php';
 
-/*
- * we are supressing the display and logging of errors on this page, as we 
- * are only interested in tests that fail and the reasons given for failing
- * 
- */
-$config->set('sysTraceLevel', 'FATAL');
-
-
 /**
  * Controller which displays all of the unit test results
  * 
@@ -107,16 +99,20 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 	 * @since 1.0
 	 */
 	public function __construct() {
-		self::$logger = new Logger('ViewTestResults');
-		self::$logger->debug('>>__construct()');
+		global $config;
+		
+		/*
+		 * we are supressing the display and logging of errors on this page, as we 
+		 * are only interested in tests that fail and the reasons given for failing
+		 * 
+		 */
+		$config->set('sysTraceLevel', 'FATAL');		
 		
 		// ensure that the super class constructor is called, indicating the rights group
 		parent::__construct('Admin');
 		
 		// set up the title and meta details
-		$this->setTitle('Alpha Core Unit Test Results');	
-		
-		self::$logger->debug('<<__construct');
+		$this->setTitle('Alpha Core Unit Test Results');
 	}
 	
 	/**
@@ -126,9 +122,23 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 	 * @since 1.0
 	 */
 	public function doGET($params) {
-		self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
-		
+		global $config;
+			
 		echo AlphaView::displayPageHead($this);
+		
+		// flip the standard database settings with the test ones
+		$config->set('sysDB', $config->get('sysDBTest'));
+		$config->set('sysDBUsername', $config->get('sysDBTestUsername'));
+		$config->set('sysDBPassword', $config->get('sysDBTestPassword'));
+		$config->set('sysDBHost', $config->get('sysDBTestHost'));
+		// force a disconnect to break any existing connections to the main database 
+		AlphaDAO::disconnect();
+		
+		if($config->get('sysDB') == '') {
+			echo AlphaView::displayErrorMessage('Unable to run the unit tests as no test database is configured!');
+			echo AlphaView::displayPageFoot($this);
+			return;
+		}
 		
 		$runningTime = 0;
 		$testCount = 0;
@@ -438,7 +448,6 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		echo '<h3>Total running time: '.$runningTime.'</h3>';
 		
 		echo AlphaView::displayPageFoot($this);
-		self::$logger->debug('<<doGET');
 	}
 	
 	/**
@@ -448,9 +457,6 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 	 * @since 1.0
 	 */
 	public function doPOST($params) {
-		self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
-		
-		self::$logger->debug('<<doPOST');
 	}
 	
 	/**

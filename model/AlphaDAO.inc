@@ -352,7 +352,7 @@ abstract class AlphaDAO {
 		else
 			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->getTableName().' WHERE '.$attribute.' = ? LIMIT 1;';
 		
-		self::$logger->info('Query=['.$sqlQuery.']');	
+		self::$logger->debug('Query=['.$sqlQuery.']');	
 		
 		$this->lastQuery = $sqlQuery;
 		$stmt = AlphaDAO::getConnection()->stmt_init();
@@ -1912,7 +1912,7 @@ abstract class AlphaDAO {
 		
 		$result = AlphaDAO::getConnection()->query($sqlQuery);
 		
-		while ($row = $result->fetch_array(MYSQLI_NUM)) {    		
+		while ($row = $result->fetch_array(MYSQLI_NUM)) {
     		if (strtolower($row[0]) == strtolower($this->getTableName()))
     			$tableExists = true;
 		}		
