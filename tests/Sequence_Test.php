@@ -63,6 +63,7 @@ class Sequence_Test extends PHPUnit_Framework_TestCase {
      */
     protected function setUp() {        
         $this->sequence = new Sequence();
+        $this->sequence->rebuildTable();
         $this->sequence->set('prefix', 'TEST');
         $this->sequence->set('sequence', 1);
         $this->sequence->save();
@@ -76,8 +77,8 @@ class Sequence_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */    
     protected function tearDown() {
-    	$this->sequence->delete();   
-        unset($this->sequence);        
+    	$this->sequence->dropTable();
+        unset($this->sequence);
     }
     
     /**

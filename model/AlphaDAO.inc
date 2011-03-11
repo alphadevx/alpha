@@ -1398,6 +1398,8 @@ abstract class AlphaDAO {
 		if(method_exists($this, 'after_makeTable_callback'))
 			$this->after_makeTable_callback();
 		
+		self::$logger->info('Successfully created the table ['.$this->getTableName().'] for the class ['.get_class($this).']');
+		
 		self::$logger->debug('<<makeTable');
 	}
 
@@ -1406,7 +1408,7 @@ abstract class AlphaDAO {
 	 * 
 	 * @since 1.0
 	 * @throws AlphaException
-	 */	
+	 */
 	public function rebuildTable() {
 		self::$logger->debug('>>rebuildTable()');
 		
@@ -1427,7 +1429,38 @@ abstract class AlphaDAO {
 		if(method_exists($this, 'after_rebuildTable_callback'))
 			$this->after_rebuildTable_callback();			
 		
-		self::$logger->debug('<<rebuildTable');		
+		self::$logger->debug('<<rebuildTable');
+	}
+	
+	/**
+	 * Drops the table if the model requirements have changed.  All data is lost!
+	 * 
+	 * @since 1.0
+	 * @param string $tableName Optional table name, leave blank for the defined table for this class to be dropped
+	 * @throws AlphaException
+	 */
+	public function dropTable($tableName=null) {
+		self::$logger->debug('>>dropTable()');
+		
+		if(method_exists($this, 'before_dropTable_callback'))
+			$this->before_dropTable_callback();
+		
+		if($tableName == null)
+			$tableName = $this->getTableName();
+			
+		$sqlQuery = 'DROP TABLE IF EXISTS '.$tableName.';';
+
+		$this->lastQuery = $sqlQuery;
+
+		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
+			throw new AlphaException('Failed to drop the table ['.$tableName.'] for the class ['.get_class($this).'], query is ['.$this->lastQuery.']');
+			self::$logger->debug('<<dropTable');
+		}
+		
+		if(method_exists($this, 'after_dropTable_callback'))
+			$this->after_dropTable_callback();			
+		
+		self::$logger->debug('<<dropTable');
 	}
 
 	/**

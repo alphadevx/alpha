@@ -65,7 +65,6 @@ class ArticleObject extends AlphaDAO {
 	 * 
 	 * @var DEnum
 	 * @since 1.0
-	 * @todo remove this field
 	 */
 	protected $section;
 	
