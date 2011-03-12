@@ -116,6 +116,8 @@ class LogFile {
  	 * @since 1.0
  	 */
  	public function writeLine($line) {
+ 		global $config;
+ 		
  		$mergedLine = '';
  		
  		$colCount = count($line); 		
@@ -139,8 +141,21 @@ class LogFile {
 				$this->backupFile();	
 			}
  		}catch(Exception $e) {
- 			echo '<p class="error"><br>Unable to write to the log file ['.$this->path.'], error ['.$e->getMessage().']</p>';
- 			exit;	
+ 			try {
+	 			$logsDir = $config->get('sysRoot').'logs';
+				
+				if(!file_exists($logsDir))
+					mkdir($logsDir, 0766);
+					
+	 			file_put_contents($this->path, $mergedLine, FILE_APPEND|LOCK_EX);
+	 			
+	 			if($this->checkFileSize() >= $this->MaxSize) {			
+					$this->backupFile();	
+				}
+			}catch(Exception $e) {
+	 			echo '<p class="error"><br>Unable to write to the log file ['.$this->path.'], error ['.$e->getMessage().']</p>';
+	 			exit;
+			}
  		}
  	}
  	
