@@ -2594,17 +2594,20 @@ abstract class AlphaDAO {
 		
 		$classNameArray = array();
 		
-		// first get any custom BOs
-		$handle = opendir($config->get('sysRoot').'model');
-   		
-        // loop over the business object directory
-	    while (false !== ($file = readdir($handle))) {
-	    	if (preg_match("/Object.inc/", $file)) {
-	    		$classname = substr($file, 0, -4);
-	    		
-	    		array_push($classNameArray, $classname);
-	    	}
-	    }
+		
+		if(file_exists($config->get('sysRoot').'model')) { // it is possible it has not been created yet...
+			// first get any custom BOs
+			$handle = opendir($config->get('sysRoot').'model');
+	   		
+	        // loop over the business object directory
+	        while (false !== ($file = readdir($handle))) {
+			   	if (preg_match("/Object.inc/", $file)) {
+			   		$classname = substr($file, 0, -4);
+			    		
+			   		array_push($classNameArray, $classname);
+			   	}
+		    }
+		}
 	    
 	    // now loop over the core BOs provided with Alpha
 	    
