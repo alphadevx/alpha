@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Alpha" default="apidocs" basedir=".">
-	<property name="app-root" value="."/>
+	<property name="alpha-root" value="."/>
 	<property name="dist-version" value="1.0"/>
 	<property name="dist-target" value="alpha-${dist-version}"/>
 	
@@ -8,13 +8,28 @@
 		<!-- make a dist folder and copy all of the application files there -->
 		<mkdir dir="${dist-target}"/>
 		<!-- now copy the files, less the SVN directories! -->
-		<copy todir="${dist-target}">
-			<fileset dir="${app-root}">
+		<copy todir="${dist-target}/alpha">
+			<fileset dir="${alpha-root}">
 				<exclude name="**/*.svn"/>
 				<exclude name="**/*.project"/>
 				<exclude name="**/*.geshi"/>
+				<exclude name="**/sample/**"/>
+				<exclude name="**/alpha-**"/>
+				<exclude name="**/build.xml"/>
+				<exclude name="**/ruleset.xml"/>
+				<exclude name="**/docs/codesniff/**"/>
+				<exclude name="**/docs/ea/**"/>
+				<exclude name="**/docs/pmd/**"/>
 			</fileset>
-		</copy>	
+		</copy>
+		<copy todir="${dist-target}">
+			<fileset dir="${alpha-root}/sample">
+			</fileset>
+		</copy>
+		<zip destfile="${dist-target}/alpha-framework-${dist-version}.zip" includeemptydirs="true">
+			<fileset dir="${dist-target}">
+			</fileset>
+		</zip>
 	</target>
 		
 	<target name="clean">
@@ -23,60 +38,68 @@
 	</target>
 
     <target name="apidocs" description="Builds the API HTML docs.">
-	<phpdoc title="Alpha Framework API Documentation"
-	  destdir="./docs/api"
-	  sourcecode="true"
-	  undocumentedelements="true"
-	  output="HTML:Smarty:HandS">
-	   <fileset dir=".">
-	      <include name="**/*.php" />
-	      <include name="**/*.inc" />
-	      <exclude name="**/lib/**"/>
-	      <exclude name="**/*.css.php"/>
-	      <exclude name="**/*.tbl.php"/>
-	      <exclude name="**/*.tbl.php.html"/>
-	      <exclude name="**/*.phtml"/>
-	   </fileset>
-	</phpdoc>
+		<phpdoc title="Alpha Framework API Documentation"
+	  		destdir="./docs/api"
+	  		sourcecode="true"
+	  		undocumentedelements="true"
+	  		output="HTML:Smarty:HandS">
+			
+	   		<fileset dir=".">
+	      		<include name="**/*.php" />
+	      		<include name="**/*.inc" />
+	      		<exclude name="**/lib/**"/>
+	   			<exclude name="**/sample/**"/>
+	      		<exclude name="**/*.css.php"/>
+	      		<exclude name="**/*.tbl.php"/>
+	      		<exclude name="**/*.tbl.php.html"/>
+	      		<exclude name="**/*.phtml"/>
+	   		</fileset>
+		</phpdoc>
     </target>
 
     <target name="depends" description="Checks dependancies.">
-	<phpdepend>
-	   <fileset dir=".">
-              <include name="**/*.php" />
-              <include name="**/*.inc" />
-              <exclude name="**/lib/**"/>
-           </fileset>
-	   <logger type="jdepend-xml" outfile="docs/depends/jdepend.xml"/>
-	   <logger type="jdepend-chart" outfile="docs/depends/jdepend.jpg"/>
-	   <logger type="overview-pyramid" outfile="docs/depends/jdepend-pyramid.jpg"/>
-	   <analyzer type="coderank-mode" value="method"/>
-	 </phpdepend>
-    </target>
+		<phpdepend>
+	   		<fileset dir=".">
+            	<include name="**/*.php" />
+              	<include name="**/*.inc" />
+              	<exclude name="**/lib/**"/>
+           	</fileset>
+			
+	   		<logger type="jdepend-xml" outfile="docs/depends/jdepend.xml"/>
+	   		<logger type="jdepend-chart" outfile="docs/depends/jdepend.jpg"/>
+	   		<logger type="overview-pyramid" outfile="docs/depends/jdepend-pyramid.jpg"/>
+	   		<analyzer type="coderank-mode" value="method"/>
+	 	</phpdepend>
+	</target>
 
-   <target name="codesniff" description="Checks the code for cleaniness.">
-	<phpcodesniffer
-	  standard="ruleset.xml"
-	  showSniffs="true"
-	  showWarnings="true"
-	  allowedFileExtensions="php inc">
-	<formatter type="default" usefile="false"/>
-	<fileset dir=".">
-            <include name="**/*.php" />
-            <include name="**/*.inc" />
-            <exclude name="**/lib/**"/>
-         </fileset>
-	</phpcodesniffer>
+	<target name="codesniff" description="Checks the code for cleaniness.">
+		<phpcodesniffer
+	  		standard="ruleset.xml"
+	  		showSniffs="true"
+	  		showWarnings="true"
+	  		allowedFileExtensions="php inc">
+			
+			<formatter type="default" usefile="false"/>
+			
+			<fileset dir=".">
+            	<include name="**/*.php" />
+            	<include name="**/*.inc" />
+            	<exclude name="**/lib/**"/>
+				<exclude name="**/sample/**"/>
+         	</fileset>
+		</phpcodesniffer>
     </target>
 
     <target name="pmd" description="Project mess detector.">
         <phpmd>
-	<fileset dir=".">
-            <include name="**/*.php" />
-            <include name="**/*.inc" />
-            <exclude name="**/lib/**"/>
-        </fileset>
-        <formatter type="html" outfile="./docs/pmd/pmd.html"/>
+			<fileset dir=".">
+            	<include name="**/*.php" />
+            	<include name="**/*.inc" />
+            	<exclude name="**/lib/**"/>
+				<exclude name="**/sample/**"/>
+        	</fileset>
+        	
+        	<formatter type="html" outfile="./docs/pmd/pmd.html"/>
         </phpmd>
     </target>
 	
