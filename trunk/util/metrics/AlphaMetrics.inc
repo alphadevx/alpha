@@ -6,7 +6,7 @@ try{
 	fopen('PEAR/File_Find/Find.php', 'r', true);
 	require_once 'PEAR/File_Find/Find.php';
 }catch (Exception $e) {
-	throw new LibraryNotInstalledException('Unable to generate code metrics as the PEAR::File package is not installed!');
+	throw new LibraryNotInstalledException('Unable to generate code metrics as the PEAR::File_Find package is not installed!');
 	exit;
 }
 
