@@ -154,7 +154,9 @@ class Login extends AlphaController implements AlphaControllerInterface {
 			if (isset($params['loginBut'])) {
 				// if the database has not been set up yet, accept a login from the config admin username/password
 				if(!AlphaDAO::isInstalled()) {
-					if ($params['email'] == $config->get('sysInstallUsername') && crypt($params['password'], $config->get('sysInstallPassword')) == crypt($config->get('sysInstallPassword'), $config->get('sysInstallPassword'))) {
+					if ($params['email'] == $config->get('sysInstallUsername') && crypt($params['password'], $config->get('sysInstallPassword')) == 
+						crypt($config->get('sysInstallPassword'), $config->get('sysInstallPassword'))) {
+							
 						self::$logger->info('Logging in ['.$params['email'].'] at ['.date("Y-m-d H:i:s").']');
 						$admin = new PersonObject();
 						$admin->set('displayName', 'Admin');
@@ -206,12 +208,14 @@ class Login extends AlphaController implements AlphaControllerInterface {
 				$this->personObject->set('password', crypt($new_password));				
 				$this->personObject->save();
 					
-				$message = 'The password for your account has been reset to '.$new_password.' as you requested.  You can now login to the site using your e-mail address and this new password as before.';
+				$message = 'The password for your account has been reset to '.$new_password.' as you requested.  You can now login to the site using your '.
+					'e-mail address and this new password as before.';
 				$subject = 'Password change request';
 					
 				$this->personObject->sendMail($message, $subject);				
 					
-				echo AlphaView::displayUpdateMessage('The password for the user <strong>'.$params['email'].'</strong> has been reset, and the new password has been sent to that e-mail address.');
+				echo AlphaView::displayUpdateMessage('The password for the user <strong>'.$params['email'].'</strong> has been reset, and the new password '.
+					'has been sent to that e-mail address.');
 				echo '<a href="'.$config->get('sysURL').'">Home Page</a>';
 			}
 		}catch(ValidationException $e) {
@@ -251,6 +255,8 @@ class Login extends AlphaController implements AlphaControllerInterface {
 	 */
 	private function doLoginAndRedirect($password) {
 		self::$logger->debug('>>doLoginAndRedirect(password=['.$password.'])');
+		
+		global $config;
 		
 		if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Active') {
 			if (crypt($password, $this->personObject->get('password')) == $this->personObject->get('password')) {
