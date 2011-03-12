@@ -297,6 +297,8 @@ class Install extends AlphaController implements AlphaControllerInterface {
 	 * @since 1.0
 	 */
 	private function createAppDirectories() {
+		global $config;
+		
 		// set the umask first before attempt mkdir
 		umask(0);
 		
