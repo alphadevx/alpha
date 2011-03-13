@@ -204,7 +204,7 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 			}catch (AlphaException $e) {
 				self::$logger->error("[$classname]:".$e->getMessage());
 				// its possible that the exception occured due to the table schema being out of date
-				if($BO->checkTableNeedsUpdate()) {				
+				if($BO->checkTableExists() && $BO->checkTableNeedsUpdate()) {				
 					$missingFields = $BO->findMissingFields();
 		    	
 					$count = count($missingFields);
