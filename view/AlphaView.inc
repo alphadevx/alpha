@@ -16,6 +16,7 @@ require_once $config->get('sysRoot').'alpha/view/widgets/DateBox.inc';
 require_once $config->get('sysRoot').'alpha/view/widgets/TextBox.inc';
 require_once $config->get('sysRoot').'alpha/view/widgets/RecordSelector.inc';
 require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
+require_once $config->get('sysRoot').'alpha/view/ViewState.inc';
 
 /**
  *
@@ -1277,11 +1278,19 @@ class AlphaView {
 		
 		if ($mode == 'edit') {
 			// give 10 rows for content fields (other 5 by default)
-			if($name == 'content')
-				$text = new TextBox($this->BO->getPropObject($name), $label, $name, 10);
-			else
+			if($name == 'content') {
+				$viewState = ViewState::getInstance();
+				
+				if($viewState->get('markdownTextBoxRows') == '')
+					$text = new TextBox($this->BO->getPropObject($name), $label, $name, 10);
+				else
+					$text = new TextBox($this->BO->getPropObject($name), $label, $name, (integer)$viewState->get('markdownTextBoxRows'));
+					
+				$html .= $text->render($tableTags, true);
+			}else{
 				$text = new TextBox($this->BO->getPropObject($name), $label, $name);
-			$html .= $text->render($tableTags);
+				$html .= $text->render($tableTags);
+			}
 		}
 		
 		if ($mode == 'view') {
