@@ -7,6 +7,7 @@ if(!isset($config)) {
 }
 
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
+require_once $config->get('sysRoot').'alpha/view/ViewState.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/model/ArticleObject.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
@@ -156,6 +157,11 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 			if(!$this->checkSecurityFields()) {
 				throw new SecurityException('This page cannot accept post data from remote servers!');
 				self::$logger->debug('<<doPOST');
+			}
+			
+			if(isset($params['markdownTextBoxRows']) && $params['markdownTextBoxRows'] != '') {
+				$viewState = ViewState::getInstance();
+				$viewState->set('markdownTextBoxRows', $params['markdownTextBoxRows']);
 			}
 
 			if (isset($params['oid'])) {

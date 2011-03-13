@@ -57,6 +57,14 @@ class ViewState {
 	protected $selectedTab;
 	
 	/**
+	 * The amount of rows to expand the Markdown edit TextBox by
+	 * 
+	 * @var string
+	 * @since 1.0
+	 */
+	protected $markdownTextBoxRows;
+	
+	/**
 	 * The view state object singleton
 	 *
 	 * @var ViewState
