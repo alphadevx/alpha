@@ -215,7 +215,7 @@ class PersonObject extends AlphaDAO {
 	 * @since 1.0
 	 */
 	protected function before_populateFromPost_callback() {
-		if(isset($_POST['password']) && preg_match(REQUIRED_STRING, $_POST['password']))
+		if(isset($_POST['password']) && preg_match(AlphaValidator::REQUIRED_STRING, $_POST['password']))
 			$_POST['password'] = crypt($_POST['password']);
 	}
 	
