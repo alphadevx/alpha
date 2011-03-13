@@ -53,7 +53,7 @@ class StringBox {
 	 * @var String
 	 * @since 1.0
 	 */
-	var $stringObject;
+	public $stringObject;
 	
 	/**
 	 * The data label for the string object
@@ -61,7 +61,7 @@ class StringBox {
 	 * @var string
 	 * @since 1.0
 	 */
-	var $label;
+	public $label;
 	
 	/**
 	 * The name of the HTML input box
@@ -69,7 +69,7 @@ class StringBox {
 	 * @var string
 	 * @since 1.0
 	 */
-	var $name;
+	public $name;
 	
 	/**
 	 * The display size of the input box
@@ -78,7 +78,7 @@ class StringBox {
 	 * @since 1.0
 	 * 
 	 */
-	var $size;
+	public $size;
 	
 	/**
 	 * The constructor

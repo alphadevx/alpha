@@ -54,7 +54,7 @@ class TextBox {
 	 * @var Text
 	 * @since 1.0
 	 */
-	var $textObject;
+	public $textObject;
 	
 	/**
 	 * The data label for the text object
@@ -62,7 +62,7 @@ class TextBox {
 	 * @var string
 	 * @since 1.0
 	 */
-	var $label;
+	public $label;
 	
 	/**
 	 * The name of the HTML input box
@@ -70,7 +70,7 @@ class TextBox {
 	 * @var string
 	 * @since 1.0
 	 */
-	var $name;
+	public $name;
 	
 	/**
 	 * The amount of rows to display by default
@@ -78,7 +78,7 @@ class TextBox {
 	 * @var integer
 	 * @since 1.0
 	 */
-	var $rows;
+	public $rows;
 	
 	/**
 	 * An optional additional idenitfier to append to the id of the text box where many are on one page
@@ -86,7 +86,7 @@ class TextBox {
 	 * @var integer
 	 * @since 1.0
 	 */
-	var $identifier;
+	public $identifier;
 	
 	/**
 	 * The constructor
@@ -114,8 +114,8 @@ class TextBox {
 	/**
 	 * Renders the HTML and javascript for the text box
 	 * 
-	 * @param bool $tableTags determines if table tags are also rendered for the TextBox
-	 * @param bool $markdown set to true if you want to render additional buttons for Markdown content
+	 * @param bool $tableTags Determines if table tags are also rendered for the TextBox
+	 * @param bool $markdown Set to true when rendering Markdown text content fields
 	 * @return string
 	 * @since 1.0
 	 */
@@ -125,13 +125,16 @@ class TextBox {
 		$html = '';
 		
 		if($tableTags) {
-			$html .= '<tr><th colspan="2">';
+			$html .= '<tr><th colspan="2" style="text-align:center;">';
 			$html .= $this->label;
 			$html .= '</th></tr>';	
 			
 			$html .= '<tr><td colspan="2">';
 		}
 		
+		if($markdown) {
+			$html .= '<input type="hidden" id="markdownTextBoxRows" name="markdownTextBoxRows" value=""/>';
+		}
 		$html .= '<textarea id="text_field_'.$this->name.'_'.$this->identifier.'" style="width:100%;" rows="'.$this->rows.'" name="'.$this->name.'">';
 		
 		if($this->textObject->getAllowHTML())
@@ -145,16 +148,35 @@ class TextBox {
 			$html .= '</td></tr>';
 			$html .= '<tr><td colspan="2">';
 		}
-		$increaseTextArea = new button("document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = (parseInt(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows) + 10);", "Increase text area", $this->name."IncBut", $config->get('sysURL')."/alpha/images/icons/arrow_down.png");
+		
+		if($markdown) {
+			$increaseTextArea = new button("document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = ".
+				"(parseInt(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows) + 10);".
+				"document.getElementById('markdownTextBoxRows').value = (parseInt(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows));",
+		 		"Increase text area", $this->name."IncBut", $config->get('sysURL')."/alpha/images/icons/arrow_down.png");
+		}else{
+			$increaseTextArea = new button("document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = ".
+				"(parseInt(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows) + 10);",
+		 		"Increase text area", $this->name."IncBut", $config->get('sysURL')."/alpha/images/icons/arrow_down.png");
+		}
+				
 		$html .= $increaseTextArea->render();
-		$decreaseTextArea = new button("if(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows > 10) {document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = (parseInt(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows) - 10)};", "Decrease text area", $this->name."DecBut", $config->get('sysURL')."/alpha/images/icons/arrow_up.png");
+		
+		if($markdown) {
+			$decreaseTextArea = new button("if(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows > 10) ".
+				"{document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = (parseInt(document.getElementById('text_field_".
+				$this->name."_".$this->identifier."').rows) - 10)};".
+				"document.getElementById('markdownTextBoxRows').value = (parseInt(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows));",
+				"Decrease text area", $this->name."DecBut", $config->get('sysURL')."/alpha/images/icons/arrow_up.png");
+		}else{
+			$decreaseTextArea = new button("if(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows > 10) ".
+				"{document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = (parseInt(document.getElementById('text_field_".
+				$this->name."_".$this->identifier."').rows) - 10)};",
+				"Decrease text area", $this->name."DecBut", $config->get('sysURL')."/alpha/images/icons/arrow_up.png");
+		}
+		
 		$html .= $decreaseTextArea->render();
 		
-		// additional buttons for Markdown content fields
-		if($markdown) {
-			$syntaxHelp = new button("window.open('".$config->get('sysURL')."/alpha/controller/view_article_title.php?title=Markdown: Syntax&no-forceframe=true','helpWin','toolbar=0,location=0,menuBar=0,scrollbars=1,width=700,height=400,left=20,top=20');", "Syntax help", "helpBut", $config->get('sysURL')."/alpha/images/icons/help.png");
-			$html .= $syntaxHelp->render();
-		}
 		if($tableTags)
 			$html .= '</td></tr>';
 
