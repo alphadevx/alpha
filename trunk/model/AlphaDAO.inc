@@ -2125,7 +2125,7 @@ abstract class AlphaDAO {
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
 			if (!in_array($propName, $this->transientAttributes)) {
-				while ($row = $result->fetch_array(MYSQLI_ASSOC)) {				
+				while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
 		    		if ($propName == $row['Field']) {		    			
 		    			$matchCount++;		    			
 		    			break;
