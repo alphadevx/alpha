@@ -35,7 +35,7 @@ if($request == '' && $isInstalled) { // process requests to the root (/) URL her
 <br>
 <br>
 <br>
-<h3 style="color:black; font-size:200%;">Coming Soon!.</h3>
+<h3 style="color:black; font-size:200%;">Coming Soon!</h3>
 </div>
 </body>
 </html>
