@@ -359,7 +359,11 @@ class AlphaView {
 			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."';", 'View', 'viewBut');
 			$fields['viewButton'] = $button->render();
 		}else{
-			$button = new Button("document.location = '".$this->BO->get('URL')."';", 'View', 'viewBut');
+			if($this->BO->hasAttribute('URL'))
+				$button = new Button("document.location = '".$this->BO->get('URL')."';", 'View', 'viewBut');
+			else
+				$button = new Button("document.location = '".$config->get('sysURL')."Detail/bo/".get_class($this->BO)."/oid/".$this->BO->getOID()."';", 'View', 'viewBut');
+			
 			$fields['viewButton'] = $button->render();
 		}
 
@@ -492,12 +496,20 @@ class AlphaView {
 		$fields['tableNeedsUpdate'] = ($this->BO->checkTableNeedsUpdate() ? '<span class="warning">Yes</span>' : '<span class="success">No</span>');
 
 		// create button
-		$button = new Button("document.location = '".FrontController::generateSecureURL('act=Create&bo='.get_class($this->BO))."'", "Create New", "createBut");
-		$fields['createButton'] = $button->render();
+		if($this->BO->checkTableExists()) {
+			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Create&bo='.get_class($this->BO))."'", "Create New", "createBut");
+			$fields['createButton'] = $button->render();
+		}else{
+			$fields['createButton'] = '';
+		}
 		
 		// list all button
-		$button = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "List All", "listBut");
-		$fields['listButton'] = $button->render();
+		if($this->BO->checkTableExists()) {
+			$button = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "List All", "listBut");
+			$fields['listButton'] = $button->render();
+		}else{
+			$fields['listButton'] = '';
+		}
 		
 		// the create table button (if required)
 		$html = '';
