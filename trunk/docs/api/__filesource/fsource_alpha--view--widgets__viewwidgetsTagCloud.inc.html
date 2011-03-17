@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>File Source for TagCloud.inc</title>
+	<link rel="stylesheet" type="text/css" href="../media/style.css">
+	<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+</head>
+<body>
+
+<table border="0" cellspacing="0" cellpadding="0" height="48" width="100%">
+  <tr>
+	<td class="header-top-left"><a href="http://www.alphaframework.org/"><img src="../media/logo.png" border="0" alt="Alpha Framework" /></a></td>
+    <td class="header-top-right">alpha--view--widgets<br /><div class="header-top-right-subpackage"></div></td>
+  </tr>
+  <tr><td colspan="2" class="header-line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+  <tr>
+    <td colspan="2" class="header-menu">
+      
+                                                                                                                                                                                                                                          
+                      		[ <a href="../classtrees_alpha--view--widgets.html" class="menu">class tree: alpha--view--widgets</a> ]
+		[ <a href="../elementindex_alpha--view--widgets.html" class="menu">index: alpha--view--widgets</a> ]
+            [ <a href="../elementindex.html" class="menu">all elements</a> ]
+    </td>
+  </tr>
+  <tr><td colspan="2" class="header-line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="table-layout:fixed;">
+  <tr valign="top">
+    <td width="195" class="menu">
+		<div class="package-title">alpha--view--widgets</div>
+      <b>Packages:</b><br />
+  <div class="package">
+              <a href="../li_alpha--controller.html">alpha--controller</a><br />
+              <a href="../li_alpha--controller--front.html">alpha--controller--front</a><br />
+              <a href="../li_alpha--exceptions.html">alpha--exceptions</a><br />
+              <a href="../li_alpha--model.html">alpha--model</a><br />
+              <a href="../li_alpha--model--types.html">alpha--model--types</a><br />
+              <a href="../li_alpha--service.html">alpha--service</a><br />
+              <a href="../li_alpha--tests.html">alpha--tests</a><br />
+              <a href="../li_alpha--util.html">alpha--util</a><br />
+              <a href="../li_alpha--util--convertors.html">alpha--util--convertors</a><br />
+              <a href="../li_alpha--util--feeds.html">alpha--util--feeds</a><br />
+              <a href="../li_alpha--util--filters.html">alpha--util--filters</a><br />
+              <a href="../li_alpha--util--graphs.html">alpha--util--graphs</a><br />
+              <a href="../li_alpha--util--helpers.html">alpha--util--helpers</a><br />
+              <a href="../li_alpha--util--metrics.html">alpha--util--metrics</a><br />
+              <a href="../li_alpha--view.html">alpha--view</a><br />
+              <a href="../li_alpha--view--widgets.html">alpha--view--widgets</a><br />
+      	</div>
+      <br />
+                        <br />
+                      </td>
+    <td width="800">
+      <table cellpadding="10" cellspacing="0" width="100%" border="0"><tr><td valign="top">
+
+<h1 align="center">Source for file TagCloud.inc</h1>
+<p>Documentation is available at <a href="../alpha--view--widgets/_view---widgets---TagCloud.inc.html">TagCloud.inc</a></p>
+<div class="src-code"><span class="php">
+<ol><li><div class="src-line"><a name="a1"></a><span class="src-php">&lt;?php</span></div></li>
+<li><div class="src-line"><a name="a2"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a3"></a><span class="src-inc">require_once&nbsp;</span><span class="src-var">$config</span><span class="src-sym">-&gt;</span><span class="src-id">get</span><span class="src-sym">(</span><span class="src-str">'sysRoot'</span><span class="src-sym">)</span>.<span class="src-str">'alpha/util/AlphaErrorHandlers.inc'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a4"></a><span class="src-inc">require_once&nbsp;</span><span class="src-var">$config</span><span class="src-sym">-&gt;</span><span class="src-id">get</span><span class="src-sym">(</span><span class="src-str">'sysRoot'</span><span class="src-sym">)</span>.<span class="src-str">'alpha/util/Logger.inc'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a5"></a><span class="src-inc">require_once&nbsp;</span><span class="src-var">$config</span><span class="src-sym">-&gt;</span><span class="src-id">get</span><span class="src-sym">(</span><span class="src-str">'sysRoot'</span><span class="src-sym">)</span>.<span class="src-str">'alpha/model/TagObject.inc'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a6"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a7"></a><span class="src-doc">/**</span></div></li>
+<li><div class="src-line"><a name="a8"></a><span class="src-doc">&nbsp;*&nbsp;A&nbsp;widget&nbsp;for&nbsp;rendering&nbsp;a&nbsp;tag&nbsp;cloud,&nbsp;based&nbsp;off&nbsp;the&nbsp;TagObject&nbsp;instances&nbsp;in&nbsp;the</span></div></li>
+<li><div class="src-line"><a name="a9"></a><span class="src-doc">&nbsp;*&nbsp;database.</span></div></li>
+<li><div class="src-line"><a name="a10"></a><span class="src-doc">&nbsp;*&nbsp;</span></div></li>
+<li><div class="src-line"><a name="a11"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@package</span><span class="src-doc">&nbsp;alpha::view::widgets</span></div></li>
+<li><div class="src-line"><a name="a12"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@author</span><span class="src-doc">&nbsp;John&nbsp;Collins&nbsp;&lt;john@design-ireland.net&gt;</span></div></li>
+<li><div class="src-line"><a name="a13"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@copyright</span><span class="src-doc">&nbsp;2010&nbsp;John&nbsp;Collins</span></div></li>
+<li><div class="src-line"><a name="a14"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@version</span><span class="src-doc">&nbsp;$Id:&nbsp;TagCloud.inc&nbsp;1315&nbsp;2011-03-09&nbsp;18:09:22Z&nbsp;johnc&nbsp;$</span></div></li>
+<li><div class="src-line"><a name="a15"></a><span class="src-doc">&nbsp;*&nbsp;</span></div></li>
+<li><div class="src-line"><a name="a16"></a><span class="src-doc">&nbsp;*/</span></div></li>
+<li><div class="src-line"><a name="a17"></a><span class="src-key">class&nbsp;</span><a href="../alpha--view--widgets/TagCloud.html">TagCloud</a>&nbsp;<span class="src-sym">{</span></div></li>
+<li><div class="src-line"><a name="a18"></a>&nbsp;&nbsp;&nbsp;&nbsp;</div></li>
+<li><div class="src-line"><a name="a19"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-doc">/**</span></div></li>
+<li><div class="src-line"><a name="a20"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Trace&nbsp;logger</span></div></li>
+<li><div class="src-line"><a name="a21"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span></div></li>
+<li><div class="src-line"><a name="a22"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@var&nbsp;</span><span class="src-doc-type">Logger&nbsp;</span></div></li>
+<li><div class="src-line"><a name="a23"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/</span></div></li>
+<li><div class="src-line"><a name="a24"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">private&nbsp;</span><span class="src-key">static&nbsp;</span><span class="src-var">$logger&nbsp;</span>=&nbsp;<span class="src-id">null</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a25"></a>&nbsp;&nbsp;&nbsp;&nbsp;</div></li>
+<li><div class="src-line"><a name="a26"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-doc">/**</span></div></li>
+<li><div class="src-line"><a name="a27"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;A&nbsp;hash&nbsp;array&nbsp;of&nbsp;popular&nbsp;tags</span></div></li>
+<li><div class="src-line"><a name="a28"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span></div></li>
+<li><div class="src-line"><a name="a29"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@var&nbsp;</span><span class="src-doc-type">array&nbsp;</span></div></li>
+<li><div class="src-line"><a name="a30"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/</span></div></li>
+<li><div class="src-line"><a name="a31"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">private&nbsp;</span><span class="src-var">$popTags&nbsp;</span>=&nbsp;<span class="src-key">array</span><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a32"></a>&nbsp;&nbsp;&nbsp;&nbsp;</div></li>
+<li><div class="src-line"><a name="a33"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-doc">/**</span></div></li>
+<li><div class="src-line"><a name="a34"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Constructor</span></div></li>
+<li><div class="src-line"><a name="a35"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/</span></div></li>
+<li><div class="src-line"><a name="a36"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../alpha--view--widgets/TagCloud.html#method__construct">__construct</a><span class="src-sym">(</span><span class="src-var">$limit</span><span class="src-sym">)&nbsp;</span><span class="src-sym">{</span></div></li>
+<li><div class="src-line"><a name="a37"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$this</span><span class="src-sym">-&gt;</span><span class="src-var">popTags&nbsp;</span>=&nbsp;<span class="src-id"><a href="../alpha--model/TagObject.html">TagObject</a></span><span class="src-sym">::</span><a href="../alpha--model/TagObject.html#methodgetPopularTagsArray">getPopularTagsArray</a><span class="src-sym">(</span><span class="src-var">$limit</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a38"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
+<li><div class="src-line"><a name="a39"></a>&nbsp;&nbsp;&nbsp;&nbsp;</div></li>
+<li><div class="src-line"><a name="a40"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-doc">/**</span></div></li>
+<li><div class="src-line"><a name="a41"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Render&nbsp;the&nbsp;tag&nbsp;cloud&nbsp;and&nbsp;return&nbsp;all&nbsp;of&nbsp;the&nbsp;HTML&nbsp;links&nbsp;in&nbsp;a&nbsp;single&nbsp;paragraph.</span></div></li>
+<li><div class="src-line"><a name="a42"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span></div></li>
+<li><div class="src-line"><a name="a43"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@param&nbsp;</span><span class="src-doc-type">$minLinkSize&nbsp;</span><span class="src-doc">The&nbsp;minimum&nbsp;font&nbsp;size&nbsp;for&nbsp;any&nbsp;tag&nbsp;link,&nbsp;in&nbsp;points.</span></div></li>
+<li><div class="src-line"><a name="a44"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@param&nbsp;</span><span class="src-doc-type">$maxLinkSize&nbsp;</span><span class="src-doc">The&nbsp;maximum&nbsp;font&nbsp;size&nbsp;for&nbsp;any&nbsp;tag&nbsp;link,&nbsp;in&nbsp;points.</span></div></li>
+<li><div class="src-line"><a name="a45"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@param&nbsp;</span><span class="src-doc-type">$target&nbsp;</span><span class="src-doc">The&nbsp;target&nbsp;attribute&nbsp;for&nbsp;the&nbsp;links</span></div></li>
+<li><div class="src-line"><a name="a46"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@return&nbsp;</span><span class="src-doc-type">string&nbsp;</span></div></li>
+<li><div class="src-line"><a name="a47"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/</span></div></li>
+<li><div class="src-line"><a name="a48"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../alpha--view--widgets/TagCloud.html#methodrender">render</a><span class="src-sym">(</span><span class="src-var">$minLinkSize</span>=<span class="src-num">8</span><span class="src-sym">,&nbsp;</span><span class="src-var">$maxLinkSize</span>=<span class="src-num">20</span><span class="src-sym">,&nbsp;</span><span class="src-var">$target</span>=<span class="src-str">''</span><span class="src-sym">)&nbsp;</span><span class="src-sym">{</span></div></li>
+<li><div class="src-line"><a name="a49"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">global&nbsp;</span><span class="src-var">$config</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a50"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div></li>
+<li><div class="src-line"><a name="a51"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$html&nbsp;</span>=&nbsp;<span class="src-str">'&lt;p&gt;'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a52"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div></li>
+<li><div class="src-line"><a name="a53"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">foreach&nbsp;</span><span class="src-sym">(</span><a href="http://www.php.net/array_keys">array_keys</a><span class="src-sym">(</span><span class="src-var">$this</span><span class="src-sym">-&gt;</span><span class="src-var">popTags</span><span class="src-sym">)&nbsp;</span><span class="src-key">as&nbsp;</span><span class="src-var">$key</span><span class="src-sym">)&nbsp;</span><span class="src-sym">{</span></div></li>
+<li><div class="src-line"><a name="a54"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$linkSize&nbsp;</span>=&nbsp;<span class="src-var">$this</span><span class="src-sym">-&gt;</span><span class="src-var">popTags</span><span class="src-sym">[</span><span class="src-var">$key</span><span class="src-sym">]</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a55"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">if&nbsp;</span><span class="src-sym">(</span><span class="src-var">$linkSize&nbsp;</span>&lt;&nbsp;<span class="src-var">$minLinkSize</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line"><a name="a56"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$linkSize&nbsp;</span>=&nbsp;<span class="src-var">$minLinkSize</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a57"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">if&nbsp;</span><span class="src-sym">(</span><span class="src-var">$linkSize&nbsp;</span>&gt;&nbsp;<span class="src-var">$maxLinkSize</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line"><a name="a58"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$linkSize&nbsp;</span>=&nbsp;<span class="src-var">$maxLinkSize</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a59"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$html&nbsp;</span>.=&nbsp;<span class="src-str">'&lt;a&nbsp;href=&quot;'</span>.<span class="src-var">$config</span><span class="src-sym">-&gt;</span><span class="src-id">get</span><span class="src-sym">(</span><span class="src-str">'sysURL'</span><span class="src-sym">)</span>.<span class="src-str">'search/q/'</span>.<span class="src-var">$key</span>.<span class="src-str">'&quot;&nbsp;style=&quot;font-size:'</span>.<span class="src-var">$linkSize</span>.<span class="src-str">'pt;&quot;'</span>.<span class="src-sym">(</span><span class="src-key">empty</span><span class="src-sym">(</span><span class="src-var">$target</span><span class="src-sym">)&nbsp;</span>?&nbsp;<span class="src-str">''&nbsp;</span>:&nbsp;<span class="src-str">'&nbsp;target=&quot;'</span>.<span class="src-var">$target</span>.<span class="src-str">'&quot;'</span><span class="src-sym">)</span>.<span class="src-str">'&nbsp;rel=&quot;tag&quot;&gt;'</span>.<span class="src-var">$key</span>.<span class="src-str">'&lt;/a&gt;&nbsp;'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a60"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
+<li><div class="src-line"><a name="a61"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div></li>
+<li><div class="src-line"><a name="a62"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-var">$html</span>.<span class="src-str">'&lt;/p&gt;'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a63"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
+<li><div class="src-line"><a name="a64"></a><span class="src-sym">}</span></div></li>
+<li><div class="src-line"><a name="a65"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a66"></a><span class="src-php">?&gt;</span></div></li>
+</ol>
+</span></div>
+        <div class="credit">
+		    <hr class="separator" />
+		    Documentation generated on Thu, 17 Mar 2011 16:44:54 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+	      </div>
+      </td></tr></table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
