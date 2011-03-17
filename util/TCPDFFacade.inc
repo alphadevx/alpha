@@ -51,7 +51,7 @@ require_once $config->get('sysRoot').'alpha/util/AlphaTCPDF.inc';
  */ 
 class TCPDFFacade {
 	/**
-	 * The markdown-format content that we will render as a PDF
+	 * The HTML-format content that we will render as a PDF
 	 * 
 	 * @var string
 	 * @since 1.0
