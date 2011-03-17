@@ -66,14 +66,6 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 	protected $BO;
 	
 	/**
-	 * The OID of the BO to be displayed
-	 * 
-	 * @var integer
-	 * @since 1.0
-	 */
-	private $BOoid;
-	
-	/**
 	 * The name of the BO
 	 * 
 	 * @var string
@@ -140,18 +132,15 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 				if($this->getCustomControllerName($BOName, 'view') != null)
 					$this->loadCustomController($BOName, 'view');
 				
-				$this->BO = new $BOName();						
+				$this->BO = new $BOName();
+				$this->BO->load($params['oid']);				
+				AlphaDAO::disconnect();
+							
 				$this->BOName = $BOName;		
 				$this->BOView = AlphaView::getInstance($this->BO);
 				
-				echo AlphaView::displayPageHead($this);
-				
-				echo AlphaView::renderDeleteForm();
-		
-				$this->BO->load($params['oid']);
-				
-				AlphaDAO::disconnect();
-				
+				echo AlphaView::displayPageHead($this);				
+				echo AlphaView::renderDeleteForm();				
 				echo $this->BOView->detailedView();
 			}else{
 				throw new IllegalArguementException('No BO available to display!');
@@ -250,8 +239,8 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 	 * @since 1.0
 	 */
 	public function before_displayPageHead_callback() {
-		$this->setTitle('Displaying '.$this->BOName.' number '.$this->BOoid);
-		$this->setDescription('Page to display '.$this->BOName.' number '.$this->BOoid);
+		$this->setTitle('Displaying '.$this->BOName.' number '.$this->BO->getID());
+		$this->setDescription('Page to display '.$this->BOName.' number '.$this->BO->getID());
 		$this->setKeywords('display,details,'.$this->BOName);
 	}
 }
