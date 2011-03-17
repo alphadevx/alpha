@@ -14,7 +14,7 @@
 				<exclude name="**/*.project"/>
 				<exclude name="**/*.geshi"/>
 				<exclude name="**/sample/**"/>
-				<exclude name="**/alpha-*/**"/>
+				<exclude name="**/alpha-1.*/**"/>
 				<exclude name="**/build.xml"/>
 				<exclude name="**/ruleset.xml"/>
 				<exclude name="**/docs/codesniff/**"/>
@@ -49,7 +49,7 @@
 	      		<include name="**/*.inc" />
 	      		<exclude name="**/lib/**"/>
 	   			<exclude name="**/sample/**"/>
-	   			<exclude name="**/alpha-*/**"/>
+	   			<exclude name="**/alpha-1.*/**"/>
 	      		<exclude name="**/*.css.php"/>
 	      		<exclude name="**/*.tbl.php"/>
 	      		<exclude name="**/*.tbl.php.html"/>
