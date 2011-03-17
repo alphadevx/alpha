@@ -8,7 +8,7 @@
  * @author John Collins <john@design-ireland.net>
  * @version $Id: AlphaController.inc 1240 2010-12-28 18:39:49Z johnc $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>

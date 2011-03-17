@@ -9,7 +9,7 @@
  * @author John Collins <john@design-ireland.net>
  * @version $Id: AlphaAgentUtils.inc 1200 2010-12-21 15:45:44Z johnc $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>

@@ -19,7 +19,7 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.
  * @author John Collins <john@design-ireland.net>
  * @version $Id: ListBusinessObjects.php 1249 2010-12-31 16:04:04Z johnc $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>
