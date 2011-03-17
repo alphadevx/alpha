@@ -728,8 +728,6 @@ class AlphaView {
 		
 		if (isset($_SESSION['currentUser'])) {	
 			$html.= '<p>You are logged in as '.$_SESSION['currentUser']->getDisplayname().'.  <a href="'.FrontController::generateSecureURL('act=Logout').'">Logout</a></p>';
-		}else{
-			$html.= '<p>You are not logged in.  <a href="'.FrontController::generateSecureURL('act=Login').'">Login</a></p>';
 		}
 		
 		if ($renderMenu && isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
