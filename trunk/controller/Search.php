@@ -234,22 +234,26 @@ class Search extends AlphaController implements AlphaControllerInterface {
 				if($displayedCount >= $this->startPoint) {
 					$temp = new $BO;
 					$temp->load($oid);
-									
-					$view = AlphaView::getInstance($temp);
-					echo $view->listView();
-									
-					$tags = $temp->getPropObject('tags')->getRelatedObjects();
-				
-					if(count($tags) > 0) {
-						echo '<p>Tags: ';
+					
+					if($temp instanceof ArticleObject && $temp->get('published') == false){
+						$this->resultCount--;
+					}else{			
+						$view = AlphaView::getInstance($temp);
+						echo $view->listView();
 										
-						$queryTerms = explode(' ', strtolower($query));
+						$tags = $temp->getPropObject('tags')->getRelatedObjects();
+					
+						if(count($tags) > 0) {
+							echo '<p>Tags: ';
+											
+							$queryTerms = explode(' ', strtolower($query));
+											
+							foreach($tags as $tag) {
+								echo (in_array($tag->get('content'), $queryTerms) ? '<strong>'.$tag->get('content').' </strong>' : $tag->get('content').' ');
+							}
 										
-						foreach($tags as $tag) {
-							echo (in_array($tag->get('content'), $queryTerms) ? '<strong>'.$tag->get('content').' </strong>' : $tag->get('content').' ');
+							echo '</p>';
 						}
-									
-						echo '</p>';
 					}
 				}
 							
