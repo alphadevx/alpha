@@ -24,7 +24,7 @@ require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
  * @author John Collins <john@design-ireland.net>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2010, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>
