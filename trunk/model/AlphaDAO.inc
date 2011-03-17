@@ -3234,7 +3234,12 @@ abstract class AlphaDAO {
      * @since 1.0
      */
     public function hasAttribute($attribute) {
-    	return property_exists(get_class($this), $attribute);
+    	try{
+    		$exists = $this->$attribute;
+    		return true;
+    	}catch(Exception $e) {
+    		return false;
+    	}
     }
 }
 
