@@ -33,3 +33,8 @@ Learn more
 For further information including installation instructions, please visit the following web page:
 
 http://www.alphaframework.org/article/Documentation
+
+Contact
+-------
+
+For bug reports and feature requests, please e-mail: dev@alphaframework.org
