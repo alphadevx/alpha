@@ -1,0 +1,1746 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Docs For Class AlphaGraphNode</title>
+	<link rel="stylesheet" type="text/css" href="../media/style.css">
+	<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+</head>
+<body>
+
+<table border="0" cellspacing="0" cellpadding="0" height="48" width="100%">
+  <tr>
+	<td class="header-top-left"><a href="http://www.alphaframework.org/"><img src="../media/logo.png" border="0" alt="Alpha Framework" /></a></td>
+    <td class="header-top-right">alpha--util--graphs<br /><div class="header-top-right-subpackage"></div></td>
+  </tr>
+  <tr><td colspan="2" class="header-line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+  <tr>
+    <td colspan="2" class="header-menu">
+      
+                                                                                                                                                                                  
+                                                                              		[ <a href="../classtrees_alpha--util--graphs.html" class="menu">class tree: alpha--util--graphs</a> ]
+		[ <a href="../elementindex_alpha--util--graphs.html" class="menu">index: alpha--util--graphs</a> ]
+            [ <a href="../elementindex.html" class="menu">all elements</a> ]
+    </td>
+  </tr>
+  <tr><td colspan="2" class="header-line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="table-layout:fixed;">
+  <tr valign="top">
+    <td width="195" class="menu">
+		<div class="package-title">alpha--util--graphs</div>
+      <b>Packages:</b><br />
+  <div class="package">
+              <a href="../li_alpha--controller.html">alpha--controller</a><br />
+              <a href="../li_alpha--controller--front.html">alpha--controller--front</a><br />
+              <a href="../li_alpha--exceptions.html">alpha--exceptions</a><br />
+              <a href="../li_alpha--model.html">alpha--model</a><br />
+              <a href="../li_alpha--model--types.html">alpha--model--types</a><br />
+              <a href="../li_alpha--service.html">alpha--service</a><br />
+              <a href="../li_alpha--tests.html">alpha--tests</a><br />
+              <a href="../li_alpha--util.html">alpha--util</a><br />
+              <a href="../li_alpha--util--convertors.html">alpha--util--convertors</a><br />
+              <a href="../li_alpha--util--feeds.html">alpha--util--feeds</a><br />
+              <a href="../li_alpha--util--filters.html">alpha--util--filters</a><br />
+              <a href="../li_alpha--util--graphs.html">alpha--util--graphs</a><br />
+              <a href="../li_alpha--util--helpers.html">alpha--util--helpers</a><br />
+              <a href="../li_alpha--util--metrics.html">alpha--util--metrics</a><br />
+              <a href="../li_alpha--view.html">alpha--view</a><br />
+              <a href="../li_alpha--view--widgets.html">alpha--view--widgets</a><br />
+      	</div>
+      <br />
+                        <b>Files:</b><br />
+        <div class="package">
+				<span style="padding-left: 1em;"><a href="../alpha--util--graphs/_util---graphs---AlphaGraphNode.inc.html">AlphaGraphNode.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--util--graphs/_util---graphs---AlphaTreeGraph.inc.html">AlphaTreeGraph.inc</a></span><br />
+	  </div>
+            <br />
+                  <b>Classes:</b><br />
+        <div class="package">
+		    		<a href="../alpha--util--graphs/AlphaGraphNode.html">AlphaGraphNode</a>    	 <br />
+	    		<a href="../alpha--util--graphs/AlphaTreeGraph.html">AlphaTreeGraph</a>    	 <br />
+	  </div>
+                </td>
+    <td width="800">
+      <table cellpadding="10" cellspacing="0" width="100%" border="0"><tr><td valign="top">
+
+<h1>Class: AlphaGraphNode</h1>
+Source Location: /util/graphs/AlphaGraphNode.inc<br /><br />
+
+<h2 class="class-name">Class AlphaGraphNode</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Class Overview</div>
+	<div class="nav-bar">
+					<span class="disabled">Class Overview</span>
+						
+													| <a href="#sec-method-summary">Method Summary</a> | <a href="#sec-methods">Methods Detail</a>
+								</div>
+	<div class="info-box-body">
+		<table width="100%" border="0">
+		<tr><td valign="top" width="60%" class="class-overview">
+
+        		<p class="short-description"><strong>Maintains the geometry for a tree node
+</strong></p>
+
+		<p class="notes">
+			Located in <a class="field" href="_util---graphs---AlphaGraphNode.inc.html">/util/graphs/AlphaGraphNode.inc</a> [<span class="field">line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a50">50</a></span>]
+		</p>
+
+		
+		<pre></pre>
+
+		
+				<strong>Author(s):</strong>
+		<ul>
+		  			 			 <li>John Collins &lt;<a href="mailto:john@design-ireland.net">john@design-ireland.net</a>&gt;</li>
+			 		  			 		  			 		  			 		  			 		  		</ul>
+		
+		
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+				<tr><td><strong>Version:</strong>&nbsp;&nbsp;</td><td>$Id: AlphaGraphNode.inc 1341 2011-03-17 15:02:02Z johnc $</td></tr>
+				<tr><td><strong>Copyright:</strong>&nbsp;&nbsp;</td><td><p>Copyright (c) 2011, John Collins (founder of Alpha Framework).  All rights reserved.</p><p><pre> Redistribution and use in source and binary forms, with or
+ without modification, are permitted provided that the
+ following conditions are met:
+
+ * Redistributions of source code must retain the above
+   copyright notice, this list of conditions and the
+   following disclaimer.
+ * Redistributions in binary form must reproduce the above
+   copyright notice, this list of conditions and the
+   following disclaimer in the documentation and/or other
+   materials provided with the distribution.
+ * Neither the name of the Alpha Framework nor the names
+   of its contributors may be used to endorse or promote
+   products derived from this software without specific
+   prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+ CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</pre></p></td></tr>
+				<tr><td><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td></tr>
+				<tr><td><strong>License:</strong>&nbsp;&nbsp;</td><td><a href="http://www.opensource.org/licenses/bsd-license.php">The BSD License</a></td></tr>
+	</table>
+		</td>
+
+		
+				<td valign="top" width="20%" class="class-overview">
+		<p class="short-description"><strong><a href="#sec_methods">Methods</a></strong></p>
+		<ul>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#method__construct">__construct</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodaddChild">addChild</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodchildCount">childCount</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodgetChildAt">getChildAt</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodgetChildren">getChildren</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodgetChildrenCenter">getChildrenCenter</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodgetHeight">getHeight</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodgetLeftSibling">getLeftSibling</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodgetLinks">getLinks</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodgetMessage">getMessage</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodgetModifier">getModifier</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodgetNodeColour">getNodeColour</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodgetOffset">getOffset</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodgetParentNode">getParentNode</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodgetRightSibling">getRightSibling</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodgetURL">getURL</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodgetWidth">getWidth</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodgetX">getX</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodgetY">getY</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodsetLeftSibling">setLeftSibling</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodsetMessage">setMessage</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodsetModifier">setModifier</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodsetNodeColour">setNodeColour</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodsetOffset">setOffset</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodsetParentNode">setParentNode</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodsetRightSibling">setRightSibling</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodsetUpLinks">setUpLinks</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodsetURL">setURL</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodsetX">setX</a></li>
+		  		  <li><a href="../alpha--util--graphs/AlphaGraphNode.html#methodsetY">setY</a></li>
+		  		</ul>
+		</td>
+		
+		</tr></table>
+		<div class="top">[ <a href="#top">Top</a> ]</div>
+	</div>
+</div>
+
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Class Overview</a>
+									    					| <span class="disabled">Method Summary</span> | <a href="#sec-methods">Methods Detail</a>
+		</div>
+		<div class="info-box-body">
+			<div class="method-summary">
+				<table border="0" cellspacing="0" cellpadding="0" class="method-summary">
+																																																																																																																																																																																																																																																																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">AlphaGraphNode</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#__construct" title="details" class="method-name">__construct</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Constructor</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#addChild" title="details" class="method-name">addChild</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Add a new node to the children array of this node</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">integer</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#childCount" title="details" class="method-name">childCount</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Get the number of child nodes attached to this node</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">mixed</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getChildAt" title="details" class="method-name">getChildAt</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Gets the child node at the index provided, or returns false if none is found</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getChildren" title="details" class="method-name">getChildren</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Returns the array of child AlphaGraphNode objects</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">integer</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getChildrenCenter" title="details" class="method-name">getChildrenCenter</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Calculates and returns the midpoint X coordinate of the children of this node</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">integer</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getHeight" title="details" class="method-name">getHeight</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Returns the node height</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result"><a href="../alpha--util--graphs/AlphaGraphNode.html">AlphaGraphNode</a></span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getLeftSibling" title="details" class="method-name">getLeftSibling</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Get the node to the left of this one (if any)</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getLinks" title="details" class="method-name">getLinks</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Returns the links array</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">string</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getMessage" title="details" class="method-name">getMessage</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Get the node text message</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">integer</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getModifier" title="details" class="method-name">getModifier</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Get the node modifier</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getNodeColour" title="details" class="method-name">getNodeColour</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Get the node colour array</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">string</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getOffset" title="details" class="method-name">getOffset</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Get the node offset</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result"><a href="../alpha--util--graphs/AlphaGraphNode.html">AlphaGraphNode</a></span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getParentNode" title="details" class="method-name">getParentNode</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Get the parent node of this node (if any)</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result"><a href="../alpha--util--graphs/AlphaGraphNode.html">AlphaGraphNode</a></span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getRightSibling" title="details" class="method-name">getRightSibling</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Get the node to the right of this one (if any)</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">string</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getURL" title="details" class="method-name">getURL</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Get the node URL</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">integer</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getWidth" title="details" class="method-name">getWidth</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Returns the node width</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">integer</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getX" title="details" class="method-name">getX</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Returns the node X-coordinate</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">integer</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getY" title="details" class="method-name">getY</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Returns the node Y-coordinate</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setLeftSibling" title="details" class="method-name">setLeftSibling</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Sets the node to the left of this node</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setMessage" title="details" class="method-name">setMessage</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Set the node text message</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setModifier" title="details" class="method-name">setModifier</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Set the node modifier</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setNodeColour" title="details" class="method-name">setNodeColour</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Set the node colour array</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setOffset" title="details" class="method-name">setOffset</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Set the node offset</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setParentNode" title="details" class="method-name">setParentNode</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Set the parent node</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setRightSibling" title="details" class="method-name">setRightSibling</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Sets the node to the right of this node</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setUpLinks" title="details" class="method-name">setUpLinks</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Sets up the array of connector endpoints</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setURL" title="details" class="method-name">setURL</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Set the node ULR</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setX" title="details" class="method-name">setX</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Sets the node X-coordinate</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setY" title="details" class="method-name">setY</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Sets the node Y-coordinate</td></tr>
+				</div>
+												</table>
+			</div>
+			<br /><div class="top">[ <a href="#top">Top</a> ]</div>
+		</div>
+	</div>
+
+
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Class Overview</a>
+																			| <a href="#sec-method-summary">Method Summary</a> | <span class="disabled">Methods Detail</span>
+					</div>
+		<div class="info-box-body">
+			<a name='method_detail'></a>
+
+<a name="method__construct" id="__construct"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">Constructor __construct</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a181">181</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>AlphaGraphNode __construct(
+integer
+$id, integer
+$width, integer
+$height, [string
+$message = ''], [array
+$nodeColour = null], [string
+$URL = null]&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Constructor
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$id:&nbsp;</span></td>
+				<td>
+							</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$width:&nbsp;</span></td>
+				<td>
+							</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$height:&nbsp;</span></td>
+				<td>
+							</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$message:&nbsp;</span></td>
+				<td>
+							</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$nodeColour:&nbsp;</span></td>
+				<td>
+							</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$URL:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodaddChild" id="addChild"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">addChild</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a428">428</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void addChild(
+<a href="../alpha--util--graphs/AlphaGraphNode.html">AlphaGraphNode</a>
+$node&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Add a new node to the children array of this node
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type"><a href="../alpha--util--graphs/AlphaGraphNode.html">AlphaGraphNode</a></span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$node:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>IllegalArguementException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodchildCount" id="childCount"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">childCount</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a300">300</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>integer childCount(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Get the number of child nodes attached to this node
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetChildAt" id="getChildAt"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">getChildAt</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a391">391</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>mixed getChildAt(
+integer
+$i&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Gets the child node at the index provided, or returns false if none is found
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$i:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetChildren" id="getChildren"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getChildren</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a417">417</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>array getChildren(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Returns the array of child AlphaGraphNode objects
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetChildrenCenter" id="getChildrenCenter"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">getChildrenCenter</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a405">405</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>integer getChildrenCenter(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Calculates and returns the midpoint X coordinate of the children of this node
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetHeight" id="getHeight"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getHeight</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a477">477</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>integer getHeight(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Returns the node height
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetLeftSibling" id="getLeftSibling"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">getLeftSibling</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a334">334</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code><a href="../alpha--util--graphs/AlphaGraphNode.html">AlphaGraphNode</a> getLeftSibling(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Get the node to the left of this one (if any)
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetLinks" id="getLinks"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getLinks</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a441">441</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>array getLinks(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Returns the links array
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetMessage" id="getMessage"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">getMessage</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a240">240</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>string getMessage(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Get the node text message
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetModifier" id="getModifier"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getModifier</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a280">280</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>integer getModifier(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Get the node modifier
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetNodeColour" id="getNodeColour"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">getNodeColour</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a196">196</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>array getNodeColour(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Get the node colour array
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetOffset" id="getOffset"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getOffset</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a260">260</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>string getOffset(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Get the node offset
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetParentNode" id="getParentNode"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">getParentNode</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a310">310</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code><a href="../alpha--util--graphs/AlphaGraphNode.html">AlphaGraphNode</a> getParentNode(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Get the parent node of this node (if any)
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetRightSibling" id="getRightSibling"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getRightSibling</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a362">362</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code><a href="../alpha--util--graphs/AlphaGraphNode.html">AlphaGraphNode</a> getRightSibling(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Get the node to the right of this one (if any)
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetURL" id="getURL"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">getURL</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a220">220</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>string getURL(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Get the node URL
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetWidth" id="getWidth"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getWidth</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a487">487</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>integer getWidth(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Returns the node width
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetX" id="getX"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">getX</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a497">497</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>integer getX(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Returns the node X-coordinate
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetY" id="getY"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getY</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a507">507</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>integer getY(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Returns the node Y-coordinate
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetLeftSibling" id="setLeftSibling"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">setLeftSibling</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a349">349</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setLeftSibling(
+<a href="../alpha--util--graphs/AlphaGraphNode.html">AlphaGraphNode</a>
+$node&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Sets the node to the left of this node
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type"><a href="../alpha--util--graphs/AlphaGraphNode.html">AlphaGraphNode</a></span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$node:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>IllegalArguementException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetMessage" id="setMessage"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">setMessage</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a250">250</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setMessage(
+string
+$message&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Set the node text message
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$message:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetModifier" id="setModifier"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">setModifier</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a290">290</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setModifier(
+integer
+$modifier&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Set the node modifier
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$modifier:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetNodeColour" id="setNodeColour"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">setNodeColour</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a207">207</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setNodeColour(
+array
+$nodeColour&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Set the node colour array
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$nodeColour:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>IllegalArguementException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetOffset" id="setOffset"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">setOffset</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a270">270</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setOffset(
+integer
+$offset&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Set the node offset
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$offset:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetParentNode" id="setParentNode"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">setParentNode</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a321">321</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setParentNode(
+<a href="../alpha--util--graphs/AlphaGraphNode.html">AlphaGraphNode</a>
+$node&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Set the parent node
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type"><a href="../alpha--util--graphs/AlphaGraphNode.html">AlphaGraphNode</a></span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$node:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>IllegalArguementException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetRightSibling" id="setRightSibling"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">setRightSibling</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a377">377</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setRightSibling(
+<a href="../alpha--util--graphs/AlphaGraphNode.html">AlphaGraphNode</a>
+$node&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Sets the node to the right of this node
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type"><a href="../alpha--util--graphs/AlphaGraphNode.html">AlphaGraphNode</a></span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$node:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>IllegalArguementException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetUpLinks" id="setUpLinks"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">setUpLinks</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a450">450</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setUpLinks(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Sets up the array of connector endpoints
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetURL" id="setURL"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">setURL</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a230">230</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setURL(
+string
+$URL&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Set the node ULR
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$URL:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetX" id="setX"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">setX</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a517">517</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setX(
+integer
+$x&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Sets the node X-coordinate
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$x:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetY" id="setY"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">setY</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--graphs__utilgraphsAlphaGraphNode.inc.html#a527">527</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setY(
+integer
+$y&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Sets the node Y-coordinate
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$y:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+		</div>
+	</div>
+
+
+        <div class="credit">
+		    <hr class="separator" />
+		    Documentation generated on Thu, 17 Mar 2011 16:43:34 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+	      </div>
+      </td></tr></table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

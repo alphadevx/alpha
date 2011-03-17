@@ -1,0 +1,1159 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Docs For Class AlphaValidator</title>
+	<link rel="stylesheet" type="text/css" href="../media/style.css">
+	<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+</head>
+<body>
+
+<table border="0" cellspacing="0" cellpadding="0" height="48" width="100%">
+  <tr>
+	<td class="header-top-left"><a href="http://www.alphaframework.org/"><img src="../media/logo.png" border="0" alt="Alpha Framework" /></a></td>
+    <td class="header-top-right">alpha--util--helpers<br /><div class="header-top-right-subpackage"></div></td>
+  </tr>
+  <tr><td colspan="2" class="header-line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+  <tr>
+    <td colspan="2" class="header-menu">
+      
+                                                                                                                                                                                                
+                                                                		[ <a href="../classtrees_alpha--util--helpers.html" class="menu">class tree: alpha--util--helpers</a> ]
+		[ <a href="../elementindex_alpha--util--helpers.html" class="menu">index: alpha--util--helpers</a> ]
+            [ <a href="../elementindex.html" class="menu">all elements</a> ]
+    </td>
+  </tr>
+  <tr><td colspan="2" class="header-line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="table-layout:fixed;">
+  <tr valign="top">
+    <td width="195" class="menu">
+		<div class="package-title">alpha--util--helpers</div>
+      <b>Packages:</b><br />
+  <div class="package">
+              <a href="../li_alpha--controller.html">alpha--controller</a><br />
+              <a href="../li_alpha--controller--front.html">alpha--controller--front</a><br />
+              <a href="../li_alpha--exceptions.html">alpha--exceptions</a><br />
+              <a href="../li_alpha--model.html">alpha--model</a><br />
+              <a href="../li_alpha--model--types.html">alpha--model--types</a><br />
+              <a href="../li_alpha--service.html">alpha--service</a><br />
+              <a href="../li_alpha--tests.html">alpha--tests</a><br />
+              <a href="../li_alpha--util.html">alpha--util</a><br />
+              <a href="../li_alpha--util--convertors.html">alpha--util--convertors</a><br />
+              <a href="../li_alpha--util--feeds.html">alpha--util--feeds</a><br />
+              <a href="../li_alpha--util--filters.html">alpha--util--filters</a><br />
+              <a href="../li_alpha--util--graphs.html">alpha--util--graphs</a><br />
+              <a href="../li_alpha--util--helpers.html">alpha--util--helpers</a><br />
+              <a href="../li_alpha--util--metrics.html">alpha--util--metrics</a><br />
+              <a href="../li_alpha--view.html">alpha--view</a><br />
+              <a href="../li_alpha--view--widgets.html">alpha--view--widgets</a><br />
+      	</div>
+      <br />
+                        <b>Files:</b><br />
+        <div class="package">
+				<span style="padding-left: 1em;"><a href="../alpha--util--helpers/_util---helpers---AlphaValidator.inc.html">AlphaValidator.inc</a></span><br />
+	  </div>
+            <br />
+                  <b>Classes:</b><br />
+        <div class="package">
+		    		<a href="../alpha--util--helpers/AlphaValidator.html">AlphaValidator</a>    	 <br />
+	  </div>
+                </td>
+    <td width="800">
+      <table cellpadding="10" cellspacing="0" width="100%" border="0"><tr><td valign="top">
+
+<h1>Class: AlphaValidator</h1>
+Source Location: /util/helpers/AlphaValidator.inc<br /><br />
+
+<h2 class="class-name">Class AlphaValidator</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Class Overview</div>
+	<div class="nav-bar">
+					<span class="disabled">Class Overview</span>
+						
+													| <a href="#sec-method-summary">Method Summary</a> | <a href="#sec-methods">Methods Detail</a>
+														| <a href="#sec-const-summary">Constants Summary</a> | <a href="#sec-consts">Constants Detail</a>
+						</div>
+	<div class="info-box-body">
+		<table width="100%" border="0">
+		<tr><td valign="top" width="60%" class="class-overview">
+
+        		<p class="short-description"><strong>Generic validation class used throughout the Alpha Framework
+</strong></p>
+
+		<p class="notes">
+			Located in <a class="field" href="_util---helpers---AlphaValidator.inc.html">/util/helpers/AlphaValidator.inc</a> [<span class="field">line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a47">47</a></span>]
+		</p>
+
+		
+		<pre></pre>
+
+		
+				<strong>Author(s):</strong>
+		<ul>
+		  			 			 <li>John Collins &lt;<a href="mailto:john@design-ireland.net">john@design-ireland.net</a>&gt;</li>
+			 		  			 		  			 		  			 		  			 		  		</ul>
+		
+		
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+				<tr><td><strong>Version:</strong>&nbsp;&nbsp;</td><td>$Id: AlphaValidator.inc 1341 2011-03-17 15:02:02Z johnc $</td></tr>
+				<tr><td><strong>Copyright:</strong>&nbsp;&nbsp;</td><td><p>Copyright (c) 2011, John Collins (founder of Alpha Framework).  All rights reserved.</p><p><pre> Redistribution and use in source and binary forms, with or
+ without modification, are permitted provided that the
+ following conditions are met:
+
+ * Redistributions of source code must retain the above
+   copyright notice, this list of conditions and the
+   following disclaimer.
+ * Redistributions in binary form must reproduce the above
+   copyright notice, this list of conditions and the
+   following disclaimer in the documentation and/or other
+   materials provided with the distribution.
+ * Neither the name of the Alpha Framework nor the names
+   of its contributors may be used to endorse or promote
+   products derived from this software without specific
+   prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+ CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</pre></p></td></tr>
+				<tr><td><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td></tr>
+				<tr><td><strong>License:</strong>&nbsp;&nbsp;</td><td><a href="http://www.opensource.org/licenses/bsd-license.php">The BSD License</a></td></tr>
+	</table>
+		</td>
+
+		
+				<td valign="top" width="20%" class="class-overview">
+		<p class="short-description"><strong><a href="#sec_methods">Methods</a></strong></p>
+		<ul>
+		  		  <li><a href="../alpha--util--helpers/AlphaValidator.html#methodisAlpha">isAlpha</a></li>
+		  		  <li><a href="../alpha--util--helpers/AlphaValidator.html#methodisAlphaNum">isAlphaNum</a></li>
+		  		  <li><a href="../alpha--util--helpers/AlphaValidator.html#methodisBoolean">isBoolean</a></li>
+		  		  <li><a href="../alpha--util--helpers/AlphaValidator.html#methodisDouble">isDouble</a></li>
+		  		  <li><a href="../alpha--util--helpers/AlphaValidator.html#methodisEmail">isEmail</a></li>
+		  		  <li><a href="../alpha--util--helpers/AlphaValidator.html#methodisInteger">isInteger</a></li>
+		  		  <li><a href="../alpha--util--helpers/AlphaValidator.html#methodisIP">isIP</a></li>
+		  		  <li><a href="../alpha--util--helpers/AlphaValidator.html#methodisSequence">isSequence</a></li>
+		  		  <li><a href="../alpha--util--helpers/AlphaValidator.html#methodisURL">isURL</a></li>
+		  		</ul>
+		</td>
+		
+		</tr></table>
+		<div class="top">[ <a href="#top">Top</a> ]</div>
+	</div>
+</div>
+
+
+
+	<a name="sec-const-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Constant Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Class Overview</a>
+									| <span class="disabled">Constants Summary</span> | <a href="#sec-consts">Constants Detail</a>
+															| <a href="#sec-method-summary">Method Summary</a> | <a href="#sec-methods">Methods Detail</a>
+									</div>
+		<div class="info-box-body">
+			<div class="const-summary">
+			<table border="0" cellspacing="0" cellpadding="0" class="var-summary">
+							<div class="var-title">
+					<tr>
+					<td class="var-title"><a href="#constALLOW_ALL" title="details" class="const-name-summary">ALLOW_ALL</a>&nbsp;&nbsp;</td>
+					<td class="const-summary-description">Allows any kind of input, including blanks</td></tr>
+				</div>
+								<div class="var-title">
+					<tr>
+					<td class="var-title"><a href="#constOPTIONAL_HTTP_URL" title="details" class="const-name-summary">OPTIONAL_HTTP_URL</a>&nbsp;&nbsp;</td>
+					<td class="const-summary-description">Optional HTTP URL value</td></tr>
+				</div>
+								<div class="var-title">
+					<tr>
+					<td class="var-title"><a href="#constREQUIRED_ALPHA" title="details" class="const-name-summary">REQUIRED_ALPHA</a>&nbsp;&nbsp;</td>
+					<td class="const-summary-description">Required alphabet string</td></tr>
+				</div>
+								<div class="var-title">
+					<tr>
+					<td class="var-title"><a href="#constREQUIRED_ALPHA_NUMBEIC" title="details" class="const-name-summary">REQUIRED_ALPHA_NUMBEIC</a>&nbsp;&nbsp;</td>
+					<td class="const-summary-description">Required alpha-numeric string</td></tr>
+				</div>
+								<div class="var-title">
+					<tr>
+					<td class="var-title"><a href="#constREQUIRED_ALPHA_UPPER" title="details" class="const-name-summary">REQUIRED_ALPHA_UPPER</a>&nbsp;&nbsp;</td>
+					<td class="const-summary-description">Required uppercase alphabet string</td></tr>
+				</div>
+								<div class="var-title">
+					<tr>
+					<td class="var-title"><a href="#constREQUIRED_DOUBLE" title="details" class="const-name-summary">REQUIRED_DOUBLE</a>&nbsp;&nbsp;</td>
+					<td class="const-summary-description">Required double value</td></tr>
+				</div>
+								<div class="var-title">
+					<tr>
+					<td class="var-title"><a href="#constREQUIRED_EMAIL" title="details" class="const-name-summary">REQUIRED_EMAIL</a>&nbsp;&nbsp;</td>
+					<td class="const-summary-description">Required email address value</td></tr>
+				</div>
+								<div class="var-title">
+					<tr>
+					<td class="var-title"><a href="#constREQUIRED_HTTP_URL" title="details" class="const-name-summary">REQUIRED_HTTP_URL</a>&nbsp;&nbsp;</td>
+					<td class="const-summary-description">Required HTTP URL value</td></tr>
+				</div>
+								<div class="var-title">
+					<tr>
+					<td class="var-title"><a href="#constREQUIRED_INTEGER" title="details" class="const-name-summary">REQUIRED_INTEGER</a>&nbsp;&nbsp;</td>
+					<td class="const-summary-description">Required integer value</td></tr>
+				</div>
+								<div class="var-title">
+					<tr>
+					<td class="var-title"><a href="#constREQUIRED_IP" title="details" class="const-name-summary">REQUIRED_IP</a>&nbsp;&nbsp;</td>
+					<td class="const-summary-description">Required IP address value</td></tr>
+				</div>
+								<div class="var-title">
+					<tr>
+					<td class="var-title"><a href="#constREQUIRED_SEQUENCE" title="details" class="const-name-summary">REQUIRED_SEQUENCE</a>&nbsp;&nbsp;</td>
+					<td class="const-summary-description">Required sequence value</td></tr>
+				</div>
+								<div class="var-title">
+					<tr>
+					<td class="var-title"><a href="#constREQUIRED_STRING" title="details" class="const-name-summary">REQUIRED_STRING</a>&nbsp;&nbsp;</td>
+					<td class="const-summary-description">Required string value, accepts a maximum of 255 characters</td></tr>
+				</div>
+								<div class="var-title">
+					<tr>
+					<td class="var-title"><a href="#constREQUIRED_TEXT" title="details" class="const-name-summary">REQUIRED_TEXT</a>&nbsp;&nbsp;</td>
+					<td class="const-summary-description">Required text value, accepts a maximum of 65536 characters</td></tr>
+				</div>
+								<div class="var-title">
+					<tr>
+					<td class="var-title"><a href="#constREQUIRED_USERNAME" title="details" class="const-name-summary">REQUIRED_USERNAME</a>&nbsp;&nbsp;</td>
+					<td class="const-summary-description">Required username (allows a-z A-Z 0-9 and -_. characters)</td></tr>
+				</div>
+								</table>
+			</div>
+			<br /><div class="top">[ <a href="#top">Top</a> ]</div>
+		</div>
+	</div>
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Class Overview</a>
+									    		    			    				| <a href="#sec-const-summary">Constants Summary</a> | <a href="#sec-consts">Constants Detail</a>
+    			    					| <span class="disabled">Method Summary</span> | <a href="#sec-methods">Methods Detail</a>
+		</div>
+		<div class="info-box-body">
+			<div class="method-summary">
+				<table border="0" cellspacing="0" cellpadding="0" class="method-summary">
+												<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">boolean</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#isAlpha" title="details" class="method-name">isAlpha</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Validate that the provided value is a valid alphabetic string (strictly a-zA-Z)</td></tr>
+				</div>
+																<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">boolean</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#isAlphaNum" title="details" class="method-name">isAlphaNum</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Validate that the provided value is a valid alpha-numeric string (strictly a-zA-Z0-9)</td></tr>
+				</div>
+																<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">boolean</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#isBoolean" title="details" class="method-name">isBoolean</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Validate that the provided value is a valid boolean (will accept 1 or 0 as valid booleans)</td></tr>
+				</div>
+																<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">boolean</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#isDouble" title="details" class="method-name">isDouble</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Validate that the provided value is a valid double</td></tr>
+				</div>
+																								<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">boolean</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#isInteger" title="details" class="method-name">isInteger</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Validate that the provided value is a valid integer</td></tr>
+				</div>
+																<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">boolean</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#isIP" title="details" class="method-name">isIP</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Validate that the provided value is a valid IP address</td></tr>
+				</div>
+																<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">boolean</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#isSequence" title="details" class="method-name">isSequence</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Validate that the provided value is a valid Sequence string ([A-Z]-[0-9])</td></tr>
+				</div>
+																<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">boolean</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#isURL" title="details" class="method-name">isURL</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Validate that the provided value is a valid URL</td></tr>
+				</div>
+																																																				<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">boolean</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#isEmail" title="details" class="method-name">isEmail</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Validate that the provided value is a valid email address</td></tr>
+				</div>
+																																												</table>
+			</div>
+			<br /><div class="top">[ <a href="#top">Top</a> ]</div>
+		</div>
+	</div>
+
+
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Class Overview</a>
+																					| <a href="#sec-const-summary">Constants Summary</a> | <a href="#sec-consts">Constants Detail</a>
+														| <a href="#sec-method-summary">Method Summary</a> | <span class="disabled">Methods Detail</span>
+					</div>
+		<div class="info-box-body">
+			<a name='method_detail'></a>
+<a name="methodisAlpha" id="isAlpha"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">static method isAlpha</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a211">211</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static boolean isAlpha(
+$value
+$value&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Validate that the provided value is a valid alphabetic string (strictly a-zA-Z)
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">$value</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$value:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodisAlphaNum" id="isAlphaNum"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">static method isAlphaNum</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a225">225</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static boolean isAlphaNum(
+$value
+$value&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Validate that the provided value is a valid alpha-numeric string (strictly a-zA-Z0-9)
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">$value</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$value:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodisBoolean" id="isBoolean"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">static method isBoolean</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a195">195</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static boolean isBoolean(
+$value
+$value&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Validate that the provided value is a valid boolean (will accept 1 or 0 as valid booleans)
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">$value</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$value:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodisDouble" id="isDouble"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">static method isDouble</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a181">181</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static boolean isDouble(
+$value
+$value&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Validate that the provided value is a valid double
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">$value</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$value:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodisInteger" id="isInteger"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">static method isInteger</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a167">167</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static boolean isInteger(
+$value
+$value&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Validate that the provided value is a valid integer
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">$value</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$value:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodisIP" id="isIP"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">static method isIP</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a271">271</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static boolean isIP(
+$value
+$ip&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Validate that the provided value is a valid IP address
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">$value</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$ip:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodisSequence" id="isSequence"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">static method isSequence</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a239">239</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static boolean isSequence(
+$value
+$value&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Validate that the provided value is a valid Sequence string ([A-Z]-[0-9])
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">$value</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$value:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodisURL" id="isURL"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">static method isURL</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a253">253</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static boolean isURL(
+$value
+$url&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Validate that the provided value is a valid URL
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">$value</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$url:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+
+<a name="methodisEmail" id="isEmail"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">isEmail</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a289">289</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>boolean isEmail(
+$value
+$email&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Validate that the provided value is a valid email address
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">$value</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$email:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+		</div>
+	</div>
+
+	<a name="sec-consts"></a>
+	<div class="info-box">
+		<div class="info-box-title">Constants</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Class Overview</a>
+										| <a href="#sec-const-summary">Constants Summary</a> | <span class="disabled">Constants Detail</span>
+																		| <a href="#sec-method-summary">Method Summary</a> | <a href="#sec-methods">Methods Detail</a>
+									</div>
+		<div class="info-box-body">
+			<a name="constALLOW_ALL" id="ALLOW_ALL"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-name">ALLOW_ALL</span>
+			 = <span class="var-default"> '/.*/i'</span>
+			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a54">54</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Allows any kind of input, including blanks
+</strong></p>
+	
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="constOPTIONAL_HTTP_URL" id="OPTIONAL_HTTP_URL"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-name">OPTIONAL_HTTP_URL</span>
+			 = <span class="var-default"> '/^(http:\/\/.*\/.*)$|^([.*]{0})$/i'</span>
+			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a126">126</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Optional HTTP URL value
+</strong></p>
+	
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="constREQUIRED_ALPHA" id="REQUIRED_ALPHA"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-name">REQUIRED_ALPHA</span>
+			 = <span class="var-default"> '/^[a-zA-Z]+$/'</span>
+			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a94">94</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Required alphabet string
+</strong></p>
+	
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="constREQUIRED_ALPHA_NUMBEIC" id="REQUIRED_ALPHA_NUMBEIC"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-name">REQUIRED_ALPHA_NUMBEIC</span>
+			 = <span class="var-default"> '/^[a-zA-Z0-9]+$/'</span>
+			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a110">110</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Required alpha-numeric string
+</strong></p>
+	
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="constREQUIRED_ALPHA_UPPER" id="REQUIRED_ALPHA_UPPER"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-name">REQUIRED_ALPHA_UPPER</span>
+			 = <span class="var-default"> '/^[A-Z]+$/'</span>
+			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a102">102</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Required uppercase alphabet string
+</strong></p>
+	
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="constREQUIRED_DOUBLE" id="REQUIRED_DOUBLE"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-name">REQUIRED_DOUBLE</span>
+			 = <span class="var-default"> '/^-{0,1}[0-9\.]+$/'</span>
+			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a62">62</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Required double value
+</strong></p>
+	
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="constREQUIRED_EMAIL" id="REQUIRED_EMAIL"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-name">REQUIRED_EMAIL</span>
+			 = <span class="var-default"> '/^[-_.a-zA-Z0-9]+@((([a-zA-Z0-9]|[-_.a-zA-Z0-9]*[a-zA-Z0-9])\.)+(ad|ae|aero|af|ag|ai|al|am|an|ao|aq|ar|arpa|as|at|au|aw|az|ba|bb|bd|be|bf|bg|bh|bi|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|com|coop|cr|cs|cu|cv|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|in|info|int|io|iq|ir|is|it|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|mg|mh|mil|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|museum|mv|mw|mx|my|mz|na|name|nc|ne|net|nf|ng|ni|nl|no|np|nr|nt|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|pro|ps|pt|pw|py|qa|re|ro|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|um|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)|(([0-9][0-9]?|[0-1][0-9][0-9]|[2][0-4][0-9]|[2][5][0-5])\.){3}([0-9][0-9]?|[0-1][0-9][0-9]|[2][0-4][0-9]|[2][5][0-5]))$/i'</span>
+			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a142">142</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Required email address value
+</strong></p>
+	
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="constREQUIRED_HTTP_URL" id="REQUIRED_HTTP_URL"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-name">REQUIRED_HTTP_URL</span>
+			 = <span class="var-default"> '/^(http:\/\/.*)$/i'</span>
+			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a118">118</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Required HTTP URL value
+</strong></p>
+	
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="constREQUIRED_INTEGER" id="REQUIRED_INTEGER"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-name">REQUIRED_INTEGER</span>
+			 = <span class="var-default"> '/^-{0,1}[0-9]*$/'</span>
+			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a70">70</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Required integer value
+</strong></p>
+	
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="constREQUIRED_IP" id="REQUIRED_IP"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-name">REQUIRED_IP</span>
+			 = <span class="var-default"> '/^(((([1-9])|([1-9][\d])|(1[\d]{2})|(2[0-4][\d])|(25[0-4]))(\.(([\d])|([1-9][\d])|(1[\d]{2})|(2[0-4][\d])|(25[0-4]))){3})|(0(\.0){3}))$/'</span>
+			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a134">134</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Required IP address value
+</strong></p>
+	
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="constREQUIRED_SEQUENCE" id="REQUIRED_SEQUENCE"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-name">REQUIRED_SEQUENCE</span>
+			 = <span class="var-default"> '/^[A-Z]*-[0-9]*$/'</span>
+			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a158">158</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Required sequence value
+</strong></p>
+	
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="constREQUIRED_STRING" id="REQUIRED_STRING"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-name">REQUIRED_STRING</span>
+			 = <span class="var-default"> '/^[a-z\d\.,\'][a-z\d\.,\' ]{0,255}$/i'</span>
+			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a86">86</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Required string value, accepts a maximum of 255 characters
+</strong></p>
+	
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="constREQUIRED_TEXT" id="REQUIRED_TEXT"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-name">REQUIRED_TEXT</span>
+			 = <span class="var-default"> '/^[a-z\d\.,\'][a-z\d\.,\' ]{0,65535}$/i'</span>
+			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a78">78</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Required text value, accepts a maximum of 65536 characters
+</strong></p>
+	
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="constREQUIRED_USERNAME" id="REQUIRED_USERNAME"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-name">REQUIRED_USERNAME</span>
+			 = <span class="var-default"> '/^[-_\.a-zA-Z0-9]*$/i'</span>
+			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--util--helpers__utilhelpersAlphaValidator.inc.html#a150">150</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Required username (allows a-z A-Z 0-9 and -_. characters)
+</strong></p>
+	
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+		</div>
+	</div>
+
+        <div class="credit">
+		    <hr class="separator" />
+		    Documentation generated on Thu, 17 Mar 2011 16:43:41 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+	      </div>
+      </td></tr></table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
