@@ -107,13 +107,32 @@ class Button {
 		if(empty($this->imgURL)) {
 			switch ($this->action) {
 				case 'submit':
-					$html .= '<input type="submit" id="'.$this->id.'" name="'.$this->id.'" class="norButton" value="'.$this->title.'"'.($width == 0? '':' style="width:'.$width.';"').'/>';
+					$html .= '<script>
+						$(function() {
+							$("#'.$this->id.'").button();
+						});
+						</script>
+					';
+					$html .= '<input type="submit" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'"'.($width == 0? '':' style="width:'.$width.';"').'/>';
 				break;
 				case 'file':
-					$html .= '<input type="file" id="'.$this->id.'" name="'.$this->id.'" class="norButton" value="'.$this->title.'"'.($width == 0? '':' style="width:'.$width.';"').'/>';
+					$html .= '<script>
+						$(function() {
+							$("#'.$this->id.'").button();
+						});
+						</script>
+					';
+					$html .= '<input type="file" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'"'.($width == 0? '':' style="width:'.$width.';"').'/>';
 				break;
 				default:
-					$html .= '<input type="button" id="'.$this->id.'" name="'.$this->id.'" class="norButton" onClick="'.$this->action.';" value="'.$this->title.'"'.($width == 0? '':' style="width:'.$width.';"').'/>';
+					$html .= '<script>
+						$(function() {
+							$("#'.$this->id.'").button();
+							$("#'.$this->id.'").click(function() { '.$this->action.'; });
+						});
+						</script>
+					';
+					$html .= '<input type="button" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'"'.($width == 0? '':' style="width:'.$width.';"').'/>';
 				break;
 			}
 		}else{
@@ -129,6 +148,7 @@ class Button {
 	 * 
 	 * @since 1.0
 	 * @return string
+	 * @deprecated Now using JQuery UI Button widget, so this custom JavaScript is no longer required
 	 */
 	public static function renderJavascript() {
 		$javascript = "
