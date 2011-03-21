@@ -155,7 +155,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 						})
 						$('#dialogDiv').dialog('open');
 						return false;";
-				$button = new Button($js, "Delete", "deleteBut");
+				$button = new Button($js, "Delete", "delete".$tag->getID()."But");
 				echo $button->render().'</td></tr>';
 			}
 			

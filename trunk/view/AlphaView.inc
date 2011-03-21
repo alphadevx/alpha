@@ -356,13 +356,13 @@ class AlphaView {
 		
 		// View button
 		if(strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
-			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."';", 'View', 'viewBut');
+			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."';", 'View', 'view'.$this->BO->getOID().'But');
 			$fields['viewButton'] = $button->render();
 		}else{
 			if($this->BO->hasAttribute('URL'))
-				$button = new Button("document.location = '".$this->BO->get('URL')."';", 'View', 'viewBut');
+				$button = new Button("document.location = '".$this->BO->get('URL')."';", 'View', 'view'.$this->BO->getOID().'But');
 			else
-				$button = new Button("document.location = '".$config->get('sysURL')."Detail/bo/".get_class($this->BO)."/oid/".$this->BO->getOID()."';", 'View', 'viewBut');
+				$button = new Button("document.location = '".$config->get('sysURL')."Detail/bo/".get_class($this->BO)."/oid/".$this->BO->getOID()."';", 'View', 'view'.$this->BO->getOID().'But');
 			
 			$fields['viewButton'] = $button->render();
 		}
@@ -371,7 +371,7 @@ class AlphaView {
 		// render edit and delete buttons for admins only
 		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
 			$html .= '&nbsp;&nbsp;';
-			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "editBut");
+			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "edit".$this->BO->getOID()."But");
 			$html .= $button->render();
 			$html .= '&nbsp;&nbsp;';
 			$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
@@ -388,7 +388,7 @@ class AlphaView {
 			})
 			$('#dialogDiv').dialog('open');
 			return false;";
-			$button = new Button($js, "Delete", "deleteBut");
+			$button = new Button($js, "Delete", "delete".$this->BO->getOID()."But");
 			$html .= $button->render();
 		}
 		$fields['adminButtons'] = $html;
@@ -497,7 +497,7 @@ class AlphaView {
 
 		// create button
 		if($this->BO->checkTableExists()) {
-			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Create&bo='.get_class($this->BO))."'", "Create New", "createBut");
+			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Create&bo='.get_class($this->BO))."'", "Create New", "create".get_class($this->BO)."But");
 			$fields['createButton'] = $button->render();
 		}else{
 			$fields['createButton'] = '';
@@ -505,7 +505,7 @@ class AlphaView {
 		
 		// list all button
 		if($this->BO->checkTableExists()) {
-			$button = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "List All", "listBut");
+			$button = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "List All", "list".get_class($this->BO)."But");
 			$fields['listButton'] = $button->render();
 		}else{
 			$fields['listButton'] = '';
@@ -624,13 +624,13 @@ class AlphaView {
 
 		$html.= '<script language="JavaScript" src="'.$config->get('sysURL').'alpha/scripts/addOnloadEvent.js"></script>';
 		
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jquery-1.3.2.min.js"></script>';
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jquery-1.5.1.min.js"></script>';
 		$html.= '<script language="JavaScript" src="'.$config->get('sysURL').'alpha/scripts/validation.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/contextMenu/jquery.contextMenu.js"></script>';
 		
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery.ui.potato.menu.js"></script>';
 		
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery-ui-1.7.2.custom.min.js"></script>';
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery-ui-1.8.11.custom.min.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/ui.datepicker.js"></script>';
 		
 		// handle force-frames
