@@ -165,9 +165,13 @@ class ArticleView extends AlphaView {
 		if (is_dir($this->BO->getAttachmentsLocation())) {
 			$handle = opendir($this->BO->getAttachmentsLocation());
 	   		
+			$fileCount = 0;
+			
 	        // loop over the attachments directory
 		    while (false !== ($file = readdir($handle))) {
 		    	if($file != '.' && $file != '..') {
+		    		$fileCount++;
+		    		
 			    	$html .= '<tr><td>';		    	
 					$html .= '&nbsp;'.$file.'&nbsp;<em>('.number_format(filesize($this->BO->getAttachmentsLocation().'/'.$file)/1024).' KB)</em>';
 					$html .= '</td>';
@@ -186,7 +190,7 @@ class ArticleView extends AlphaView {
 						})
 						$('#dialogDiv').dialog('open');
 						return false;";
-					$button = new Button($js, "Delete", "deleteBut");
+					$button = new Button($js, "Delete", "delete".$fileCount."But");
 					$html .= $button->render();
 					$html .= '</td></tr>';
 		    	}
