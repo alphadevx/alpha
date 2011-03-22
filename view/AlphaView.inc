@@ -669,7 +669,7 @@ class AlphaView {
 		$html.= '	(function($) {';
 		$html.= '		var dialogCoords = [(screen.width/2)-200, (screen.height/2)-200];';
 		$html.= '		$(document).ready(function(){';
-		$html.= '			$.extend($.ui.dialog.defaults, {';
+		$html.= '			$.extend($.ui.dialog.prototype.options, {';
 		$html.= '				modal: true,';
 		$html.= '	        	resizable: false,';
 		$html.= '	        	draggable: false,';
