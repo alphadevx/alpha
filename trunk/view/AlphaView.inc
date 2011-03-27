@@ -1524,7 +1524,8 @@ class AlphaView {
 			$propName = $propObj->name;
 			
 			if($propName != 'logger' && !$propObj->isPrivate()) {
-				if(get_class($BO->getPropObject($propName)) == 'DEnum') {					
+				$prop = $BO->getPropObject($propName);
+				if($prop instanceof DEnum) {					
 					${$propName} = $BO->getPropObject($propName)->getDisplayValue();
 				}else{
 					${$propName} = $BO->get($propName);
