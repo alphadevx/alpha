@@ -482,10 +482,6 @@ class RecordSelector {
 		
 		$html .= '<script language="JavaScript" src="'.$config->get('sysURL').'/alpha/scripts/addOnloadEvent.js"></script>';
 		
-		$html .= '<script type="text/javascript">';
-		$html .= Button::renderJavascript();
-		$html .= '</script>';
-		
 		$html .= '<script language="JavaScript">
 			var selectedOIDs = new Object();
 			
