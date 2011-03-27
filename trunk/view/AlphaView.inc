@@ -622,10 +622,10 @@ class AlphaView {
 		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/css/alpha.css">';
 		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
 
-		$html.= '<script language="JavaScript" src="'.$config->get('sysURL').'alpha/scripts/addOnloadEvent.js"></script>';
+		//$html.= '<script language="JavaScript" src="'.$config->get('sysURL').'alpha/scripts/addOnloadEvent.js"></script>';
 		
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jquery-1.5.1.min.js"></script>';
-		$html.= '<script language="JavaScript" src="'.$config->get('sysURL').'alpha/scripts/validation.js"></script>';
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/scripts/validation.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/contextMenu/jquery.contextMenu.js"></script>';
 		
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery.ui.potato.menu.js"></script>';
@@ -650,9 +650,9 @@ class AlphaView {
 			}
 		}
 				
-		$html.= '<script type="text/javascript">';
+		/*$html.= '<script type="text/javascript">';
 		$html .= Button::renderJavascript();
-		$html.= '</script>';
+		$html.= '</script>';*/
 		
 		if (isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
 			$html.= '<script type="text/javascript">';
