@@ -238,83 +238,93 @@ abstract class AlphaDAO {
 		
 		if(method_exists($this, 'before_load_callback'))
 			$this->before_load_callback();
+
+                global $config;
 		
 		$this->OID = $OID;
-		
-		$attributes = $this->getPersistentAttributes();
-		$fields = '';
-		foreach($attributes as $att)
-			$fields .= $att.',';
-		$fields = substr($fields, 0, -1);
-		
-		$sqlQuery = 'SELECT '.$fields.' FROM '.$this->getTableName().' WHERE OID = ? LIMIT 1;';					
-		$this->lastQuery = $sqlQuery;
-		$stmt = AlphaDAO::getConnection()->stmt_init();
 
-		$row = array();
-		
-		if($stmt->prepare($sqlQuery)) {
-			$stmt->bind_param('i', $OID);
-			$stmt->execute();
-			
-			$result = $this->bindResult($stmt);
-			if(isset($result[0]))
-				$row = $result[0];
-			
-			$stmt->close();
+		if($config->get('sysMemcachedHost') != '' && $this->loadFromCache()) {
+                // BO was found in cache
 		}else{
-			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
-			if(!$this->checkTableExists()) {
-				$this->makeTable();
-				throw new BONotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->getTableName().'] did not exist so had to create!');
-			}
-			return;
-		}
 		
-		if(!isset($row['OID']) || $row['OID'] < 1) {
-			throw new BONotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');			
-			self::$logger->debug('<<load');
-			return;
-		}
-		
-		// get the class attributes
-		$reflection = new ReflectionClass(get_class($this));
-		$properties = $reflection->getProperties();
-
-		try {
-			foreach($properties as $propObj) {
-				$propName = $propObj->name;
-											
-				// filter transient attributes
-				if(!in_array($propName, $this->transientAttributes)) {
-					$this->set($propName, $row[$propName]);
-				}elseif(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {
-					$prop = $this->getPropObject($propName);
-					
-					// handle the setting of ONE-TO-MANY relation values
-					if($prop->getRelationType() == 'ONE-TO-MANY') {
-						$this->set($propObj->name, $this->getOID());
-					}
-				}
-			}
-		}catch (IllegalArguementException $e) {
-			self::$logger->warn('Bad data stored in the table ['.$this->getTableName().'], field ['.$propObj->name.'] bad value['.$row[$propObj->name].'], exception ['.$e->getMessage().']');
-		}catch (PHPException $e) {
-			// it is possible that the load failed due to the table not being up-to-date
-			if($this->checkTableNeedsUpdate()) {				
-				$missingFields = $this->findMissingFields();
-	    	
-				$count = count($missingFields);
+			$attributes = $this->getPersistentAttributes();
+			$fields = '';
+			foreach($attributes as $att)
+				$fields .= $att.',';
+			$fields = substr($fields, 0, -1);
+			
+			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->getTableName().' WHERE OID = ? LIMIT 1;';					
+			$this->lastQuery = $sqlQuery;
+			$stmt = AlphaDAO::getConnection()->stmt_init();
+	
+			$row = array();
+			
+			if($stmt->prepare($sqlQuery)) {
+				$stmt->bind_param('i', $OID);
+				$stmt->execute();
 				
-				for($i = 0; $i < $count; $i++)
-					$this->addProperty($missingFields[$i]);
-					
-				throw new BONotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->getTableName().'] was out of sync with the database so had to be updated!');
+				$result = $this->bindResult($stmt);
+				if(isset($result[0]))
+					$row = $result[0];
+				
+				$stmt->close();
+			}else{
+				self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
+				if(!$this->checkTableExists()) {
+					$this->makeTable();
+					throw new BONotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->getTableName().'] did not exist so had to create!');
+				}
+				return;
+			}
+			
+			if(!isset($row['OID']) || $row['OID'] < 1) {
+				throw new BONotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');			
 				self::$logger->debug('<<load');
 				return;
 			}
+			
+			// get the class attributes
+			$reflection = new ReflectionClass(get_class($this));
+			$properties = $reflection->getProperties();
+	
+			try {
+				foreach($properties as $propObj) {
+					$propName = $propObj->name;
+												
+					// filter transient attributes
+					if(!in_array($propName, $this->transientAttributes)) {
+						$this->set($propName, $row[$propName]);
+					}elseif(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {
+						$prop = $this->getPropObject($propName);
+						
+						// handle the setting of ONE-TO-MANY relation values
+						if($prop->getRelationType() == 'ONE-TO-MANY') {
+							$this->set($propObj->name, $this->getOID());
+						}
+					}
+				}
+			}catch (IllegalArguementException $e) {
+				self::$logger->warn('Bad data stored in the table ['.$this->getTableName().'], field ['.$propObj->name.'] bad value['.$row[$propObj->name].'], exception ['.$e->getMessage().']');
+			}catch (PHPException $e) {
+				// it is possible that the load failed due to the table not being up-to-date
+				if($this->checkTableNeedsUpdate()) {				
+					$missingFields = $this->findMissingFields();
+		    	
+					$count = count($missingFields);
+					
+					for($i = 0; $i < $count; $i++)
+						$this->addProperty($missingFields[$i]);
+						
+					throw new BONotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->getTableName().'] was out of sync with the database so had to be updated!');
+					self::$logger->debug('<<load');
+					return;
+				}
+			}
+
+			if($config->get('sysMemcachedHost') != '')
+				$this->addToCache();
 		}
-		
+			
 		$this->setEnumOptions();	
 		if(method_exists($this, 'after_load_callback'))
 			$this->after_load_callback();
@@ -834,6 +844,8 @@ abstract class AlphaDAO {
 			
 		if(method_exists($this, 'before_save_callback'))
 			$this->before_save_callback();
+			
+		global $config;
 		
 		// firstly we will validate the object before we try to save it
 		if(!$this->validate()) {
@@ -1010,6 +1022,9 @@ abstract class AlphaDAO {
 				
 				$stmt->close();
 				
+				if($config->get('sysMemcachedHost') != '')
+					$this->removeFromCache();
+				
 				if(method_exists($this, 'after_save_callback'))
 					$this->after_save_callback();
 			}else{
@@ -1043,6 +1058,8 @@ abstract class AlphaDAO {
 		
 		if(method_exists($this, 'before_saveAttribute_callback'))
 			$this->before_saveAttribute_callback();
+			
+		global $config;
 		
 		if(!isset($this->$attribute))
 			throw new IllegalArguementException('Could not perform save, as the attribute ['.$attribute.'] is not present on the class['.get_class($this).']');
@@ -1071,6 +1088,9 @@ abstract class AlphaDAO {
 		$stmt->close();
 		
 		$this->set($attribute, $value);
+		
+		if($config->get('sysMemcachedHost') != '')
+			$this->removeFromCache();
 				
 		if(method_exists($this, 'after_saveAttribute_callback'))
 			$this->after_saveAttribute_callback();
@@ -1131,6 +1151,8 @@ abstract class AlphaDAO {
 				
 		if(method_exists($this, 'before_delete_callback'))
 				$this->before_delete_callback();
+				
+		global $config;
 		
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this));
@@ -1205,6 +1227,9 @@ abstract class AlphaDAO {
 		}
 				
 		$stmt->close();
+		
+		if($config->get('sysMemcachedHost') != '')
+			$this->removeFromCache();
 		
 		if(method_exists($this, 'after_delete_callback'))
 			$this->after_delete_callback();
@@ -1383,7 +1408,7 @@ abstract class AlphaDAO {
 		if($this->isTableOverloaded())
 			$sqlQuery .= "classname VARCHAR(100),";
 		
-		$sqlQuery .= "PRIMARY KEY (OID)) TYPE=InnoDB;";
+		$sqlQuery .= "PRIMARY KEY (OID)) ENGINE=InnoDB;";
 		
 		$this->lastQuery = $sqlQuery;
 		
@@ -2361,7 +2386,7 @@ abstract class AlphaDAO {
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;			
 			$prop = $this->getPropObject($propName);
-			if(get_class($prop) == 'Relation') {
+			if($prop instanceof Relation) {
 								
 				if($prop->getRelationType() == 'MANY-TO-ONE') {
 					$indexExists = false;
@@ -3241,6 +3266,100 @@ abstract class AlphaDAO {
     		return false;
     	}
     }
+
+	/**
+	 * Stores the business object to the configured Memcached instance
+	 * 
+	 * @since 1.1
+	 */
+    private function addToCache() {
+		self::$logger->debug('>>addToCache()');
+      	global $config;
+
+      	try {
+	      	$memcache = new Memcache();
+		    $memcache->connect($config->get('sysMemcachedHost'), 11211);
+		
+		    $memcache->set(get_class($this).'-'.$this->getOID(), $this, MEMCACHE_COMPRESSED, 3600);
+      	}catch(Exception $e) {
+      		self::$logger->error('Error while attempting to store a business object to Memcached instance: ['.$e->getMessage().']');
+      	}
+	    
+	    self::$logger->debug('<<addToCache');
+   	}
+   	
+   	/**
+   	 * Removes the business object from the configured Memcached instance
+   	 * 
+   	 * @since 1.1
+   	 */
+   	private function removeFromCache() {
+   		self::$logger->debug('>>removeFromCache()');
+		global $config;
+
+		try {
+      		$memcache = new Memcache();
+      		$memcache->connect($config->get('sysMemcachedHost'), 11211);
+      		$memcache->delete(get_class($this).'-'.$this->getOID());
+		}catch(Exception $e) {
+      		self::$logger->error('Error while attempting to remove a business object from Memcached instance: ['.$e->getMessage().']');
+      	}
+      	
+      	self::$logger->debug('<<removeFromCache');
+   	}
+
+   	/**
+   	 * Attempts to load the business object from the configured Memcached instance
+   	 * 
+   	 * @since 1.1
+   	 * @return boolean
+   	 */
+   	private function loadFromCache() {
+   		self::$logger->debug('>>loadFromCache()');
+      	global $config;
+
+      	try {
+	      	$memcache = new Memcache();
+	      	$memcache->connect($config->get('sysMemcachedHost'), 11211);
+	
+	      	$BO = $memcache->get(get_class($this).'-'.$this->getOID());
+	
+	      	if(!$BO) {
+	      		self::$logger->debug('<<loadFromCache: [false]');
+	        	return false;
+	      	}else{
+		        // get the class attributes
+				$reflection = new ReflectionClass(get_class($this));
+				$properties = $reflection->getProperties();
+				
+				foreach($properties as $propObj) {
+					$propName = $propObj->name;
+			
+					if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
+						$propClass = get_class($this->getPropObject($propName));
+						
+						if (strtoupper($propClass) != 'DATE' && strtoupper($propClass) != 'TIMESTAMP') {
+							if(strtoupper($propClass) == 'TEXT' && !$this->getPropObject($propName)->getAllowHTML())
+								$this->getPropObject($propName)->setValue($BO->get($propName));
+							else
+								$this->getPropObject($propName)->setValue($BO->get($propName));
+						}else{						
+							$this->getPropObject($propName)->populateFromString($BO->get($propName));
+						}
+					}
+					if ($propName == "version_num")
+						$this->version_num->setValue($BO->getVersion());
+				}
+		
+				self::$logger->debug('<<loadFromCache: [true]');
+		        return true;
+	      	}
+      	}catch(Exception $e) {
+      		self::$logger->error('Error while attempting to load a business object from Memcached instance: ['.$e->getMessage().']');
+      		self::$logger->debug('<<loadFromCache: [false]');
+	        return false;
+      	}
+	}
 }
 
 ?>
