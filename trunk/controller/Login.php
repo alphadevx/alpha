@@ -104,7 +104,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 		$this->setKeywords('login,logon');
 		
 		self::$logger->debug('<<__construct');
-	}	
+	}
 		
 	/**
 	 * Handle GET requests
@@ -253,7 +253,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 	 * @throws ValidationException
 	 * @since 1.0
 	 */
-	private function doLoginAndRedirect($password) {
+	protected function doLoginAndRedirect($password) {
 		self::$logger->debug('>>doLoginAndRedirect(password=['.$password.'])');
 		
 		global $config;
