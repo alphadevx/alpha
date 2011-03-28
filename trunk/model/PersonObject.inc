@@ -149,7 +149,7 @@ class PersonObject extends AlphaDAO {
 		$this->email->setHelper('Please provide a valid e-mail address as your username.');
 		$this->password = new String();
 		$this->password->setSize(70);
-		$this->password->setHelper('Please provide a password for logging in.');		
+		$this->password->setHelper('Please provide a password for logging in.');
 		$this->password->isPassword(true);		
 		$this->state = new Enum(array(
 									'Active',
