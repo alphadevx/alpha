@@ -582,14 +582,15 @@ class AlphaView {
 	 * 
 	 * @param AlphaController $controller
 	 * @param bool $renderMenu Set to false to hide the default menu (default value is true)
+	 * @param bool $renderStatus Set to false to hide the status message from the session (if any, default value is true)
 	 * @return string
 	 * @throws IllegalArguementException
 	 * @since 1.0
 	 */
-	public static function displayPageHead($controller, $renderMenu = true) {
+	public static function displayPageHead($controller, $renderMenu = true, $renderStatus = true) {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaView');
-		self::$logger->debug('>>displayPageHead(controller=['.var_export($controller, true).'])');
+		self::$logger->debug('>>displayPageHead(controller=['.var_export($controller, true).'], renderMenu=['.$renderMenu.'], renderStatus=['.$renderStatus.'])');
 		
 		if(method_exists($controller, 'before_displayPageHead_callback'))
 			$controller->before_displayPageHead_callback();
@@ -649,10 +650,6 @@ class AlphaView {
 				$html.= '</script>';
 			}
 		}
-				
-		/*$html.= '<script type="text/javascript">';
-		$html .= Button::renderJavascript();
-		$html.= '</script>';*/
 		
 		if (isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
 			$html.= '<script type="text/javascript">';
@@ -754,11 +751,13 @@ class AlphaView {
 		
 		if(method_exists($controller, 'after_displayPageHead_callback'))
 			$html.= $controller->after_displayPageHead_callback();
-			
-		// render a status message if there is any
-		$message = $controller->getStatusMessage();
-		if(!empty($message))
-			$html .= $message;
+
+		if($renderStatus) {
+			// render a status message if there is any
+			$message = $controller->getStatusMessage();
+			if(!empty($message))
+				$html .= $message;
+		}
 			
 		self::$logger->debug('<<displayPageHead ['.$html.']');
 		return $html;
