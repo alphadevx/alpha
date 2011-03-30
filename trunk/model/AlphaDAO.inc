@@ -254,7 +254,7 @@ abstract class AlphaDAO {
 			$fields = substr($fields, 0, -1);
 			
 			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->getTableName().' WHERE OID = ? LIMIT 1;';					
-			$this->lastQuery = $sqlQuery;
+			$this->setLastQuery($sqlQuery);
 			$stmt = AlphaDAO::getConnection()->stmt_init();
 	
 			$row = array();
@@ -348,6 +348,8 @@ abstract class AlphaDAO {
 		
 		if(method_exists($this, 'before_loadByAttribute_callback'))
 				$this->before_loadByAttribute_callback();
+
+		global $config;
 		
 		if(count($attributes) == 0)
 			$attributes = $this->getPersistentAttributes();
@@ -364,7 +366,7 @@ abstract class AlphaDAO {
 		
 		self::$logger->debug('Query=['.$sqlQuery.']');	
 		
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 		$stmt = AlphaDAO::getConnection()->stmt_init();
 
 		$row = array();
@@ -450,6 +452,10 @@ abstract class AlphaDAO {
 		}
 		
 		$this->setEnumOptions();	
+
+		if($config->get('sysMemcachedHost') != '')
+                        $this->addToCache();
+
 		if(method_exists($this, 'after_loadByAttribute_callback'))
 			$this->after_loadByAttribute_callback();
 		
@@ -497,7 +503,7 @@ abstract class AlphaDAO {
 				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' ORDER BY '.$orderBy.' '.$order.' LIMIT '.$start.', '.$limit.';';
 		}
 		
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 		
 		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$this->lastQuery.']');
@@ -560,7 +566,7 @@ abstract class AlphaDAO {
 		else
 			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = ? ORDER BY ".$orderBy." ".$order.$limit;			
 			
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 		self::$logger->debug($sqlQuery);
 		
 		$stmt = AlphaDAO::getConnection()->stmt_init();
@@ -671,7 +677,7 @@ abstract class AlphaDAO {
 		
 		$sqlQuery = "SELECT OID FROM ".$this->getTableName().$whereClause." ORDER BY ".$orderBy." ".$order.$limit;
 			
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 		self::$logger->debug($sqlQuery);
 		
 		$stmt = AlphaDAO::getConnection()->stmt_init();
@@ -757,7 +763,7 @@ abstract class AlphaDAO {
 		else
 			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' ORDER BY ".$orderBy." ".$order.$limit;
 			
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 
 		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$this->lastQuery.']');
@@ -808,7 +814,7 @@ abstract class AlphaDAO {
 			$sqlQuery = "SELECT ".$returnAttribute." FROM ".$this->getTableName()." WHERE $attribute = '$value' ORDER BY OID ".$order.";";
 			
 			
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 		self::$logger->debug('lastQuery ['.$sqlQuery.']');
 
 		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
@@ -904,7 +910,7 @@ abstract class AlphaDAO {
 				
 				$sqlQuery = rtrim($sqlQuery, ',').')';
 				
-				$this->lastQuery = $sqlQuery;
+				$this->setLastQuery($sqlQuery);
 				self::$logger->debug('Query ['.$sqlQuery.']');
 				$stmt = AlphaDAO::getConnection()->stmt_init();
 			
@@ -941,7 +947,7 @@ abstract class AlphaDAO {
 	
 				$sqlQuery .= " WHERE OID=?;";
 				
-				$this->lastQuery = $sqlQuery;
+				$this->setLastQuery($sqlQuery);
 				$stmt = AlphaDAO::getConnection()->stmt_init();
 				
 				if($stmt->prepare($sqlQuery)) {							
@@ -1070,7 +1076,7 @@ abstract class AlphaDAO {
 		// assume that it is a persistent object that needs to be updated
 		$sqlQuery = 'UPDATE '.$this->getTableName().' SET '.$attribute.'=? WHERE OID=?;';
 				
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 		$stmt = AlphaDAO::getConnection()->stmt_init();
 				
 		if($stmt->prepare($sqlQuery)) {
@@ -1214,7 +1220,7 @@ abstract class AlphaDAO {
 		
 		$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE OID = ?;";
 			
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 		
 		$stmt = AlphaDAO::getConnection()->stmt_init();
 				
@@ -1290,29 +1296,36 @@ abstract class AlphaDAO {
 		
 		if(method_exists($this, 'before_getVersion_callback'))
 			$this->before_getVersion_callback();
+
+		global $config;
 		
-		$sqlQuery = 'SELECT version_num FROM '.$this->getTableName().' WHERE OID = ?;';
-		$this->lastQuery = $sqlQuery;
-		
-		$stmt = AlphaDAO::getConnection()->stmt_init();
-		
-		if($stmt->prepare($sqlQuery)) {
-			$stmt->bind_param('i', $this->OID);
+		if($config->get('sysMemcachedHost') != '' && $this->loadFromCache()) {
+			// BO was found in cache
+			$row['version_num'] = $this->version_num->getValue();
+		}else{		
+			$sqlQuery = 'SELECT version_num FROM '.$this->getTableName().' WHERE OID = ?;';
+			$this->setLastQuery($sqlQuery);
 			
-			$stmt->execute();
+			$stmt = AlphaDAO::getConnection()->stmt_init();
 			
-			$result = $this->bindResult($stmt);
-			if(isset($result[0]))
-				$row = $result[0];
+			if($stmt->prepare($sqlQuery)) {
+				$stmt->bind_param('i', $this->OID);
 				
-			$stmt->close();
-		}else{
-			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
-			if(!$this->checkTableExists()) {
-				$this->makeTable();
-				throw new BONotFoundException('Failed to get the version number, table did not exist so had to create!');
+				$stmt->execute();
+				
+				$result = $this->bindResult($stmt);
+				if(isset($result[0]))
+					$row = $result[0];
+					
+				$stmt->close();
+			}else{
+				self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
+				if(!$this->checkTableExists()) {
+					$this->makeTable();
+					throw new BONotFoundException('Failed to get the version number, table did not exist so had to create!');
+				}
+				return;
 			}
-			return;
 		}
 		
 		if(!isset($row['version_num']) || $row['version_num'] < 1) {
@@ -1410,7 +1423,7 @@ abstract class AlphaDAO {
 		
 		$sqlQuery .= "PRIMARY KEY (OID)) ENGINE=InnoDB;";
 		
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 		
 		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to create the table ['.$this->getTableName().'] for the class ['.get_class($this).'], query is ['.$this->lastQuery.']');
@@ -1442,7 +1455,7 @@ abstract class AlphaDAO {
 		
 		$sqlQuery = 'DROP TABLE IF EXISTS '.$this->getTableName().';';
 
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 
 		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to drop the table ['.$this->getTableName().'] for the class ['.get_class($this).'], query is ['.$this->lastQuery.']');
@@ -1475,7 +1488,7 @@ abstract class AlphaDAO {
 			
 		$sqlQuery = 'DROP TABLE IF EXISTS '.$tableName.';';
 
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 
 		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to drop the table ['.$tableName.'] for the class ['.get_class($this).'], query is ['.$this->lastQuery.']');
@@ -1559,7 +1572,7 @@ abstract class AlphaDAO {
 			}
 		}
 
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 
 		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to add the new attribute ['.$propName.'] to the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');
@@ -1628,7 +1641,7 @@ abstract class AlphaDAO {
 		
 		$sqlQuery = 'SELECT MAX(OID) AS max_OID FROM '.$this->getTableName();
 
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 
 		$result = AlphaDAO::getConnection()->query($sqlQuery);	
 
@@ -1685,7 +1698,7 @@ abstract class AlphaDAO {
 		else
 			$sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->getTableName();
 
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 		
 		$result = AlphaDAO::getConnection()->query($sqlQuery);
 
@@ -1771,7 +1784,7 @@ abstract class AlphaDAO {
 				if ($propClass == 'Enum') {
 					$sqlQuery = "SHOW COLUMNS FROM ".$this->getTableName()." LIKE '$propName'";
 					
-					$this->lastQuery = $sqlQuery;
+					$this->setLastQuery($sqlQuery);
 					
 					$result = AlphaDAO::getConnection()->query($sqlQuery);
 					
@@ -1966,7 +1979,7 @@ abstract class AlphaDAO {
 		$tableExists = false;
 		
 		$sqlQuery = 'SHOW TABLES;';
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 		
 		$result = AlphaDAO::getConnection()->query($sqlQuery);
 		
@@ -2056,7 +2069,7 @@ abstract class AlphaDAO {
 			
 			$query = 'SHOW COLUMNS FROM '.$this->getTableName();
 			$result = AlphaDAO::getConnection()->query($query);
-			$this->lastQuery = $query;
+			$this->setLastQuery($query);
 			
 			// get the class attributes
 			$reflection = new ReflectionClass(get_class($this));
@@ -2141,7 +2154,7 @@ abstract class AlphaDAO {
 		
 		$result = AlphaDAO::getConnection()->query($sqlQuery);
 		
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 			
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this));
@@ -2321,7 +2334,7 @@ abstract class AlphaDAO {
 		
 		$result = AlphaDAO::getConnection()->query($query);
 		
-		$this->lastQuery = $query;
+		$this->setLastQuery($query);
 		
 		$indexNames = array();
 		
@@ -2482,7 +2495,7 @@ abstract class AlphaDAO {
 				$sqlQuery = 'ALTER TABLE '.$this->getTableName().' ADD INDEX rightID_fk_idx (rightID);';
 				
 			if(!empty($sqlQuery)) {
-				$this->lastQuery = $sqlQuery;
+				$this->setLastQuery($sqlQuery);
 	
 				$result = AlphaDAO::getConnection()->query($sqlQuery);
 	
@@ -2493,7 +2506,7 @@ abstract class AlphaDAO {
 
 			$sqlQuery = 'ALTER TABLE '.$this->getTableName().' ADD FOREIGN KEY '.$attributeName.'_fk_idx ('.$attributeName.') REFERENCES '.$tableName.' ('.$relatedClassAttribute.') ON DELETE SET NULL;';
 			
-			$this->lastQuery = $sqlQuery;	
+			$this->setLastQuery($sqlQuery);	
 			$result = AlphaDAO::getConnection()->query($sqlQuery);
 		}
 	
@@ -2525,7 +2538,7 @@ abstract class AlphaDAO {
 		if(empty($attribute2Name)) {
 			$sqlQuery = 'CREATE UNIQUE INDEX '.$attribute1Name.'_unq_idx ON '.$this->getTableName().' ('.$attribute1Name.');';
 			
-			$this->lastQuery = $sqlQuery;
+			$this->setLastQuery($sqlQuery);
 	
 			$result = AlphaDAO::getConnection()->query($sqlQuery);
 	
@@ -2539,7 +2552,7 @@ abstract class AlphaDAO {
 			// process composite unique keys
 			$sqlQuery = 'CREATE UNIQUE INDEX '.$attribute1Name.'_'.$attribute2Name.'_unq_idx ON '.$this->getTableName().' ('.$attribute1Name.','.$attribute2Name.');';
 			
-			$this->lastQuery = $sqlQuery;
+			$this->setLastQuery($sqlQuery);
 	
 			$result = AlphaDAO::getConnection()->query($sqlQuery);
 	
@@ -2853,7 +2866,7 @@ abstract class AlphaDAO {
 		
 		$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' WHERE OID = ?;';
 
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 		
 		$stmt = AlphaDAO::getConnection()->stmt_init();
 		
@@ -3272,7 +3285,7 @@ abstract class AlphaDAO {
 	 * 
 	 * @since 1.1
 	 */
-    private function addToCache() {
+        public function addToCache() {
 		self::$logger->debug('>>addToCache()');
       	global $config;
 
@@ -3281,6 +3294,7 @@ abstract class AlphaDAO {
 		    $memcache->connect($config->get('sysMemcachedHost'), 11211);
 		
 		    $memcache->set(get_class($this).'-'.$this->getOID(), $this, MEMCACHE_COMPRESSED, 3600);
+//$memcache->set(get_class($this).'-'.$this->getOID(), $this, 0, 3600);
       	}catch(Exception $e) {
       		self::$logger->error('Error while attempting to store a business object to Memcached instance: ['.$e->getMessage().']');
       	}
@@ -3293,7 +3307,7 @@ abstract class AlphaDAO {
    	 * 
    	 * @since 1.1
    	 */
-   	private function removeFromCache() {
+   	public function removeFromCache() {
    		self::$logger->debug('>>removeFromCache()');
 		global $config;
 
@@ -3314,7 +3328,7 @@ abstract class AlphaDAO {
    	 * @since 1.1
    	 * @return boolean
    	 */
-   	private function loadFromCache() {
+   	public function loadFromCache() {
    		self::$logger->debug('>>loadFromCache()');
       	global $config;
 
@@ -3325,6 +3339,7 @@ abstract class AlphaDAO {
 	      	$BO = $memcache->get(get_class($this).'-'.$this->getOID());
 	
 	      	if(!$BO) {
+			self::$logger->info('Memcache miss on key ['.get_class($this).'-'.$this->getOID().']');
 	      		self::$logger->debug('<<loadFromCache: [false]');
 	        	return false;
 	      	}else{
@@ -3335,20 +3350,20 @@ abstract class AlphaDAO {
 				foreach($properties as $propObj) {
 					$propName = $propObj->name;
 			
-					if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
+					if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes) && is_object($this->getPropObject($propName))) {
+
 						$propClass = get_class($this->getPropObject($propName));
 						
 						if (strtoupper($propClass) != 'DATE' && strtoupper($propClass) != 'TIMESTAMP') {
-							if(strtoupper($propClass) == 'TEXT' && !$this->getPropObject($propName)->getAllowHTML())
-								$this->getPropObject($propName)->setValue($BO->get($propName));
-							else
+							if($BO->get($propName) != '')
 								$this->getPropObject($propName)->setValue($BO->get($propName));
 						}else{						
 							$this->getPropObject($propName)->populateFromString($BO->get($propName));
 						}
+
 					}
 					if ($propName == "version_num")
-						$this->version_num->setValue($BO->getVersion());
+						$this->version_num->setValue($BO->get('version_num'));
 				}
 		
 				self::$logger->debug('<<loadFromCache: [true]');
@@ -3359,6 +3374,17 @@ abstract class AlphaDAO {
       		self::$logger->debug('<<loadFromCache: [false]');
 	        return false;
       	}
+	}
+
+	/**
+	 * Sets the last query executed on this business object
+	 * 
+	 * @param string $query
+	 * @since 1.1
+	 */
+	protected function setLastQuery($query) {
+		self::$logger->sql($query);
+		$this->lastQuery = $query;
 	}
 }
 

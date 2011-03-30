@@ -62,7 +62,7 @@ class Logger {
 	private $logfile;
 	
 	/**
-	 * The logging level applied accross the system.  Valid options are DEBUG, INFO, WARN, ERROR and FATAL
+	 * The logging level applied accross the system.  Valid options are DEBUG, INFO, WARN, ERROR, FATAL, and SQL
 	 *
 	 * @var string
 	 * @since 1.0
@@ -169,6 +169,20 @@ class Logger {
 			$this->level == 'FATAL' || in_array($this->classname, $this->debugClasses)) {
 			$dateTime = date("Y-m-d H:i:s");
 			$this->logfile->writeLine(array($dateTime, 'FATAL', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ? 
+				$_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
+		}
+	}
+	
+	/**
+	 * Log a SQL queries
+	 *
+	 * @param string $message
+	 * @since 1.1
+	 */
+	public function sql($message) {
+		if($this->level == 'SQL') {
+			$dateTime = date("Y-m-d H:i:s");
+			$this->logfile->writeLine(array($dateTime, 'SQL', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ? 
 				$_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
 		}
 	}
