@@ -186,9 +186,10 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 	public function before_displayPageFoot_callback() {
 		global $config;
 		
-		$html = $this->renderComments();
+		$html = '';
 		
-		$rating = $this->BO->getArticleScore();
+		if($config->get('sysCMSDisplayComments'))
+			$html .= $this->renderComments();
 		
 		if($config->get('sysCMSDisplayTags')) {
 			$tags = $this->BO->getPropObject('tags')->getRelatedObjects();
@@ -203,6 +204,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 		}
 		
 		if($config->get('sysCMSDisplayVotes')) {
+			$rating = $this->BO->getArticleScore();
 			$votes = $this->BO->getArticleVotes();
 			$html .= '<p>Average Article User Rating: <strong>'.$rating.'</strong> out of 10 (based on <strong>'.count($votes).'</strong> votes)</p>';
 		}
