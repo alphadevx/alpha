@@ -222,7 +222,7 @@ class RelationLookup extends AlphaDAO implements AlphaTypeInterface {
 		else
 			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = ? AND classname = ? ORDER BY ".$orderBy." ".$order.$limit;
 			
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 		
 		$stmt = AlphaDAO::getConnection()->stmt_init();
 

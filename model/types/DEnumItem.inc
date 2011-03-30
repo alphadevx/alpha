@@ -120,7 +120,7 @@ class DEnumItem extends AlphaDAO implements AlphaTypeInterface{
 		
 		$sqlQuery = 'SELECT OID FROM '.self::TABLE_NAME.' WHERE DEnumID = \''.$EnumID.'\';';
 		
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 
 		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to load objects, query: ['.$this->lastQuery.']');

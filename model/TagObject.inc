@@ -126,7 +126,7 @@ class TagObject extends AlphaDAO {
 		
 		$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE taggedOID='$taggedOID' AND taggedClass='$taggedClass' ORDER BY OID";
 		
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 		
 		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to object OIDs, MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$sqlQuery.']');
@@ -163,7 +163,7 @@ class TagObject extends AlphaDAO {
 		
 		$sqlQuery = "SELECT content, count(*) as count FROM `tag` GROUP BY content ORDER BY count DESC LIMIT $limit";
 		
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 		
 		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to query the tags table, MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$sqlQuery.']');
@@ -201,7 +201,7 @@ class TagObject extends AlphaDAO {
 		if(!$indexExists) {
 			$sqlQuery = 'CREATE UNIQUE INDEX tclass_toid_tcontent_unq_idx ON '.$this->getTableName().' (taggedClass,taggedOID,content);';
 				
-			$this->lastQuery = $sqlQuery;
+			$this->setLastQuery($sqlQuery);
 		
 			if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 				throw new AlphaException('Failed to create the index [tclass_toid_tcontent_unq_idx] on ['.$this->getTableName().'], error is ['.AlphaDAO::getConnection()->error.']');

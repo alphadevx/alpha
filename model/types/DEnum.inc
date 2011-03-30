@@ -144,7 +144,7 @@ class DEnum extends AlphaDAO implements AlphaTypeInterface{
 		
 		$sqlQuery = 'SELECT * FROM '.self::TABLE_NAME.' WHERE name = \''.$this->name->getValue().'\';';
 
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 		
 		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to load DEnum '.$this->name->getValue().', not found in database.');
@@ -255,7 +255,7 @@ class DEnum extends AlphaDAO implements AlphaTypeInterface{
 		
 		$sqlQuery = 'SELECT COUNT(OID) AS item_count FROM DEnumItem WHERE DEnumID = \''.$this->getID().'\';';
 
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 
 		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to get the item count for the DEnum.');
