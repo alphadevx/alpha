@@ -349,7 +349,7 @@ class ArticleObject extends AlphaDAO {
 		
 		$sqlQuery = "SELECT OID FROM ".self::TABLE_NAME." WHERE published='1' AND section!='$excludeID' ORDER BY dateAdded DESC LIMIT 0, $limit;";		
 
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 		
 		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to load the OIDs for the most recent articles, MySql error is ['.AlphaDAO::getConnection()->error.
@@ -477,7 +477,7 @@ class ArticleObject extends AlphaDAO {
 		
 		$sqlQuery = "SELECT COUNT(*) AS usersVote FROM ".ArticleVoteObject::TABLE_NAME." WHERE articleOID='".$this->OID."' AND personOID='".$userID."';";		
 
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 		
 		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to check if the current user voted for the article ['.$this->OID.'], MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$sqlQuery.']');

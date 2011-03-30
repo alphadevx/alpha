@@ -128,7 +128,8 @@ class BadRequestObject extends AlphaDAO {
 		
 		$sqlQuery = 'SELECT COUNT(OID) AS request_count FROM '.$this->getTableName().' WHERE IP = ? AND client = ? AND created_ts > NOW()-INTERVAL ? MINUTE';
 		
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
+		
 		$stmt = AlphaDAO::getConnection()->stmt_init();
 
 		$row = array();

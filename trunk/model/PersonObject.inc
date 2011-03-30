@@ -366,7 +366,7 @@ class PersonObject extends AlphaDAO {
 
 		$sqlQuery = "SELECT COUNT(OID) AS post_count FROM ".ArticleCommentObject::TABLE_NAME." WHERE created_by='".$this->OID."';";
 
-		$this->lastQuery = $sqlQuery;
+		$this->setLastQuery($sqlQuery);
 
 		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to get the count of the comments posted for the person ['.$this->getDisplayName().'], query is ['.$this->lastQuery.']');
