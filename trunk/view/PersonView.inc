@@ -129,7 +129,6 @@ class PersonView extends AlphaView {
 		global $config;
 		
 		$html = '<p>In order to access this site, you will need to create a user account.  In order to do so, please provide a valid email address below and a password will be sent to your inbox shortly (you can change your password once you log in).</p>';
-		$html .= '<p class="warning">Please note: the forum is currently not available, but will be made available in the coming weeks!</p>';
 		$html .= '<table cols="2">';
 		$html .= '<form action="'.$_SERVER["PHP_SELF"].'?reset=true" method="POST">';
 		$html .= '<tr>';
