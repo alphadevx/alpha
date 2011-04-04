@@ -147,7 +147,7 @@ class AlphaValidator {
 	 * @var string
 	 * @since 1.0
 	 */
-	const REQUIRED_USERNAME = '/^[-_\.a-zA-Z0-9]*$/i';
+	const REQUIRED_USERNAME = '/^[-_\.a-zA-Z0-9]+$/';
 	
 	/**
 	 * Required sequence value
