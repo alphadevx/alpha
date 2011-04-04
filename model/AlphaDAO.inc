@@ -3339,7 +3339,7 @@ abstract class AlphaDAO {
 	      	$BO = $memcache->get(get_class($this).'-'.$this->getOID());
 	
 	      	if(!$BO) {
-			self::$logger->info('Memcache miss on key ['.get_class($this).'-'.$this->getOID().']');
+			self::$logger->debug('Memcache miss on key ['.get_class($this).'-'.$this->getOID().']');
 	      		self::$logger->debug('<<loadFromCache: [false]');
 	        	return false;
 	      	}else{
