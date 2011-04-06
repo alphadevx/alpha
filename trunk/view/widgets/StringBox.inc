@@ -113,7 +113,7 @@ class StringBox {
 		$html = '';
 		 
 		if ($tableTags) {
-			$html .= '<tr><th style="width:25%;">';
+			$html .= '<tr><th>';
 			$html .= $this->label;
 			$html .= '</th>';
 	
