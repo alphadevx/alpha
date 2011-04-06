@@ -136,8 +136,6 @@ class Search extends AlphaController implements AlphaControllerInterface {
 			$log = new LogFile($config->get('sysRoot').'logs/search.log');		
 			$log->writeLine(array($params['q'], date('Y-m-d H:i:s'), $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
 			
-			echo '<h2>Display results for &quot;'.$params['q'].'&quot;</h2>';
-			
 			// if a BO name is provided, only search tags on that class, otherwise search all BOs
 			if(isset($params['bo']))
 				$BOs = array($params['bo']);
@@ -216,13 +214,15 @@ class Search extends AlphaController implements AlphaControllerInterface {
 	 * @param string $query
 	 * @since 1.0
 	 */
-	private function renderResultList($BOIDs, $BO, $query) {
+	protected function renderResultList($BOIDs, $BO, $query) {
 		global $config;
 		
 		// used to track when our pagination range ends
 		$end = ($this->startPoint+$config->get('sysListPageAmount'));
 		// used to track how many results have been displayed or skipped from the pagination range
 		$displayedCount = 0;
+		
+		echo '<h2>Displaying results for &quot;'.$query.'&quot;</h2>';
 			
 		foreach(array_keys($BOIDs) as $oid) {
 			try {
