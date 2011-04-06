@@ -161,9 +161,7 @@ class TagObject extends AlphaDAO {
 	public static function getPopularTagsArray($limit) {
 		global $config;		
 		
-		$sqlQuery = "SELECT content, count(*) as count FROM `tag` GROUP BY content ORDER BY count DESC LIMIT $limit";
-		
-		$this->setLastQuery($sqlQuery);
+		$sqlQuery = "SELECT content, count(*) as count FROM ".TagObject::TABLE_NAME." GROUP BY content ORDER BY count DESC LIMIT $limit";
 		
 		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to query the tags table, MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$sqlQuery.']');
@@ -283,7 +281,7 @@ class TagObject extends AlphaDAO {
 	}
 	
 	/**
-	 * Cleans tag content by remocing white spaces and converting to lowercase.
+	 * Cleans tag content by removing white spaces and converting to lowercase.
 	 * 
 	 * @param $content
 	 * @return string
