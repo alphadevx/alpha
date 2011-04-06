@@ -116,16 +116,17 @@
     });
   
 	var positionContainer = function(errorContainer, field) {
-		if(field[0].nodeName == 'INPUT' && field.attr('type') != 'hidden') {
+		// uncomment of you want to re-enable animation effect
+		/*if(field[0].nodeName == 'INPUT' && field.attr('type') != 'hidden') {
 			errorContainer.animate({
 				top: field.offset().top - errorContainer.height()
 			});
-		}
+		}*/
 	};
   
   
 	var showContainer = function(errorContainer) {
-		errorContainer.slideDown('slow');
+		errorContainer.fadeIn('slow');
 	};
   
 	var hideContainer = function(errorContainer) {
