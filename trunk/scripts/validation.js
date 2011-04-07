@@ -79,18 +79,31 @@
 		if($('#'+fieldName+'_rule').length > 0) {
 			var rule = $('#'+fieldName+'_rule').val();
 			var flag = '';
+			
+			if(rule.match(/equal\ to\ /g)) {
+				equalToField = rule.replace(/equal\ to\ /g,'');
+				if(fieldVal == $('#'+equalToField).val()) {
+					return html;
+				}else{
+					return '<span>'+$('#'+fieldName+'_msg').val()+'</span>';
+				}
+			}
+			
 			if(rule.match(/\/i/g)) {
 				flag = 'i';
 				rule = rule.replace(/\/i/g,'');
 			}
+			
 			if(rule.match(/\/g/g)) {
 				flag = 'g';
 				rule = rule.replace(/\/g/g,'');
 			}
+			
 			if(rule.match(/\/m/g)) {
 				flag = 'm';
 				rule = rule.replace(/\/m/g,'');
 			}
+			
 			rule = rule.replace(/\//g,'');
 			
 			if(flag == '')
