@@ -205,6 +205,9 @@ class RelationLookup extends AlphaDAO implements AlphaTypeInterface {
 	 * @since 1.0
 	 */
 	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC") {
+		if(!isset(self::$logger))
+			self::$logger = new Logger('RelationLookup');
+			
 		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
 		
 		if(method_exists($this, 'before_loadAllByAttribute_callback'))
