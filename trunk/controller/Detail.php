@@ -92,16 +92,17 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 	/**
 	 * constructor to set up the object
 	 * 
+	 * @param string $visibility The name of the rights group that can access this controller.
 	 * @since 1.0
 	 */
-	public function __construct() {
+	public function __construct($visibility='Standard') {
 		self::$logger = new Logger('Detail');
 		self::$logger->debug('>>__construct()');
 		
 		global $config;
 				
 		// ensure that the super class constructor is called, indicating the rights group
-		parent::__construct('Standard');
+		parent::__construct($visibility);
 		
 		self::$logger->debug('<<__construct');
 	}
