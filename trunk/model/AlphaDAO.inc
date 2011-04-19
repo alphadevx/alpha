@@ -1588,10 +1588,11 @@ abstract class AlphaDAO {
 	/**
 	 * Populates the current business object from global POST data.
 	 * 
+	 * @param boolean $filterAll Defaults to false, set to true if you want to strictly filter all POSTed user input using InputFilter::encode.
 	 * @since 1.0
 	 */	
-	public function populateFromPost() {
-		self::$logger->debug('>>populateFromPost()');
+	public function populateFromPost($filterAll=false) {
+		self::$logger->debug('>>populateFromPost(filterAll=['.$filterAll.'])');
 		
 		if(method_exists($this, 'before_populateFromPost_callback'))
 			$this->before_populateFromPost_callback();
@@ -1608,12 +1609,19 @@ abstract class AlphaDAO {
 				
 				if(isset($_POST[$propName])) {
 					if (strtoupper($propClass) != 'DATE' && strtoupper($propClass) != 'TIMESTAMP') {
-						if(strtoupper($propClass) == 'TEXT' && !$this->getPropObject($propName)->getAllowHTML())
+						if($filterAll) {
 							$this->getPropObject($propName)->setValue(InputFilter::encode($_POST[$propName], false));
-						else
-							$this->getPropObject($propName)->setValue(InputFilter::encode($_POST[$propName], true));
-					}else{						
-						$this->getPropObject($propName)->populateFromString(InputFilter::encode($_POST[$propName], true));
+						}else{
+							if(strtoupper($propClass) == 'TEXT' && !$this->getPropObject($propName)->getAllowHTML())
+								$this->getPropObject($propName)->setValue(InputFilter::encode($_POST[$propName], false));
+							else
+								$this->getPropObject($propName)->setValue(InputFilter::encode($_POST[$propName], true));
+						}
+					}else{
+						if($filterAll)
+							$this->getPropObject($propName)->populateFromString(InputFilter::encode($_POST[$propName], false));
+						else						
+							$this->getPropObject($propName)->populateFromString(InputFilter::encode($_POST[$propName], true));
 					}					
 				}
 			}
