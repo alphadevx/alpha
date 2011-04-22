@@ -145,9 +145,12 @@ class Edit extends AlphaController implements AlphaControllerInterface {
 				$this->BOView = AlphaView::getInstance($this->BO);
 				
 				// set up the title and meta details
-				$this->setTitle('Editing a '.$BOName);
-				$this->setDescription('Page to edit a '.$BOName.'.');
-				$this->setKeywords('edit,'.$BOName);
+				if($this->title == '')
+					$this->setTitle('Editing a '.$BOName);
+				if($this->description == '')
+					$this->setDescription('Page to edit a '.$BOName.'.');
+				if($this->keywords == '')
+					$this->setKeywords('edit,'.$BOName);
 				
 				echo AlphaView::displayPageHead($this);
 		
