@@ -240,9 +240,12 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 	 * @since 1.0
 	 */
 	public function before_displayPageHead_callback() {
-		$this->setTitle('Displaying '.$this->BOName.' number '.$this->BO->getID());
-		$this->setDescription('Page to display '.$this->BOName.' number '.$this->BO->getID());
-		$this->setKeywords('display,details,'.$this->BOName);
+		if($this->title == '')
+			$this->setTitle('Displaying '.$this->BOName.' number '.$this->BO->getID());
+		if($this->description == '')
+			$this->setDescription('Page to display '.$this->BOName.' number '.$this->BO->getID());
+		if($this->keywords == '')
+			$this->setKeywords('display,details,'.$this->BOName);
 	}
 }
 
