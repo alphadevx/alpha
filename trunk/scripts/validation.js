@@ -89,6 +89,14 @@
 				}
 			}
 			
+			if(rule.match(/is\ checked/g)) {
+				if($('#'+fieldName).attr('checked')) {
+					return html;
+				}else{
+					return '<span>'+$('#'+fieldName+'_msg').val()+'</span>';
+				}
+			}
+			
 			if(rule.match(/\/i/g)) {
 				flag = 'i';
 				rule = rule.replace(/\/i/g,'');
