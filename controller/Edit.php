@@ -176,9 +176,10 @@ class Edit extends AlphaController implements AlphaControllerInterface {
 	 * Handle POST requests
 	 * 
 	 * @param array $params
+	 * @param string $saveMessage Optional status message to display on successful save of the BO, otherwise default will be used
 	 * @since 1.0
 	 */
-	public function doPOST($params) {
+	public function doPOST($params, $saveMessage='') {
 		self::$logger->debug('>>doPOST(params=['.var_export($params, true).'])');
 		
 		global $config;
@@ -213,8 +214,11 @@ class Edit extends AlphaController implements AlphaControllerInterface {
 					$this->BO->populateFromPost();
 					
 					try {
-						$this->BO->save();			
-						echo AlphaView::displayUpdateMessage(get_class($this->BO).' '.$this->BO->getID().' saved successfully.');
+						$this->BO->save();
+						if($saveMessage == '')
+							echo AlphaView::displayUpdateMessage(get_class($this->BO).' '.$this->BO->getID().' saved successfully.');
+						else
+							echo AlphaView::displayUpdateMessage($saveMessage);
 					}catch (LockingException $e) {
 						$this->BO->reload();
 						echo AlphaView::displayErrorMessage($e->getMessage());
