@@ -77,17 +77,13 @@ class ViewArticleFile extends ViewArticle {
 		global $config;
 		
 		try {
-			// ensure that a title is provided
-			if (isset($params['file'])) {
-				$title = basename($params['file']);
-				$title = str_replace('_', ' ', $title);
-				$title = str_replace('.text', '', $title);
-			}else{
+			// ensure that a file path is provided
+			if (!isset($params['file'])) {
 				throw new IllegalArguementException('Could not load the article as a file name was not supplied!');
 			}
 			
 			$this->BO = new ArticleObject();
-			$this->BO->set('title', $title);
+
 			// just checking to see if the file path is absolute or not
 			if(substr($params['file'], 0, 1) == '/')
 				$this->BO->loadContentFromFile($params['file']);
