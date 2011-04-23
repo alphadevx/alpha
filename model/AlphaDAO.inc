@@ -868,7 +868,7 @@ abstract class AlphaDAO {
 				throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
 				return;
 			}
-			
+
 			// set the "updated by" fields, we can only set the user id if someone is logged in
 			if(isset($_SESSION['currentUser']))
 				$this->updated_by->setValue($_SESSION['currentUser']->getOID());
@@ -1299,33 +1299,29 @@ abstract class AlphaDAO {
 
 		global $config;
 		
-		if($config->get('sysMemcachedHost') != '' && $this->loadFromCache()) {
-			// BO was found in cache
-			$row['version_num'] = $this->version_num->getValue();
-		}else{		
-			$sqlQuery = 'SELECT version_num FROM '.$this->getTableName().' WHERE OID = ?;';
-			$this->setLastQuery($sqlQuery);
+		
+		$sqlQuery = 'SELECT version_num FROM '.$this->getTableName().' WHERE OID = ?;';
+		$this->setLastQuery($sqlQuery);
 			
-			$stmt = AlphaDAO::getConnection()->stmt_init();
+		$stmt = AlphaDAO::getConnection()->stmt_init();
 			
-			if($stmt->prepare($sqlQuery)) {
-				$stmt->bind_param('i', $this->OID);
+		if($stmt->prepare($sqlQuery)) {
+			$stmt->bind_param('i', $this->OID);
 				
-				$stmt->execute();
+			$stmt->execute();
 				
-				$result = $this->bindResult($stmt);
-				if(isset($result[0]))
-					$row = $result[0];
+			$result = $this->bindResult($stmt);
+			if(isset($result[0]))
+				$row = $result[0];
 					
-				$stmt->close();
-			}else{
-				self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
-				if(!$this->checkTableExists()) {
-					$this->makeTable();
-					throw new BONotFoundException('Failed to get the version number, table did not exist so had to create!');
-				}
-				return;
+			$stmt->close();
+		}else{
+			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
+			if(!$this->checkTableExists()) {
+				$this->makeTable();
+				throw new BONotFoundException('Failed to get the version number, table did not exist so had to create!');
 			}
+			return;
 		}
 		
 		if(!isset($row['version_num']) || $row['version_num'] < 1) {
