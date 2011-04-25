@@ -1062,7 +1062,7 @@ class AlphaView {
 	 * @return string
 	 * @since 1.0
 	 */
-	public function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
+	public static function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
 		
 		$html = '';
@@ -1131,7 +1131,7 @@ class AlphaView {
 	 * @return string
 	 * @since 1.0
 	 */
-	public function renderDEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
+	public static function renderDEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderDEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
 		
 		$html = '';
