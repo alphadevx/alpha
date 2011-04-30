@@ -239,7 +239,7 @@ abstract class AlphaDAO {
 		if(method_exists($this, 'before_load_callback'))
 			$this->before_load_callback();
 
-                global $config;
+        global $config;
 		
 		$this->OID = $OID;
 
@@ -338,21 +338,23 @@ abstract class AlphaDAO {
 	 * @param string $atribute The name of the attribute to load the object by.
 	 * @param string $value The value of the attribute to load the object by.
 	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
-	 * @param array $attributes The attributes to load from the database to this object (leave blank to load all attributes)
+	 * @param array $loadAttributes The attributes to load from the database to this object (leave blank to load all attributes)
 	 * @since 1.0
 	 * @throws BONotFoundException
 	 */
-	public function loadByAttribute($attribute, $value, $ignoreClassType=false, $attributes=array()) {
+	public function loadByAttribute($attribute, $value, $ignoreClassType=false, $loadAttributes=array()) {
 		self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'], ignoreClassType=['.$ignoreClassType.'], 
-			attributes=['.var_export($attributes, true).'])');
+			loadAttributes=['.var_export($loadAttributes, true).'])');
 		
 		if(method_exists($this, 'before_loadByAttribute_callback'))
 				$this->before_loadByAttribute_callback();
 
 		global $config;
 		
-		if(count($attributes) == 0)
+		if(count($loadAttributes) == 0)
 			$attributes = $this->getPersistentAttributes();
+		else
+			$attributes = $loadAttributes;
 		
 		$fields = '';
 		foreach($attributes as $att)
@@ -453,8 +455,8 @@ abstract class AlphaDAO {
 		
 		$this->setEnumOptions();	
 
-		if($config->get('sysMemcachedHost') != '')
-                        $this->addToCache();
+		if($config->get('sysMemcachedHost') != '' && count($loadAttributes) == 0) // we will only cache fully-populated BOs
+        	$this->addToCache();
 
 		if(method_exists($this, 'after_loadByAttribute_callback'))
 			$this->after_loadByAttribute_callback();
@@ -3343,7 +3345,7 @@ abstract class AlphaDAO {
 	      	$BO = $memcache->get(get_class($this).'-'.$this->getOID());
 	
 	      	if(!$BO) {
-			self::$logger->debug('Memcache miss on key ['.get_class($this).'-'.$this->getOID().']');
+				self::$logger->debug('Memcache miss on key ['.get_class($this).'-'.$this->getOID().']');
 	      		self::$logger->debug('<<loadFromCache: [false]');
 	        	return false;
 	      	}else{
@@ -3366,10 +3368,11 @@ abstract class AlphaDAO {
 						}
 
 					}
+					
 					if ($propName == "version_num")
 						$this->version_num->setValue($BO->get('version_num'));
 				}
-		
+
 				self::$logger->debug('<<loadFromCache: [true]');
 		        return true;
 	      	}
