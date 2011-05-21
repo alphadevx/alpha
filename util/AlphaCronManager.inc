@@ -126,9 +126,20 @@ class AlphaCronManager {
 		
 		$handle = opendir($config->get('sysRoot').'tasks');
    		
-        // loop over the business object directory
+        // loop over the custom task directory
 	    while (false !== ($file = readdir($handle))) {
-	    	if (preg_match("/_task.inc/", $file)) {
+	    	if (preg_match("/Task.inc/", $file)) {
+	    		$classname = substr($file, 0, -4);
+	    		
+	    		array_push($classNameArray, $classname);
+	    	}
+	    }
+	    
+		$handle = opendir($config->get('sysRoot').'alpha/tasks');
+   		
+        // loop over the custom task directory
+	    while (false !== ($file = readdir($handle))) {
+	    	if (preg_match("/Task.inc/", $file)) {
 	    		$classname = substr($file, 0, -4);
 	    		
 	    		array_push($classNameArray, $classname);
@@ -156,6 +167,8 @@ class AlphaCronManager {
 		
 		if(file_exists($config->get('sysRoot').'tasks/'.$classname.'.inc'))
 			require_once $config->get('sysRoot').'tasks/'.$classname.'.inc';
+		elseif(file_exists($config->get('sysRoot').'alpha/tasks/'.$classname.'.inc'))
+			require_once $config->get('sysRoot').'alpha/tasks/'.$classname.'.inc';
 		else
 			throw new IllegalArguementException('The class ['.$classname.'] is not defined anywhere!');
 		
