@@ -44,7 +44,7 @@
  * </pre>
  *  
  */
-class AlphaFileUtil {
+class AlphaFileUtils {
 
 	/**
 	 * A hash array for mapping file extensions to MIME types.
@@ -516,11 +516,11 @@ class AlphaFileUtil {
 	 */
 	public static function getMIMETypeByExtension($ext) {
 		$ext = strtolower($ext);
-		if (!isset(AlphaFileUtil::$extensionToMIMEMappings[$ext]))
+		if (!isset(AlphaFileUtils::$extensionToMIMEMappings[$ext]))
 			throw new IllegalArguementException('Unable to determine the MIME type for the extension ['.$ext.']');
 
 
-		return AlphaFileUtil::$extensionToMIMEMappings[$ext];
+		return AlphaFileUtils::$extensionToMIMEMappings[$ext];
 	}
 	
 	/**
@@ -542,7 +542,7 @@ class AlphaFileUtil {
 		    foreach ($dir as $file) {
 		    	if($file->isDir() && !$file->isDot()) {
 		      		echo '<li><em>'.$file->getPathname().'</em></li>';
-		      		$fileCount += AlphaFileUtil::listDirectoryContents($file->getPathname(), $fileCount);
+		      		$fileCount += AlphaFileUtils::listDirectoryContents($file->getPathname(), $fileCount);
 		      	}elseif(!$file->isDot()){
 			        $fileName = $file->getFilename();
 			        $fileCount++;
@@ -571,7 +571,10 @@ class AlphaFileUtil {
 			
 		    foreach ($dir as $file) {
 		    	if($file->isDir() && !$file->isDot()) {
-		      		AlphaFileUtil::deleteDirectoryContents($file->getPathname());
+		    		if(count(scandir($file->getPathname())) == 2) // remove an emtpy directory
+		    			rmdir($file->getPathname());
+		    		else
+		      			AlphaFileUtils::deleteDirectoryContents($file->getPathname());
 		      	}elseif(!$file->isDot()){
 			        unlink($file->getPathname());
 		      	}		      	
@@ -579,7 +582,88 @@ class AlphaFileUtil {
 		}catch (Exception $e) {
 			throw new AlphaException('Failed to delete files files in the ['.$sourceDir.'] directory, error is ['.$e->getMessage().']');
 		}
-	}	
+	}
+
+	/**
+	 * Recursively copies the indicated folder, or single file, to the desintation location
+	 * 
+	 * @param string $source The path to the source directory or file.
+	 * @param string $dest The destination source directory or file.
+	 * @throws AlphaException
+	 * @since 1.1
+	 */
+	public static function copy($source, $dest) {
+		
+		if (is_file($source)) {
+			if(!copy($source, $dest))
+				throw new AlphaException("Error copying the file [$source] to [$dest].");
+			return;
+		}
+ 
+		// Make destination directory if it does not already exist
+		if (!file_exists($dest) && !is_dir($dest)) {
+			if(!mkdir($dest))
+				throw new AlphaException("Error creating the destination directory [$dest].");
+		}
+ 
+		$dir = dir($source);
+		while (false !== $entry = $dir->read()) {
+			if ($entry == '.' || $entry == '..') {
+				continue;
+			}
+	 
+			if ($dest !== "$source/$entry") {
+				self::copy("$source/$entry", "$dest/$entry");
+			}
+		}
+ 
+		$dir->close();
+	}
+
+	/**
+	 * Recursively compresses the contens of the source directory indicated to the desintation zip archive
+	 * 
+	 * @param string $source The path to the source directory or file.
+	 * @param string $dest The destination zip file file.
+	 * @throws AlphaException
+	 * @since 1.1
+	 */
+	public static function zip($source, $dest) {
+		if (extension_loaded('zip') === true) {
+
+			if (file_exists($source) === true) {
+				$zip = new ZipArchive();
+
+				if ($zip->open($dest, ZIPARCHIVE::CREATE) === true) {
+					$source = realpath($source);
+
+					if(is_dir($source) === true) {
+						$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source), RecursiveIteratorIterator::SELF_FIRST);
+
+						foreach ($files as $file) {
+							$file = realpath($file);
+
+							if(is_dir($file) === true) {
+								$zip->addEmptyDir(str_replace($source . '/', '', $file . '/'));
+							}
+
+							if(is_file($file) === true) {
+								$zip->addFromString(str_replace($source . '/', '', $file), file_get_contents($file));
+							}
+						}
+					}
+
+					if(is_file($source) === true) {
+						$zip->addFromString(basename($source), file_get_contents($source));
+					}
+				}
+
+				$zip->close();
+			}
+		}else{
+    			throw new AlphaException('Unable to create the zip file ['.$dest.'] as the zip extension is unavailable!');
+		}
+	}
 }
 
 ?>
