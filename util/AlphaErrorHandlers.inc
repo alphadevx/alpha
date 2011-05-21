@@ -2,6 +2,7 @@
 
 require_once $config->get('sysRoot').'alpha/util/Logger.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/PHPException.inc';
+require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 
 /**
  *
