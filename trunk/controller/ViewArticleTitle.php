@@ -7,7 +7,7 @@ if(!isset($config)) {
 }
 
 require_once $config->get('sysRoot').'alpha/controller/ViewArticle.php';
-require_once $config->get('sysRoot').'alpha/util/AlphaKDP.inc';
+require_once $config->get('sysRoot').'alpha/util/AlphaKPI.inc';
 
 /**
  * 
@@ -91,7 +91,7 @@ class ViewArticleTitle extends ViewArticle {
 		
 		global $config;
 		
-		$KDP = new AlphaKDP('viewarticle');
+		$KDP = new AlphaKPI('viewarticle');
 		
 		try {
 			// it may have already been loaded by a doPOST call

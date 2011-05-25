@@ -6,7 +6,7 @@ require_once $config->get('sysRoot').'alpha/model/types/String.inc';
 
 /**
  *
- * A Key Decision Point (KDP) logging class
+ * A Key Performance Indicator (KPI) logging class
  * 
  * @package alpha::util
  * @since 1.1
@@ -49,9 +49,9 @@ require_once $config->get('sysRoot').'alpha/model/types/String.inc';
  * </pre>
  *  
  */
-class AlphaKDP {
+class AlphaKPI {
 	/**
-	 * The date/time of the KDP event
+	 * The date/time of the KPI event
 	 * 
 	 * @var Timestamp
 	 * @since 1.1
@@ -59,7 +59,7 @@ class AlphaKDP {
 	private $timeStamp;
 	
 	/**
-	 * The name of the KDP
+	 * The name of the KPI
 	 * 
 	 * @var String
 	 * @since 1.1
@@ -75,7 +75,7 @@ class AlphaKDP {
 	private $sessionID;
 	
 	/**
-	 * The start time of the KDP event (UNIX timestamp with microseconds)
+	 * The start time of the KPI event (UNIX timestamp with microseconds)
 	 * 
 	 * @var float
 	 * @since 1.1
@@ -83,7 +83,7 @@ class AlphaKDP {
 	private $startTime;
 	
 	/**
-	 * The end time of the KDP event (UNIX timestamp with microseconds)
+	 * The end time of the KPI event (UNIX timestamp with microseconds)
 	 * 
 	 * @var float
 	 * @since 1.1
@@ -101,14 +101,14 @@ class AlphaKDP {
 	/**
 	 * Constructor
 	 * 
-	 * @param string $name The name of the KDP which is used in the log files, must only be letters and/or numbers.
+	 * @param string $name The name of the KPI which is used in the log files, must only be letters and/or numbers.
 	 * @throws IllegalArguementException
 	 * @since 1.1
 	 */
 	public function __construct($name) {
 		$this->name = new String();
 		$this->name->setRule(AlphaValidator::REQUIRED_ALPHA_NUMBEIC);
-		$this->name->setHelper('The KDP name can only contain letters and numbers');
+		$this->name->setHelper('The KPI name can only contain letters and numbers');
 		
 		$this->name->setValue($name);
 		
@@ -129,7 +129,7 @@ class AlphaKDP {
 	}
 	
 	/**
-	 * Stores the current startTime for the KDP in the session, useful for multi-request KDP tracking.
+	 * Stores the current startTime for the KPI in the session, useful for multi-request KPI tracking.
 	 * 
 	 * @since 1.0
 	 */
@@ -138,7 +138,7 @@ class AlphaKDP {
 	}
 	
 	/**
-	 * Writes the KDP event to a log file named logs/kdp-'.$this->name->getValue().'.csv, which will be created if it does
+	 * Writes the KPI event to a log file named logs/kpi-'.$this->name->getValue().'.csv, which will be created if it does
 	 * not exist.
 	 * 
 	 * @since 1.1
@@ -150,7 +150,7 @@ class AlphaKDP {
 		
 		$this->duration = $this->endTime - $this->startTime;
 		
-		$logfile = new LogFile($config->get('sysRoot').'logs/kdp-'.$this->name->getValue().'.csv');
+		$logfile = new LogFile($config->get('sysRoot').'logs/kpi-'.$this->name->getValue().'.csv');
 		
 		$logfile->setMaxSize($config->get('sysLogFileMaxSize'));
 		$logfile->setSeperator(',');
