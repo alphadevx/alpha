@@ -7,6 +7,7 @@ if(!isset($config)) {
 }
 
 require_once $config->get('sysRoot').'alpha/controller/ViewArticle.php';
+require_once $config->get('sysRoot').'alpha/util/AlphaKDP.inc';
 
 /**
  * 
@@ -90,6 +91,8 @@ class ViewArticleTitle extends ViewArticle {
 		
 		global $config;
 		
+		$KDP = new AlphaKDP('viewarticle');
+		
 		try {
 			// it may have already been loaded by a doPOST call
 			if($this->BO->isTransient()) {
@@ -127,6 +130,8 @@ class ViewArticleTitle extends ViewArticle {
 		echo $BOView->markdownView();
 		
 		echo AlphaView::displayPageFoot($this);
+		
+		$KDP->log();
 		
 		self::$logger->debug('<<doGET');
 	}	
