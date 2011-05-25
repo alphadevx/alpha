@@ -11,7 +11,7 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.
 require_once $config->get('sysRoot').'alpha/model/TagObject.inc';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/util/LogFile.inc';
-require_once $config->get('sysRoot').'alpha/util/AlphaKDP.inc';
+require_once $config->get('sysRoot').'alpha/util/AlphaKPI.inc';
 
 /**
  * 
@@ -123,7 +123,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 		
 		global $config;
 		
-		$KDP = new AlphaKDP('search');
+		$KDP = new AlphaKPI('search');
 		
 		if(isset($params['q'])) {
 			
