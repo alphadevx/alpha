@@ -11,6 +11,7 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.
 require_once $config->get('sysRoot').'alpha/model/TagObject.inc';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 require_once $config->get('sysRoot').'alpha/util/LogFile.inc';
+require_once $config->get('sysRoot').'alpha/util/AlphaKDP.inc';
 
 /**
  * 
@@ -122,6 +123,8 @@ class Search extends AlphaController implements AlphaControllerInterface {
 		
 		global $config;
 		
+		$KDP = new AlphaKDP('search');
+		
 		if(isset($params['q'])) {
 			
 			$this->query = $params['q'];
@@ -202,6 +205,8 @@ class Search extends AlphaController implements AlphaControllerInterface {
 		}		
 		
 		echo AlphaView::displayPageFoot($this);
+		
+		$KDP->log();
 		
 		self::$logger->debug('<<doGET');
 	}
