@@ -75,7 +75,7 @@ class AlphaKPI {
 	private $sessionID;
 	
 	/**
-	 * The start time of the KPI event (UNIX timestamp with microseconds)
+	 * The start time of the KPI event (UNIX timestamp in seconds)
 	 * 
 	 * @var float
 	 * @since 1.1
@@ -83,7 +83,7 @@ class AlphaKPI {
 	private $startTime;
 	
 	/**
-	 * The end time of the KPI event (UNIX timestamp with microseconds)
+	 * The end time of the KPI event (UNIX timestamp in seconds)
 	 * 
 	 * @var float
 	 * @since 1.1
@@ -91,7 +91,7 @@ class AlphaKPI {
 	private $endTime;
 	
 	/**
-	 * The duration in microseconds
+	 * The duration in seconds
 	 * 
 	 * @var float
 	 * @since 1.1
@@ -155,7 +155,30 @@ class AlphaKPI {
 		$logfile->setMaxSize($config->get('sysLogFileMaxSize'));
 		$logfile->setSeperator(',');
 		
-		$logfile->writeLine(array($this->timeStamp, $this->name->getValue(), $this->sessionID, $this->startTime, $this->endTime, $this->duration));
+		$logfile->writeLine(array($this->timeStamp, $this->name->getValue(), $this->sessionID, $this->startTime, $this->endTime, 
+			$this->duration));
+	}
+	
+	/**
+	 * Writes a step in the KPI event to a log file named logs/kpi-'.$this->name->getValue().'.csv, which will be created if it does
+	 * not exist.
+	 * 
+	 * @since 1.1
+	 */
+	public function logStep($stepName) {
+		global $config;
+		
+		$this->endTime = microtime(true);
+		
+		$this->duration = $this->endTime - $this->startTime;
+		
+		$logfile = new LogFile($config->get('sysRoot').'logs/kpi-'.$this->name->getValue().'.csv');
+		
+		$logfile->setMaxSize($config->get('sysLogFileMaxSize'));
+		$logfile->setSeperator(',');
+		
+		$logfile->writeLine(array($this->timeStamp, $this->name->getValue().' ['.$stepName.']', $this->sessionID, $this->startTime, 
+			$this->endTime, $this->duration));
 	}
 }
 

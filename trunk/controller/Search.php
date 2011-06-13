@@ -123,7 +123,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 		
 		global $config;
 		
-		$KDP = new AlphaKPI('search');
+		$KPI = new AlphaKPI('search');
 		
 		if(isset($params['q'])) {
 			
@@ -138,6 +138,8 @@ class Search extends AlphaController implements AlphaControllerInterface {
 			// log the user's search query in a log file
 			$log = new LogFile($config->get('sysRoot').'logs/search.log');		
 			$log->writeLine(array($params['q'], date('Y-m-d H:i:s'), $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
+			
+			$KPI->logStep('log search query');
 			
 			// if a BO name is provided, only search tags on that class, otherwise search all BOs
 			if(isset($params['bo']))
@@ -163,6 +165,8 @@ class Search extends AlphaController implements AlphaControllerInterface {
 						
 						self::$logger->debug('There are ['.count($matchingTags).'] TagObjects matching the query ['.$params['q'].']');
 						
+						$KPI->logStep('loaded matching tags');
+						
 						/*
 						 * Build an array of BOs for the matching tags from the DB:
 						 * array key = BO ID
@@ -185,6 +189,8 @@ class Search extends AlphaController implements AlphaControllerInterface {
 						
 						$this->resultCount += count($BOIDs);
 						
+						$KPI->logStep('built array of matching OIDs');
+						
 						// sort the BO IDs based on tag frequency weight						
 						arsort($BOIDs);						
 						
@@ -206,7 +212,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 		
 		echo AlphaView::displayPageFoot($this);
 		
-		$KDP->log();
+		$KPI->log();
 		
 		self::$logger->debug('<<doGET');
 	}
