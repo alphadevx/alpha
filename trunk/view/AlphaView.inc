@@ -1299,6 +1299,9 @@ class AlphaView {
 			$html .= '<tr><th>';
 			$html .= $label;
 			$html .= '</th>';
+			
+			// filter ouput to prevent malicious injection
+			$value = InputFilter::encode($value);
 
 			// ensures that line returns are rendered
 			$value = str_replace("\n", '<br>', $value);
