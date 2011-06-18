@@ -3300,7 +3300,7 @@ abstract class AlphaDAO {
 		    $memcache->connect($config->get('sysMemcachedHost'), 11211);
 		
 		    $memcache->set(get_class($this).'-'.$this->getOID(), $this, MEMCACHE_COMPRESSED, 3600);
-//$memcache->set(get_class($this).'-'.$this->getOID(), $this, 0, 3600);
+
       	}catch(Exception $e) {
       		self::$logger->error('Error while attempting to store a business object to Memcached instance: ['.$e->getMessage().']');
       	}
@@ -3355,22 +3355,18 @@ abstract class AlphaDAO {
 				
 				foreach($properties as $propObj) {
 					$propName = $propObj->name;
-			
-					if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes) && is_object($this->getPropObject($propName))) {
-
-						$propClass = get_class($this->getPropObject($propName));
+												
+					// filter transient attributes
+					if(!in_array($propName, $this->transientAttributes)) {
+						$this->set($propName, $BO->get($propName));
+					}elseif(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {
+						$prop = $this->getPropObject($propName);
 						
-						if (strtoupper($propClass) != 'DATE' && strtoupper($propClass) != 'TIMESTAMP') {
-							if($BO->get($propName) != '')
-								$this->getPropObject($propName)->setValue($BO->get($propName));
-						}else{						
-							$this->getPropObject($propName)->populateFromString($BO->get($propName));
+						// handle the setting of ONE-TO-MANY relation values
+						if($prop->getRelationType() == 'ONE-TO-MANY') {
+							$this->set($propObj->name, $this->getOID());
 						}
-
 					}
-					
-					if ($propName == "version_num")
-						$this->version_num->setValue($BO->get('version_num'));
 				}
 
 				self::$logger->debug('<<loadFromCache: [true]');
