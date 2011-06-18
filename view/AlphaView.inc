@@ -600,7 +600,7 @@ class AlphaView {
 		if(!AlphaController::checkControllerDefExists(get_class($controller)))
 			throw new IllegalArguementException('The controller provided ['.get_class($controller).'] is not defined anywhere!');
 		
-		$html = '';
+		$html = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">';
 		
 		$html.= '<html>';
 		$html.= '<head>';
@@ -701,7 +701,7 @@ class AlphaView {
 		
 		if(method_exists($controller, 'during_displayPageHead_callback'))
 			$html.= $controller->during_displayPageHead_callback();
-		
+
 		$html.= '</head>';
 		try {
 			if($controller->getBO() != null)
@@ -1400,6 +1400,9 @@ class AlphaView {
 					$mode = 'view';
 				else
 					$mode = $orignalMode;
+					
+				if(!is_object($this->BO->getPropObject($propName)))
+					continue;
 					
 				$propClass = get_class($this->BO->getPropObject($propName));
 				
