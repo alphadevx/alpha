@@ -322,7 +322,7 @@ class PersonObject extends AlphaDAO {
 
 		$body .= $message;
 
-		$body .= '<p>Kind regards,</p><p>Administrator</p><a href="'.$config->get('sysURL').'">'.$config->get('sysURL').'</a></body></html>';
+		$body .= '</body></html>';
 
 		$headers = 'MIME-Version: 1.0'."\n";
 		$headers .= 'Content-type: text/html; charset=iso-8859-1'."\n";
