@@ -135,7 +135,7 @@ class TextBox {
 		if($markdown) {
 			$html .= '<input type="hidden" id="markdownTextBoxRows" name="markdownTextBoxRows" value=""/>';
 		}
-		$html .= '<textarea id="text_field_'.$this->name.'_'.$this->identifier.'" style="width:100%;" rows="'.$this->rows.'" name="'.$this->name.'">';
+		$html .= '<textarea class="checkMax" maxlength="'.$this->textObject->getSize().'" id="text_field_'.$this->name.'_'.$this->identifier.'" style="width:100%;" rows="'.$this->rows.'" name="'.$this->name.'">';
 		
 		if($this->textObject->getAllowHTML())
 			$html .= InputFilter::decode($this->textObject->getValue(), true);
