@@ -123,7 +123,7 @@ class AlphaValidator {
 	 * @var string
 	 * @since 1.0
 	 */
-	const OPTIONAL_HTTP_URL = '/^(http:\/\/.*\/.*)$|^([.*]{0})$/i';
+	const OPTIONAL_HTTP_URL = '/http.*|^$/i';
 	
 	/**
 	 * Required IP address value
