@@ -1296,9 +1296,13 @@ class AlphaView {
 		}
 		
 		if ($mode == 'view') {
-			$html .= '<tr><th>';
+			if($tableTags)
+				$html .= '<tr><th>';
+				
 			$html .= $label;
-			$html .= '</th>';
+			
+			if($tableTags)
+				$html .= '</th>';
 			
 			// filter ouput to prevent malicious injection
 			$value = InputFilter::encode($value);
@@ -1306,9 +1310,13 @@ class AlphaView {
 			// ensures that line returns are rendered
 			$value = str_replace("\n", '<br>', $value);
 			
-			$html .= '<td>&nbsp;';
+			if($tableTags)
+				$html .= '<td>&nbsp;';
+				
 			$html .= $value;
-			$html .= '</td></tr>';
+			
+			if($tableTags)
+				$html .= '</td></tr>';
 		}
 		
 		self::$logger->debug('<<renderTextField ['.$html.']');
