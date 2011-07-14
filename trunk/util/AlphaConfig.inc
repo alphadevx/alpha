@@ -213,8 +213,12 @@ class AlphaConfig {
 			die('Failed to load the config file ['.$serverIni.']');
 		}
      
-		$envIni = $rootPath.'config/'.$environment.'.ini';
-     
+		if(file_exists($serverIni)) {
+			$envIni = $rootPath.'config/'.$environment.'.ini';
+     	}else{
+            die('Failed to load the config file ['.$rootPath.'config/'.$environment.'.ini]');
+        }
+
 		$configArray = parse_ini_file($envIni);
     
 		foreach(array_keys($configArray) as $key) {
