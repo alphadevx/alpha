@@ -116,7 +116,7 @@ class AlphaImageUtils {
 		if(($type == 'jpg')) {
 			imagejpeg($imageResource, $destination);
 		}else{
-			$function = 'image'.$strImageType;
+			$function = 'image'.$type;
 
 			$function($imageResource, $destination);
 		}
