@@ -3,6 +3,7 @@
 require_once $config->get('sysRoot').'alpha/util/AlphaErrorHandlers.inc';
 require_once $config->get('sysRoot').'alpha/util/Logger.inc';
 require_once $config->get('sysRoot').'alpha/util/InputFilter.inc';
+require_once $config->get('sysRoot').'alpha/util/cache/AlphaCacheProviderFactory.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/BONotFoundException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/FailedSaveException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/FailedDeleteException.inc';
@@ -243,7 +244,7 @@ abstract class AlphaDAO {
 		
 		$this->OID = $OID;
 
-		if($config->get('sysMemcachedHost') != '' && $this->loadFromCache()) {
+		if($config->get('sysCacheProviderName') != '' && $this->loadFromCache()) {
                 // BO was found in cache
 		}else{
 		
@@ -321,7 +322,7 @@ abstract class AlphaDAO {
 				}
 			}
 
-			if($config->get('sysMemcachedHost') != '')
+			if($config->get('sysCacheProviderName') != '')
 				$this->addToCache();
 		}
 			
@@ -455,7 +456,7 @@ abstract class AlphaDAO {
 		
 		$this->setEnumOptions();	
 
-		if($config->get('sysMemcachedHost') != '' && count($loadAttributes) == 0) // we will only cache fully-populated BOs
+		if($config->get('sysCacheProviderName') != '' && count($loadAttributes) == 0) // we will only cache fully-populated BOs
         	$this->addToCache();
 
 		if(method_exists($this, 'after_loadByAttribute_callback'))
@@ -1030,7 +1031,7 @@ abstract class AlphaDAO {
 				
 				$stmt->close();
 				
-				if($config->get('sysMemcachedHost') != '')
+				if($config->get('sysCacheProviderName') != '')
 					$this->removeFromCache();
 				
 				if(method_exists($this, 'after_save_callback'))
@@ -1097,7 +1098,7 @@ abstract class AlphaDAO {
 		
 		$this->set($attribute, $value);
 		
-		if($config->get('sysMemcachedHost') != '')
+		if($config->get('sysCacheProviderName') != '')
 			$this->removeFromCache();
 				
 		if(method_exists($this, 'after_saveAttribute_callback'))
@@ -1236,7 +1237,7 @@ abstract class AlphaDAO {
 				
 		$stmt->close();
 		
-		if($config->get('sysMemcachedHost') != '')
+		if($config->get('sysCacheProviderName') != '')
 			$this->removeFromCache();
 		
 		if(method_exists($this, 'after_delete_callback'))
@@ -3287,7 +3288,7 @@ abstract class AlphaDAO {
     }
 
 	/**
-	 * Stores the business object to the configured Memcached instance
+	 * Stores the business object to the configured cache instance
 	 * 
 	 * @since 1.1
 	 */
@@ -3296,20 +3297,19 @@ abstract class AlphaDAO {
       	global $config;
 
       	try {
-	      	$memcache = new Memcache();
-		    $memcache->connect($config->get('sysMemcachedHost'), 11211);
-		
-		    $memcache->set(get_class($this).'-'.$this->getOID(), $this, MEMCACHE_COMPRESSED, 3600);
+      		$cache = AlphaCacheProviderFactory::getInstance($config->get('sysCacheProviderName'));
+      		$cache->set(get_class($this).'-'.$this->getOID(), $this, 3600);
 
       	}catch(Exception $e) {
-      		self::$logger->error('Error while attempting to store a business object to Memcached instance: ['.$e->getMessage().']');
+      		self::$logger->error('Error while attempting to store a business object to the ['.$config->get('sysCacheProviderName').'] 
+      			instance: ['.$e->getMessage().']');
       	}
 	    
 	    self::$logger->debug('<<addToCache');
    	}
    	
    	/**
-   	 * Removes the business object from the configured Memcached instance
+   	 * Removes the business object from the configured cache instance
    	 * 
    	 * @since 1.1
    	 */
@@ -3318,18 +3318,18 @@ abstract class AlphaDAO {
 		global $config;
 
 		try {
-      		$memcache = new Memcache();
-      		$memcache->connect($config->get('sysMemcachedHost'), 11211);
-      		$memcache->delete(get_class($this).'-'.$this->getOID());
+      		$cache = AlphaCacheProviderFactory::getInstance($config->get('sysCacheProviderName'));
+      		$cache->delete(get_class($this).'-'.$this->getOID());
 		}catch(Exception $e) {
-      		self::$logger->error('Error while attempting to remove a business object from Memcached instance: ['.$e->getMessage().']');
+      		self::$logger->error('Error while attempting to remove a business object from ['.$config->get('sysCacheProviderName').']
+      			instance: ['.$e->getMessage().']');
       	}
       	
       	self::$logger->debug('<<removeFromCache');
    	}
 
    	/**
-   	 * Attempts to load the business object from the configured Memcached instance
+   	 * Attempts to load the business object from the configured cache instance
    	 * 
    	 * @since 1.1
    	 * @return boolean
@@ -3339,13 +3339,11 @@ abstract class AlphaDAO {
       	global $config;
 
       	try {
-	      	$memcache = new Memcache();
-	      	$memcache->connect($config->get('sysMemcachedHost'), 11211);
-	
-	      	$BO = $memcache->get(get_class($this).'-'.$this->getOID());
+	      	$cache = AlphaCacheProviderFactory::getInstance($config->get('sysCacheProviderName'));
+      		$BO = $cache->get(get_class($this).'-'.$this->getOID());
 	
 	      	if(!$BO) {
-				self::$logger->debug('Memcache miss on key ['.get_class($this).'-'.$this->getOID().']');
+				self::$logger->debug('Cache miss on key ['.get_class($this).'-'.$this->getOID().']');
 	      		self::$logger->debug('<<loadFromCache: [false]');
 	        	return false;
 	      	}else{
@@ -3373,7 +3371,9 @@ abstract class AlphaDAO {
 		        return true;
 	      	}
       	}catch(Exception $e) {
-      		self::$logger->error('Error while attempting to load a business object from Memcached instance: ['.$e->getMessage().']');
+      		self::$logger->error('Error while attempting to load a business object from ['.$config->get('sysCacheProviderName').']
+      		 instance: ['.$e->getMessage().']');
+      		
       		self::$logger->debug('<<loadFromCache: [false]');
 	        return false;
       	}
