@@ -72,6 +72,8 @@ class AlphaCacheProviderMemcache implements AlphaCacheProviderInterface {
 	 * @since 1.1
 	 */
 	public function get($key) {
+		self::$logger->debug('>>get(key=['.$key.'])');
+		
 		global $config;
 
       	try {
@@ -80,9 +82,11 @@ class AlphaCacheProviderMemcache implements AlphaCacheProviderInterface {
 	
 	      	$value = $memcache->get($key);
 	      	
+	      	self::$logger->debug('<<get: ['.print_r($value, true).'])');
 	      	return $value;
       	}catch(Exception $e) {
       		self::$logger->error('Error while attempting to load a business object from Memcached instance: ['.$e->getMessage().']');
+      		self::$logger->debug('<<get: [false])');
 	        return false;
       	}
 	}
