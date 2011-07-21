@@ -207,7 +207,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 		}else{
 			$this->setTitle('Search results');			
 			echo AlphaView::displayPageHead($this);
-			self::$logger->warn('No search query provided!');
+			self::$logger->debug('No search query provided!');
 		}		
 		
 		echo AlphaView::displayPageFoot($this);
@@ -335,10 +335,12 @@ class Search extends AlphaController implements AlphaControllerInterface {
 		if($end > $this->resultCount)
 			$end = $this->resultCount;
 		
-		if($this->resultCount > 0)
+		if($this->resultCount > 0) {
 			$html .= '<p align="center">Displaying '.($this->startPoint+1).' to '.$end.' of <strong>'.$this->resultCount.'</strong>.&nbsp;&nbsp;';
-		else
-			$html .= AlphaView::displayUpdateMessage('There were no search results for your query.');	
+		}else{
+			if(!empty($this->query))
+				$html .= AlphaView::displayUpdateMessage('There were no search results for your query.');
+		}	
 				
 		if ($this->startPoint > 0) {
 			// handle secure URLs
