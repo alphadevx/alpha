@@ -83,7 +83,7 @@ class ArticleView extends AlphaView {
 	 */
 	public function listView($fields=array()) {
 		$fields['dateAdded'] = $this->BO->getCreateTS()->getDate();
-		parent::listView($fields);				
+		parent::listView($fields);
 	}
 	
 	/**
