@@ -104,8 +104,8 @@ class DEnumView extends AlphaView {
 		// render edit buttons for admins only
 		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
 			$html .= '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".FrontController::generateSecureURL('act=EditDEnum&oid='.$this->BO->getID())."'", 'Edit', 'editBut');
-			$html .= $temp->render();
+			$button = new Button("document.location = '".FrontController::generateSecureURL('act=EditDEnum&oid='.$this->BO->getOID())."'", "Edit", "edit".$this->BO->getOID()."But");
+			$html .= $button->render();
 		}
 		$html .= '</td></tr>';
 
