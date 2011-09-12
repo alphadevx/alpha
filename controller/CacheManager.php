@@ -7,7 +7,7 @@ if(!isset($config)) {
 }
 
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
-require_once $config->get('sysRoot').'alpha/util/AlphaFileUtil.inc';
+require_once $config->get('sysRoot').'alpha/util/AlphaFileUtils.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 
@@ -113,7 +113,7 @@ class CacheManager extends AlphaController implements AlphaControllerInterface {
 		
 		echo '<h2>Listing contents of cache directory: '.$this->dataDir.'</h2>';
 		
-   		$fileCount = AlphaFileUtil::listDirectoryContents($this->dataDir);
+   		$fileCount = AlphaFileUtils::listDirectoryContents($this->dataDir);
    		
    		echo '<h2>Total of '.$fileCount.' files in the cache.</h2>';
    		
@@ -165,7 +165,7 @@ class CacheManager extends AlphaController implements AlphaControllerInterface {
 
 			if (isset($params['clearCache']) && $params['clearCache'] == 'true') {
 				try {
-					AlphaFileUtil::deleteDirectoryContents($this->dataDir);
+					AlphaFileUtils::deleteDirectoryContents($this->dataDir);
 							
 					$this->setStatusMessage(AlphaView::displayUpdateMessage('Cache contents deleted successfully.'));
 					
