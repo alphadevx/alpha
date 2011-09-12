@@ -129,7 +129,7 @@ class LogFile {
  			 */
  			$value = str_replace($this->seperator, '', $line[$i]);
 			if ($i == ($colCount-1))
-				$mergedLine .= $value."\n";				
+				$mergedLine .= $value.$this->seperator."\n";	
 			else
 				$mergedLine .= $value.$this->seperator;				
  		}
