@@ -7,7 +7,7 @@ if(!isset($config)) {
 }
 
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
-require_once $config->get('sysRoot').'alpha/util/AlphaFileUtil.inc';
+require_once $config->get('sysRoot').'alpha/util/AlphaFileUtils.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 
