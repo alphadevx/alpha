@@ -124,7 +124,7 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 					})
 					$('#dialogDiv').dialog('open');
 					return false;";
-				$button = new Button($js, "Re-create tags", "clearBut");
+				$button = new Button($js, "Re-create tags", "clearBut".$BO);
 				
    				echo $button->render();
 			}
