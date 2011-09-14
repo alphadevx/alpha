@@ -226,7 +226,7 @@ class TagObject extends AlphaDAO {
 		global $config;
 		
 		// apply stop words
-		$lowerWords = preg_split("/[\s,.:]+/", $content);
+		$lowerWords = preg_split("/[\s,.:-]+/", $content);
 		
 		array_walk($lowerWords, 'TagObject::lowercaseArrayElement');
 		
