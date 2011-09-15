@@ -132,7 +132,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 			// replace any %20 on the URL with spaces
 			$params['q'] = str_replace('%20', ' ', $params['q']);
 			
-			$this->setTitle('Search results - '.$params['q']);			
+			$this->setTitle('Search results - '.$params['q']);
 			echo AlphaView::displayPageHead($this);
 			
 			// log the user's search query in a log file
@@ -153,39 +153,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 					$temp = new $BO;
 					
 					if($temp->isTagged()) {
-						// explode the user's query into a set of tokenized transient TagObjects
-						$queryTags = TagObject::tokenize($params['q'], '', '', false);			
-						$matchingTags = array();
-						
-						// load TagObjects from the DB where content equals the content of one of our transient TagObjects
-						foreach($queryTags as $queryTag) {
-							$tags = $queryTag->loadAllByAttribute('content', $queryTag->get('content'));
-							$matchingTags = array_merge($matchingTags, $tags);
-						}
-						
-						self::$logger->debug('There are ['.count($matchingTags).'] TagObjects matching the query ['.$params['q'].']');
-						
-						$KPI->logStep('loaded matching tags');
-						
-						/*
-						 * Build an array of BOs for the matching tags from the DB:
-						 * array key = BO ID
-						 * array value = weight (the amount of tags matching the BO)
-						 */
-						$BOIDs = array();
-						
-						foreach($matchingTags as $tag) {							
-							if($tag->get('taggedClass') == $BO) {
-								if(isset($BOIDs[$tag->get('taggedOID')])) {
-									// increment the weight if the same BO is tagged more than once
-									$weight = intval($BOIDs[$tag->get('taggedOID')]) + 1;
-									$BOIDs[$tag->get('taggedOID')] = $weight;									
-								}else{
-									$BOIDs[$tag->get('taggedOID')] = 1;									
-								}
-								self::$logger->debug('Found BO ['.$tag->get('taggedOID').'] has weight ['.$BOIDs[$tag->get('taggedOID')].']');								
-							}
-						}
+						$BOIDs = $this->doTagSearch($params['q'], $BO);
 						
 						$this->resultCount += count($BOIDs);
 						
@@ -218,14 +186,61 @@ class Search extends AlphaController implements AlphaControllerInterface {
 	}
 	
 	/**
+	 * Searches for tags on the given BO type matching the query provided
+	 * 
+	 * @param string $query
+	 * @param string $BOName
+	 * @param array $BOIDs
+	 * @return array
+	 * @since 1.1
+	 */
+	protected function doTagSearch($query, $BOName, $BOIDs=array()) {
+		// explode the user's query into a set of tokenized transient TagObjects
+		$queryTags = TagObject::tokenize($query, '', '', false);			
+		$matchingTags = array();
+						
+		// load TagObjects from the DB where content equals the content of one of our transient TagObjects
+		foreach($queryTags as $queryTag) {
+			$tags = $queryTag->loadAllByAttribute('content', $queryTag->get('content'));
+			$matchingTags = array_merge($matchingTags, $tags);
+		}
+						
+		self::$logger->debug('There are ['.count($matchingTags).'] TagObjects matching the query ['.$query.']');
+						
+		/*
+		 * Build an array of BOs for the matching tags from the DB:
+		 * array key = BO ID
+		 * array value = weight (the amount of tags matching the BO)
+		 */
+		foreach($matchingTags as $tag) {							
+			if($tag->get('taggedClass') == $BOName) {
+				
+				if(isset($BOIDs[$tag->get('taggedOID')])) {
+					// increment the weight if the same BO is tagged more than once
+					$weight = intval($BOIDs[$tag->get('taggedOID')]) + 1;
+					$BOIDs[$tag->get('taggedOID')] = $weight;									
+				}else{
+					$BOIDs[$tag->get('taggedOID')] = 1;									
+				}
+				
+				self::$logger->debug('Found BO ['.$tag->get('taggedOID').'] has weight ['.$BOIDs[$tag->get('taggedOID')].']');								
+			}
+		}
+		
+		return $BOIDs;
+	}
+	
+	/**
 	 * Renders the search result list
 	 * 
 	 * @param array $BOIDs
 	 * @param string $BO
 	 * @param string $query
+	 * @param bool $showTags
+	 * @param bool $showScore
 	 * @since 1.0
 	 */
-	protected function renderResultList($BOIDs, $BO, $query) {
+	protected function renderResultList($BOIDs, $BO, $query='', $showTags=true, $showScore=false) {
 		global $config;
 		
 		// used to track when our pagination range ends
@@ -233,7 +248,8 @@ class Search extends AlphaController implements AlphaControllerInterface {
 		// used to track how many results have been displayed or skipped from the pagination range
 		$displayedCount = 0;
 		
-		echo '<h2>Displaying results for &quot;'.$query.'&quot;</h2>';
+		if(!empty($query))
+			echo '<h2>Displaying results for &quot;'.$query.'&quot;</h2>';
 			
 		foreach(array_keys($BOIDs) as $oid) {
 			try {
@@ -251,19 +267,27 @@ class Search extends AlphaController implements AlphaControllerInterface {
 					}else{			
 						$view = AlphaView::getInstance($temp);
 						echo $view->listView();
-										
-						$tags = $temp->getPropObject('tags')->getRelatedObjects();
-					
-						if(count($tags) > 0) {
-							echo '<p>Tags: ';
+
+						if($showTags) {
+							$tags = $temp->getPropObject('tags')->getRelatedObjects();
+						
+							if(count($tags) > 0) {
+								echo '<p>Tags: ';
+												
+								$queryTerms = explode(' ', strtolower($query));
+												
+								foreach($tags as $tag) {
+									echo (in_array($tag->get('content'), $queryTerms) ? '<strong>'.$tag->get('content').' </strong>' : $tag->get('content').' ');
+								}
 											
-							$queryTerms = explode(' ', strtolower($query));
-											
-							foreach($tags as $tag) {
-								echo (in_array($tag->get('content'), $queryTerms) ? '<strong>'.$tag->get('content').' </strong>' : $tag->get('content').' ');
+								echo '</p>';
 							}
-										
-							echo '</p>';
+						}
+						
+						if($showScore) {
+							$score = $BOIDs[$oid];
+							
+							echo '<p>Score: <strong>'.$score.'</strong></p>';
 						}
 					}
 				}
