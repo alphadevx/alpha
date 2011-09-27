@@ -142,22 +142,26 @@ class DEnum extends AlphaDAO implements AlphaTypeInterface{
 	 */
 	public function getOptions($alphaSort = false) {
 		
-		$sqlQuery = 'SELECT * FROM '.self::TABLE_NAME.' WHERE name = \''.$this->name->getValue().'\';';
+		//$sqlQuery = 'SELECT * FROM '.self::TABLE_NAME.' WHERE name = \''.$this->name->getValue().'\';';
 
-		$this->setLastQuery($sqlQuery);
+		//$this->setLastQuery($sqlQuery);
 		
-		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
+		//if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
+		try {
+			$options = new DEnum();
+			$options->loadByAttribute('name', $this->name->getValue());
+		}catch (BONotFoundException $e) { 
 			throw new AlphaException('Failed to load DEnum '.$this->name->getValue().', not found in database.');
 		}
 		
 		// now build an array of item indexes to be returned		
-		$row = $result->fetch_array(MYSQLI_ASSOC);
+		//$row = $result->fetch_array(MYSQLI_ASSOC);
 		$count = 0;
 		$this->options = array();
 		
 		$tmp = new DEnumItem();		
 		
-		foreach($tmp->loadItems($row["OID"]) as $DEnumItem) {			
+		foreach($tmp->loadItems($options->getOID()) as $DEnumItem) {			
 			$this->options[$DEnumItem->getID()] = $DEnumItem->getValue();
 			$count++;			
 		}
