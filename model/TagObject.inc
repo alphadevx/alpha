@@ -120,32 +120,22 @@ class TagObject extends AlphaDAO {
 	 * @return array
 	 * @since 1.0
 	 * @throws AlphaException
+	 * @todo remove MySQL dependancies
 	 */
 	public function loadTags($taggedClass, $taggedOID) {
 		global $config;		
 		
-		$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE taggedOID='$taggedOID' AND taggedClass='$taggedClass' ORDER BY OID";
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
 		
-		$this->setLastQuery($sqlQuery);
-		
-		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
-			throw new AlphaException('Failed to object OIDs, MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$sqlQuery.']');
+		try {
+			$tags = $provider->loadAllByAttributes(array('taggedOID','taggedClass'), array($taggedOID, $taggedClass));
+			return $tags;
+		}catch(BONotFoundException $bonf) {
 			return array();
+		}catch(Exception $e) {
+			self::$logger->error($e->getMessage());
+			throw new AlphaException($e->getMessage());
 		}
-		
-		// now build an array of objects to be returned
-		$objects = array();
-		$count = 0;
-		$BOClass = get_class($this);
-		
-		while($row = $result->fetch_array(MYSQLI_ASSOC)) {
-			$obj = new $BOClass();
-			$obj->load($row['OID']);
-			$objects[$count] = $obj;
-			$count++;
-		}
-		
-		return $objects;
 	}
 	
 	/**
@@ -157,21 +147,26 @@ class TagObject extends AlphaDAO {
 	 * @return array
 	 * @since 1.0
 	 * @throws AlphaException
+	 * @todo remove MySQL dependancies
 	 */
 	public static function getPopularTagsArray($limit) {
-		global $config;		
+		global $config;
+		
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), new TagObject());
 		
 		$sqlQuery = "SELECT content, count(*) as count FROM ".TagObject::TABLE_NAME." GROUP BY content ORDER BY count DESC LIMIT $limit";
 		
-		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
-			throw new AlphaException('Failed to query the tags table, MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$sqlQuery.']');
+		try{
+			$result = $provider->query($sqlQuery);			
+		}catch(CustomQueryException $e) {
+			throw new AlphaException('Failed to query the tags table, error is ['.$e->getMessage().']');
 			return array();
 		}
 		
 		// now build an array of tags to be returned
 		$popTags = array();		
 		
-		while($row = $result->fetch_array(MYSQLI_ASSOC)) {			
+		foreach($result as $row) {
 			$popTags[$row['content']] = $row['count'];			
 		}
 		

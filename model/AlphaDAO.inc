@@ -14,6 +14,7 @@ require_once $config->get('sysRoot').'alpha/exceptions/MailNotSentException.inc'
 require_once $config->get('sysRoot').'alpha/exceptions/BadBOTableNameException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/FailedIndexCreateException.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/FailedLookupCreateException.inc';
+require_once $config->get('sysRoot').'alpha/exceptions/CustomQueryException.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Date.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Timestamp.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Double.inc';
@@ -26,9 +27,10 @@ require_once $config->get('sysRoot').'alpha/model/types/DEnumItem.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Relation.inc';
 require_once $config->get('sysRoot').'alpha/model/types/Sequence.inc';
+require_once $config->get('sysRoot').'alpha/model/AlphaDAOProviderFactory.inc';
 
 /**
- * Base business object class definition
+ * Base business object class definition providing DAO storage via the configured provider.
  * 
  * @package alpha::model
  * @since 1.0
@@ -173,8 +175,10 @@ abstract class AlphaDAO {
 	 * 
 	 * @var mysqli
 	 * @since 1.0
+	 * @todo Move the AlphaDAOProviderMySQL
+	 * @deprecated
 	 */
-	private static $connection;
+	//private static $connection;
 	
 	/**
 	 * The constructor which sets up some housekeeping attributes
@@ -200,9 +204,11 @@ abstract class AlphaDAO {
 	 *  
 	 * @return mysqli
 	 * @since 1.0
+	 * @todo move to AlphaDAOProviderMySQL
+	 * @deprecated
 	 */
 	public static function getConnection() {
-		global $config;
+		/*global $config;
 		
 		if (!isset(self::$connection)) {
 			self::$connection = new mysqli($config->get('sysDBHost'), $config->get('sysDBUsername'), $config->get('sysDBPassword'), $config->get('sysDB'));
@@ -212,19 +218,39 @@ abstract class AlphaDAO {
 			}
 		}
 		
-		return self::$connection;
+		return self::$connection;*/
 	}
 	
 	/**
-	 * Disconnects the current database connection if one exists (self::$connection is set)
+	 * Disconnects the current database connection if one exists
 	 * 
 	 * @since 1.0
 	 */
 	public static function disconnect() {
-		if (isset(self::$connection)) {
-			self::$connection->close();
-			self::$connection = null;
-		}
+		global $config;
+		
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), new PersonObject());
+		$provider->disconnect();
+		
+		//if (isset(self::$connection)) {
+			//self::$connection->close();
+			//self::$connection = null;
+		//}
+	}
+	
+	/**
+   	 * Returns a 2d array, where each element in the array is another array
+	 * representing a database row.
+   	 * 
+   	 * @param string $sqlQuery
+   	 * @return array
+   	 * @since 1.1
+   	 */
+	public function query($sqlQuery) {
+		global $config;
+		
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		return $provider->query($sqlQuery);
 	}
 	
 	/**
@@ -247,86 +273,15 @@ abstract class AlphaDAO {
 		if($config->get('sysCacheProviderName') != '' && $this->loadFromCache()) {
                 // BO was found in cache
 		}else{
-		
-			$attributes = $this->getPersistentAttributes();
-			$fields = '';
-			foreach($attributes as $att)
-				$fields .= $att.',';
-			$fields = substr($fields, 0, -1);
-			
-			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->getTableName().' WHERE OID = ? LIMIT 1;';					
-			$this->setLastQuery($sqlQuery);
-			$stmt = AlphaDAO::getConnection()->stmt_init();
-	
-			$row = array();
-			
-			if($stmt->prepare($sqlQuery)) {
-				$stmt->bind_param('i', $OID);
-				$stmt->execute();
-				
-				$result = $this->bindResult($stmt);
-				if(isset($result[0]))
-					$row = $result[0];
-				
-				$stmt->close();
-			}else{
-				self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
-				if(!$this->checkTableExists()) {
-					$this->makeTable();
-					throw new BONotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->getTableName().'] did not exist so had to create!');
-				}
-				return;
-			}
-			
-			if(!isset($row['OID']) || $row['OID'] < 1) {
-				throw new BONotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');			
-				self::$logger->debug('<<load');
-				return;
-			}
-			
-			// get the class attributes
-			$reflection = new ReflectionClass(get_class($this));
-			$properties = $reflection->getProperties();
-	
-			try {
-				foreach($properties as $propObj) {
-					$propName = $propObj->name;
-												
-					// filter transient attributes
-					if(!in_array($propName, $this->transientAttributes)) {
-						$this->set($propName, $row[$propName]);
-					}elseif(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {
-						$prop = $this->getPropObject($propName);
-						
-						// handle the setting of ONE-TO-MANY relation values
-						if($prop->getRelationType() == 'ONE-TO-MANY') {
-							$this->set($propObj->name, $this->getOID());
-						}
-					}
-				}
-			}catch (IllegalArguementException $e) {
-				self::$logger->warn('Bad data stored in the table ['.$this->getTableName().'], field ['.$propObj->name.'] bad value['.$row[$propObj->name].'], exception ['.$e->getMessage().']');
-			}catch (PHPException $e) {
-				// it is possible that the load failed due to the table not being up-to-date
-				if($this->checkTableNeedsUpdate()) {				
-					$missingFields = $this->findMissingFields();
-		    	
-					$count = count($missingFields);
-					
-					for($i = 0; $i < $count; $i++)
-						$this->addProperty($missingFields[$i]);
-						
-					throw new BONotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->getTableName().'] was out of sync with the database so had to be updated!');
-					self::$logger->debug('<<load');
-					return;
-				}
-			}
+			$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+			$provider->load($OID);
 
 			if($config->get('sysCacheProviderName') != '')
 				$this->addToCache();
 		}
 			
-		$this->setEnumOptions();	
+		$this->setEnumOptions();
+		
 		if(method_exists($this, 'after_load_callback'))
 			$this->after_load_callback();
 		
@@ -352,107 +307,8 @@ abstract class AlphaDAO {
 
 		global $config;
 		
-		if(count($loadAttributes) == 0)
-			$attributes = $this->getPersistentAttributes();
-		else
-			$attributes = $loadAttributes;
-		
-		$fields = '';
-		foreach($attributes as $att)
-			$fields .= $att.',';
-		$fields = substr($fields, 0, -1);
-		
-		if(!$ignoreClassType && $this->isTableOverloaded())
-			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->getTableName().' WHERE '.$attribute.' = ? AND classname = ? LIMIT 1;';
-		else
-			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->getTableName().' WHERE '.$attribute.' = ? LIMIT 1;';
-		
-		self::$logger->debug('Query=['.$sqlQuery.']');	
-		
-		$this->setLastQuery($sqlQuery);
-		$stmt = AlphaDAO::getConnection()->stmt_init();
-
-		$row = array();
-		
-		if($stmt->prepare($sqlQuery)) {
-			if($this->$attribute instanceof Integer) {
-				if(!$ignoreClassType && $this->isTableOverloaded()) {
-					$stmt->bind_param('is', $value, get_class($this));
-				}else{
-					$stmt->bind_param('i', $value);
-				}
-			}else{
-				if(!$ignoreClassType && $this->isTableOverloaded()) {
-					$stmt->bind_param('ss', $value, get_class($this));
-				}else{
-					$stmt->bind_param('s', $value);
-				}
-			}
-			
-			$stmt->execute();
-			
-			$result = $this->bindResult($stmt);
-			
-			if(isset($result[0]))
-				$row = $result[0];
-				
-			$stmt->close();
-		}else{
-			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
-			if(!$this->checkTableExists()) {
-				$this->makeTable();
-				throw new BONotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table did not exist so had to create!');
-			}
-			return;
-		}
-		
-		if(!isset($row['OID']) || $row['OID'] < 1) {
-			throw new BONotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], not found in database.');			
-			self::$logger->debug('<<loadByAttribute');
-			return;
-		}
-		
-		$this->OID = $row['OID'];
-		
-		// get the class attributes
-		$reflection = new ReflectionClass(get_class($this));
-		$properties = $reflection->getProperties();
-
-		try {
-			foreach($properties as $propObj) {
-				$propName = $propObj->name;
-
-				if(isset($row[$propName])) {
-					// filter transient attributes
-					if(!in_array($propName, $this->transientAttributes)) {
-						$this->set($propName, $row[$propName]);
-					}elseif(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {
-						$prop = $this->getPropObject($propName);
-						
-						// handle the setting of ONE-TO-MANY relation values
-						if($prop->getRelationType() == 'ONE-TO-MANY') {
-							$this->set($propObj->name, $this->getOID());
-						}
-					}
-				}
-			}
-		}catch (IllegalArguementException $e) {
-			self::$logger->warn('Bad data stored in the table ['.$this->getTableName().'], field ['.$propObj->name.'] bad value['.$row[$propObj->name].'], exception ['.$e->getMessage().']');
-		}catch (PHPException $e) {
-			// it is possible that the load failed due to the table not being up-to-date
-			if($this->checkTableNeedsUpdate()) {				
-				$missingFields = $this->findMissingFields();
-	    	
-				$count = count($missingFields);
-				
-				for($i = 0; $i < $count; $i++)
-					$this->addProperty($missingFields[$i]);
-					
-				throw new BONotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table ['.$this->getTableName().'] was out of sync with the database so had to be updated!');
-				self::$logger->debug('<<loadByAttribute');
-				return;
-			}
-		}
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider->loadByAttribute($attribute, $value, $ignoreClassType, $loadAttributes);
 		
 		$this->setEnumOptions();	
 
@@ -485,50 +341,8 @@ abstract class AlphaDAO {
 		
 		global $config;
 		
-		// ensure that the field name provided in the orderBy param is legit
-		try {
-			$field = $this->get($orderBy);
-		}catch(AlphaException $e) {
-			throw new AlphaException('The field name ['.$orderBy.'] provided in the param orderBy does not exist on the class ['.get_class($this).']');
-		}
-		
-		if(!$ignoreClassType && $this->isTableOverloaded()) {
-			if($limit == 0) {
-				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' WHERE classname=\''.get_class($this).'\' ORDER BY '.$orderBy.' '.$order.';';
-			}else{
-				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' WHERE classname=\''.get_class($this).'\' ORDER BY '.$orderBy.' '.$order.' LIMIT '.
-					$start.', '.$limit.';';
-			}
-		}else{				
-			if($limit == 0)
-				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' ORDER BY '.$orderBy.' '.$order.';';
-			else
-				$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' ORDER BY '.$orderBy.' '.$order.' LIMIT '.$start.', '.$limit.';';
-		}
-		
-		$this->setLastQuery($sqlQuery);
-		
-		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
-			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$this->lastQuery.']');
-			self::$logger->debug('<<loadAll [0]');
-			return array();
-		}
-		
-		// now build an array of objects to be returned
-		$objects = array();
-		$count = 0;
-		$BO_Class = get_class($this);
-		
-		while($row = $result->fetch_array(MYSQLI_ASSOC)) {
-			try {
-				$obj = new $BO_Class();
-				$obj->load($row['OID']);
-				$objects[$count] = $obj;
-				$count++;
-			}catch(ResourceNotAllowedException $e) {
-				// the resource not allowed will be absent from the list
-			}
-		}
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$objects = $provider->loadAll($start, $limit, $orderBy, $order, $ignoreClassType);
 		
 		if(method_exists($this, 'after_loadAll_callback'))
 			$this->after_loadAll_callback();
@@ -546,87 +360,29 @@ abstract class AlphaDAO {
 	 * @param integer $limit The amount (limit) of objects to load, useful for pagination.
 	 * @param string $orderBy The name of the field to sort the objects by.
 	 * @param string $order The order to sort the objects by.
-	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
+	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type.
+	 * @param array $constructorArgs An optional array of contructor arguements to pass to the BOs that will be generated and returned.  Supports a maximum of 5 arguements.
 	 * @return array An array containing objects of this type of business object.
 	 * @since 1.0
 	 * @throws BONotFoundException
+	 * @throws IllegalArguementException
 	 */
-	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC", $ignoreClassType=false) {
-		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
+	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC", $ignoreClassType=false, $constructorArgs=array()) {
+		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
 		
 		if(method_exists($this, 'before_loadAllByAttribute_callback'))
 			$this->before_loadAllByAttribute_callback();
 		
 		global $config;
 		
-		if ($start != 0 && $limit != 0)
-			$limit = ' LIMIT '.$start.', '.$limit.';';
-		else
-			$limit = ';';
-		
-		if(!$ignoreClassType && $this->isTableOverloaded())
-			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = ? AND classname = ? ORDER BY ".$orderBy." ".$order.$limit;
-		else
-			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE $attribute = ? ORDER BY ".$orderBy." ".$order.$limit;			
-			
-		$this->setLastQuery($sqlQuery);
-		self::$logger->debug($sqlQuery);
-		
-		$stmt = AlphaDAO::getConnection()->stmt_init();
-
-		$row = array();
-		
-		if($stmt->prepare($sqlQuery)) {
-			if($this->$attribute instanceof Integer) {
-				if($this->isTableOverloaded()) {
-					$stmt->bind_param('is', $value, get_class($this));
-				}else{
-					$stmt->bind_param('i', $value);
-				}
-			}else{
-				if($this->isTableOverloaded()) {
-					$stmt->bind_param('ss', $value, get_class($this));
-				}else{
-					$stmt->bind_param('s', $value);
-				}
-			}
-			
-			$stmt->execute();
-			
-			$result = $this->bindResult($stmt);
-				
-			$stmt->close();
-		}else{
-			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
-			if(!$this->checkTableExists()) {
-				$this->makeTable();
-				throw new BONotFoundException('Failed to load objects by attribute ['.$attribute.'] and value ['.$value.'], table did not exist so had to create!');
-			}
-			self::$logger->debug('<<loadAllByAttribute []');
-			return array();
-		}
-		
-		// now build an array of objects to be returned
-		$objects = array();
-		$count = 0;
-		$BO_Class = get_class($this);
-		
-		foreach($result as $row) {
-			try {
-				$obj = new $BO_Class();
-				$obj->load($row['OID']);
-				$objects[$count] = $obj;
-				$count++;
-			}catch(ResourceNotAllowedException $e) {
-				// the resource not allowed will be absent from the list
-			}
-		}
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$objects = $provider->loadAllByAttribute($attribute, $value, $start, $limit, $orderBy, $order, $ignoreClassType);
 		
 		if(method_exists($this, 'after_loadAllByAttribute_callback'))
 			$this->after_loadAllByAttribute_callback();
 		
 		self::$logger->debug('<<loadAllByAttribute ['.count($objects).']');
-		return $objects;	
+		return $objects;
 	}
 	
 	/**
@@ -658,75 +414,8 @@ abstract class AlphaDAO {
 				'] provided to loadAllByAttributes');
 		}
 		
-		$whereClause = ' WHERE';
-		
-		$count = count($attributes);
-		
-		for($i = 0; $i < $count; $i++) {
-			$whereClause .= ' '.$attributes[$i].' = ? AND';
-			self::$logger->debug($whereClause);
-		}
-		
-		if(!$ignoreClassType && $this->isTableOverloaded())
-			$whereClause .= ' classname = ? AND';
-		
-		// remove the last " AND"
-		$whereClause = substr($whereClause, 0, -4);
-		
-		if ($limit != 0)
-			$limit = ' LIMIT '.$start.', '.$limit.';';
-		else
-			$limit = ';';
-		
-		$sqlQuery = "SELECT OID FROM ".$this->getTableName().$whereClause." ORDER BY ".$orderBy." ".$order.$limit;
-			
-		$this->setLastQuery($sqlQuery);
-		self::$logger->debug($sqlQuery);
-		
-		$stmt = AlphaDAO::getConnection()->stmt_init();
-		
-		if($stmt->prepare($sqlQuery)) {			
-			// bind params where required attributes are provided
-			if(count($attributes) > 0 && count($attributes) == count($values)) {
-				$stmt = $this->bindParams($stmt, $attributes, $values);
-			}else{
-				// we'll still need to bind the "classname" for overloaded BOs...
-				if($this->isTableOverloaded())
-					$stmt->bind_param('s', get_class($this));
-			}
-			$stmt->execute();
-			
-			$result = $this->bindResult($stmt);
-				
-			$stmt->close();
-		}else{
-			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
-			
-			if(!$this->checkTableExists()) {
-				$this->makeTable();
-				throw new BONotFoundException('Failed to load objects by attributes ['.var_export($attributes, true).'] and values ['.
-					var_export($values, true).'], table did not exist so had to create!');
-			}
-			
-			self::$logger->debug('<<loadAllByAttributes []');
-			return array();
-		}
-		
-		// now build an array of objects to be returned
-		$objects = array();
-		$count = 0;
-		$BO_Class = get_class($this);
-		
-		foreach($result as $row) {
-			try {
-				$obj = new $BO_Class();
-				$obj->load($row['OID']);
-				$objects[$count] = $obj;
-				$count++;
-			}catch(ResourceNotAllowedException $e) {
-				// the resource not allowed will be absent from the list
-			}
-		}
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$objects = $provider->loadAllByAttributes($attributes, $values, $start, $limit, $orderBy, $order, $ignoreClassType);
 		
 		if(method_exists($this, 'after_loadAllByAttributes_callback'))
 			$this->after_loadAllByAttributes_callback();
@@ -756,35 +445,8 @@ abstract class AlphaDAO {
 		
 		global $config;
 		
-		if ($start != 0 && $limit != 0)
-			$limit = ' LIMIT '.$start.', '.$limit.';';
-		else
-			$limit = ';';
-		
-		if(!$ignoreClassType && $this->isTableOverloaded())
-			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' AND classname='".get_class($this)."' ORDER BY ".$orderBy." ".$order.$limit;
-		else
-			$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' ORDER BY ".$orderBy." ".$order.$limit;
-			
-		$this->setLastQuery($sqlQuery);
-
-		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
-			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$this->lastQuery.']');
-			self::$logger->debug('<<loadAllByDayUpdated []');
-			return array();
-		}
-		
-		// now build an array of objects to be returned
-		$objects = array();
-		$count = 0;
-		$BO_Class = get_class($this);
-		
-		while($row = $result->fetch_array(MYSQLI_ASSOC)) {
-			$obj = new $BO_Class();
-			$obj->load($row['OID']);
-			$objects[$count] = $obj;
-			$count++;
-		}
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$objects = $provider->loadAllByDayUpdated($date, $start, $limit, $orderBy, $order, $ignoreClassType);
 		
 		if(method_exists($this, 'after_loadAllByDayUpdated_callback'))
 			$this->after_loadAllByDayUpdated_callback();
@@ -811,30 +473,8 @@ abstract class AlphaDAO {
 		
 		global $config;
 		
-		if(!$ignoreClassType && $this->isTableOverloaded())
-			$sqlQuery = "SELECT ".$returnAttribute." FROM ".$this->getTableName()." WHERE $attribute = '$value' AND classname='".get_class($this)."' ORDER BY OID ".$order.";";
-		else
-			$sqlQuery = "SELECT ".$returnAttribute." FROM ".$this->getTableName()." WHERE $attribute = '$value' ORDER BY OID ".$order.";";
-			
-			
-		$this->setLastQuery($sqlQuery);
-		self::$logger->debug('lastQuery ['.$sqlQuery.']');
-
-		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
-			throw new BONotFoundException('Failed to load field ['.$returnAttribute.'] values, MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$this->lastQuery.']');
-			self::$logger->debug('<<loadAllFieldValuesByAttribute []');
-			return array();
-		}
-		
-		// now build an array of attribute values to be returned
-		$values = array();
-		$count = 0;
-		$BO_Class = get_class($this);
-		
-		while($row = $result->fetch_array(MYSQLI_ASSOC)) {
-			$values[$count] = $row[$returnAttribute];
-			$count++;
-		}
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$values = $provider->loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order, $ignoreClassType);
 		
 		self::$logger->debug('<<loadAllFieldValuesByAttribute ['.count($values).']');
 		return $values;
@@ -861,194 +501,14 @@ abstract class AlphaDAO {
 			throw new FailedSaveException('Could not save due to a validation error.');
 			return;
 		}else{		
-			// get the class attributes
-			$reflection = new ReflectionClass(get_class($this));
-			$properties = $reflection->getProperties();
-			$sqlQuery = '';
-			$stmt = null;
-
-			if($this->getVersion() != $this->version_num->getValue()){
-				throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
-				return;
-			}
-
-			// set the "updated by" fields, we can only set the user id if someone is logged in
-			if(isset($_SESSION['currentUser']))
-				$this->updated_by->setValue($_SESSION['currentUser']->getOID());
+			$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+			$provider->save();
 			
-			$this->updated_ts = new Timestamp(date("Y-m-d H:i:s"));
-			
-			// check to see if it is a transient object that needs to be inserted
-			if($this->isTransient()) {
-				$savedFieldsCount = 0;
-				$sqlQuery = 'INSERT INTO '.$this->getTableName().' (';
-	
-				foreach($properties as $propObj) {
-					$propName = $propObj->name;
-					if (!in_array($propName, $this->transientAttributes)) {
-						// Skip the OID, database auto number takes care of this.
-						if($propName != 'OID' && $propName != 'version_num') {
-							$sqlQuery .= "$propName,";
-							$savedFieldsCount++;
-						}
-						
-						if($propName == 'version_num') {
-							$sqlQuery .= 'version_num,';
-							$savedFieldsCount++;
-						}
-					}
-				}
-				if($this->isTableOverloaded())
-					$sqlQuery .= 'classname,';
-	
-				$sqlQuery = rtrim($sqlQuery, ",");
-	
-				$sqlQuery .= ') VALUES (';
+			if($config->get('sysCacheProviderName') != '')
+				$this->BO->removeFromCache();
 				
-				for($i = 0; $i < $savedFieldsCount; $i++)
-					$sqlQuery.= '?,';
-				
-				if($this->isTableOverloaded())
-					$sqlQuery.= '?,';
-				
-				$sqlQuery = rtrim($sqlQuery, ',').')';
-				
-				$this->setLastQuery($sqlQuery);
-				self::$logger->debug('Query ['.$sqlQuery.']');
-				$stmt = AlphaDAO::getConnection()->stmt_init();
-			
-				if($stmt->prepare($sqlQuery)) {			
-					$stmt = $this->bindParams($stmt);					
-					$stmt->execute();					
-				}else{
-					throw new FailedSaveException('Failed to save object, error is ['.$stmt->error.'], query ['.$this->lastQuery.']');
-				}
-			}else{
-				// assume that it is a persistent object that needs to be updated
-				$savedFieldsCount = 0;
-				$sqlQuery = 'UPDATE '.$this->getTableName().' SET ';
-	
-				foreach($properties as $propObj) {
-					$propName = $propObj->name;
-					if (!in_array($propName, $this->transientAttributes)) {
-						// Skip the OID, database auto number takes care of this.
-						if($propName != 'OID' && $propName != 'version_num') {							
-							$sqlQuery .= "$propName = ?,";
-							$savedFieldsCount++;
-						}
-						
-						if($propName == 'version_num') {
-							$sqlQuery .= 'version_num = ?,';
-							$savedFieldsCount++;
-						}
-					}
-				}
-				if($this->isTableOverloaded())
-					$sqlQuery .= 'classname = ?,';
-	
-				$sqlQuery = rtrim($sqlQuery, ",");
-	
-				$sqlQuery .= " WHERE OID=?;";
-				
-				$this->setLastQuery($sqlQuery);
-				$stmt = AlphaDAO::getConnection()->stmt_init();
-				
-				if($stmt->prepare($sqlQuery)) {							
-					$this->bindParams($stmt);					
-					$stmt->execute();					
-				}else{
-					throw new FailedSaveException('Failed to save object, error is ['.$stmt->error.'], query ['.$this->lastQuery.']');				
-				}				
-			}
-	
-			if ($stmt != null && $stmt->error == '') {
-				// populate the updated OID in case we just done an insert				
-				if($this->isTransient())
-					$this->setOID(AlphaDAO::getConnection()->insert_id);
-
-				try {
-					foreach($properties as $propObj) {
-						$propName = $propObj->name;
-						
-						if(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {				
-							$prop = $this->getPropObject($propName);
-							
-							// handle the saving of MANY-TO-MANY relation values
-							if($prop->getRelationType() == 'MANY-TO-MANY') {
-								try {
-									try{
-										// check to see if the rel is on this class
-										$side = $prop->getSide(get_class($this));											
-									}catch (IllegalArguementException $iae) {
-										$side = $prop->getSide(ucfirst($this->getTableName()).'Object');
-									}
-										
-									$lookUp = $prop->getLookup();									
-										
-									// first delete all of the old RelationLookup objects for this rel
-									try {
-										if($side == 'left')
-											$lookUp->deleteAllByAttribute('leftID', $this->getOID());
-										else
-											$lookUp->deleteAllByAttribute('rightID', $this->getOID());							
-									}catch (Exception $e) {
-										throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
-									}
-											
-									if(isset($_POST[$propName]) && $_POST[$propName] != '00000000000')
-										$OIDs = explode(',', $_POST[$propName]);
-																					
-									if(isset($OIDs) && !empty($OIDs[0])) {										
-										// now for each posted OID, create a new RelationLookup record and save
-										foreach ($OIDs as $oid) {											
-											$newLookUp = new RelationLookup($lookUp->get('leftClassName'), $lookUp->get('rightClassName'));
-											if($side == 'left') {
-												$newLookUp->set('leftID', $this->getOID());
-												$newLookUp->set('rightID', $oid);
-											}else{
-												$newLookUp->set('rightID', $this->getOID());
-												$newLookUp->set('leftID', $oid);
-											}
-											$newLookUp->save();
-										}									
-									}
-								}catch (Exception $e) {
-									throw new FailedSaveException('Failed to update a MANY-TO-MANY relation on the object, error is ['.$e->getMessage().']');
-									return;
-								}
-							}
-							
-							// handle the saving of ONE-TO-MANY relation values
-							if($prop->getRelationType() == 'ONE-TO-MANY') {
-								$prop->setValue($this->getOID());
-							}
-						}						
-					}
-				}catch (Exception $e) {
-					throw new FailedSaveException('Failed to save object, error is ['.$e->getMessage().']');
-					return;
-				}
-				
-				$stmt->close();
-				
-				if($config->get('sysCacheProviderName') != '')
-					$this->removeFromCache();
-				
-				if(method_exists($this, 'after_save_callback'))
-					$this->after_save_callback();
-			}else{
-				// there has been an error, so decrement the version number back
-				$temp = $this->version_num->getValue();					
-				$this->version_num->setValue($temp-1);	
-				
-				// check for unique violations			
-				if(AlphaDAO::getConnection()->errno == '1062') {					
-					throw new ValidationException('Failed to save, the value '.$this->findOffendingValue(AlphaDAO::getConnection()->error).' is already in use!');
-					return;
-				}else{					
-					throw new FailedSaveException('Failed to save object, MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$this->lastQuery.']');
-				}
-			}
+			if(method_exists($this, 'after_save_callback'))
+				$this->after_save_callback();
 		}
 	}
 	
@@ -1076,25 +536,8 @@ abstract class AlphaDAO {
 		if($this->isTransient())
 			throw new FailedSaveException('Cannot perform saveAttribute method on transient BO!');
 
-		// assume that it is a persistent object that needs to be updated
-		$sqlQuery = 'UPDATE '.$this->getTableName().' SET '.$attribute.'=? WHERE OID=?;';
-				
-		$this->setLastQuery($sqlQuery);
-		$stmt = AlphaDAO::getConnection()->stmt_init();
-				
-		if($stmt->prepare($sqlQuery)) {
-			if($this->$attribute instanceof Integer)
-				$bindingsType = 'i';
-			else
-				$bindingsType = 's';
-			$stmt->bind_param($bindingsType.'i', $value, $this->getOID());
-			self::$logger->debug('Binding params ['.$bindingsType.'i, '.$value.', '.$this->getOID().']');
-			$stmt->execute();					
-		}else{
-			throw new FailedSaveException('Failed to save attribute, error is ['.$stmt->error.'], query ['.$this->lastQuery.']');				
-		}
-				
-		$stmt->close();
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider->saveAttribute($attribute, $value);
 		
 		$this->set($attribute, $value);
 		
@@ -1302,46 +745,14 @@ abstract class AlphaDAO {
 
 		global $config;
 		
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$ver = $provider->getVersion();
 		
-		$sqlQuery = 'SELECT version_num FROM '.$this->getTableName().' WHERE OID = ?;';
-		$this->setLastQuery($sqlQuery);
-			
-		$stmt = AlphaDAO::getConnection()->stmt_init();
-			
-		if($stmt->prepare($sqlQuery)) {
-			$stmt->bind_param('i', $this->OID);
-				
-			$stmt->execute();
-				
-			$result = $this->bindResult($stmt);
-			if(isset($result[0]))
-				$row = $result[0];
-					
-			$stmt->close();
-		}else{
-			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
-			if(!$this->checkTableExists()) {
-				$this->makeTable();
-				throw new BONotFoundException('Failed to get the version number, table did not exist so had to create!');
-			}
-			return;
-		}
+		if(method_exists($this, 'after_getVersion_callback'))
+			$this->after_getVersion_callback();
 		
-		if(!isset($row['version_num']) || $row['version_num'] < 1) {
-			if(method_exists($this, 'after_getVersion_callback'))
-				$this->after_getVersion_callback();
-				
-			self::$logger->debug('<<getVersion [0]');
-			return 0;
-		}else{
-			if(method_exists($this, 'after_getVersion_callback'))
-				$this->after_getVersion_callback();
-			
-			$version_num = $row['version_num'];
-			
-			self::$logger->debug('<<getVersion ['.$version_num.']');
-			return $version_num;
-		}
+		self::$logger->debug('<<getVersion ['.$ver.']');
+		return $ver;
 	}
 
 	/**
@@ -1355,82 +766,11 @@ abstract class AlphaDAO {
 		
 		if(method_exists($this, 'before_makeTable_callback'))
 			$this->before_makeTable_callback();
-		
-		$sqlQuery = "CREATE TABLE ".$this->getTableName()." (OID INT(11) ZEROFILL NOT NULL AUTO_INCREMENT,";
-		
-		// get the class attributes
-		$reflection = new ReflectionClass(get_class($this));
-		$properties = $reflection->getProperties();
-		
-		foreach($properties as $propObj) {
-			$propName = $propObj->name;
 			
-			if(!in_array($propName, $this->transientAttributes) && $propName != "OID") {
-				$propClass = get_class($this->getPropObject($propName));
-
-				switch (strtoupper($propClass)) {
-					case "INTEGER":
-						// special properties for RelationLookup OIDs
-						if($this instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID'))
-							$sqlQuery .= "$propName INT(".$this->getPropObject($propName)->getSize().") ZEROFILL NOT NULL,";
-						else
-							$sqlQuery .= "$propName INT(".$this->getPropObject($propName)->getSize()."),";
-					break;
-					case "DOUBLE":
-						$sqlQuery .= "$propName DOUBLE(".$this->getPropObject($propName)->getSize(true)."),";
-					break;
-					case "STRING":
-						$sqlQuery .= "$propName VARCHAR(".$this->getPropObject($propName)->getSize()."),";
-					break;
-					case "TEXT":
-						$sqlQuery .= "$propName TEXT,";
-					break;
-					case "BOOLEAN":
-						$sqlQuery .= "$propName CHAR(1) DEFAULT '0',";
-					break;
-					case "DATE":
-						$sqlQuery .= "$propName DATE,";
-					break;
-					case "TIMESTAMP":
-						$sqlQuery .= "$propName DATETIME,";
-					break;
-					case "ENUM":
-						$sqlQuery .= "$propName ENUM(";
-						$enumVals = $this->getPropObject($propName)->getOptions();
-						foreach($enumVals as $val) {
-							$sqlQuery .= "'".$val."',";
-						}
-						$sqlQuery = rtrim($sqlQuery, ",");
-						$sqlQuery .= "),";
-					break;
-					case "DENUM":
-						$tmp = new DEnum(get_class($this).'::'.$propName);						
-						$tmp->save();
-						$sqlQuery .= "$propName INT(11) ZEROFILL,";
-					break;
-					case "RELATION":						
-						$sqlQuery .= "$propName INT(11) ZEROFILL UNSIGNED,";
-					break;
-					default:
-						$sqlQuery .= "";
-					break;
-				}
-			}			
-		}
-		if($this->isTableOverloaded())
-			$sqlQuery .= "classname VARCHAR(100),";
+		global $config;
 		
-		$sqlQuery .= "PRIMARY KEY (OID)) ENGINE=InnoDB;";
-		
-		$this->setLastQuery($sqlQuery);
-		
-		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
-			throw new AlphaException('Failed to create the table ['.$this->getTableName().'] for the class ['.get_class($this).'], query is ['.$this->lastQuery.']');
-			self::$logger->debug('<<makeTable');
-		}
-				
-		// check the table indexes if any additional ones required
-		$this->checkIndexes();
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider->makeTable();
 		
 		if(method_exists($this, 'after_makeTable_callback'))
 			$this->after_makeTable_callback();
@@ -1451,20 +791,14 @@ abstract class AlphaDAO {
 		
 		if(method_exists($this, 'before_rebuildTable_callback'))
 			$this->before_rebuildTable_callback();
+			
+		global $config;
 		
-		$sqlQuery = 'DROP TABLE IF EXISTS '.$this->getTableName().';';
-
-		$this->setLastQuery($sqlQuery);
-
-		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
-			throw new AlphaException('Failed to drop the table ['.$this->getTableName().'] for the class ['.get_class($this).'], query is ['.$this->lastQuery.']');
-			self::$logger->debug('<<rebuildTable');
-		}
-
-		$this->makeTable();
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider->rebuildTable();
 		
 		if(method_exists($this, 'after_rebuildTable_callback'))
-			$this->after_rebuildTable_callback();			
+			$this->after_rebuildTable_callback();
 		
 		self::$logger->debug('<<rebuildTable');
 	}
@@ -1481,18 +815,11 @@ abstract class AlphaDAO {
 		
 		if(method_exists($this, 'before_dropTable_callback'))
 			$this->before_dropTable_callback();
-		
-		if($tableName == null)
-			$tableName = $this->getTableName();
 			
-		$sqlQuery = 'DROP TABLE IF EXISTS '.$tableName.';';
-
-		$this->setLastQuery($sqlQuery);
-
-		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
-			throw new AlphaException('Failed to drop the table ['.$tableName.'] for the class ['.get_class($this).'], query is ['.$this->lastQuery.']');
-			self::$logger->debug('<<dropTable');
-		}
+		global $config;
+		
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider->dropTable($tableName);
 		
 		if(method_exists($this, 'after_dropTable_callback'))
 			$this->after_dropTable_callback();			
@@ -1682,46 +1009,20 @@ abstract class AlphaDAO {
 		if(method_exists($this, 'before_getCount_callback'))
 			$this->before_getCount_callback();
 			
+		global $config;
+			
 		if(!is_array($attributes) || !is_array($values)) {
 			throw new IllegalArguementException('Illegal arrays attributes=['.var_export($attributes, true).'] and values=['.var_export($values, true).'] provided to loadAllByAttributes');
 		}
 		
-		if($this->isTableOverloaded())
-			$whereClause = ' WHERE classname = \''.get_class($this).'\' AND';
-		else
-			$whereClause = ' WHERE';
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$count = $provider->getCount($attributes, $values);
+		
+		if(method_exists($this, 'after_getCount_callback'))
+			$this->after_getCount_callback();
 			
-		$count = count($attributes);
-		
-		for($i = 0; $i < $count; $i++) {
-			$whereClause .= ' '.$attributes[$i].' = \''.$values[$i].'\' AND';
-			self::$logger->debug($whereClause);
-		}
-		// remove the last " AND"
-		$whereClause = substr($whereClause, 0, -4);
-		
-		if($whereClause != ' WHERE')
-			$sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->getTableName().$whereClause;
-		else
-			$sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->getTableName();
-
-		$this->setLastQuery($sqlQuery);
-		
-		$result = AlphaDAO::getConnection()->query($sqlQuery);
-
-		if ($result) {
-			if(method_exists($this, 'after_getCount_callback'))
-				$this->after_getCount_callback();
-				
-			$row = $result->fetch_array(MYSQLI_ASSOC);
-
-			self::$logger->debug('<<getCount ['.$row['class_count'].']');
-			return $row['class_count'];
-		}else{
-			throw new AlphaException('Failed to get the count for the class ['.get_class($this).'] from the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');			
-			self::$logger->debug('<<getCount [0]');
-			return 0;
-		}
+		self::$logger->debug('<<getCount ['.$count.']');
+		return $count;
 	}
 
 	/**
@@ -1776,44 +1077,12 @@ abstract class AlphaDAO {
 		
 		if(method_exists($this, 'before_setEnumOptions_callback'))
 			$this->before_setEnumOptions_callback();
+			
+		global $config;
 		
-		// get the class attributes
-		$reflection = new ReflectionClass(get_class($this));
-		$properties = $reflection->getProperties();
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider->setEnumOptions();
 		
-		// flag for any database errors
-		$dbError = false;
-		
-		foreach($properties as $propObj) {
-			$propName = $propObj->name;
-			if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
-				$propClass = get_class($this->getPropObject($propName));
-				if ($propClass == 'Enum') {
-					$sqlQuery = "SHOW COLUMNS FROM ".$this->getTableName()." LIKE '$propName'";
-					
-					$this->setLastQuery($sqlQuery);
-					
-					$result = AlphaDAO::getConnection()->query($sqlQuery);
-					
-					if ($result) {							
-						$row = $result->fetch_array(MYSQLI_NUM);
-						$options = explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2",$row[1]));
-						
-						$this->getPropObject($propName)->setOptions($options);						
-					}else{
-						$dbError = true;
-						break;
-					}
-				}
-			}
-		}
-		
-		if (!$dbError) {
-			if(method_exists($this, 'after_setEnumOptions_callback'))
-				$this->after_setEnumOptions_callback();
-		}else{			
-			throw new AlphaException('Failed to load enum options correctly for object instance of class ['.get_class($this).']');
-		}
 		self::$logger->debug('<<setEnumOptions');
 	}
 	
@@ -1982,30 +1251,15 @@ abstract class AlphaDAO {
 			$this->before_checkTableExists_callback();
 			
 		global $config;
-				
-		$tableExists = false;
 		
-		$sqlQuery = 'SHOW TABLES;';
-		$this->setLastQuery($sqlQuery);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$tableExists = $provider->checkTableExists();
 		
-		$result = AlphaDAO::getConnection()->query($sqlQuery);
-		
-		while ($row = $result->fetch_array(MYSQLI_NUM)) {
-    		if (strtolower($row[0]) == strtolower($this->getTableName()))
-    			$tableExists = true;
-		}		
-		
-		if ($result) {
-			if(method_exists($this, 'after_checkTableExists_callback'))
-				$this->after_checkTableExists_callback();
+		if(method_exists($this, 'after_checkTableExists_callback'))
+			$this->after_checkTableExists_callback();
 			
-			self::$logger->debug('<<checkTableExists ['.$tableExists.']');
-			return $tableExists;
-		}else{			
-			throw new AlphaException('Failed to access the system database correctly, error is ['.AlphaDAO::getConnection()->error.']');
-			self::$logger->debug('<<checkTableExists [false]');
-			return false;
-		}
+		self::$logger->debug('<<checkTableExists ['.$tableExists.']');
+		return $tableExists;
 	}
 	
 	/**
@@ -2023,31 +1277,12 @@ abstract class AlphaDAO {
 		self::$logger->debug('>>checkBOTableExists(BOClassName=['.$BOClassName.'])');
 		
 		global $config;
+
+		require_once $config->get('sysRoot').'alpha/model/'.$config->get('sysDBProviderName').'.inc';
+		eval('$tableExists = '.$config->get('sysDBProviderName').'::checkBOTableExists($BOClassName);');
 		
-		eval('$tableName = '.$BOClassName.'::TABLE_NAME;');
-		
-		if(empty($tableName))
-			$tableName = substr($BOClassName, 0, strpos($BOClassName, '_'));		
-				
-		$tableExists = false;
-		
-		$sqlQuery = 'SHOW TABLES;';
-		
-		$result = AlphaDAO::getConnection()->query($sqlQuery);
-		
-		while ($row = $result->fetch_array(MYSQLI_NUM)) {    		
-    		if ($row[0] == $tableName)
-    			$tableExists = true;
-		}		
-		
-		if ($result) {			
-			self::$logger->debug('<<checkBOTableExists ['.($tableExists ? 'true' : 'false').']');
-			return $tableExists;
-		}else{			
-			throw new AlphaException('Failed to access the system database correctly, error is ['.AlphaDAO::getConnection()->error.']');
-			self::$logger->debug('<<checkBOTableExists [false]');
-			return false;
-		}
+		self::$logger->debug('<<checkBOTableExists ['.($tableExists ? 'true' : 'false').']');
+		return $tableExists;
 	}
 	
 	/**
@@ -2317,6 +1552,7 @@ abstract class AlphaDAO {
 	 */
 	protected function markUnique($attribute1Name, $attribute2Name='') {
 		self::$logger->debug('>>markUnique(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'])');
+		
 		if(empty($attribute2Name)) {
 			array_push($this->uniqueAttributes, $attribute1Name);
 		}else{
@@ -2324,7 +1560,20 @@ abstract class AlphaDAO {
 			$attributes = $attribute1Name.'+'.$attribute2Name;
 			array_push($this->uniqueAttributes, $attributes);
 		}
+		
 		self::$logger->debug('<<markUnique');
+	}
+	
+	/**
+	 * Returns the array of names of unique attributes on this BO
+	 * 
+	 * @return array
+	 * @since 1.1
+	 */
+	public function getUniqueAttributes() {
+		self::$logger->debug('>>getUniqueAttributes()');
+		self::$logger->debug('<<getUniqueAttributes: ['.print_r($this->uniqueAttributes, true).']');
+		return $this->uniqueAttributes;
 	}
 	
 	/**
@@ -2333,6 +1582,8 @@ abstract class AlphaDAO {
 	 * @return array An array of database indexes on this table.
 	 * @since 1.0
 	 * @throws AlphaException
+	 * @deprecated
+	 * @todo remove?
 	 */
 	protected function getIndexes() {
 		self::$logger->debug('>>getIndexes()');
@@ -2361,104 +1612,16 @@ abstract class AlphaDAO {
 	 * Checks to see if all of the indexes are in place for the BO's table, creates those that are missing.
 	 * 
 	 * @since 1.0
+	 * @deprecated
+	 * @todo remove?
 	 */
 	protected function checkIndexes() {
-		self::$logger->debug('>>checkIndexes()');		
+		self::$logger->debug('>>checkIndexes()');
 		
 		if(method_exists($this, 'before_checkIndexes_callback'))
 			$this->before_checkIndexes_callback();
 		
-		$indexNames = $this->getIndexes();		
-		
-		// process unique keys
-		foreach($this->uniqueAttributes as $prop) {
-			// check for composite indexes
-			if(strpos($prop, '+')) {
-				$attributes = explode('+', $prop);
-				
-				$index_exists = false;
-				foreach ($indexNames as $index) {
-					if ($attributes[0].'_'.$attributes[1].'_unq_idx' == $index) {
-				    	$index_exists = true;
-					}
-				}
-	
-				if(!$index_exists)
-					$this->createUniqueIndex($attributes[0], $attributes[1]);
-			}else{
-				$index_exists = false;
-				foreach ($indexNames as $index) {					
-					if ($prop.'_unq_idx' == $index) {
-				    	$index_exists = true;
-					}
-				}
-	
-				if(!$index_exists)
-					$this->createUniqueIndex($prop);
-			}
-		}		
-		
-		// process foreign-key indexes
-		// get the class attributes
-		$reflection = new ReflectionClass(get_class($this));
-		$properties = $reflection->getProperties();
-		
-		foreach($properties as $propObj) {
-			$propName = $propObj->name;			
-			$prop = $this->getPropObject($propName);
-			if($prop instanceof Relation) {
-								
-				if($prop->getRelationType() == 'MANY-TO-ONE') {
-					$indexExists = false;
-					foreach ($indexNames as $index) {
-						if ($propName.'_fk_idx' == $index) {
-					    	$indexExists = true;
-						}
-					}
-		
-					if(!$indexExists) {
-						$this->createForeignIndex($propName, $prop->getRelatedClass(), $prop->getRelatedClassField());
-					}
-				}
-				
-				if($prop->getRelationType() == 'MANY-TO-MANY') {					
-					$lookup = $prop->getLookup();
-					
-					if($lookup != null) {
-						try {					
-							$lookupIndexNames = $lookup->getIndexes();
-							
-							// handle index check/creation on left side of Relation
-							$indexExists = false;
-							foreach ($lookupIndexNames as $index) {
-								if ('leftID_fk_idx' == $index) {
-							    	$indexExists = true;
-								}
-							}
-							
-							if(!$indexExists) {
-								$lookup->createForeignIndex('leftID', $prop->getRelatedClass('left'), 'OID');
-							}
-							
-							// handle index check/creation on right side of Relation
-							$indexExists = false;
-							foreach ($lookupIndexNames as $index) {
-								if ('rightID_fk_idx' == $index) {
-							    	$indexExists = true;
-								}
-							}
-							
-							if(!$indexExists) {
-								$lookup->createForeignIndex('rightID', $prop->getRelatedClass('right'), 'OID');
-							}
-						}catch(AlphaException $e) {
-							self::$logger->error($e->getMessage());
-						}
-					}
-				}
-				
-			}
-		}
+		// TODO
 		
 		if(method_exists($this, 'after_checkIndexes_callback'))
 			$this->after_checkIndexes_callback();
@@ -2579,6 +1742,8 @@ abstract class AlphaDAO {
 	 * 
 	 * @param string $error The MySQL error string.
 	 * @since 1.0
+	 * @deprecated
+	 * @todo remove
 	 */
 	protected function findOffendingValue($error) {
 		self::$logger->debug('>>findOffendingValue(error=['.$error.'])');
@@ -2725,12 +1890,12 @@ abstract class AlphaDAO {
 	}
 	
 	/**
-	 * Private setter for the object ID, used from load methods.
+	 * Setter for the Object ID (OID)
 	 *
 	 * @param integer $OID The Object ID.
 	 * @since 1.0
 	 */
-	private function setOID($OID) {
+	public function setOID($OID) {
 		self::$logger->debug('>>setOID(OID=['.$OID.'])');
 		self::$logger->debug('<<setOID');
 		$this->OID = $OID;
@@ -2921,55 +2086,13 @@ abstract class AlphaDAO {
 	public function isTableOverloaded() {
 		self::$logger->debug('>>isTableOverloaded()');
 		
-		$classname = get_class($this);
-		$tablename = ucfirst($this->getTableName()).'Object';
+		global $config;
 		
-		// use reflection to check to see if we are dealing with a persistent type (e.g. DEnum) which are never overloaded
-		$reflection = new ReflectionClass($classname);
-		$implementedInterfaces = $reflection->getInterfaces();
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$isOverloaded = $provider->isTableOverloaded();
 		
-		foreach ($implementedInterfaces as $interface) {
-			if ($interface->name == 'AlphaTypeInterface') {
-				self::$logger->debug('<<isTableOverloaded [false]');
-				return false;
-			}
-		}
-		
-		if($classname != $tablename) {
-			// loop over all BOs to see if there is one using the same table as this BO
-			
-			$BOclasses = self::getBOClassNames();
-			
-			foreach($BOclasses as $BOclassName) {
-				if($tablename == $BOclassName) {
-					self::$logger->debug('<<isTableOverloaded [true]');
-					return true;
-				}
-			}
-			throw new BadBOTableNameException('The table name ['.$tablename.'] for the class ['.$classname.'] is invalid as it does not match a BO definition in the system!');
-			self::$logger->debug('<<isTableOverloaded [false]');
-			return false;
-		}else{
-			// check to see if there is already a "classname" column in the database for this BO
-			
-			$query = 'SHOW COLUMNS FROM '.$this->getTableName();
-			
-			$result = AlphaDAO::getConnection()->query($query);
-			
-			if($result) {
-				while ($row = $result->fetch_array(MYSQLI_ASSOC)) {						
-					if ('classname' == $row['Field']) {
-						self::$logger->debug('<<isTableOverloaded [true]');
-						return true;
-					}
-				}
-			}else{
-				self::$logger->warn('Error during show columns ['.AlphaDAO::getConnection()->error.']');
-			}
-			
-			self::$logger->debug('<<isTableOverloaded [false]');
-			return false;
-		}
+		self::$logger->debug('<<isTableOverloaded ['.$isOverloaded.']');
+		return $isOverloaded;
 	}
 	
 	/**
@@ -2983,8 +2106,15 @@ abstract class AlphaDAO {
 			self::$logger = new Logger('AlphaDAO');
 		self::$logger->debug('>>begin()');     	
      	
-     	if (!AlphaDAO::getConnection()->autocommit(false))
-     		throw new AlphaException('Error beginning a new transaction, error is ['.AlphaDAO::getConnection()->error.']');
+		global $config;
+		
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), new PersonObject());
+		
+    	try{
+    		$provider->commit();
+    	}catch (Exception $e) {
+     		throw new AlphaException('Error beginning a new transaction, error is ['.$e->getMessage().']');
+    	}
      	
      	self::$logger->debug('<<begin');
 	}
@@ -3000,8 +2130,15 @@ abstract class AlphaDAO {
 			self::$logger = new Logger('AlphaDAO');
 		self::$logger->debug('>>commit()');
 		
-    	if (!AlphaDAO::getConnection()->commit())
-     		throw new FailedSaveException('Error commiting a transaction, error is ['.AlphaDAO::getConnection()->error.']');
+		global $config;
+		
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), new PersonObject());
+		
+    	try{
+    		$provider->commit();
+    	}catch (Exception $e) {
+     		throw new FailedSaveException('Error commiting a transaction, error is ['.$e->getMessage().']');
+    	}
     	
     	self::$logger->debug('<<commit');
   	}
@@ -3140,6 +2277,8 @@ abstract class AlphaDAO {
   	 * @param array Optional array of BO values.
   	 * @return mysqli_stmt
   	 * @since 1.0
+  	 * @todo remove
+  	 * @deprecated
   	 */
 	protected function bindParams($stmt, $attributes=array(), $values=array()) {
 		self::$logger->debug('>>bindParams(stmt=['.var_export($stmt, true).'])');
@@ -3241,6 +2380,8 @@ abstract class AlphaDAO {
 	 * @param mysqli_stmt $stmt
 	 * @return array A 2D array containing the query result.
 	 * @since 1.0
+	 * @todo remove
+	 * @deprecated
 	 */
 	protected function bindResult($stmt) {
 		$result = array();
@@ -3385,7 +2526,7 @@ abstract class AlphaDAO {
 	 * @param string $query
 	 * @since 1.1
 	 */
-	protected function setLastQuery($query) {
+	public function setLastQuery($query) {
 		self::$logger->sql($query);
 		$this->lastQuery = $query;
 	}

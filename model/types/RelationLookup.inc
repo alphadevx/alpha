@@ -189,31 +189,34 @@ class RelationLookup extends AlphaDAO implements AlphaTypeInterface {
 	}
 	
 	/**
-	 * Loads all of the objects of this class by the specified attribute into an array which is returned. 
 	 * This custom version provides the left/right class names to the business object constructor, required 
 	 * for RelationLookup objects.
 	 * 
-	 * @param string $atribute The attribute to load the objects by.
-	 * @param string $value The value of the attribute to load the objects by.
-	 * @param integer $start The start of the SQL LIMIT clause, useful for pagination.
-	 * @param integer $limit The amount (limit) of objects to load, useful for pagination.
-	 * @param string $orderBy The name of the field to sort the objects by.
-	 * @param string $order The order to sort the objects by.
-	 * @return array An array containing objects of this type of business object.
-	 * @since 1.0
-	 * @throws BONotFoundException
-	 * @since 1.0
+	 * 
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAO::loadAllByAttribute()
 	 */
-	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC") {
+	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC", $ignoreClassType=false, $constructorArgs=array()) {
 		if(!isset(self::$logger))
 			self::$logger = new Logger('RelationLookup');
 			
-		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.']');
+		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
 		
 		if(method_exists($this, 'before_loadAllByAttribute_callback'))
 			$this->before_loadAllByAttribute_callback();
-		
+			
 		global $config;
+			
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$objects = $provider->loadAllByAttribute($attribute, $value, $start, $limit, $orderBy, $order, $ignoreClassType, array($this->leftClassName, $this->rightClassName));
+		
+		if(method_exists($this, 'after_loadAllByAttribute_callback'))
+			$this->after_loadAllByAttribute_callback();
+		
+		self::$logger->debug('<<loadAllByAttribute ['.count($objects).']');
+		return $objects;
+		
+		/*global $config;
 		
 		if ($start != 0 && $limit != 0)
 			$limit = ' LIMIT '.$start.', '.$limit.';';
@@ -275,13 +278,13 @@ class RelationLookup extends AlphaDAO implements AlphaTypeInterface {
 			}catch(ResourceNotAllowedException $e) {
 				// the resource not allowed will be absent from the list
 			}
-		}
+		}*/
 		
-		if(method_exists($this, 'after_loadAllByAttribute_callback'))
+		/*if(method_exists($this, 'after_loadAllByAttribute_callback'))
 			$this->after_loadAllByAttribute_callback();
 		
 		self::$logger->debug('<<loadAllByAttribute ['.count($objects).']');
-		return $objects;	
+		return $objects;*/	
 	}
 	
 	/**

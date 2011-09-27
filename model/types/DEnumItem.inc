@@ -112,25 +112,27 @@ class DEnumItem extends AlphaDAO implements AlphaTypeInterface{
 	 * @since 1.0
 	 * @throws AlphaException
 	 */
-	public function loadItems($EnumID)
-	{		
+	public function loadItems($EnumID) {		
 		global $config;
 		
 		$this->DEnumID->setValue($EnumID);
 		
 		$sqlQuery = 'SELECT OID FROM '.self::TABLE_NAME.' WHERE DEnumID = \''.$EnumID.'\';';
 		
-		$this->setLastQuery($sqlQuery);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
 
-		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
-			throw new AlphaException('Failed to load objects, query: ['.$this->lastQuery.']');
+		try{
+			$result = $provider->query($sqlQuery);			
+		}catch(CustomQueryException $e) {
+			throw new AlphaException('Failed to load objects, error is ['.$e->getMessage().']');
+			return array();
 		}
 		
 		// now build an array of objects to be returned
 		$objects = array();
 		$count = 0;		
 		
-		while($row = $result->fetch_array(MYSQLI_ASSOC)) {
+		foreach($result as $row) {
 			$obj = new DEnumItem();
 			$obj->load($row['OID']);
 			$objects[$count] = $obj;
