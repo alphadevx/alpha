@@ -327,7 +327,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			self::$logger->warn('Bad data stored in the table ['.$this->BO->getTableName().'], field ['.$propObj->name.'] bad value['.$row[$propObj->name].'], exception ['.$e->getMessage().']');
 		}catch (PHPException $e) {
 			// it is possible that the load failed due to the table not being up-to-date
-			if($this->checkTableNeedsUpdate()) {				
+			if($this->BO->checkTableNeedsUpdate()) {				
 				$missingFields = $this->BO->findMissingFields();
 	    	
 				$count = count($missingFields);
@@ -1386,7 +1386,70 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	public function checkTableNeedsUpdate() {
 		self::$logger->debug('>>checkTableNeedsUpdate()');
 				
-		// TODO: implement
+		$updateRequired = false;
+			
+		$matchCount = 0;
+			
+		$query = 'SHOW COLUMNS FROM '.$this->BO->getTableName();
+		$result = self::getConnection()->query($query);
+		$this->BO->setLastQuery($query);
+			
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = $reflection->getProperties();
+			
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			if (!in_array($propName, $this->BO->getTransientAttributes())) {
+				
+				$foundMatch = false;	
+					
+				while ($row = $result->fetch_array(MYSQLI_ASSOC)) {						
+			    	if ($propName == $row['Field']) {
+			    		$foundMatch = true;
+			    		break;
+			    	}
+				}
+					
+				if(!$foundMatch)
+					$matchCount--;						
+					
+				$result->data_seek(0);					
+			}
+		}
+			
+		// check for the "classname" field in overloaded tables
+		if($this->BO->isTableOverloaded()) {
+			$foundMatch = false;
+			
+			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+				if ('classname' == $row['Field']) {
+					$foundMatch = true;
+			    	break;
+				}
+			}
+			if(!$foundMatch)						
+				$matchCount--;
+		}
+			
+		if ($matchCount != 0)
+			$updateRequired = true;
+			
+		if ($result) {
+			// check the table indexes
+			try {
+				$this->checkIndexes();
+			}catch (AlphaException $ae) {
+				self::$logger->warn("Error while checking database indexes:\n\n".$ae->getMessage());
+			}
+				
+			self::$logger->debug('<<checkTableNeedsUpdate ['.$updateRequired.']');
+			return $updateRequired;
+		}else{				
+			throw new AlphaException('Failed to access the system database correctly, error is ['.self::getConnection()->error.']');
+			self::$logger->debug('<<checkTableNeedsUpdate [false]');
+			return false;
+		}
 	}
 	
 	/**
@@ -1418,14 +1481,14 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		
 		$query = 'SHOW INDEX FROM '.$this->BO->getTableName();
 		
-		$result = AlphaDAOProviderMySQL::getConnection()->query($query);
+		$result = self::getConnection()->query($query);
 		
 		$this->BO->setLastQuery($query);
 		
 		$indexNames = array();
 		
 		if (!$result) {
-			throw new AlphaException('Failed to access the system database correctly, error is ['.AlphaDAOProviderMySQL::getConnection()->error.']');
+			throw new AlphaException('Failed to access the system database correctly, error is ['.self::getConnection()->error.']');
 		}else{
 			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {				
 				array_push($indexNames, $row['Key_name']);
