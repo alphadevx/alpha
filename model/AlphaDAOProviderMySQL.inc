@@ -116,6 +116,16 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
+	 * Returns the last database error string for the current connection.
+	 * 
+	 * @since 1.1
+	 * @return string
+	 */
+	public static function getLastDatabaseError() {
+		return self::getConnection()->error;
+	}
+	
+	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::query()
 	 */
@@ -195,7 +205,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 				// filter transient attributes
 				if(!in_array($propName, $this->BO->getTransientAttributes())) {
 					$this->BO->set($propName, $row[$propName]);
-				}elseif(!$propObj->isPrivate() && $this->BO->get($propName) != '' && $this->BO->getPropObject($propName) instanceof Relation) {
+				}elseif(!$propObj->isPrivate() && $this->BO->getPropObject($propName) instanceof Relation) {
 					$prop = $this->BO->getPropObject($propName);
 						
 					// handle the setting of ONE-TO-MANY relation values

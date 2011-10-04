@@ -271,7 +271,7 @@ abstract class AlphaDAO {
 		$this->OID = $OID;
 
 		if($config->get('sysCacheProviderName') != '' && $this->loadFromCache()) {
-                // BO was found in cache
+            // BO was found in cache
 		}else{
 			$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
 			$provider->load($OID);

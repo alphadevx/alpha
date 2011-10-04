@@ -62,6 +62,14 @@ interface AlphaDAOProviderInterface {
 	public static function disconnect();
 	
 	/**
+	 * Returns the last database error string for the current connection.
+	 * 
+	 * @since 1.1
+	 * @return string
+	 */
+	public static function getLastDatabaseError();
+	
+	/**
 	 * Populates the child object with the properties retrived from the database for the object $OID.
 	 * 
 	 * @param integer $OID The object ID of the business object to load.
