@@ -1295,7 +1295,9 @@ abstract class AlphaDAO {
 	 */
 	public function checkTableNeedsUpdate() {
 		self::$logger->debug('>>checkTableNeedsUpdate()');
-				
+		
+		global $config;
+		
 		if(method_exists($this, 'before_checkTableNeedsUpdate_callback'))
 			$this->before_checkTableNeedsUpdate_callback();
 		
@@ -1305,73 +1307,15 @@ abstract class AlphaDAO {
 			self::$logger->debug('<<checkTableNeedsUpdate [true]');
 			return true;
 		}else{
-			$updateRequired = false;
+		
+			$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+			$updateRequired = $provider->checkTableNeedsUpdate();
 			
-			$matchCount = 0;
+			if(method_exists($this, 'after_checkTableNeedsUpdate_callback'))
+				$this->after_checkTableNeedsUpdate_callback();
 			
-			$query = 'SHOW COLUMNS FROM '.$this->getTableName();
-			$result = AlphaDAO::getConnection()->query($query);
-			$this->setLastQuery($query);
-			
-			// get the class attributes
-			$reflection = new ReflectionClass(get_class($this));
-			$properties = $reflection->getProperties();
-			
-			foreach($properties as $propObj) {
-				$propName = $propObj->name;
-				if (!in_array($propName, $this->transientAttributes)) {
-				
-					$foundMatch = false;	
-					
-					while ($row = $result->fetch_array(MYSQLI_ASSOC)) {						
-			    		if ($propName == $row['Field']) {
-			    			$foundMatch = true;
-			    			break;
-			    		}
-					}
-					
-					if(!$foundMatch)
-						$matchCount--;						
-					
-					$result->data_seek(0);					
-				}
-			}
-			
-			// check for the "classname" field in overloaded tables
-			if($this->isTableOverloaded()) {
-				$foundMatch = false;
-			
-				while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-					if ('classname' == $row['Field']) {
-						$foundMatch = true;
-			    		break;
-					}
-				}
-				if(!$foundMatch)						
-					$matchCount--;
-			}
-			
-			if ($matchCount != 0)
-				$updateRequired = true;
-			
-			if ($result) {
-				if(method_exists($this, 'before_checkTableNeedsUpdate_callback'))
-					$this->before_checkTableNeedsUpdate_callback();
-				
-				// check the table indexes
-				try {
-					$this->checkIndexes();
-				}catch (AlphaException $ae) {
-					self::$logger->warn("Error while checking database indexes:\n\n".$ae->getMessage());
-				}
-				
-				self::$logger->debug('<<checkTableNeedsUpdate ['.$updateRequired.']');
-				return $updateRequired;
-			}else{				
-				throw new AlphaException('Failed to access the system database correctly, error is ['.AlphaDAO::getConnection()->error.']');
-				self::$logger->debug('<<checkTableNeedsUpdate [false]');
-				return false;
-			}
+			self::$logger->debug('<<checkTableNeedsUpdate ['.$updateRequired.']');
+			return $updateRequired;
 		}
 	}
 	
@@ -1582,29 +1526,16 @@ abstract class AlphaDAO {
 	 * @return array An array of database indexes on this table.
 	 * @since 1.0
 	 * @throws AlphaException
-	 * @deprecated
-	 * @todo remove?
 	 */
-	protected function getIndexes() {
+	public function getIndexes() {
 		self::$logger->debug('>>getIndexes()');
 		
-		$query = 'SHOW INDEX FROM '.$this->getTableName();
+		global $config;
 		
-		$result = AlphaDAO::getConnection()->query($query);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$indexNames = $provider->getIndexes();
 		
-		$this->setLastQuery($query);
-		
-		$indexNames = array();
-		
-		if (!$result) {
-			throw new AlphaException('Failed to access the system database correctly, error is ['.AlphaDAO::getConnection()->error.']');
-		}else{			
-			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {				
-				array_push($indexNames, $row['Key_name']);
-			}
-		}
-		
-		self::$logger->debug('<<getIndexes');
+		self::$logger->debug('<<getIndexes ['.print_r($indexNames, true).']');
 		return $indexNames;
 	}
 	
