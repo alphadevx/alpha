@@ -141,12 +141,6 @@ class DEnum extends AlphaDAO implements AlphaTypeInterface{
 	 * throws AlphaException
 	 */
 	public function getOptions($alphaSort = false) {
-		
-		//$sqlQuery = 'SELECT * FROM '.self::TABLE_NAME.' WHERE name = \''.$this->name->getValue().'\';';
-
-		//$this->setLastQuery($sqlQuery);
-		
-		//if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
 		try {
 			$options = new DEnum();
 			$options->loadByAttribute('name', $this->name->getValue());
@@ -154,8 +148,7 @@ class DEnum extends AlphaDAO implements AlphaTypeInterface{
 			throw new AlphaException('Failed to load DEnum '.$this->name->getValue().', not found in database.');
 		}
 		
-		// now build an array of item indexes to be returned		
-		//$row = $result->fetch_array(MYSQLI_ASSOC);
+		// now build an array of item indexes to be returned
 		$count = 0;
 		$this->options = array();
 		
@@ -255,22 +248,22 @@ class DEnum extends AlphaDAO implements AlphaTypeInterface{
 	 * @since 1.0
 	 * @throws AlphaException
 	 */
-	public function getItemCount() {		
+	public function getItemCount() {
+		
+		global $config;
+		
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
 		
 		$sqlQuery = 'SELECT COUNT(OID) AS item_count FROM DEnumItem WHERE DEnumID = \''.$this->getID().'\';';
 
 		$this->setLastQuery($sqlQuery);
+		
+		$result = $provider->query($sqlQuery);
 
-		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
-			throw new AlphaException('Failed to get the item count for the DEnum.');
-		}
-
-		$row = $result->fetch_array(MYSQLI_ASSOC);
-
-		if (isset($row['item_count'])) {				
-			return $row['item_count'];
+		if (count($result) > 0 && isset($result[0]['item_count'])) {				
+			return $result[0]['item_count'];
 		}else{
-			throw new AlphaException('Failed to get the item count for the DEnum. Database error string is ['.AlphaDAO::getConnection()->error.']');			
+			throw new AlphaException('Failed to get the item count for the DEnum. Database error string is ['.$provider->getLastDatabaseError().']');			
 		}
 	}
 
