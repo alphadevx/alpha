@@ -1622,10 +1622,40 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	 * @since 1.1
 	 * @throws FailedIndexCreateException
 	 */
-	protected function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute) {
+	public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute) {
 		self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.']');
 		
-		// TODO: implement
+		$result = false;
+		
+		if(self::checkBOTableExists(ucfirst($tableName).'Object')) {
+			$sqlQuery = '';
+			
+			if($attributeName == 'leftID')
+				$sqlQuery = 'ALTER TABLE '.$this->BO->getTableName().' ADD INDEX leftID_fk_idx (leftID);';
+			if($attributeName == 'rightID')
+				$sqlQuery = 'ALTER TABLE '.$this->BO->getTableName().' ADD INDEX rightID_fk_idx (rightID);';
+				
+			if(!empty($sqlQuery)) {
+				$this->BO->setLastQuery($sqlQuery);
+	
+				$result = self::getConnection()->query($sqlQuery);
+	
+				if (!$result) {
+					throw new FailedIndexCreateException('Failed to create an index on ['.$this->BO->getTableName().'], error is ['.self::getConnection()->error.'], query ['.$this->BO->getLastQuery().']');
+				}
+			}
+
+			$sqlQuery = 'ALTER TABLE '.$this->BO->getTableName().' ADD FOREIGN KEY '.$attributeName.'_fk_idx ('.$attributeName.') REFERENCES '.$tableName.' ('.$relatedClassAttribute.') ON DELETE SET NULL;';
+			
+			$this->BO->setLastQuery($sqlQuery);	
+			$result = self::getConnection()->query($sqlQuery);
+		}
+	
+		if ($result) {
+			self::$logger->debug('Successfully created the foreign key index ['.$attributeName.'_fk_idx]');
+		}else{			
+			throw new FailedIndexCreateException('Failed to create the index ['.$attributeName.'_fk_idx] on ['.$this->BO->getTableName().'], error is ['.self::getConnection()->error.'], query ['.$this->BO->getLastQuery().']');
+		}
 		
 		self::$logger->debug('<<createForeignIndex');
 	}
