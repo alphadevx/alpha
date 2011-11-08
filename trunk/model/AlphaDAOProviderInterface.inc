@@ -349,6 +349,18 @@ interface AlphaDAOProviderInterface {
 	public function getIndexes();
 	
 	/**
+	 * Creates a foreign key constraint (index) in the database on the given attribute.
+	 * 
+	 * @param string $attributeName The name of the attribute to apply the index on.
+	 * @param string $relatedClass The name of the related class in the format "NameObject".
+	 * @param string $relatedClassAttribute The name of the field to relate to on the related class.
+	 * @param bool $allowNullValues For foreign key indexes that don't allow null values, set this to false (default is true).
+	 * @since 1.1
+	 * @throws FailedIndexCreateException
+	 */
+	public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute);
+	
+	/**
 	 * Reloads the object from the database, overwritting any attribute values in memory.
 	 * 
 	 * @since 1.1
