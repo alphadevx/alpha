@@ -1934,42 +1934,16 @@ abstract class AlphaDAO {
 		if(method_exists($this, 'before_checkRecordExists_callback'))
 			$this->before_checkRecordExists_callback();
 		
-		$sqlQuery = 'SELECT OID FROM '.$this->getTableName().' WHERE OID = ?;';
-
-		$this->setLastQuery($sqlQuery);
+		global $config;
 		
-		$stmt = AlphaDAO::getConnection()->stmt_init();
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$recordExists = $provider->checkRecordExists($OID);
 		
-		if($stmt->prepare($sqlQuery)) {
-			$stmt->bind_param('i', $OID);
+		if(method_exists($this, 'after_checkRecordExists_callback'))
+			$this->after_checkRecordExists_callback();
 			
-			$stmt->execute();
-			
-			$result = $this->bindResult($stmt);
-				
-			$stmt->close();
-
-			if ($result) {
-				if(method_exists($this, 'after_checkRecordExists_callback'))
-					$this->after_checkRecordExists_callback();
-					
-				if(count($result) > 0) {
-					self::$logger->debug('<<checkRecordExists [true]');
-					return true;
-				}else{
-					self::$logger->debug('<<checkRecordExists [false]');
-					return false;
-				}
-			}else{
-				throw new AlphaException('Failed to check for the record ['.$OID.'] on the class ['.get_class($this).'] from the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');			
-				self::$logger->debug('<<checkRecordExists [false]');
-				return false;
-			}
-		}else{
-			throw new AlphaException('Failed to check for the record ['.$OID.'] on the class ['.get_class($this).'] from the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');			
-			self::$logger->debug('<<checkRecordExists [false]');
-			return false;
-		}
+		self::$logger->debug('<<checkRecordExists ['.$recordExists.']');
+		return $recordExists;
 	}
 	
 	/**
