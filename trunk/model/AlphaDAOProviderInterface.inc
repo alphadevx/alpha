@@ -361,6 +361,17 @@ interface AlphaDAOProviderInterface {
 	public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute);
 	
 	/**
+	 * Creates a unique index in the database on the given attribute(s).
+	 * 
+	 * @param string $attribute1Name The first attribute to mark unique in the database.
+	 * @param string $attribute2Name The second attribute to mark unique in the databse (optional, use only for composite keys).
+	 * @param string $attribute3Name The third attribute to mark unique in the databse (optional, use only for composite keys).
+	 * @since 1.1
+	 * @throws FailedIndexCreateException
+	 */
+	public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '');
+	
+	/**
 	 * Reloads the object from the database, overwritting any attribute values in memory.
 	 * 
 	 * @since 1.1

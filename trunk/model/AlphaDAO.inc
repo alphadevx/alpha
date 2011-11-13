@@ -1484,16 +1484,21 @@ abstract class AlphaDAO {
 	 * 
 	 * @param string $attribute1Name The first attribute to mark unique in the database.
 	 * @param string $attribute2Name The second attribute to mark unique in the databse (optional, use only for composite keys).
+	 * @param string $attribute3Name The third attribute to mark unique in the databse (optional, use only for composite keys).
 	 * @since 1.0
 	 */
-	protected function markUnique($attribute1Name, $attribute2Name='') {
-		self::$logger->debug('>>markUnique(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'])');
+	protected function markUnique($attribute1Name, $attribute2Name='', $attribute3Name='') {
+		self::$logger->debug('>>markUnique(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
 		
 		if(empty($attribute2Name)) {
 			array_push($this->uniqueAttributes, $attribute1Name);
 		}else{
 			// Process composite unique keys: add them seperated by a + sign
-			$attributes = $attribute1Name.'+'.$attribute2Name;
+			if($attribute3Name == '')
+				$attributes = $attribute1Name.'+'.$attribute2Name;
+			else
+				$attributes = $attribute1Name.'+'.$attribute2Name.'+'.$attribute3Name;
+				
 			array_push($this->uniqueAttributes, $attributes);
 		}
 		
@@ -1594,43 +1599,23 @@ abstract class AlphaDAO {
 	 * 
 	 * @param string $attribute1Name The first attribute to mark unique in the database.
 	 * @param string $attribute2Name The second attribute to mark unique in the databse (optional, use only for composite keys).
+	 * @param string $attribute3Name The third attribute to mark unique in the databse (optional, use only for composite keys).
 	 * @since 1.0
 	 * @throws FailedIndexCreateException
 	 */
-	protected function createUniqueIndex($attribute1Name, $attribute2Name = '') {
-		self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'])');
+	public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '') {
+		self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
 		
 		if(method_exists($this, 'before_createUniqueIndex_callback'))
 			$this->before_createUniqueIndex_callback();
+			
+		global $config;
 		
-		if(empty($attribute2Name)) {
-			$sqlQuery = 'CREATE UNIQUE INDEX '.$attribute1Name.'_unq_idx ON '.$this->getTableName().' ('.$attribute1Name.');';
-			
-			$this->setLastQuery($sqlQuery);
-	
-			$result = AlphaDAO::getConnection()->query($sqlQuery);
-	
-			if ($result) {
-				if(method_exists($this, 'after_createUniqueIndex_callback'))
-					$this->after_createUniqueIndex_callback();
-			}else{			
-				throw new FailedIndexCreateException('Failed to create the index ['.$attribute1Name.'_unq_idx] on ['.$this->getTableName().'], error is ['.AlphaDAO::getConnection()->error.']');
-			}
-		}else{
-			// process composite unique keys
-			$sqlQuery = 'CREATE UNIQUE INDEX '.$attribute1Name.'_'.$attribute2Name.'_unq_idx ON '.$this->getTableName().' ('.$attribute1Name.','.$attribute2Name.');';
-			
-			$this->setLastQuery($sqlQuery);
-	
-			$result = AlphaDAO::getConnection()->query($sqlQuery);
-	
-			if ($result) {
-				if(method_exists($this, 'after_create_unique_index_callback'))
-					$this->after_createUniqueIndex_callback();
-			}else{			
-				throw new FailedIndexCreateException('Failed to create the index ['.$attribute1Name.'_'.$attribute2Name.'_unq_idx] on ['.$this->getTableName().'], error is ['.AlphaDAO::getConnection()->error.']');
-			}
-		}
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider->createUniqueIndex($attribute1Name, $attribute2Name, $attribute3Name);
+		
+		if(method_exists($this, 'after_createUniqueIndex_callback'))
+			$this->before_createUniqueIndex_callback();
 		
 		self::$logger->debug('<<createUniqueIndex');
 	}

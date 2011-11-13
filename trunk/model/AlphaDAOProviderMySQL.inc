@@ -1545,10 +1545,19 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 					if ($attributes[0].'_'.$attributes[1].'_unq_idx' == $index) {
 				    	$index_exists = true;
 					}
+					if(count($attributes) == 3) {
+						if ($attributes[0].'_'.$attributes[1].'_'.$attributes[2].'_unq_idx' == $index) {
+					    	$index_exists = true;
+						}
+					}
 				}
 	
-				if(!$index_exists)
-					$this->createUniqueIndex($attributes[0], $attributes[1]);
+				if(!$index_exists) {
+					if(count($attributes) == 3)
+						$this->BO->createUniqueIndex($attributes[0], $attributes[1], $attributes[2]);
+					else
+						$this->BO->createUniqueIndex($attributes[0], $attributes[1]);
+				}
 			}else{
 				$index_exists = false;
 				foreach ($indexNames as $index) {					
@@ -1680,13 +1689,31 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	 * 
 	 * @param string $attribute1Name The first attribute to mark unique in the database.
 	 * @param string $attribute2Name The second attribute to mark unique in the databse (optional, use only for composite keys).
+	 * @param string $attribute3Name The third attribute to mark unique in the databse (optional, use only for composite keys).
 	 * @since 1.1
 	 * @throws FailedIndexCreateException
 	 */
-	protected function createUniqueIndex($attribute1Name, $attribute2Name = '') {
-		self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'])');
+	public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '') {
+		self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
 		
-		// TODO: implement
+		if($attribute2Name != '' && $attribute3Name != '')
+			$sqlQuery = 'CREATE UNIQUE INDEX '.$attribute1Name.'_'.$attribute2Name.'_'.$attribute3Name.'_unq_idx ON '.$this->BO->getTableName().' ('.$attribute1Name.','.$attribute2Name.','.$attribute3Name.');';
+		
+		if($attribute2Name != '' && $attribute3Name == '')
+			$sqlQuery = 'CREATE UNIQUE INDEX '.$attribute1Name.'_'.$attribute2Name.'_unq_idx ON '.$this->BO->getTableName().' ('.$attribute1Name.','.$attribute2Name.');';
+			
+		if($attribute2Name == '' && $attribute3Name == '')
+			$sqlQuery = 'CREATE UNIQUE INDEX '.$attribute1Name.'_unq_idx ON '.$this->BO->getTableName().' ('.$attribute1Name.');';
+		
+		$this->BO->setLastQuery($sqlQuery);
+		
+		$result = self::getConnection()->query($sqlQuery);
+		
+		if ($result) {
+			self::$logger->debug('Successfully created the unique index on ['.$this->BO->getTableName().']');
+		}else{
+			throw new FailedIndexCreateException('Failed to create the unique index on ['.$this->BO->getTableName().'], error is ['.self::getConnection()->error.']');
+		}
 		
 		self::$logger->debug('<<createUniqueIndex');
 	}

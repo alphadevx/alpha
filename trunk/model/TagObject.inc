@@ -110,6 +110,8 @@ class TagObject extends AlphaDAO {
 		$this->taggedClass = new String();
 		$this->taggedOID = new Integer();
 		$this->content = new String();
+		
+		$this->markUnique('taggedClass', 'taggedOID', 'content');
 	}
 	
 	/**
@@ -183,25 +185,23 @@ class TagObject extends AlphaDAO {
 	 * 
 	 * @since 1.0
 	 * @throws AlphaException
-	 * @todo remove MySQL dependancies
+	 * @todo remove (not used)
 	 */
 	protected function after_checkIndexes_callback() {
 		$indexNames = $this->getIndexes();
 		$indexExists = false;
 		
 		foreach ($indexNames as $index) {					
-			if ('tclass_toid_tcontent_unq_idx' == $index) {
+			if ('taggedClass_taggedOID_content_unq_idx' == $index) {
 		    	$indexExists = true;
 			}
 		}
 		
 		if(!$indexExists) {
-			$sqlQuery = 'CREATE UNIQUE INDEX tclass_toid_tcontent_unq_idx ON '.$this->getTableName().' (taggedClass,taggedOID,content);';
-				
-			$this->setLastQuery($sqlQuery);
-		
-			if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
-				throw new AlphaException('Failed to create the index [tclass_toid_tcontent_unq_idx] on ['.$this->getTableName().'], error is ['.AlphaDAO::getConnection()->error.']');
+			try {
+				$this->createUniqueIndex('taggedClass', 'taggedOID', 'content');
+			}catch (Exception $e) {
+				throw new AlphaException('Failed to create the unique index on the tags table, error is ['.$e->getMessage().']');
 			}
 		}
 	}
