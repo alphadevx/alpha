@@ -1719,7 +1719,39 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	public function checkRecordExists($OID) {
 		self::$logger->debug('>>checkRecordExists(OID=['.$OID.'])');
 		
-		// TODO: implement
+		$sqlQuery = 'SELECT OID FROM '.$this->BO->getTableName().' WHERE OID = ?;';
+
+		$this->BO->setLastQuery($sqlQuery);
+		
+		$stmt = self::getConnection()->stmt_init();
+		
+		if($stmt->prepare($sqlQuery)) {
+			$stmt->bind_param('i', $OID);
+			
+			$stmt->execute();
+			
+			$result = $this->bindResult($stmt);
+				
+			$stmt->close();
+
+			if ($result) {					
+				if(count($result) > 0) {
+					self::$logger->debug('<<checkRecordExists [true]');
+					return true;
+				}else{
+					self::$logger->debug('<<checkRecordExists [false]');
+					return false;
+				}
+			}else{
+				throw new AlphaException('Failed to check for the record ['.$OID.'] on the class ['.get_class($this->BO).'] from the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');			
+				self::$logger->debug('<<checkRecordExists [false]');
+				return false;
+			}
+		}else{
+			throw new AlphaException('Failed to check for the record ['.$OID.'] on the class ['.get_class($this->BO).'] from the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');			
+			self::$logger->debug('<<checkRecordExists [false]');
+			return false;
+		}
 	}
 	
 	/**
