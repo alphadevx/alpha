@@ -648,10 +648,10 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		else
 			$sqlQuery = "SELECT OID FROM ".$this->BO->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' ORDER BY ".$orderBy." ".$order.$limit;
 			
-		$this->setLastQuery($sqlQuery);
+		$this->BO->setLastQuery($sqlQuery);
 
 		if(!$result = AlphaDAOProviderMySQL::getConnection()->query($sqlQuery)) {
-			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.AlphaDAOProviderMySQL::getConnection()->error.'], query ['.$this->BO->getLastQuery().']');
+			throw new BONotFoundException('Failed to load object OIDs, MySql error is ['.self::getConnection()->error.'], query ['.$this->BO->getLastQuery().']');
 			self::$logger->debug('<<loadAllByDayUpdated []');
 			return array();
 		}
