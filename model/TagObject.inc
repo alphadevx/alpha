@@ -120,10 +120,14 @@ class TagObject extends AlphaDAO {
 	 * @return array
 	 * @since 1.0
 	 * @throws AlphaException
-	 * @todo remove MySQL dependancies
+	 * @throws IllegalArguementException
 	 */
 	public function loadTags($taggedClass, $taggedOID) {
-		global $config;		
+			
+		global $config;
+		
+		if($taggedClass == '' || $taggedOID == '')
+			throw new IllegalArguementException('The taggedClass or taggedOID provided are empty');
 		
 		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
 		
@@ -147,7 +151,6 @@ class TagObject extends AlphaDAO {
 	 * @return array
 	 * @since 1.0
 	 * @throws AlphaException
-	 * @todo remove MySQL dependancies
 	 */
 	public static function getPopularTagsArray($limit) {
 		global $config;
@@ -180,6 +183,7 @@ class TagObject extends AlphaDAO {
 	 * 
 	 * @since 1.0
 	 * @throws AlphaException
+	 * @todo remove MySQL dependancies
 	 */
 	protected function after_checkIndexes_callback() {
 		$indexNames = $this->getIndexes();

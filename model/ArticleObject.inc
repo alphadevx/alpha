@@ -250,6 +250,7 @@ class ArticleObject extends AlphaDAO {
 		$this->tags->setRelatedClassDisplayField('content');
 		$this->tags->setRelationType('ONE-TO-MANY');
 		$this->tags->setTaggedClass(get_class($this));
+		$this->tags->setValue($this->OID);
 		
 		$this->URL = '';
 		$this->printURL = '';
@@ -272,6 +273,9 @@ class ArticleObject extends AlphaDAO {
 	 */
 	protected function after_save_callback() {
 		if($this->getVersion() == 1 && $this->tags instanceof Relation) {
+			// update the empty tags values to reference this OID
+			$this->tags->setValue($this->OID);
+			
 			foreach($this->taggedAttributes as $tagged) {
 				$tags = TagObject::tokenize($this->get($tagged), get_class($this), $this->getOID());
 				foreach($tags as $tag) {
