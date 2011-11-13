@@ -122,32 +122,19 @@ class BadRequestObject extends AlphaDAO {
 	 * 
 	 * @return integer
 	 * @since 1.0
+	 * @throws AlphaException
 	 */
 	public function getBadRequestCount() {
 		global $config;
 		
-		$sqlQuery = 'SELECT COUNT(OID) AS request_count FROM '.$this->getTableName().' WHERE IP = ? AND client = ? AND created_ts > NOW()-INTERVAL ? MINUTE';
+		$sqlQuery = "SELECT COUNT(OID) AS request_count FROM ".$this->getTableName()." WHERE IP = '".$this->IP->getValue()."' AND client = '".$this->client->getValue()."' AND created_ts > NOW()-INTERVAL '".$config->get('sysTempBlacklistFilerPeriod')."' MINUTE";
 		
-		$this->setLastQuery($sqlQuery);
+		$result = $this->query($sqlQuery);
 		
-		$stmt = AlphaDAO::getConnection()->stmt_init();
-
-		$row = array();
-		
-		if($stmt->prepare($sqlQuery)) {
-			$stmt->bind_param('ssi', $this->IP->getValue(), $this->client->getValue(), $config->get('sysTempBlacklistFilerPeriod'));
-			
-			$stmt->execute();
-			
-			$result = $this->bindResult($stmt);
-			if(isset($result[0]))
-				$row = $result[0];
-				
-			$stmt->close();
-		}else{
-			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
-			return 0;
-		}
+		if(isset($result[0]))
+			$row = $result[0];
+		else
+			throw new AlphaException('No result set returned when querying the bad request table');
 		
 		if(isset($row['request_count'])) {
 			return $row['request_count'];
