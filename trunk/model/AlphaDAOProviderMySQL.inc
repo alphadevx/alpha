@@ -129,7 +129,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::query()
 	 */
-	public function query($sqlQuery) {		
+	public function query($sqlQuery) {
 		$this->BO->setLastQuery($sqlQuery);
 		
 		$resultArray = array();
@@ -931,7 +931,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		$sqlQuery = 'UPDATE '.$this->BO->getTableName().' SET '.$attribute.'=? WHERE OID=?;';
 				
 		$this->BO->setLastQuery($sqlQuery);
-		$stmt = AlphaDAOProviderMySQL::getConnection()->stmt_init();
+		$stmt = self::getConnection()->stmt_init();
 				
 		if($stmt->prepare($sqlQuery)) {
 			if($this->BO->getPropObject($attribute) instanceof Integer)
@@ -956,13 +956,14 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	 * @return boolean
 	 * @since 1.1
 	 * @throws ValidationException
+	 * @todo should this be here?
 	 */
 	protected function validate() {
 		self::$logger->debug('>>validate()');
 		
 		// TODO: implement
 			
-		self::$logger->debug('<<validate ['.$valid.']');		
+		self::$logger->debug('<<validate ['.$valid.']');
 		return $valid;
 	}
 	
@@ -975,7 +976,21 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	public function delete() {
 		self::$logger->debug('>>delete()');
 				
-		// TODO: implement
+		$sqlQuery = "DELETE FROM ".$this->BO->getTableName()." WHERE OID = ?;";
+			
+		$this->BO->setLastQuery($sqlQuery);
+		
+		$stmt = self::getConnection()->stmt_init();
+				
+		if($stmt->prepare($sqlQuery)) {
+			$stmt->bind_param('i', $this->BO->getOID());			
+			$stmt->execute();
+			self::$logger->debug('Deleted the object ['.$this->BO->getOID().'] of class ['.get_class($this->BO).']');					
+		}else{
+			throw new FailedDeleteException('Failed to delete object ['.$this->BO->getOID().'], error is ['.$stmt->error.'], query ['.$this->BO->getLastQuery().']');				
+		}
+				
+		$stmt->close();
 		
 		self::$logger->debug('<<delete');
 	}

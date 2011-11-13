@@ -245,6 +245,7 @@ abstract class AlphaDAO {
    	 * @param string $sqlQuery
    	 * @return array
    	 * @since 1.1
+   	 * @throws CustomQueryException
    	 */
 	public function query($sqlQuery) {
 		global $config;
@@ -664,21 +665,8 @@ abstract class AlphaDAO {
 			}
 		}
 		
-		$sqlQuery = "DELETE FROM ".$this->getTableName()." WHERE OID = ?;";
-			
-		$this->setLastQuery($sqlQuery);
-		
-		$stmt = AlphaDAO::getConnection()->stmt_init();
-				
-		if($stmt->prepare($sqlQuery)) {
-			$stmt->bind_param('i', $this->getOID());			
-			$stmt->execute();
-			self::$logger->debug('Deleted the object ['.$this->getOID().'] of class ['.get_class($this).']');					
-		}else{
-			throw new FailedDeleteException('Failed to delete object ['.$this->getOID().'], error is ['.$stmt->error.'], query ['.$this->lastQuery.']');				
-		}
-				
-		$stmt->close();
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider->delete();
 		
 		if($config->get('sysCacheProviderName') != '')
 			$this->removeFromCache();
@@ -976,19 +964,23 @@ abstract class AlphaDAO {
 		$sqlQuery = 'SELECT MAX(OID) AS max_OID FROM '.$this->getTableName();
 
 		$this->setLastQuery($sqlQuery);
-
-		$result = AlphaDAO::getConnection()->query($sqlQuery);	
-
-		$row = $result->fetch_array(MYSQLI_ASSOC);
-
-		if (isset($row['max_OID'])) {
-			if(method_exists($this, 'after_getMAX_callback'))
-				$this->after_getMAX_callback();
-
-			self::$logger->debug('<<getMAX ['.$row['max_OID'].']');
-			return $row['max_OID'];
-		}else{			
-			throw new AlphaException('Failed to get the MAX ID for the class ['.get_class($this).'] from the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');
+		
+		try {
+			$result = $this->query($sqlQuery);
+	
+			$row = $result[0];
+	
+			if (isset($row['max_OID'])) {
+				if(method_exists($this, 'after_getMAX_callback'))
+					$this->after_getMAX_callback();
+	
+				self::$logger->debug('<<getMAX ['.$row['max_OID'].']');
+				return $row['max_OID'];
+			}else{			
+				throw new AlphaException('Failed to get the MAX ID for the class ['.get_class($this).'] from the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');
+			}
+		}catch (Exception $e) {
+			throw new AlphaException($e->getMessage());
 			self::$logger->debug('<<getMAX [0]');
 			return 0;
 		}
@@ -2060,8 +2052,15 @@ abstract class AlphaDAO {
 			self::$logger = new Logger('AlphaDAO');
 		self::$logger->debug('>>rollback()');
     	
-    	if (!AlphaDAO::getConnection()->rollback())
-     		throw new AlphaException('Error aborting a transaction, error is ['.AlphaDAO::getConnection()->error.']');
+		global $config;
+		
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), new PersonObject());
+		
+    	try{
+    		$provider->rollback();
+    	}catch (Exception $e) {
+     		throw new FailedSaveException('Error aborting a transaction, error is ['.$e->getMessage().']');
+    	}
     	
     	self::$logger->debug('<<rollback');
   	}
