@@ -146,7 +146,7 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 					
 					echo AlphaView::displayUpdateMessage('The table for the class '.$classname.' has been successfully recreated.');
 				}catch(AlphaException $e) {
-					self::$logger->error($e->getTraceAsString());
+					self::$logger->error($e->getMessage());
 					echo AlphaView::displayErrorMessage('Error recreating the table for the class '.$classname.', check the log!');
 				}
 			}
@@ -166,7 +166,7 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 					
 					echo AlphaView::displayUpdateMessage('The table for the class '.$classname.' has been successfully updated.');
 				}catch(AlphaException $e) {
-					self::$logger->error($e->getTraceAsString());
+					self::$logger->error($e->getMessage());
 					echo AlphaView::displayErrorMessage('Error updating the table for the class '.$classname.', check the log!');
 				}
 			}
