@@ -1199,7 +1199,71 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	public function addProperty($propName) {
 		self::$logger->debug('>>addProperty(propName=['.$propName.'])');
 		
-		// TODO: implement
+		$sqlQuery = 'ALTER TABLE '.$this->BO->getTableName().' ADD ';
+		
+		if($this->isTableOverloaded() && $propName == 'classname') {
+			$sqlQuery .= 'classname VARCHAR(100)';
+		}else{
+			if(!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
+				$propClass = get_class($this->BO->getPropObject($propName));
+	
+				switch (strtoupper($propClass)) {
+					case 'INTEGER':
+						$sqlQuery .= "$propName INT(".$this->BO->getPropObject($propName)->getSize().")";
+					break;
+					case 'DOUBLE':
+						$sqlQuery .= "$propName DOUBLE(".$this->BO->getPropObject($propName)->getSize(true).")";
+					break;
+					case 'STRING':
+						$sqlQuery .= "$propName VARCHAR(".$this->BO->getPropObject($propName)->getSize().")";
+					break;
+					case 'SEQUENCE':
+						$sqlQuery .= "$propName VARCHAR(".$this->BO->getPropObject($propName)->getSize().")";
+					break;
+					case 'TEXT':
+						$sqlQuery .= "$propName TEXT";
+					break;
+					case 'BOOLEAN':
+						$sqlQuery .= "$propName CHAR(1) DEFAULT '0'";
+					break;
+					case 'DATE':
+						$sqlQuery .= "$propName DATE";
+					break;
+					case 'TIMESTAMP':
+						$sqlQuery .= "$propName DATETIME";
+					break;
+					case 'ENUM':
+						$sqlQuery .= "$propName ENUM(";
+						$enumVals = $this->BO->getPropObject($propName)->getOptions();
+						foreach($enumVals as $val) {
+							$sqlQuery .= "'".$val."',";
+						}
+						$sqlQuery = rtrim($sqlQuery, ",");
+						$sqlQuery .= ')';
+					break;
+					case 'DENUM':
+						$tmp = new DEnum(get_class($this->BO).'::'.$propName);						
+						$tmp->save();
+						$sqlQuery .= "$propName INT(11) ZEROFILL";
+					break;
+					case 'RELATION':						
+						$sqlQuery .= "$propName INT(11) ZEROFILL UNSIGNED";
+					break;
+					default:
+						$sqlQuery .= '';
+					break;
+				}
+			}
+		}
+
+		$this->BO->setLastQuery($sqlQuery);
+
+		if(!$result = self::getConnection()->query($sqlQuery)) {
+			throw new AlphaException('Failed to add the new attribute ['.$propName.'] to the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
+			self::$logger->debug('<<addProperty');
+		}else{
+			self::$logger->info('Successfully added the ['.$propName.'] column onto the ['.$this->BO->getTableName().'] table for the class ['.get_class($this->BO).']');
+		}
 
 		self::$logger->debug('<<addProperty');
 	}
@@ -1394,7 +1458,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			self::$logger->debug('<<checkBOTableExists ['.($tableExists ? 'true' : 'false').']');
 			return $tableExists;
 		}else{			
-			throw new AlphaException('Failed to access the system database correctly, error is ['.AlphaDAO::getConnection()->error.']');
+			throw new AlphaException('Failed to access the system database correctly, error is ['.self::getConnection()->error.']');
 			self::$logger->debug('<<checkBOTableExists [false]');
 			return false;
 		}
@@ -1488,7 +1552,57 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	public function findMissingFields() {
 		self::$logger->debug('>>findMissingFields()');
 		
-		// TODO: implement
+		$missingFields = array();			
+		$matchCount = 0;
+			
+		$sqlQuery = 'SHOW COLUMNS FROM '.$this->BO->getTableName();
+		
+		$result = self::getConnection()->query($sqlQuery);
+		
+		$this->BO->setLastQuery($sqlQuery);
+			
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = $reflection->getProperties();
+		
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			if (!in_array($propName, $this->BO->getTransientAttributes())) {
+				while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+		    		if ($propName == $row['Field']) {
+		    			$matchCount++;		    			
+		    			break;
+		    		}
+				}
+				$result->data_seek(0);
+			}else{
+				$matchCount++;
+			}
+			
+			if($matchCount==0) {					
+				array_push($missingFields, $propName);
+			}else{
+				$matchCount = 0;
+			}
+		}
+		
+		// check for the "classname" field in overloaded tables
+		if($this->BO->isTableOverloaded()) {
+			$foundMatch = false;
+			
+			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+				if ('classname' == $row['Field']) {
+					$foundMatch = true;
+		    		break;
+				}
+			}
+			if(!$foundMatch)						
+				array_push($missingFields, 'classname');
+		}
+		
+		if (!$result) {
+			throw new AlphaException('Failed to access the system database correctly, error is ['.self::getConnection()->error.']');
+		}
 		
 		self::$logger->debug('<<findMissingFields ['.var_export($missingFields, true).']');
 		return $missingFields;	

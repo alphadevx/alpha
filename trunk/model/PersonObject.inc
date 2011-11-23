@@ -360,6 +360,7 @@ class PersonObject extends AlphaDAO {
 	 * @return integer
 	 * @since 1.0
 	 * @throws AlphaException
+	 * @todo update to remove MySQLi dependancies
 	 */
 	public function getCommentCount() {
 		$temp = new ArticleCommentObject();

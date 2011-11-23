@@ -346,6 +346,7 @@ class ArticleObject extends AlphaDAO {
 	 * @return array
 	 * @since 1.0
 	 * @throws AlphaException
+	 * @todo update to remove MySQLi dependancies
 	 */
 	public function loadRecentWithLimit($limit){
 		$denum = new DEnum('ArticleObject::section');
@@ -471,6 +472,7 @@ class ArticleObject extends AlphaDAO {
 	 * @return boolean True if they have voted already, false otherwise
 	 * @since 1.0
 	 * @throws AlphaException
+	 * @todo update to remove MySQLi dependancies
 	 */
 	public function checkUserVoted() {
 		// just going to return true if nobody is logged in

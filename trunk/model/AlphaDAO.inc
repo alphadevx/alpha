@@ -171,16 +171,6 @@ abstract class AlphaDAO {
 	private static $logger = null;
 	
 	/**
-	 * Datebase connection
-	 * 
-	 * @var mysqli
-	 * @since 1.0
-	 * @todo Move the AlphaDAOProviderMySQL
-	 * @deprecated
-	 */
-	//private static $connection;
-	
-	/**
 	 * The constructor which sets up some housekeeping attributes
 	 * 
 	 * @since 1.0
@@ -204,21 +194,12 @@ abstract class AlphaDAO {
 	 *  
 	 * @return mysqli
 	 * @since 1.0
-	 * @todo move to AlphaDAOProviderMySQL
+	 * @throws AlphaException
 	 * @deprecated
 	 */
 	public static function getConnection() {
-		/*global $config;
-		
-		if (!isset(self::$connection)) {
-			self::$connection = new mysqli($config->get('sysDBHost'), $config->get('sysDBUsername'), $config->get('sysDBPassword'), $config->get('sysDB'));
-				
-			if (mysqli_connect_error()) {
-			    self::$logger->fatal('Could not connect to database: ['.mysqli_connect_errno().'] '.mysqli_connect_error());
-			}
-		}
-		
-		return self::$connection;*/
+		throw new AlphaException('The static getConnection() method is not longer supported!  Please update your code to instantiate a AlphaDAOProviderInterface '.
+		'instance, then invoke the query() method on that instance to run a custom query.');
 	}
 	
 	/**
@@ -231,11 +212,6 @@ abstract class AlphaDAO {
 		
 		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), new PersonObject());
 		$provider->disconnect();
-		
-		//if (isset(self::$connection)) {
-			//self::$connection->close();
-			//self::$connection = null;
-		//}
 	}
 	
 	/**
@@ -821,77 +797,18 @@ abstract class AlphaDAO {
 	 * 
 	 * @param string $propName The name of the new field to add to the database table.
 	 * @since 1.0
-	 * @throws AlphaException	 
+	 * @throws AlphaException
 	 */
 	public function addProperty($propName) {
 		self::$logger->debug('>>addProperty(propName=['.$propName.'])');
 		
+		global $config;
+		
 		if(method_exists($this, 'before_addProperty_callback'))
 			$this->before_addProperty_callback();
 			
-		$sqlQuery = 'ALTER TABLE '.$this->getTableName().' ADD ';
-		
-		if($this->isTableOverloaded() && $propName == 'classname') {
-			$sqlQuery .= 'classname VARCHAR(100)';
-		}else{
-			if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
-				$propClass = get_class($this->getPropObject($propName));
-	
-				switch (strtoupper($propClass)) {
-					case 'INTEGER':
-						$sqlQuery .= "$propName INT(".$this->getPropObject($propName)->getSize().")";
-					break;
-					case 'DOUBLE':
-						$sqlQuery .= "$propName DOUBLE(".$this->getPropObject($propName)->getSize(true).")";
-					break;
-					case 'STRING':
-						$sqlQuery .= "$propName VARCHAR(".$this->getPropObject($propName)->getSize().")";
-					break;
-					case 'SEQUENCE':
-						$sqlQuery .= "$propName VARCHAR(".$this->getPropObject($propName)->getSize().")";
-					break;
-					case 'TEXT':
-						$sqlQuery .= "$propName TEXT";
-					break;
-					case 'BOOLEAN':
-						$sqlQuery .= "$propName CHAR(1) DEFAULT '0'";
-					break;
-					case 'DATE':
-						$sqlQuery .= "$propName DATE";
-					break;
-					case 'TIMESTAMP':
-						$sqlQuery .= "$propName DATETIME";
-					break;
-					case 'ENUM':
-						$sqlQuery .= "$propName ENUM(";
-						$enumVals = $this->getPropObject($propName)->getOptions();
-						foreach($enumVals as $val) {
-							$sqlQuery .= "'".$val."',";
-						}
-						$sqlQuery = rtrim($sqlQuery, ",");
-						$sqlQuery .= ')';
-					break;
-					case 'DENUM':
-						$tmp = new DEnum(get_class($this).'::'.$propName);						
-						$tmp->save();
-						$sqlQuery .= "$propName INT(11) ZEROFILL";
-					break;
-					case 'RELATION':						
-						$sqlQuery .= "$propName INT(11) ZEROFILL UNSIGNED";
-					break;
-					default:
-						$sqlQuery .= '';
-					break;
-				}
-			}
-		}
-
-		$this->setLastQuery($sqlQuery);
-
-		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
-			throw new AlphaException('Failed to add the new attribute ['.$propName.'] to the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');
-			self::$logger->debug('<<addProperty');
-		}
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider->addProperty($propName);
 
 		if(method_exists($this, 'after_addProperty_callback'))
 			$this->after_addProperty_callback();			
@@ -1322,60 +1239,13 @@ abstract class AlphaDAO {
 	public function findMissingFields() {
 		self::$logger->debug('>>findMissingFields()');
 		
+		global $config;
+		
 		if(method_exists($this, 'before_findMissingFields_callback'))
 			$this->before_findMissingFields_callback();
-		
-		$missingFields = array();			
-		$matchCount = 0;
 			
-		$sqlQuery = 'SHOW COLUMNS FROM '.$this->getTableName();
-		
-		$result = AlphaDAO::getConnection()->query($sqlQuery);
-		
-		$this->setLastQuery($sqlQuery);
-			
-		// get the class attributes
-		$reflection = new ReflectionClass(get_class($this));
-		$properties = $reflection->getProperties();
-		
-		foreach($properties as $propObj) {
-			$propName = $propObj->name;
-			if (!in_array($propName, $this->transientAttributes)) {
-				while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-		    		if ($propName == $row['Field']) {		    			
-		    			$matchCount++;		    			
-		    			break;
-		    		}	    		
-				}				
-				$result->data_seek(0);
-			}else{
-				$matchCount++;
-			}
-			
-			if($matchCount==0) {					
-				array_push($missingFields, $propName);
-			}else{
-				$matchCount = 0;
-			}
-		}
-		
-		// check for the "classname" field in overloaded tables
-		if($this->isTableOverloaded()) {
-			$foundMatch = false;
-			
-			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-				if ('classname' == $row['Field']) {
-					$foundMatch = true;
-		    		break;
-				}
-			}
-			if(!$foundMatch)						
-				array_push($missingFields, 'classname');
-		}
-		
-		if (!$result) {			
-			throw new AlphaException('Failed to access the system database correctly, error is ['.AlphaDAO::getConnection()->error.']');
-		}
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$missingFields = $provider->findMissingFields();
 		
 		if(method_exists($this, 'after_findMissingFields_callback'))
 			$this->after_findMissingFields_callback();
@@ -1534,27 +1404,6 @@ abstract class AlphaDAO {
 		
 		self::$logger->debug('<<getIndexes ['.print_r($indexNames, true).']');
 		return $indexNames;
-	}
-	
-	/**
-	 * Checks to see if all of the indexes are in place for the BO's table, creates those that are missing.
-	 * 
-	 * @since 1.0
-	 * @deprecated
-	 * @todo remove?
-	 */
-	protected function checkIndexes() {
-		self::$logger->debug('>>checkIndexes()');
-		
-		if(method_exists($this, 'before_checkIndexes_callback'))
-			$this->before_checkIndexes_callback();
-		
-		// TODO
-		
-		if(method_exists($this, 'after_checkIndexes_callback'))
-			$this->after_checkIndexes_callback();
-		
-		self::$logger->debug('<<checkIndexes');
 	}
 	
 	/**
