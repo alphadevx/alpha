@@ -84,10 +84,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Gets the current connection singleton, or creates a new one if none exists
-	 *  
-	 * @return mysqli
-	 * @since 1.1
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::getConnection()
 	 */
 	public static function getConnection() {
 		global $config;
@@ -104,9 +102,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Disconnects the current database connection if one exists (self::$connection is set)
-	 * 
-	 * @since 1.1
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::disconnect()
 	 */
 	public static function disconnect() {
 		if (isset(self::$connection)) {
@@ -116,10 +113,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Returns the last database error string for the current connection.
-	 * 
-	 * @since 1.1
-	 * @return string
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::getLastDatabaseError()
 	 */
 	public static function getLastDatabaseError() {
 		return self::getConnection()->error;
@@ -147,11 +142,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Populates the business object with the properties retrived from the database for the object $OID.
-	 * 
-	 * @param integer $OID The object ID of the business object to load.
-	 * @since 1.1
-	 * @throws BONotFoundException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::load()
 	 */
 	public function load($OID) {
 		self::$logger->debug('>>load(OID=['.$OID.'])');
@@ -236,14 +228,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Populates the child object from the database table by the given attribute value.
-	 * 
-	 * @param string $atribute The name of the attribute to load the object by.
-	 * @param string $value The value of the attribute to load the object by.
-	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
-	 * @param array $loadAttributes The attributes to load from the database to this object (leave blank to load all attributes)
-	 * @since 1.1
-	 * @throws BONotFoundException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::loadByAttribute()
 	 */
 	public function loadByAttribute($attribute, $value, $ignoreClassType=false, $loadAttributes=array()) {
 		self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'], ignoreClassType=['.$ignoreClassType.'], 
@@ -355,16 +341,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Loads all of the objects of this class into an array which is returned.
-	 * 
-	 * @param integer $start The start of the SQL LIMIT clause, useful for pagination.
-	 * @param integer $limit The amount (limit) of objects to load, useful for pagination.
-	 * @param string $orderBy The name of the field to sort the objects by.
-	 * @param string $order The order to sort the objects by.
-	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
-	 * @return array An array containing objects of this type of business object.
-	 * @since 1.1
-	 * @throws BONotFoundException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::loadAll()
 	 */
 	public function loadAll($start=0, $limit=0, $orderBy='OID', $order='ASC', $ignoreClassType=false) {
 		self::$logger->debug('>>loadAll(start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
@@ -419,20 +397,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Loads all of the objects of this class by the specified attribute into an array which is returned.
-	 * 
-	 * @param string $atribute The attribute to load the objects by.
-	 * @param string $value The value of the attribute to load the objects by.
-	 * @param integer $start The start of the SQL LIMIT clause, useful for pagination.
-	 * @param integer $limit The amount (limit) of objects to load, useful for pagination.
-	 * @param string $orderBy The name of the field to sort the objects by.
-	 * @param string $order The order to sort the objects by.
-	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type.
-	 * @param array $constructorArgs An optional array of contructor arguements to pass to the BOs that will be generated and returned.  Supports a maximum of 5 arguements.
-	 * @return array An array containing objects of this type of business object.
-	 * @since 1.1
-	 * @throws BONotFoundException
-	 * @throws IllegalArguementException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::loadAllByAttribute()
 	 */
 	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC", $ignoreClassType=false, $constructorArgs=array()) {
 		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
@@ -531,19 +497,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Loads all of the objects of this class by the specified attributes into an array which is returned.
-	 * 
-	 * @param array $atributes The attributes to load the objects by.
-	 * @param array $values The values of the attributes to load the objects by.
-	 * @param integer $start The start of the SQL LIMIT clause, useful for pagination.
-	 * @param integer $limit The amount (limit) of objects to load, useful for pagination.
-	 * @param string $orderBy The name of the field to sort the objects by.
-	 * @param string $order The order to sort the objects by.
-	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
-	 * @return array An array containing objects of this type of business object.
-	 * @since 1.1
-	 * @throws BONotFoundException
-	 * @throws IllegalArguementException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::loadAllByAttributes()
 	 */
 	public function loadAllByAttributes($attributes=array(), $values=array(), $start=0, $limit=0, $orderBy='OID', $order='ASC', $ignoreClassType=false) {
 		self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.
@@ -623,17 +578,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Loads all of the objects of this class that where updated (updated_ts value) on the date indicated.
-	 * 
-	 * @param string $date The date for which to load the objects updated on, in the format 'YYYY-MM-DD'.	 
-	 * @param integer $start The start of the SQL LIMIT clause, useful for pagination.
-	 * @param integer $limit The amount (limit) of objects to load, useful for pagination.
-	 * @param string $orderBy The name of the field to sort the objects by.
-	 * @param string $order The order to sort the objects by.
-	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
-	 * @return array An array containing objects of this type of business object.
-	 * @since 1.1
-	 * @throws BONotFoundException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::loadAllByDayUpdated()
 	 */
 	public function loadAllByDayUpdated($date, $start=0, $limit=0, $orderBy="OID", $order="ASC", $ignoreClassType=false) {
 		self::$logger->debug('>>loadAllByDayUpdated(date=['.$date.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
@@ -673,17 +619,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Loads all of the specified attribute values of this class by the specified attribute into an 
-	 * array which is returned. 
-	 * 
-	 * @param string $attribute The attribute name to load the field values by.
-	 * @param string $value The value of the attribute to load the field values by.
-	 * @param string $returnAttribute The name of the attribute to return.
-	 * @param string $order The order to sort the BOs by.
-	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type.
-	 * @return array An array of field values.
-	 * @since 1.1
-	 * @throws BONotFoundException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::loadAllFieldValuesByAttribute()
 	 */
 	public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order='ASC', $ignoreClassType=false) {
 		self::$logger->debug('>>loadAllFieldValuesByAttribute(attribute=['.$attribute.'], value=['.$value.'], returnAttribute=['.$returnAttribute.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
@@ -718,12 +655,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 
 	/**
-	 * Saves the object.  If $this->OID is empty or null it will INSERT, otherwise UPDATE.
-	 * 
-	 * @since 1.1
-	 * @throws FailedSaveException
-	 * @throws LockingException
-	 * @throws ValidationException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::save()
 	 */
 	public function save() {
 		self::$logger->debug('>>save()');
@@ -915,14 +848,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Saves the field specified with the value supplied.  Only works for persistent BOs.  Note that no Alpha type
-	 * validation is performed with this method!
-	 * 
-	 * @param string $attribute The name of the attribute to save.
-	 * @param mixed $value The value of the attribute to save.
-	 * @since 1.1
-	 * @throws IllegalArguementException
-	 * @throws FailedSaveException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::saveAttribute()
 	 */
 	public function saveAttribute($attribute, $value) {
 		self::$logger->debug('>>saveAttribute(attribute=['.$attribute.'], value=['.$value.'])');
@@ -951,27 +878,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Validates the object to be saved.
-	 * 
-	 * @return boolean
-	 * @since 1.1
-	 * @throws ValidationException
-	 * @todo should this be here?
-	 */
-	protected function validate() {
-		self::$logger->debug('>>validate()');
-		
-		// TODO: implement
-			
-		self::$logger->debug('<<validate ['.$valid.']');
-		return $valid;
-	}
-	
-	/**
-	 * Deletes the current object from the database.
-	 * 
-	 * @since 1.1
-	 * @throws FailedDeleteException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::delete()
 	 */
 	public function delete() {
 		self::$logger->debug('>>delete()');
@@ -996,29 +904,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Delete all object instances from the database by the specified attribute matching the value provided.
-	 *
-	 * @param string $attribute The name of the field to delete the objects by.
-	 * @param mixed $value The value of the field to delete the objects by.
-	 * @return integer The number of rows deleted.
-	 * @since 1.1
-	 * @throws FailedDeleteException
-	 */
-	public function deleteAllByAttribute($attribute, $value) {
-		self::$logger->debug('>>deleteAllByAttribute(attribute=['.$attribute.'], value=['.$value.'])');
-				
-		// TODO: implement
-			
-		self::$logger->debug('<<deleteAllByAttribute ['.$deletedRowCount.']');
-		return $deletedRowCount;
-	}
-	
-	/**
-	 * Gets the version_num of the object from the database (returns 0 if the BO is not saved yet).
-	 * 
-	 * @return integer
-	 * @since 1.1
-	 * @throws BONotFoundException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::getVersion()
 	 */
 	public function getVersion() {
 		self::$logger->debug('>>getVersion()');
@@ -1059,11 +946,9 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 
 	/**
-	 * Builds a new database table for the BO class.
-	 * 
-	 * @since 1.1
-	 * @throws AlphaException
-	 */	
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::makeTable()
+	 */
 	public function makeTable() {
 		self::$logger->debug('>>makeTable()');
 		
@@ -1189,12 +1074,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 
 	/**
-	 * Adds in a new class property without loosing existing data (does an ALTER TABLE query on the
-	 * database).
-	 * 
-	 * @param string $propName The name of the new field to add to the database table.
-	 * @since 1.1
-	 * @throws AlphaException	 
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::addProperty()
 	 */
 	public function addProperty($propName) {
 		self::$logger->debug('>>addProperty(propName=['.$propName.'])');
@@ -1269,40 +1150,37 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 
 	/**
-	 * Populates the current business object from global POST data.
-	 * 
-	 * @param boolean $filterAll Defaults to false, set to true if you want to strictly filter all POSTed user input using InputFilter::encode.
-	 * @since 1.1
-	 */	
-	public function populateFromPost($filterAll=false) {
-		self::$logger->debug('>>populateFromPost(filterAll=['.$filterAll.'])');
-		
-		// TODO: implement
-		
-		self::$logger->debug('<<populateFromPost');	
-	}
-
-	/**
-	 * Gets the maximum OID value from the database for this class type.
-	 * 
-	 * @return integer The maximum OID value in the class table.
-	 * @since 1.1
-	 * @throws AlphaException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::getMAX()
 	 */
 	public function getMAX() {
 		self::$logger->debug('>>getMAX()');
 		
-		// TODO: implement
+		$sqlQuery = 'SELECT MAX(OID) AS max_OID FROM '.$this->BO->getTableName();
+
+		$this->BO->setLastQuery($sqlQuery);
+		
+		try {
+			$result = $this->BO->query($sqlQuery);
+	
+			$row = $result[0];
+	
+			if (isset($row['max_OID'])) {	
+				self::$logger->debug('<<getMAX ['.$row['max_OID'].']');
+				return $row['max_OID'];
+			}else{			
+				throw new AlphaException('Failed to get the MAX ID for the class ['.get_class($this->BO).'] from the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
+			}
+		}catch (Exception $e) {
+			throw new AlphaException($e->getMessage());
+			self::$logger->debug('<<getMAX [0]');
+			return 0;
+		}
 	}
 	
 	/**
-	 * Gets the count from the database for the amount of objects of this class.
-	 * 
-	 * @param array $atributes The attributes to count the objects by (optional).
-	 * @param array $values The values of the attributes to count the objects by (optional).
-	 * @return integer
-	 * @since 1.1
-	 * @throws AlphaException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::getCount()
 	 */
 	public function getCount($attributes=array(), $values=array()) {
 		self::$logger->debug('>>getCount(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'])');
@@ -1391,11 +1269,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Checks to see if the table exists in the database for the current business class.
-	 * 
-	 * @return boolean
-	 * @since 1.1
-	 * @throws AlphaException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::checkTableExists()
 	 */
 	public function checkTableExists() {
 		self::$logger->debug('>>checkTableExists()');
@@ -1425,13 +1300,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Static method to check the database and see if the table for the indicated BO class name
-	 * exists (assumes table name will be $BOClassName less "Object").
-	 * 
-	 * @param string $BOClassName The name of the business object class we are checking.
-	 * @return boolean
-	 * @since 1.1
-	 * @throws AlphaException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::checkBOTableExists()
 	 */
 	public static function checkBOTableExists($BOClassName) {
 		if(self::$logger == null)
@@ -1465,12 +1335,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Checks to see if the table in the database matches (for fields) the business class definition, i.e. if the
-	 * database table is in sync with the class definition.
-	 * 
-	 * @return boolean
-	 * @since 1.1
-	 * @throws AlphaException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::checkTableNeedsUpdate()
 	 */
 	public function checkTableNeedsUpdate() {
 		self::$logger->debug('>>checkTableNeedsUpdate()');
@@ -1542,12 +1408,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Returns an array containing any properties on the class which have not been created on the database 
-	 * table yet.
-	 * 
-	 * @return array An array of missing fields in the database table.
-	 * @since 1.1
-	 * @throws AlphaException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::findMissingFields()
 	 */
 	public function findMissingFields() {
 		self::$logger->debug('>>findMissingFields()');
@@ -1609,11 +1471,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Gets an array of all of the names of the active database indexes for this class.
-	 *
-	 * @return array An array of database indexes on this table.
-	 * @since 1.1
-	 * @throws AlphaException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::getIndexes()
 	 */
 	public function getIndexes() {
 		self::$logger->debug('>>getIndexes()');
@@ -1751,14 +1610,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Creates a foreign key constraint (index) in the database on the given attribute.
-	 * 
-	 * @param string $attributeName The name of the attribute to apply the index on.
-	 * @param string $relatedClass The name of the related class in the format "NameObject".
-	 * @param string $relatedClassAttribute The name of the field to relate to on the related class.
-	 * @param bool $allowNullValues For foreign key indexes that don't allow null values, set this to false (default is true).
-	 * @since 1.1
-	 * @throws FailedIndexCreateException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::createForeignIndex()
 	 */
 	public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute) {
 		self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.']');
@@ -1799,13 +1652,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Creates a unique index in the database on the given attribute(s).
-	 * 
-	 * @param string $attribute1Name The first attribute to mark unique in the database.
-	 * @param string $attribute2Name The second attribute to mark unique in the databse (optional, use only for composite keys).
-	 * @param string $attribute3Name The third attribute to mark unique in the databse (optional, use only for composite keys).
-	 * @since 1.1
-	 * @throws FailedIndexCreateException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::createUniqueIndex()
 	 */
 	public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '') {
 		self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
@@ -1833,10 +1681,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Reloads the object from the database, overwritting any attribute values in memory.
-	 * 
-	 * @since 1.1
-	 * @throws AlphaException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::reload()
 	 */
 	public function reload() {
 		self::$logger->debug('>>reload()');
@@ -1850,12 +1696,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Checks that a record exists for the BO in the database.
-	 * 
-	 * @param int $OID The Object ID of the object we want to see whether it exists or not.
-	 * @return boolean
-	 * @since 1.1
-	 * @throws AlphaException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::checkRecordExists()
 	 */
 	public function checkRecordExists($OID) {
 		self::$logger->debug('>>checkRecordExists(OID=['.$OID.'])');
@@ -1896,13 +1738,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Checks to see if the table name matches the classname, and if not if the table
-	 * name matches the classname name of another BO, i.e. the table is used to store 
-	 * multiple types of BOs.
-	 * 
-	 * @return bool
-	 * @since 1.1
-	 * @throws BadBOTableNameException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::isTableOverloaded()
 	 */
 	public function isTableOverloaded() {
 		self::$logger->debug('>>isTableOverloaded()');
@@ -1959,14 +1796,12 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Starts a new database transaction.
-	 * 
-	 * @since 1.1
-	 * @throws AlphaException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::begin()
 	 */
 	public static function begin() {
 		if(self::$logger == null)
-			self::$logger = new Logger('AlphaDAO');
+			self::$logger = new Logger('AlphaDAOProviderMySQL');
 		self::$logger->debug('>>begin()');     	
      	
      	if (!self::getConnection()->autocommit(false))
@@ -1976,14 +1811,12 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	}
 	
 	/**
-	 * Commits the current database transaction.
-	 * 
-	 * @since 1.1
-	 * @throws FailedSaveException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::commit()
 	 */
 	public static function commit() {
 		if(self::$logger == null)
-			self::$logger = new Logger('AlphaDAO');
+			self::$logger = new Logger('AlphaDAOProviderMySQL');
 		self::$logger->debug('>>commit()');
 		
     	if (!self::getConnection()->commit())
@@ -1993,39 +1826,23 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
   	}
   	
 	/**
-	 * Aborts the current database transaction.
-	 * 
-	 * @since 1.1
-	 * @throws AlphaException
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::rollback()
 	 */
 	public static function rollback() {
 		if(self::$logger == null)
-			self::$logger = new Logger('AlphaDAO');
+			self::$logger = new Logger('AlphaDAOProviderMySQL');
 		self::$logger->debug('>>rollback()');
     	
-    	// TODO: implement
+    	if (!self::getConnection()->rollback())
+     		throw new AlphaException('Error rolling back a transaction, error is ['.self::getConnection()->error.']');
     	
     	self::$logger->debug('<<rollback');
-  	}
-
-  	/**
-  	 * Static method that tries to determine if the system database has been installed or not.
-  	 *
-  	 * @return boolean
-  	 * @since 1.1
-  	 */
-  	public static function isInstalled() {
-  		if(self::$logger == null)
-			self::$logger = new Logger('AlphaDAO');
-		self::$logger->debug('>>isInstalled()');
-		
-		// TODO: implement
   	}
 	
   	/**
   	 * (non-PHPdoc)
   	 * @see alpha/model/AlphaDAOProviderInterface::setBO()
-  	 * @since 1.1
   	 */
 	public function setBO($BO) {
 		$this->BO = $BO;
@@ -2062,13 +1879,13 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			}
 				
 			if($this->BO->isTableOverloaded()) {
-				//if(isset($this->classname)) {
-					//$bindingsTypes .= 's';
-					//array_push($params, $this->classname);					
-				//}else{					
+				if(isset($this->classname)) {
+					$bindingsTypes .= 's';
+					array_push($params, $this->classname);					
+				}else{					
 					$bindingsTypes .= 's';					
 					array_push($params, get_class($this->BO));					
-				//}
+				}
 			}
 		}else{ // bind all attributes on the business object
 		
@@ -2098,13 +1915,13 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			}
 				
 			if($this->BO->isTableOverloaded()) {
-				//if(isset($this->classname)) {
-					//$bindingsTypes .= 's';
-					//array_push($params, $this->classname);					
-				//}else{					
+				if(isset($this->classname)) {
+					$bindingsTypes .= 's';
+					array_push($params, $this->classname);					
+				}else{					
 					$bindingsTypes .= 's';					
 					array_push($params, get_class($this->BO));					
-				//}
+				}
 			}
 			
 			// the OID may be on the WHERE clause for UPDATEs and DELETEs
