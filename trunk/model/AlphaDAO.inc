@@ -1470,25 +1470,6 @@ abstract class AlphaDAO {
 	}
 	
 	/**
-	 * Parses a MySQL error for the value that violated a unique constraint.
-	 * 
-	 * @param string $error The MySQL error string.
-	 * @since 1.0
-	 * @deprecated
-	 * @todo remove
-	 */
-	protected function findOffendingValue($error) {
-		self::$logger->debug('>>findOffendingValue(error=['.$error.'])');
-				
-		$singleQuote1 = strpos($error,"'");
-		$singleQuote2 = strrpos($error,"'");
-		
-		$value = substr($error, $singleQuote1, ($singleQuote2-$singleQuote1)+1);
-		self::$logger->debug('<<findOffendingValue ['.$value.'])');
-		return $value;
-	}
-	
-	/**
 	 * Gets the data labels array.
 	 * 
 	 * @return array An array of attribute labels.
