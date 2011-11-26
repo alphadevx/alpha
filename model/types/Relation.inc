@@ -537,6 +537,10 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 		global $config;
 		
 		if($this->relationType == 'ONE-TO-MANY') {
+			
+			if($this->getValue() == '') // if the value is empty, then return an empty array
+				return array();
+			
 			try {
 				AlphaDAO::loadClassDef($this->relatedClass);
 			}catch(IllegalArguementException $e) {		
