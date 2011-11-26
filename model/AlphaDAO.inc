@@ -482,7 +482,7 @@ abstract class AlphaDAO {
 			$provider->save();
 			
 			if($config->get('sysCacheProviderName') != '')
-				$this->BO->removeFromCache();
+				$this->removeFromCache();
 				
 			if(method_exists($this, 'after_save_callback'))
 				$this->after_save_callback();
