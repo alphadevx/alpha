@@ -877,30 +877,17 @@ abstract class AlphaDAO {
 		
 		if(method_exists($this, 'before_getMAX_callback'))
 			$this->before_getMAX_callback();
+			
+		global $config;
 		
-		$sqlQuery = 'SELECT MAX(OID) AS max_OID FROM '.$this->getTableName();
-
-		$this->setLastQuery($sqlQuery);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$max = $provider->getMAX();
 		
-		try {
-			$result = $this->query($sqlQuery);
+		if(method_exists($this, 'after_getMAX_callback'))
+			$this->after_getMAX_callback();
 	
-			$row = $result[0];
-	
-			if (isset($row['max_OID'])) {
-				if(method_exists($this, 'after_getMAX_callback'))
-					$this->after_getMAX_callback();
-	
-				self::$logger->debug('<<getMAX ['.$row['max_OID'].']');
-				return $row['max_OID'];
-			}else{			
-				throw new AlphaException('Failed to get the MAX ID for the class ['.get_class($this).'] from the table ['.$this->getTableName().'], query is ['.$this->lastQuery.']');
-			}
-		}catch (Exception $e) {
-			throw new AlphaException($e->getMessage());
-			self::$logger->debug('<<getMAX [0]');
-			return 0;
-		}
+		self::$logger->debug('<<getMAX ['.$max.']');
+		return $max;
 	}
 	
 	/**
