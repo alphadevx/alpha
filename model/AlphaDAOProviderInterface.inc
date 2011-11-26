@@ -192,32 +192,12 @@ interface AlphaDAOProviderInterface {
 	public function saveAttribute($attribute, $value);
 	
 	/**
-	 * Validates the object to be saved.
-	 * 
-	 * @return boolean
-	 * @since 1.1
-	 * @throws ValidationException
-	 */
-	//protected function validate();
-	
-	/**
 	 * Deletes the current object from the database.
 	 * 
 	 * @since 1.1
 	 * @throws FailedDeleteException
 	 */
 	public function delete();
-	
-	/**
-	 * Delete all object instances from the database by the specified attribute matching the value provided.
-	 *
-	 * @param string $attribute The name of the field to delete the objects by.
-	 * @param mixed $value The value of the field to delete the objects by.
-	 * @return integer The number of rows deleted.
-	 * @since 1.1
-	 * @throws FailedDeleteException
-	 */
-	public function deleteAllByAttribute($attribute, $value);
 	
 	/**
 	 * Gets the version_num of the object from the database (returns 0 if the BO is not saved yet).
@@ -262,14 +242,6 @@ interface AlphaDAOProviderInterface {
 	 * @throws AlphaException	 
 	 */
 	public function addProperty($propName);
-
-	/**
-	 * Populates the current business object from global POST data.
-	 * 
-	 * @param boolean $filterAll Defaults to false, set to true if you want to strictly filter all POSTed user input using InputFilter::encode.
-	 * @since 1.1
-	 */	
-	public function populateFromPost($filterAll=false);
 
 	/**
 	 * Gets the maximum OID value from the database for this class type.
@@ -423,14 +395,6 @@ interface AlphaDAOProviderInterface {
 	 * @throws AlphaException
 	 */
 	public static function rollback();
-
-  	/**
-  	 * Static method that tries to determine if the system database has been installed or not.
-  	 *
-  	 * @return boolean
-  	 * @since 1.1
-  	 */
-  	public static function isInstalled();
     
    	/**
    	 * Provide the BO that we are going to map the data to from this provider.
