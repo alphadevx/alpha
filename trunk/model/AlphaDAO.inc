@@ -1960,45 +1960,6 @@ abstract class AlphaDAO {
   		
   		return $name;
   	}
-	
-	/**
-	 * Dynamically binds the result of the supplied prepared statement to a 2d array, where each element in the array is another array
-	 * representing a database row.
-	 * 
-	 * @param mysqli_stmt $stmt
-	 * @return array A 2D array containing the query result.
-	 * @since 1.0
-	 * @todo remove
-	 * @deprecated
-	 */
-	protected function bindResult($stmt) {
-		$result = array();
-     
-		$metadata = $stmt->result_metadata();
-      	$fields = $metadata->fetch_fields();
-
-      	while(true) {
-        	$pointers = array();
-        	$row = array();
-       
-        	$pointers[] = $stmt;
-        	foreach ($fields as $field) {
-          		$fieldname = $field->name;
-          		$pointers[] = &$row[$fieldname];
-        	}
-       
-        	call_user_func_array('mysqli_stmt_bind_result', $pointers);
-       
-        	if (!$stmt->fetch())
-          		break;
-       
-       		$result[] = $row;
-      	}
-     
-      	$metadata->free();
-     
-      	return $result;
-    }
     
     /**
      * Check to see if an attribute exists on the BO.
