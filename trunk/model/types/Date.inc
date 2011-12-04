@@ -9,7 +9,7 @@ require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
  * 
  * @package alpha::model::types
  * @since 1.0
- * @author John Collins <john@design-ireland.net>
+ * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
