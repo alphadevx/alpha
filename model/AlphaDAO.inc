@@ -215,14 +215,12 @@ abstract class AlphaDAO {
 	}
 	
 	/**
-   	 * Returns a 2d array, where each element in the array is another array
-	 * representing a database row.
-   	 * 
-   	 * @param string $sqlQuery
-   	 * @return array
-   	 * @since 1.1
-   	 * @throws CustomQueryException
-   	 */
+	 * Returns a 2d array, where each element in the array is another array representing a database row.
+	 * 
+	 * @param string $sqlQuery
+	 * @since 1.1
+	 * @throws CustomQueryException
+	 */
 	public function query($sqlQuery) {
 		global $config;
 		
