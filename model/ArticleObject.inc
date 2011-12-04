@@ -231,6 +231,7 @@ class ArticleObject extends AlphaDAO {
 		
 		$this->comments = new Relation();
 		$this->markTransient('comments');
+		$this->comments->setValue($this->OID);
 		$this->comments->setRelatedClass('ArticleCommentObject');
 		$this->comments->setRelatedClassField('articleOID');
 		$this->comments->setRelatedClassDisplayField('content');
@@ -238,6 +239,7 @@ class ArticleObject extends AlphaDAO {
 		
 		$this->votes = new Relation();
 		$this->markTransient('votes');
+		$this->votes->setValue($this->OID);
 		$this->votes->setRelatedClass('ArticleVoteObject');
 		$this->votes->setRelatedClassField('articleOID');
 		$this->votes->setRelatedClassDisplayField('score');
@@ -337,6 +339,9 @@ class ArticleObject extends AlphaDAO {
 		}else{
 			$this->printURL = $config->get('sysURL').'alpha/controller/ViewArticlePrint.php?title='.$this->title->getValue();
 		}
+		
+		$this->comments->setValue($this->OID);
+		$this->votes->setValue($this->OID);
 	}
 	
 	/**
