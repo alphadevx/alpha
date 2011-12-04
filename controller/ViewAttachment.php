@@ -7,7 +7,7 @@ if(!isset($config)) {
 }
 
 require_once $config->get('sysRoot').'alpha/util/Logger.inc';
-require_once $config->get('sysRoot').'alpha/util/AlphaFileUtil.inc';
+require_once $config->get('sysRoot').'alpha/util/AlphaFileUtils.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
 require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
 require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
@@ -102,7 +102,7 @@ class ViewAttachment extends AlphaController implements AlphaControllerInterface
 					self::$logger->info('Downloading the file ['.$params['filename'].'] from the folder ['.$params['dir'].']');
 					
 					$pathParts = pathinfo($filePath);
-					$mimeType = AlphaFileUtil::getMIMETypeByExtension($pathParts['extension']);
+					$mimeType = AlphaFileUtils::getMIMETypeByExtension($pathParts['extension']);
 					header('Content-Type: '.$mimeType);
 					header('Content-Disposition: attachment; filename="'.$pathParts['basename'].'"');
 					header('Content-Length: '.filesize($filePath));

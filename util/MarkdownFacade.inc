@@ -118,7 +118,7 @@ class MarkdownFacade {
 			$fileName = substr($attachmentURL, $start+1, $end-($start+1));
 
 			if(method_exists($this->BO, 'getAttachmentSecureURL')) {
-				$this->content = str_replace($attachmentURL, 'href='.$this->BO->getAttachmentSecureURL($fileName), $this->content);
+				$this->content = str_replace($attachmentURL, 'href="'.$this->BO->getAttachmentSecureURL($fileName).'" rel="nofollow"', $this->content);
 			}
 		}
 		
