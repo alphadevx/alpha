@@ -1,0 +1,863 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>phpDocumentor Parser Errors and Warnings</title>
+	<link rel="stylesheet" type="text/css" href="media/style.css">
+	<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+</head>
+<body>
+
+<table border="0" cellspacing="0" cellpadding="0" height="48" width="100%">
+  <tr>
+	<td class="header-top-left"><a href="http://www.alphaframework.org/"><img src="media/logo.png" border="0" alt="Alpha Framework" /></a></td>
+    <td class="header-top-right">alpha--controller<br /><div class="header-top-right-subpackage"></div></td>
+  </tr>
+  <tr><td colspan="2" class="header-line"><img src="media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+  <tr>
+    <td colspan="2" class="header-menu">
+      
+                        
+                                                                                                                                                                                                                                                                    		[ <a href="classtrees_alpha--controller.html" class="menu">class tree: alpha--controller</a> ]
+		[ <a href="elementindex_alpha--controller.html" class="menu">index: alpha--controller</a> ]
+            [ <a href="elementindex.html" class="menu">all elements</a> ]
+    </td>
+  </tr>
+  <tr><td colspan="2" class="header-line"><img src="media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="table-layout:fixed;">
+  <tr valign="top">
+    <td width="195" class="menu">
+		<div class="package-title">alpha--controller</div>
+      <b>Packages:</b><br />
+  <div class="package">
+              <a href="li_alpha--controller.html">alpha--controller</a><br />
+              <a href="li_alpha--controller--front.html">alpha--controller--front</a><br />
+              <a href="li_alpha--exceptions.html">alpha--exceptions</a><br />
+              <a href="li_alpha--model.html">alpha--model</a><br />
+              <a href="li_alpha--model--types.html">alpha--model--types</a><br />
+              <a href="li_alpha--service.html">alpha--service</a><br />
+              <a href="li_alpha--tasks.html">alpha--tasks</a><br />
+              <a href="li_alpha--tests.html">alpha--tests</a><br />
+              <a href="li_alpha--util.html">alpha--util</a><br />
+              <a href="li_alpha--util--cache.html">alpha--util--cache</a><br />
+              <a href="li_alpha--util--convertors.html">alpha--util--convertors</a><br />
+              <a href="li_alpha--util--feeds.html">alpha--util--feeds</a><br />
+              <a href="li_alpha--util--filters.html">alpha--util--filters</a><br />
+              <a href="li_alpha--util--graphs.html">alpha--util--graphs</a><br />
+              <a href="li_alpha--util--helpers.html">alpha--util--helpers</a><br />
+              <a href="li_alpha--util--metrics.html">alpha--util--metrics</a><br />
+              <a href="li_alpha--view.html">alpha--view</a><br />
+              <a href="li_alpha--view--widgets.html">alpha--view--widgets</a><br />
+      	</div>
+      <br />
+                </td>
+    <td width="800">
+      <table cellpadding="10" cellspacing="0" width="100%" border="0"><tr><td valign="top">
+
+<a href="#Post-parsing">Post-parsing</a><br>
+<a href="#AlphaAgentUtils_Test.php">AlphaAgentUtils_Test.php</a><br>
+<a href="#AlphaBackupUtils.inc">AlphaBackupUtils.inc</a><br>
+<a href="#AlphaCacheProviderFactory.inc">AlphaCacheProviderFactory.inc</a><br>
+<a href="#AlphaCacheProviderInterface.inc">AlphaCacheProviderInterface.inc</a><br>
+<a href="#AlphaCacheProviderMemcache.inc">AlphaCacheProviderMemcache.inc</a><br>
+<a href="#AlphaConfig.inc">AlphaConfig.inc</a><br>
+<a href="#AlphaConfig_Test.php">AlphaConfig_Test.php</a><br>
+<a href="#AlphaController.inc">AlphaController.inc</a><br>
+<a href="#AlphaControllerInterface.inc">AlphaControllerInterface.inc</a><br>
+<a href="#AlphaController_Test.php">AlphaController_Test.php</a><br>
+<a href="#AlphaCronManager.inc">AlphaCronManager.inc</a><br>
+<a href="#AlphaDAO.inc">AlphaDAO.inc</a><br>
+<a href="#AlphaDAO2Excel.inc">AlphaDAO2Excel.inc</a><br>
+<a href="#AlphaDAOProviderFactory.inc">AlphaDAOProviderFactory.inc</a><br>
+<a href="#AlphaDAOProviderInterface.inc">AlphaDAOProviderInterface.inc</a><br>
+<a href="#AlphaDAOProviderMySQL.inc">AlphaDAOProviderMySQL.inc</a><br>
+<a href="#AlphaDAO_Test.php">AlphaDAO_Test.php</a><br>
+<a href="#AlphaErrorHandlers.inc">AlphaErrorHandlers.inc</a><br>
+<a href="#AlphaException.inc">AlphaException.inc</a><br>
+<a href="#AlphaFeed.inc">AlphaFeed.inc</a><br>
+<a href="#AlphaFeed_Test.php">AlphaFeed_Test.php</a><br>
+<a href="#AlphaFileUtils.inc">AlphaFileUtils.inc</a><br>
+<a href="#AlphaFilterInterface.inc">AlphaFilterInterface.inc</a><br>
+<a href="#AlphaFilters_Test.php">AlphaFilters_Test.php</a><br>
+<a href="#AlphaGraphNode.inc">AlphaGraphNode.inc</a><br>
+<a href="#AlphaImageUtils.inc">AlphaImageUtils.inc</a><br>
+<a href="#AlphaKPI.inc">AlphaKPI.inc</a><br>
+<a href="#AlphaMarkdown.inc">AlphaMarkdown.inc</a><br>
+<a href="#AlphaMetrics.inc">AlphaMetrics.inc</a><br>
+<a href="#AlphaTaskInterface.inc">AlphaTaskInterface.inc</a><br>
+<a href="#AlphaTCPDF.inc">AlphaTCPDF.inc</a><br>
+<a href="#AlphaTreeGraph.inc">AlphaTreeGraph.inc</a><br>
+<a href="#AlphaType.inc">AlphaType.inc</a><br>
+<a href="#AlphaTypeInterface.inc">AlphaTypeInterface.inc</a><br>
+<a href="#AlphaValidator.inc">AlphaValidator.inc</a><br>
+<a href="#AlphaValidator_Test.php">AlphaValidator_Test.php</a><br>
+<a href="#AlphaView.inc">AlphaView.inc</a><br>
+<a href="#AlphaView_Test.php">AlphaView_Test.php</a><br>
+<a href="#ArticleCommentObject.inc">ArticleCommentObject.inc</a><br>
+<a href="#ArticleCommentView.inc">ArticleCommentView.inc</a><br>
+<a href="#ArticleObject.inc">ArticleObject.inc</a><br>
+<a href="#ArticleView.inc">ArticleView.inc</a><br>
+<a href="#ArticleVoteObject.inc">ArticleVoteObject.inc</a><br>
+<a href="#Atom.inc">Atom.inc</a><br>
+<a href="#BackupTask.inc">BackupTask.inc</a><br>
+<a href="#BadBOTableNameException.inc">BadBOTableNameException.inc</a><br>
+<a href="#BadRequestObject.inc">BadRequestObject.inc</a><br>
+<a href="#BlacklistedClientObject.inc">BlacklistedClientObject.inc</a><br>
+<a href="#BONotFoundException.inc">BONotFoundException.inc</a><br>
+<a href="#Boolean.inc">Boolean.inc</a><br>
+<a href="#Boolean_Test.php">Boolean_Test.php</a><br>
+<a href="#Button.inc">Button.inc</a><br>
+<a href="#CacheManager.php">CacheManager.php</a><br>
+<a href="#ClientBlacklistFilter.inc">ClientBlacklistFilter.inc</a><br>
+<a href="#ClientTempBlacklistFilter.inc">ClientTempBlacklistFilter.inc</a><br>
+<a href="#Create.php">Create.php</a><br>
+<a href="#CreateArticle.php">CreateArticle.php</a><br>
+<a href="#CustomQueryException.inc">CustomQueryException.inc</a><br>
+<a href="#Date.inc">Date.inc</a><br>
+<a href="#DateBox.inc">DateBox.inc</a><br>
+<a href="#Date_Test.php">Date_Test.php</a><br>
+<a href="#DEnum.inc">DEnum.inc</a><br>
+<a href="#DEnumItem.inc">DEnumItem.inc</a><br>
+<a href="#DEnumView.inc">DEnumView.inc</a><br>
+<a href="#DEnum_Test.php">DEnum_Test.php</a><br>
+<a href="#Detail.php">Detail.php</a><br>
+<a href="#Double.inc">Double.inc</a><br>
+<a href="#Double_Test.php">Double_Test.php</a><br>
+<a href="#Edit.php">Edit.php</a><br>
+<a href="#EditArticle.php">EditArticle.php</a><br>
+<a href="#EditDEnum.php">EditDEnum.php</a><br>
+<a href="#EditTags.php">EditTags.php</a><br>
+<a href="#Enum.inc">Enum.inc</a><br>
+<a href="#Enum_Test.php">Enum_Test.php</a><br>
+<a href="#Exceptions_Test.php">Exceptions_Test.php</a><br>
+<a href="#FailedDeleteException.inc">FailedDeleteException.inc</a><br>
+<a href="#FailedIndexCreateException.inc">FailedIndexCreateException.inc</a><br>
+<a href="#FailedLookupCreateException.inc">FailedLookupCreateException.inc</a><br>
+<a href="#FailedSaveException.inc">FailedSaveException.inc</a><br>
+<a href="#FailedUnitCommitException.inc">FailedUnitCommitException.inc</a><br>
+<a href="#FileNotFoundException.inc">FileNotFoundException.inc</a><br>
+<a href="#FrontController.inc">FrontController.inc</a><br>
+<a href="#FrontController_Test.php">FrontController_Test.php</a><br>
+<a href="#GenSecureQueryStrings.php">GenSecureQueryStrings.php</a><br>
+<a href="#IllegalArguementException.inc">IllegalArguementException.inc</a><br>
+<a href="#Image.inc">Image.inc</a><br>
+<a href="#Image_Test.php">Image_Test.php</a><br>
+<a href="#index.php">index.php</a><br>
+<a href="#InputFilter.inc">InputFilter.inc</a><br>
+<a href="#Install.php">Install.php</a><br>
+<a href="#Integer.inc">Integer.inc</a><br>
+<a href="#Integer_Test.php">Integer_Test.php</a><br>
+<a href="#LibraryNotInstalledException.inc">LibraryNotInstalledException.inc</a><br>
+<a href="#ListAll.php">ListAll.php</a><br>
+<a href="#ListBusinessObjects.php">ListBusinessObjects.php</a><br>
+<a href="#ListDEnums.php">ListDEnums.php</a><br>
+<a href="#ListSequences.php">ListSequences.php</a><br>
+<a href="#LockingException.inc">LockingException.inc</a><br>
+<a href="#LogFile.inc">LogFile.inc</a><br>
+<a href="#Logger.inc">Logger.inc</a><br>
+<a href="#Login.php">Login.php</a><br>
+<a href="#Logout.php">Logout.php</a><br>
+<a href="#MailNotSentException.inc">MailNotSentException.inc</a><br>
+<a href="#MarkdownFacade.inc">MarkdownFacade.inc</a><br>
+<a href="#PersonObject.inc">PersonObject.inc</a><br>
+<a href="#PersonView.inc">PersonView.inc</a><br>
+<a href="#PHPException.inc">PHPException.inc</a><br>
+<a href="#PreviewArticle.php">PreviewArticle.php</a><br>
+<a href="#RecordSelector.inc">RecordSelector.inc</a><br>
+<a href="#Relation.inc">Relation.inc</a><br>
+<a href="#RelationLookup.inc">RelationLookup.inc</a><br>
+<a href="#Relation_Test.php">Relation_Test.php</a><br>
+<a href="#ResourceNotAllowedException.inc">ResourceNotAllowedException.inc</a><br>
+<a href="#ResourceNotFoundException.inc">ResourceNotFoundException.inc</a><br>
+<a href="#RightsObject.inc">RightsObject.inc</a><br>
+<a href="#RSS.inc">RSS.inc</a><br>
+<a href="#RSS2.inc">RSS2.inc</a><br>
+<a href="#Search.php">Search.php</a><br>
+<a href="#SecurityException.inc">SecurityException.inc</a><br>
+<a href="#Sequence.inc">Sequence.inc</a><br>
+<a href="#SequenceView.inc">SequenceView.inc</a><br>
+<a href="#Sequence_Test.php">Sequence_Test.php</a><br>
+<a href="#String.inc">String.inc</a><br>
+<a href="#StringBox.inc">StringBox.inc</a><br>
+<a href="#String_Test.php">String_Test.php</a><br>
+<a href="#TagCloud.inc">TagCloud.inc</a><br>
+<a href="#TagManager.php">TagManager.php</a><br>
+<a href="#TagObject.inc">TagObject.inc</a><br>
+<a href="#Tag_Test.php">Tag_Test.php</a><br>
+<a href="#TCPDFFacade.inc">TCPDFFacade.inc</a><br>
+<a href="#Text.inc">Text.inc</a><br>
+<a href="#TextBox.inc">TextBox.inc</a><br>
+<a href="#Text_Test.php">Text_Test.php</a><br>
+<a href="#Timestamp.inc">Timestamp.inc</a><br>
+<a href="#Timestamp_Test.php">Timestamp_Test.php</a><br>
+<a href="#ValidationException.inc">ValidationException.inc</a><br>
+<a href="#ViewArticle.php">ViewArticle.php</a><br>
+<a href="#ViewArticleFile.php">ViewArticleFile.php</a><br>
+<a href="#ViewArticlePDF.php">ViewArticlePDF.php</a><br>
+<a href="#ViewArticlePrint.php">ViewArticlePrint.php</a><br>
+<a href="#ViewArticleTitle.php">ViewArticleTitle.php</a><br>
+<a href="#ViewAttachment.php">ViewAttachment.php</a><br>
+<a href="#ViewExcel.php">ViewExcel.php</a><br>
+<a href="#ViewFeed.php">ViewFeed.php</a><br>
+<a href="#ViewImage.php">ViewImage.php</a><br>
+<a href="#ViewLog.php">ViewLog.php</a><br>
+<a href="#ViewMetrics.php">ViewMetrics.php</a><br>
+<a href="#ViewRecordSelector.php">ViewRecordSelector.php</a><br>
+<a href="#ViewState.inc">ViewState.inc</a><br>
+<a href="#ViewTestResults.php">ViewTestResults.php</a><br>
+<a name="Post-parsing"></a>
+<h1>Post-parsing</h1>
+<h2>Warnings:</h2><br>
+<b>Warning</b> - Class Double_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class DEnum_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class Date_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class Enum_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class Exceptions_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class Image_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class FrontController_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class Boolean_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class AlphaValidator_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class AlphaConfig_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class AlphaAgentUtils_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class AlphaController_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class AlphaDAO_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class AlphaFilters_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class AlphaFeed_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class Integer_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class AlphaView_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - class AlphaTCPDF in package alpha--util parent not found in @see parent::Image()<br>
+<b>Warning</b> - class AlphaTCPDF in package alpha--util parent not found in @see parent::Image()<br>
+<b>Warning</b> - class AlphaTCPDF in package alpha--util parent not found in @see parent::Image()<br>
+<b>Warning</b> - class AlphaTCPDF in package alpha--util parent not found in @see parent::Image()<br>
+<b>Warning</b> - Class Relation_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - class AlphaTCPDF in package alpha--util parent not found in @see parent::Image()<br>
+<b>Warning</b> - Class AlphaTCPDF parent TCPDF not found<br>
+<b>Warning</b> - class AlphaTCPDF in package alpha--util parent not found in @see parent::Image()<br>
+<b>Warning</b> - Class Tag_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class String_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class Sequence_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class Text_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class Timestamp_Test parent PHPUnit_Framework_TestCase not found<br>
+<b>Warning</b> - Class AlphaMarkdown parent MarkdownExtra_Parser not found<br>
+<a name="AlphaAgentUtils.inc"></a>
+<h1>AlphaAgentUtils.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 46</b> - DocBlock would be page-level, but precedes class "AlphaAgentUtils", use another DocBlock to document the file<br>
+<a name="AlphaAgentUtils_Test.php"></a>
+<h1>AlphaAgentUtils_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 87</b> - File "W:\alphaframework.org\alpha\tests\AlphaAgentUtils_Test.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaBackupUtils.inc"></a>
+<h1>AlphaBackupUtils.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 77</b> - File "W:\alphaframework.org\alpha\util\AlphaBackupUtils.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaCacheProviderFactory.inc"></a>
+<h1>AlphaCacheProviderFactory.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 48</b> - DocBlock would be page-level, but precedes class "AlphaCacheProviderFactory", use another DocBlock to document the file<br>
+<a name="AlphaCacheProviderInterface.inc"></a>
+<h1>AlphaCacheProviderInterface.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 48</b> - DocBlock would be page-level, but precedes class "AlphaCacheProviderInterface", use another DocBlock to document the file<br>
+<a name="AlphaCacheProviderMemcache.inc"></a>
+<h1>AlphaCacheProviderMemcache.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 131</b> - File "W:\alphaframework.org\alpha\util\cache\AlphaCacheProviderMemcache.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaConfig.inc"></a>
+<h1>AlphaConfig.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 47</b> - DocBlock would be page-level, but precedes class "AlphaConfig", use another DocBlock to document the file<br>
+<a name="AlphaConfig_Test.php"></a>
+<h1>AlphaConfig_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 110</b> - File "W:\alphaframework.org\alpha\tests\AlphaConfig_Test.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaController.inc"></a>
+<h1>AlphaController.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 1216</b> - File "W:\alphaframework.org\alpha\controller\AlphaController.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaControllerInterface.inc"></a>
+<h1>AlphaControllerInterface.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 46</b> - DocBlock would be page-level, but precedes class "AlphaControllerInterface", use another DocBlock to document the file<br>
+<a name="AlphaController_Test.php"></a>
+<h1>AlphaController_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 556</b> - File "W:\alphaframework.org\alpha\tests\AlphaController_Test.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaCronManager.inc"></a>
+<h1>AlphaCronManager.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 181</b> - File "W:\alphaframework.org\alpha\util\AlphaCronManager.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaDAO.inc"></a>
+<h1>AlphaDAO.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 2068</b> - File "W:\alphaframework.org\alpha\model\AlphaDAO.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaDAO2Excel.inc"></a>
+<h1>AlphaDAO2Excel.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 46</b> - DocBlock would be page-level, but precedes class "AlphaDAO2Excel", use another DocBlock to document the file<br>
+<a name="AlphaDAOProviderFactory.inc"></a>
+<h1>AlphaDAOProviderFactory.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 48</b> - DocBlock would be page-level, but precedes class "AlphaDAOProviderFactory", use another DocBlock to document the file<br>
+<a name="AlphaDAOProviderInterface.inc"></a>
+<h1>AlphaDAOProviderInterface.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 47</b> - DocBlock would be page-level, but precedes class "AlphaDAOProviderInterface", use another DocBlock to document the file<br>
+<a name="AlphaDAOProviderMySQL.inc"></a>
+<h1>AlphaDAOProviderMySQL.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 2009</b> - File "W:\alphaframework.org\alpha\model\AlphaDAOProviderMySQL.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaDAO_Test.php"></a>
+<h1>AlphaDAO_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 47</b> - DocBlock would be page-level, but precedes class "AlphaDAO_Test", use another DocBlock to document the file<br>
+<a name="AlphaErrorHandlers.inc"></a>
+<h1>AlphaErrorHandlers.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 57</b> - Method "catchException" has no method-level DocBlock.<br>
+<b>Warning on line 65</b> - Method "catchError" has no method-level DocBlock.<br>
+<b>Warning on line 72</b> - File "W:\alphaframework.org\alpha\util\AlphaErrorHandlers.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaException.inc"></a>
+<h1>AlphaException.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 46</b> - DocBlock would be page-level, but precedes class "AlphaException", use another DocBlock to document the file<br>
+<a name="AlphaFeed.inc"></a>
+<h1>AlphaFeed.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 357</b> - File "W:\alphaframework.org\alpha\util\feeds\AlphaFeed.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaFeed_Test.php"></a>
+<h1>AlphaFeed_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 118</b> - Method "testAddItemToRSSandParse" has no method-level DocBlock.<br>
+<b>Warning on line 141</b> - Method "testAddItemToRSS2andParse" has no method-level DocBlock.<br>
+<b>Warning on line 165</b> - Method "testAddItemToAtomandParse" has no method-level DocBlock.<br>
+<b>Warning on line 168</b> - File "W:\alphaframework.org\alpha\tests\AlphaFeed_Test.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaFileUtils.inc"></a>
+<h1>AlphaFileUtils.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 46</b> - DocBlock would be page-level, but precedes class "AlphaFileUtils", use another DocBlock to document the file<br>
+<a name="AlphaFilterInterface.inc"></a>
+<h1>AlphaFilterInterface.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 46</b> - DocBlock would be page-level, but precedes class "AlphaFilterInterface", use another DocBlock to document the file<br>
+<a name="AlphaFilters_Test.php"></a>
+<h1>AlphaFilters_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 216</b> - File "W:\alphaframework.org\alpha\tests\AlphaFilters_Test.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaGraphNode.inc"></a>
+<h1>AlphaGraphNode.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 531</b> - File "W:\alphaframework.org\alpha\util\graphs\AlphaGraphNode.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaImageUtils.inc"></a>
+<h1>AlphaImageUtils.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 46</b> - DocBlock would be page-level, but precedes class "AlphaImageUtils", use another DocBlock to document the file<br>
+<a name="AlphaKPI.inc"></a>
+<h1>AlphaKPI.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 184</b> - File "W:\alphaframework.org\alpha\util\AlphaKPI.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaMarkdown.inc"></a>
+<h1>AlphaMarkdown.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 213</b> - File "W:\alphaframework.org\alpha\util\AlphaMarkdown.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaMetrics.inc"></a>
+<h1>AlphaMetrics.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 254</b> - File "W:\alphaframework.org\alpha\util\metrics\AlphaMetrics.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaTaskInterface.inc"></a>
+<h1>AlphaTaskInterface.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 46</b> - DocBlock would be page-level, but precedes class "AlphaTaskInterface", use another DocBlock to document the file<br>
+<a name="AlphaTCPDF.inc"></a>
+<h1>AlphaTCPDF.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 436</b> - File "W:\alphaframework.org\alpha\util\AlphaTCPDF.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaTreeGraph.inc"></a>
+<h1>AlphaTreeGraph.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 443</b> - File "W:\alphaframework.org\alpha\util\graphs\AlphaTreeGraph.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaType.inc"></a>
+<h1>AlphaType.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 81</b> - File "W:\alphaframework.org\alpha\model\types\AlphaType.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaTypeInterface.inc"></a>
+<h1>AlphaTypeInterface.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 90</b> - File "W:\alphaframework.org\alpha\model\types\AlphaTypeInterface.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaValidator.inc"></a>
+<h1>AlphaValidator.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 46</b> - DocBlock would be page-level, but precedes class "AlphaValidator", use another DocBlock to document the file<br>
+<a name="AlphaValidator_Test.php"></a>
+<h1>AlphaValidator_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 180</b> - File "W:\alphaframework.org\alpha\tests\AlphaValidator_Test.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaView.inc"></a>
+<h1>AlphaView.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 1569</b> - File "W:\alphaframework.org\alpha\view\AlphaView.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="AlphaView_Test.php"></a>
+<h1>AlphaView_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 190</b> - File "W:\alphaframework.org\alpha\tests\AlphaView_Test.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ArticleCommentObject.inc"></a>
+<h1>ArticleCommentObject.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 102</b> - File "W:\alphaframework.org\alpha\model\ArticleCommentObject.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ArticleCommentView.inc"></a>
+<h1>ArticleCommentView.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 181</b> - File "W:\alphaframework.org\alpha\view\ArticleCommentView.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ArticleObject.inc"></a>
+<h1>ArticleObject.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 555</b> - File "W:\alphaframework.org\alpha\model\ArticleObject.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ArticleView.inc"></a>
+<h1>ArticleView.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 222</b> - File "W:\alphaframework.org\alpha\view\ArticleView.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ArticleVoteObject.inc"></a>
+<h1>ArticleVoteObject.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 115</b> - File "W:\alphaframework.org\alpha\model\ArticleVoteObject.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Atom.inc"></a>
+<h1>Atom.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 137</b> - File "W:\alphaframework.org\alpha\util\feeds\Atom.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="BackupTask.inc"></a>
+<h1>BackupTask.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 120</b> - File "W:\alphaframework.org\alpha\tasks\BackupTask.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="BadBOTableNameException.inc"></a>
+<h1>BadBOTableNameException.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 51</b> - File "W:\alphaframework.org\alpha\exceptions\BadBOTableNameException.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="BadRequestObject.inc"></a>
+<h1>BadRequestObject.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 146</b> - File "W:\alphaframework.org\alpha\model\BadRequestObject.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="BlacklistedClientObject.inc"></a>
+<h1>BlacklistedClientObject.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 88</b> - File "W:\alphaframework.org\alpha\model\BlacklistedClientObject.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="BONotFoundException.inc"></a>
+<h1>BONotFoundException.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 51</b> - File "W:\alphaframework.org\alpha\exceptions\BONotFoundException.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Boolean.inc"></a>
+<h1>Boolean.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 151</b> - File "W:\alphaframework.org\alpha\model\types\Boolean.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Boolean_Test.php"></a>
+<h1>Boolean_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 47</b> - DocBlock would be page-level, but precedes class "Boolean_Test", use another DocBlock to document the file<br>
+<a name="Button.inc"></a>
+<h1>Button.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 46</b> - DocBlock would be page-level, but precedes class "Button", use another DocBlock to document the file<br>
+<a name="CacheManager.php"></a>
+<h1>CacheManager.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 204</b> - File "W:\alphaframework.org\alpha\controller\CacheManager.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ClientBlacklistFilter.inc"></a>
+<h1>ClientBlacklistFilter.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 93</b> - File "W:\alphaframework.org\alpha\util\filters\ClientBlacklistFilter.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ClientTempBlacklistFilter.inc"></a>
+<h1>ClientTempBlacklistFilter.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 96</b> - File "W:\alphaframework.org\alpha\util\filters\ClientTempBlacklistFilter.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Create.php"></a>
+<h1>Create.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 246</b> - File "W:\alphaframework.org\alpha\controller\Create.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="CreateArticle.php"></a>
+<h1>CreateArticle.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 246</b> - File "W:\alphaframework.org\alpha\controller\CreateArticle.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="CustomQueryException.inc"></a>
+<h1>CustomQueryException.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 51</b> - File "W:\alphaframework.org\alpha\exceptions\CustomQueryException.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Date.inc"></a>
+<h1>Date.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 331</b> - File "W:\alphaframework.org\alpha\model\types\Date.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="DateBox.inc"></a>
+<h1>DateBox.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 152</b> - File "W:\alphaframework.org\alpha\view\widgets\DateBox.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Date_Test.php"></a>
+<h1>Date_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 47</b> - DocBlock would be page-level, but precedes class "Date_Test", use another DocBlock to document the file<br>
+<a name="DEnum.inc"></a>
+<h1>DEnum.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 298</b> - File "W:\alphaframework.org\alpha\model\types\DEnum.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="DEnumItem.inc"></a>
+<h1>DEnumItem.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 193</b> - File "W:\alphaframework.org\alpha\model\types\DEnumItem.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="DEnumView.inc"></a>
+<h1>DEnumView.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 172</b> - File "W:\alphaframework.org\alpha\view\DEnumView.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="DEnum_Test.php"></a>
+<h1>DEnum_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 47</b> - DocBlock would be page-level, but precedes class "DEnum_Test", use another DocBlock to document the file<br>
+<a name="Detail.php"></a>
+<h1>Detail.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 262</b> - File "W:\alphaframework.org\alpha\controller\Detail.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Double.inc"></a>
+<h1>Double.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 189</b> - File "W:\alphaframework.org\alpha\model\types\Double.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Double_Test.php"></a>
+<h1>Double_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 47</b> - DocBlock would be page-level, but precedes class "Double_Test", use another DocBlock to document the file<br>
+<a name="Edit.php"></a>
+<h1>Edit.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 285</b> - File "W:\alphaframework.org\alpha\controller\Edit.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="EditArticle.php"></a>
+<h1>EditArticle.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 360</b> - File "W:\alphaframework.org\alpha\controller\EditArticle.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="EditDEnum.php"></a>
+<h1>EditDEnum.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 240</b> - File "W:\alphaframework.org\alpha\controller\EditDEnum.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="EditTags.php"></a>
+<h1>EditTags.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 349</b> - File "W:\alphaframework.org\alpha\controller\EditTags.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Enum.inc"></a>
+<h1>Enum.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 142</b> - File "W:\alphaframework.org\alpha\model\types\Enum.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Enum_Test.php"></a>
+<h1>Enum_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 47</b> - DocBlock would be page-level, but precedes class "Enum_Test", use another DocBlock to document the file<br>
+<a name="Exceptions_Test.php"></a>
+<h1>Exceptions_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 47</b> - DocBlock would be page-level, but precedes class "Exceptions_Test", use another DocBlock to document the file<br>
+<a name="FailedDeleteException.inc"></a>
+<h1>FailedDeleteException.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 51</b> - File "W:\alphaframework.org\alpha\exceptions\FailedDeleteException.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="FailedIndexCreateException.inc"></a>
+<h1>FailedIndexCreateException.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 51</b> - File "W:\alphaframework.org\alpha\exceptions\FailedIndexCreateException.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="FailedLookupCreateException.inc"></a>
+<h1>FailedLookupCreateException.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 51</b> - File "W:\alphaframework.org\alpha\exceptions\FailedLookupCreateException.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="FailedSaveException.inc"></a>
+<h1>FailedSaveException.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 51</b> - File "W:\alphaframework.org\alpha\exceptions\FailedSaveException.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="FailedUnitCommitException.inc"></a>
+<h1>FailedUnitCommitException.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 51</b> - File "W:\alphaframework.org\alpha\exceptions\FailedUnitCommitException.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="FileNotFoundException.inc"></a>
+<h1>FileNotFoundException.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 51</b> - File "W:\alphaframework.org\alpha\exceptions\FileNotFoundException.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="FrontController.inc"></a>
+<h1>FrontController.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 608</b> - File "W:\alphaframework.org\alpha\controller\front\FrontController.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="FrontController_Test.php"></a>
+<h1>FrontController_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 295</b> - File "W:\alphaframework.org\alpha\tests\FrontController_Test.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="GenSecureQueryStrings.php"></a>
+<h1>GenSecureQueryStrings.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 165</b> - File "W:\alphaframework.org\alpha\controller\GenSecureQueryStrings.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="IllegalArguementException.inc"></a>
+<h1>IllegalArguementException.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 51</b> - File "W:\alphaframework.org\alpha\exceptions\IllegalArguementException.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Image.inc"></a>
+<h1>Image.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 433</b> - File "W:\alphaframework.org\alpha\view\widgets\Image.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Image_Test.php"></a>
+<h1>Image_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 151</b> - File "W:\alphaframework.org\alpha\tests\Image_Test.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="index.php"></a>
+<h1>index.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 50</b> - Page-level DocBlock precedes "require_once '../util/AlphaConfig.inc'", use another DocBlock to document the source element<br>
+<a name="InputFilter.inc"></a>
+<h1>InputFilter.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 47</b> - DocBlock would be page-level, but precedes class "InputFilter", use another DocBlock to document the file<br>
+<a name="Install.php"></a>
+<h1>Install.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 551</b> - File "W:\alphaframework.org\alpha\controller\Install.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Integer.inc"></a>
+<h1>Integer.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 186</b> - File "W:\alphaframework.org\alpha\model\types\Integer.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Integer_Test.php"></a>
+<h1>Integer_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 47</b> - DocBlock would be page-level, but precedes class "Integer_Test", use another DocBlock to document the file<br>
+<a name="LibraryNotInstalledException.inc"></a>
+<h1>LibraryNotInstalledException.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 51</b> - File "W:\alphaframework.org\alpha\exceptions\LibraryNotInstalledException.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ListAll.php"></a>
+<h1>ListAll.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 422</b> - File "W:\alphaframework.org\alpha\controller\ListAll.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ListBusinessObjects.php"></a>
+<h1>ListBusinessObjects.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 238</b> - File "W:\alphaframework.org\alpha\controller\ListBusinessObjects.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ListDEnums.php"></a>
+<h1>ListDEnums.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 189</b> - File "W:\alphaframework.org\alpha\controller\ListDEnums.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ListSequences.php"></a>
+<h1>ListSequences.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 153</b> - File "W:\alphaframework.org\alpha\controller\ListSequences.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="LockingException.inc"></a>
+<h1>LockingException.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 51</b> - File "W:\alphaframework.org\alpha\exceptions\LockingException.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="LogFile.inc"></a>
+<h1>LogFile.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 47</b> - DocBlock would be page-level, but precedes class "LogFile", use another DocBlock to document the file<br>
+<a name="Logger.inc"></a>
+<h1>Logger.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 226</b> - File "W:\alphaframework.org\alpha\util\Logger.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Login.php"></a>
+<h1>Login.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 308</b> - File "W:\alphaframework.org\alpha\controller\Login.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Logout.php"></a>
+<h1>Logout.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 146</b> - File "W:\alphaframework.org\alpha\controller\Logout.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="MailNotSentException.inc"></a>
+<h1>MailNotSentException.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 51</b> - File "W:\alphaframework.org\alpha\exceptions\MailNotSentException.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="MarkdownFacade.inc"></a>
+<h1>MarkdownFacade.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 239</b> - File "W:\alphaframework.org\alpha\util\MarkdownFacade.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="PersonObject.inc"></a>
+<h1>PersonObject.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 384</b> - File "W:\alphaframework.org\alpha\model\PersonObject.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="PersonView.inc"></a>
+<h1>PersonView.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 156</b> - File "W:\alphaframework.org\alpha\view\PersonView.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="PHPException.inc"></a>
+<h1>PHPException.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 51</b> - File "W:\alphaframework.org\alpha\exceptions\PHPException.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="PreviewArticle.php"></a>
+<h1>PreviewArticle.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 160</b> - File "W:\alphaframework.org\alpha\controller\PreviewArticle.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="RecordSelector.inc"></a>
+<h1>RecordSelector.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 542</b> - File "W:\alphaframework.org\alpha\view\widgets\RecordSelector.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Relation.inc"></a>
+<h1>Relation.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 669</b> - File "W:\alphaframework.org\alpha\model\types\Relation.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="RelationLookup.inc"></a>
+<h1>RelationLookup.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 275</b> - File "W:\alphaframework.org\alpha\model\types\RelationLookup.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Relation_Test.php"></a>
+<h1>Relation_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 47</b> - DocBlock would be page-level, but precedes class "Relation_Test", use another DocBlock to document the file<br>
+<a name="ResourceNotAllowedException.inc"></a>
+<h1>ResourceNotAllowedException.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 51</b> - File "W:\alphaframework.org\alpha\exceptions\ResourceNotAllowedException.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ResourceNotFoundException.inc"></a>
+<h1>ResourceNotFoundException.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 51</b> - File "W:\alphaframework.org\alpha\exceptions\ResourceNotFoundException.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="RightsObject.inc"></a>
+<h1>RightsObject.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 145</b> - File "W:\alphaframework.org\alpha\model\RightsObject.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="RSS.inc"></a>
+<h1>RSS.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 111</b> - File "W:\alphaframework.org\alpha\util\feeds\RSS.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="RSS2.inc"></a>
+<h1>RSS2.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 78</b> - File "W:\alphaframework.org\alpha\util\feeds\RSS2.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Search.php"></a>
+<h1>Search.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 416</b> - File "W:\alphaframework.org\alpha\controller\Search.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="SecurityException.inc"></a>
+<h1>SecurityException.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 51</b> - File "W:\alphaframework.org\alpha\exceptions\SecurityException.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Sequence.inc"></a>
+<h1>Sequence.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 242</b> - File "W:\alphaframework.org\alpha\model\types\Sequence.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="SequenceView.inc"></a>
+<h1>SequenceView.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 212</b> - File "W:\alphaframework.org\alpha\view\SequenceView.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Sequence_Test.php"></a>
+<h1>Sequence_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 47</b> - DocBlock would be page-level, but precedes class "Sequence_Test", use another DocBlock to document the file<br>
+<a name="String.inc"></a>
+<h1>String.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 237</b> - File "W:\alphaframework.org\alpha\model\types\String.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="StringBox.inc"></a>
+<h1>StringBox.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 159</b> - File "W:\alphaframework.org\alpha\view\widgets\StringBox.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="String_Test.php"></a>
+<h1>String_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 47</b> - DocBlock would be page-level, but precedes class "String_Test", use another DocBlock to document the file<br>
+<a name="TagCloud.inc"></a>
+<h1>TagCloud.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 128</b> - File "W:\alphaframework.org\alpha\view\widgets\TagCloud.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TagManager.php"></a>
+<h1>TagManager.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 244</b> - File "W:\alphaframework.org\alpha\controller\TagManager.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TagObject.inc"></a>
+<h1>TagObject.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 266</b> - File "W:\alphaframework.org\alpha\model\TagObject.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Tag_Test.php"></a>
+<h1>Tag_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 47</b> - DocBlock would be page-level, but precedes class "Tag_Test", use another DocBlock to document the file<br>
+<a name="TCPDFFacade.inc"></a>
+<h1>TCPDFFacade.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 335</b> - File "W:\alphaframework.org\alpha\util\TCPDFFacade.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Text.inc"></a>
+<h1>Text.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 217</b> - File "W:\alphaframework.org\alpha\model\types\Text.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TextBox.inc"></a>
+<h1>TextBox.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 215</b> - File "W:\alphaframework.org\alpha\view\widgets\TextBox.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Text_Test.php"></a>
+<h1>Text_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 47</b> - DocBlock would be page-level, but precedes class "Text_Test", use another DocBlock to document the file<br>
+<a name="Timestamp.inc"></a>
+<h1>Timestamp.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 537</b> - File "W:\alphaframework.org\alpha\model\types\Timestamp.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="Timestamp_Test.php"></a>
+<h1>Timestamp_Test.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 47</b> - DocBlock would be page-level, but precedes class "Timestamp_Test", use another DocBlock to document the file<br>
+<a name="ValidationException.inc"></a>
+<h1>ValidationException.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 51</b> - File "W:\alphaframework.org\alpha\exceptions\ValidationException.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ViewArticle.php"></a>
+<h1>ViewArticle.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 410</b> - File "W:\alphaframework.org\alpha\controller\ViewArticle.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ViewArticleFile.php"></a>
+<h1>ViewArticleFile.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 133</b> - File "W:\alphaframework.org\alpha\controller\ViewArticleFile.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ViewArticlePDF.php"></a>
+<h1>ViewArticlePDF.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 154</b> - File "W:\alphaframework.org\alpha\controller\ViewArticlePDF.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ViewArticlePrint.php"></a>
+<h1>ViewArticlePrint.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 187</b> - File "W:\alphaframework.org\alpha\controller\ViewArticlePrint.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ViewArticleTitle.php"></a>
+<h1>ViewArticleTitle.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 150</b> - File "W:\alphaframework.org\alpha\controller\ViewArticleTitle.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ViewAttachment.php"></a>
+<h1>ViewAttachment.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 152</b> - File "W:\alphaframework.org\alpha\controller\ViewAttachment.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ViewExcel.php"></a>
+<h1>ViewExcel.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 172</b> - File "W:\alphaframework.org\alpha\controller\ViewExcel.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ViewFeed.php"></a>
+<h1>ViewFeed.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 246</b> - File "W:\alphaframework.org\alpha\controller\ViewFeed.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ViewImage.php"></a>
+<h1>ViewImage.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 141</b> - File "W:\alphaframework.org\alpha\controller\ViewImage.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ViewLog.php"></a>
+<h1>ViewLog.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 160</b> - File "W:\alphaframework.org\alpha\controller\ViewLog.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ViewMetrics.php"></a>
+<h1>ViewMetrics.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 156</b> - File "W:\alphaframework.org\alpha\controller\ViewMetrics.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ViewRecordSelector.php"></a>
+<h1>ViewRecordSelector.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 173</b> - File "W:\alphaframework.org\alpha\controller\ViewRecordSelector.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ViewState.inc"></a>
+<h1>ViewState.inc</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 140</b> - File "W:\alphaframework.org\alpha\view\ViewState.inc" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="ViewTestResults.php"></a>
+<h1>ViewTestResults.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 495</b> - File "W:\alphaframework.org\alpha\controller\ViewTestResults.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+        <div class="credit">
+		    <hr class="separator" />
+		    Documentation generated on Sun, 04 Dec 2011 16:21:31 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+	      </div>
+      </td></tr></table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
