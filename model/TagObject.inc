@@ -179,32 +179,6 @@ class TagObject extends AlphaDAO {
 		ksort($popTags);		
 		return $popTags;
 	}
-	
-	/**
-	 * Use this callback to create the tclass_toid__tcontent unique table index
-	 * 
-	 * @since 1.0
-	 * @throws AlphaException
-	 * @todo remove (not used)
-	 */
-	protected function after_checkIndexes_callback() {
-		$indexNames = $this->getIndexes();
-		$indexExists = false;
-		
-		foreach ($indexNames as $index) {					
-			if ('taggedClass_taggedOID_content_unq_idx' == $index) {
-		    	$indexExists = true;
-			}
-		}
-		
-		if(!$indexExists) {
-			try {
-				$this->createUniqueIndex('taggedClass', 'taggedOID', 'content');
-			}catch (Exception $e) {
-				throw new AlphaException('Failed to create the unique index on the tags table, error is ['.$e->getMessage().']');
-			}
-		}
-	}
 
 	/**
 	 * Splits the passed content by spaces, filters (removes) stop words from stopwords.ini, 
