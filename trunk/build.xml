@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Alpha" default="apidocs" basedir=".">
 	<property name="alpha-root" value="."/>
-	<property name="dist-version" value="1.0"/>
+	<property name="dist-version" value="1.1"/>
 	<property name="dist-target" value="alpha-${dist-version}"/>
 	
 	<target name="dist" depends="clean">
