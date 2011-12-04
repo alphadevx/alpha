@@ -360,21 +360,20 @@ class PersonObject extends AlphaDAO {
 	 * @return integer
 	 * @since 1.0
 	 * @throws AlphaException
-	 * @todo update to remove MySQLi dependancies
 	 */
 	public function getCommentCount() {
 		$temp = new ArticleCommentObject();
 
-		$sqlQuery = "SELECT COUNT(OID) AS post_count FROM ".ArticleCommentObject::TABLE_NAME." WHERE created_by='".$this->OID."';";
+		$sqlQuery = "SELECT COUNT(OID) AS post_count FROM ".$temp->getTableName()." WHERE created_by='".$this->OID."';";
 
-		$this->setLastQuery($sqlQuery);
+		$result = $this->query($sqlQuery);
 
-		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
-			throw new AlphaException('Failed to get the count of the comments posted for the person ['.$this->getDisplayName().'], query is ['.$this->lastQuery.']');
+		if(!isset($result[0])) {
+			throw new AlphaException('Failed to get the count of the comments posted for the person ['.$this->getDisplayName().'], query is ['.$sqlQuery.']');
 			return 0;
 		}
 
-		$row = $result->fetch_array(MYSQLI_ASSOC);
+		$row = $result[0];
 
 		if(isset($row['post_count']))
 			return $row['post_count'];
