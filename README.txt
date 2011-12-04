@@ -1,4 +1,4 @@
-Alpha Framework 1.0
+Alpha Framework 1.1
 ===================
 
 Introduction
