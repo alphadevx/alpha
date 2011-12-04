@@ -5,7 +5,7 @@
  * A factory for creating DAO provider implementations that implement the
  * AlphaDAOProviderInterface interface.
  * 
- * @package alpha::modal
+ * @package alpha::model
  * @since 1.1
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
