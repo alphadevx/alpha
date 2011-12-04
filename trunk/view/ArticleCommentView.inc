@@ -168,7 +168,7 @@ class ArticleCommentView extends AlphaView {
 			echo '</table>';
 			
 			echo '<div align="center">';
-			$temp = new button('submit', 'Update Your Comment', 'saveBut');
+			$temp = new button('submit', 'Update Your Comment', 'saveBut'.$this->BO->getID());
 			echo $temp->render();
 			echo '</div>';
 			
