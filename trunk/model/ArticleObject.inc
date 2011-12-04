@@ -346,29 +346,19 @@ class ArticleObject extends AlphaDAO {
 	 * @return array
 	 * @since 1.0
 	 * @throws AlphaException
-	 * @todo update to remove MySQLi dependancies
 	 */
 	public function loadRecentWithLimit($limit){
 		$denum = new DEnum('ArticleObject::section');
 		$excludeID = $denum->getOptionID('Main');
 		
-		$sqlQuery = "SELECT OID FROM ".self::TABLE_NAME." WHERE published='1' AND section!='$excludeID' ORDER BY dateAdded DESC LIMIT 0, $limit;";		
+		$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE published='1' AND section!='$excludeID' ORDER BY dateAdded DESC LIMIT 0, $limit;";		
 
-		$this->setLastQuery($sqlQuery);
-		
-		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
-			throw new AlphaException('Failed to load the OIDs for the most recent articles, MySql error is ['.AlphaDAO::getConnection()->error.
-				'], query ['.$sqlQuery.']');
-			return array();
-		}
+		$result = $this->query($sqlQuery);
 		
 		$OIDs = array();
 		
-		$i = 0;
-		while($row = $result->fetch_array(MYSQLI_ASSOC)) {
-			$OIDs[$i] = $row['OID'];
-			$i++;
-		}
+		foreach($result as $row)
+			array_push($OIDs, $row['OID']);
 		
 		return $OIDs;
 	}
@@ -472,7 +462,6 @@ class ArticleObject extends AlphaDAO {
 	 * @return boolean True if they have voted already, false otherwise
 	 * @since 1.0
 	 * @throws AlphaException
-	 * @todo update to remove MySQLi dependancies
 	 */
 	public function checkUserVoted() {
 		// just going to return true if nobody is logged in
@@ -481,16 +470,18 @@ class ArticleObject extends AlphaDAO {
 		
 		$userID = $_SESSION['currentUser']->getID();
 		
-		$sqlQuery = "SELECT COUNT(*) AS usersVote FROM ".ArticleVoteObject::TABLE_NAME." WHERE articleOID='".$this->OID."' AND personOID='".$userID."';";		
-
-		$this->setLastQuery($sqlQuery);
+		$vote = new ArticleVoteObject();
 		
-		if(!$result = AlphaDAO::getConnection()->query($sqlQuery)) {
-			throw new AlphaException('Failed to check if the current user voted for the article ['.$this->OID.'], MySql error is ['.AlphaDAO::getConnection()->error.'], query ['.$sqlQuery.']');
+		$sqlQuery = "SELECT COUNT(*) AS usersVote FROM ".$vote->getTableName()." WHERE articleOID='".$this->OID."' AND personOID='".$userID."';";		
+
+		$result = $this->query($sqlQuery);
+		
+		if(!isset($result[0])) {
+			throw new AlphaException('Failed to check if the current user voted for the article ['.$this->OID.'], query ['.$sqlQuery.']');
 			return false;
 		}
 		
-		$row = $result->fetch_array(MYSQLI_ASSOC);
+		$row = $result[0];
 		
 		if($row['usersVote'] == "0")
 			return false;
