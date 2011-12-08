@@ -222,6 +222,12 @@ class ViewFeed extends AlphaController implements AlphaControllerInterface {
 				$this->fieldMappings = array('title', 'URL', 'description', 'created_ts', 'OID');
 				$this->sortBy = 'created_ts';
 			break;
+			case 'BlogEntryObject':
+				$this->title = 'Latest blog entries from '.$config->get('sysTitle');
+				$this->description = 'News feed containing all of the details on the latest blog entries published on '.$config->get('sysTitle').'.';
+				$this->fieldMappings = array('title', 'URL', 'description', 'created_ts', 'OID');
+				$this->sortBy = 'created_ts';
+			break;
 			case 'NewsObject':
 				$this->title = 'Latest news from '.$config->get('sysTitle');
 				$this->description = 'News feed containing all of the latest news items from '.$config->get('sysTitle').'.';
