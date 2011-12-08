@@ -17,7 +17,7 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.
  * @package alpha::controller
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id: ListBusinessObjects.php 1249 2010-12-31 16:04:04Z johnc $
+ * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
  * All rights reserved.
