@@ -73,11 +73,21 @@ class BlacklistedClientObject extends AlphaDAO {
 	const TABLE_NAME = 'BlacklistedClient';
 	
 	/**
+	 * Trace logger
+	 * 
+	 * @var Logger
+	 * @since 1.1
+	 */
+	private static $logger = null;
+	
+	/**
 	 * Constructor for the class
 	 * 
 	 * @since 1.0
 	 */
 	public function __construct() {
+		self::$logger = new Logger('BlacklistedClientObject');
+		
 		// ensure to call the parent constructor
 		parent::__construct();
 		

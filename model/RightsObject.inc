@@ -82,11 +82,21 @@ class RightsObject extends AlphaDAO {
 	const TABLE_NAME = 'Rights';
 	
 	/**
+	 * Trace logger
+	 * 
+	 * @var Logger
+	 * @since 1.1
+	 */
+	private static $logger = null;
+	
+	/**
 	 * Constructor
 	 * 
 	 * @since 1.0
 	 */
 	public function __construct() {
+		self::$logger = new Logger('BlacklistedClientObject');
+		
 		// ensure to call the parent constructor
 		parent::__construct();
 		$this->name = new String();
