@@ -218,6 +218,7 @@ abstract class AlphaDAO {
 	 * Returns a 2d array, where each element in the array is another array representing a database row.
 	 * 
 	 * @param string $sqlQuery
+	 * @return array
 	 * @since 1.1
 	 * @throws CustomQueryException
 	 */
@@ -942,6 +943,8 @@ abstract class AlphaDAO {
 	 * @since 1.0
 	 */
 	public final function getOID() {
+		if(self::$logger == null)
+			self::$logger = new Logger('AlphaDAO');
 		self::$logger->debug('>>getOID()');
 		$oid = str_pad($this->OID, 11, '0', STR_PAD_LEFT);
 		self::$logger->debug('<<getOID ['.$oid.']');
@@ -1067,7 +1070,7 @@ abstract class AlphaDAO {
 					$this->after_set_callback();
 				
 				// complex types will have a setValue() method to call
-				if (get_class($this->$prop) != false) {				
+				if (is_object($this->$prop) && get_class($this->$prop) != false) {
 					if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {					
 						$this->$prop->setValue($value);
 					}else{
