@@ -81,11 +81,21 @@ class ArticleCommentObject extends AlphaDAO {
 	const TABLE_NAME = 'ArticleComment';
 	
 	/**
+	 * Trace logger
+	 * 
+	 * @var Logger
+	 * @since 1.1
+	 */
+	private static $logger = null;
+	
+	/**
 	 * constructor for the class
 	 * 
 	 * @since 1.0
 	 */
 	public function __construct() {
+		self::$logger = new Logger('ArticleCommentObject');
+		
 		// ensure to call the parent constructor
 		parent::__construct();
 		
