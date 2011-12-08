@@ -131,7 +131,10 @@ class ArticleView extends AlphaView {
 		$button = new button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
 		$fields['cancelButton'] = $button->render();
 		
-		$tags = $this->BO->getPropObject('tags')->getRelatedObjects();
+		$tags = array();
+		
+		if(is_object($this->BO->getPropObject('tags')))
+			$tags = $this->BO->getPropObject('tags')->getRelatedObjects();
 			
 		if(count($tags) > 0) {
 			$button = new button("document.location = '".FrontController::generateSecureURL('act=EditTags&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."'", "Edit Tags", "tagsBut");
