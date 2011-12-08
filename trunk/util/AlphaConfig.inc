@@ -7,7 +7,7 @@
  * @package alpha::util
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id: AlphaAgentUtils.inc 1200 2010-12-21 15:45:44Z johnc $
+ * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
  * All rights reserved.
