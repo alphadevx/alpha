@@ -94,7 +94,7 @@ class ViewArticleFile extends ViewArticle {
 			self::$logger->error($e->getMessage());
 			throw new ResourceNotFoundException($e->getMessage());
 		}catch(FileNotFoundException $e) {
-			self::$logger->warn($e->getMessage());
+			self::$logger->warn($e->getMessage().' File path is ['.$params['file'].']');
 			throw new ResourceNotFoundException('Failed to load the requested article from the file system!');
 		}
 
