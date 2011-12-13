@@ -92,6 +92,7 @@ class TagCloud {
       			
       			$cache->set($cacheKey, $this->popTags, 86400);
       		}else{
+      			$this->popTags = array_slice($this->popTags, 0, $limit);
       			self::$logger->debug('Cache lookup on the key ['.$cacheKey.'] succeeded');
       		}
 		}else{
