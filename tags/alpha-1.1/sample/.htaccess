@@ -1,0 +1,25 @@
+Options +FollowSymLinks
+IndexIgnore */*
+
+# turn off PHP magic quotes
+php_value magic_quotes_gpc off
+
+# only .php files will be executed by the PHP interpreter
+RemoveHandler php5-script .php
+<FilesMatch "\.php$">
+	SetHandler php5-script
+</FilesMatch>
+
+# Turn on the RewriteEngine
+RewriteEngine On
+
+#  Rules
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.php
+
+# Restrict access to the following file types
+<FilesMatch "\.(htaccess|ini|log|inc|conf)$">
+	Order Allow,Deny
+	Deny from all
+</FilesMatch>
