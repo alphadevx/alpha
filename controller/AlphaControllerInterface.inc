@@ -6,7 +6,7 @@
  * @package alpha::controller
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id: AlphaController.inc 1240 2010-12-28 18:39:49Z johnc $
+ * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
  * All rights reserved.
