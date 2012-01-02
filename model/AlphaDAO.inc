@@ -1416,7 +1416,7 @@ abstract class AlphaDAO {
 		$relatedBO = new $relatedClass;		
 		$tableName = $relatedBO->getTableName();
 
-		// if the relation is on itself (table-wise), exist without attempting to create the foreign keys
+		// if the relation is on itself (table-wise), exit without attempting to create the foreign keys
 		if($this->getTableName() == $tableName) {
 			self::$logger->debug('<<createForeignIndex');
 			return;
