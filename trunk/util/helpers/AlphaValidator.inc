@@ -75,7 +75,7 @@ class AlphaValidator {
 	 * @var string
 	 * @since 1.0
 	 */
-	const REQUIRED_TEXT = '/^[a-z\d\.,\'][a-z\d\.,\' ]{0,65535}$/i';
+	const REQUIRED_TEXT = '/^[\S]{1,65536}$/';
 	
 	/**
 	 * Required string value, accepts a maximum of 255 characters
@@ -83,7 +83,7 @@ class AlphaValidator {
 	 * @var string
 	 * @since 1.0
 	 */
-	const REQUIRED_STRING = '/^[a-z\d\.,\'][a-z\d\.,\' ]{0,255}$/i';
+	const REQUIRED_STRING = '/^[\S]{1,255}$/';
 	
 	/**
 	 * Required alphabet string
