@@ -1014,14 +1014,14 @@ class AlphaView {
 		
 				$html .= '<td>';
 				$html .= '<select size="1" name="'.$name.'"/>';
-				$html .= '<option value="0" selected>N</option>';
-				$html .= '<option value="1">Y</option>';
+				$html .= '<option value="0" selected>No</option>';
+				$html .= '<option value="1">Yes</option>';
 				$html .= '</select><br>';
 				$html .= '</td></tr>';
 			}else{
-				$html .= '<select size="1" name="'.$name.'"/>';
-				$html .= '<option value="0" selected>N</option>';
-				$html .= '<option value="1">Y</option>';
+				$html .= $label.'<select size="1" name="'.$name.'"/>';
+				$html .= '<option value="0" selected>No</option>';
+				$html .= '<option value="1">Yes</option>';
 				$html .= '</select>';
 			}
 		}
@@ -1034,14 +1034,14 @@ class AlphaView {
 	
 				$html .= '<td>';
 				$html .= '<select size="1" name="'.$name.'"/>';
-				$html .= '<option value="0" '.($value == '0'? 'selected':'').'>N</option>';
-				$html .= '<option value="1" '.($value == '1'? 'selected':'').'>Y</option>';
+				$html .= '<option value="0" '.($value == '0'? 'selected':'').'>No</option>';
+				$html .= '<option value="1" '.($value == '1'? 'selected':'').'>Yes</option>';
 				$html .= '</select><br>';
 				$html .= '</td></tr>';
 			}else{
-				$html .= '<select size="1" name="'.$name.'"/>';
-				$html .= '<option value="0" '.($value == '0'? 'selected':'').'>N</option>';
-				$html .= '<option value="1" '.($value == '1'? 'selected':'').'>Y</option>';
+				$html .= $label.'<select size="1" name="'.$name.'"/>';
+				$html .= '<option value="0" '.($value == '0'? 'selected':'').'>No</option>';
+				$html .= '<option value="1" '.($value == '1'? 'selected':'').'>Yes</option>';
 				$html .= '</select>';
 			}
 		}
