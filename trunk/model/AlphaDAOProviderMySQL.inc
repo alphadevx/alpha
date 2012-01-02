@@ -1616,6 +1616,10 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute) {
 		self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.']');
 		
+		AlphaDAO::loadClassDef($relatedClass);		
+		$relatedBO = new $relatedClass;		
+		$tableName = $relatedBO->getTableName();
+		
 		$result = false;
 		
 		if(self::checkBOTableExists(ucfirst($tableName).'Object')) {
