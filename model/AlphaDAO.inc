@@ -2067,6 +2067,17 @@ abstract class AlphaDAO {
 		self::$logger->sql($query);
 		$this->lastQuery = $query;
 	}
+	
+	/**
+	 * Re-initialize the static logger property on the BO after de-serialize, as PHP does
+	 * not serialize static properties.
+	 * 
+	 * @since 1.2
+	 */
+	public function __wakeup() {
+		if(self::$logger == null)
+			self::$logger = new Logger(get_class($this));
+	}
 }
 
 ?>
