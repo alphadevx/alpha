@@ -213,10 +213,13 @@ class AlphaConfig {
 			die('Failed to load the config file ['.$serverIni.']');
 		}
      
-		if(file_exists($serverIni)) {
+		if(substr($environment, -3) == 'CLI') // CLI mode
+			$envIni = $rootPath.'config/'.substr($environment, 0, 3).'.ini';
+		else
 			$envIni = $rootPath.'config/'.$environment.'.ini';
-     	}else{
-            die('Failed to load the config file ['.$rootPath.'config/'.$environment.'.ini]');
+     
+		if(!file_exists($envIni)) {
+        	die('Failed to load the config file ['.$envIni.']');
         }
 
 		$configArray = parse_ini_file($envIni);
