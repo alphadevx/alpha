@@ -204,6 +204,11 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 					if($prop->getRelationType() == 'ONE-TO-MANY') {
 						$this->BO->set($propObj->name, $this->BO->getOID());
 					}
+					
+					// handle the setting of MANY-TO-ONE relation values
+					if($prop->getRelationType() == 'MANY-TO-ONE') {
+						$this->BO->set($propObj->name, $row[$propName]);
+					}
 				}
 			}
 		}catch (IllegalArguementException $e) {
