@@ -838,6 +838,11 @@ abstract class AlphaDAO {
 				$propClass = get_class($this->getPropObject($propName));
 				
 				if(isset($_POST[$propName])) {
+					// we will accept "on" as a valid Boolean when dealing with checkboxes
+					if(strtoupper($propClass) == 'BOOLEAN' && $_POST[$propName] == 'on') {
+						$_POST[$propName] = 1;
+					}
+					
 					if (strtoupper($propClass) != 'DATE' && strtoupper($propClass) != 'TIMESTAMP') {
 						if($filterAll) {
 							$this->getPropObject($propName)->setValue(InputFilter::encode($_POST[$propName], false));
