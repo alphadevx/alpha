@@ -627,9 +627,11 @@ class AlphaView {
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/scripts/validation.js"></script>';
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/contextMenu/jquery.contextMenu.js"></script>';
 		
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery-ui-1.8.11.custom.min.js"></script>';
+		
 		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery.ui.potato.menu.js"></script>';
 		
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery-ui-1.8.11.custom.min.js"></script>';
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery.ui.checkbox.js"></script>';
 		
 		// handle force-frames
 		if($config->get('sysForceFrame')) {
@@ -699,6 +701,18 @@ class AlphaView {
 		$html.= '	})(jQuery);';
 		$html.= '</script>';
 		
+		// checkbox JS
+		$html.= '<script type="text/javascript">';
+		//$html .= '$(function() {';
+		$html.= '	(function($) {';
+		$html.= '		$(document).ready(function(){';
+		$html .= '			$(":checkbox").checkbox();';
+		//$html .= '});';
+		$html.= '		});';
+		$html.= '	})(jQuery);';
+		$html.= '</script>';
+		
+		
 		if(method_exists($controller, 'during_displayPageHead_callback'))
 			$html.= $controller->during_displayPageHead_callback();
 
@@ -717,8 +731,8 @@ class AlphaView {
 		
 		$html .= '<div id="recordSelector"></div>';
 			
-		if($controller->getTitle() != '')
-			$html.= '<h1>'.$controller->getTitle().'</h1>';
+		//if($controller->getTitle() != '')
+			//$html.= '<h1>'.$controller->getTitle().'</h1>';
 		
 		if ($renderMenu && isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
 			$html .= '<ul id="adminmenu" class="potato-menu">
@@ -1007,16 +1021,14 @@ class AlphaView {
 		$html = '';
 		
 		if ($mode == 'create') {
-			if($tableTags) {
+			if($tableTags) {		
 				$html .= '<tr><th style="width:25%;">';
-				$html .= $label;
+				$html .= '<label for="'.$name.'">'.$label.'</label>';
 				$html .= '</th>';
-		
+				
 				$html .= '<td>';
-				$html .= '<select size="1" name="'.$name.'"/>';
-				$html .= '<option value="0" selected>No</option>';
-				$html .= '<option value="1">Yes</option>';
-				$html .= '</select><br>';
+				$html .= '<input type="hidden" name="'.$name.'" value="0">';
+				$html .= '<input type="checkbox" name="'.$name.'" id="'.$name.'" />';
 				$html .= '</td></tr>';
 			}else{
 				$html .= $label.'<select size="1" name="'.$name.'"/>';
@@ -1028,21 +1040,18 @@ class AlphaView {
 		
 		if ($mode == 'edit') {
 			if($tableTags) {
-				$html .= '<tr><th>';
-				$html .= $label;
+				$html .= '<tr><th style="width:25%;">';
+				$html .= '<label for="'.$name.'">'.$label.'</label>';
 				$html .= '</th>';
-	
+				
 				$html .= '<td>';
-				$html .= '<select size="1" name="'.$name.'"/>';
-				$html .= '<option value="0" '.($value == '0'? 'selected':'').'>No</option>';
-				$html .= '<option value="1" '.($value == '1'? 'selected':'').'>Yes</option>';
-				$html .= '</select><br>';
+				$html .= '<input type="hidden" name="'.$name.'" value="0">';
+				$html .= '<input type="checkbox" name="'.$name.'" id="'.$name.'"'.($value == '1'? ' checked':'').' />';
 				$html .= '</td></tr>';
 			}else{
-				$html .= $label.'<select size="1" name="'.$name.'"/>';
-				$html .= '<option value="0" '.($value == '0'? 'selected':'').'>No</option>';
-				$html .= '<option value="1" '.($value == '1'? 'selected':'').'>Yes</option>';
-				$html .= '</select>';
+				$html .= '<label for="'.$name.'">'.$label.'</label>';
+				$html .= '<input type="hidden" name="'.$name.'" value="0">';
+				$html .= '<input type="checkbox" name="'.$name.'" id="'.$name.'"'.($value == '1'? ' checked':'').' />';
 			}
 		}
 				
