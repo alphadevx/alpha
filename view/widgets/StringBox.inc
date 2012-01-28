@@ -118,10 +118,10 @@ class StringBox {
 			$html .= '</th>';
 	
 			$html .= '<td>';
-			$html .= '<input '.($this->stringObject->checkIsPassword()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.String::MAX_SIZE.'" name="'.$this->name.'" id="'.$this->name.'" value="'.((isset($_POST[$this->name]) && $this->stringObject->getValue() == "")? $_POST[$this->name] : $this->stringObject->getValue()).'"'.($readOnly ? 'readonly class="readonly"' : '').'/>';
+			$html .= '<input '.($this->stringObject->checkIsPassword()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.String::MAX_SIZE.'" name="'.$this->name.'" id="'.$this->name.'" value="'.((isset($_POST[$this->name]) && $this->stringObject->getValue() == "" && !$this->stringObject->checkIsPassword())? $_POST[$this->name] : $this->stringObject->getValue()).'"'.($readOnly ? 'readonly class="readonly"' : '').'/>';
 			$html .= '</td></tr>';
 		}else{
-			$html .= '<input '.($this->stringObject->checkIsPassword()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.String::MAX_SIZE.'" name="'.$this->name.'" id="'.$this->name.'" value="'.((isset($_POST[$this->name]) && $this->stringObject->getValue() == "")? $_POST[$this->name] : $this->stringObject->getValue()).'"'.($readOnly ? 'readonly class="readonly"' : '').'/>';
+			$html .= '<input '.($this->stringObject->checkIsPassword()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.String::MAX_SIZE.'" name="'.$this->name.'" id="'.$this->name.'" value="'.((isset($_POST[$this->name]) && $this->stringObject->getValue() == "" && !$this->stringObject->checkIsPassword())? $_POST[$this->name] : $this->stringObject->getValue()).'"'.($readOnly ? 'readonly class="readonly"' : '').'/>';
 		}
 		
 		if($this->stringObject->getRule() != '') {
