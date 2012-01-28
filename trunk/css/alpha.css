@@ -143,3 +143,10 @@ ul.potato-menu-group a {
 .potato-menu a:hover {
     background: #B6B2B2;
 }
+
+/* Checkbox */
+.ui-checkbox { position: relative; }
+.ui-checkbox .ui-checkbox-inputwrapper { width: 0; height: 0; overflow: hidden; }
+.ui-checkbox label { display: block; position: relative; padding-right: 1em; line-height: 1.8em; padding: .0em 0 .5em 20px; margin: 0 0 .3em; cursor: pointer; z-index: 1; }
+.ui-checkbox .ui-checkbox-box { position: absolute; top: 0; left: 0; width: 18px; height: 18px;}
+.ui-icon-check { position: relative; left:2px; }
