@@ -2,6 +2,7 @@
 
 require_once $config->get('sysRoot').'alpha/lib/markdown/markdown.php';
 require_once $config->get('sysRoot').'alpha/view/widgets/Image.inc';
+require_once $config->get('sysRoot').'alpha/util/codehighlight/AlphaHighlightProviderFactory.inc';
 
 /**
  *
@@ -57,6 +58,8 @@ class AlphaMarkdown extends MarkdownExtra_Parser {
 	 * @since 1.0
 	 */
 	public function _doCodeBlocks_callback($matches) {		
+		global $config;
+		
 		$codeblock = $matches[1];	
 		
 		$codeblock = $this->outdent($codeblock);
@@ -78,18 +81,9 @@ class AlphaMarkdown extends MarkdownExtra_Parser {
 			$language = 'php';			
 		}
 		
-		$geshiInstalled = true;
-		
-		try{
-			fopen('geshi.php', 'r', true);
-			require_once 'geshi.php';
-		}catch (Exception $e) {
-			$geshiInstalled = false;
-		}
-		
-		if($geshiInstalled) {
-			$geshi = new GeSHi($codeblock, $language);
-			$codeblock = $geshi->parse_code();
+		if($config->get('sysHighlightProviderName') != '') {
+			$highlighter = AlphaHighlightProviderFactory::getInstance($config->get('sysHighlightProviderName'));
+			$codeblock = $highlighter->highlight($codeblock, $language);
 		}
 		
 		$result = "\n\n".$this->hashBlock("<pre><code>" . $codeblock . "\n</code></pre>")."\n\n";	
