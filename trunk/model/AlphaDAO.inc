@@ -1,34 +1,5 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/util/AlphaErrorHandlers.inc';
-require_once $config->get('sysRoot').'alpha/util/Logger.inc';
-require_once $config->get('sysRoot').'alpha/util/InputFilter.inc';
-require_once $config->get('sysRoot').'alpha/util/cache/AlphaCacheProviderFactory.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/BONotFoundException.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/FailedSaveException.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/FailedDeleteException.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/LockingException.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/ValidationException.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/MailNotSentException.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/BadBOTableNameException.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/FailedIndexCreateException.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/FailedLookupCreateException.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/CustomQueryException.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Date.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Timestamp.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Double.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Integer.inc';
-require_once $config->get('sysRoot').'alpha/model/types/String.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
-require_once $config->get('sysRoot').'alpha/model/types/DEnum.inc';
-require_once $config->get('sysRoot').'alpha/model/types/DEnumItem.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Relation.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Sequence.inc';
-require_once $config->get('sysRoot').'alpha/model/AlphaDAOProviderFactory.inc';
-
 /**
  * Base business object class definition providing DAO storage via the configured provider.
  * 
@@ -37,7 +8,7 @@ require_once $config->get('sysRoot').'alpha/model/AlphaDAOProviderFactory.inc';
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>

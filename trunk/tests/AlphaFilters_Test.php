@@ -1,9 +1,5 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/util/filters/ClientBlacklistFilter.inc';
-require_once $config->get('sysRoot').'alpha/util/filters/ClientTempBlacklistFilter.inc';
-require_once $config->get('sysRoot').'alpha/controller/front/FrontController.inc';
-
 /**
  * Test cases for implementations of the AlphaFilterInterface
  * 
@@ -12,7 +8,7 @@ require_once $config->get('sysRoot').'alpha/controller/front/FrontController.inc
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>

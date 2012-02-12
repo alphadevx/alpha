@@ -1,10 +1,5 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/controller/Search.php';
-require_once $config->get('sysRoot').'alpha/model/PersonObject.inc';
-require_once $config->get('sysRoot').'alpha/model/ArticleObject.inc';
-require_once $config->get('sysRoot').'alpha/model/RightsObject.inc';
-
 /**
  *
  * Test cases for the AlphaController class.
@@ -14,7 +9,7 @@ require_once $config->get('sysRoot').'alpha/model/RightsObject.inc';
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>

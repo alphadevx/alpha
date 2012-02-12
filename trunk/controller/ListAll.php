@@ -4,12 +4,9 @@
 if(!isset($config)) {
 	require_once '../util/AlphaConfig.inc';
 	$config = AlphaConfig::getInstance();
+	
+	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
 }
-
-require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
-require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
-require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
-require_once $config->get('sysRoot').'alpha/util/helpers/AlphaValidator.inc';
 
 /**
  * 
@@ -20,7 +17,7 @@ require_once $config->get('sysRoot').'alpha/util/helpers/AlphaValidator.inc';
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>

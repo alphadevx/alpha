@@ -83,10 +83,11 @@ class AlphaHighlightProviderLuminous implements AlphaHighlightProviderInterface 
 		
 		$codeBlock = '';
 		
-		if(file_exists($config->get('sysRoot').'lib/luminous/luminous.php')) {
-			require $config->get('sysRoot').'lib/luminous/luminous.php';
+		try {
+			AlphaAutoLoader::loadLib('luminous.php');
+			
 			$codeblock = luminous($language, $source, false);
-		}else{
+		}catch(LibraryNotInstalledException $e) {
 			$codeblock = $source;
 		}
 		

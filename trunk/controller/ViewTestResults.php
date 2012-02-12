@@ -4,41 +4,14 @@
 if(!isset($config)) {
 	require_once '../util/AlphaConfig.inc';
 	$config = AlphaConfig::getInstance();
+	
+	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
 }
 
 // add PHPUnit to the include_path
 ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.$config->get('sysRoot').'alpha/lib/PEAR/PHPUnit-3.2.9');
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
-
-require_once $config->get('sysRoot').'alpha/util/Logger.inc';
-require_once $config->get('sysRoot').'alpha/model/PersonObject.inc';
-require_once $config->get('sysRoot').'alpha/model/TagObject.inc';
-require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
-require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
-require_once $config->get('sysRoot').'alpha/tests/Enum_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/DEnum_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/Sequence_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/Boolean_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/Date_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/Timestamp_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/Integer_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/Double_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/Exceptions_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/String_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/Text_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/Relation_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/Tag_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/AlphaDAO_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/AlphaValidator_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/AlphaController_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/FrontController_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/AlphaView_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/Image_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/AlphaAgentUtils_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/AlphaConfig_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/AlphaFeed_Test.php';
-require_once $config->get('sysRoot').'alpha/tests/AlphaFilters_Test.php';
 
 /**
  * Controller which displays all of the unit test results
@@ -48,7 +21,7 @@ require_once $config->get('sysRoot').'alpha/tests/AlphaFilters_Test.php';
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>

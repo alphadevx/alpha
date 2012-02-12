@@ -1,13 +1,5 @@
 <?php
 
-// load config
-if(!isset($config)) {
-	require_once 'AlphaConfig.inc';
-	$config = AlphaConfig::getInstance();
-}
-
-require_once $config->get('sysRoot').'alpha/util/LogFile.inc';
-
 /**
  * Log class used for debug and exception logging
  * 
@@ -16,7 +8,7 @@ require_once $config->get('sysRoot').'alpha/util/LogFile.inc';
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>

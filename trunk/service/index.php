@@ -47,11 +47,12 @@
  */
 
 // include the config file
-if(!isset($config))
+if(!isset($config)) {
 	require_once '../util/AlphaConfig.inc';
-$config = AlphaConfig::getInstance();
+	$config = AlphaConfig::getInstance();
 
-require_once $config->get('sysRoot').'alpha/controller/Login.php';
+	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
+}
 
 $controller = new Login();
 $controller->setName('Login');

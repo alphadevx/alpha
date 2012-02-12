@@ -78,6 +78,8 @@ class AlphaAutoLoader {
 					$config->get('sysRoot').'alpha/exceptions/',
 					$config->get('sysRoot').'alpha/model/',
 					$config->get('sysRoot').'alpha/model/types/',
+					$config->get('sysRoot').'alpha/view/',
+					$config->get('sysRoot').'alpha/view/widgets/',
 					$config->get('sysRoot').'alpha/util/',
 					$config->get('sysRoot').'alpha/util/cache/',
 					$config->get('sysRoot').'alpha/util/codehighlight/',
@@ -86,10 +88,10 @@ class AlphaAutoLoader {
 					$config->get('sysRoot').'alpha/util/graphs/',
 					$config->get('sysRoot').'alpha/util/helpers/',
 					$config->get('sysRoot').'alpha/util/metrics/',
+					$config->get('sysRoot').'alpha/tests/',
 					$config->get('sysRoot').'controller/',
 					$config->get('sysRoot').'model/',
-					$config->get('sysRoot').'view/',
-					$config->get('sysRoot').'view/widgets/',
+					$config->get('sysRoot').'view/'
 				);
 	}
 	
@@ -125,10 +127,10 @@ class AlphaAutoLoader {
 		}
 
 		if(strpos($className, 'Exception') !== false) {
-			if(self::loadFile($config->get('sysRoot').'alpha/exception/', $className)) {
+			if(self::loadFile($config->get('sysRoot').'alpha/exceptions/', $className)) {
 				return;
 			}else{
-				array_push($skipDirs, $config->get('sysRoot').'alpha/exception/');
+				array_push($skipDirs, $config->get('sysRoot').'alpha/exceptions/');
 			}
 		}
 
@@ -156,9 +158,17 @@ class AlphaAutoLoader {
 			}
 		}
 		
+		if(strpos($className, 'Utils') !== false) {
+			if(self::loadFile($config->get('sysRoot').'alpha/util/', $className)) {
+				return;
+			}else{
+				array_push($skipDirs, $config->get('sysRoot').'alpha/util/');
+			}
+		}
+		
 		// do a full folder scan
 		foreach (self::$scannedDirs as $dir) {
-			if(!in_array($dir, $skipDirKey)) {
+			if(!in_array($dir, $skipDirs)) {
 				$loaded = self::loadFile($dir, $className);
 
 				if($loaded) {
@@ -169,17 +179,22 @@ class AlphaAutoLoader {
 				}
 			}
 		}
+		
+		if(isset(self::$logger))
+			self::$logger->fatal('Unable to load the required class ['.$className.']');
 	}
 	
 	/**
 	 * Loads the lib file from the lib dir based on the filename provided.
 	 * 
 	 * @param string $fileName
+	 * @throws LibraryNotInstalledException
 	 * @since 1.2
 	 */
 	public static function loadLib($fileName) {
 		global $config;
 		
+		// Libraries shipped with Alpha
 		$iterator = new RecursiveDirectoryIterator($config->get('sysRoot').'alpha/lib/');
 		
 		foreach (new RecursiveIteratorIterator($iterator) as $name => $file) {
@@ -192,8 +207,20 @@ class AlphaAutoLoader {
 			}
 		}
 		
-		if(isset(self::$logger))
-			self::$logger->fatal('Cannot find the library file ['.$fileName.'] in the lib dir!');
+		// custom libs
+		$iterator = new RecursiveDirectoryIterator($config->get('sysRoot').'lib/');
+		
+		foreach (new RecursiveIteratorIterator($iterator) as $name => $file) {
+			if($file->getBaseName() == $fileName) {
+				if(isset(self::$logger))
+					self::$logger->debug('Found the library file ['.$fileName.'] in the location ['.$name.']');
+				
+				require_once $name;
+				return;
+			}
+		}
+		
+		throw new LibraryNotInstalledException('Cannot find the library file ['.$fileName.'] in the lib dir!');
 	}
 
 	/**
@@ -204,7 +231,9 @@ class AlphaAutoLoader {
 	 * @return bool
 	 * @since 1.2
 	 */
-	private static loadFile($dir, $className) {
+	private static function loadFile($dir, $className) {
+		global $config;
+		
 		// we're doing .inc first, as most classes in Alpha use this extension
 		$path = $dir.$className.'.inc';
 		if (file_exists($path) && is_readable($path)) {

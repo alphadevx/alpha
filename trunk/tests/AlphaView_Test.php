@@ -1,9 +1,5 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
-require_once $config->get('sysRoot').'alpha/view/ArticleView.inc';
-require_once $config->get('sysRoot').'alpha/model/ArticleObject.inc';
-
 /**
  *
  * Test cases for the AlphaView class.
@@ -13,7 +9,7 @@ require_once $config->get('sysRoot').'alpha/model/ArticleObject.inc';
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>

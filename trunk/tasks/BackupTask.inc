@@ -1,9 +1,5 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/util/AlphaTaskInterface.inc';
-require_once $config->get('sysRoot').'alpha/util/AlphaBackupUtils.inc';
-require_once $config->get('sysRoot').'alpha/util/AlphaFileUtils.inc';
-
 /**
  * A cron task for backup up the system database and select folders
  * 
@@ -12,7 +8,7 @@ require_once $config->get('sysRoot').'alpha/util/AlphaFileUtils.inc';
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>

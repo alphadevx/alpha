@@ -1,15 +1,5 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/util/AlphaErrorHandlers.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/AlphaException.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/SecurityException.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/ResourceNotFoundException.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/LibraryNotInstalledException.inc';
-require_once $config->get('sysRoot').'alpha/util/filters/AlphaFilterInterface.inc';
-require_once $config->get('sysRoot').'alpha/model/BadRequestObject.inc';
-require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
-
 /**
  * 
  * The front controller designed to optionally handle all requests
@@ -19,7 +9,7 @@ require_once $config->get('sysRoot').'alpha/controller/AlphaController.inc';
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>
