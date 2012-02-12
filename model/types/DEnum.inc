@@ -1,7 +1,5 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
-
 /**
  * The DEnum (Dynamic Enum) complex data type.  Similiar to Enum, 
  * except list items are stored in a database table and are editable.
@@ -11,7 +9,7 @@ require_once $config->get('sysRoot').'alpha/model/types/AlphaTypeInterface.inc';
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>

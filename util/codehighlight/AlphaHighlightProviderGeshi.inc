@@ -1,7 +1,5 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/util/codehighlight/AlphaHighlightProviderInterface.inc';
-
 /**
  *
  * Wraps Geshi in the standard API defined in AlphaHighlightProviderInterface, 
@@ -65,11 +63,12 @@ class AlphaHighlightProviderGeshi implements AlphaHighlightProviderInterface {
 		
 		$codeBlock = '';
 		
-		if(file_exists($config->get('sysRoot').'lib/geshi/geshi.php')) {
-			require $config->get('sysRoot').'lib/geshi/geshi.php';
+		try {
+			AlphaAutoLoader::loadLib('geshi.php');
+
 			$geshi = new GeSHi($source, $language);
 			$codeblock = $geshi->parse_code();
-		}else{
+		}catch(LibraryNotInstalledException $e) {
 			$codeblock = $source;
 		}
 		

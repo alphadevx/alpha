@@ -1,11 +1,8 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/exceptions/LibraryNotInstalledException.inc';
-
 try{
-	fopen('PEAR/File_Find/Find.php', 'r', true);
-	require_once 'PEAR/File_Find/Find.php';
-}catch (Exception $e) {
+	AlphaAutoLoader::loadLib('Find.php');
+}catch (LibraryNotInstalledException $e) {
 	throw new LibraryNotInstalledException('Unable to generate code metrics as the PEAR::File_Find package is not installed!');
 	exit;
 }
@@ -18,7 +15,7 @@ try{
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>

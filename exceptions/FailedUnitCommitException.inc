@@ -1,7 +1,5 @@
 <?php
 
-require_once 'AlphaException.inc';
-
 /**
  * The exception class for AlphaController unit of work failed to save exceptions
  * 
@@ -10,7 +8,7 @@ require_once 'AlphaException.inc';
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>

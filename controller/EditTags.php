@@ -4,15 +4,9 @@
 if(!isset($config)) {
 	require_once '../util/AlphaConfig.inc';
 	$config = AlphaConfig::getInstance();
+	
+	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
 }
-
-require_once $config->get('sysRoot').'alpha/controller/Edit.php';
-require_once $config->get('sysRoot').'alpha/model/TagObject.inc';
-require_once $config->get('sysRoot').'alpha/controller/AlphaControllerInterface.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/BONotFoundException.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/FailedSaveException.inc';
-require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
 
 /**
  * 
@@ -24,7 +18,7 @@ require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>

@@ -1,10 +1,5 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/util/feeds/RSS.inc';
-require_once $config->get('sysRoot').'alpha/util/feeds/RSS2.inc';
-require_once $config->get('sysRoot').'alpha/util/feeds/Atom.inc';
-require_once $config->get('sysRoot').'alpha/model/ArticleObject.inc';
-
 /**
  * Test cases for the AlphaFeed class and its children
  * 
@@ -13,7 +8,7 @@ require_once $config->get('sysRoot').'alpha/model/ArticleObject.inc';
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>

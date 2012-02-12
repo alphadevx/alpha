@@ -4,10 +4,7 @@
 require_once 'alpha/util/AlphaConfig.inc';
 $config = AlphaConfig::getInstance();
 
-require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
-require_once $config->get('sysRoot').'alpha/controller/front/FrontController.inc';
-require_once $config->get('sysRoot').'alpha/controller/ViewArticleTitle.php';
-require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
+require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
 
 $request = str_replace($config->get('sysURL'), '', 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 
