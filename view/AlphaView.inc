@@ -1,23 +1,5 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/util/AlphaErrorHandlers.inc';
-require_once $config->get('sysRoot').'alpha/util/Logger.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Date.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Timestamp.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Double.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Integer.inc';
-require_once $config->get('sysRoot').'alpha/model/types/String.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Text.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
-require_once $config->get('sysRoot').'alpha/view/widgets/Button.inc';
-require_once $config->get('sysRoot').'alpha/view/widgets/StringBox.inc';
-require_once $config->get('sysRoot').'alpha/view/widgets/DateBox.inc';
-require_once $config->get('sysRoot').'alpha/view/widgets/TextBox.inc';
-require_once $config->get('sysRoot').'alpha/view/widgets/RecordSelector.inc';
-require_once $config->get('sysRoot').'alpha/model/AlphaDAO.inc';
-require_once $config->get('sysRoot').'alpha/view/ViewState.inc';
-
 /**
  *
  * The master rendering view class for the Alpha Framework.
@@ -27,7 +9,7 @@ require_once $config->get('sysRoot').'alpha/view/ViewState.inc';
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>
