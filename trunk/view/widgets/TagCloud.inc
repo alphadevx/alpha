@@ -1,10 +1,5 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/util/AlphaErrorHandlers.inc';
-require_once $config->get('sysRoot').'alpha/util/Logger.inc';
-require_once $config->get('sysRoot').'alpha/model/TagObject.inc';
-require_once $config->get('sysRoot').'alpha/util/cache/AlphaCacheProviderFactory.inc';
-
 /**
  * A widget for rendering a tag cloud, based off the TagObject instances in the
  * database.
@@ -14,7 +9,7 @@ require_once $config->get('sysRoot').'alpha/util/cache/AlphaCacheProviderFactory
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>

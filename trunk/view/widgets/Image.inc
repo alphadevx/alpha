@@ -1,15 +1,5 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/util/AlphaErrorHandlers.inc';
-require_once $config->get('sysRoot').'alpha/util/Logger.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Enum.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Double.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Boolean.inc';
-require_once $config->get('sysRoot').'alpha/model/types/Integer.inc';
-require_once $config->get('sysRoot').'alpha/exceptions/IllegalArguementException.inc';
-require_once $config->get('sysRoot').'alpha/controller/front/FrontController.inc';
-require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
-
 /**
  * A widget that can generate an image which is scaled to the screen resolution of the
  * user, and can be made secured to prevent hot-linking from remote sites.  Note that by
@@ -20,7 +10,7 @@ require_once $config->get('sysRoot').'alpha/view/AlphaView.inc';
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2011, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
  * All rights reserved.
  * 
  * <pre>
