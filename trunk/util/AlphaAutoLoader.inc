@@ -1,5 +1,7 @@
 <?php
 
+require_once $config->get('sysRoot').'alpha/util/AlphaErrorHandlers.inc';
+
 /**
  *
  * A class for auto-loading classes in the Alpha Framework, as well as
@@ -88,6 +90,7 @@ class AlphaAutoLoader {
 					$config->get('sysRoot').'alpha/util/graphs/',
 					$config->get('sysRoot').'alpha/util/helpers/',
 					$config->get('sysRoot').'alpha/util/metrics/',
+					$config->get('sysRoot').'alpha/util/filters/',
 					$config->get('sysRoot').'alpha/tests/',
 					$config->get('sysRoot').'controller/',
 					$config->get('sysRoot').'model/',
