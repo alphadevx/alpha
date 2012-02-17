@@ -48,6 +48,14 @@
  *  
  */
 interface AlphaRendererProviderInterface {
+   	/**
+   	 * Provide the BO that we are going render.
+   	 * 
+   	 * @param AlphaDAO $BO
+   	 * @since 1.2
+   	 */
+   	public function setBO($BO);
+
 	/**
 	 * Renders the create view for the BO using the selected renderer.
 	 * 
@@ -265,6 +273,17 @@ interface AlphaRendererProviderInterface {
 	 * @since 1.2
 	 */
 	public function renderRelationField($name, $label, $mode, $value='', $tableTags=true, $expanded=false, $buttons=true);
+
+	/**
+	 * Convenience method that renders all fields for the current BO in edit/create/view mode.
+	 *
+	 * @param string $mode (view|edit|create)
+	 * @param array $filterFields Optional list of field names to exclude from rendering.
+	 * @param array $readOnlyFields Optional list of fields to render in a readonly fashion when rendering in create or edit mode.
+	 * @return string
+	 * @since 1.2
+	 */
+	public function renderAllFields($mode, $filterFields=array(), $readOnlyFields=array());
 }
 
 ?>

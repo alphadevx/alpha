@@ -60,11 +60,12 @@ class AlphaRendererProviderFactory {
 	 * based on the name of the provider class supplied.
 	 * 
 	 * @param $providerName The class name of the provider class, should be in the alpha::view::renderers package. 
+	 * @param $BO The AlphaDAO instance to pass to the renderer provider for passing data. 
 	 * @throws IllegalArguementException
 	 * @return AlphaRendererProviderInterface
 	 * @since 1.2
 	 */
-	public static function getInstance($providerName) {
+	public static function getInstance($providerName, $BO) {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaRendererProviderFactory');
 		
@@ -76,6 +77,7 @@ class AlphaRendererProviderFactory {
 			require_once $config->get('sysRoot').'alpha/view/renderers/'.$providerName.'.inc';
 			
 			$instance = new $providerName;
+			$instance->setBO($BO);
 			
 			if(!$instance instanceof AlphaCacheProviderInterface)
 				throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected AlphaCacheProviderInterface intwerface!');
