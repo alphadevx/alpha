@@ -122,8 +122,51 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::editView()
 	 */
 	public function editView($fields=array()) {
-		// TODO
-		self::$logger->warn('Not implemented yet!');
+		self::$logger->debug('>>editView(fields=['.var_export($fields, true).'])');
+		
+		global $config;
+
+		// the form action
+		$fields['formAction'] = $_SERVER['REQUEST_URI'];
+		
+		// the form ID
+		$fields['formID'] = get_class($this->BO).'_'.$this->BO->getOID();
+		
+		// buffer form fields to $formFields
+		$fields['formFields'] = $this->renderAllFields('edit');
+		
+		// buffer HTML output for Create and Cancel buttons		
+		$button = new Button('submit', 'Save', 'saveBut');
+		$fields['saveButton'] = $button->render();
+		
+		$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
+				$('#dialogDiv').dialog({
+				buttons: {
+					'OK': function(event, ui) {						
+						$('#deleteOID').attr('value', '".$this->BO->getOID()."');
+						$('#deleteForm').submit();
+					},
+					'Cancel': function(event, ui) {
+						$(this).dialog('close');
+					}
+				}
+			})
+			$('#dialogDiv').dialog('open');
+			return false;";
+		$button = new Button($js, "Delete", "deleteBut");
+		$fields['deleteButton'] = $button->render();
+		
+		$button = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
+		$fields['cancelButton'] = $button->render();		
+				
+		// buffer security fields to $formSecurityFields variable		
+		$fields['formSecurityFields'] = $this->renderSecurityFields();
+
+		// OID will need to be posted for optimistic lock checking
+		$fields['version_num'] = $this->BO->getVersionNumber();
+
+		self::$logger->debug('<<editView [HTML]');
+		return $this->loadTemplate($this->BO, 'edit', $fields);
 	}
 	
 	/**
@@ -212,8 +255,20 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderSecurityFields()
 	 */
 	public static function renderSecurityFields() {
-		// TODO
-		self::$logger->warn('Not implemented yet!');
+		if(self::$logger == null)
+			self::$logger = new Logger('AlphaRendererProviderHTML');
+		self::$logger->debug('>>renderSecurityFields()');
+		
+		$html = '';
+		
+		$fields = AlphaController::generateSecurityFields();
+		
+		$html .= '<input type="hidden" name="var1" value="'.$fields[0].'"/>';
+		$html .= '<input type="hidden" name="var2" value="'.$fields[1].'"/>';
+		
+		self::$logger->debug('<<renderSecurityFields ['.$html.']');
+		return $html;
+	}
 	}
 	
 	/**
