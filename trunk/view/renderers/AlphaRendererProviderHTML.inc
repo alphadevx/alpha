@@ -448,8 +448,187 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::displayPageHead()
 	 */
 	public static function displayPageHead($controller) {
-		// TODO
-		self::$logger->warn('Not implemented yet!');
+		if(self::$logger == null)
+			self::$logger = new Logger('AlphaRendererProviderHTML');
+
+		self::$logger->debug('>>displayPageHead(controller=['.var_export($controller, true).'], renderMenu=['.$renderMenu.'], renderStatus=['.$renderStatus.'])');
+
+		if(method_exists($controller, 'before_displayPageHead_callback'))
+			$controller->before_displayPageHead_callback();
+		
+		global $config;
+		
+		if(!AlphaController::checkControllerDefExists(get_class($controller)))
+			throw new IllegalArguementException('The controller provided ['.get_class($controller).'] is not defined anywhere!');
+		
+		$html = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">';
+		
+		$html.= '<html>';
+		$html.= '<head>';
+		$html.= '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">';
+		$html.= '<title>'.$controller->getTitle().'</title>';
+		if($controller->getKeywords() != '')
+			$html.= '<meta name="Keywords" content="'.$controller->getKeywords().'">';
+		if($controller->getDescription() != '')
+			$html.= '<meta name="Description" content="'.$controller->getDescription().'">';
+		$html.= '<meta name="title" content="'.$controller->getTitle().'">';
+		$html.= '<meta name="robots" content="index,follow,NOODP">';
+		if ($controller->getBO() != null && $controller->getBO()->hasAttribute('URL')) {
+			$URL = $controller->getBO()->get('URL');
+			if($URL != '')
+				$html.= '<link rel="canonical" href="'.$URL.'" />';
+		}
+		$html.= '<meta http-equiv="imagetoolbar" content="no">';
+
+		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/ui/themes/'.$config->get('sysTheme').'/jquery.ui.all.css">';
+		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/css/alpha.css">';
+		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
+		
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jquery-1.5.1.min.js"></script>';
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/scripts/validation.js"></script>';
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/contextMenu/jquery.contextMenu.js"></script>';
+		
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery-ui-1.8.11.custom.min.js"></script>';
+		
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery.ui.potato.menu.js"></script>';
+		
+		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery.ui.checkbox.js"></script>';
+		
+		// handle force-frames
+		if($config->get('sysForceFrame')) {
+			// if no-forceframe=true or we are in the admin backend, don't force frame
+			if(!isset($_GET['no-forceframe']) && strpos($_SERVER['REQUEST_URI'], '/tk/') === false) {
+				$html.= '<script type="text/javascript">';
+				$html.= 'pageLoc = self.location;';
+				$html.= 'pageAdd = top.location;';
+		 
+				$html.= 'if (pageLoc == pageAdd) {';
+				$html.= '    contentSrc = escape(pageLoc);';
+				$html.= '    contPage = \''.$config->get('sysURL').'?\' + contentSrc;';
+				$html.= '    top.location.href = contPage;';
+				$html.= '}';
+				$html.= '</script>';
+			}
+		}
+		
+		if (isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+			$html.= '<script type="text/javascript">';
+			$html.= '	(function($) {';
+			$html.= '		$(document).ready(function(){';
+			$html.= '		$("#adminmenu").ptMenu();';
+			$html.= '	});';
+			$html.= '})(jQuery);';
+			$html.= '</script>';
+		}
+		
+		// general dialog defaults
+		$html.= '<script type="text/javascript">';
+		$html.= '	(function($) {';
+		$html.= '		var dialogCoords = [(screen.width/2)-200, (screen.height/2)-200];';
+		$html.= '		$(document).ready(function(){';
+		$html.= '			$.extend($.ui.dialog.prototype.options, {';
+		$html.= '				modal: true,';
+		$html.= '	        	resizable: false,';
+		$html.= '	        	draggable: false,';
+		$html.= '	        	autoOpen: false,';
+		$html.= '	        	height: 200,';
+		$html.= '	        	width: 400,';
+		$html.= '	        	position: dialogCoords,';
+		$html.= '	        	buttons: {';
+		$html.= '	        		"Cancel": function() {';
+		$html.= '						$(this).dialog("close");';
+		$html.= '					}';
+		$html.= '				}';
+		$html.= '			});';
+		$html.= '		});';
+		$html.= '	})(jQuery);';
+		$html.= '</script>';
+		
+		// record selector JS
+		$html.= '<script type="text/javascript">';
+		$html.= '	(function($) {';
+		$html.= '		$(document).ready(function(){';
+		$html.= '			var dialogOpts = {';
+		$html.= '			    title: "Record selector",';
+		$html.= '			    modal: true,';
+		$html.= '			    resizable: false,';
+		$html.= '			    draggable: false,';
+		$html.= '			    autoOpen: false,';
+		$html.= '			    height: 300,';
+		$html.= '			    width: 600';
+		$html.= '			};';
+		$html.= '			$("#recordSelector").dialog(dialogOpts);';
+		$html.= '		});';
+		$html.= '	})(jQuery);';
+		$html.= '</script>';
+		
+		// checkbox JS
+		$html.= '<script type="text/javascript">';
+		//$html .= '$(function() {';
+		$html.= '	(function($) {';
+		$html.= '		$(document).ready(function(){';
+		$html .= '			$(":checkbox").checkbox();';
+		//$html .= '});';
+		$html.= '		});';
+		$html.= '	})(jQuery);';
+		$html.= '</script>';
+		
+		
+		if(method_exists($controller, 'during_displayPageHead_callback'))
+			$html.= $controller->during_displayPageHead_callback();
+
+		$html.= '</head>';
+		try {
+			if($controller->getBO() != null)
+				$html.= '<body'.($controller->getBO()->get('bodyOnload') != '' ? ' onload="'.$controller->getBO()->get('bodyOnload').'"' : '').'>';
+			else
+				$html.= '<body>';
+		} catch (AlphaException $e) {
+			$html.= '<body>';
+		}
+		
+		if(method_exists($controller, 'insert_CMSDisplayStandardHeader_callback'))
+			$html.= $controller->insert_CMSDisplayStandardHeader_callback();
+		
+		$html .= '<div id="recordSelector"></div>';
+			
+		//if($controller->getTitle() != '')
+			//$html.= '<h1>'.$controller->getTitle().'</h1>';
+		
+		if ($renderMenu && isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+			$html .= '<ul id="adminmenu" class="potato-menu">
+						<li><a href="'.$config->get('sysURL').'">Home</a></li>
+						<li><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Admin Home</a></li>
+						<li><a href="#">Logs &raquo;</a>			
+							<ul>
+								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysLogFile')).'">System Log</a></li>
+								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/search.log').'">Search Log</a></li>
+								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/feeds.log').'">Feed Log</a></li>
+								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/tasks.log').'">Cron Tasks Log</a></li>
+							</ul>
+						</li>
+						<li><a href="'.FrontController::generateSecureURL('act=GenSecureQueryStrings').'">Generate Secure URL</a></li>
+						<li><a href="'.FrontController::generateSecureURL('act=ViewMetrics').'">Software Metrics</a></li>
+						<li><a href="'.FrontController::generateSecureURL('act=CacheManager').'">Manage Cache</a></li>
+						<li><a href="'.FrontController::generateSecureURL('act=TagManager').'">Manage Tags</a></li>
+						<li><a href="'.FrontController::generateSecureURL('act=ListDEnums').'">Manage DEnums</a></li>
+						<li><a href="'.FrontController::generateSecureURL('act=ListSequences').'">Manage Sequences</a></li>
+						<li><a href="'.FrontController::generateSecureURL('act=ViewTestResults').'">Unit Tests</a></li>
+					</ul>';
+		}
+		
+		if(method_exists($controller, 'after_displayPageHead_callback'))
+			$html.= $controller->after_displayPageHead_callback();
+
+		if($renderStatus) {
+			// render a status message if there is any
+			$message = $controller->getStatusMessage();
+			if(!empty($message))
+				$html .= $message;
+		}
+			
+		self::$logger->debug('<<displayPageHead [HTML]');
+		return $html;
 	}
 	
 	/**
@@ -457,8 +636,25 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::displayPageFoot()
 	 */
 	public static function displayPageFoot($controller) {
-		// TODO
-		self::$logger->warn('Not implemented yet!');
+		if(self::$logger == null)		
+			self::$logger = new Logger('AlphaRendererProviderHTML');
+		
+		self::$logger->debug('>>displayPageFoot(controller=['.get_class($controller).'])');
+
+		$html = '';
+		
+		if(method_exists($controller, 'before_displayPageFoot_callback'))
+			$html .= $controller->before_displayPageFoot_callback();
+		
+		$html .= '<div id="dialogDiv"></div>';
+		$html .= '</body>';
+		$html .= '</html>';
+		
+		if(method_exists($controller, 'after_displayPageFoot_callback'))
+			$controller->after_displayPageFoot_callback();
+			
+		self::$logger->debug('<<displayPageFoot ['.$html.']');
+		return $html;
 	}
 	
 	/**
@@ -504,6 +700,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	public static function renderSecurityFields() {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaRendererProviderHTML');
+
 		self::$logger->debug('>>renderSecurityFields()');
 		
 		$html = '';
