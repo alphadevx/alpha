@@ -293,8 +293,49 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::detailedView()
 	 */
 	public function detailedView($fields=array()) {
-		// TODO
-		self::$logger->warn('Not implemented yet!');
+		self::$logger->debug('>>detailedView(fields=['.var_export($fields, true).'])');
+		
+		global $config;
+		
+		// we may want to display the OID regardless of class
+		$fields['OIDLabel'] = $this->BO->getDataLabel('OID');		
+		$fields['OID'] = $this->BO->getOID();		
+		
+		// buffer form fields to $formFields
+		$fields['formFields'] = $this->renderAllFields('view');
+		
+		// Back button
+		$button = new Button('history.back()', 'Back', 'backBut');
+		$fields['backButton'] = $button->render();
+		
+		$html = '';
+		// render edit and delete buttons for admins only
+		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
+			$html .= '&nbsp;&nbsp;';
+			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "editBut");
+			$html .= $button->render();
+			$html .= '&nbsp;&nbsp;';
+			$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
+				$('#dialogDiv').dialog({
+				buttons: {
+					'OK': function(event, ui) {						
+						$('#deleteOID').attr('value', '".$this->BO->getOID()."');
+						$('#deleteForm').submit();
+					},
+					'Cancel': function(event, ui) {
+						$(this).dialog('close');
+					}
+				}
+			})
+			$('#dialogDiv').dialog('open');
+			return false;";
+			$button = new Button($js, "Delete", "deleteBut");
+			$html .= $button->render();
+		}
+		$fields['adminButtons'] = $html;
+		
+		self::$logger->debug('<<detailedView [HTML]');
+		return $this->loadTemplate($this->BO, 'detail', $fields);
 	}
 	
 	/**
