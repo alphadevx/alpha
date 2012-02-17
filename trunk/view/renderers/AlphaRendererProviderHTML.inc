@@ -174,8 +174,118 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::listView()
 	 */
 	public function listView($fields=array()) {
-		// TODO
-		self::$logger->warn('Not implemented yet!');
+		self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
+		
+		global $config;
+		
+		// the form action
+		$fields['formAction'] = $_SERVER['REQUEST_URI'];
+		
+		// work out how many columns will be in the table
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = array_keys($reflection->getDefaultProperties());		
+		$fields['colCount'] = 1+count(array_diff($properties, $this->BO->getDefaultAttributes(), $this->BO->getTransientAttributes()));
+		
+		// get the class attributes
+		$properties = $reflection->getProperties();
+		
+		$html = '';
+		
+		$html .= '<tr>';
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			
+			// skip over password fields
+			$property = $this->BO->getPropObject($propName);
+			if(!($property instanceof String && $property->checkIsPassword())) {			
+				if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
+					$html .= '	<th>'.$this->BO->getDataLabel($propName).'</th>';				
+				}
+				if ($propName == 'OID')
+					$html .= '	<th>'.$this->BO->getDataLabel($propName).'</th>';
+			}else{
+				$fields['colCount'] = $fields['colCount']-1;
+			}
+		}
+		$html .= '</tr><tr>';
+		
+		$fields['formHeadings'] = $html;
+		
+		$html = '';
+
+		// and now the values
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			
+			$property = $this->BO->getPropObject($propName);
+			if(!($property instanceof String && $property->checkIsPassword())) {
+				if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
+					$propClass = get_class($this->BO->getPropObject($propName));
+					
+					if ($propClass == 'Text') {
+						$text = htmlentities($this->BO->get($propName));
+						if(strlen($text) > 70)
+							$html .= '	<td>&nbsp;'.substr($text, 0, 70).'...</td>';
+						else
+							$html .= '	<td>&nbsp;'.$text.'</td>';
+					}elseif($propClass == 'DEnum') {
+						$html .= '	<td>&nbsp;'.$this->BO->getPropObject($propName)->getDisplayValue().'</td>';
+					}else{
+						$html .= '	<td>&nbsp;'.$this->BO->get($propName).'</td>';
+					}
+				}
+				if ($propName == 'OID')
+					$html .= '	<td>&nbsp;'.$this->BO->getOID().'</td>';
+			}
+		}
+		$html .= '</tr>';
+		
+		$fields['formFields'] = $html;
+		
+		// View button
+		if(strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."';", 'View', 'view'.$this->BO->getOID().'But');
+			$fields['viewButton'] = $button->render();
+		}else{
+			if($this->BO->hasAttribute('URL'))
+				$button = new Button("document.location = '".$this->BO->get('URL')."';", 'View', 'view'.$this->BO->getOID().'But');
+			else
+				$button = new Button("document.location = '".$config->get('sysURL')."Detail/bo/".get_class($this->BO)."/oid/".$this->BO->getOID()."';", 'View', 'view'.$this->BO->getOID().'But');
+			
+			$fields['viewButton'] = $button->render();
+		}
+
+		$html = '';
+		// render edit and delete buttons for admins only
+		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
+			$html .= '&nbsp;&nbsp;';
+			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "edit".$this->BO->getOID()."But");
+			$html .= $button->render();
+			$html .= '&nbsp;&nbsp;';
+			$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
+				$('#dialogDiv').dialog({
+				buttons: {
+					'OK': function(event, ui) {						
+						$('#deleteOID').attr('value', '".$this->BO->getOID()."');
+						$('#deleteForm').submit();
+					},
+					'Cancel': function(event, ui) {
+						$(this).dialog('close');
+					}
+				}
+			})
+			$('#dialogDiv').dialog('open');
+			return false;";
+			$button = new Button($js, "Delete", "delete".$this->BO->getOID()."But");
+			$html .= $button->render();
+		}
+		$fields['adminButtons'] = $html;
+
+		// buffer security fields to $formSecurityFields variable
+		$fields['formSecurityFields'] = $this->renderSecurityFields();
+
+		self::$logger->debug('<<listView [HTML]');
+		return $this->loadTemplate($this->BO, 'list', $fields);				
 	}
 	
 	/**
