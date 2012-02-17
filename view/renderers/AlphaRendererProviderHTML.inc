@@ -343,8 +343,104 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::adminView()
 	 */
 	public function adminView($fields=array()) {
-		// TODO
-		self::$logger->warn('Not implemented yet!');
+		self::$logger->debug('>>adminView(fields=['.var_export($fields, true).'])');
+		
+		global $config;
+		
+		// the form action
+		$fields['formAction'] = $_SERVER['REQUEST_URI'];
+		
+		// the class name of the BO
+		$fields['className'] = get_class($this->BO);
+		
+		// the table name in the DB for the BO
+		$fields['tableName'] = $this->BO->getTableName();
+		
+		// record count for the BO in the DB
+		$fields['count'] = ($this->BO->checkTableExists() ? $this->BO->getCount() : '<span class="warning">unavailable</span>');
+
+		// table exists in the DB?
+		$fields['tableExists'] = ($this->BO->checkTableExists() ? '<span class="success">Yes</span>' : '<span class="warning">No</span>');
+		
+		// table schema needs to be updated in the DB?
+		$fields['tableNeedsUpdate'] = ($this->BO->checkTableNeedsUpdate() ? '<span class="warning">Yes</span>' : '<span class="success">No</span>');
+
+		// create button
+		if($this->BO->checkTableExists()) {
+			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Create&bo='.get_class($this->BO))."'", "Create New", "create".get_class($this->BO)."But");
+			$fields['createButton'] = $button->render();
+		}else{
+			$fields['createButton'] = '';
+		}
+		
+		// list all button
+		if($this->BO->checkTableExists()) {
+			$button = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "List All", "list".get_class($this->BO)."But");
+			$fields['listButton'] = $button->render();
+		}else{
+			$fields['listButton'] = '';
+		}
+		
+		// the create table button (if required)
+		$html = '';
+		if (!$this->BO->checkTableExists()) {			
+			$button = new Button("submit", "Create Table", "createTableBut");
+			$html .= $button->render();
+			// hidden field so that we know which class to create the table for
+			$html .= '<input type="hidden" name="createTableClass" value="'.get_class($this->BO).'"/>';
+		}
+		$fields['createTableButton'] = $html;
+		
+		// recreate and update table buttons (if required)
+		$html = '';
+		if ($this->BO->checkTableNeedsUpdate() && $this->BO->checkTableExists()) {			
+			$js = "$('#dialogDiv').text('Are you sure you wish to recreate this class table (all data will be lost)?');
+				$('#dialogDiv').dialog({
+				buttons: {
+					'OK': function(event, ui) {
+						$('#admin_".get_class($this->BO)."_button_pressed').attr('value', 'recreateTableBut');
+						$('#admin_".get_class($this->BO)."').submit();
+					},
+					'Cancel': function(event, ui) {
+						$(this).dialog('close');
+					}
+				}
+			})
+			$('#dialogDiv').dialog('open');
+			return false;";
+			$button = new Button($js , "Recreate Table", "recreateTableBut");
+			$html .= $button->render();
+			// hidden field so that we know which class to recreate the table for
+			$html .= '<input type="hidden" name="recreateTableClass" value="'.get_class($this->BO).'"/>';
+			$html .= '&nbsp;&nbsp;';
+			$js = "$('#dialogDiv').text('Are you sure you wish to attempt to modify this class table by adding new attributes?');
+				$('#dialogDiv').dialog({
+				buttons: {
+					'OK': function(event, ui) {
+						$('#admin_".get_class($this->BO)."_button_pressed').attr('value', 'updateTableBut');
+						$('#admin_".get_class($this->BO)."').submit();
+					},
+					'Cancel': function(event, ui) {
+						$(this).dialog('close');
+					}
+				}
+			})
+			$('#dialogDiv').dialog('open');
+			return false;";
+			$button = new Button($js , "Update Table", "updateTableBut");
+			$html .= $button->render();
+			// hidden field so that we know which class to update the table for
+			$html .= '<input type="hidden" name="updateTableClass" value="'.get_class($this->BO).'"/>';
+			// hidden field to tell us which button was pressed
+			$html .= '<input type="hidden" id="admin_'.get_class($this->BO).'_button_pressed" name="admin_'.get_class($this->BO).'_button_pressed" value=""/>';
+		}
+		$fields['recreateOrUpdateButtons'] = $html;
+		
+		// buffer security fields to $formSecurityFields variable
+		$fields['formSecurityFields'] = $this->renderSecurityFields();
+		
+		self::$logger->debug('<<adminView [HTML]');
+		return $this->loadTemplate($this->BO, 'admin', $fields);
 	}
 	
 	/**
