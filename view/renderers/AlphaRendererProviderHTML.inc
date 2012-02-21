@@ -758,8 +758,40 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderIntegerField()
 	 */
 	public function renderIntegerField($name, $label, $mode, $value='', $tableTags=true) {
-		// TODO
-		self::$logger->warn('Not implemented yet!');
+		self::$logger->debug('>>renderIntegerField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+		
+		$html = '';
+		
+		if ($mode == 'create') {
+			if($tableTags) {
+				$html .= '<tr><th style="width:25%;">';
+				$html .= $label;
+				$html .= '</th>';
+		
+				$html .= '<td>';
+				$html .= '<input type="text" style="width:100%;" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<input type="text" style="width:100%;" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
+			}
+		}
+		
+		if ($mode == 'edit') {
+			if($tableTags) {
+				$html .= '<tr><th style="width:25%;">';
+				$html .= $label;
+				$html .= '</th>';
+	
+				$html .= '<td>';
+				$html .= '<input type="text" style="width:100%;" name="'.$name.'" value="'.$value.'"/><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<input type="text" style="width:100%;" name="'.$name.'" value="'.$value.'"/>';
+			}
+		}
+				
+		self::$logger->debug('<<renderIntegerField ['.$html.']');
+		return $html;
 	}
 	
 	/**
@@ -767,8 +799,40 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderDoubleField()
 	 */
 	public function renderDoubleField($name, $label, $mode, $value='', $tableTags=true) {
-		// TODO
-		self::$logger->warn('Not implemented yet!');
+		self::$logger->debug('>>renderDoubleField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+		
+		$html = '';
+		
+		if ($mode == 'create') {
+			if($tableTags) {
+				$html .= '<tr><th style="width:25%;">';
+				$html .= $label;
+				$html .= '</th>';
+		
+				$html .= '<td>';
+				$html .= '<input type="text" size="13" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<input type="text" size="13" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/>';
+			}
+		}
+		
+		if ($mode == 'edit') {
+			if($tableTags) {
+				$html .= '<tr><th style="width:25%;">';
+				$html .= $label;
+				$html .= '</th>';
+	
+				$html .= '<td>';
+				$html .= '<input type="text" size="13" name="'.$name.'" value="'.$value.'"/><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<input type="text" size="13" name="'.$name.'" value="'.$value.'"/>';
+			}
+		}
+				
+		self::$logger->debug('<<renderDoubleField ['.$html.']');
+		return $html;
 	}
 	
 	/**
@@ -776,8 +840,47 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderBooleanField()
 	 */
 	public function renderBooleanField($name, $label, $mode, $value='', $tableTags=true) {
-		// TODO
-		self::$logger->warn('Not implemented yet!');
+		self::$logger->debug('>>renderBooleanField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+		
+		$html = '';
+		
+		if ($mode == 'create') {
+			if($tableTags) {		
+				$html .= '<tr><th style="width:25%;">';
+				$html .= '<label for="'.$name.'">'.$label.'</label>';
+				$html .= '</th>';
+				
+				$html .= '<td>';
+				$html .= '<input type="hidden" name="'.$name.'" value="0">';
+				$html .= '<input type="checkbox" name="'.$name.'" id="'.$name.'" />';
+				$html .= '</td></tr>';
+			}else{
+				$html .= $label.'<select size="1" name="'.$name.'"/>';
+				$html .= '<option value="0" selected>No</option>';
+				$html .= '<option value="1">Yes</option>';
+				$html .= '</select>';
+			}
+		}
+		
+		if ($mode == 'edit') {
+			if($tableTags) {
+				$html .= '<tr><th style="width:25%;">';
+				$html .= '<label for="'.$name.'">'.$label.'</label>';
+				$html .= '</th>';
+				
+				$html .= '<td>';
+				$html .= '<input type="hidden" name="'.$name.'" value="0">';
+				$html .= '<input type="checkbox" name="'.$name.'" id="'.$name.'"'.($value == '1'? ' checked':'').' />';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<label for="'.$name.'">'.$label.'</label>';
+				$html .= '<input type="hidden" name="'.$name.'" value="0">';
+				$html .= '<input type="checkbox" name="'.$name.'" id="'.$name.'"'.($value == '1'? ' checked':'').' />';
+			}
+		}
+				
+		self::$logger->debug('<<renderBooleanField ['.$html.']');
+		return $html;
 	}
 	
 	/**
@@ -785,8 +888,60 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderEnumField()
 	 */
 	public function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
-		// TODO
-		self::$logger->warn('Not implemented yet!');
+		self::$logger->debug('>>renderEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+		
+		$html = '';
+		
+		if ($mode == 'create') {
+			if ($tableTags) {
+				$html .= '<tr><th style="width:25%;">';
+				$html .= $label;
+				$html .= '</th>';
+				$html .= '<td>';
+				$html .= '<select name="'.$name.'"/>';			
+				foreach ($options as $val) {
+					$html .= '<option value="'.$val.'">'.$val.'</option>';
+				}
+				$html .= '</select><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<select name="'.$name.'"/>';			
+				foreach ($options as $val) {
+					$html .= '<option value="'.$val.'">'.$val.'</option>';
+				}
+				$html .= '</select>';
+			}
+		}
+		
+		if ($mode == 'edit') {
+			if ($tableTags) {
+				$html .= '<tr><th style="width:25%;">';
+				$html .= $label;
+				$html .= '</th>';
+				$html .= '<td>';
+				$html .= '<select name="'.$name.'"/>';			
+				foreach ($options as $val) {
+					if ($value == $val)
+						$html .= '<option value="'.$val.'" selected>'.$val.'</option>';
+					else
+						$html .= '<option value="'.$val.'">'.$val.'</option>';
+				}
+				$html .= '</select><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<select name="'.$name.'"/>';			
+				foreach ($options as $val) {
+					if ($value == $val)
+						$html .= '<option value="'.$val.'" selected>'.$val.'</option>';
+					else
+						$html .= '<option value="'.$val.'">'.$val.'</option>';
+				}
+				$html .= '</select>';
+			}
+		}
+				
+		self::$logger->debug('<<renderEnumField ['.$html.']');
+		return $html;
 	}
 	
 	/**
@@ -794,8 +949,60 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderDEnumField()
 	 */
 	public function renderDEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
-		// TODO
-		self::$logger->warn('Not implemented yet!');
+		self::$logger->debug('>>renderDEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+		
+		$html = '';
+		
+		if ($mode == 'create') {
+			if($tableTags) {
+				$html .= '<tr><th style="width:25%;">';
+				$html .= $label;
+				$html .= '</th>';
+				$html .= '<td>';
+				$html .= '<select name="'.$name.'"/>';
+				foreach (array_keys($options) as $index) {
+					$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
+				}
+				$html .= '</select><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<select name="'.$name.'"/>';
+				foreach (array_keys($options) as $index) {
+					$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
+				}
+				$html .= '</select>';
+			}
+		}
+		
+		if ($mode == 'edit') {
+			if($tableTags) {
+				$html .= '<tr><th style="width:25%;">';
+				$html .= $label;
+				$html .= '</th>';
+				$html .= '<td>';
+				$html .= '<select name="'.$name.'"/>';			
+				foreach (array_keys($options) as $index) {
+					if ($value == $index)
+						$html .= '<option value="'.$index.'" selected>'.$options[$index].'</option>';
+					else
+						$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
+				}
+				$html .= '</select><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<select name="'.$name.'"/>';			
+				foreach (array_keys($options) as $index) {
+					if ($value == $index)
+						$html .= '<option value="'.$index.'" selected>'.$options[$index].'</option>';
+					else
+						$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
+				}
+				$html .= '</select>';
+			}
+		}		
+		
+		self::$logger->debug('<<renderDEnumField ['.$html.']');
+		return $html;
 	}
 	
 	/**
@@ -803,8 +1010,57 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderDefaultField()
 	 */
 	public function renderDefaultField($name, $label, $mode, $value='', $tableTags=true) {
-		// TODO
-		self::$logger->warn('Not implemented yet!');
+		self::$logger->debug('>>renderDefaultField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+		
+		$html = '';
+		
+		if ($mode == 'create') {
+			if($tableTags) {
+				$html .= '<tr><th colspan="2">';
+				$html .= $label;
+				$html .= '</th></tr>';
+		
+				$html .= '<tr><td colspan="2">';
+				$html .= '<textarea cols="100" rows="3" name="'.$name.'">'. (isset ($_POST[$name]) ? $_POST[$name] : '').'</textarea><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<textarea cols="100" rows="3" name="'.$name.'">'. (isset ($_POST[$name]) ? $_POST[$name] : '').'</textarea>';
+			}
+		}
+		
+		if ($mode == 'edit') {
+			if($tableTags) {		
+				$html .= '<tr><th colspan="2">';
+				$html .= $label;
+				$html .= '</th></tr>';
+	
+				$html .= '<tr><td colspan="2">';
+				$html .= '<textarea cols="100" rows="3" name="'.$name.'">'.$value.'</textarea><br>';
+				$html .= '</td></tr>';
+			}else{
+				$html .= '<textarea cols="100" rows="3" name="'.$name.'">'.$value.'</textarea>';
+			}
+		}
+		
+		if ($mode == 'view') {
+			if($tableTags) {
+				$html .= '<tr><th>';
+				$html .= $label;
+				$html .= '</th>';
+	
+				$html .= '<td>&nbsp;';
+				if(method_exists($this, 'during_renderDefaultField_callback'))
+					$html .= $this->during_renderDefaultField_callback($name, $mode, $value);
+				else
+					$html .= $value;
+				$html .= '</td></tr>';
+			}else{
+				$html .= $value;
+			}
+		}
+		
+		self::$logger->debug('<<renderDefaultField ['.$html.']');
+		return $html;
 	}
 	
 	/**
@@ -812,8 +1068,62 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderTextField()
 	 */
 	public function renderTextField($name, $label, $mode, $value='', $tableTags=true) {
-		// TODO
-		self::$logger->warn('Not implemented yet!');
+		self::$logger->debug('>>renderTextField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+		
+		$html = '';
+		
+		if ($mode == 'create') {
+			// give 10 rows for content fields (other 5 by default)
+			if($name == 'content')
+				$text = new TextBox($this->BO->getPropObject($name), $label, $name, 10);
+			else
+				$text = new TextBox($this->BO->getPropObject($name), $label, $name);
+			$html .= $text->render($tableTags);
+		}
+		
+		if ($mode == 'edit') {
+			// give 10 rows for content fields (other 5 by default)
+			if($name == 'content') {
+				$viewState = ViewState::getInstance();
+				
+				if($viewState->get('markdownTextBoxRows') == '')
+					$text = new TextBox($this->BO->getPropObject($name), $label, $name, 10);
+				else
+					$text = new TextBox($this->BO->getPropObject($name), $label, $name, (integer)$viewState->get('markdownTextBoxRows'));
+					
+				$html .= $text->render($tableTags, true);
+			}else{
+				$text = new TextBox($this->BO->getPropObject($name), $label, $name);
+				$html .= $text->render($tableTags);
+			}
+		}
+		
+		if ($mode == 'view') {
+			if($tableTags)
+				$html .= '<tr><th>';
+				
+			$html .= $label;
+			
+			if($tableTags)
+				$html .= '</th>';
+			
+			// filter ouput to prevent malicious injection
+			$value = InputFilter::encode($value);
+
+			// ensures that line returns are rendered
+			$value = str_replace("\n", '<br>', $value);
+			
+			if($tableTags)
+				$html .= '<td>&nbsp;';
+				
+			$html .= $value;
+			
+			if($tableTags)
+				$html .= '</td></tr>';
+		}
+		
+		self::$logger->debug('<<renderTextField ['.$html.']');
+		return $html;
 	}
 	
 	/**
@@ -821,8 +1131,52 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderRelationField()
 	 */
 	public function renderRelationField($name, $label, $mode, $value='', $tableTags=true, $expanded=false, $buttons=true) {
-		// TODO
-		self::$logger->warn('Not implemented yet!');
+		self::$logger->debug('>>renderRelationField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'], expanded=['.$expanded.'], buttons=['.$buttons.'])');
+		
+		$html = '';
+		
+		$rel = $this->BO->getPropObject($name);
+		
+		if ($mode == 'create' || $mode == 'edit') {
+			if($rel->getRelationType() == 'MANY-TO-MANY') {
+				try{
+					// check to see if the rel is on this class
+					$rel->getSide(get_class($this->BO));
+					$widget = new RecordSelector($rel, $label, $name, get_class($this->BO));
+					$html .= $widget->render($tableTags, $expanded, $buttons);
+				}catch (IllegalArguementException $iae) {
+					// the rel may be on a parent class
+					$parentClassName = ucfirst($this->BO->getTableName()).'Object';
+					$widget = new RecordSelector($rel, $label, $name, $parentClassName);
+					$html .= $widget->render($tableTags, $expanded, $buttons);
+				}
+			}else{
+				$rel = new RecordSelector($rel, $label, $name);
+				$html .= $rel->render($tableTags, $expanded, $buttons);
+			}
+		}
+		
+		if ($mode == 'view') {
+			if($rel->getRelationType() == 'MANY-TO-ONE') {
+				$html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue());
+			}elseif($rel->getRelationType() == 'MANY-TO-MANY') {
+				try{
+					// check to see if the rel is on this class
+					$rel->getSide(get_class($this->BO));
+					$html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue(get_class($this->BO)));
+				}catch (IllegalArguementException $iae) {
+					// the rel may be on a parent class
+					$parentClassName = ucfirst($this->BO->getTableName()).'Object';
+					$html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue($parentClassName));
+				}
+			}else{
+				$rel = new RecordSelector($rel, $label, $name);
+				$html .= $rel->render($tableTags, $expanded, $buttons);
+			}
+		}
+		
+		self::$logger->debug('<<renderRelationField ['.$html.']');
+		return $html;
 	}
 
 	/**
