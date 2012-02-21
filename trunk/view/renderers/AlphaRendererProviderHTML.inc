@@ -662,8 +662,16 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::displayUpdateMessage()
 	 */
 	public static function displayUpdateMessage($message) {
-		// TODO
-		self::$logger->warn('Not implemented yet!');
+		if(self::$logger == null)
+			self::$logger = new Logger('AlphaRendererProviderHTML');
+		self::$logger->debug('>>displayUpdateMessage(message=['.$message.'])');
+		
+		$html = '<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
+				<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
+				'.$message.'</p></div>';
+		
+		self::$logger->debug('<<displayUpdateMessage ['.$html.']');
+		return $html;
 	}
 	
 	/**
@@ -671,8 +679,16 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::displayErrorMessage()
 	 */
 	public static function displayErrorMessage($message) {
-		// TODO
-		self::$logger->warn('Not implemented yet!');
+		if(self::$logger == null)
+			self::$logger = new Logger('AlphaRendererProviderHTML');
+		self::$logger->debug('>>displayErrorMessage(message=['.$message.'])');
+		
+		$html = '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
+				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+				'.$message.'</p></div>';
+		
+		self::$logger->debug('<<displayErrorMessage ['.$html.']');
+		return $html;
 	}
 	
 	/**
@@ -680,8 +696,21 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderErrorPage()
 	 */
 	public static function renderErrorPage($code, $message) {
-		// TODO
-		self::$logger->warn('Not implemented yet!');
+		global $config;		
+		
+		$html = '<html><head>';
+		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/ui/themes/'.$config->get('sysTheme').'/jquery.ui.all.css">';
+		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/css/alpha.css">';
+		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
+		$html .= '<title>'.$code.' - '.$message.'</title></head>';
+		$html .= '<body>';
+		$html .= '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
+				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+				<strong>'.$code.':</strong> '.$message.'</p>
+				</div>';
+		$html .= '</body></html>';
+		
+		return $html;
 	}
 	
 	/**
@@ -689,8 +718,17 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderDeleteForm()
 	 */
 	public static function renderDeleteForm() {
-		// TODO
-		self::$logger->warn('Not implemented yet!');
+		if(self::$logger == null)
+			self::$logger = new Logger('AlphaRendererProviderHTML');
+		self::$logger->debug('>>renderDeleteForm()');
+		
+		$html = '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" id="deleteForm">';		
+		$html .= '<input type="hidden" name="deleteOID" id="deleteOID" value=""/>';
+		$html .= self::renderSecurityFields();
+		$html .= '</form>';
+		
+		self::$logger->debug('<<renderDeleteForm ['.$html.']');
+		return $html;
 	}
 	
 	/**
@@ -728,7 +766,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * (non-PHPdoc)
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderDoubleField()
 	 */
-	public static function renderDoubleField($name, $label, $mode, $value='', $tableTags=true) {
+	public function renderDoubleField($name, $label, $mode, $value='', $tableTags=true) {
 		// TODO
 		self::$logger->warn('Not implemented yet!');
 	}
@@ -746,7 +784,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * (non-PHPdoc)
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderEnumField()
 	 */
-	public static function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
+	public function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
 		// TODO
 		self::$logger->warn('Not implemented yet!');
 	}
@@ -755,7 +793,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * (non-PHPdoc)
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderDEnumField()
 	 */
-	public static function renderDEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
+	public function renderDEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
 		// TODO
 		self::$logger->warn('Not implemented yet!');
 	}
