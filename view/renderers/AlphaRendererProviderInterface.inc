@@ -190,7 +190,7 @@ interface AlphaRendererProviderInterface {
 	 * @return string
 	 * @since 1.2
 	 */
-	public static function renderDoubleField($name, $label, $mode, $value='', $tableTags=true);
+	public function renderDoubleField($name, $label, $mode, $value='', $tableTags=true);
 	
 	/**
 	 * Renders an Boolean field value.
@@ -217,7 +217,7 @@ interface AlphaRendererProviderInterface {
 	 * @return string
 	 * @since 1.0
 	 */
-	public static function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true);
+	public function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true);
 	
 	/**
 	 * Renders an DEnum field value.
@@ -231,7 +231,7 @@ interface AlphaRendererProviderInterface {
 	 * @return string
 	 * @since 1.2
 	 */
-	public static function renderDEnumField($name, $label, $mode, $options, $value='', $tableTags=true);
+	public function renderDEnumField($name, $label, $mode, $options, $value='', $tableTags=true);
 	
 	/**
 	 * Method to render a field when type is not known.
