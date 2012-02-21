@@ -151,10 +151,10 @@ class DEnumView extends AlphaView {
 		
 		$html .= '<tr><td colspan="2">';
 		
-		$temp = new button('submit', 'Save', 'saveBut');
+		$temp = new Button('submit', 'Save', 'saveBut');
 		$html .= $temp->render();
 		$html .= '&nbsp;&nbsp;';
-		$temp = new button("document.location = '".FrontController::generateSecureURL('act=ListDEnums')."'", 'Back to List', 'cancelBut');
+		$temp = new Button("document.location = '".FrontController::generateSecureURL('act=ListDEnums')."'", 'Back to List', 'cancelBut');
 		$html .= $temp->render();
 		$html .= '</td></tr>';
 

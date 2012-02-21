@@ -104,7 +104,7 @@ class ArticleView extends AlphaView {
 		$fields['formFields'] = $this->renderAllFields('edit');
 		
 		// buffer HTML output for Create and Cancel buttons		
-		$button = new button('submit', 'Save', 'saveBut');
+		$button = new Button('submit', 'Save', 'saveBut');
 		$fields['saveButton'] = $button->render();
 		
 		$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
@@ -124,7 +124,7 @@ class ArticleView extends AlphaView {
 		$button = new Button($js, "Delete", "deleteBut");
 		$fields['deleteButton'] = $button->render();
 		
-		$button = new button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
+		$button = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
 		$fields['cancelButton'] = $button->render();
 		
 		$tags = array();
@@ -133,7 +133,7 @@ class ArticleView extends AlphaView {
 			$tags = $this->BO->getPropObject('tags')->getRelatedObjects();
 			
 		if(count($tags) > 0) {
-			$button = new button("document.location = '".FrontController::generateSecureURL('act=EditTags&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."'", "Edit Tags", "tagsBut");
+			$button = new Button("document.location = '".FrontController::generateSecureURL('act=EditTags&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."'", "Edit Tags", "tagsBut");
 			$fields['tagsButton'] = $button->render();
 		}
 				
@@ -209,7 +209,7 @@ class ArticleView extends AlphaView {
 		$html .= '</td></tr>';
 		
 		$html .= '<tr><td colspan="2">';
-		$temp = new button('submit', 'Upload', 'uploadBut');
+		$temp = new Button('submit', 'Upload', 'uploadBut');
 		$html .= $temp->render();
 		$html .= '</td></tr>';
 		

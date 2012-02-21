@@ -73,14 +73,23 @@ class AlphaRendererProviderFactory {
 		
 		global $config;
 		
+		if($providerName == 'auto') {
+			if(strpos($_SERVER['REQUEST_URI'], '/api/') !== false) {
+				// inspection of the Accept header will be placed here once we add REST API support in later versions of Alpha 
+			}else{
+				// use the HTML renderer
+				$providerName = 'AlphaRendererProviderHTML';
+			}
+		}
+		
 		if(file_exists($config->get('sysRoot').'alpha/view/renderers/'.$providerName.'.inc')) {
 			require_once $config->get('sysRoot').'alpha/view/renderers/'.$providerName.'.inc';
 			
 			$instance = new $providerName;
 			$instance->setBO($BO);
 			
-			if(!$instance instanceof AlphaCacheProviderInterface)
-				throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected AlphaCacheProviderInterface intwerface!');
+			if(!$instance instanceof AlphaRendererProviderInterface)
+				throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected AlphaRendererProviderInterface interface!');
 			
 			self::$logger->debug('<<getInstance: [Object '.$providerName.']');
 			return $instance;

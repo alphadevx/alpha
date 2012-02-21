@@ -159,7 +159,7 @@ class AlphaView {
 	/**
 	 * Renders the default create view to standard output
 	 * 
-	 * @param array $fields Hash array of HTML fields to pass to the template
+	 * @param array $fields Hash array of fields to pass to the template
 	 * @since 1.0
 	 */
 	public function createView($fields=array()) {		
@@ -168,28 +168,12 @@ class AlphaView {
 		if(method_exists($this, 'before_createView_callback'))
 			$this->before_createView_callback();
 		
-		global $config;
+		global $config; 
+			
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
+		$body = $provider->createView($fields);
 		
-		// the form action
-		$fields['formAction'] = $_SERVER['REQUEST_URI'];
-		
-		// the form ID
-		$fields['formID'] = get_class($this->BO).'_'.$this->BO->getOID();
-		
-		// buffer form fields to $formFields
-		$fields['formFields'] = $this->renderAllFields('create');
-		
-		// buffer HTML output for Create and Cancel buttons		
-		$button = new Button('submit', 'Create', 'createBut');
-		$fields['createButton'] = $button->render();
-		
-		$button = new Button("document.location.replace('".FrontController::generateSecureURL('act=ListBusinessObjects')."')", 'Cancel', 'cancelBut');
-		$fields['cancelButton'] = $button->render();		
-		
-		// buffer security fields to $formSecurityFields variable		
-		$fields['formSecurityFields'] = $this->renderSecurityFields();		
-
-		$this->loadTemplate($this->BO, 'create', $fields);
+		echo $body;
 		
 		if(method_exists($this, 'after_createView_callback'))
 			$this->after_createView_callback();
@@ -200,7 +184,7 @@ class AlphaView {
 	/**
 	 * Renders a form to enable object editing to standard output
 	 * 
-	 * @param array $fields Hash array of HTML fields to pass to the template
+	 * @param array $fields Hash array of fields to pass to the template
 	 * @since 1.0
 	 */
 	public function editView($fields=array()) {
@@ -209,48 +193,12 @@ class AlphaView {
 		if(method_exists($this, 'before_editView_callback'))
 			$this->before_editView_callback();
 		
-		global $config;
-
-		// the form action
-		$fields['formAction'] = $_SERVER['REQUEST_URI'];
+		global $config; 
+			
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
+		$body = $provider->editView($fields);
 		
-		// the form ID
-		$fields['formID'] = get_class($this->BO).'_'.$this->BO->getOID();
-		
-		// buffer form fields to $formFields
-		$fields['formFields'] = $this->renderAllFields('edit');
-		
-		// buffer HTML output for Create and Cancel buttons		
-		$button = new Button('submit', 'Save', 'saveBut');
-		$fields['saveButton'] = $button->render();
-		
-		$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
-				$('#dialogDiv').dialog({
-				buttons: {
-					'OK': function(event, ui) {						
-						$('#deleteOID').attr('value', '".$this->BO->getOID()."');
-						$('#deleteForm').submit();
-					},
-					'Cancel': function(event, ui) {
-						$(this).dialog('close');
-					}
-				}
-			})
-			$('#dialogDiv').dialog('open');
-			return false;";
-		$button = new Button($js, "Delete", "deleteBut");
-		$fields['deleteButton'] = $button->render();
-		
-		$button = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
-		$fields['cancelButton'] = $button->render();		
-				
-		// buffer security fields to $formSecurityFields variable		
-		$fields['formSecurityFields'] = $this->renderSecurityFields();
-
-		// OID will need to be posted for optimistic lock checking
-		$fields['version_num'] = $this->BO->getVersionNumber();
-
-		$this->loadTemplate($this->BO, 'edit', $fields);
+		echo $body;
 		
 		if(method_exists($this, 'after_editView_callback'))
 			$this->after_editView_callback();
@@ -261,7 +209,7 @@ class AlphaView {
 	/**
 	 * Renders the list view to standard output
 	 * 
-	 * @param array $fields Hash array of HTML fields to pass to the template
+	 * @param array $fields Hash array of fields to pass to the template
 	 * @since 1.0
 	 */
 	public function listView($fields=array()) {
@@ -270,115 +218,12 @@ class AlphaView {
 		if(method_exists($this, 'before_listView_callback'))
 			$this->before_listView_callback();
 		
-		global $config;
-		
-		// the form action
-		$fields['formAction'] = $_SERVER['REQUEST_URI'];
-		
-		// work out how many columns will be in the table
-		$reflection = new ReflectionClass(get_class($this->BO));
-		$properties = array_keys($reflection->getDefaultProperties());		
-		$fields['colCount'] = 1+count(array_diff($properties, $this->BO->getDefaultAttributes(), $this->BO->getTransientAttributes()));
-		
-		// get the class attributes
-		$properties = $reflection->getProperties();
-		
-		$html = '';
-		
-		$html .= '<tr>';
-		foreach($properties as $propObj) {
-			$propName = $propObj->name;
+		global $config; 
 			
-			// skip over password fields
-			$property = $this->BO->getPropObject($propName);
-			if(!($property instanceof String && $property->checkIsPassword())) {			
-				if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
-					$html .= '	<th>'.$this->BO->getDataLabel($propName).'</th>';				
-				}
-				if ($propName == 'OID')
-					$html .= '	<th>'.$this->BO->getDataLabel($propName).'</th>';
-			}else{
-				$fields['colCount'] = $fields['colCount']-1;
-			}
-		}
-		$html .= '</tr><tr>';
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
+		$body = $provider->listView($fields);
 		
-		$fields['formHeadings'] = $html;
-		
-		$html = '';
-
-		// and now the values
-		foreach($properties as $propObj) {
-			$propName = $propObj->name;
-			
-			$property = $this->BO->getPropObject($propName);
-			if(!($property instanceof String && $property->checkIsPassword())) {
-				if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
-					$propClass = get_class($this->BO->getPropObject($propName));
-					
-					if ($propClass == 'Text') {
-						$text = htmlentities($this->BO->get($propName));
-						if(strlen($text) > 70)
-							$html .= '	<td>&nbsp;'.substr($text, 0, 70).'...</td>';
-						else
-							$html .= '	<td>&nbsp;'.$text.'</td>';
-					}elseif($propClass == 'DEnum') {
-						$html .= '	<td>&nbsp;'.$this->BO->getPropObject($propName)->getDisplayValue().'</td>';
-					}else{
-						$html .= '	<td>&nbsp;'.$this->BO->get($propName).'</td>';
-					}
-				}
-				if ($propName == 'OID')
-					$html .= '	<td>&nbsp;'.$this->BO->getOID().'</td>';
-			}
-		}
-		$html .= '</tr>';
-		
-		$fields['formFields'] = $html;
-		
-		// View button
-		if(strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
-			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."';", 'View', 'view'.$this->BO->getOID().'But');
-			$fields['viewButton'] = $button->render();
-		}else{
-			if($this->BO->hasAttribute('URL'))
-				$button = new Button("document.location = '".$this->BO->get('URL')."';", 'View', 'view'.$this->BO->getOID().'But');
-			else
-				$button = new Button("document.location = '".$config->get('sysURL')."Detail/bo/".get_class($this->BO)."/oid/".$this->BO->getOID()."';", 'View', 'view'.$this->BO->getOID().'But');
-			
-			$fields['viewButton'] = $button->render();
-		}
-
-		$html = '';
-		// render edit and delete buttons for admins only
-		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
-			$html .= '&nbsp;&nbsp;';
-			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "edit".$this->BO->getOID()."But");
-			$html .= $button->render();
-			$html .= '&nbsp;&nbsp;';
-			$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
-				$('#dialogDiv').dialog({
-				buttons: {
-					'OK': function(event, ui) {						
-						$('#deleteOID').attr('value', '".$this->BO->getOID()."');
-						$('#deleteForm').submit();
-					},
-					'Cancel': function(event, ui) {
-						$(this).dialog('close');
-					}
-				}
-			})
-			$('#dialogDiv').dialog('open');
-			return false;";
-			$button = new Button($js, "Delete", "delete".$this->BO->getOID()."But");
-			$html .= $button->render();
-		}
-		$fields['adminButtons'] = $html;
-
-		// buffer security fields to $formSecurityFields variable
-		$fields['formSecurityFields'] = $this->renderSecurityFields();
-
-		$this->loadTemplate($this->BO, 'list', $fields);
+		echo $body;
 		
 		if(method_exists($this, 'after_listView_callback'))
 			$this->after_listView_callback();
@@ -389,7 +234,7 @@ class AlphaView {
 	/**
 	 * Displays a detailed view of the object (read-only) to standard output
 	 * 
-	 * @param array $fields Hash array of HTML fields to pass to the template
+	 * @param array $fields Hash array of fields to pass to the template
 	 * @since 1.0
 	 */
 	public function detailedView($fields=array()) {
@@ -398,46 +243,12 @@ class AlphaView {
 		if(method_exists($this, 'before_detailedView_callback'))
 			$this->before_detailedView_callback();
 		
-		global $config;
+		global $config; 
+			
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
+		$body = $provider->detailedView($fields);
 		
-		// we may want to display the OID regardless of class
-		$fields['OIDLabel'] = $this->BO->getDataLabel('OID');		
-		$fields['OID'] = $this->BO->getOID();		
-		
-		// buffer form fields to $formFields
-		$fields['formFields'] = $this->renderAllFields('view');
-		
-		// Back button
-		$button = new Button('history.back()', 'Back', 'backBut');
-		$fields['backButton'] = $button->render();
-		
-		$html = '';
-		// render edit and delete buttons for admins only
-		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
-			$html .= '&nbsp;&nbsp;';
-			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "editBut");
-			$html .= $button->render();
-			$html .= '&nbsp;&nbsp;';
-			$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
-				$('#dialogDiv').dialog({
-				buttons: {
-					'OK': function(event, ui) {						
-						$('#deleteOID').attr('value', '".$this->BO->getOID()."');
-						$('#deleteForm').submit();
-					},
-					'Cancel': function(event, ui) {
-						$(this).dialog('close');
-					}
-				}
-			})
-			$('#dialogDiv').dialog('open');
-			return false;";
-			$button = new Button($js, "Delete", "deleteBut");
-			$html .= $button->render();
-		}
-		$fields['adminButtons'] = $html;
-		
-		$this->loadTemplate($this->BO, 'detail', $fields);
+		echo $body;
 		
 		if(method_exists($this, 'after_detailedView_callback'))
 			$this->after_detailedView_callback();
@@ -448,7 +259,7 @@ class AlphaView {
 	/**
 	 * Renders the admin view for the business object screen to standard output
 	 * 
-	 * @param array $fields Hash array of HTML fields to pass to the template
+	 * @param array $fields Hash array of fields to pass to the template
 	 * @since 1.0
 	 */
 	public function adminView($fields=array()) {
@@ -457,101 +268,12 @@ class AlphaView {
 		if(method_exists($this, 'before_adminView_callback'))
 			$this->before_adminView_callback();
 		
-		global $config;
+		global $config; 
+			
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
+		$body = $provider->adminView($fields);
 		
-		// the form action
-		$fields['formAction'] = $_SERVER['REQUEST_URI'];
-		
-		// the class name of the BO
-		$fields['className'] = get_class($this->BO);
-		
-		// the table name in the DB for the BO
-		$fields['tableName'] = $this->BO->getTableName();
-		
-		// record count for the BO in the DB
-		$fields['count'] = ($this->BO->checkTableExists() ? $this->BO->getCount() : '<span class="warning">unavailable</span>');
-
-		// table exists in the DB?
-		$fields['tableExists'] = ($this->BO->checkTableExists() ? '<span class="success">Yes</span>' : '<span class="warning">No</span>');
-		
-		// table schema needs to be updated in the DB?
-		$fields['tableNeedsUpdate'] = ($this->BO->checkTableNeedsUpdate() ? '<span class="warning">Yes</span>' : '<span class="success">No</span>');
-
-		// create button
-		if($this->BO->checkTableExists()) {
-			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Create&bo='.get_class($this->BO))."'", "Create New", "create".get_class($this->BO)."But");
-			$fields['createButton'] = $button->render();
-		}else{
-			$fields['createButton'] = '';
-		}
-		
-		// list all button
-		if($this->BO->checkTableExists()) {
-			$button = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "List All", "list".get_class($this->BO)."But");
-			$fields['listButton'] = $button->render();
-		}else{
-			$fields['listButton'] = '';
-		}
-		
-		// the create table button (if required)
-		$html = '';
-		if (!$this->BO->checkTableExists()) {			
-			$button = new Button("submit", "Create Table", "createTableBut");
-			$html .= $button->render();
-			// hidden field so that we know which class to create the table for
-			$html .= '<input type="hidden" name="createTableClass" value="'.get_class($this->BO).'"/>';
-		}
-		$fields['createTableButton'] = $html;
-		
-		// recreate and update table buttons (if required)
-		$html = '';
-		if ($this->BO->checkTableNeedsUpdate() && $this->BO->checkTableExists()) {			
-			$js = "$('#dialogDiv').text('Are you sure you wish to recreate this class table (all data will be lost)?');
-				$('#dialogDiv').dialog({
-				buttons: {
-					'OK': function(event, ui) {
-						$('#admin_".get_class($this->BO)."_button_pressed').attr('value', 'recreateTableBut');
-						$('#admin_".get_class($this->BO)."').submit();
-					},
-					'Cancel': function(event, ui) {
-						$(this).dialog('close');
-					}
-				}
-			})
-			$('#dialogDiv').dialog('open');
-			return false;";
-			$button = new Button($js , "Recreate Table", "recreateTableBut");
-			$html .= $button->render();
-			// hidden field so that we know which class to recreate the table for
-			$html .= '<input type="hidden" name="recreateTableClass" value="'.get_class($this->BO).'"/>';
-			$html .= '&nbsp;&nbsp;';
-			$js = "$('#dialogDiv').text('Are you sure you wish to attempt to modify this class table by adding new attributes?');
-				$('#dialogDiv').dialog({
-				buttons: {
-					'OK': function(event, ui) {
-						$('#admin_".get_class($this->BO)."_button_pressed').attr('value', 'updateTableBut');
-						$('#admin_".get_class($this->BO)."').submit();
-					},
-					'Cancel': function(event, ui) {
-						$(this).dialog('close');
-					}
-				}
-			})
-			$('#dialogDiv').dialog('open');
-			return false;";
-			$button = new Button($js , "Update Table", "updateTableBut");
-			$html .= $button->render();
-			// hidden field so that we know which class to update the table for
-			$html .= '<input type="hidden" name="updateTableClass" value="'.get_class($this->BO).'"/>';
-			// hidden field to tell us which button was pressed
-			$html .= '<input type="hidden" id="admin_'.get_class($this->BO).'_button_pressed" name="admin_'.get_class($this->BO).'_button_pressed" value=""/>';
-		}
-		$fields['recreateOrUpdateButtons'] = $html;
-		
-		// buffer security fields to $formSecurityFields variable
-		$fields['formSecurityFields'] = $this->renderSecurityFields();
-		
-		$this->loadTemplate($this->BO, 'admin', $fields);
+		echo $body;
 		
 		if(method_exists($this, 'after_adminView_callback'))
 			$this->after_adminView_callback();

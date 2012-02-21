@@ -82,6 +82,7 @@ class AlphaAutoLoader {
 					$config->get('sysRoot').'alpha/model/types/',
 					$config->get('sysRoot').'alpha/view/',
 					$config->get('sysRoot').'alpha/view/widgets/',
+					$config->get('sysRoot').'alpha/view/renderers/',
 					$config->get('sysRoot').'alpha/util/',
 					$config->get('sysRoot').'alpha/util/cache/',
 					$config->get('sysRoot').'alpha/util/codehighlight/',
