@@ -99,7 +99,7 @@ class ArticleCommentView extends AlphaView {
 		echo '<input type="hidden" name="articleOID" value="'.$this->BO->get('articleOID').'"/>';
 		echo '<tr><td colspan="2">';
 		
-		$button = new button('submit', 'Post Comment', 'createBut');
+		$button = new Button('submit', 'Post Comment', 'createBut');
 		echo $button->render();
 			
 		echo '</td></tr>';
@@ -132,7 +132,7 @@ class ArticleCommentView extends AlphaView {
 		if ($_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
 			echo '<tr><td colspan="2">';
 			
-			$temp = new button('submit', 'Save', 'saveBut');
+			$temp = new Button('submit', 'Save', 'saveBut');
 			echo $temp->render();
 			echo '&nbsp;&nbsp;';
 			$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
@@ -152,7 +152,7 @@ class ArticleCommentView extends AlphaView {
 			$temp = new Button($js, "Delete", "deleteBut");
 			echo $temp->render();
 			echo '&nbsp;&nbsp;';
-			$temp = new button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'",'Back to List','cancelBut');
+			$temp = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'",'Back to List','cancelBut');
 			echo $temp->render();
 			echo '</td></tr>';
 			
@@ -163,7 +163,7 @@ class ArticleCommentView extends AlphaView {
 			echo '</table>';
 			
 			echo '<div align="center">';
-			$temp = new button('submit', 'Update Your Comment', 'saveBut'.$this->BO->getID());
+			$temp = new Button('submit', 'Update Your Comment', 'saveBut'.$this->BO->getID());
 			echo $temp->render();
 			echo '</div>';
 			

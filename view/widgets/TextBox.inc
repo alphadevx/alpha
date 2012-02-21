@@ -147,12 +147,12 @@ class TextBox {
 		}
 		
 		if($markdown) {
-			$increaseTextArea = new button("document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = ".
+			$increaseTextArea = new Button("document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = ".
 				"(parseInt(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows) + 10);".
 				"document.getElementById('markdownTextBoxRows').value = (parseInt(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows));",
 		 		"Increase text area", $this->name."IncBut", $config->get('sysURL')."/alpha/images/icons/arrow_down.png");
 		}else{
-			$increaseTextArea = new button("document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = ".
+			$increaseTextArea = new Button("document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = ".
 				"(parseInt(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows) + 10);",
 		 		"Increase text area", $this->name."IncBut", $config->get('sysURL')."/alpha/images/icons/arrow_down.png");
 		}
@@ -160,13 +160,13 @@ class TextBox {
 		$html .= $increaseTextArea->render();
 		
 		if($markdown) {
-			$decreaseTextArea = new button("if(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows > 10) ".
+			$decreaseTextArea = new Button("if(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows > 10) ".
 				"{document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = (parseInt(document.getElementById('text_field_".
 				$this->name."_".$this->identifier."').rows) - 10)};".
 				"document.getElementById('markdownTextBoxRows').value = (parseInt(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows));",
 				"Decrease text area", $this->name."DecBut", $config->get('sysURL')."/alpha/images/icons/arrow_up.png");
 		}else{
-			$decreaseTextArea = new button("if(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows > 10) ".
+			$decreaseTextArea = new Button("if(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows > 10) ".
 				"{document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = (parseInt(document.getElementById('text_field_".
 				$this->name."_".$this->identifier."').rows) - 10)};",
 				"Decrease text area", $this->name."DecBut", $config->get('sysURL')."/alpha/images/icons/arrow_up.png");

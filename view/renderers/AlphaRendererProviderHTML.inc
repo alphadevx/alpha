@@ -751,7 +751,6 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		self::$logger->debug('<<renderSecurityFields ['.$html.']');
 		return $html;
 	}
-	}
 	
 	/**
 	 * (non-PHPdoc)
