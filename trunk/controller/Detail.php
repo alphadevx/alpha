@@ -237,12 +237,28 @@ class Detail extends AlphaController implements AlphaControllerInterface {
 	 * @since 1.0
 	 */
 	public function before_displayPageHead_callback() {
-		if($this->title == '')
+		if($this->title == '' && isset($this->BO))
 			$this->setTitle('Displaying '.$this->BOName.' number '.$this->BO->getID());
-		if($this->description == '')
+		if($this->description == '' && isset($this->BO))
 			$this->setDescription('Page to display '.$this->BOName.' number '.$this->BO->getID());
 		if($this->keywords == '')
 			$this->setKeywords('display,details,'.$this->BOName);
+	}
+	
+	/**
+	 * Use this callback to inject in the admin menu template fragment for admin users of
+	 * the backend only.
+	 * 
+	 * @since 1.2
+	 */
+	public function after_displayPageHead_callback() {
+		$menu = '';
+		
+		if (isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+			$menu .= AlphaView::loadTemplateFragment('html', 'adminmenu.phtml', array());
+		}
+		
+		return $menu;
 	}
 }
 

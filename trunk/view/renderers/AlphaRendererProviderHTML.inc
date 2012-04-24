@@ -451,7 +451,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaRendererProviderHTML');
 
-		self::$logger->debug('>>displayPageHead(controller=['.var_export($controller, true).'], renderMenu=['.$renderMenu.'], renderStatus=['.$renderStatus.'])');
+		self::$logger->debug('>>displayPageHead(controller=['.var_export($controller, true).'])');
 
 		if(method_exists($controller, 'before_displayPageHead_callback'))
 			$controller->before_displayPageHead_callback();
@@ -564,11 +564,9 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		
 		// checkbox JS
 		$html.= '<script type="text/javascript">';
-		//$html .= '$(function() {';
 		$html.= '	(function($) {';
 		$html.= '		$(document).ready(function(){';
 		$html .= '			$(":checkbox").checkbox();';
-		//$html .= '});';
 		$html.= '		});';
 		$html.= '	})(jQuery);';
 		$html.= '</script>';
@@ -591,41 +589,17 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 			$html.= $controller->insert_CMSDisplayStandardHeader_callback();
 		
 		$html .= '<div id="recordSelector"></div>';
-			
-		//if($controller->getTitle() != '')
-			//$html.= '<h1>'.$controller->getTitle().'</h1>';
-		
-		if ($renderMenu && isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
-			$html .= '<ul id="adminmenu" class="potato-menu">
-						<li><a href="'.$config->get('sysURL').'">Home</a></li>
-						<li><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Admin Home</a></li>
-						<li><a href="#">Logs &raquo;</a>			
-							<ul>
-								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysLogFile')).'">System Log</a></li>
-								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/search.log').'">Search Log</a></li>
-								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/feeds.log').'">Feed Log</a></li>
-								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/tasks.log').'">Cron Tasks Log</a></li>
-							</ul>
-						</li>
-						<li><a href="'.FrontController::generateSecureURL('act=GenSecureQueryStrings').'">Generate Secure URL</a></li>
-						<li><a href="'.FrontController::generateSecureURL('act=ViewMetrics').'">Software Metrics</a></li>
-						<li><a href="'.FrontController::generateSecureURL('act=CacheManager').'">Manage Cache</a></li>
-						<li><a href="'.FrontController::generateSecureURL('act=TagManager').'">Manage Tags</a></li>
-						<li><a href="'.FrontController::generateSecureURL('act=ListDEnums').'">Manage DEnums</a></li>
-						<li><a href="'.FrontController::generateSecureURL('act=ListSequences').'">Manage Sequences</a></li>
-						<li><a href="'.FrontController::generateSecureURL('act=ViewTestResults').'">Unit Tests</a></li>
-					</ul>';
-		}
 		
 		if(method_exists($controller, 'after_displayPageHead_callback'))
 			$html.= $controller->after_displayPageHead_callback();
 
-		if($renderStatus) {
+		// TODO need to move this elsewhere as the $renderStatus param is no longer provided
+		/*if($renderStatus) {
 			// render a status message if there is any
 			$message = $controller->getStatusMessage();
 			if(!empty($message))
 				$html .= $message;
-		}
+		}*/
 			
 		self::$logger->debug('<<displayPageHead [HTML]');
 		return $html;
