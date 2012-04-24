@@ -453,6 +453,17 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		$report->printResult($result);
 		echo '</pre></p></div>';
 	}
+	
+	/**
+	 * Use this callback to inject in the admin menu template fragment
+	 * 
+	 * @since 1.2
+	 */
+	public function after_displayPageHead_callback() {
+		$menu = AlphaView::loadTemplateFragment('html', 'adminmenu.phtml', array());
+		
+		return $menu;
+	}
 }
 
 // now build the new controller if this file is called directly

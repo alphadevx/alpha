@@ -186,6 +186,7 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 	 * @since 1.0
 	 */
 	private function displayBodyContent() {
+		
 		$classNames = AlphaDAO::getBOClassNames();
 		$loadedClasses = array();
 		
@@ -220,6 +221,17 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 				echo AlphaView::displayErrorMessage('Error accessing the class ['.$classname.'], check the log!');
 			}
 		}
+	}
+	
+	/**
+	 * Use this callback to inject in the admin menu template fragment
+	 * 
+	 * @since 1.2
+	 */
+	public function after_displayPageHead_callback() {
+		$menu = AlphaView::loadTemplateFragment('html', 'adminmenu.phtml', array());
+		
+		return $menu;
 	}
 }
 
