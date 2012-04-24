@@ -282,196 +282,28 @@ class AlphaView {
 	}
 	
 	/**
-	 * Method to render the page header HTML content
+	 * Method to render the page header content
 	 * 
 	 * @param AlphaController $controller
-	 * @param bool $renderMenu Set to false to hide the default menu (default value is true)
-	 * @param bool $renderStatus Set to false to hide the status message from the session (if any, default value is true)
 	 * @return string
 	 * @throws IllegalArguementException
 	 * @since 1.0
 	 */
-	public static function displayPageHead($controller, $renderMenu = true, $renderStatus = true) {
+	public static function displayPageHead($controller) {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaView');
-		self::$logger->debug('>>displayPageHead(controller=['.var_export($controller, true).'], renderMenu=['.$renderMenu.'], renderStatus=['.$renderStatus.'])');
+		self::$logger->debug('>>displayPageHead(controller=['.var_export($controller, true).'])');
 		
 		if(method_exists($controller, 'before_displayPageHead_callback'))
 			$controller->before_displayPageHead_callback();
 		
-		global $config;
-		
-		if(!AlphaController::checkControllerDefExists(get_class($controller)))
-			throw new IllegalArguementException('The controller provided ['.get_class($controller).'] is not defined anywhere!');
-		
-		$html = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">';
-		
-		$html.= '<html>';
-		$html.= '<head>';
-		$html.= '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">';
-		$html.= '<title>'.$controller->getTitle().'</title>';
-		if($controller->getKeywords() != '')
-			$html.= '<meta name="Keywords" content="'.$controller->getKeywords().'">';
-		if($controller->getDescription() != '')
-			$html.= '<meta name="Description" content="'.$controller->getDescription().'">';
-		$html.= '<meta name="title" content="'.$controller->getTitle().'">';
-		$html.= '<meta name="robots" content="index,follow,NOODP">';
-		if ($controller->getBO() != null && $controller->getBO()->hasAttribute('URL')) {
-			$URL = $controller->getBO()->get('URL');
-			if($URL != '')
-				$html.= '<link rel="canonical" href="'.$URL.'" />';
-		}
-		$html.= '<meta http-equiv="imagetoolbar" content="no">';
-
-		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/ui/themes/'.$config->get('sysTheme').'/jquery.ui.all.css">';
-		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/css/alpha.css">';
-		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
-		
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jquery-1.5.1.min.js"></script>';
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/scripts/validation.js"></script>';
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/contextMenu/jquery.contextMenu.js"></script>';
-		
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery-ui-1.8.11.custom.min.js"></script>';
-		
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery.ui.potato.menu.js"></script>';
-		
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery.ui.checkbox.js"></script>';
-		
-		// handle force-frames
-		if($config->get('sysForceFrame')) {
-			// if no-forceframe=true or we are in the admin backend, don't force frame
-			if(!isset($_GET['no-forceframe']) && strpos($_SERVER['REQUEST_URI'], '/tk/') === false) {
-				$html.= '<script type="text/javascript">';
-				$html.= 'pageLoc = self.location;';
-				$html.= 'pageAdd = top.location;';
-		 
-				$html.= 'if (pageLoc == pageAdd) {';
-				$html.= '    contentSrc = escape(pageLoc);';
-				$html.= '    contPage = \''.$config->get('sysURL').'?\' + contentSrc;';
-				$html.= '    top.location.href = contPage;';
-				$html.= '}';
-				$html.= '</script>';
-			}
-		}
-		
-		if (isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
-			$html.= '<script type="text/javascript">';
-			$html.= '	(function($) {';
-			$html.= '		$(document).ready(function(){';
-			$html.= '		$("#adminmenu").ptMenu();';
-			$html.= '	});';
-			$html.= '})(jQuery);';
-			$html.= '</script>';
-		}
-		
-		// general dialog defaults
-		$html.= '<script type="text/javascript">';
-		$html.= '	(function($) {';
-		$html.= '		var dialogCoords = [(screen.width/2)-200, (screen.height/2)-200];';
-		$html.= '		$(document).ready(function(){';
-		$html.= '			$.extend($.ui.dialog.prototype.options, {';
-		$html.= '				modal: true,';
-		$html.= '	        	resizable: false,';
-		$html.= '	        	draggable: false,';
-		$html.= '	        	autoOpen: false,';
-		$html.= '	        	height: 200,';
-		$html.= '	        	width: 400,';
-		$html.= '	        	position: dialogCoords,';
-		$html.= '	        	buttons: {';
-		$html.= '	        		"Cancel": function() {';
-		$html.= '						$(this).dialog("close");';
-		$html.= '					}';
-		$html.= '				}';
-		$html.= '			});';
-		$html.= '		});';
-		$html.= '	})(jQuery);';
-		$html.= '</script>';
-		
-		// record selector JS
-		$html.= '<script type="text/javascript">';
-		$html.= '	(function($) {';
-		$html.= '		$(document).ready(function(){';
-		$html.= '			var dialogOpts = {';
-		$html.= '			    title: "Record selector",';
-		$html.= '			    modal: true,';
-		$html.= '			    resizable: false,';
-		$html.= '			    draggable: false,';
-		$html.= '			    autoOpen: false,';
-		$html.= '			    height: 300,';
-		$html.= '			    width: 600';
-		$html.= '			};';
-		$html.= '			$("#recordSelector").dialog(dialogOpts);';
-		$html.= '		});';
-		$html.= '	})(jQuery);';
-		$html.= '</script>';
-		
-		// checkbox JS
-		$html.= '<script type="text/javascript">';
-		//$html .= '$(function() {';
-		$html.= '	(function($) {';
-		$html.= '		$(document).ready(function(){';
-		$html .= '			$(":checkbox").checkbox();';
-		//$html .= '});';
-		$html.= '		});';
-		$html.= '	})(jQuery);';
-		$html.= '</script>';
-		
-		
-		if(method_exists($controller, 'during_displayPageHead_callback'))
-			$html.= $controller->during_displayPageHead_callback();
-
-		$html.= '</head>';
-		try {
-			if($controller->getBO() != null)
-				$html.= '<body'.($controller->getBO()->get('bodyOnload') != '' ? ' onload="'.$controller->getBO()->get('bodyOnload').'"' : '').'>';
-			else
-				$html.= '<body>';
-		} catch (AlphaException $e) {
-			$html.= '<body>';
-		}
-		
-		if(method_exists($controller, 'insert_CMSDisplayStandardHeader_callback'))
-			$html.= $controller->insert_CMSDisplayStandardHeader_callback();
-		
-		$html .= '<div id="recordSelector"></div>';
+		global $config; 
 			
-		//if($controller->getTitle() != '')
-			//$html.= '<h1>'.$controller->getTitle().'</h1>';
-		
-		if ($renderMenu && isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
-			$html .= '<ul id="adminmenu" class="potato-menu">
-						<li><a href="'.$config->get('sysURL').'">Home</a></li>
-						<li><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Admin Home</a></li>
-						<li><a href="#">Logs &raquo;</a>			
-							<ul>
-								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysLogFile')).'">System Log</a></li>
-								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/search.log').'">Search Log</a></li>
-								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/feeds.log').'">Feed Log</a></li>
-								<li><a href="'.FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/tasks.log').'">Cron Tasks Log</a></li>
-							</ul>
-						</li>
-						<li><a href="'.FrontController::generateSecureURL('act=GenSecureQueryStrings').'">Generate Secure URL</a></li>
-						<li><a href="'.FrontController::generateSecureURL('act=ViewMetrics').'">Software Metrics</a></li>
-						<li><a href="'.FrontController::generateSecureURL('act=CacheManager').'">Manage Cache</a></li>
-						<li><a href="'.FrontController::generateSecureURL('act=TagManager').'">Manage Tags</a></li>
-						<li><a href="'.FrontController::generateSecureURL('act=ListDEnums').'">Manage DEnums</a></li>
-						<li><a href="'.FrontController::generateSecureURL('act=ListSequences').'">Manage Sequences</a></li>
-						<li><a href="'.FrontController::generateSecureURL('act=ViewTestResults').'">Unit Tests</a></li>
-					</ul>';
-		}
-		
-		if(method_exists($controller, 'after_displayPageHead_callback'))
-			$html.= $controller->after_displayPageHead_callback();
-
-		if($renderStatus) {
-			// render a status message if there is any
-			$message = $controller->getStatusMessage();
-			if(!empty($message))
-				$html .= $message;
-		}
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), new PersonObject());
+		eval('$header = '.get_class($provider).'::displayPageHead($controller);');
 			
-		self::$logger->debug('<<displayPageHead ['.$html.']');
-		return $html;
+		self::$logger->debug('<<displayPageHead ['.$header.']');
+		return $header;
 	}
 	
 	/**
@@ -480,6 +312,7 @@ class AlphaView {
 	 * @param AlphaController $controller
 	 * @return string
 	 * @since 1.0
+	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public static function displayPageFoot($controller) {
 		if(self::$logger == null)		
@@ -508,6 +341,7 @@ class AlphaView {
 	 * @param string $message
 	 * @return string
 	 * @since 1.0
+	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public static function displayUpdateMessage($message) {
 		if(self::$logger == null)
@@ -528,6 +362,7 @@ class AlphaView {
 	 * @param string $message
 	 * @return string
 	 * @since 1.0
+	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public static function displayErrorMessage($message) {
 		if(self::$logger == null)
@@ -549,6 +384,7 @@ class AlphaView {
 	 * @param string $message
 	 * @return string
 	 * @since 1.0
+	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public static function renderErrorPage($code, $message) {
 		global $config;		
@@ -573,6 +409,7 @@ class AlphaView {
 	 * 
 	 * @return string
 	 * @since 1.0
+	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public static function renderDeleteForm() {
 		if(self::$logger == null)
@@ -595,6 +432,7 @@ class AlphaView {
 	 * 
 	 * @return string
 	 * @since 1.0
+	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public static function renderSecurityFields() {
 		if(self::$logger == null)
@@ -622,6 +460,7 @@ class AlphaView {
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.0
+	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public function renderIntegerField($name, $label, $mode, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderIntegerField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
@@ -670,6 +509,7 @@ class AlphaView {
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.0
+	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public static function renderDoubleField($name, $label, $mode, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderDoubleField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
@@ -718,6 +558,7 @@ class AlphaView {
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.0
+	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public function renderBooleanField($name, $label, $mode, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderBooleanField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
@@ -774,6 +615,7 @@ class AlphaView {
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.0
+	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public static function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
@@ -843,6 +685,7 @@ class AlphaView {
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.0
+	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public static function renderDEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderDEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
@@ -911,6 +754,7 @@ class AlphaView {
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.0
+	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public function renderDefaultField($name, $label, $mode, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderDefaultField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
@@ -976,6 +820,7 @@ class AlphaView {
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.0
+	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public function renderTextField($name, $label, $mode, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderTextField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
@@ -1048,6 +893,7 @@ class AlphaView {
 	 * @param bool $buttons Render buttons for expanding/contacting the related fields (optional)
 	 * @return string
 	 * @since 1.0
+	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public function renderRelationField($name, $label, $mode, $value='', $tableTags=true, $expanded=false, $buttons=true) {
 		self::$logger->debug('>>renderRelationField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'], expanded=['.$expanded.'], buttons=['.$buttons.'])');
@@ -1106,6 +952,7 @@ class AlphaView {
 	 * @param array $readOnlyFields Optional list of fields to render in a readonly fashion when rendering in create or edit mode
 	 * @return string
 	 * @since 1.0
+	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public function renderAllFields($mode, $filterFields=array(), $readOnlyFields=array()) {
 		self::$logger->debug('>>renderAllFields(mode=['.$mode.'], filterFields=['.var_export($filterFields, true).'], readOnlyFields=['.var_export($readOnlyFields, true).'])');
@@ -1221,7 +1068,7 @@ class AlphaView {
 	}
 	
 	/**
-	 * Loads a .phtml template for the BO specified if one exists.  Lower level custom templates
+	 * Loads a template for the BO specified if one exists.  Lower level custom templates
 	 * take precedence.
 	 * 
 	 * @param AlphaDAO $BO
@@ -1279,5 +1126,43 @@ class AlphaView {
 		
 		self::$logger->debug('<<loadTemplate');
 	}
+	
+	/**
+	 * Loads a template fragment from the renderers/templates/[type]/fragment/[filename.ext] location.
+	 * 
+	 * @param string $type Currently only html support, later json and xml.
+	 * @param string $fileName The name of the fragment file
+	 * @param array $fields A hash array of field values to pass to the template fragment.
+	 * @since 1.2
+	 * @throws IllegalArguementException
+	 */
+	public static function loadTemplateFragment($type, $fileName, $fields) {
+		if(self::$logger == null)
+			self::$logger = new Logger('AlphaView');
+		self::$logger->debug('>>loadTemplateFragment(type=['.$type.'], fileName=['.$fileName.'], fields=['.var_export($fields, true).'])');
+		
+		global $config;
+		
+		// loop over the $fields array and create a local variable for each key value
+		foreach (array_keys($fields) as $fieldName)
+			${$fieldName} = $fields[$fieldName];
+
+		$customPath = $config->get('sysRoot').'view/renderers/templates/'.$type.'/fragments/'.$fileName;
+		$defaultPath = $config->get('sysRoot').'alpha/view/renderers/templates/'.$type.'/fragments/'.$fileName;
+
+		// Check to see if a custom template exists for this BO, and if it does load that		
+		if (file_exists($customPath)) {
+			self::$logger->debug('Loading template ['.$customPath.']');
+			require $customPath;				
+		}elseif (file_exists($defaultPath)) {
+			self::$logger->debug('Loading template ['.$defaultPath.']');
+			require $defaultPath;
+		}else{
+			throw new IllegalArguementException('Template fragment not found in ['.$customPath.'] or ['.$defaultPath.']!');
+		}
+		
+		self::$logger->debug('<<loadTemplateFragment');
+	}
 }
+
 ?>
