@@ -227,6 +227,22 @@ class CreateArticle extends AlphaController implements AlphaControllerInterface 
 		
 		return $html;
 	}
+	
+	/**
+	 * Use this callback to inject in the admin menu template fragment for admin users of
+	 * the backend only.
+	 * 
+	 * @since 1.2
+	 */
+	public function after_displayPageHead_callback() {
+		$menu = '';
+		
+		if (isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+			$menu .= AlphaView::loadTemplateFragment('html', 'adminmenu.phtml', array());
+		}
+		
+		return $menu;
+	}
 }
 
 // now build the new controller
