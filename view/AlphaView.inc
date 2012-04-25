@@ -301,6 +301,9 @@ class AlphaView {
 			
 		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), new PersonObject());
 		eval('$header = '.get_class($provider).'::displayPageHead($controller);');
+		
+		if(method_exists($controller, 'after_displayPageHead_callback'))
+			$header.= $controller->after_displayPageHead_callback();
 			
 		self::$logger->debug('<<displayPageHead ['.$header.']');
 		return $header;
@@ -312,27 +315,28 @@ class AlphaView {
 	 * @param AlphaController $controller
 	 * @return string
 	 * @since 1.0
-	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public static function displayPageFoot($controller) {
 		if(self::$logger == null)		
 			self::$logger = new Logger('AlphaView');
 		
 		self::$logger->debug('>>displayPageFoot(controller=['.get_class($controller).'])');
-		$html = '';
+		
+		global $config;
+		
+		$footer = '';
 		
 		if(method_exists($controller, 'before_displayPageFoot_callback'))
-			$html .= $controller->before_displayPageFoot_callback();
+			$footer .= $controller->before_displayPageFoot_callback();
 		
-		$html .= '<div id="dialogDiv"></div>';
-		$html .= '</body>';
-		$html .= '</html>';
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), new PersonObject());
+		eval('$footer .= '.get_class($provider).'::displayPageFoot($controller);');
 		
 		if(method_exists($controller, 'after_displayPageFoot_callback'))
-			$this->after_displayPageFoot_callback();
+			$footer .= $controller->after_displayPageFoot_callback();
 			
-		self::$logger->debug('<<displayPageFoot ['.$html.']');
-		return $html;
+		self::$logger->debug('<<displayPageFoot ['.$footer.']');
+		return $footer;
 	}
 	
 	/**

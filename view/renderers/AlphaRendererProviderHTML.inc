@@ -452,9 +452,6 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 			self::$logger = new Logger('AlphaRendererProviderHTML');
 
 		self::$logger->debug('>>displayPageHead(controller=['.var_export($controller, true).'])');
-
-		if(method_exists($controller, 'before_displayPageHead_callback'))
-			$controller->before_displayPageHead_callback();
 		
 		global $config;
 		
@@ -589,9 +586,6 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 			$html.= $controller->insert_CMSDisplayStandardHeader_callback();
 		
 		$html .= '<div id="recordSelector"></div>';
-		
-		if(method_exists($controller, 'after_displayPageHead_callback'))
-			$html.= $controller->after_displayPageHead_callback();
 
 		// TODO need to move this elsewhere as the $renderStatus param is no longer provided
 		/*if($renderStatus) {
@@ -617,15 +611,9 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 
 		$html = '';
 		
-		if(method_exists($controller, 'before_displayPageFoot_callback'))
-			$html .= $controller->before_displayPageFoot_callback();
-		
 		$html .= '<div id="dialogDiv"></div>';
 		$html .= '</body>';
 		$html .= '</html>';
-		
-		if(method_exists($controller, 'after_displayPageFoot_callback'))
-			$controller->after_displayPageFoot_callback();
 			
 		self::$logger->debug('<<displayPageFoot ['.$html.']');
 		return $html;
