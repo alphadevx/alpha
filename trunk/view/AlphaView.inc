@@ -310,7 +310,7 @@ class AlphaView {
 	}
 	
 	/**
-	 * Method to render the page footer HTML
+	 * Method to render the page footer content
 	 * 
 	 * @param AlphaController $controller
 	 * @return string
@@ -340,45 +340,45 @@ class AlphaView {
 	}
 	
 	/**
-	 * Renders the HTML for an update (e.g. successful save) message
+	 * Renders the content for an update (e.g. successful save) message
 	 * 
 	 * @param string $message
 	 * @return string
 	 * @since 1.0
-	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public static function displayUpdateMessage($message) {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaView');
 		self::$logger->debug('>>displayUpdateMessage(message=['.$message.'])');
 		
-		$html = '<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
-				<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
-				'.$message.'</p></div>';
+		global $config;
 		
-		self::$logger->debug('<<displayUpdateMessage ['.$html.']');
-		return $html;
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), new PersonObject());
+		eval('$message = '.get_class($provider).'::displayUpdateMessage($message);');
+		
+		self::$logger->info('<<displayUpdateMessage ['.$message.']');
+		return $message;
 	}
 	
 	/**
-	 * Renders the HTML for an error (e.g. save failed) message
+	 * Renders the content for an error (e.g. save failed) message
 	 * 
 	 * @param string $message
 	 * @return string
 	 * @since 1.0
-	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public static function displayErrorMessage($message) {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaView');
 		self::$logger->debug('>>displayErrorMessage(message=['.$message.'])');
 		
-		$html = '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
-				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
-				'.$message.'</p></div>';
+		global $config;
 		
-		self::$logger->debug('<<displayErrorMessage ['.$html.']');
-		return $html;
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), new PersonObject());
+		eval('$message = '.get_class($provider).'::displayErrorMessage($message);');
+		
+		self::$logger->debug('<<displayErrorMessage ['.$message.']');
+		return $message;
 	}
 	
 	/**
