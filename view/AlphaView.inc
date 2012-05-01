@@ -268,7 +268,7 @@ class AlphaView {
 		if(method_exists($this, 'before_adminView_callback'))
 			$this->before_adminView_callback();
 		
-		global $config; 
+		global $config;
 			
 		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
 		$body = $provider->adminView($fields);
@@ -356,7 +356,7 @@ class AlphaView {
 		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), new PersonObject());
 		eval('$message = '.get_class($provider).'::displayUpdateMessage($message);');
 		
-		self::$logger->info('<<displayUpdateMessage ['.$message.']');
+		self::$logger->debug('<<displayUpdateMessage ['.$message.']');
 		return $message;
 	}
 	
@@ -382,48 +382,42 @@ class AlphaView {
 	}
 	
 	/**
-	 * Renders a HTML error page with the supplied error code (typlically a HTTP code) and a message
+	 * Renders an error page with the supplied error code (typlically a HTTP code) and a message
 	 * 
 	 * @param string $code
 	 * @param string $message
 	 * @return string
 	 * @since 1.0
-	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public static function renderErrorPage($code, $message) {
-		global $config;		
+		if(self::$logger == null)
+			self::$logger = new Logger('AlphaView');
+		self::$logger->debug('>>renderErrorPage(code=['.$code.'],message=['.$message.'])');
 		
-		$html = '<html><head>';
-		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/ui/themes/'.$config->get('sysTheme').'/jquery.ui.all.css">';
-		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/css/alpha.css">';
-		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
-		$html .= '<title>'.$code.' - '.$message.'</title></head>';
-		$html .= '<body>';
-		$html .= '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 
-				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
-				<strong>'.$code.':</strong> '.$message.'</p>
-				</div>';
-		$html .= '</body></html>';
+		global $config;
 		
-		return $html;
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), new PersonObject());
+		eval('$message = '.get_class($provider).'::renderErrorPage($code, $message);');
+		
+		self::$logger->debug('<<renderErrorPage ['.$message.']');
+		return $message;
 	}
 	
 	/**
-	 * Method to render a hidden form for posting the OID of an object to be deleted
+	 * Method to render a hidden HTML form for posting the OID of an object to be deleted
 	 * 
 	 * @return string
 	 * @since 1.0
-	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public static function renderDeleteForm() {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaView');
 		self::$logger->debug('>>renderDeleteForm()');
 		
-		$html = '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" id="deleteForm">';		
-		$html .= '<input type="hidden" name="deleteOID" id="deleteOID" value=""/>';
-		$html .= self::renderSecurityFields();
-		$html .= '</form>';
+		global $config;
+		
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), new PersonObject());
+		eval('$html = '.get_class($provider).'::renderDeleteForm();');
 		
 		self::$logger->debug('<<renderDeleteForm ['.$html.']');
 		return $html;
@@ -436,19 +430,16 @@ class AlphaView {
 	 * 
 	 * @return string
 	 * @since 1.0
-	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public static function renderSecurityFields() {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaView');
 		self::$logger->debug('>>renderSecurityFields()');
 		
-		$html = '';
+		global $config;
 		
-		$fields = AlphaController::generateSecurityFields();
-		
-		$html .= '<input type="hidden" name="var1" value="'.$fields[0].'"/>';
-		$html .= '<input type="hidden" name="var2" value="'.$fields[1].'"/>';
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), new PersonObject());
+		eval('$html = '.get_class($provider).'::renderSecurityFields();');
 		
 		self::$logger->debug('<<renderSecurityFields ['.$html.']');
 		return $html;
@@ -464,41 +455,15 @@ class AlphaView {
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.0
-	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public function renderIntegerField($name, $label, $mode, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderIntegerField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
 		
-		$html = '';
+		global $config;
 		
-		if ($mode == 'create') {
-			if($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $label;
-				$html .= '</th>';
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
+		$html = $provider->renderIntegerField($name, $label, $mode, $value, $tableTags);
 		
-				$html .= '<td>';
-				$html .= '<input type="text" style="width:100%;" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<input type="text" style="width:100%;" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
-			}
-		}
-		
-		if ($mode == 'edit') {
-			if($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $label;
-				$html .= '</th>';
-	
-				$html .= '<td>';
-				$html .= '<input type="text" style="width:100%;" name="'.$name.'" value="'.$value.'"/><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<input type="text" style="width:100%;" name="'.$name.'" value="'.$value.'"/>';
-			}
-		}
-				
 		self::$logger->debug('<<renderIntegerField ['.$html.']');
 		return $html;
 	}
@@ -513,40 +478,14 @@ class AlphaView {
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.0
-	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public static function renderDoubleField($name, $label, $mode, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderDoubleField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
 		
-		$html = '';
+		global $config;
 		
-		if ($mode == 'create') {
-			if($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $label;
-				$html .= '</th>';
-		
-				$html .= '<td>';
-				$html .= '<input type="text" size="13" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<input type="text" size="13" name="'.$name.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/>';
-			}
-		}
-		
-		if ($mode == 'edit') {
-			if($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $label;
-				$html .= '</th>';
-	
-				$html .= '<td>';
-				$html .= '<input type="text" size="13" name="'.$name.'" value="'.$value.'"/><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<input type="text" size="13" name="'.$name.'" value="'.$value.'"/>';
-			}
-		}
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
+		$html = $provider->renderDoubleField($name, $label, $mode, $value, $tableTags);
 				
 		self::$logger->debug('<<renderDoubleField ['.$html.']');
 		return $html;
@@ -562,47 +501,14 @@ class AlphaView {
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.0
-	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public function renderBooleanField($name, $label, $mode, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderBooleanField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
 		
-		$html = '';
+		global $config;
 		
-		if ($mode == 'create') {
-			if($tableTags) {		
-				$html .= '<tr><th style="width:25%;">';
-				$html .= '<label for="'.$name.'">'.$label.'</label>';
-				$html .= '</th>';
-				
-				$html .= '<td>';
-				$html .= '<input type="hidden" name="'.$name.'" value="0">';
-				$html .= '<input type="checkbox" name="'.$name.'" id="'.$name.'" />';
-				$html .= '</td></tr>';
-			}else{
-				$html .= $label.'<select size="1" name="'.$name.'"/>';
-				$html .= '<option value="0" selected>No</option>';
-				$html .= '<option value="1">Yes</option>';
-				$html .= '</select>';
-			}
-		}
-		
-		if ($mode == 'edit') {
-			if($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= '<label for="'.$name.'">'.$label.'</label>';
-				$html .= '</th>';
-				
-				$html .= '<td>';
-				$html .= '<input type="hidden" name="'.$name.'" value="0">';
-				$html .= '<input type="checkbox" name="'.$name.'" id="'.$name.'"'.($value == '1'? ' checked':'').' />';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<label for="'.$name.'">'.$label.'</label>';
-				$html .= '<input type="hidden" name="'.$name.'" value="0">';
-				$html .= '<input type="checkbox" name="'.$name.'" id="'.$name.'"'.($value == '1'? ' checked':'').' />';
-			}
-		}
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
+		$html = $provider->renderBooleanField($name, $label, $mode, $value, $tableTags);
 				
 		self::$logger->debug('<<renderBooleanField ['.$html.']');
 		return $html;
@@ -619,60 +525,14 @@ class AlphaView {
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.0
-	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public static function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
 		
-		$html = '';
+		global $config;
 		
-		if ($mode == 'create') {
-			if ($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $label;
-				$html .= '</th>';
-				$html .= '<td>';
-				$html .= '<select name="'.$name.'"/>';			
-				foreach ($options as $val) {
-					$html .= '<option value="'.$val.'">'.$val.'</option>';
-				}
-				$html .= '</select><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<select name="'.$name.'"/>';			
-				foreach ($options as $val) {
-					$html .= '<option value="'.$val.'">'.$val.'</option>';
-				}
-				$html .= '</select>';
-			}
-		}
-		
-		if ($mode == 'edit') {
-			if ($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $label;
-				$html .= '</th>';
-				$html .= '<td>';
-				$html .= '<select name="'.$name.'"/>';			
-				foreach ($options as $val) {
-					if ($value == $val)
-						$html .= '<option value="'.$val.'" selected>'.$val.'</option>';
-					else
-						$html .= '<option value="'.$val.'">'.$val.'</option>';
-				}
-				$html .= '</select><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<select name="'.$name.'"/>';			
-				foreach ($options as $val) {
-					if ($value == $val)
-						$html .= '<option value="'.$val.'" selected>'.$val.'</option>';
-					else
-						$html .= '<option value="'.$val.'">'.$val.'</option>';
-				}
-				$html .= '</select>';
-			}
-		}
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
+		$html = $provider->renderEnumField($name, $label, $mode, $options, $value, $tableTags);
 				
 		self::$logger->debug('<<renderEnumField ['.$html.']');
 		return $html;
@@ -689,60 +549,14 @@ class AlphaView {
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.0
-	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public static function renderDEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderDEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
 		
-		$html = '';
+		global $config;
 		
-		if ($mode == 'create') {
-			if($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $label;
-				$html .= '</th>';
-				$html .= '<td>';
-				$html .= '<select name="'.$name.'"/>';
-				foreach (array_keys($options) as $index) {
-					$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
-				}
-				$html .= '</select><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<select name="'.$name.'"/>';
-				foreach (array_keys($options) as $index) {
-					$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
-				}
-				$html .= '</select>';
-			}
-		}
-		
-		if ($mode == 'edit') {
-			if($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $label;
-				$html .= '</th>';
-				$html .= '<td>';
-				$html .= '<select name="'.$name.'"/>';			
-				foreach (array_keys($options) as $index) {
-					if ($value == $index)
-						$html .= '<option value="'.$index.'" selected>'.$options[$index].'</option>';
-					else
-						$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
-				}
-				$html .= '</select><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<select name="'.$name.'"/>';			
-				foreach (array_keys($options) as $index) {
-					if ($value == $index)
-						$html .= '<option value="'.$index.'" selected>'.$options[$index].'</option>';
-					else
-						$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
-				}
-				$html .= '</select>';
-			}
-		}		
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
+		$html = $provider->renderDEnumField($name, $label, $mode, $options, $value, $tableTags);
 		
 		self::$logger->debug('<<renderDEnumField ['.$html.']');
 		return $html;
@@ -758,57 +572,14 @@ class AlphaView {
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.0
-	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public function renderDefaultField($name, $label, $mode, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderDefaultField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
 		
-		$html = '';
+		global $config;
 		
-		if ($mode == 'create') {
-			if($tableTags) {
-				$html .= '<tr><th colspan="2">';
-				$html .= $label;
-				$html .= '</th></tr>';
-		
-				$html .= '<tr><td colspan="2">';
-				$html .= '<textarea cols="100" rows="3" name="'.$name.'">'. (isset ($_POST[$name]) ? $_POST[$name] : '').'</textarea><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<textarea cols="100" rows="3" name="'.$name.'">'. (isset ($_POST[$name]) ? $_POST[$name] : '').'</textarea>';
-			}
-		}
-		
-		if ($mode == 'edit') {
-			if($tableTags) {		
-				$html .= '<tr><th colspan="2">';
-				$html .= $label;
-				$html .= '</th></tr>';
-	
-				$html .= '<tr><td colspan="2">';
-				$html .= '<textarea cols="100" rows="3" name="'.$name.'">'.$value.'</textarea><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<textarea cols="100" rows="3" name="'.$name.'">'.$value.'</textarea>';
-			}
-		}
-		
-		if ($mode == 'view') {
-			if($tableTags) {
-				$html .= '<tr><th>';
-				$html .= $label;
-				$html .= '</th>';
-	
-				$html .= '<td>&nbsp;';
-				if(method_exists($this, 'during_renderDefaultField_callback'))
-					$html .= $this->during_renderDefaultField_callback($name, $mode, $value);
-				else
-					$html .= $value;
-				$html .= '</td></tr>';
-			}else{
-				$html .= $value;
-			}
-		}
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
+		$html = $provider->renderDefaultField($name, $label, $mode, $value, $tableTags);
 		
 		self::$logger->debug('<<renderDefaultField ['.$html.']');
 		return $html;
@@ -824,62 +595,14 @@ class AlphaView {
 	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.0
-	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public function renderTextField($name, $label, $mode, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderTextField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
 		
-		$html = '';
+		global $config;
 		
-		if ($mode == 'create') {
-			// give 10 rows for content fields (other 5 by default)
-			if($name == 'content')
-				$text = new TextBox($this->BO->getPropObject($name), $label, $name, 10);
-			else
-				$text = new TextBox($this->BO->getPropObject($name), $label, $name);
-			$html .= $text->render($tableTags);
-		}
-		
-		if ($mode == 'edit') {
-			// give 10 rows for content fields (other 5 by default)
-			if($name == 'content') {
-				$viewState = ViewState::getInstance();
-				
-				if($viewState->get('markdownTextBoxRows') == '')
-					$text = new TextBox($this->BO->getPropObject($name), $label, $name, 10);
-				else
-					$text = new TextBox($this->BO->getPropObject($name), $label, $name, (integer)$viewState->get('markdownTextBoxRows'));
-					
-				$html .= $text->render($tableTags, true);
-			}else{
-				$text = new TextBox($this->BO->getPropObject($name), $label, $name);
-				$html .= $text->render($tableTags);
-			}
-		}
-		
-		if ($mode == 'view') {
-			if($tableTags)
-				$html .= '<tr><th>';
-				
-			$html .= $label;
-			
-			if($tableTags)
-				$html .= '</th>';
-			
-			// filter ouput to prevent malicious injection
-			$value = InputFilter::encode($value);
-
-			// ensures that line returns are rendered
-			$value = str_replace("\n", '<br>', $value);
-			
-			if($tableTags)
-				$html .= '<td>&nbsp;';
-				
-			$html .= $value;
-			
-			if($tableTags)
-				$html .= '</td></tr>';
-		}
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
+		$html = $provider->renderTextField($name, $label, $mode, $value, $tableTags);
 		
 		self::$logger->debug('<<renderTextField ['.$html.']');
 		return $html;
@@ -897,52 +620,14 @@ class AlphaView {
 	 * @param bool $buttons Render buttons for expanding/contacting the related fields (optional)
 	 * @return string
 	 * @since 1.0
-	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public function renderRelationField($name, $label, $mode, $value='', $tableTags=true, $expanded=false, $buttons=true) {
 		self::$logger->debug('>>renderRelationField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'], expanded=['.$expanded.'], buttons=['.$buttons.'])');
 		
-		$html = '';
+		global $config;
 		
-		$rel = $this->BO->getPropObject($name);
-		
-		if ($mode == 'create' || $mode == 'edit') {
-			if($rel->getRelationType() == 'MANY-TO-MANY') {
-				try{
-					// check to see if the rel is on this class
-					$rel->getSide(get_class($this->BO));
-					$widget = new RecordSelector($rel, $label, $name, get_class($this->BO));
-					$html .= $widget->render($tableTags, $expanded, $buttons);
-				}catch (IllegalArguementException $iae) {
-					// the rel may be on a parent class
-					$parentClassName = ucfirst($this->BO->getTableName()).'Object';
-					$widget = new RecordSelector($rel, $label, $name, $parentClassName);
-					$html .= $widget->render($tableTags, $expanded, $buttons);
-				}
-			}else{
-				$rel = new RecordSelector($rel, $label, $name);
-				$html .= $rel->render($tableTags, $expanded, $buttons);
-			}
-		}
-		
-		if ($mode == 'view') {
-			if($rel->getRelationType() == 'MANY-TO-ONE') {
-				$html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue());
-			}elseif($rel->getRelationType() == 'MANY-TO-MANY') {
-				try{
-					// check to see if the rel is on this class
-					$rel->getSide(get_class($this->BO));
-					$html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue(get_class($this->BO)));
-				}catch (IllegalArguementException $iae) {
-					// the rel may be on a parent class
-					$parentClassName = ucfirst($this->BO->getTableName()).'Object';
-					$html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue($parentClassName));
-				}
-			}else{
-				$rel = new RecordSelector($rel, $label, $name);
-				$html .= $rel->render($tableTags, $expanded, $buttons);
-			}
-		}
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
+		$html = $provider->renderRelationField($name, $label, $mode, $value, $tableTags, $expanded, $buttons);
 		
 		self::$logger->debug('<<renderRelationField ['.$html.']');
 		return $html;
@@ -956,116 +641,14 @@ class AlphaView {
 	 * @param array $readOnlyFields Optional list of fields to render in a readonly fashion when rendering in create or edit mode
 	 * @return string
 	 * @since 1.0
-	 * @todo use version from AlphaRendererProviderInterface instance
 	 */
 	public function renderAllFields($mode, $filterFields=array(), $readOnlyFields=array()) {
 		self::$logger->debug('>>renderAllFields(mode=['.$mode.'], filterFields=['.var_export($filterFields, true).'], readOnlyFields=['.var_export($readOnlyFields, true).'])');
 		
-		$html = '';
-				
-		// get the class attributes		
-		$properties = array_keys($this->BO->getDataLabels());
+		global $config;
 		
-		$orignalMode = $mode;
-		
-		foreach($properties as $propName) {			
-			if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $filterFields)) {
-				// render readonly fields in the supplied array
-				if(in_array($propName, $readOnlyFields))
-					$mode = 'view';
-				else
-					$mode = $orignalMode;
-					
-				if(!is_object($this->BO->getPropObject($propName)))
-					continue;
-					
-				$propClass = get_class($this->BO->getPropObject($propName));
-				
-				// exclude non-Relation transient attributes from create and edit screens
-				if($propClass != 'Relation' && ($mode == 'edit' || $mode == 'create') && in_array($propName, $this->BO->getTransientAttributes())) {
-					continue;
-				}
-				
-				switch (strtoupper($propClass)) {
-					case 'INTEGER' :
-						if($mode == 'view') {
-							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
-						}else{
-							$html .= $this->renderIntegerField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
-						}				
-					break;
-					case 'DOUBLE' :
-						if($mode == 'view') {
-							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
-						}else{
-							$html .= $this->renderDoubleField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
-						}
-					break;
-					case 'DATE' :
-						if($mode == 'view') {
-							$value = $this->BO->get($propName);
-							if ($value == '0000-00-00')
-								$value = '';
-							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $value);
-						}else{
-							$date = new DateBox($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
-							$html .= $date->render();
-						}
-					break;
-					case 'TIMESTAMP' :
-						if($mode == 'view') {
-							$value = $this->BO->get($propName);
-							if ($value == '0000-00-00 00:00:00')
-								$value = '';
-							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $value);
-						}else{
-							$timestamp = new DateBox($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
-							$html .= $timestamp->render();
-						}
-					break;
-					case 'STRING' :
-						if($mode == 'view') {
-							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
-						}else{
-							$string = new StringBox($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
-							$html .= $string->render();
-						}
-					break;
-					case 'TEXT' :
-						$html .= $this->renderTextField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
-					break;
-					case 'BOOLEAN' :
-						if($mode == 'view') {
-							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
-						}else{
-							$html .= $this->renderBooleanField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
-						}
-					break;
-					case 'ENUM' :
-						if($mode == 'view') {
-							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
-						}else{
-							$enum = $this->BO->getPropObject($propName);
-							$html .= $this->renderEnumField($propName, $this->BO->getDataLabel($propName), $mode, $enum->getOptions(), $this->BO->get($propName));
-						}
-					break;
-					case 'DENUM' :
-						if($mode == 'view') {
-							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->getPropObject($propName)->getDisplayValue());
-						}else{
-							$denum = $this->BO->getPropObject($propName);
-							$html .= $this->renderDEnumField($propName, $this->BO->getDataLabel($propName), $mode, $denum->getOptions(), $this->BO->get($propName));
-						}
-					break;
-					case 'RELATION' :
-						$html .= $this->renderRelationField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
-					break;
-					default :
-						$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
-					break;
-				}
-			}
-		}
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
+		$html = $provider->renderAllFields($mode, $filterFields, $readOnlyFields);
 		
 		self::$logger->debug('<<renderAllFields ['.$html.']');
 		return $html;

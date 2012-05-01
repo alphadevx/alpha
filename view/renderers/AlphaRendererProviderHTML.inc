@@ -111,7 +111,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$fields['cancelButton'] = $button->render();		
 		
 		// buffer security fields to $formSecurityFields variable		
-		$fields['formSecurityFields'] = $this->renderSecurityFields();		
+		$fields['formSecurityFields'] = self::renderSecurityFields();		
 
 		self::$logger->debug('<<createView [HTML]');
 		return $this->loadTemplate($this->BO, 'create', $fields);
@@ -160,7 +160,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$fields['cancelButton'] = $button->render();		
 				
 		// buffer security fields to $formSecurityFields variable		
-		$fields['formSecurityFields'] = $this->renderSecurityFields();
+		$fields['formSecurityFields'] = self::renderSecurityFields();
 
 		// OID will need to be posted for optimistic lock checking
 		$fields['version_num'] = $this->BO->getVersionNumber();
@@ -282,7 +282,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$fields['adminButtons'] = $html;
 
 		// buffer security fields to $formSecurityFields variable
-		$fields['formSecurityFields'] = $this->renderSecurityFields();
+		$fields['formSecurityFields'] = self::renderSecurityFields();
 
 		self::$logger->debug('<<listView [HTML]');
 		return $this->loadTemplate($this->BO, 'list', $fields);				
@@ -437,7 +437,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$fields['recreateOrUpdateButtons'] = $html;
 		
 		// buffer security fields to $formSecurityFields variable
-		$fields['formSecurityFields'] = $this->renderSecurityFields();
+		$fields['formSecurityFields'] = self::renderSecurityFields();
 		
 		self::$logger->debug('<<adminView [HTML]');
 		return $this->loadTemplate($this->BO, 'admin', $fields);
