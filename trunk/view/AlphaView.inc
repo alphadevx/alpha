@@ -664,13 +664,13 @@ class AlphaView {
 	 * @since 1.0
 	 * @throws IllegalArguementException
 	 */
-	public function loadTemplate($BO, $mode, $fields) {
+	public static function loadTemplate($BO, $mode, $fields) {
 		self::$logger->debug('>>loadTemplate(BO=['.var_export($BO, true).'], mode=['.$mode.'], fields=['.var_export($fields, true).'])');
 		
 		global $config;
 		
 		// for each BO property, create a local variable holding its value		
-		$reflection = new ReflectionClass(get_class($this->BO));
+		$reflection = new ReflectionClass(get_class($BO));
 		$properties = $reflection->getProperties();
 		
 		foreach($properties as $propObj) {
@@ -693,9 +693,9 @@ class AlphaView {
 		$filename = $mode.'.phtml';
 		$classTemplateDir = get_class($BO);
 
-		$customPath = $config->get('sysRoot').'view/templates/'.$classTemplateDir.'/'.$filename;
-		$defaultPath1 = $config->get('sysRoot').'alpha/view/templates/'.$classTemplateDir.'/'.$filename;
-		$defaultPath2 = $config->get('sysRoot').'alpha/view/templates/'.$filename;
+		$customPath = $config->get('sysRoot').'view/html/templates/'.$classTemplateDir.'/'.$filename;
+		$defaultPath1 = $config->get('sysRoot').'alpha/view/renderers/html/templates/'.$classTemplateDir.'/'.$filename;
+		$defaultPath2 = $config->get('sysRoot').'alpha/view/renderers/html/templates/'.$filename;
 
 		// Check to see if a custom template exists for this BO, and if it does load that		
 		if (file_exists($customPath)) {
@@ -708,16 +708,16 @@ class AlphaView {
 			self::$logger->debug('Loading template ['.$defaultPath2.']');
 			require $defaultPath2;	
 		}else{
-			throw new IllegalArguementException('No ['.$mode.'] HTML template found for class ['.get_class($BO).']');
+			throw new IllegalArguementException('No ['.$mode.'] HTML template found fooor class ['.get_class($BO).']');
 		}
 		
 		self::$logger->debug('<<loadTemplate');
 	}
 	
 	/**
-	 * Loads a template fragment from the renderers/templates/[type]/fragment/[filename.ext] location.
+	 * Loads a template fragment from the renderers/[type]/fragments/[filename.ext] location.
 	 * 
-	 * @param string $type Currently only html support, later json and xml.
+	 * @param string $type Currently only html supported, later json and xml.
 	 * @param string $fileName The name of the fragment file
 	 * @param array $fields A hash array of field values to pass to the template fragment.
 	 * @since 1.2
@@ -734,8 +734,8 @@ class AlphaView {
 		foreach (array_keys($fields) as $fieldName)
 			${$fieldName} = $fields[$fieldName];
 
-		$customPath = $config->get('sysRoot').'view/renderers/templates/'.$type.'/fragments/'.$fileName;
-		$defaultPath = $config->get('sysRoot').'alpha/view/renderers/templates/'.$type.'/fragments/'.$fileName;
+		$customPath = $config->get('sysRoot').'view/'.$type.'/fragments/'.$fileName;
+		$defaultPath = $config->get('sysRoot').'alpha/view/renderers/'.$type.'/fragments/'.$fileName;
 
 		// Check to see if a custom template exists for this BO, and if it does load that		
 		if (file_exists($customPath)) {

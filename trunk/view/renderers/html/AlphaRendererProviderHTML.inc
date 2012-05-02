@@ -114,7 +114,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$fields['formSecurityFields'] = self::renderSecurityFields();		
 
 		self::$logger->debug('<<createView [HTML]');
-		return $this->loadTemplate($this->BO, 'create', $fields);
+		return AlphaView::loadTemplate($this->BO, 'create', $fields);
 	}
 	
 	/**
@@ -166,7 +166,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$fields['version_num'] = $this->BO->getVersionNumber();
 
 		self::$logger->debug('<<editView [HTML]');
-		return $this->loadTemplate($this->BO, 'edit', $fields);
+		return AlphaView::loadTemplate($this->BO, 'edit', $fields);
 	}
 	
 	/**
@@ -285,7 +285,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$fields['formSecurityFields'] = self::renderSecurityFields();
 
 		self::$logger->debug('<<listView [HTML]');
-		return $this->loadTemplate($this->BO, 'list', $fields);				
+		return AlphaView::loadTemplate($this->BO, 'list', $fields);				
 	}
 	
 	/**
@@ -335,7 +335,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$fields['adminButtons'] = $html;
 		
 		self::$logger->debug('<<detailedView [HTML]');
-		return $this->loadTemplate($this->BO, 'detail', $fields);
+		return AlphaView::loadTemplate($this->BO, 'detail', $fields);
 	}
 	
 	/**
@@ -440,7 +440,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$fields['formSecurityFields'] = self::renderSecurityFields();
 		
 		self::$logger->debug('<<adminView [HTML]');
-		return $this->loadTemplate($this->BO, 'admin', $fields);
+		return AlphaView::loadTemplate($this->BO, 'admin', $fields);
 	}
 	
 	/**
@@ -1137,76 +1137,6 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		}
 		
 		self::$logger->debug('<<renderRelationField ['.$html.']');
-		return $html;
-	}
-
-	/**
-	 * Loads a .phtml template for the BO specified if one exists.  Lower level custom templates
-	 * take precedence.
-	 * 
-	 * @param AlphaDAO $BO
-	 * @param string $mode
-	 * @param array $fields
-	 * @return string The rendered HTML.
-	 * @since 1.2
-	 * @throws IllegalArguementException
-	 */
-	private function loadTemplate($BO, $mode, $fields) {
-		self::$logger->debug('>>loadTemplate(BO=['.var_export($BO, true).'], mode=['.$mode.'], fields=['.var_export($fields, true).'])');
-		
-		global $config;
-		
-		// for each BO property, create a local variable holding its value		
-		$reflection = new ReflectionClass(get_class($this->BO));
-		$properties = $reflection->getProperties();
-		
-		foreach($properties as $propObj) {
-			$propName = $propObj->name;
-			
-			if($propName != 'logger' && !$propObj->isPrivate()) {
-				$prop = $BO->getPropObject($propName);
-				if($prop instanceof DEnum) {					
-					${$propName} = $BO->getPropObject($propName)->getDisplayValue();
-				}else{
-					${$propName} = $BO->get($propName);
-				}
-			}
-		}
-		
-		// loop over the $fields array and create a local variable for each key value
-		foreach (array_keys($fields) as $fieldName)
-			${$fieldName} = $fields[$fieldName];
-			
-		$filename = $mode.'.phtml';
-		$classTemplateDir = get_class($BO);
-
-		$customPath = $config->get('sysRoot').'view/templates/html/'.$classTemplateDir.'/'.$filename;
-		$defaultPath1 = $config->get('sysRoot').'alpha/view/renderers/templates/html/'.$classTemplateDir.'/'.$filename;
-		$defaultPath2 = $config->get('sysRoot').'alpha/view/renderers/templates/html/'.$filename;
-
-		$html = '';
-
-		// Check to see if a custom template exists for this BO, and if it does load that		
-		if (file_exists($customPath)) {
-			self::$logger->debug('Loading template ['.$customPath.']');
-			ob_start();
-			require $customPath;
-			$html = ob_get_clean();
-		}elseif (file_exists($defaultPath1)) {
-			self::$logger->debug('Loading template ['.$defaultPath1.']');
-			ob_start();
-			require $defaultPath1;
-			$html = ob_get_clean();
-		}elseif (file_exists($defaultPath2)) {
-			self::$logger->debug('Loading template ['.$defaultPath2.']');
-			ob_start();
-			require $defaultPath2;
-			$html = ob_get_clean();
-		}else{
-			throw new IllegalArguementException('No ['.$mode.'] HTML template found for class ['.get_class($BO).']');
-		}
-		
-		self::$logger->debug('<<loadTemplate [HTML]');
 		return $html;
 	}
 
