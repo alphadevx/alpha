@@ -59,7 +59,7 @@ class AlphaRendererProviderFactory {
 	 * A static method that attempts to return a AlphaRendererProviderInterface instance
 	 * based on the name of the provider class supplied.
 	 * 
-	 * @param $providerName The class name of the provider class, should be in the alpha::view::renderers package. 
+	 * @param $providerName The class name of the provider class, should be in one of the alpha::view::renderers::[html|json|xml] packages.
 	 * @param $BO The AlphaDAO instance to pass to the renderer provider for passing data. 
 	 * @throws IllegalArguementException
 	 * @return AlphaRendererProviderInterface
@@ -82,20 +82,24 @@ class AlphaRendererProviderFactory {
 			}
 		}
 		
-		if(file_exists($config->get('sysRoot').'alpha/view/renderers/'.$providerName.'.inc')) {
-			require_once $config->get('sysRoot').'alpha/view/renderers/'.$providerName.'.inc';
-			
-			$instance = new $providerName;
-			$instance->setBO($BO);
-			
-			if(!$instance instanceof AlphaRendererProviderInterface)
-				throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected AlphaRendererProviderInterface interface!');
-			
-			self::$logger->debug('<<getInstance: [Object '.$providerName.']');
-			return $instance;
+		if(file_exists($config->get('sysRoot').'alpha/view/renderers/html/'.$providerName.'.inc')) {
+			require_once $config->get('sysRoot').'alpha/view/renderers/html/'.$providerName.'.inc';
+		}elseif(file_exists($config->get('sysRoot').'alpha/view/renderers/xml/'.$providerName.'.inc')) {
+                        require_once $config->get('sysRoot').'alpha/view/renderers/xml/'.$providerName.'.inc';
+                }elseif(file_exists($config->get('sysRoot').'alpha/view/renderers/json/'.$providerName.'.inc')) {
+                        require_once $config->get('sysRoot').'alpha/view/renderers/json/'.$providerName.'.inc';
 		}else{
 			throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
 		}
+
+		$instance = new $providerName;
+                $instance->setBO($BO);
+
+                if(!$instance instanceof AlphaRendererProviderInterface)
+	                throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected AlphaRendererProviderInterface interface!');
+
+                self::$logger->debug('<<getInstance: [Object '.$providerName.']');
+                return $instance;
 		
 		self::$logger->debug('<<getInstance');
 	}
