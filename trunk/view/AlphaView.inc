@@ -53,6 +53,14 @@ class AlphaView {
 	 * @since 1.0
 	 */
 	protected $BO;
+
+        /**
+         * The rendering provider that will be used to render the business object
+         *
+         * @var AlphaRendererProviderInterface
+         * @since 1.2
+         */
+	protected $provider;
 	
 	/**
 	 * Trace logger
@@ -72,11 +80,15 @@ class AlphaView {
 	protected function __construct($BO) {
 		self::$logger = new Logger('AlphaView');
 		self::$logger->debug('>>__construct(BO=['.var_export($BO, true).'])');
+
+		global $config;
 		
 		if(AlphaDAO::checkClassDefExists(get_class($BO)))
 			$this->BO = $BO;
 		else
 			throw new IllegalArguementException('The BO provided ['.get_class($BO).'] is not defined anywhere!');
+
+		$this->provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
 		
 		self::$logger->debug('<<__construct');
 	}
@@ -170,8 +182,7 @@ class AlphaView {
 		
 		global $config; 
 			
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
-		$body = $provider->createView($fields);
+		$body = $this->provider->createView($fields);
 		
 		echo $body;
 		
@@ -195,8 +206,7 @@ class AlphaView {
 		
 		global $config; 
 			
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
-		$body = $provider->editView($fields);
+		$body = $this->provider->editView($fields);
 		
 		echo $body;
 		
@@ -220,8 +230,7 @@ class AlphaView {
 		
 		global $config; 
 			
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
-		$body = $provider->listView($fields);
+		$body = $this->provider->listView($fields);
 		
 		echo $body;
 		
@@ -245,8 +254,7 @@ class AlphaView {
 		
 		global $config; 
 			
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
-		$body = $provider->detailedView($fields);
+		$body = $this->provider->detailedView($fields);
 		
 		echo $body;
 		
@@ -270,8 +278,7 @@ class AlphaView {
 		
 		global $config;
 			
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
-		$body = $provider->adminView($fields);
+		$body = $this->provider->adminView($fields);
 		
 		echo $body;
 		
@@ -461,8 +468,7 @@ class AlphaView {
 		
 		global $config;
 		
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
-		$html = $provider->renderIntegerField($name, $label, $mode, $value, $tableTags);
+		$html = $this->provider->renderIntegerField($name, $label, $mode, $value, $tableTags);
 		
 		self::$logger->debug('<<renderIntegerField ['.$html.']');
 		return $html;
@@ -484,8 +490,7 @@ class AlphaView {
 		
 		global $config;
 		
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
-		$html = $provider->renderDoubleField($name, $label, $mode, $value, $tableTags);
+		$html = $this->provider->renderDoubleField($name, $label, $mode, $value, $tableTags);
 				
 		self::$logger->debug('<<renderDoubleField ['.$html.']');
 		return $html;
@@ -507,8 +512,7 @@ class AlphaView {
 		
 		global $config;
 		
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
-		$html = $provider->renderBooleanField($name, $label, $mode, $value, $tableTags);
+		$html = $this->provider->renderBooleanField($name, $label, $mode, $value, $tableTags);
 				
 		self::$logger->debug('<<renderBooleanField ['.$html.']');
 		return $html;
@@ -531,8 +535,7 @@ class AlphaView {
 		
 		global $config;
 		
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
-		$html = $provider->renderEnumField($name, $label, $mode, $options, $value, $tableTags);
+		$html = $this->provider->renderEnumField($name, $label, $mode, $options, $value, $tableTags);
 				
 		self::$logger->debug('<<renderEnumField ['.$html.']');
 		return $html;
@@ -555,8 +558,7 @@ class AlphaView {
 		
 		global $config;
 		
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
-		$html = $provider->renderDEnumField($name, $label, $mode, $options, $value, $tableTags);
+		$html = $this->provider->renderDEnumField($name, $label, $mode, $options, $value, $tableTags);
 		
 		self::$logger->debug('<<renderDEnumField ['.$html.']');
 		return $html;
@@ -578,8 +580,7 @@ class AlphaView {
 		
 		global $config;
 		
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
-		$html = $provider->renderDefaultField($name, $label, $mode, $value, $tableTags);
+		$html = $this->provider->renderDefaultField($name, $label, $mode, $value, $tableTags);
 		
 		self::$logger->debug('<<renderDefaultField ['.$html.']');
 		return $html;
@@ -601,8 +602,7 @@ class AlphaView {
 		
 		global $config;
 		
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
-		$html = $provider->renderTextField($name, $label, $mode, $value, $tableTags);
+		$html = $this->provider->renderTextField($name, $label, $mode, $value, $tableTags);
 		
 		self::$logger->debug('<<renderTextField ['.$html.']');
 		return $html;
@@ -626,8 +626,7 @@ class AlphaView {
 		
 		global $config;
 		
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
-		$html = $provider->renderRelationField($name, $label, $mode, $value, $tableTags, $expanded, $buttons);
+		$html = $this->provider->renderRelationField($name, $label, $mode, $value, $tableTags, $expanded, $buttons);
 		
 		self::$logger->debug('<<renderRelationField ['.$html.']');
 		return $html;
@@ -647,8 +646,7 @@ class AlphaView {
 		
 		global $config;
 		
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
-		$html = $provider->renderAllFields($mode, $filterFields, $readOnlyFields);
+		$html = $this->provider->renderAllFields($mode, $filterFields, $readOnlyFields);
 		
 		self::$logger->debug('<<renderAllFields ['.$html.']');
 		return $html;
@@ -749,6 +747,19 @@ class AlphaView {
 		}
 		
 		self::$logger->debug('<<loadTemplateFragment');
+	}
+
+	/**
+         * Enables you to set an explicit type of AlphaRendererProviderInterface implementation to use for rendering the business
+	 * object attached to this view.  Note that this has no affect on static methods of the AlphaView class, which always instantiate
+	 * a new AlphaRendererProviderInterface provider each time they're called.
+         *
+         * @param string $ProviderClassName The name of the AlphaRendererProviderInterface implementation to use in this view object
+         * @since 1.2
+         * @throws IllegalArguementException
+         */
+	public function setProvider($ProviderClassName) {
+		$this->provider = AlphaRendererProviderFactory::getInstance($ProviderClassName, $this->BO);
 	}
 }
 
