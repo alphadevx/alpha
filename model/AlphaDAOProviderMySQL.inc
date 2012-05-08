@@ -173,6 +173,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
+				if($this->getMaintainHistory())
+					$this->BO->makeHistoryTable();
 				throw new BONotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->BO->getTableName().'] did not exist so had to create!');
 			}
 			return;
@@ -287,6 +289,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
+				if($this->getMaintainHistory())
+                                        $this->BO->makeHistoryTable();
 				throw new BONotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table did not exist so had to create!');
 			}
 			return;
@@ -447,6 +451,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
+				if($this->getMaintainHistory())
+                                        $this->BO->makeHistoryTable();
 				throw new BONotFoundException('Failed to load objects by attribute ['.$attribute.'] and value ['.$value.'], table did not exist so had to create!');
 			}
 			self::$logger->debug('<<loadAllByAttribute []');
@@ -552,6 +558,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
+				if($this->getMaintainHistory())
+                                        $this->BO->makeHistoryTable();
 				throw new BONotFoundException('Failed to load objects by attributes ['.var_export($attributes, true).'] and values ['.
 					var_export($values, true).'], table did not exist so had to create!');
 			}
@@ -932,6 +940,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
+				if($this->getMaintainHistory())
+                                        $this->BO->makeHistoryTable();
 				throw new BONotFoundException('Failed to get the version number, table did not exist so had to create!');
 			}
 			return;
@@ -1031,6 +1041,92 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		$this->checkIndexes();
 		
 		self::$logger->debug('<<makeTable');
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::makeHistoryTable()
+	 */
+	public function makeHistoryTable() {
+		self::$logger->debug('>>makeHistoryTable()');
+
+		$sqlQuery = "CREATE TABLE ".$this->BO->getTableName()."_history (OID INT(11) ZEROFILL NOT NULL,";
+
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = $reflection->getProperties();
+
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+
+			if(!in_array($propName, $this->BO->getTransientAttributes()) && $propName != "OID") {
+				$propClass = get_class($this->BO->getPropObject($propName));
+
+				switch (strtoupper($propClass)) {
+					case "INTEGER":
+						// special properties for RelationLookup OIDs
+						if($this->BO instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID'))
+							$sqlQuery .= "$propName INT(".$this->BO->getPropObject($propName)->getSize().") ZEROFILL NOT NULL,";
+						else
+							$sqlQuery .= "$propName INT(".$this->BO->getPropObject($propName)->getSize()."),";
+					break;
+					case "DOUBLE":
+						$sqlQuery .= "$propName DOUBLE(".$this->BO->getPropObject($propName)->getSize(true)."),";
+					break;
+					case "STRING":
+						$sqlQuery .= "$propName VARCHAR(".$this->BO->getPropObject($propName)->getSize()."),";
+					break;
+					case "TEXT":
+						$sqlQuery .= "$propName TEXT,";
+					break;
+					case "BOOLEAN":
+						$sqlQuery .= "$propName CHAR(1) DEFAULT '0',";
+					break;
+					case "DATE":
+						$sqlQuery .= "$propName DATE,";
+					break;
+					case "TIMESTAMP":
+						$sqlQuery .= "$propName DATETIME,";
+					break;
+					case "ENUM":
+						$sqlQuery .= "$propName ENUM(";
+
+						$enumVals = $this->BO->getPropObject($propName)->getOptions();
+
+						foreach($enumVals as $val) {
+							$sqlQuery .= "'".$val."',";
+						}
+
+						$sqlQuery = rtrim($sqlQuery, ",");
+						$sqlQuery .= "),";
+					break;
+					case "DENUM":
+						$tmp = new DEnum(get_class($this->BO).'::'.$propName);
+						$sqlQuery .= "$propName INT(11) ZEROFILL,";
+					break;
+					case "RELATION":
+						$sqlQuery .= "$propName INT(11) ZEROFILL UNSIGNED,";
+					break;
+					default:
+						$sqlQuery .= "";
+					break;
+				}
+			}
+		}
+
+		if($this->BO->isTableOverloaded())
+			$sqlQuery .= "classname VARCHAR(100),";
+
+		$sqlQuery .= "PRIMARY KEY (OID, version_num)) ENGINE=MyISAM;";
+
+		$this->BO->setLastQuery($sqlQuery);
+
+		if(!$result = AlphaDAOProviderMySQL::getConnection()->query($sqlQuery)) {
+			throw new AlphaException('Failed to create the table ['.$this->BO->getTableName().'_history] for the class ['.get_class($this->BO).'], database error is ['.AlphaDAOProviderMySQL::getConnection()->error.']');
+			self::$logger->debug('<<makeHistoryTable');
+		}
+
+		self::$logger->debug('<<makeHistoryTable');
 	}
 
 	/**
@@ -1275,8 +1371,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::checkTableExists()
 	 */
-	public function checkTableExists() {
-		self::$logger->debug('>>checkTableExists()');
+	public function checkTableExists($checkHistoryTable = false) {
+		self::$logger->debug('>>checkTableExists(checkHistoryTable=['.$checkHistoryTable.'])');
 		
 		global $config;
 				
@@ -1286,10 +1382,12 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		$this->BO->setLastQuery($sqlQuery);
 		
 		$result = self::getConnection()->query($sqlQuery);
+
+		$tableName = ($checkHistoryTable ? $this->BO->getTableName().'_history' : $this->BO->getTableName());
 		
 		while ($row = $result->fetch_array(MYSQLI_NUM)) {
-    		if (strtolower($row[0]) == strtolower($this->BO->getTableName()))
-    			$tableExists = true;
+	    		if (strtolower($row[0]) == strtolower($tableName))
+    				$tableExists = true;
 		}		
 		
 		if ($result) {			
@@ -1301,20 +1399,23 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::checkBOTableExists()
 	 */
-	public static function checkBOTableExists($BOClassName) {
+	public static function checkBOTableExists($BOClassName, $checkHistoryTable = false) {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaDAOProvidermySQL');
-		self::$logger->debug('>>checkBOTableExists(BOClassName=['.$BOClassName.'])');
+		self::$logger->debug('>>checkBOTableExists(BOClassName=['.$BOClassName.'], checkHistoryTable=['.$checkHistoryTable.'])');
 		
 		eval('$tableName = '.$BOClassName.'::TABLE_NAME;');
-		
+
 		if(empty($tableName))
-			$tableName = substr($BOClassName, 0, strpos($BOClassName, '_'));		
+			$tableName = substr($BOClassName, 0, strpos($BOClassName, '_'));
+
+		if($checkHistoryTable)
+                        $tableName .= '_history';
 				
 		$tableExists = false;
 		
@@ -1323,9 +1424,9 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		$result = self::getConnection()->query($sqlQuery);
 		
 		while ($row = $result->fetch_array(MYSQLI_NUM)) {    		
-    		if ($row[0] == $tableName)
-    			$tableExists = true;
-		}		
+    			if ($row[0] == $tableName)
+    				$tableExists = true;
+		}			
 		
 		if ($result) {			
 			self::$logger->debug('<<checkBOTableExists ['.($tableExists ? 'true' : 'false').']');

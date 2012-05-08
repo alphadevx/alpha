@@ -140,6 +140,14 @@ abstract class AlphaDAO {
 	 * @since 1.0
 	 */
 	private static $logger = null;
+
+	/**
+         * Determines if we will maintain a _history table for this DAO (default is false).
+         *
+         * @var boolean
+         * @since 1.2
+         */
+	private $maintainHistory = false;
 	
 	/**
 	 * The constructor which sets up some housekeeping attributes
@@ -715,6 +723,31 @@ abstract class AlphaDAO {
 	}
 
 	/**
+         * Builds a new database table for the BO class to story it's history of changes
+         *
+         * @since 1.2
+         * @throws AlphaException
+         */
+	public function makeHistoryTable() {
+                self::$logger->debug('>>makeHistoryTable()');
+
+               	if(method_exists($this, 'before_makeHistoryTable_callback'))
+                       	$this->before_makeHistoryTable_callback();
+
+               	global $config;
+
+               	$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+                $provider->makeHistoryTable();
+
+               	if(method_exists($this, 'after_makeHistoryTable_callback'))
+                        $this->after_makeHistoryTable_callback();
+
+               	self::$logger->info('Successfully created the table ['.$this->getTableName().'_history] for the class ['.get_class($this).']');
+
+               	self::$logger->debug('<<makeHistoryTable');
+        }
+
+	/**
 	 * Re-builds the table if the model requirements have changed.  All data is lost!
 	 * 
 	 * @since 1.0
@@ -1113,11 +1146,12 @@ abstract class AlphaDAO {
 	/**
 	 * Checks to see if the table exists in the database for the current business class.
 	 * 
+	 * @param boolean $checkHistoryTable Set to true if you want to check for the existance of the _history table for this DAO.
 	 * @return boolean
 	 * @since 1.0
 	 * @throws AlphaException
 	 */
-	public function checkTableExists() {
+	public function checkTableExists($checkHistoryTable = false) {
 		self::$logger->debug('>>checkTableExists()');
 		
 		if(method_exists($this, 'before_checkTableExists_callback'))
@@ -1126,7 +1160,7 @@ abstract class AlphaDAO {
 		global $config;
 		
 		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
-		$tableExists = $provider->checkTableExists();
+		$tableExists = $provider->checkTableExists($checkHistoryTable);
 		
 		if(method_exists($this, 'after_checkTableExists_callback'))
 			$this->after_checkTableExists_callback();
@@ -1140,11 +1174,12 @@ abstract class AlphaDAO {
 	 * exists (assumes table name will be $BOClassName less "Object").
 	 * 
 	 * @param string $BOClassName The name of the business object class we are checking.
+	 * @param boolean $checkHistoryTable Set to true if you want to check for the existance of the _history table for this DAO.
 	 * @return boolean
 	 * @since 1.0
 	 * @throws AlphaException
 	 */
-	public static function checkBOTableExists($BOClassName) {
+	public static function checkBOTableExists($BOClassName, $checkHistoryTable = false) {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaDAO');
 		self::$logger->debug('>>checkBOTableExists(BOClassName=['.$BOClassName.'])');
@@ -1152,7 +1187,7 @@ abstract class AlphaDAO {
 		global $config;
 
 		require_once $config->get('sysRoot').'alpha/model/'.$config->get('sysDBProviderName').'.inc';
-		eval('$tableExists = '.$config->get('sysDBProviderName').'::checkBOTableExists($BOClassName);');
+		eval('$tableExists = '.$config->get('sysDBProviderName').'::checkBOTableExists($BOClassName, $checkHistoryTable);');
 		
 		self::$logger->debug('<<checkBOTableExists ['.($tableExists ? 'true' : 'false').']');
 		return $tableExists;
@@ -2054,6 +2089,30 @@ abstract class AlphaDAO {
 		if(self::$logger == null)
 			self::$logger = new Logger(get_class($this));
 	}
+
+	/**
+         * Sets maintainHistory attribute on this DAO
+         *
+         * @param boolean $maintainHistory
+	 * @throws IllegalArguementException
+         * @since 1.2
+         */
+	public function setMaintainHistory($maintainHistory) {
+		if(!is_bool($maintainHistory))
+			throw new IllegalArguementException('Non-boolean value ['.$maintainHistory.'] passed to setMaintainHistory method!');
+
+		$this->maintainHistory = $maintainHistory;
+	}
+
+	/**
+         * Gets the value of the  maintainHistory attribute
+         *
+         * @returns boolean
+         * @since 1.2
+         */
+        public function	getMaintainHistory() {
+                return $this->maintainHistory;
+        }
 }
 
 ?>
