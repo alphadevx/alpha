@@ -216,6 +216,14 @@ interface AlphaDAOProviderInterface {
 	 */	
 	public function makeTable();
 
+       	/**
+         * Builds a new database table for the BO class to store it's history
+         *
+         * @since 1.2
+         * @throws AlphaException
+         */
+        public function makeHistoryTable();
+
 	/**
 	 * Re-builds the table if the model requirements have changed.  All data is lost!
 	 * 
@@ -274,22 +282,24 @@ interface AlphaDAOProviderInterface {
 	/**
 	 * Checks to see if the table exists in the database for the current business class.
 	 * 
+	 * @param boolean $checkHistoryTable Set to true if you want to check for the existance of the _history table for this DAO.
 	 * @return boolean
 	 * @since 1.1
 	 * @throws AlphaException
 	 */
-	public function checkTableExists();
+	public function checkTableExists($checkHistoryTable = false);
 	
 	/**
 	 * Static method to check the database and see if the table for the indicated BO class name
 	 * exists (assumes table name will be $BOClassName less "Object").
 	 * 
 	 * @param string $BOClassName The name of the business object class we are checking.
+	 * @param boolean $checkHistoryTable Set to true if you	want to	check for the existance	of the _history	table for this DAO.
 	 * @return boolean
 	 * @since 1.1
 	 * @throws AlphaException
 	 */
-	public static function checkBOTableExists($BOClassName);
+	public static function checkBOTableExists($BOClassName, $checkHistoryTable = false);
 	
 	/**
 	 * Checks to see if the table in the database matches (for fields) the business class definition, i.e. if the

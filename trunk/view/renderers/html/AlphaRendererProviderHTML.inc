@@ -361,6 +361,9 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 
 		// table exists in the DB?
 		$fields['tableExists'] = ($this->BO->checkTableExists() ? '<span class="success">Yes</span>' : '<span class="warning">No</span>');
+
+		if($this->BO->getMaintainHistory())
+			$fields['tableExists'] = ($this->BO->checkTableExists(true) ? '<span class="success">Yes</span>' : '<span class="warning">No history table</span>');
 		
 		// table schema needs to be updated in the DB?
 		$fields['tableNeedsUpdate'] = ($this->BO->checkTableNeedsUpdate() ? '<span class="warning">Yes</span>' : '<span class="success">No</span>');
@@ -382,14 +385,20 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		}
 		
 		// the create table button (if required)
-		$html = '';
-		if (!$this->BO->checkTableExists()) {			
-			$button = new Button("submit", "Create Table", "createTableBut");
-			$html .= $button->render();
-			// hidden field so that we know which class to create the table for
-			$html .= '<input type="hidden" name="createTableClass" value="'.get_class($this->BO).'"/>';
-		}
-		$fields['createTableButton'] = $html;
+                $html = '';
+                if (!$this->BO->checkTableExists()) {
+                        $button = new Button("submit", "Create Table", "createTableBut");
+                        $html .= $button->render();
+                        // hidden field so that we know which class to create the table for
+                        $html .= '<input type="hidden" name="createTableClass" value="'.get_class($this->BO).'"/>';
+                }
+		if ($html == '' && $this->BO->getMaintainHistory() && !$this->BO->checkTableExists(true)) {
+                        $button = new Button("submit", "Create History Table", "createHistoryTableBut");
+                        $html .= $button->render();
+                        // hidden field so that we know which class to create the table for
+                        $html .= '<input type="hidden" name="createTableClass" value="'.get_class($this->BO).'"/>';
+                }
+                $fields['createTableButton'] = $html;
 		
 		// recreate and update table buttons (if required)
 		$html = '';

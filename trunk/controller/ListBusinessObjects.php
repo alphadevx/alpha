@@ -134,6 +134,21 @@ class ListBusinessObjects extends AlphaController implements AlphaControllerInte
 					echo AlphaView::displayErrorMessage('Error creating the table for the class '.$classname.', check the log!');
 				}
 			}
+
+			if(isset($params['createHistoryTableBut'])) {
+                                try {
+                                        $classname = $params['createTableClass'];
+                                        AlphaDAO::loadClassDef($classname);
+
+                                	$BO = new $classname();
+                                        $BO->makeHistoryTable();
+
+                                       	echo AlphaView::displayUpdateMessage('The history table for the class '.$classname.' has been successfully created.');
+                                }catch(AlphaException $e) {
+                                       	self::$logger->error($e->getMessage());
+                                       	echo AlphaView::displayErrorMessage('Error creating the history table for the class '.$classname.', check the log!');
+                               	}
+                        }
 			
 			if(isset($params['recreateTableClass']) && $params['admin_'.$params['recreateTableClass'].'_button_pressed'] == 'recreateTableBut') {
 				try {					
