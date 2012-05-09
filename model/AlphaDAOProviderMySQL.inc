@@ -173,7 +173,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
-				if($this->getMaintainHistory())
+				if($this->BO->getMaintainHistory())
 					$this->BO->makeHistoryTable();
 				throw new BONotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->BO->getTableName().'] did not exist so had to create!');
 			}
@@ -289,7 +289,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
-				if($this->getMaintainHistory())
+				if($this->BO->getMaintainHistory())
                                         $this->BO->makeHistoryTable();
 				throw new BONotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table did not exist so had to create!');
 			}
@@ -451,7 +451,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
-				if($this->getMaintainHistory())
+				if($this->BO->getMaintainHistory())
                                         $this->BO->makeHistoryTable();
 				throw new BONotFoundException('Failed to load objects by attribute ['.$attribute.'] and value ['.$value.'], table did not exist so had to create!');
 			}
@@ -558,7 +558,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
-				if($this->getMaintainHistory())
+				if($this->BO->getMaintainHistory())
                                         $this->BO->makeHistoryTable();
 				throw new BONotFoundException('Failed to load objects by attributes ['.var_export($attributes, true).'] and values ['.
 					var_export($values, true).'], table did not exist so had to create!');
@@ -856,6 +856,9 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 				throw new FailedSaveException('Failed to save object, MySql error is ['.AlphaDAOProviderMySQL::getConnection()->error.'], query ['.$this->BO->getLastQuery().']');
 			}
 		}
+
+		if($this->BO->getMaintainHistory())
+                        $this->BO->saveHistory();
 	}
 	
 	/**
@@ -884,8 +887,70 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		}
 				
 		$stmt->close();
+
+		$this->{$attribute} = $value;
+
+		if($this->BO->getMaintainHistory())
+			$this->BO->saveHistory();
 			
 		self::$logger->debug('<<saveAttribute');
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAOProviderInterface::saveHistory()
+	 */
+	public function saveHistory() {
+		self::$logger->debug('>>saveHistory()');
+
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = $reflection->getProperties();
+		$sqlQuery = '';
+		$stmt = null;
+
+		$savedFieldsCount = 0;
+		$attributeNames = array();
+		$attributeValues = array();
+
+		$sqlQuery = 'INSERT INTO '.$this->BO->getTableName().'_history (';
+
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			if (!in_array($propName, $this->BO->getTransientAttributes())) {
+				$sqlQuery .= "$propName,";
+				$attributeNames[] = $propName;
+				$attributeValues[] = $this->BO->get($propName);
+				$savedFieldsCount++;
+			}
+		}
+
+		if($this->BO->isTableOverloaded())
+			$sqlQuery .= 'classname,';
+
+		$sqlQuery = rtrim($sqlQuery, ",");	
+
+		$sqlQuery .= ') VALUES (';
+
+		for($i = 0; $i < $savedFieldsCount; $i++)
+			$sqlQuery.= '?,';
+
+		if($this->BO->isTableOverloaded())
+			$sqlQuery.= '?,';
+
+		$sqlQuery = rtrim($sqlQuery, ',').')';
+
+		$this->BO->setLastQuery($sqlQuery);
+		self::$logger->debug('Query ['.$sqlQuery.']');
+
+		$stmt = AlphaDAOProviderMySQL::getConnection()->stmt_init();
+
+		if($stmt->prepare($sqlQuery)) {
+			$stmt = $this->bindParams($stmt, $attributeNames, $attributeValues);
+			$stmt->execute();
+		}else{
+			throw new FailedSaveException('Failed to save object history, error is ['.$stmt->error.'], query ['.$this->BO->getLastQuery().']');
+		}
 	}
 	
 	/**
@@ -940,7 +1005,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
-				if($this->getMaintainHistory())
+				if($this->BO->getMaintainHistory())
                                         $this->BO->makeHistoryTable();
 				throw new BONotFoundException('Failed to get the version number, table did not exist so had to create!');
 			}
