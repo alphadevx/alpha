@@ -190,6 +190,14 @@ interface AlphaDAOProviderInterface {
 	 * @throws FailedSaveException
 	 */
 	public function saveAttribute($attribute, $value);
+
+        /**
+         * Saves the object history to the [tablename]_history table. It always does an INSERT.
+         *
+         * @since 1.2
+         * @throws FailedSaveException
+         */
+	public function saveHistory();
 	
 	/**
 	 * Deletes the current object from the database.

@@ -504,6 +504,27 @@ abstract class AlphaDAO {
 			
 		self::$logger->debug('<<saveAttribute');
 	}
+
+	/**
+         * Saves the history of the object in the [tablename]_history table. It will always perform an insert.
+         *
+         * @since 1.2
+         * @throws FailedSaveException
+         */
+	public function saveHistory() {
+                self::$logger->debug('>>saveHistory()');
+
+                if(method_exists($this, 'before_saveHistory_callback'))
+                        $this->before_saveHistory_callback();
+
+                global $config;
+
+                $provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+                $provider->saveHistory();
+
+                if(method_exists($this, 'after_saveHistory_callback'))
+	                $this->after_saveHistory_callback();
+        }
 	
 	/**
 	 * Validates the object to be saved.
