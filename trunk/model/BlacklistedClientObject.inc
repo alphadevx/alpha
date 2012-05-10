@@ -91,7 +91,6 @@ class BlacklistedClientObject extends AlphaDAO {
 		
 		$this->client = new String();
 		$this->markUnique('client');
-		$this->setMaintainHistory(true);
 	}
 }
 

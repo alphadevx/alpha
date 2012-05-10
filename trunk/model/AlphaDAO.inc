@@ -950,6 +950,32 @@ abstract class AlphaDAO {
 		return $count;
 	}
 
+        /**
+         * Gets the count from the database for the amount of entries in the [tableName]_history table for this business object.  Only call
+         * this	method on classes where	maintainHistory	= true,	otherwise an exception will be thrown.
+         *
+         * @return integer
+         * @since 1.2
+         * @throws AlphaException
+         */
+	public function getHistoryCount() {
+                self::$logger->debug('>>getHistoryCount()');
+
+                if(method_exists($this, 'before_getHistoryCount_callback'))
+                        $this->before_getHistoryCount_callback();
+
+               	global $config;
+
+               	$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+               	$count = $provider->getHistoryCount();
+
+               	if(method_exists($this, 'after_getHistoryCount_callback'))
+                        $this->after_getHistoryCount_callback();
+
+                self::$logger->debug('<<getHistoryCount ['.$count.']');
+                return $count;
+        }
+
 	/**
 	 * Gets the OID for the object in zero-padded format (same as getOID()).  This version is designed
 	 * to be overridden in case you want to do something different with the ID of your objects outside

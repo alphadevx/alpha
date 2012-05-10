@@ -278,6 +278,16 @@ interface AlphaDAOProviderInterface {
 	 * @throws AlphaException
 	 */
 	public function getCount($attributes=array(), $values=array());
+
+        /**
+         * Gets the count from the database for the amount of entries in the [tableName]_history table for this business object.  Only call
+	 * this method on classes where maintainHistory = true, otherwise an exception will be thrown.
+         *
+         * @return integer
+         * @since 1.2
+         * @throws AlphaException
+         */
+        public function getHistoryCount();
 	
 	/**
 	 * Populate all of the enum options for this object from the database.
