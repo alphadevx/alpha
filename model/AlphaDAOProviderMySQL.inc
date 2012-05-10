@@ -1383,7 +1383,39 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			return 0;
 		}
 	}
-	
+
+        /**
+         * Gets the count from the database for the amount of entries in the [tableName]_history table for this business object.  Only call
+         * this	method on classes where	maintainHistory	= true,	otherwise an exception will be thrown.
+         *
+         * @return integer
+         * @since 1.2
+         * @throws AlphaException
+         */
+	public function getHistoryCount() {
+		self::$logger->debug('>>getHistoryCount()');
+
+		if(!$this->BO->getMaintainHistory())
+			throw new AlphaException('getHistoryCount method called on a DAO where no history is maintained!');
+
+		$sqlQuery = 'SELECT COUNT(OID) AS object_count FROM '.$this->BO->getTableName().'_history WHERE OID='.$this->BO->getOID();
+
+               	$this->BO->setLastQuery($sqlQuery);
+
+               	$result = self::getConnection()->query($sqlQuery);
+
+               	if ($result) {
+                       	$row = $result->fetch_array(MYSQLI_ASSOC);
+
+                        self::$logger->debug('<<getHistoryCount ['.$row['object_count'].']');
+                        return $row['object_count'];
+                }else{
+                        throw new AlphaException('Failed to get the history count for the business object ['.$this->BO->getOID().'] from the table ['.$this->BO->getTableName().'_history], query is ['.$this->BO->getLastQuery().']');
+                       	self::$logger->debug('<<getHistoryCount [0]');
+                       	return 0;
+               	}
+	}
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::setEnumOptions()
