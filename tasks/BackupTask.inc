@@ -65,7 +65,7 @@ class BackupTask implements AlphaTaskInterface {
 		if(!file_exists($config->get('sysBackupDir')))
 			mkdir($config->get('sysBackupDir'));
 			
-		$targetDir = $config->get('sysBackupDir').date("d-m-Y").'/';
+		$targetDir = $config->get('sysBackupDir').date("Y-m-d").'/';
 			
 		if(file_exists($targetDir))
 			AlphaFileUtils::deleteDirectoryContents($targetDir);
@@ -85,7 +85,7 @@ class BackupTask implements AlphaTaskInterface {
 		}
 		
 		if($config->get('sysBackupCompress')) {
-			AlphaFileUtils::zip($targetDir, $targetDir.date("d-m-Y").'.zip');
+			AlphaFileUtils::zip($targetDir, $targetDir.date("Y-m-d").'.zip');
 			
 			// we can safely remove the uncompressed files now to save space...
 			AlphaFileUtils::deleteDirectoryContents($targetDir.'logs');
@@ -94,7 +94,7 @@ class BackupTask implements AlphaTaskInterface {
 			AlphaFileUtils::deleteDirectoryContents($targetDir.'attachments');
 			rmdir($targetDir.'attachments');
 			
-			unlink($targetDir.$config->get('sysDB').'_'.date("d-m-Y").'.sql');
+			unlink($targetDir.$config->get('sysDB').'_'.date("Y-m-d").'.sql');
 			
 			if(count($additionalDirectories) > 0) {
 				foreach($additionalDirectories as $additionalDirectory) {
