@@ -67,7 +67,7 @@ class AlphaBackUpUtils {
 	public static function backUpDatabase($backupDir) {
 		global $config;
 		
-		$targetFileName = $backupDir.$config->get('sysDB').'_'.date("d-m-Y").'.sql';
+		$targetFileName = $backupDir.$config->get('sysDB').'_'.date("Y-m-d").'.sql';
 		
 		exec('mysqldump  --host="'.$config->get('sysDBHost').'" --user="'.$config->get('sysDBUsername').'" --password="'.$config->get('sysDBPassword').'" --opt '.$config->get('sysDB').' 2>&1 >'.$targetFileName);
 	}
