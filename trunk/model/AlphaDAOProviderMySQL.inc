@@ -1384,13 +1384,9 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		}
 	}
 
-        /**
-         * Gets the count from the database for the amount of entries in the [tableName]_history table for this business object.  Only call
-         * this	method on classes where	maintainHistory	= true,	otherwise an exception will be thrown.
-         *
-         * @return integer
-         * @since 1.2
-         * @throws AlphaException
+	/**
+         * (non-PHPdoc)
+         * @see alpha/model/AlphaDAOProviderInterface::getHistoryCount()
          */
 	public function getHistoryCount() {
 		self::$logger->debug('>>getHistoryCount()');
