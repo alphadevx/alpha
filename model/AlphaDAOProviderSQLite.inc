@@ -102,19 +102,20 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::disconnect()
-	 * @todo
 	 */
 	public static function disconnect() {
-                throw new NotImplementedException('AlphaDAOProviderInterface::disconnect() not implemented by this provider');
+		if(isset(self::$connection)) {
+			self::$connection->close();
+			self::$connection = null;
+		}
 	}
 	
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::getLastDatabaseError()
-	 * @todo
 	 */
 	public static function getLastDatabaseError() {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::getLastDatabaseError() not implemented by this provider');
+		self::$connection->lastErrorMsg();
 	}
 	
 	/**
