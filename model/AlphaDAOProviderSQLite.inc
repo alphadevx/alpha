@@ -52,6 +52,14 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	 * @since 1.2
 	 */
 	private static $logger = null;
+
+	/**
+	 * Database connection
+	 *
+	 * @var SQLite3
+	 * @since 1.2
+	 */
+	private static $connection;
 	
 	/**
 	 * The business object that we are mapping back to
@@ -76,10 +84,19 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::getConnection()
-	 * @todo
 	 */
 	public static function getConnection() {
-		throw new NotImplementedException('AlphaDAOProviderInterface::getConnection() not implemented by this provider');
+		global $config;
+
+		if(!isset(self::$connection)) {
+			try {
+				self::$connection = new SQLite3($config->get('sysDBFilePath'));
+			} catch(Exeception $e) {
+				self::$logger->fatal('Could not open SQLite database: ['.$e->getMessage().']');
+			}
+		}
+
+		return self::$connection;
 	}
 	
 	/**
