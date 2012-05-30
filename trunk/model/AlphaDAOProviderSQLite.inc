@@ -121,10 +121,22 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::query()
-	 * @todo
 	 */
 	public function query($sqlQuery) {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::query() not implemented by this provider');
+		$this->BO->setLastQuery($sqlQuery);
+		
+		$resultArray = array();
+		
+		if(!$result = self::getConnection()->query($sqlQuery)) {
+			throw new CustomQueryException('Failed to run the custom query, SQLite error is ['.self::getLastDatabaseError().'], query ['.$sqlQuery.']');
+			return array();
+		}else{
+			while($row = $result->fetchArray(SQLITE3_ASSOC)) {
+				array_push($resultArray, $row);
+			}
+				
+			return $resultArray;
+		}
 	}
 	
 	/**
