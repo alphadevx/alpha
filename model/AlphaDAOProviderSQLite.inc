@@ -142,12 +142,96 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::load()
-	 * @todo
 	 */
 	public function load($OID) {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::load() not implemented by this provider');
-	}
+		self::$logger->debug('>>load(OID=['.$OID.'])');
+
+	        global $config;
+		
+		$attributes = $this->BO->getPersistentAttributes();
+		$fields = '';
+		foreach($attributes as $att)
+			$fields .= $att.',';
+		$fields = substr($fields, 0, -1);
+			
+		$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE OID = :OID LIMIT 1;';
+		$this->BO->setLastQuery($sqlQuery);
+		$stmt = self::getConnection()->prepare($sqlQuery);
+
+		$row = array();
+			
+		if($stmt instanceof SQLite3Stmt) {
+			$stmt->bindValue(':OID', $OID, SQLITE3_INTEGER);
+				
+			$result = $stmt->execute();
+
+			// there should only ever be one (or none)
+			$row = $result->fetchArray(SQLITE3_ASSOC);
+				
+			$stmt->close();
+		}else{
+			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
+			if(!$this->BO->checkTableExists()) {
+				$this->BO->makeTable();
+				if($this->BO->getMaintainHistory())
+					$this->BO->makeHistoryTable();
+				throw new BONotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->BO->getTableName().'] did not exist so had to create!');
+			}
+			return;
+		}
+			
+		if(!isset($row['OID']) || $row['OID'] < 1) {
+			throw new BONotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');			
+			self::$logger->debug('<<load');
+			return;
+		}
+			
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = $reflection->getProperties();
 	
+		try {
+			foreach($properties as $propObj) {
+				$propName = $propObj->name;
+				
+				// filter transient attributes
+				if(!in_array($propName, $this->BO->getTransientAttributes())) {
+					$this->BO->set($propName, $row[$propName]);
+				}elseif(!$propObj->isPrivate() && $this->BO->getPropObject($propName) instanceof Relation) {
+					$prop = $this->BO->getPropObject($propName);
+						
+					// handle the setting of ONE-TO-MANY relation values
+					if($prop->getRelationType() == 'ONE-TO-MANY') {
+						$this->BO->set($propObj->name, $this->BO->getOID());
+					}
+					
+					// handle the setting of MANY-TO-ONE relation values
+					if($prop->getRelationType() == 'MANY-TO-ONE') {
+						$this->BO->set($propObj->name, $row[$propName]);
+					}
+				}
+			}
+		}catch (IllegalArguementException $e) {
+			self::$logger->warn('Bad data stored in the table ['.$this->BO->getTableName().'], field ['.$propObj->name.'] bad value['.$row[$propObj->name].'], exception ['.$e->getMessage().']');
+		}catch (PHPException $e) {
+			// it is possible that the load failed due to the table not being up-to-date
+			if($this->BO->checkTableNeedsUpdate()) {	
+				$missingFields = $this->BO->findMissingFields();
+
+				$count = count($missingFields);
+
+				for($i = 0; $i < $count; $i++)
+					$this->BO->addProperty($missingFields[$i]);
+
+				throw new BONotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->BO->getTableName().'] was out of sync with the database so had to be updated!');
+				self::$logger->debug('<<load');
+				return;
+			}
+		}
+		
+		self::$logger->debug('<<load');
+	}
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::loadByAttribute()
