@@ -6,7 +6,7 @@
  * @package alpha::model
  * @since 1.2
  * @author John Collins <dev@alphaframework.org>
- * @version $Id: AlphaDAOProviderMySQL.inc 1524 2012-05-10 12:58:19Z alphadev $
+ * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
  * All rights reserved.
@@ -235,19 +235,172 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::loadByAttribute()
-	 * @todo
 	 */
 	public function loadByAttribute($attribute, $value, $ignoreClassType=false, $loadAttributes=array()) {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::loadByAttribute() not implemented by this provider');
+		self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'], ignoreClassType=['.$ignoreClassType.'], 
+			loadAttributes=['.var_export($loadAttributes, true).'])');
+		
+		if(count($loadAttributes) == 0)
+			$attributes = $this->BO->getPersistentAttributes();
+		else
+			$attributes = $loadAttributes;
+		
+		$fields = '';
+		foreach($attributes as $att)
+			$fields .= $att.',';
+		$fields = substr($fields, 0, -1);
+		
+		if(!$ignoreClassType && $this->BO->isTableOverloaded())
+			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE '.$attribute.' = :attribute AND classname = :classname LIMIT 1;';
+		else
+			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE '.$attribute.' = :attribute LIMIT 1;';
+		
+		self::$logger->debug('Query=['.$sqlQuery.']');
+		
+		$this->BO->setLastQuery($sqlQuery);
+		$stmt = self::getConnection()->prepare($sqlQuery);
+
+		$row = array();
+		
+		if($stmt instanceof SQLite3Stmt) {
+			if($this->BO->getPropObject($attribute) instanceof Integer) {
+				if(!$ignoreClassType && $this->BO->isTableOverloaded()) {
+					$stmt->bindValue(':attribute', $value, SQLITE3_INTEGER);
+					$stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
+				}else{
+					$stmt->bindValue(':attribute', $value, SQLITE3_INTEGER);
+				}
+			}else{
+				if(!$ignoreClassType && $this->BO->isTableOverloaded()) {
+					$stmt->bindValue(':attribute', $value, SQLITE3_TEXT);
+                                        $stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
+				}else{
+					$stmt->bindValue(':attribute', $value, SQLITE3_TEXT);
+				}
+			}
+			
+			$result = $stmt->execute();
+			
+			// there should only ever be one (or none)
+                        $row = $result->fetchArray(SQLITE3_ASSOC);
+				
+			$stmt->close();
+		}else{
+			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
+			if(!$this->BO->checkTableExists()) {
+				$this->BO->makeTable();
+				if($this->BO->getMaintainHistory())
+                                        $this->BO->makeHistoryTable();
+				throw new BONotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table did not exist so had to create!');
+			}
+			return;
+		}
+		
+		if(!isset($row['OID']) || $row['OID'] < 1) {
+			throw new BONotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], not found in database.');			
+			self::$logger->debug('<<loadByAttribute');
+			return;
+		}
+		
+		$this->OID = $row['OID'];
+		
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = $reflection->getProperties();
+
+		try {
+			foreach($properties as $propObj) {
+				$propName = $propObj->name;
+
+				if(isset($row[$propName])) {
+					// filter transient attributes
+					if(!in_array($propName, $this->BO->getTransientAttributes())) {
+						$this->BO->set($propName, $row[$propName]);
+					}elseif(!$propObj->isPrivate() && $this->BO->get($propName) != '' && $this->BO->getPropObject($propName) instanceof Relation) {
+						$prop = $this->BO->getPropObject($propName);
+						
+						// handle the setting of ONE-TO-MANY relation values
+						if($prop->getRelationType() == 'ONE-TO-MANY') {
+							$this->BO->set($propObj->name, $this->BO->getOID());
+						}
+					}
+				}
+			}
+		}catch (IllegalArguementException $e) {
+			self::$logger->warn('Bad data stored in the table ['.$this->BO->getTableName().'], field ['.$propObj->name.'] bad value['.$row[$propObj->name].'], exception ['.$e->getMessage().']');
+		}catch (PHPException $e) {
+			// it is possible that the load failed due to the table not being up-to-date
+			if($this->BO->checkTableNeedsUpdate()) {				
+				$missingFields = $this->BO->findMissingFields();
+	    	
+				$count = count($missingFields);
+				
+				for($i = 0; $i < $count; $i++)
+					$this->BO->addProperty($missingFields[$i]);
+					
+				throw new BONotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table ['.$this->BO->getTableName().'] was out of sync with the database so had to be updated!');
+				self::$logger->debug('<<loadByAttribute');
+				return;
+			}
+		}
+		
+		self::$logger->debug('<<loadByAttribute');
 	}
 	
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::loadAll()
-	 * @todo
 	 */
 	public function loadAll($start=0, $limit=0, $orderBy='OID', $order='ASC', $ignoreClassType=false) {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::loadAll() not implemented by this provider');
+		self::$logger->debug('>>loadAll(start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
+		
+		// ensure that the field name provided in the orderBy param is legit
+		try {
+			$field = $this->BO->get($orderBy);
+		}catch(AlphaException $e) {
+			throw new AlphaException('The field name ['.$orderBy.'] provided in the param orderBy does not exist on the class ['.get_class($this->BO).']');
+		}
+		
+		if(!$ignoreClassType && $this->BO->isTableOverloaded()) {
+			if($limit == 0) {
+				$sqlQuery = 'SELECT OID FROM '.$this->BO->getTableName().' WHERE classname=\''.get_class($this->BO).'\' ORDER BY '.$orderBy.' '.$order.';';
+			}else{
+				$sqlQuery = 'SELECT OID FROM '.$this->BO->getTableName().' WHERE classname=\''.get_class($this->BO).'\' ORDER BY '.$orderBy.' '.$order.' LIMIT '.
+					$limit.' OFFSET '.$start.';';
+			}
+		}else{				
+			if($limit == 0)
+				$sqlQuery = 'SELECT OID FROM '.$this->BO->getTableName().' ORDER BY '.$orderBy.' '.$order.';';
+			else
+				$sqlQuery = 'SELECT OID FROM '.$this->BO->getTableName().' ORDER BY '.$orderBy.' '.$order.' LIMIT '.$limit.' OFFSET '.$start.';';
+		}
+		
+		$this->BO->setLastQuery($sqlQuery);
+		
+		if(!$result = self::getConnection()->query($sqlQuery)) {
+			throw new BONotFoundException('Failed to load object OIDs, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
+			self::$logger->debug('<<loadAll [0]');
+			return array();
+		}
+		
+		// now build an array of objects to be returned
+		$objects = array();
+		$count = 0;
+		$BO_Class = get_class($this->BO);
+		
+		while($row = $result->fetchArray()) {
+			try {
+				$obj = new $BO_Class();
+				$obj->load($row['OID']);
+				$objects[$count] = $obj;
+				$count++;
+			}catch(ResourceNotAllowedException $e) {
+				// the resource not allowed will be absent from the list
+			}
+		}
+		
+		self::$logger->debug('<<loadAll ['.count($objects).']');
+		return $objects;
 	}
 	
 	/**
