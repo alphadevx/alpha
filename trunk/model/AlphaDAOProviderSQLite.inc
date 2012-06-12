@@ -406,19 +406,185 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::loadAllByAttribute()
-	 * @todo
 	 */
 	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC", $ignoreClassType=false, $constructorArgs=array()) {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::loadAllByAttribute() not implemented by this provider');
+		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
+		
+		if ($start != 0 && $limit != 0)
+			$limit = ' LIMIT '.$limit.' OFFSET '.$start.';';
+		else
+			$limit = ';';
+		
+		if(!$ignoreClassType && $this->BO->isTableOverloaded())
+			$sqlQuery = "SELECT OID FROM ".$this->BO->getTableName()." WHERE $attribute = :attribute AND classname = :classname ORDER BY ".$orderBy." ".$order.$limit;
+		else
+			$sqlQuery = "SELECT OID FROM ".$this->BO->getTableName()." WHERE $attribute = :attribute ORDER BY ".$orderBy." ".$order.$limit;			
+			
+		$this->BO->setLastQuery($sqlQuery);
+		self::$logger->debug($sqlQuery);
+		
+		$stmt = self::getConnection()->prepare($sqlQuery);
+		
+		if($stmt instanceof SQLite3Stmt) {
+			if($this->BO->getPropObject($attribute) instanceof Integer) {
+				if($this->BO->isTableOverloaded()) {
+					$stmt->bindValue(':attribute', $value, SQLITE3_INTEGER);
+					$stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
+				}else{
+					$stmt->bindValue(':attribute', $value, SQLITE3_INTEGER);
+				}
+			}else{
+				if($this->BO->isTableOverloaded()) {
+					$stmt->bindValue(':attribute', $value, SQLITE3_TEXT);
+                                        $stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
+				}else{
+					$stmt->bindValue(':attribute', $value, SQLITE3_TEXT);
+				}
+			}
+			
+			$result = $stmt->execute();
+			
+			$stmt->close();
+		}else{
+			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
+			if(!$this->BO->checkTableExists()) {
+				$this->BO->makeTable();
+				if($this->BO->getMaintainHistory())
+                                        $this->BO->makeHistoryTable();
+				throw new BONotFoundException('Failed to load objects by attribute ['.$attribute.'] and value ['.$value.'], table did not exist so had to create!');
+			}
+			self::$logger->debug('<<loadAllByAttribute []');
+			return array();
+		}
+		
+		// now build an array of objects to be returned
+		$objects = array();
+		$count = 0;
+		$BO_Class = get_class($this->BO);
+		
+		foreach($result as $row) {
+			try {
+				$argsCount = count($constructorArgs);
+				
+				if($argsCount < 1) {
+					$obj = new $BO_Class();
+				}else{
+					switch ($argsCount) {
+						case 1:
+							$obj = new $BO_Class($constructorArgs[0]);
+						break;
+						case 2:
+							$obj = new $BO_Class($constructorArgs[0],$constructorArgs[1]);
+						break;
+						case 3:
+							$obj = new $BO_Class($constructorArgs[0],$constructorArgs[1],$constructorArgs[2]);
+						break;
+						case 4:
+							$obj = new $BO_Class($constructorArgs[0],$constructorArgs[1],$constructorArgs[2],$constructorArgs[3]);
+						break;
+						case 5:
+							$obj = new $BO_Class($constructorArgs[0],$constructorArgs[1],$constructorArgs[2],$constructorArgs[3],$constructorArgs[4]);
+						break;						
+						default:
+							throw new IllegalArguementException('Too many elements in the $constructorArgs array passed to the loadAllByAttribute method!');
+						break;
+					}
+				}
+				
+				$obj->load($row['OID']);
+				$objects[$count] = $obj;
+				$count++;
+			}catch(ResourceNotAllowedException $e) {
+				// the resource not allowed will be absent from the list
+			}
+		}
+		
+		self::$logger->debug('<<loadAllByAttribute ['.count($objects).']');
+		return $objects;
 	}
 	
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::loadAllByAttributes()
-	 * @todo
 	 */
 	public function loadAllByAttributes($attributes=array(), $values=array(), $start=0, $limit=0, $orderBy='OID', $order='ASC', $ignoreClassType=false) {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::loadAllByAttributes() not implemented by this provider');
+		self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.
+			$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
+		
+		$whereClause = ' WHERE';
+		
+		$count = count($attributes);
+		
+		for($i = 0; $i < $count; $i++) {
+			$whereClause .= ' '.$attributes[$i].' = :'.$attributes[$i].' AND';
+			self::$logger->debug($whereClause);
+		}
+		
+		if(!$ignoreClassType && $this->BO->isTableOverloaded())
+			$whereClause .= ' classname = :classname AND';
+		
+		// remove the last " AND"
+		$whereClause = substr($whereClause, 0, -4);
+		
+		if ($limit != 0)
+			$limit = ' LIMIT '.$limit.' OFFSET '.$start.';';
+		else
+			$limit = ';';
+		
+		$sqlQuery = "SELECT OID FROM ".$this->BO->getTableName().$whereClause." ORDER BY ".$orderBy." ".$order.$limit;
+			
+		$this->BO->setLastQuery($sqlQuery);
+		
+		$stmt = self::getConnection()->prepare($sqlQuery);
+		
+		if($stmt instanceof SQLite3Stmt) {
+			// bind params where required attributes are provided
+			if(count($attributes) > 0 && count($attributes) == count($values)) {
+				for($i = 0; $i < count($attributes); $i++) {
+					$stmt->bindValue(':'.$attributes[$i], $values[$i], SQLITE3_TEXT);
+				}
+			}else{
+				// we'll still need to bind the "classname" for overloaded BOs...
+				if($this->BO->isTableOverloaded())
+					$stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
+			}
+			
+			$result = $stmt->execute();
+				
+			$stmt->close();
+		}else{
+			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
+			
+			if(!$this->BO->checkTableExists()) {
+				$this->BO->makeTable();
+				if($this->BO->getMaintainHistory())
+                                        $this->BO->makeHistoryTable();
+				throw new BONotFoundException('Failed to load objects by attributes ['.var_export($attributes, true).'] and values ['.
+					var_export($values, true).'], table did not exist so had to create!');
+			}
+			
+			self::$logger->debug('<<loadAllByAttributes []');
+			return array();
+		}
+		
+		// now build an array of objects to be returned
+		$objects = array();
+		$count = 0;
+		$BO_Class = get_class($this->BO);
+		
+		foreach($result as $row) {
+			try {
+				$obj = new $BO_Class();
+				$obj->load($row['OID']);
+				$objects[$count] = $obj;
+				$count++;
+			}catch(ResourceNotAllowedException $e) {
+				// the resource not allowed will be absent from the list
+			}
+		}
+		
+		self::$logger->debug('<<loadAllByAttributes ['.count($objects).']');
+		return $objects;
 	}
 	
 	/**
