@@ -590,19 +590,78 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::loadAllByDayUpdated()
-	 * @todo
 	 */
 	public function loadAllByDayUpdated($date, $start=0, $limit=0, $orderBy="OID", $order="ASC", $ignoreClassType=false) {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::loadAllByDayUpdated() not implemented by this provider');
+		self::$logger->debug('>>loadAllByDayUpdated(date=['.$date.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
+		
+		if ($start != 0 && $limit != 0)
+			$limit = ' LIMIT '.$limit.' OFFSET '.$start.';';
+		else
+			$limit = ';';
+		
+		if(!$ignoreClassType && $this->BO->isTableOverloaded())
+			$sqlQuery = "SELECT OID FROM ".$this->BO->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' AND classname='".get_class($this->BO)."' ORDER BY ".$orderBy." ".$order.$limit;
+		else
+			$sqlQuery = "SELECT OID FROM ".$this->BO->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' ORDER BY ".$orderBy." ".$order.$limit;
+			
+		$this->BO->setLastQuery($sqlQuery);
+
+		if(!$result = self::getConnection()->query($sqlQuery)) {
+			throw new BONotFoundException('Failed to load object OIDs, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
+			self::$logger->debug('<<loadAllByDayUpdated []');
+			return array();
+		}
+		
+		// now build an array of objects to be returned
+		$objects = array();
+		$count = 0;
+		$BO_Class = get_class($this->BO);
+		
+		while($row = $result->fetchArray()) {
+			$obj = new $BO_Class();
+			$obj->load($row['OID']);
+			$objects[$count] = $obj;
+			$count++;
+		}
+		
+		self::$logger->debug('<<loadAllByDayUpdated ['.count($objects).']');
+		return $objects;
 	}
 	
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::loadAllFieldValuesByAttribute()
-	 * @todo
 	 */
 	public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order='ASC', $ignoreClassType=false) {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::loadAllFieldValuesByAttribute() not implemented by this provider');
+		self::$logger->debug('>>loadAllFieldValuesByAttribute(attribute=['.$attribute.'], value=['.$value.'], returnAttribute=['.$returnAttribute.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
+
+		if(!$ignoreClassType && $this->BO->isTableOverloaded())
+			$sqlQuery = "SELECT ".$returnAttribute." FROM ".$this->BO->getTableName()." WHERE $attribute = '$value' AND classname='".get_class($this->BO)."' ORDER BY OID ".$order.";";
+		else
+			$sqlQuery = "SELECT ".$returnAttribute." FROM ".$this->BO->getTableName()." WHERE $attribute = '$value' ORDER BY OID ".$order.";";
+
+		$this->BO->setLastQuery($sqlQuery);
+
+		self::$logger->debug('lastQuery ['.$sqlQuery.']');
+
+		if(!$result = self::getConnection()->query($sqlQuery)) {
+			throw new BONotFoundException('Failed to load field ['.$returnAttribute.'] values, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
+			self::$logger->debug('<<loadAllFieldValuesByAttribute []');
+			return array();
+		}
+
+		// now build an array of attribute values to be returned
+		$values = array();
+		$count = 0;
+		$BO_Class = get_class($this->BO);
+
+		while($row = $result->fetchArray()) {
+			$values[$count] = $row[$returnAttribute];
+			$count++;
+		}
+
+		self::$logger->debug('<<loadAllFieldValuesByAttribute ['.count($values).']');
+		return $values;
 	}
 
 	/**
