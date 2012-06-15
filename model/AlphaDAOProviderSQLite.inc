@@ -667,12 +667,215 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::save()
-	 * @todo
 	 */
 	public function save() {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::save() not implemented by this provider');
-	}
+		self::$logger->debug('>>save()');
+			
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = $reflection->getProperties();
+		$sqlQuery = '';
+		$stmt = null;
+
+		if($this->BO->getVersion() != $this->BO->getVersionNumber()->getValue()){
+			throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
+			return;
+		}
+
+		// set the "updated by" fields, we can only set the user id if someone is logged in
+		if(isset($_SESSION['currentUser']))
+			$this->BO->set('updated_by', $_SESSION['currentUser']->getOID());
+			
+		$this->BO->set('updated_ts', new Timestamp(date("Y-m-d H:i:s")));
+			
+		// check to see if it is a transient object that needs to be inserted
+		if($this->BO->isTransient()) {
+			$savedFields = array();
+			$sqlQuery = 'INSERT INTO '.$this->BO->getTableName().' (';
 	
+			foreach($properties as $propObj) {
+				$propName = $propObj->name;
+				if (!in_array($propName, $this->BO->getTransientAttributes())) {
+					// Skip the OID, database auto number takes care of this.
+					if($propName != 'OID' && $propName != 'version_num') {
+						$sqlQuery .= "$propName,";
+						$savedFields[] = $propName;
+					}
+					
+					if($propName == 'version_num') {
+						$sqlQuery .= 'version_num,';
+						$savedFields[] = 'version_num';
+					}
+				}
+			}
+			if($this->BO->isTableOverloaded())
+				$sqlQuery .= 'classname,';
+	
+			$sqlQuery = rtrim($sqlQuery, ",");
+	
+			$sqlQuery .= ') VALUES (';
+				
+			foreach($savedFields as $savedField)
+				$sqlQuery.= ':'.$savedField.',';
+				
+			if($this->BO->isTableOverloaded())
+				$sqlQuery.= ':classname,';
+				
+			$sqlQuery = rtrim($sqlQuery, ',').')';
+				
+			$this->BO->setLastQuery($sqlQuery);
+			self::$logger->debug('Query ['.$sqlQuery.']');
+			
+			$stmt = self::getConnection()->prepare($sqlQuery);
+		
+			if($stmt instanceof SQLite3Stmt) {
+
+				foreach($savedFields as $savedField) {
+					if($this->BO->get($savedField) instanceof Integer)
+						$stmt->bindParam(':'.$savedField, $savedField, SQLITE3_INTEGER);
+					else
+						$stmt->bindParam(':'.$savedField, $savedField, SQLITE3_TEXT);
+				}
+
+				if($this->BO->isTableOverloaded())
+					$stmt->bindParam(':classname', get_class($this->BO), SQLITE3_TEXT);
+
+				$stmt->execute();
+			}else{
+				throw new FailedSaveException('Failed to save object, error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
+			}
+		}else{
+			// assume that it is a persistent object that needs to be updated
+			$savedFields = array();
+			$sqlQuery = 'UPDATE '.$this->BO->getTableName().' SET ';
+	
+			foreach($properties as $propObj) {
+				$propName = $propObj->name;
+				if (!in_array($propName, $this->BO->getTransientAttributes())) {
+					// Skip the OID, database auto number takes care of this.
+					if($propName != 'OID' && $propName != 'version_num') {			
+						$sqlQuery .= "$propName = :$propName,";
+						$savedFields[] = $propName;
+					}
+
+					if($propName == 'version_num') {
+						$sqlQuery .= 'version_num = :version_num,';
+						$savedFields[] = 'version_num';
+					}
+				}
+			}
+
+			if($this->BO->isTableOverloaded())
+				$sqlQuery .= 'classname = :classname,';
+	
+			$sqlQuery = rtrim($sqlQuery, ",");
+	
+			$sqlQuery .= " WHERE OID=:OID;";
+
+			$this->BO->setLastQuery($sqlQuery);
+			$stmt = self::getConnection()->prepare($sqlQuery);
+				
+			if($stmt instanceof SQLite3Stmt) {				
+				
+				foreach($savedFields as $savedField) {
+                                       	if($this->BO->get($savedField) instanceof Integer)
+                                                $stmt->bindParam(':'.$savedField, $savedField, SQLITE3_INTEGER);
+                                        else
+                                                $stmt->bindParam(':'.$savedField, $savedField, SQLITE3_TEXT);
+                                }
+
+                                if($this->BO->isTableOverloaded())
+                                       	$stmt->bindParam(':classname', get_class($this->BO), SQLITE3_TEXT);
+
+				$stmt->bindValue(':OID', $OID, SQLITE3_INTEGER);
+
+				$stmt->execute();	
+			}else{
+				throw new FailedSaveException('Failed to save object, error is ['.$stmt->error.'], query ['.$this->BO->getLastQuery().']');				
+			}	
+		}
+
+		if ($stmt != null && $stmt != false) {
+			// populate the updated OID in case we just done an insert				
+			if($this->BO->isTransient())
+				$this->BO->setOID(self::getConnection()->lastInsertRowID());
+
+			try {
+				foreach($properties as $propObj) {
+					$propName = $propObj->name;
+
+					if(!$propObj->isPrivate() && $this->BO->get($propName) != '' && $this->BO->getPropObject($propName) instanceof Relation) {				
+						$prop = $this->BO->getPropObject($propName);
+
+						// handle the saving of MANY-TO-MANY relation values
+						if($prop->getRelationType() == 'MANY-TO-MANY') {
+							try {
+								try{
+									// check to see if the rel is on this class
+									$side = $prop->getSide(get_class($this->BO));											
+								}catch (IllegalArguementException $iae) {
+									$side = $prop->getSide(ucfirst($this->BO->getTableName()).'Object');
+								}
+
+								$lookUp = $prop->getLookup();									
+										
+								// first delete all of the old RelationLookup objects for this rel
+								try {
+									if($side == 'left')
+										$lookUp->deleteAllByAttribute('leftID', $this->BO->getOID());
+									else
+										$lookUp->deleteAllByAttribute('rightID', $this->BO->getOID());							
+								}catch (Exception $e) {
+									throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
+								}
+											
+								if(isset($_POST[$propName]) && $_POST[$propName] != '00000000000')
+									$OIDs = explode(',', $_POST[$propName]);
+																					
+								if(isset($OIDs) && !empty($OIDs[0])) {										
+									// now for each posted OID, create a new RelationLookup record and save
+									foreach ($OIDs as $oid) {											
+										$newLookUp = new RelationLookup($lookUp->get('leftClassName'), $lookUp->get('rightClassName'));
+										if($side == 'left') {
+											$newLookUp->set('leftID', $this->BO->getOID());
+											$newLookUp->set('rightID', $oid);
+										}else{
+											$newLookUp->set('rightID', $this->BO->getOID());
+											$newLookUp->set('leftID', $oid);
+										}
+										$newLookUp->save();
+									}									
+								}
+							}catch (Exception $e) {
+								throw new FailedSaveException('Failed to update a MANY-TO-MANY relation on the object, error is ['.$e->getMessage().']');
+								return;
+							}
+						}
+							
+						// handle the saving of ONE-TO-MANY relation values
+						if($prop->getRelationType() == 'ONE-TO-MANY') {
+							$prop->setValue($this->BO->getOID());
+						}
+					}						
+				}
+			}catch (Exception $e) {
+				throw new FailedSaveException('Failed to save object, error is ['.$e->getMessage().']');
+				return;
+			}
+				
+			$stmt->close();
+		}else{
+			// there has been an error, so decrement the version number back
+			$temp = $this->BO->getVersionNumber()->getValue();					
+			$this->BO->set('version_num', $temp-1);	
+
+			throw new FailedSaveException('Failed to save object, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
+		}
+
+		if($this->BO->getMaintainHistory())
+                        $this->BO->saveHistory();
+	}
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::saveAttribute()
