@@ -732,13 +732,13 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
 				foreach($savedFields as $savedField) {
 					if($this->BO->get($savedField) instanceof Integer)
-						$stmt->bindParam(':'.$savedField, $savedField, SQLITE3_INTEGER);
+						$stmt->bindValue(':'.$savedField, $savedField, SQLITE3_INTEGER);
 					else
-						$stmt->bindParam(':'.$savedField, $savedField, SQLITE3_TEXT);
+						$stmt->bindValue(':'.$savedField, $savedField, SQLITE3_TEXT);
 				}
 
 				if($this->BO->isTableOverloaded())
-					$stmt->bindParam(':classname', get_class($this->BO), SQLITE3_TEXT);
+					$stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
 
 				$stmt->execute();
 			}else{
@@ -779,13 +779,13 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 				
 				foreach($savedFields as $savedField) {
                                        	if($this->BO->get($savedField) instanceof Integer)
-                                                $stmt->bindParam(':'.$savedField, $savedField, SQLITE3_INTEGER);
+                                                $stmt->bindValue(':'.$savedField, $savedField, SQLITE3_INTEGER);
                                         else
-                                                $stmt->bindParam(':'.$savedField, $savedField, SQLITE3_TEXT);
+                                                $stmt->bindValue(':'.$savedField, $savedField, SQLITE3_TEXT);
                                 }
 
                                 if($this->BO->isTableOverloaded())
-                                       	$stmt->bindParam(':classname', get_class($this->BO), SQLITE3_TEXT);
+                                       	$stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
 
 				$stmt->bindValue(':OID', $OID, SQLITE3_INTEGER);
 
@@ -879,10 +879,37 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::saveAttribute()
-	 * @todo
 	 */
 	public function saveAttribute($attribute, $value) {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::saveAttribute() not implemented by this provider');
+		self::$logger->debug('>>saveAttribute(attribute=['.$attribute.'], value=['.$value.'])');
+		
+		// assume that it is a persistent object that needs to be updated
+		$sqlQuery = 'UPDATE '.$this->BO->getTableName().' SET '.$attribute.'=:attribute WHERE OID=:OID;';
+
+		$this->BO->setLastQuery($sqlQuery);
+		$stmt = self::getConnection()->prepare($sqlQuery);
+				
+		if($stmt instanceof SQLite3Stmt) {
+			if($this->BO->getPropObject($attribute) instanceof Integer)
+				$stmt->bindValue(':attribute', $value, SQLITE3_INTEGER);
+			else
+				$stmt->bindValue(':attribute', $value, SQLITE3_TEXT);
+
+			$stmt->bindValue(':OID', $this->BO->getOID(), SQLITE3_INTEGER);
+
+			$stmt->execute();
+		}else{
+			throw new FailedSaveException('Failed to save attribute, error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');				
+		}
+				
+		$stmt->close();
+
+		$this->{$attribute} = $value;
+
+		if($this->BO->getMaintainHistory())
+			$this->BO->saveHistory();
+
+		self::$logger->debug('<<saveAttribute');
 	}
 
 	/**
