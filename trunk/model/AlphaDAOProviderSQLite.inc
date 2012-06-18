@@ -915,28 +915,136 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::saveHistory()
-	 * @todo
 	 */
 	public function saveHistory() {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::saveHistory() not implemented by this provider');
+		self::$logger->debug('>>saveHistory()');
+
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = $reflection->getProperties();
+		$sqlQuery = '';
+		$stmt = null;
+
+		$savedFields = array();
+		$attributeNames = array();
+		$attributeValues = array();
+
+		$sqlQuery = 'INSERT INTO '.$this->BO->getTableName().'_history (';
+
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			if (!in_array($propName, $this->BO->getTransientAttributes())) {
+				$sqlQuery .= "$propName,";
+				$attributeNames[] = $propName;
+				$attributeValues[] = $this->BO->get($propName);
+				$savedFields[] = $propName;
+			}
+		}
+
+		if($this->BO->isTableOverloaded())
+			$sqlQuery .= 'classname,';
+
+		$sqlQuery = rtrim($sqlQuery, ",");	
+
+		$sqlQuery .= ') VALUES (';
+
+		foreach($savedFields as $saveField)
+			$sqlQuery.= ':'.$savedField.',';
+
+		if($this->BO->isTableOverloaded())
+			$sqlQuery.= ':classname,';
+
+		$sqlQuery = rtrim($sqlQuery, ',').')';
+
+		$this->BO->setLastQuery($sqlQuery);
+		self::$logger->debug('Query ['.$sqlQuery.']');
+
+		$stmt = self::getConnection()->prepare($sqlQuery);
+
+		if($stmt instanceof SQLite3Stmt) {
+			foreach($savedFields as $savedField) {
+				if($this->BO->get($savedField) instanceof Integer)
+					$stmt->bindValue(':'.$savedField, $savedField, SQLITE3_INTEGER);
+				else
+					$stmt->bindValue(':'.$savedField, $savedField, SQLITE3_TEXT);
+			}
+
+			if($this->BO->isTableOverloaded())
+				$stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
+
+			$stmt->execute();
+		}else{
+			throw new FailedSaveException('Failed to save object history, error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
+		}
 	}
 	
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::delete()
-	 * @todo
 	 */
 	public function delete() {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::delete() not implemented by this provider');
+		self::$logger->debug('>>delete()');
+				
+		$sqlQuery = "DELETE FROM ".$this->BO->getTableName()." WHERE OID = :OID;";
+			
+		$this->BO->setLastQuery($sqlQuery);
+		
+		$stmt = self::getConnection()->prepare($sqlQuery);
+				
+		if($stmt instanceof SQLite3Stmt) {
+			$stmt->bindValue(':OID', $this->BO->getOID(), SQLITE3_INTEGER);
+			$stmt->execute();
+			self::$logger->debug('Deleted the object ['.$this->BO->getOID().'] of class ['.get_class($this->BO).']');					
+		}else{
+			throw new FailedDeleteException('Failed to delete object ['.$this->BO->getOID().'], error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');				
+		}
+				
+		$stmt->close();
+		
+		self::$logger->debug('<<delete');
 	}
 	
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::getVersion()
-	 * @todo
 	 */
 	public function getVersion() {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::getVersion() not implemented by this provider');
+		self::$logger->debug('>>getVersion()');
+
+		$sqlQuery = 'SELECT version_num FROM '.$this->BO->getTableName().' WHERE OID = :OID;';
+		$this->BO->setLastQuery($sqlQuery);
+
+		$stmt = self::getConnection()->prepare($sqlQuery);
+
+		if($stmt instanceof SQLite3Stmt) {
+			$stmt->bindValue(':OID', $this->BO->getOID(), SQLITE3_INTEGER);
+
+			$result = $stmt->execute();
+
+			// there should only ever be one (or none)
+                        $row = $result->fetchArray(SQLITE3_ASSOC);
+					
+			$stmt->close();
+		}else{
+			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
+			if(!$this->BO->checkTableExists()) {
+				$this->BO->makeTable();
+				if($this->BO->getMaintainHistory())
+                                        $this->BO->makeHistoryTable();
+				throw new BONotFoundException('Failed to get the version number, table did not exist so had to create!');
+			}
+			return;
+		}
+		
+		if(!isset($row['version_num']) || $row['version_num'] < 1) {
+			self::$logger->debug('<<getVersion [0]');
+			return 0;
+		}else{
+			$version_num = $row['version_num'];
+			
+			self::$logger->debug('<<getVersion ['.$version_num.']');
+			return $version_num;
+		}
 	}
 
 	/**
