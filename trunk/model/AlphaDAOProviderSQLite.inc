@@ -1050,30 +1050,181 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::makeTable()
-	 * @todo
 	 */
 	public function makeTable() {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::makeTable() not implemented by this provider');
+		self::$logger->debug('>>makeTable()');
+		
+		$sqlQuery = "CREATE TABLE ".$this->BO->getTableName()." (OID INTEGER(11) PRIMARY KEY,";
+		
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = $reflection->getProperties();
+		
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			
+			if(!in_array($propName, $this->BO->getTransientAttributes()) && $propName != "OID") {
+				$propClass = get_class($this->BO->getPropObject($propName));
+
+				switch (strtoupper($propClass)) {
+					case "INTEGER":
+						// special properties for RelationLookup OIDs
+						if($this->BO instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID'))
+							$sqlQuery .= "$propName INTEGER(".$this->BO->getPropObject($propName)->getSize().") NOT NULL,";
+						else
+							$sqlQuery .= "$propName INTEGER(".$this->BO->getPropObject($propName)->getSize()."),";
+					break;
+					case "DOUBLE":
+						$sqlQuery .= "$propName REAL(".$this->BO->getPropObject($propName)->getSize(true)."),";
+					break;
+					case "STRING":
+						$sqlQuery .= "$propName TEXT(".$this->BO->getPropObject($propName)->getSize()."),";
+					break;
+					case "TEXT":
+						$sqlQuery .= "$propName TEXT,";
+					break;
+					case "BOOLEAN":
+						$sqlQuery .= "$propName INTEGER(1) DEFAULT '0',";
+					break;
+					case "DATE":
+						$sqlQuery .= "$propName TEXT,";
+					break;
+					case "TIMESTAMP":
+						$sqlQuery .= "$propName TEXT,";
+					break;
+					case "ENUM":
+						$sqlQuery .= "$propName TEXT,";
+					break;
+					case "DENUM":
+						$tmp = new DEnum(get_class($this->BO).'::'.$propName);
+						$sqlQuery .= "$propName INTEGER(11),";
+					break;
+					case "RELATION":						
+						$sqlQuery .= "$propName INTEGER(11),";
+					break;
+					default:
+						$sqlQuery .= "";
+					break;
+				}
+			}			
+		}
+		if($this->BO->isTableOverloaded())
+			$sqlQuery .= "classname TEXT(100);";
+		else
+			$sqlQuery .= ";";
+		
+		$this->BO->setLastQuery($sqlQuery);
+		
+		if(!$result = self::getConnection()->query($sqlQuery)) {
+			throw new AlphaException('Failed to create the table ['.$this->BO->getTableName().'] for the class ['.get_class($this->BO).'], database error is ['.self::getLastDatabaseError().']');
+			self::$logger->debug('<<makeTable');
+		}
+
+		// check the table indexes if any additional ones required
+		$this->checkIndexes();
+		
+		self::$logger->debug('<<makeTable');
 	}
 
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::makeHistoryTable()
-	 * @todo
 	 */
 	public function makeHistoryTable() {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::makeHistoryTable() not implemented by this provider');
+		self::$logger->debug('>>makeHistoryTable()');
+
+		$sqlQuery = "CREATE TABLE ".$this->BO->getTableName()."_history (OID INTEGER NOT NULL,";
+
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = $reflection->getProperties();
+
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+
+			if(!in_array($propName, $this->BO->getTransientAttributes()) && $propName != "OID") {
+				$propClass = get_class($this->BO->getPropObject($propName));
+
+				switch (strtoupper($propClass)) {
+					case "INTEGER":
+						// special properties for RelationLookup OIDs
+						if($this->BO instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID'))
+							$sqlQuery .= "$propName INT(".$this->BO->getPropObject($propName)->getSize().") NOT NULL,";
+						else
+							$sqlQuery .= "$propName INT(".$this->BO->getPropObject($propName)->getSize()."),";
+					break;
+					case "DOUBLE":
+						$sqlQuery .= "$propName REAL(".$this->BO->getPropObject($propName)->getSize(true)."),";
+					break;
+					case "STRING":
+						$sqlQuery .= "$propName TEXT(".$this->BO->getPropObject($propName)->getSize()."),";
+					break;
+					case "TEXT":
+						$sqlQuery .= "$propName TEXT,";
+					break;
+					case "BOOLEAN":
+						$sqlQuery .= "$propName INTEGER(1) DEFAULT '0',";
+					break;
+					case "DATE":
+						$sqlQuery .= "$propName TEXT,";
+					break;
+					case "TIMESTAMP":
+						$sqlQuery .= "$propName TEXT,";
+					break;
+					case "ENUM":
+						$sqlQuery .= "$propName TEXT,";
+					break;
+					case "DENUM":
+						$tmp = new DEnum(get_class($this->BO).'::'.$propName);
+						$sqlQuery .= "$propName INTEGER(11),";
+					break;
+					case "RELATION":
+						$sqlQuery .= "$propName INTEGER(11),";
+					break;
+					default:
+						$sqlQuery .= "";
+					break;
+				}
+			}
+		}
+
+		if($this->BO->isTableOverloaded())
+			$sqlQuery .= "classname TEXT(100),";
+
+		$sqlQuery .= "PRIMARY KEY (OID, version_num));";
+
+		$this->BO->setLastQuery($sqlQuery);
+
+		if(!$result = self::getConnection()->query($sqlQuery))) {
+			throw new AlphaException('Failed to create the table ['.$this->BO->getTableName().'_history] for the class ['.get_class($this->BO).'], database error is ['.self::getLastDatabaseError().']');
+			self::$logger->debug('<<makeHistoryTable');
+		}
+
+		self::$logger->debug('<<makeHistoryTable');
 	}
 
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::rebuildTable()
-	 * @todo
 	 */
 	public function rebuildTable() {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::rebuildTable() not implemented by this provider');
+		self::$logger->debug('>>rebuildTable()');
+
+		// the use of "IF EXISTS" here requires SQLite 3.3.0 or above.
+		$sqlQuery = 'DROP TABLE IF EXISTS '.$this->BO->getTableName().';';
+
+		$this->BO->setLastQuery($sqlQuery);
+
+		if(!$result = self::getConnection()->query($sqlQuery)) {
+			throw new AlphaException('Failed to drop the table ['.$this->BO->getTableName().'] for the class ['.get_class($this->BO).'], database error is ['.self::getLastDatabaseError().']');
+			self::$logger->debug('<<rebuildTable');
+		}
+
+		$this->BO->makeTable();
+
+		self::$logger->debug('<<rebuildTable');
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::dropTable()
