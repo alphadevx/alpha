@@ -1228,19 +1228,94 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::dropTable()
-	 * @todo
 	 */
 	public function dropTable($tableName=null) {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::dropTable() not implemented by this provider');
+		self::$logger->debug('>>dropTable()');
+		
+		if($tableName == null)
+			$tableName = $this->BO->getTableName();
+
+		// the use of "IF EXISTS" here requires SQLite 3.3.0 or above.
+		$sqlQuery = 'DROP TABLE IF EXISTS '.$tableName.';';
+
+		$this->BO->setLastQuery($sqlQuery);
+
+		if(!$result = self::getConnection()->query($sqlQuery)) {
+			throw new AlphaException('Failed to drop the table ['.$tableName.'] for the class ['.get_class($this->BO).'], query is ['.$this->BO->getLastQuery().']');
+			self::$logger->debug('<<dropTable');
+		}
+
+		self::$logger->debug('<<dropTable');
 	}
 
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::addProperty()
-	 * @todo
 	 */
 	public function addProperty($propName) {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::addProperty() not implemented by this provider');
+		self::$logger->debug('>>addProperty(propName=['.$propName.'])');
+
+		$sqlQuery = 'ALTER TABLE '.$this->BO->getTableName().' ADD ';
+
+		if($this->isTableOverloaded() && $propName == 'classname') {
+			$sqlQuery .= 'classname TEXT(100)';
+		}else{
+			if(!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
+				$propClass = get_class($this->BO->getPropObject($propName));
+
+				switch (strtoupper($propClass)) {
+					case "INTEGER":
+						// special properties for RelationLookup OIDs
+						if($this->BO instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID'))
+							$sqlQuery .= "$propName INTEGER(".$this->BO->getPropObject($propName)->getSize().") NOT NULL,";
+						else
+							$sqlQuery .= "$propName INTEGER(".$this->BO->getPropObject($propName)->getSize()."),";
+					break;
+					case "DOUBLE":
+						$sqlQuery .= "$propName REAL(".$this->BO->getPropObject($propName)->getSize(true)."),";
+					break;
+					case "STRING":
+						$sqlQuery .= "$propName TEXT(".$this->BO->getPropObject($propName)->getSize()."),";
+					break;
+					case "TEXT":
+						$sqlQuery .= "$propName TEXT,";
+					break;
+					case "BOOLEAN":
+						$sqlQuery .= "$propName INTEGER(1) DEFAULT '0',";
+					break;
+					case "DATE":
+						$sqlQuery .= "$propName TEXT,";
+					break;
+					case "TIMESTAMP":
+						$sqlQuery .= "$propName TEXT,";
+					break;
+					case "ENUM":
+						$sqlQuery .= "$propName TEXT,";
+					break;
+					case "DENUM":
+						$tmp = new DEnum(get_class($this->BO).'::'.$propName);
+						$sqlQuery .= "$propName INTEGER(11),";
+					break;
+					case "RELATION":						
+						$sqlQuery .= "$propName INTEGER(11),";
+					break;
+					default:
+						$sqlQuery .= "";
+					break;
+				}
+			}
+		}
+
+		$this->BO->setLastQuery($sqlQuery);
+
+		if(!$result = self::getConnection()->query($sqlQuery)) {
+			throw new AlphaException('Failed to add the new attribute ['.$propName.'] to the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
+			self::$logger->debug('<<addProperty');
+		}else{
+			self::$logger->info('Successfully added the ['.$propName.'] column onto the ['.$this->BO->getTableName().'] table for the class ['.get_class($this->BO).']');
+		}
+
+		self::$logger->debug('<<addProperty');
 	}
 
 	/**
