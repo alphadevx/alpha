@@ -1321,28 +1321,96 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::getMAX()
-	 * @todo
 	 */
 	public function getMAX() {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::getMAX() not implemented by this provider');
-	}
+		self::$logger->debug('>>getMAX()');
+
+		$sqlQuery = 'SELECT MAX(OID) AS max_OID FROM '.$this->BO->getTableName();
+
+		$this->BO->setLastQuery($sqlQuery);
+
+		try {
+			$result = $this->BO->query($sqlQuery);
 	
+			$row = $result[0];
+	
+			if (isset($row['max_OID'])) {	
+				self::$logger->debug('<<getMAX ['.$row['max_OID'].']');
+				return $row['max_OID'];
+			}else{			
+				throw new AlphaException('Failed to get the MAX ID for the class ['.get_class($this->BO).'] from the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
+			}
+		}catch (Exception $e) {
+			throw new AlphaException($e->getMessage());
+			self::$logger->debug('<<getMAX [0]');
+			return 0;
+		}
+	}
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::getCount()
-	 * @todo
 	 */
 	public function getCount($attributes=array(), $values=array()) {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::getCount() not implemented by this provider');
+		self::$logger->debug('>>getCount(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'])');
+
+		if($this->BO->isTableOverloaded())
+			$whereClause = ' WHERE classname = \''.get_class($this->BO).'\' AND';
+		else
+			$whereClause = ' WHERE';
+
+		$count = count($attributes);
+
+		for($i = 0; $i < $count; $i++) {
+			$whereClause .= ' '.$attributes[$i].' = \''.$values[$i].'\' AND';
+			self::$logger->debug($whereClause);
+		}
+		// remove the last " AND"
+		$whereClause = substr($whereClause, 0, -4);
+
+		if($whereClause != ' WHERE')
+			$sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->BO->getTableName().$whereClause;
+		else
+			$sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->BO->getTableName();
+
+		$this->BO->setLastQuery($sqlQuery);
+
+		if (!$result = self::getConnection()->query($sqlQuery)) {
+			throw new AlphaException('Failed to get the count for the class ['.get_class($this->BO).'] from the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
+                        self::$logger->debug('<<getCount [0]');
+                        return 0;
+		}else{
+			$row = $result->fetchArray(SQLITE3_ASSOC);
+
+                        self::$logger->debug('<<getCount ['.$row['class_count'].']');
+                        return $row['class_count'];
+		}
 	}
 
 	/**
          * (non-PHPdoc)
          * @see alpha/model/AlphaDAOProviderInterface::getHistoryCount()
-         * @todo
          */
 	public function getHistoryCount() {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::getHistoryCount() not implemented by this provider');
+		self::$logger->debug('>>getHistoryCount()');
+
+		if(!$this->BO->getMaintainHistory())
+			throw new AlphaException('getHistoryCount method called on a DAO where no history is maintained!');
+
+		$sqlQuery = 'SELECT COUNT(OID) AS object_count FROM '.$this->BO->getTableName().'_history WHERE OID='.$this->BO->getOID();
+
+               	$this->BO->setLastQuery($sqlQuery);
+
+               	if (!$result = self::getConnection()->query($sqlQuery)) {
+			throw new AlphaException('Failed to get the history count for the business object ['.$this->BO->getOID().'] from the table ['.$this->BO->getTableName().'_history], query is ['.$this->BO->getLastQuery().']');
+                        self::$logger->debug('<<getHistoryCount [0]');
+                       	return 0;
+                }else{
+			$row = $result->fetchArray(SQLITE3_ASSOC);
+
+                        self::$logger->debug('<<getHistoryCount ['.$row['object_count'].']');
+                       	return $row['object_count'];
+               	}
 	}
 
 	/**
