@@ -1414,32 +1414,87 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	}
 
 	/**
+	 * Given that Enum values are not saved in the database for SQLite, an implementation is not required here.
+	 * 
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::setEnumOptions()
-	 * @todo
+	 * @throws NotImplementedException
 	 */
 	public function setEnumOptions() {
                	throw new NotImplementedException('AlphaDAOProviderInterface::setEnumOptions() not implemented by this provider');
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::checkTableExists()
-	 * @todo
 	 */
 	public function checkTableExists($checkHistoryTable = false) {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::checkTableExists() not implemented by this provider');
+		self::$logger->debug('>>checkTableExists(checkHistoryTable=['.$checkHistoryTable.'])');
+
+		global $config;
+
+		$tableExists = false;
+
+		$sqlQuery = 'SELECT name FROM sqlite_master WHERE type = "table";';
+		$this->BO->setLastQuery($sqlQuery);
+
+		$result = self::getConnection()->query($sqlQuery);
+
+		$tableName = ($checkHistoryTable ? $this->BO->getTableName().'_history' : $this->BO->getTableName());
+
+		while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+	    		if (strtolower($row['name']) == strtolower($tableName))
+    				$tableExists = true;
+		}
+
+		if ($result) {			
+			self::$logger->debug('<<checkTableExists ['.$tableExists.']');
+			return $tableExists;
+		}else{			
+			throw new AlphaException('Failed to access the system database correctly, error is ['.self::getLastDatabaseError().']');
+			self::$logger->debug('<<checkTableExists [false]');
+			return false;
+		}
 	}
 
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::checkBOTableExists()
-	 * @todo
 	 */
 	public static function checkBOTableExists($BOClassName, $checkHistoryTable = false) {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::checkBOTableExists() not implemented by this provider');
+		if(self::$logger == null)
+			self::$logger = new Logger('AlphaDAOProviderSQLite');
+		self::$logger->debug('>>checkBOTableExists(BOClassName=['.$BOClassName.'], checkHistoryTable=['.$checkHistoryTable.'])');
+
+		eval('$tableName = '.$BOClassName.'::TABLE_NAME;');
+
+		if(empty($tableName))
+			$tableName = substr($BOClassName, 0, strpos($BOClassName, '_'));
+
+		if($checkHistoryTable)
+                        $tableName .= '_history';
+
+		$tableExists = false;
+
+		$sqlQuery = 'SELECT name FROM sqlite_master WHERE type = "table";';
+
+		$result = self::getConnection()->query($sqlQuery);
+
+		while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+    			if ($row['name'] == $tableName)
+    				$tableExists = true;
+		}
+
+		if (isset($row['name'])) {			
+			self::$logger->debug('<<checkBOTableExists ['.($tableExists ? 'true' : 'false').']');
+			return $tableExists;
+		}else{
+			throw new AlphaException('Failed to access the system database correctly, error is ['.self::getLastDatabaseError().']');
+			self::$logger->debug('<<checkBOTableExists [false]');
+			return false;
+		}
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::checkTableNeedsUpdate()
