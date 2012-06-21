@@ -1498,10 +1498,74 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::checkTableNeedsUpdate()
-	 * @todo
 	 */
 	public function checkTableNeedsUpdate() {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::checkTableNeedsUpdate() not implemented by this provider');
+		self::$logger->debug('>>checkTableNeedsUpdate()');
+				
+		$updateRequired = false;
+			
+		$matchCount = 0;
+			
+		$query = 'PRAGMA table_info('.$this->BO->getTableName().')';
+		$result = self::getConnection()->query($query);
+		$this->BO->setLastQuery($query);
+			
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = $reflection->getProperties();
+			
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			if (!in_array($propName, $this->BO->getTransientAttributes())) {
+				
+				$foundMatch = false;	
+					
+				while ($row = $result->fetchArray(SQLITE3_ASSOC)) {						
+			    		if ($propName == $row['name']) {
+			    			$foundMatch = true;
+			    			break;
+			    		}
+				}
+					
+				if(!$foundMatch)
+					$matchCount--;				
+
+				$result->data_seek(0);					
+			}
+		}
+			
+		// check for the "classname" field in overloaded tables
+		if($this->BO->isTableOverloaded()) {
+			$foundMatch = false;
+			
+			while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+				if ('classname' == $row['name']) {
+					$foundMatch = true;
+			    		break;
+				}
+			}
+			if(!$foundMatch)						
+				$matchCount--;
+		}
+
+		if ($matchCount != 0)
+			$updateRequired = true;
+
+		if (!$result) {
+			throw new AlphaException('Failed to access the system database correctly, error is ['.self::getLastDatabaseError().']');
+                        self::$logger->debug('<<checkTableNeedsUpdate [false]');
+                        return false;
+		}else{
+			// check the table indexes
+                        try {
+                             	$this->checkIndexes();
+                        }catch (AlphaException $ae) {
+                                self::$logger->warn("Error while checking database indexes:\n\n".$ae->getMessage());
+                        }
+
+                        self::$logger->debug('<<checkTableNeedsUpdate ['.$updateRequired.']');
+                        return $updateRequired;
+		}
 	}
 	
 	/**
