@@ -1501,39 +1501,39 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	 */
 	public function checkTableNeedsUpdate() {
 		self::$logger->debug('>>checkTableNeedsUpdate()');
-				
+
 		$updateRequired = false;
-			
+
 		$matchCount = 0;
-			
+
 		$query = 'PRAGMA table_info('.$this->BO->getTableName().')';
 		$result = self::getConnection()->query($query);
 		$this->BO->setLastQuery($query);
-			
+
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this->BO));
 		$properties = $reflection->getProperties();
-			
+
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
 			if (!in_array($propName, $this->BO->getTransientAttributes())) {
-				
+
 				$foundMatch = false;	
-					
+
 				while ($row = $result->fetchArray(SQLITE3_ASSOC)) {						
 			    		if ($propName == $row['name']) {
 			    			$foundMatch = true;
 			    			break;
 			    		}
 				}
-					
+
 				if(!$foundMatch)
 					$matchCount--;				
 
-				$result->data_seek(0);					
+				$result->seek(0);					
 			}
 		}
-			
+
 		// check for the "classname" field in overloaded tables
 		if($this->BO->isTableOverloaded()) {
 			$foundMatch = false;
@@ -1571,12 +1571,64 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::findMissingFields()
-	 * @todo
 	 */
 	public function findMissingFields() {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::findMissingFields() not implemented by this provider');
+		self::$logger->debug('>>findMissingFields()');
+
+		$missingFields = array();
+		$matchCount = 0;
+
+		$sqlQuery = 'PRAGMA table_info('.$this->BO->getTableName().')';
+		$result = self::getConnection()->query($sqlQuery);
+		$this->BO->setLastQuery($sqlQuery);
+
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = $reflection->getProperties();
+
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+			if (!in_array($propName, $this->BO->getTransientAttributes())) {
+				while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+		    			if ($propName == $row['name']) {
+		    				$matchCount++;
+		    				break;
+		    			}
+				}
+				$result->seek(0);
+			}else{
+				$matchCount++;
+			}
+			
+			if($matchCount==0) {					
+				array_push($missingFields, $propName);
+			}else{
+				$matchCount = 0;
+			}
+		}
+
+		// check for the "classname" field in overloaded tables
+		if($this->BO->isTableOverloaded()) {
+			$foundMatch = false;
+			
+			while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+				if ('classname' == $row['name']) {
+					$foundMatch = true;
+		    			break;
+				}
+			}
+			if(!$foundMatch)				
+				array_push($missingFields, 'classname');
+		}
+		
+		if (!$result) {
+			throw new AlphaException('Failed to access the system database correctly, error is ['.self::getLastDatabaseError().']');
+		}
+
+		self::$logger->debug('<<findMissingFields ['.var_export($missingFields, true).']');
+		return $missingFields;
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::getIndexes()
