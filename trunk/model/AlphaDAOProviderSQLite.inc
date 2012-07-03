@@ -1632,25 +1632,144 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::getIndexes()
-	 * @todo
 	 */
 	public function getIndexes() {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::getIndexes() not implemented by this provider');
+		self::$logger->debug('>>getIndexes()');
+		
+		$query = "SELECT name FROM sqlite_master WHERE type='index' AND tbl_name='".$this->BO->getTableName()."'";
+		
+		$this->BO->setLastQuery($query);
+		
+		$indexNames = array();
+		
+		if (!$result = self::getConnection()->query($sqlQuery)) {
+			throw new AlphaException('Failed to access the system database correctly, error is ['.self::getLastDatabaseError().']');
+		}else{
+			while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+				array_push($indexNames, $row['name']);
+			}
+		}
+
+		self::$logger->debug('<<getIndexes');
+		return $indexNames;
 	}
-	
+
 	/**
-         * (non-PHPdoc)
-         * @see alpha/model/AlphaDAOProviderInterface::checkIndexes()
-         * @todo
+         * Checks to see if all of the indexes are in place for the BO's table, creates those that are missing.
+	 *
+         * @since 1.2
          */
 	private function checkIndexes() {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::checkIndexes() not implemented by this provider');
+		self::$logger->debug('>>checkIndexes()');
+
+		$indexNames = $this->getIndexes();
+
+		// process unique keys
+		foreach($this->BO->getUniqueAttributes() as $prop) {
+			// check for composite indexes
+			if(strpos($prop, '+')) {
+				$attributes = explode('+', $prop);
+
+				$index_exists = false;
+				foreach ($indexNames as $index) {
+					if ($attributes[0].'_'.$attributes[1].'_unq_idx' == $index) {
+				    		$index_exists = true;
+					}
+					if(count($attributes) == 3) {
+						if ($attributes[0].'_'.$attributes[1].'_'.$attributes[2].'_unq_idx' == $index) {
+					    		$index_exists = true;
+						}
+					}
+				}
+
+				if(!$index_exists) {
+					if(count($attributes) == 3)
+						$this->BO->createUniqueIndex($attributes[0], $attributes[1], $attributes[2]);
+					else
+						$this->BO->createUniqueIndex($attributes[0], $attributes[1]);
+				}
+			}else{
+				$index_exists = false;
+				foreach ($indexNames as $index) {
+					if ($prop.'_unq_idx' == $index) {
+				    		$index_exists = true;
+					}
+				}
+
+				if(!$index_exists)
+					$this->createUniqueIndex($prop);
+			}
+		}
+
+		// Process foreign-key indexes. Note that SQLite 3.6.19 is requrired for foreign key support.
+
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this->BO));
+		$properties = $reflection->getProperties();
+
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;			
+			$prop = $this->BO->getPropObject($propName);
+			if($prop instanceof Relation) {
+
+				if($prop->getRelationType() == 'MANY-TO-ONE') {
+					$indexExists = false;
+					foreach ($indexNames as $index) {
+						if ($propName.'_fk_idx' == $index) {
+					    		$indexExists = true;
+						}
+					}
+
+					if(!$indexExists) {
+						$this->createForeignIndex($propName, $prop->getRelatedClass(), $prop->getRelatedClassField());
+					}
+				}
+				
+				if($prop->getRelationType() == 'MANY-TO-MANY') {
+					$lookup = $prop->getLookup();
+
+					if($lookup != null) {
+						try {					
+							$lookupIndexNames = $lookup->getIndexes();
+							
+							// handle index check/creation on left side of Relation
+							$indexExists = false;
+							foreach ($lookupIndexNames as $index) {
+								if ('leftID_fk_idx' == $index) {
+							    		$indexExists = true;
+								}
+							}
+
+							if(!$indexExists) {
+								$lookup->createForeignIndex('leftID', $prop->getRelatedClass('left'), 'OID');
+							}
+
+							// handle index check/creation on right side of Relation
+							$indexExists = false;
+							foreach ($lookupIndexNames as $index) {
+								if ('rightID_fk_idx' == $index) {
+							    		$indexExists = true;
+								}
+							}
+
+							if(!$indexExists) {
+								$lookup->createForeignIndex('rightID', $prop->getRelatedClass('right'), 'OID');
+							}
+						}catch(AlphaException $e) {
+							self::$logger->error($e->getMessage());
+						}
+					}
+				}
+			}
+		}
+
+		self::$logger->debug('<<checkIndexes');
 	}
 	
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::createForeignIndex()
-	 * @todo
+	 * @todo note that in SQLite3, we will have to re-create the table to create the FK, see: http://stackoverflow.com/questions/1884818/how-do-i-add-a-foreign-key-to-an-existing-sqlite-3-6-21-table
 	 */
 	public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute) {
                	throw new NotImplementedException('AlphaDAOProviderInterface::createForeignIndex() not implemented by this provider');
