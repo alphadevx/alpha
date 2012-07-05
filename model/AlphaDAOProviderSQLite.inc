@@ -1772,45 +1772,145 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	 * @todo note that in SQLite3, we will have to re-create the table to create the FK, see: http://stackoverflow.com/questions/1884818/how-do-i-add-a-foreign-key-to-an-existing-sqlite-3-6-21-table
 	 */
 	public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute) {
+		/* 
+		 * High-level approach will need to be:
+		 *
+		 * 1. Rename the source table to [tablename]_temp
+		 * 2. Creata a new [tablename] table, with the new FK in place.
+		 * 3. Copy all of the data from [tablename]_temp to [tablename].
+		 * 4. Drop [tablename]_temp.
+		 */
                	throw new NotImplementedException('AlphaDAOProviderInterface::createForeignIndex() not implemented by this provider');
 	}
 	
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::createUniqueIndex()
-	 * @todo
+	 * @todo note that in SQLite3, we will have to re-create the table to create the UK, see: http://stackoverflow.com/questions/969187/altering-sqlite-column-type-and-adding-pk-constraint
 	 */
 	public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '') {
+		/*
+                 * High-level approach will need to be:
+                 *
+                 * 1. Rename the source	table to [tablename]_temp
+                 * 2. Creata a new [tablename] table, with the new UK in place.
+                 * 3. Copy all of the data from	[tablename]_temp to [tablename].
+                 * 4. Drop [tablename]_temp.
+                 */
                 throw new NotImplementedException('AlphaDAOProviderInterface::createUniqueIndex() not implemented by this provider');
 	}
 	
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::reload()
-	 * @todo
 	 */
 	public function reload() {
-                throw new NotImplementedException('AlphaDAOProviderInterface::reload() not implemented by this provider');
+		self::$logger->debug('>>reload()');
+
+		if(!$this->BO->isTransient()) {
+			$this->BO->load($this->BO->getOID());			
+		}else{
+			throw new AlphaException('Cannot reload transient object from database!');
+		}
+
+		self::$logger->debug('<<reload');
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::checkRecordExists()
-	 * @todo
 	 */
 	public function checkRecordExists($OID) {
-                throw new NotImplementedException('AlphaDAOProviderInterface::checkRecordExists() not implemented by this provider');
+		self::$logger->debug('>>checkRecordExists(OID=['.$OID.'])');
+
+		$sqlQuery = 'SELECT OID FROM '.$this->BO->getTableName().' WHERE OID = :OID;';
+		$this->BO->setLastQuery($sqlQuery);
+		$stmt = self::getConnection()->prepare($sqlQuery);
+
+		$row = array();
+
+		if($stmt instanceof SQLite3Stmt) {
+			$stmt->bindValue(':OID', $OID, SQLITE3_INTEGER);
+
+			$result = $stmt->execute();
+
+			// there should only ever be one (or none)
+			$row = $result->fetchArray(SQLITE3_ASSOC);
+
+			$stmt->close();
+
+		}else{
+			throw new AlphaException('Failed to check for the record ['.$OID.'] on the class ['.get_class($this->BO).'] from the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');			
+			self::$logger->debug('<<checkRecordExists [false]');
+			return false;
+		}
+
+		if(!isset($row['OID'])) {
+			self::$logger->debug('<<checkRecordExists [false]');
+			return false;
+		}else{
+			self::$logger->debug('<<checkRecordExists [true]');
+                        return true;
+		}
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::isTableOverloaded()
-	 * @todo
 	 */
 	public function isTableOverloaded() {
-                throw new NotImplementedException('AlphaDAOProviderInterface::isTableOverloaded() not implemented by this provider');
+		self::$logger->debug('>>isTableOverloaded()');
+		
+		$classname = get_class($this->BO);
+		$tablename = ucfirst($this->BO->getTableName()).'Object';
+		
+		// use reflection to check to see if we are dealing with a persistent type (e.g. DEnum) which are never overloaded
+		$reflection = new ReflectionClass($classname);
+		$implementedInterfaces = $reflection->getInterfaces();
+		
+		foreach ($implementedInterfaces as $interface) {
+			if ($interface->name == 'AlphaTypeInterface') {
+				self::$logger->debug('<<isTableOverloaded [false]');
+				return false;
+			}
+		}
+
+		if($classname != $tablename) {
+			// loop over all BOs to see if there is one using the same table as this BO
+			
+			$BOclasses = AlphaDAO::getBOClassNames();
+
+			foreach($BOclasses as $BOclassName) {
+				if($tablename == $BOclassName) {
+					self::$logger->debug('<<isTableOverloaded [true]');
+					return true;
+				}
+			}
+			throw new BadBOTableNameException('The table name ['.$tablename.'] for the class ['.$classname.'] is invalid as it does not match a BO definition in the system!');
+			self::$logger->debug('<<isTableOverloaded [false]');
+			return false;
+		}else{
+			// check to see if there is already a "classname" column in the database for this BO
+			$query = 'PRAGMA table_info('.$this->BO->getTableName().')';
+			$result = self::getConnection()->query($sqlQuery);
+			$this->BO->setLastQuery($sqlQuery);
+
+			if(!$result) {
+				self::$logger->warn('Error during pragma table info lookup ['.self::getLastDatabaseError().']');
+			}else{
+				while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+					if ('classname' == $row['name']) {
+						self::$logger->debug('<<isTableOverloaded [true]');
+						return true;
+					}
+				}
+			}
+
+			self::$logger->debug('<<isTableOverloaded [false]');
+			return false;
+		}
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::begin()
