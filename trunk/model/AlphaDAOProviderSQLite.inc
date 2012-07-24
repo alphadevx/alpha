@@ -1959,10 +1959,9 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
   	/**
   	 * (non-PHPdoc)
   	 * @see alpha/model/AlphaDAOProviderInterface::setBO()
-	 * @todo
   	 */
 	public function setBO($BO) {
-                throw new NotImplementedException('AlphaDAOProviderInterface::setBO() not implemented by this provider');
+		$this->BO = $BO;
 	}
 }
 
