@@ -1195,7 +1195,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
 		$this->BO->setLastQuery($sqlQuery);
 
-		if(!$result = self::getConnection()->query($sqlQuery))) {
+		if(!$result = self::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to create the table ['.$this->BO->getTableName().'_history] for the class ['.get_class($this->BO).'], database error is ['.self::getLastDatabaseError().']');
 			self::$logger->debug('<<makeHistoryTable');
 		}
