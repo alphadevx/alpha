@@ -1914,28 +1914,46 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::begin()
-	 * @todo
 	 */
 	public static function begin() {
-                throw new NotImplementedException('AlphaDAOProviderInterface::begin() not implemented by this provider');
+		if(self::$logger == null)
+			self::$logger = new Logger('AlphaDAOProviderSQLite');
+	        self::$logger->debug('>>begin()');
+
+         	if (!self::getConnection()->query('BEGIN'))
+             		throw new AlphaException('Error beginning a new transaction, error is ['.self::getLastDatabaseError().']');
+
+         	self::$logger->debug('<<begin');
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::commit()
-	 * @todo
 	 */
 	public static function commit() {
-                throw new NotImplementedException('AlphaDAOProviderInterface::commit() not implemented by this provider');
+		if(self::$logger == null)
+                        self::$logger = new Logger('AlphaDAOProviderSQLite');
+                self::$logger->debug('>>commit()');
+
+                if (!self::getConnection()->query('COMMIT'))
+                        throw new AlphaException('Error commiting a transaction, error is ['.self::getLastDatabaseError().']');
+
+                self::$logger->debug('<<commit');
   	}
   	
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::rollback()
-	 * @todo
 	 */
 	public static function rollback() {
-                throw new NotImplementedException('AlphaDAOProviderInterface::createForeignIndex() not implemented by this provider');
+		if(self::$logger == null)
+                       	self::$logger = new Logger('AlphaDAOProviderSQLite');
+               	self::$logger->debug('>>rollback()');
+
+               	if (!self::getConnection()->query('ROLLBACK'))
+                       	throw new AlphaException('Error rolling back a transaction, error is ['.self::getLastDatabaseError().']');
+
+               	self::$logger->debug('<<rollback');
   	}
 	
   	/**
