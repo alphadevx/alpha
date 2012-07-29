@@ -5,7 +5,7 @@ if(!isset($config)) {
 	require_once '../util/AlphaConfig.inc';
 	$config = AlphaConfig::getInstance();
 	
-	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
+	require_once $config->get('app.root').'alpha/util/AlphaAutoLoader.inc';
 }
 
 /**
@@ -149,7 +149,7 @@ class ViewArticlePrint extends ViewArticle {
 	public function during_displayPageHead_callback() {
 		global $config;
 		
-		return '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/css/print.css">';
+		return '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/css/print.css">';
 	}
 	
 	/**
@@ -168,7 +168,7 @@ class ViewArticlePrint extends ViewArticle {
 		$html = '<p>Article URL: <a href="'.$this->BO->get('URL').'">'.$this->BO->get('URL').'</a><br>';
 		$html .= 'Title: '.$this->BO->get('title').'<br>';
 		$html .= 'Author: '.$this->BO->get('author').'<br>';
-		$html .= $config->get('sysCMSFooter').'</p>';
+		$html .= $config->get('cms.footer').'</p>';
 		
 		return $html;
 	}

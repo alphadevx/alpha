@@ -83,9 +83,9 @@ class MarkdownFacade {
 		$this->BO = $BO;
 		if($this->BO instanceof ArticleObject && $this->BO->isLoadedFromFile()) {
 			$underscoreTimeStamp = str_replace(array('-',' ',':'), '_', $this->BO->getContentFileDate());
-			$this->filename = $config->get('sysRoot').'cache/html/'.get_class($this->BO).'_'.$this->BO->get('title').'_'.$underscoreTimeStamp.'.html';
+			$this->filename = $config->get('app.root').'cache/html/'.get_class($this->BO).'_'.$this->BO->get('title').'_'.$underscoreTimeStamp.'.html';
 		}else{
-			$this->filename = $config->get('sysRoot').'cache/html/'.get_class($this->BO).'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.html';
+			$this->filename = $config->get('app.root').'cache/html/'.get_class($this->BO).'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.html';
 		}
 		
 		if(!$useCache) {
@@ -128,7 +128,7 @@ class MarkdownFacade {
 			$end = strrpos($attachmentURL, '" alt');
 			$fileName = substr($attachmentURL, $start+1, $end-($start+1));
 	
-			if($config->get('sysCMSImagesWidget')) {
+			if($config->get('cms.images.widget')) {
 				// get the details of the source image
 				$path = $this->BO->getAttachmentsLocation().'/'.$fileName;
 				$image_details = getimagesize($path);
@@ -140,7 +140,7 @@ class MarkdownFacade {
 		    	elseif($imgType == 3)
 		    		$type = 'png';
 		    		
-				$img = new Image($path, $image_details[0], $image_details[1], $type, 0.95, false, (boolean)$config->get('sysCMSImagesWidgetSecure'));
+				$img = new Image($path, $image_details[0], $image_details[1], $type, 0.95, false, (boolean)$config->get('cms.images.widget.secure'));
 				
 				$this->content = str_replace($attachmentURL, $img->renderHTMLLink(), $this->content);
 			}else{
@@ -170,9 +170,9 @@ class MarkdownFacade {
 		}
 		
 		/*
-		 * Replace all instances of $sysURL in the text with the sysURL setting from config
+		 * Replace all instances of $sysURL in the text with the app.url setting from config
 		 */
-		$text = str_replace('$sysURL', $config->get('sysURL'), $text);
+		$text = str_replace('$sysURL', $config->get('app.url'), $text);
 		
 		// transform text using parser.
 		return $parser->transform($text);

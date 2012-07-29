@@ -201,13 +201,13 @@ class Image {
 		
 		if(!strpos($this->source, 'attachments/article_')) {
 			// checking to see if we will write a jpg or png to the cache
-			if($this->sourceType->getValue() == 'png' && $config->get('sysImagesPerservePNG'))
-				$this->filename = $config->get('sysRoot').'cache/images/'.basename($this->source, ".".$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.png';
+			if($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png'))
+				$this->filename = $config->get('app.root').'cache/images/'.basename($this->source, ".".$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.png';
 			else
-				$this->filename = $config->get('sysRoot').'cache/images/'.basename($this->source, ".".$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.jpg';
+				$this->filename = $config->get('app.root').'cache/images/'.basename($this->source, ".".$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.jpg';
 		}else{
 			// make a cache dir for the article
-			$cacheDir = $config->get('sysRoot').'cache/images/article_'.substr($this->source, strpos($this->source, 'attachments/article_')+20, 11);
+			$cacheDir = $config->get('app.root').'cache/images/article_'.substr($this->source, strpos($this->source, 'attachments/article_')+20, 11);
 			if(!file_exists($cacheDir)) {
 				$success = mkdir($cacheDir);
 			
@@ -224,7 +224,7 @@ class Image {
 			}
 			
 			// now set the filename to include the new cache directory
-			if($this->sourceType->getValue() == 'png' && $config->get('sysImagesPerservePNG'))
+			if($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png'))
 				$this->filename = $cacheDir.'/'.basename($this->source, ".".$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.png';
 			else
 				$this->filename = $cacheDir.'/'.basename($this->source, ".".$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.jpg';
@@ -254,7 +254,7 @@ class Image {
 		 * Handle secure image validation (if enabled in config).
 		 * Not required for the view_article_pdf.php controller.
 		 */
-		if($config->get('sysCMSImagesWidgetSecure') && basename($_SERVER["PHP_SELF"]) != 'ViewArticlePDF.php') {
+		if($config->get('cms.images.widget.secure') && basename($_SERVER["PHP_SELF"]) != 'ViewArticlePDF.php') {
 			$valid = AlphaController::checkSecurityFields();			
 			
 			// if not valid, just return a blank black image of the same dimensions
@@ -263,7 +263,7 @@ class Image {
 			    $bgc = imagecolorallocate($im, 0, 0, 0);			    
 			    imagefilledrectangle($im, 0, 0, $this->width->getValue(), $this->height->getValue(), $bgc); 
 			    
-			    if($this->sourceType->getValue() == 'png' && $config->get('sysImagesPerservePNG')) {
+			    if($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
 			    	header("Content-Type: image/png");
 					imagepng($im);
 			    }else{
@@ -322,7 +322,7 @@ class Image {
 			    imagefilledrectangle($im, 0, 0, $this->width->getValue(), $this->height->getValue(), $bgc); 
 			    
 			    imagestring($im, 1, 5, 5, "Error loading $this->source", $tc);
-			    if($this->sourceType->getValue() == 'png' && $config->get('sysImagesPerservePNG')) {
+			    if($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
 			    	header("Content-Type: image/png");
 					imagepng($im);
 			    }else{
@@ -339,7 +339,7 @@ class Image {
 				$new_image = imagecreatetruecolor($this->width->getValue(), $this->height->getValue());
 			
 				// set a transparent background for PNGs
-				if($this->sourceType->getValue() == 'png' && $config->get('sysImagesPerservePNG')) {
+				if($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
 					// Turn off transparency blending (temporarily)
 			        imagealphablending($new_image, false);
 			
@@ -355,7 +355,7 @@ class Image {
 		        // copy the old image to the new image (in memory, not the file!)
 		        imagecopyresampled($new_image, $old_image, 0, 0, 0, 0, $this->width->getValue(), $this->height->getValue(), $oldWidth, $oldHeight);	
 				
-				if($this->sourceType->getValue() == 'png' && $config->get('sysImagesPerservePNG')) {
+				if($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
 					header("Content-Type: image/png");
 					imagepng($new_image);
 				}else{
@@ -379,7 +379,7 @@ class Image {
 	private function cache($image) {
 		global $config;
 		
-		if($this->sourceType->getValue() == 'png' && $config->get('sysImagesPerservePNG'))
+		if($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png'))
 			imagepng($image, $this->filename);
 		else
 			imagejpeg($image, $this->filename, 100*$this->quality->getValue());
@@ -415,7 +415,7 @@ class Image {
 	public static function convertImageURLToPath($imgURL) {
 		global $config;
 		
-		$imgPath = str_replace($config->get('sysURL'), '', $imgURL);
+		$imgPath = str_replace($config->get('app.url'), '', $imgURL);
 
 		return $imgPath;
 	}

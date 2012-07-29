@@ -128,7 +128,7 @@ class TagObject extends AlphaDAO {
 		if($taggedClass == '' || $taggedOID == '')
 			throw new IllegalArguementException('The taggedClass or taggedOID provided are empty');
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		
 		try {
 			$tags = $provider->loadAllByAttributes(array('taggedOID','taggedClass'), array($taggedOID, $taggedClass));
@@ -154,7 +154,7 @@ class TagObject extends AlphaDAO {
 	public static function getPopularTagsArray($limit) {
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), new TagObject());
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), new TagObject());
 		
 		$sqlQuery = "SELECT content, count(*) as count FROM ".TagObject::TABLE_NAME." GROUP BY content ORDER BY count DESC LIMIT $limit";
 		
@@ -201,12 +201,12 @@ class TagObject extends AlphaDAO {
 		array_walk($lowerWords, 'TagObject::lowercaseArrayElement');
 		
 		if($applyStopwords) {
-			if(file_exists($config->get('sysRoot').'config/stopwords-'.$config->get('sysStopwordsSize').'.ini')) {		
-				$stopwords = file($config->get('sysRoot').'config/stopwords-'.$config->get('sysStopwordsSize').'.ini', FILE_IGNORE_NEW_LINES);
-			}elseif(file_exists($config->get('sysRoot').'alpha/stopwords-'.$config->get('sysStopwordsSize').'.ini')) {
-				$stopwords = file($config->get('sysRoot').'alpha/stopwords-'.$config->get('sysStopwordsSize').'.ini', FILE_IGNORE_NEW_LINES);
+			if(file_exists($config->get('app.root').'config/stopwords-'.$config->get('search.stop.words.size').'.ini')) {		
+				$stopwords = file($config->get('app.root').'config/stopwords-'.$config->get('search.stop.words.size').'.ini', FILE_IGNORE_NEW_LINES);
+			}elseif(file_exists($config->get('app.root').'alpha/stopwords-'.$config->get('search.stop.words.size').'.ini')) {
+				$stopwords = file($config->get('app.root').'alpha/stopwords-'.$config->get('search.stop.words.size').'.ini', FILE_IGNORE_NEW_LINES);
 			}else{
-				throw new AlphaException('Unable to find a stopwords-'.$config->get('sysStopwordsSize').'.ini file in the application!');
+				throw new AlphaException('Unable to find a stopwords-'.$config->get('search.stop.words.size').'.ini file in the application!');
 			}
 			
 			array_walk($stopwords, 'TagObject::lowercaseArrayElement');

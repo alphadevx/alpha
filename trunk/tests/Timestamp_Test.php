@@ -64,7 +64,7 @@ class Timestamp_Test extends PHPUnit_Framework_TestCase {
     protected function setUp() {
     	global $config;
     	
-    	$config->set('sysDefaultDateTime', 'now');
+    	$config->set('app.default.datetime', 'now');
         $this->timestamp1 = new Timestamp();        
     }
     

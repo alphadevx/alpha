@@ -193,7 +193,7 @@ class AlphaFilters_Test extends PHPUnit_Framework_TestCase {
      */
     public function testClientTempBlacklistFilter() {
     	global $config;
-    	$config->set('sysTempBlacklistFilerLimit', 3);
+    	$config->set('security.client.temp.blacklist.filter.limit', 3);
     	
     	$_SERVER['HTTP_USER_AGENT'] = $this->badAgent;
     	$_SERVER['REMOTE_ADDR'] = $this->badIP;

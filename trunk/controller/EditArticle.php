@@ -5,7 +5,7 @@ if(!isset($config)) {
 	require_once '../util/AlphaConfig.inc';
 	$config = AlphaConfig::getInstance();
 	
-	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
+	require_once $config->get('app.root').'alpha/util/AlphaAutoLoader.inc';
 }
 
 /**
@@ -291,10 +291,10 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 			<script type="text/javascript">
 			var previewURL = "'.FrontController::generateSecureURL('act=PreviewArticle&bo=ArticleObject&oid='.$this->BO->getOID()).'";
 			</script>			
-			<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/markitup/jquery.markitup.js"></script>
-			<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/markitup/sets/markdown/set.js"></script>
-			<link rel="stylesheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/markitup/skins/simple/style.css" />
-			<link rel="stylesheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/markitup/sets/markdown/style.css" />
+			<script type="text/javascript" src="'.$config->get('app.url').'alpha/lib/markitup/jquery.markitup.js"></script>
+			<script type="text/javascript" src="'.$config->get('app.url').'alpha/lib/markitup/sets/markdown/set.js"></script>
+			<link rel="stylesheet" type="text/css" href="'.$config->get('app.url').'alpha/lib/markitup/skins/simple/style.css" />
+			<link rel="stylesheet" type="text/css" href="'.$config->get('app.url').'alpha/lib/markitup/sets/markdown/style.css" />
 			<script type="text/javascript">
 			$(document).ready(function() {
 				$("#text_field_content_0").markItUp(mySettings);

@@ -5,7 +5,7 @@ if(!isset($config)) {
 	require_once '../util/configLoader.inc';
 	$config = configLoader::getInstance();
 	
-	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
+	require_once $config->get('app.root').'alpha/util/AlphaAutoLoader.inc';
 }
 
 /**

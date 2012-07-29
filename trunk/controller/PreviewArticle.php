@@ -5,7 +5,7 @@ if(!isset($config)) {
 	require_once '../util/AlphaConfig.inc';
 	$config = AlphaConfig::getInstance();
 	
-	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
+	require_once $config->get('app.root').'alpha/util/AlphaAutoLoader.inc';
 }
 
 /**
@@ -125,9 +125,9 @@ class PreviewArticle extends AlphaController implements AlphaControllerInterface
 			// render a simple HTML header
 			echo '<html>';
 			echo '<head>';					
-			echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/ui/themes/'.$config->get('sysTheme').'/jquery.ui.all.css">';
-			echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/css/alpha.css">';
-			echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
+			echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/lib/jquery/ui/themes/'.$config->get('app.css.theme').'/jquery.ui.all.css">';
+			echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/css/alpha.css">';
+			echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'config/css/overrides.css">';
 			echo '</head>';
 			echo '<body>';
 				

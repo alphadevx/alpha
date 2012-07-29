@@ -72,8 +72,8 @@ class AlphaCacheProviderFactory {
 		
 		global $config;
 		
-		if(file_exists($config->get('sysRoot').'alpha/util/cache/'.$providerName.'.inc')) {
-			require_once $config->get('sysRoot').'alpha/util/cache/'.$providerName.'.inc';
+		if(file_exists($config->get('app.root').'alpha/util/cache/'.$providerName.'.inc')) {
+			require_once $config->get('app.root').'alpha/util/cache/'.$providerName.'.inc';
 			
 			$instance = new $providerName;
 			

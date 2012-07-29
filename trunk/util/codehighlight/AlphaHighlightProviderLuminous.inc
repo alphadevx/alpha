@@ -1,6 +1,6 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/util/codehighlight/AlphaHighlightProviderInterface.inc';
+require_once $config->get('app.root').'alpha/util/codehighlight/AlphaHighlightProviderInterface.inc';
 
 /**
  *
@@ -26,7 +26,7 @@ require_once $config->get('sysRoot').'alpha/util/codehighlight/AlphaHighlightPro
  * public function during_displayPageHead_callback() {
  *		global $config;
  *	
- *		$html = '<link type="text/css" rel="StyleSheet" href="'.$config->get('sysURL').'lib/luminous/style/luminous.css">';
+ *		$html = '<link type="text/css" rel="StyleSheet" href="'.$config->get('app.url').'lib/luminous/style/luminous.css">';
  *	
  *		return $html;
  *	}

@@ -67,7 +67,7 @@ class ArticleCommentView extends AlphaView {
 		echo '<p>Posted by '.($author->get('URL') == ''? $author->get('displayname') : '<a href="'.$author->get('URL').'" target="new window">'.$author->get('displayname').'</a>').' at '.$createTS->getValue().'.';
 		echo '&nbsp;'.$author->get('displayname').' has posted ['.$author->getCommentCount().'] comments on articles since joining.';
 		echo '</p>';
-		if($config->get('sysCMSCommentsAllowed') && isset($_SESSION['currentUser']) && $_SESSION['currentUser']->getID() == $author->getID())
+		if($config->get('cms.comments.allowed') && isset($_SESSION['currentUser']) && $_SESSION['currentUser']->getID() == $author->getID())
 			$this->editView();
 		else
 			echo $markdown->getContent();

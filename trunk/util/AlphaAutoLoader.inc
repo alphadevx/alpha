@@ -1,6 +1,6 @@
 <?php
 
-require_once $config->get('sysRoot').'alpha/util/AlphaErrorHandlers.inc';
+require_once $config->get('app.root').'alpha/util/AlphaErrorHandlers.inc';
 
 /**
  *
@@ -75,27 +75,27 @@ class AlphaAutoLoader {
 			self::$logger = new Logger('AlphaAutoLoader');
 		
 		self::$scannedDirs = array(
-					$config->get('sysRoot').'alpha/controller/',
-					$config->get('sysRoot').'alpha/controller/front/',
-					$config->get('sysRoot').'alpha/exceptions/',
-					$config->get('sysRoot').'alpha/model/',
-					$config->get('sysRoot').'alpha/model/types/',
-					$config->get('sysRoot').'alpha/view/',
-					$config->get('sysRoot').'alpha/view/widgets/',
-					$config->get('sysRoot').'alpha/view/renderers/',
-					$config->get('sysRoot').'alpha/util/',
-					$config->get('sysRoot').'alpha/util/cache/',
-					$config->get('sysRoot').'alpha/util/codehighlight/',
-					$config->get('sysRoot').'alpha/util/convertors/',
-					$config->get('sysRoot').'alpha/util/feeds/',
-					$config->get('sysRoot').'alpha/util/graphs/',
-					$config->get('sysRoot').'alpha/util/helpers/',
-					$config->get('sysRoot').'alpha/util/metrics/',
-					$config->get('sysRoot').'alpha/util/filters/',
-					$config->get('sysRoot').'alpha/tests/',
-					$config->get('sysRoot').'controller/',
-					$config->get('sysRoot').'model/',
-					$config->get('sysRoot').'view/'
+					$config->get('app.root').'alpha/controller/',
+					$config->get('app.root').'alpha/controller/front/',
+					$config->get('app.root').'alpha/exceptions/',
+					$config->get('app.root').'alpha/model/',
+					$config->get('app.root').'alpha/model/types/',
+					$config->get('app.root').'alpha/view/',
+					$config->get('app.root').'alpha/view/widgets/',
+					$config->get('app.root').'alpha/view/renderers/',
+					$config->get('app.root').'alpha/util/',
+					$config->get('app.root').'alpha/util/cache/',
+					$config->get('app.root').'alpha/util/codehighlight/',
+					$config->get('app.root').'alpha/util/convertors/',
+					$config->get('app.root').'alpha/util/feeds/',
+					$config->get('app.root').'alpha/util/graphs/',
+					$config->get('app.root').'alpha/util/helpers/',
+					$config->get('app.root').'alpha/util/metrics/',
+					$config->get('app.root').'alpha/util/filters/',
+					$config->get('app.root').'alpha/tests/',
+					$config->get('app.root').'controller/',
+					$config->get('app.root').'model/',
+					$config->get('app.root').'view/'
 				);
 	}
 	
@@ -115,58 +115,58 @@ class AlphaAutoLoader {
 		$skipDirs = array();
 
 		if(strpos($className, 'Controller') !== false) {
-			if(self::loadFile($config->get('sysRoot').'alpha/controller/', $className)) {
+			if(self::loadFile($config->get('app.root').'alpha/controller/', $className)) {
 				// it was found and inclued by loadFile() so we can return
 				return;
 			}else{
 				// it was NOT found by loadFile() in this dir, so we can skip a scan of this dir on the full scan
-				array_push($skipDirs, $config->get('sysRoot').'alpha/controller/');
+				array_push($skipDirs, $config->get('app.root').'alpha/controller/');
 			}
 
-			if(self::loadFile($config->get('sysRoot').'alpha/controller/front/', $className)) {
+			if(self::loadFile($config->get('app.root').'alpha/controller/front/', $className)) {
 				return;
 			}else{
-				array_push($skipDirs, $config->get('sysRoot').'alpha/controller/front/');
+				array_push($skipDirs, $config->get('app.root').'alpha/controller/front/');
 			}
 		}
 
 		if(strpos($className, 'Exception') !== false) {
-			if(self::loadFile($config->get('sysRoot').'alpha/exceptions/', $className)) {
+			if(self::loadFile($config->get('app.root').'alpha/exceptions/', $className)) {
 				return;
 			}else{
-				array_push($skipDirs, $config->get('sysRoot').'alpha/exceptions/');
+				array_push($skipDirs, $config->get('app.root').'alpha/exceptions/');
 			}
 		}
 
 		if(strpos($className, 'DAO') !== false) {
-			if(self::loadFile($config->get('sysRoot').'alpha/model/', $className)) {
+			if(self::loadFile($config->get('app.root').'alpha/model/', $className)) {
 				return;
 			}else{
-				array_push($skipDirs, $config->get('sysRoot').'alpha/model/');
+				array_push($skipDirs, $config->get('app.root').'alpha/model/');
 			}
 		}
 
 		if(strpos($className, 'Object') !== false) {
-			if(self::loadFile($config->get('sysRoot').'alpha/model/', $className)) {
+			if(self::loadFile($config->get('app.root').'alpha/model/', $className)) {
 				return;
 			}else{
-				array_push($skipDirs, $config->get('sysRoot').'alpha/model/');
+				array_push($skipDirs, $config->get('app.root').'alpha/model/');
 			}
 		}
 
 		if(strpos($className, 'View') !== false) {
-			if(self::loadFile($config->get('sysRoot').'alpha/view/', $className)) {
+			if(self::loadFile($config->get('app.root').'alpha/view/', $className)) {
 				return;
 			}else{
-				array_push($skipDirs, $config->get('sysRoot').'alpha/view/');
+				array_push($skipDirs, $config->get('app.root').'alpha/view/');
 			}
 		}
 		
 		if(strpos($className, 'Utils') !== false) {
-			if(self::loadFile($config->get('sysRoot').'alpha/util/', $className)) {
+			if(self::loadFile($config->get('app.root').'alpha/util/', $className)) {
 				return;
 			}else{
-				array_push($skipDirs, $config->get('sysRoot').'alpha/util/');
+				array_push($skipDirs, $config->get('app.root').'alpha/util/');
 			}
 		}
 		
@@ -199,7 +199,7 @@ class AlphaAutoLoader {
 		global $config;
 		
 		// Libraries shipped with Alpha
-		$iterator = new RecursiveDirectoryIterator($config->get('sysRoot').'alpha/lib/');
+		$iterator = new RecursiveDirectoryIterator($config->get('app.root').'alpha/lib/');
 		
 		foreach (new RecursiveIteratorIterator($iterator) as $name => $file) {
 			if($file->getBaseName() == $fileName) {
@@ -212,7 +212,7 @@ class AlphaAutoLoader {
 		}
 		
 		// custom libs
-		$iterator = new RecursiveDirectoryIterator($config->get('sysRoot').'lib/');
+		$iterator = new RecursiveDirectoryIterator($config->get('app.root').'lib/');
 		
 		foreach (new RecursiveIteratorIterator($iterator) as $name => $file) {
 			if($file->getBaseName() == $fileName) {

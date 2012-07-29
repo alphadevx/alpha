@@ -64,7 +64,7 @@ class Date_Test extends PHPUnit_Framework_TestCase {
     protected function setUp() {
     	global $config;
     	// override setting to ensure dates default to now
-    	$config->set('sysDefaultDateTime', 'now');
+    	$config->set('app.default.datetime', 'now');
     	        
         $this->date1 = new Date();        
     }

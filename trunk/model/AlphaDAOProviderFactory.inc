@@ -73,8 +73,8 @@ class AlphaDAOProviderFactory {
 		
 		global $config;
 		
-		if(file_exists($config->get('sysRoot').'alpha/model/'.$providerName.'.inc')) {
-			require_once $config->get('sysRoot').'alpha/model/'.$providerName.'.inc';
+		if(file_exists($config->get('app.root').'alpha/model/'.$providerName.'.inc')) {
+			require_once $config->get('app.root').'alpha/model/'.$providerName.'.inc';
 			
 			$instance = new $providerName;
 			$instance->setBO($BO);

@@ -5,7 +5,7 @@ if(!isset($config)) {
 	require_once '../util/AlphaConfig.inc';
 	$config = AlphaConfig::getInstance();
 	
-	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
+	require_once $config->get('app.root').'alpha/util/AlphaAutoLoader.inc';
 }
 
 /**
@@ -79,7 +79,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		if(!isset($_SESSION['currentUser'])) {
 			self::$logger->info('Nobody logged in, invoking Login controller...');
 			
-			require_once $config->get('sysRoot').'alpha/controller/Login.php';
+			require_once $config->get('app.root').'alpha/controller/Login.php';
 
 			$controller = new Login();
 			$controller->setName('Login');
@@ -94,7 +94,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 			parent::__construct('Admin');
 			
 			// set up the title and meta details
-			$this->setTitle('Installing '.$config->get('sysTitle'));
+			$this->setTitle('Installing '.$config->get('app.title'));
 			
 			self::$logger->debug('<<__construct');
 		}
@@ -286,7 +286,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 	private function copyRestrictedAccessFileToDirectory($dir) {
 		global $config;
 		
-		copy($config->get('sysRoot').'alpha/.htaccess', $dir.'/.htaccess');
+		copy($config->get('app.root').'alpha/.htaccess', $dir.'/.htaccess');
 	}
 	
 	/**
@@ -304,7 +304,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		 * Create the logs directory, then instantiate a new logger
 		 */
 		try {
-			$logsDir = $config->get('sysRoot').'logs';
+			$logsDir = $config->get('app.root').'logs';
 			
 			echo '<p>Attempting to create the logs directory <em>'.$logsDir.'</em>...';
 			
@@ -327,7 +327,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		 * Create the cron tasks directory
 		 */
 		try {
-			$tasksDir = $config->get('sysRoot').'tasks';
+			$tasksDir = $config->get('app.root').'tasks';
 			
 			echo '<p>Attempting to create the tasks directory <em>'.$tasksDir.'</em>...';
 			
@@ -348,7 +348,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		 * Create the controller directory
 		 */
 		try {
-			$controllerDir = $config->get('sysRoot').'controller';
+			$controllerDir = $config->get('app.root').'controller';
 			
 			echo '<p>Attempting to create the controller directory <em>'.$controllerDir.'</em>...';
 			
@@ -367,7 +367,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		 * Create the model directory
 		 */
 		try {
-			$modelDir = $config->get('sysRoot').'model';
+			$modelDir = $config->get('app.root').'model';
 			
 			echo '<p>Attempting to create the model directory <em>'.$modelDir.'</em>...';
 			
@@ -388,7 +388,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		 * Create the view directory
 		 */
 		try {
-			$viewDir = $config->get('sysRoot').'view';
+			$viewDir = $config->get('app.root').'view';
 			
 			echo '<p>Attempting to create the view directory <em>'.$viewDir.'</em>...';
 			
@@ -409,7 +409,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		 * Create the attachments directory
 		 */
 		try {
-			$attachmentsDir = $config->get('sysRoot').'attachments';
+			$attachmentsDir = $config->get('app.root').'attachments';
 			
 			echo '<p>Attempting to create the attachments directory <em>'.$attachmentsDir.'</em>...';
 			
@@ -430,11 +430,11 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		 * Create the cache directory and sub-directories
 		 */
 		try {
-			$cacheDir = $config->get('sysRoot').'cache';
-			$htmlDir = $config->get('sysRoot').'cache/html';
-			$imagesDir = $config->get('sysRoot').'cache/images';
-			$pdfDir = $config->get('sysRoot').'cache/pdf';
-			$xlsDir = $config->get('sysRoot').'cache/xls';
+			$cacheDir = $config->get('app.root').'cache';
+			$htmlDir = $config->get('app.root').'cache/html';
+			$imagesDir = $config->get('app.root').'cache/images';
+			$pdfDir = $config->get('app.root').'cache/pdf';
+			$xlsDir = $config->get('app.root').'cache/xls';
 			
 			// cache
 			echo '<p>Attempting to create the cache directory <em>'.$cacheDir.'</em>...';
@@ -528,7 +528,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		
 		// the person is logged in?
 		if (isset($_SESSION['currentUser'])) {
-			if ($_SESSION['currentUser']->get('email') == $config->get('sysInstallUsername')) {
+			if ($_SESSION['currentUser']->get('email') == $config->get('app.install.username')) {
 				self::$logger->debug('<<checkRights [true]');
 				return true;
 			}

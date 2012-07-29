@@ -307,31 +307,31 @@ class ArticleObject extends AlphaDAO {
 		global $front;
 		
 		// check the config to see if we are using mod_rewrite
-		if($config->get('sysUseModRewrite')) {
+		if($config->get('app.use.mod.rewrite')) {
 			// check to see if an alias is registered for the view_article_title controller, otherwise use the long URL version
 			if(isset($front) && $front->hasAlias('ViewArticleTitle')) {
 				$alias = $front->getControllerAlias('ViewArticleTitle');
 				
-				$this->URL = $config->get('sysURL').$alias.'/'.str_replace(' ', '_', $this->title->getValue());
+				$this->URL = $config->get('app.url').$alias.'/'.str_replace(' ', '_', $this->title->getValue());
 			}else{
-				$this->URL = $config->get('sysURL').'ViewArticleTitle/title/'.str_replace(' ', '_', $this->title->getValue());
+				$this->URL = $config->get('app.url').'ViewArticleTitle/title/'.str_replace(' ', '_', $this->title->getValue());
 			}
 		}else{
-			$this->URL = $config->get('sysURL').'alpha/controller/ViewArticle.php?oid='.$this->getID();
+			$this->URL = $config->get('app.url').'alpha/controller/ViewArticle.php?oid='.$this->getID();
 		}
 		
 		// now set up the print version URL
-		if($config->get('sysUseModRewrite')) {
+		if($config->get('app.use.mod.rewrite')) {
 			// check to see if an alias is registered for the view_article_title controller, otherwise use the long URL version
 			if(isset($front) && $front->hasAlias('ViewArticlePrint')) {
 				$alias = $front->getControllerAlias('ViewArticlePrint');
 				
-				$this->printURL = $config->get('sysURL').$alias.'/'.str_replace(' ', '_', $this->title->getValue());
+				$this->printURL = $config->get('app.url').$alias.'/'.str_replace(' ', '_', $this->title->getValue());
 			}else{
-				$this->printURL = $config->get('sysURL').'ViewArticlePrint/title/'.str_replace(' ', '_', $this->title->getValue());
+				$this->printURL = $config->get('app.url').'ViewArticlePrint/title/'.str_replace(' ', '_', $this->title->getValue());
 			}
 		}else{
-			$this->printURL = $config->get('sysURL').'alpha/controller/ViewArticlePrint.php?title='.$this->title->getValue();
+			$this->printURL = $config->get('app.url').'alpha/controller/ViewArticlePrint.php?title='.$this->title->getValue();
 		}
 		
 		$this->comments->setValue($this->OID);
@@ -371,7 +371,7 @@ class ArticleObject extends AlphaDAO {
 	public function getAttachmentsLocation() {
 		global $config;
 		
-		return $config->get('sysRoot').'attachments/article_'.$this->getID();
+		return $config->get('app.root').'attachments/article_'.$this->getID();
 	}
 	
 	/**
@@ -383,7 +383,7 @@ class ArticleObject extends AlphaDAO {
 	public function getAttachmentsURL() {
 		global $config;
 		
-		return $config->get('sysURL').'attachments/article_'.$this->getID();
+		return $config->get('app.url').'attachments/article_'.$this->getID();
 	}
 	
 	/**

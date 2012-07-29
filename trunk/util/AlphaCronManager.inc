@@ -5,7 +5,7 @@ if(!isset($config)) {
 	require_once 'AlphaConfig.inc';
 	$config = AlphaConfig::getInstance();
 	
-	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
+	require_once $config->get('app.root').'alpha/util/AlphaAutoLoader.inc';
 }
 
 /**
@@ -72,7 +72,7 @@ class AlphaCronManager {
 		global $config;		
 		
 		self::$logger = new Logger('AlphaCronManager');			
-		self::$logger->setLogFile($config->get('sysRoot').'logs/tasks.log');
+		self::$logger->setLogFile($config->get('app.root').'logs/tasks.log');
 		
 		self::$logger->debug('>>__construct()');
 		
@@ -80,7 +80,7 @@ class AlphaCronManager {
 
 		$taskList = self::getTaskClassNames();
 		
-		self::$logger->info('Found ['.count($taskList).'] tasks in the directory ['.$config->get('sysRoot').'tasks]');
+		self::$logger->info('Found ['.count($taskList).'] tasks in the directory ['.$config->get('app.root').'tasks]');
 		
 		foreach($taskList as $taskClass) {
 			self::$logger->info('Loading task ['.$taskClass.']');
@@ -116,7 +116,7 @@ class AlphaCronManager {
 		
 		if(self::$logger == null) {
 			self::$logger = new Logger('AlphaCronManager');
-			self::$logger->setLogFile($config->get('sysRoot').'logs/tasks.log');
+			self::$logger->setLogFile($config->get('app.root').'logs/tasks.log');
 		}
 		self::$logger->debug('>>getTaskClassNames()');
 		
@@ -124,7 +124,7 @@ class AlphaCronManager {
 		
 		$classNameArray = array();		
 		
-		$handle = opendir($config->get('sysRoot').'tasks');
+		$handle = opendir($config->get('app.root').'tasks');
    		
         // loop over the custom task directory
 	    while (false !== ($file = readdir($handle))) {
@@ -135,7 +135,7 @@ class AlphaCronManager {
 	    	}
 	    }
 	    
-		$handle = opendir($config->get('sysRoot').'alpha/tasks');
+		$handle = opendir($config->get('app.root').'alpha/tasks');
    		
         // loop over the custom task directory
 	    while (false !== ($file = readdir($handle))) {
@@ -161,14 +161,14 @@ class AlphaCronManager {
 		
 		if(self::$logger == null) {
 			self::$logger = new Logger('AlphaCronManager');
-			self::$logger->setLogFile($config->get('sysRoot').'logs/tasks.log');
+			self::$logger->setLogFile($config->get('app.root').'logs/tasks.log');
 		}
 		self::$logger->debug('>>loadClassDef(classname=['.$classname.'])');
 		
-		if(file_exists($config->get('sysRoot').'tasks/'.$classname.'.inc'))
-			require_once $config->get('sysRoot').'tasks/'.$classname.'.inc';
-		elseif(file_exists($config->get('sysRoot').'alpha/tasks/'.$classname.'.inc'))
-			require_once $config->get('sysRoot').'alpha/tasks/'.$classname.'.inc';
+		if(file_exists($config->get('app.root').'tasks/'.$classname.'.inc'))
+			require_once $config->get('app.root').'tasks/'.$classname.'.inc';
+		elseif(file_exists($config->get('app.root').'alpha/tasks/'.$classname.'.inc'))
+			require_once $config->get('app.root').'alpha/tasks/'.$classname.'.inc';
 		else
 			throw new IllegalArguementException('The class ['.$classname.'] is not defined anywhere!');
 		

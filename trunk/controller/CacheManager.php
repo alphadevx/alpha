@@ -5,7 +5,7 @@ if(!isset($config)) {
 	require_once '../util/AlphaConfig.inc';
 	$config = AlphaConfig::getInstance();
 	
-	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
+	require_once $config->get('app.root').'alpha/util/AlphaAutoLoader.inc';
 }
 
 /**
@@ -85,7 +85,7 @@ class CacheManager extends AlphaController implements AlphaControllerInterface {
 		parent::__construct('Admin');
 		
 		$this->setTitle('Cache Manager');
-		$this->dataDir  = $config->get('sysRoot').'cache/';
+		$this->dataDir  = $config->get('app.root').'cache/';
 		
 		self::$logger->debug('<<__construct');
 	}

@@ -117,7 +117,7 @@ class DEnumItem extends AlphaDAO implements AlphaTypeInterface{
 		
 		$sqlQuery = 'SELECT OID FROM '.self::TABLE_NAME.' WHERE DEnumID = \''.$EnumID.'\';';
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 
 		try{
 			$result = $provider->query($sqlQuery);			

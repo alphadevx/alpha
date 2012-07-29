@@ -129,7 +129,7 @@ class Timestamp extends AlphaType implements AlphaTypeInterface {
  		$this->validationRule = AlphaValidator::ALLOW_ALL;
 		
  		if(empty($timestamp)) {
- 			if($config->get('sysDefaultDateTime') == 'now') {
+ 			if($config->get('app.default.datetime') == 'now') {
 		 		$this->year=date('Y');
 		 		$this->month=date('m');
 		 		$this->day=date('d');

@@ -322,7 +322,7 @@ class PersonObject extends AlphaDAO {
 
 		$headers = 'MIME-Version: 1.0'."\n";
 		$headers .= 'Content-type: text/html; charset=iso-8859-1'."\n";
-		$headers .= "From: ".$config->get('sysReplyTo')."\n";
+		$headers .= "From: ".$config->get('email.reply.to')."\n";
 		
 		try {
 			mail($this->get('email'), $subject, $body, $headers);

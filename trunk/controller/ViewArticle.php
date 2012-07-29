@@ -5,7 +5,7 @@ if(!isset($config)) {
 	require_once '../util/AlphaConfig.inc';
 	$config = AlphaConfig::getInstance();
 	
-	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
+	require_once $config->get('app.root').'alpha/util/AlphaAutoLoader.inc';
 }
 
 /**
@@ -101,7 +101,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 		
 		try{
 			// check to see if we need to force a re-direct to the mod_rewrite alias URL for the article
-			if($config->get('sysForceModRewriteURLs') && basename($_SERVER['PHP_SELF']) == 'ViewArticle.php') {
+			if($config->get('app.force.mod.rewrite.uls') && basename($_SERVER['PHP_SELF']) == 'ViewArticle.php') {
 				// set the correct HTTP header for the response
 	    		header('HTTP/1.1 301 Moved Permanently');
 	    		
@@ -159,14 +159,14 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 		
 		$html = '';
 		
-		if($config->get('sysCMSDisplayStandardHeader')) {
-			$html.= '<p><a href="'.$config->get('sysURL').'">'.$config->get('sysTitle').'</a> &nbsp; &nbsp;';
+		if($config->get('cms.display.standard.header')) {
+			$html.= '<p><a href="'.$config->get('app.url').'">'.$config->get('app.title').'</a> &nbsp; &nbsp;';
 			$html.= 'Date Added: <em>'.$this->BO->getCreateTS()->getDate().'</em> &nbsp; &nbsp;';
 			$html.= 'Last Updated: <em>'.$this->BO->getUpdateTS()->getDate().'</em> &nbsp; &nbsp;';
 			$html.= 'Revision: <em>'.$this->BO->getVersion().'</em></p>';
 		}
 		
-		$html.= $config->get('sysCMSHeader');
+		$html.= $config->get('cms.header');
 		
 		return $html;
 	}
@@ -183,28 +183,28 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 		
 		$html = '';
 		
-		if($config->get('sysCMSDisplayComments'))
+		if($config->get('cms.display.comments'))
 			$html .= $this->renderComments();
 		
-		if($config->get('sysCMSDisplayTags')) {
+		if($config->get('cms.display.tags')) {
 			$tags = $this->BO->getPropObject('tags')->getRelatedObjects();
 			
 			if(count($tags) > 0) {
 				$html .= '<p>Tags:';
 				
 				foreach($tags as $tag)
-					$html .= ' <a href="'.$config->get('sysURL').'search/q/'.$tag->get('content').'">'.$tag->get('content').'</a>';
+					$html .= ' <a href="'.$config->get('app.url').'search/q/'.$tag->get('content').'">'.$tag->get('content').'</a>';
 				$html .= '</p>';
 			}
 		}
 		
-		if($config->get('sysCMSDisplayVotes')) {
+		if($config->get('cms.display.votes')) {
 			$rating = $this->BO->getArticleScore();
 			$votes = $this->BO->getArticleVotes();
 			$html .= '<p>Average Article User Rating: <strong>'.$rating.'</strong> out of 10 (based on <strong>'.count($votes).'</strong> votes)</p>';
 		}
 		
-		if(!$this->BO->checkUserVoted() && $config->get('sysCMSVotingAllowed')) {
+		if(!$this->BO->checkUserVoted() && $config->get('cms.voting.allowed')) {
 			$html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="post">';
 			$html .= '<p>Please rate this article from 1-10 (10 being the best):' .
 					'<select name="user_vote">' .
@@ -233,7 +233,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 		$html .= $temp->render();
 		
 		$html .= '&nbsp;&nbsp;';
-		if($config->get('sysAllowPDFVersions')) {
+		if($config->get('cms.allow.pdf.versions')) {
 			$temp = new Button("document.location = '".FrontController::generateSecureURL("act=ViewArticlePDF&title=".$this->BO->get("title"))."';",'Open PDF Version','pdfBut');
 			$html .= $temp->render();
 		}
@@ -245,13 +245,13 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 			$html .= $button->render();
 		}
 		
-		if($config->get('sysCMSDisplayStandardFooter')) {
+		if($config->get('cms.display.standard.footer')) {
 			$html .= '<p>Article URL: <a href="'.$this->BO->get('URL').'">'.$this->BO->get('URL').'</a><br>';
 			$html .= 'Title: '.$this->BO->get('title').'<br>';
 			$html .= 'Author: '.$this->BO->get('author').'</p>';
 		}
 		
-		$html .= $config->get('sysCMSFooter');
+		$html .= $config->get('cms.footer');
 		
 		return $html;
 	}
@@ -367,7 +367,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 		$comments = $this->BO->getArticleComments();
 		$comment_count = count($comments);
 		
-		if($config->get('sysCMSDisplayComments') && $comment_count > 0) {
+		if($config->get('cms.display.comments') && $comment_count > 0) {
 			$html .= '<h2>There are ['.$comment_count.'] user comments for this article</h2>';
 			
 			ob_start();
@@ -378,7 +378,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 			$html.= ob_get_clean();
 		}
 		
-		if(isset($_SESSION['currentUser']) && $config->get('sysCMSCommentsAllowed')) {
+		if(isset($_SESSION['currentUser']) && $config->get('cms.comments.allowed')) {
 			$comment = new ArticleCommentObject();
 			$comment->set('articleOID', $this->BO->getID());
 			

@@ -5,7 +5,7 @@ if(!isset($config)) {
 	require_once '../util/AlphaConfig.inc';
 	$config = AlphaConfig::getInstance();
 	
-	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
+	require_once $config->get('app.root').'alpha/util/AlphaAutoLoader.inc';
 }
 
 /**
@@ -319,7 +319,7 @@ class ListAll extends AlphaController implements AlphaControllerInterface {
 		
 		$html = '';
 		
-		$end = (($this->startPoint-1)+$config->get('sysListPageAmount'));
+		$end = (($this->startPoint-1)+$config->get('app.list.page.amount'));
 		
 		if($end > $this->BOCount)
 			$end = $this->BOCount;
@@ -332,21 +332,21 @@ class ListAll extends AlphaController implements AlphaControllerInterface {
 		if ($this->startPoint > 1) {
 			// handle secure URLs
 			if(isset($_GET['tk']))
-				$html .= '<a href="'.FrontController::generateSecureURL('act=ListAll&bo='.$this->BOname.'&start='.($this->startPoint-$config->get('sysListPageAmount'))).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
+				$html .= '<a href="'.FrontController::generateSecureURL('act=ListAll&bo='.$this->BOname.'&start='.($this->startPoint-$config->get('app.list.page.amount'))).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
 			else
-				$html .= '<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($this->startPoint-$config->get('sysListPageAmount')).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
-		}elseif($this->BOCount > $config->get('sysListPageAmount')){
+				$html .= '<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($this->startPoint-$config->get('app.list.page.amount')).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
+		}elseif($this->BOCount > $config->get('app.list.page.amount')){
 			$html .= '&lt;&lt;-Previous&nbsp;&nbsp;';
 		}
 		$page = 1;
-		for ($i = 0; $i < $this->BOCount; $i+=$config->get('sysListPageAmount')) {
+		for ($i = 0; $i < $this->BOCount; $i+=$config->get('app.list.page.amount')) {
 			if($i != ($this->startPoint-1)) {
 				// handle secure URLs
 				if(isset($_GET['tk']))
 					$html .= '&nbsp;<a href="'.FrontController::generateSecureURL('act=ListAll&bo='.$this->BOname.'&start='.($i+1)).'">'.$page.'</a>&nbsp;';
 				else
 					$html .= '&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($i+1).'">'.$page.'</a>&nbsp;';
-			}elseif($this->BOCount > $config->get('sysListPageAmount')){
+			}elseif($this->BOCount > $config->get('app.list.page.amount')){
 				$html .= '&nbsp;'.$page.'&nbsp;';
 			}
 			$page++;
@@ -354,11 +354,11 @@ class ListAll extends AlphaController implements AlphaControllerInterface {
 		if ($this->BOCount > $end) {
 			// handle secure URLs
 			if(isset($_GET['tk']))
-				$html .= '&nbsp;&nbsp;<a href="'.FrontController::generateSecureURL('act=ListAll&bo='.$this->BOname.'&start='.($this->startPoint+$config->get('sysListPageAmount'))).'">Next-&gt;&gt;</a>';
+				$html .= '&nbsp;&nbsp;<a href="'.FrontController::generateSecureURL('act=ListAll&bo='.$this->BOname.'&start='.($this->startPoint+$config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a>';
 			else
-				$html .= '&nbsp;&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($this->startPoint+$config->get('sysListPageAmount')).
+				$html .= '&nbsp;&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($this->startPoint+$config->get('app.list.page.amount')).
 					'">Next-&gt;&gt;</a>';
-		}elseif($this->BOCount > $config->get('sysListPageAmount')){
+		}elseif($this->BOCount > $config->get('app.list.page.amount')){
 			$html .= '&nbsp;&nbsp;Next-&gt;&gt;';
 		}
 		$html .= '</p>';
@@ -379,18 +379,18 @@ class ListAll extends AlphaController implements AlphaControllerInterface {
 		
 		if(isset($this->filterField) && isset($this->filterValue)) {
 			if(isset($this->sort) && isset($this->order)) {
-				$objects = $temp->loadAllByAttribute($this->filterField, $this->filterValue, $this->startPoint-1, $config->get('sysListPageAmount'),
+				$objects = $temp->loadAllByAttribute($this->filterField, $this->filterValue, $this->startPoint-1, $config->get('app.list.page.amount'),
 					$this->sort, $this->order);
 			}else{
-				$objects = $temp->loadAllByAttribute($this->filterField, $this->filterValue, $this->startPoint-1, $config->get('sysListPageAmount'));
+				$objects = $temp->loadAllByAttribute($this->filterField, $this->filterValue, $this->startPoint-1, $config->get('app.list.page.amount'));
 			}
 				
 			$this->BOCount = $temp->getCount(array($this->filterField), array($this->filterValue));
 		}else{
 			if(isset($this->sort) && isset($this->order))
-				$objects = $temp->loadAll($this->startPoint-1, $config->get('sysListPageAmount'), $this->sort, $this->order);
+				$objects = $temp->loadAll($this->startPoint-1, $config->get('app.list.page.amount'), $this->sort, $this->order);
 			else
-				$objects = $temp->loadAll($this->startPoint-1, $config->get('sysListPageAmount'));
+				$objects = $temp->loadAll($this->startPoint-1, $config->get('app.list.page.amount'));
 				
 			$this->BOCount = $temp->getCount();
 		}

@@ -5,7 +5,7 @@ if(!isset($config)) {
 	require_once '../util/AlphaConfig.inc';
 	$config = AlphaConfig::getInstance();
 	
-	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
+	require_once $config->get('app.root').'alpha/util/AlphaAutoLoader.inc';
 }
 
 /**
@@ -131,7 +131,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 			echo AlphaView::displayPageHead($this);
 			
 			// log the user's search query in a log file
-			$log = new LogFile($config->get('sysRoot').'logs/search.log');		
+			$log = new LogFile($config->get('app.root').'logs/search.log');		
 			$log->writeLine(array($params['q'], date('Y-m-d H:i:s'), $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
 			
 			$KPI->logStep('log search query');
@@ -239,7 +239,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 		global $config;
 		
 		// used to track when our pagination range ends
-		$end = ($this->startPoint+$config->get('sysListPageAmount'));
+		$end = ($this->startPoint+$config->get('app.list.page.amount'));
 		// used to track how many results have been displayed or skipped from the pagination range
 		$displayedCount = 0;
 		
@@ -315,9 +315,9 @@ class Search extends AlphaController implements AlphaControllerInterface {
 	public function after_displayPageHead_callback() {
 		global $config;
 		
-		$html = '<div align="center"><form method="GET" id="search_form" onsubmit="document.location = \''.$config->get('sysURL').'search/q/\'+document.getElementById(\'q\').value; return false;">';
+		$html = '<div align="center"><form method="GET" id="search_form" onsubmit="document.location = \''.$config->get('app.url').'search/q/\'+document.getElementById(\'q\').value; return false;">';
 		$html .= 'Search for: <input type="text" size="80" name="q" id="q"/>&nbsp;';		
-		$button = new Button('document.location = \''.$config->get('sysURL').'search/q/\'+document.getElementById(\'q\').value', 'Search', 'searchButton');
+		$button = new Button('document.location = \''.$config->get('app.url').'search/q/\'+document.getElementById(\'q\').value', 'Search', 'searchButton');
 		$html .= $button->render();
 		$html .= '</form></div>';
 		
@@ -349,7 +349,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 		
 		$html = '';
 		
-		$end = ($this->startPoint+$config->get('sysListPageAmount'));
+		$end = ($this->startPoint+$config->get('app.list.page.amount'));
 		
 		if($end > $this->resultCount)
 			$end = $this->resultCount;
@@ -364,21 +364,21 @@ class Search extends AlphaController implements AlphaControllerInterface {
 		if ($this->startPoint > 0) {
 			// handle secure URLs
 			if(isset($_GET['tk']))
-				$html .= '<a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint-$config->get('sysListPageAmount'))).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
+				$html .= '<a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint-$config->get('app.list.page.amount'))).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
 			else
-				$html .= '<a href="'.$config->get('sysURL').'search/q/'.$this->query.'/start/'.($this->startPoint-$config->get('sysListPageAmount')).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
-		}elseif($this->resultCount > $config->get('sysListPageAmount')){
+				$html .= '<a href="'.$config->get('app.url').'search/q/'.$this->query.'/start/'.($this->startPoint-$config->get('app.list.page.amount')).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
+		}elseif($this->resultCount > $config->get('app.list.page.amount')){
 			$html .= '&lt;&lt;-Previous&nbsp;&nbsp;';
 		}
 		$page = 1;
-		for ($i = 0; $i < $this->resultCount; $i+=$config->get('sysListPageAmount')) {
+		for ($i = 0; $i < $this->resultCount; $i+=$config->get('app.list.page.amount')) {
 			if($i != $this->startPoint) {
 				// handle secure URLs
 				if(isset($_GET['tk']))
 					$html .= '&nbsp;<a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.$i).'">'.$page.'</a>&nbsp;';
 				else
-					$html .= '&nbsp;<a href="'.$config->get('sysURL').'search/q/'.$this->query.'/start/'.$i.'">'.$page.'</a>&nbsp;';
-			}elseif($this->resultCount > $config->get('sysListPageAmount')){
+					$html .= '&nbsp;<a href="'.$config->get('app.url').'search/q/'.$this->query.'/start/'.$i.'">'.$page.'</a>&nbsp;';
+			}elseif($this->resultCount > $config->get('app.list.page.amount')){
 				$html .= '&nbsp;'.$page.'&nbsp;';
 			}
 			$page++;
@@ -386,10 +386,10 @@ class Search extends AlphaController implements AlphaControllerInterface {
 		if ($this->resultCount > $end) {
 			// handle secure URLs
 			if(isset($_GET['tk']))
-				$html .= '&nbsp;&nbsp;<a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint+$config->get('sysListPageAmount'))).'">Next-&gt;&gt;</a>';
+				$html .= '&nbsp;&nbsp;<a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint+$config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a>';
 			else
-				$html .= '&nbsp;&nbsp;<a href="'.$config->get('sysURL').'search/q/'.$this->query.'/start/'.($this->startPoint+$config->get('sysListPageAmount')).'">Next-&gt;&gt;</a>';
-		}elseif($this->resultCount > $config->get('sysListPageAmount')){
+				$html .= '&nbsp;&nbsp;<a href="'.$config->get('app.url').'search/q/'.$this->query.'/start/'.($this->startPoint+$config->get('app.list.page.amount')).'">Next-&gt;&gt;</a>';
+		}elseif($this->resultCount > $config->get('app.list.page.amount')){
 			$html .= '&nbsp;&nbsp;Next-&gt;&gt;';
 		}
 		$html .= '</p>';

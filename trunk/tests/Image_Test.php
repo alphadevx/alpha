@@ -64,7 +64,7 @@ class Image_Test extends PHPUnit_Framework_TestCase {
     protected function setUp() {
     	global $config;
     	        
-        $this->img = new Image($config->get('sysRoot').'/alpha/images/icons/accept.png', 16, 16, 'png');
+        $this->img = new Image($config->get('app.root').'/alpha/images/icons/accept.png', 16, 16, 'png');
     }
     
     /** 
@@ -101,7 +101,7 @@ class Image_Test extends PHPUnit_Framework_TestCase {
     	global $config;
     	
     	try {
-    		$this->img = new Image($config->get('sysRoot').'/alpha/images/icons/accept.png', 16, 16, 'tif');
+    		$this->img = new Image($config->get('app.root').'/alpha/images/icons/accept.png', 16, 16, 'tif');
     		$this->fail('testing for an expected exception when a bad source type is provided');
     	} catch (IllegalArguementException $e) {
     		$this->assertEquals('Not a valid enum option!', $e->getMessage(), 'testing for an expected exception when a bad source type is provided');
@@ -117,7 +117,7 @@ class Image_Test extends PHPUnit_Framework_TestCase {
     	global $config;
     	
     	try {
-    		$this->img = new Image($config->get('sysRoot').'/alpha/images/icons/accept.png', 16, 16, 'png', 2.5);
+    		$this->img = new Image($config->get('app.root').'/alpha/images/icons/accept.png', 16, 16, 'png', 2.5);
     		$this->fail('testing for an expected exception when a quality value is provided');
     	} catch (IllegalArguementException $e) {
     		$this->assertEquals('The quality setting of [2.5] is outside of the allowable range of 0.0 to 1.0', $e->getMessage(), 'testing for an expected exception when a quality value is provided');
@@ -132,7 +132,7 @@ class Image_Test extends PHPUnit_Framework_TestCase {
     public function testConstructorSetFilename() {
     	global $config;
     	
-    	$this->assertEquals($config->get('sysRoot').'cache/images/accept_16x16.png', $this->img->getFilename(), 'testing that the constructor will call setFilename internally to get up a filename  to store the generated image automatically');
+    	$this->assertEquals($config->get('app.root').'cache/images/accept_16x16.png', $this->img->getFilename(), 'testing that the constructor will call setFilename internally to get up a filename  to store the generated image automatically');
     }
     
     /**
@@ -143,7 +143,7 @@ class Image_Test extends PHPUnit_Framework_TestCase {
     public function testConvertImageURLToPath() {
     	global $config;
     	
-    	$this->assertEquals('images/testimage.png', Image::convertImageURLToPath($config->get('sysURL').'images/testimage.png'), 'testing the convertImageURLToPath method');
+    	$this->assertEquals('images/testimage.png', Image::convertImageURLToPath($config->get('app.url').'images/testimage.png'), 'testing the convertImageURLToPath method');
     }
 }
 

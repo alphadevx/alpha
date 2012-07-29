@@ -250,7 +250,7 @@ class DEnum extends AlphaDAO implements AlphaTypeInterface{
 		
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		
 		$sqlQuery = 'SELECT COUNT(OID) AS item_count FROM DEnumItem WHERE DEnumID = \''.$this->getID().'\';';
 

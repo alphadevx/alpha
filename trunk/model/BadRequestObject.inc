@@ -3,7 +3,7 @@
 /**
  *
  * A HTTP request that resulted in a 404 response.  The class is only used when the
- * sysEnableClientTempBlacklistFiler setting is set to true to enable the filter.
+ * security.client.temp.blacklist.filter.enabled setting is set to true to enable the filter.
  * 
  * @package alpha::model
  * @since 1.0
@@ -116,7 +116,7 @@ class BadRequestObject extends AlphaDAO {
 	
 	/**
 	 * Gets the count of bad requests for the client with this IP and client string in the past
-	 * configurable period (sysTempBlacklistFilerPeriod)
+	 * configurable period (secutity.client.temp.blacklist.filter.period)
 	 * 
 	 * @return integer
 	 * @since 1.0
@@ -125,7 +125,7 @@ class BadRequestObject extends AlphaDAO {
 	public function getBadRequestCount() {
 		global $config;
 		
-		$sqlQuery = "SELECT COUNT(OID) AS request_count FROM ".$this->getTableName()." WHERE IP = '".$this->IP->getValue()."' AND client = '".$this->client->getValue()."' AND created_ts > NOW()-INTERVAL '".$config->get('sysTempBlacklistFilerPeriod')."' MINUTE";
+		$sqlQuery = "SELECT COUNT(OID) AS request_count FROM ".$this->getTableName()." WHERE IP = '".$this->IP->getValue()."' AND client = '".$this->client->getValue()."' AND created_ts > NOW()-INTERVAL '".$config->get('secutity.client.temp.blacklist.filter.period')."' MINUTE";
 		
 		$result = $this->query($sqlQuery);
 		

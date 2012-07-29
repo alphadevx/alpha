@@ -189,7 +189,7 @@ abstract class AlphaDAO {
 	public static function disconnect() {
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), new PersonObject());
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), new PersonObject());
 		$provider->disconnect();
 	}
 	
@@ -204,7 +204,7 @@ abstract class AlphaDAO {
 	public function query($sqlQuery) {
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		return $provider->query($sqlQuery);
 	}
 	
@@ -225,13 +225,13 @@ abstract class AlphaDAO {
 		
 		$this->OID = $OID;
 
-		if($config->get('sysCacheProviderName') != '' && $this->loadFromCache()) {
+		if($config->get('cache.provider.name') != '' && $this->loadFromCache()) {
             // BO was found in cache
 		}else{
-			$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+			$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 			$provider->load($OID);
 
-			if($config->get('sysCacheProviderName') != '')
+			if($config->get('cache.provider.name') != '')
 				$this->addToCache();
 		}
 			
@@ -262,12 +262,12 @@ abstract class AlphaDAO {
 
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$provider->loadByAttribute($attribute, $value, $ignoreClassType, $loadAttributes);
 		
 		$this->setEnumOptions();	
 
-		if($config->get('sysCacheProviderName') != '' && count($loadAttributes) == 0) // we will only cache fully-populated BOs
+		if($config->get('cache.provider.name') != '' && count($loadAttributes) == 0) // we will only cache fully-populated BOs
         	$this->addToCache();
 
 		if(method_exists($this, 'after_loadByAttribute_callback'))
@@ -296,7 +296,7 @@ abstract class AlphaDAO {
 		
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$objects = $provider->loadAll($start, $limit, $orderBy, $order, $ignoreClassType);
 		
 		if(method_exists($this, 'after_loadAll_callback'))
@@ -330,7 +330,7 @@ abstract class AlphaDAO {
 		
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$objects = $provider->loadAllByAttribute($attribute, $value, $start, $limit, $orderBy, $order, $ignoreClassType);
 		
 		if(method_exists($this, 'after_loadAllByAttribute_callback'))
@@ -369,7 +369,7 @@ abstract class AlphaDAO {
 				'] provided to loadAllByAttributes');
 		}
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$objects = $provider->loadAllByAttributes($attributes, $values, $start, $limit, $orderBy, $order, $ignoreClassType);
 		
 		if(method_exists($this, 'after_loadAllByAttributes_callback'))
@@ -400,7 +400,7 @@ abstract class AlphaDAO {
 		
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$objects = $provider->loadAllByDayUpdated($date, $start, $limit, $orderBy, $order, $ignoreClassType);
 		
 		if(method_exists($this, 'after_loadAllByDayUpdated_callback'))
@@ -428,7 +428,7 @@ abstract class AlphaDAO {
 		
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$values = $provider->loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order, $ignoreClassType);
 		
 		self::$logger->debug('<<loadAllFieldValuesByAttribute ['.count($values).']');
@@ -456,10 +456,10 @@ abstract class AlphaDAO {
 			throw new FailedSaveException('Could not save due to a validation error.');
 			return;
 		}else{		
-			$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+			$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 			$provider->save();
 			
-			if($config->get('sysCacheProviderName') != '')
+			if($config->get('cache.provider.name') != '')
 				$this->removeFromCache();
 				
 			if(method_exists($this, 'after_save_callback'))
@@ -491,12 +491,12 @@ abstract class AlphaDAO {
 		if($this->isTransient())
 			throw new FailedSaveException('Cannot perform saveAttribute method on transient BO!');
 
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$provider->saveAttribute($attribute, $value);
 		
 		$this->set($attribute, $value);
 		
-		if($config->get('sysCacheProviderName') != '')
+		if($config->get('cache.provider.name') != '')
 			$this->removeFromCache();
 				
 		if(method_exists($this, 'after_saveAttribute_callback'))
@@ -519,7 +519,7 @@ abstract class AlphaDAO {
 
                 global $config;
 
-                $provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+                $provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
                 $provider->saveHistory();
 
                 if(method_exists($this, 'after_saveHistory_callback'))
@@ -640,10 +640,10 @@ abstract class AlphaDAO {
 			}
 		}
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$provider->delete();
 		
-		if($config->get('sysCacheProviderName') != '')
+		if($config->get('cache.provider.name') != '')
 			$this->removeFromCache();
 		
 		if(method_exists($this, 'after_delete_callback'))
@@ -708,7 +708,7 @@ abstract class AlphaDAO {
 
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$ver = $provider->getVersion();
 		
 		if(method_exists($this, 'after_getVersion_callback'))
@@ -732,7 +732,7 @@ abstract class AlphaDAO {
 			
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$provider->makeTable();
 		
 		if(method_exists($this, 'after_makeTable_callback'))
@@ -757,7 +757,7 @@ abstract class AlphaDAO {
 
                	global $config;
 
-               	$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+               	$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
                 $provider->makeHistoryTable();
 
                	if(method_exists($this, 'after_makeHistoryTable_callback'))
@@ -782,7 +782,7 @@ abstract class AlphaDAO {
 			
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$provider->rebuildTable();
 		
 		if(method_exists($this, 'after_rebuildTable_callback'))
@@ -806,7 +806,7 @@ abstract class AlphaDAO {
 			
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$provider->dropTable($tableName);
 		
 		if(method_exists($this, 'after_dropTable_callback'))
@@ -831,7 +831,7 @@ abstract class AlphaDAO {
 		if(method_exists($this, 'before_addProperty_callback'))
 			$this->before_addProperty_callback();
 			
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$provider->addProperty($propName);
 
 		if(method_exists($this, 'after_addProperty_callback'))
@@ -909,7 +909,7 @@ abstract class AlphaDAO {
 			
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$max = $provider->getMAX();
 		
 		if(method_exists($this, 'after_getMAX_callback'))
@@ -940,7 +940,7 @@ abstract class AlphaDAO {
 			throw new IllegalArguementException('Illegal arrays attributes=['.var_export($attributes, true).'] and values=['.var_export($values, true).'] provided to loadAllByAttributes');
 		}
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$count = $provider->getCount($attributes, $values);
 		
 		if(method_exists($this, 'after_getCount_callback'))
@@ -966,7 +966,7 @@ abstract class AlphaDAO {
 
                	global $config;
 
-               	$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+               	$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
                	$count = $provider->getHistoryCount();
 
                	if(method_exists($this, 'after_getHistoryCount_callback'))
@@ -1033,7 +1033,7 @@ abstract class AlphaDAO {
 			
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$provider->setEnumOptions();
 		
 		self::$logger->debug('<<setEnumOptions');
@@ -1206,7 +1206,7 @@ abstract class AlphaDAO {
 			
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$tableExists = $provider->checkTableExists($checkHistoryTable);
 		
 		if(method_exists($this, 'after_checkTableExists_callback'))
@@ -1233,8 +1233,8 @@ abstract class AlphaDAO {
 		
 		global $config;
 
-		require_once $config->get('sysRoot').'alpha/model/'.$config->get('sysDBProviderName').'.inc';
-		eval('$tableExists = '.$config->get('sysDBProviderName').'::checkBOTableExists($BOClassName, $checkHistoryTable);');
+		require_once $config->get('app.root').'alpha/model/'.$config->get('db.provider.name').'.inc';
+		eval('$tableExists = '.$config->get('db.provider.name').'::checkBOTableExists($BOClassName, $checkHistoryTable);');
 		
 		self::$logger->debug('<<checkBOTableExists ['.($tableExists ? 'true' : 'false').']');
 		return $tableExists;
@@ -1263,7 +1263,7 @@ abstract class AlphaDAO {
 			return true;
 		}else{
 		
-			$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+			$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 			$updateRequired = $provider->checkTableNeedsUpdate();
 			
 			if(method_exists($this, 'after_checkTableNeedsUpdate_callback'))
@@ -1290,7 +1290,7 @@ abstract class AlphaDAO {
 		if(method_exists($this, 'before_findMissingFields_callback'))
 			$this->before_findMissingFields_callback();
 			
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$missingFields = $provider->findMissingFields();
 		
 		if(method_exists($this, 'after_findMissingFields_callback'))
@@ -1445,7 +1445,7 @@ abstract class AlphaDAO {
 		
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$indexNames = $provider->getIndexes();
 		
 		self::$logger->debug('<<getIndexes ['.print_r($indexNames, true).']');
@@ -1480,7 +1480,7 @@ abstract class AlphaDAO {
 			return;
 		}
 
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$provider->createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute);
 		
 		if(method_exists($this, 'after_createForeignIndex_callback'))
@@ -1506,7 +1506,7 @@ abstract class AlphaDAO {
 			
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$provider->createUniqueIndex($attribute1Name, $attribute2Name, $attribute3Name);
 		
 		if(method_exists($this, 'after_createUniqueIndex_callback'))
@@ -1564,9 +1564,9 @@ abstract class AlphaDAO {
 		$classNameArray = array();
 		
 		
-		if(file_exists($config->get('sysRoot').'model')) { // it is possible it has not been created yet...
+		if(file_exists($config->get('app.root').'model')) { // it is possible it has not been created yet...
 			// first get any custom BOs
-			$handle = opendir($config->get('sysRoot').'model');
+			$handle = opendir($config->get('app.root').'model');
 	   		
 	        // loop over the business object directory
 	        while (false !== ($file = readdir($handle))) {
@@ -1580,7 +1580,7 @@ abstract class AlphaDAO {
 	    
 	    // now loop over the core BOs provided with Alpha
 	    
-	    $handle = opendir($config->get('sysRoot').'alpha/model');
+	    $handle = opendir($config->get('app.root').'alpha/model');
    		
         // loop over the business object directory
 	    while (false !== ($file = readdir($handle))) {
@@ -1742,12 +1742,12 @@ abstract class AlphaDAO {
 		
 		global $config;
 		
-		if(file_exists($config->get('sysRoot').'model/'.$classname.'.inc'))
-			require_once $config->get('sysRoot').'model/'.$classname.'.inc';
-		elseif(file_exists($config->get('sysRoot').'alpha/model/'.$classname.'.inc'))
-			require_once $config->get('sysRoot').'alpha/model/'.$classname.'.inc';
-		elseif(file_exists($config->get('sysRoot').'alpha/model/types/'.$classname.'.inc'))
-			require_once $config->get('sysRoot').'alpha/model/types/'.$classname.'.inc';
+		if(file_exists($config->get('app.root').'model/'.$classname.'.inc'))
+			require_once $config->get('app.root').'model/'.$classname.'.inc';
+		elseif(file_exists($config->get('app.root').'alpha/model/'.$classname.'.inc'))
+			require_once $config->get('app.root').'alpha/model/'.$classname.'.inc';
+		elseif(file_exists($config->get('app.root').'alpha/model/types/'.$classname.'.inc'))
+			require_once $config->get('app.root').'alpha/model/types/'.$classname.'.inc';
 		else
 			throw new IllegalArguementException('The class ['.$classname.'] is not defined anywhere!');
 		
@@ -1770,11 +1770,11 @@ abstract class AlphaDAO {
 		
 		$exists = false;
 		
-		if(file_exists($config->get('sysRoot').'model/'.$classname.'.inc'))
+		if(file_exists($config->get('app.root').'model/'.$classname.'.inc'))
 			$exists = true;
-		if(file_exists($config->get('sysRoot').'alpha/model/'.$classname.'.inc'))
+		if(file_exists($config->get('app.root').'alpha/model/'.$classname.'.inc'))
 			$exists = true;
-		if(file_exists($config->get('sysRoot').'alpha/model/types/'.$classname.'.inc'))
+		if(file_exists($config->get('app.root').'alpha/model/types/'.$classname.'.inc'))
 			$exists = true;
 		
 		self::$logger->debug('<<checkClassDefExists ['.$exists.']');
@@ -1797,7 +1797,7 @@ abstract class AlphaDAO {
 		
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$recordExists = $provider->checkRecordExists($OID);
 		
 		if(method_exists($this, 'after_checkRecordExists_callback'))
@@ -1821,7 +1821,7 @@ abstract class AlphaDAO {
 		
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$isOverloaded = $provider->isTableOverloaded();
 		
 		self::$logger->debug('<<isTableOverloaded ['.$isOverloaded.']');
@@ -1841,7 +1841,7 @@ abstract class AlphaDAO {
      	
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), new PersonObject());
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), new PersonObject());
 		
     	try{
     		$provider->commit();
@@ -1865,7 +1865,7 @@ abstract class AlphaDAO {
 		
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), new PersonObject());
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), new PersonObject());
 		
     	try{
     		$provider->commit();
@@ -1889,7 +1889,7 @@ abstract class AlphaDAO {
     	
 		global $config;
 		
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), new PersonObject());
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), new PersonObject());
 		
     	try{
     		$provider->rollback();
@@ -2033,11 +2033,11 @@ abstract class AlphaDAO {
       	global $config;
 
       	try {
-      		$cache = AlphaCacheProviderFactory::getInstance($config->get('sysCacheProviderName'));
+      		$cache = AlphaCacheProviderFactory::getInstance($config->get('cache.provider.name'));
       		$cache->set(get_class($this).'-'.$this->getOID(), $this, 3600);
 
       	}catch(Exception $e) {
-      		self::$logger->error('Error while attempting to store a business object to the ['.$config->get('sysCacheProviderName').'] 
+      		self::$logger->error('Error while attempting to store a business object to the ['.$config->get('cache.provider.name').'] 
       			instance: ['.$e->getMessage().']');
       	}
 	    
@@ -2054,10 +2054,10 @@ abstract class AlphaDAO {
 		global $config;
 
 		try {
-      		$cache = AlphaCacheProviderFactory::getInstance($config->get('sysCacheProviderName'));
+      		$cache = AlphaCacheProviderFactory::getInstance($config->get('cache.provider.name'));
       		$cache->delete(get_class($this).'-'.$this->getOID());
 		}catch(Exception $e) {
-      		self::$logger->error('Error while attempting to remove a business object from ['.$config->get('sysCacheProviderName').']
+      		self::$logger->error('Error while attempting to remove a business object from ['.$config->get('cache.provider.name').']
       			instance: ['.$e->getMessage().']');
       	}
       	
@@ -2075,7 +2075,7 @@ abstract class AlphaDAO {
       	global $config;
 
       	try {
-	      	$cache = AlphaCacheProviderFactory::getInstance($config->get('sysCacheProviderName'));
+	      	$cache = AlphaCacheProviderFactory::getInstance($config->get('cache.provider.name'));
       		$BO = $cache->get(get_class($this).'-'.$this->getOID());
 	
 	      	if(!$BO) {
@@ -2107,7 +2107,7 @@ abstract class AlphaDAO {
 		        return true;
 	      	}
       	}catch(Exception $e) {
-      		self::$logger->error('Error while attempting to load a business object from ['.$config->get('sysCacheProviderName').']
+      		self::$logger->error('Error while attempting to load a business object from ['.$config->get('cache.provider.name').']
       		 instance: ['.$e->getMessage().']');
       		
       		self::$logger->debug('<<loadFromCache: [false]');

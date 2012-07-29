@@ -63,7 +63,7 @@ abstract class AlphaErrorHandlers {
 }
 
 set_exception_handler('AlphaErrorHandlers::catchException');
-set_error_handler('AlphaErrorHandlers::catchError', $config->get('sysPHPErrorLogLevel'));
+set_error_handler('AlphaErrorHandlers::catchError', $config->get('php.error.log.level'));
 
 
 ?>
