@@ -132,7 +132,7 @@ class Image_Test extends PHPUnit_Framework_TestCase {
     public function testConstructorSetFilename() {
     	global $config;
     	
-    	$this->assertEquals($config->get('app.root').'cache/images/accept_16x16.png', $this->img->getFilename(), 'testing that the constructor will call setFilename internally to get up a filename  to store the generated image automatically');
+    	$this->assertEquals($config->get('app.file.store.dir').'cache/images/accept_16x16.png', $this->img->getFilename(), 'testing that the constructor will call setFilename internally to get up a filename  to store the generated image automatically');
     }
     
     /**

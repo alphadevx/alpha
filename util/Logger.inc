@@ -89,7 +89,7 @@ class Logger {
 		$this->classname = $classname;
 		$this->level = $config->get('app.log.trace.level');
 		$this->debugClasses = explode(',', $config->get('app.log.trace.debug.classes'));
-		$this->logfile = new LogFile($config->get('app.log.file'));
+		$this->logfile = new LogFile($config->get('app.file.store.dir').'logs/'.$config->get('app.log.file'));
 		$this->logfile->setMaxSize($config->get('app.log.file.max.size'));
 	}
 	

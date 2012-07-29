@@ -54,8 +54,8 @@ class AlphaBackUpUtils {
 	public static function backUpAttachmentsAndLogs($backupDir) {
 		global $config;
 
-		AlphaFileUtils::copy($config->get('app.root').'attachments', $backupDir.'attachments');
-		AlphaFileUtils::copy($config->get('app.root').'logs', $backupDir.'logs');
+		AlphaFileUtils::copy($config->get('app.file.store.dir').'attachments', $backupDir.'attachments');
+		AlphaFileUtils::copy($config->get('app.file.store.dir').'logs', $backupDir.'logs');
 	}
 	
 	/**
