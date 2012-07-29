@@ -5,7 +5,7 @@ if(!isset($config)) {
 	require_once '../util/AlphaConfig.inc';
 	$config = AlphaConfig::getInstance();
 	
-	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
+	require_once $config->get('app.root').'alpha/util/AlphaAutoLoader.inc';
 }
 
 /**
@@ -169,8 +169,8 @@ class ViewFeed extends AlphaController implements AlphaControllerInterface {
 					$feed = new Atom($BOName, $this->title, str_replace('&', '&amp;', $_SERVER['REQUEST_URI']), $this->description);
 					$feed->setFieldMappings($this->fieldMappings[0], $this->fieldMappings[1], $this->fieldMappings[2], $this->fieldMappings[3],
 						$this->fieldMappings[4]);
-					if($config->get('sysAtomFeedAuthor') != '')
-						$feed->addAuthor($config->get('sysAtomFeedAuthor'));
+					if($config->get('feeds.atom.author') != '')
+						$feed->addAuthor($config->get('feeds.atom.author'));
 				break;
 			}
 			
@@ -179,7 +179,7 @@ class ViewFeed extends AlphaController implements AlphaControllerInterface {
 			echo $feed->render();
 			
 			// log the request for this news feed
-			$feedLog = new LogFile($config->get('sysRoot').'logs/feeds.log');		
+			$feedLog = new LogFile($config->get('app.root').'logs/feeds.log');		
 			$feedLog->writeLine(array($this->BOName, $this->type, date("Y-m-d H:i:s"), $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());
@@ -212,20 +212,20 @@ class ViewFeed extends AlphaController implements AlphaControllerInterface {
 		// set up some BO to feed fields mappings based on common BO types
 		switch($this->BOName) {
 			case 'ArticleObject':
-				$this->title = 'Latest articles from '.$config->get('sysTitle');
-				$this->description = 'News feed containing all of the details on the latest articles published on '.$config->get('sysTitle').'.';
+				$this->title = 'Latest articles from '.$config->get('app.title');
+				$this->description = 'News feed containing all of the details on the latest articles published on '.$config->get('app.title').'.';
 				$this->fieldMappings = array('title', 'URL', 'description', 'created_ts', 'OID');
 				$this->sortBy = 'created_ts';
 			break;
 			case 'BlogEntryObject':
-				$this->title = 'Latest blog entries from '.$config->get('sysTitle');
-				$this->description = 'News feed containing all of the details on the latest blog entries published on '.$config->get('sysTitle').'.';
+				$this->title = 'Latest blog entries from '.$config->get('app.title');
+				$this->description = 'News feed containing all of the details on the latest blog entries published on '.$config->get('app.title').'.';
 				$this->fieldMappings = array('title', 'URL', 'description', 'created_ts', 'OID');
 				$this->sortBy = 'created_ts';
 			break;
 			case 'NewsObject':
-				$this->title = 'Latest news from '.$config->get('sysTitle');
-				$this->description = 'News feed containing all of the latest news items from '.$config->get('sysTitle').'.';
+				$this->title = 'Latest news from '.$config->get('app.title');
+				$this->description = 'News feed containing all of the latest news items from '.$config->get('app.title').'.';
 				$this->fieldMappings = array('title', 'URL', 'content', 'created_ts', 'OID');
 			break;
 		}

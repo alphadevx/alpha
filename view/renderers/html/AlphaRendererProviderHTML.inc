@@ -250,7 +250,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 			if($this->BO->hasAttribute('URL'))
 				$button = new Button("document.location = '".$this->BO->get('URL')."';", 'View', 'view'.$this->BO->getOID().'But');
 			else
-				$button = new Button("document.location = '".$config->get('sysURL')."Detail/bo/".get_class($this->BO)."/oid/".$this->BO->getOID()."';", 'View', 'view'.$this->BO->getOID().'But');
+				$button = new Button("document.location = '".$config->get('app.url')."Detail/bo/".get_class($this->BO)."/oid/".$this->BO->getOID()."';", 'View', 'view'.$this->BO->getOID().'But');
 			
 			$fields['viewButton'] = $button->render();
 		}
@@ -486,22 +486,22 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		}
 		$html.= '<meta http-equiv="imagetoolbar" content="no">';
 
-		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/ui/themes/'.$config->get('sysTheme').'/jquery.ui.all.css">';
-		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/css/alpha.css">';
-		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
+		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/lib/jquery/ui/themes/'.$config->get('app.css.theme').'/jquery.ui.all.css">';
+		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/css/alpha.css">';
+		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'config/css/overrides.css">';
 		
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/jquery-1.5.1.min.js"></script>';
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/scripts/validation.js"></script>';
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/contextMenu/jquery.contextMenu.js"></script>';
+		$html.= '<script type="text/javascript" src="'.$config->get('app.url').'alpha/lib/jquery/jquery-1.5.1.min.js"></script>';
+		$html.= '<script type="text/javascript" src="'.$config->get('app.url').'alpha/scripts/validation.js"></script>';
+		$html.= '<script type="text/javascript" src="'.$config->get('app.url').'alpha/lib/jquery/contextMenu/jquery.contextMenu.js"></script>';
 		
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery-ui-1.8.11.custom.min.js"></script>';
+		$html.= '<script type="text/javascript" src="'.$config->get('app.url').'alpha/lib/jquery/ui/jquery-ui-1.8.11.custom.min.js"></script>';
 		
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery.ui.potato.menu.js"></script>';
+		$html.= '<script type="text/javascript" src="'.$config->get('app.url').'alpha/lib/jquery/ui/jquery.ui.potato.menu.js"></script>';
 		
-		$html.= '<script type="text/javascript" src="'.$config->get('sysURL').'alpha/lib/jquery/ui/jquery.ui.checkbox.js"></script>';
+		$html.= '<script type="text/javascript" src="'.$config->get('app.url').'alpha/lib/jquery/ui/jquery.ui.checkbox.js"></script>';
 		
 		// handle force-frames
-		if($config->get('sysForceFrame')) {
+		if($config->get('app.force.frame')) {
 			// if no-forceframe=true or we are in the admin backend, don't force frame
 			if(!isset($_GET['no-forceframe']) && strpos($_SERVER['REQUEST_URI'], '/tk/') === false) {
 				$html.= '<script type="text/javascript">';
@@ -510,7 +510,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		 
 				$html.= 'if (pageLoc == pageAdd) {';
 				$html.= '    contentSrc = escape(pageLoc);';
-				$html.= '    contPage = \''.$config->get('sysURL').'?\' + contentSrc;';
+				$html.= '    contPage = \''.$config->get('app.url').'?\' + contentSrc;';
 				$html.= '    top.location.href = contPage;';
 				$html.= '}';
 				$html.= '</script>';
@@ -670,9 +670,9 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		global $config;		
 		
 		$html = '<html><head>';
-		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/lib/jquery/ui/themes/'.$config->get('sysTheme').'/jquery.ui.all.css">';
-		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'alpha/css/alpha.css">';
-		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('sysURL').'config/css/overrides.css">';
+		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/lib/jquery/ui/themes/'.$config->get('app.css.theme').'/jquery.ui.all.css">';
+		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/css/alpha.css">';
+		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'config/css/overrides.css">';
 		$html .= '<title>'.$code.' - '.$message.'</title></head>';
 		$html .= '<body>';
 		$html .= '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;"> 

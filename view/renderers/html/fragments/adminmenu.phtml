@@ -1,12 +1,12 @@
 <ul id="adminmenu" class="potato-menu">
-	<li><a href="<?= $config->get('sysURL') ?>">Home</a></li>
+	<li><a href="<?= $config->get('app.url') ?>">Home</a></li>
 	<li><a href="<?= FrontController::generateSecureURL('act=ListBusinessObjects') ?>">Admin Home</a></li>
 	<li><a href="#">Logs &raquo;</a>			
 		<ul>
-			<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysLogFile')) ?>">System Log</a></li>
-			<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/search.log') ?>">Search Log</a></li>
-			<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/feeds.log') ?>">Feed Log</a></li>
-			<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('sysRoot').'logs/tasks.log') ?>">Cron Tasks Log</a></li>
+			<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.log.file')) ?>">System Log</a></li>
+			<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.root').'logs/search.log') ?>">Search Log</a></li>
+			<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.root').'logs/feeds.log') ?>">Feed Log</a></li>
+			<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.root').'logs/tasks.log') ?>">Cron Tasks Log</a></li>
 		</ul>
 	</li>
 	<li><a href="<?= FrontController::generateSecureURL('act=GenSecureQueryStrings') ?>">Generate Secure URL</a></li>

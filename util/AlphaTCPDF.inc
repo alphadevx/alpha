@@ -94,7 +94,7 @@ class AlphaTCPDF extends TCPDF {
 			}else {
 				// it has no query string, so threat as a regular image URL
 				if(AlphaValidator::isURL($file))
-					parent::Image($config->get('sysRoot').'/'.Image::convertImageURLToPath($file), $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border);
+					parent::Image($config->get('app.root').'/'.Image::convertImageURLToPath($file), $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border);
 				else
 					parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border);
 			}

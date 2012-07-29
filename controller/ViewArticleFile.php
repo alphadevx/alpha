@@ -5,7 +5,7 @@ if(!isset($config)) {
 	require_once '../util/AlphaConfig.inc';
 	$config = AlphaConfig::getInstance();
 	
-	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
+	require_once $config->get('app.root').'alpha/util/AlphaAutoLoader.inc';
 }
 
 /**
@@ -87,7 +87,7 @@ class ViewArticleFile extends ViewArticle {
 			if(substr($params['file'], 0, 1) == '/')
 				$this->BO->loadContentFromFile($params['file']);
 			else
-				$this->BO->loadContentFromFile($config->get('sysRoot').'alpha/docs/'.$params['file']);
+				$this->BO->loadContentFromFile($config->get('app.root').'alpha/docs/'.$params['file']);
 			
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());

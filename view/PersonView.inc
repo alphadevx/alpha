@@ -104,7 +104,7 @@ class PersonView extends AlphaView {
 		$temp = new Button("submit","Reset Password","resetBut");
 		$html .= $temp->render();
 		$html .= '&nbsp;&nbsp;';
-		$temp = new Button("document.location.replace('".$config->get('sysURL')."')","Cancel","cancelBut");
+		$temp = new Button("document.location.replace('".$config->get('app.url')."')","Cancel","cancelBut");
 		$html .= $temp->render();
 		$html .= '</td></tr>';
 		
@@ -138,7 +138,7 @@ class PersonView extends AlphaView {
 		$temp = new Button("submit","Register","registerBut");
 		$html .= $temp->render();
 		$html .= '&nbsp;&nbsp;';
-		$temp = new Button("document.location.replace('".$config->get('sysURL')."')","Cancel","cancelBut");
+		$temp = new Button("document.location.replace('".$config->get('app.url')."')","Cancel","cancelBut");
 		$html .= $temp->render();
 		$html .= '</td></tr>';
 		

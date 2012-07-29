@@ -97,7 +97,7 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     public function testConstructModRewrite() {
     	global $config;
     	
-    	$request = $config->get('sysURL').'ViewArticleTitle/title/Test_Title';
+    	$request = $config->get('app.url').'ViewArticleTitle/title/Test_Title';
     	$_SERVER['REQUEST_URI'] = str_replace('http://'.$_SERVER['HTTP_HOST'], '', $request);
     	$front = new FrontController();
     	
@@ -112,7 +112,7 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     public function testConstructModRewriteWithAlias() {
     	global $config;
     	
-    	$request = $config->get('sysURL').'article/Test_Title';
+    	$request = $config->get('app.url').'article/Test_Title';
     	$_SERVER['REQUEST_URI'] = str_replace('http://'.$_SERVER['HTTP_HOST'], '', $request);
     	$front = new FrontController();
     	$front->registerAlias('ViewArticleTitle','article','title');
@@ -144,7 +144,7 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     	global $config;
     	
     	$params = 'act=ViewArticleTitle&title=Test_Title';
-    	$request = $config->get('sysURL').'tk/'.FrontController::encodeQuery($params);
+    	$request = $config->get('app.url').'tk/'.FrontController::encodeQuery($params);
     	$_SERVER['REQUEST_URI'] = str_replace('http://'.$_SERVER['HTTP_HOST'], '', $request);
     	$front = new FrontController();
     	
@@ -159,13 +159,13 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     public function testEncodeQuery() {
     	global $config;
     	
-    	$oldKey = $config->get('sysQSKey');
-    	$config->set('sysQSKey', 'testkey');
+    	$oldKey = $config->get('security.query.string.key');
+    	$config->set('security.query.string.key', 'testkey');
     	$params = 'act=ViewArticleTitle&title=Test_Title';
     	
     	$this->assertEquals(FrontController::encodeQuery($params), '8kqoeebEej0V-FN5-DOdA1HBDDieFcNWTib2yLSUNjq0B0FWzAupIA==', 'testing the encodeQuery method with a known encrypted result for a test key');
     	
-    	$config->set('sysQSKey', $oldKey);
+    	$config->set('security.query.string.key', $oldKey);
     }
     
     /**
@@ -176,8 +176,8 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     public function testDecodeQueryParams() {
     	global $config;
     	
-    	$oldKey = $config->get('sysQSKey');
-    	$config->set('sysQSKey', 'testkey');
+    	$oldKey = $config->get('security.query.string.key');
+    	$config->set('security.query.string.key', 'testkey');
     	$tk = '8kqoeebEej0V-FN5-DOdA1HBDDieFcNWTib2yLSUNjq0B0FWzAupIA==';
     	
     	$this->assertEquals('act=ViewArticleTitle&title=Test_Title', FrontController::decodeQueryParams($tk), 'testing the decodeQueryParams method with a known encrypted result for a test key');
@@ -191,8 +191,8 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     public function testGetDecodeQueryParams() {
     	global $config;
     	
-    	$oldKey = $config->get('sysQSKey');
-    	$config->set('sysQSKey', 'testkey');
+    	$oldKey = $config->get('security.query.string.key');
+    	$config->set('security.query.string.key', 'testkey');
     	$tk = '8kqoeebEej0V-FN5-DOdA1HBDDieFcNWTib2yLSUNjq0B0FWzAupIA==';
     	
     	$decoded = FrontController::getDecodeQueryParams($tk);
@@ -209,7 +209,7 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     public function testLoadControllerFileNotFound() {
     	global $config;
     	
-    	$request = $config->get('sysURL').'doesNotExists';
+    	$request = $config->get('app.url').'doesNotExists';
     	$_SERVER['REQUEST_URI'] = str_replace('http://'.$_SERVER['HTTP_HOST'], '', $request);
     	$front = new FrontController();
     	

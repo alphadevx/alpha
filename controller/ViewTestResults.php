@@ -5,11 +5,11 @@ if(!isset($config)) {
 	require_once '../util/AlphaConfig.inc';
 	$config = AlphaConfig::getInstance();
 	
-	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
+	require_once $config->get('app.root').'alpha/util/AlphaAutoLoader.inc';
 }
 
 // add PHPUnit to the include_path
-ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.$config->get('sysRoot').'alpha/lib/PEAR/PHPUnit-3.2.9');
+ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.$config->get('app.root').'alpha/lib/PEAR/PHPUnit-3.2.9');
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
@@ -79,7 +79,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		 * are only interested in tests that fail and the reasons given for failing
 		 * 
 		 */
-		$config->set('sysTraceLevel', 'FATAL');		
+		$config->set('app.log.trace.level', 'FATAL');		
 		
 		// ensure that the super class constructor is called, indicating the rights group
 		parent::__construct('Admin');
@@ -100,14 +100,14 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		echo AlphaView::displayPageHead($this);
 		
 		// flip the standard database settings with the test ones
-		$config->set('sysDB', $config->get('sysDBTest'));
-		$config->set('sysDBUsername', $config->get('sysDBTestUsername'));
-		$config->set('sysDBPassword', $config->get('sysDBTestPassword'));
-		$config->set('sysDBHost', $config->get('sysDBTestHost'));
+		$config->set('db.name', $config->get('db.test.name'));
+		$config->set('db.username', $config->get('db.test.username'));
+		$config->set('db.password', $config->get('db.test.password'));
+		$config->set('db.hostname', $config->get('db.test.hostname'));
 		// force a disconnect to break any existing connections to the main database 
 		AlphaDAO::disconnect();
 		
-		if($config->get('sysDB') == '') {
+		if($config->get('db.name') == '') {
 			echo AlphaView::displayErrorMessage('Unable to run the unit tests as no test database is configured!');
 			echo AlphaView::displayPageFoot($this);
 			return;

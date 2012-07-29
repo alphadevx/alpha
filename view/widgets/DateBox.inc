@@ -128,18 +128,18 @@ class DateBox {
 			$html .= '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$value.'" readonly/>';
 			$html .= '<script language="javascript">';
 			if($this->dateObject instanceof Timestamp)
-				$html .= "$('#".$this->name."').datepicker({dateFormat:'yy-mm-dd HH:II:SS',showOn:'button',buttonImage:'".$config->get('sysURL')."alpha/images/icons/calendar.png'})";
+				$html .= "$('#".$this->name."').datepicker({dateFormat:'yy-mm-dd HH:II:SS',showOn:'button',buttonImage:'".$config->get('app.url')."alpha/images/icons/calendar.png'})";
 			else
-				$html .= '$(document).ready(function(){$(\'#'.$this->name.'\').datepicker({dateFormat:\'yy-mm-dd\',defaultDate:\''.$value.'\',showOn:\'button\',buttonImageOnly:\'true\',buttonImage:\''.$config->get('sysURL').'alpha/images/icons/calendar.png\'})});';
+				$html .= '$(document).ready(function(){$(\'#'.$this->name.'\').datepicker({dateFormat:\'yy-mm-dd\',defaultDate:\''.$value.'\',showOn:\'button\',buttonImageOnly:\'true\',buttonImage:\''.$config->get('app.url').'alpha/images/icons/calendar.png\'})});';
 			$html .= '</script>';
 			$html .= '</td></tr>';
 		}else{
 			$html .= '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$value.'" readonly/>';
 			$html .= '<script language="javascript">';
 			if($this->dateObject instanceof Timestamp)
-				$html .= "$('#".$this->name."').datepicker({dateFormat:'yy-mm-dd HH:II:SS',showOn:'button',buttonImage:'".$config->get('sysURL')."alpha/images/icons/calendar.png'})";
+				$html .= "$('#".$this->name."').datepicker({dateFormat:'yy-mm-dd HH:II:SS',showOn:'button',buttonImage:'".$config->get('app.url')."alpha/images/icons/calendar.png'})";
 			else
-				$html .= '$(document).ready(function(){$(\'#'.$this->name.'\').datepicker({dateFormat:\'yy-mm-dd\',defaultDate:\''.$value.'\',showOn:\'button\',buttonImageOnly:\'true\',buttonImage:\''.$config->get('sysURL').'alpha/images/icons/calendar.png\'})});';
+				$html .= '$(document).ready(function(){$(\'#'.$this->name.'\').datepicker({dateFormat:\'yy-mm-dd\',defaultDate:\''.$value.'\',showOn:\'button\',buttonImageOnly:\'true\',buttonImage:\''.$config->get('app.url').'alpha/images/icons/calendar.png\'})});';
 			$html .= '</script>';
 		}
 		

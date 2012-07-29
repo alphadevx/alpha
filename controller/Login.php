@@ -5,7 +5,7 @@ if(!isset($config)) {
 	require_once '../util/AlphaConfig.inc';
 	$config = AlphaConfig::getInstance();
 	
-	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
+	require_once $config->get('app.root').'alpha/util/AlphaAutoLoader.inc';
 }
 
 /**
@@ -96,7 +96,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 		$this->setBO($this->personObject);
 		
 		// set up the title and meta details
-		$this->setTitle('Login to '.$config->get('sysTitle'));
+		$this->setTitle('Login to '.$config->get('app.title'));
 		$this->setDescription('Login page.');
 		$this->setKeywords('login,logon');
 		
@@ -151,14 +151,14 @@ class Login extends AlphaController implements AlphaControllerInterface {
 			if (isset($params['loginBut'])) {
 				// if the database has not been set up yet, accept a login from the config admin username/password
 				if(!AlphaDAO::isInstalled()) {
-					if ($params['email'] == $config->get('sysInstallUsername') && crypt($params['password'], $config->get('sysInstallPassword')) == 
-						crypt($config->get('sysInstallPassword'), $config->get('sysInstallPassword'))) {
+					if ($params['email'] == $config->get('app.install.username') && crypt($params['password'], $config->get('app.install.password')) == 
+						crypt($config->get('app.install.password'), $config->get('app.install.password'))) {
 							
 						self::$logger->info('Logging in ['.$params['email'].'] at ['.date("Y-m-d H:i:s").']');
 						$admin = new PersonObject();
 						$admin->set('displayName', 'Admin');
 						$admin->set('email', $params['email']);
-						$admin->set('password', crypt($params['password'], $config->get('sysInstallPassword')));
+						$admin->set('password', crypt($params['password'], $config->get('app.install.password')));
 						$admin->set('OID', '00000000001');
 						$_SESSION['currentUser'] = $admin;
 						if ($this->getNextJob() != '') {
@@ -167,7 +167,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 							header('Location: '.$url);
 							exit;
 						}else{
-							header('Location: '.$config->get('sysURL').'alpha/controller/Install.php');
+							header('Location: '.$config->get('app.url').'alpha/controller/Install.php');
 							exit;
 						}
 					}else{
@@ -213,7 +213,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 					
 				echo AlphaView::displayUpdateMessage('The password for the user <strong>'.$params['email'].'</strong> has been reset, and the new password '.
 					'has been sent to that e-mail address.');
-				echo '<a href="'.$config->get('sysURL').'">Home Page</a>';
+				echo '<a href="'.$config->get('app.url').'">Home Page</a>';
 			}
 		}catch(ValidationException $e) {
 			echo AlphaView::displayPageHead($this);
@@ -269,7 +269,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 					exit;
 				}else{
 					self::$logger->debug('<<doLoginAndRedirect');
-					header('Location: '.$config->get('sysURL'));
+					header('Location: '.$config->get('app.url'));
 					exit;
 				}
 			}else{
@@ -288,7 +288,7 @@ class Login extends AlphaController implements AlphaControllerInterface {
 	public function before_displayPageFoot_callback() {
 		global $config;
 		
-		return '<p><em>Version '.$config->get('sysVersion').'</em></p>';
+		return '<p><em>Version '.$config->get('app.version').'</em></p>';
 	}
 }
 

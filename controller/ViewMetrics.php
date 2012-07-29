@@ -5,7 +5,7 @@ if(!isset($config)) {
 	require_once '../util/AlphaConfig.inc';
 	$config = AlphaConfig::getInstance();
 	
-	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
+	require_once $config->get('app.root').'alpha/util/AlphaAutoLoader.inc';
 }
 
 /**
@@ -92,7 +92,7 @@ class ViewMetrics extends AlphaController implements AlphaControllerInterface{
 		
 		echo AlphaView::displayPageHead($this);
 
-		$dir = $config->get('sysRoot');
+		$dir = $config->get('app.root');
 		
 		$metrics = new AlphaMetrics($dir);
 		$metrics->calculateLOC();

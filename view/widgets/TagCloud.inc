@@ -67,7 +67,7 @@ class TagCloud {
 	 * Constructor
 	 * 
 	 * @param $limit The maximum amount of tags to include in the cloud.
-	 * @param $cacheKey Set this optional value to attempt to store the tag cloud array in the available cache for 24hrs (sysCacheProviderName).
+	 * @param $cacheKey Set this optional value to attempt to store the tag cloud array in the available cache for 24hrs (cache.provider.name).
 	 * @since 1.0
 	 */
 	public function __construct($limit, $cacheKey = '') {
@@ -75,8 +75,8 @@ class TagCloud {
 		
 		global $config;
 		
-		if($cacheKey != '' && $config->get('sysCacheProviderName') != '') {
-			$cache = AlphaCacheProviderFactory::getInstance($config->get('sysCacheProviderName'));
+		if($cacheKey != '' && $config->get('cache.provider.name') != '') {
+			$cache = AlphaCacheProviderFactory::getInstance($config->get('cache.provider.name'));
       		$this->popTags = $cache->get($cacheKey);
       		
       		// cache look-up failed, so add it for the next time
@@ -115,7 +115,7 @@ class TagCloud {
 				$linkSize = $minLinkSize;
 			if ($linkSize > $maxLinkSize)
 				$linkSize = $maxLinkSize;
-			$html .= '<a href="'.$config->get('sysURL').'search/q/'.$key.'" style="font-size:'.$linkSize.'pt;"'.(empty($target) ? '' : ' target="'.$target.'"').' rel="tag">'.$key.'</a> ';
+			$html .= '<a href="'.$config->get('app.url').'search/q/'.$key.'" style="font-size:'.$linkSize.'pt;"'.(empty($target) ? '' : ' target="'.$target.'"').' rel="tag">'.$key.'</a> ';
 		}
 		
 		return $html.'</p>';

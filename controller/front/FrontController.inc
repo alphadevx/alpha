@@ -123,7 +123,7 @@ class FrontController {
 			self::$logger->debug('Processing direct request to the front controller');
 			$this->pageController = $_GET['act'];
 		// calls to the front controller via mod_rewrite
-		}elseif($config->get('sysUseModRewrite') && !isset($_GET['tk'])) {
+		}elseif($config->get('app.use.mod.rewrite') && !isset($_GET['tk'])) {
 			self::$logger->debug('Processing a mod_rewrite request');
 			$this->handleModRewriteRequests();			
 		// direct calls to the front controller with an encrypted query string
@@ -190,10 +190,10 @@ class FrontController {
 	public static function generateSecureURL($params) {
 		global $config;
 		
-		if($config->get('sysUseModRewrite'))
-			return $config->get('sysURL').'tk/'.FrontController::encodeQuery($params);
+		if($config->get('app.use.mod.rewrite'))
+			return $config->get('app.url').'tk/'.FrontController::encodeQuery($params);
 		else
-			return $config->get('sysURL').'?tk='.FrontController::encodeQuery($params);
+			return $config->get('app.url').'?tk='.FrontController::encodeQuery($params);
 	}
 	
 	/**
@@ -208,7 +208,7 @@ class FrontController {
    
 		$td = mcrypt_module_open ('tripledes', '', 'ecb', ''); 
 		$iv = mcrypt_create_iv (mcrypt_enc_get_iv_size ($td), MCRYPT_RAND); 
-		mcrypt_generic_init ($td, $config->get('sysQSKey'), $iv); 
+		mcrypt_generic_init ($td, $config->get('security.query.string.key'), $iv); 
 		$encryptedData = mcrypt_generic ($td, $queryString); 
 		mcrypt_generic_deinit ($td); 
 		mcrypt_module_close ($td);
@@ -237,7 +237,7 @@ class FrontController {
 			// replace any troublesome characters from the URL with the original values
 			$token = strtr($_GET['tk'], '-_', '+/');
 			$token = base64_decode($token);			
-			$this->queryString = trim(mcrypt_decrypt('tripledes', $config->get('sysQSKey'), $token, 'ecb', $iv));
+			$this->queryString = trim(mcrypt_decrypt('tripledes', $config->get('security.query.string.key'), $token, 'ecb', $iv));
 		}
 	}
 	
@@ -255,7 +255,7 @@ class FrontController {
 		// replace any troublesome characters from the URL with the original values
 		$token = strtr($tk, '-_', '+/');
 		$token = base64_decode($token);
-		$params = trim(mcrypt_decrypt('tripledes', $config->get('sysQSKey'), $token, 'ecb', $iv));
+		$params = trim(mcrypt_decrypt('tripledes', $config->get('security.query.string.key'), $token, 'ecb', $iv));
 		
 		return $params;
 	}
@@ -274,7 +274,7 @@ class FrontController {
 		// replace any troublesome characters from the URL with the original values
 		$token = strtr($tk, '-_', '+/');
 		$token = base64_decode($token);
-		$params = trim(mcrypt_decrypt('tripledes', $config->get('sysQSKey'), $token, 'ecb', $iv));
+		$params = trim(mcrypt_decrypt('tripledes', $config->get('security.query.string.key'), $token, 'ecb', $iv));
 		
 		$pairs = explode('&', $params);
 		
@@ -298,7 +298,7 @@ class FrontController {
 	public function loadController($allowRedirects = true) {
 		global $config;
 		
-		if($allowRedirects && $config->get('sysCheckInstalled') && $this->pageController != 'Install' && $this->pageController != 'Login') {
+		if($allowRedirects && $config->get('app.check.installed') && $this->pageController != 'Install' && $this->pageController != 'Login') {
 			if(!AlphaDAO::isInstalled()) {
 				self::$logger->info('Invoking the Install controller as the system DB is not installed...');
 				$url = FrontController::generateSecureURL('act=Install');
@@ -314,7 +314,7 @@ class FrontController {
 		
 		if($allowRedirects) {
 			// if there is an alias configured for the above page controller, redirect there
-			if($config->get('sysForceFC') && $this->hasAlias($this->pageController)) {
+			if($config->get('app.force.front.controller') && $this->hasAlias($this->pageController)) {
 				// make sure that it is not already an alias-based request to prevent re-direct loop			
 				if(empty($this->currentAlias)) {
 					// set the correct HTTP header for the response
@@ -328,10 +328,10 @@ class FrontController {
 			    		if($keys[1] == 'title')
 			    			$param = str_replace(' ','_',$param);
 			    		
-			    		$URL = $config->get('sysURL').'/'.$this->getControllerAlias($this->pageController).'/'.
+			    		$URL = $config->get('app.url').'/'.$this->getControllerAlias($this->pageController).'/'.
 			    			$this->getControllerParam($this->pageController).$param;
 			    	}else{
-			    		$URL = $config->get('sysURL').'/'.$this->getControllerAlias($this->pageController);
+			    		$URL = $config->get('app.url').'/'.$this->getControllerAlias($this->pageController);
 			    	}
 			    	
 			    	header('Location: '.$URL);
@@ -361,7 +361,7 @@ class FrontController {
 		}catch (IllegalArguementException $e) {
 			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".var_export($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
 			
-			if($config->get('sysEnableClientTempBlacklistFiler')) {
+			if($config->get('security.client.temp.blacklist.filter.enabled')) {
 				if(isset($_SERVER['HTTP_USER_AGENT']) && isset($_SERVER['REMOTE_ADDR']) && isset($_SERVER['REQUEST_URI'])) {
 					$request = new BadRequestObject();
 					$request->set('client', $_SERVER['HTTP_USER_AGENT']);
@@ -375,7 +375,7 @@ class FrontController {
 		}catch (AlphaException $e) {
 			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".var_export($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
 			
-			if($config->get('sysEnableClientTempBlacklistFiler')) {
+			if($config->get('security.client.temp.blacklist.filter.enabled')) {
 				if(isset($_SERVER['HTTP_USER_AGENT']) && isset($_SERVER['REMOTE_ADDR']) && isset($_SERVER['REQUEST_URI'])) {
 					$request = new BadRequestObject();
 					$request->set('client', $_SERVER['HTTP_USER_AGENT']);
@@ -525,7 +525,7 @@ class FrontController {
 		global $config;
 		
 		// strip off the system URL from the request URL
-		$request = str_replace($config->get('sysURL'), '', 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+		$request = str_replace($config->get('app.url'), '', 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 		self::$logger->debug('$request is ['.$request.']');
 		$params = self::multipleExplode($request, array('/','?','&'));
 		self::$logger->debug('$params are ['.var_export($params, true).']');

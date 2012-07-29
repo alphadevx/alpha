@@ -82,12 +82,12 @@ class AlphaRendererProviderFactory {
 			}
 		}
 		
-		if(file_exists($config->get('sysRoot').'alpha/view/renderers/html/'.$providerName.'.inc')) {
-			require_once $config->get('sysRoot').'alpha/view/renderers/html/'.$providerName.'.inc';
-		}elseif(file_exists($config->get('sysRoot').'alpha/view/renderers/xml/'.$providerName.'.inc')) {
-                        require_once $config->get('sysRoot').'alpha/view/renderers/xml/'.$providerName.'.inc';
-                }elseif(file_exists($config->get('sysRoot').'alpha/view/renderers/json/'.$providerName.'.inc')) {
-                        require_once $config->get('sysRoot').'alpha/view/renderers/json/'.$providerName.'.inc';
+		if(file_exists($config->get('app.root').'alpha/view/renderers/html/'.$providerName.'.inc')) {
+			require_once $config->get('app.root').'alpha/view/renderers/html/'.$providerName.'.inc';
+		}elseif(file_exists($config->get('app.root').'alpha/view/renderers/xml/'.$providerName.'.inc')) {
+                        require_once $config->get('app.root').'alpha/view/renderers/xml/'.$providerName.'.inc';
+                }elseif(file_exists($config->get('app.root').'alpha/view/renderers/json/'.$providerName.'.inc')) {
+                        require_once $config->get('app.root').'alpha/view/renderers/json/'.$providerName.'.inc';
 		}else{
 			throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
 		}

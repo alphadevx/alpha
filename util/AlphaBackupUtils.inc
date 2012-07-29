@@ -54,8 +54,8 @@ class AlphaBackUpUtils {
 	public static function backUpAttachmentsAndLogs($backupDir) {
 		global $config;
 
-		AlphaFileUtils::copy($config->get('sysRoot').'attachments', $backupDir.'attachments');
-		AlphaFileUtils::copy($config->get('sysRoot').'logs', $backupDir.'logs');
+		AlphaFileUtils::copy($config->get('app.root').'attachments', $backupDir.'attachments');
+		AlphaFileUtils::copy($config->get('app.root').'logs', $backupDir.'logs');
 	}
 	
 	/**
@@ -67,9 +67,9 @@ class AlphaBackUpUtils {
 	public static function backUpDatabase($backupDir) {
 		global $config;
 		
-		$targetFileName = $backupDir.$config->get('sysDB').'_'.date("Y-m-d").'.sql';
+		$targetFileName = $backupDir.$config->get('db.name').'_'.date("Y-m-d").'.sql';
 		
-		exec('mysqldump  --host="'.$config->get('sysDBHost').'" --user="'.$config->get('sysDBUsername').'" --password="'.$config->get('sysDBPassword').'" --opt '.$config->get('sysDB').' 2>&1 >'.$targetFileName);
+		exec('mysqldump  --host="'.$config->get('db.hostname').'" --user="'.$config->get('db.username').'" --password="'.$config->get('db.password').'" --opt '.$config->get('db.name').' 2>&1 >'.$targetFileName);
 	}
 }
 

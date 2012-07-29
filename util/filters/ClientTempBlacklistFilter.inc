@@ -80,7 +80,7 @@ class ClientTempBlacklistFilter implements AlphaFilterInterface {
 			$request->set('IP', $IP);
 			$badRequestCount = $request->getBadRequestCount();
 			
-			if($badRequestCount >= $config->get('sysTempBlacklistFilerLimit')) {
+			if($badRequestCount >= $config->get('security.client.temp.blacklist.filter.limit')) {
 				// if we got this far then the client is bad
 				self::$logger->warn('The client ['.$client.'] was blocked from accessing the resource ['.$_SERVER['REQUEST_URI'].'] on a temporary basis');
 				throw new ResourceNotAllowedException('Not allowed!');

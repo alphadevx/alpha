@@ -4,14 +4,14 @@
 require_once 'alpha/util/AlphaConfig.inc';
 $config = AlphaConfig::getInstance();
 
-require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
+require_once $config->get('app.root').'alpha/util/AlphaAutoLoader.inc';
 
-$request = str_replace($config->get('sysURL'), '', 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+$request = str_replace($config->get('app.url'), '', 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 
 // checking to see if the DB is installed before proceeding to process requests normally
 $isInstalled = true;
 
-if($config->get('sysCheckInstalled')&& !AlphaDAO::isInstalled())
+if($config->get('app.check.installed')&& !AlphaDAO::isInstalled())
 	$isInstalled = false;
 
 if($request == '' && $isInstalled) { // process requests to the root (/) URL here with your code
@@ -21,13 +21,13 @@ if($request == '' && $isInstalled) { // process requests to the root (/) URL her
 
 <title>Alpha Framework</title>
 
-<link rel="StyleSheet" type="text/css" href="{$config->get('sysURL')}alpha/css/alpha.css">
-<link rel="StyleSheet" type="text/css" href="{$config->get('sysURL')}config/css/overrides.css">
+<link rel="StyleSheet" type="text/css" href="{$config->get('app.url')}alpha/css/alpha.css">
+<link rel="StyleSheet" type="text/css" href="{$config->get('app.url')}config/css/overrides.css">
 		
 </head>
 <body>
 <div align="center">
-<img src="{$config->get('sysURL')}/alpha/images/logo-large.png"/>
+<img src="{$config->get('app.url')}/alpha/images/logo-large.png"/>
 <br>
 <br>
 <br>
@@ -43,12 +43,12 @@ EOCSS;
 		// register the article load by title alias
 		$front->registerAlias('ViewArticleTitle','article','title');
 		$front->registerAlias('Search','search','q');
-		if($config->get('sysEnableClientBlacklistFilter')) {		
-			require_once $config->get('sysRoot').'alpha/util/filters/ClientBlacklistFilter.inc';
+		if($config->get('security.client.blacklist.filter.enabled')) {		
+			require_once $config->get('app.root').'alpha/util/filters/ClientBlacklistFilter.inc';
 			$front->registerFilter(new ClientBlacklistFilter());
 		}
-		if($config->get('sysEnableClientTempBlacklistFiler')) {		
-			require_once $config->get('sysRoot').'alpha/util/filters/ClientTempBlacklistFilter.inc';
+		if($config->get('security.client.temp.blacklist.filter.enabled')) {
+			require_once $config->get('app.root').'alpha/util/filters/ClientTempBlacklistFilter.inc';
 			$front->registerFilter(new ClientTempBlacklistFilter());
 		}
 			

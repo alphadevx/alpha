@@ -205,7 +205,7 @@ class RelationLookup extends AlphaDAO implements AlphaTypeInterface {
 			
 		global $config;
 			
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('sysDBProviderName'), $this);
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$objects = $provider->loadAllByAttribute($attribute, $value, $start, $limit, $orderBy, $order, $ignoreClassType, array($this->leftClassName, $this->rightClassName));
 		
 		if(method_exists($this, 'after_loadAllByAttribute_callback'))

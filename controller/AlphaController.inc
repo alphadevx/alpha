@@ -226,16 +226,16 @@ abstract class AlphaController {
 	 	}
 	 	
 	 	// if configured to do so, force redirect to the front controller
-	 	if($config->get('sysForceFC') && basename($_SERVER['PHP_SELF']) != 'index.php') {
+	 	if($config->get('app.force.front.controller') && basename($_SERVER['PHP_SELF']) != 'index.php') {
 	 		// set the correct HTTP header for the response
 	    		header('HTTP/1.1 301 Moved Permanently');
     		
     			if(empty($_SERVER['QUERY_STRING'])) {
-    				header('Location: '.$config->get('sysURL').'?act='.get_class($this));
+    				header('Location: '.$config->get('app.url').'?act='.get_class($this));
     				self::$logger->debug('<<__construct');
 					exit;
     			}else{
-    				header('Location: '.$config->get('sysURL').'?act='.get_class($this).'&'.$_SERVER['QUERY_STRING']);
+    				header('Location: '.$config->get('app.url').'?act='.get_class($this).'&'.$_SERVER['QUERY_STRING']);
     				self::$logger->debug('<<__construct');
 					exit;
     			}
@@ -1015,10 +1015,10 @@ abstract class AlphaController {
 
 		self::$logger->debug('Custom controller name is ['.$controllerName.']');
 		
-		if (file_exists($config->get('sysRoot').'controller/'.$controllerName.'.php')) {
+		if (file_exists($config->get('app.root').'controller/'.$controllerName.'.php')) {
 			self::$logger->debug('<<getCustomControllerName');
 			return $controllerName;
-		}elseif (file_exists($config->get('sysRoot').'alpha/controller/'.$controllerName.'.php')) {
+		}elseif (file_exists($config->get('app.root').'alpha/controller/'.$controllerName.'.php')) {
 			self::$logger->debug('<<getCustomControllerName');
 			return $controllerName;
 		}else{
@@ -1051,7 +1051,7 @@ abstract class AlphaController {
 		
 		// just making sure that we are not already using the custom controller
 		if(get_class($this) != $controllerName) {
-			if (file_exists($config->get('sysRoot').'controller/'.$controllerName.'.php')) {
+			if (file_exists($config->get('app.root').'controller/'.$controllerName.'.php')) {
 				self::$logger->debug('Custom controller found, redirecting...');
 				// handle secure URLs
 				if(isset($_GET['tk'])) {
@@ -1065,13 +1065,13 @@ abstract class AlphaController {
 					self::$logger->debug('<<loadCustomController');
 					exit;
 				}else{
-					$url = $config->get('sysURL').'controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING'];
+					$url = $config->get('app.url').'controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING'];
 					self::$logger->debug('Redirecting to ['.$url.']');
 					header('Location: '.$url);
 					self::$logger->debug('<<loadCustomController');
 					exit;
 				}
-			}elseif (file_exists($config->get('sysRoot').'alpha/controller/'.$controllerName.'.php')) {
+			}elseif (file_exists($config->get('app.root').'alpha/controller/'.$controllerName.'.php')) {
 				self::$logger->debug('Custom controller found, redirecting...');
 				// handle secure URLs
 				if(self::checkIfAccessingFromSecureURL()) {
@@ -1093,7 +1093,7 @@ abstract class AlphaController {
 					self::$logger->debug('<<loadCustomController');
 					exit;
 				}else{
-					$url = $config->get('sysURL').'alpha/controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING'];
+					$url = $config->get('app.url').'alpha/controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING'];
 					self::$logger->debug('Redirecting to ['.$url.']');
 					header('Location: '.$url);
 					self::$logger->debug('<<loadCustomController');
@@ -1151,9 +1151,9 @@ abstract class AlphaController {
 		
 		if($controllerName == '/')
 			$exists = true;
-		if(file_exists($config->get('sysRoot').'controller/'.$controllerName.'.php'))
+		if(file_exists($config->get('app.root').'controller/'.$controllerName.'.php'))
 			$exists = true;
-		if(file_exists($config->get('sysRoot').'alpha/controller/'.$controllerName.'.php'))
+		if(file_exists($config->get('app.root').'alpha/controller/'.$controllerName.'.php'))
 			$exists = true;
 
 		self::$logger->debug('<<checkControllerDefExists ['.$exists.']');
@@ -1174,10 +1174,10 @@ abstract class AlphaController {
 		
 		global $config;
 		
-		if(file_exists($config->get('sysRoot').'controller/'.$controllerName.'.php'))
-			require_once $config->get('sysRoot').'controller/'.$controllerName.'.php';
-		elseif(file_exists($config->get('sysRoot').'alpha/controller/'.$controllerName.'.php'))
-			require_once $config->get('sysRoot').'alpha/controller/'.$controllerName.'.php';
+		if(file_exists($config->get('app.root').'controller/'.$controllerName.'.php'))
+			require_once $config->get('app.root').'controller/'.$controllerName.'.php';
+		elseif(file_exists($config->get('app.root').'alpha/controller/'.$controllerName.'.php'))
+			require_once $config->get('app.root').'alpha/controller/'.$controllerName.'.php';
 		else
 			throw new IllegalArguementException('The class ['.$controllerName.'] is not defined anywhere!');
 		

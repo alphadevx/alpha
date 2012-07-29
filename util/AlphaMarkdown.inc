@@ -79,8 +79,8 @@ class AlphaMarkdown extends MarkdownExtra_Parser {
 			$language = 'php';			
 		}
 		
-		if($config->get('sysHighlightProviderName') != '') {
-			$highlighter = AlphaHighlightProviderFactory::getInstance($config->get('sysHighlightProviderName'));
+		if($config->get('cms.highlight.provider.name') != '') {
+			$highlighter = AlphaHighlightProviderFactory::getInstance($config->get('cms.highlight.provider.name'));
 			$codeblock = $highlighter->highlight($codeblock, $language);
 		}
 		
@@ -112,9 +112,9 @@ class AlphaMarkdown extends MarkdownExtra_Parser {
 		 * 
 		 * 1. $url parses to a valid URL
 		 * 2. $url has a host part
-		 * 3. $url does not contain $config->get('sysURL'), i.e. points to a local resource.
+		 * 3. $url does not contain $config->get('app.url'), i.e. points to a local resource.
 		 */
-		if(is_array($parts) && isset($parts['host']) && strpos($url, $config->get('sysURL')) === false)
+		if(is_array($parts) && isset($parts['host']) && strpos($url, $config->get('app.url')) === false)
 			$external = true;			
 		
 		$url = $this->encodeAmpsAndAngles($url);
@@ -133,7 +133,7 @@ class AlphaMarkdown extends MarkdownExtra_Parser {
 		if (!$external) {
 			$result .= ">$link_text</a>";
 		}else{
-			$result .= '>'.$link_text.'<img src="'.$config->get('sysURL').'alpha/images/icons/page_go.png'.'" class="externalLink"/></a>';
+			$result .= '>'.$link_text.'<img src="'.$config->get('app.url').'alpha/images/icons/page_go.png'.'" class="externalLink"/></a>';
 		}
 
 		return $this->hashSpan($result);

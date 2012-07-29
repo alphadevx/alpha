@@ -88,7 +88,7 @@ class AlphaView {
 		else
 			throw new IllegalArguementException('The BO provided ['.get_class($BO).'] is not defined anywhere!');
 
-		$this->provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), $this->BO);
+		$this->provider = AlphaRendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), $this->BO);
 		
 		self::$logger->debug('<<__construct');
 	}
@@ -120,13 +120,13 @@ class AlphaView {
 
 		// Check to see if a custom view exists for this BO, and if it does return that view instead		
 		if (!$returnParent) {
-			if (file_exists($config->get('sysRoot').'view/'.$filename.'.inc')) {
-				require_once $config->get('sysRoot').'view/'.$filename.'.inc';
+			if (file_exists($config->get('app.root').'view/'.$filename.'.inc')) {
+				require_once $config->get('app.root').'view/'.$filename.'.inc';
 
 				self::$logger->debug('<<getInstance [new '.$filename.'('.get_class($BO).')]');
 				return new $filename($BO);
-			}elseif (file_exists($config->get('sysRoot').'alpha/view/'.$filename.'.inc')) {
-				require_once $config->get('sysRoot').'alpha/view/'.$filename.'.inc';
+			}elseif (file_exists($config->get('app.root').'alpha/view/'.$filename.'.inc')) {
+				require_once $config->get('app.root').'alpha/view/'.$filename.'.inc';
 
 				self::$logger->debug('<<getInstance [new '.$filename.'('.get_class($BO).')]');
 				return new $filename($BO);
@@ -306,7 +306,7 @@ class AlphaView {
 		
 		global $config; 
 			
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), new PersonObject());
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new PersonObject());
 		eval('$header = '.get_class($provider).'::displayPageHead($controller);');
 		
 		if(method_exists($controller, 'after_displayPageHead_callback'))
@@ -336,7 +336,7 @@ class AlphaView {
 		if(method_exists($controller, 'before_displayPageFoot_callback'))
 			$footer .= $controller->before_displayPageFoot_callback();
 		
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), new PersonObject());
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new PersonObject());
 		eval('$footer .= '.get_class($provider).'::displayPageFoot($controller);');
 		
 		if(method_exists($controller, 'after_displayPageFoot_callback'))
@@ -360,7 +360,7 @@ class AlphaView {
 		
 		global $config;
 		
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), new PersonObject());
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new PersonObject());
 		eval('$message = '.get_class($provider).'::displayUpdateMessage($message);');
 		
 		self::$logger->debug('<<displayUpdateMessage ['.$message.']');
@@ -381,7 +381,7 @@ class AlphaView {
 		
 		global $config;
 		
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), new PersonObject());
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new PersonObject());
 		eval('$message = '.get_class($provider).'::displayErrorMessage($message);');
 		
 		self::$logger->debug('<<displayErrorMessage ['.$message.']');
@@ -403,7 +403,7 @@ class AlphaView {
 		
 		global $config;
 		
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), new PersonObject());
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new PersonObject());
 		eval('$message = '.get_class($provider).'::renderErrorPage($code, $message);');
 		
 		self::$logger->debug('<<renderErrorPage ['.$message.']');
@@ -423,7 +423,7 @@ class AlphaView {
 		
 		global $config;
 		
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), new PersonObject());
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new PersonObject());
 		eval('$html = '.get_class($provider).'::renderDeleteForm();');
 		
 		self::$logger->debug('<<renderDeleteForm ['.$html.']');
@@ -445,7 +445,7 @@ class AlphaView {
 		
 		global $config;
 		
-		$provider = AlphaRendererProviderFactory::getInstance($config->get('sysRendererProviderName'), new PersonObject());
+		$provider = AlphaRendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new PersonObject());
 		eval('$html = '.get_class($provider).'::renderSecurityFields();');
 		
 		self::$logger->debug('<<renderSecurityFields ['.$html.']');
@@ -691,9 +691,9 @@ class AlphaView {
 		$filename = $mode.'.phtml';
 		$classTemplateDir = get_class($BO);
 
-		$customPath = $config->get('sysRoot').'view/html/templates/'.$classTemplateDir.'/'.$filename;
-		$defaultPath1 = $config->get('sysRoot').'alpha/view/renderers/html/templates/'.$classTemplateDir.'/'.$filename;
-		$defaultPath2 = $config->get('sysRoot').'alpha/view/renderers/html/templates/'.$filename;
+		$customPath = $config->get('app.root').'view/html/templates/'.$classTemplateDir.'/'.$filename;
+		$defaultPath1 = $config->get('app.root').'alpha/view/renderers/html/templates/'.$classTemplateDir.'/'.$filename;
+		$defaultPath2 = $config->get('app.root').'alpha/view/renderers/html/templates/'.$filename;
 
 		// Check to see if a custom template exists for this BO, and if it does load that		
 		if (file_exists($customPath)) {
@@ -732,8 +732,8 @@ class AlphaView {
 		foreach (array_keys($fields) as $fieldName)
 			${$fieldName} = $fields[$fieldName];
 
-		$customPath = $config->get('sysRoot').'view/'.$type.'/fragments/'.$fileName;
-		$defaultPath = $config->get('sysRoot').'alpha/view/renderers/'.$type.'/fragments/'.$fileName;
+		$customPath = $config->get('app.root').'view/'.$type.'/fragments/'.$fileName;
+		$defaultPath = $config->get('app.root').'alpha/view/renderers/'.$type.'/fragments/'.$fileName;
 
 		// Check to see if a custom template exists for this BO, and if it does load that		
 		if (file_exists($customPath)) {

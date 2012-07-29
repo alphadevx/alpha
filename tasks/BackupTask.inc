@@ -60,12 +60,12 @@ class BackupTask implements AlphaTaskInterface {
 		global $config;
 		
 		self::$logger = new Logger('BackupTask');
-		self::$logger->setLogFile($config->get('sysRoot').'logs/tasks.log');
+		self::$logger->setLogFile($config->get('app.root').'logs/tasks.log');
 		
-		if(!file_exists($config->get('sysBackupDir')))
-			mkdir($config->get('sysBackupDir'));
+		if(!file_exists($config->get('backup.dir')))
+			mkdir($config->get('backup.dir'));
 			
-		$targetDir = $config->get('sysBackupDir').date("Y-m-d").'/';
+		$targetDir = $config->get('backup.dir').date("Y-m-d").'/';
 			
 		if(file_exists($targetDir))
 			AlphaFileUtils::deleteDirectoryContents($targetDir);
@@ -77,14 +77,14 @@ class BackupTask implements AlphaTaskInterface {
 		$back->backUpAttachmentsAndLogs($targetDir);
 		$back->backUpDatabase($targetDir);
 		
-		$additionalDirectories = explode(',', $config->get('sysBackupIncludeDirs'));
+		$additionalDirectories = explode(',', $config->get('backup.include.dirs'));
 		
 		if(count($additionalDirectories) > 0) {
 			foreach($additionalDirectories as $additionalDirectory)
 				AlphaFileUtils::copy($additionalDirectory, $targetDir.basename($additionalDirectory));
 		}
 		
-		if($config->get('sysBackupCompress')) {
+		if($config->get('backup.compress')) {
 			AlphaFileUtils::zip($targetDir, $targetDir.date("Y-m-d").'.zip');
 			
 			// we can safely remove the uncompressed files now to save space...
@@ -94,7 +94,7 @@ class BackupTask implements AlphaTaskInterface {
 			AlphaFileUtils::deleteDirectoryContents($targetDir.'attachments');
 			rmdir($targetDir.'attachments');
 			
-			unlink($targetDir.$config->get('sysDB').'_'.date("Y-m-d").'.sql');
+			unlink($targetDir.$config->get('db.name').'_'.date("Y-m-d").'.sql');
 			
 			if(count($additionalDirectories) > 0) {
 				foreach($additionalDirectories as $additionalDirectory) {

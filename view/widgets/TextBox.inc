@@ -150,11 +150,11 @@ class TextBox {
 			$increaseTextArea = new Button("document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = ".
 				"(parseInt(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows) + 10);".
 				"document.getElementById('markdownTextBoxRows').value = (parseInt(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows));",
-		 		"Increase text area", $this->name."IncBut", $config->get('sysURL')."/alpha/images/icons/arrow_down.png");
+		 		"Increase text area", $this->name."IncBut", $config->get('app.url')."/alpha/images/icons/arrow_down.png");
 		}else{
 			$increaseTextArea = new Button("document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = ".
 				"(parseInt(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows) + 10);",
-		 		"Increase text area", $this->name."IncBut", $config->get('sysURL')."/alpha/images/icons/arrow_down.png");
+		 		"Increase text area", $this->name."IncBut", $config->get('app.url')."/alpha/images/icons/arrow_down.png");
 		}
 				
 		$html .= $increaseTextArea->render();
@@ -164,12 +164,12 @@ class TextBox {
 				"{document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = (parseInt(document.getElementById('text_field_".
 				$this->name."_".$this->identifier."').rows) - 10)};".
 				"document.getElementById('markdownTextBoxRows').value = (parseInt(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows));",
-				"Decrease text area", $this->name."DecBut", $config->get('sysURL')."/alpha/images/icons/arrow_up.png");
+				"Decrease text area", $this->name."DecBut", $config->get('app.url')."/alpha/images/icons/arrow_up.png");
 		}else{
 			$decreaseTextArea = new Button("if(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows > 10) ".
 				"{document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = (parseInt(document.getElementById('text_field_".
 				$this->name."_".$this->identifier."').rows) - 10)};",
-				"Decrease text area", $this->name."DecBut", $config->get('sysURL')."/alpha/images/icons/arrow_up.png");
+				"Decrease text area", $this->name."DecBut", $config->get('app.url')."/alpha/images/icons/arrow_up.png");
 		}
 		
 		$html .= $decreaseTextArea->render();

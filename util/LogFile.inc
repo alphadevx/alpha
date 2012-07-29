@@ -142,7 +142,7 @@ class LogFile {
 			}
  		}catch(Exception $e) {
  			try {
-	 			$logsDir = $config->get('sysRoot').'logs';
+	 			$logsDir = $config->get('app.root').'logs';
 				
 				if(!file_exists($logsDir))
 					mkdir($logsDir, 0766);

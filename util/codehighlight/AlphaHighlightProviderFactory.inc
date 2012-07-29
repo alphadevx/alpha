@@ -3,7 +3,7 @@
 /**
  *
  * A factory for generating instances of the AlphaCodeHighlighterInterface, 
- * based on the sysHighlightProviderName setting.
+ * based on the cms.highlight.provider.name setting.
  * 
  * @package alpha::util::codehighlight
  * @since 1.2
@@ -72,8 +72,8 @@ class AlphaHighlightProviderFactory {
 		
 		global $config;
 		
-		if(file_exists($config->get('sysRoot').'alpha/util/codehighlight/'.$providerName.'.inc')) {
-			require_once $config->get('sysRoot').'alpha/util/codehighlight/'.$providerName.'.inc';
+		if(file_exists($config->get('app.root').'alpha/util/codehighlight/'.$providerName.'.inc')) {
+			require_once $config->get('app.root').'alpha/util/codehighlight/'.$providerName.'.inc';
 			
 			$instance = new $providerName;
 			

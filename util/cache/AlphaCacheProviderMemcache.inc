@@ -76,7 +76,7 @@ class AlphaCacheProviderMemcache implements AlphaCacheProviderInterface {
 
       	try {
 	      	$memcache = new Memcache();
-	      	$memcache->connect($config->get('sysMemcachedHost'), 11211);
+	      	$memcache->connect($config->get('cache.memcached.host'), 11211);
 	
 	      	$value = $memcache->get($key);
 	      	
@@ -99,7 +99,7 @@ class AlphaCacheProviderMemcache implements AlphaCacheProviderInterface {
 		
 		try {
 	      	$memcache = new Memcache();
-		    $memcache->connect($config->get('sysMemcachedHost'), 11211);
+		    $memcache->connect($config->get('cache.memcached.host'), 11211);
 		
 		    if($expiry > 0)
 		    	$memcache->set($key, $value, MEMCACHE_COMPRESSED, $expiry);
@@ -121,7 +121,7 @@ class AlphaCacheProviderMemcache implements AlphaCacheProviderInterface {
 
 		try {
       		$memcache = new Memcache();
-      		$memcache->connect($config->get('sysMemcachedHost'), 11211);
+      		$memcache->connect($config->get('cache.memcached.host'), 11211);
       		$memcache->delete($key);
 		}catch(Exception $e) {
       		self::$logger->error('Error while attempting to remove a value from Memcached instance: ['.$e->getMessage().']');

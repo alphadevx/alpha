@@ -5,7 +5,7 @@ if(!isset($config)) {
 	require_once '../util/AlphaConfig.inc';
 	$config = AlphaConfig::getInstance();
 	
-	require_once $config->get('sysRoot').'alpha/util/AlphaAutoLoader.inc';
+	require_once $config->get('app.root').'alpha/util/AlphaAutoLoader.inc';
 }
 
 /**
@@ -122,7 +122,7 @@ class Logout extends AlphaController implements AlphaControllerInterface {
 		
 		echo AlphaView::displayUpdateMessage('You have successfully logged out of the system.');
 		
-		echo '<div align="center"><a href="'.$config->get('sysURL').'">Home Page</a></div>';
+		echo '<div align="center"><a href="'.$config->get('app.url').'">Home Page</a></div>';
 		
 		echo AlphaView::displayPageFoot($this);
 		

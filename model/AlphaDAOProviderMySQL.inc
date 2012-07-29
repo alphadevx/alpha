@@ -89,7 +89,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		global $config;
 		
 		if (!isset(self::$connection)) {
-			self::$connection = new mysqli($config->get('sysDBHost'), $config->get('sysDBUsername'), $config->get('sysDBPassword'), $config->get('sysDB'));
+			self::$connection = new mysqli($config->get('db.hostname'), $config->get('db.username'), $config->get('db.password'), $config->get('db.name'));
 				
 			if (mysqli_connect_error()) {
 			    self::$logger->fatal('Could not connect to database: ['.mysqli_connect_errno().'] '.mysqli_connect_error());

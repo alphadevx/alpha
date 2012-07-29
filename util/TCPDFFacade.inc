@@ -100,9 +100,9 @@ class TCPDFFacade {
 		global $l;
 		
 		$this->BO = $BO;
-		$this->PDFFilename = $config->get('sysRoot').'cache/pdf/'.get_class($this->BO).'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.pdf';
+		$this->PDFFilename = $config->get('app.root').'cache/pdf/'.get_class($this->BO).'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.pdf';
 		$PDFDownloadName = str_replace(' ', '_', $this->BO->get('title').'.pdf');
-		$this->HTMLFilename = $config->get('sysRoot').'cache/html/'.get_class($this->BO).'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.html';
+		$this->HTMLFilename = $config->get('app.root').'cache/html/'.get_class($this->BO).'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.html';
 		
 		// first check the PDF cache, and if its there then re-direct to the file
 		if($this->checkPDFCache())
@@ -143,7 +143,7 @@ class TCPDFFacade {
 			$end = strrpos($attachmentURL, '" alt');
 			$fileName = substr($attachmentURL, $start+1, $end-($start+1));
 	
-			if($config->get('sysCMSImagesWidget')) {
+			if($config->get('cms.images.widget')) {
 				// get the details of the source image
 				$path = $this->BO->getAttachmentsLocation().'/'.$fileName;
 				$image_details = getimagesize($path);
@@ -155,7 +155,7 @@ class TCPDFFacade {
 		    	elseif($imgType == 3)
 		    		$type = 'png';
 		    		
-				$img = new Image($path, $image_details[0], $image_details[1], $type, 0.95, false, (boolean)$config->get('sysCMSImagesWidgetSecure'));
+				$img = new Image($path, $image_details[0], $image_details[1], $type, 0.95, false, (boolean)$config->get('cms.images.widget.secure'));
 				$this->content = str_replace($attachmentURL, $img->renderHTMLLink(), $this->content);
 			}else{
 				// render a normal image link to the ViewAttachment controller				
@@ -226,10 +226,10 @@ class TCPDFFacade {
 		}
 		
 		/*
-		 * Replace all instances of $sysURL in the text with the sysURL setting from config
+		 * Replace all instances of $sysURL in the text with the app.url setting from config
 		 * 
 		 */
-		$text = str_replace('$sysURL', $config->get('sysURL'), $text);
+		$text = str_replace('$sysURL', $config->get('app.url'), $text);
 		
 		// transform text using parser.
 		return $parser->transform($text);

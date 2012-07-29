@@ -90,7 +90,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
 		if(!isset(self::$connection)) {
 			try {
-				self::$connection = new SQLite3($config->get('sysDBFilePath'));
+				self::$connection = new SQLite3($config->get('db.file.path'));
 			} catch(Exeception $e) {
 				self::$logger->fatal('Could not open SQLite database: ['.$e->getMessage().']');
 			}

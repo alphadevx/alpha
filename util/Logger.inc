@@ -87,10 +87,10 @@ class Logger {
 		global $config;
 		
 		$this->classname = $classname;
-		$this->level = $config->get('sysTraceLevel');
-		$this->debugClasses = explode(',', $config->get('sysTraceDebugClasses'));
-		$this->logfile = new LogFile($config->get('sysLogFile'));
-		$this->logfile->setMaxSize($config->get('sysLogFileMaxSize'));
+		$this->level = $config->get('app.log.trace.level');
+		$this->debugClasses = explode(',', $config->get('app.log.trace.debug.classes'));
+		$this->logfile = new LogFile($config->get('app.log.file'));
+		$this->logfile->setMaxSize($config->get('app.log.file.max.size'));
 	}
 	
 	/**
@@ -189,16 +189,16 @@ class Logger {
 		global $config;
 		
 		// just making sure an email address has been set in the .ini file
-		if($config->get('sysErrorMailAddress') != '') {
+		if($config->get('app.log.error.mail.address') != '') {
 			$body = "The following error has occured:\n\n";
 		
 			$body .= "Class:-> ".$this->classname."\n\n";
 			$body .= "Message:-> ".$message."\n\n";			
 			
-			$body .= "\n\nKind regards,\n\nAdministrator\n--\n".$config->get('sysURL');
+			$body .= "\n\nKind regards,\n\nAdministrator\n--\n".$config->get('app.url');
 			
-			mail($config->get('sysErrorMailAddress'), "Error in class ".$this->classname." on site .".$config->get('sysTitle'), $body, 
-				"From: ".$config->get('sysReplyTo')."\r\nReply-To: ".$config->get('sysReplyTo')."\r\nX-Mailer: PHP/" . phpversion());
+			mail($config->get('app.log.error.mail.address'), "Error in class ".$this->classname." on site .".$config->get('app.title'), $body, 
+				"From: ".$config->get('email.reply.to')."\r\nReply-To: ".$config->get('email.reply.to')."\r\nX-Mailer: PHP/" . phpversion());
 		}
 	}
 	
@@ -212,7 +212,7 @@ class Logger {
 		global $config;
 		
 		$this->logfile = new LogFile($filepath);
-		$this->logfile->setMaxSize($config->get('sysLogFileMaxSize'));
+		$this->logfile->setMaxSize($config->get('app.log.file.max.size'));
 	}
 }
 
