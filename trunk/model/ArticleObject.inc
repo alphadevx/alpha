@@ -371,7 +371,7 @@ class ArticleObject extends AlphaDAO {
 	public function getAttachmentsLocation() {
 		global $config;
 		
-		return $config->get('app.root').'attachments/article_'.$this->getID();
+		return $config->get('app.file.store.dir').'attachments/article_'.$this->getID();
 	}
 	
 	/**

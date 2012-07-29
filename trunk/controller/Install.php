@@ -409,7 +409,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		 * Create the attachments directory
 		 */
 		try {
-			$attachmentsDir = $config->get('app.root').'attachments';
+			$attachmentsDir = $config->get('app.file.store.dir').'attachments';
 			
 			echo '<p>Attempting to create the attachments directory <em>'.$attachmentsDir.'</em>...';
 			
@@ -430,11 +430,11 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		 * Create the cache directory and sub-directories
 		 */
 		try {
-			$cacheDir = $config->get('app.root').'cache';
-			$htmlDir = $config->get('app.root').'cache/html';
-			$imagesDir = $config->get('app.root').'cache/images';
-			$pdfDir = $config->get('app.root').'cache/pdf';
-			$xlsDir = $config->get('app.root').'cache/xls';
+			$cacheDir = $config->get('app.file.store.dir').'cache';
+			$htmlDir = $config->get('app.file.store.dir').'cache/html';
+			$imagesDir = $config->get('app.file.store.dir').'cache/images';
+			$pdfDir = $config->get('app.file.store.dir').'cache/pdf';
+			$xlsDir = $config->get('app.file.store.dir').'cache/xls';
 			
 			// cache
 			echo '<p>Attempting to create the cache directory <em>'.$cacheDir.'</em>...';

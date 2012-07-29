@@ -3,7 +3,7 @@
 	<li><a href="<?= FrontController::generateSecureURL('act=ListBusinessObjects') ?>">Admin Home</a></li>
 	<li><a href="#">Logs &raquo;</a>			
 		<ul>
-			<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.log.file')) ?>">System Log</a></li>
+			<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.file.store.dir').'logs/'.$config->get('app.log.file')) ?>">System Log</a></li>
 			<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.root').'logs/search.log') ?>">Search Log</a></li>
 			<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.root').'logs/feeds.log') ?>">Feed Log</a></li>
 			<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.root').'logs/tasks.log') ?>">Cron Tasks Log</a></li>

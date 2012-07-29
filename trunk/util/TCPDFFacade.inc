@@ -100,9 +100,9 @@ class TCPDFFacade {
 		global $l;
 		
 		$this->BO = $BO;
-		$this->PDFFilename = $config->get('app.root').'cache/pdf/'.get_class($this->BO).'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.pdf';
+		$this->PDFFilename = $config->get('app.file.store.dir').'cache/pdf/'.get_class($this->BO).'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.pdf';
 		$PDFDownloadName = str_replace(' ', '_', $this->BO->get('title').'.pdf');
-		$this->HTMLFilename = $config->get('app.root').'cache/html/'.get_class($this->BO).'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.html';
+		$this->HTMLFilename = $config->get('app.file.store.dir').'cache/html/'.get_class($this->BO).'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.html';
 		
 		// first check the PDF cache, and if its there then re-direct to the file
 		if($this->checkPDFCache())
