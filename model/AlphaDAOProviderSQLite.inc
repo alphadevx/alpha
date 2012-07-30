@@ -1109,13 +1109,13 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			}			
 		}
 		if($this->BO->isTableOverloaded())
-			$sqlQuery .= "classname TEXT(100);";
+			$sqlQuery .= "classname TEXT(100));";
 		else
-			$sqlQuery .= ";";
+			$sqlQuery = substr($sqlQuery, 0, -1).");";
 		
 		$this->BO->setLastQuery($sqlQuery);
-		
-		if(!$result = self::getConnection()->query($sqlQuery)) {
+
+		if(!self::getConnection()->exec($sqlQuery)) {
 			throw new AlphaException('Failed to create the table ['.$this->BO->getTableName().'] for the class ['.get_class($this->BO).'], database error is ['.self::getLastDatabaseError().']');
 			self::$logger->debug('<<makeTable');
 		}
@@ -1472,7 +1472,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			$tableName = substr($BOClassName, 0, strpos($BOClassName, '_'));
 
 		if($checkHistoryTable)
-                        $tableName .= '_history';
+        	$tableName .= '_history';
 
 		$tableExists = false;
 
@@ -1485,10 +1485,10 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
     				$tableExists = true;
 		}
 
-		if (isset($row['name'])) {			
+		if ($result) {
 			self::$logger->debug('<<checkBOTableExists ['.($tableExists ? 'true' : 'false').']');
 			return $tableExists;
-		}else{
+		}else{echo self::getLastDatabaseError();
 			throw new AlphaException('Failed to access the system database correctly, error is ['.self::getLastDatabaseError().']');
 			self::$logger->debug('<<checkBOTableExists [false]');
 			return false;
@@ -1636,9 +1636,9 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	public function getIndexes() {
 		self::$logger->debug('>>getIndexes()');
 		
-		$query = "SELECT name FROM sqlite_master WHERE type='index' AND tbl_name='".$this->BO->getTableName()."'";
+		$sqlQuery = "SELECT name FROM sqlite_master WHERE type='index' AND tbl_name='".$this->BO->getTableName()."'";
 		
-		$this->BO->setLastQuery($query);
+		$this->BO->setLastQuery($sqlQuery);
 		
 		$indexNames = array();
 		
@@ -1655,10 +1655,10 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	}
 
 	/**
-         * Checks to see if all of the indexes are in place for the BO's table, creates those that are missing.
+     * Checks to see if all of the indexes are in place for the BO's table, creates those that are missing.
 	 *
-         * @since 1.2
-         */
+     * @since 1.2
+     */
 	private function checkIndexes() {
 		self::$logger->debug('>>checkIndexes()');
 
@@ -1920,7 +1920,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			self::$logger = new Logger('AlphaDAOProviderSQLite');
 	        self::$logger->debug('>>begin()');
 
-         	if (!self::getConnection()->query('BEGIN'))
+         	if (!self::getConnection()->exec('BEGIN'))
              		throw new AlphaException('Error beginning a new transaction, error is ['.self::getLastDatabaseError().']');
 
          	self::$logger->debug('<<begin');
@@ -1935,7 +1935,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
                         self::$logger = new Logger('AlphaDAOProviderSQLite');
                 self::$logger->debug('>>commit()');
 
-                if (!self::getConnection()->query('COMMIT'))
+                if (!self::getConnection()->exec('COMMIT'))
                         throw new AlphaException('Error commiting a transaction, error is ['.self::getLastDatabaseError().']');
 
                 self::$logger->debug('<<commit');
@@ -1950,7 +1950,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
                        	self::$logger = new Logger('AlphaDAOProviderSQLite');
                	self::$logger->debug('>>rollback()');
 
-               	if (!self::getConnection()->query('ROLLBACK'))
+               	if (!self::getConnection()->exec('ROLLBACK'))
                        	throw new AlphaException('Error rolling back a transaction, error is ['.self::getLastDatabaseError().']');
 
                	self::$logger->debug('<<rollback');
