@@ -304,7 +304,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		 * Create the logs directory, then instantiate a new logger
 		 */
 		try {
-			$logsDir = $config->get('app.root').'logs';
+			$logsDir = $config->get('app.file.store.dir').'logs';
 			
 			echo '<p>Attempting to create the logs directory <em>'.$logsDir.'</em>...';
 			
