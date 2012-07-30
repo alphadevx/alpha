@@ -1844,7 +1844,7 @@ abstract class AlphaDAO {
 		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), new PersonObject());
 		
     	try{
-    		$provider->commit();
+    		$provider->begin();
     	}catch (Exception $e) {
      		throw new AlphaException('Error beginning a new transaction, error is ['.$e->getMessage().']');
     	}
