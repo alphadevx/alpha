@@ -282,15 +282,16 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			$result = $stmt->execute();
 			
 			// there should only ever be one (or none)
-                        $row = $result->fetchArray(SQLITE3_ASSOC);
+            $row = $result->fetchArray(SQLITE3_ASSOC);
 				
 			$stmt->close();
 		}else{
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
+				
 				if($this->BO->getMaintainHistory())
-                                        $this->BO->makeHistoryTable();
+                	$this->BO->makeHistoryTable();
 				throw new BONotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table did not exist so had to create!');
 			}
 			return;
@@ -732,9 +733,9 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
 				foreach($savedFields as $savedField) {
 					if($this->BO->get($savedField) instanceof Integer)
-						$stmt->bindValue(':'.$savedField, $savedField, SQLITE3_INTEGER);
+						$stmt->bindValue(':'.$savedField, $this->BO->get($savedField), SQLITE3_INTEGER);
 					else
-						$stmt->bindValue(':'.$savedField, $savedField, SQLITE3_TEXT);
+						$stmt->bindValue(':'.$savedField, $this->BO->get($savedField), SQLITE3_TEXT);
 				}
 
 				if($this->BO->isTableOverloaded())
@@ -779,9 +780,9 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 				
 				foreach($savedFields as $savedField) {
                                        	if($this->BO->get($savedField) instanceof Integer)
-                                                $stmt->bindValue(':'.$savedField, $savedField, SQLITE3_INTEGER);
+                                                $stmt->bindValue(':'.$savedField, $this->BO->get($savedField), SQLITE3_INTEGER);
                                         else
-                                                $stmt->bindValue(':'.$savedField, $savedField, SQLITE3_TEXT);
+                                                $stmt->bindValue(':'.$savedField, $this->BO->get($savedField), SQLITE3_TEXT);
                                 }
 
                                 if($this->BO->isTableOverloaded())
@@ -799,12 +800,12 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			// populate the updated OID in case we just done an insert				
 			if($this->BO->isTransient())
 				$this->BO->setOID(self::getConnection()->lastInsertRowID());
-
+			
 			try {
 				foreach($properties as $propObj) {
 					$propName = $propObj->name;
 
-					if(!$propObj->isPrivate() && $this->BO->get($propName) != '' && $this->BO->getPropObject($propName) instanceof Relation) {				
+					if($this->BO->getPropObject($propName) instanceof Relation) {
 						$prop = $this->BO->getPropObject($propName);
 
 						// handle the saving of MANY-TO-MANY relation values
@@ -856,7 +857,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 						if($prop->getRelationType() == 'ONE-TO-MANY') {
 							$prop->setValue($this->BO->getOID());
 						}
-					}						
+					}
 				}
 			}catch (Exception $e) {
 				throw new FailedSaveException('Failed to save object, error is ['.$e->getMessage().']');
@@ -1054,7 +1055,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	public function makeTable() {
 		self::$logger->debug('>>makeTable()');
 		
-		$sqlQuery = "CREATE TABLE ".$this->BO->getTableName()." (OID INTEGER(11) PRIMARY KEY,";
+		$sqlQuery = "CREATE TABLE ".$this->BO->getTableName()." (OID INTEGER PRIMARY KEY,";
 		
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this->BO));
@@ -1421,7 +1422,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	 * @throws NotImplementedException
 	 */
 	public function setEnumOptions() {
-               	throw new NotImplementedException('AlphaDAOProviderInterface::setEnumOptions() not implemented by this provider');
+    	throw new NotImplementedException('AlphaDAOProviderInterface::setEnumOptions() not implemented by the SQLite3 provider');
 	}
 
 	/**
@@ -1780,7 +1781,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		 * 3. Copy all of the data from [tablename]_temp to [tablename].
 		 * 4. Drop [tablename]_temp.
 		 */
-               	throw new NotImplementedException('AlphaDAOProviderInterface::createForeignIndex() not implemented by this provider');
+         throw new NotImplementedException('AlphaDAOProviderInterface::createForeignIndex() not implemented by this provider');
 	}
 	
 	/**
@@ -1790,14 +1791,14 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	 */
 	public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '') {
 		/*
-                 * High-level approach will need to be:
-                 *
-                 * 1. Rename the source	table to [tablename]_temp
-                 * 2. Creata a new [tablename] table, with the new UK in place.
-                 * 3. Copy all of the data from	[tablename]_temp to [tablename].
-                 * 4. Drop [tablename]_temp.
-                 */
-                throw new NotImplementedException('AlphaDAOProviderInterface::createUniqueIndex() not implemented by this provider');
+         * High-level approach will need to be:
+         *
+         * 1. Rename the source	table to [tablename]_temp
+         * 2. Creata a new [tablename] table, with the new UK in place.
+         * 3. Copy all of the data from	[tablename]_temp to [tablename].
+         * 4. Drop [tablename]_temp.
+         */
+         throw new NotImplementedException('AlphaDAOProviderInterface::createUniqueIndex() not implemented by this provider');
 	}
 	
 	/**
@@ -1891,7 +1892,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			return false;
 		}else{
 			// check to see if there is already a "classname" column in the database for this BO
-			$query = 'PRAGMA table_info('.$this->BO->getTableName().')';
+			$sqlQuery = 'PRAGMA table_info('.$this->BO->getTableName().')';
 			$result = self::getConnection()->query($sqlQuery);
 			$this->BO->setLastQuery($sqlQuery);
 
