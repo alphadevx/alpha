@@ -1034,7 +1034,11 @@ abstract class AlphaDAO {
 		global $config;
 		
 		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
-		$provider->setEnumOptions();
+		try {
+			$provider->setEnumOptions();
+		}catch (NotImplementedException $e) {
+			self::$logger->warn($e->getMessage());
+		}
 		
 		self::$logger->debug('<<setEnumOptions');
 	}
@@ -1085,7 +1089,7 @@ abstract class AlphaDAO {
 					$this->after_get_callback();
 
 				// simple types returned as-is
-				self::$logger->debug('<<get ['.$this->$prop.'])');
+				self::$logger->debug('<<get ['.print_r($this->$prop, true).'])');
 				return $this->$prop;
 			}else{
 				throw new AlphaException('Could not access the property ['.$prop.'] on the object of class ['.get_class($this).']');
