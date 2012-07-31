@@ -783,7 +783,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 				foreach($properties as $propObj) {
 					$propName = $propObj->name;
 					
-					if(!$propObj->isPrivate() && $this->BO->get($propName) != '' && $this->BO->getPropObject($propName) instanceof Relation) {				
+					if($this->BO->getPropObject($propName) instanceof Relation) {
 						$prop = $this->BO->getPropObject($propName);
 							
 						// handle the saving of MANY-TO-MANY relation values
