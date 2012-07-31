@@ -52,7 +52,7 @@ class DEnum extends AlphaDAO implements AlphaTypeInterface{
 	 * @var array
 	 * @since 1.0
 	 */
-	protected $options;
+	protected $options = array();
 	
 	/**
 	 * The currently selected DEnum option
@@ -95,11 +95,21 @@ class DEnum extends AlphaDAO implements AlphaTypeInterface{
 	protected $helper = 'Not a valid denum option!';
 	
 	/**
+	 * Trace logger
+	 *
+	 * @var Logger
+	 * @since 1.2
+	 */
+	private static $logger = null;
+	
+	/**
 	 * Constructor that sets up the DEnum options
 	 * 
 	 * @param String $name
 	 */
 	public function __construct($name=null) {
+		self::$logger = new Logger('DEnum');
+		
 		// ensure to call the parent constructor
 		parent::__construct();
 		
@@ -109,14 +119,19 @@ class DEnum extends AlphaDAO implements AlphaTypeInterface{
 		
 		$this->name = new String($name);
 		
-		if(isset($name)) {
+		if(isset($name) && $this->checkTableExists()) {
 			try {
 				$this->loadByAttribute('name',$name);				
 			}catch(BONotFoundException $e) {
 				// DEnum does not exist so create it
 				$this->save();
 			}
-			$this->getOptions();
+			
+			try{
+				$this->getOptions();
+			}catch(AlphaException $e) {
+				self::$logger->warn($e->getMessage());
+			}
 		}
 	}
 	
