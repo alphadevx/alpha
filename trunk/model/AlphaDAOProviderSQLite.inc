@@ -273,7 +273,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			}else{
 				if(!$ignoreClassType && $this->BO->isTableOverloaded()) {
 					$stmt->bindValue(':attribute', $value, SQLITE3_TEXT);
-                                        $stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
+                    $stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
 				}else{
 					$stmt->bindValue(':attribute', $value, SQLITE3_TEXT);
 				}
@@ -426,6 +426,8 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		
 		$stmt = self::getConnection()->prepare($sqlQuery);
 		
+		$objects = array();
+		
 		if($stmt instanceof SQLite3Stmt) {
 			if($this->BO->getPropObject($attribute) instanceof Integer) {
 				if($this->BO->isTableOverloaded()) {
@@ -437,13 +439,54 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			}else{
 				if($this->BO->isTableOverloaded()) {
 					$stmt->bindValue(':attribute', $value, SQLITE3_TEXT);
-                                        $stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
+                    $stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
 				}else{
 					$stmt->bindValue(':attribute', $value, SQLITE3_TEXT);
 				}
 			}
 			
-			$result = $stmt->execute();
+			$result = $stmt->execute();//print_r($result->fetchArray(SQLITE3_ASSOC));
+			
+			// now build an array of objects to be returned
+			$count = 0;
+			$BO_Class = get_class($this->BO);//print_r($result->fetchArray(SQLITE3_ASSOC));
+			
+			while($row = $result->fetchArray(SQLITE3_ASSOC)){
+				try {
+					$argsCount = count($constructorArgs);
+			
+					if($argsCount < 1) {
+						$obj = new $BO_Class();
+					}else{
+						switch ($argsCount) {
+							case 1:
+								$obj = new $BO_Class($constructorArgs[0]);
+								break;
+							case 2:
+								$obj = new $BO_Class($constructorArgs[0],$constructorArgs[1]);
+								break;
+							case 3:
+								$obj = new $BO_Class($constructorArgs[0],$constructorArgs[1],$constructorArgs[2]);
+								break;
+							case 4:
+								$obj = new $BO_Class($constructorArgs[0],$constructorArgs[1],$constructorArgs[2],$constructorArgs[3]);
+								break;
+							case 5:
+								$obj = new $BO_Class($constructorArgs[0],$constructorArgs[1],$constructorArgs[2],$constructorArgs[3],$constructorArgs[4]);
+								break;
+							default:
+								throw new IllegalArguementException('Too many elements in the $constructorArgs array passed to the loadAllByAttribute method!');
+								break;
+						}
+					}
+			
+					$obj->load($row['OID']);
+					$objects[$count] = $obj;
+					$count++;
+				}catch(ResourceNotAllowedException $e) {
+					// the resource not allowed will be absent from the list
+				}
+			}
 			
 			$stmt->close();
 		}else{
@@ -456,48 +499,6 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			}
 			self::$logger->debug('<<loadAllByAttribute []');
 			return array();
-		}
-		
-		// now build an array of objects to be returned
-		$objects = array();
-		$count = 0;
-		$BO_Class = get_class($this->BO);
-		
-		foreach($result as $row) {
-			try {
-				$argsCount = count($constructorArgs);
-				
-				if($argsCount < 1) {
-					$obj = new $BO_Class();
-				}else{
-					switch ($argsCount) {
-						case 1:
-							$obj = new $BO_Class($constructorArgs[0]);
-						break;
-						case 2:
-							$obj = new $BO_Class($constructorArgs[0],$constructorArgs[1]);
-						break;
-						case 3:
-							$obj = new $BO_Class($constructorArgs[0],$constructorArgs[1],$constructorArgs[2]);
-						break;
-						case 4:
-							$obj = new $BO_Class($constructorArgs[0],$constructorArgs[1],$constructorArgs[2],$constructorArgs[3]);
-						break;
-						case 5:
-							$obj = new $BO_Class($constructorArgs[0],$constructorArgs[1],$constructorArgs[2],$constructorArgs[3],$constructorArgs[4]);
-						break;						
-						default:
-							throw new IllegalArguementException('Too many elements in the $constructorArgs array passed to the loadAllByAttribute method!');
-						break;
-					}
-				}
-				
-				$obj->load($row['OID']);
-				$objects[$count] = $obj;
-				$count++;
-			}catch(ResourceNotAllowedException $e) {
-				// the resource not allowed will be absent from the list
-			}
 		}
 		
 		self::$logger->debug('<<loadAllByAttribute ['.count($objects).']');
@@ -1531,7 +1532,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 				if(!$foundMatch)
 					$matchCount--;				
 
-				$result->seek(0);					
+				$result->reset();
 			}
 		}
 
@@ -1554,18 +1555,18 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
 		if (!$result) {
 			throw new AlphaException('Failed to access the system database correctly, error is ['.self::getLastDatabaseError().']');
-                        self::$logger->debug('<<checkTableNeedsUpdate [false]');
-                        return false;
+            self::$logger->debug('<<checkTableNeedsUpdate [false]');
+            return false;
 		}else{
 			// check the table indexes
-                        try {
-                             	$this->checkIndexes();
-                        }catch (AlphaException $ae) {
-                                self::$logger->warn("Error while checking database indexes:\n\n".$ae->getMessage());
-                        }
+            try {
+            	$this->checkIndexes();
+            }catch (AlphaException $ae) {
+            	self::$logger->warn("Error while checking database indexes:\n\n".$ae->getMessage());
+            }
 
-                        self::$logger->debug('<<checkTableNeedsUpdate ['.$updateRequired.']');
-                        return $updateRequired;
+            self::$logger->debug('<<checkTableNeedsUpdate ['.$updateRequired.']');
+            return $updateRequired;
 		}
 	}
 	
