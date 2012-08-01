@@ -55,7 +55,7 @@ abstract class AlphaErrorHandlers {
 	
 	public static function catchError($error_no, $msg, $file, $line) {	
 		$e = new PHPException();
-		$e->setMessage('[PHP error '.$error_no.'] on line ['.$line.']: '.$msg);
+		$e->setMessage('[PHP error '.$error_no.'] on line ['.$line.'] of file ['.$file.']: '.$msg);
 		$e->setFile($file);
 		 
 		throw $e;
