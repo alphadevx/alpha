@@ -385,20 +385,22 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		}
 		
 		// the create table button (if required)
-                $html = '';
-                if (!$this->BO->checkTableExists()) {
-                        $button = new Button("submit", "Create Table", "createTableBut");
-                        $html .= $button->render();
-                        // hidden field so that we know which class to create the table for
-                        $html .= '<input type="hidden" name="createTableClass" value="'.get_class($this->BO).'"/>';
-                }
+        $html = '';
+        
+        if (!$this->BO->checkTableExists()) {
+        	$button = new Button("submit", "Create Table", "createTableBut");
+            $html .= $button->render();
+            // hidden field so that we know which class to create the table for
+            $html .= '<input type="hidden" name="createTableClass" value="'.get_class($this->BO).'"/>';
+        }
+        
 		if ($html == '' && $this->BO->getMaintainHistory() && !$this->BO->checkTableExists(true)) {
-                        $button = new Button("submit", "Create History Table", "createHistoryTableBut");
-                        $html .= $button->render();
-                        // hidden field so that we know which class to create the table for
-                        $html .= '<input type="hidden" name="createTableClass" value="'.get_class($this->BO).'"/>';
-                }
-                $fields['createTableButton'] = $html;
+        	$button = new Button("submit", "Create History Table", "createHistoryTableBut");
+            $html .= $button->render();
+            // hidden field so that we know which class to create the table for
+            $html .= '<input type="hidden" name="createTableClass" value="'.get_class($this->BO).'"/>';
+        }
+        $fields['createTableButton'] = $html;
 		
 		// recreate and update table buttons (if required)
 		$html = '';

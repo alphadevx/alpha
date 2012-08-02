@@ -1037,7 +1037,7 @@ abstract class AlphaDAO {
 		try {
 			$provider->setEnumOptions();
 		}catch (NotImplementedException $e) {
-			self::$logger->warn($e->getMessage());
+			self::$logger->info($e->getMessage());
 		}
 		
 		self::$logger->debug('<<setEnumOptions');
@@ -1073,7 +1073,7 @@ abstract class AlphaDAO {
 			if(method_exists($this, 'after_get_callback'))
 				$this->after_get_callback();
 
-			self::$logger->debug('<<get ['.eval('return $this->get'.ucfirst($prop).'();').'])');
+			self::$logger->debug('<<get ['.eval('return print_r($this->get'.ucfirst($prop).'(), true);').'])');
 			return eval('return $this->get'.ucfirst($prop).'();');
 		}else{
 			// handle attributes with no dedicated child get.ucfirst($prop) method
