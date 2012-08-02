@@ -780,16 +780,20 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			if($stmt instanceof SQLite3Stmt) {				
 				
 				foreach($savedFields as $savedField) {
-                                       	if($this->BO->get($savedField) instanceof Integer)
-                                                $stmt->bindValue(':'.$savedField, $this->BO->get($savedField), SQLITE3_INTEGER);
-                                        else
-                                                $stmt->bindValue(':'.$savedField, $this->BO->get($savedField), SQLITE3_TEXT);
-                                }
+                	if($this->BO->get($savedField) instanceof Integer)
+                    	$stmt->bindValue(':'.$savedField, $this->BO->get($savedField), SQLITE3_INTEGER);
+                    else
+                    	$stmt->bindValue(':'.$savedField, $this->BO->get($savedField), SQLITE3_TEXT);
+                }
 
-                                if($this->BO->isTableOverloaded())
-                                       	$stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
+                if($this->BO->isTableOverloaded())
+                	$stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
 
-				$stmt->bindValue(':OID', $OID, SQLITE3_INTEGER);
+				$stmt->bindValue(':OID', $this->BO->getOID(), SQLITE3_INTEGER);
+				
+				$temp = $this->BO->getVersionNumber()->getValue();echo $temp.'<br>';
+				$this->BO->set('version_num', $temp+1);
+				$stmt->bindValue(':version_num', $temp+1, SQLITE3_INTEGER);
 
 				$stmt->execute();	
 			}else{
@@ -1782,7 +1786,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		 * 3. Copy all of the data from [tablename]_temp to [tablename].
 		 * 4. Drop [tablename]_temp.
 		 */
-         throw new NotImplementedException('AlphaDAOProviderInterface::createForeignIndex() not implemented by this provider');
+         //throw new NotImplementedException('AlphaDAOProviderInterface::createForeignIndex() not implemented by this provider');
 	}
 	
 	/**
@@ -1799,7 +1803,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
          * 3. Copy all of the data from	[tablename]_temp to [tablename].
          * 4. Drop [tablename]_temp.
          */
-         throw new NotImplementedException('AlphaDAOProviderInterface::createUniqueIndex() not implemented by this provider');
+         //throw new NotImplementedException('AlphaDAOProviderInterface::createUniqueIndex() not implemented by this provider');
 	}
 	
 	/**
