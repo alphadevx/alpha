@@ -71,6 +71,10 @@ class Enum_Test extends PHPUnit_Framework_TestCase {
      */
     protected function setUp() {        
         $this->enum1 = new Enum();
+        
+        $rights = new RightsObject();
+        $rights->rebuildTable();
+        
         $this->person = new PersonObject();
         $this->person->set('displayName', $_SESSION['currentUser']->getDisplayName());
         $this->person->set('email', $_SESSION['currentUser']->get('email'));

@@ -104,10 +104,12 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		$config->set('db.username', $config->get('db.test.username'));
 		$config->set('db.password', $config->get('db.test.password'));
 		$config->set('db.hostname', $config->get('db.test.hostname'));
+		// do the same for the SQLite3 provider
+		$config->set('db.file.path', $config->get('db.file.test.path'));
 		// force a disconnect to break any existing connections to the main database 
 		AlphaDAO::disconnect();
 		
-		if($config->get('db.name') == '') {
+		if($config->get('db.name') == '' && $config->get('db.file.path') == '') {
 			echo AlphaView::displayErrorMessage('Unable to run the unit tests as no test database is configured!');
 			echo AlphaView::displayPageFoot($this);
 			return;
@@ -288,7 +290,7 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		echo '<p>Running time: '.$runningTime.'</p>';
 		
 		// **** begin test suite ****
-		echo '<h3>MySQL AlphaDAO:</h3>';
+		echo '<h3>AlphaDAO:</h3>';
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('AlphaDAO_Test');
