@@ -791,7 +791,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
 				$stmt->bindValue(':OID', $this->BO->getOID(), SQLITE3_INTEGER);
 				
-				$temp = $this->BO->getVersionNumber()->getValue();echo $temp.'<br>';
+				$temp = $this->BO->getVersionNumber()->getValue();
 				$this->BO->set('version_num', $temp+1);
 				$stmt->bindValue(':version_num', $temp+1, SQLITE3_INTEGER);
 

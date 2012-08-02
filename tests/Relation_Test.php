@@ -64,6 +64,9 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
     protected function setUp() {        
         $this->rel1 = new Relation();
         
+        $rights = new RightsObject();
+        $rights->rebuildTable();
+        
         $person = new PersonObject();
         $person->set('displayName', $_SESSION['currentUser']->getDisplayName());
         $person->set('email', $_SESSION['currentUser']->get('email'));

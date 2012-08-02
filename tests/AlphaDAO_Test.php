@@ -64,6 +64,9 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
     protected function setUp() {
     	AlphaDAO::begin();
         
+    	$rights = new RightsObject();
+    	$rights->rebuildTable();
+    	
     	$this->person = $this->createPersonObject('unitTestUser');
     	$this->person->rebuildTable();
     	
