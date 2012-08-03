@@ -181,7 +181,7 @@ class Tag_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */
     public function testSaveArticleGeneratesDescriptionTags() {
-    	$this->article->save();    	
+    	$this->article->save();
     	$tags = $this->article->getPropObject('tags')->getRelatedObjects();
     	
     	$found = false;

@@ -858,7 +858,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		}
 
 		if($this->BO->getMaintainHistory())
-                        $this->BO->saveHistory();
+        	$this->BO->saveHistory();
 	}
 	
 	/**
