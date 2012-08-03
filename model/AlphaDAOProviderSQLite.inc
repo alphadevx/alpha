@@ -1954,12 +1954,12 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	public static function begin() {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaDAOProviderSQLite');
-	        self::$logger->debug('>>begin()');
+	    self::$logger->debug('>>begin()');
 
-         	if (!self::getConnection()->exec('BEGIN'))
-             		throw new AlphaException('Error beginning a new transaction, error is ['.self::getLastDatabaseError().']');
+        if (!self::getConnection()->exec('BEGIN'))
+        	throw new AlphaException('Error beginning a new transaction, error is ['.self::getLastDatabaseError().']');
 
-         	self::$logger->debug('<<begin');
+        self::$logger->debug('<<begin');
 	}
 
 	/**
@@ -1968,13 +1968,13 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	 */
 	public static function commit() {
 		if(self::$logger == null)
-                        self::$logger = new Logger('AlphaDAOProviderSQLite');
-                self::$logger->debug('>>commit()');
+        	self::$logger = new Logger('AlphaDAOProviderSQLite');
+        self::$logger->debug('>>commit()');
 
-                if (!self::getConnection()->exec('COMMIT'))
-                        throw new AlphaException('Error commiting a transaction, error is ['.self::getLastDatabaseError().']');
+        if (!self::getConnection()->exec('COMMIT'))
+        	throw new AlphaException('Error commiting a transaction, error is ['.self::getLastDatabaseError().']');
 
-                self::$logger->debug('<<commit');
+        self::$logger->debug('<<commit');
   	}
   	
 	/**
@@ -1983,13 +1983,18 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	 */
 	public static function rollback() {
 		if(self::$logger == null)
-                       	self::$logger = new Logger('AlphaDAOProviderSQLite');
-               	self::$logger->debug('>>rollback()');
+        	self::$logger = new Logger('AlphaDAOProviderSQLite');
+        
+		self::$logger->debug('>>rollback()');
 
-               	if (!self::getConnection()->exec('ROLLBACK'))
-                       	throw new AlphaException('Error rolling back a transaction, error is ['.self::getLastDatabaseError().']');
+        try {
+        	self::getConnection()->exec('ROLLBACK');
+        }catch (Exception $e) {
+        	if(strpos($e->getMessage(), 'cannot rollback - no transaction is active') === false) // just filtering out errors where the rollback failed due to no current transaction
+        		throw new AlphaException('Error rolling back a transaction, error is ['.self::getLastDatabaseError().']');
+        }
 
-               	self::$logger->debug('<<rollback');
+        self::$logger->debug('<<rollback');
   	}
 	
   	/**
