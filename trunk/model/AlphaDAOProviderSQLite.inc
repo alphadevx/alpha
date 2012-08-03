@@ -445,11 +445,11 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 				}
 			}
 			
-			$result = $stmt->execute();//print_r($result->fetchArray(SQLITE3_ASSOC));
+			$result = $stmt->execute();
 			
 			// now build an array of objects to be returned
 			$count = 0;
-			$BO_Class = get_class($this->BO);//print_r($result->fetchArray(SQLITE3_ASSOC));
+			$BO_Class = get_class($this->BO);
 			
 			while($row = $result->fetchArray(SQLITE3_ASSOC)){
 				try {
@@ -491,12 +491,15 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			$stmt->close();
 		}else{
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
+			
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
 				if($this->BO->getMaintainHistory())
-                                        $this->BO->makeHistoryTable();
+                	$this->BO->makeHistoryTable();
+				
 				throw new BONotFoundException('Failed to load objects by attribute ['.$attribute.'] and value ['.$value.'], table did not exist so had to create!');
 			}
+			
 			self::$logger->debug('<<loadAllByAttribute []');
 			return array();
 		}
@@ -543,7 +546,11 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			// bind params where required attributes are provided
 			if(count($attributes) > 0 && count($attributes) == count($values)) {
 				for($i = 0; $i < count($attributes); $i++) {
-					$stmt->bindValue(':'.$attributes[$i], $values[$i], SQLITE3_TEXT);
+					if (strcspn($values[$i], '0123456789') != strlen($values[$i])) {
+						$stmt->bindValue(':'.$attributes[$i], $values[$i], SQLITE3_INTEGER);
+					}else{
+						$stmt->bindValue(':'.$attributes[$i], $values[$i], SQLITE3_TEXT);
+					}
 				}
 			}else{
 				// we'll still need to bind the "classname" for overloaded BOs...
@@ -552,8 +559,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			}
 			
 			$result = $stmt->execute();
-				
-			$stmt->close();
+
 		}else{
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
 			
@@ -574,7 +580,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		$count = 0;
 		$BO_Class = get_class($this->BO);
 		
-		foreach($result as $row) {
+		while($row = $result->fetchArray(SQLITE3_ASSOC)){
 			try {
 				$obj = new $BO_Class();
 				$obj->load($row['OID']);
@@ -584,6 +590,8 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 				// the resource not allowed will be absent from the list
 			}
 		}
+		
+		$stmt->close();
 		
 		self::$logger->debug('<<loadAllByAttributes ['.count($objects).']');
 		return $objects;
@@ -741,8 +749,17 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
 				if($this->BO->isTableOverloaded())
 					$stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
+				
+				$stmt->bindValue(':version_num', 1, SQLITE3_INTEGER); // on an initial save, this will always be 1
 
-				$stmt->execute();
+				try {
+					$stmt->execute();
+				}catch (Exception $e) {
+					if(self::getConnection()->lastErrorCode() == 19)
+						throw new ValidationException('Unique key violation while trying to save object, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
+					else
+						throw new FailedSaveException('Failed to save object, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
+				}
 			}else{
 				throw new FailedSaveException('Failed to save object, error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
 			}
@@ -879,7 +896,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		}
 
 		if($this->BO->getMaintainHistory())
-                        $this->BO->saveHistory();
+        	$this->BO->saveHistory();
 	}
 
 	/**
@@ -1494,7 +1511,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		if ($result) {
 			self::$logger->debug('<<checkBOTableExists ['.($tableExists ? 'true' : 'false').']');
 			return $tableExists;
-		}else{echo self::getLastDatabaseError();
+		}else{
 			throw new AlphaException('Failed to access the system database correctly, error is ['.self::getLastDatabaseError().']');
 			self::$logger->debug('<<checkBOTableExists [false]');
 			return false;
@@ -1795,15 +1812,28 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	 * @todo note that in SQLite3, we will have to re-create the table to create the UK, see: http://stackoverflow.com/questions/969187/altering-sqlite-column-type-and-adding-pk-constraint
 	 */
 	public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '') {
-		/*
-         * High-level approach will need to be:
-         *
-         * 1. Rename the source	table to [tablename]_temp
-         * 2. Creata a new [tablename] table, with the new UK in place.
-         * 3. Copy all of the data from	[tablename]_temp to [tablename].
-         * 4. Drop [tablename]_temp.
-         */
-         //throw new NotImplementedException('AlphaDAOProviderInterface::createUniqueIndex() not implemented by this provider');
+		self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
+		
+		if($attribute2Name != '' && $attribute3Name != '')
+			$sqlQuery = 'CREATE UNIQUE INDEX IF NOT EXISTS '.$attribute1Name.'_'.$attribute2Name.'_'.$attribute3Name.'_unq_idx ON '.$this->BO->getTableName().' ('.$attribute1Name.','.$attribute2Name.','.$attribute3Name.');';
+		
+		if($attribute2Name != '' && $attribute3Name == '')
+			$sqlQuery = 'CREATE UNIQUE INDEX IF NOT EXISTS '.$attribute1Name.'_'.$attribute2Name.'_unq_idx ON '.$this->BO->getTableName().' ('.$attribute1Name.','.$attribute2Name.');';
+			
+		if($attribute2Name == '' && $attribute3Name == '')
+			$sqlQuery = 'CREATE UNIQUE INDEX IF NOT EXISTS '.$attribute1Name.'_unq_idx ON '.$this->BO->getTableName().' ('.$attribute1Name.');';
+		
+		$this->BO->setLastQuery($sqlQuery);
+		
+		$result = self::getConnection()->query($sqlQuery);
+		
+		if ($result) {
+			self::$logger->debug('Successfully created the unique index on ['.$this->BO->getTableName().']');
+		}else{
+			throw new FailedIndexCreateException('Failed to create the unique index on ['.$this->BO->getTableName().'], error is ['.self::getConnection()->error.']');
+		}
+		
+		self::$logger->debug('<<createUniqueIndex');
 	}
 	
 	/**
