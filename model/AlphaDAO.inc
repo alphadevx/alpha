@@ -1112,7 +1112,7 @@ abstract class AlphaDAO {
 	 * @throws AlphaException
 	 */
 	public function set($prop, $value, $noChildMethods = false) {
-		self::$logger->debug('>>set(prop=['.$prop.'], $value=['.$value.'], noChildMethods=['.$noChildMethods.'])');
+		self::$logger->debug('>>set(prop=['.$prop.'], $value=['.print_r($value, true).'], noChildMethods=['.$noChildMethods.'])');
 		
 		if(method_exists($this, 'before_set_callback'))
 			$this->before_set_callback();
@@ -1122,7 +1122,7 @@ abstract class AlphaDAO {
 			if(method_exists($this, 'after_set_callback'))
 				$this->after_set_callback();
 			
-			eval('$this->set'.ucfirst($prop)."('$value');");
+			eval('$this->set'.ucfirst($prop).'($value);');
 		}else{
 			// handle attributes with no dedicated child set.ucfirst($prop) method
 			if(isset($this->$prop)) {
@@ -1527,8 +1527,26 @@ abstract class AlphaDAO {
 	 */
 	public function getDataLabels() {
 		self::$logger->debug('>>getDataLabels()');
-		self::$logger->debug('<<getDataLabels() ['.var_export($this->dataLabels, true).'])');		
+		self::$logger->debug('<<getDataLabels() ['.var_export($this->dataLabels, true).'])');
 		return $this->dataLabels;
+	}
+	
+	/**
+	 * Sets the data labels array.
+	 * 
+	 * @param array $labels
+	 * @throws IllegalArguementException
+	 * @since 1.2
+	 */
+	public function setDataLabels($labels) {
+		self::$logger->debug('>>setDataLabels(labels=['.print_r($labels, true).'])');
+		
+		if(is_array($labels))
+			$this->dataLabels = $labels;
+		else
+			throw new IllegalArguementException('The value ['.print_r($labels, true).'] provided to setDataLabels() is not a valid array!');
+		
+		self::$logger->debug('<<setDataLabels()');
 	}
 	
 	/**

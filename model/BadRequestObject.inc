@@ -123,9 +123,14 @@ class BadRequestObject extends AlphaDAO {
 	 * @throws AlphaException
 	 */
 	public function getBadRequestCount() {
+		
 		global $config;
 		
-		$sqlQuery = "SELECT COUNT(OID) AS request_count FROM ".$this->getTableName()." WHERE IP = '".$this->IP->getValue()."' AND client = '".$this->client->getValue()."' AND created_ts > NOW()-INTERVAL '".$config->get('security.client.temp.blacklist.filter.period')."' MINUTE";
+		// the datetime interval syntax between MySQL and SQLite3 is a little different
+		if($config->get('db.provider.name') == 'AlphaDAOProviderMySQL')
+			$sqlQuery = "SELECT COUNT(OID) AS request_count FROM ".$this->getTableName()." WHERE IP = '".$this->IP->getValue()."' AND client = '".$this->client->getValue()."' AND created_ts > NOW()-INTERVAL '".$config->get('security.client.temp.blacklist.filter.period')."' MINUTE";
+		else
+			$sqlQuery = "SELECT COUNT(OID) AS request_count FROM ".$this->getTableName()." WHERE IP = '".$this->IP->getValue()."' AND client = '".$this->client->getValue()."' AND created_ts > datetime('now', '-".$config->get('security.client.temp.blacklist.filter.period')." MINUTES')";
 		
 		$result = $this->query($sqlQuery);
 		
