@@ -706,7 +706,7 @@ class AlphaView {
 			self::$logger->debug('Loading template ['.$defaultPath2.']');
 			require $defaultPath2;	
 		}else{
-			throw new IllegalArguementException('No ['.$mode.'] HTML template found fooor class ['.get_class($BO).']');
+			throw new IllegalArguementException('No ['.$mode.'] HTML template found for class ['.get_class($BO).']');
 		}
 		
 		self::$logger->debug('<<loadTemplate');

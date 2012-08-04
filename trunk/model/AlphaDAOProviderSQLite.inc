@@ -751,6 +751,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 					$stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
 				
 				$stmt->bindValue(':version_num', 1, SQLITE3_INTEGER); // on an initial save, this will always be 1
+				$this->BO->set('version_num', 1);
 
 				try {
 					$stmt->execute();
@@ -1803,13 +1804,11 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		 * 3. Copy all of the data from [tablename]_temp to [tablename].
 		 * 4. Drop [tablename]_temp.
 		 */
-         //throw new NotImplementedException('AlphaDAOProviderInterface::createForeignIndex() not implemented by this provider');
 	}
 	
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::createUniqueIndex()
-	 * @todo note that in SQLite3, we will have to re-create the table to create the UK, see: http://stackoverflow.com/questions/969187/altering-sqlite-column-type-and-adding-pk-constraint
 	 */
 	public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '') {
 		self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
