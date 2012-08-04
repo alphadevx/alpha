@@ -146,7 +146,7 @@ class AlphaKPI {
 		
 		$this->duration = $this->endTime - $this->startTime;
 		
-		$logfile = new LogFile($config->get('app.root').'logs/kpi-'.$this->name->getValue().'.csv');
+		$logfile = new LogFile($config->get('app.file.store.dir').'logs/kpi-'.$this->name->getValue().'.csv');
 		
 		$logfile->setMaxSize($config->get('app.log.file.max.size'));
 		$logfile->setSeperator(',');
