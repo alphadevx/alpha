@@ -357,10 +357,10 @@ class Image {
 				
 				if($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
 					header("Content-Type: image/png");
-					imagepng($new_image);
+					imagepng($new_image, basename($this->filename));
 				}else{
 					header("Content-Type: image/jpeg");
-					imagejpeg($new_image, '', 100*$this->quality->getValue());
+					imagejpeg($new_image, basename($this->filename), 100*$this->quality->getValue());
 				}
 				
 				$this->cache($new_image);
