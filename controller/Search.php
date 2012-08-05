@@ -131,7 +131,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 			echo AlphaView::displayPageHead($this);
 			
 			// log the user's search query in a log file
-			$log = new LogFile($config->get('app.root').'logs/search.log');		
+			$log = new LogFile($config->get('app.file.store.dir').'logs/search.log');		
 			$log->writeLine(array($params['q'], date('Y-m-d H:i:s'), $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
 			
 			$KPI->logStep('log search query');
