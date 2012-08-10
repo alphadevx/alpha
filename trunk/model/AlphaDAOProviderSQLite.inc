@@ -1083,6 +1083,10 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this->BO));
 		$properties = $reflection->getProperties();
+
+		//$propName.'_fk_idx'
+		//FOREIGN KEY (parent_id) REFERENCES othertable(id)
+		$foreignKeys = array();
 		
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
@@ -1093,10 +1097,12 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 				switch (strtoupper($propClass)) {
 					case "INTEGER":
 						// special properties for RelationLookup OIDs
-						if($this->BO instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID'))
+						if($this->BO instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
+							// TODO add a $foreignKeys entry here...
 							$sqlQuery .= "$propName INTEGER(".$this->BO->getPropObject($propName)->getSize().") NOT NULL,";
-						else
+						} else {
 							$sqlQuery .= "$propName INTEGER(".$this->BO->getPropObject($propName)->getSize()."),";
+						}
 					break;
 					case "DOUBLE":
 						$sqlQuery .= "$propName REAL(".$this->BO->getPropObject($propName)->getSize(true)."),";
@@ -1125,6 +1131,12 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 					break;
 					case "RELATION":						
 						$sqlQuery .= "$propName INTEGER(11),";
+
+						$relatedField = $propObj->getRelatedClassField();
+						$relatedClass = $propObj->getRelatedClass();
+						$relatedBO = new $relatedClass;		
+						$tableName = $relatedBO->getTableName();
+						$foreignKeys[$propName] = array($tableName, $relatedField);
 					break;
 					default:
 						$sqlQuery .= "";
@@ -1133,9 +1145,17 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			}			
 		}
 		if($this->BO->isTableOverloaded())
-			$sqlQuery .= "classname TEXT(100));";
+			$sqlQuery .= "classname TEXT(100)";
 		else
-			$sqlQuery = substr($sqlQuery, 0, -1).");";
+			$sqlQuery = substr($sqlQuery, 0, -1);
+
+		if(count($foreignKeys) > 0 ) {
+			foreach ($foreignKeys as $field => $related) {
+				$sqlQuery .= 'FOREIGN KEY ('.$field.') REFERENCES '.$related[0].'('.$related[1].')';
+			}
+		}
+
+		$sqlQuery .= ');';
 		
 		$this->BO->setLastQuery($sqlQuery);
 
@@ -1731,6 +1751,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		$reflection = new ReflectionClass(get_class($this->BO));
 		$properties = $reflection->getProperties();
 
+		// TODO this won't work for SQLite3, need to figure out how to access the list of FKs. See: http://stackoverflow.com/questions/1884818/how-do-i-add-a-foreign-key-to-an-existing-sqlite-3-6-21-table
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;			
 			$prop = $this->BO->getPropObject($propName);
@@ -1793,17 +1814,42 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::createForeignIndex()
-	 * @todo note that in SQLite3, we will have to re-create the table to create the FK, see: http://stackoverflow.com/questions/1884818/how-do-i-add-a-foreign-key-to-an-existing-sqlite-3-6-21-table
 	 */
 	public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute) {
+		self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.']');
+
 		/* 
-		 * High-level approach will need to be:
+		 * High-level approach 
 		 *
 		 * 1. Rename the source table to [tablename]_temp
 		 * 2. Creata a new [tablename] table, with the new FK in place.
 		 * 3. Copy all of the data from [tablename]_temp to [tablename].
 		 * 4. Drop [tablename]_temp.
 		 */
+		try {
+			self::begin();
+
+			// rename the table to [tablename]_temp
+			$query = 'ALTER TABLE '.$this->BO->getTableName().' RENAME TO '.$this->BO->getTableName().'_temp;';
+			$this->BO->setLastQuery($query);
+			$this->BO->query($query);
+
+			// now create the new table with the FK in place
+			$this->BO->makeTable();
+
+			// copy all of the old data to the new table
+			$query = 'INSERT '.$this->BO->getTableName().' INTO SELECT * FROM '.$this->BO->getTableName().'_temp;'
+			$this->BO->setLastQuery($query);
+			$this->BO->query($query);
+
+			// finally, drop the _temp table and commit the changes
+			$this->BO->dropTable($this->BO->getTableName().'_temp');
+			self::commit();
+		}catch (Exception $e) {
+			throw new FailedIndexCreateException('Failed to create the index ['.$attributeName.'] on ['.$this->BO->getTableName().'], error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
+		}
+
+		self::$logger->debug('<<createForeignIndex');
 	}
 	
 	/**
