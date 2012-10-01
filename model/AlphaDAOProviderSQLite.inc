@@ -759,10 +759,10 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 					if(self::getConnection()->lastErrorCode() == 19)
 						throw new ValidationException('Unique key violation while trying to save object, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
 					else
-						throw new FailedSaveException('Failed to save object, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
+						throw new FailedSaveException('Failed to save object, exception ['.$e->getMessage().'], DB error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
 				}
 			}else{
-				throw new FailedSaveException('Failed to save object, error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
+				throw new FailedSaveException('Failed to save object, exception ['.$e->getMessage().'], DB error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
 			}
 		}else{
 			// assume that it is a persistent object that needs to be updated
@@ -1838,7 +1838,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			$this->BO->makeTable();
 
 			// copy all of the old data to the new table
-			$query = 'INSERT '.$this->BO->getTableName().' INTO SELECT * FROM '.$this->BO->getTableName().'_temp;'
+			$query = 'INSERT '.$this->BO->getTableName().' INTO SELECT * FROM '.$this->BO->getTableName().'_temp;';
 			$this->BO->setLastQuery($query);
 			$this->BO->query($query);
 
