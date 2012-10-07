@@ -202,10 +202,15 @@ abstract class AlphaDAO {
 	 * @throws CustomQueryException
 	 */
 	public function query($sqlQuery) {
+		self::$logger->debug('>>query(sqlQuery=['.$sqlQuery.'])');
+
 		global $config;
 
 		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
-		return $provider->query($sqlQuery);
+		$result = $provider->query($sqlQuery);
+
+		self::$logger->debug('<<query ['.print_r($result, true).']');
+		return $result;
 	}
 
 	/**
@@ -520,7 +525,7 @@ abstract class AlphaDAO {
         global $config;
 
         $provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
-        provider->saveHistory();
+        $provider->saveHistory();
 
         if(method_exists($this, 'after_saveHistory_callback'))
 	        $this->after_saveHistory_callback();
@@ -1852,17 +1857,21 @@ abstract class AlphaDAO {
 	/**
 	 * Starts a new database transaction.
 	 *
+	 * @param $BO The AlphaDAO instance to pass to the database provider. Leave empty to have a new PersonObject passed.
 	 * @since 1.0
 	 * @throws AlphaException
 	 */
-	public static function begin() {
+	public static function begin($BO = null) {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaDAO');
 		self::$logger->debug('>>begin()');
 
 		global $config;
 
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), new PersonObject());
+		if(isset($BO))
+			$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $BO);
+		else
+			$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), new PersonObject());
 
     	try{
     		$provider->begin();
@@ -1876,17 +1885,21 @@ abstract class AlphaDAO {
 	/**
 	 * Commits the current database transaction.
 	 *
+	 * @param $BO The AlphaDAO instance to pass to the database provider. Leave empty to have a new PersonObject passed.
 	 * @since 1.0
 	 * @throws FailedSaveException
 	 */
-	public static function commit() {
+	public static function commit($BO = null) {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaDAO');
 		self::$logger->debug('>>commit()');
 
 		global $config;
 
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), new PersonObject());
+		if(isset($BO))
+			$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $BO);
+		else
+			$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), new PersonObject());
 
     	try{
     		$provider->commit();
@@ -1900,17 +1913,21 @@ abstract class AlphaDAO {
 	/**
 	 * Aborts the current database transaction.
 	 *
+	 * @param $BO The AlphaDAO instance to pass to the database provider. Leave empty to have a new PersonObject passed.
 	 * @since 1.0
 	 * @throws AlphaException
 	 */
-	public static function rollback() {
+	public static function rollback($BO = null) {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaDAO');
 		self::$logger->debug('>>rollback()');
 
 		global $config;
 
-		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), new PersonObject());
+		if(isset($BO))
+			$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $BO);
+		else
+			$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), new PersonObject());
 
     	try{
     		$provider->rollback();

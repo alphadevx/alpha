@@ -2,52 +2,52 @@
 
 /**
  * SQLite DAO provider (uses the SQLite3 native API in PHP).
- * 
+ *
  * @package alpha::model
  * @since 1.2
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
  * All rights reserved.
- * 
+ *
  * <pre>
- * Redistribution and use in source and binary forms, with or 
- * without modification, are permitted provided that the 
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are permitted provided that the
  * following conditions are met:
- * 
- * * Redistributions of source code must retain the above 
- *   copyright notice, this list of conditions and the 
+ *
+ * * Redistributions of source code must retain the above
+ *   copyright notice, this list of conditions and the
  *   following disclaimer.
- * * Redistributions in binary form must reproduce the above 
- *   copyright notice, this list of conditions and the 
- *   following disclaimer in the documentation and/or other 
+ * * Redistributions in binary form must reproduce the above
+ *   copyright notice, this list of conditions and the
+ *   following disclaimer in the documentation and/or other
  *   materials provided with the distribution.
- * * Neither the name of the Alpha Framework nor the names 
- *   of its contributors may be used to endorse or promote 
- *   products derived from this software without specific 
+ * * Neither the name of the Alpha Framework nor the names
+ *   of its contributors may be used to endorse or promote
+ *   products derived from this software without specific
  *   prior written permission.
- *   
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
- * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
- * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *  
+ *
  */
 class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	/**
 	 * Trace logger
-	 * 
+	 *
 	 * @var Logger
 	 * @since 1.2
 	 */
@@ -60,27 +60,27 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	 * @since 1.2
 	 */
 	private static $connection;
-	
+
 	/**
 	 * The business object that we are mapping back to
-	 * 
+	 *
 	 * @var AlphaDAO
 	 * @since 1.2
 	 */
 	private $BO;
-	
+
 	/**
 	 * The constructor
-	 * 
+	 *
 	 * @since 1.2
 	 */
 	public function __construct() {
 		self::$logger = new Logger('AlphaDAOProviderSQLite');
 		self::$logger->debug('>>__construct()');
-		
+
 		self::$logger->debug('<<__construct');
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::getConnection()
@@ -98,7 +98,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
 		return self::$connection;
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::disconnect()
@@ -109,7 +109,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			self::$connection = null;
 		}
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::getLastDatabaseError()
@@ -117,16 +117,16 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	public static function getLastDatabaseError() {
 		self::$connection->lastErrorMsg();
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::query()
 	 */
 	public function query($sqlQuery) {
 		$this->BO->setLastQuery($sqlQuery);
-		
+
 		$resultArray = array();
-		
+
 		if(!$result = self::getConnection()->query($sqlQuery)) {
 			throw new CustomQueryException('Failed to run the custom query, SQLite error is ['.self::getLastDatabaseError().'], query ['.$sqlQuery.']');
 			return array();
@@ -134,11 +134,11 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			while($row = $result->fetchArray(SQLITE3_ASSOC)) {
 				array_push($resultArray, $row);
 			}
-				
+
 			return $resultArray;
 		}
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::load()
@@ -147,27 +147,27 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		self::$logger->debug('>>load(OID=['.$OID.'])');
 
 	        global $config;
-		
+
 		$attributes = $this->BO->getPersistentAttributes();
 		$fields = '';
 		foreach($attributes as $att)
 			$fields .= $att.',';
 		$fields = substr($fields, 0, -1);
-			
+
 		$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE OID = :OID LIMIT 1;';
 		$this->BO->setLastQuery($sqlQuery);
 		$stmt = self::getConnection()->prepare($sqlQuery);
 
 		$row = array();
-			
+
 		if($stmt instanceof SQLite3Stmt) {
 			$stmt->bindValue(':OID', $OID, SQLITE3_INTEGER);
-				
+
 			$result = $stmt->execute();
 
 			// there should only ever be one (or none)
 			$row = $result->fetchArray(SQLITE3_ASSOC);
-				
+
 			$stmt->close();
 		}else{
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
@@ -179,32 +179,32 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			}
 			return;
 		}
-			
+
 		if(!isset($row['OID']) || $row['OID'] < 1) {
-			throw new BONotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');			
+			throw new BONotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');
 			self::$logger->debug('<<load');
 			return;
 		}
-			
+
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this->BO));
 		$properties = $reflection->getProperties();
-	
+
 		try {
 			foreach($properties as $propObj) {
 				$propName = $propObj->name;
-				
+
 				// filter transient attributes
 				if(!in_array($propName, $this->BO->getTransientAttributes())) {
 					$this->BO->set($propName, $row[$propName]);
 				}elseif(!$propObj->isPrivate() && $this->BO->getPropObject($propName) instanceof Relation) {
 					$prop = $this->BO->getPropObject($propName);
-						
+
 					// handle the setting of ONE-TO-MANY relation values
 					if($prop->getRelationType() == 'ONE-TO-MANY') {
 						$this->BO->set($propObj->name, $this->BO->getOID());
 					}
-					
+
 					// handle the setting of MANY-TO-ONE relation values
 					if($prop->getRelationType() == 'MANY-TO-ONE') {
 						$this->BO->set($propObj->name, $row[$propName]);
@@ -215,7 +215,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			self::$logger->warn('Bad data stored in the table ['.$this->BO->getTableName().'], field ['.$propObj->name.'] bad value['.$row[$propObj->name].'], exception ['.$e->getMessage().']');
 		}catch (PHPException $e) {
 			// it is possible that the load failed due to the table not being up-to-date
-			if($this->BO->checkTableNeedsUpdate()) {	
+			if($this->BO->checkTableNeedsUpdate()) {
 				$missingFields = $this->BO->findMissingFields();
 
 				$count = count($missingFields);
@@ -228,7 +228,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 				return;
 			}
 		}
-		
+
 		self::$logger->debug('<<load');
 	}
 
@@ -239,29 +239,29 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	public function loadByAttribute($attribute, $value, $ignoreClassType=false, $loadAttributes=array()) {
 		self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'], ignoreClassType=['.$ignoreClassType.'], 
 			loadAttributes=['.var_export($loadAttributes, true).'])');
-		
+
 		if(count($loadAttributes) == 0)
 			$attributes = $this->BO->getPersistentAttributes();
 		else
 			$attributes = $loadAttributes;
-		
+
 		$fields = '';
 		foreach($attributes as $att)
 			$fields .= $att.',';
 		$fields = substr($fields, 0, -1);
-		
+
 		if(!$ignoreClassType && $this->BO->isTableOverloaded())
 			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE '.$attribute.' = :attribute AND classname = :classname LIMIT 1;';
 		else
 			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE '.$attribute.' = :attribute LIMIT 1;';
-		
+
 		self::$logger->debug('Query=['.$sqlQuery.']');
-		
+
 		$this->BO->setLastQuery($sqlQuery);
 		$stmt = self::getConnection()->prepare($sqlQuery);
 
 		$row = array();
-		
+
 		if($stmt instanceof SQLite3Stmt) {
 			if($this->BO->getPropObject($attribute) instanceof Integer) {
 				if(!$ignoreClassType && $this->BO->isTableOverloaded()) {
@@ -278,33 +278,33 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 					$stmt->bindValue(':attribute', $value, SQLITE3_TEXT);
 				}
 			}
-			
+
 			$result = $stmt->execute();
-			
+
 			// there should only ever be one (or none)
             $row = $result->fetchArray(SQLITE3_ASSOC);
-				
+
 			$stmt->close();
 		}else{
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
-				
+
 				if($this->BO->getMaintainHistory())
                 	$this->BO->makeHistoryTable();
 				throw new BONotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table did not exist so had to create!');
 			}
 			return;
 		}
-		
+
 		if(!isset($row['OID']) || $row['OID'] < 1) {
-			throw new BONotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], not found in database.');			
+			throw new BONotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], not found in database.');
 			self::$logger->debug('<<loadByAttribute');
 			return;
 		}
-		
+
 		$this->OID = $row['OID'];
-		
+
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this->BO));
 		$properties = $reflection->getProperties();
@@ -319,7 +319,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 						$this->BO->set($propName, $row[$propName]);
 					}elseif(!$propObj->isPrivate() && $this->BO->get($propName) != '' && $this->BO->getPropObject($propName) instanceof Relation) {
 						$prop = $this->BO->getPropObject($propName);
-						
+
 						// handle the setting of ONE-TO-MANY relation values
 						if($prop->getRelationType() == 'ONE-TO-MANY') {
 							$this->BO->set($propObj->name, $this->BO->getOID());
@@ -331,37 +331,37 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			self::$logger->warn('Bad data stored in the table ['.$this->BO->getTableName().'], field ['.$propObj->name.'] bad value['.$row[$propObj->name].'], exception ['.$e->getMessage().']');
 		}catch (PHPException $e) {
 			// it is possible that the load failed due to the table not being up-to-date
-			if($this->BO->checkTableNeedsUpdate()) {				
+			if($this->BO->checkTableNeedsUpdate()) {
 				$missingFields = $this->BO->findMissingFields();
-	    	
+
 				$count = count($missingFields);
-				
+
 				for($i = 0; $i < $count; $i++)
 					$this->BO->addProperty($missingFields[$i]);
-					
+
 				throw new BONotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table ['.$this->BO->getTableName().'] was out of sync with the database so had to be updated!');
 				self::$logger->debug('<<loadByAttribute');
 				return;
 			}
 		}
-		
+
 		self::$logger->debug('<<loadByAttribute');
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::loadAll()
 	 */
 	public function loadAll($start=0, $limit=0, $orderBy='OID', $order='ASC', $ignoreClassType=false) {
 		self::$logger->debug('>>loadAll(start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
-		
+
 		// ensure that the field name provided in the orderBy param is legit
 		try {
 			$field = $this->BO->get($orderBy);
 		}catch(AlphaException $e) {
 			throw new AlphaException('The field name ['.$orderBy.'] provided in the param orderBy does not exist on the class ['.get_class($this->BO).']');
 		}
-		
+
 		if(!$ignoreClassType && $this->BO->isTableOverloaded()) {
 			if($limit == 0) {
 				$sqlQuery = 'SELECT OID FROM '.$this->BO->getTableName().' WHERE classname=\''.get_class($this->BO).'\' ORDER BY '.$orderBy.' '.$order.';';
@@ -369,26 +369,26 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 				$sqlQuery = 'SELECT OID FROM '.$this->BO->getTableName().' WHERE classname=\''.get_class($this->BO).'\' ORDER BY '.$orderBy.' '.$order.' LIMIT '.
 					$limit.' OFFSET '.$start.';';
 			}
-		}else{				
+		}else{
 			if($limit == 0)
 				$sqlQuery = 'SELECT OID FROM '.$this->BO->getTableName().' ORDER BY '.$orderBy.' '.$order.';';
 			else
 				$sqlQuery = 'SELECT OID FROM '.$this->BO->getTableName().' ORDER BY '.$orderBy.' '.$order.' LIMIT '.$limit.' OFFSET '.$start.';';
 		}
-		
+
 		$this->BO->setLastQuery($sqlQuery);
-		
+
 		if(!$result = self::getConnection()->query($sqlQuery)) {
 			throw new BONotFoundException('Failed to load object OIDs, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
 			self::$logger->debug('<<loadAll [0]');
 			return array();
 		}
-		
+
 		// now build an array of objects to be returned
 		$objects = array();
 		$count = 0;
 		$BO_Class = get_class($this->BO);
-		
+
 		while($row = $result->fetchArray()) {
 			try {
 				$obj = new $BO_Class();
@@ -399,35 +399,35 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 				// the resource not allowed will be absent from the list
 			}
 		}
-		
+
 		self::$logger->debug('<<loadAll ['.count($objects).']');
 		return $objects;
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::loadAllByAttribute()
 	 */
 	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC", $ignoreClassType=false, $constructorArgs=array()) {
 		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
-		
+
 		if ($start != 0 && $limit != 0)
 			$limit = ' LIMIT '.$limit.' OFFSET '.$start.';';
 		else
 			$limit = ';';
-		
+
 		if(!$ignoreClassType && $this->BO->isTableOverloaded())
 			$sqlQuery = "SELECT OID FROM ".$this->BO->getTableName()." WHERE $attribute = :attribute AND classname = :classname ORDER BY ".$orderBy." ".$order.$limit;
 		else
-			$sqlQuery = "SELECT OID FROM ".$this->BO->getTableName()." WHERE $attribute = :attribute ORDER BY ".$orderBy." ".$order.$limit;			
-			
+			$sqlQuery = "SELECT OID FROM ".$this->BO->getTableName()." WHERE $attribute = :attribute ORDER BY ".$orderBy." ".$order.$limit;
+
 		$this->BO->setLastQuery($sqlQuery);
 		self::$logger->debug($sqlQuery);
-		
+
 		$stmt = self::getConnection()->prepare($sqlQuery);
-		
+
 		$objects = array();
-		
+
 		if($stmt instanceof SQLite3Stmt) {
 			if($this->BO->getPropObject($attribute) instanceof Integer) {
 				if($this->BO->isTableOverloaded()) {
@@ -444,17 +444,17 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 					$stmt->bindValue(':attribute', $value, SQLITE3_TEXT);
 				}
 			}
-			
+
 			$result = $stmt->execute();
-			
+
 			// now build an array of objects to be returned
 			$count = 0;
 			$BO_Class = get_class($this->BO);
-			
+
 			while($row = $result->fetchArray(SQLITE3_ASSOC)){
 				try {
 					$argsCount = count($constructorArgs);
-			
+
 					if($argsCount < 1) {
 						$obj = new $BO_Class();
 					}else{
@@ -479,7 +479,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 								break;
 						}
 					}
-			
+
 					$obj->load($row['OID']);
 					$objects[$count] = $obj;
 					$count++;
@@ -487,27 +487,27 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 					// the resource not allowed will be absent from the list
 				}
 			}
-			
+
 			$stmt->close();
 		}else{
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
-			
+
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
 				if($this->BO->getMaintainHistory())
                 	$this->BO->makeHistoryTable();
-				
+
 				throw new BONotFoundException('Failed to load objects by attribute ['.$attribute.'] and value ['.$value.'], table did not exist so had to create!');
 			}
-			
+
 			self::$logger->debug('<<loadAllByAttribute []');
 			return array();
 		}
-		
+
 		self::$logger->debug('<<loadAllByAttribute ['.count($objects).']');
 		return $objects;
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::loadAllByAttributes()
@@ -515,33 +515,33 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	public function loadAllByAttributes($attributes=array(), $values=array(), $start=0, $limit=0, $orderBy='OID', $order='ASC', $ignoreClassType=false) {
 		self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.
 			$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
-		
+
 		$whereClause = ' WHERE';
-		
+
 		$count = count($attributes);
-		
+
 		for($i = 0; $i < $count; $i++) {
 			$whereClause .= ' '.$attributes[$i].' = :'.$attributes[$i].' AND';
 			self::$logger->debug($whereClause);
 		}
-		
+
 		if(!$ignoreClassType && $this->BO->isTableOverloaded())
 			$whereClause .= ' classname = :classname AND';
-		
+
 		// remove the last " AND"
 		$whereClause = substr($whereClause, 0, -4);
-		
+
 		if ($limit != 0)
 			$limit = ' LIMIT '.$limit.' OFFSET '.$start.';';
 		else
 			$limit = ';';
-		
+
 		$sqlQuery = "SELECT OID FROM ".$this->BO->getTableName().$whereClause." ORDER BY ".$orderBy." ".$order.$limit;
-			
+
 		$this->BO->setLastQuery($sqlQuery);
-		
+
 		$stmt = self::getConnection()->prepare($sqlQuery);
-		
+
 		if($stmt instanceof SQLite3Stmt) {
 			// bind params where required attributes are provided
 			if(count($attributes) > 0 && count($attributes) == count($values)) {
@@ -557,12 +557,12 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 				if($this->BO->isTableOverloaded())
 					$stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
 			}
-			
+
 			$result = $stmt->execute();
 
 		}else{
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
-			
+
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
 				if($this->BO->getMaintainHistory())
@@ -570,16 +570,16 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 				throw new BONotFoundException('Failed to load objects by attributes ['.var_export($attributes, true).'] and values ['.
 					var_export($values, true).'], table did not exist so had to create!');
 			}
-			
+
 			self::$logger->debug('<<loadAllByAttributes []');
 			return array();
 		}
-		
+
 		// now build an array of objects to be returned
 		$objects = array();
 		$count = 0;
 		$BO_Class = get_class($this->BO);
-		
+
 		while($row = $result->fetchArray(SQLITE3_ASSOC)){
 			try {
 				$obj = new $BO_Class();
@@ -590,30 +590,30 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 				// the resource not allowed will be absent from the list
 			}
 		}
-		
+
 		$stmt->close();
-		
+
 		self::$logger->debug('<<loadAllByAttributes ['.count($objects).']');
 		return $objects;
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::loadAllByDayUpdated()
 	 */
 	public function loadAllByDayUpdated($date, $start=0, $limit=0, $orderBy="OID", $order="ASC", $ignoreClassType=false) {
 		self::$logger->debug('>>loadAllByDayUpdated(date=['.$date.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
-		
+
 		if ($start != 0 && $limit != 0)
 			$limit = ' LIMIT '.$limit.' OFFSET '.$start.';';
 		else
 			$limit = ';';
-		
+
 		if(!$ignoreClassType && $this->BO->isTableOverloaded())
 			$sqlQuery = "SELECT OID FROM ".$this->BO->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' AND classname='".get_class($this->BO)."' ORDER BY ".$orderBy." ".$order.$limit;
 		else
 			$sqlQuery = "SELECT OID FROM ".$this->BO->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' ORDER BY ".$orderBy." ".$order.$limit;
-			
+
 		$this->BO->setLastQuery($sqlQuery);
 
 		if(!$result = self::getConnection()->query($sqlQuery)) {
@@ -621,23 +621,23 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			self::$logger->debug('<<loadAllByDayUpdated []');
 			return array();
 		}
-		
+
 		// now build an array of objects to be returned
 		$objects = array();
 		$count = 0;
 		$BO_Class = get_class($this->BO);
-		
+
 		while($row = $result->fetchArray()) {
 			$obj = new $BO_Class();
 			$obj->load($row['OID']);
 			$objects[$count] = $obj;
 			$count++;
 		}
-		
+
 		self::$logger->debug('<<loadAllByDayUpdated ['.count($objects).']');
 		return $objects;
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::loadAllFieldValuesByAttribute()
@@ -680,7 +680,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	 */
 	public function save() {
 		self::$logger->debug('>>save()');
-			
+
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this->BO));
 		$properties = $reflection->getProperties();
@@ -695,14 +695,14 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		// set the "updated by" fields, we can only set the user id if someone is logged in
 		if(isset($_SESSION['currentUser']))
 			$this->BO->set('updated_by', $_SESSION['currentUser']->getOID());
-			
+
 		$this->BO->set('updated_ts', new Timestamp(date("Y-m-d H:i:s")));
-			
+
 		// check to see if it is a transient object that needs to be inserted
 		if($this->BO->isTransient()) {
 			$savedFields = array();
 			$sqlQuery = 'INSERT INTO '.$this->BO->getTableName().' (';
-	
+
 			foreach($properties as $propObj) {
 				$propName = $propObj->name;
 				if (!in_array($propName, $this->BO->getTransientAttributes())) {
@@ -711,7 +711,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 						$sqlQuery .= "$propName,";
 						$savedFields[] = $propName;
 					}
-					
+
 					if($propName == 'version_num') {
 						$sqlQuery .= 'version_num,';
 						$savedFields[] = 'version_num';
@@ -720,24 +720,24 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			}
 			if($this->BO->isTableOverloaded())
 				$sqlQuery .= 'classname,';
-	
+
 			$sqlQuery = rtrim($sqlQuery, ",");
-	
+
 			$sqlQuery .= ') VALUES (';
-				
+
 			foreach($savedFields as $savedField)
 				$sqlQuery.= ':'.$savedField.',';
-				
+
 			if($this->BO->isTableOverloaded())
 				$sqlQuery.= ':classname,';
-				
+
 			$sqlQuery = rtrim($sqlQuery, ',').')';
-				
+
 			$this->BO->setLastQuery($sqlQuery);
 			self::$logger->debug('Query ['.$sqlQuery.']');
-			
+
 			$stmt = self::getConnection()->prepare($sqlQuery);
-		
+
 			if($stmt instanceof SQLite3Stmt) {
 
 				foreach($savedFields as $savedField) {
@@ -749,7 +749,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
 				if($this->BO->isTableOverloaded())
 					$stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
-				
+
 				$stmt->bindValue(':version_num', 1, SQLITE3_INTEGER); // on an initial save, this will always be 1
 				$this->BO->set('version_num', 1);
 
@@ -768,12 +768,12 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			// assume that it is a persistent object that needs to be updated
 			$savedFields = array();
 			$sqlQuery = 'UPDATE '.$this->BO->getTableName().' SET ';
-	
+
 			foreach($properties as $propObj) {
 				$propName = $propObj->name;
 				if (!in_array($propName, $this->BO->getTransientAttributes())) {
 					// Skip the OID, database auto number takes care of this.
-					if($propName != 'OID' && $propName != 'version_num') {			
+					if($propName != 'OID' && $propName != 'version_num') {
 						$sqlQuery .= "$propName = :$propName,";
 						$savedFields[] = $propName;
 					}
@@ -787,16 +787,16 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
 			if($this->BO->isTableOverloaded())
 				$sqlQuery .= 'classname = :classname,';
-	
+
 			$sqlQuery = rtrim($sqlQuery, ",");
-	
+
 			$sqlQuery .= " WHERE OID=:OID;";
 
 			$this->BO->setLastQuery($sqlQuery);
 			$stmt = self::getConnection()->prepare($sqlQuery);
-				
-			if($stmt instanceof SQLite3Stmt) {				
-				
+
+			if($stmt instanceof SQLite3Stmt) {
+
 				foreach($savedFields as $savedField) {
                 	if($this->BO->get($savedField) instanceof Integer)
                     	$stmt->bindValue(':'.$savedField, $this->BO->get($savedField), SQLITE3_INTEGER);
@@ -808,22 +808,22 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
                 	$stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
 
 				$stmt->bindValue(':OID', $this->BO->getOID(), SQLITE3_INTEGER);
-				
+
 				$temp = $this->BO->getVersionNumber()->getValue();
 				$this->BO->set('version_num', $temp+1);
 				$stmt->bindValue(':version_num', $temp+1, SQLITE3_INTEGER);
 
-				$stmt->execute();	
+				$stmt->execute();
 			}else{
-				throw new FailedSaveException('Failed to save object, error is ['.$stmt->error.'], query ['.$this->BO->getLastQuery().']');				
-			}	
+				throw new FailedSaveException('Failed to save object, error is ['.$stmt->error.'], query ['.$this->BO->getLastQuery().']');
+			}
 		}
 
 		if ($stmt != null && $stmt != false) {
-			// populate the updated OID in case we just done an insert				
+			// populate the updated OID in case we just done an insert
 			if($this->BO->isTransient())
 				$this->BO->setOID(self::getConnection()->lastInsertRowID());
-			
+
 			try {
 				foreach($properties as $propObj) {
 					$propName = $propObj->name;
@@ -836,29 +836,29 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 							try {
 								try{
 									// check to see if the rel is on this class
-									$side = $prop->getSide(get_class($this->BO));											
+									$side = $prop->getSide(get_class($this->BO));
 								}catch (IllegalArguementException $iae) {
 									$side = $prop->getSide(ucfirst($this->BO->getTableName()).'Object');
 								}
 
-								$lookUp = $prop->getLookup();									
-										
+								$lookUp = $prop->getLookup();
+
 								// first delete all of the old RelationLookup objects for this rel
 								try {
 									if($side == 'left')
 										$lookUp->deleteAllByAttribute('leftID', $this->BO->getOID());
 									else
-										$lookUp->deleteAllByAttribute('rightID', $this->BO->getOID());							
+										$lookUp->deleteAllByAttribute('rightID', $this->BO->getOID());
 								}catch (Exception $e) {
 									throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
 								}
-											
+
 								if(isset($_POST[$propName]) && $_POST[$propName] != '00000000000')
 									$OIDs = explode(',', $_POST[$propName]);
-																					
-								if(isset($OIDs) && !empty($OIDs[0])) {										
+
+								if(isset($OIDs) && !empty($OIDs[0])) {
 									// now for each posted OID, create a new RelationLookup record and save
-									foreach ($OIDs as $oid) {											
+									foreach ($OIDs as $oid) {
 										$newLookUp = new RelationLookup($lookUp->get('leftClassName'), $lookUp->get('rightClassName'));
 										if($side == 'left') {
 											$newLookUp->set('leftID', $this->BO->getOID());
@@ -868,14 +868,14 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 											$newLookUp->set('leftID', $oid);
 										}
 										$newLookUp->save();
-									}									
+									}
 								}
 							}catch (Exception $e) {
 								throw new FailedSaveException('Failed to update a MANY-TO-MANY relation on the object, error is ['.$e->getMessage().']');
 								return;
 							}
 						}
-							
+
 						// handle the saving of ONE-TO-MANY relation values
 						if($prop->getRelationType() == 'ONE-TO-MANY') {
 							$prop->setValue($this->BO->getOID());
@@ -886,12 +886,12 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 				throw new FailedSaveException('Failed to save object, error is ['.$e->getMessage().']');
 				return;
 			}
-				
+
 			$stmt->close();
 		}else{
 			// there has been an error, so decrement the version number back
-			$temp = $this->BO->getVersionNumber()->getValue();					
-			$this->BO->set('version_num', $temp-1);	
+			$temp = $this->BO->getVersionNumber()->getValue();
+			$this->BO->set('version_num', $temp-1);
 
 			throw new FailedSaveException('Failed to save object, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
 		}
@@ -906,13 +906,13 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	 */
 	public function saveAttribute($attribute, $value) {
 		self::$logger->debug('>>saveAttribute(attribute=['.$attribute.'], value=['.$value.'])');
-		
+
 		// assume that it is a persistent object that needs to be updated
 		$sqlQuery = 'UPDATE '.$this->BO->getTableName().' SET '.$attribute.'=:attribute WHERE OID=:OID;';
 
 		$this->BO->setLastQuery($sqlQuery);
 		$stmt = self::getConnection()->prepare($sqlQuery);
-				
+
 		if($stmt instanceof SQLite3Stmt) {
 			if($this->BO->getPropObject($attribute) instanceof Integer)
 				$stmt->bindValue(':attribute', $value, SQLITE3_INTEGER);
@@ -923,9 +923,9 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
 			$stmt->execute();
 		}else{
-			throw new FailedSaveException('Failed to save attribute, error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');				
+			throw new FailedSaveException('Failed to save attribute, error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
 		}
-				
+
 		$stmt->close();
 
 		$this->{$attribute} = $value;
@@ -968,7 +968,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		if($this->BO->isTableOverloaded())
 			$sqlQuery .= 'classname,';
 
-		$sqlQuery = rtrim($sqlQuery, ",");	
+		$sqlQuery = rtrim($sqlQuery, ",");
 
 		$sqlQuery .= ') VALUES (';
 
@@ -1001,33 +1001,33 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			throw new FailedSaveException('Failed to save object history, error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
 		}
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::delete()
 	 */
 	public function delete() {
 		self::$logger->debug('>>delete()');
-				
+
 		$sqlQuery = "DELETE FROM ".$this->BO->getTableName()." WHERE OID = :OID;";
-			
+
 		$this->BO->setLastQuery($sqlQuery);
-		
+
 		$stmt = self::getConnection()->prepare($sqlQuery);
-				
+
 		if($stmt instanceof SQLite3Stmt) {
 			$stmt->bindValue(':OID', $this->BO->getOID(), SQLITE3_INTEGER);
 			$stmt->execute();
-			self::$logger->debug('Deleted the object ['.$this->BO->getOID().'] of class ['.get_class($this->BO).']');					
+			self::$logger->debug('Deleted the object ['.$this->BO->getOID().'] of class ['.get_class($this->BO).']');
 		}else{
-			throw new FailedDeleteException('Failed to delete object ['.$this->BO->getOID().'], error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');				
+			throw new FailedDeleteException('Failed to delete object ['.$this->BO->getOID().'], error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
 		}
-				
+
 		$stmt->close();
-		
+
 		self::$logger->debug('<<delete');
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::getVersion()
@@ -1046,8 +1046,8 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			$result = $stmt->execute();
 
 			// there should only ever be one (or none)
-                        $row = $result->fetchArray(SQLITE3_ASSOC);
-					
+            $row = $result->fetchArray(SQLITE3_ASSOC);
+
 			$stmt->close();
 		}else{
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
@@ -1059,13 +1059,13 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			}
 			return;
 		}
-		
+
 		if(!isset($row['version_num']) || $row['version_num'] < 1) {
 			self::$logger->debug('<<getVersion [0]');
 			return 0;
 		}else{
 			$version_num = $row['version_num'];
-			
+
 			self::$logger->debug('<<getVersion ['.$version_num.']');
 			return $version_num;
 		}
@@ -1077,20 +1077,18 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	 */
 	public function makeTable() {
 		self::$logger->debug('>>makeTable()');
-		
+
 		$sqlQuery = "CREATE TABLE ".$this->BO->getTableName()." (OID INTEGER PRIMARY KEY,";
-		
+
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this->BO));
 		$properties = $reflection->getProperties();
 
-		//$propName.'_fk_idx'
-		//FOREIGN KEY (parent_id) REFERENCES othertable(id)
 		$foreignKeys = array();
-		
+
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
-			
+
 			if(!in_array($propName, $this->BO->getTransientAttributes()) && $propName != "OID") {
 				$propClass = get_class($this->BO->getPropObject($propName));
 
@@ -1129,12 +1127,14 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 						$tmp = new DEnum(get_class($this->BO).'::'.$propName);
 						$sqlQuery .= "$propName INTEGER(11),";
 					break;
-					case "RELATION":						
+					case "RELATION":
 						$sqlQuery .= "$propName INTEGER(11),";
 
-						$relatedField = $propObj->getRelatedClassField();
-						$relatedClass = $propObj->getRelatedClass();
-						$relatedBO = new $relatedClass;		
+						$rel = $this->BO->getPropObject($propName);
+
+						$relatedField = $rel->getRelatedClassField();
+						$relatedClass = $rel->getRelatedClass();
+						$relatedBO = new $relatedClass;
 						$tableName = $relatedBO->getTableName();
 						$foreignKeys[$propName] = array($tableName, $relatedField);
 					break;
@@ -1142,7 +1142,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 						$sqlQuery .= "";
 					break;
 				}
-			}			
+			}
 		}
 		if($this->BO->isTableOverloaded())
 			$sqlQuery .= "classname TEXT(100)";
@@ -1151,12 +1151,12 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
 		if(count($foreignKeys) > 0 ) {
 			foreach ($foreignKeys as $field => $related) {
-				$sqlQuery .= 'FOREIGN KEY ('.$field.') REFERENCES '.$related[0].'('.$related[1].')';
+				$sqlQuery .= ', FOREIGN KEY ('.$field.') REFERENCES '.$related[0].'('.$related[1].')';
 			}
 		}
 
 		$sqlQuery .= ');';
-		
+
 		$this->BO->setLastQuery($sqlQuery);
 
 		if(!self::getConnection()->exec($sqlQuery)) {
@@ -1165,8 +1165,8 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		}
 
 		// check the table indexes if any additional ones required
-		$this->checkIndexes();
-		
+		//$this->checkIndexes();
+
 		self::$logger->debug('<<makeTable');
 	}
 
@@ -1275,7 +1275,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	 */
 	public function dropTable($tableName=null) {
 		self::$logger->debug('>>dropTable()');
-		
+
 		if($tableName == null)
 			$tableName = $this->BO->getTableName();
 
@@ -1340,7 +1340,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 						$tmp = new DEnum(get_class($this->BO).'::'.$propName);
 						$sqlQuery .= "$propName INTEGER(11),";
 					break;
-					case "RELATION":						
+					case "RELATION":
 						$sqlQuery .= "$propName INTEGER(11),";
 					break;
 					default:
@@ -1375,13 +1375,13 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
 		try {
 			$result = $this->BO->query($sqlQuery);
-	
+
 			$row = $result[0];
-	
-			if (isset($row['max_OID'])) {	
+
+			if (isset($row['max_OID'])) {
 				self::$logger->debug('<<getMAX ['.$row['max_OID'].']');
 				return $row['max_OID'];
-			}else{			
+			}else{
 				throw new AlphaException('Failed to get the MAX ID for the class ['.get_class($this->BO).'] from the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
 			}
 		}catch (Exception $e) {
@@ -1421,20 +1421,21 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
 		if (!$result = self::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to get the count for the class ['.get_class($this->BO).'] from the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
-                        self::$logger->debug('<<getCount [0]');
-                        return 0;
+
+            self::$logger->debug('<<getCount [0]');
+            return 0;
 		}else{
 			$row = $result->fetchArray(SQLITE3_ASSOC);
 
-                        self::$logger->debug('<<getCount ['.$row['class_count'].']');
-                        return $row['class_count'];
+            self::$logger->debug('<<getCount ['.$row['class_count'].']');
+            return $row['class_count'];
 		}
 	}
 
 	/**
-         * (non-PHPdoc)
-         * @see alpha/model/AlphaDAOProviderInterface::getHistoryCount()
-         */
+     * (non-PHPdoc)
+     * @see alpha/model/AlphaDAOProviderInterface::getHistoryCount()
+     */
 	public function getHistoryCount() {
 		self::$logger->debug('>>getHistoryCount()');
 
@@ -1443,23 +1444,24 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
 		$sqlQuery = 'SELECT COUNT(OID) AS object_count FROM '.$this->BO->getTableName().'_history WHERE OID='.$this->BO->getOID();
 
-               	$this->BO->setLastQuery($sqlQuery);
+        $this->BO->setLastQuery($sqlQuery);
 
-               	if (!$result = self::getConnection()->query($sqlQuery)) {
+        if (!$result = self::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to get the history count for the business object ['.$this->BO->getOID().'] from the table ['.$this->BO->getTableName().'_history], query is ['.$this->BO->getLastQuery().']');
-                        self::$logger->debug('<<getHistoryCount [0]');
-                       	return 0;
-                }else{
+
+            self::$logger->debug('<<getHistoryCount [0]');
+            return 0;
+        }else{
 			$row = $result->fetchArray(SQLITE3_ASSOC);
 
-                        self::$logger->debug('<<getHistoryCount ['.$row['object_count'].']');
-                       	return $row['object_count'];
-               	}
+            self::$logger->debug('<<getHistoryCount ['.$row['object_count'].']');
+            return $row['object_count'];
+        }
 	}
 
 	/**
 	 * Given that Enum values are not saved in the database for SQLite, an implementation is not required here.
-	 * 
+	 *
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::setEnumOptions()
 	 * @throws NotImplementedException
@@ -1487,14 +1489,14 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		$tableName = ($checkHistoryTable ? $this->BO->getTableName().'_history' : $this->BO->getTableName());
 
 		while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-	    		if (strtolower($row['name']) == strtolower($tableName))
-    				$tableExists = true;
+	    	if (strtolower($row['name']) == strtolower($tableName))
+    			$tableExists = true;
 		}
 
-		if ($result) {			
+		if ($result) {
 			self::$logger->debug('<<checkTableExists ['.$tableExists.']');
 			return $tableExists;
-		}else{			
+		}else{
 			throw new AlphaException('Failed to access the system database correctly, error is ['.self::getLastDatabaseError().']');
 			self::$logger->debug('<<checkTableExists [false]');
 			return false;
@@ -1546,6 +1548,9 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	public function checkTableNeedsUpdate() {
 		self::$logger->debug('>>checkTableNeedsUpdate()');
 
+		if(!$this->BO->checkTableExists())
+			return false;
+
 		$updateRequired = false;
 
 		$matchCount = 0;
@@ -1562,17 +1567,17 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			$propName = $propObj->name;
 			if (!in_array($propName, $this->BO->getTransientAttributes())) {
 
-				$foundMatch = false;	
+				$foundMatch = false;
 
-				while ($row = $result->fetchArray(SQLITE3_ASSOC)) {						
-			    		if ($propName == $row['name']) {
-			    			$foundMatch = true;
-			    			break;
-			    		}
+				while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+			    	if ($propName == $row['name']) {
+			    		$foundMatch = true;
+			    		break;
+			    	}
 				}
 
 				if(!$foundMatch)
-					$matchCount--;				
+					$matchCount--;
 
 				$result->reset();
 			}
@@ -1581,14 +1586,14 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		// check for the "classname" field in overloaded tables
 		if($this->BO->isTableOverloaded()) {
 			$foundMatch = false;
-			
+
 			while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
 				if ('classname' == $row['name']) {
 					$foundMatch = true;
 			    		break;
 				}
 			}
-			if(!$foundMatch)						
+			if(!$foundMatch)
 				$matchCount--;
 		}
 
@@ -1611,7 +1616,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
             return $updateRequired;
 		}
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::findMissingFields()
@@ -1643,8 +1648,8 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			}else{
 				$matchCount++;
 			}
-			
-			if($matchCount==0) {					
+
+			if($matchCount==0) {
 				array_push($missingFields, $propName);
 			}else{
 				$matchCount = 0;
@@ -1654,17 +1659,17 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		// check for the "classname" field in overloaded tables
 		if($this->BO->isTableOverloaded()) {
 			$foundMatch = false;
-			
+
 			while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
 				if ('classname' == $row['name']) {
 					$foundMatch = true;
 		    			break;
 				}
 			}
-			if(!$foundMatch)				
+			if(!$foundMatch)
 				array_push($missingFields, 'classname');
 		}
-		
+
 		if (!$result) {
 			throw new AlphaException('Failed to access the system database correctly, error is ['.self::getLastDatabaseError().']');
 		}
@@ -1679,13 +1684,13 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	 */
 	public function getIndexes() {
 		self::$logger->debug('>>getIndexes()');
-		
+
 		$sqlQuery = "SELECT name FROM sqlite_master WHERE type='index' AND tbl_name='".$this->BO->getTableName()."'";
-		
+
 		$this->BO->setLastQuery($sqlQuery);
-		
+
 		$indexNames = array();
-		
+
 		if (!$result = self::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to access the system database correctly, error is ['.self::getLastDatabaseError().']');
 		}else{
@@ -1706,7 +1711,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	private function checkIndexes() {
 		self::$logger->debug('>>checkIndexes()');
 
-		$indexNames = $this->getIndexes();
+		$indexNames = $this->BO->getIndexes();
 
 		// process unique keys
 		foreach($this->BO->getUniqueAttributes() as $prop) {
@@ -1745,81 +1750,22 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			}
 		}
 
-		// Process foreign-key indexes. Note that SQLite 3.6.19 is requrired for foreign key support.
-
-		// get the class attributes
-		$reflection = new ReflectionClass(get_class($this->BO));
-		$properties = $reflection->getProperties();
-
-		// TODO this won't work for SQLite3, need to figure out how to access the list of FKs. See: http://stackoverflow.com/questions/1884818/how-do-i-add-a-foreign-key-to-an-existing-sqlite-3-6-21-table
-		foreach($properties as $propObj) {
-			$propName = $propObj->name;			
-			$prop = $this->BO->getPropObject($propName);
-			if($prop instanceof Relation) {
-
-				if($prop->getRelationType() == 'MANY-TO-ONE') {
-					$indexExists = false;
-					foreach ($indexNames as $index) {
-						if ($propName.'_fk_idx' == $index) {
-					    		$indexExists = true;
-						}
-					}
-
-					if(!$indexExists) {
-						$this->createForeignIndex($propName, $prop->getRelatedClass(), $prop->getRelatedClassField());
-					}
-				}
-				
-				if($prop->getRelationType() == 'MANY-TO-MANY') {
-					$lookup = $prop->getLookup();
-
-					if($lookup != null) {
-						try {					
-							$lookupIndexNames = $lookup->getIndexes();
-							
-							// handle index check/creation on left side of Relation
-							$indexExists = false;
-							foreach ($lookupIndexNames as $index) {
-								if ('leftID_fk_idx' == $index) {
-							    		$indexExists = true;
-								}
-							}
-
-							if(!$indexExists) {
-								$lookup->createForeignIndex('leftID', $prop->getRelatedClass('left'), 'OID');
-							}
-
-							// handle index check/creation on right side of Relation
-							$indexExists = false;
-							foreach ($lookupIndexNames as $index) {
-								if ('rightID_fk_idx' == $index) {
-							    		$indexExists = true;
-								}
-							}
-
-							if(!$indexExists) {
-								$lookup->createForeignIndex('rightID', $prop->getRelatedClass('right'), 'OID');
-							}
-						}catch(AlphaException $e) {
-							self::$logger->error($e->getMessage());
-						}
-					}
-				}
-			}
-		}
+		// TODO: Processing foreign key indexes should go here, however there is no obvious way to list existing foreign keys in SQLite, see: https://www.assembla.com/spaces/alpha-framework/tickets/38
 
 		self::$logger->debug('<<checkIndexes');
 	}
-	
+
 	/**
+	 * Note that SQLite 3.6.19 is requrired for foreign key support.
+	 *
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::createForeignIndex()
 	 */
 	public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute) {
-		self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.']');
+		self::$logger->info('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.']');
 
-		/* 
-		 * High-level approach 
+		/*
+		 * High-level approach
 		 *
 		 * 1. Rename the source table to [tablename]_temp
 		 * 2. Creata a new [tablename] table, with the new FK in place.
@@ -1827,60 +1773,72 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		 * 4. Drop [tablename]_temp.
 		 */
 		try {
-			self::begin();
+				AlphaDAO::begin($this->BO);
 
-			// rename the table to [tablename]_temp
-			$query = 'ALTER TABLE '.$this->BO->getTableName().' RENAME TO '.$this->BO->getTableName().'_temp;';
-			$this->BO->setLastQuery($query);
-			$this->BO->query($query);
+				// rename the table to [tablename]_temp
+				$query = 'ALTER TABLE '.$this->BO->getTableName().' RENAME TO '.$this->BO->getTableName().'_temp;';
+				$this->BO->setLastQuery($query);
+				self::getConnection()->query($query);
 
-			// now create the new table with the FK in place
-			$this->BO->makeTable();
+				self::$logger->info('Renamed the table ['.$this->BO->getTableName().'] to ['.$this->BO->getTableName().'_temp]');
 
-			// copy all of the old data to the new table
-			$query = 'INSERT '.$this->BO->getTableName().' INTO SELECT * FROM '.$this->BO->getTableName().'_temp;';
-			$this->BO->setLastQuery($query);
-			$this->BO->query($query);
+				// now create the new table with the FK in place
+				$this->BO->makeTable();
 
-			// finally, drop the _temp table and commit the changes
-			$this->BO->dropTable($this->BO->getTableName().'_temp');
-			self::commit();
+				self::$logger->info('Made a new copy of the table ['.$this->BO->getTableName().']');
+
+				// copy all of the old data to the new table
+				$query = 'INSERT INTO '.$this->BO->getTableName().' SELECT * FROM '.$this->BO->getTableName().'_temp;';
+				$this->BO->setLastQuery($query);
+				self::getConnection()->query($query);
+
+				self::$logger->info('Copied all of the data from ['.$this->BO->getTableName().'] to ['.$this->BO->getTableName().'_temp]');
+
+				// finally, drop the _temp table and commit the changes
+				$this->BO->dropTable($this->BO->getTableName().'_temp');
+
+				self::$logger->info('Dropped the table ['.$this->BO->getTableName().'_temp]');
+
+				AlphaDAO::commit($this->BO);
+
 		}catch (Exception $e) {
-			throw new FailedIndexCreateException('Failed to create the index ['.$attributeName.'] on ['.$this->BO->getTableName().'], error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
+			AlphaDAO::rollback($this->BO);
+
+			throw new FailedIndexCreateException('Failed to create the index ['.$attributeName.'] on ['.$this->BO->getTableName().'], error is ['.$e->getMessage().'], query ['.$this->BO->getLastQuery().']');
 		}
 
-		self::$logger->debug('<<createForeignIndex');
+		self::$logger->info('<<createForeignIndex');
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::createUniqueIndex()
 	 */
 	public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '') {
 		self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
-		
+
 		if($attribute2Name != '' && $attribute3Name != '')
 			$sqlQuery = 'CREATE UNIQUE INDEX IF NOT EXISTS '.$attribute1Name.'_'.$attribute2Name.'_'.$attribute3Name.'_unq_idx ON '.$this->BO->getTableName().' ('.$attribute1Name.','.$attribute2Name.','.$attribute3Name.');';
-		
+
 		if($attribute2Name != '' && $attribute3Name == '')
 			$sqlQuery = 'CREATE UNIQUE INDEX IF NOT EXISTS '.$attribute1Name.'_'.$attribute2Name.'_unq_idx ON '.$this->BO->getTableName().' ('.$attribute1Name.','.$attribute2Name.');';
-			
+
 		if($attribute2Name == '' && $attribute3Name == '')
 			$sqlQuery = 'CREATE UNIQUE INDEX IF NOT EXISTS '.$attribute1Name.'_unq_idx ON '.$this->BO->getTableName().' ('.$attribute1Name.');';
-		
+
 		$this->BO->setLastQuery($sqlQuery);
-		
+
 		$result = self::getConnection()->query($sqlQuery);
-		
+
 		if ($result) {
 			self::$logger->debug('Successfully created the unique index on ['.$this->BO->getTableName().']');
 		}else{
 			throw new FailedIndexCreateException('Failed to create the unique index on ['.$this->BO->getTableName().'], error is ['.self::getConnection()->error.']');
 		}
-		
+
 		self::$logger->debug('<<createUniqueIndex');
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::reload()
@@ -1889,7 +1847,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		self::$logger->debug('>>reload()');
 
 		if(!$this->BO->isTransient()) {
-			$this->BO->load($this->BO->getOID());			
+			$this->BO->load($this->BO->getOID());
 		}else{
 			throw new AlphaException('Cannot reload transient object from database!');
 		}
@@ -1921,7 +1879,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			$stmt->close();
 
 		}else{
-			throw new AlphaException('Failed to check for the record ['.$OID.'] on the class ['.get_class($this->BO).'] from the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');			
+			throw new AlphaException('Failed to check for the record ['.$OID.'] on the class ['.get_class($this->BO).'] from the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
 			self::$logger->debug('<<checkRecordExists [false]');
 			return false;
 		}
@@ -1941,14 +1899,14 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	 */
 	public function isTableOverloaded() {
 		self::$logger->debug('>>isTableOverloaded()');
-		
+
 		$classname = get_class($this->BO);
 		$tablename = ucfirst($this->BO->getTableName()).'Object';
-		
+
 		// use reflection to check to see if we are dealing with a persistent type (e.g. DEnum) which are never overloaded
 		$reflection = new ReflectionClass($classname);
 		$implementedInterfaces = $reflection->getInterfaces();
-		
+
 		foreach ($implementedInterfaces as $interface) {
 			if ($interface->name == 'AlphaTypeInterface') {
 				self::$logger->debug('<<isTableOverloaded [false]');
@@ -1958,7 +1916,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
 		if($classname != $tablename) {
 			// loop over all BOs to see if there is one using the same table as this BO
-			
+
 			$BOclasses = AlphaDAO::getBOClassNames();
 
 			foreach($BOclasses as $BOclassName) {
@@ -2021,7 +1979,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
         self::$logger->debug('<<commit');
   	}
-  	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::rollback()
@@ -2029,11 +1987,12 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 	public static function rollback() {
 		if(self::$logger == null)
         	self::$logger = new Logger('AlphaDAOProviderSQLite');
-        
+
 		self::$logger->debug('>>rollback()');
 
         try {
         	self::getConnection()->exec('ROLLBACK');
+        	self::disconnect();
         }catch (Exception $e) {
         	if(strpos($e->getMessage(), 'cannot rollback - no transaction is active') === false) // just filtering out errors where the rollback failed due to no current transaction
         		throw new AlphaException('Error rolling back a transaction, error is ['.self::getLastDatabaseError().']');
@@ -2041,7 +2000,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
         self::$logger->debug('<<rollback');
   	}
-	
+
   	/**
   	 * (non-PHPdoc)
   	 * @see alpha/model/AlphaDAOProviderInterface::setBO()
