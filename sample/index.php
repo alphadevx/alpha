@@ -23,7 +23,7 @@ if($request == '' && $isInstalled) { // process requests to the root (/) URL her
 
 <link rel="StyleSheet" type="text/css" href="{$config->get('app.url')}alpha/css/alpha.css">
 <link rel="StyleSheet" type="text/css" href="{$config->get('app.url')}config/css/overrides.css">
-		
+
 </head>
 <body>
 <div align="center">
@@ -43,15 +43,19 @@ EOCSS;
 		// register the article load by title alias
 		$front->registerAlias('ViewArticleTitle','article','title');
 		$front->registerAlias('Search','search','q');
-		if($config->get('security.client.blacklist.filter.enabled')) {		
+		if($config->get('security.client.blacklist.filter.enabled')) {
 			require_once $config->get('app.root').'alpha/util/filters/ClientBlacklistFilter.inc';
 			$front->registerFilter(new ClientBlacklistFilter());
+		}
+		if($config->get('security.ip.blacklist.filter.enabled')) {
+			require_once $config->get('app.root').'alpha/util/filters/IPBlacklistFilter.inc';
+			$front->registerFilter(new IPBlacklistFilter());
 		}
 		if($config->get('security.client.temp.blacklist.filter.enabled')) {
 			require_once $config->get('app.root').'alpha/util/filters/ClientTempBlacklistFilter.inc';
 			$front->registerFilter(new ClientTempBlacklistFilter());
 		}
-			
+
 		$front->loadController();
 	}catch (LibraryNotInstalledException $lnie) {
 		header('HTTP/1.1 404 Not Found');
