@@ -228,12 +228,15 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 		
 		AlphaDAO::disconnect();
 		
-		$html .= '&nbsp;&nbsp;';
-		$temp = new Button("window.open('".$this->BO->get('printURL')."')",'Open Printer Version','printBut');
-		$html .= $temp->render();
+		if($config->get('cms.allow.print.versions')) {
+			$html .= '&nbsp;&nbsp;';
+			$temp = new Button("window.open('".$this->BO->get('printURL')."')",'Open Printer Version','printBut');
+			$html .= $temp->render();
+		}
 		
 		$html .= '&nbsp;&nbsp;';
 		if($config->get('cms.allow.pdf.versions')) {
+			$html .= '&nbsp;&nbsp;';
 			$temp = new Button("document.location = '".FrontController::generateSecureURL("act=ViewArticlePDF&title=".$this->BO->get("title"))."';",'Open PDF Version','pdfBut');
 			$html .= $temp->render();
 		}
@@ -246,7 +249,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 		}
 		
 		if($config->get('cms.display.standard.footer')) {
-			$html .= '<p>Article URL: <a href="'.$this->BO->get('URL').'">'.$this->BO->get('URL').'</a><br>';
+			$html .= '<p>Article URL: <a href="http://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"].'">http://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"].'</a><br>';
 			$html .= 'Title: '.$this->BO->get('title').'<br>';
 			$html .= 'Author: '.$this->BO->get('author').'</p>';
 		}
