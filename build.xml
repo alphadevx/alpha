@@ -1,13 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Alpha" default="apidocs" basedir=".">
+
+<project name="AlphaFramework" default="generatedocs" basedir=".">
+
+	<target name="buildAlphaReleaseArtifact" depends="prepare">
+
+		<svnexport
+		   svnpath="/usr/bin/svn"
+		   username="${svn.username}"
+		   password="${svn.password}"
+		   force="true"
+		   nocache="true"
+		   repositoryurl="${svn.repo.url}"
+		   todir="${build.dir}"/>
+
+		<zip destfile="${build.dir}/alpha-${alpha.version}.zip">
+			<fileset dir="${build.dir}">
+				<include name="**/**"/>
+			</fileset>
+		</zip>
+
+	</target>
+
+	<target name="init">
+        <if>
+            <not><isset property="propfile"/></not>
+                <then>
+                    <fail message="No properties file specified.  Try again with 'phing -Dpropfile=/path/to/build.*.properties -Dreleasetype=Major|Minor|Bugfix'"/>
+                </then>
+            <else>
+                <echo message="Using properties file ${propfile}"/>
+                <property file="${propfile}"/>
+            </else>
+        </if>
+        <if>
+            <not><isset property="releasetype"/></not>
+                <then>
+                    <fail message="No releasetype specified.  Try again with 'phing -Dpropfile=/path/to/build.*.properties -Dreleasetype=Major|Minor|Bugfix'"/>
+                </then>
+            <else>
+                <version releasetype="${releasetype}" file="VERSION.txt" property="alpha.version"/>
+                <echo  message="New version number is ${alpha.version}"  />
+            </else>
+        </if>
+    </target>
+
+	<target name="clean">
+		<echo msg="Cleaing out any previous build...."/>
+		<delete dir="${build.dir}"/>
+	</target>
+
+	<target name="prepare" depends="init, clean">
+		<echo msg="Creating the build directory...."/>
+		<mkdir dir="${build.dir}"/>
+	</target>
+
+	<target name="generatedocs">
+		<apigen
+		  source="."
+		  destination="/home/john/apitest"
+		  exclude="*/.svn/*,*/lib/*"
+		  title="Alpha Framework API Documentation"
+		  deprecated="true"
+		  php="no"
+		  download="no"
+		  extensions="inc,php"
+		  accesslevels="public,private,protected"
+		  allowedhtml="b,i,a,ul,ol,li,p,br,var,samp,kbd,tt,pre"
+		  todo="false"/>
+	</target>
+
+
+
+
+	<!-- TODO: everything below this line is open for review, see ticket #5
+
 	<property name="alpha-root" value="."/>
 	<property name="dist-version" value="1.1"/>
 	<property name="dist-target" value="alpha-${dist-version}"/>
-	
+
 	<target name="dist" depends="clean">
-		<!-- make a dist folder and copy all of the application files there -->
 		<mkdir dir="${dist-target}"/>
-		<!-- now copy the files, less the SVN directories! -->
 		<copy todir="${dist-target}/alpha">
 			<fileset dir="${alpha-root}">
 				<exclude name="**/*.svn"/>
@@ -31,9 +103,8 @@
 			</fileset>
 		</zip>
 	</target>
-		
+
 	<target name="clean">
-		<!-- delete the distribution folder -->
 		<delete dir="${dist-target}"/>
 	</target>
 
@@ -43,7 +114,7 @@
 	  		sourcecode="true"
 	  		undocumentedelements="true"
 	  		output="HTML:Smarty:HandS">
-			
+
 	   		<fileset dir=".">
 	      		<include name="**/*.php" />
 	      		<include name="**/*.inc" />
@@ -65,7 +136,7 @@
               	<include name="**/*.inc" />
               	<exclude name="**/lib/**"/>
            	</fileset>
-			
+
 	   		<logger type="jdepend-xml" outfile="docs/depends/jdepend.xml"/>
 	   		<logger type="jdepend-chart" outfile="docs/depends/jdepend.jpg"/>
 	   		<logger type="overview-pyramid" outfile="docs/depends/jdepend-pyramid.jpg"/>
@@ -79,9 +150,9 @@
 	  		showSniffs="true"
 	  		showWarnings="true"
 	  		allowedFileExtensions="php inc">
-			
+
 			<formatter type="default" usefile="false"/>
-			
+
 			<fileset dir=".">
             	<include name="**/*.php" />
             	<include name="**/*.inc" />
@@ -99,9 +170,8 @@
             	<exclude name="**/lib/**"/>
 				<exclude name="**/sample/**"/>
         	</fileset>
-        	
+
         	<formatter type="html" outfile="./docs/pmd/pmd.html"/>
         </phpmd>
-    </target>
-	
+    </target> -->
 </project>
