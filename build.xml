@@ -1,177 +1,121 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="AlphaFramework" default="generatedocs" basedir=".">
+<project name="AlphaFramework" default="init" basedir=".">
 
-	<target name="buildAlphaReleaseArtifact" depends="prepare">
+  	<!-- Creates a new release of the Alpha Framework -->
+    <target name="releaseAlpha" depends="init, moveOldDocs, generateDocs">
 
-		<svnexport
-		   svnpath="/usr/bin/svn"
-		   username="${svn.username}"
-		   password="${svn.password}"
-		   force="true"
-		   nocache="true"
-		   repositoryurl="${svn.repo.url}"
-		   todir="${build.dir}"/>
+        <exec command="svn add docs/api/current" />
 
-		<zip destfile="${build.dir}/alpha-${alpha.version}.zip">
-			<fileset dir="${build.dir}">
-				<include name="**/**"/>
-			</fileset>
-		</zip>
+        <version releasetype="${releasetype}" file="VERSION.txt" property="alpha.version.new" />
+    	<echo message="New version number is ${alpha.version.new}" />
 
-	</target>
+        <svncommit
+            svnpath="/usr/bin/svn"
+            username="${svn.username}"
+            password="${svn.password}"
+            nocache="true"
+            workingcopy="."
+            message="Added new API docs to docs/api/current and updated the VERSION.txt value to ${alpha.version.new}" />
 
-	<target name="init">
-        <if>
-            <not><isset property="propfile"/></not>
-                <then>
-                    <fail message="No properties file specified.  Try again with 'phing -Dpropfile=/path/to/build.*.properties -Dreleasetype=Major|Minor|Bugfix'"/>
-                </then>
-            <else>
-                <echo message="Using properties file ${propfile}"/>
-                <property file="${propfile}"/>
-            </else>
-        </if>
-        <if>
-            <not><isset property="releasetype"/></not>
-                <then>
-                    <fail message="No releasetype specified.  Try again with 'phing -Dpropfile=/path/to/build.*.properties -Dreleasetype=Major|Minor|Bugfix'"/>
-                </then>
-            <else>
-                <version releasetype="${releasetype}" file="VERSION.txt" property="alpha.version"/>
-                <echo  message="New version number is ${alpha.version}"  />
-            </else>
-        </if>
+        <svncopy
+           svnpath="/usr/bin/svn"
+           username="${svn.username}"
+           password="${svn.password}"
+           force="true"
+           nocache="true"
+           message="Creating the new tag tags/${alpha.version.new}"
+           repositoryurl="${svn.repo.url}/trunk"
+           todir="${svn.repo.url}/tags/${alpha.version.new}" />
+
+        <phingcall target="buildAlphaReleaseArtifact" />
+
     </target>
 
+  	<!-- Moves the latest API docs into a backup directory named to match the current version (VERSION.txt) -->
+    <target name="moveOldDocs">
+        <exec command="svn mv docs/api/current docs/api/${alpha.version.old}" />
+
+        <svncommit
+            svnpath="/usr/bin/svn"
+            username="${svn.username}"
+            password="${svn.password}"
+            nocache="true"
+            workingcopy="."
+            message="Moved the old API docs to docs/api/${alpha.version.old}" />
+
+    </target>
+
+  	<!-- Builds the version .zip file containing the Alpha Framework code -->
+  	<target name="buildAlphaReleaseArtifact" depends="clean">
+
+	    <svnexport
+	        svnpath="/usr/bin/svn"
+	        username="${svn.username}"
+	        password="${svn.password}"
+	        force="true"
+	        nocache="true"
+	        repositoryurl="${svn.repo.url}/trunk"
+	        todir="${build.dir}" />
+
+	    <mkdir dir="${artifacts.dir}" />
+
+	    <zip destfile="${artifacts.dir}/alpha-${alpha.version.new}.zip">
+	      	<fileset dir="${build.dir}">
+	        	<include name="**/**" />
+	      	</fileset>
+	    </zip>
+
+  	</target>
+
+  	<!-- Loads the properties file specified in the command line arguements -->
+  	<target name="init">
+	    <if>
+	      	<not><isset property="propfile"/></not>
+	      	<then>
+	        	<fail message="No properties file specified.  Try again with 'phing -Dpropfile=/path/to/build.*.properties -Dreleasetype=Major|Minor|Bugfix'" />
+	      	</then>
+	      	<else>
+	        	<echo message="Using properties file ${propfile}" />
+	        	<property file="${propfile}" />
+	      	</else>
+	    </if>
+
+	    <if>
+	      	<not><isset property="releasetype"/></not>
+	      	<then>
+	        	<fail message="No releasetype specified.  Try again with 'phing -Dpropfile=/path/to/build.*.properties -Dreleasetype=Major|Minor|Bugfix'" />
+	      	</then>
+	      	<else>
+	          	<loadfile property="alpha.version.old" file="VERSION.txt" />
+	           	<echo message="Old version number is ${alpha.version.old}" />
+	      	</else>
+	    </if>
+  	</target>
+
+	<!-- Cleans out the previous build folder -->
 	<target name="clean">
-		<echo msg="Cleaing out any previous build...."/>
-		<delete dir="${build.dir}"/>
+	    <echo msg="Cleaing out any previous build...." />
+	    <delete dir="${build.dir}" />
 	</target>
 
-	<target name="prepare" depends="init, clean">
-		<echo msg="Creating the build directory...."/>
-		<mkdir dir="${build.dir}"/>
-	</target>
+  	<!-- Generates new API docs for the Alpha Framework using ApiGen -->
+  	<target name="generateDocs">
 
-	<target name="generatedocs">
-		<apigen
-		  source="."
-		  destination="/home/john/apitest"
-		  exclude="*/.svn/*,*/lib/*"
-		  title="Alpha Framework API Documentation"
-		  deprecated="true"
-		  php="no"
-		  download="no"
-		  extensions="inc,php"
-		  accesslevels="public,private,protected"
-		  allowedhtml="b,i,a,ul,ol,li,p,br,var,samp,kbd,tt,pre"
-		  todo="false"/>
-	</target>
+	    <apigen
+	      source="."
+	      destination="docs/api/current"
+	      exclude="*/.svn/*,*/lib/*"
+	      title="Alpha Framework API Documentation"
+	      deprecated="true"
+	      php="no"
+	      download="no"
+	      extensions="inc,php"
+	      accesslevels="public,private,protected"
+	      allowedhtml="b,i,a,ul,ol,li,p,br,var,samp,kbd,tt,pre"
+	      todo="false" />
 
+  	</target>
 
-
-
-	<!-- TODO: everything below this line is open for review, see ticket #5
-
-	<property name="alpha-root" value="."/>
-	<property name="dist-version" value="1.1"/>
-	<property name="dist-target" value="alpha-${dist-version}"/>
-
-	<target name="dist" depends="clean">
-		<mkdir dir="${dist-target}"/>
-		<copy todir="${dist-target}/alpha">
-			<fileset dir="${alpha-root}">
-				<exclude name="**/*.svn"/>
-				<exclude name="**/*.project"/>
-				<exclude name="**/*.geshi"/>
-				<exclude name="**/sample/**"/>
-				<exclude name="**/alpha-1.*/**"/>
-				<exclude name="**/build.xml"/>
-				<exclude name="**/ruleset.xml"/>
-				<exclude name="**/docs/codesniff/**"/>
-				<exclude name="**/docs/ea/**"/>
-				<exclude name="**/docs/pmd/**"/>
-			</fileset>
-		</copy>
-		<copy todir="${dist-target}">
-			<fileset dir="${alpha-root}/sample">
-			</fileset>
-		</copy>
-		<zip destfile="${dist-target}/alpha-framework-${dist-version}.zip" includeemptydirs="true">
-			<fileset dir="${dist-target}">
-			</fileset>
-		</zip>
-	</target>
-
-	<target name="clean">
-		<delete dir="${dist-target}"/>
-	</target>
-
-    <target name="apidocs" description="Builds the API HTML docs.">
-		<phpdoc title="Alpha Framework API Documentation"
-	  		destdir="./docs/api"
-	  		sourcecode="true"
-	  		undocumentedelements="true"
-	  		output="HTML:Smarty:HandS">
-
-	   		<fileset dir=".">
-	      		<include name="**/*.php" />
-	      		<include name="**/*.inc" />
-	      		<exclude name="**/lib/**"/>
-	   			<exclude name="**/sample/**"/>
-	   			<exclude name="**/alpha-1.*/**"/>
-	      		<exclude name="**/*.css.php"/>
-	      		<exclude name="**/*.tbl.php"/>
-	      		<exclude name="**/*.tbl.php.html"/>
-	      		<exclude name="**/*.phtml"/>
-	   		</fileset>
-		</phpdoc>
-    </target>
-
-    <target name="depends" description="Checks dependancies.">
-		<phpdepend>
-	   		<fileset dir=".">
-            	<include name="**/*.php" />
-              	<include name="**/*.inc" />
-              	<exclude name="**/lib/**"/>
-           	</fileset>
-
-	   		<logger type="jdepend-xml" outfile="docs/depends/jdepend.xml"/>
-	   		<logger type="jdepend-chart" outfile="docs/depends/jdepend.jpg"/>
-	   		<logger type="overview-pyramid" outfile="docs/depends/jdepend-pyramid.jpg"/>
-	   		<analyzer type="coderank-mode" value="method"/>
-	 	</phpdepend>
-	</target>
-
-	<target name="codesniff" description="Checks the code for cleaniness.">
-		<phpcodesniffer
-	  		standard="ruleset.xml"
-	  		showSniffs="true"
-	  		showWarnings="true"
-	  		allowedFileExtensions="php inc">
-
-			<formatter type="default" usefile="false"/>
-
-			<fileset dir=".">
-            	<include name="**/*.php" />
-            	<include name="**/*.inc" />
-            	<exclude name="**/lib/**"/>
-				<exclude name="**/sample/**"/>
-         	</fileset>
-		</phpcodesniffer>
-    </target>
-
-    <target name="pmd" description="Project mess detector.">
-        <phpmd>
-			<fileset dir=".">
-            	<include name="**/*.php" />
-            	<include name="**/*.inc" />
-            	<exclude name="**/lib/**"/>
-				<exclude name="**/sample/**"/>
-        	</fileset>
-
-        	<formatter type="html" outfile="./docs/pmd/pmd.html"/>
-        </phpmd>
-    </target> -->
 </project>
