@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="AlphaFramework" default="init" basedir=".">
@@ -94,6 +93,24 @@
 	    </if>
   	</target>
 
+  	<!-- Loads the properties file specified in the command line arguements -->
+  	<target name="deployInit">
+	    <if>
+	      	<not><isset property="propfile"/></not>
+	      	<then>
+	        	<fail message="No properties file specified.  Try again with 'phing -Dpropfile=/path/to/build.*.properties'" />
+	      	</then>
+	      	<else>
+	        	<echo message="Using properties file ${propfile}" />
+	        	<property file="${propfile}" />
+	      	</else>
+	    </if>
+
+	    <loadfile property="app.version" file="../VERSION.txt" />
+	    <echo message="App version number is ${app.version}" />
+
+  	</target>
+
 	<!-- Cleans out the previous build folder -->
 	<target name="clean">
 	    <echo msg="Cleaing out any previous build...." />
@@ -117,5 +134,45 @@
 	      todo="false" />
 
   	</target>
+
+  	<!-- deploys the source to the target server(s) -->
+    <target name="appDeploy" depends="deployInit, clean">
+
+    	<mkdir dir="${build.dir}" />
+
+        <tar destfile="${build.dir}/release.${app.version}.tar.gz" compression="gzip">
+            <fileset dir="../">
+                <exclude name="**/.svn/**" />
+            </fileset>
+        </tar>
+
+        <phingcall target="appDeployRemote" />
+
+    </target>
+
+    <!-- deploys the bundled .tar.gz to the target server -->
+    <target  name="appDeployRemote">
+
+        <echo  msg="Deploying to server: (${target.server})"  />
+
+        <!-- Create the target dir on the remote server -->
+        <ssh username="${target.server.user}" password="${target.server.password}" host="${target.server}" port="${target.server.port}" command="mkdir ${target.server.dest.dir}/${app.version}" />
+
+        <!-- Copy up the .tar.gz into the target dir on the remote server -->
+        <scp username="${target.server.user}" password="${target.server.password}" host="${target.server}" port="${target.server.port}" todir="${target.server.dest.dir}/${app.version}" file="${build.dir}/release.${app.version}.tar.gz"/>
+
+        <!-- Un-tar the remote .tar.gz file -->
+        <ssh username="${target.server.user}" password="${target.server.password}" host="${target.server}" port="${target.server.port}" command="tar -C ${target.server.dest.dir}/${app.version} -zxvf ${target.server.dest.dir}/${app.version}/release.${app.version}.tar.gz > /dev/null" />
+
+        <!-- Remove the remote .tar.gz file -->
+        <ssh username="${target.server.user}" password="${target.server.password}" host="${target.server}" port="${target.server.port}" command="rm -f ${target.server.dest.dir}/${app.version}/release.${app.version}.tar.gz" />
+
+        <!-- Change group ownership on the extracted files to nginx -->
+        <ssh username="${target.server.user}" password="${target.server.password}" host="${target.server}" port="${target.server.port}" command="chgrp -R apache ${target.server.dest.dir}/${app.version}"  />
+
+        <!-- Point the /var/www/current symlink to the new version -->
+        <ssh username="${target.server.user}" password="${target.server.password}" host="${target.server}"  port="${target.server.port}" command="rm -f /var/www/current; ln -s ${target.server.dest.dir}/${app.version} /var/www/current" />
+
+    </target>
 
 </project>
