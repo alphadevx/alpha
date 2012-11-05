@@ -205,16 +205,21 @@ class AlphaConfig {
 		$serverIni = $rootPath.'config/servers.ini';
 
 		if(file_exists($serverIni)) {
-			$envs = parse_ini_file($serverIni);
+            $envs = parse_ini_file($serverIni);
+            $environment = '';
 
-			if(in_array($server, $envs)) {
-				$environment = array_search($server, $envs);
-			}else{
-				die('No environment configured for the server '.$server);
-			}
-		}else{
-			die('Failed to load the config file ['.$serverIni.']');
-		}
+            foreach ($envs as $env => $serversList) {
+            	$servers = explode(',', $serversList);
+
+            	if(in_array($server, $servers))
+            		$environment = $env;
+            }
+
+            if($environment == '')
+                die('No environment configured for the server '.$server);
+        }else{
+            die('Failed to load the config file ['.$serverIni.']');
+        }
 
 		if(substr($environment, -3) == 'CLI') // CLI mode
 			$envIni = $rootPath.'config/'.substr($environment, 0, 3).'.ini';
