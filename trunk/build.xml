@@ -111,11 +111,11 @@
 
   	</target>
 
-	<!-- Cleans out the previous build folder -->
-	<target name="clean">
+	  <!-- Cleans out the previous build folder -->
+	  <target name="clean">
 	    <echo msg="Cleaing out any previous build...." />
 	    <delete dir="${build.dir}" />
-	</target>
+	  </target>
 
   	<!-- Generates new API docs for the Alpha Framework using ApiGen -->
   	<target name="generateDocs">
@@ -125,6 +125,7 @@
 	      destination="docs/api/current"
 	      exclude="*/.svn/*,*/lib/*"
 	      title="Alpha Framework API Documentation"
+        templateconfig="docs/apigen-template/config.neon"
 	      deprecated="true"
 	      php="no"
 	      download="no"
