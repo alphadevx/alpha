@@ -8,7 +8,7 @@
         <exec command="svn add docs/api/current" />
 
         <version releasetype="${releasetype}" file="VERSION.txt" property="alpha.version.new" />
-    	<echo message="New version number is ${alpha.version.new}" />
+    	  <echo message="New version number is ${alpha.version.new}" />
 
         <svncommit
             svnpath="/usr/bin/svn"
@@ -24,9 +24,9 @@
            password="${svn.password}"
            force="true"
            nocache="true"
-           message="Creating the new tag tags/${alpha.version.new}"
+           message="Creating the new tag tags/alpha-${alpha.version.new}"
            repositoryurl="${svn.repo.url}/trunk"
-           todir="${svn.repo.url}/tags/${alpha.version.new}" />
+           todir="${svn.repo.url}/tags/alpha-${alpha.version.new}" />
 
         <phingcall target="buildAlphaReleaseArtifact" />
 
