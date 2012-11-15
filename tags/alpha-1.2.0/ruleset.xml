@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<ruleset name="Alpha">
+	<description>A custom coding standard for Alpha</description>
+
+	<exclude-pattern>*/docs/*</exclude-pattern>
+	<exclude-pattern>*/lib/*</exclude-pattern>
+
+	<rule ref="Generic.Classes.DuplicateClassName"/>
+	<rule ref="Generic.CodeAnalysis.EmptyStatement"/>
+	<rule ref="Generic.CodeAnalysis.ForLoopShouldBeWhileLoop"/>
+	<rule ref="Generic.CodeAnalysis.ForLoopWithTestFunctionCall"/>
+	<rule ref="Generic.CodeAnalysis.JumbledIncrementer"/>
+	<rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
+	<rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier"/>
+	<rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+	<rule ref="Generic.CodeAnalysis.UselessOverridingMethod"/>
+	<rule ref="Generic.Commenting.Todo"/>
+	<rule ref="Generic.Formatting.DisallowMultipleStatements"/>
+	<rule ref="Generic.Formatting.NoSpaceAfterCast"/>
+	<rule ref="Generic.Files.LineLength">
+		<properties>
+        	<property name="lineLimit" value="160"/>
+            <property name="absoluteLineLimit" value="165"/>
+        </properties>
+	</rule>
+	<rule ref="Generic.Functions.CallTimePassByReference"/>
+	<rule ref="Generic.Functions.FunctionCallArgumentSpacing"/>
+	<rule ref="Generic.Functions.OpeningFunctionBraceKernighanRitchie"/>
+	<rule ref="Generic.Metrics.NestingLevel"/>
+	<rule ref="Generic.Metrics.CyclomaticComplexity">
+    	<properties>
+        	<property name="complexity" value="20"/>
+        </properties>
+	</rule>
+	<rule ref="Generic.NamingConventions.ConstructorName"/>
+	<rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
+	<rule ref="Generic.PHP.ForbiddenFunctions"/>
+	<rule ref="Generic.PHP.NoSilencedErrors"/>
+	<rule ref="Generic.Strings.UnnecessaryStringConcat"/>
+	
+	<rule ref="Squiz">
+		<exclude name="Squiz.PHP.Eval"/>
+		<exclude name="Squiz.CSS.ClassDefinitionClosingBraceSpace"/>
+		<exclude name="Squiz.CSS.ClassDefinitionNameSpacing"/>
+		<exclude name="Squiz.CSS.ClassDefinitionClosingBraceSpace"/>
+		<exclude name="Squiz.CSS.ClassDefinitionOpeningBraceSpace"/>
+		<exclude name="Squiz.CSS.ColonSpacing"/>
+		<exclude name="Squiz.CSS.ColourDefinition"/>
+		<exclude name="Squiz.CSS.DisallowMultipleStyleDefinitions"/>
+		<exclude name="Squiz.CSS.DuplicateClassDefinition"/>
+		<exclude name="Squiz.CSS.DuplicateStyleDefinition"/>
+		<exclude name="Squiz.CSS.EmptyClassDefinition"/>
+		<exclude name="Squiz.CSS.EmptyStyleDefinition"/>
+		<exclude name="Squiz.CSS.Indentation"/>
+		<exclude name="Squiz.CSS.LowercaseStyleDefinition"/>
+		<exclude name="Squiz.CSS.MissingColon"/>
+		<exclude name="Squiz.CSS.Opacity"/>
+		<exclude name="Squiz.CSS.SemicolonSpacing"/>
+		<exclude name="Squiz.Commenting.LongConditionClosingComment"/>
+		<exclude name="Squiz.Commenting.ClassComment"/>
+	</rule>
+
+	<rule ref="Internal.NoCodeFound">
+		<severity>0</severity>
+	</rule>
+	
+</ruleset>
