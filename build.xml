@@ -22,7 +22,6 @@
            svnpath="/usr/bin/svn"
            username="${svn.username}"
            password="${svn.password}"
-           force="true"
            nocache="true"
            message="Creating the new tag tags/alpha-${alpha.version.new}"
            repositoryurl="${svn.repo.url}/trunk"
