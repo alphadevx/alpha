@@ -558,6 +558,36 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
         $this->assertTrue(AlphaController::checkControllerDefExists('Search'), 'Testing that a good controller classname returns true');
         $this->assertFalse(AlphaController::checkControllerDefExists('DoesNotExist'), 'Testing that a bad controller classname returns false');
     }
+
+    /**
+     * Testing the checkIfAccessingFromSecureURL method with good and bad input
+     *
+     * @since 1.2.1
+     */
+    public function testCheckIfAccessingFromSecureURL() {
+
+        global $config;
+
+        $oldToken = $_GET['tk'];
+        $oldRequestURI = $_SERVER['REQUEST_URI'];
+
+        $_GET['tk'] = null;
+        $_SERVER['REQUEST_URI'] = '/search';
+
+        $this->assertFalse(AlphaController::checkIfAccessingFromSecureURL(), 'Testing that the false is returned when tk is unavailable');
+
+        $_GET['tk'] = '8kqoeebEej0V-FN5-DOdA1HBDDieFcNWTib2yLSUNjq0B0FWzAupIA==';
+
+        $this->assertTrue(AlphaController::checkIfAccessingFromSecureURL(), 'Testing that the true is returned when tk is set in global _GET array');
+
+        $_GET['tk'] = null;
+        $_SERVER['REQUEST_URI'] = $config->get('app.url').'tk/8kqoeebEej0V-FN5-DOdA1HBDDieFcNWTib2yLSUNjq0B0FWzAupIA==';
+
+        $this->assertTrue(AlphaController::checkIfAccessingFromSecureURL(), 'Testing that the true is returned when tk is part of the mod_rewrite style URL');
+
+        $_GET['tk'] = $oldToken;
+        $_SERVER['REQUEST_URI'] = $oldRequestURI;
+    }
 }
 
 ?>
