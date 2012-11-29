@@ -865,17 +865,19 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		self::$logger->debug('>>saveAttribute(attribute=['.$attribute.'], value=['.$value.'])');
 
 		// assume that it is a persistent object that needs to be updated
-		$sqlQuery = 'UPDATE '.$this->BO->getTableName().' SET '.$attribute.'=? WHERE OID=?;';
+		$sqlQuery = 'UPDATE '.$this->BO->getTableName().' SET '.$attribute.'=?, version_num = ? WHERE OID=?;';
 
 		$this->BO->setLastQuery($sqlQuery);
 		$stmt = self::getConnection()->stmt_init();
+
+		$newVersionNumber = $this->BO->getVersionNumber()->getValue()+1;
 
 		if($stmt->prepare($sqlQuery)) {
 			if($this->BO->getPropObject($attribute) instanceof Integer)
 				$bindingsType = 'i';
 			else
 				$bindingsType = 's';
-			$stmt->bind_param($bindingsType.'i', $value, $this->BO->getOID());
+			$stmt->bind_param($bindingsType.'ii', $value, $newVersionNumber, $this->BO->getOID());
 			self::$logger->debug('Binding params ['.$bindingsType.'i, '.$value.', '.$this->BO->getOID().']');
 			$stmt->execute();
 		}else{
@@ -884,7 +886,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 
 		$stmt->close();
 
-		$this->{$attribute} = $value;
+		$this->BO->set($attribute, $value);
+		$this->BO->set('version_num', $newVersionNumber);
 
 		if($this->BO->getMaintainHistory())
 			$this->BO->saveHistory();

@@ -902,10 +902,12 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		self::$logger->debug('>>saveAttribute(attribute=['.$attribute.'], value=['.$value.'])');
 
 		// assume that it is a persistent object that needs to be updated
-		$sqlQuery = 'UPDATE '.$this->BO->getTableName().' SET '.$attribute.'=:attribute WHERE OID=:OID;';
+		$sqlQuery = 'UPDATE '.$this->BO->getTableName().' SET '.$attribute.'=:attribute, version_num =:version WHERE OID=:OID;';
 
 		$this->BO->setLastQuery($sqlQuery);
 		$stmt = self::getConnection()->prepare($sqlQuery);
+
+		$newVersionNumber = $this->BO->getVersionNumber()->getValue()+1;
 
 		if($stmt instanceof SQLite3Stmt) {
 			if($this->BO->getPropObject($attribute) instanceof Integer)
@@ -913,6 +915,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			else
 				$stmt->bindValue(':attribute', $value, SQLITE3_TEXT);
 
+			$stmt->bindValue(':version', $newVersionNumber, SQLITE3_INTEGER);
 			$stmt->bindValue(':OID', $this->BO->getOID(), SQLITE3_INTEGER);
 
 			$stmt->execute();
@@ -922,7 +925,8 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
 		$stmt->close();
 
-		$this->{$attribute} = $value;
+		$this->BO->set($attribute, $value);
+		$this->BO->set('version_num', $newVersionNumber);
 
 		if($this->BO->getMaintainHistory())
 			$this->BO->saveHistory();

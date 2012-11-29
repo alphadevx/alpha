@@ -142,11 +142,11 @@ abstract class AlphaDAO {
 	private static $logger = null;
 
 	/**
-         * Determines if we will maintain a _history table for this DAO (default is false).
-         *
-         * @var boolean
-         * @since 1.2
-         */
+     * Determines if we will maintain a _history table for this DAO (default is false).
+     *
+     * @var boolean
+     * @since 1.2
+     */
 	private $maintainHistory = false;
 
 	/**
@@ -498,8 +498,6 @@ abstract class AlphaDAO {
 
 		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$provider->saveAttribute($attribute, $value);
-
-		$this->set($attribute, $value);
 
 		if($config->get('cache.provider.name') != '')
 			$this->removeFromCache();

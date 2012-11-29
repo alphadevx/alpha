@@ -752,6 +752,29 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
         $this->person->rebuildTable(); // this should result in the _history table being created
 
         $this->assertTrue($this->person->checkTableExists(true), 'Testing to ensure that a history table was created automatically');
+
+        $this->person->dropTable('Person_history');
+    }
+
+    /**
+     * Testing that the saveHistory() method is automatically invoked when it should be
+     *
+     * @since 1.2.1
+     */
+    public function testSaveHistory() {
+        $this->person->setMaintainHistory(true);
+        $this->person->rebuildTable(); // this should result in the _history table being created
+
+        $this->person->set('password', 'passwordhist1');
+        $this->person->save();
+
+        $this->assertEquals(1, $this->person->getHistoryCount(), 'Testing that a normal save is propegated to the history table for this class');
+$this->person->setMaintainHistory(true);
+        $this->person->saveAttribute('password', 'passwordhist2');
+
+        $this->assertEquals(2, $this->person->getHistoryCount(), 'Testing that an attribute save is propegated to the history table for this class');
+
+        $this->person->dropTable('Person_history');
     }
 }
 
