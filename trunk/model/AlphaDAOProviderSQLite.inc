@@ -173,8 +173,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
-				if($this->BO->getMaintainHistory())
-					$this->BO->makeHistoryTable();
+
 				throw new BONotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->BO->getTableName().'] did not exist so had to create!');
 			}
 			return;
@@ -290,8 +289,6 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
 
-				if($this->BO->getMaintainHistory())
-                	$this->BO->makeHistoryTable();
 				throw new BONotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table did not exist so had to create!');
 			}
 			return;
@@ -494,8 +491,6 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
-				if($this->BO->getMaintainHistory())
-                	$this->BO->makeHistoryTable();
 
 				throw new BONotFoundException('Failed to load objects by attribute ['.$attribute.'] and value ['.$value.'], table did not exist so had to create!');
 			}
@@ -565,8 +560,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
-				if($this->BO->getMaintainHistory())
-                                        $this->BO->makeHistoryTable();
+
 				throw new BONotFoundException('Failed to load objects by attributes ['.var_export($attributes, true).'] and values ['.
 					var_export($values, true).'], table did not exist so had to create!');
 			}
@@ -1053,8 +1047,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
-				if($this->BO->getMaintainHistory())
-                                        $this->BO->makeHistoryTable();
+
 				throw new BONotFoundException('Failed to get the version number, table did not exist so had to create!');
 			}
 			return;
@@ -1165,7 +1158,10 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		}
 
 		// check the table indexes if any additional ones required
-		//$this->checkIndexes();
+		$this->checkIndexes();
+
+		if($this->BO->getMaintainHistory())
+			$this->BO->makeHistoryTable();
 
 		self::$logger->debug('<<makeTable');
 	}
