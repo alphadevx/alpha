@@ -2,53 +2,53 @@
 
 /**
  * A utility class for carrying out various file system tasks
- * 
+ *
  * @package alpha::util
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
  * All rights reserved.
- * 
+ *
  * <pre>
- * Redistribution and use in source and binary forms, with or 
- * without modification, are permitted provided that the 
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are permitted provided that the
  * following conditions are met:
- * 
- * * Redistributions of source code must retain the above 
- *   copyright notice, this list of conditions and the 
+ *
+ * * Redistributions of source code must retain the above
+ *   copyright notice, this list of conditions and the
  *   following disclaimer.
- * * Redistributions in binary form must reproduce the above 
- *   copyright notice, this list of conditions and the 
- *   following disclaimer in the documentation and/or other 
+ * * Redistributions in binary form must reproduce the above
+ *   copyright notice, this list of conditions and the
+ *   following disclaimer in the documentation and/or other
  *   materials provided with the distribution.
- * * Neither the name of the Alpha Framework nor the names 
- *   of its contributors may be used to endorse or promote 
- *   products derived from this software without specific 
+ * * Neither the name of the Alpha Framework nor the names
+ *   of its contributors may be used to endorse or promote
+ *   products derived from this software without specific
  *   prior written permission.
- *   
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
- * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
- * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *  
+ *
  */
 class AlphaFileUtils {
 
 	/**
 	 * A hash array for mapping file extensions to MIME types.
-	 * 
+	 *
 	 * @var array
 	 * @since 1.0
 	 */
@@ -508,7 +508,7 @@ class AlphaFileUtils {
 
 	/**
 	 * Method that allows you to determine a MIME type for a file which you provide the extension for.
-	 * 
+	 *
 	 * @param string $ext The file extension.
 	 * @return string
 	 * @throws IllegalArguementException
@@ -522,62 +522,68 @@ class AlphaFileUtils {
 
 		return AlphaFileUtils::$extensionToMIMEMappings[$ext];
 	}
-	
+
 	/**
 	 * Renders the contents of the directory as a HTML list.
-	 * 
+	 *
 	 * @param string $sourceDir The path to the source directory.
 	 * @param integer $fileCount The current file count (used in recursive calls).
+	 * @param array $excludeFiles An array of file names to exclude from the list rendered.
 	 * @return integer The current filecount for the directory.
 	 * @throws AlphaException
 	 * @since 1.0
 	 */
-	public static function listDirectoryContents($sourceDir, $fileCount=0) {
+	public static function listDirectoryContents($sourceDir, $fileCount=0, $excludeFiles = array()) {
 		try
 		{
 		    $dir = new DirectoryIterator($sourceDir);
 		    $fileCount = 0;
-		    
+
 			echo '<ul>';
 		    foreach ($dir as $file) {
-		    	if($file->isDir() && !$file->isDot()) {
-		      		echo '<li><em>'.$file->getPathname().'</em></li>';
-		      		$fileCount += AlphaFileUtils::listDirectoryContents($file->getPathname(), $fileCount);
-		      	}elseif(!$file->isDot()){
-			        $fileName = $file->getFilename();
-			        $fileCount++;
-			        echo '<li>'.$fileName.'</li>';
-		      	}		      	
+		    	if(!in_array($file->getFilename(), $excludeFiles)) {
+			    	if($file->isDir() && !$file->isDot()) {
+			      		echo '<li><em>'.$file->getPathname().'</em></li>';
+			      		$fileCount += AlphaFileUtils::listDirectoryContents($file->getPathname(), $fileCount, $excludeFiles);
+			      	}elseif(!$file->isDot()){
+				        $fileName = $file->getFilename();
+				        $fileCount++;
+				        echo '<li>'.$fileName.'</li>';
+			      	}
+			    }
 		    }
 			echo '</ul>';
-			
-			return $fileCount;			
+
+			return $fileCount;
 		}catch (Exception $e) {
 			throw new AlphaException('Failed list files in the ['.$sourceDir.'] directory, error is ['.$e->getMessage().']');
 		}
 	}
-	
+
 	/**
 	 * Recursively deletes the contents of the directory indicated.
-	 * 
+	 *
 	 * @param string $sourceDir The path to the source directory.
+	 * @param array $excludeFiles An array of file names to exclude from the deletion.
 	 * @throws AlphaException
-	 * @since 1.0	
+	 * @since 1.0
 	 */
-	public static function deleteDirectoryContents($sourceDir) {
-				
+	public static function deleteDirectoryContents($sourceDir, $excludeFiles = array()) {
+
 		try	{
-		    $dir = new DirectoryIterator($sourceDir);	    
-			
+		    $dir = new DirectoryIterator($sourceDir);
+
 		    foreach ($dir as $file) {
-		    	if($file->isDir() && !$file->isDot()) {
-		    		if(count(scandir($file->getPathname())) == 2) // remove an emtpy directory
-		    			rmdir($file->getPathname());
-		    		else
-		      			AlphaFileUtils::deleteDirectoryContents($file->getPathname());
-		      	}elseif(!$file->isDot()){
-			        unlink($file->getPathname());
-		      	}		      	
+		    	if(!in_array($file->getFilename(), $excludeFiles)) {
+			    	if($file->isDir() && !$file->isDot()) {
+			    		if(count(scandir($file->getPathname())) == 2) // remove an empty directory
+			    			rmdir($file->getPathname());
+			    		else
+			      			AlphaFileUtils::deleteDirectoryContents($file->getPathname(), $excludeFiles);
+			      	}elseif(!$file->isDot()){
+				        unlink($file->getPathname());
+			      	}
+			    }
 		    }
 		}catch (Exception $e) {
 			throw new AlphaException('Failed to delete files files in the ['.$sourceDir.'] directory, error is ['.$e->getMessage().']');
@@ -586,43 +592,43 @@ class AlphaFileUtils {
 
 	/**
 	 * Recursively copies the indicated folder, or single file, to the desintation location
-	 * 
+	 *
 	 * @param string $source The path to the source directory or file.
 	 * @param string $dest The destination source directory or file.
 	 * @throws AlphaException
 	 * @since 1.1
 	 */
 	public static function copy($source, $dest) {
-		
+
 		if (is_file($source)) {
 			if(!copy($source, $dest))
 				throw new AlphaException("Error copying the file [$source] to [$dest].");
 			return;
 		}
- 
+
 		// Make destination directory if it does not already exist
 		if (!file_exists($dest) && !is_dir($dest)) {
 			if(!mkdir($dest))
 				throw new AlphaException("Error creating the destination directory [$dest].");
 		}
- 
+
 		$dir = dir($source);
 		while (false !== $entry = $dir->read()) {
 			if ($entry == '.' || $entry == '..') {
 				continue;
 			}
-	 
+
 			if ($dest !== "$source/$entry") {
 				self::copy("$source/$entry", "$dest/$entry");
 			}
 		}
- 
+
 		$dir->close();
 	}
 
 	/**
 	 * Recursively compresses the contens of the source directory indicated to the desintation zip archive
-	 * 
+	 *
 	 * @param string $source The path to the source directory or file.
 	 * @param string $dest The destination zip file file.
 	 * @throws AlphaException
