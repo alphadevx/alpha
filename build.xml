@@ -123,7 +123,7 @@
 	      source="."
 	      destination="docs/api/current"
 	      exclude="*/.svn/*,*/lib/*"
-	      title="Alpha Framework API Documentation"
+	      title="Alpha Framework ${alpha.version.new} API Documentation"
         templateconfig="docs/apigen-template/config.neon"
 	      deprecated="true"
 	      php="no"
