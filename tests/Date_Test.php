@@ -136,7 +136,7 @@ class Date_Test extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * Testing the populate_from_string method
+     * Testing the populateFromString method
      *
      * @since 1.0
      */
@@ -144,6 +144,33 @@ class Date_Test extends PHPUnit_Framework_TestCase {
     	$this->date1->populateFromString("2007-08-13");
 
     	$this->assertEquals("2007-08-13", $this->date1->getValue(), "testing the populateFromString method");
+
+        try {
+            $this->date1->populateFromString("2007-08-40");
+            $this->fail("testing the populateFromString method with a bad date value");
+        }catch (AlphaException $e) {
+            $this->assertEquals('Error: the date value 2007-08-40 provided is invalid!'
+                , $e->getMessage()
+                , "testing the populateFromString method with a bad date value");
+        }
+
+        try {
+            $this->date1->populateFromString("2007-08-aa");
+            $this->fail("testing the populateFromString method with a bad date value");
+        }catch (AlphaException $e) {
+            $this->assertEquals('Error: the day value aa provided is invalid!'
+                , $e->getMessage()
+                , "testing the populateFromString method with a bad date value");
+        }
+
+        try {
+            $this->date1->populateFromString("bad");
+            $this->fail("testing the populateFromString method with a bad date value");
+        }catch (AlphaException $e) {
+            $this->assertEquals('Invalid Date value [bad] provided!'
+                , $e->getMessage()
+                , "testing the populateFromString method with a bad date value");
+        }
     }
 
     /**

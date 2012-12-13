@@ -291,7 +291,7 @@ class Date extends AlphaType implements AlphaTypeInterface {
 	 		if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $day))
 	 			$valid = 'Error: the day value '.$day.' provided is invalid!';
 	 		if (!isset($valid) && !checkdate($month, $day, $year))
-	 			$valid = 'Error: the day value '.$year.'/'.$month.'/'.$day.' provided is invalid!';
+	 			$valid = 'Error: the date value '.$year.'-'.$month.'-'.$day.' provided is invalid!';
 
 	 		if (isset($valid)){
 	 			throw new IllegalArguementException($valid);
