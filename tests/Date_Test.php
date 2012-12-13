@@ -161,12 +161,12 @@ class Date_Test extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * Testing the get_euro_value method for converting to European date format
+     * Testing the getEuroValue method for converting to European date format
      *
      * @since 1.0
      */
     public function testGetEuroValue() {
-    	$this->assertEquals(date("d/m/y"), $this->date1->getEuroValue(), "testing the get_euro_value method for converting to European date format");
+    	$this->assertEquals(date("d/m/y"), $this->date1->getEuroValue(), "testing the getEuroValue method for converting to European date format");
     }
 
     /**
@@ -187,6 +187,15 @@ class Date_Test extends PHPUnit_Framework_TestCase {
         $date = new Date('2012-12-10');
 
         $this->assertEquals('1355097600', $date->getUnixValue(), 'testing the getUnixValue() method');
+    }
+
+    /**
+     * Testing the getUSValue method for converting to European date format
+     *
+     * @since 1.2.1
+     */
+    public function testGetUSValue() {
+        $this->assertEquals(date("m/d/y"), $this->date1->getUSValue(), "testing the getUSValue method for converting to US date format");
     }
 }
 
