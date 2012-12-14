@@ -769,12 +769,22 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
         $this->person->save();
 
         $this->assertEquals(1, $this->person->getHistoryCount(), 'Testing that a normal save is propegated to the history table for this class');
-$this->person->setMaintainHistory(true);
+        $this->person->setMaintainHistory(true);
         $this->person->saveAttribute('password', 'passwordhist2');
 
         $this->assertEquals(2, $this->person->getHistoryCount(), 'Testing that an attribute save is propegated to the history table for this class');
 
         $this->person->dropTable('Person_history');
+    }
+
+    /**
+     * Testing the hasAttribute method
+     *
+     * @since 1.2.1
+     */
+    public function testHasAttribute() {
+        $this->assertTrue($this->person->hasAttribute('password'), 'testing the hasAttribute method for true');
+        $this->assertFalse($this->person->hasAttribute('doesnotexist'), 'testing the hasAttribute method for false');
     }
 }
 
