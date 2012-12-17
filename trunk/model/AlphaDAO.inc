@@ -464,8 +464,10 @@ abstract class AlphaDAO {
 			$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 			$provider->save();
 
-			if($config->get('cache.provider.name') != '')
+			if($config->get('cache.provider.name') != '') {
 				$this->removeFromCache();
+				$this->addToCache();
+			}
 
 			if(method_exists($this, 'after_save_callback'))
 				$this->after_save_callback();
@@ -499,8 +501,10 @@ abstract class AlphaDAO {
 		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
 		$provider->saveAttribute($attribute, $value);
 
-		if($config->get('cache.provider.name') != '')
+		if($config->get('cache.provider.name') != '') {
 			$this->removeFromCache();
+			$this->addToCache();
+		}
 
 		if(method_exists($this, 'after_saveAttribute_callback'))
 			$this->after_saveAttribute_callback();
@@ -2064,7 +2068,7 @@ abstract class AlphaDAO {
 	 *
 	 * @since 1.1
 	 */
-        public function addToCache() {
+    public function addToCache() {
 		self::$logger->debug('>>addToCache()');
       	global $config;
 
@@ -2128,7 +2132,7 @@ abstract class AlphaDAO {
 
 					// filter transient attributes
 					if(!in_array($propName, $this->transientAttributes)) {
-						$this->set($propName, $BO->get($propName));
+						$this->set($propName, $BO->get($propName, true));
 					}elseif(!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {
 						$prop = $this->getPropObject($propName);
 

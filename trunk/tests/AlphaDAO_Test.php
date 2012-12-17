@@ -786,6 +786,28 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
         $this->assertTrue($this->person->hasAttribute('password'), 'testing the hasAttribute method for true');
         $this->assertFalse($this->person->hasAttribute('doesnotexist'), 'testing the hasAttribute method for false');
     }
+
+    /**
+     * Testing that a saved record is subsequently retrievable from the cache
+     *
+     * @since 1.2.1
+     */
+    public function testLoadFromCache() {
+
+        global $config;
+        $oldSetting = $config->get('cache.provider.name');
+        $config->set('cache.provider.name', 'AlphaCacheProviderArray');
+
+        $this->person->save();
+
+        $fromCache = new PersonObject();
+        $fromCache->setOID($this->person->getOID());
+
+        $this->assertTrue($fromCache->loadFromCache(), 'testing that the item loads from the cache');
+        $this->assertEquals('unitTestUser', $fromCache->get('displayName', true), 'testing that a saved record is subsequently retrievable from the cache');
+
+        $config->set('cache.provider.name', $oldSetting);
+    }
 }
 
 ?>
