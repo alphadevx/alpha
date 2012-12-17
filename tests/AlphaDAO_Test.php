@@ -808,6 +808,31 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
 
         $config->set('cache.provider.name', $oldSetting);
     }
+
+    /**
+     * Testing the removeFromCache method
+     *
+     * @since 1.2.1
+     */
+    public function testRemoveFromCache() {
+
+        global $config;
+        $oldSetting = $config->get('cache.provider.name');
+        $config->set('cache.provider.name', 'AlphaCacheProviderArray');
+
+        $this->person->save();
+
+        $fromCache = new PersonObject();
+        $fromCache->setOID($this->person->getOID());
+
+        $this->assertTrue($fromCache->loadFromCache(), 'testing that the item loads from the cache');
+
+        $fromCache->removeFromCache();
+
+        $this->assertFalse($fromCache->loadFromCache(), 'testing that the item is gone from the cache');
+
+        $config->set('cache.provider.name', $oldSetting);
+    }
 }
 
 ?>
