@@ -3,70 +3,70 @@
 /**
  *
  * Test case for the Relation data type
- * 
+ *
  * @package alpha::tests
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
  * All rights reserved.
- * 
+ *
  * <pre>
- * Redistribution and use in source and binary forms, with or 
- * without modification, are permitted provided that the 
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are permitted provided that the
  * following conditions are met:
- * 
- * * Redistributions of source code must retain the above 
- *   copyright notice, this list of conditions and the 
+ *
+ * * Redistributions of source code must retain the above
+ *   copyright notice, this list of conditions and the
  *   following disclaimer.
- * * Redistributions in binary form must reproduce the above 
- *   copyright notice, this list of conditions and the 
- *   following disclaimer in the documentation and/or other 
+ * * Redistributions in binary form must reproduce the above
+ *   copyright notice, this list of conditions and the
+ *   following disclaimer in the documentation and/or other
  *   materials provided with the distribution.
- * * Neither the name of the Alpha Framework nor the names 
- *   of its contributors may be used to endorse or promote 
- *   products derived from this software without specific 
+ * * Neither the name of the Alpha Framework nor the names
+ *   of its contributors may be used to endorse or promote
+ *   products derived from this software without specific
  *   prior written permission.
- *   
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
- * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
- * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *  
+ *
  */
 class Relation_Test extends PHPUnit_Framework_TestCase {
 	/**
 	 * A Relation for testing
-	 * 
+	 *
 	 * @var Relation
 	 * @since 1.0
 	 */
-	private $rel1;	
-	
+	private $rel1;
+
 	/**
      * Called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
-     * 
+     *
      * @since 1.0
      */
-    protected function setUp() {        
+    protected function setUp() {
         $this->rel1 = new Relation();
-        
+
         $rights = new RightsObject();
         $rights->rebuildTable();
-        
+
         $person = new PersonObject();
         $person->set('displayName', $_SESSION['currentUser']->getDisplayName());
         $person->set('email', $_SESSION['currentUser']->get('email'));
@@ -74,27 +74,27 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
         $person->rebuildTable();
         $person->save();
     }
-    
-    /** 
+
+    /**
      * Called after the test functions are executed
      * this function is defined in PHPUnit_TestCase and overwritten
      * here
-     * 
+     *
      * @since 1.0
-     */    
-    protected function tearDown() {        
+     */
+    protected function tearDown() {
         unset($this->rel1);
         $person = new PersonObject();
         $person->dropTable();
-        
+
         $rights = new RightsObject();
         $rights->dropTable();
         $rights->dropTable('Person2Rights');
     }
-    
+
     /**
      * Testing passing a valid BO name to setRelatedClass
-     * 
+     *
      * @since 1.0
      */
     public function testSetRelatedClassPass() {
@@ -104,10 +104,10 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
     		$this->fail('Testing passing a valid BO name to setRelatedClass');
     	}
     }
-    
+
 	/**
      * Testing passing an invalid BO name to setRelatedClass
-     * 
+     *
      * @since 1.0
      */
     public function testSetRelatedClassFail() {
@@ -120,10 +120,10 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
     			, 'Testing passing an invalid BO name to setRelatedClass');
     	}
     }
-    
+
 	/**
      * Testing passing a valid field name to setRelatedClassField
-     * 
+     *
      * @since 1.0
      */
     public function testSetRelatedClassFieldPass() {
@@ -134,10 +134,10 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
     		$this->fail('Testing passing a valid field name to setRelatedClassField');
     	}
     }
-    
+
 	/**
      * Testing passing an invalid field name to setRelatedClassField
-     * 
+     *
      * @since 1.0
      */
     public function testSetRelatedClassFieldFail() {
@@ -151,10 +151,10 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
     			, 'Testing passing an invalid field name to setRelatedClassField');
     	}
     }
-    
+
     /**
      * Testing passing a valid type name to setRelationType
-     * 
+     *
      * @since 1.0
      */
     public function testSetRelationTypePass() {
@@ -164,15 +164,15 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
     		$this->fail('Testing passing a valid type name to setRelationType');
     	}
     }
-    
+
 	/**
      * Testing passing an invalid type name to setRelationType
-     * 
+     *
      * @since 1.0
      */
     public function testSetRelationTypeFail() {
     	try {
-    		$this->rel1->setRelationType('blah');    		
+    		$this->rel1->setRelationType('blah');
     		$this->fail('Testing passing an invalid type name to setRelationType');
     	}catch (AlphaException $e) {
     		$this->assertEquals('Relation type of [blah] is invalid!'
@@ -180,10 +180,10 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
     			, 'Testing passing an invalid type name to setRelationType');
     	}
     }
-    
+
 	/**
      * Testing setValue method with a valid value
-     * 
+     *
      * @since 1.0
      */
     public function testSetValuePass() {
@@ -194,10 +194,10 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
     		$this->fail('Testing setValue method with a valid value');
     	}
     }
-    
+
 	/**
      * Testing setValue method with an invalid value
-     * 
+     *
      * @since 1.0
      */
     public function testSetValueFail() {
@@ -210,10 +210,10 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
     			, 'Testing setValue method with an invalid value');
     	}
     }
-    
+
     /**
      * Testing that the display field value of the related class is accessed correctly
-     * 
+     *
      * @since 1.0
      */
     public function testSetRelatedClassDisplayFieldPass() {
@@ -227,14 +227,14 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
     		$this->fail('Testing that the display field value of the related class is accessed correctly');
     	}
     }
-    
+
 	/**
      * Testing that getRelatedClassDisplayFieldValue() will fail to load an invalid class definition
-     * 
+     *
      * @since 1.0
      */
     public function testGetRelatedClassDisplayFieldValueFail() {
-    	try {    		
+    	try {
     		$this->rel1->setRelatedClassDisplayField('someField');
     		$value = $this->rel1->getRelatedClassDisplayFieldValue();
     		$this->fail('Testing that getRelatedClassDisplayFieldValue() will fail to load an invalid class definition');
@@ -243,6 +243,39 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
     			, $e->getMessage()
     			, 'Testing that getRelatedClassDisplayFieldValue() will fail to load an invalid class definition');
     	}
+    }
+
+    /**
+     * Testing the getRelatedClass() method with different relation types.
+     *
+     * @since 1.2.1
+     */
+    public function testGetRelatedClass() {
+        $oneToOneRel = new Relation();
+        $oneToOneRel->setRelatedClass('ArticleCommentObject');
+        $oneToOneRel->setRelatedClassField('articleOID');
+        $oneToOneRel->setRelatedClassDisplayField('content');
+        $oneToOneRel->setRelationType('ONE-TO-ONE');
+
+        $this->assertEquals('ArticleCommentObject', $oneToOneRel->getRelatedClass(), 'testing the getRelatedClass() method on a ONE-TO-ONE relation');
+
+        $oneToManyRel = new Relation();
+        $oneToManyRel->setRelatedClass('ArticleCommentObject');
+        $oneToManyRel->setRelatedClassField('articleOID');
+        $oneToManyRel->setRelatedClassDisplayField('content');
+        $oneToManyRel->setRelationType('ONE-TO-MANY');
+
+        $this->assertEquals('ArticleCommentObject', $oneToManyRel->getRelatedClass(), 'testing the getRelatedClass() method on a ONE-TO-MANY relation');
+
+        $manyToManyRel = new Relation();
+        $manyToManyRel->setRelatedClass('PersonObject', 'left');
+        $manyToManyRel->setRelatedClassDisplayField('email', 'left');
+        $manyToManyRel->setRelatedClass('RightsObject', 'right');
+        $manyToManyRel->setRelatedClassDisplayField('name', 'right');
+        $manyToManyRel->setRelationType('MANY-TO-MANY');
+
+        $this->assertEquals('PersonObject', $manyToManyRel->getRelatedClass('left'), 'testing the getRelatedClass() method on a MANY-TO-MANY relation');
+        $this->assertEquals('RightsObject', $manyToManyRel->getRelatedClass('right'), 'testing the getRelatedClass() method on a MANY-TO-MANY relation');
     }
 }
 
