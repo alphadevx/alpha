@@ -833,6 +833,21 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
 
         $config->set('cache.provider.name', $oldSetting);
     }
+
+    /**
+     * Testing the getFriendlyClassName() method
+     *
+     * @since 1.2.1
+     */
+    public function testGetFriendlyClassName() {
+        $person = new PersonObject();
+        $article = new ArticleObject();
+        $comment = new ArticleCommentObject();
+
+        $this->assertEquals('Person', $person->getFriendlyClassName(), 'testing the getFriendlyClassName() method');
+        $this->assertEquals('Article', $article->getFriendlyClassName(), 'testing the getFriendlyClassName() method');
+        $this->assertEquals('ArticleComment', $comment->getFriendlyClassName(), 'testing the getFriendlyClassName() method');
+    }
 }
 
 ?>
