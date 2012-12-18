@@ -67,6 +67,9 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
     	$rights = new RightsObject();
     	$rights->rebuildTable();
 
+        $request = new BadRequestObject();
+        $request->rebuildTable();
+
     	$this->person = $this->createPersonObject('unitTestUser');
     	$this->person->rebuildTable();
 
@@ -89,6 +92,8 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
         $rights = new RightsObject();
         $rights->dropTable();
         $rights->dropTable('Person2Rights');
+        $request = new BadRequestObject();
+        $request->dropTable();
     }
 
     /**
@@ -847,6 +852,21 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
         $this->assertEquals('Person', $person->getFriendlyClassName(), 'testing the getFriendlyClassName() method');
         $this->assertEquals('Article', $article->getFriendlyClassName(), 'testing the getFriendlyClassName() method');
         $this->assertEquals('ArticleComment', $comment->getFriendlyClassName(), 'testing the getFriendlyClassName() method');
+    }
+
+    /**
+     * Testing the cast() method
+     *
+     * @since 1.2.1
+     */
+    public function testCast() {
+        $original = new BadRequestObject();
+        $original->set('IP', '127.0.0.1');
+        $copy = $original->cast('BlacklistedIPObject', $original);
+
+        $this->assertTrue($copy instanceof BlacklistedIPObject, 'testing the cast() method');
+        $this->assertTrue($copy->hasAttribute('IP'), 'testing the cast() method');
+        $this->assertEquals($original->get('IP'), $copy->get('IP'), 'testing the cast() method');
     }
 }
 
