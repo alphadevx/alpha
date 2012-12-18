@@ -1,7 +1,6 @@
 <?php
 
 /**
- *
  * Test case for the Relation data type
  *
  * @package alpha::tests
@@ -276,6 +275,46 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals('PersonObject', $manyToManyRel->getRelatedClass('left'), 'testing the getRelatedClass() method on a MANY-TO-MANY relation');
         $this->assertEquals('RightsObject', $manyToManyRel->getRelatedClass('right'), 'testing the getRelatedClass() method on a MANY-TO-MANY relation');
+    }
+
+    /**
+     * Testing the getSide() method on a MANY-TO-MANY relation
+     *
+     * @since 1.2.1
+     */
+    public function testGetSidePass() {
+
+        $manyToManyRel = new Relation();
+        $manyToManyRel->setRelatedClass('PersonObject', 'left');
+        $manyToManyRel->setRelatedClassDisplayField('email', 'left');
+        $manyToManyRel->setRelatedClass('RightsObject', 'right');
+        $manyToManyRel->setRelatedClassDisplayField('name', 'right');
+        $manyToManyRel->setRelationType('MANY-TO-MANY');
+
+        $this->assertEquals('left', $manyToManyRel->getSide('PersonObject'), 'testing the getSide() method on a MANY-TO-MANY relation');
+        $this->assertEquals('right', $manyToManyRel->getSide('RightsObject'), 'testing the getSide() method on a MANY-TO-MANY relation');
+    }
+
+    /**
+     * Testing the getSide() method on a ONE-TO-MANY relation
+     *
+     * @since 1.2.1
+     */
+    public function testGetSideFail() {
+
+        $oneToManyRel = new Relation();
+        $oneToManyRel->setRelatedClass('ArticleCommentObject');
+        $oneToManyRel->setRelatedClassField('articleOID');
+        $oneToManyRel->setRelatedClassDisplayField('content');
+        $oneToManyRel->setRelationType('ONE-TO-MANY');
+
+        try{
+            $oneToManyRel->getSide('ArticleCommentObject');
+            $this->fail('testing the getSide() method on a ONE-TO-MANY relation');
+        }catch (IllegalArguementException $e) {
+            $this->assertEquals('Error trying to determine the MANY-TO-MANY relationship side for the classname [ArticleCommentObject]', $e->getMessage(), 'testing the getSide() method on a ONE-TO-MANY relation');
+        }
+
     }
 }
 
