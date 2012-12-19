@@ -373,6 +373,22 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
         }
 
     }
+
+    /**
+     * Testing the getRelatedObject method
+     *
+     * @since 1.2.1
+     */
+    public function testGetRelatedObject() {
+        $oneToOneRel = new Relation();
+        $oneToOneRel->setRelatedClass('PersonObject');
+        $oneToOneRel->setRelatedClassField('OID');
+        $oneToOneRel->setRelatedClassDisplayField('displayName');
+        $oneToOneRel->setRelationType('ONE-TO-ONE');
+        $oneToOneRel->setValue($this->person->getOID());
+
+        $this->assertEquals($_SESSION['currentUser']->getDisplayName(), $oneToOneRel->getRelatedObject()->get('displayName'), 'testing the getRelatedObject method');
+    }
 }
 
 ?>
