@@ -74,6 +74,12 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
         $rights = new RightsObject();
         $rights->rebuildTable();
 
+        $article = new ArticleObject();
+        $article->rebuildTable();
+
+        $comment = new ArticleCommentObject();
+        $comment->rebuildTable();
+
         $this->person = new PersonObject();
         $this->person->set('displayName', $_SESSION['currentUser']->getDisplayName());
         $this->person->set('email', $_SESSION['currentUser']->get('email'));
@@ -97,6 +103,12 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
         $rights = new RightsObject();
         $rights->dropTable();
         $rights->dropTable('Person2Rights');
+
+        $comment = new ArticleCommentObject();
+        $comment->dropTable();
+
+        $article = new ArticleObject();
+        $article->dropTable();
     }
 
     /**
@@ -388,6 +400,61 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
         $oneToOneRel->setValue($this->person->getOID());
 
         $this->assertEquals($_SESSION['currentUser']->getDisplayName(), $oneToOneRel->getRelatedObject()->get('displayName'), 'testing the getRelatedObject method');
+    }
+
+    /**
+     * Testing the getRelatedObjects method with a ONE-TO-MANY and MANY-TO-MANY relation
+     *
+     * @since 1.2.1
+     */
+    public function testGetRelatedObjects() {
+
+        $group = new RightsObject();
+        $group->set('name', 'unittestgroup');
+        $group->save();
+
+        $person1 = new PersonObject();
+        $person1->set('displayName', 'user1');
+        $person1->set('email', 'user1@test.com');
+        $person1->set('password', 'password');
+        $person1->save();
+        $lookup = $person1->getPropObject('rights')->getLookup();
+        $lookup->setValue(array($person1->getOID(), $group->getOID()));
+        $lookup->save();
+
+        $person2 = new PersonObject();
+        $person2->set('displayName', 'user2');
+        $person2->set('email', 'user2@test.com');
+        $person2->set('password', 'password');
+        $person2->save();
+        $lookup = $person2->getPropObject('rights')->getLookup();
+        $lookup->setValue(array($person2->getOID(), $group->getOID()));
+        $lookup->save();
+
+        $person2->getPropObject('rights')->setValue($group->getOID());
+
+        $this->assertEquals(2, count($group->getPropObject('members')->getRelatedObjects('RightsObject')), 'testing the getRelatedObjects method with a MANY-TO-MANY relation');
+        $this->assertTrue($group->getPropObject('members')->getRelatedObjects('RightsObject')[0] instanceof PersonObject, 'testing the getRelatedObjects method with a MANY-TO-MANY relation');
+
+        $article = new ArticleObject();
+        $article->set('title', 'unit test');
+        $article->set('description', 'unit test');
+        $article->set('content', 'unit test');
+        $article->set('author', 'unit test');
+        $article->save();
+
+        $comment1 = new ArticleCommentObject();
+        $comment1->set('content', 'unit test');
+        $comment1->getPropObject('articleOID')->setValue($article->getOID());
+        $comment1->save();
+
+        $comment2 = new ArticleCommentObject();
+        $comment2->set('content', 'unit test');
+        $comment2->getPropObject('articleOID')->setValue($article->getOID());
+        $comment2->save();
+
+        $this->assertEquals(2, count($article->getPropObject('comments')->getRelatedObjects()), 'testing the getRelatedObjects method with a ONE-TO-MANY relation');
+        $this->assertTrue($article->getPropObject('comments')->getRelatedObjects()[0] instanceof ArticleCommentObject, 'testing the getRelatedObjects method with a ONE-TO-MANY relation');
     }
 }
 
