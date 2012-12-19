@@ -264,6 +264,19 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		echo '<p>Running time: '.$runningTime.'</p>';
 
 		// **** begin test suite ****
+		echo '<h3>RelationLookup:</h3>';
+
+		$suite = new PHPUnit_Framework_TestSuite();
+		$suite->addTestSuite('RelationLookup_Test');
+		$result = $suite->run();
+		$runningTime+=$result->time();
+		$testCount+=$result->count();
+
+		$this->printTestResult($result);
+
+		echo '<p>Running time: '.$runningTime.'</p>';
+
+		// **** begin test suite ****
 		echo '<h3>Exception Handling:</h3>';
 
 		$suite = new PHPUnit_Framework_TestSuite();
