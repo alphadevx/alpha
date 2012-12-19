@@ -53,6 +53,14 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
 	 */
 	private $rel1;
 
+    /**
+     * A PersonObject for testing
+     *
+     * @var PersonObject
+     * @since 1.2.1
+     */
+    private $person;
+
 	/**
      * Called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
@@ -66,12 +74,12 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
         $rights = new RightsObject();
         $rights->rebuildTable();
 
-        $person = new PersonObject();
-        $person->set('displayName', $_SESSION['currentUser']->getDisplayName());
-        $person->set('email', $_SESSION['currentUser']->get('email'));
-        $person->set('password', 'password');
-        $person->rebuildTable();
-        $person->save();
+        $this->person = new PersonObject();
+        $this->person->set('displayName', $_SESSION['currentUser']->getDisplayName());
+        $this->person->set('email', $_SESSION['currentUser']->get('email'));
+        $this->person->set('password', 'password');
+        $this->person->rebuildTable();
+        $this->person->save();
     }
 
     /**
@@ -242,6 +250,55 @@ class Relation_Test extends PHPUnit_Framework_TestCase {
     			, $e->getMessage()
     			, 'Testing that getRelatedClassDisplayFieldValue() will fail to load an invalid class definition');
     	}
+    }
+
+    /**
+     * Testing the getRelatedClassDisplayFieldValue() method on ONE-TO-MANY and MANY-TO-MANY relations
+     *
+     * @since 1.2.1
+     */
+    public function testGetRelatedClassDisplayFieldValuePass() {
+        $oneToManyRel = new Relation();
+        $oneToManyRel->setRelatedClass('PersonObject');
+        $oneToManyRel->setRelatedClassField('OID');
+        $oneToManyRel->setRelatedClassDisplayField('displayName');
+        $oneToManyRel->setRelationType('ONE-TO-MANY');
+        $oneToManyRel->setValue($this->person->getOID());
+
+        $this->assertEquals($_SESSION['currentUser']->getDisplayName(), $oneToManyRel->getRelatedClassDisplayFieldValue(), 'testing the getRelatedClassDisplayFieldValue() method on ONE-TO-MANY relation');
+
+        $group = new RightsObject();
+        $group->set('name', 'unittestgroup');
+        $group->save();
+
+        $person1 = new PersonObject();
+        $person1->set('displayName', 'user1');
+        $person1->set('email', 'user1@test.com');
+        $person1->set('password', 'password');
+        $person1->save();
+        $lookup = $person1->getPropObject('rights')->getLookup();
+        $lookup->setValue(array($person1->getOID(), $group->getOID()));
+        $lookup->save();
+
+        $person2 = new PersonObject();
+        $person2->set('displayName', 'user2');
+        $person2->set('email', 'user2@test.com');
+        $person2->set('password', 'password');
+        $person2->save();
+        $lookup = $person2->getPropObject('rights')->getLookup();
+        $lookup->setValue(array($person2->getOID(), $group->getOID()));
+        $lookup->save();
+
+        $person2->getPropObject('rights')->setValue($group->getOID());
+
+        try {
+            $this->assertEquals('user1@test.com,user2@test.com', $person2->getPropObject('rights')->getRelatedClassDisplayFieldValue(), 'testing the getRelatedClassDisplayFieldValue() method on MANY-TO-MANY relation');
+            $this->fail('testing the getRelatedClassDisplayFieldValue() method on MANY-TO-MANY relation');
+        }catch (IllegalArguementException $e) {
+            $this->assertEquals($e->getMessage(), 'Tried to load related MANY-TO-MANY fields but no accessingClassName parameter set on the call to getRelatedClassDisplayFieldValue!', 'testing the getRelatedClassDisplayFieldValue() method on MANY-TO-MANY relation');
+        }
+
+        $this->assertEquals('user1@test.com,user2@test.com', $person2->getPropObject('rights')->getRelatedClassDisplayFieldValue('RightsObject'), 'testing the getRelatedClassDisplayFieldValue() method on MANY-TO-MANY relation');
     }
 
     /**
