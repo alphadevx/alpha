@@ -129,6 +129,35 @@ class RelationLookup_Test extends PHPUnit_Framework_TestCase {
         $lookup = new RelationLookup('ArticleObject','PersonObject');
         $this->assertEquals('Article2Person', $lookup->getTableName(), 'testing the getTableName() method');
     }
+
+    /**
+     * Testing the setValue() method with good params
+     *
+     * @since 1.2.1
+     */
+    public function testSetValuePass() {
+        $lookup = new RelationLookup('PersonObject','ArticleObject');
+        $lookup->setValue(array(1,2));
+
+        $this->assertTrue(is_array($lookup->getValue()), 'testing the setValue() method with good params');
+        $this->assertTrue(in_array(2, $lookup->getValue()), 'testing the setValue() method with good params');
+    }
+
+    /**
+     * Testing the setValue() method with bad params
+     *
+     * @since 1.2.1
+     */
+    public function testSetValueFail() {
+        $lookup = new RelationLookup('PersonObject','ArticleObject');
+
+        try {
+            $lookup->setValue(2);
+            $this->fail('testing the setValue() method with bad params');
+        }catch (IllegalArguementException $e) {
+            $this->assertEquals('Array value passed to setValue is not valid [2], array should contain two OIDs', $e->getMessage(), 'testing the setValue() method with bad params');
+        }
+    }
 }
 
 ?>
