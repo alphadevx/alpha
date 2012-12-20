@@ -158,6 +158,40 @@ class RelationLookup_Test extends PHPUnit_Framework_TestCase {
             $this->assertEquals('Array value passed to setValue is not valid [2], array should contain two OIDs', $e->getMessage(), 'testing the setValue() method with bad params');
         }
     }
+
+    /**
+     * Testing the loadAllbyAttribute() method
+     *
+     * @since 1.2.1
+     */
+    public function testLoadAllbyAttribute() {
+        $group = new RightsObject();
+        $group->set('name', 'unittestgroup');
+        $group->save();
+
+        $person1 = new PersonObject();
+        $person1->set('displayName', 'user1');
+        $person1->set('email', 'user1@test.com');
+        $person1->set('password', 'password');
+        $person1->save();
+        $lookup = $person1->getPropObject('rights')->getLookup();
+        $lookup->setValue(array($person1->getOID(), $group->getOID()));
+        $lookup->save();
+
+        $person2 = new PersonObject();
+        $person2->set('displayName', 'user2');
+        $person2->set('email', 'user2@test.com');
+        $person2->set('password', 'password');
+        $person2->save();
+        $lookup = $person2->getPropObject('rights')->getLookup();
+        $lookup->setValue(array($person2->getOID(), $group->getOID()));
+        $lookup->save();
+
+        //$person2->getPropObject('rights')->setValue($group->getOID());
+
+        $lookup = new RelationLookup('PersonObject','RightsObject');
+        $this->assertEquals(2, count($lookup->loadAllbyAttribute('rightID', $group->getOID())), 'testing the loadAllbyAttribute() method');
+    }
 }
 
 ?>
