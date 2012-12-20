@@ -115,6 +115,20 @@ class RelationLookup_Test extends PHPUnit_Framework_TestCase {
 
         $this->assertTrue($lookup->checkTableExists(), 'testing the RelationLookup constructor');
     }
+
+    /**
+     * Testing the getTableName() method
+     *
+     * @since 1.2.1
+     */
+    public function testGetTableName() {
+
+        $lookup = new RelationLookup('PersonObject','ArticleObject');
+        $this->assertEquals('Person2Article', $lookup->getTableName(), 'testing the getTableName() method');
+
+        $lookup = new RelationLookup('ArticleObject','PersonObject');
+        $this->assertEquals('Article2Person', $lookup->getTableName(), 'testing the getTableName() method');
+    }
 }
 
 ?>
