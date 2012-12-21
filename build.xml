@@ -48,6 +48,8 @@
   	<!-- Builds the version .zip file containing the Alpha Framework code -->
   	<target name="buildAlphaReleaseArtifact" depends="clean">
 
+      <mkdir dir="${artifacts.dir}/alpha" />
+
 	    <svnexport
 	        svnpath="/usr/bin/svn"
 	        username="${svn.username}"
@@ -55,7 +57,15 @@
 	        force="true"
 	        nocache="true"
 	        repositoryurl="${svn.repo.url}/trunk"
-	        todir="${build.dir}" />
+	        todir="${build.dir}/alpha" />
+
+      <copy todir="${build.dir}" includeemptydirs="true">
+        <fileset dir="${build.dir}/alpha/sample">
+          <include name="**/**" />
+        </fileset>
+      </copy>
+
+      <delete dir="${build.dir}/alpha/sample" includeemptydirs="true"/>
 
 	    <mkdir dir="${artifacts.dir}" />
 
