@@ -501,7 +501,7 @@ class AlphaFileUtils {
 		'xwd' => 'image/x-xwd',
 		'xyz' => 'chemical/x-pdb',
 		'z' => 'application/x-compress',
-		'zip' => 'application/x-compressed',
+		'zip' => 'application/zip',
 		'zoo' => 'application/octet-stream',
 		'zsh' => 'text/x-script.zsh',
 	);
