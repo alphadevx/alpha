@@ -265,6 +265,9 @@ abstract class AlphaController {
 	 	if(isset($_SESSION['statusMessage']))
 	 		$this->setStatusMessage($_SESSION['statusMessage']);
 
+	 	if($config->get('security.encrypt.http.fieldnames') && !empty($_POST))
+			$this->decryptFieldNames();
+
 	 	self::$logger->debug('<<__construct');
 	}
 
@@ -1195,6 +1198,22 @@ abstract class AlphaController {
 			return true;
 		else
 			return false;
+	}
+
+	/**
+	 * Descrypts the POST fieldnames in the global $_REQUEST and $_POST variables
+	 *
+	 * @since 1.2.2
+	 */
+	private function decryptFieldNames() {
+		foreach(array_keys($_POST) as $fieldname) {
+			if(AlphaValidator::isBase64($fieldname)) {
+				$_REQUEST[trim(AlphaSecurityUtils::decrypt(base64_decode($fieldname)))] = $_POST[$fieldname];
+				unset($_REQUEST[$fieldname]);
+				$_POST[trim(AlphaSecurityUtils::decrypt(base64_decode($fieldname)))] = $_POST[$fieldname];
+				unset($_POST[$fieldname]);
+			}
+		}
 	}
 }
 
