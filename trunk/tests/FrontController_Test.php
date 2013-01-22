@@ -159,13 +159,13 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     public function testEncodeQuery() {
     	global $config;
 
-    	$oldKey = $config->get('security.query.string.key');
-    	$config->set('security.query.string.key', 'testkey');
+    	$oldKey = $config->get('security.encryption.key');
+    	$config->set('security.encryption.key', 'testkey');
     	$params = 'act=ViewArticleTitle&title=Test_Title';
 
     	$this->assertEquals(FrontController::encodeQuery($params), '8kqoeebEej0V-FN5-DOdA1HBDDieFcNWTib2yLSUNjq0B0FWzAupIA==', 'testing the encodeQuery method with a known encrypted result for a test key');
 
-    	$config->set('security.query.string.key', $oldKey);
+    	$config->set('security.encryption.key', $oldKey);
     }
 
     /**
@@ -176,13 +176,13 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     public function testDecodeQueryParams() {
     	global $config;
 
-    	$oldKey = $config->get('security.query.string.key');
-    	$config->set('security.query.string.key', 'testkey');
+    	$oldKey = $config->get('security.encryption.key');
+    	$config->set('security.encryption.key', 'testkey');
     	$tk = '8kqoeebEej0V-FN5-DOdA1HBDDieFcNWTib2yLSUNjq0B0FWzAupIA==';
 
     	$this->assertEquals('act=ViewArticleTitle&title=Test_Title', FrontController::decodeQueryParams($tk), 'testing the decodeQueryParams method with a known encrypted result for a test key');
 
-        $config->set('security.query.string.key', $oldKey);
+        $config->set('security.encryption.key', $oldKey);
     }
 
     /**
@@ -193,8 +193,8 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     public function testGetDecodeQueryParams() {
     	global $config;
 
-    	$oldKey = $config->get('security.query.string.key');
-    	$config->set('security.query.string.key', 'testkey');
+    	$oldKey = $config->get('security.encryption.key');
+    	$config->set('security.encryption.key', 'testkey');
     	$tk = '8kqoeebEej0V-FN5-DOdA1HBDDieFcNWTib2yLSUNjq0B0FWzAupIA==';
 
     	$decoded = FrontController::getDecodeQueryParams($tk);
@@ -202,7 +202,7 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     	$this->assertEquals('ViewArticleTitle', $decoded['act'], 'testing that the getDecodeQueryParams method will return the known params with a known encrypted result for a test key');
     	$this->assertEquals('Test_Title', $decoded['title'], 'testing that the getDecodeQueryParams method will return the known params with a known encrypted result for a test key');
 
-        $config->set('security.query.string.key', $oldKey);
+        $config->set('security.encryption.key', $oldKey);
     }
 
     /**
@@ -302,10 +302,10 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
 
         global $config;
 
-        $oldKey = $config->get('security.query.string.key');
+        $oldKey = $config->get('security.encryption.key');
         $oldRewriteSetting = $config->get('app.use.mod.rewrite');
 
-        $config->set('security.query.string.key', 'testkey');
+        $config->set('security.encryption.key', 'testkey');
         $params = 'act=ViewArticleTitle&title=Test_Title';
 
         $config->set('app.use.mod.rewrite', true);
@@ -314,7 +314,7 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
         $config->set('app.use.mod.rewrite', false);
         $this->assertEquals($config->get('app.url').'?tk=8kqoeebEej0V-FN5-DOdA1HBDDieFcNWTib2yLSUNjq0B0FWzAupIA==', FrontController::generateSecureURL($params), 'Testing the generateSecureURL() returns the correct URL with mod_rewrite style URLs disabled');
 
-        $config->set('security.query.string.key', $oldKey);
+        $config->set('security.encryption.key', $oldKey);
         $config->set('app.use.mod.rewrite', $oldRewriteSetting);
     }
 }
