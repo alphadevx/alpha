@@ -180,7 +180,7 @@ class AlphaValidator {
 	 */
 	public static function isDouble($value) {
 		if (preg_match(self::REQUIRED_DOUBLE, $value))
-			return is_double($value);
+			return (is_numeric($value) ? doubleval($value) == $value : false);
 		else
 			return false;
 	}

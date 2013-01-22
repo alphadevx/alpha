@@ -97,10 +97,7 @@ class StringBox {
 			throw new IllegalArguementException('String object passed ['.var_export($string, true).'] is not a valid String object!');
 
 		$this->label = $label;
-		if($config->get('security.encrypt.http.fieldnames'))
-			$this->name = base64_encode(AlphaSecurityUtils::encrypt($name));
-		else
-			$this->name = $name;
+		$this->name = $name;
 		$this->size = $size;
 	}
 

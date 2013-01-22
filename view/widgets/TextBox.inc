@@ -105,10 +105,7 @@ class TextBox {
 			throw new IllegalArguementException('Text object passed ['.var_export($text, true).'] is not a valid Text object!');
 
 		$this->label = $label;
-		if($config->get('security.encrypt.http.fieldnames'))
-			$this->name = base64_encode(AlphaSecurityUtils::encrypt($name));
-		else
-			$this->name = $name;
+		$this->name = $name;
 		$this->rows = $rows;
 		$this->identifier = $identifier;
 	}
