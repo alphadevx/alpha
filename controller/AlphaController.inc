@@ -212,8 +212,11 @@ abstract class AlphaController {
 	 	global $config;
 
 	 	// kick off new session, or reuse existing one
-	 	if(!isset($_SESSION))
+	 	if(!isset($_SESSION)) {
+	 		$hostname = parse_url($config->get('app.url'))['host'];
+	 		session_set_cookie_params(0, '/', $hostname, false, true);
 	 		session_start();
+	 	}
 
 	 	// set the access rights to the group name indicated
 	 	$this->visibility = $visibility;
