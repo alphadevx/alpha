@@ -1212,9 +1212,11 @@ abstract class AlphaController {
 		foreach(array_keys($_POST) as $fieldname) {
 			if(AlphaValidator::isBase64($fieldname)) {
 				$_REQUEST[trim(AlphaSecurityUtils::decrypt(base64_decode($fieldname)))] = $_POST[$fieldname];
-				unset($_REQUEST[$fieldname]);
 				$_POST[trim(AlphaSecurityUtils::decrypt(base64_decode($fieldname)))] = $_POST[$fieldname];
+			}else{
+				// clear non-encrypted fields (we won't accept these when security.encrypt.http.fieldnames = true)
 				unset($_POST[$fieldname]);
+				unset($_REQUEST[$fieldname]);
 			}
 		}
 	}
