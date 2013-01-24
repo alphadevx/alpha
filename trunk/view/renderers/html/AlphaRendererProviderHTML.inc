@@ -712,12 +712,25 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 
 		self::$logger->debug('>>renderSecurityFields()');
 
+		global $config;
+
 		$html = '';
 
 		$fields = AlphaController::generateSecurityFields();
 
-		$html .= '<input type="hidden" name="var1" value="'.$fields[0].'"/>';
-		$html .= '<input type="hidden" name="var2" value="'.$fields[1].'"/>';
+		if($config->get('security.encrypt.http.fieldnames'))
+			$fieldname = base64_encode(AlphaSecurityUtils::encrypt('var1'));
+		else
+			$fieldname = 'var1';
+
+		$html .= '<input type="hidden" name="'.$fieldname.'" value="'.$fields[0].'"/>';
+
+		if($config->get('security.encrypt.http.fieldnames'))
+			$fieldname = base64_encode(AlphaSecurityUtils::encrypt('var2'));
+		else
+			$fieldname = 'var2';
+
+		$html .= '<input type="hidden" name="'.$fieldname.'" value="'.$fields[1].'"/>';
 
 		self::$logger->debug('<<renderSecurityFields ['.$html.']');
 		return $html;
