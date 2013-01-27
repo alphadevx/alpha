@@ -142,7 +142,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 				$('#dialogDiv').dialog({
 				buttons: {
 					'OK': function(event, ui) {
-						$('#deleteOID').attr('value', '".$this->BO->getOID()."');
+						$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
 						$('#deleteForm').submit();
 					},
 					'Cancel': function(event, ui) {
@@ -265,7 +265,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 				$('#dialogDiv').dialog({
 				buttons: {
 					'OK': function(event, ui) {
-						$('#deleteOID').attr('value', '".$this->BO->getOID()."');
+						$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
 						$('#deleteForm').submit();
 					},
 					'Cancel': function(event, ui) {
@@ -318,7 +318,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 				$('#dialogDiv').dialog({
 				buttons: {
 					'OK': function(event, ui) {
-						$('#deleteOID').attr('value', '".$this->BO->getOID()."');
+						$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
 						$('#deleteForm').submit();
 					},
 					'Cancel': function(event, ui) {
@@ -693,8 +693,11 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 			self::$logger = new Logger('AlphaRendererProviderHTML');
 		self::$logger->debug('>>renderDeleteForm()');
 
+		global $config;
+
 		$html = '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" id="deleteForm">';
-		$html .= '<input type="hidden" name="deleteOID" id="deleteOID" value=""/>';
+		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID');
+		$html .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value=""/>';
 		$html .= self::renderSecurityFields();
 		$html .= '</form>';
 

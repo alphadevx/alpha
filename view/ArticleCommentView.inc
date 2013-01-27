@@ -139,7 +139,7 @@ class ArticleCommentView extends AlphaView {
 				$('#dialogDiv').dialog({
 				buttons: {
 					'OK': function(event, ui) {
-						$('#deleteOID').attr('value', '".$this->BO->getOID()."');
+						$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
 						$('#deleteForm').submit();
 					},
 					'Cancel': function(event, ui) {
