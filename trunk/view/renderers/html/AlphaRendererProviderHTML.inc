@@ -390,14 +390,16 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
         	$button = new Button("submit", "Create Table", "createTableBut");
             $html .= $button->render();
             // hidden field so that we know which class to create the table for
-            $html .= '<input type="hidden" name="createTableClass" value="'.get_class($this->BO).'"/>';
+            $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('createTableClass')) : 'createTableClass');
+            $html .= '<input type="hidden" name="'.$fieldname.'" value="'.get_class($this->BO).'"/>';
         }
 
 		if ($html == '' && $this->BO->getMaintainHistory() && !$this->BO->checkTableExists(true)) {
         	$button = new Button("submit", "Create History Table", "createHistoryTableBut");
             $html .= $button->render();
             // hidden field so that we know which class to create the table for
-            $html .= '<input type="hidden" name="createTableClass" value="'.get_class($this->BO).'"/>';
+            $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('createTableClass')) : 'createTableClass');
+            $html .= '<input type="hidden" name="'.$fieldname.'" value="'.get_class($this->BO).'"/>';
         }
         $fields['createTableButton'] = $html;
 
@@ -408,7 +410,8 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 				$('#dialogDiv').dialog({
 				buttons: {
 					'OK': function(event, ui) {
-						$('#admin_".get_class($this->BO)."_button_pressed').attr('value', 'recreateTableBut');
+						//$('#admin_".get_class($this->BO)."_button_pressed').attr('value', 'recreateTableBut');
+						$('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('admin_'.get_class($this->BO).'_button_pressed')) : 'admin_'.get_class($this->BO).'_button_pressed')."\"]').attr('value', 'recreateTableBut');
 						$('#admin_".get_class($this->BO)."').submit();
 					},
 					'Cancel': function(event, ui) {
@@ -427,7 +430,8 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 				$('#dialogDiv').dialog({
 				buttons: {
 					'OK': function(event, ui) {
-						$('#admin_".get_class($this->BO)."_button_pressed').attr('value', 'updateTableBut');
+						//$('#admin_".get_class($this->BO)."_button_pressed').attr('value', 'updateTableBut');
+						$('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('admin_'.get_class($this->BO).'_button_pressed')) : 'admin_'.get_class($this->BO).'_button_pressed')."\"]').attr('value', 'updateTableBut');
 						$('#admin_".get_class($this->BO)."').submit();
 					},
 					'Cancel': function(event, ui) {
@@ -440,9 +444,11 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 			$button = new Button($js , "Update Table", "updateTableBut");
 			$html .= $button->render();
 			// hidden field so that we know which class to update the table for
-			$html .= '<input type="hidden" name="updateTableClass" value="'.get_class($this->BO).'"/>';
+			$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('updateTableClass')) : 'updateTableClass');
+			$html .= '<input type="hidden" name="'.$fieldname.'" value="'.get_class($this->BO).'"/>';
 			// hidden field to tell us which button was pressed
-			$html .= '<input type="hidden" id="admin_'.get_class($this->BO).'_button_pressed" name="admin_'.get_class($this->BO).'_button_pressed" value=""/>';
+			$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('admin_'.get_class($this->BO).'_button_pressed')) : 'admin_'.get_class($this->BO).'_button_pressed');
+			$html .= '<input type="hidden" id="'.$fieldname.'" name="'.$fieldname.'" value=""/>';
 		}
 		$fields['recreateOrUpdateButtons'] = $html;
 
