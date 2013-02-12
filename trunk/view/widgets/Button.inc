@@ -91,10 +91,7 @@ class Button {
 
 		$this->action = $action;
 		$this->title = $title;
-		if($config->get('security.encrypt.http.fieldnames'))
-			$this->id = base64_encode(AlphaSecurityUtils::encrypt($id));
-		else
-			$this->id = $id;
+		$this->id = $id;
 		$this->imgURL = $imgURL;
 		$this->title = $title;
 	}
