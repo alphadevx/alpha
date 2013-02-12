@@ -408,7 +408,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC", $ignoreClassType=false, $constructorArgs=array()) {
 		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
 
-		if ($start != 0 && $limit != 0)
+		if ($limit != 0)
 			$limit = ' LIMIT '.$start.', '.$limit.';';
 		else
 			$limit = ';';
