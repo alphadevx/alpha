@@ -139,6 +139,8 @@ class CreateArticle extends AlphaController implements AlphaControllerInterface 
 
 				$this->BO->save();
 
+				self::$logger->action('Created new ArticleObject instance with OID '.$this->BO->getOID());
+
 				AlphaDAO::disconnect();
 
 				try {
