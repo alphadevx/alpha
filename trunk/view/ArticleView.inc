@@ -159,6 +159,8 @@ class ArticleView extends AlphaView {
 	 * @since 1.0
 	 */
 	protected function renderFileUploadSection() {
+		global $config;
+
 		$html = '<tr><td colspan="2">&nbsp;</td></tr><tr><th colspan="2" style="text-align:left;">File Attachments:</th></tr>';
 
 		if (is_dir($this->BO->getAttachmentsLocation())) {
@@ -179,7 +181,7 @@ class ArticleView extends AlphaView {
 							$('#dialogDiv').dialog({
 							buttons: {
 								'OK': function(event, ui) {
-									$('#file_to_delete').attr('value', '".$file."');
+									$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('file_to_delete')) : 'file_to_delete')."\"]').attr('value', '".$file."');
 									$('#".get_class($this->BO).'_'.$this->BO->getID()."').submit();
 								},
 								'Cancel': function(event, ui) {
@@ -213,7 +215,8 @@ class ArticleView extends AlphaView {
 		$html .= $temp->render();
 		$html .= '</td></tr>';
 
-		$html .= '<input type="hidden" name="file_to_delete" id="file_to_delete" value=""/>';
+		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('file_to_delete')) : 'file_to_delete');
+		$html .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value=""/>';
 
 		return $html;
 	}

@@ -17,7 +17,7 @@ if(!isset($config)) {
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -182,6 +182,7 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 
 					try {
 						$success = $this->BO->save();
+						self::$logger->action('Article '.$this->BO->getID().' saved');
 						echo AlphaView::displayUpdateMessage('Article '.$this->BO->getID().' saved successfully.');
 					}catch (LockingException $e) {
 						$this->BO->reload();
@@ -198,7 +199,7 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 
 					try {
 						$this->BO->delete();
-
+						self::$logger->action('Article '.$params['deleteOID'].' deleted.');
 						AlphaDAO::disconnect();
 
 						echo AlphaView::displayUpdateMessage('Article '.$params['deleteOID'].' deleted successfully.');
@@ -232,6 +233,7 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 
 					if($success) {
 						echo AlphaView::displayUpdateMessage('File uploaded successfully.');
+						self::$logger->action('File '.$_FILES['userfile']['name'].' uploaded to '.$this->BO->getAttachmentsLocation().'/'.$_FILES['userfile']['name']);
 					}
 
 					$view = AlphaView::getInstance($this->BO);
@@ -248,6 +250,7 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 
 					if($success) {
 						echo AlphaView::displayUpdateMessage($params['file_to_delete'].' deleted successfully.');
+						self::$logger->action('File '.$this->BO->getAttachmentsLocation().'/'.$params['file_to_delete'].' deleted');
 					}
 
 					$view = AlphaView::getInstance($this->BO);
