@@ -9,41 +9,41 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
  * All rights reserved.
- * 
+ *
  * <pre>
- * Redistribution and use in source and binary forms, with or 
- * without modification, are permitted provided that the 
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are permitted provided that the
  * following conditions are met:
- * 
- * * Redistributions of source code must retain the above 
- *   copyright notice, this list of conditions and the 
+ *
+ * * Redistributions of source code must retain the above
+ *   copyright notice, this list of conditions and the
  *   following disclaimer.
- * * Redistributions in binary form must reproduce the above 
- *   copyright notice, this list of conditions and the 
- *   following disclaimer in the documentation and/or other 
+ * * Redistributions in binary form must reproduce the above
+ *   copyright notice, this list of conditions and the
+ *   following disclaimer in the documentation and/or other
  *   materials provided with the distribution.
- * * Neither the name of the Alpha Framework nor the names 
- *   of its contributors may be used to endorse or promote 
- *   products derived from this software without specific 
+ * * Neither the name of the Alpha Framework nor the names
+ *   of its contributors may be used to endorse or promote
+ *   products derived from this software without specific
  *   prior written permission.
- *   
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
- * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
- * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *  
+ *
  */
 class PersonObject extends AlphaDAO {
 	/**
@@ -79,6 +79,14 @@ class PersonObject extends AlphaDAO {
 	protected $rights;
 
 	/**
+	 * A Relation containing all of the actions carried out by this person
+	 *
+	 * @var Relation
+	 * @since 1.2.2
+	 */
+	protected $actions;
+
+	/**
 	 * An array of data display labels for the class properties
 	 *
 	 * @var array
@@ -90,7 +98,8 @@ class PersonObject extends AlphaDAO {
 									"password"=>"Password",
 									"state"=>"Account state",
 									"URL"=>"Your site address",
-									"rights"=>"Rights Group Membership");
+									"rights"=>"Rights Group Membership",
+									"actions"=>"Actions");
 
 	/**
 	 * The name of the database table for the class
@@ -115,10 +124,10 @@ class PersonObject extends AlphaDAO {
 	 * @since 1.0
 	 */
 	protected $URL;
-	
+
 	/**
 	 * Trace logger
-	 * 
+	 *
 	 * @var Logger
 	 * @since 1.0
 	 */
@@ -126,13 +135,13 @@ class PersonObject extends AlphaDAO {
 
 	/**
 	 * Constructor for the class that populates all of the complex types with default values
-	 * 
+	 *
 	 * @since 1.0
 	 */
 	public function __construct() {
 		self::$logger = new Logger('PersonObject');
 		self::$logger->debug('>>__construct()');
-		
+
 		// ensure to call the parent constructor
 		parent::__construct();
 		$this->displayName = new String();
@@ -146,7 +155,7 @@ class PersonObject extends AlphaDAO {
 		$this->password = new String();
 		$this->password->setSize(70);
 		$this->password->setHelper('Please provide a password for logging in.');
-		$this->password->isPassword(true);		
+		$this->password->isPassword(true);
 		$this->state = new Enum(array(
 									'Active',
 									'Disabled'));
@@ -160,23 +169,27 @@ class PersonObject extends AlphaDAO {
 
 		$this->rights = new Relation();
 		$this->markTransient('rights');
+
+		$this->actions = new Relation();
+		$this->markTransient('actions');
+
 		$this->setupRels();
-		
+
 		self::$logger->debug('<<__construct');
 	}
 
 	/**
 	 * Set up the transient attributes for the rights group after it has loaded
-	 * 
+	 *
 	 * @since 1.0
 	 */
 	protected function after_load_callback() {
-		$this->setupRels();		
+		$this->setupRels();
 	}
-	
+
 	/**
 	 * Set up the transient attributes for the site after it has loaded
-	 * 
+	 *
 	 * @since 1.0
 	 */
 	protected function after_loadByAttribute_callback() {
@@ -185,15 +198,15 @@ class PersonObject extends AlphaDAO {
 
 	/**
 	 * Looks up the OID for the Standard rights group, then relates the new person
-	 * to that group if they are not in it already.  If that group does not exist it 
+	 * to that group if they are not in it already.  If that group does not exist it
 	 * will be recreated!
-	 * 
+	 *
 	 * @since 1.0
 	 */
 	protected function after_save_callback() {
 		if($this->getVersionNumber()->getValue() == 1) {
 			$standardGroup = new RightsObject();
-			
+
 			$this->setupRels();
 
 			if(!$this->inGroup('Standard')) {
@@ -203,30 +216,30 @@ class PersonObject extends AlphaDAO {
 					$standardGroup->set('name', 'Standard');
 					$standardGroup->save();
 				}
-						
+
 				$lookup = $this->rights->getLookup();
 				$lookup->setValue(array($this->getID(), $standardGroup->getID()));
 				$lookup->save();
 			}
 		}
 	}
-	
+
 	/**
-	 * Encrypts any fields called 'password' posted for the PersonObject 
-	 * 
+	 * Encrypts any fields called 'password' posted for the PersonObject
+	 *
 	 * @since 1.0
 	 */
 	protected function before_populateFromPost_callback() {
 		if(isset($_POST['password']) && preg_match(AlphaValidator::REQUIRED_STRING, $_POST['password']))
 			$_POST['password'] = crypt($_POST['password']);
 	}
-	
+
 	/**
 	 * Sets up the Relation definitions on this BO
-	 * 
+	 *
 	 * @since 1.0
 	 */
-	protected function setupRels() {		
+	protected function setupRels() {
 		// set up MANY-TO-MANY relation person2rights
 		if(isset($this->rights)) {
 			$this->rights->setRelatedClass('PersonObject', 'left');
@@ -235,6 +248,14 @@ class PersonObject extends AlphaDAO {
 			$this->rights->setRelatedClassDisplayField('name', 'right');
 			$this->rights->setRelationType('MANY-TO-MANY');
 			$this->rights->setValue($this->getID());
+		}
+
+		if(isset($this->actions)) {
+			$this->actions->setValue($this->OID);
+			$this->actions->setRelatedClass('ActionLogObject');
+			$this->actions->setRelatedClassField('created_by');
+			$this->actions->setRelatedClassDisplayField('message');
+			$this->actions->setRelationType('ONE-TO-MANY');
 		}
 	}
 
@@ -269,9 +290,9 @@ class PersonObject extends AlphaDAO {
 		if(self::$logger == null)
 			self::$logger = new Logger('PersonObject');
 		self::$logger->debug('>>inGroup(groupName=['.$groupName.'])');
-			
+
 		$group = new RightsObject();
-			
+
 		try {
 			$group->loadByAttribute('name', $groupName);
 		}catch (BONotFoundException $e) {
@@ -279,9 +300,9 @@ class PersonObject extends AlphaDAO {
 			self::$logger->debug('<<inGroup [false]');
 			return false;
 		}
-			
+
 		$rel = $group->getMembers();
-		
+
 		try {
 			// load all person2rights RelationLookup objects for this person
 			$lookUps = $rel->getLookup()->loadAllByAttribute('leftID', $this->getID());
@@ -293,12 +314,12 @@ class PersonObject extends AlphaDAO {
 					self::$logger->debug('<<inGroup [true]');
 					return true;
 				}
-			}				
+			}
 		}catch (BONotFoundException $e) {
 			self::$logger->debug('<<inGroup [false]');
 			return false;
 		}
-		
+
 		self::$logger->debug('<<inGroup [false]');
 		return false;
 	}
@@ -323,7 +344,7 @@ class PersonObject extends AlphaDAO {
 		$headers = 'MIME-Version: 1.0'."\n";
 		$headers .= 'Content-type: text/html; charset=iso-8859-1'."\n";
 		$headers .= "From: ".$config->get('email.reply.to')."\n";
-		
+
 		try {
 			mail($this->get('email'), $subject, $body, $headers);
 		}catch (PHPException $e) {
