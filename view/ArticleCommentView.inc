@@ -125,8 +125,10 @@ class ArticleCommentView extends AlphaView {
 		$textBox = new TextBox($this->BO->getPropObject('content'), $this->BO->getDataLabel('content'), 'content', '', 5, $this->BO->getID());
 		echo $textBox->render();
 
-		echo '<input type="hidden" name="version_num" value="'.$this->BO->getVersion().'"/>';
-		echo '<input type="hidden" name="article_comment_id" value="'.$this->BO->getID().'"/>';
+		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('version_num')) : 'version_num');
+		echo '<input type="hidden" name="'.$fieldname.'" value="'.$this->BO->getVersion().'"/>';
+		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('article_comment_id')) : 'article_comment_id');
+		echo '<input type="hidden" name="'.$fieldname.'" value="'.$this->BO->getID().'"/>';
 
 		// render special buttons for admins only
 		if ($_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
