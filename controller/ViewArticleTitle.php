@@ -17,7 +17,7 @@ if(!isset($config)) {
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -138,8 +138,8 @@ class ViewArticleTitle extends ViewArticle {
 // now build the new controller
 if(basename($_SERVER['PHP_SELF']) == 'ViewArticleTitle.php') {
 	$controller = new ViewArticleTitle();
-	
-	if(!empty($_POST)) {			
+
+	if(!empty($_POST)) {
 		$controller->doPOST($_REQUEST);
 	}else{
 		$controller->doGET($_GET);

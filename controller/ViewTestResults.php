@@ -21,7 +21,7 @@ require_once 'PHPUnit/TextUI/TestRunner.php';
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -447,6 +447,9 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 		echo '<h3>Total running time: '.$runningTime.'</h3>';
 
 		echo AlphaView::displayPageFoot($this);
+
+		self::$logger = new Logger('ViewTestResults');
+		self::$logger->action('Ran unit tests');
 	}
 
 	/**
