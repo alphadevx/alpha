@@ -8,10 +8,13 @@ require_once $config->get('app.root').'alpha/util/AlphaAutoLoader.inc';
 
 $request = str_replace($config->get('app.url'), '', 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 
+if($config->get('security.http.header.x.frame.options') != '')
+	header('X-Frame-Options: '.$config->get('security.http.header.x.frame.options'));
+
 // checking to see if the DB is installed before proceeding to process requests normally
 $isInstalled = true;
 
-if($config->get('app.check.installed')&& !AlphaDAO::isInstalled())
+if($config->get('app.check.installed') && !AlphaDAO::isInstalled())
 	$isInstalled = false;
 
 if($request == '' && $isInstalled) { // process requests to the root (/) URL here with your code
