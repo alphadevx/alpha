@@ -902,6 +902,41 @@ abstract class AlphaDAO {
 	}
 
 	/**
+	 * Populates the current business object from the provided hash array
+	 *
+	 * @param array $hashArray
+	 * @since 1.2.1
+ 	 */
+	public function populateFromArray($hashArray) {
+		self::$logger->debug('>>populateFromArray(hashArray=['.print_r($hashArray, true).'])');
+
+		// get the class attributes
+		$reflection = new ReflectionClass(get_class($this));
+		$properties = $reflection->getProperties();
+
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+
+			if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
+				$propClass = get_class($this->getPropObject($propName));
+
+				if(isset($hashArray[$propName])) {
+
+					if (strtoupper($propClass) != 'DATE' && strtoupper($propClass) != 'TIMESTAMP')
+						$this->getPropObject($propName)->setValue($hashArray[$propName]);
+					else
+						$this->getPropObject($propName)->populateFromString($hashArray[$propName]);
+				}
+            }
+
+            if ($propName == 'version_num' && isset($hashArray['version_num']))
+                $this->version_num->setValue($hashArray['version_num']);
+		}
+
+		self::$logger->debug('<<populateFromArray');
+	}
+
+	/**
 	 * Gets the maximum OID value from the database for this class type.
 	 *
 	 * @return integer The maximum OID value in the class table.
