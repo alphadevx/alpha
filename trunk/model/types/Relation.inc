@@ -574,7 +574,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 				}
 			}
 			// load objects on the left from accessing on the right
-			if($accessingClassName == $this->relatedClassRight) {
+			if($accessingClassName == $this->relatedClassRight && count($objects) == 0) {
 				AlphaDAO::loadClassDef($this->relatedClassLeft);
 
 				$lookupObjects = $this->lookup->loadAllByAttribute('rightID', $this->value);
