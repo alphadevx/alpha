@@ -309,7 +309,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 			echo '<p>Attempting to create the logs directory <em>'.$logsDir.'</em>...';
 
 			if(!file_exists($logsDir))
-				mkdir($logsDir, 0766);
+				mkdir($logsDir, 0774);
 
 			$this->copyRestrictedAccessFileToDirectory($logsDir);
 
@@ -332,7 +332,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 			echo '<p>Attempting to create the tasks directory <em>'.$tasksDir.'</em>...';
 
 			if(!file_exists($tasksDir))
-				mkdir($tasksDir, 0766);
+				mkdir($tasksDir, 0774);
 
 			$this->copyRestrictedAccessFileToDirectory($logsDir);
 
@@ -353,7 +353,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 			echo '<p>Attempting to create the controller directory <em>'.$controllerDir.'</em>...';
 
 			if(!file_exists($controllerDir))
-				mkdir($controllerDir, 0766);
+				mkdir($controllerDir, 0774);
 
 			self::$logger->info('Controller directory ['.$controllerDir.'] successfully created');
 			echo AlphaView::displayUpdateMessage('Controllers directory ['.$controllerDir.'] successfully created');
@@ -372,7 +372,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 			echo '<p>Attempting to create the model directory <em>'.$modelDir.'</em>...';
 
 			if(!file_exists($modelDir))
-				mkdir($modelDir, 0766);
+				mkdir($modelDir, 0774);
 
 			$this->copyRestrictedAccessFileToDirectory($modelDir);
 
@@ -393,7 +393,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 			echo '<p>Attempting to create the view directory <em>'.$viewDir.'</em>...';
 
 			if(!file_exists($viewDir))
-				mkdir($viewDir, 0766);
+				mkdir($viewDir, 0774);
 
 			$this->copyRestrictedAccessFileToDirectory($viewDir);
 
@@ -414,7 +414,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 			echo '<p>Attempting to create the attachments directory <em>'.$attachmentsDir.'</em>...';
 
 			if(!file_exists($attachmentsDir))
-				mkdir($attachmentsDir, 0766);
+				mkdir($attachmentsDir, 0774);
 
 			$this->copyRestrictedAccessFileToDirectory($attachmentsDir);
 
@@ -439,7 +439,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 			// cache
 			echo '<p>Attempting to create the cache directory <em>'.$cacheDir.'</em>...';
 			if(!file_exists($cacheDir))
-				mkdir($cacheDir, 0766);
+				mkdir($cacheDir, 0774);
 
 			$this->copyRestrictedAccessFileToDirectory($cacheDir);
 
@@ -449,7 +449,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 			// cache/html
 			echo '<p>Attempting to create the HTML cache directory <em>'.$htmlDir.'</em>...';
 			if(!file_exists($htmlDir))
-				mkdir($htmlDir, 0766);
+				mkdir($htmlDir, 0774);
 
 			$this->copyRestrictedAccessFileToDirectory($htmlDir);
 
@@ -459,7 +459,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 			// cache/images
 			echo '<p>Attempting to create the cache directory <em>'.$imagesDir.'</em>...';
 			if(!file_exists($imagesDir))
-				mkdir($imagesDir, 0766);
+				mkdir($imagesDir, 0774);
 
 			$this->copyRestrictedAccessFileToDirectory($imagesDir);
 
@@ -469,7 +469,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 			// cache/pdf
 			echo '<p>Attempting to create the cache directory <em>'.$pdfDir.'</em>...';
 			if(!file_exists($pdfDir))
-				mkdir($pdfDir, 0766);
+				mkdir($pdfDir, 0774);
 
 			$this->copyRestrictedAccessFileToDirectory($pdfDir);
 
@@ -479,7 +479,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 			// cache/xls
 			echo '<p>Attempting to create the cache directory <em>'.$xlsDir.'</em>...';
 			if(!file_exists($xlsDir))
-				mkdir($xlsDir, 0766);
+				mkdir($xlsDir, 0774);
 
 			$this->copyRestrictedAccessFileToDirectory($xlsDir);
 
