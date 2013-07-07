@@ -12,68 +12,68 @@ require_once $config->get('app.root').'alpha/util/AlphaErrorHandlers.inc';
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
  * All rights reserved.
- * 
+ *
  * <pre>
- * Redistribution and use in source and binary forms, with or 
- * without modification, are permitted provided that the 
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are permitted provided that the
  * following conditions are met:
- * 
- * * Redistributions of source code must retain the above 
- *   copyright notice, this list of conditions and the 
+ *
+ * * Redistributions of source code must retain the above
+ *   copyright notice, this list of conditions and the
  *   following disclaimer.
- * * Redistributions in binary form must reproduce the above 
- *   copyright notice, this list of conditions and the 
- *   following disclaimer in the documentation and/or other 
+ * * Redistributions in binary form must reproduce the above
+ *   copyright notice, this list of conditions and the
+ *   following disclaimer in the documentation and/or other
  *   materials provided with the distribution.
- * * Neither the name of the Alpha Framework nor the names 
- *   of its contributors may be used to endorse or promote 
- *   products derived from this software without specific 
+ * * Neither the name of the Alpha Framework nor the names
+ *   of its contributors may be used to endorse or promote
+ *   products derived from this software without specific
  *   prior written permission.
- *   
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
- * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
- * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *  
+ *
  */
 class AlphaAutoLoader {
 	/**
 	 * Hash array of the directories to scan
-	 * 
+	 *
 	 * @var array
 	 */
 	private static $scannedDirs;
-	
+
 	/**
 	 * Logger
-	 * 
+	 *
 	 * @var Logger
 	 */
 	private static $logger;
-	
+
 	/**
 	 * Sets up the list of directories to scan.
-	 * 
+	 *
 	 * @since 1.2
 	 */
 	private static function initFolderList() {
 		global $config;
-		
+
 		if(!isset(self::$logger) && class_exists('Logger'))
 			self::$logger = new Logger('AlphaAutoLoader');
-		
+
 		self::$scannedDirs = array(
 					$config->get('app.root').'alpha/controller/',
 					$config->get('app.root').'alpha/controller/front/',
@@ -98,19 +98,19 @@ class AlphaAutoLoader {
 					$config->get('app.root').'view/'
 				);
 	}
-	
+
 	/**
 	 * Load the file based on the class name provided.  The file is assumed to be called "className.[inc|php]".
-	 * 
+	 *
 	 * @param string $className
 	 * @since 1.2
 	 */
 	public static function loadClass($className) {
 		global $config;
-		
+
 		if(!isset(self::$scannedDirs))
 			self::initFolderList();
-		
+
 		// lets try to guess the correct dir to save time, based on the name of the class
 		$skipDirs = array();
 
@@ -161,7 +161,7 @@ class AlphaAutoLoader {
 				array_push($skipDirs, $config->get('app.root').'alpha/view/');
 			}
 		}
-		
+
 		if(strpos($className, 'Utils') !== false) {
 			if(self::loadFile($config->get('app.root').'alpha/util/', $className)) {
 				return;
@@ -169,7 +169,7 @@ class AlphaAutoLoader {
 				array_push($skipDirs, $config->get('app.root').'alpha/util/');
 			}
 		}
-		
+
 		// do a full folder scan
 		foreach (self::$scannedDirs as $dir) {
 			if(!in_array($dir, $skipDirs)) {
@@ -183,53 +183,53 @@ class AlphaAutoLoader {
 				}
 			}
 		}
-		
+
 		if(isset(self::$logger))
 			self::$logger->fatal('Unable to load the required class ['.$className.']');
 	}
-	
+
 	/**
 	 * Loads the lib file from the lib dir based on the filename provided.
-	 * 
+	 *
 	 * @param string $fileName
 	 * @throws LibraryNotInstalledException
 	 * @since 1.2
 	 */
 	public static function loadLib($fileName) {
 		global $config;
-		
+
 		// Libraries shipped with Alpha
 		$iterator = new RecursiveDirectoryIterator($config->get('app.root').'alpha/lib/');
-		
+
 		foreach (new RecursiveIteratorIterator($iterator) as $name => $file) {
 			if($file->getBaseName() == $fileName) {
 				if(isset(self::$logger))
 					self::$logger->debug('Found the library file ['.$fileName.'] in the location ['.$name.']');
-				
+
 				require_once $name;
 				return;
 			}
 		}
-		
+
 		// custom libs
 		$iterator = new RecursiveDirectoryIterator($config->get('app.root').'lib/');
-		
+
 		foreach (new RecursiveIteratorIterator($iterator) as $name => $file) {
 			if($file->getBaseName() == $fileName) {
 				if(isset(self::$logger))
 					self::$logger->debug('Found the library file ['.$fileName.'] in the location ['.$name.']');
-				
+
 				require_once $name;
 				return;
 			}
 		}
-		
+
 		throw new LibraryNotInstalledException('Cannot find the library file ['.$fileName.'] in the lib dir!');
 	}
 
 	/**
 	 * Attempts to load the file for the class in the directory indicated.
-	 * 
+	 *
 	 * @param string $dir
 	 * @param string $className
 	 * @return bool
@@ -237,7 +237,7 @@ class AlphaAutoLoader {
 	 */
 	private static function loadFile($dir, $className) {
 		global $config;
-		
+
 		// we're doing .inc first, as most classes in Alpha use this extension
 		$path = $dir.$className.'.inc';
 		if (file_exists($path) && is_readable($path)) {
