@@ -1210,14 +1210,17 @@ abstract class AlphaController {
 	 */
 	private function decryptFieldNames() {
 		foreach(array_keys($_POST) as $fieldname) {
+
+			// set request params where fieldnames provided are based64 encoded and encrypted
 			if(AlphaValidator::isBase64($fieldname)) {
 				$_REQUEST[trim(AlphaSecurityUtils::decrypt(base64_decode($fieldname)))] = $_POST[$fieldname];
 				$_POST[trim(AlphaSecurityUtils::decrypt(base64_decode($fieldname)))] = $_POST[$fieldname];
-			}else{
-				// clear non-encrypted fields (we won't accept these when security.encrypt.http.fieldnames = true)
-				unset($_POST[$fieldname]);
-				unset($_REQUEST[$fieldname]);
 			}
+
+			// clear non-encrypted fields (we won't accept these when security.encrypt.http.fieldnames = true), and encrypted fieldnames already decrypted above.
+			unset($_POST[$fieldname]);
+			unset($_REQUEST[$fieldname]);
+
 		}
 	}
 }
