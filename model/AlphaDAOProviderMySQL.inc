@@ -144,7 +144,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	 * @see alpha/model/AlphaDAOProviderInterface::load()
 	 */
 	public function load($OID) {
-		self::$logger->debug('>>load(OID=['.$OID.'])');
+		self::$logger->debug('>>load(OID=['.print_r($OID, true).'])');
 
         global $config;
 
@@ -170,18 +170,19 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 
 			$stmt->close();
 		}else{
-			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
+			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.'], OID is ['.print_r($OID, true).'], MySql error is ['.self::getConnection()->error.']');
 			if(!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
 
 				throw new BONotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->BO->getTableName().'] did not exist so had to create!');
 			}
+
 			return;
 		}
 
 		if(!isset($row['OID']) || $row['OID'] < 1) {
 			throw new BONotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');
-			self::$logger->debug('<<load');
+			self::$logger->warn('<<load');
 			return;
 		}
 
@@ -223,12 +224,12 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 					$this->BO->addProperty($missingFields[$i]);
 
 				throw new BONotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->BO->getTableName().'] was out of sync with the database so had to be updated!');
-				self::$logger->debug('<<load');
+				self::$logger->warn('<<load');
 				return;
 			}
 		}
 
-		self::$logger->debug('<<load');
+		self::$logger->debug('<<load ['.$OID.']');
 	}
 
 	/**
@@ -1477,14 +1478,14 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 
 		$result = self::getConnection()->query($sqlQuery);
 
-		$tableName = ($checkHistoryTable ? $this->BO->getTableName().'_history' : $this->BO->getTableName());
-
-		while ($row = $result->fetch_array(MYSQLI_NUM)) {
-	    		if (strtolower($row[0]) == strtolower($tableName))
-    				$tableExists = true;
-		}
-
 		if ($result) {
+			$tableName = ($checkHistoryTable ? $this->BO->getTableName().'_history' : $this->BO->getTableName());
+
+			while ($row = $result->fetch_array(MYSQLI_NUM)) {
+		    	if (strtolower($row[0]) == strtolower($tableName))
+	    			$tableExists = true;
+			}
+
 			self::$logger->debug('<<checkTableExists ['.$tableExists.']');
 			return $tableExists;
 		}else{
