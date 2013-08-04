@@ -864,11 +864,11 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 				$html .= '</th>';
 
 				$html .= '<td>';
-				$html .= '<input type="hidden" name="'.$name.'" value="0">';
-				$html .= '<input type="checkbox" name="'.$fieldname.'" id="'.$name.'" />';
+				$html .= '<input type="hidden" name="'.$fieldname.'" value="0">';
+				$html .= '<input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'" />';
 				$html .= '</td></tr>';
 			}else{
-				$html .= $label.'<select size="1" name="'.$name.'"/>';
+				$html .= $label.'<select size="1" name="'.$fieldname.'"/>';
 				$html .= '<option value="0" selected>No</option>';
 				$html .= '<option value="1">Yes</option>';
 				$html .= '</select>';
@@ -882,13 +882,13 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 				$html .= '</th>';
 
 				$html .= '<td>';
-				$html .= '<input type="hidden" name="'.$name.'" value="0">';
-				$html .= '<input type="checkbox" name="'.$fieldname.'" id="'.$name.'"'.($value == '1'? ' checked':'').' />';
+				$html .= '<input type="hidden" name="'.$fieldname.'" value="0">';
+				$html .= '<input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'"'.($value == '1'? ' checked':'').' />';
 				$html .= '</td></tr>';
 			}else{
 				$html .= '<label for="'.$fieldname.'">'.$label.'</label>';
-				$html .= '<input type="hidden" name="'.$name.'" value="0">';
-				$html .= '<input type="checkbox" name="'.$fieldname.'" id="'.$name.'"'.($value == '1'? ' checked':'').' />';
+				$html .= '<input type="hidden" name="'.$fieldname.'" value="0">';
+				$html .= '<input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'"'.($value == '1'? ' checked':'').' />';
 			}
 		}
 
