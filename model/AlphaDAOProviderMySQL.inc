@@ -8,7 +8,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -182,7 +182,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 
 		if(!isset($row['OID']) || $row['OID'] < 1) {
 			throw new BONotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');
-			self::$logger->warn('<<load');
+			self::$logger->debug('<<load');
 			return;
 		}
 
