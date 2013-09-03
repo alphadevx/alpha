@@ -485,7 +485,7 @@ class AlphaView {
 	 * @return string
 	 * @since 1.0
 	 */
-	public static function renderDoubleField($name, $label, $mode, $value='', $tableTags=true) {
+	public function renderDoubleField($name, $label, $mode, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderDoubleField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
 
 		global $config;
@@ -530,7 +530,7 @@ class AlphaView {
 	 * @return string
 	 * @since 1.0
 	 */
-	public static function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
+	public function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
 
 		global $config;
@@ -553,7 +553,7 @@ class AlphaView {
 	 * @return string
 	 * @since 1.0
 	 */
-	public static function renderDEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
+	public function renderDEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderDEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
 
 		global $config;
