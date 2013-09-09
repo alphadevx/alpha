@@ -213,7 +213,8 @@ abstract class AlphaController {
 
 	 	// kick off new session, or reuse existing one
 	 	if(!isset($_SESSION)) {
-	 		$hostname = parse_url($config->get('app.url'))['host'];
+	 		$url = parse_url($config->get('app.url'));
+	 		$hostname = $url['host'];
 	 		session_set_cookie_params(0, '/', $hostname, false, true);
 	 		session_start();
 	 	}

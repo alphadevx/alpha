@@ -103,7 +103,8 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$fields['formFields'] = $this->renderAllFields('create');
 
 		// buffer HTML output for Create and Cancel buttons
-		$button = new Button('submit', 'Create', 'createBut');
+		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('createBut')) : 'createBut');
+		$button = new Button('submit', 'Create', $fieldname);
 		$fields['createButton'] = $button->render();
 
 		$button = new Button("document.location.replace('".FrontController::generateSecureURL('act=ListBusinessObjects')."')", 'Cancel', 'cancelBut');
@@ -135,7 +136,8 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$fields['formFields'] = $this->renderAllFields('edit');
 
 		// buffer HTML output for Create and Cancel buttons
-		$button = new Button('submit', 'Save', 'saveBut');
+		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('saveBut')) : 'saveBut');
+		$button = new Button('submit', 'Save', $fieldname);
 		$fields['saveButton'] = $button->render();
 
 		$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
@@ -387,7 +389,8 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
         $html = '';
 
         if (!$this->BO->checkTableExists()) {
-        	$button = new Button("submit", "Create Table", "createTableBut");
+        	$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('createTableBut')) : 'createTableBut');
+        	$button = new Button('submit', 'Create Table', $fieldname);
             $html .= $button->render();
             // hidden field so that we know which class to create the table for
             $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('createTableClass')) : 'createTableClass');
@@ -395,7 +398,8 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
         }
 
 		if ($html == '' && $this->BO->getMaintainHistory() && !$this->BO->checkTableExists(true)) {
-        	$button = new Button("submit", "Create History Table", "createHistoryTableBut");
+			$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('createHistoryTableBut')) : 'createHistoryTableBut');
+        	$button = new Button('submit', 'Create History Table', $fieldname);
             $html .= $button->render();
             // hidden field so that we know which class to create the table for
             $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('createTableClass')) : 'createTableClass');
@@ -421,6 +425,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 			})
 			$('#dialogDiv').dialog('open');
 			return false;";
+
 			$button = new Button($js , "Recreate Table", "recreateTableBut");
 			$html .= $button->render();
 			// hidden field so that we know which class to recreate the table for
