@@ -78,7 +78,8 @@ class PersonView extends AlphaView {
 		$html .= $stringBox->render(true);
 		$html .= '</tr>';
 		$html .= '<tr><td colspan="2">';
-		$temp = new Button("submit","Login","loginBut");
+		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('loginBut')) : 'loginBut');
+		$temp = new Button('submit','Login',$fieldname);
 		$html .= '<div align="center">'.$temp->render(80).'</div>';
 		$html .= '</td></tr>';
 

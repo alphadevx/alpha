@@ -115,12 +115,13 @@ class CacheManager extends AlphaController implements AlphaControllerInterface {
    		echo '<h2>Total of '.$fileCount.' files in the cache.</h2>';
 
    		echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" name="clearForm" id="clearForm">';
-   		echo '<input type="hidden" name="clearCache" id="clearCache" value="false"/>';
+   		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('clearCache')) : 'clearCache');
+   		echo '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value="false"/>';
    		$js = "$('#dialogDiv').text('Are you sure you want to delete all files in the cache?');
 				$('#dialogDiv').dialog({
 				buttons: {
 					'OK': function(event, ui) {
-						$('#clearCache').attr('value', 'true');
+						$('[id=\"".$fieldname."\"]').attr('value', 'true');
 						$('#clearForm').submit();
 					},
 					'Cancel': function(event, ui) {
