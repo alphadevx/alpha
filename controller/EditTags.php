@@ -165,7 +165,8 @@ class EditTags extends Edit implements AlphaControllerInterface {
 
 			echo '<tr><td colspan="3">';
 
-			$temp = new Button('submit', 'Save', 'saveBut');
+			$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('saveBut')) : 'saveBut');
+			$temp = new Button('submit', 'Save', $fieldname);
 			echo $temp->render();
 			echo '&nbsp;&nbsp;';
 			$temp = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.$params['bo'].'&oid='.$params['oid'])."'", 'Back to Object', 'cancelBut');
