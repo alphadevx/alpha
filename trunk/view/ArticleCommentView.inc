@@ -134,7 +134,8 @@ class ArticleCommentView extends AlphaView {
 		if ($_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
 			echo '<tr><td colspan="2">';
 
-			$temp = new Button('submit', 'Save', 'saveBut');
+			$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('saveBut')) : 'saveBut');
+			$temp = new Button('submit', 'Save', $fieldname);
 			echo $temp->render();
 			echo '&nbsp;&nbsp;';
 			$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');

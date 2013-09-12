@@ -153,7 +153,8 @@ class DEnumView extends AlphaView {
 
 		$html .= '<tr><td colspan="2">';
 
-		$temp = new Button('submit', 'Save', 'saveBut');
+		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('saveBut')) : 'saveBut');
+		$temp = new Button('submit', 'Save', $fieldname);
 		$html .= $temp->render();
 		$html .= '&nbsp;&nbsp;';
 		$temp = new Button("document.location = '".FrontController::generateSecureURL('act=ListDEnums')."'", 'Back to List', 'cancelBut');

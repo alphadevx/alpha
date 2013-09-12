@@ -263,7 +263,7 @@ class FrontController {
 		$token = base64_decode($token);
 		$params = trim(AlphaSecurityUtils::decrypt($token));
 
-		$pairs = explode('&', $params);print_r($pairs);
+		$pairs = explode('&', $params);
 
 		$parameters = array();
 
