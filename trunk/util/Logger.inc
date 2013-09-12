@@ -145,8 +145,11 @@ class Logger {
 		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' || 
 			in_array($this->classname, $this->debugClasses)) {
 			$dateTime = date("Y-m-d H:i:s");
-			$this->logfile->writeLine(array($dateTime, 'ERROR', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ? 
-				$_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
+			$line = array($dateTime, 'ERROR', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ? 
+				$_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : ''));
+			$this->logfile->writeLine($line);
+
+			$this->notifyAdmin(print_r($line, true));
 		}
 	}
 
@@ -160,8 +163,11 @@ class Logger {
 		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' || 
 			$this->level == 'FATAL' || in_array($this->classname, $this->debugClasses)) {
 			$dateTime = date("Y-m-d H:i:s");
-			$this->logfile->writeLine(array($dateTime, 'FATAL', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ? 
-				$_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
+			$line = array($dateTime, 'FATAL', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ? 
+				$_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : ''));
+			$this->logfile->writeLine($line);
+
+			$this->notifyAdmin(print_r($line, true));
 		}
 	}
 
@@ -214,7 +220,7 @@ class Logger {
 
 			$body .= "\n\nKind regards,\n\nAdministrator\n--\n".$config->get('app.url');
 
-			mail($config->get('app.log.error.mail.address'), "Error in class ".$this->classname." on site .".$config->get('app.title'), $body, 
+			mail($config->get('app.log.error.mail.address'), "Error in class ".$this->classname." on site ".$config->get('app.title'), $body, 
 				"From: ".$config->get('email.reply.to')."\r\nReply-To: ".$config->get('email.reply.to')."\r\nX-Mailer: PHP/" . phpversion());
 		}
 	}
