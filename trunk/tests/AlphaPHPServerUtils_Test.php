@@ -70,13 +70,13 @@ class AlphaPHPServerUtils_Test extends PHPUnit_Framework_TestCase {
      * @since 1.2.2
      */
     public function testStart() {
-        $pid = AlphaPHPServerUtils::start('127.0.0.1','8081','.');
+        $pid = AlphaPHPServerUtils::start('localhost','8081','.');
         sleep(1); // wait a second to give the server time to start...
 
         $this->assertTrue($pid > 0, 'Testing that a PID was returned after starting the server');
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'http://127.0.0.1:8081/');
+        curl_setopt($ch, CURLOPT_URL, 'http://localhost:8081/');
         $result = curl_exec($ch);
 
         $this->assertEquals(404, curl_getinfo($ch, CURLINFO_HTTP_CODE), 'Testing that the server returns a 404 not found');
@@ -91,13 +91,13 @@ class AlphaPHPServerUtils_Test extends PHPUnit_Framework_TestCase {
      * @since 1.2.2
      */
     public function testStop() {
-        $pid = AlphaPHPServerUtils::start('127.0.0.1','8081','.');
+        $pid = AlphaPHPServerUtils::start('localhost','8081','.');
         sleep(1); // wait a second to give the server time to start...
 
         $this->assertTrue($pid > 0, 'Testing that a PID was returned after starting the server');
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'http://127.0.0.1:8081/');
+        curl_setopt($ch, CURLOPT_URL, 'http://localhost:8081/');
         curl_setopt($ch, CURLOPT_TIMEOUT, 3);
         $result = curl_exec($ch);
 
@@ -119,7 +119,7 @@ class AlphaPHPServerUtils_Test extends PHPUnit_Framework_TestCase {
      * @since 1.2.2
      */
     public function testStatus() {
-        $pid = AlphaPHPServerUtils::start('127.0.0.1','8081','.');
+        $pid = AlphaPHPServerUtils::start('localhost','8081','.');
 
         $this->assertTrue(AlphaPHPServerUtils::status($pid), 'Testing that the status of the server is true when it is running');
 

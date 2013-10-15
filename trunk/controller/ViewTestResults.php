@@ -430,11 +430,26 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 
 		$this->printTestResult($result);
 
+		echo '<p>Running time: '.$runningTime.'</p>';
+
 		// **** begin test suite ****
 		echo '<h3>AlphaDAOProviderFactory:</h3>';
 
 		$suite = new PHPUnit_Framework_TestSuite();
 		$suite->addTestSuite('AlphaDAOProviderFactory_Test');
+		$result = $suite->run();
+		$runningTime+=$result->time();
+		$testCount+=$result->count();
+
+		$this->printTestResult($result);
+
+		echo '<p>Running time: '.$runningTime.'</p>';
+
+		// **** begin test suite ****
+		echo '<h3>AlphaPHPServerUtils:</h3>';
+
+		$suite = new PHPUnit_Framework_TestSuite();
+		$suite->addTestSuite('AlphaPHPServerUtils_Test');
 		$result = $suite->run();
 		$runningTime+=$result->time();
 		$testCount+=$result->count();
