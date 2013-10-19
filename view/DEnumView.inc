@@ -143,7 +143,9 @@ class DEnumView extends AlphaView {
 			$html .= $temp->render();
 		}
 
-		$html .= '<input type="hidden" name="version_num" value="'.$this->BO->getVersion().'"/>';
+		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('version_num')) : 'version_num');
+
+		$html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->BO->getVersion().'"/>';
 
 		$html .= '<tr><td colspan="2"><h3>Add a new value to the DEnum dropdown list:</h3></td></tr>';
 
