@@ -15,6 +15,6 @@
 		<?= $fileAttachments; ?>
 		<?= $formSecurityFields ?>	
 	</table>
-	<input type="hidden" name="version_num" value="<?= $version_num ?>"/>
+	<input type="hidden" name="<?= ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('version_num')) : 'version_num') ?>" value="<?= $version_num ?>"/>
 </form>
 <div id="helpPage"></div>
