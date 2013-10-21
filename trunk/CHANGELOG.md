@@ -1,6 +1,189 @@
 Alpha Framework Change log
 ==========================
 
+Version 1.2.2 October 22nd 2013
+-------------------------------
+
+2013-10-19 13:36:29 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/105 - the hidden version_num fieldname is now encrypted when security.encrypt.http.fieldnames = true in configuration
+
+2013-10-15 21:34:29 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/122 - fixed the AlphaCronManager and BackupTask classes to use the new app.file.store.dir for writting their logs
+
+2013-09-22 22:10:24 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/119 - added the AlphaPHPServerUtils class for controlling the built-in HTTP server in PHP 5.4 (starting/stopping/PID status checks)
+
+2013-09-12 21:41:08 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/78 - fixed broken support for the security.encrypt.http.fieldnames in a view more core views and controllers
+
+2013-09-12 21:38:17 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/121 - the Image widget no longer creates unnessary image files in the app root. In addition, the var1 and var2 security fields are now URL encoded/decoded by this widget as they are passed in the URL via the ViewImage controller, and are not always URL safe.
+
+2013-09-12 21:30:36 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/120 - added calls to the Logger::notifyAdmin() method from Logger::error() and Logger::fatal()
+
+2013-09-12 21:21:40 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/78 - fixed support for security.encrypt.http.fieldnames in the GenSecureQueryStrings controller
+
+2013-09-12 21:20:52 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/78 - fixed support for security.encrypt.http.fieldnames in the EditTags controller
+
+2013-09-09 21:22:14 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/78 - fixed more instances of security.encrypt.http.fieldnames not being supported correctly in the scaffolded screens
+
+2013-09-03 23:07:49 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/118 - the AlphaView::renderDoubleField(), AlphaView::renderEnumField(), and AlphaView::renderDEnumField() methods are no longer incorrectly defined as static
+
+2013-08-04 11:22:45 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/106 - fixed broken support for security.encrypt.http.fieldnames = true in the AlphaRendererProviderHTML::renderBooleanField() method and in the jquery.ui.checkbox Javascript
+
+2013-07-09 23:23:29 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/103 - improved the database result checking code in the AlphaDAOProviderMySQL::checkTableExists() method to make it more robust
+
+2013-07-09 23:16:53 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/104 - the AlphaController::decryptFieldNames() now only sets unencrypted fieldname/value pairs in the request when the security.encrypt.http.fieldnames setting is enabled
+
+2013-07-07 19:23:50 GMT
+
+Code clean-up (white spaces and copyright) of AlphaAutoLoader class
+
+2013-07-06 13:31:08 GMT
+
+Code clean-up (white spaces and copyright) of MarkdownFacade and AlphaView classes
+
+2013-06-05 10:52:49 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/83 - updated the folder permissions set by the install controller to make group level permissions more permissive, and permissions for others more restrictive
+
+2013-06-04 10:37:40 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/95 - fixed support for MANY-TO-MANY relations where a DAO is related to itself
+
+2013-05-28 11:08:25 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/96 - added the AlphaDAO::populateFromArray() method
+
+2013-05-20 15:58:33 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/92 - added optional support for the X-Frame-Options header via the new security.http.header.x.frame.options setting
+
+2013-03-08 17:13:14 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/84 - added Logger::action() calls to the ViewTestResults controller, and cleaned up white spaces in the controller and exception packages
+
+2013-02-27 16:47:12 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/84 - added Logger::action() calls to the ViewArticle controller
+
+2013-02-26 15:13:13 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/84 - added more Logger::action() calls to the standard controllers
+
+2013-02-22 16:50:48 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/84 - added Logger::action() calls to the ListBusinessObjects controller
+
+2013-02-22 16:18:53 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/84 - added more Logger::action() calls to the standard controllers
+
+2013-02-21 16:39:18 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/84 - fixed support for the security.encrypt.http.fieldnames setting in the EditTags controller, and added calls to Logger::action() to this class
+
+2013-02-20 16:32:20 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/84 - added a relation to person model to pull in actions carried out by the person
+
+2013-02-19 16:11:21 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/84 - added more Logger::action() calls to the standard controllers
+
+2013-02-15 14:43:16 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/84 - added more Logger::action() calls to the standard controllers
+
+2013-02-14 16:11:19 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/85 - I have added the new ActionLogObject class, and some sample logging calls to the Login/Logout controllers
+
+2013-02-12 22:34:51 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/78 - removed the encryption of id and name attributes from buttons as this was resulting in id attributes that were invalid (for example CSS rules were being ignored)
+
+2013-02-12 22:30:48 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/90 - the AlphaDAOProviderMySQL::loadAllByAttribute() method no longer ignores the limit param when the start = 0
+
+2013-02-08 16:03:10 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/78 - I have updated the HTML generated in the DEnumView class to support security.encrypt.http.fieldnames being set to true
+
+2013-02-08 15:09:22 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/78 - I have updated the HTML generated in the adminView() method to support security.encrypt.http.fieldnames being set to true
+
+2013-01-27 20:22:18 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/78 - fixed the default delete button Javascript and AlphaRendererProviderHTML::renderDeleteForm() method to support security.encrypt.http.fieldnames being set to true
+
+2013-01-25 11:53:35 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/87 - updated the sample .htaccess to remove unused directives and to ensure that directory listings are switched off for the app directories
+
+2013-01-24 14:05:13 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/78 - updated the PersonView class to support the new security.encrypt.http.fieldnames setting
+
+2013-01-24 12:29:12 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/78 - non-ecrypted POST fieldnames will be wiped from the request (along with their values) if security.encrypt.http.fieldnames is enabled
+
+2013-01-24 12:27:12 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/78 - the var1/var2 security fieldnames are now encrypted if security.encrypt.http.fieldnames is enabled
+
+2013-01-24 12:24:15 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/78 - updated the Button widget to support the new security.encrypt.http.fieldnames setting, and removed the deprecated Button::renderJavascript() method
+
+2013-01-24 11:39:50 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/85 - added the HttpOnly flag to the PHPSESSID cookie set by Alpha
+
+2013-01-22 16:43:56 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/78 - added the renderStringField() method to the AlphaRendererProviderInterface and AlphaRendererProviderHTML implmentation, fixed a type-check bug in AlphaValidatorLLisDouble(), fixed some broken unit tests due to the name change of the security.query.string.key setting, and finally added more support for security.encrypt.http.fieldnames to the AlphaRendererProviderHTML class.
+
+2013-01-21 23:26:23 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/78 - added support for the new security.encrypt.http.fieldnames setting to StringBox and TextBox, in addition to adding support at the controller level for automatically decrypting POST fieldnames when security.encrypt.http.fieldnames is enabled
+
+2013-01-20 21:01:12 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/44 - manually adding in the correct version number in the current API docs
+
+2013-01-17 17:20:05 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/80 - added the AlphaSecurityUtils class to centralize encrypt/decrypt logic, changed the security.query.string.key setting to security.encryption.key which is more generic, and finally updated the AlphaController::checkSecurityFields() and AlphaController::generateSecurityFields() methods to use strong encryption (TripleDES rather than MD5)
+
+2013-01-09 16:34:50 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/77 - switching from application/x-compressed to application/zip in the MIME-type file mappings in AlphaFileUtils
+
 Version 1.2.1 December 21st 2012
 --------------------------------
 
