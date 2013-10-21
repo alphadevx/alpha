@@ -1,0 +1,14 @@
+<form action="<?= $formAction ?>" id="<?= $formID ?>" method="POST">
+	<table class="edit_view">	
+		<?= $formFields ?>
+		<tr><td colspan="2">
+		<?= $saveButton ?>
+		&nbsp;&nbsp;
+		<?= $deleteButton ?>
+		&nbsp;&nbsp;
+		<?= $cancelButton ?>
+		</td></tr>
+		<?= $formSecurityFields ?>	
+	</table>
+	<input type="hidden" name="<?= ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('version_num')) : 'version_num') ?>" value="<?= $version_num ?>"/>
+</form>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class TagCloud | Alpha Framework API Documentation</title>
+
+	<script type="text/javascript" src="resources/combined.js?197213082"></script>
+	<script type="text/javascript" src="elementlist.js?3605655050"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="http://www.alphaframework.org/" style="color:none; background-color:none;"><img src="resources/logo-small.png" /></a>
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Packages</h3>
+			<ul>
+				<li><a href="package-alpha..controller.html">alpha::controller</a>
+						</li>
+				<li><a href="package-alpha..controller..front.html">alpha::controller::front</a>
+						</li>
+				<li><a href="package-alpha..exceptions.html">alpha::exceptions</a>
+						</li>
+				<li><a href="package-alpha..model.html">alpha::model</a>
+						</li>
+				<li><a href="package-alpha..model..types.html">alpha::model::types</a>
+						</li>
+				<li><a href="package-alpha..tasks.html">alpha::tasks</a>
+						</li>
+				<li><a href="package-alpha..tests.html">alpha::tests</a>
+						</li>
+				<li><a href="package-alpha..util.html">alpha::util</a>
+						</li>
+				<li><a href="package-alpha..util..cache.html">alpha::util::cache</a>
+						</li>
+				<li><a href="package-alpha..util..codehighlight.html">alpha::util::codehighlight</a>
+						</li>
+				<li><a href="package-alpha..util..convertors.html">alpha::util::convertors</a>
+						</li>
+				<li><a href="package-alpha..util..feeds.html">alpha::util::feeds</a>
+						</li>
+				<li><a href="package-alpha..util..filters.html">alpha::util::filters</a>
+						</li>
+				<li><a href="package-alpha..util..graphs.html">alpha::util::graphs</a>
+						</li>
+				<li><a href="package-alpha..util..helpers.html">alpha::util::helpers</a>
+						</li>
+				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
+						</li>
+				<li><a href="package-alpha..view.html">alpha::view</a>
+						</li>
+				<li><a href="package-alpha..view..renderers.html">alpha::view::renderers</a>
+						</li>
+				<li class="active"><a href="package-alpha..view..widgets.html">alpha::view::widgets</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Button.html">Button</a></li>
+				<li><a href="class-DateBox.html">DateBox</a></li>
+				<li><a href="class-Image.html">Image</a></li>
+				<li><a href="class-RecordSelector.html">RecordSelector</a></li>
+				<li><a href="class-StringBox.html">StringBox</a></li>
+				<li class="active"><a href="class-TagCloud.html">TagCloud</a></li>
+				<li><a href="class-TextBox.html">TextBox</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="package-alpha..view..widgets.html" title="Summary of alpha::view::widgets"><span>Package</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="deprecated.html" title="List of deprecated elements"><span>Deprecated</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class TagCloud</h1>
+
+
+	<div class="description">
+	
+<p>A widget for rendering a tag cloud, based off the TagObject instances in the
+database.</p>
+
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		<b>Package:</b> <a href="package-alpha..view..widgets.html">alpha::view::widgets</a><br />
+
+				<b>Copyright:</b>
+				Copyright (c) 2012, John Collins (founder of Alpha Framework). All rights
+reserved.
+<pre>
+Redistribution and use in source and binary forms, with or
+without modification, are permitted provided that the
+following conditions are met:
+
+* Redistributions of source code must retain the above
+  copyright notice, this list of conditions and the
+  following disclaimer.
+* Redistributions in binary form must reproduce the above
+  copyright notice, this list of conditions and the
+  following disclaimer in the documentation and/or other
+  materials provided with the distribution.
+* Neither the name of the Alpha Framework nor the names
+  of its contributors may be used to endorse or promote
+  products derived from this software without specific
+  prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre>
+<br />
+				<b>License:</b>
+				<a href="http://www.opensource.org/licenses/bsd-license.php">The BSD License</a><br />
+				<b>Author:</b>
+				John Collins &lt;<a
+href="mailto:dev&#64;alphaframework.org">dev&#64;<!---->alphaframework.org</a>&gt;<br />
+				<b>Version:</b>
+				$Id: TagCloud.inc 1548 2012-07-29 17:07:07Z alphadevx $<br />
+				<b>Since:</b>
+				1.0<br />
+		<b>Located at</b> <a href="source-class-TagCloud.html#3-123" title="Go to source code">view/widgets/TagCloud.inc</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-TagCloud.html#66-96" title="Go to source code">__construct</a>( <span>mixed <var>$limit</var></span>, <span>mixed <var>$cacheKey</var> = <span class="php-quote">''</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Constructor</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Constructor</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$limit</var></dt>
+					<dd><code>mixed</code><br>$limit The maximum amount of tags to include in the cloud.</dd>
+					<dt><var>$cacheKey</var></dt>
+					<dd><code>mixed</code><br>$cacheKey Set this optional value to attempt to store the tag cloud array in the
+available cache for 24hrs (cache.provider.name).</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="render" id="_render">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_render">#</a>
+		<code><a href="source-class-TagCloud.html#98-122" title="Go to source code">render</a>( <span>mixed <var>$minLinkSize</var> = <span class="php-num">8</span></span>, <span>mixed <var>$maxLinkSize</var> = <span class="php-num">20</span></span>, <span>mixed <var>$target</var> = <span class="php-quote">''</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Render the tag cloud and return all of the HTML links in a single
+paragraph.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Render the tag cloud and return all of the HTML links in a single
+paragraph.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$minLinkSize</var></dt>
+					<dd><code>mixed</code><br>$minLinkSize The minimum font size for any tag link, in points.</dd>
+					<dt><var>$maxLinkSize</var></dt>
+					<dd><code>mixed</code><br>$maxLinkSize The maximum font size for any tag link, in points.</dd>
+					<dt><var>$target</var></dt>
+					<dd><code>mixed</code><br>$target The target attribute for the links</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="logger" id="$logger">
+		<td class="attributes"><code>
+			private static 
+			<code><a href="class-Logger.html">Logger</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-TagCloud.html#50-56" title="Go to source code"><var>$logger</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">null</span></code></td>
+		<td class="description"><div>
+			<a href="#$logger" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Trace logger</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Trace logger</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="popTags" id="$popTags">
+		<td class="attributes"><code>
+			private  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-TagCloud.html#58-64" title="Go to source code"><var>$popTags</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$popTags" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>A hash array of popular tags</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>A hash array of popular tags</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Alpha Framework API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

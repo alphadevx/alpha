@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Interface AlphaRendererProviderInterface | Alpha Framework ${alpha.version.new} API Documentation</title>
+
+	<script type="text/javascript" src="resources/combined.js?197213082"></script>
+	<script type="text/javascript" src="elementlist.js?3859037951"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="http://www.alphaframework.org/" style="color:none; background-color:none;"><img src="resources/logo-small.png" /></a>
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Packages</h3>
+			<ul>
+				<li><a href="package-alpha..controller.html">alpha::controller</a>
+						</li>
+				<li><a href="package-alpha..controller..front.html">alpha::controller::front</a>
+						</li>
+				<li><a href="package-alpha..exceptions.html">alpha::exceptions</a>
+						</li>
+				<li><a href="package-alpha..model.html">alpha::model</a>
+						</li>
+				<li><a href="package-alpha..model..types.html">alpha::model::types</a>
+						</li>
+				<li><a href="package-alpha..tasks.html">alpha::tasks</a>
+						</li>
+				<li><a href="package-alpha..tests.html">alpha::tests</a>
+						</li>
+				<li><a href="package-alpha..util.html">alpha::util</a>
+						</li>
+				<li><a href="package-alpha..util..cache.html">alpha::util::cache</a>
+						</li>
+				<li><a href="package-alpha..util..codehighlight.html">alpha::util::codehighlight</a>
+						</li>
+				<li><a href="package-alpha..util..convertors.html">alpha::util::convertors</a>
+						</li>
+				<li><a href="package-alpha..util..feeds.html">alpha::util::feeds</a>
+						</li>
+				<li><a href="package-alpha..util..filters.html">alpha::util::filters</a>
+						</li>
+				<li><a href="package-alpha..util..graphs.html">alpha::util::graphs</a>
+						</li>
+				<li><a href="package-alpha..util..helpers.html">alpha::util::helpers</a>
+						</li>
+				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
+						</li>
+				<li><a href="package-alpha..view.html">alpha::view</a>
+						</li>
+				<li class="active"><a href="package-alpha..view..renderers.html">alpha::view::renderers</a>
+						</li>
+				<li><a href="package-alpha..view..widgets.html">alpha::view::widgets</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-AlphaRendererProviderFactory.html">AlphaRendererProviderFactory</a></li>
+				<li><a href="class-AlphaRendererProviderHTML.html">AlphaRendererProviderHTML</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li class="active"><a href="class-AlphaRendererProviderInterface.html">AlphaRendererProviderInterface</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="package-alpha..view..renderers.html" title="Summary of alpha::view::renderers"><span>Package</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="deprecated.html" title="List of deprecated elements"><span>Deprecated</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Interface AlphaRendererProviderInterface</h1>
+
+
+	<div class="description">
+	
+<p>Defines the renderer interface, which allows us to have various
+implementations (HTML, JSON, XML etc.) behind one unified interface. Use the
+AlphaRendererProviderFactory::getInstance() method to get instances of this.</p>
+
+	</div>
+
+
+
+
+
+	<div>
+		<h4>Direct known implementers</h4>
+			<a href="class-AlphaRendererProviderHTML.html">AlphaRendererProviderHTML</a>
+	</div>
+
+
+
+
+	<div class="info">
+		
+		
+		
+		<b>Package:</b> <a href="package-alpha..view..renderers.html">alpha::view::renderers</a><br />
+
+				<b>Copyright:</b>
+				Copyright (c) 2012, John Collins (founder of Alpha Framework). All rights
+reserved.
+<pre>
+Redistribution and use in source and binary forms, with or
+without modification, are permitted provided that the
+following conditions are met:
+
+* Redistributions of source code must retain the above
+  copyright notice, this list of conditions and the
+  following disclaimer.
+* Redistributions in binary form must reproduce the above
+  copyright notice, this list of conditions and the
+  following disclaimer in the documentation and/or other
+  materials provided with the distribution.
+* Neither the name of the Alpha Framework nor the names
+  of its contributors may be used to endorse or promote
+  products derived from this software without specific
+  prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre>
+<br />
+				<b>License:</b>
+				<a href="http://www.opensource.org/licenses/bsd-license.php">The BSD License</a><br />
+				<b>Author:</b>
+				John Collins &lt;<a
+href="mailto:dev&#64;alphaframework.org">dev&#64;<!---->alphaframework.org</a>&gt;<br />
+				<b>Version:</b>
+				$Id: AlphaRendererProviderInterface.inc 1508 2012-02-21 15:54:52Z alphadev $<br />
+				<b>Since:</b>
+				1.2<br />
+		<b>Located at</b> <a href="source-class-AlphaRendererProviderInterface.html#3-287" title="Go to source code">view/renderers/AlphaRendererProviderInterface.inc</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="setBO" id="_setBO">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setBO">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#51-57" title="Go to source code">setBO</a>( <span><code><a href="class-AlphaDAO.html">AlphaDAO</a></code> <var>$BO</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Provide the BO that we are going render.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Provide the BO that we are going render.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$BO</var></dt>
+					<dd><code><code><a href="class-AlphaDAO.html">AlphaDAO</a></code></code><br>$BO</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="createView" id="_createView">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_createView">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#59-66" title="Go to source code">createView</a>( <span>array <var>$fields</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Renders the create view for the BO using the selected renderer.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders the create view for the BO using the selected renderer.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$fields</var></dt>
+					<dd><code>array</code><br>$fields Hash array of fields to pass to the template.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="editView" id="_editView">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_editView">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#68-75" title="Go to source code">editView</a>( <span>array <var>$fields</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Renders the edit view for the BO using the selected renderer.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders the edit view for the BO using the selected renderer.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$fields</var></dt>
+					<dd><code>array</code><br>$fields Hash array of fields to pass to the template.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="listView" id="_listView">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_listView">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#77-84" title="Go to source code">listView</a>( <span>array <var>$fields</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Renders the list view for the BO using the selected renderer.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders the list view for the BO using the selected renderer.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$fields</var></dt>
+					<dd><code>array</code><br>$fields Hash array of fields to pass to the template.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="detailedView" id="_detailedView">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_detailedView">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#86-93" title="Go to source code">detailedView</a>( <span>array <var>$fields</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Renders the detailed read-only view for the BO using the selected
+renderer.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders the detailed read-only view for the BO using the selected
+renderer.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$fields</var></dt>
+					<dd><code>array</code><br>$fields Hash array of fields to pass to the template.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="adminView" id="_adminView">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_adminView">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#95-102" title="Go to source code">adminView</a>( <span>array <var>$fields</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Renders the admin view for the BO using the selected renderer.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders the admin view for the BO using the selected renderer.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$fields</var></dt>
+					<dd><code>array</code><br>$fields Hash array of fields to pass to the template.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="displayPageHead" id="_displayPageHead">
+
+		<td class="attributes"><code>
+			 public static
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_displayPageHead">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#104-112" title="Go to source code">displayPageHead</a>( <span><code><a href="class-AlphaController.html">AlphaController</a></code> <var>$controller</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Renders the header content using the given renderer.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders the header content using the given renderer.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$controller</var></dt>
+					<dd><code><code><a href="class-AlphaController.html">AlphaController</a></code></code><br>$controller</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-IllegalArguementException.html">IllegalArguementException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="displayPageFoot" id="_displayPageFoot">
+
+		<td class="attributes"><code>
+			 public static
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_displayPageFoot">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#114-121" title="Go to source code">displayPageFoot</a>( <span><code><a href="class-AlphaController.html">AlphaController</a></code> <var>$controller</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Renders the footer content using the given renderer.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders the footer content using the given renderer.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$controller</var></dt>
+					<dd><code><code><a href="class-AlphaController.html">AlphaController</a></code></code><br>$controller</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="displayUpdateMessage" id="_displayUpdateMessage">
+
+		<td class="attributes"><code>
+			 public static
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_displayUpdateMessage">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#123-130" title="Go to source code">displayUpdateMessage</a>( <span>string <var>$message</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Renders an update (e.g. successful save) message.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders an update (e.g. successful save) message.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$message</var></dt>
+					<dd><code>string</code><br>$message</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="displayErrorMessage" id="_displayErrorMessage">
+
+		<td class="attributes"><code>
+			 public static
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_displayErrorMessage">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#132-139" title="Go to source code">displayErrorMessage</a>( <span>string <var>$message</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Renders an error (e.g. save failed) message.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders an error (e.g. save failed) message.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$message</var></dt>
+					<dd><code>string</code><br>$message</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="renderErrorPage" id="_renderErrorPage">
+
+		<td class="attributes"><code>
+			 public static
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_renderErrorPage">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#141-149" title="Go to source code">renderErrorPage</a>( <span>string <var>$code</var></span>, <span>string <var>$message</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Renders an error page with the supplied HTTP error code and a message.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders an error page with the supplied HTTP error code and a message.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$code</var></dt>
+					<dd><code>string</code><br>$code</dd>
+					<dt><var>$message</var></dt>
+					<dd><code>string</code><br>$message</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="renderDeleteForm" id="_renderDeleteForm">
+
+		<td class="attributes"><code>
+			 public static
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_renderDeleteForm">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#151-157" title="Go to source code">renderDeleteForm</a>( )</code>
+
+		<div class="description short">
+			
+<p>Method to render a hidden HTML form for posting the OID of an object to be
+deleted.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Method to render a hidden HTML form for posting the OID of an object to be
+deleted.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="renderSecurityFields" id="_renderSecurityFields">
+
+		<td class="attributes"><code>
+			 public static
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_renderSecurityFields">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#159-167" title="Go to source code">renderSecurityFields</a>( )</code>
+
+		<div class="description short">
+			
+<p>Method to render a HTML form with two hidden, hashed (MD5) form fields to be
+used as a check to ensure that a post to the controller is being sent from the
+same server as hosting it.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Method to render a HTML form with two hidden, hashed (MD5) form fields to be
+used as a check to ensure that a post to the controller is being sent from the
+same server as hosting it.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="renderIntegerField" id="_renderIntegerField">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_renderIntegerField">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#169-180" title="Go to source code">renderIntegerField</a>( <span>string <var>$name</var></span>, <span>string <var>$label</var></span>, <span>string <var>$mode</var></span>, <span>string <var>$value</var> = <span class="php-quote">''</span></span>, <span>boolean <var>$tableTags</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Renders an Integer field value.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders an Integer field value.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name The field name</dd>
+					<dt><var>$label</var></dt>
+					<dd><code>string</code><br>$label The label to apply to the field</dd>
+					<dt><var>$mode</var></dt>
+					<dd><code>string</code><br>$mode The field mode (create/edit/view)</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>string</code><br>$value The field value (optional)</dd>
+					<dt><var>$tableTags</var></dt>
+					<dd><code>boolean</code><br>$tableTags Include table tags and label (optional)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="renderDoubleField" id="_renderDoubleField">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_renderDoubleField">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#182-193" title="Go to source code">renderDoubleField</a>( <span>string <var>$name</var></span>, <span>string <var>$label</var></span>, <span>string <var>$mode</var></span>, <span>string <var>$value</var> = <span class="php-quote">''</span></span>, <span>boolean <var>$tableTags</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Renders an Double field value.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders an Double field value.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name The field name</dd>
+					<dt><var>$label</var></dt>
+					<dd><code>string</code><br>$label The label to apply to the field</dd>
+					<dt><var>$mode</var></dt>
+					<dd><code>string</code><br>$mode The field mode (create/edit/view)</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>string</code><br>$value The field value (optional)</dd>
+					<dt><var>$tableTags</var></dt>
+					<dd><code>boolean</code><br>$tableTags Include table tags and label (optional)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="renderBooleanField" id="_renderBooleanField">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_renderBooleanField">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#195-206" title="Go to source code">renderBooleanField</a>( <span>string <var>$name</var></span>, <span>string <var>$label</var></span>, <span>string <var>$mode</var></span>, <span>string <var>$value</var> = <span class="php-quote">''</span></span>, <span>boolean <var>$tableTags</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Renders an Boolean field value.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders an Boolean field value.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name The field name</dd>
+					<dt><var>$label</var></dt>
+					<dd><code>string</code><br>$label The label to apply to the field</dd>
+					<dt><var>$mode</var></dt>
+					<dd><code>string</code><br>$mode The field mode (create/edit/view)</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>string</code><br>$value The field value (optional)</dd>
+					<dt><var>$tableTags</var></dt>
+					<dd><code>boolean</code><br>$tableTags Include table tags and label (optional)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="renderEnumField" id="_renderEnumField">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_renderEnumField">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#208-220" title="Go to source code">renderEnumField</a>( <span>string <var>$name</var></span>, <span>string <var>$label</var></span>, <span>string <var>$mode</var></span>, <span>array <var>$options</var></span>, <span>string <var>$value</var> = <span class="php-quote">''</span></span>, <span>boolean <var>$tableTags</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Renders an Enum field value.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders an Enum field value.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name The field name</dd>
+					<dt><var>$label</var></dt>
+					<dd><code>string</code><br>$label The label to apply to the field</dd>
+					<dt><var>$mode</var></dt>
+					<dd><code>string</code><br>$mode The field mode (create/edit/view)</dd>
+					<dt><var>$options</var></dt>
+					<dd><code>array</code><br>$options The Enum options</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>string</code><br>$value The field value (optional)</dd>
+					<dt><var>$tableTags</var></dt>
+					<dd><code>boolean</code><br>$tableTags Include table tags and label (optional)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="renderDEnumField" id="_renderDEnumField">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_renderDEnumField">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#222-234" title="Go to source code">renderDEnumField</a>( <span>string <var>$name</var></span>, <span>string <var>$label</var></span>, <span>string <var>$mode</var></span>, <span>array <var>$options</var></span>, <span>string <var>$value</var> = <span class="php-quote">''</span></span>, <span>boolean <var>$tableTags</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Renders an DEnum field value.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders an DEnum field value.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name The field name</dd>
+					<dt><var>$label</var></dt>
+					<dd><code>string</code><br>$label The label to apply to the field</dd>
+					<dt><var>$mode</var></dt>
+					<dd><code>string</code><br>$mode The field mode (create/edit/view)</dd>
+					<dt><var>$options</var></dt>
+					<dd><code>array</code><br>$options The DEnum options</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>string</code><br>$value The field value (optional)</dd>
+					<dt><var>$tableTags</var></dt>
+					<dd><code>boolean</code><br>$tableTags Include table tags and label (optional)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="renderDefaultField" id="_renderDefaultField">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_renderDefaultField">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#236-247" title="Go to source code">renderDefaultField</a>( <span>string <var>$name</var></span>, <span>string <var>$label</var></span>, <span>string <var>$mode</var></span>, <span>string <var>$value</var> = <span class="php-quote">''</span></span>, <span>boolean <var>$tableTags</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Method to render a field when type is not known.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Method to render a field when type is not known.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name The field name</dd>
+					<dt><var>$label</var></dt>
+					<dd><code>string</code><br>$label The label to apply to the field</dd>
+					<dt><var>$mode</var></dt>
+					<dd><code>string</code><br>$mode The field mode (create/edit/view)</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>string</code><br>$value The field value (optional)</dd>
+					<dt><var>$tableTags</var></dt>
+					<dd><code>boolean</code><br>$tableTags Include table tags and label (optional)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="renderTextField" id="_renderTextField">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_renderTextField">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#249-260" title="Go to source code">renderTextField</a>( <span>string <var>$name</var></span>, <span>string <var>$label</var></span>, <span>string <var>$mode</var></span>, <span>string <var>$value</var> = <span class="php-quote">''</span></span>, <span>boolean <var>$tableTags</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Renders a Text field value.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders a Text field value.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name The field name</dd>
+					<dt><var>$label</var></dt>
+					<dd><code>string</code><br>$label The label to apply to the field</dd>
+					<dt><var>$mode</var></dt>
+					<dd><code>string</code><br>$mode The field mode (create/edit/view)</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>string</code><br>$value The field value (optional)</dd>
+					<dt><var>$tableTags</var></dt>
+					<dd><code>boolean</code><br>$tableTags Include table tags and label (optional)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="renderRelationField" id="_renderRelationField">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_renderRelationField">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#262-275" title="Go to source code">renderRelationField</a>( <span>string <var>$name</var></span>, <span>string <var>$label</var></span>, <span>string <var>$mode</var></span>, <span>string <var>$value</var> = <span class="php-quote">''</span></span>, <span>boolean <var>$tableTags</var> = <span class="php-keyword1">true</span></span>, <span>boolean <var>$expanded</var> = <span class="php-keyword1">false</span></span>, <span>boolean <var>$buttons</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Renders a Relation field value.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders a Relation field value.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name The field name</dd>
+					<dt><var>$label</var></dt>
+					<dd><code>string</code><br>$label The label to apply to the field</dd>
+					<dt><var>$mode</var></dt>
+					<dd><code>string</code><br>$mode The field mode (create/edit/view)</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>string</code><br>$value The field value (optional)</dd>
+					<dt><var>$tableTags</var></dt>
+					<dd><code>boolean</code><br>$tableTags Include table tags and label (optional)</dd>
+					<dt><var>$expanded</var></dt>
+					<dd><code>boolean</code><br>$expanded Render the related fields in expanded format or not (optional)</dd>
+					<dt><var>$buttons</var></dt>
+					<dd><code>boolean</code><br>$buttons Render buttons for expanding/contacting the related fields (optional)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="renderAllFields" id="_renderAllFields">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_renderAllFields">#</a>
+		<code><a href="source-class-AlphaRendererProviderInterface.html#277-286" title="Go to source code">renderAllFields</a>( <span>string <var>$mode</var></span>, <span>array <var>$filterFields</var> = <span class="php-keyword1">array</span>()</span>, <span>array <var>$readOnlyFields</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Convenience method that renders all fields for the current BO in
+edit/create/view mode.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Convenience method that renders all fields for the current BO in
+edit/create/view mode.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$mode</var></dt>
+					<dd><code>string</code><br>$mode (view|edit|create)</dd>
+					<dt><var>$filterFields</var></dt>
+					<dd><code>array</code><br>$filterFields Optional list of field names to exclude from rendering.</dd>
+					<dt><var>$readOnlyFields</var></dt>
+					<dd><code>array</code><br>$readOnlyFields Optional list of fields to render in a readonly fashion when
+rendering in create or edit mode.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Alpha Framework ${alpha.version.new} API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>
