@@ -220,7 +220,7 @@ class Logger {
 
 			$body .= "\n\nKind regards,\n\nAdministrator\n--\n".$config->get('app.url');
 
-			mail($config->get('app.log.error.mail.address'), "Error in class ".$this->classname." on site ".$config->get('app.title'), $body, 
+			mb_send_mail($config->get('app.log.error.mail.address'), "Error in class ".$this->classname." on site ".$config->get('app.title'), $body, 
 				"From: ".$config->get('email.reply.to')."\r\nReply-To: ".$config->get('email.reply.to')."\r\nX-Mailer: PHP/" . phpversion());
 		}
 	}

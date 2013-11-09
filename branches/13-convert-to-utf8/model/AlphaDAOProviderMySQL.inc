@@ -1092,7 +1092,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		if($this->BO->isTableOverloaded())
 			$sqlQuery .= "classname VARCHAR(100),";
 
-		$sqlQuery .= "PRIMARY KEY (OID)) ENGINE=InnoDB;";
+		$sqlQuery .= "PRIMARY KEY (OID)) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;";
 
 		$this->BO->setLastQuery($sqlQuery);
 
@@ -2134,7 +2134,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			}
 		}
 
-		self::$logger->debug('bindingsTypes=['.$bindingsTypes.'], count: ['.strlen($bindingsTypes).']');
+		self::$logger->debug('bindingsTypes=['.$bindingsTypes.'], count: ['.mb_strlen($bindingsTypes).']');
 		self::$logger->debug('params ['.var_export($params, true).']');
 
 	    if ($params != null) {

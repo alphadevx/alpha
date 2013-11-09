@@ -217,6 +217,10 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
     	$_SERVER['REQUEST_URI'] = str_replace('http://'.$_SERVER['HTTP_HOST'], '', $request);
     	$front = new FrontController();
 
+        $badrequest = new BadRequestObject();
+        if (!$badrequest->checkTableExists())
+            $badrequest->makeTable();
+
     	try{
     		$front->loadController(false);
     		$this->fail('testing that a request to a bad URL will result in a ResourceNotFoundException exception');
@@ -236,9 +240,9 @@ class FrontController_Test extends PHPUnit_Framework_TestCase {
 
     	$this->assertTrue($front->hasAlias('ViewArticleTitle'), 'testing the setting up and checking for the existence of a controller alias');
     	$this->assertTrue($front->checkAlias('article'), 'testing the setting up and checking for the existence of a controller alias');
-    	$this->assertEquals('ViewArticleTitle', $front->getAliasController('article'), 
+    	$this->assertEquals('ViewArticleTitle', $front->getAliasController('article'),
     		'testing the setting up and checking for the existence of a controller alias');
-    	$this->assertEquals('article', $front->getControllerAlias('ViewArticleTitle'), 
+    	$this->assertEquals('article', $front->getControllerAlias('ViewArticleTitle'),
     		'testing the setting up and checking for the existence of a controller alias');
     }
 

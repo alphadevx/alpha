@@ -9,7 +9,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -115,6 +115,9 @@ class FrontController {
 		self::$logger->debug('>>__construct()');
 
 		global $config;
+
+		mb_internal_encoding('UTF-8');
+		mb_http_output();
 
 		self::$logger->debug('Requested URL is ['.$_SERVER['REQUEST_URI'].']');
 

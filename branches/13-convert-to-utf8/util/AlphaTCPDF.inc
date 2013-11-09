@@ -4,61 +4,61 @@ AlphaAutoLoader::loadLib('tcpdf.php');
 
 /**
  * Custom version of the TCPDF library class, allowing for any required overrides.
- * 
+ *
  * @package alpha::util
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).  
+ * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
  * All rights reserved.
- * 
+ *
  * <pre>
- * Redistribution and use in source and binary forms, with or 
- * without modification, are permitted provided that the 
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are permitted provided that the
  * following conditions are met:
- * 
- * * Redistributions of source code must retain the above 
- *   copyright notice, this list of conditions and the 
+ *
+ * * Redistributions of source code must retain the above
+ *   copyright notice, this list of conditions and the
  *   following disclaimer.
- * * Redistributions in binary form must reproduce the above 
- *   copyright notice, this list of conditions and the 
- *   following disclaimer in the documentation and/or other 
+ * * Redistributions in binary form must reproduce the above
+ *   copyright notice, this list of conditions and the
+ *   following disclaimer in the documentation and/or other
  *   materials provided with the distribution.
- * * Neither the name of the Alpha Framework nor the names 
- *   of its contributors may be used to endorse or promote 
- *   products derived from this software without specific 
+ * * Neither the name of the Alpha Framework nor the names
+ *   of its contributors may be used to endorse or promote
+ *   products derived from this software without specific
  *   prior written permission.
- *   
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
- * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
- * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *  
+ *
  */
 class AlphaTCPDF extends TCPDF {
 	/**
 	 * Trace logger
-	 * 
+	 *
 	 * @var Logger
 	 * @since 1.0
 	 */
 	private static $logger = null;
-	
+
 	/**
 	 * Overrides the TCPDF::Image method to decrypt encrypted $file paths from the Image widget, then pass
 	 * them to the normal TCPDF::Image along with all of the other (unmodified) parameters.
-	 * 
+	 *
 	 * @param string $file Name of the file containing the image.
 	 * @param float $x Abscissa of the upper-left corner.
 	 * @param float $y Ordinate of the upper-left corner.
@@ -78,18 +78,18 @@ class AlphaTCPDF extends TCPDF {
 	public function Image($file, $x='', $y='', $w=0, $h=0, $type='', $link='', $align='', $resize=false, $dpi=300, $palign='', $ismask=false, $imgmask=false, $border=0) {
 		if(self::$logger == null)
 			self::$logger = new Logger('AlphaTCPDF');
-		
+
 		global $config;
-			
+
 		self::$logger->debug('Processing image file URL ['.$file.']');
-		
+
 		try {
 			if(strpos($file, '/tk/') !== false) {
 				$start = strpos($file, '/tk/')+3;
-				$end = strlen($file);
+				$end = mb_strlen($file);
 				$tk = substr($file, $start+1, $end-($start+1));
 				$decoded = FrontController::getDecodeQueryParams($tk);
-				
+
 				parent::Image($decoded['s'], $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border);
 			}else {
 				// it has no query string, so threat as a regular image URL
@@ -103,11 +103,11 @@ class AlphaTCPDF extends TCPDF {
 			throw $e;
 		}
 	}
-	
+
 	/**
 	 * Process opening tags.  Overridden here to fix a bug when the image type can't be determined from the URL.
-	 * 
-	 * @param array $dom html dom array 
+	 *
+	 * @param array $dom html dom array
 	 * @param int $key current element id
 	 * @param boolean $cell if true add the default cMargin space to each new line (default false).
 	 * @access protected
@@ -196,7 +196,7 @@ class AlphaTCPDF extends TCPDF {
 							}
 						}
 					}
-				}		
+				}
 				break;
 			}
 			case 'img': {
@@ -205,18 +205,18 @@ class AlphaTCPDF extends TCPDF {
 					if ($tag['attribute']['src'][0] == '/') {
 						$tag['attribute']['src'] = $_SERVER['DOCUMENT_ROOT'].$tag['attribute']['src'];
 					}
-					
+
 					$tag['attribute']['src'] = urldecode($tag['attribute']['src']);
-					
+
 					if (!isset($tag['attribute']['width'])) {
 						$tag['attribute']['width'] = 0;
 					}
 					if (!isset($tag['attribute']['height'])) {
 						$tag['attribute']['height'] = 0;
 					}
-					
+
 					$tag['attribute']['align'] = 'bottom';
-					
+
 					switch($tag['attribute']['align']) {
 						case 'top': {
 						$align = 'T';
@@ -400,11 +400,11 @@ class AlphaTCPDF extends TCPDF {
 				$this->SetXY($this->GetX(), $this->GetY() + ((0.3 * $this->FontSizePt) / $this->k));
 				break;
 			}
-			case 'h1': 
-			case 'h2': 
-			case 'h3': 
-			case 'h4': 
-			case 'h5': 
+			case 'h1':
+			case 'h2':
+			case 'h3':
+			case 'h4':
+			case 'h5':
 			case 'h6': {
 				$this->addHTMLVertSpace(1, $cell, ($tag['fontsize'] * 1.5) / $this->k, $firstorlast, $tag['value'], false);
 			break;

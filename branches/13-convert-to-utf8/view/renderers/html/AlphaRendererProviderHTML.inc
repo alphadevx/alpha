@@ -225,7 +225,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 
 					if ($propClass == 'Text') {
 						$text = htmlentities($this->BO->get($propName));
-						if(strlen($text) > 70)
+						if(mb_strlen($text) > 70)
 							$html .= '	<td>&nbsp;'.substr($text, 0, 70).'...</td>';
 						else
 							$html .= '	<td>&nbsp;'.$text.'</td>';
