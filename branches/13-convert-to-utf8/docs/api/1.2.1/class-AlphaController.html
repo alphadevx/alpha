@@ -1,0 +1,2727 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class AlphaController | Alpha Framework ${alpha.version.new} API Documentation</title>
+
+	<script type="text/javascript" src="resources/combined.js?197213082"></script>
+	<script type="text/javascript" src="elementlist.js?3859037951"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="http://www.alphaframework.org/" style="color:none; background-color:none;"><img src="resources/logo-small.png" /></a>
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Packages</h3>
+			<ul>
+				<li class="active"><a href="package-alpha..controller.html">alpha::controller</a>
+						</li>
+				<li><a href="package-alpha..controller..front.html">alpha::controller::front</a>
+						</li>
+				<li><a href="package-alpha..exceptions.html">alpha::exceptions</a>
+						</li>
+				<li><a href="package-alpha..model.html">alpha::model</a>
+						</li>
+				<li><a href="package-alpha..model..types.html">alpha::model::types</a>
+						</li>
+				<li><a href="package-alpha..tasks.html">alpha::tasks</a>
+						</li>
+				<li><a href="package-alpha..tests.html">alpha::tests</a>
+						</li>
+				<li><a href="package-alpha..util.html">alpha::util</a>
+						</li>
+				<li><a href="package-alpha..util..cache.html">alpha::util::cache</a>
+						</li>
+				<li><a href="package-alpha..util..codehighlight.html">alpha::util::codehighlight</a>
+						</li>
+				<li><a href="package-alpha..util..convertors.html">alpha::util::convertors</a>
+						</li>
+				<li><a href="package-alpha..util..feeds.html">alpha::util::feeds</a>
+						</li>
+				<li><a href="package-alpha..util..filters.html">alpha::util::filters</a>
+						</li>
+				<li><a href="package-alpha..util..graphs.html">alpha::util::graphs</a>
+						</li>
+				<li><a href="package-alpha..util..helpers.html">alpha::util::helpers</a>
+						</li>
+				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
+						</li>
+				<li><a href="package-alpha..view.html">alpha::view</a>
+						</li>
+				<li><a href="package-alpha..view..renderers.html">alpha::view::renderers</a>
+						</li>
+				<li><a href="package-alpha..view..widgets.html">alpha::view::widgets</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-AlphaController.html">AlphaController</a></li>
+				<li><a href="class-CacheManager.html">CacheManager</a></li>
+				<li><a href="class-Create.html">Create</a></li>
+				<li><a href="class-CreateArticle.html">CreateArticle</a></li>
+				<li><a href="class-Detail.html">Detail</a></li>
+				<li><a href="class-Edit.html">Edit</a></li>
+				<li><a href="class-EditArticle.html">EditArticle</a></li>
+				<li><a href="class-EditDEnum.html">EditDEnum</a></li>
+				<li><a href="class-EditTags.html">EditTags</a></li>
+				<li><a href="class-GenSecureQueryStrings.html">GenSecureQueryStrings</a></li>
+				<li><a href="class-Install.html">Install</a></li>
+				<li><a href="class-ListAll.html">ListAll</a></li>
+				<li><a href="class-ListBusinessObjects.html">ListBusinessObjects</a></li>
+				<li><a href="class-ListDEnums.html">ListDEnums</a></li>
+				<li><a href="class-ListSequences.html">ListSequences</a></li>
+				<li><a href="class-Login.html">Login</a></li>
+				<li><a href="class-Logout.html">Logout</a></li>
+				<li><a href="class-PreviewArticle.html">PreviewArticle</a></li>
+				<li><a href="class-Search.html">Search</a></li>
+				<li><a href="class-TagManager.html">TagManager</a></li>
+				<li><a href="class-ViewArticle.html">ViewArticle</a></li>
+				<li><a href="class-ViewArticleFile.html">ViewArticleFile</a></li>
+				<li><a href="class-ViewArticlePDF.html">ViewArticlePDF</a></li>
+				<li><a href="class-ViewArticlePrint.html">ViewArticlePrint</a></li>
+				<li><a href="class-ViewArticleTitle.html">ViewArticleTitle</a></li>
+				<li><a href="class-ViewAttachment.html">ViewAttachment</a></li>
+				<li><a href="class-ViewExcel.html">ViewExcel</a></li>
+				<li><a href="class-ViewFeed.html">ViewFeed</a></li>
+				<li><a href="class-ViewImage.html">ViewImage</a></li>
+				<li><a href="class-ViewLog.html">ViewLog</a></li>
+				<li><a href="class-ViewMetrics.html">ViewMetrics</a></li>
+				<li><a href="class-ViewRecordSelector.html">ViewRecordSelector</a></li>
+				<li><a href="class-ViewTestResults.html">ViewTestResults</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-AlphaControllerInterface.html">AlphaControllerInterface</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="package-alpha..controller.html" title="Summary of alpha::controller"><span>Package</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="deprecated.html" title="List of deprecated elements"><span>Deprecated</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class AlphaController</h1>
+
+
+	<div class="description">
+	
+<p>The master controller class for the Alpha Framework.</p>
+
+	</div>
+
+
+
+	<div>
+		<h4>Direct known subclasses</h4>
+			<a href="class-CacheManager.html">CacheManager</a>, 
+			<a href="class-Create.html">Create</a>, 
+			<a href="class-Login.html">Login</a>, 
+			<a href="class-Logout.html">Logout</a>, 
+			<a href="class-PreviewArticle.html">PreviewArticle</a>, 
+			<a href="class-Search.html">Search</a>, 
+			<a href="class-TagManager.html">TagManager</a>, 
+			<a href="class-ViewArticle.html">ViewArticle</a>, 
+			<a href="class-ViewArticlePDF.html">ViewArticlePDF</a>, 
+			<a href="class-ViewAttachment.html">ViewAttachment</a>, 
+			<a href="class-ViewExcel.html">ViewExcel</a>, 
+			<a href="class-ViewFeed.html">ViewFeed</a>, 
+			<a href="class-CreateArticle.html">CreateArticle</a>, 
+			<a href="class-ViewImage.html">ViewImage</a>, 
+			<a href="class-ViewLog.html">ViewLog</a>, 
+			<a href="class-ViewMetrics.html">ViewMetrics</a>, 
+			<a href="class-ViewRecordSelector.html">ViewRecordSelector</a>, 
+			<a href="class-ViewTestResults.html">ViewTestResults</a>, 
+			<a href="class-Detail.html">Detail</a>, 
+			<a href="class-Edit.html">Edit</a>, 
+			<a href="class-EditArticle.html">EditArticle</a>, 
+			<a href="class-GenSecureQueryStrings.html">GenSecureQueryStrings</a>, 
+			<a href="class-Install.html">Install</a>, 
+			<a href="class-ListAll.html">ListAll</a>, 
+			<a href="class-ListBusinessObjects.html">ListBusinessObjects</a>
+	</div>
+
+	<div>
+		<h4>Indirect known subclasses</h4>
+			<a href="class-EditDEnum.html">EditDEnum</a>, 
+			<a href="class-EditTags.html">EditTags</a>, 
+			<a href="class-ListDEnums.html">ListDEnums</a>, 
+			<a href="class-ListSequences.html">ListSequences</a>, 
+			<a href="class-ViewArticleFile.html">ViewArticleFile</a>, 
+			<a href="class-ViewArticlePrint.html">ViewArticlePrint</a>, 
+			<a href="class-ViewArticleTitle.html">ViewArticleTitle</a>
+	</div>
+
+
+
+
+
+	<div class="info">
+		<b>Abstract</b><br />
+		
+		
+		<b>Package:</b> <a href="package-alpha..controller.html">alpha::controller</a><br />
+
+				<b>Copyright:</b>
+				Copyright (c) 2012, John Collins (founder of Alpha Framework). All rights
+reserved.
+<pre>
+Redistribution and use in source and binary forms, with or
+without modification, are permitted provided that the
+following conditions are met:
+
+* Redistributions of source code must retain the above
+  copyright notice, this list of conditions and the
+  following disclaimer.
+* Redistributions in binary form must reproduce the above
+  copyright notice, this list of conditions and the
+  following disclaimer in the documentation and/or other
+  materials provided with the distribution.
+* Neither the name of the Alpha Framework nor the names
+  of its contributors may be used to endorse or promote
+  products derived from this software without specific
+  prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre>
+<br />
+				<b>License:</b>
+				<a href="http://www.opensource.org/licenses/bsd-license.php">The BSD License</a><br />
+				<b>Author:</b>
+				John Collins &lt;<a
+href="mailto:dev&#64;alphaframework.org">dev&#64;<!---->alphaframework.org</a>&gt;<br />
+				<b>Version:</b>
+				$Id: AlphaController.inc 1548 2012-07-29 17:07:07Z alphadevx $<br />
+				<b>Since:</b>
+				1.0<br />
+		<b>Located at</b> <a href="source-class-AlphaController.html#3-1199" title="Go to source code">controller/AlphaController.inc</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-AlphaController.html#200-269" title="Go to source code">__construct</a>( <span>string <var>$visibility</var> = <span class="php-quote">'Public'</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Constructor for the AlphaController that starts a new session if required,
+and handles the population of new/dirty objects from the session when available.
+Accepts the name of the rights group that has access to this controller,
+'Public' by default.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Constructor for the AlphaController that starts a new session if required,
+and handles the population of new/dirty objects from the session when available.
+Accepts the name of the rights group that has access to this controller,
+'Public' by default.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$visibility</var></dt>
+					<dd><code>string</code><br>$visibility The name of the rights group that can access this controller.</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getBO" id="_getBO">
+
+		<td class="attributes"><code>
+			 public 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getBO">#</a>
+		<code><a href="source-class-AlphaController.html#271-281" title="Go to source code">getBO</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the BO for this controller (if any).</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the BO for this controller (if any).</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setBO" id="_setBO">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setBO">#</a>
+		<code><a href="source-class-AlphaController.html#283-308" title="Go to source code">setBO</a>( <span><code><a href="class-AlphaDAO.html">AlphaDAO</a></code> <var>$BO</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Setter for the BO for this controller.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Setter for the BO for this controller.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$BO</var></dt>
+					<dd><code><code><a href="class-AlphaDAO.html">AlphaDAO</a></code></code><br>$BO</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getName" id="_getName">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getName">#</a>
+		<code><a href="source-class-AlphaController.html#310-320" title="Go to source code">getName</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the name of the unit of work job.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the name of the unit of work job.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setName" id="_setName">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setName">#</a>
+		<code><a href="source-class-AlphaController.html#322-332" title="Go to source code">setName</a>( <span>string <var>$name</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Setter for the unit of work job name.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Setter for the unit of work job name.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getVisibility" id="_getVisibility">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getVisibility">#</a>
+		<code><a href="source-class-AlphaController.html#334-344" title="Go to source code">getVisibility</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the name of the rights group that has access to this controller.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the name of the rights group that has access to this controller.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setVisibility" id="_setVisibility">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setVisibility">#</a>
+		<code><a href="source-class-AlphaController.html#346-356" title="Go to source code">setVisibility</a>( <span>string <var>$visibility</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Setter for the name of the rights group that has access to this
+controller.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Setter for the name of the rights group that has access to this
+controller.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$visibility</var></dt>
+					<dd><code>string</code><br>$visibility</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getFirstJob" id="_getFirstJob">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getFirstJob">#</a>
+		<code><a href="source-class-AlphaController.html#358-368" title="Go to source code">getFirstJob</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets the name of the first job in this unit of work.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the name of the first job in this unit of work.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getNextJob" id="_getNextJob">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getNextJob">#</a>
+		<code><a href="source-class-AlphaController.html#370-380" title="Go to source code">getNextJob</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets the name of the next job in this unit of work</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the name of the next job in this unit of work</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getPreviousJob" id="_getPreviousJob">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getPreviousJob">#</a>
+		<code><a href="source-class-AlphaController.html#382-392" title="Go to source code">getPreviousJob</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets the name of the previous job in this unit of work</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the name of the previous job in this unit of work</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getLastJob" id="_getLastJob">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getLastJob">#</a>
+		<code><a href="source-class-AlphaController.html#394-404" title="Go to source code">getLastJob</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets the name of the last job in this unit of work.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the name of the last job in this unit of work.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setUnitOfWork" id="_setUnitOfWork">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setUnitOfWork">#</a>
+		<code><a href="source-class-AlphaController.html#406-470" title="Go to source code">setUnitOfWork</a>( <span>array <var>$jobs</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Sets the name of the controller job sequence to the values in the supplied
+array (and stores the array in the session).</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sets the name of the controller job sequence to the values in the supplied
+array (and stores the array in the session).</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$jobs</var></dt>
+					<dd><code>array</code><br>$jobs The names of the controllers in this unit of work sequence.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-IllegalArguementException.html">IllegalArguementException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getStartTime" id="_getStartTime">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Timestamp.html">Timestamp</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getStartTime">#</a>
+		<code><a href="source-class-AlphaController.html#472-482" title="Go to source code">getStartTime</a>( )</code>
+
+		<div class="description short">
+			
+<p>Getter for the unit start time.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Getter for the unit start time.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Timestamp.html">Timestamp</a></code></code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setUnitStartTime" id="_setUnitStartTime">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setUnitStartTime">#</a>
+		<code><a href="source-class-AlphaController.html#484-503" title="Go to source code">setUnitStartTime</a>( <span>integer <var>$year</var></span>, <span>integer <var>$month</var></span>, <span>integer <var>$day</var></span>, <span>integer <var>$hour</var></span>, <span>integer <var>$minute</var></span>, <span>integer <var>$second</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Setter for the unit start time (value will be stored in the session as key
+unitStartTime).</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Setter for the unit start time (value will be stored in the session as key
+unitStartTime).</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$year</var></dt>
+					<dd><code>integer</code><br>$year</dd>
+					<dt><var>$month</var></dt>
+					<dd><code>integer</code><br>$month</dd>
+					<dt><var>$day</var></dt>
+					<dd><code>integer</code><br>$day</dd>
+					<dt><var>$hour</var></dt>
+					<dd><code>integer</code><br>$hour</dd>
+					<dt><var>$minute</var></dt>
+					<dd><code>integer</code><br>$minute</dd>
+					<dt><var>$second</var></dt>
+					<dd><code>integer</code><br>$second</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getEndTime" id="_getEndTime">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Timestamp.html">Timestamp</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getEndTime">#</a>
+		<code><a href="source-class-AlphaController.html#505-515" title="Go to source code">getEndTime</a>( )</code>
+
+		<div class="description short">
+			
+<p>Getter for the unit end time.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Getter for the unit end time.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Timestamp.html">Timestamp</a></code></code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setUnitEndTime" id="_setUnitEndTime">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setUnitEndTime">#</a>
+		<code><a href="source-class-AlphaController.html#517-536" title="Go to source code">setUnitEndTime</a>( <span>integer <var>$year</var></span>, <span>integer <var>$month</var></span>, <span>integer <var>$day</var></span>, <span>integer <var>$hour</var></span>, <span>integer <var>$minute</var></span>, <span>integer <var>$second</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Setter for the unit end time (value will be stored in the session as key
+unitEndTime).</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Setter for the unit end time (value will be stored in the session as key
+unitEndTime).</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$year</var></dt>
+					<dd><code>integer</code><br>$year</dd>
+					<dt><var>$month</var></dt>
+					<dd><code>integer</code><br>$month</dd>
+					<dt><var>$day</var></dt>
+					<dd><code>integer</code><br>$day</dd>
+					<dt><var>$hour</var></dt>
+					<dd><code>integer</code><br>$hour</dd>
+					<dt><var>$minute</var></dt>
+					<dd><code>integer</code><br>$minute</dd>
+					<dt><var>$second</var></dt>
+					<dd><code>integer</code><br>$second</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getMAXDuration" id="_getMAXDuration">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Integer.html">Integer</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getMAXDuration">#</a>
+		<code><a href="source-class-AlphaController.html#538-548" title="Go to source code">getMAXDuration</a>( )</code>
+
+		<div class="description short">
+			
+<p>Getter for the unit of work MAX duration.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Getter for the unit of work MAX duration.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Integer.html">Integer</a></code></code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setUnitMAXDuration" id="_setUnitMAXDuration">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setUnitMAXDuration">#</a>
+		<code><a href="source-class-AlphaController.html#550-560" title="Go to source code">setUnitMAXDuration</a>( <span>integer <var>$duration</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Setter for the unit MAX duration.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Setter for the unit MAX duration.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$duration</var></dt>
+					<dd><code>integer</code><br>$duration The desired duration in seconds.</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getUnitDuration" id="_getUnitDuration">
+
+		<td class="attributes"><code>
+			 public 
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getUnitDuration">#</a>
+		<code><a href="source-class-AlphaController.html#562-591" title="Go to source code">getUnitDuration</a>( )</code>
+
+		<div class="description short">
+			
+<p>Calculates and returns the unit of work current duration in seconds.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Calculates and returns the unit of work current duration in seconds.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="markDirty" id="_markDirty">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_markDirty">#</a>
+		<code><a href="source-class-AlphaController.html#593-613" title="Go to source code">markDirty</a>( <span><code><a href="class-AlphaDAO.html">AlphaDAO</a></code> <var>$object</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Adds the supplied business object to the dirtyObjects array in the
+session.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Adds the supplied business object to the dirtyObjects array in the
+session.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$object</var></dt>
+					<dd><code><code><a href="class-AlphaDAO.html">AlphaDAO</a></code></code><br>$object</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getDirtyObjects" id="_getDirtyObjects">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getDirtyObjects">#</a>
+		<code><a href="source-class-AlphaController.html#615-625" title="Go to source code">getDirtyObjects</a>( )</code>
+
+		<div class="description short">
+			
+<p>Getter for the dirty objects array.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Getter for the dirty objects array.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="markNew" id="_markNew">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_markNew">#</a>
+		<code><a href="source-class-AlphaController.html#627-647" title="Go to source code">markNew</a>( <span><code><a href="class-AlphaDAO.html">AlphaDAO</a></code> <var>$object</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Adds a newly created business object to the newObjects array in the
+session.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Adds a newly created business object to the newObjects array in the
+session.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$object</var></dt>
+					<dd><code><code><a href="class-AlphaDAO.html">AlphaDAO</a></code></code><br>$object</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getNewObjects" id="_getNewObjects">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getNewObjects">#</a>
+		<code><a href="source-class-AlphaController.html#649-659" title="Go to source code">getNewObjects</a>( )</code>
+
+		<div class="description short">
+			
+<p>Getter for the new objects array.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Getter for the new objects array.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="commit" id="_commit">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_commit">#</a>
+		<code><a href="source-class-AlphaController.html#661-728" title="Go to source code">commit</a>( )</code>
+
+		<div class="description short">
+			
+<p>Commits (saves) all of the new and modified (dirty) objects in the unit of
+work to the database.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Commits (saves) all of the new and modified (dirty) objects in the unit of
+work to the database.</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-FailedUnitCommitException.html">FailedUnitCommitException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="abort" id="_abort">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_abort">#</a>
+		<code><a href="source-class-AlphaController.html#730-755" title="Go to source code">abort</a>( )</code>
+
+		<div class="description short">
+			
+<p>Method to clearup a cancelled unit of work.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Method to clearup a cancelled unit of work.</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="clearUnitOfWorkAttributes" id="_clearUnitOfWorkAttributes">
+
+		<td class="attributes"><code>
+			 private 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_clearUnitOfWorkAttributes">#</a>
+		<code><a href="source-class-AlphaController.html#757-767" title="Go to source code">clearUnitOfWorkAttributes</a>( )</code>
+
+		<div class="description short">
+			
+<p>Clears the session and object attributes related to unit of work sessions</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Clears the session and object attributes related to unit of work sessions</p>
+
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getTitle" id="_getTitle">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getTitle">#</a>
+		<code><a href="source-class-AlphaController.html#769-779" title="Go to source code">getTitle</a>( )</code>
+
+		<div class="description short">
+			
+<p>Getter for the page title.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Getter for the page title.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setTitle" id="_setTitle">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setTitle">#</a>
+		<code><a href="source-class-AlphaController.html#781-791" title="Go to source code">setTitle</a>( <span>string <var>$title</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Setter for the page title.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Setter for the page title.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$title</var></dt>
+					<dd><code>string</code><br>$title</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getDescription" id="_getDescription">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getDescription">#</a>
+		<code><a href="source-class-AlphaController.html#793-803" title="Go to source code">getDescription</a>( )</code>
+
+		<div class="description short">
+			
+<p>Getter for the page description.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Getter for the page description.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setDescription" id="_setDescription">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setDescription">#</a>
+		<code><a href="source-class-AlphaController.html#805-815" title="Go to source code">setDescription</a>( <span>string <var>$description</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Setter for the page description.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Setter for the page description.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$description</var></dt>
+					<dd><code>string</code><br>$description</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getKeywords" id="_getKeywords">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getKeywords">#</a>
+		<code><a href="source-class-AlphaController.html#817-827" title="Go to source code">getKeywords</a>( )</code>
+
+		<div class="description short">
+			
+<p>Getter for the page keywords.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Getter for the page keywords.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setKeywords" id="_setKeywords">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setKeywords">#</a>
+		<code><a href="source-class-AlphaController.html#829-839" title="Go to source code">setKeywords</a>( <span>string <var>$keywords</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Setter for the page keywords, should pass a comma-seperated list as a
+string.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Setter for the page keywords, should pass a comma-seperated list as a
+string.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$keywords</var></dt>
+					<dd><code>string</code><br>$keywords</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="accessError" id="_accessError">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_accessError">#</a>
+		<code><a href="source-class-AlphaController.html#841-867" title="Go to source code">accessError</a>( )</code>
+
+		<div class="description short">
+			
+<p>Method to display an access error for trespassing users. HTTP response header
+code will be 403.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Method to display an access error for trespassing users. HTTP response header
+code will be 403.</p>
+
+
+
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="checkRights" id="_checkRights">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_checkRights">#</a>
+		<code><a href="source-class-AlphaController.html#869-922" title="Go to source code">checkRights</a>( )</code>
+
+		<div class="description short">
+			
+<p>Checks the user rights of the currently logged-in person against the page
+visibility set for this controller. Will return false if the user has not got
+the correct rights.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Checks the user rights of the currently logged-in person against the page
+visibility set for this controller. Will return false if the user has not got
+the correct rights.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="checkSecurityFields" id="_checkSecurityFields">
+
+		<td class="attributes"><code>
+			 public static
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_checkSecurityFields">#</a>
+		<code><a href="source-class-AlphaController.html#924-972" title="Go to source code">checkSecurityFields</a>( )</code>
+
+		<div class="description short">
+			
+<p>Method to check the validity of the two hidden form security fields which aim
+to ensure that a post to the controller is being sent from the same server that
+is hosting it.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Method to check the validity of the two hidden form security fields which aim
+to ensure that a post to the controller is being sent from the same server that
+is hosting it.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="generateSecurityFields" id="_generateSecurityFields">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_generateSecurityFields">#</a>
+		<code><a href="source-class-AlphaController.html#974-992" title="Go to source code">generateSecurityFields</a>( )</code>
+
+		<div class="description short">
+			
+<p>Generates the two security fields to prevent remote form processing.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Generates the two security fields to prevent remote form processing.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>An array containing the two fields<br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getCustomControllerName" id="_getCustomControllerName">
+
+		<td class="attributes"><code>
+			 public static
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getCustomControllerName">#</a>
+		<code><a href="source-class-AlphaController.html#994-1028" title="Go to source code">getCustomControllerName</a>( <span>string <var>$BOName</var></span>, <span>string <var>$mode</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Returns the name of a custom controller if one is found, otherwise returns
+null.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns the name of a custom controller if one is found, otherwise returns
+null.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$BOName</var></dt>
+					<dd><code>string</code><br>$BOName The classname of the business object</dd>
+					<dt><var>$mode</var></dt>
+					<dd><code>string</code><br>$mode The mode of the controller (create, view, edit)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="loadCustomController" id="_loadCustomController">
+
+		<td class="attributes"><code>
+			 protected 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_loadCustomController">#</a>
+		<code><a href="source-class-AlphaController.html#1030-1109" title="Go to source code">loadCustomController</a>( <span>string <var>$BOName</var></span>, <span>string <var>$mode</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Does a HTTP redirect to a custom controller if one is found.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Does a HTTP redirect to a custom controller if one is found.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$BOName</var></dt>
+					<dd><code>string</code><br>$BOName The classname of the business object</dd>
+					<dt><var>$mode</var></dt>
+					<dd><code>string</code><br>$mode The mode of the controller (create, view, edit)</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-FileNotFoundException.html">FileNotFoundException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setStatusMessage" id="_setStatusMessage">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setStatusMessage">#</a>
+		<code><a href="source-class-AlphaController.html#1111-1120" title="Go to source code">setStatusMessage</a>( <span>string <var>$message</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Set the status message in the _SESSION to the value provided.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Set the status message in the _SESSION to the value provided.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$message</var></dt>
+					<dd><code>string</code><br>$message</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getStatusMessage" id="_getStatusMessage">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getStatusMessage">#</a>
+		<code><a href="source-class-AlphaController.html#1122-1133" title="Go to source code">getStatusMessage</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets the current status message for this controller. Note that by getting the
+current status message, you clear out the value stored in _SESSION so this
+method can only be used to get the status message once for display purposes.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the current status message for this controller. Note that by getting the
+current status message, you clear out the value stored in _SESSION so this
+method can only be used to get the status message once for display purposes.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="checkControllerDefExists" id="_checkControllerDefExists">
+
+		<td class="attributes"><code>
+			 public static
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_checkControllerDefExists">#</a>
+		<code><a href="source-class-AlphaController.html#1135-1161" title="Go to source code">checkControllerDefExists</a>( <span>string <var>$controllerName</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Checks that the definition for the controller classname provided exists. Will
+also return true if you pass "/" for the root of the web application.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Checks that the definition for the controller classname provided exists. Will
+also return true if you pass "/" for the root of the web application.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$controllerName</var></dt>
+					<dd><code>string</code><br>$controllerName</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="loadControllerDef" id="_loadControllerDef">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_loadControllerDef">#</a>
+		<code><a href="source-class-AlphaController.html#1163-1185" title="Go to source code">loadControllerDef</a>( <span>string <var>$controllerName</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Loads the definition for the controller classname provided.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Loads the definition for the controller classname provided.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$controllerName</var></dt>
+					<dd><code>string</code><br>$controllerName</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-IllegalArguementException.html">IllegalArguementException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="checkIfAccessingFromSecureURL" id="_checkIfAccessingFromSecureURL">
+
+		<td class="attributes"><code>
+			 public static
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_checkIfAccessingFromSecureURL">#</a>
+		<code><a href="source-class-AlphaController.html#1187-1198" title="Go to source code">checkIfAccessingFromSecureURL</a>( )</code>
+
+		<div class="description short">
+			
+<p>Static function for determining if the current request URL is a secure one
+(has a tk string or not)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Static function for determining if the current request URL is a secure one
+(has a tk string or not)</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>True if the current URL contains a tk value, false otherwise<br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="name" id="$name">
+		<td class="attributes"><code>
+			protected  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaController.html#49-55" title="Go to source code"><var>$name</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$name" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The name of the controller</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The name of the controller</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="visibility" id="$visibility">
+		<td class="attributes"><code>
+			protected  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaController.html#57-64" title="Go to source code"><var>$visibility</var></a>
+		</td>
+		<td class="value"><code><span class="php-quote">'Public'</span></code></td>
+		<td class="description"><div>
+			<a href="#$visibility" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Used to set access privileages for the controller to the name of the rights
+group allowed to access it. 'Public' by default.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Used to set access privileages for the controller to the name of the rights
+group allowed to access it. 'Public' by default.</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="BO" id="$BO">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-AlphaDAO.html">AlphaDAO</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaController.html#66-73" title="Go to source code"><var>$BO</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">null</span></code></td>
+		<td class="description"><div>
+			<a href="#$BO" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Optionally, a BO may be set for the default validation form handling code to
+load in the displayPageHead() method. The definition of this BO class will need
+to be included in the child controller.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Optionally, a BO may be set for the default validation form handling code to
+load in the displayPageHead() method. The definition of this BO class will need
+to be included in the child controller.</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="unitOfWork" id="$unitOfWork">
+		<td class="attributes"><code>
+			protected  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaController.html#75-82" title="Go to source code"><var>$unitOfWork</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$unitOfWork" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Used to determine if the controller is part of a unit of work sequence
+(either empty or the name of the unit).</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Used to determine if the controller is part of a unit of work sequence
+(either empty or the name of the unit).</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="unitStartTime" id="$unitStartTime">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-Timestamp.html">Timestamp</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaController.html#84-90" title="Go to source code"><var>$unitStartTime</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$unitStartTime" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Stores the start time of a unit of work transaction.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Stores the start time of a unit of work transaction.</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="unitEndTime" id="$unitEndTime">
+		<td class="attributes"><code>
+			protected  
+			Timestamp.
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaController.html#92-98" title="Go to source code"><var>$unitEndTime</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$unitEndTime" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Stores the end time of a unit of work transaction.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Stores the end time of a unit of work transaction.</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="unitMAXDuration" id="$unitMAXDuration">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-Integer.html">Integer</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaController.html#100-106" title="Go to source code"><var>$unitMAXDuration</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$unitMAXDuration" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Stores the maximum allowed time duration (in seconds) of the unit of
+work.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Stores the maximum allowed time duration (in seconds) of the unit of
+work.</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="firstJob" id="$firstJob">
+		<td class="attributes"><code>
+			protected  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaController.html#108-114" title="Go to source code"><var>$firstJob</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$firstJob" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The name of the first controller that is used in this unit of work.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The name of the first controller that is used in this unit of work.</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="nextJob" id="$nextJob">
+		<td class="attributes"><code>
+			protected  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaController.html#116-122" title="Go to source code"><var>$nextJob</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$nextJob" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The name of the next controller that is used in this unit of work.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The name of the next controller that is used in this unit of work.</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="previousJob" id="$previousJob">
+		<td class="attributes"><code>
+			protected  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaController.html#124-130" title="Go to source code"><var>$previousJob</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$previousJob" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The name of the previous controller that is used in this unit of work.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The name of the previous controller that is used in this unit of work.</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="lastJob" id="$lastJob">
+		<td class="attributes"><code>
+			protected  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaController.html#132-138" title="Go to source code"><var>$lastJob</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$lastJob" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The name of the last controller that is used in this unit of work.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The name of the last controller that is used in this unit of work.</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="dirtyObjects" id="$dirtyObjects">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaController.html#140-147" title="Go to source code"><var>$dirtyObjects</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$dirtyObjects" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>An array for storing dirty objects in a session (i.e. persistent business
+objects that have not been updated in the database yet).</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>An array for storing dirty objects in a session (i.e. persistent business
+objects that have not been updated in the database yet).</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="newObjects" id="$newObjects">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaController.html#149-156" title="Go to source code"><var>$newObjects</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$newObjects" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>An array for storing new objects in a session (transient business objects
+that have no OID yet).</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>An array for storing new objects in a session (transient business objects
+that have no OID yet).</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="title" id="$title">
+		<td class="attributes"><code>
+			protected  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaController.html#158-164" title="Go to source code"><var>$title</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$title" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The title to be displayed on the controller page</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The title to be displayed on the controller page</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="keywords" id="$keywords">
+		<td class="attributes"><code>
+			protected  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaController.html#166-172" title="Go to source code"><var>$keywords</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$keywords" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Meta keywords for the controller page, generally populated from tags</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Meta keywords for the controller page, generally populated from tags</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="description" id="$description">
+		<td class="attributes"><code>
+			protected  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaController.html#174-180" title="Go to source code"><var>$description</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$description" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Meta description for the controller page.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Meta description for the controller page.</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="statusMessage" id="$statusMessage">
+		<td class="attributes"><code>
+			protected  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaController.html#182-190" title="Go to source code"><var>$statusMessage</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$statusMessage" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Used to set status update messages to display to the user (messages stored
+between requests in _SESSION). Useful for when you want to display a message to
+a user after POSTing a request, or when moving from one page to the next.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Used to set status update messages to display to the user (messages stored
+between requests in _SESSION). Useful for when you want to display a message to
+a user after POSTing a request, or when moving from one page to the next.</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="logger" id="$logger">
+		<td class="attributes"><code>
+			private static 
+			<code><a href="class-Logger.html">Logger</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaController.html#192-198" title="Go to source code"><var>$logger</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">null</span></code></td>
+		<td class="description"><div>
+			<a href="#$logger" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Trace logger</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Trace logger</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Alpha Framework ${alpha.version.new} API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

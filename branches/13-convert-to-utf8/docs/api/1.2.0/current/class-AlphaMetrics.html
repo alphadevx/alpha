@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class AlphaMetrics | Alpha Framework ${alpha.version.new} API Documentation</title>
+
+	<script type="text/javascript" src="resources/combined.js?197213082"></script>
+	<script type="text/javascript" src="elementlist.js?3859037951"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="http://www.alphaframework.org/" style="color:none; background-color:none;"><img src="resources/logo-small.png" /></a>
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Packages</h3>
+			<ul>
+				<li><a href="package-alpha..controller.html">alpha::controller</a>
+						</li>
+				<li><a href="package-alpha..controller..front.html">alpha::controller::front</a>
+						</li>
+				<li><a href="package-alpha..exceptions.html">alpha::exceptions</a>
+						</li>
+				<li><a href="package-alpha..model.html">alpha::model</a>
+						</li>
+				<li><a href="package-alpha..model..types.html">alpha::model::types</a>
+						</li>
+				<li><a href="package-alpha..tasks.html">alpha::tasks</a>
+						</li>
+				<li><a href="package-alpha..tests.html">alpha::tests</a>
+						</li>
+				<li><a href="package-alpha..util.html">alpha::util</a>
+						</li>
+				<li><a href="package-alpha..util..cache.html">alpha::util::cache</a>
+						</li>
+				<li><a href="package-alpha..util..codehighlight.html">alpha::util::codehighlight</a>
+						</li>
+				<li><a href="package-alpha..util..convertors.html">alpha::util::convertors</a>
+						</li>
+				<li><a href="package-alpha..util..feeds.html">alpha::util::feeds</a>
+						</li>
+				<li><a href="package-alpha..util..filters.html">alpha::util::filters</a>
+						</li>
+				<li><a href="package-alpha..util..graphs.html">alpha::util::graphs</a>
+						</li>
+				<li><a href="package-alpha..util..helpers.html">alpha::util::helpers</a>
+						</li>
+				<li class="active"><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
+						</li>
+				<li><a href="package-alpha..view.html">alpha::view</a>
+						</li>
+				<li><a href="package-alpha..view..renderers.html">alpha::view::renderers</a>
+						</li>
+				<li><a href="package-alpha..view..widgets.html">alpha::view::widgets</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-AlphaMetrics.html">AlphaMetrics</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="package-alpha..util..metrics.html" title="Summary of alpha::util::metrics"><span>Package</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="deprecated.html" title="List of deprecated elements"><span>Deprecated</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class AlphaMetrics</h1>
+
+
+	<div class="description">
+	
+<p>Utility class for calcualting some software metics related to a project</p>
+
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		<b>Package:</b> <a href="package-alpha..util..metrics.html">alpha::util::metrics</a><br />
+
+				<b>Copyright:</b>
+				Copyright (c) 2012, John Collins (founder of Alpha Framework). All rights
+reserved.
+<pre>
+Redistribution and use in source and binary forms, with or
+without modification, are permitted provided that the
+following conditions are met:
+
+* Redistributions of source code must retain the above
+  copyright notice, this list of conditions and the
+  following disclaimer.
+* Redistributions in binary form must reproduce the above
+  copyright notice, this list of conditions and the
+  following disclaimer in the documentation and/or other
+  materials provided with the distribution.
+* Neither the name of the Alpha Framework nor the names
+  of its contributors may be used to endorse or promote
+  products derived from this software without specific
+  prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre>
+<br />
+				<b>License:</b>
+				<a href="http://www.opensource.org/licenses/bsd-license.php">The BSD License</a><br />
+				<b>Author:</b>
+				John Collins &lt;<a
+href="mailto:dev&#64;alphaframework.org">dev&#64;<!---->alphaframework.org</a>&gt;<br />
+				<b>Version:</b>
+				$Id: AlphaMetrics.inc 1496 2012-02-12 20:32:21Z alphadev $<br />
+				<b>Since:</b>
+				1.0<br />
+		<b>Located at</b> <a href="source-class-AlphaMetrics.html#10-250" title="Go to source code">util/metrics/AlphaMetrics.inc</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-AlphaMetrics.html#144-154" title="Go to source code">__construct</a>( <span>string <var>$rootDir</var> = <span class="php-quote">'.'</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Constructor, default $rootDir is .</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Constructor, default $rootDir is .</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$rootDir</var></dt>
+					<dd><code>string</code><br>$rootDir</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="calculateLOC" id="_calculateLOC">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_calculateLOC">#</a>
+		<code><a href="source-class-AlphaMetrics.html#156-186" title="Go to source code">calculateLOC</a>( )</code>
+
+		<div class="description short">
+			
+<p>Calculates the Lines of Code (LOC)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Calculates the Lines of Code (LOC)</p>
+
+
+
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="resultsToHTML" id="_resultsToHTML">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_resultsToHTML">#</a>
+		<code><a href="source-class-AlphaMetrics.html#188-215" title="Go to source code">resultsToHTML</a>( )</code>
+
+		<div class="description short">
+			
+<p>Generates a HTML table containing the metrics results</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Generates a HTML table containing the metrics results</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="disregardCommentsLOC" id="_disregardCommentsLOC">
+
+		<td class="attributes"><code>
+			 private 
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_disregardCommentsLOC">#</a>
+		<code><a href="source-class-AlphaMetrics.html#217-249" title="Go to source code">disregardCommentsLOC</a>( <span>string <var>$sourceFile</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Filters comments from LOC metric</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Filters comments from LOC metric</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sourceFile</var></dt>
+					<dd><code>string</code><br>$sourceFile</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="rootDir" id="$rootDir">
+		<td class="attributes"><code>
+			private  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaMetrics.html#55-61" title="Go to source code"><var>$rootDir</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$rootDir" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The directory to begin the calculations from</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The directory to begin the calculations from</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="includeFileTypes" id="$includeFileTypes">
+		<td class="attributes"><code>
+			private  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaMetrics.html#63-69" title="Go to source code"><var>$includeFileTypes</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>(<span class="php-quote">'.php'</span>, <span class="php-quote">'.ini'</span>, <span class="php-quote">'.html'</span>, <span class="php-quote">'.phtml'</span>, <span class="php-quote">'.inc'</span>, <span class="php-quote">'.js'</span>, <span class="php-quote">'.css'</span>, <span class="php-quote">'.xml'</span>)</code></td>
+		<td class="description"><div>
+			<a href="#$includeFileTypes" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The file extensions of the file types to include in the calculations</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The file extensions of the file types to include in the calculations</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="excludeSubDirectories" id="$excludeSubDirectories">
+		<td class="attributes"><code>
+			private  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaMetrics.html#71-77" title="Go to source code"><var>$excludeSubDirectories</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>(<span class="php-quote">'cache'</span>,<span class="php-quote">'lib'</span>,<span class="php-quote">'docs'</span>,<span class="php-quote">'attachments'</span>,<span class="php-quote">'dist'</span>)</code></td>
+		<td class="description"><div>
+			<a href="#$excludeSubDirectories" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Any sub-directories which you might want to exclude from the calculations</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Any sub-directories which you might want to exclude from the calculations</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="TLOC" id="$TLOC">
+		<td class="attributes"><code>
+			private  
+			integer
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaMetrics.html#79-85" title="Go to source code"><var>$TLOC</var></a>
+		</td>
+		<td class="value"><code><span class="php-num">0</span></code></td>
+		<td class="description"><div>
+			<a href="#$TLOC" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The Total Lines of Code (TLOC) for the project</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The Total Lines of Code (TLOC) for the project</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="TLOCLessComments" id="$TLOCLessComments">
+		<td class="attributes"><code>
+			private  
+			integer
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaMetrics.html#87-93" title="Go to source code"><var>$TLOCLessComments</var></a>
+		</td>
+		<td class="value"><code><span class="php-num">0</span></code></td>
+		<td class="description"><div>
+			<a href="#$TLOCLessComments" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The Total Lines of Code (TLOC) for the project, less comments defined in
+$comments</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The Total Lines of Code (TLOC) for the project, less comments defined in
+$comments</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="fileCount" id="$fileCount">
+		<td class="attributes"><code>
+			private  
+			integer
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaMetrics.html#95-101" title="Go to source code"><var>$fileCount</var></a>
+		</td>
+		<td class="value"><code><span class="php-num">0</span></code></td>
+		<td class="description"><div>
+			<a href="#$fileCount" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The count of the source code files in the project</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The count of the source code files in the project</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="filesLOCResult" id="$filesLOCResult">
+		<td class="attributes"><code>
+			private  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaMetrics.html#103-109" title="Go to source code"><var>$filesLOCResult</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$filesLOCResult" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>An array of fileName =&gt; lines of code to be populated by this class</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>An array of fileName =&gt; lines of code to be populated by this class</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="filesLOCNoCommentsResult" id="$filesLOCNoCommentsResult">
+		<td class="attributes"><code>
+			private  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaMetrics.html#111-118" title="Go to source code"><var>$filesLOCNoCommentsResult</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$filesLOCNoCommentsResult" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>An array of fileName =&gt; lines of code to be populated by this class,
+excluding comment lines defined in the $comments array</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>An array of fileName =&gt; lines of code to be populated by this class,
+excluding comment lines defined in the $comments array</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="files" id="$files">
+		<td class="attributes"><code>
+			private  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaMetrics.html#120-126" title="Go to source code"><var>$files</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$files" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>An array of the source code file names in the project</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>An array of the source code file names in the project</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="directories" id="$directories">
+		<td class="attributes"><code>
+			private  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaMetrics.html#128-134" title="Go to source code"><var>$directories</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$directories" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>An array of the directories in the project</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>An array of the directories in the project</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="comments" id="$comments">
+		<td class="attributes"><code>
+			private  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaMetrics.html#136-142" title="Go to source code"><var>$comments</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>(<span class="php-quote">'/'</span>,<span class="php-quote">'*'</span>,<span class="php-quote">'#'</span>)</code></td>
+		<td class="description"><div>
+			<a href="#$comments" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>An array of the first characters of a comment line in source code</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>An array of the first characters of a comment line in source code</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Alpha Framework ${alpha.version.new} API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>
