@@ -1089,7 +1089,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			if(!in_array($propName, $this->BO->getTransientAttributes()) && $propName != "OID") {
 				$propClass = get_class($this->BO->getPropObject($propName));
 
-				switch (strtoupper($propClass)) {
+				switch (mb_strtoupper($propClass)) {
 					case "INTEGER":
 						// special properties for RelationLookup OIDs
 						if($this->BO instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
@@ -1189,7 +1189,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			if(!in_array($propName, $this->BO->getTransientAttributes()) && $propName != "OID") {
 				$propClass = get_class($this->BO->getPropObject($propName));
 
-				switch (strtoupper($propClass)) {
+				switch (mb_strtoupper($propClass)) {
 					case "INTEGER":
 						// special properties for RelationLookup OIDs
 						if($this->BO instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID'))
@@ -1307,7 +1307,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			if(!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
 				$propClass = get_class($this->BO->getPropObject($propName));
 
-				switch (strtoupper($propClass)) {
+				switch (mb_strtoupper($propClass)) {
 					case "INTEGER":
 						// special properties for RelationLookup OIDs
 						if($this->BO instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID'))

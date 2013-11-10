@@ -1303,7 +1303,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 					continue;
 				}
 
-				switch (strtoupper($propClass)) {
+				switch (mb_strtoupper($propClass)) {
 					case 'INTEGER' :
 						if($mode == 'view') {
 							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
