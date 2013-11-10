@@ -59,12 +59,12 @@ class InputFilter {
 			if($allowHTML)
 				return $text;
 			else
-				return htmlentities($text);
+				return htmlentities($text, ENT_COMPAT, 'utf-8');
 		}else{
 			if($allowHTML)
 				return $text;
 			else
-				return htmlentities($text);
+				return htmlentities($text, ENT_COMPAT, 'utf-8');
 		}
 	}
 	

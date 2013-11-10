@@ -129,7 +129,7 @@ class SequenceView extends AlphaView {
 					$propClass = get_class($this->BO->getPropObject($propName));
 
 					if ($propClass == 'Text') {
-						$text = htmlentities($this->BO->get($propName));
+						$text = htmlentities($this->BO->get($propName), ENT_COMPAT, 'utf-8');
 						if(mb_strlen($text) > 70)
 							$html .= '	<td>&nbsp;'.mb_substr($text, 0, 70).'...</td>';
 						else
