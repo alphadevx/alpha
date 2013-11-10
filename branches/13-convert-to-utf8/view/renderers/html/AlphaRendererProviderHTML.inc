@@ -483,7 +483,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 
 		$html.= '<html>';
 		$html.= '<head>';
-		$html.= '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">';
+		$html.= '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">';
 		$html.= '<title>'.$controller->getTitle().'</title>';
 		if($controller->getKeywords() != '')
 			$html.= '<meta name="Keywords" content="'.$controller->getKeywords().'">';
