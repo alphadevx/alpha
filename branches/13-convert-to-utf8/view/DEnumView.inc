@@ -124,7 +124,7 @@ class DEnumView extends AlphaView {
 		$obj_type = '';
 
 		$html = '<table cols="2" class="edit_view">';
-		$html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
+		$html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" accept-charset="UTF-8">';
 
 		$temp = new StringBox($this->BO->getPropObject('name'), $labels['name'], 'name', '', 0, true, true);
 		$html .= $temp->render();

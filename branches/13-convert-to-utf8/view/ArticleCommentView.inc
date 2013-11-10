@@ -91,7 +91,7 @@ class ArticleCommentView extends AlphaView {
 		echo '<h2>Post a new comment:</h2>';
 
 		echo '<table cols="2" class="create_view">';
-		echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
+		echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" accept-charset="UTF-8">';
 
 		$textBox = new TextBox($this->BO->getPropObject('content'), $this->BO->getDataLabel('content'), 'content', '', 10);
 		echo $textBox->render();
@@ -120,7 +120,7 @@ class ArticleCommentView extends AlphaView {
 		global $config;
 
 		echo '<table cols="2" class="edit_view" style="width:100%; margin:0px">';
-		echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
+		echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" accept-charset="UTF-8">';
 
 		$textBox = new TextBox($this->BO->getPropObject('content'), $this->BO->getDataLabel('content'), 'content', '', 5, $this->BO->getID());
 		echo $textBox->render();

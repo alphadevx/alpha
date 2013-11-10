@@ -122,7 +122,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 			AlphaDAO::disconnect();
 
 			echo '<table cols="3" class="edit_view">';
-			echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
+			echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" accept-charset="UTF-8">';
 			echo '<tr><td colspan="3"><h3>The following tags were found:</h3></td></tr>';
 
 			foreach($tags as $tag) {

@@ -706,7 +706,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 
 		global $config;
 
-		$html = '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" id="deleteForm">';
+		$html = '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" id="deleteForm" accept-charset="UTF-8">';
 		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID');
 		$html .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value=""/>';
 		$html .= self::renderSecurityFields();

@@ -205,7 +205,7 @@ class ViewArticle extends AlphaController implements AlphaControllerInterface {
 		}
 
 		if(!$this->BO->checkUserVoted() && $config->get('cms.voting.allowed')) {
-			$html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="post">';
+			$html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" accept-charset="UTF-8">';
 			$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('userVote')) : 'userVote');
 			$html .= '<p>Please rate this article from 1-10 (10 being the best):' .
 					'<select name="'.$fieldname.'">' .

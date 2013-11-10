@@ -141,7 +141,7 @@ class GenSecureQueryStrings extends AlphaController implements AlphaControllerIn
 		$html .= '<p>Example 2: to generate a secure URL for viewing an Atom news feed of the articles, enter'.
 			' <em>act=ViewFeed&bo=ArticleObject&type=Atom</em</p>';
 
-		$html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="post">';
+		$html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" accept-charset="UTF-8">';
 		$html .= '<input type="text" name="QS" size="100"/>';
 		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('saveBut')) : 'saveBut');
 		$temp = new Button('submit', 'Generate', $fieldname);

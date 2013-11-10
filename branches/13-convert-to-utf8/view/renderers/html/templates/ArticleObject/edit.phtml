@@ -1,5 +1,5 @@
-<form action="<?= $formAction ?>" id="<?= $formID ?>" method="POST" enctype="multipart/form-data">
-	<table class="edit_view">	
+<form action="<?= $formAction ?>" id="<?= $formID ?>" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
+	<table class="edit_view">
 		<?= $formFields ?>
 		<tr><td colspan="2">
 		<?= $saveButton ?>
@@ -13,7 +13,7 @@
 		<?= $cancelButton ?>
 		</td></tr>
 		<?= $fileAttachments; ?>
-		<?= $formSecurityFields ?>	
+		<?= $formSecurityFields ?>
 	</table>
 	<input type="hidden" name="<?= ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('version_num')) : 'version_num') ?>" value="<?= $version_num ?>"/>
 </form>
