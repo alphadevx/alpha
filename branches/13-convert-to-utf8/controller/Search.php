@@ -269,7 +269,7 @@ class Search extends AlphaController implements AlphaControllerInterface {
 							if(count($tags) > 0) {
 								echo '<p>Tags: ';
 
-								$queryTerms = explode(' ', strtolower($query));
+								$queryTerms = explode(' ', mb_strtolower($query));
 
 								foreach($tags as $tag) {
 									echo (in_array($tag->get('content'), $queryTerms) ? '<strong>'.$tag->get('content').' </strong>' : $tag->get('content').' ');

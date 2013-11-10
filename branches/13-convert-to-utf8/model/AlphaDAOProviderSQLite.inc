@@ -1489,7 +1489,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		$tableName = ($checkHistoryTable ? $this->BO->getTableName().'_history' : $this->BO->getTableName());
 
 		while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-	    	if (strtolower($row['name']) == strtolower($tableName))
+	    	if (strtolower($row['name']) == mb_strtolower($tableName))
     			$tableExists = true;
 		}
 

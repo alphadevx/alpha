@@ -176,7 +176,7 @@ class AlphaTCPDF extends TCPDF {
 					preg_match_all('/([^;:\s]*):([^;]*)/', $tag['attribute']['style'], $style_array, PREG_PATTERN_ORDER);
 					$astyle = array();
 					while (list($id, $name) = each($style_array[1])) {
-						$name = strtolower($name);
+						$name = mb_strtolower($name);
 						$astyle[$name] = trim($style_array[2][$id]);
 					}
 					if (isset($astyle['color'])) {
@@ -184,7 +184,7 @@ class AlphaTCPDF extends TCPDF {
 					}
 					if (isset($astyle['text-decoration'])) {
 						$this->HREF['style'] = '';
-						$decors = explode(' ', strtolower($astyle['text-decoration']));
+						$decors = explode(' ', mb_strtolower($astyle['text-decoration']));
 						foreach ($decors as $dec) {
 							$dec = trim($dec);
 							if (!$this->empty_string($dec)) {
@@ -237,7 +237,7 @@ class AlphaTCPDF extends TCPDF {
 					}
 					$fileinfo = pathinfo($tag['attribute']['src']);
 					if (isset($fileinfo['extension']) AND (!$this->empty_string($fileinfo['extension']))) {
-						$type = strtolower($fileinfo['extension']);
+						$type = mb_strtolower($fileinfo['extension']);
 					}else{
 						$type = '';
 					}

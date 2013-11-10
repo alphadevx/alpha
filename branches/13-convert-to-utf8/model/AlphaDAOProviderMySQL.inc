@@ -1482,7 +1482,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			$tableName = ($checkHistoryTable ? $this->BO->getTableName().'_history' : $this->BO->getTableName());
 
 			while ($row = $result->fetch_array(MYSQLI_NUM)) {
-		    	if (strtolower($row[0]) == strtolower($tableName))
+		    	if (strtolower($row[0]) == mb_strtolower($tableName))
 	    			$tableExists = true;
 			}
 
