@@ -142,22 +142,22 @@ class AlphaConfig {
 
 		$rootPath = '';
 
-		if(strrpos($currentScript, 'alpha/view/widgets/') !== false) {
+		if(mb_strrpos($currentScript, 'alpha/view/widgets/') !== false) {
 			// set path for widgets
-			$rootPath = substr($currentScript, 0, strrpos($currentScript, 'alpha/view/widgets/'));
-		}elseif(strrpos($currentScript, 'alpha/util/') !== false) {
+			$rootPath = substr($currentScript, 0, mb_strrpos($currentScript, 'alpha/view/widgets/'));
+		}elseif(mb_strrpos($currentScript, 'alpha/util/') !== false) {
 			// set the path for util scripts
-			$rootPath = substr($currentScript, 0, strrpos($currentScript, 'alpha/util/'));
-		}elseif(strrpos($currentScript, 'alpha/') !== false) {
+			$rootPath = substr($currentScript, 0, mb_strrpos($currentScript, 'alpha/util/'));
+		}elseif(mb_strrpos($currentScript, 'alpha/') !== false) {
 			// check to see if it is a controller under /alpha
-			$rootPath = substr($currentScript, 0, strrpos($currentScript, 'alpha/'));
-		}elseif(!strrpos($currentScript, 'alpha/') && strrpos($currentScript, 'controller/') != false) {
+			$rootPath = substr($currentScript, 0, mb_strrpos($currentScript, 'alpha/'));
+		}elseif(!mb_strrpos($currentScript, 'alpha/') && mb_strrpos($currentScript, 'controller/') != false) {
 			// handle custom controllers at a lower level
-			$rootPath = substr($currentScript, 0, strrpos($currentScript, 'controller/'));
-		}elseif(strrpos($currentScript, 'config/css/') !== false) {
+			$rootPath = substr($currentScript, 0, mb_strrpos($currentScript, 'controller/'));
+		}elseif(mb_strrpos($currentScript, 'config/css/') !== false) {
 			// set path for CSS files
-			$rootPath = substr($currentScript, 0, strrpos($currentScript, 'config/css/'));
-		}elseif(strrpos($currentScript, 'AlphaCronManager') !== false) {
+			$rootPath = substr($currentScript, 0, mb_strrpos($currentScript, 'config/css/'));
+		}elseif(mb_strrpos($currentScript, 'AlphaCronManager') !== false) {
 			// set the path for the AlphaCronManager being run from CLI
 			$rootPath = '../../';
 		}else{
