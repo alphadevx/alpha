@@ -1014,7 +1014,7 @@ abstract class AlphaController {
 		global $config;
 
 		// strip the Object part from the class name
-		$BOName = substr($BOName, 0, strpos($BOName, 'Object'));
+		$BOName = substr($BOName, 0, mb_strpos($BOName, 'Object'));
 		// uppercase the first letter of each word, e.g. create cart becomes Create Cart
 		$controllerName = ucwords($mode.' '.$BOName);
 		// remove spaces
@@ -1048,7 +1048,7 @@ abstract class AlphaController {
 		global $config;
 
 		// strip the Object part from the class name
-		$BOName = substr($BOName, 0, strpos($BOName, 'Object'));
+		$BOName = substr($BOName, 0, mb_strpos($BOName, 'Object'));
 		// uppercase the first letter of each word, e.g. create cart becomes Create Cart
 		$controllerName = ucwords($mode.' '.$BOName);
 		// remove spaces
@@ -1085,7 +1085,7 @@ abstract class AlphaController {
 					if(isset($_GET['tk'])) {
 						$params = FrontController::decodeQueryParams($_GET['tk']);
 					}else{
-						$start = strpos($_SERVER['REQUEST_URI'], '/tk/')+3;
+						$start = mb_strpos($_SERVER['REQUEST_URI'], '/tk/')+3;
 						$end = strlen($_SERVER['REQUEST_URI']);
 						$tk = substr($_SERVER['REQUEST_URI'], $start+1, $end-($start+1));
 						$params = FrontController::decodeQueryParams($tk);
@@ -1198,7 +1198,7 @@ abstract class AlphaController {
 	 * @since 1.0
 	 */
 	public static function checkIfAccessingFromSecureURL() {
-		if (isset($_GET['tk']) || strpos($_SERVER['REQUEST_URI'], '/tk/') !== false)
+		if (isset($_GET['tk']) || mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false)
 			return true;
 		else
 			return false;

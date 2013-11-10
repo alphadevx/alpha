@@ -244,7 +244,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$fields['formFields'] = $html;
 
 		// View button
-		if(strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+		if(mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
 			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."';", 'View', 'view'.$this->BO->getOID().'But');
 			$fields['viewButton'] = $button->render();
 		}else{
@@ -515,7 +515,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		// handle force-frames
 		if($config->get('app.force.frame')) {
 			// if no-forceframe=true or we are in the admin backend, don't force frame
-			if(!isset($_GET['no-forceframe']) && strpos($_SERVER['REQUEST_URI'], '/tk/') === false) {
+			if(!isset($_GET['no-forceframe']) && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') === false) {
 				$html.= '<script type="text/javascript">';
 				$html.= 'pageLoc = self.location;';
 				$html.= 'pageAdd = top.location;';
@@ -529,7 +529,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 			}
 		}
 
-		if (isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+		if (isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
 			$html.= '<script type="text/javascript">';
 			$html.= '	(function($) {';
 			$html.= '		$(document).ready(function(){';

@@ -84,8 +84,8 @@ class AlphaTCPDF extends TCPDF {
 		self::$logger->debug('Processing image file URL ['.$file.']');
 
 		try {
-			if(strpos($file, '/tk/') !== false) {
-				$start = strpos($file, '/tk/')+3;
+			if(mb_strpos($file, '/tk/') !== false) {
+				$start = mb_strpos($file, '/tk/')+3;
 				$end = mb_strlen($file);
 				$tk = substr($file, $start+1, $end-($start+1));
 				$decoded = FrontController::getDecodeQueryParams($tk);

@@ -240,7 +240,7 @@ class Create extends AlphaController implements AlphaControllerInterface {
 	public function after_displayPageHead_callback() {
 		$menu = '';
 
-		if (isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+		if (isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
 			$menu .= AlphaView::loadTemplateFragment('html', 'adminmenu.phtml', array());
 		}
 

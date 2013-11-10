@@ -1515,7 +1515,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		eval('$tableName = '.$BOClassName.'::TABLE_NAME;');
 
 		if(empty($tableName))
-			$tableName = substr($BOClassName, 0, strpos($BOClassName, '_'));
+			$tableName = substr($BOClassName, 0, mb_strpos($BOClassName, '_'));
 
 		if($checkHistoryTable)
         	$tableName .= '_history';
@@ -1716,7 +1716,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		// process unique keys
 		foreach($this->BO->getUniqueAttributes() as $prop) {
 			// check for composite indexes
-			if(strpos($prop, '+')) {
+			if(mb_strpos($prop, '+')) {
 				$attributes = explode('+', $prop);
 
 				$index_exists = false;
@@ -1994,7 +1994,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
         	self::getConnection()->exec('ROLLBACK');
         	self::disconnect();
         }catch (Exception $e) {
-        	if(strpos($e->getMessage(), 'cannot rollback - no transaction is active') === false) // just filtering out errors where the rollback failed due to no current transaction
+        	if(mb_strpos($e->getMessage(), 'cannot rollback - no transaction is active') === false) // just filtering out errors where the rollback failed due to no current transaction
         		throw new AlphaException('Error rolling back a transaction, error is ['.self::getLastDatabaseError().']');
         }
 

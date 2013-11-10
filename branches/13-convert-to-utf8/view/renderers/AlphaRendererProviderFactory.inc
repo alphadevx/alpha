@@ -74,7 +74,7 @@ class AlphaRendererProviderFactory {
 		global $config;
 
 		if($providerName == 'auto') {
-			if(isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/api/') !== false) {
+			if(isset($_SERVER['REQUEST_URI']) && mb_strpos($_SERVER['REQUEST_URI'], '/api/') !== false) {
 				// inspection of the Accept header will be placed here once we add REST API support in later versions of Alpha
 			}else{
 				// use the HTML renderer

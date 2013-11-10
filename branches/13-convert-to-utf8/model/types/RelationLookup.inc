@@ -177,8 +177,8 @@ class RelationLookup extends AlphaDAO implements AlphaTypeInterface {
 	 */
 	public function getTableName() {
 		if(isset($this->leftClassName) && isset($this->rightClassName)) {
-			$left = substr($this->leftClassName, 0, strpos($this->leftClassName, 'Object'));
-			$right = substr($this->rightClassName, 0, strpos($this->rightClassName, 'Object'));
+			$left = substr($this->leftClassName, 0, mb_strpos($this->leftClassName, 'Object'));
+			$right = substr($this->rightClassName, 0, mb_strpos($this->rightClassName, 'Object'));
 			self::$logger->debug('Setting table name to ['.$left.'2'.$right.']');
     		return $left.'2'.$right;
     	}else{

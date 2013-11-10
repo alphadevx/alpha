@@ -1507,7 +1507,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		eval('$tableName = '.$BOClassName.'::TABLE_NAME;');
 
 		if(empty($tableName))
-			$tableName = substr($BOClassName, 0, strpos($BOClassName, '_'));
+			$tableName = substr($BOClassName, 0, mb_strpos($BOClassName, '_'));
 
 		if($checkHistoryTable)
             $tableName .= '_history';
@@ -1709,7 +1709,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		// process unique keys
 		foreach($this->BO->getUniqueAttributes() as $prop) {
 			// check for composite indexes
-			if(strpos($prop, '+')) {
+			if(mb_strpos($prop, '+')) {
 				$attributes = explode('+', $prop);
 
 				$index_exists = false;
@@ -2201,8 +2201,8 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	private function findOffendingValue($error) {
 		self::$logger->debug('>>findOffendingValue(error=['.$error.'])');
 
-		$singleQuote1 = strpos($error,"'");
-		$singleQuote2 = strrpos($error,"'");
+		$singleQuote1 = mb_strpos($error,"'");
+		$singleQuote2 = mb_strrpos($error,"'");
 
 		$value = substr($error, $singleQuote1, ($singleQuote2-$singleQuote1)+1);
 		self::$logger->debug('<<findOffendingValue ['.$value.'])');
