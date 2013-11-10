@@ -144,19 +144,19 @@ class AlphaConfig {
 
 		if(mb_strrpos($currentScript, 'alpha/view/widgets/') !== false) {
 			// set path for widgets
-			$rootPath = substr($currentScript, 0, mb_strrpos($currentScript, 'alpha/view/widgets/'));
+			$rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'alpha/view/widgets/'));
 		}elseif(mb_strrpos($currentScript, 'alpha/util/') !== false) {
 			// set the path for util scripts
-			$rootPath = substr($currentScript, 0, mb_strrpos($currentScript, 'alpha/util/'));
+			$rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'alpha/util/'));
 		}elseif(mb_strrpos($currentScript, 'alpha/') !== false) {
 			// check to see if it is a controller under /alpha
-			$rootPath = substr($currentScript, 0, mb_strrpos($currentScript, 'alpha/'));
+			$rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'alpha/'));
 		}elseif(!mb_strrpos($currentScript, 'alpha/') && mb_strrpos($currentScript, 'controller/') != false) {
 			// handle custom controllers at a lower level
-			$rootPath = substr($currentScript, 0, mb_strrpos($currentScript, 'controller/'));
+			$rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'controller/'));
 		}elseif(mb_strrpos($currentScript, 'config/css/') !== false) {
 			// set path for CSS files
-			$rootPath = substr($currentScript, 0, mb_strrpos($currentScript, 'config/css/'));
+			$rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'config/css/'));
 		}elseif(mb_strrpos($currentScript, 'AlphaCronManager') !== false) {
 			// set the path for the AlphaCronManager being run from CLI
 			$rootPath = '../../';
@@ -221,8 +221,8 @@ class AlphaConfig {
             die('Failed to load the config file ['.$serverIni.']');
         }
 
-		if(substr($environment, -3) == 'CLI') // CLI mode
-			$envIni = $rootPath.'config/'.substr($environment, 0, 3).'.ini';
+		if(mb_substr($environment, -3) == 'CLI') // CLI mode
+			$envIni = $rootPath.'config/'.mb_substr($environment, 0, 3).'.ini';
 		else
 			$envIni = $rootPath.'config/'.$environment.'.ini';
 

@@ -152,7 +152,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		$fields = '';
 		foreach($attributes as $att)
 			$fields .= $att.',';
-		$fields = substr($fields, 0, -1);
+		$fields = mb_substr($fields, 0, -1);
 
 		$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE OID = :OID LIMIT 1;';
 		$this->BO->setLastQuery($sqlQuery);
@@ -247,7 +247,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		$fields = '';
 		foreach($attributes as $att)
 			$fields .= $att.',';
-		$fields = substr($fields, 0, -1);
+		$fields = mb_substr($fields, 0, -1);
 
 		if(!$ignoreClassType && $this->BO->isTableOverloaded())
 			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE '.$attribute.' = :attribute AND classname = :classname LIMIT 1;';
@@ -524,7 +524,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			$whereClause .= ' classname = :classname AND';
 
 		// remove the last " AND"
-		$whereClause = substr($whereClause, 0, -4);
+		$whereClause = mb_substr($whereClause, 0, -4);
 
 		if ($limit != 0)
 			$limit = ' LIMIT '.$limit.' OFFSET '.$start.';';
@@ -1144,7 +1144,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		if($this->BO->isTableOverloaded())
 			$sqlQuery .= "classname TEXT(100)";
 		else
-			$sqlQuery = substr($sqlQuery, 0, -1);
+			$sqlQuery = mb_substr($sqlQuery, 0, -1);
 
 		if(count($foreignKeys) > 0 ) {
 			foreach ($foreignKeys as $field => $related) {
@@ -1410,7 +1410,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 			self::$logger->debug($whereClause);
 		}
 		// remove the last " AND"
-		$whereClause = substr($whereClause, 0, -4);
+		$whereClause = mb_substr($whereClause, 0, -4);
 
 		if($whereClause != ' WHERE')
 			$sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->BO->getTableName().$whereClause;
@@ -1515,7 +1515,7 @@ class AlphaDAOProviderSQLite implements AlphaDAOProviderInterface {
 		eval('$tableName = '.$BOClassName.'::TABLE_NAME;');
 
 		if(empty($tableName))
-			$tableName = substr($BOClassName, 0, mb_strpos($BOClassName, '_'));
+			$tableName = mb_substr($BOClassName, 0, mb_strpos($BOClassName, '_'));
 
 		if($checkHistoryTable)
         	$tableName .= '_history';

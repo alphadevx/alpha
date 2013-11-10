@@ -308,7 +308,7 @@ abstract class AlphaController {
 					$keywords .= ','.$tag->get('content');
 			}
 
-			$this->setKeywords(substr($keywords, 1));
+			$this->setKeywords(mb_substr($keywords, 1));
 	 	}
 
 	 	self::$logger->debug('<<setBO');
@@ -1014,7 +1014,7 @@ abstract class AlphaController {
 		global $config;
 
 		// strip the Object part from the class name
-		$BOName = substr($BOName, 0, mb_strpos($BOName, 'Object'));
+		$BOName = mb_substr($BOName, 0, mb_strpos($BOName, 'Object'));
 		// uppercase the first letter of each word, e.g. create cart becomes Create Cart
 		$controllerName = ucwords($mode.' '.$BOName);
 		// remove spaces
@@ -1048,7 +1048,7 @@ abstract class AlphaController {
 		global $config;
 
 		// strip the Object part from the class name
-		$BOName = substr($BOName, 0, mb_strpos($BOName, 'Object'));
+		$BOName = mb_substr($BOName, 0, mb_strpos($BOName, 'Object'));
 		// uppercase the first letter of each word, e.g. create cart becomes Create Cart
 		$controllerName = ucwords($mode.' '.$BOName);
 		// remove spaces
@@ -1086,8 +1086,8 @@ abstract class AlphaController {
 						$params = FrontController::decodeQueryParams($_GET['tk']);
 					}else{
 						$start = mb_strpos($_SERVER['REQUEST_URI'], '/tk/')+3;
-						$end = strlen($_SERVER['REQUEST_URI']);
-						$tk = substr($_SERVER['REQUEST_URI'], $start+1, $end-($start+1));
+						$end = mb_strlen($_SERVER['REQUEST_URI']);
+						$tk = mb_substr($_SERVER['REQUEST_URI'], $start+1, $end-($start+1));
 						$params = FrontController::decodeQueryParams($tk);
 					}
 

@@ -73,7 +73,7 @@ class AlphaMarkdown extends MarkdownExtra_Parser {
 		if(isset($codeTypeTag[0])) {
 			$start = mb_strpos($codeTypeTag[0], '[');
 			$end = mb_strpos($codeTypeTag[0], ']');
-			$language = substr($codeTypeTag[0], $start+1, $end-($start+1));
+			$language = mb_substr($codeTypeTag[0], $start+1, $end-($start+1));
 		}else{
 			// will use php as a defualt language type when none is provided
 			$language = 'php';

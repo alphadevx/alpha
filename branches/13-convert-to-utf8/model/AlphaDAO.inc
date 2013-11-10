@@ -1634,7 +1634,7 @@ abstract class AlphaDAO {
 	        // loop over the business object directory
 	        while (false !== ($file = readdir($handle))) {
 			   	if (preg_match("/Object.inc/", $file)) {
-			   		$classname = substr($file, 0, -4);
+			   		$classname = mb_substr($file, 0, -4);
 
 			   		array_push($classNameArray, $classname);
 			   	}
@@ -1648,7 +1648,7 @@ abstract class AlphaDAO {
         // loop over the business object directory
 	    while (false !== ($file = readdir($handle))) {
 	    	if (preg_match("/Object.inc/", $file)) {
-	    		$classname = substr($file, 0, -4);
+	    		$classname = mb_substr($file, 0, -4);
 
 	    		array_push($classNameArray, $classname);
 	    	}
@@ -2077,7 +2077,7 @@ abstract class AlphaDAO {
   	 * @since 1.0
   	 */
   	public function getFriendlyClassName() {
-  		$name = substr(get_class($this), 0, -6);
+  		$name = mb_substr(get_class($this), 0, -6);
 
   		return $name;
   	}

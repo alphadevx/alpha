@@ -152,7 +152,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		$fields = '';
 		foreach($attributes as $att)
 			$fields .= $att.',';
-		$fields = substr($fields, 0, -1);
+		$fields = mb_substr($fields, 0, -1);
 
 		$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE OID = ? LIMIT 1;';
 		$this->BO->setLastQuery($sqlQuery);
@@ -248,7 +248,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		$fields = '';
 		foreach($attributes as $att)
 			$fields .= $att.',';
-		$fields = substr($fields, 0, -1);
+		$fields = mb_substr($fields, 0, -1);
 
 		if(!$ignoreClassType && $this->BO->isTableOverloaded())
 			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE '.$attribute.' = ? AND classname = ? LIMIT 1;';
@@ -524,7 +524,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			$whereClause .= ' classname = ? AND';
 
 		// remove the last " AND"
-		$whereClause = substr($whereClause, 0, -4);
+		$whereClause = mb_substr($whereClause, 0, -4);
 
 		if ($limit != 0)
 			$limit = ' LIMIT '.$start.', '.$limit.';';
@@ -1363,7 +1363,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			self::$logger->debug($whereClause);
 		}
 		// remove the last " AND"
-		$whereClause = substr($whereClause, 0, -4);
+		$whereClause = mb_substr($whereClause, 0, -4);
 
 		if($whereClause != ' WHERE')
 			$sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->BO->getTableName().$whereClause;
@@ -1507,7 +1507,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		eval('$tableName = '.$BOClassName.'::TABLE_NAME;');
 
 		if(empty($tableName))
-			$tableName = substr($BOClassName, 0, mb_strpos($BOClassName, '_'));
+			$tableName = mb_substr($BOClassName, 0, mb_strpos($BOClassName, '_'));
 
 		if($checkHistoryTable)
             $tableName .= '_history';
@@ -2204,7 +2204,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		$singleQuote1 = mb_strpos($error,"'");
 		$singleQuote2 = mb_strrpos($error,"'");
 
-		$value = substr($error, $singleQuote1, ($singleQuote2-$singleQuote1)+1);
+		$value = mb_substr($error, $singleQuote1, ($singleQuote2-$singleQuote1)+1);
 		self::$logger->debug('<<findOffendingValue ['.$value.'])');
 		return $value;
 	}

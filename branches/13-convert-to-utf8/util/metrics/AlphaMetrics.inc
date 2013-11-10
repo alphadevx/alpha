@@ -160,7 +160,7 @@ class AlphaMetrics {
 	 */
 	public function calculateLOC() {
 		foreach ($this->files as $file) {
-			$file_type = substr($file, mb_strrpos($file, '.'));
+			$file_type = mb_substr($file, mb_strrpos($file, '.'));
 			if (in_array($file_type, $this->includeFileTypes)) {
 				$exclude = false;
 				foreach ($this->excludeSubDirectories as $dir) {
@@ -234,7 +234,7 @@ class AlphaMetrics {
 				$exclude = true;
 			}else{
 				foreach ($this->comments as $comment) {
-					if (substr($line, 0, 1) == $comment) {
+					if (mb_substr($line, 0, 1) == $comment) {
 						$exclude = true;
 					}
 				}

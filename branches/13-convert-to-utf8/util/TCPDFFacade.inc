@@ -127,7 +127,7 @@ class TCPDFFacade {
 		foreach($attachments[0] as $attachmentURL) {
 			$start = mb_strpos($attachmentURL, '/');
 			$end = mb_strrpos($attachmentURL, '"');
-			$fileName = substr($attachmentURL, $start+1, $end-($start+1));
+			$fileName = mb_substr($attachmentURL, $start+1, $end-($start+1));
 
 			if(method_exists($this->BO, 'getAttachmentSecureURL')) {
 				$this->content = str_replace($attachmentURL, 'href='.$this->BO->getAttachmentSecureURL($fileName), $this->content);
@@ -141,7 +141,7 @@ class TCPDFFacade {
 		foreach($attachments[0] as $attachmentURL) {
 			$start = mb_strpos($attachmentURL, '/');
 			$end = mb_strrpos($attachmentURL, '" alt');
-			$fileName = substr($attachmentURL, $start+1, $end-($start+1));
+			$fileName = mb_substr($attachmentURL, $start+1, $end-($start+1));
 
 			if($config->get('cms.images.widget')) {
 				// get the details of the source image

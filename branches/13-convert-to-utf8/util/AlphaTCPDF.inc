@@ -87,7 +87,7 @@ class AlphaTCPDF extends TCPDF {
 			if(mb_strpos($file, '/tk/') !== false) {
 				$start = mb_strpos($file, '/tk/')+3;
 				$end = mb_strlen($file);
-				$tk = substr($file, $start+1, $end-($start+1));
+				$tk = mb_substr($file, $start+1, $end-($start+1));
 				$decoded = FrontController::getDecodeQueryParams($tk);
 
 				parent::Image($decoded['s'], $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border);
@@ -255,7 +255,7 @@ class AlphaTCPDF extends TCPDF {
 						$imglink = $this->HREF['url'];
 						if ($imglink{0} == '#') {
 							// convert url to internal link
-							$page = intval(substr($imglink, 1));
+							$page = intval(mb_substr($imglink, 1));
 							$imglink = $this->AddLink();
 							$this->SetLink($imglink, 0, $page);
 						}
