@@ -90,6 +90,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 
 		if (!isset(self::$connection)) {
 			self::$connection = new mysqli($config->get('db.hostname'), $config->get('db.username'), $config->get('db.password'), $config->get('db.name'));
+			self::$connection->set_charset('utf8');
 
 			if (mysqli_connect_error()) {
 			    self::$logger->fatal('Could not connect to database: ['.mysqli_connect_errno().'] '.mysqli_connect_error());
@@ -1053,10 +1054,10 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 						$sqlQuery .= "$propName DOUBLE(".$this->BO->getPropObject($propName)->getSize(true)."),";
 					break;
 					case "STRING":
-						$sqlQuery .= "$propName VARCHAR(".$this->BO->getPropObject($propName)->getSize()."),";
+						$sqlQuery .= "$propName VARCHAR(".$this->BO->getPropObject($propName)->getSize().") CHARACTER SET utf8,";
 					break;
 					case "TEXT":
-						$sqlQuery .= "$propName TEXT,";
+						$sqlQuery .= "$propName TEXT CHARACTER SET utf8,";
 					break;
 					case "BOOLEAN":
 						$sqlQuery .= "$propName CHAR(1) DEFAULT '0',";
@@ -1074,7 +1075,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 							$sqlQuery .= "'".$val."',";
 						}
 						$sqlQuery = rtrim($sqlQuery, ",");
-						$sqlQuery .= "),";
+						$sqlQuery .= ") CHARACTER SET utf8,";
 					break;
 					case "DENUM":
 						$tmp = new DEnum(get_class($this->BO).'::'.$propName);
@@ -1092,7 +1093,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		if($this->BO->isTableOverloaded())
 			$sqlQuery .= "classname VARCHAR(100),";
 
-		$sqlQuery .= "PRIMARY KEY (OID)) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;";
+		$sqlQuery .= "PRIMARY KEY (OID)) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
 		$this->BO->setLastQuery($sqlQuery);
 
