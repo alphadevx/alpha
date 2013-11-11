@@ -107,6 +107,7 @@ class FrontController {
 	 * The constructor method
 	 *
 	 * @throws ResourceNotFoundException
+	 * @throws BadRequestException
 	 * @since 1.0
 	 */
 	public function __construct() {
@@ -119,6 +120,8 @@ class FrontController {
 		mb_internal_encoding('UTF-8');
 		mb_http_output('UTF-8');
 		mb_http_input('UTF-8');
+		if (!mb_check_encoding())
+			throw new BadRequestException('Request character encoding does not match expected UTF-8');
 
 		self::$logger->debug('Requested URL is ['.$_SERVER['REQUEST_URI'].']');
 
