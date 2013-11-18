@@ -1185,7 +1185,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		if($this->BO->isTableOverloaded())
 			$sqlQuery .= "classname VARCHAR(100),";
 
-		$sqlQuery .= "PRIMARY KEY (OID, version_num)) ENGINE=MyISAM;";
+		$sqlQuery .= "PRIMARY KEY (OID, version_num)) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
 		$this->BO->setLastQuery($sqlQuery);
 

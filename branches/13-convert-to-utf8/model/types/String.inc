@@ -1,4 +1,4 @@
-* --<?php
+<?php
 
 /**
  * The String complex data type
