@@ -196,7 +196,7 @@ class Date extends AlphaType implements AlphaTypeInterface {
  	 * @since 1.0
  	 */
  	public function getEuroValue() {
- 		return $this->day.'/'.$this->month.'/'.substr($this->year, 2, 2);
+ 		return $this->day.'/'.$this->month.'/'.mb_substr($this->year, 2, 2);
  	}
 
 	/**
@@ -206,7 +206,7 @@ class Date extends AlphaType implements AlphaTypeInterface {
  	 * @since 1.0
  	 */
  	public function getUSValue() {
- 		return $this->month.'/'.$this->day.'/'.substr($this->year, 2, 2);
+ 		return $this->month.'/'.$this->day.'/'.mb_substr($this->year, 2, 2);
  	}
 
  	/**

@@ -84,7 +84,7 @@ class ViewArticleFile extends ViewArticle {
 			$this->BO = new ArticleObject();
 
 			// just checking to see if the file path is absolute or not
-			if(substr($params['file'], 0, 1) == '/')
+			if(mb_substr($params['file'], 0, 1) == '/')
 				$this->BO->loadContentFromFile($params['file']);
 			else
 				$this->BO->loadContentFromFile($config->get('app.root').'alpha/docs/'.$params['file']);

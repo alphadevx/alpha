@@ -110,9 +110,9 @@ class MarkdownFacade {
 		preg_match_all('/href\=\"\$attachURL\/.*\"/', $this->content, $attachments);
 
 		foreach($attachments[0] as $attachmentURL) {
-			$start = strpos($attachmentURL, '/');
-			$end = strrpos($attachmentURL, '"');
-			$fileName = substr($attachmentURL, $start+1, $end-($start+1));
+			$start = mb_strpos($attachmentURL, '/');
+			$end = mb_strrpos($attachmentURL, '"');
+			$fileName = mb_substr($attachmentURL, $start+1, $end-($start+1));
 
 			if(method_exists($this->BO, 'getAttachmentSecureURL')) {
 				$this->content = str_replace($attachmentURL, 'href="'.$this->BO->getAttachmentSecureURL($fileName).'" rel="nofollow"', $this->content);
@@ -124,9 +124,9 @@ class MarkdownFacade {
 		preg_match_all('/\<img\ src\=\"\$attachURL\/.*\".*\>/', $this->content, $attachments);
 
 		foreach($attachments[0] as $attachmentURL) {
-			$start = strpos($attachmentURL, '/');
-			$end = strrpos($attachmentURL, '" alt');
-			$fileName = substr($attachmentURL, $start+1, $end-($start+1));
+			$start = mb_strpos($attachmentURL, '/');
+			$end = mb_strrpos($attachmentURL, '" alt');
+			$fileName = mb_substr($attachmentURL, $start+1, $end-($start+1));
 
 			if($config->get('cms.images.widget')) {
 				// get the details of the source image

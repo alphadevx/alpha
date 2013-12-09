@@ -207,7 +207,7 @@ class Image {
 				$this->filename = $config->get('app.file.store.dir').'cache/images/'.basename($this->source, ".".$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.jpg';
 		}else{
 			// make a cache dir for the article
-			$cacheDir = $config->get('app.file.store.dir').'cache/images/article_'.substr($this->source, strpos($this->source, 'attachments/article_')+20, 11);
+			$cacheDir = $config->get('app.file.store.dir').'cache/images/article_'.mb_substr($this->source, mb_strpos($this->source, 'attachments/article_')+20, 11);
 			if(!file_exists($cacheDir)) {
 				$success = mkdir($cacheDir);
 

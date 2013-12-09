@@ -90,6 +90,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 
 		if (!isset(self::$connection)) {
 			self::$connection = new mysqli($config->get('db.hostname'), $config->get('db.username'), $config->get('db.password'), $config->get('db.name'));
+			self::$connection->set_charset('utf8');
 
 			if (mysqli_connect_error()) {
 			    self::$logger->fatal('Could not connect to database: ['.mysqli_connect_errno().'] '.mysqli_connect_error());
@@ -152,7 +153,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		$fields = '';
 		foreach($attributes as $att)
 			$fields .= $att.',';
-		$fields = substr($fields, 0, -1);
+		$fields = mb_substr($fields, 0, -1);
 
 		$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE OID = ? LIMIT 1;';
 		$this->BO->setLastQuery($sqlQuery);
@@ -248,7 +249,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		$fields = '';
 		foreach($attributes as $att)
 			$fields .= $att.',';
-		$fields = substr($fields, 0, -1);
+		$fields = mb_substr($fields, 0, -1);
 
 		if(!$ignoreClassType && $this->BO->isTableOverloaded())
 			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE '.$attribute.' = ? AND classname = ? LIMIT 1;';
@@ -524,7 +525,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			$whereClause .= ' classname = ? AND';
 
 		// remove the last " AND"
-		$whereClause = substr($whereClause, 0, -4);
+		$whereClause = mb_substr($whereClause, 0, -4);
 
 		if ($limit != 0)
 			$limit = ' LIMIT '.$start.', '.$limit.';';
@@ -1041,7 +1042,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			if(!in_array($propName, $this->BO->getTransientAttributes()) && $propName != "OID") {
 				$propClass = get_class($this->BO->getPropObject($propName));
 
-				switch (strtoupper($propClass)) {
+				switch (mb_strtoupper($propClass)) {
 					case "INTEGER":
 						// special properties for RelationLookup OIDs
 						if($this->BO instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID'))
@@ -1053,10 +1054,10 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 						$sqlQuery .= "$propName DOUBLE(".$this->BO->getPropObject($propName)->getSize(true)."),";
 					break;
 					case "STRING":
-						$sqlQuery .= "$propName VARCHAR(".$this->BO->getPropObject($propName)->getSize()."),";
+						$sqlQuery .= "$propName VARCHAR(".$this->BO->getPropObject($propName)->getSize().") CHARACTER SET utf8,";
 					break;
 					case "TEXT":
-						$sqlQuery .= "$propName TEXT,";
+						$sqlQuery .= "$propName TEXT CHARACTER SET utf8,";
 					break;
 					case "BOOLEAN":
 						$sqlQuery .= "$propName CHAR(1) DEFAULT '0',";
@@ -1074,7 +1075,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 							$sqlQuery .= "'".$val."',";
 						}
 						$sqlQuery = rtrim($sqlQuery, ",");
-						$sqlQuery .= "),";
+						$sqlQuery .= ") CHARACTER SET utf8,";
 					break;
 					case "DENUM":
 						$tmp = new DEnum(get_class($this->BO).'::'.$propName);
@@ -1092,7 +1093,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		if($this->BO->isTableOverloaded())
 			$sqlQuery .= "classname VARCHAR(100),";
 
-		$sqlQuery .= "PRIMARY KEY (OID)) ENGINE=InnoDB;";
+		$sqlQuery .= "PRIMARY KEY (OID)) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
 		$this->BO->setLastQuery($sqlQuery);
 
@@ -1129,7 +1130,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			if(!in_array($propName, $this->BO->getTransientAttributes()) && $propName != "OID") {
 				$propClass = get_class($this->BO->getPropObject($propName));
 
-				switch (strtoupper($propClass)) {
+				switch (mb_strtoupper($propClass)) {
 					case "INTEGER":
 						// special properties for RelationLookup OIDs
 						if($this->BO instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID'))
@@ -1184,7 +1185,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		if($this->BO->isTableOverloaded())
 			$sqlQuery .= "classname VARCHAR(100),";
 
-		$sqlQuery .= "PRIMARY KEY (OID, version_num)) ENGINE=MyISAM;";
+		$sqlQuery .= "PRIMARY KEY (OID, version_num)) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
 		$this->BO->setLastQuery($sqlQuery);
 
@@ -1254,7 +1255,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			if(!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
 				$propClass = get_class($this->BO->getPropObject($propName));
 
-				switch (strtoupper($propClass)) {
+				switch (mb_strtoupper($propClass)) {
 					case 'INTEGER':
 						$sqlQuery .= "$propName INT(".$this->BO->getPropObject($propName)->getSize().")";
 					break;
@@ -1363,7 +1364,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			self::$logger->debug($whereClause);
 		}
 		// remove the last " AND"
-		$whereClause = substr($whereClause, 0, -4);
+		$whereClause = mb_substr($whereClause, 0, -4);
 
 		if($whereClause != ' WHERE')
 			$sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->BO->getTableName().$whereClause;
@@ -1482,7 +1483,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			$tableName = ($checkHistoryTable ? $this->BO->getTableName().'_history' : $this->BO->getTableName());
 
 			while ($row = $result->fetch_array(MYSQLI_NUM)) {
-		    	if (strtolower($row[0]) == strtolower($tableName))
+		    	if (strtolower($row[0]) == mb_strtolower($tableName))
 	    			$tableExists = true;
 			}
 
@@ -1507,7 +1508,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		eval('$tableName = '.$BOClassName.'::TABLE_NAME;');
 
 		if(empty($tableName))
-			$tableName = substr($BOClassName, 0, strpos($BOClassName, '_'));
+			$tableName = mb_substr($BOClassName, 0, mb_strpos($BOClassName, '_'));
 
 		if($checkHistoryTable)
             $tableName .= '_history';
@@ -1709,7 +1710,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 		// process unique keys
 		foreach($this->BO->getUniqueAttributes() as $prop) {
 			// check for composite indexes
-			if(strpos($prop, '+')) {
+			if(mb_strpos($prop, '+')) {
 				$attributes = explode('+', $prop);
 
 				$index_exists = false;
@@ -2134,7 +2135,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 			}
 		}
 
-		self::$logger->debug('bindingsTypes=['.$bindingsTypes.'], count: ['.strlen($bindingsTypes).']');
+		self::$logger->debug('bindingsTypes=['.$bindingsTypes.'], count: ['.mb_strlen($bindingsTypes).']');
 		self::$logger->debug('params ['.var_export($params, true).']');
 
 	    if ($params != null) {
@@ -2201,10 +2202,10 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	private function findOffendingValue($error) {
 		self::$logger->debug('>>findOffendingValue(error=['.$error.'])');
 
-		$singleQuote1 = strpos($error,"'");
-		$singleQuote2 = strrpos($error,"'");
+		$singleQuote1 = mb_strpos($error,"'");
+		$singleQuote2 = mb_strrpos($error,"'");
 
-		$value = substr($error, $singleQuote1, ($singleQuote2-$singleQuote1)+1);
+		$value = mb_substr($error, $singleQuote1, ($singleQuote2-$singleQuote1)+1);
 		self::$logger->debug('<<findOffendingValue ['.$value.'])');
 		return $value;
 	}

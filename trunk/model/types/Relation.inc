@@ -8,7 +8,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -410,7 +410,7 @@ class Relation extends AlphaType implements AlphaTypeInterface {
 			if(!AlphaValidator::isInteger($val))
 				throw new IllegalArguementException("[$val]".$this->helper);
 
-			if (strlen($val) <= $this->size) {
+			if (mb_strlen($val) <= $this->size) {
 				$this->value = str_pad($val, 11, '0', STR_PAD_LEFT);
 			}else{
 				throw new IllegalArguementException("[$val]".$this->helper);

@@ -556,10 +556,10 @@ abstract class AlphaDAO {
 			$propName = $propObj->name;
 			if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
 				$propClass = get_class($this->getPropObject($propName));
-				if (strtoupper($propClass) != "ENUM" &&
-				strtoupper($propClass) != "DENUM" &&
-				strtoupper($propClass) != "DENUMITEM" && 
-				strtoupper($propClass) != "BOOLEAN") {
+				if (mb_strtoupper($propClass) != "ENUM" &&
+				mb_strtoupper($propClass) != "DENUM" &&
+				mb_strtoupper($propClass) != "DENUMITEM" &&
+				mb_strtoupper($propClass) != "BOOLEAN") {
 					if ($this->getPropObject($propName) != false && !preg_match($this->getPropObject($propName)->getRule(), $this->getPropObject($propName)->getValue())) {
 						throw new ValidationException('Failed to save, validation error is: '.$this->getPropObject($propName)->getHelper());
 						$valid = false;
@@ -871,15 +871,15 @@ abstract class AlphaDAO {
 
 				if(isset($_POST[$propName])) {
 					// we will accept "on" as a valid Boolean when dealing with checkboxes
-					if(strtoupper($propClass) == 'BOOLEAN' && $_POST[$propName] == 'on') {
+					if(mb_strtoupper($propClass) == 'BOOLEAN' && $_POST[$propName] == 'on') {
 						$_POST[$propName] = 1;
 					}
 
-					if (strtoupper($propClass) != 'DATE' && strtoupper($propClass) != 'TIMESTAMP') {
+					if (mb_strtoupper($propClass) != 'DATE' && mb_strtoupper($propClass) != 'TIMESTAMP') {
 						if($filterAll) {
 							$this->getPropObject($propName)->setValue(InputFilter::encode($_POST[$propName], false));
 						}else{
-							if(strtoupper($propClass) == 'TEXT' && !$this->getPropObject($propName)->getAllowHTML())
+							if(mb_strtoupper($propClass) == 'TEXT' && !$this->getPropObject($propName)->getAllowHTML())
 								$this->getPropObject($propName)->setValue(InputFilter::encode($_POST[$propName], false));
 							else
 								$this->getPropObject($propName)->setValue(InputFilter::encode($_POST[$propName], true));
@@ -922,7 +922,7 @@ abstract class AlphaDAO {
 
 				if(isset($hashArray[$propName])) {
 
-					if (strtoupper($propClass) != 'DATE' && strtoupper($propClass) != 'TIMESTAMP')
+					if (mb_strtoupper($propClass) != 'DATE' && mb_strtoupper($propClass) != 'TIMESTAMP')
 						$this->getPropObject($propName)->setValue($hashArray[$propName]);
 					else
 						$this->getPropObject($propName)->populateFromString($hashArray[$propName]);
@@ -1142,7 +1142,7 @@ abstract class AlphaDAO {
 
 	/**
 	 * Generic setter method for setting class properties.  Will use the method set.ucfirst($prop) instead if that
-	 * method exists at a child level (by default).  Set $noChildMethods to true if you don't want to use 
+	 * method exists at a child level (by default).  Set $noChildMethods to true if you don't want to use
 	 * any get.ucfirst($prop) method even if it exists, false otherwise (default).
 	 *
 	 * @param string $prop The name of the property to set.
@@ -1172,7 +1172,7 @@ abstract class AlphaDAO {
 
 				// complex types will have a setValue() method to call
 				if (is_object($this->$prop) && get_class($this->$prop) != false) {
-					if (strtoupper(get_class($this->$prop)) != 'DATE' && strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
+					if (mb_strtoupper(get_class($this->$prop)) != 'DATE' && mb_strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
 						$this->$prop->setValue($value);
 					}else{
 						// Date and Timestamp objects have a special setter accepting a string
@@ -1190,7 +1190,7 @@ abstract class AlphaDAO {
 	}
 
 	/**
-	 * Gets the property object rather than the value for complex attributes.  Returns false if 
+	 * Gets the property object rather than the value for complex attributes.  Returns false if
 	 * the property exists but is private.
 	 *
 	 * @param string $prop The name of the property we are getting.
@@ -1634,7 +1634,7 @@ abstract class AlphaDAO {
 	        // loop over the business object directory
 	        while (false !== ($file = readdir($handle))) {
 			   	if (preg_match("/Object.inc/", $file)) {
-			   		$classname = substr($file, 0, -4);
+			   		$classname = mb_substr($file, 0, -4);
 
 			   		array_push($classNameArray, $classname);
 			   	}
@@ -1648,7 +1648,7 @@ abstract class AlphaDAO {
         // loop over the business object directory
 	    while (false !== ($file = readdir($handle))) {
 	    	if (preg_match("/Object.inc/", $file)) {
-	    		$classname = substr($file, 0, -4);
+	    		$classname = mb_substr($file, 0, -4);
 
 	    		array_push($classNameArray, $classname);
 	    	}
@@ -2077,7 +2077,7 @@ abstract class AlphaDAO {
   	 * @since 1.0
   	 */
   	public function getFriendlyClassName() {
-  		$name = substr(get_class($this), 0, -6);
+  		$name = mb_substr(get_class($this), 0, -6);
 
   		return $name;
   	}
