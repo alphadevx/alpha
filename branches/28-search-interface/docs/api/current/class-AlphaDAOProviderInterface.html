@@ -1,0 +1,2136 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Interface AlphaDAOProviderInterface | Alpha Framework 1.2.2 API Documentation</title>
+
+	<script type="text/javascript" src="resources/combined.js?197213082"></script>
+	<script type="text/javascript" src="elementlist.js?1938582898"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="http://www.alphaframework.org/" style="color:none; background-color:none;"><img src="resources/logo-small.png" /></a>
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Packages</h3>
+			<ul>
+				<li><a href="package-alpha..controller.html">alpha::controller</a>
+						</li>
+				<li><a href="package-alpha..controller..front.html">alpha::controller::front</a>
+						</li>
+				<li><a href="package-alpha..exceptions.html">alpha::exceptions</a>
+						</li>
+				<li class="active"><a href="package-alpha..model.html">alpha::model</a>
+						</li>
+				<li><a href="package-alpha..model..types.html">alpha::model::types</a>
+						</li>
+				<li><a href="package-alpha..tasks.html">alpha::tasks</a>
+						</li>
+				<li><a href="package-alpha..tests.html">alpha::tests</a>
+						</li>
+				<li><a href="package-alpha..util.html">alpha::util</a>
+						</li>
+				<li><a href="package-alpha..util..cache.html">alpha::util::cache</a>
+						</li>
+				<li><a href="package-alpha..util..codehighlight.html">alpha::util::codehighlight</a>
+						</li>
+				<li><a href="package-alpha..util..convertors.html">alpha::util::convertors</a>
+						</li>
+				<li><a href="package-alpha..util..feeds.html">alpha::util::feeds</a>
+						</li>
+				<li><a href="package-alpha..util..filters.html">alpha::util::filters</a>
+						</li>
+				<li><a href="package-alpha..util..graphs.html">alpha::util::graphs</a>
+						</li>
+				<li><a href="package-alpha..util..helpers.html">alpha::util::helpers</a>
+						</li>
+				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
+						</li>
+				<li><a href="package-alpha..view.html">alpha::view</a>
+						</li>
+				<li><a href="package-alpha..view..renderers.html">alpha::view::renderers</a>
+						</li>
+				<li><a href="package-alpha..view..widgets.html">alpha::view::widgets</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-ActionLogObject.html">ActionLogObject</a></li>
+				<li><a href="class-AlphaDAO.html">AlphaDAO</a></li>
+				<li><a href="class-AlphaDAOProviderFactory.html">AlphaDAOProviderFactory</a></li>
+				<li><a href="class-AlphaDAOProviderMySQL.html">AlphaDAOProviderMySQL</a></li>
+				<li><a href="class-AlphaDAOProviderSQLite.html">AlphaDAOProviderSQLite</a></li>
+				<li><a href="class-ArticleCommentObject.html">ArticleCommentObject</a></li>
+				<li><a href="class-ArticleObject.html">ArticleObject</a></li>
+				<li><a href="class-ArticleVoteObject.html">ArticleVoteObject</a></li>
+				<li><a href="class-BadRequestObject.html">BadRequestObject</a></li>
+				<li><a href="class-BlacklistedClientObject.html">BlacklistedClientObject</a></li>
+				<li><a href="class-BlacklistedIPObject.html">BlacklistedIPObject</a></li>
+				<li><a href="class-PersonObject.html">PersonObject</a></li>
+				<li><a href="class-RightsObject.html">RightsObject</a></li>
+				<li><a href="class-TagObject.html">TagObject</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li class="active"><a href="class-AlphaDAOProviderInterface.html">AlphaDAOProviderInterface</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="package-alpha..model.html" title="Summary of alpha::model"><span>Package</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="deprecated.html" title="List of deprecated elements"><span>Deprecated</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Interface AlphaDAOProviderInterface</h1>
+
+
+	<div class="description">
+	
+<p>An interface that defines all of the Data Access Object (DAO) methods that
+should be included in a provider that implements this interface.</p>
+
+	</div>
+
+
+
+
+
+	<div>
+		<h4>Direct known implementers</h4>
+			<a href="class-AlphaDAOProviderMySQL.html">AlphaDAOProviderMySQL</a>, 
+			<a href="class-AlphaDAOProviderSQLite.html">AlphaDAOProviderSQLite</a>
+	</div>
+
+
+
+
+	<div class="info">
+		
+		
+		
+		<b>Package:</b> <a href="package-alpha..model.html">alpha::model</a><br />
+
+				<b>Copyright:</b>
+				Copyright (c) 2013, John Collins (founder of Alpha Framework). All rights
+reserved.
+<pre>
+Redistribution and use in source and binary forms, with or
+without modification, are permitted provided that the
+following conditions are met:
+
+* Redistributions of source code must retain the above
+  copyright notice, this list of conditions and the
+  following disclaimer.
+* Redistributions in binary form must reproduce the above
+  copyright notice, this list of conditions and the
+  following disclaimer in the documentation and/or other
+  materials provided with the distribution.
+* Neither the name of the Alpha Framework nor the names
+  of its contributors may be used to endorse or promote
+  products derived from this software without specific
+  prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre>
+<br />
+				<b>License:</b>
+				<a href="http://www.opensource.org/licenses/bsd-license.php">The BSD License</a><br />
+				<b>Author:</b>
+				John Collins &lt;<a
+href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&gt;<br />
+				<b>Version:</b>
+				$Id: AlphaDAOProviderInterface.inc 1662 2013-07-09 22:23:29Z alphadevx $<br />
+				<b>Since:</b>
+				1.1<br />
+		<b>Located at</b> <a href="source-class-AlphaDAOProviderInterface.html#3-445" title="Go to source code">model/AlphaDAOProviderInterface.inc</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="getConnection" id="_getConnection">
+
+		<td class="attributes"><code>
+			 public static
+			mysqli
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getConnection">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#49-55" title="Go to source code">getConnection</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets the current connection singleton, or creates a new one if none
+exists</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the current connection singleton, or creates a new one if none
+exists</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mysqli</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="disconnect" id="_disconnect">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_disconnect">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#57-62" title="Go to source code">disconnect</a>( )</code>
+
+		<div class="description short">
+			
+<p>Disconnects the current database connection if one exists (self::$connection
+is set)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Disconnects the current database connection if one exists (self::$connection
+is set)</p>
+
+
+
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getLastDatabaseError" id="_getLastDatabaseError">
+
+		<td class="attributes"><code>
+			 public static
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getLastDatabaseError">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#64-70" title="Go to source code">getLastDatabaseError</a>( )</code>
+
+		<div class="description short">
+			
+<p>Returns the last database error string for the current connection.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns the last database error string for the current connection.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="load" id="_load">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_load">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#72-79" title="Go to source code">load</a>( <span>integer <var>$OID</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Populates the child object with the properties retrived from the database for
+the object $OID.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Populates the child object with the properties retrived from the database for
+the object $OID.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$OID</var></dt>
+					<dd><code>integer</code><br>$OID The object ID of the business object to load.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BONotFoundException.html">BONotFoundException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="loadByAttribute" id="_loadByAttribute">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_loadByAttribute">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#81-91" title="Go to source code">loadByAttribute</a>( <span>string <var>$attribute</var></span>, <span>string <var>$value</var></span>, <span>boolean <var>$ignoreClassType</var> = <span class="php-keyword1">false</span></span>, <span>array <var>$loadAttributes</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Populates the child object from the database table by the given attribute
+value.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Populates the child object from the database table by the given attribute
+value.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$attribute</var></dt>
+					<dd><code>string</code><br>$atribute The name of the attribute to load the object by.</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>string</code><br>$value The value of the attribute to load the object by.</dd>
+					<dt><var>$ignoreClassType</var></dt>
+					<dd><code>boolean</code><br>$ignoreClassType Default is false, set to true if you want to load from
+overloaded tables and ignore the class type</dd>
+					<dt><var>$loadAttributes</var></dt>
+					<dd><code>array</code><br>$loadAttributes The attributes to load from the database to this object (leave
+blank to load all attributes)</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BONotFoundException.html">BONotFoundException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="loadAll" id="_loadAll">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_loadAll">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#93-105" title="Go to source code">loadAll</a>( <span>integer <var>$start</var> = <span class="php-num">0</span></span>, <span>integer <var>$limit</var> = <span class="php-num">0</span></span>, <span>string <var>$orderBy</var> = <span class="php-quote">'OID'</span></span>, <span>string <var>$order</var> = <span class="php-quote">'ASC'</span></span>, <span>boolean <var>$ignoreClassType</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Loads all of the objects of this class into an array which is returned.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Loads all of the objects of this class into an array which is returned.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$start</var></dt>
+					<dd><code>integer</code><br>$start The start of the SQL LIMIT clause, useful for pagination.</dd>
+					<dt><var>$limit</var></dt>
+					<dd><code>integer</code><br>$limit The amount (limit) of objects to load, useful for pagination.</dd>
+					<dt><var>$orderBy</var></dt>
+					<dd><code>string</code><br>$orderBy The name of the field to sort the objects by.</dd>
+					<dt><var>$order</var></dt>
+					<dd><code>string</code><br>$order The order to sort the objects by.</dd>
+					<dt><var>$ignoreClassType</var></dt>
+					<dd><code>boolean</code><br>$ignoreClassType Default is false, set to true if you want to load from
+overloaded tables and ignore the class type</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>An array containing objects of this type of business object.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BONotFoundException.html">BONotFoundException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="loadAllByAttribute" id="_loadAllByAttribute">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_loadAllByAttribute">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#107-123" title="Go to source code">loadAllByAttribute</a>( <span>string <var>$attribute</var></span>, <span>string <var>$value</var></span>, <span>integer <var>$start</var> = <span class="php-num">0</span></span>, <span>integer <var>$limit</var> = <span class="php-num">0</span></span>, <span>string <var>$orderBy</var> = <span class="php-quote">&quot;OID&quot;</span></span>, <span>string <var>$order</var> = <span class="php-quote">&quot;ASC&quot;</span></span>, <span>boolean <var>$ignoreClassType</var> = <span class="php-keyword1">false</span></span>, <span>array <var>$constructorArgs</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Loads all of the objects of this class by the specified attribute into an
+array which is returned.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Loads all of the objects of this class by the specified attribute into an
+array which is returned.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$attribute</var></dt>
+					<dd><code>string</code><br>$atribute The attribute to load the objects by.</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>string</code><br>$value The value of the attribute to load the objects by.</dd>
+					<dt><var>$start</var></dt>
+					<dd><code>integer</code><br>$start The start of the SQL LIMIT clause, useful for pagination.</dd>
+					<dt><var>$limit</var></dt>
+					<dd><code>integer</code><br>$limit The amount (limit) of objects to load, useful for pagination.</dd>
+					<dt><var>$orderBy</var></dt>
+					<dd><code>string</code><br>$orderBy The name of the field to sort the objects by.</dd>
+					<dt><var>$order</var></dt>
+					<dd><code>string</code><br>$order The order to sort the objects by.</dd>
+					<dt><var>$ignoreClassType</var></dt>
+					<dd><code>boolean</code><br>$ignoreClassType Default is false, set to true if you want to load from
+overloaded tables and ignore the class type.</dd>
+					<dt><var>$constructorArgs</var></dt>
+					<dd><code>array</code><br>$constructorArgs An optional array of contructor arguements to pass to the BOs
+that will be generated and returned. Supports a maximum of 5 arguements.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>An array containing objects of this type of business object.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BONotFoundException.html">BONotFoundException</a></code></code><br />
+					<code><code><a href="class-IllegalArguementException.html">IllegalArguementException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="loadAllByAttributes" id="_loadAllByAttributes">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_loadAllByAttributes">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#125-140" title="Go to source code">loadAllByAttributes</a>( <span>array <var>$attributes</var> = <span class="php-keyword1">array</span>()</span>, <span>array <var>$values</var> = <span class="php-keyword1">array</span>()</span>, <span>integer <var>$start</var> = <span class="php-num">0</span></span>, <span>integer <var>$limit</var> = <span class="php-num">0</span></span>, <span>string <var>$orderBy</var> = <span class="php-quote">'OID'</span></span>, <span>string <var>$order</var> = <span class="php-quote">'ASC'</span></span>, <span>boolean <var>$ignoreClassType</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Loads all of the objects of this class by the specified attributes into an
+array which is returned.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Loads all of the objects of this class by the specified attributes into an
+array which is returned.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$attributes</var></dt>
+					<dd><code>array</code><br>$atributes The attributes to load the objects by.</dd>
+					<dt><var>$values</var></dt>
+					<dd><code>array</code><br>$values The values of the attributes to load the objects by.</dd>
+					<dt><var>$start</var></dt>
+					<dd><code>integer</code><br>$start The start of the SQL LIMIT clause, useful for pagination.</dd>
+					<dt><var>$limit</var></dt>
+					<dd><code>integer</code><br>$limit The amount (limit) of objects to load, useful for pagination.</dd>
+					<dt><var>$orderBy</var></dt>
+					<dd><code>string</code><br>$orderBy The name of the field to sort the objects by.</dd>
+					<dt><var>$order</var></dt>
+					<dd><code>string</code><br>$order The order to sort the objects by.</dd>
+					<dt><var>$ignoreClassType</var></dt>
+					<dd><code>boolean</code><br>$ignoreClassType Default is false, set to true if you want to load from
+overloaded tables and ignore the class type</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>An array containing objects of this type of business object.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BONotFoundException.html">BONotFoundException</a></code></code><br />
+					<code><code><a href="class-IllegalArguementException.html">IllegalArguementException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="loadAllByDayUpdated" id="_loadAllByDayUpdated">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_loadAllByDayUpdated">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#142-155" title="Go to source code">loadAllByDayUpdated</a>( <span>string <var>$date</var></span>, <span>integer <var>$start</var> = <span class="php-num">0</span></span>, <span>integer <var>$limit</var> = <span class="php-num">0</span></span>, <span>string <var>$orderBy</var> = <span class="php-quote">&quot;OID&quot;</span></span>, <span>string <var>$order</var> = <span class="php-quote">&quot;ASC&quot;</span></span>, <span>boolean <var>$ignoreClassType</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Loads all of the objects of this class that where updated (updated_ts value)
+on the date indicated.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Loads all of the objects of this class that where updated (updated_ts value)
+on the date indicated.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$date</var></dt>
+					<dd><code>string</code><br>$date The date for which to load the objects updated on, in the format
+'YYYY-MM-DD'.</dd>
+					<dt><var>$start</var></dt>
+					<dd><code>integer</code><br>$start The start of the SQL LIMIT clause, useful for pagination.</dd>
+					<dt><var>$limit</var></dt>
+					<dd><code>integer</code><br>$limit The amount (limit) of objects to load, useful for pagination.</dd>
+					<dt><var>$orderBy</var></dt>
+					<dd><code>string</code><br>$orderBy The name of the field to sort the objects by.</dd>
+					<dt><var>$order</var></dt>
+					<dd><code>string</code><br>$order The order to sort the objects by.</dd>
+					<dt><var>$ignoreClassType</var></dt>
+					<dd><code>boolean</code><br>$ignoreClassType Default is false, set to true if you want to load from
+overloaded tables and ignore the class type</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>An array containing objects of this type of business object.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BONotFoundException.html">BONotFoundException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="loadAllFieldValuesByAttribute" id="_loadAllFieldValuesByAttribute">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_loadAllFieldValuesByAttribute">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#157-170" title="Go to source code">loadAllFieldValuesByAttribute</a>( <span>string <var>$attribute</var></span>, <span>string <var>$value</var></span>, <span>string <var>$returnAttribute</var></span>, <span>string <var>$order</var> = <span class="php-quote">'ASC'</span></span>, <span>boolean <var>$ignoreClassType</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Loads all of the specified attribute values of this class by the specified
+attribute into an array which is returned.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Loads all of the specified attribute values of this class by the specified
+attribute into an array which is returned.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$attribute</var></dt>
+					<dd><code>string</code><br>$attribute The attribute name to load the field values by.</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>string</code><br>$value The value of the attribute to load the field values by.</dd>
+					<dt><var>$returnAttribute</var></dt>
+					<dd><code>string</code><br>$returnAttribute The name of the attribute to return.</dd>
+					<dt><var>$order</var></dt>
+					<dd><code>string</code><br>$order The order to sort the BOs by.</dd>
+					<dt><var>$ignoreClassType</var></dt>
+					<dd><code>boolean</code><br>$ignoreClassType Default is false, set to true if you want to load from
+overloaded tables and ignore the class type.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>An array of field values.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BONotFoundException.html">BONotFoundException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="save" id="_save">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_save">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#172-180" title="Go to source code">save</a>( )</code>
+
+		<div class="description short">
+			
+<p>Saves the object. If $this-&gt;OID is empty or null it will INSERT, otherwise
+UPDATE.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Saves the object. If $this-&gt;OID is empty or null it will INSERT, otherwise
+UPDATE.</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-FailedSaveException.html">FailedSaveException</a></code></code><br />
+					<code><code><a href="class-LockingException.html">LockingException</a></code></code><br />
+					<code><code><a href="class-ValidationException.html">ValidationException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="saveAttribute" id="_saveAttribute">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_saveAttribute">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#182-192" title="Go to source code">saveAttribute</a>( <span>string <var>$attribute</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Saves the field specified with the value supplied. Only works for persistent
+BOs. Note that no Alpha type validation is performed with this method!</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Saves the field specified with the value supplied. Only works for persistent
+BOs. Note that no Alpha type validation is performed with this method!</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$attribute</var></dt>
+					<dd><code>string</code><br>$attribute The name of the attribute to save.</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>mixed</code><br>$value The value of the attribute to save.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-IllegalArguementException.html">IllegalArguementException</a></code></code><br />
+					<code><code><a href="class-FailedSaveException.html">FailedSaveException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="saveHistory" id="_saveHistory">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_saveHistory">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#194-200" title="Go to source code">saveHistory</a>( )</code>
+
+		<div class="description short">
+			
+<p>Saves the object history to the [tablename]_history table. It always does an
+INSERT.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Saves the object history to the [tablename]_history table. It always does an
+INSERT.</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-FailedSaveException.html">FailedSaveException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="delete" id="_delete">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_delete">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#202-208" title="Go to source code">delete</a>( )</code>
+
+		<div class="description short">
+			
+<p>Deletes the current object from the database.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Deletes the current object from the database.</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-FailedDeleteException.html">FailedDeleteException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getVersion" id="_getVersion">
+
+		<td class="attributes"><code>
+			 public 
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getVersion">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#210-217" title="Go to source code">getVersion</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets the version_num of the object from the database (returns 0 if the BO is
+not saved yet).</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the version_num of the object from the database (returns 0 if the BO is
+not saved yet).</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BONotFoundException.html">BONotFoundException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="makeTable" id="_makeTable">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_makeTable">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#219-225" title="Go to source code">makeTable</a>( )</code>
+
+		<div class="description short">
+			
+<p>Builds a new database table for the BO class.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Builds a new database table for the BO class.</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="makeHistoryTable" id="_makeHistoryTable">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_makeHistoryTable">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#227-233" title="Go to source code">makeHistoryTable</a>( )</code>
+
+		<div class="description short">
+			
+<p>Builds a new database table for the BO class to store it's history</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Builds a new database table for the BO class to store it's history</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rebuildTable" id="_rebuildTable">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_rebuildTable">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#235-241" title="Go to source code">rebuildTable</a>( )</code>
+
+		<div class="description short">
+			
+<p>Re-builds the table if the model requirements have changed. All data is
+lost!</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Re-builds the table if the model requirements have changed. All data is
+lost!</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="dropTable" id="_dropTable">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_dropTable">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#243-250" title="Go to source code">dropTable</a>( <span>string <var>$tableName</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Drops the table if the model requirements have changed. All data is lost!</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Drops the table if the model requirements have changed. All data is lost!</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$tableName</var></dt>
+					<dd><code>string</code><br>$tableName Optional table name, leave blank for the defined table for this class
+to be dropped</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addProperty" id="_addProperty">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addProperty">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#252-260" title="Go to source code">addProperty</a>( <span>string <var>$propName</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Adds in a new class property without loosing existing data (does an ALTER
+TABLE query on the database).</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Adds in a new class property without loosing existing data (does an ALTER
+TABLE query on the database).</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$propName</var></dt>
+					<dd><code>string</code><br>$propName The name of the new field to add to the database table.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getMAX" id="_getMAX">
+
+		<td class="attributes"><code>
+			 public 
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getMAX">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#262-269" title="Go to source code">getMAX</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets the maximum OID value from the database for this class type.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the maximum OID value from the database for this class type.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>The maximum OID value in the class table.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getCount" id="_getCount">
+
+		<td class="attributes"><code>
+			 public 
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getCount">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#271-280" title="Go to source code">getCount</a>( <span>array <var>$attributes</var> = <span class="php-keyword1">array</span>()</span>, <span>array <var>$values</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Gets the count from the database for the amount of objects of this class.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the count from the database for the amount of objects of this class.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$attributes</var></dt>
+					<dd><code>array</code><br>$atributes The attributes to count the objects by (optional).</dd>
+					<dt><var>$values</var></dt>
+					<dd><code>array</code><br>$values The values of the attributes to count the objects by (optional).</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getHistoryCount" id="_getHistoryCount">
+
+		<td class="attributes"><code>
+			 public 
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getHistoryCount">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#282-290" title="Go to source code">getHistoryCount</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets the count from the database for the amount of entries in the
+[tableName]_history table for this business object. Only call this method on
+classes where maintainHistory = true, otherwise an exception will be thrown.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the count from the database for the amount of entries in the
+[tableName]_history table for this business object. Only call this method on
+classes where maintainHistory = true, otherwise an exception will be thrown.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setEnumOptions" id="_setEnumOptions">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setEnumOptions">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#292-298" title="Go to source code">setEnumOptions</a>( )</code>
+
+		<div class="description short">
+			
+<p>Populate all of the enum options for this object from the database.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Populate all of the enum options for this object from the database.</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="checkTableExists" id="_checkTableExists">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_checkTableExists">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#300-308" title="Go to source code">checkTableExists</a>( <span>boolean <var>$checkHistoryTable</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Checks to see if the table exists in the database for the current business
+class.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Checks to see if the table exists in the database for the current business
+class.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$checkHistoryTable</var></dt>
+					<dd><code>boolean</code><br>$checkHistoryTable Set to true if you want to check for the existance of the
+_history table for this DAO.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="checkBOTableExists" id="_checkBOTableExists">
+
+		<td class="attributes"><code>
+			 public static
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_checkBOTableExists">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#310-320" title="Go to source code">checkBOTableExists</a>( <span>string <var>$BOClassName</var></span>, <span>boolean <var>$checkHistoryTable</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Static method to check the database and see if the table for the indicated BO
+class name exists (assumes table name will be $BOClassName less "Object").</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Static method to check the database and see if the table for the indicated BO
+class name exists (assumes table name will be $BOClassName less "Object").</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$BOClassName</var></dt>
+					<dd><code>string</code><br>$BOClassName The name of the business object class we are checking.</dd>
+					<dt><var>$checkHistoryTable</var></dt>
+					<dd><code>boolean</code><br>$checkHistoryTable Set to true if you want to check for the existance of the
+_history table for this DAO.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="checkTableNeedsUpdate" id="_checkTableNeedsUpdate">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_checkTableNeedsUpdate">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#322-330" title="Go to source code">checkTableNeedsUpdate</a>( )</code>
+
+		<div class="description short">
+			
+<p>Checks to see if the table in the database matches (for fields) the business
+class definition, i.e. if the database table is in sync with the class
+definition.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Checks to see if the table in the database matches (for fields) the business
+class definition, i.e. if the database table is in sync with the class
+definition.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="findMissingFields" id="_findMissingFields">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_findMissingFields">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#332-340" title="Go to source code">findMissingFields</a>( )</code>
+
+		<div class="description short">
+			
+<p>Returns an array containing any properties on the class which have not been
+created on the database table yet.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns an array containing any properties on the class which have not been
+created on the database table yet.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>An array of missing fields in the database table.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getIndexes" id="_getIndexes">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getIndexes">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#342-349" title="Go to source code">getIndexes</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets an array of all of the names of the active database indexes for this
+class.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets an array of all of the names of the active database indexes for this
+class.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>An array of database indexes on this table.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="createForeignIndex" id="_createForeignIndex">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_createForeignIndex">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#351-361" title="Go to source code">createForeignIndex</a>( <span>string <var>$attributeName</var></span>, <span>string <var>$relatedClass</var></span>, <span>string <var>$relatedClassAttribute</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Creates a foreign key constraint (index) in the database on the given
+attribute.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Creates a foreign key constraint (index) in the database on the given
+attribute.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$attributeName</var></dt>
+					<dd><code>string</code><br>$attributeName The name of the attribute to apply the index on.</dd>
+					<dt><var>$relatedClass</var></dt>
+					<dd><code>string</code><br>$relatedClass The name of the related class in the format "NameObject".</dd>
+					<dt><var>$relatedClassAttribute</var></dt>
+					<dd><code>string</code><br>$relatedClassAttribute The name of the field to relate to on the related class.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-FailedIndexCreateException.html">FailedIndexCreateException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="createUniqueIndex" id="_createUniqueIndex">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_createUniqueIndex">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#363-372" title="Go to source code">createUniqueIndex</a>( <span>string <var>$attribute1Name</var></span>, <span>string <var>$attribute2Name</var> = <span class="php-quote">''</span></span>, <span>string <var>$attribute3Name</var> = <span class="php-quote">''</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Creates a unique index in the database on the given attribute(s).</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Creates a unique index in the database on the given attribute(s).</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$attribute1Name</var></dt>
+					<dd><code>string</code><br>$attribute1Name The first attribute to mark unique in the database.</dd>
+					<dt><var>$attribute2Name</var></dt>
+					<dd><code>string</code><br>$attribute2Name The second attribute to mark unique in the databse (optional,
+use only for composite keys).</dd>
+					<dt><var>$attribute3Name</var></dt>
+					<dd><code>string</code><br>$attribute3Name The third attribute to mark unique in the databse (optional, use
+only for composite keys).</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-FailedIndexCreateException.html">FailedIndexCreateException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="reload" id="_reload">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_reload">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#374-380" title="Go to source code">reload</a>( )</code>
+
+		<div class="description short">
+			
+<p>Reloads the object from the database, overwritting any attribute values in
+memory.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Reloads the object from the database, overwritting any attribute values in
+memory.</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="checkRecordExists" id="_checkRecordExists">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_checkRecordExists">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#382-390" title="Go to source code">checkRecordExists</a>( <span>integer <var>$OID</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Checks that a record exists for the BO in the database.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Checks that a record exists for the BO in the database.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$OID</var></dt>
+					<dd><code>integer</code><br>$OID The Object ID of the object we want to see whether it exists or not.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isTableOverloaded" id="_isTableOverloaded">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isTableOverloaded">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#392-401" title="Go to source code">isTableOverloaded</a>( )</code>
+
+		<div class="description short">
+			
+<p>Checks to see if the table name matches the classname, and if not if the
+table name matches the classname name of another BO, i.e. the table is used to
+store multiple types of BOs.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Checks to see if the table name matches the classname, and if not if the
+table name matches the classname name of another BO, i.e. the table is used to
+store multiple types of BOs.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BadBOTableNameException.html">BadBOTableNameException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="begin" id="_begin">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_begin">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#403-409" title="Go to source code">begin</a>( )</code>
+
+		<div class="description short">
+			
+<p>Starts a new database transaction.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Starts a new database transaction.</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="commit" id="_commit">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_commit">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#411-417" title="Go to source code">commit</a>( )</code>
+
+		<div class="description short">
+			
+<p>Commits the current database transaction.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Commits the current database transaction.</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-FailedSaveException.html">FailedSaveException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rollback" id="_rollback">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_rollback">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#419-425" title="Go to source code">rollback</a>( )</code>
+
+		<div class="description short">
+			
+<p>Aborts the current database transaction.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Aborts the current database transaction.</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setBO" id="_setBO">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setBO">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#427-433" title="Go to source code">setBO</a>( <span><code><a href="class-AlphaDAO.html">AlphaDAO</a></code> <var>$BO</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Provide the BO that we are going to map the data to from this provider.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Provide the BO that we are going to map the data to from this provider.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$BO</var></dt>
+					<dd><code><code><a href="class-AlphaDAO.html">AlphaDAO</a></code></code><br>$BO</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="query" id="_query">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_query">#</a>
+		<code><a href="source-class-AlphaDAOProviderInterface.html#435-444" title="Go to source code">query</a>( <span>string <var>$sqlQuery</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Returns a 2d array, where each element in the array is another array
+representing a database row.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns a 2d array, where each element in the array is another array
+representing a database row.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sqlQuery</var></dt>
+					<dd><code>string</code><br>$sqlQuery</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-CustomQueryException.html">CustomQueryException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Alpha Framework 1.2.2 API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

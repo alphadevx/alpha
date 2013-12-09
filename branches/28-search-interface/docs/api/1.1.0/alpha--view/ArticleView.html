@@ -1,0 +1,701 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Docs For Class ArticleView</title>
+	<link rel="stylesheet" type="text/css" href="../media/style.css">
+	<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+</head>
+<body>
+
+<table border="0" cellspacing="0" cellpadding="0" height="48" width="100%">
+  <tr>
+	<td class="header-top-left"><a href="http://www.alphaframework.org/"><img src="../media/logo.png" border="0" alt="Alpha Framework" /></a></td>
+    <td class="header-top-right">alpha--view<br /><div class="header-top-right-subpackage"></div></td>
+  </tr>
+  <tr><td colspan="2" class="header-line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+  <tr>
+    <td colspan="2" class="header-menu">
+      
+                                                                                                                                                                                                                                                        
+                                    		[ <a href="../classtrees_alpha--view.html" class="menu">class tree: alpha--view</a> ]
+		[ <a href="../elementindex_alpha--view.html" class="menu">index: alpha--view</a> ]
+            [ <a href="../elementindex.html" class="menu">all elements</a> ]
+    </td>
+  </tr>
+  <tr><td colspan="2" class="header-line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="table-layout:fixed;">
+  <tr valign="top">
+    <td width="195" class="menu">
+		<div class="package-title">alpha--view</div>
+      <b>Packages:</b><br />
+  <div class="package">
+              <a href="../li_alpha--controller.html">alpha--controller</a><br />
+              <a href="../li_alpha--controller--front.html">alpha--controller--front</a><br />
+              <a href="../li_alpha--exceptions.html">alpha--exceptions</a><br />
+              <a href="../li_alpha--model.html">alpha--model</a><br />
+              <a href="../li_alpha--model--types.html">alpha--model--types</a><br />
+              <a href="../li_alpha--service.html">alpha--service</a><br />
+              <a href="../li_alpha--tasks.html">alpha--tasks</a><br />
+              <a href="../li_alpha--tests.html">alpha--tests</a><br />
+              <a href="../li_alpha--util.html">alpha--util</a><br />
+              <a href="../li_alpha--util--cache.html">alpha--util--cache</a><br />
+              <a href="../li_alpha--util--convertors.html">alpha--util--convertors</a><br />
+              <a href="../li_alpha--util--feeds.html">alpha--util--feeds</a><br />
+              <a href="../li_alpha--util--filters.html">alpha--util--filters</a><br />
+              <a href="../li_alpha--util--graphs.html">alpha--util--graphs</a><br />
+              <a href="../li_alpha--util--helpers.html">alpha--util--helpers</a><br />
+              <a href="../li_alpha--util--metrics.html">alpha--util--metrics</a><br />
+              <a href="../li_alpha--view.html">alpha--view</a><br />
+              <a href="../li_alpha--view--widgets.html">alpha--view--widgets</a><br />
+      	</div>
+      <br />
+                        <b>Files:</b><br />
+        <div class="package">
+				<span style="padding-left: 1em;"><a href="../alpha--view/_view---AlphaView.inc.html">AlphaView.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--view/_view---ArticleCommentView.inc.html">ArticleCommentView.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--view/_view---ArticleView.inc.html">ArticleView.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--view/_view---DEnumView.inc.html">DEnumView.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--view/_view---PersonView.inc.html">PersonView.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--view/_view---SequenceView.inc.html">SequenceView.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--view/_view---ViewState.inc.html">ViewState.inc</a></span><br />
+	  </div>
+            <br />
+                  <b>Classes:</b><br />
+        <div class="package">
+		    		<a href="../alpha--view/AlphaView.html">AlphaView</a>    	 <br />
+	    		<a href="../alpha--view/ArticleCommentView.html">ArticleCommentView</a>    	 <br />
+	    		<a href="../alpha--view/ArticleView.html">ArticleView</a>    	 <br />
+	    		<a href="../alpha--view/DEnumView.html">DEnumView</a>    	 <br />
+	    		<a href="../alpha--view/PersonView.html">PersonView</a>    	 <br />
+	    		<a href="../alpha--view/SequenceView.html">SequenceView</a>    	 <br />
+	    		<a href="../alpha--view/ViewState.html">ViewState</a>    	 <br />
+	  </div>
+                </td>
+    <td width="800">
+      <table cellpadding="10" cellspacing="0" width="100%" border="0"><tr><td valign="top">
+
+<h1>Class: ArticleView</h1>
+Source Location: /view/ArticleView.inc<br /><br />
+
+<h2 class="class-name">Class ArticleView</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Class Overview</div>
+	<div class="nav-bar">
+					<span class="disabled">Class Overview</span>
+						
+					| <a href="#sec-inherited">Inherited Properties, Constants, and Methods</a>
+											| <a href="#sec-vars">Properties</a>
+														| <a href="#sec-method-summary">Method Summary</a> | <a href="#sec-methods">Methods Detail</a>
+								</div>
+	<div class="info-box-body">
+		<table width="100%" border="0">
+		<tr><td valign="top" width="60%" class="class-overview">
+
+        		<p class="short-description"><strong>The rendering class for the ArticleObject class
+</strong></p>
+
+		<p class="notes">
+			Located in <a class="field" href="_view---ArticleView.inc.html">/view/ArticleView.inc</a> [<span class="field">line <a href="../__filesource/fsource_alpha--view__viewArticleView.inc.html#a52">52</a></span>]
+		</p>
+
+		
+		<pre><a href="../alpha--view/AlphaView.html">AlphaView</a>
+   |
+   --ArticleView</pre>
+
+		
+				<strong>Author(s):</strong>
+		<ul>
+		  			 			 <li>John Collins &lt;dev@alphaframework.org&gt;</li>
+			 		  			 		  			 		  			 		  			 		  		</ul>
+		
+		
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+				<tr><td><strong>Version:</strong>&nbsp;&nbsp;</td><td>$Id: ArticleView.inc 1467 2011-12-08 21:31:01Z johnc $</td></tr>
+				<tr><td><strong>Copyright:</strong>&nbsp;&nbsp;</td><td><p>Copyright (c) 2011, John Collins (founder of Alpha Framework).  All rights reserved.</p><p><pre> Redistribution and use in source and binary forms, with or
+ without modification, are permitted provided that the
+ following conditions are met:
+
+ * Redistributions of source code must retain the above
+   copyright notice, this list of conditions and the
+   following disclaimer.
+ * Redistributions in binary form must reproduce the above
+   copyright notice, this list of conditions and the
+   following disclaimer in the documentation and/or other
+   materials provided with the distribution.
+ * Neither the name of the Alpha Framework nor the names
+   of its contributors may be used to endorse or promote
+   products derived from this software without specific
+   prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+ CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</pre></p></td></tr>
+				<tr><td><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td></tr>
+				<tr><td><strong>License:</strong>&nbsp;&nbsp;</td><td><a href="http://www.opensource.org/licenses/bsd-license.php">The BSD License</a></td></tr>
+	</table>
+		</td>
+
+		
+				<td valign="top" width="20%" class="class-overview">
+		<p class="short-description"><strong><a href="#sec_methods">Methods</a></strong></p>
+		<ul>
+		  		  <li><a href="../alpha--view/ArticleView.html#methodafter_createView_callback">after_createView_callback</a></li>
+		  		  <li><a href="../alpha--view/ArticleView.html#methodeditView">editView</a></li>
+		  		  <li><a href="../alpha--view/ArticleView.html#methodlistView">listView</a></li>
+		  		  <li><a href="../alpha--view/ArticleView.html#methodmarkdownView">markdownView</a></li>
+		  		  <li><a href="../alpha--view/ArticleView.html#methodrenderFileUploadSection">renderFileUploadSection</a></li>
+		  		</ul>
+		</td>
+		
+		</tr></table>
+		<div class="top">[ <a href="#top">Top</a> ]</div>
+	</div>
+</div>
+
+
+	<a name="sec-inherited"></a>
+	<div class="info-box">
+		<div class="info-box-title">Inherited Properties, Constants, and Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Class Overview</a>
+						| <span class="disabled">Inherited Properties, Constants, and Methods</span>
+												| <a href="#sec-vars">Properties</a>
+																			| <a href="#sec-method-summary">Method Summary</a> | <a href="#sec-methods">Methods Detail</a>
+							    				</div>
+		<div class="info-box-body">
+			<table cellpadding="2" cellspacing="0" class="class-table">
+				<tr>
+					<th class="class-table-header" width="30%">Inherited Properties</th>
+					<th class="class-table-header" width="40%">Inherited Methods</th>
+					<th class="class-table-header" width="30%">Inherited Constants</th>
+				</tr>
+				<tr>
+					<td width="30%">
+													<p>Inherited From <span class="classname"><a href="../alpha--view/AlphaView.html">AlphaView</a></span></p>
+							<blockquote>
+								<dl>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#var$BO">AlphaView::$BO</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition"></span>
+										</dd>
+																	</dl>
+							</blockquote>
+											</td>
+					<td width="40%">
+													<p>Inherited From <span class="classname"><a href="../alpha--view/AlphaView.html">AlphaView</a></span></p>
+							<blockquote>
+								<dl>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#method__construct">AlphaView::__construct()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Constructor for the AlphaView.  As this is protected, use the AlphaView::getInstance method from a public scope.</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodadminView">AlphaView::adminView()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Renders the admin view for the business object screen to standard output</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodcreateView">AlphaView::createView()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Renders the default create view to standard output</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methoddetailedView">AlphaView::detailedView()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Displays a detailed view of the object (read-only) to standard output</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methoddisplayErrorMessage">AlphaView::displayErrorMessage()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Renders the HTML for an error (e.g. save failed) message</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methoddisplayPageFoot">AlphaView::displayPageFoot()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Method to render the page footer HTML</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methoddisplayPageHead">AlphaView::displayPageHead()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Method to render the page header HTML content</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methoddisplayUpdateMessage">AlphaView::displayUpdateMessage()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Renders the HTML for an update (e.g. successful save) message</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodeditView">AlphaView::editView()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Renders a form to enable object editing to standard output</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodgetBO">AlphaView::getBO()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Gets the BO attached to this view (if any)</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodgetInstance">AlphaView::getInstance()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Static method which returns a AlphaView object or a custom child view for the BO specified  if one exists</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodlistView">AlphaView::listView()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Renders the list view to standard output</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodloadTemplate">AlphaView::loadTemplate()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Loads a .phtml template for the BO specified if one exists.  Lower level custom templates  take precedence.</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodrenderAllFields">AlphaView::renderAllFields()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Renders all fields for the current BO in edit/create/view mode</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodrenderBooleanField">AlphaView::renderBooleanField()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Method to render the default Boolean HTML</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodrenderDefaultField">AlphaView::renderDefaultField()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Method to render the default field HTML when type is not known</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodrenderDeleteForm">AlphaView::renderDeleteForm()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Method to render a hidden form for posting the OID of an object to be deleted</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodrenderDEnumField">AlphaView::renderDEnumField()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Method to render the default DEnum HTML</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodrenderDoubleField">AlphaView::renderDoubleField()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Method to render the default Double HTML</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodrenderEnumField">AlphaView::renderEnumField()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Method to render the default Enum HTML</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodrenderErrorPage">AlphaView::renderErrorPage()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Renders a HTML error page with the supplied error code (typlically a HTTP code) and a message</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodrenderIntegerField">AlphaView::renderIntegerField()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Method to render the default Integer HTML</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodrenderRelationField">AlphaView::renderRelationField()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">render the default Relation HTML</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodrenderSecurityFields">AlphaView::renderSecurityFields()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Method to render a HTML form with two hidden, hashed (MD5) form fields to be used as  a check to ensure that a post to the controller is being sent from the same server  as hosting it.</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodrenderTextField">AlphaView::renderTextField()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">render the default Text HTML</span>
+										</dd>
+																			<dt>
+											<span class="method-definition"><a href="../alpha--view/AlphaView.html#methodsetBO">AlphaView::setBO()</a></span>
+										</dt>
+										<dd>
+											<span class="method-definition">Simple setter for the view business object</span>
+										</dd>
+																	</dl>
+							</blockquote>
+											</td>
+					<td width="30%">
+											</td>
+				</tr>
+			</table>
+			<br /><div class="top">[ <a href="#top">Top</a> ]</div>
+		</div>
+	</div>
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Class Overview</a>
+										| <a href="#sec-inherited">Inherited Properties and Methods</a>
+															| <a href="#sec-vars">Properties</a>
+							    					| <span class="disabled">Method Summary</span> | <a href="#sec-methods">Methods Detail</a>
+		</div>
+		<div class="info-box-body">
+			<div class="method-summary">
+				<table border="0" cellspacing="0" cellpadding="0" class="method-summary">
+																																																								<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#after_createView_callback" title="details" class="method-name">after_createView_callback</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Adds a note to the create article screen</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#editView" title="details" class="method-name">editView</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Renders a form to enable article editing with attachments options</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#listView" title="details" class="method-name">listView</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Renders the list view (adds the dateAdded field for the list template)</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#markdownView" title="details" class="method-name">markdownView</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Method to generate the markdown HTML render of the article content</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">string</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#renderFileUploadSection" title="details" class="method-name">renderFileUploadSection</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Renders the HTML for the file upload section</td></tr>
+				</div>
+												</table>
+			</div>
+			<br /><div class="top">[ <a href="#top">Top</a> ]</div>
+		</div>
+	</div>
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Properties</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Class Overview</a>
+										| <a href="#sec-inherited">Inherited Properties and Methods</a>
+										| <a href="#sec-var-summary">Property Summary</a> | <span class="disabled">Properties Detail</span>
+															| <a href="#sec-method-summary">Method Summary</a> | <a href="#sec-methods">Methods Detail</a>
+												</div>
+		<div class="info-box-body">
+					</div>
+	</div>
+
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Class Overview</a>
+										| <a href="#sec-inherited">Inherited Properties and Methods</a>
+															| <a href="#sec-vars">Properties</a>
+																	| <a href="#sec-method-summary">Method Summary</a> | <span class="disabled">Methods Detail</span>
+					</div>
+		<div class="info-box-body">
+			<a name='method_detail'></a>
+
+<a name="methodafter_createView_callback" id="after_createView_callback"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">after_createView_callback</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewArticleView.inc.html#a74">74</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void after_createView_callback(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Adds a note to the create article screen
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodeditView" id="editView"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">editView</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewArticleView.inc.html#a95">95</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void editView(
+[array
+$fields = array()]&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Renders a form to enable article editing with attachments options
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$fields:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> hash array of HTML fields to pass to the template</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../alpha--view/AlphaView.html#methodeditView">AlphaView::editView()</a></dt>
+						<dd>Renders a form to enable object editing to standard output</dd>
+					</dl>
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodlistView" id="listView"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">listView</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewArticleView.inc.html#a84">84</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void listView(
+[array
+$fields = array()]&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Renders the list view (adds the dateAdded field for the list template)
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$fields:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> hash array of HTML fields to pass to the template</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../alpha--view/AlphaView.html#methodlistView">AlphaView::listView()</a></dt>
+						<dd>Renders the list view to standard output</dd>
+					</dl>
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodmarkdownView" id="markdownView"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">markdownView</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewArticleView.inc.html#a59">59</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void markdownView(
+[array
+$fields = array()]&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Method to generate the markdown HTML render of the article content
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$fields:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> Hash array of HTML fields to pass to the template.</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodrenderFileUploadSection" id="renderFileUploadSection"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">renderFileUploadSection</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--view__viewArticleView.inc.html#a165">165</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>string renderFileUploadSection(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Renders the HTML for the file upload section
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+		</div>
+	</div>
+
+
+        <div class="credit">
+		    <hr class="separator" />
+		    Documentation generated on Tue, 13 Dec 2011 20:26:27 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+	      </div>
+      </td></tr></table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
