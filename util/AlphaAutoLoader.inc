@@ -114,7 +114,7 @@ class AlphaAutoLoader {
 		// lets try to guess the correct dir to save time, based on the name of the class
 		$skipDirs = array();
 
-		if(strpos($className, 'Controller') !== false) {
+		if(mb_strpos($className, 'Controller') !== false) {
 			if(self::loadFile($config->get('app.root').'alpha/controller/', $className)) {
 				// it was found and inclued by loadFile() so we can return
 				return;
@@ -130,7 +130,7 @@ class AlphaAutoLoader {
 			}
 		}
 
-		if(strpos($className, 'Exception') !== false) {
+		if(mb_strpos($className, 'Exception') !== false) {
 			if(self::loadFile($config->get('app.root').'alpha/exceptions/', $className)) {
 				return;
 			}else{
@@ -138,7 +138,7 @@ class AlphaAutoLoader {
 			}
 		}
 
-		if(strpos($className, 'DAO') !== false) {
+		if(mb_strpos($className, 'DAO') !== false) {
 			if(self::loadFile($config->get('app.root').'alpha/model/', $className)) {
 				return;
 			}else{
@@ -146,7 +146,7 @@ class AlphaAutoLoader {
 			}
 		}
 
-		if(strpos($className, 'Object') !== false) {
+		if(mb_strpos($className, 'Object') !== false) {
 			if(self::loadFile($config->get('app.root').'alpha/model/', $className)) {
 				return;
 			}else{
@@ -154,7 +154,7 @@ class AlphaAutoLoader {
 			}
 		}
 
-		if(strpos($className, 'View') !== false) {
+		if(mb_strpos($className, 'View') !== false) {
 			if(self::loadFile($config->get('app.root').'alpha/view/', $className)) {
 				return;
 			}else{
@@ -162,7 +162,7 @@ class AlphaAutoLoader {
 			}
 		}
 
-		if(strpos($className, 'Utils') !== false) {
+		if(mb_strpos($className, 'Utils') !== false) {
 			if(self::loadFile($config->get('app.root').'alpha/util/', $className)) {
 				return;
 			}else{

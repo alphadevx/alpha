@@ -129,7 +129,7 @@ class AlphaCronManager {
         // loop over the custom task directory
 	    while (false !== ($file = readdir($handle))) {
 	    	if (preg_match("/Task.inc/", $file)) {
-	    		$classname = substr($file, 0, -4);
+	    		$classname = mb_substr($file, 0, -4);
 
 	    		array_push($classNameArray, $classname);
 	    	}
@@ -140,7 +140,7 @@ class AlphaCronManager {
         // loop over the custom task directory
 	    while (false !== ($file = readdir($handle))) {
 	    	if (preg_match("/Task.inc/", $file)) {
-	    		$classname = substr($file, 0, -4);
+	    		$classname = mb_substr($file, 0, -4);
 
 	    		array_push($classNameArray, $classname);
 	    	}

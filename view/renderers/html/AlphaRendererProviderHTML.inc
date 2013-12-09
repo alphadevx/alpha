@@ -224,9 +224,9 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 					$propClass = get_class($this->BO->getPropObject($propName));
 
 					if ($propClass == 'Text') {
-						$text = htmlentities($this->BO->get($propName));
-						if(strlen($text) > 70)
-							$html .= '	<td>&nbsp;'.substr($text, 0, 70).'...</td>';
+						$text = htmlentities($this->BO->get($propName), ENT_COMPAT, 'utf-8');
+						if(mb_strlen($text) > 70)
+							$html .= '	<td>&nbsp;'.mb_substr($text, 0, 70).'...</td>';
 						else
 							$html .= '	<td>&nbsp;'.$text.'</td>';
 					}elseif($propClass == 'DEnum') {
@@ -244,7 +244,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$fields['formFields'] = $html;
 
 		// View button
-		if(strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+		if(mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
 			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."';", 'View', 'view'.$this->BO->getOID().'But');
 			$fields['viewButton'] = $button->render();
 		}else{
@@ -483,7 +483,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 
 		$html.= '<html>';
 		$html.= '<head>';
-		$html.= '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">';
+		$html.= '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">';
 		$html.= '<title>'.$controller->getTitle().'</title>';
 		if($controller->getKeywords() != '')
 			$html.= '<meta name="Keywords" content="'.$controller->getKeywords().'">';
@@ -515,7 +515,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		// handle force-frames
 		if($config->get('app.force.frame')) {
 			// if no-forceframe=true or we are in the admin backend, don't force frame
-			if(!isset($_GET['no-forceframe']) && strpos($_SERVER['REQUEST_URI'], '/tk/') === false) {
+			if(!isset($_GET['no-forceframe']) && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') === false) {
 				$html.= '<script type="text/javascript">';
 				$html.= 'pageLoc = self.location;';
 				$html.= 'pageAdd = top.location;';
@@ -529,7 +529,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 			}
 		}
 
-		if (isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+		if (isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
 			$html.= '<script type="text/javascript">';
 			$html.= '	(function($) {';
 			$html.= '		$(document).ready(function(){';
@@ -706,7 +706,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 
 		global $config;
 
-		$html = '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" id="deleteForm">';
+		$html = '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" id="deleteForm" accept-charset="UTF-8">';
 		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID');
 		$html .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value=""/>';
 		$html .= self::renderSecurityFields();
@@ -1303,7 +1303,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 					continue;
 				}
 
-				switch (strtoupper($propClass)) {
+				switch (mb_strtoupper($propClass)) {
 					case 'INTEGER' :
 						if($mode == 'view') {
 							$html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));

@@ -245,7 +245,7 @@ class Timestamp extends AlphaType implements AlphaTypeInterface {
  	 * @since 1.0
  	 */
  	public function getEuroValue() {
- 		return $this->day.'/'.$this->month.'/'.substr($this->year, 2, 2);
+ 		return $this->day.'/'.$this->month.'/'.mb_substr($this->year, 2, 2);
  	}
 
  	/**

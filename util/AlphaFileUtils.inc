@@ -515,7 +515,7 @@ class AlphaFileUtils {
 	 * @since 1.0
 	 */
 	public static function getMIMETypeByExtension($ext) {
-		$ext = strtolower($ext);
+		$ext = mb_strtolower($ext);
 		if (!isset(AlphaFileUtils::$extensionToMIMEMappings[$ext]))
 			throw new IllegalArguementException('Unable to determine the MIME type for the extension ['.$ext.']');
 

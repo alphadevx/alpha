@@ -58,7 +58,7 @@ class AlphaPHPServerUtils {
      */
     public static function start($host, $port, $docRoot) {
         // we are on Windows
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        if (mb_strtoupper(mb_substr(PHP_OS, 0, 3)) === 'WIN') {
             // Command that starts the built-in web server
             $command = sprintf(
                 'php -S %s:%d -t %s',
@@ -109,7 +109,7 @@ class AlphaPHPServerUtils {
      */
     public static function stop($PID) {
         // we are on Windows
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        if (mb_strtoupper(mb_substr(PHP_OS, 0, 3)) === 'WIN') {
             exec("taskkill /F /pid $PID");
         }else{ // we are on Linux
             exec("kill -9 $PID");
@@ -125,7 +125,7 @@ class AlphaPHPServerUtils {
     public static function status($PID) {
         $output = array();
         // we are on Windows
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        if (mb_strtoupper(mb_substr(PHP_OS, 0, 3)) === 'WIN') {
             exec("tasklist /fi \"PID eq $PID\"", $output);
 
             if(isset($output[0]) && $output[0] == 'INFO: No tasks are running which match the specified criteria.')

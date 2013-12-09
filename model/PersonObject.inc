@@ -346,7 +346,7 @@ class PersonObject extends AlphaDAO {
 		$headers .= "From: ".$config->get('email.reply.to')."\n";
 
 		try {
-			mail($this->get('email'), $subject, $body, $headers);
+			mb_send_mail($this->get('email'), $subject, $body, $headers);
 		}catch (PHPException $e) {
 			throw new MailNotSentException('Error sending a mail to ['.$this->get('email').']');
 		}

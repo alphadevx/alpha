@@ -57,7 +57,7 @@ class PersonView extends AlphaView {
 		global $config;
 
 		$html = '<div class="bordered" style="text-align:center; padding:10px; margin:10px;">';
-		$html .= '<form action="'.FrontController::generateSecureURL('act=Login&no-forceframe=true').'" method="POST" id="loginForm">';
+		$html .= '<form action="'.FrontController::generateSecureURL('act=Login&no-forceframe=true').'" method="POST" id="loginForm" accept-charset="UTF-8">';
 		$html .= '<table cols="2" align="center">';
 		$html .= '<tr>';
 		if($config->get('security.encrypt.http.fieldnames'))
@@ -105,7 +105,7 @@ class PersonView extends AlphaView {
 
 		$html = '<p>If you have forgotten your password, you can use this form to have a new password automatically generated and sent to your e-mail address.</p>';
 		$html .= '<table cols="2">';
-		$html .= '<form action="'.FrontController::generateSecureURL('act=Login&reset=true&no-forceframe=true').'" method="POST">';
+		$html .= '<form action="'.FrontController::generateSecureURL('act=Login&reset=true&no-forceframe=true').'" method="POST" accept-charset="UTF-8">';
 		$html .= '<tr>';
 		if($config->get('security.encrypt.http.fieldnames'))
 			$fieldname = base64_encode(AlphaSecurityUtils::encrypt('email'));
@@ -140,7 +140,7 @@ class PersonView extends AlphaView {
 
 		$html = '<p>In order to access this site, you will need to create a user account.  In order to do so, please provide a valid email address below and a password will be sent to your inbox shortly (you can change your password once you log in).</p>';
 		$html .= '<table cols="2">';
-		$html .= '<form action="'.$_SERVER["PHP_SELF"].'?reset=true" method="POST">';
+		$html .= '<form action="'.$_SERVER["PHP_SELF"].'?reset=true" method="POST" accept-charset="UTF-8">';
 		$html .= '<tr>';
 		if($config->get('security.encrypt.http.fieldnames'))
 			$fieldname = base64_encode(AlphaSecurityUtils::encrypt('displayname'));

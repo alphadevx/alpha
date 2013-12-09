@@ -301,7 +301,7 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
     		$this->fail('Testing the validation method');
     	}catch (ValidationException $e) {
     		$this->assertEquals('Failed to save, validation error is:',
-    						substr($e->getMessage(), 0, 36),
+    						mb_substr($e->getMessage(), 0, 36),
     						'Testing the validation method');
     	}
     }
@@ -325,7 +325,7 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
     		$this->fail('Testing the delete method');
     	}catch (BONotFoundException $e) {
     		$this->assertEquals('Failed to load object',
-    						substr($e->getMessage(), 0, 21),
+    						mb_substr($e->getMessage(), 0, 21),
     						'Testing the delete method');
     	}
     }
@@ -645,37 +645,37 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
     	$this->person->save();
 
     	if($config->get('db.provider.name') == 'AlphaDAOProviderMySQL') {
-	    	$this->assertEquals('INSERT INTO Person', substr($this->person->getLastQuery(), 0, 18),
+	    	$this->assertEquals('INSERT INTO Person', mb_substr($this->person->getLastQuery(), 0, 18),
 	    		'Testing the getLastQuery method after various persistance calls');
 	    	$this->person->checkTableNeedsUpdate();
-	    	$this->assertEquals('SHOW INDEX FROM Person', substr($this->person->getLastQuery(), 0, 22),
+	    	$this->assertEquals('SHOW INDEX FROM Person', mb_substr($this->person->getLastQuery(), 0, 22),
 	    		'Testing the getLastQuery method after various persistance calls');
 	    	$this->person->getCount();
-	    	$this->assertEquals('SELECT COUNT(OID)', substr($this->person->getLastQuery(), 0, 17),
+	    	$this->assertEquals('SELECT COUNT(OID)', mb_substr($this->person->getLastQuery(), 0, 17),
 	    		'Testing the getLastQuery method after various persistance calls');
 	    	$this->person->getMAX();
-	    	$this->assertEquals('SELECT MAX(OID)', substr($this->person->getLastQuery(), 0, 15),
+	    	$this->assertEquals('SELECT MAX(OID)', mb_substr($this->person->getLastQuery(), 0, 15),
 	    		'Testing the getLastQuery method after various persistance calls');
 	    	$this->person->load($this->person->getID());
-	    	$this->assertEquals('SHOW COLUMNS FROM Person', substr($this->person->getLastQuery(), 0, 24),
+	    	$this->assertEquals('SHOW COLUMNS FROM Person', mb_substr($this->person->getLastQuery(), 0, 24),
 	    		'Testing the getLastQuery method after various persistance calls');
     	}
 
     	if($config->get('db.provider.name') == 'AlphaDAOProviderSQLite') {
-    		$this->assertEquals('PRAGMA table_info(Person)', substr($this->person->getLastQuery(), 0, 25),
+    		$this->assertEquals('PRAGMA table_info(Person)', mb_substr($this->person->getLastQuery(), 0, 25),
     				'Testing the getLastQuery method after various persistance calls');
     		$this->person->checkTableNeedsUpdate();
-    		$this->assertEquals('SELECT name FROM sqlite_master WHERE type=\'index\'', substr($this->person->getLastQuery(), 0, 49),
+    		$this->assertEquals('SELECT name FROM sqlite_master WHERE type=\'index\'', mb_substr($this->person->getLastQuery(), 0, 49),
     				'Testing the getLastQuery method after various persistance calls');
     		$this->person->getCount();
-    		$this->assertEquals('SELECT COUNT(OID)', substr($this->person->getLastQuery(), 0, 17),
+    		$this->assertEquals('SELECT COUNT(OID)', mb_substr($this->person->getLastQuery(), 0, 17),
     				'Testing the getLastQuery method after various persistance calls');
     		$this->person->getMAX();
-    		$this->assertEquals('SELECT MAX(OID)', substr($this->person->getLastQuery(), 0, 15),
+    		$this->assertEquals('SELECT MAX(OID)', mb_substr($this->person->getLastQuery(), 0, 15),
     				'Testing the getLastQuery method after various persistance calls');
     		$this->person->load($this->person->getID());
     		$this->assertEquals('SELECT displayName,email,password,state,URL,OID,version_num,created_ts,created_by,updated_ts,updated_by FROM Person WHERE OID = :OID LIMIT 1;', 
-    				substr($this->person->getLastQuery(), 0, 150),
+    				mb_substr($this->person->getLastQuery(), 0, 150),
     				'Testing the getLastQuery method after various persistance calls');
     	}
     }

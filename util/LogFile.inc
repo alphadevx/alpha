@@ -219,29 +219,29 @@ class LogFile {
 	 			if($col == 1 && $cols[1] == 'Level'){
 	 				switch($fields[$index]) {
 	 					case 'DEBUG':
-	 						echo '<td class="debug"><pre>'.htmlentities($fields[$index]).'</pre></td>';
+	 						echo '<td class="debug"><pre>'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</pre></td>';
 	 					break;
 	 					case 'INFO':
-	 						echo '<td class="info"><pre>'.htmlentities($fields[$index]).'</pre></td>';
+	 						echo '<td class="info"><pre>'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</pre></td>';
 	 					break;
 	 					case 'WARN':
-	 						echo '<td class="warn"><pre>'.htmlentities($fields[$index]).'</pre></td>';
+	 						echo '<td class="warn"><pre>'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</pre></td>';
 	 					break;
 	 					case 'ERROR':
-	 						echo '<td class="error"><pre>'.htmlentities($fields[$index]).'</pre></td>';
+	 						echo '<td class="error"><pre>'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</pre></td>';
 	 					break;
 	 					case 'FATAL':
-	 						echo '<td class="fatal"><pre>'.htmlentities($fields[$index]).'</pre></td>';
+	 						echo '<td class="fatal"><pre>'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</pre></td>';
 	 					break;
 	 					case 'SQL':
-	 						echo '<td class="sql"><pre>'.htmlentities($fields[$index]).'</pre></td>';
+	 						echo '<td class="sql"><pre>'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</pre></td>';
 	 					break;
 	 					default:
-	 						echo '<td><pre>'.htmlentities($fields[$index]).'</pre></td>';
+	 						echo '<td><pre>'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</pre></td>';
 	 					break;
 	 				}
 	 			}else{
-	 				echo '<td><pre>'.htmlentities($fields[$index]).'</pre></td>';
+	 				echo '<td><pre>'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</pre></td>';
 	 			}
 	 		}
  			
