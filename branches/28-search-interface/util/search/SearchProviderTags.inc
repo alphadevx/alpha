@@ -2,15 +2,15 @@
 
 /**
  *
- * An implementation of the AlphaCacheProviderInterface interface that uses an array as the
- * target store.  Only useful for unit tests.
+ * Uses the TagObject business oject to store searchable tags in the main
+ * application database.
  *
- * @package alpha::util::cache
- * @since 1.2.1
+ * @package alpha::util::search
+ * @since 1.2.3
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -46,72 +46,56 @@
  * </pre>
  *
  */
-class AlphaCacheProviderArray implements AlphaCacheProviderInterface {
-
-    /**
-     * Trace logger
-     *
-     * @var Logger
-     * @since 1.2.1
+class SearchProviderTags implements SearchProviderInterface {
+	/**
+     * {@inheritdoc}
      */
-    private static $logger = null;
+	public function search($query, $returnType = 'all', $start = 0, $limit = 10) {
+		throw new NotImplementedException('Not implemented yet');
+	}
 
-    /**
-     * The hash array containing the cached items.
-     *
-     * @var array
-     * @since 1.2.1
+	/**
+     * {@inheritdoc}
      */
-    public static $cacheArray = array();
+	public function getRelated(AlphaDAO $sourceObject, $returnType = 'all', $start = 0, $limit = 10) {
+		throw new NotImplementedException('Not implemented yet');
+	}
 
-    /**
-     * Constructor
-     *
-     * @since 1.2.1
+	/**
+     * {@inheritdoc}
      */
-    public function __construct() {
-        self::$logger = new Logger('AlphaCacheProviderArray');
-    }
+	public function index(AlphaDAO $sourceObject) {
+		$taggedAttributes = $sourceObject->getTaggedAttributes();
 
-    /**
-     * (non-PHPdoc)
-     * @see alpha/util/cache/AlphaCacheProviderInterface::get()
-     * @since 1.2.1
+		foreach($taggedAttributes as $tagged) {
+			$tags = TagObject::tokenize($sourceObject->get($tagged), get_class($sourceObject), $sourceObject->getOID());
+
+			foreach($tags as $tag) {
+				try {
+					$tag->save();
+				}catch(ValidationException $e){
+					/*
+					 * The unique key has most-likely been violated because this BO is already tagged with this
+					 * value, so we can ignore in this case.
+					 */
+				}
+			}
+		}
+	}
+
+	/**
+     * {@inheritdoc}
      */
-    public function get($key) {
-        self::$logger->debug('>>get(key=['.$key.'])');
+	public function delete(AlphaDAO $sourceObject) {
+		throw new NotImplementedException('Not implemented yet');
+	}
 
-        self::$logger->debug('Getting value for key ['.$key.']');
-
-        if(array_key_exists($key, self::$cacheArray))
-            return self::$cacheArray[$key];
-        else
-            return false;
-    }
-
-    /**
-     * (non-PHPdoc)
-     * @see alpha/util/cache/AlphaCacheProviderInterface::set()
-     * @since 1.2.1
+	/**
+     * {@inheritdoc}
      */
-    public function set($key, $value, $expiry=0) {
-
-        self::$logger->debug('Setting value for key ['.$key.']');
-
-        self::$cacheArray[$key] = $value;
-    }
-
-    /**
-     * (non-PHPdoc)
-     * @see alpha/util/cache/AlphaCacheProviderInterface::delete()
-     * @since 1.2.1
-     */
-    public function delete($key) {
-
-        self::$logger->debug('Removing value for key ['.$key.']');
-
-        unset(self::$cacheArray[$key]);
-    }
+	public function getNumberFound() {
+		throw new NotImplementedException('Not implemented yet');
+	}
 }
 
 ?>

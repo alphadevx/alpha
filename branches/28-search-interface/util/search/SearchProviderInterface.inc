@@ -70,16 +70,16 @@ interface SearchProviderInterface {
 	 * @return array An array of related business objects.
 	 * @since 1.2.3
 	 */
-	public function getRelated($sourceObject, $returnType = 'all', $start = 0, $limit = 10);
+	public function getRelated(AlphaDAO $sourceObject, $returnType = 'all', $start = 0, $limit = 10);
 
 	/**
 	 * Adds/updates the business object provided to the search engine index.
 	 *
-	 * @param AlphaDAO $sourceObject The object to add to the search index. Will be updated if is already exists.
+	 * @param AlphaDAO $sourceObject The object to add to the search index. The sourceObject should already be stored in the database.
 	 * @throws SearchIndexWriteException
 	 * @since 1.2.3
 	 */
-	public function index($sourceObject);
+	public function index(AlphaDAO $sourceObject);
 
 	/**
 	 * Deletes the business object provided from the search engine index.
@@ -88,7 +88,7 @@ interface SearchProviderInterface {
 	 * @throws SearchIndexWriteException
 	 * @since 1.2.3
 	 */
-	public function delete($sourceObject);
+	public function delete(AlphaDAO $sourceObject);
 
 	/**
 	 * Returns the number of matching objects found in the previous search carried out by this provider.
