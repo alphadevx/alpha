@@ -147,6 +147,25 @@ class SearchProviderTags_Test extends PHPUnit_Framework_TestCase {
         }
         $this->assertTrue($found, 'Testing that the index method is generating tags as expected');
     }
+
+    /**
+     * Testing that tags have been deleted once a DAO has been deleted from the search index
+     *
+     * @since 1.2.3
+     */
+    public function testDelete() {
+        $this->article->save();
+        $tags = $this->article->getPropObject('tags')->getRelatedObjects();
+
+        $this->assertTrue(count($tags) > 0, 'Confirming that tags exist after saving the article (ArticleObject::after_save_callback())');
+
+        $provider = SearchProviderFactory::getInstance('SearchProviderTags');
+        $provider->delete($this->article);
+
+        $tags = $this->article->getPropObject('tags')->getRelatedObjects();
+
+        $this->assertTrue(count($tags) == 0, 'Testing that tags have been deleted once a DAO has been deleted from the search index');
+    }
 }
 
 ?>

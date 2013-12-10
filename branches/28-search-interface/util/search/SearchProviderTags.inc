@@ -87,7 +87,10 @@ class SearchProviderTags implements SearchProviderInterface {
      * {@inheritdoc}
      */
 	public function delete(AlphaDAO $sourceObject) {
-		throw new NotImplementedException('Not implemented yet');
+		$tags = $sourceObject->getPropObject('tags')->getRelatedObjects();
+
+		foreach ($tags as $tag)
+			$tag->delete();
 	}
 
 	/**
