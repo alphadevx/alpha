@@ -166,6 +166,25 @@ class SearchProviderTags_Test extends PHPUnit_Framework_TestCase {
 
         $this->assertTrue(count($tags) == 0, 'Testing that tags have been deleted once a DAO has been deleted from the search index');
     }
+
+    /**
+     * Testing the search method for expected results
+     *
+     * @since 1.2.3
+     */
+    public function testSearch() {
+        $this->article->save();
+
+        $provider = SearchProviderFactory::getInstance('SearchProviderTags');
+        $results = $provider->search('unitTestArticle');
+
+        $this->assertTrue(count($results) == 1, 'Testing the search method for expected results');
+        $this->assertEquals($this->article->getOID(), $results[0]->getOID(), 'Testing the search method for expected results');
+
+        $results = $provider->search('unitTestArticle', 'PersonObject');
+
+        $this->assertTrue(count($results) == 0, 'Testing the search method honours returnType filtering');
+    }
 }
 
 ?>

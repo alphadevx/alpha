@@ -47,11 +47,64 @@
  *
  */
 class SearchProviderTags implements SearchProviderInterface {
+
 	/**
      * {@inheritdoc}
      */
 	public function search($query, $returnType = 'all', $start = 0, $limit = 10) {
-		throw new NotImplementedException('Not implemented yet');
+
+		// explode the user's query into a set of tokenized transient TagObjects
+		$queryTags = TagObject::tokenize($query, '', '', false);
+		$matchingTags = array();
+
+		// load TagObjects from the DB where content equals the content of one of our transient TagObjects
+		foreach($queryTags as $queryTag) {
+			$tags = $queryTag->loadAllByAttribute('content', $queryTag->get('content'));
+			$matchingTags = array_merge($matchingTags, $tags);
+		}
+
+		// the result objects
+		$results = array();
+		// matching tags with weights
+		$matches = array();
+
+		/*
+		 * Build an array of BOs for the matching tags from the DB:
+		 * array key = BO ID
+		 * array value = weight (the amount of tags matching the BO)
+		 */
+		foreach($matchingTags as $tag) {
+			if ($returnType == 'all' || $tag->get('taggedClass') == $returnType) {
+
+				$key = $tag->get('taggedClass').'-'.$tag->get('taggedOID');
+
+				if(isset($matches[$key])) {
+					// increment the weight if the same BO is tagged more than once
+					$weight = intval($matches[$key]) + 1;
+					$matches[$key] = $weight;
+				}else{
+					$matches[$key] = 1;
+				}
+			}
+		}
+
+		// sort the matches based on tag frequency weight
+		arsort($matches);
+
+		// now paginate
+		$matches = array_slice($matches, $start, $limit);
+
+		// now load each object
+		foreach ($matches as $key => $weight) {
+			$parts = explode('-', $key);
+
+			$BO = new $parts[0];
+			$BO->load($parts[1]);
+
+			$results[] = $BO;
+		}
+
+		return $results;
 	}
 
 	/**
