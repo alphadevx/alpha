@@ -185,6 +185,30 @@ class SearchProviderTags_Test extends PHPUnit_Framework_TestCase {
 
         $this->assertTrue(count($results) == 0, 'Testing the search method honours returnType filtering');
     }
+
+    /**
+     * Testing the method for getting the expected number of results
+     *
+     * @since 1.2.3
+     */
+    public function testGetNumberFound() {
+        $this->article->save();
+
+        $provider = SearchProviderFactory::getInstance('SearchProviderTags');
+        $results = $provider->search('unitTestArticle');
+
+        $this->assertTrue($provider->getNumberFound() == 1, 'Testing the method for getting the expected number of results');
+
+        $article2 = $this->createArticleObject('unitTestArticle 2');
+        $article2->save();
+
+        $article3 = $this->createArticleObject('unitTestArticle 3');
+        $article3->save();
+
+        $results = $provider->search('unitTestArticle');
+
+        $this->assertTrue($provider->getNumberFound() == 3, 'Testing the method for getting the expected number of results');
+    }
 }
 
 ?>

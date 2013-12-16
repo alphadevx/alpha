@@ -49,6 +49,14 @@
 class SearchProviderTags implements SearchProviderInterface {
 
 	/**
+	 * The number of matches found for the current search.
+	 *
+	 * @var integer
+	 * @since 1.2.3
+	 */
+	private $numberFound = 0;
+
+	/**
      * {@inheritdoc}
      */
 	public function search($query, $returnType = 'all', $start = 0, $limit = 10) {
@@ -90,6 +98,8 @@ class SearchProviderTags implements SearchProviderInterface {
 
 		// sort the matches based on tag frequency weight
 		arsort($matches);
+
+		$this->numberFound = count($matches);
 
 		// now paginate
 		$matches = array_slice($matches, $start, $limit);
@@ -150,7 +160,7 @@ class SearchProviderTags implements SearchProviderInterface {
      * {@inheritdoc}
      */
 	public function getNumberFound() {
-		throw new NotImplementedException('Not implemented yet');
+		return $this->numberFound;
 	}
 }
 
