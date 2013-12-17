@@ -121,7 +121,56 @@ class SearchProviderTags implements SearchProviderInterface {
      * {@inheritdoc}
      */
 	public function getRelated(AlphaDAO $sourceObject, $returnType = 'all', $start = 0, $limit = 10) {
-		throw new NotImplementedException('Not implemented yet');
+
+		// all the tags on the source object for comparison
+		$tags = $sourceObject->getPropObject('tags')->getRelatedObjects();
+
+		// the result objects
+		$results = array();
+		// matching tags with weights
+		$matches = array();
+
+		foreach($tags as $tag) {
+			$tagObject = new TagObject();
+			$matchingTags = $tagObject->query("SELECT * FROM ".$tagObject->getTableName()." WHERE 
+				content='".$tag->get('content')."' AND NOT 
+				(taggedOID = '".$sourceObject->getOID()."' AND taggedClass = '".get_class($sourceObject)."');");
+
+			foreach($matchingTags as $matchingTag) {
+				if ($returnType == 'all' || $tag->get('taggedClass') == $returnType) {
+
+					$key = $matchingTag['taggedClass'].'-'.$matchingTag['taggedOID'];
+
+					if(isset($matches[$key])) {
+						// increment the weight if the same BO is tagged more than once
+						$weight = intval($matches[$key]) + 1;
+						$matches[$key] = $weight;
+					}else{
+						$matches[$key] = 1;
+					}
+				}
+			}
+		}
+
+		// sort the matches based on tag frequency weight
+		arsort($matches);
+
+		$this->numberFound = count($matches);
+
+		// now paginate
+		$matches = array_slice($matches, $start, $limit);
+
+		// now load each object
+		foreach ($matches as $key => $weight) {
+			$parts = explode('-', $key);
+
+			$BO = new $parts[0];
+			$BO->load($parts[1]);
+
+			$results[] = $BO;
+		}
+
+		return $results;
 	}
 
 	/**
