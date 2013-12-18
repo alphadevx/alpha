@@ -2017,6 +2017,19 @@ abstract class AlphaDAO {
   	}
 
   	/**
+  	 * Returns the contents of the taggedAttributes array, or an empty array if that does not exist.
+  	 *
+  	 * @return array
+  	 * @since 1.2.3
+  	 */
+  	public function getTaggedAttributes() {
+  		if($this->isTagged())
+  			return $this->taggedAttributes;
+  		else
+  			return array();
+  	}
+
+  	/**
   	 * Setter for the BO version number.
   	 *
   	 * @param integer $versionNumber The version number.
