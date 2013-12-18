@@ -113,3 +113,5 @@ class AlphaCacheProviderArray implements AlphaCacheProviderInterface {
         unset(self::$cacheArray[$key]);
     }
 }
+
+?>

@@ -92,6 +92,7 @@ class AlphaAutoLoader {
 					$config->get('app.root').'alpha/util/helpers/',
 					$config->get('app.root').'alpha/util/metrics/',
 					$config->get('app.root').'alpha/util/filters/',
+					$config->get('app.root').'alpha/util/search/',
 					$config->get('app.root').'alpha/tests/',
 					$config->get('app.root').'controller/',
 					$config->get('app.root').'model/',

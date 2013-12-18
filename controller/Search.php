@@ -136,37 +136,20 @@ class Search extends AlphaController implements AlphaControllerInterface {
 
 			$KPI->logStep('log search query');
 
+			$provider = SearchProviderFactory::getInstance('SearchProviderTags');
+
 			// if a BO name is provided, only search tags on that class, otherwise search all BOs
 			if(isset($params['bo']))
-				$BOs = array($params['bo']);
-			else
-				$BOs = AlphaDAO::getBOClassNames();
+        		$results = $provider->search($params['q'], $params['bo'], $this->startPoint);
+        	else
+        		$results = $provider->search($params['q'], 'all', $this->startPoint);
 
-			try {
-				foreach($BOs as $BO) {
-					AlphaDAO::loadClassDef($BO);
-					$temp = new $BO;
+        	$this->resultCount = $provider->getNumberFound();
 
-					if($temp->isTagged()) {
-						$BOIDs = $this->doTagSearch($params['q'], $BO);
+        	$KPI->logStep('search completed using SearchProviderTags provider');
 
-						$this->resultCount += count($BOIDs);
+        	$this->renderResultList($results, $params['q']);
 
-						$KPI->logStep('built array of matching OIDs');
-
-						// sort the BO IDs based on tag frequency weight
-						arsort($BOIDs);
-
-						// render the list view for each BO
-						$this->renderResultList($BOIDs, $BO, $params['q']);
-
-						AlphaDAO::disconnect();
-					}
-				}
-			}catch(Exception $e) {
-				self::$logger->error($e->getMessage());
-				throw new IllegalArguementException('Error occured while searching for: ['.$params['q'].']');
-			}
 		}else{
 			$this->setTitle('Search results');
 			echo AlphaView::displayPageHead($this);
@@ -181,116 +164,47 @@ class Search extends AlphaController implements AlphaControllerInterface {
 	}
 
 	/**
-	 * Searches for tags on the given BO type matching the query provided
-	 *
-	 * @param string $query
-	 * @param string $BOName
-	 * @param array $BOIDs
-	 * @return array
-	 * @since 1.1
-	 */
-	protected function doTagSearch($query, $BOName, $BOIDs=array()) {
-		// explode the user's query into a set of tokenized transient TagObjects
-		$queryTags = TagObject::tokenize($query, '', '', false);
-		$matchingTags = array();
-
-		// load TagObjects from the DB where content equals the content of one of our transient TagObjects
-		foreach($queryTags as $queryTag) {
-			$tags = $queryTag->loadAllByAttribute('content', $queryTag->get('content'));
-			$matchingTags = array_merge($matchingTags, $tags);
-		}
-
-		self::$logger->debug('There are ['.count($matchingTags).'] TagObjects matching the query ['.$query.']');
-
-		/*
-		 * Build an array of BOs for the matching tags from the DB:
-		 * array key = BO ID
-		 * array value = weight (the amount of tags matching the BO)
-		 */
-		foreach($matchingTags as $tag) {
-			if($tag->get('taggedClass') == $BOName) {
-
-				if(isset($BOIDs[$tag->get('taggedOID')])) {
-					// increment the weight if the same BO is tagged more than once
-					$weight = intval($BOIDs[$tag->get('taggedOID')]) + 1;
-					$BOIDs[$tag->get('taggedOID')] = $weight;
-				}else{
-					$BOIDs[$tag->get('taggedOID')] = 1;
-				}
-
-				self::$logger->debug('Found BO ['.$tag->get('taggedOID').'] has weight ['.$BOIDs[$tag->get('taggedOID')].']');
-			}
-		}
-
-		return $BOIDs;
-	}
-
-	/**
 	 * Renders the search result list
 	 *
-	 * @param array $BOIDs
-	 * @param string $BO
+	 * @param array $results
 	 * @param string $query
 	 * @param bool $showTags
-	 * @param bool $showScore
 	 * @since 1.0
 	 */
-	protected function renderResultList($BOIDs, $BO, $query='', $showTags=true, $showScore=false) {
+	protected function renderResultList($results, $query='', $showTags=true) {
 		global $config;
 
 		// used to track when our pagination range ends
 		$end = ($this->startPoint+$config->get('app.list.page.amount'));
-		// used to track how many results have been displayed or skipped from the pagination range
-		$displayedCount = 0;
 
 		if(!empty($query))
 			echo '<h2>Displaying results for &quot;'.$query.'&quot;</h2>';
 
-		foreach(array_keys($BOIDs) as $oid) {
-			try {
-				// if we have reached the end of the pagination range then break out
-				if($displayedCount == $end)
-					break;
+		foreach($results as $bo) {
 
-				// if our display count is >= the start but < the end...
-				if($displayedCount >= $this->startPoint) {
-					$temp = new $BO;
-					$temp->load($oid);
+			if($bo instanceof ArticleObject && $bo->get('published') == false){
+				$this->resultCount--;
+			}else{
+				$view = AlphaView::getInstance($bo);
+				echo $view->listView();
 
-					if($temp instanceof ArticleObject && $temp->get('published') == false){
-						$this->resultCount--;
-					}else{
-						$view = AlphaView::getInstance($temp);
-						echo $view->listView();
+				if($showTags) {
+					$tags = $bo->getPropObject('tags')->getRelatedObjects();
 
-						if($showTags) {
-							$tags = $temp->getPropObject('tags')->getRelatedObjects();
+					if(count($tags) > 0) {
+						echo '<p>Tags: ';
 
-							if(count($tags) > 0) {
-								echo '<p>Tags: ';
+						$queryTerms = explode(' ', mb_strtolower($query));
 
-								$queryTerms = explode(' ', mb_strtolower($query));
-
-								foreach($tags as $tag) {
-									echo (in_array($tag->get('content'), $queryTerms) ? '<strong>'.$tag->get('content').' </strong>' : $tag->get('content').' ');
-								}
-
-								echo '</p>';
-							}
+						foreach($tags as $tag) {
+							echo (in_array($tag->get('content'), $queryTerms) ? '<strong>'.$tag->get('content').' </strong>' : $tag->get('content').' ');
 						}
 
-						if($showScore) {
-							$score = $BOIDs[$oid];
-
-							echo '<p>Score: <strong>'.$score.'</strong></p>';
-						}
+						echo '</p>';
 					}
 				}
-
-				$displayedCount++;
-			}catch(BONotFoundException $e) {
-				self::$logger->warn('Orpaned TagObject detected pointing to a non-existant BO of OID ['.$oid.'] and type ['.$BO.'].');
 			}
+
 		}
 	}
 
