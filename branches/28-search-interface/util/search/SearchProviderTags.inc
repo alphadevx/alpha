@@ -49,12 +49,29 @@
 class SearchProviderTags implements SearchProviderInterface {
 
 	/**
+	 * Trace logger
+	 *
+	 * @var Logger
+	 * @since 1.2.3
+	 */
+	private static $logger;
+
+	/**
 	 * The number of matches found for the current search.
 	 *
 	 * @var integer
 	 * @since 1.2.3
 	 */
 	private $numberFound = 0;
+
+	/**
+	 * constructor to set up the object
+	 *
+	 * @since 1.2.3
+	 */
+	public function __construct() {
+		self::$logger = new Logger('SearchProviderTags');
+	}
 
 	/**
      * {@inheritdoc}
@@ -102,16 +119,24 @@ class SearchProviderTags implements SearchProviderInterface {
 		$this->numberFound = count($matches);
 
 		// now paginate
-		$matches = array_slice($matches, $start, $limit);
+		$matches = array_slice($matches, $start, $limit+5); // the +5 is just some padding in case of orphans
 
 		// now load each object
 		foreach ($matches as $key => $weight) {
-			$parts = explode('-', $key);
+			if(count($results) < $limit) {
+				$parts = explode('-', $key);
 
-			$BO = new $parts[0];
-			$BO->load($parts[1]);
+				try {
 
-			$results[] = $BO;
+					$BO = new $parts[0];
+					$BO->load($parts[1]);
+
+					$results[] = $BO;
+
+				}catch(BONotFoundException $e) {
+					self::$logger->warn('Orpaned TagObject detected pointing to a non-existant BO of OID ['.$parts[1].'] and type ['.$parts[0].'].');
+				}
+			}
 		}
 
 		return $results;
