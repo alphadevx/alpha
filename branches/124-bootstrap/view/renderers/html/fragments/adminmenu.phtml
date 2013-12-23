@@ -1,7 +1,7 @@
 <ul id="adminmenu" class="potato-menu">
 	<li><a href="<?= $config->get('app.url') ?>">Home</a></li>
 	<li><a href="<?= FrontController::generateSecureURL('act=ListBusinessObjects') ?>">Admin Home</a></li>
-	<li><a href="#">Logs &raquo;</a>			
+	<li><a href="#">Logs &raquo;</a>
 		<ul>
 			<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.file.store.dir').'logs/'.$config->get('app.log.file')) ?>">System Log</a></li>
 			<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.root').'logs/search.log') ?>">Search Log</a></li>

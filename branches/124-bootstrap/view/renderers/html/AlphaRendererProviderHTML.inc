@@ -479,7 +479,10 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		if(!AlphaController::checkControllerDefExists(get_class($controller)))
 			throw new IllegalArguementException('The controller provided ['.get_class($controller).'] is not defined anywhere!');
 
-		$html = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">';
+		$html = AlphaView::loadTemplateFragment('html', 'head.phtml', array('title' => $controller->getTitle(), 'description' => $controller->getDescription()));
+
+		// TODO: all of this needs to be reviewed for Bootstrap
+		/*$html = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">';
 
 		$html.= '<html>';
 		$html.= '<head>';
@@ -592,7 +595,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		if(method_exists($controller, 'during_displayPageHead_callback'))
 			$html.= $controller->during_displayPageHead_callback();
 
-		$html.= '</head>';
+		$html.= '</head>';*/
 		try {
 			if($controller->getBO() != null)
 				$html.= '<body'.($controller->getBO()->get('bodyOnload') != '' ? ' onload="'.$controller->getBO()->get('bodyOnload').'"' : '').'>';
@@ -605,7 +608,8 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		if(method_exists($controller, 'insert_CMSDisplayStandardHeader_callback'))
 			$html.= $controller->insert_CMSDisplayStandardHeader_callback();
 
-		$html .= '<div id="recordSelector"></div>';
+		// TODO review this widget with Bootstrap
+		//$html .= '<div id="recordSelector"></div>';
 
 		// TODO need to move this elsewhere as the $renderStatus param is no longer provided
 		/*if($renderStatus) {
@@ -629,11 +633,14 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 
 		self::$logger->debug('>>displayPageFoot(controller=['.get_class($controller).'])');
 
-		$html = '';
+		// TODO revise post-Bootstrap
+		/*$html = '';
 
 		$html .= '<div id="dialogDiv"></div>';
 		$html .= '</body>';
-		$html .= '</html>';
+		$html .= '</html>';*/
+
+		$html = AlphaView::loadTemplateFragment('html', 'footer.phtml', array());
 
 		self::$logger->debug('<<displayPageFoot ['.$html.']');
 		return $html;
