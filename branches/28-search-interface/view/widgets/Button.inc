@@ -8,7 +8,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -110,31 +110,37 @@ class Button {
 			switch ($this->action) {
 				case 'submit':
 					$html .= '<script>
-						$(function() {
-							$("[Id=\''.$this->id.'\']").button();
-						});
+						if (window.jQuery) {
+							$(function() {
+								$("[Id=\''.$this->id.'\']").button();
+							});
+						}
 						</script>
 					';
-					$html .= '<input type="submit" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'"'.($width == 0? '':' style="width:'.$width.';"').'/>';
+					$html .= '<input type="submit" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="btn btn-primary"'.($width == 0? '':' style="width:'.$width.';"').'/>';
 				break;
 				case 'file':
 					$html .= '<script>
-						$(function() {
-							$("[Id=\''.$this->id.'\']").button();
-						});
+						if (window.jQuery) {
+							$(function() {
+								$("[Id=\''.$this->id.'\']").button();
+							});
+						}
 						</script>
 					';
-					$html .= '<input type="file" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'"'.($width == 0? '':' style="width:'.$width.';"').'/>';
+					$html .= '<input type="file" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="btn btn-primary"'.($width == 0? '':' style="width:'.$width.';"').'/>';
 				break;
 				default:
 					$html .= '<script>
-						$(function() {
-							$("[Id=\''.$this->id.'\']").button();
-							$("[Id=\''.$this->id.'\']").click(function() { '.$this->action.'; });
-						});
+						if (window.jQuery) {
+							$(function() {
+								$("[Id=\''.$this->id.'\']").button();
+								$("[Id=\''.$this->id.'\']").click(function() { '.$this->action.'; });
+							});
+						}
 						</script>
 					';
-					$html .= '<input type="button" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'"'.($width == 0? '':' style="width:'.$width.';"').'/>';
+					$html .= '<input type="button" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="btn btn-primary"'.($width == 0? '':' style="width:'.$width.';"').'/>';
 				break;
 			}
 		}else{
