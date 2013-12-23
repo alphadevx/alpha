@@ -1,0 +1,27 @@
+<form action="<?= $formAction ?>" id="admin_<?= $className ?>" method="POST" accept-charset="UTF-8">
+	<table class="admin_view">
+		<tr>
+		<th>Class name</th>
+		<th>Table name</th>
+		<th>Table row count</th>
+		<th>Table exists?</th>
+		<th>Table needs updating?</th>
+		</tr>
+		<tr>
+		<td>&nbsp;<?= $className ?></td>
+		<td>&nbsp;<?= $tableName ?></td>
+		<td>&nbsp;<?= $count ?></td>
+		<td>&nbsp;<?= $tableExists ?></td>
+		<td>&nbsp;<?= $tableNeedsUpdate ?></td>
+		</tr>
+		<tr>
+		<td colspan="5" align="center">
+			<?= $createButton ?>&nbsp;&nbsp;
+			<?= $listButton ?>&nbsp;&nbsp;
+			<?= $createTableButton ?>
+			<?= $recreateOrUpdateButtons ?>
+		</td>
+		</tr>
+		<?= $formSecurityFields ?>
+	</table>
+</form>
