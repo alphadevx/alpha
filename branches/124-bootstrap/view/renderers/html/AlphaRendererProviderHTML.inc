@@ -672,9 +672,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 			self::$logger = new Logger('AlphaRendererProviderHTML');
 		self::$logger->debug('>>displayErrorMessage(message=['.$message.'])');
 
-		$html = '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;">
-				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
-				'.$message.'</p></div>';
+		$html = '<div class="alert alert-danger">'.$message.'</div>';
 
 		self::$logger->debug('<<displayErrorMessage ['.$html.']');
 		return $html;
