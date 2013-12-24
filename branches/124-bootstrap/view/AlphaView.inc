@@ -54,12 +54,12 @@ class AlphaView {
 	 */
 	protected $BO;
 
-        /**
-         * The rendering provider that will be used to render the business object
-         *
-         * @var AlphaRendererProviderInterface
-         * @since 1.2
-         */
+    /**
+     * The rendering provider that will be used to render the business object
+     *
+     * @var AlphaRendererProviderInterface
+     * @since 1.2
+     */
 	protected $provider;
 
 	/**

@@ -95,28 +95,32 @@ class PersonView extends AlphaView {
 	public function displayResetForm() {
 		global $config;
 
-		$html = '<p>If you have forgotten your password, you can use this form to have a new password automatically generated and sent to your e-mail address.</p>';
-		$html .= '<table cols="2">';
-		$html .= '<form action="'.FrontController::generateSecureURL('act=Login&reset=true&no-forceframe=true').'" method="POST" accept-charset="UTF-8">';
-		$html .= '<tr>';
-		if($config->get('security.encrypt.http.fieldnames'))
-			$fieldname = base64_encode(AlphaSecurityUtils::encrypt('email'));
-		else
-			$fieldname = 'email';
-		$html .= '	<td>E-mail Address</td> <td><input type="text" name="'.$fieldname.'" size="50" value="'.(isset($_POST[$fieldname])? $_POST[$fieldname] : '').'"/></td>';
-		$html .= '</tr>';
-		$html .= '<tr><td colspan="2">';
-		$temp = new Button("submit","Reset Password","resetBut");
+		$html = '<div class="bordered padded">';
+		$html .= '<h1>Password reset</h1>';
+		$html .= '<p>If you have forgotten your password, you can use this form to have a new password automatically generated and sent to your e-mail address.</p>';
+		$html .= '<form action="'.FrontController::generateSecureURL('act=Login&reset=true&no-forceframe=true').'" method="POST" id="resetForm" accept-charset="UTF-8">';
+
+		$email = new String(isset($_POST['email']) ? $_POST['email'] : '');
+		$email->setRule(AlphaValidator::REQUIRED_EMAIL);
+		$email->setSize(70);
+		$email->setHelper('Please provide a valid e-mail address!');
+		$stringBox = new StringBox($email, $this->BO->getDataLabel('email'), 'email', 'resetForm', '50');
+		$html .= $stringBox->render();
+
+		$html .= '<div class="form-group lower spread">';
+
+		$temp = new Button('submit', 'Reset Password', 'resetBut');
 		$html .= $temp->render();
-		$html .= '&nbsp;&nbsp;';
-		$temp = new Button("document.location.replace('".$config->get('app.url')."')","Cancel","cancelBut");
+
+		$temp = new Button("document.location.replace('".$config->get('app.url')."')", 'Cancel', 'cancelBut');
 		$html .= $temp->render();
-		$html .= '</td></tr>';
+
+		$html .= '</div>';
 
 		$html .= $this->renderSecurityFields();
 
 		$html .= '</form>';
-		$html .= '</table>';
+		$html .= '</div>';
 
 		return $html;
 	}

@@ -109,38 +109,14 @@ class Button {
 		if(empty($this->imgURL)) {
 			switch ($this->action) {
 				case 'submit':
-					$html .= '<script>
-						if (window.jQuery) {
-							$(function() {
-								$("[Id=\''.$this->id.'\']").button();
-							});
-						}
-						</script>
-					';
 					$html .= '<input type="submit" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="btn btn-primary"'.($width == 0? '':' style="width:'.$width.';"').'/>';
 				break;
 				case 'file':
-					$html .= '<script>
-						if (window.jQuery) {
-							$(function() {
-								$("[Id=\''.$this->id.'\']").button();
-							});
-						}
-						</script>
-					';
 					$html .= '<input type="file" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="btn btn-primary"'.($width == 0? '':' style="width:'.$width.';"').'/>';
 				break;
 				default:
-					$html .= '<script>
-						if (window.jQuery) {
-							$(function() {
-								$("[Id=\''.$this->id.'\']").button();
-								$("[Id=\''.$this->id.'\']").click(function() { '.$this->action.'; });
-							});
-						}
-						</script>
-					';
 					$html .= '<input type="button" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="btn btn-primary"'.($width == 0? '':' style="width:'.$width.';"').'/>';
+					$html .= '<script>document.getElementById(\''.$this->id.'\').onclick = function() { '.$this->action.'; };</script>';
 				break;
 			}
 		}else{
