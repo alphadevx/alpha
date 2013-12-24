@@ -1,11 +1,8 @@
 <form action="<?= $formAction ?>" id="<?= $formID ?>" method="POST" accept-charset="UTF-8">
-	<table class="create_view">
-		<?= $formFields ?>
-		<tr><td colspan="2">
+	<?= $formFields ?>
+	<div class="form-group lower spread">
 		<?= $createButton ?>
-		&nbsp;&nbsp;
 		<?= $cancelButton ?>
-		</td></tr>
-		<?= $formSecurityFields ?>
-	</table>
+	</div>
+	<?= $formSecurityFields ?>
 </form>

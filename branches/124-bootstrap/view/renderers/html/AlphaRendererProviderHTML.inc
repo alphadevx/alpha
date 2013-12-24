@@ -103,8 +103,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$fields['formFields'] = $this->renderAllFields('create');
 
 		// buffer HTML output for Create and Cancel buttons
-		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('createBut')) : 'createBut');
-		$button = new Button('submit', 'Create', $fieldname);
+		$button = new Button('submit', 'Create', 'createBut');
 		$fields['createButton'] = $button->render();
 
 		$button = new Button("document.location.replace('".FrontController::generateSecureURL('act=ListBusinessObjects')."')", 'Cancel', 'cancelBut');
@@ -1057,35 +1056,20 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * (non-PHPdoc)
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderStringField()
 	 */
-	public function renderStringField($name, $label, $mode, $value='', $tableTags=true) {
-		self::$logger->debug('>>renderStringField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+	public function renderStringField($name, $label, $mode, $value='') {
+		self::$logger->debug('>>renderStringField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
 		global $config;
-
-		if($config->get('security.encrypt.http.fieldnames'))
-			$fieldname = base64_encode(AlphaSecurityUtils::encrypt($name));
-		else
-			$fieldname = $name;
 
 		$html = '';
 
 		if ($mode == 'create' || $mode == 'edit') {
-			$string = new StringBox($this->BO->getPropObject($name), $this->BO->getDataLabel($name), $fieldname);
-			$html .= $string->render($tableTags);
+			$string = new StringBox($this->BO->getPropObject($name), $this->BO->getDataLabel($name), $name);
+			$html .= $string->render();
 		}
 
 		if ($mode == 'view') {
-			if($tableTags) {
-				$html .= '<tr><th>';
-				$html .= $label;
-				$html .= '</th>';
-
-				$html .= '<td>&nbsp;';
-				$html .= $value;
-				$html .= '</td></tr>';
-			}else{
-				$html .= $value;
-			}
+			$html .= $value;
 		}
 
 		self::$logger->debug('<<renderStringField ['.$html.']');

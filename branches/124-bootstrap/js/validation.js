@@ -58,11 +58,11 @@
 					$('[id="'+field.attr('id')+'"]').parent().toggleClass('has-error');
 				}else{
 					messageSpan.html(error);
+					$('[id="'+field.attr('id')+'"]').parent().toggleClass('has-error');
 				}
 			}else{
 				hideContainer(errorContainer);
 				isVisible = false;
-				$('[id="'+field.attr('id')+'"]').parent().toggleClass('has-error');
 			}
 		});
 	}

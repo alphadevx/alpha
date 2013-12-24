@@ -265,11 +265,10 @@ interface AlphaRendererProviderInterface {
 	 * @param string $label The label to apply to the field
 	 * @param string $mode The field mode (create/edit/view)
 	 * @param string $value The field value (optional)
-	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.2.2
 	 */
-	public function renderStringField($name, $label, $mode, $value='', $tableTags=true);
+	public function renderStringField($name, $label, $mode, $value='');
 
 	/**
 	 * Renders a Relation field value.
