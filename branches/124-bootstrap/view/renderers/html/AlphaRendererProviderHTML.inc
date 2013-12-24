@@ -481,121 +481,11 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 
 		$html = AlphaView::loadTemplateFragment('html', 'head.phtml', array('title' => $controller->getTitle(), 'description' => $controller->getDescription()));
 
-		// TODO: all of this needs to be reviewed for Bootstrap
-		/*$html = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">';
-
-		$html.= '<html>';
-		$html.= '<head>';
-		$html.= '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">';
-		$html.= '<title>'.$controller->getTitle().'</title>';
-		if($controller->getKeywords() != '')
-			$html.= '<meta name="Keywords" content="'.$controller->getKeywords().'">';
-		if($controller->getDescription() != '')
-			$html.= '<meta name="Description" content="'.$controller->getDescription().'">';
-		$html.= '<meta name="title" content="'.$controller->getTitle().'">';
-		$html.= '<meta name="robots" content="index,follow,NOODP">';
-		if ($controller->getBO() != null && $controller->getBO()->hasAttribute('URL')) {
-			$URL = $controller->getBO()->get('URL');
-			if($URL != '')
-				$html.= '<link rel="canonical" href="'.$URL.'" />';
-		}
-		$html.= '<meta http-equiv="imagetoolbar" content="no">';
-
-		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/lib/jquery/ui/themes/'.$config->get('app.css.theme').'/jquery.ui.all.css">';
-		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/css/alpha.css">';
-		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'config/css/overrides.css">';
-
-		$html.= '<script type="text/javascript" src="'.$config->get('app.url').'alpha/lib/jquery/jquery-1.5.1.min.js"></script>';
-		$html.= '<script type="text/javascript" src="'.$config->get('app.url').'alpha/scripts/validation.js"></script>';
-		$html.= '<script type="text/javascript" src="'.$config->get('app.url').'alpha/lib/jquery/contextMenu/jquery.contextMenu.js"></script>';
-
-		$html.= '<script type="text/javascript" src="'.$config->get('app.url').'alpha/lib/jquery/ui/jquery-ui-1.8.11.custom.min.js"></script>';
-
-		$html.= '<script type="text/javascript" src="'.$config->get('app.url').'alpha/lib/jquery/ui/jquery.ui.potato.menu.js"></script>';
-
-		$html.= '<script type="text/javascript" src="'.$config->get('app.url').'alpha/lib/jquery/ui/jquery.ui.checkbox.js"></script>';
-
-		// handle force-frames
-		if($config->get('app.force.frame')) {
-			// if no-forceframe=true or we are in the admin backend, don't force frame
-			if(!isset($_GET['no-forceframe']) && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') === false) {
-				$html.= '<script type="text/javascript">';
-				$html.= 'pageLoc = self.location;';
-				$html.= 'pageAdd = top.location;';
-
-				$html.= 'if (pageLoc == pageAdd) {';
-				$html.= '    contentSrc = escape(pageLoc);';
-				$html.= '    contPage = \''.$config->get('app.url').'?\' + contentSrc;';
-				$html.= '    top.location.href = contPage;';
-				$html.= '}';
-				$html.= '</script>';
-			}
-		}
-
-		if (isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
-			$html.= '<script type="text/javascript">';
-			$html.= '	(function($) {';
-			$html.= '		$(document).ready(function(){';
-			$html.= '		$("#adminmenu").ptMenu();';
-			$html.= '	});';
-			$html.= '})(jQuery);';
-			$html.= '</script>';
-		}
-
-		// general dialog defaults
-		$html.= '<script type="text/javascript">';
-		$html.= '	(function($) {';
-		$html.= '		var dialogCoords = [(screen.width/2)-200, (screen.height/2)-200];';
-		$html.= '		$(document).ready(function(){';
-		$html.= '			$.extend($.ui.dialog.prototype.options, {';
-		$html.= '				modal: true,';
-		$html.= '	        	resizable: false,';
-		$html.= '	        	draggable: false,';
-		$html.= '	        	autoOpen: false,';
-		$html.= '	        	height: 200,';
-		$html.= '	        	width: 400,';
-		$html.= '	        	position: dialogCoords,';
-		$html.= '	        	buttons: {';
-		$html.= '	        		"Cancel": function() {';
-		$html.= '						$(this).dialog("close");';
-		$html.= '					}';
-		$html.= '				}';
-		$html.= '			});';
-		$html.= '		});';
-		$html.= '	})(jQuery);';
-		$html.= '</script>';
-
-		// record selector JS
-		$html.= '<script type="text/javascript">';
-		$html.= '	(function($) {';
-		$html.= '		$(document).ready(function(){';
-		$html.= '			var dialogOpts = {';
-		$html.= '			    title: "Record selector",';
-		$html.= '			    modal: true,';
-		$html.= '			    resizable: false,';
-		$html.= '			    draggable: false,';
-		$html.= '			    autoOpen: false,';
-		$html.= '			    height: 300,';
-		$html.= '			    width: 600';
-		$html.= '			};';
-		$html.= '			$("#recordSelector").dialog(dialogOpts);';
-		$html.= '		});';
-		$html.= '	})(jQuery);';
-		$html.= '</script>';
-
-		// checkbox JS
-		$html.= '<script type="text/javascript">';
-		$html.= '	(function($) {';
-		$html.= '		$(document).ready(function(){';
-		$html .= '			$(":checkbox").checkbox();';
-		$html.= '		});';
-		$html.= '	})(jQuery);';
-		$html.= '</script>';
-
 		if(method_exists($controller, 'during_displayPageHead_callback'))
 			$html.= $controller->during_displayPageHead_callback();
 
-		$html.= '</head>';*/
+		$html.= '</head>';
+
 		try {
 			if($controller->getBO() != null)
 				$html.= '<body'.($controller->getBO()->get('bodyOnload') != '' ? ' onload="'.$controller->getBO()->get('bodyOnload').'"' : '').'>';
@@ -605,19 +495,11 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 			$html.= '<body>';
 		}
 
+		$html .= '<div class="container">';
+
 		if(method_exists($controller, 'insert_CMSDisplayStandardHeader_callback'))
 			$html.= $controller->insert_CMSDisplayStandardHeader_callback();
 
-		// TODO review this widget with Bootstrap
-		//$html .= '<div id="recordSelector"></div>';
-
-		// TODO need to move this elsewhere as the $renderStatus param is no longer provided
-		/*if($renderStatus) {
-			// render a status message if there is any
-			$message = $controller->getStatusMessage();
-			if(!empty($message))
-				$html .= $message;
-		}*/
 
 		self::$logger->debug('<<displayPageHead [HTML]');
 		return $html;
@@ -633,12 +515,6 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 
 		self::$logger->debug('>>displayPageFoot(controller=['.get_class($controller).'])');
 
-		// TODO revise post-Bootstrap
-		/*$html = '';
-
-		$html .= '<div id="dialogDiv"></div>';
-		$html .= '</body>';
-		$html .= '</html>';*/
 
 		$html = AlphaView::loadTemplateFragment('html', 'footer.phtml', array());
 
