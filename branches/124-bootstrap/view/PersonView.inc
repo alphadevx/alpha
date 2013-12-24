@@ -9,7 +9,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -56,36 +56,28 @@ class PersonView extends AlphaView {
 	public function displayLoginForm() {
 		global $config;
 
-		$html = '<div class="bordered" style="text-align:center; padding:10px; margin:10px;">';
+		$html = '<div class="bordered padded">';
+		$html .= "<h1>Login</h1>";
 		$html .= '<form action="'.FrontController::generateSecureURL('act=Login&no-forceframe=true').'" method="POST" id="loginForm" accept-charset="UTF-8">';
-		$html .= '<table cols="2" align="center">';
-		$html .= '<tr>';
-		if($config->get('security.encrypt.http.fieldnames'))
-			$fieldname = base64_encode(AlphaSecurityUtils::encrypt('email'));
-		else
-			$fieldname = 'email';
-		$stringBox = new StringBox(new String(isset($_POST[$fieldname])? $_POST[$fieldname] : ''), $this->BO->getDataLabel('email'), $fieldname, 'loginForm', '50');
-		$html .= $stringBox->render(true);
-		$html .= '</tr>';
-		$html .= '<tr>';
+
+		$email = new String(isset($_POST['email']) ? $_POST['email'] : '');
+		$email->setRule(AlphaValidator::REQUIRED_EMAIL);
+		$email->setSize(70);
+		$email->setHelper('Please provide a valid e-mail address!');
+		$stringBox = new StringBox($email, $this->BO->getDataLabel('email'), 'email', 'loginForm', '50');
+		$html .= $stringBox->render();
+
 		$password = new String();
 		$password->isPassword();
-		if($config->get('security.encrypt.http.fieldnames'))
-			$fieldname = base64_encode(AlphaSecurityUtils::encrypt('password'));
-		else
-			$fieldname = 'password';
-		$stringBox = new StringBox($password, $this->BO->getDataLabel('password'), $fieldname, 'loginForm', '50');
-		$html .= $stringBox->render(true);
-		$html .= '</tr>';
-		$html .= '<tr><td colspan="2">';
-		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('loginBut')) : 'loginBut');
-		$temp = new Button('submit','Login',$fieldname);
-		$html .= '<div align="center">'.$temp->render(80).'</div>';
-		$html .= '</td></tr>';
+
+		$stringBox = new StringBox($password, $this->BO->getDataLabel('password'), 'password', 'loginForm', '50');
+		$html .= $stringBox->render();
+
+		$temp = new Button('submit', 'Login', 'loginBut');
+		$html .= '<div class="centered">'.$temp->render(80).'</div>';
 
 		$html .= $this->renderSecurityFields();
 
-		$html .= '</table>';
 		$html .= '</form>';
 
 		$html .= '<p><a href="'.FrontController::generateSecureURL('act=Login&reset=true&no-forceframe=true').'">Forgotten your password?</a></p>';
