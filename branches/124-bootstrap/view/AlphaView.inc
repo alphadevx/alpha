@@ -9,7 +9,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -718,6 +718,7 @@ class AlphaView {
 	 * @param string $type Currently only html supported, later json and xml.
 	 * @param string $fileName The name of the fragment file
 	 * @param array $fields A hash array of field values to pass to the template fragment.
+	 * @return string
 	 * @since 1.2
 	 * @throws IllegalArguementException
 	 */
@@ -738,10 +739,16 @@ class AlphaView {
 		// Check to see if a custom template exists for this BO, and if it does load that
 		if (file_exists($customPath)) {
 			self::$logger->debug('Loading template ['.$customPath.']');
+			ob_start();
 			require $customPath;
+			$html = ob_get_clean();
+			return $html;
 		}elseif (file_exists($defaultPath)) {
 			self::$logger->debug('Loading template ['.$defaultPath.']');
+			ob_start();
 			require $defaultPath;
+			$html = ob_get_clean();
+			return $html;
 		}else{
 			throw new IllegalArguementException('Template fragment not found in ['.$customPath.'] or ['.$defaultPath.']!');
 		}
