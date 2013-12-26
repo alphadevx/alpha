@@ -1,13 +1,5 @@
 <?php
 
-// include the config file
-if(!isset($config)) {
-	require_once '../../util/AlphaConfig.inc';
-	$config = AlphaConfig::getInstance();
-
-	require_once $config->get('app.root').'alpha/util/AlphaAutoLoader.inc';
-}
-
 /**
  * Record selection HTML widget.
  *
@@ -16,7 +8,7 @@ if(!isset($config)) {
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -148,25 +140,11 @@ class RecordSelector {
 			// value to appear in the text-box
 			$inputBoxValue = $this->relationObject->getRelatedClassDisplayFieldValue();
 
-			if($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $this->label;
-				$html .= '</th>';
-
-				$html .= '<td>';
-				$html .= '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
-				$js = "$('#recordSelector').dialog('open');
-				 $('#recordSelector').load('".$config->get('app.url')."ViewRecordSelector/value/'+document.getElementById('".$this->name."').value+'/field/".$this->name."/relatedClass/".$this->relationObject->getRelatedClass()."/relatedClassField/".$this->relationObject->getRelatedClassField()."/relatedClassDisplayField/".$this->relationObject->getRelatedClassDisplayField()."/relationType/".$this->relationObject->getRelationType()."');";
-				$tmp = new Button($js, "Insert record link", "relBut", $config->get('app.url')."/alpha/images/icons/application_link.png");
-				$html .= $tmp->render();
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
-				$js = "$('#recordSelector').dialog('open');
-				 $('#recordSelector').load('".$config->get('app.url')."ViewRecordSelector/value/'+document.getElementById('".$this->name."').value+'/field/".$this->name."/relatedClass/".$this->relationObject->getRelatedClass()."/relatedClassField/".$this->relationObject->getRelatedClassField()."/relatedClassDisplayField/".$this->relationObject->getRelatedClassDisplayField()."/relationType/".$this->relationObject->getRelationType()."');";
-				$tmp = new Button($js, "Insert record link", "relBut", $config->get('app.url')."/alpha/images/icons/application_link.png");
-				$html .= $tmp->render();
-			}
+			$html .= '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
+			$js = "$('#recordSelector').dialog('open');
+			 $('#recordSelector').load('".$config->get('app.url')."ViewRecordSelector/value/'+document.getElementById('".$this->name."').value+'/field/".$this->name."/relatedClass/".$this->relationObject->getRelatedClass()."/relatedClassField/".$this->relationObject->getRelatedClassField()."/relatedClassDisplayField/".$this->relationObject->getRelatedClassDisplayField()."/relationType/".$this->relationObject->getRelationType()."');";
+			$tmp = new Button($js, "Insert record link", "relBut", $config->get('app.url')."/alpha/images/icons/application_link.png");
+			$html .= $tmp->render();
 
 			// hidden field to store the actual value of the relation
 			$html .= '<input type="hidden" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->relationObject->getValue().'"/>';
@@ -181,7 +159,7 @@ class RecordSelector {
 		if($this->relationObject->getRelationType() == 'ONE-TO-MANY') {
 			$objects = $this->relationObject->getRelatedObjects();
 
-			if(count($objects) > 0 && $tableTags) {
+			if(count($objects) > 0) {
 				// render tags differently
 				if($this->name == 'tags' && $this->relationObject->getRelatedClass() == 'TagObject') {
 					$html .= '<tr><th>'.$this->label.'</th><td>';
@@ -287,31 +265,17 @@ class RecordSelector {
 			// replace commas with line returns
 			$inputBoxValue = str_replace(",", "\n", $inputBoxValue);
 
-			if($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $this->label;
-				$html .= '</th>';
-
-				$html .= '<td>';
-				$html .= '<textarea id="'.$this->name.'_display" style="width:100%;" rows="4" readonly>';
-				$html .= $inputBoxValue;
-				$html .= '</textarea>';
-				$html .= '<div align="center">';
-				$js = "$('#recordSelector').dialog('open');
-				 $('#recordSelector').load('".$config->get('app.url')."ViewRecordSelector/lookupOIDs/'+document.getElementById('".$this->name."').value+'/value/'+document.getElementById('".$this->name."_OID').value+'/field/".$this->name."/relatedClassLeft/".$this->relationObject->getRelatedClass('left')."/relatedClassLeftDisplayField/".$this->relationObject->getRelatedClassDisplayField('left')."/relatedClassRight/".$this->relationObject->getRelatedClass('right')."/relatedClassRightDisplayField/".$this->relationObject->getRelatedClassDisplayField('right')."/accessingClassName/".$this->accessingClassName."/relationType/".$this->relationObject->getRelationType()."');";
-				$tmp = new Button($js, "Insert record link", "relBut", $config->get('app.url')."/alpha/images/icons/application_link.png");
-				$html .= $tmp->render();
-				$html .= '</div>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<textarea id="'.$this->name.'_display" style="width:95%;" rows="5" readonly>';
-				$html .= $inputBoxValue;
-				$html .= '</textarea>';
-				$js = "$('#recordSelector').dialog('open');
-				 $('#recordSelector').load('".$config->get('app.url')."ViewRecordSelector/lookupOIDs/'+document.getElementById('".$this->name."').value+'/value/'+document.getElementById('".$this->name."_OID').value+'/field/".$this->name."/relatedClassLeft/".$this->relationObject->getRelatedClass('left')."/relatedClassLeftDisplayField/".$this->relationObject->getRelatedClassDisplayField('left')."/relatedClassRight/".$this->relationObject->getRelatedClass('right')."/relatedClassRightDisplayField/".$this->relationObject->getRelatedClassDisplayField('right')."/accessingClassName/".$this->accessingClassName."/relationType/".$this->relationObject->getRelationType()."');";
-				$tmp = new Button($js, "Insert record link", "relBut", $config->get('app.url')."/alpha/images/icons/application_link.png");
-				$html .= $tmp->render();
-			}
+			$html .= '<textarea id="'.$this->name.'_display" class="form-control" rows="5" readonly>';
+			$html .= $inputBoxValue;
+			$html .= '</textarea>';
+			$js = "if(window.jQuery) {
+					$('#recordSelector').modal({
+			 			remote: '".$config->get('app.url')."ViewRecordSelector/lookupOIDs/'+document.getElementById('".$this->name."').value+'/value/'+document.getElementById('".$this->name."_OID').value+'/field/".$this->name."/relatedClassLeft/".$this->relationObject->getRelatedClass('left')."/relatedClassLeftDisplayField/".$this->relationObject->getRelatedClassDisplayField('left')."/relatedClassRight/".$this->relationObject->getRelatedClass('right')."/relatedClassRightDisplayField/".$this->relationObject->getRelatedClassDisplayField('right')."/accessingClassName/".$this->accessingClassName."/relationType/".$this->relationObject->getRelationType()."'
+					});
+					$('#recordSelector').modal('show');
+				}";
+			$tmp = new Button($js, "Insert record link", "relBut", $config->get('app.url')."/alpha/images/icons/application_link.png");
+			$html .= '<div class="centered">'.$tmp->render().'</div>';
 
 			// hidden field to store the OID of the current BO
 			$html .= '<input type="hidden" name="'.$this->name.'_OID" id="'.$this->name.'_OID" value="'.$this->relationObject->getValue().'"/>';
@@ -340,7 +304,50 @@ class RecordSelector {
 
 		global $config;
 
-		$html = $this->displayPageHead();
+		$html = '<div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				        <h4 class="modal-title" id="selectorLabel">Please select</h4>
+				      </div>
+				      <div class="modal-body">';
+
+		$html .= '<script language="JavaScript">
+            var selectedOIDs = new Object();
+
+            function toggelOID(oid, displayValue, isSelected) {
+                if(isSelected)
+                    selectedOIDs[oid] = displayValue;
+                else
+                    delete selectedOIDs[oid];
+            }
+
+            function setParentFieldValues() {
+                var OIDs;
+                var displayValues;
+
+                for(key in selectedOIDs) {
+                    if(OIDs == null)
+                        OIDs = key;
+                    else
+                        OIDs = OIDs + \',\' + key;
+
+                    if(displayValues == null)
+                        displayValues = selectedOIDs[key];
+                    else
+                        displayValues = displayValues + \'\\n\' + selectedOIDs[key];
+                }
+
+                if(OIDs == null) {
+                    document.getElementById(\''.$_GET['field'].'\').value = "00000000000";
+                    document.getElementById(\''.$_GET['field'].'_display\').value = "";
+                }else{
+                    document.getElementById(\''.$_GET['field'].'\').value = OIDs;
+                    document.getElementById(\''.$_GET['field'].'_display\').value = displayValues;
+                }
+            }
+
+            </script>';
 
 		if($this->relationObject->getRelationType() == 'MANY-TO-MANY') {
 
@@ -369,7 +376,7 @@ class RecordSelector {
 				self::$logger->debug('['.count($objects).'] related ['.$classNameLeft.'] objects loaded');
 			}
 
-			$html .= '<table cols="3" width="100%" class="bordered">';
+			$html .= '<table cols="3" class="table table-bordered">';
 			$html .= '<tr>';
 			$html .= '<th>'.$oidLabel.'</th>';
 			$html .= '<th>'.$fieldLabel.'</th>';
@@ -397,11 +404,11 @@ class RecordSelector {
 			}
 			$html .= '</table>';
 
-			$html .= '<div align="center" style="padding:10px;">';
-			$tmp = new Button("$('#recordSelector').dialog('close');", "Cancel", "cancelBut", $config->get('app.url')."/alpha/images/icons/cancel.png");
+			$html .= '<div class="modal-footer centered spread">';
+			$tmp = new Button("$('#recordSelector').modal('hide');", "Cancel", "cancelBut", $config->get('app.url')."/alpha/images/icons/cancel.png");
 			$html .= $tmp->render();
-			$html .= '&nbsp;&nbsp;&nbsp;';
-			$tmp = new Button("setParentFieldValues(); $('#".$_GET['field']."_display').blur(); $('#recordSelector').dialog('close');", "Accept", "acceptBut", $config->get('app.url')."/alpha/images/icons/accept.png");
+
+			$tmp = new Button("setParentFieldValues(); $('[id=\'".$_GET['field']."_display\']').blur(); $('#recordSelector').modal('hide');", "Accept", "acceptBut", $config->get('app.url')."/alpha/images/icons/accept.png");
 			$html .= $tmp->render();
 			$html .= '</div>';
 		}else{
@@ -434,7 +441,7 @@ class RecordSelector {
 				if($obj->getOID() == $this->relationObject->getValue()) {
 					$html .= '<img src="'.$config->get('app.url').'/alpha/images/icons/accept_ghost.png"/>';
 				}else{
-					$tmp = new Button("document.getElementById('".$_GET['field']."').value = '".$obj->getOID()."'; document.getElementById('".$_GET['field']."_display').value = '".$obj->get($this->relationObject->getRelatedClassDisplayField())."'; $('#".$_GET['field']."_display').blur(); $('#recordSelector').dialog('close');", "", "selBut", $config->get('app.url')."/alpha/images/icons/accept.png");
+					$tmp = new Button("document.getElementById('".$_GET['field']."').value = '".$obj->getOID()."'; document.getElementById('".$_GET['field']."_display').value = '".$obj->get($this->relationObject->getRelatedClassDisplayField())."'; $('[Id=".$_GET['field']."_display]').blur(); $('#recordSelector').modal('hide');", "", "selBut", $config->get('app.url')."/alpha/images/icons/accept.png");
 					$html .= $tmp->render();
 				}
 				$html .= '</td>';
@@ -451,90 +458,12 @@ class RecordSelector {
 
 		$html .= '});</script>';
 
-		$html .= $this->displayPageFoot();
+		$html .= '</div>
+			  </div>';
 
 		self::$logger->debug('<<renderSelector[html]');
 		return $html;
 	}
-
-	/**
-	 * Renders the header HTML and JS for the record selector pop-up page.
-	 *
-	 * @since 1.0
-	 * @return string
-	 */
-	private function displayPageHead() {
-		self::$logger->debug('>>displayPageHead()');
-
-		global $config;
-
-		$html = '<html>';
-		$html .= '<head>';
-		$html .= '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">';
-		$html .= '<title>Record Selector</title>';
-
-		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/lib/jquery/ui/themes/'.$config->get('app.css.theme').'/ui.all.css">';
-		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/css/alpha.css">';
-		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'config/css/overrides.css">';
-
-		$html .= '<script language="JavaScript" src="'.$config->get('app.url').'/alpha/scripts/addOnloadEvent.js"></script>';
-
-		$html .= '<script language="JavaScript">
-			var selectedOIDs = new Object();
-
-			function toggelOID(oid, displayValue, isSelected) {
-				if(isSelected)
-					selectedOIDs[oid] = displayValue;
-				else
-					delete selectedOIDs[oid];
-			}
-
-			function setParentFieldValues() {
-				var OIDs;
-				var displayValues;
-
-				for(key in selectedOIDs) {
-					if(OIDs == null)
-						OIDs = key;
-					else
-						OIDs = OIDs + \',\' + key;
-
-					if(displayValues == null)
-						displayValues = selectedOIDs[key];
-					else
-						displayValues = displayValues + \'\\n\' + selectedOIDs[key];
-				}
-
-				if(OIDs == null) {
-					document.getElementById(\''.$_GET['field'].'\').value = "00000000000";
-					document.getElementById(\''.$_GET['field'].'_display\').value = "";
-				}else{
-					document.getElementById(\''.$_GET['field'].'\').value = OIDs;
-					document.getElementById(\''.$_GET['field'].'_display\').value = displayValues;
-				}
-			}
-
-			</script>';
-
-		$html .= '</head>';
-
-		self::$logger->debug('<<displayPageHead [html]');
-		return $html;
-	}
-
-	/**
-	 * Renders the footer HTML and JS for the record selector pop-up page.
-	 *
-	 * @since 1.0
-	 * @return string
-	 */
-	private function displayPageFoot() {
-		$html = '</body>';
-		$html .= '</html>';
-
-		return $html;
-	}
 }
-
 
 ?>

@@ -1039,11 +1039,6 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 
 		global $config;
 
-		if($config->get('security.encrypt.http.fieldnames'))
-			$fieldname = base64_encode(AlphaSecurityUtils::encrypt($name));
-		else
-			$fieldname = $name;
-
 		$html = '';
 
 		$rel = $this->BO->getPropObject($name);
@@ -1053,12 +1048,12 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 				try{
 					// check to see if the rel is on this class
 					$rel->getSide(get_class($this->BO));
-					$widget = new RecordSelector($rel, $label, $fieldname, get_class($this->BO));
+					$widget = new RecordSelector($rel, $label, $name, get_class($this->BO));
 					$html .= $widget->render($tableTags, $expanded, $buttons);
 				}catch (IllegalArguementException $iae) {
 					// the rel may be on a parent class
 					$parentClassName = ucfirst($this->BO->getTableName()).'Object';
-					$widget = new RecordSelector($rel, $label, $fieldname, $parentClassName);
+					$widget = new RecordSelector($rel, $label, $name, $parentClassName);
 					$html .= $widget->render($tableTags, $expanded, $buttons);
 				}
 			}else{
