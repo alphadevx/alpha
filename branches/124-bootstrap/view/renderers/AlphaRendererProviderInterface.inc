@@ -198,11 +198,10 @@ interface AlphaRendererProviderInterface {
 	 * @param string $label The label to apply to the field
 	 * @param string $mode The field mode (create/edit/view)
 	 * @param string $value The field value (optional)
-	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.2
 	 */
-	public function renderBooleanField($name, $label, $mode, $value='', $tableTags=true);
+	public function renderBooleanField($name, $label, $mode, $value='');
 
 	/**
 	 * Renders an Enum field value.
@@ -212,11 +211,10 @@ interface AlphaRendererProviderInterface {
 	 * @param string $mode The field mode (create/edit/view)
 	 * @param array $options The Enum options
 	 * @param string $value The field value (optional)
-	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.0
 	 */
-	public function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true);
+	public function renderEnumField($name, $label, $mode, $options, $value='');
 
 	/**
 	 * Renders an DEnum field value.

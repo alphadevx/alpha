@@ -730,8 +730,8 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * (non-PHPdoc)
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderBooleanField()
 	 */
-	public function renderBooleanField($name, $label, $mode, $value='', $tableTags=true) {
-		self::$logger->debug('>>renderBooleanField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+	public function renderBooleanField($name, $label, $mode, $value='') {
+		self::$logger->debug('>>renderBooleanField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
 		global $config;
 
@@ -740,42 +740,22 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		else
 			$fieldname = $name;
 
-		$html = '';
+		$html = '<div class="checkbox">';
+		$html .= '	<label>';
 
 		if ($mode == 'create') {
-			if($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= '<label for="'.$fieldname.'">'.$label.'</label>';
-				$html .= '</th>';
+			$html .= '		<input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'">';
+			$html .= '			'.$label;
 
-				$html .= '<td>';
-				$html .= '<input type="hidden" name="'.$fieldname.'" value="0">';
-				$html .= '<input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'" />';
-				$html .= '</td></tr>';
-			}else{
-				$html .= $label.'<select size="1" name="'.$fieldname.'"/>';
-				$html .= '<option value="0" selected>No</option>';
-				$html .= '<option value="1">Yes</option>';
-				$html .= '</select>';
-			}
 		}
 
 		if ($mode == 'edit') {
-			if($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= '<label for="'.$fieldname.'">'.$label.'</label>';
-				$html .= '</th>';
-
-				$html .= '<td>';
-				$html .= '<input type="hidden" name="'.$fieldname.'" value="0">';
-				$html .= '<input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'"'.($value == '1'? ' checked':'').' />';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<label for="'.$fieldname.'">'.$label.'</label>';
-				$html .= '<input type="hidden" name="'.$fieldname.'" value="0">';
-				$html .= '<input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'"'.($value == '1'? ' checked':'').' />';
-			}
+			$html .= '		<input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'"'.($value == '1'? ' checked':'').' />';
+			$html .= '			'.$label;
 		}
+
+		$html .= '	</label>';
+		$html .= '</div>';
 
 		self::$logger->debug('<<renderBooleanField ['.$html.']');
 		return $html;
@@ -785,8 +765,8 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * (non-PHPdoc)
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderEnumField()
 	 */
-	public function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
-		self::$logger->debug('>>renderEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+	public function renderEnumField($name, $label, $mode, $options, $value='') {
+		self::$logger->debug('>>renderEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
 		global $config;
 
@@ -795,55 +775,29 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		else
 			$fieldname = $name;
 
-		$html = '';
+		$html = '<div class="form-group">';
+		$html .= '	<label for="'.$fieldname.'">'.$label.'</label>';
 
 		if ($mode == 'create') {
-			if ($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $label;
-				$html .= '</th>';
-				$html .= '<td>';
-				$html .= '<select name="'.$fieldname.'"/>';
-				foreach ($options as $val) {
-					$html .= '<option value="'.$val.'">'.$val.'</option>';
-				}
-				$html .= '</select><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<select name="'.$fieldname.'"/>';
-				foreach ($options as $val) {
-					$html .= '<option value="'.$val.'">'.$val.'</option>';
-				}
-				$html .= '</select>';
+			$html .= '	<select name="'.$fieldname.'" class="form-control"/>';
+			foreach ($options as $val) {
+				$html .= '		<option value="'.$val.'">'.$val.'</option>';
 			}
+			$html .= '	</select>';
 		}
 
 		if ($mode == 'edit') {
-			if ($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $label;
-				$html .= '</th>';
-				$html .= '<td>';
-				$html .= '<select name="'.$fieldname.'"/>';
-				foreach ($options as $val) {
-					if ($value == $val)
-						$html .= '<option value="'.$val.'" selected>'.$val.'</option>';
-					else
-						$html .= '<option value="'.$val.'">'.$val.'</option>';
-				}
-				$html .= '</select><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<select name="'.$fieldname.'"/>';
-				foreach ($options as $val) {
-					if ($value == $val)
-						$html .= '<option value="'.$val.'" selected>'.$val.'</option>';
-					else
-						$html .= '<option value="'.$val.'">'.$val.'</option>';
-				}
-				$html .= '</select>';
+			$html .= '	<select name="'.$fieldname.'" class="form-control"/>';
+			foreach ($options as $val) {
+				if ($value == $val)
+					$html .= '		<option value="'.$val.'" selected>'.$val.'</option>';
+				else
+					$html .= '		<option value="'.$val.'">'.$val.'</option>';
 			}
+			$html .= '	</select>';
 		}
+
+		$html .= '</div>';
 
 		self::$logger->debug('<<renderEnumField ['.$html.']');
 		return $html;
