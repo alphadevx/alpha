@@ -143,7 +143,7 @@ class RecordSelector {
 			$html .= '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
 			$js = "$('#recordSelector').dialog('open');
 			 $('#recordSelector').load('".$config->get('app.url')."ViewRecordSelector/value/'+document.getElementById('".$this->name."').value+'/field/".$this->name."/relatedClass/".$this->relationObject->getRelatedClass()."/relatedClassField/".$this->relationObject->getRelatedClassField()."/relatedClassDisplayField/".$this->relationObject->getRelatedClassDisplayField()."/relationType/".$this->relationObject->getRelationType()."');";
-			$tmp = new Button($js, "Insert record link", "relBut", $config->get('app.url')."/alpha/images/icons/application_link.png");
+			$tmp = new Button($js, "Insert record link", "relBut", '', 'glyphicon-star');
 			$html .= $tmp->render();
 
 			// hidden field to store the actual value of the relation
@@ -265,6 +265,9 @@ class RecordSelector {
 			// replace commas with line returns
 			$inputBoxValue = str_replace(",", "\n", $inputBoxValue);
 
+			$html .= '<div class="form-group">';
+			$html .= '<label for="'.$this->name.'_display">'.$this->label.'</label>';
+
 			$html .= '<textarea id="'.$this->name.'_display" class="form-control" rows="5" readonly>';
 			$html .= $inputBoxValue;
 			$html .= '</textarea>';
@@ -274,8 +277,10 @@ class RecordSelector {
 					});
 					$('#recordSelector').modal('show');
 				}";
-			$tmp = new Button($js, "Insert record link", "relBut", $config->get('app.url')."/alpha/images/icons/application_link.png");
-			$html .= '<div class="centered">'.$tmp->render().'</div>';
+			$tmp = new Button($js, "Select", "relBut", '', 'glyphicon-check');
+			$html .= '<div class="centered lower">'.$tmp->render().'</div>';
+
+			$html .= '</div>';
 
 			// hidden field to store the OID of the current BO
 			$html .= '<input type="hidden" name="'.$this->name.'_OID" id="'.$this->name.'_OID" value="'.$this->relationObject->getValue().'"/>';
@@ -405,10 +410,10 @@ class RecordSelector {
 			$html .= '</table>';
 
 			$html .= '<div class="modal-footer centered spread">';
-			$tmp = new Button("$('#recordSelector').modal('hide');", "Cancel", "cancelBut", $config->get('app.url')."/alpha/images/icons/cancel.png");
+			$tmp = new Button("$('#recordSelector').modal('hide');", 'Cancel', 'selectorCancelBut', '', 'glyphicon-remove');
 			$html .= $tmp->render();
 
-			$tmp = new Button("setParentFieldValues(); $('[id=\'".$_GET['field']."_display\']').blur(); $('#recordSelector').modal('hide');", "Accept", "acceptBut", $config->get('app.url')."/alpha/images/icons/accept.png");
+			$tmp = new Button("setParentFieldValues(); $('[id=\'".$_GET['field']."_display\']').blur(); $('#recordSelector').modal('hide');", 'Okay', 'selectAcceptBut', '', 'glyphicon-ok');
 			$html .= $tmp->render();
 			$html .= '</div>';
 		}else{
