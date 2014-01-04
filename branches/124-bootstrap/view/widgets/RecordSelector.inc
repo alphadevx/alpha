@@ -270,9 +270,13 @@ class RecordSelector {
 			$html .= '<textarea id="'.$this->name.'_display" class="form-control" rows="5" readonly>';
 			$html .= $inputBoxValue;
 			$html .= '</textarea>';
+
+			$fieldname1 = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt($this->name)) : $this->name);
+			$fieldname2 = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt($this->name.'_OID')) : $this->name.'_OID');
+
 			$js = "if(window.jQuery) {
 					$('#recordSelector').modal({
-			 			remote: '".$config->get('app.url')."ViewRecordSelector/lookupOIDs/'+document.getElementById('".$this->name."').value+'/value/'+document.getElementById('".$this->name."_OID').value+'/field/".$this->name."/relatedClassLeft/".$this->relationObject->getRelatedClass('left')."/relatedClassLeftDisplayField/".$this->relationObject->getRelatedClassDisplayField('left')."/relatedClassRight/".$this->relationObject->getRelatedClass('right')."/relatedClassRightDisplayField/".$this->relationObject->getRelatedClassDisplayField('right')."/accessingClassName/".$this->accessingClassName."/relationType/".$this->relationObject->getRelationType()."'
+			 			remote: '".$config->get('app.url')."ViewRecordSelector/lookupOIDs/'+document.getElementById('".$fieldname1."').value+'/value/'+document.getElementById('".$fieldname2."').value+'/field/".$this->name."/relatedClassLeft/".$this->relationObject->getRelatedClass('left')."/relatedClassLeftDisplayField/".$this->relationObject->getRelatedClassDisplayField('left')."/relatedClassRight/".$this->relationObject->getRelatedClass('right')."/relatedClassRightDisplayField/".$this->relationObject->getRelatedClassDisplayField('right')."/accessingClassName/".$this->accessingClassName."/relationType/".$this->relationObject->getRelationType()."'
 					});
 					$('#recordSelector').modal('show');
 				}";
@@ -282,14 +286,15 @@ class RecordSelector {
 			$html .= '</div>';
 
 			// hidden field to store the OID of the current BO
-			$html .= '<input type="hidden" name="'.$this->name.'_OID" id="'.$this->name.'_OID" value="'.$this->relationObject->getValue().'"/>';
+			$html .= '<input type="hidden" name="'.$fieldname2.'" id="'.$fieldname2.'" value="'.$this->relationObject->getValue().'"/>';
 
 			// hidden field to store the OIDs of the related BOs on the other side of the rel (this is what we check for when saving)
 			if($this->relationObject->getSide($this->accessingClassName) == 'left')
 				$lookupOIDs = $this->relationObject->getLookup()->loadAllFieldValuesByAttribute('leftID', $this->relationObject->getValue(), 'rightID', 'DESC');
 			else
 				$lookupOIDs = $this->relationObject->getLookup()->loadAllFieldValuesByAttribute('rightID', $this->relationObject->getValue(), 'leftID', 'DESC');
-			$html .= '<input type="hidden" name="'.$this->name.'" id="'.$this->name.'" value="'.implode(',', $lookupOIDs).'"/>';
+
+			$html .= '<input type="hidden" name="'.$fieldname1.'" id="'.$fieldname1.'" value="'.implode(',', $lookupOIDs).'"/>';
 		}
 
 		self::$logger->debug('<<__render [html]');
@@ -307,6 +312,8 @@ class RecordSelector {
 		self::$logger->debug('>>renderSelector(lookupOIDs=['.var_export($lookupOIDs, true).'])');
 
 		global $config;
+
+		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt($_GET['field'])) : $_GET['field']);
 
 		$html = '<div class="modal-dialog">
 				    <div class="modal-content">
@@ -343,10 +350,10 @@ class RecordSelector {
                 }
 
                 if(OIDs == null) {
-                    document.getElementById(\''.$_GET['field'].'\').value = "00000000000";
+                    document.getElementById(\''.$fieldname.'\').value = "00000000000";
                     document.getElementById(\''.$_GET['field'].'_display\').value = "";
                 }else{
-                    document.getElementById(\''.$_GET['field'].'\').value = OIDs;
+                    document.getElementById(\''.$fieldname.'\').value = OIDs;
                     document.getElementById(\''.$_GET['field'].'_display\').value = displayValues;
                 }
             }
