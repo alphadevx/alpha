@@ -875,8 +875,8 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * (non-PHPdoc)
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderDefaultField()
 	 */
-	public function renderDefaultField($name, $label, $mode, $value='', $tableTags=true) {
-		self::$logger->debug('>>renderDefaultField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+	public function renderDefaultField($name, $label, $mode, $value='') {
+		self::$logger->debug('>>renderDefaultField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
 		global $config;
 
@@ -888,48 +888,15 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$html = '';
 
 		if ($mode == 'create') {
-			if($tableTags) {
-				$html .= '<tr><th colspan="2">';
-				$html .= $label;
-				$html .= '</th></tr>';
-
-				$html .= '<tr><td colspan="2">';
-				$html .= '<textarea cols="100" rows="3" name="'.$fieldname.'">'. (isset ($_POST[$name]) ? $_POST[$name] : '').'</textarea><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<textarea cols="100" rows="3" name="'.$fieldname.'">'. (isset ($_POST[$name]) ? $_POST[$name] : '').'</textarea>';
-			}
+			$html .= '<textarea cols="100" rows="3" name="'.$fieldname.'">'. (isset ($_POST[$name]) ? $_POST[$name] : '').'</textarea>';
 		}
 
 		if ($mode == 'edit') {
-			if($tableTags) {
-				$html .= '<tr><th colspan="2">';
-				$html .= $label;
-				$html .= '</th></tr>';
-
-				$html .= '<tr><td colspan="2">';
-				$html .= '<textarea cols="100" rows="3" name="'.$fieldname.'">'.$value.'</textarea><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<textarea cols="100" rows="3" name="'.$fieldname.'">'.$value.'</textarea>';
-			}
+			$html .= '<textarea cols="100" rows="3" name="'.$fieldname.'">'.$value.'</textarea>';
 		}
 
 		if ($mode == 'view') {
-			if($tableTags) {
-				$html .= '<tr><th>';
-				$html .= $label;
-				$html .= '</th>';
-
-				$html .= '<td>&nbsp;';
-				if(method_exists($this, 'during_renderDefaultField_callback'))
-					$html .= $this->during_renderDefaultField_callback($name, $mode, $value);
-				else
-					$html .= $value;
-				$html .= '</td></tr>';
-			}else{
-				$html .= $value;
-			}
+			$html .= '<p><strong>'.$label.':</strong> '.$value.'</p>';
 		}
 
 		self::$logger->debug('<<renderDefaultField ['.$html.']');
@@ -1018,12 +985,12 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$html = '';
 
 		if ($mode == 'create' || $mode == 'edit') {
-			$string = new StringBox($this->BO->getPropObject($name), $this->BO->getDataLabel($name), $name);
+			$string = new StringBox($this->BO->getPropObject($name), $label, $name);
 			$html .= $string->render();
 		}
 
 		if ($mode == 'view') {
-			$html .= $value;
+			$html .= '<p><strong>'.$label.':</strong> '.$value.'</p>';
 		}
 
 		self::$logger->debug('<<renderStringField ['.$html.']');

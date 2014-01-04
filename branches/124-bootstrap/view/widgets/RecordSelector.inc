@@ -127,6 +127,7 @@ class RecordSelector {
 	 * @param bool $buttons Render buttons for expanding/contacting the related fields (optional)
 	 * @return string
 	 * @since 1.0
+	 * @todo Remove $tableTags param
 	 */
 	public function render($tableTags=true, $expanded=false, $buttons=true) {
 		self::$logger->debug('>>render(tableTags=['.$tableTags.'], expanded=['.$expanded.'], buttons=['.$buttons.'])');
@@ -170,24 +171,24 @@ class RecordSelector {
 
 					$html .= '</td></tr>';
 				}else{
-					$html .= '<tr><th style="text-align:center;" colspan="2">';
-					$html .= $this->label;
+					$html .= '<div><strong>'.$this->label.':</strong>';
 					if($buttons) {
-						$tmp = new Button("document.getElementById('relation_field_".$this->name."').style.display = '';", "Display related objects", $this->name."DisBut", $config->get('app.url')."/alpha/images/icons/arrow_down.png");
+						$html .= '<div class="spread">';
+						$tmp = new Button("document.getElementById('relation_field_".$this->name."').style.display = '';", "Show", $this->name."DisBut", '', 'glyphicon-list');
 						$html .= $tmp->render();
-						$tmp = new Button("document.getElementById('relation_field_".$this->name."').style.display = 'none';", "Hide related objects", $this->name."HidBut", $config->get('app.url')."/alpha/images/icons/arrow_up.png");
+						$tmp = new Button("document.getElementById('relation_field_".$this->name."').style.display = 'none';", "Hide", $this->name."HidBut", '', 'glyphicon-minus');
 						$html .= $tmp->render();
+						$html .= '</div>';
 					}
-					$html .= '</th></tr>';
+					$html .= '</div>';
 
-					$html .= '<tr><td colspan="2">';
-					$html .= '<table id="relation_field_'.$this->name.'" style="width:100%; display:'.($expanded ? '' : 'none').';" class="relationTable">';
+					$html .= '<div id="relation_field_'.$this->name.'" style="display:'.($expanded ? '' : 'none').';">';
 
 					$customViewControllerName = AlphaController::getCustomControllerName(get_class($objects[0]), 'view');
 					$customEditControllerName = AlphaController::getCustomControllerName(get_class($objects[0]), 'edit');
 
 					foreach($objects as $obj) {
-						$html .= '<tr><td>';
+
 						// check to see if we are in the admin back-end
 						if(mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
 							$viewURL = FrontController::generateSecureURL('act=Detail&bo='.get_class($obj).'&oid='.$obj->getOID());
@@ -244,16 +245,14 @@ class RecordSelector {
 						$value = str_replace("\n", '<br>', $obj->get($this->relationObject->getRelatedClassDisplayField()));
 						$html .= '<p>'.$value.'</p>';
 
-						$html .= '<div align="center">';
+						$html .= '<div class="centered">';
 						$html .= '<a href="'.$viewURL.'">View</a>';
 						// if the current user owns it, they get the edit link
 						if(isset($_SESSION['currentUser']) && $_SESSION['currentUser']->getOID() == $obj->getCreatorId())
-							$html .= '&nbsp;&nbsp;&nbsp;&nbsp;<a href="'.$editURL.'">Edit</a></div>';
+							$html .= '&nbsp;&nbsp;&nbsp;&nbsp;<a href="'.$editURL.'">Edit</a>';
 						$html .= '</div>';
 					}
-					$html .= '</table>';
-
-					$html .= '</td></tr>';
+					$html .= '</div>';
 				}
 			}
 		}
