@@ -135,8 +135,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$fields['formFields'] = $this->renderAllFields('edit');
 
 		// buffer HTML output for Create and Cancel buttons
-		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('saveBut')) : 'saveBut');
-		$button = new Button('submit', 'Save', $fieldname);
+		$button = new Button('submit', 'Save', 'saveBut');
 		$fields['saveButton'] = $button->render();
 
 		$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
@@ -530,9 +529,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 			self::$logger = new Logger('AlphaRendererProviderHTML');
 		self::$logger->debug('>>displayUpdateMessage(message=['.$message.'])');
 
-		$html = '<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
-				<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
-				'.$message.'</p></div>';
+		$html = '<div class="alert alert-success">'.$message.'</div>';
 
 		self::$logger->debug('<<displayUpdateMessage ['.$html.']');
 		return $html;
@@ -779,7 +776,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$html .= '	<label for="'.$fieldname.'">'.$label.'</label>';
 
 		if ($mode == 'create') {
-			$html .= '	<select name="'.$fieldname.'" class="form-control"/>';
+			$html .= '	<select name="'.$fieldname.'" id="'.$fieldname.'" class="form-control"/>';
 			foreach ($options as $val) {
 				$html .= '		<option value="'.$val.'">'.$val.'</option>';
 			}
@@ -787,7 +784,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		}
 
 		if ($mode == 'edit') {
-			$html .= '	<select name="'.$fieldname.'" class="form-control"/>';
+			$html .= '	<select name="'.$fieldname.'" id="'.$fieldname.'" class="form-control"/>';
 			foreach ($options as $val) {
 				if ($value == $val)
 					$html .= '		<option value="'.$val.'" selected>'.$val.'</option>';
