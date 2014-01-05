@@ -11,7 +11,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id: AlphaRendererProviderInterface.inc 1499 2012-02-16 19:29:16Z alphadev $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -310,24 +310,37 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$html = '';
 		// render edit and delete buttons for admins only
 		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
-			$html .= '&nbsp;&nbsp;';
+
 			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "editBut");
 			$html .= $button->render();
-			$html .= '&nbsp;&nbsp;';
-			$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
-				$('#dialogDiv').dialog({
-				buttons: {
-					'OK': function(event, ui) {
-						$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
-						$('#deleteForm').submit();
-					},
-					'Cancel': function(event, ui) {
-						$(this).dialog('close');
-					}
-				}
-			})
-			$('#dialogDiv').dialog('open');
-			return false;";
+
+			$js = "if(window.jQuery) {
+					BootstrapDialog.show({
+						title: 'Confirmation',
+			            message: 'Are you sure you wish to delete this item?',
+			            buttons: [
+			            	{
+			            		icon: 'glyphicon glyphicon-remove',
+				                label: 'Cancel',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself){
+				                    dialogItself.close();
+				                }
+			            	},
+			            	{
+				                icon: 'glyphicon glyphicon-ok',
+				                label: 'Okay',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself) {
+				                	$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
+									$('#deleteForm').submit();
+				                    dialogItself.close();
+				                }
+			            	}
+			            ]
+			        });
+				}";
+
 			$button = new Button($js, "Delete", "deleteBut");
 			$html .= $button->render();
 		}
