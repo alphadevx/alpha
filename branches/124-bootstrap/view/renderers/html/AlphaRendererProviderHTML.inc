@@ -261,22 +261,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "edit".$this->BO->getOID()."But");
 			$html .= $button->render();
 			$html .= '&nbsp;&nbsp;';
-			/*$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
-				$('#dialogDiv').dialog({
-				buttons: {
-					'OK': function(event, ui) {
-						$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
-						$('#deleteForm').submit();
-					},
-					'Cancel': function(event, ui) {
-						$(this).dialog('close');
-					}
-				}
-			})
-			$('#dialogDiv').dialog('open');
-			return false;";
-			$button = new Button($js, "Delete", "delete".$this->BO->getOID()."But");
-			$html .= $button->render();*/
+
 			$js = "if(window.jQuery) {
 					BootstrapDialog.show({
 						title: 'Confirmation',
