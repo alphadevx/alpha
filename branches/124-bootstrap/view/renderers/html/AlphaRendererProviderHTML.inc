@@ -138,20 +138,32 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$button = new Button('submit', 'Save', 'saveBut');
 		$fields['saveButton'] = $button->render();
 
-		$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
-				$('#dialogDiv').dialog({
-				buttons: {
-					'OK': function(event, ui) {
-						$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
-						$('#deleteForm').submit();
-					},
-					'Cancel': function(event, ui) {
-						$(this).dialog('close');
-					}
-				}
-			})
-			$('#dialogDiv').dialog('open');
-			return false;";
+		$js = "if(window.jQuery) {
+					BootstrapDialog.show({
+						title: 'Confirmation',
+			            message: 'Are you sure you wish to delete this item?',
+			            buttons: [
+			            	{
+			            		icon: 'glyphicon glyphicon-remove',
+				                label: 'Cancel',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself){
+				                    dialogItself.close();
+				                }
+			            	},
+			            	{
+				                icon: 'glyphicon glyphicon-ok',
+				                label: 'Okay',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself) {
+				                	$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
+									$('#deleteForm').submit();
+				                    dialogItself.close();
+				                }
+			            	}
+			            ]
+			        });
+				}";
 		$button = new Button($js, "Delete", "deleteBut");
 		$fields['deleteButton'] = $button->render();
 
