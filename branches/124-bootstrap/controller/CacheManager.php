@@ -17,7 +17,7 @@ if(!isset($config)) {
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -108,29 +108,41 @@ class CacheManager extends AlphaController implements AlphaControllerInterface {
 
 		echo AlphaView::displayPageHead($this);
 
-		echo '<h2>Listing contents of cache directory: '.$this->dataDir.'</h2>';
+		echo '<h3>Listing contents of cache directory: '.$this->dataDir.'</h3>';
 
    		$fileCount = AlphaFileUtils::listDirectoryContents($this->dataDir, 0, array('.htaccess'));
 
-   		echo '<h2>Total of '.$fileCount.' files in the cache.</h2>';
+   		echo '<h3>Total of '.$fileCount.' files in the cache.</h3>';
 
    		echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" name="clearForm" id="clearForm">';
    		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('clearCache')) : 'clearCache');
    		echo '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value="false"/>';
-   		$js = "$('#dialogDiv').text('Are you sure you want to delete all files in the cache?');
-				$('#dialogDiv').dialog({
-				buttons: {
-					'OK': function(event, ui) {
-						$('[id=\"".$fieldname."\"]').attr('value', 'true');
-						$('#clearForm').submit();
-					},
-					'Cancel': function(event, ui) {
-						$(this).dialog('close');
-					}
-				}
-			})
-			$('#dialogDiv').dialog('open');
-			return false;";
+		$js = "if(window.jQuery) {
+					BootstrapDialog.show({
+						title: 'Confirmation',
+			            message: 'Are you sure you want to delete all files in the cache?',
+			            buttons: [
+			            	{
+			            		icon: 'glyphicon glyphicon-remove',
+				                label: 'Cancel',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself){
+				                    dialogItself.close();
+				                }
+			            	},
+			            	{
+				                icon: 'glyphicon glyphicon-ok',
+				                label: 'Okay',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself) {
+				                	$('[id=\"".$fieldname."\"]').attr('value', 'true');
+									$('#clearForm').submit();
+				                    dialogItself.close();
+				                }
+			            	}
+			            ]
+			        });
+				}";
 		$button = new Button($js, "Clear cache", "clearBut");
    		echo $button->render();
 
