@@ -15,7 +15,7 @@ try{
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -66,7 +66,7 @@ class AlphaMetrics {
 	 * @var array
 	 * @since 1.0
 	 */
-	private $includeFileTypes = array('.php', '.ini', '.html', '.phtml', '.inc', '.js', '.css', '.xml');
+	private $includeFileTypes = array('.php', '.html', '.phtml', '.inc', '.js', '.css', '.xml');
 
 	/**
 	 * Any sub-directories which you might want to exclude from the calculations
@@ -194,7 +194,7 @@ class AlphaMetrics {
 	public function resultsToHTML() {
 		$count = 1;
 
-		$html = '<table class="list_view"><tr>';
+		$html = '<table class="table table-striped table-hover"><tr>';
 		$html .= '<th width="10%">File #:</th>';
 		$html .= '<th width="50%">File name:</th>';
 		$html .= '<th width="20%">Lines of Code (LOC):</th>';
