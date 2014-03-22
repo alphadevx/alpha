@@ -108,6 +108,10 @@ class CacheManager extends AlphaController implements AlphaControllerInterface {
 
 		echo AlphaView::displayPageHead($this);
 
+		$message = $this->getStatusMessage();
+		if(!empty($message))
+			echo $message;
+
 		echo '<h3>Listing contents of cache directory: '.$this->dataDir.'</h3>';
 
    		$fileCount = AlphaFileUtils::listDirectoryContents($this->dataDir, 0, array('.htaccess'));
@@ -158,8 +162,6 @@ class CacheManager extends AlphaController implements AlphaControllerInterface {
 	 * Handle POST requests
 	 *
 	 * @param array $params
-	 * @throws SecurityException
-	 * @throws IllegalArguementException
 	 * @since 1.0
 	 */
 	public function doPOST($params) {
@@ -186,7 +188,7 @@ class CacheManager extends AlphaController implements AlphaControllerInterface {
 				}
 			}
 
-			$this->doGET($params);
+			return $this->doGET($params);
 		}catch(SecurityException $e) {
 			$this->setStatusMessage(AlphaView::displayErrorMessage($e->getMessage()));
 
@@ -195,6 +197,12 @@ class CacheManager extends AlphaController implements AlphaControllerInterface {
 			self::$logger->error($e->getMessage());
 			$this->setStatusMessage(AlphaView::displayErrorMessage($e->getMessage()));
 		}
+
+		echo AlphaView::displayPageHead($this);
+
+		$message = $this->getStatusMessage();
+		if(!empty($message))
+			echo $message;
 
 		echo AlphaView::displayPageFoot($this);
 		self::$logger->debug('<<doPOST');

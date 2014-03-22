@@ -94,6 +94,10 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 
 		echo AlphaView::displayPageHead($this);
 
+		$message = $this->getStatusMessage();
+		if(!empty($message))
+			echo $message;
+
 		echo '<h3>Listing business objects which are tagged</h3>';
 
 		$BOs = AlphaDAO::getBOClassNames();
@@ -157,7 +161,6 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 	 *
 	 * @param array $params
 	 * @since 1.0
-	 * @throws ResourceNotAllowedException
 	 */
 	public function doPOST($params) {
 		self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
@@ -203,14 +206,21 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 				AlphaDAO::disconnect();
 			}
 
-			$this->doGET($params);
+			return $this->doGET($params);
 		}catch(SecurityException $e) {
+			$this->setStatusMessage(AlphaView::displayErrorMessage($e->getMessage()));
+
 			self::$logger->warn($e->getMessage());
-			throw new ResourceNotAllowedException($e->getMessage());
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());
-			throw new ResourceNotFoundException($e->getMessage());
+			$this->setStatusMessage(AlphaView::displayErrorMessage($e->getMessage()));
 		}
+
+		echo AlphaView::displayPageHead($this);
+
+		$message = $this->getStatusMessage();
+		if(!empty($message))
+			echo $message;
 
 		echo AlphaView::displayPageFoot($this);
 		self::$logger->debug('<<doPOST');
