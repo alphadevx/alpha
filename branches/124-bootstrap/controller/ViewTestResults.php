@@ -21,7 +21,7 @@ require_once 'PHPUnit/TextUI/TestRunner.php';
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -497,12 +497,12 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 	 */
 	private function printTestResult($result) {
 		if($result->wasSuccessful()) {
-			echo '<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;">';
-			echo '<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>';
+			echo '<div class="alert alert-success" style="padding: 0pt 0.7em;">';
+			echo '<p><span class="glyphicon glyphicon-ok" style="float: left; margin-right: 0.3em;"></span>';
 			echo '<strong>Success</strong><pre>';
 		}else{
-			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;">';
-			echo '<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>';
+			echo '<div class="alert alert-danger" style="padding: 0pt 0.7em;">';
+			echo '<p><span class="glyphicon glyphicon-remove" style="float: left; margin-right: 0.3em;"></span>';
 			echo '<strong>Fail</strong><pre>';
 		}
 

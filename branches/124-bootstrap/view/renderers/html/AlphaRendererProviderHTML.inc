@@ -599,7 +599,6 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$html = '<html><head>';
 		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/lib/jquery/ui/themes/'.$config->get('app.css.theme').'/jquery.ui.all.css">';
 		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/css/alpha.css">';
-		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'config/css/overrides.css">';
 		$html .= '<title>'.$code.' - '.$message.'</title></head>';
 		$html .= '<body>';
 		$html .= '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;">
