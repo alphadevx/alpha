@@ -122,17 +122,18 @@ class RecordSelector {
 	/**
 	 * Renders the text boxes and buttons for the widget, that will appear in user forms.
 	 *
-	 * @param bool $tableTags Include table tags and label (optional)
 	 * @param bool $expanded Render the related fields in expanded format or not (optional)
 	 * @param bool $buttons Render buttons for expanding/contacting the related fields (optional)
 	 * @return string
 	 * @since 1.0
 	 * @todo Remove $tableTags param
 	 */
-	public function render($tableTags=true, $expanded=false, $buttons=true) {
-		self::$logger->debug('>>render(tableTags=['.$tableTags.'], expanded=['.$expanded.'], buttons=['.$buttons.'])');
+	public function render($expanded=false, $buttons=true) {
+		self::$logger->debug('>>render(expanded=['.$expanded.'], buttons=['.$buttons.'])');
 
 		global $config;
+
+		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt($this->name)) : $this->name);
 
 		$html = '';
 
@@ -141,19 +142,45 @@ class RecordSelector {
 			// value to appear in the text-box
 			$inputBoxValue = $this->relationObject->getRelatedClassDisplayFieldValue();
 
-			$html .= '<input type="text" size="70" class="readonly" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" readonly/>';
-			$js = "$('#dialogDiv').dialog('open');
-			 $('#dialogDiv').load('".$config->get('app.url')."ViewRecordSelector/value/'+document.getElementById('".$this->name."').value+'/field/".$this->name."/relatedClass/".$this->relationObject->getRelatedClass()."/relatedClassField/".$this->relationObject->getRelatedClassField()."/relatedClassDisplayField/".$this->relationObject->getRelatedClassDisplayField()."/relationType/".$this->relationObject->getRelationType()."');";
-			$tmp = new Button($js, "Insert record link", "relBut", '', 'glyphicon-star');
-			$html .= $tmp->render();
+			$html .= '<div class="form-group">';
+			$html .= '<label for="'.$this->name.'_display">'.$this->label.'</label>';
+
+			$html .= '<input type="text" size="70" class="form-control" name="'.$this->name.'_display" id="'.$this->name.'_display" value="'.$inputBoxValue.'" disabled/>';
+
+			$js = "	if(window.jQuery) {
+			 			window.jQuery.dialog = new BootstrapDialog({
+            				title: 'Please select',
+            				message: 'Loading...',
+            				onshow: function(dialogRef){
+				                dialogRef.getModalBody().load('".$config->get('app.url')."ViewRecordSelector/value/'+document.getElementById('".$fieldname."').value+'/field/".$this->name."/relatedClass/".$this->relationObject->getRelatedClass()."/relatedClassField/".$this->relationObject->getRelatedClassField()."/relatedClassDisplayField/".$this->relationObject->getRelatedClassDisplayField()."/relationType/".$this->relationObject->getRelationType()."');
+				            },
+				            buttons: [
+			            	{
+			            		icon: 'glyphicon glyphicon-remove',
+				                label: 'Cancel',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself){
+				                    dialogItself.close();
+				                }
+			            	}
+			            ]
+        				});
+						window.jQuery.dialog.open();
+					}";
+
+
+			$tmp = new Button($js, "Select", "relBut", '', 'glyphicon-check');
+			$html .= '<div class="centered lower">'.$tmp->render().'</div>';
 
 			// hidden field to store the actual value of the relation
-			$html .= '<input type="hidden" name="'.$this->name.'" id="'.$this->name.'" value="'.$this->relationObject->getValue().'"/>';
+			$html .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value="'.$this->relationObject->getValue().'"/>';
 
 			if($this->relationObject->getRule() != '') {
-				$html .= '<input type="hidden" id="'.$this->name.'_msg" value="'.$this->relationObject->getHelper().'"/>';
-				$html .= '<input type="hidden" id="'.$this->name.'_rule" value="'.$this->relationObject->getRule().'"/>';
+				$html .= '<input type="hidden" id="'.$fieldname.'_msg" value="'.$this->relationObject->getHelper().'"/>';
+				$html .= '<input type="hidden" id="'.$fieldname.'_rule" value="'.$this->relationObject->getRule().'"/>';
 			}
+
+			$html .= '</div>';
 		}
 
 		// render read-only list for one-to-many relations
@@ -464,7 +491,7 @@ class RecordSelector {
 				if($obj->getOID() == $this->relationObject->getValue()) {
 					$html .= '<img src="'.$config->get('app.url').'/alpha/images/icons/accept_ghost.png"/>';
 				}else{
-					$tmp = new Button("document.getElementById('".$_GET['field']."').value = '".$obj->getOID()."'; document.getElementById('".$_GET['field']."_display').value = '".$obj->get($this->relationObject->getRelatedClassDisplayField())."'; $('[Id=".$_GET['field']."_display]').blur(); $('#dialogDiv').modal('hide');", "", "selBut", $config->get('app.url')."/alpha/images/icons/accept.png");
+					$tmp = new Button("document.getElementById('".$fieldname."').value = '".$obj->getOID()."'; document.getElementById('".$_GET['field']."_display').value = '".$obj->get($this->relationObject->getRelatedClassDisplayField())."'; $('[Id=".$_GET['field']."_display]').blur(); window.jQuery.dialog.close();", "", "selBut", $config->get('app.url')."/alpha/images/icons/accept.png");
 					$html .= $tmp->render();
 				}
 				$html .= '</td>';
