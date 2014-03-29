@@ -10,7 +10,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -198,11 +198,10 @@ interface AlphaRendererProviderInterface {
 	 * @param string $label The label to apply to the field
 	 * @param string $mode The field mode (create/edit/view)
 	 * @param string $value The field value (optional)
-	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.2
 	 */
-	public function renderBooleanField($name, $label, $mode, $value='', $tableTags=true);
+	public function renderBooleanField($name, $label, $mode, $value='');
 
 	/**
 	 * Renders an Enum field value.
@@ -212,11 +211,10 @@ interface AlphaRendererProviderInterface {
 	 * @param string $mode The field mode (create/edit/view)
 	 * @param array $options The Enum options
 	 * @param string $value The field value (optional)
-	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.0
 	 */
-	public function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true);
+	public function renderEnumField($name, $label, $mode, $options, $value='');
 
 	/**
 	 * Renders an DEnum field value.
@@ -239,11 +237,10 @@ interface AlphaRendererProviderInterface {
 	 * @param string $label The label to apply to the field
 	 * @param string $mode The field mode (create/edit/view)
 	 * @param string $value The field value (optional)
-	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.2
 	 */
-	public function renderDefaultField($name, $label, $mode, $value='', $tableTags=true);
+	public function renderDefaultField($name, $label, $mode, $value='');
 
 	/**
 	 * Renders a Text field value.
@@ -265,11 +262,10 @@ interface AlphaRendererProviderInterface {
 	 * @param string $label The label to apply to the field
 	 * @param string $mode The field mode (create/edit/view)
 	 * @param string $value The field value (optional)
-	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.2.2
 	 */
-	public function renderStringField($name, $label, $mode, $value='', $tableTags=true);
+	public function renderStringField($name, $label, $mode, $value='');
 
 	/**
 	 * Renders a Relation field value.

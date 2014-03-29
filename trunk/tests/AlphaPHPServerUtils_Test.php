@@ -8,7 +8,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -77,7 +77,9 @@ class AlphaPHPServerUtils_Test extends PHPUnit_Framework_TestCase {
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'http://localhost:8081/');
+        ob_start();
         $result = curl_exec($ch);
+        ob_end_clean();
 
         $this->assertEquals(404, curl_getinfo($ch, CURLINFO_HTTP_CODE), 'Testing that the server returns a 404 not found');
 
@@ -99,7 +101,9 @@ class AlphaPHPServerUtils_Test extends PHPUnit_Framework_TestCase {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'http://localhost:8081/');
         curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+        ob_start();
         $result = curl_exec($ch);
+        ob_end_clean();
 
         $this->assertEquals(404, curl_getinfo($ch, CURLINFO_HTTP_CODE), 'Testing that the server returns a 404 not found');
 

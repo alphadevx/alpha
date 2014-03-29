@@ -9,7 +9,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -60,7 +60,7 @@ class DEnumView extends AlphaView {
 		$labels = $this->BO->getDataLabels();
 		$colCount = 1;
 
-		$html = '<table class="list_view">';
+		$html = '<table class="table">';
 		$html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
 		// first render all of the table headers
 		$html .= '<tr>';
@@ -123,13 +123,12 @@ class DEnumView extends AlphaView {
 		$labels = $this->BO->getDataLabels();
 		$obj_type = '';
 
-		$html = '<table cols="2" class="edit_view">';
-		$html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" accept-charset="UTF-8">';
+		$html = '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" accept-charset="UTF-8">';
 
 		$temp = new StringBox($this->BO->getPropObject('name'), $labels['name'], 'name', '', 0, true, true);
 		$html .= $temp->render();
 
-		$html .= '<tr><td colspan="2"><h3>DEnum display values:</h3></td></tr>';
+		$html .= '<h3>DEnum display values:</h3>';
 
 		// now get all of the options for the enum and render
 		$denum = $this->BO;
@@ -138,8 +137,7 @@ class DEnumView extends AlphaView {
 
 		foreach ($denumItems as $item) {
 			$labels = $item->getDataLabels();
-			$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('value_'.$item->getID())) : 'value_'.$item->getID());
-			$temp = new StringBox($item->getPropObject('value'), $labels['value'], $fieldname, '');
+			$temp = new StringBox($item->getPropObject('value'), $labels['value'], 'value_'.$item->getID(), '');
 			$html .= $temp->render();
 		}
 
@@ -147,25 +145,21 @@ class DEnumView extends AlphaView {
 
 		$html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->BO->getVersion().'"/>';
 
-		$html .= '<tr><td colspan="2"><h3>Add a new value to the DEnum dropdown list:</h3></td></tr>';
+		$html .= '<h3>Add a new value to the DEnum dropdown list:</h3>';
 
-		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('new_value')) : 'new_value');
-		$temp = new StringBox(new String(), 'Dropdown value', $fieldname, '');
+		$temp = new StringBox(new String(), 'Dropdown value', 'new_value', '');
 		$html .= $temp->render();
 
-		$html .= '<tr><td colspan="2">';
-
-		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('saveBut')) : 'saveBut');
-		$temp = new Button('submit', 'Save', $fieldname);
+		$temp = new Button('submit', 'Save', 'saveBut');
 		$html .= $temp->render();
 		$html .= '&nbsp;&nbsp;';
 		$temp = new Button("document.location = '".FrontController::generateSecureURL('act=ListDEnums')."'", 'Back to List', 'cancelBut');
 		$html .= $temp->render();
-		$html .= '</td></tr>';
+		$html .= '';
 
 		$html .= AlphaView::renderSecurityFields();
 
-		$html .= '</form></table>';
+		$html .= '</form>';
 
 		return $html;
 	}

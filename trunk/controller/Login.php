@@ -219,7 +219,10 @@ class Login extends AlphaController implements AlphaControllerInterface {
 
 			echo AlphaView::displayErrorMessage($e->getMessage());
 
-			echo $this->personView->displayLoginForm();
+			if (isset($params['reset']))
+				echo $this->personView->displayResetForm();
+			else
+				echo $this->personView->displayLoginForm();
 
 			self::$logger->warn($e->getMessage());
 		}catch(SecurityException $e) {
@@ -233,7 +236,10 @@ class Login extends AlphaController implements AlphaControllerInterface {
 
 			echo AlphaView::displayErrorMessage('Failed to find the user \''.$params['email'].'\'');
 
-			echo $this->personView->displayLoginForm();
+			if (isset($params['reset']))
+				echo $this->personView->displayResetForm();
+			else
+				echo $this->personView->displayLoginForm();
 
 			self::$logger->warn($e->getMessage());
 		}

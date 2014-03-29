@@ -17,7 +17,7 @@ if(!isset($config)) {
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -94,7 +94,11 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 
 		echo AlphaView::displayPageHead($this);
 
-		echo '<h2>Listing business objects which are tagged</h2>';
+		$message = $this->getStatusMessage();
+		if(!empty($message))
+			echo $message;
+
+		echo '<h3>Listing business objects which are tagged</h3>';
 
 		$BOs = AlphaDAO::getBOClassNames();
 
@@ -104,23 +108,36 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 			if($temp->isTagged()) {
 				$tag = new TagObject();
 				$count = count($tag->loadAllByAttribute('taggedClass', $BO));
-				echo '<h3>'.$temp->getFriendlyClassName().' object is tagged ('.$count.' tags found)</h3>';
+				echo '<h4>'.$temp->getFriendlyClassName().' object is tagged ('.$count.' tags found)</h4>';
 
-				$js = "$('#dialogDiv').text('Are you sure you want to delete all tags attached to the ".$temp->getFriendlyClassName().
-					" class, and have them re-created?');
-						$('#dialogDiv').dialog({
-						buttons: {
-							'OK': function(event, ui) {
-								$('#clearTaggedClass').attr('value', '".$BO."');
-								$('#clearForm').submit();
-							},
-							'Cancel': function(event, ui) {
-								$(this).dialog('close');
-							}
-						}
-					})
-					$('#dialogDiv').dialog('open');
-					return false;";
+				$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('clearTaggedClass')) : 'clearTaggedClass');
+
+				$js = "if(window.jQuery) {
+					BootstrapDialog.show({
+						title: 'Confirmation',
+			            message: 'Are you sure you want to delete all tags attached to the ".$temp->getFriendlyClassName()." class, and have them re-created?',
+			            buttons: [
+			            	{
+			            		icon: 'glyphicon glyphicon-remove',
+				                label: 'Cancel',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself){
+				                    dialogItself.close();
+				                }
+			            	},
+			            	{
+				                icon: 'glyphicon glyphicon-ok',
+				                label: 'Okay',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself) {
+				                	$('[id=\"".$fieldname."\"]').attr('value', '".$BO."');
+									$('#clearForm').submit();
+				                    dialogItself.close();
+				                }
+			            	}
+			            ]
+			        });
+				}";
 				$button = new Button($js, "Re-create tags", "clearBut".$BO);
 
    				echo $button->render();
@@ -130,7 +147,7 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 		AlphaDAO::disconnect();
 
    		echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" id="clearForm">';
-   		echo '<input type="hidden" name="clearTaggedClass" id="clearTaggedClass"/>';
+   		echo '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'"/>';
    		echo AlphaView::renderSecurityFields();
    		echo '</form>';
 
@@ -144,7 +161,6 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 	 *
 	 * @param array $params
 	 * @since 1.0
-	 * @throws ResourceNotAllowedException
 	 */
 	public function doPOST($params) {
 		self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
@@ -190,14 +206,21 @@ class TagManager extends AlphaController implements AlphaControllerInterface {
 				AlphaDAO::disconnect();
 			}
 
-			$this->doGET($params);
+			return $this->doGET($params);
 		}catch(SecurityException $e) {
+			$this->setStatusMessage(AlphaView::displayErrorMessage($e->getMessage()));
+
 			self::$logger->warn($e->getMessage());
-			throw new ResourceNotAllowedException($e->getMessage());
 		}catch(IllegalArguementException $e) {
 			self::$logger->error($e->getMessage());
-			throw new ResourceNotFoundException($e->getMessage());
+			$this->setStatusMessage(AlphaView::displayErrorMessage($e->getMessage()));
 		}
+
+		echo AlphaView::displayPageHead($this);
+
+		$message = $this->getStatusMessage();
+		if(!empty($message))
+			echo $message;
 
 		echo AlphaView::displayPageFoot($this);
 		self::$logger->debug('<<doPOST');
