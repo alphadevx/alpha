@@ -447,42 +447,67 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		// recreate and update table buttons (if required)
 		$html = '';
 		if ($this->BO->checkTableNeedsUpdate() && $this->BO->checkTableExists()) {
-			$js = "$('#dialogDiv').text('Are you sure you wish to recreate this class table (all data will be lost)?');
-				$('#dialogDiv').dialog({
-				buttons: {
-					'OK': function(event, ui) {
-						//$('#admin_".get_class($this->BO)."_button_pressed').attr('value', 'recreateTableBut');
-						$('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('admin_'.get_class($this->BO).'_button_pressed')) : 'admin_'.get_class($this->BO).'_button_pressed')."\"]').attr('value', 'recreateTableBut');
-						$('#admin_".get_class($this->BO)."').submit();
-					},
-					'Cancel': function(event, ui) {
-						$(this).dialog('close');
-					}
-				}
-			})
-			$('#dialogDiv').dialog('open');
-			return false;";
+
+			$js = "if(window.jQuery) {
+					BootstrapDialog.show({
+						title: 'Confirmation',
+			            message: 'Are you sure you wish to recreate this class table (all data will be lost)?',
+			            buttons: [
+			            	{
+			            		icon: 'glyphicon glyphicon-remove',
+				                label: 'Cancel',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself){
+				                    dialogItself.close();
+				                }
+			            	},
+			            	{
+				                icon: 'glyphicon glyphicon-ok',
+				                label: 'Okay',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself) {
+				                	$('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('admin_'.get_class($this->BO).'_button_pressed')) : 'admin_'.get_class($this->BO).'_button_pressed')."\"]').attr('value', 'recreateTableBut');
+									$('#admin_".get_class($this->BO)."').submit();
+				                    dialogItself.close();
+				                }
+			            	}
+			            ]
+			        });
+				}";
 
 			$button = new Button($js , "Recreate Table", "recreateTableBut");
 			$html .= $button->render();
 			// hidden field so that we know which class to recreate the table for
 			$html .= '<input type="hidden" name="recreateTableClass" value="'.get_class($this->BO).'"/>';
 			$html .= '&nbsp;&nbsp;';
-			$js = "$('#dialogDiv').text('Are you sure you wish to attempt to modify this class table by adding new attributes?');
-				$('#dialogDiv').dialog({
-				buttons: {
-					'OK': function(event, ui) {
-						//$('#admin_".get_class($this->BO)."_button_pressed').attr('value', 'updateTableBut');
-						$('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('admin_'.get_class($this->BO).'_button_pressed')) : 'admin_'.get_class($this->BO).'_button_pressed')."\"]').attr('value', 'updateTableBut');
-						$('#admin_".get_class($this->BO)."').submit();
-					},
-					'Cancel': function(event, ui) {
-						$(this).dialog('close');
-					}
-				}
-			})
-			$('#dialogDiv').dialog('open');
-			return false;";
+
+			$js = "if(window.jQuery) {
+					BootstrapDialog.show({
+						title: 'Confirmation',
+			            message: 'Are you sure you wish to attempt to modify this class table by adding new attributes?',
+			            buttons: [
+			            	{
+			            		icon: 'glyphicon glyphicon-remove',
+				                label: 'Cancel',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself){
+				                    dialogItself.close();
+				                }
+			            	},
+			            	{
+				                icon: 'glyphicon glyphicon-ok',
+				                label: 'Okay',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself) {
+				                	$('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('admin_'.get_class($this->BO).'_button_pressed')) : 'admin_'.get_class($this->BO).'_button_pressed')."\"]').attr('value', 'updateTableBut');
+									$('#admin_".get_class($this->BO)."').submit();
+				                    dialogItself.close();
+				                }
+			            	}
+			            ]
+			        });
+				}";
+
 			$button = new Button($js , "Update Table", "updateTableBut");
 			$html .= $button->render();
 			// hidden field so that we know which class to update the table for
