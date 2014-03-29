@@ -8,7 +8,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -80,6 +80,8 @@ class DateBox {
 	 */
 	public function __construct($object, $label="", $name="") {
 
+		global $config;
+
 		// check the type of the object passed
 		if($object instanceof Date || $object instanceof Timestamp) {
 			$this->dateObject = $object;
@@ -88,17 +90,20 @@ class DateBox {
 		}
 
 		$this->label = $label;
-		$this->name = $name;
+
+		if($config->get('security.encrypt.http.fieldnames'))
+			$this->name = base64_encode(AlphaSecurityUtils::encrypt($name));
+		else
+			$this->name = $name;
 	}
 
 	/**
 	 * Renders the text box and icon to open the calendar pop-up
 	 *
-	 * @param boolean $tableTags
 	 * @return string
 	 * @since 1.0
 	 */
-	public function render($tableTags=true) {
+	public function render() {
 		global $config;
 
 		$html = '';
@@ -119,29 +124,20 @@ class DateBox {
 		if($value == '0000-00-00')
 			$value = '';
 
-		if($tableTags) {
-			$html .= '<tr><th style="width:25%;">';
-			$html .= $this->label;
-			$html .= '</th>';
+		$html .= '<div class="input-group date">';
+		$html .= '<input type="text" class="form-control" name="'.$this->name.'" id="'.$this->name.'" value="'.$value.'"/>';
+		$html .= '<span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>';
+		$html .= '</div>';
 
-			$html .= '<td>';
-			$html .= '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$value.'" readonly/>';
-			$html .= '<script language="javascript">';
-			if($this->dateObject instanceof Timestamp)
-				$html .= "$('#".$this->name."').datepicker({dateFormat:'yy-mm-dd HH:II:SS',showOn:'button',buttonImage:'".$config->get('app.url')."alpha/images/icons/calendar.png'})";
-			else
-				$html .= '$(document).ready(function(){$(\'#'.$this->name.'\').datepicker({dateFormat:\'yy-mm-dd\',defaultDate:\''.$value.'\',showOn:\'button\',buttonImageOnly:\'true\',buttonImage:\''.$config->get('app.url').'alpha/images/icons/calendar.png\'})});';
-			$html .= '</script>';
-			$html .= '</td></tr>';
-		}else{
-			$html .= '<input type="text" size="'.$size.'" class="readonly" name="'.$this->name.'" id="'.$this->name.'" value="'.$value.'" readonly/>';
-			$html .= '<script language="javascript">';
-			if($this->dateObject instanceof Timestamp)
-				$html .= "$('#".$this->name."').datepicker({dateFormat:'yy-mm-dd HH:II:SS',showOn:'button',buttonImage:'".$config->get('app.url')."alpha/images/icons/calendar.png'})";
-			else
-				$html .= '$(document).ready(function(){$(\'#'.$this->name.'\').datepicker({dateFormat:\'yy-mm-dd\',defaultDate:\''.$value.'\',showOn:\'button\',buttonImageOnly:\'true\',buttonImage:\''.$config->get('app.url').'alpha/images/icons/calendar.png\'})});';
-			$html .= '</script>';
-		}
+		$html .= '<script language="javascript">';
+		$html .= 'if(window.jQuery) {';
+		$html .= '	$(\'[Id="'.$this->name.'"]\').parent().datepicker({';
+		$html .= '		format: "yyyy-mm-dd",';
+		$html .= '		todayBtn: "linked",';
+		$html .= '		autoclose: true';
+		$html .= '	});';
+		$html .= '}';
+		$html .= '</script>';
 
 		return $html;
 	}
