@@ -17,7 +17,7 @@ if(!isset($config)) {
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -175,55 +175,14 @@ class CreateArticle extends AlphaController implements AlphaControllerInterface 
 	public function during_displayPageHead_callback() {
 		global $config;
 
+		$fieldid = ($config->get('security.encrypt.http.fieldnames') ? 'text_field_'.base64_encode(AlphaSecurityUtils::encrypt('content')).'_0' : 'text_field_content_0');
+
 		$html = '
 			<script type="text/javascript">
-			var previewURL = "'.FrontController::generateSecureURL('act=PreviewArticle&bo=ArticleObject').'";
-			</script>
-			<script type="text/javascript" src="'.$config->get('app.url').'alpha/lib/markitup/jquery.markitup.js"></script>
-			<script type="text/javascript" src="'.$config->get('app.url').'alpha/lib/markitup/sets/markdown/set.js"></script>
-			<link rel="stylesheet" type="text/css" href="'.$config->get('app.url').'alpha/lib/markitup/skins/simple/style.css" />
-			<link rel="stylesheet" type="text/css" href="'.$config->get('app.url').'alpha/lib/markitup/sets/markdown/style.css" />
-			<script type="text/javascript">
 			$(document).ready(function() {
-				$(\'[id="'.($config->get('security.encrypt.http.fieldnames') ? 'text_field_'.base64_encode(AlphaSecurityUtils::encrypt('content')).'_0' : 'text_field_content_0').'"]\').markItUp(mySettings);
-
-				var dialogCoords = [(screen.width/2)-400, (screen.height/2)-300];
-
-				var dialogOpts = {
-			        title: "Help Page",
-			        modal: true,
-			        resizable: false,
-			        draggable: false,
-			        autoOpen: false,
-			        height: 400,
-			        width: 800,
-			        position: dialogCoords,
-			        buttons: {},
-			        open: function() {
-			        	//display correct dialog content
-			        	$("#helpPage").load("'.FrontController::generateSecureURL('act=ViewArticleFile&file=Markdown_Help.text').'");
-					},
-					close: function() {
-
-						$("#helpPage").dialog(dialogOpts);
-
-						$(".markItUpButton15").click(
-			        		function (){
-			            		$("#helpPage").dialog("open");
-			            		return false;
-			        		}
-			    		);
-			    	}
-			    };
-
-			    $("#helpPage").dialog(dialogOpts);
-
-			    $(".markItUpButton15").click(
-			        function (){
-			            $("#helpPage").dialog("open");
-			            return false;
-			        }
-			    );
+				$(\'[id="'.$fieldid.'"]\').pagedownBootstrap({
+					\'sanatize\': false
+				});
 			});
 			</script>';
 

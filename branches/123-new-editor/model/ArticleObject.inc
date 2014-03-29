@@ -9,7 +9,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -214,8 +214,6 @@ class ArticleObject extends AlphaDAO {
 		$this->description->setRule("/\w+/");
 		$this->bodyOnload = new String();
 		$this->content = new Text();
-		$this->content->setHelper('Please provide some content for the article.');
-		$this->content->setRule("/\w+/");
 		$this->headerContent = new Text();
 		$this->author = new String();
 		$this->author->setHelper('Please state the name of the author of this article');

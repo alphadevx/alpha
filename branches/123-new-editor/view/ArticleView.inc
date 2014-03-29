@@ -104,8 +104,7 @@ class ArticleView extends AlphaView {
 		$fields['formFields'] = $this->renderAllFields('edit');
 
 		// buffer HTML output for Create and Cancel buttons
-		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('saveBut')) : 'saveBut');
-		$button = new Button('submit', 'Save', $fieldname);
+		$button = new Button('submit', 'Save', 'saveBut');
 		$fields['saveButton'] = $button->render();
 
 		$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
