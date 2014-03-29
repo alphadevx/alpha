@@ -804,12 +804,14 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$html .= '	<label>';
 
 		if ($mode == 'create') {
+			$html .= '		<input type="hidden" name="'.$fieldname.'" value="0">';
 			$html .= '		<input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'">';
 			$html .= '			'.$label;
 
 		}
 
 		if ($mode == 'edit') {
+			$html .= '		<input type="hidden" name="'.$fieldname.'" value="0">';
 			$html .= '		<input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'"'.($value == '1'? ' checked':'').' />';
 			$html .= '			'.$label;
 		}
