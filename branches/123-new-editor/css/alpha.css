@@ -1,0 +1,13 @@
+.padded {padding:25px;}
+.bordered {border:1px solid #CCCCCC; border-radius: 6px;}
+.centered {text-align:center;}
+.lower {position:relative; top:10px;}
+.spread * {margin-right:10px;}
+.table-bordered {table-layout:fixed;}
+
+td.debug {background-color:white;}
+td.info {background-color:lightgray;}
+td.warn {background-color:yellow;}
+td.error {background-color:orange;}
+td.fatal {background-color:red; color:white;}
+td.sql {background-color:black; color:white;}
