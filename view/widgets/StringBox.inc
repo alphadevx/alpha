@@ -8,7 +8,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -97,37 +97,32 @@ class StringBox {
 			throw new IllegalArguementException('String object passed ['.var_export($string, true).'] is not a valid String object!');
 
 		$this->label = $label;
-		$this->name = $name;
 		$this->size = $size;
+
+		if($config->get('security.encrypt.http.fieldnames'))
+			$this->name = base64_encode(AlphaSecurityUtils::encrypt($name));
+		else
+			$this->name = $name;
 	}
 
 	/**
 	 * Renders the HTML and javascript for the string box
 	 *
-	 * @param bool $tableTags determines if table tags are also rendered for the StringBox
 	 * @param bool $readOnly set to true to make the text box readonly (defaults to false)
 	 * @return string
 	 * @since 1.0
 	 */
-	public function render($tableTags=true, $readOnly=false) {
-		$html = '';
+	public function render($readOnly=false) {
 
-		if ($tableTags) {
-			$html .= '<tr><th>';
-			$html .= $this->label;
-			$html .= '</th>';
-
-			$html .= '<td>';
-			$html .= '<input '.($this->stringObject->checkIsPassword()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.String::MAX_SIZE.'" name="'.$this->name.'" id="'.$this->name.'" value="'.((isset($_POST[$this->name]) && $this->stringObject->getValue() == "" && !$this->stringObject->checkIsPassword())? $_POST[$this->name] : $this->stringObject->getValue()).'"'.($readOnly ? 'readonly class="readonly"' : '').'/>';
-			$html .= '</td></tr>';
-		}else{
-			$html .= '<input '.($this->stringObject->checkIsPassword()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.String::MAX_SIZE.'" name="'.$this->name.'" id="'.$this->name.'" value="'.((isset($_POST[$this->name]) && $this->stringObject->getValue() == "" && !$this->stringObject->checkIsPassword())? $_POST[$this->name] : $this->stringObject->getValue()).'"'.($readOnly ? 'readonly class="readonly"' : '').'/>';
-		}
+		$html = '<div class="form-group">';
+		$html .= '	<label for="'.$this->name.'">'.$this->label.'</label>';
+		$html .= '	<input '.($this->stringObject->checkIsPassword()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.String::MAX_SIZE.'" name="'.$this->name.'" id="'.$this->name.'" value="'.((isset($_POST[$this->name]) && $this->stringObject->getValue() == "" && !$this->stringObject->checkIsPassword())? $_POST[$this->name] : $this->stringObject->getValue()).'" class="form-control"'.($readOnly ? ' readonly' : '').'/>';
 
 		if($this->stringObject->getRule() != '') {
-			$html .= '<input type="hidden" id="'.$this->name.'_msg" value="'.$this->stringObject->getHelper().'"/>';
-			$html .= '<input type="hidden" id="'.$this->name.'_rule" value="'.$this->stringObject->getRule().'"/>';
+			$html .= '	<input type="hidden" id="'.$this->name.'_msg" value="'.$this->stringObject->getHelper().'"/>';
+			$html .= '	<input type="hidden" id="'.$this->name.'_rule" value="'.$this->stringObject->getRule().'"/>';
 		}
+		$html .= '</div>';
 
 		return $html;
 	}

@@ -1,19 +1,21 @@
-<ul id="adminmenu" class="potato-menu">
-	<li><a href="<?= $config->get('app.url') ?>">Home</a></li>
-	<li><a href="<?= FrontController::generateSecureURL('act=ListBusinessObjects') ?>">Admin Home</a></li>
-	<li><a href="#">Logs &raquo;</a>			
-		<ul>
-			<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.file.store.dir').'logs/'.$config->get('app.log.file')) ?>">System Log</a></li>
-			<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.root').'logs/search.log') ?>">Search Log</a></li>
-			<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.root').'logs/feeds.log') ?>">Feed Log</a></li>
-			<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.root').'logs/tasks.log') ?>">Cron Tasks Log</a></li>
-		</ul>
-	</li>
-	<li><a href="<?= FrontController::generateSecureURL('act=GenSecureQueryStrings') ?>">Generate Secure URL</a></li>
-	<li><a href="<?= FrontController::generateSecureURL('act=ViewMetrics') ?>">Software Metrics</a></li>
-	<li><a href="<?= FrontController::generateSecureURL('act=CacheManager') ?>">Manage Cache</a></li>
-	<li><a href="<?= FrontController::generateSecureURL('act=TagManager') ?>">Manage Tags</a></li>
-	<li><a href="<?= FrontController::generateSecureURL('act=ListDEnums') ?>">Manage DEnums</a></li>
-	<li><a href="<?= FrontController::generateSecureURL('act=ListSequences') ?>">Manage Sequences</a></li>
-	<li><a href="<?= FrontController::generateSecureURL('act=ViewTestResults') ?>">Unit Tests</a></li>
-</ul>
+<nav class="navbar navbar-default" role="navigation">
+	<ul id="adminmenu" class="nav navbar-nav">
+		<li><a href="<?= $config->get('app.url') ?>">Home</a></li>
+		<li><a href="<?= FrontController::generateSecureURL('act=ListBusinessObjects') ?>">Admin Home</a></li>
+		<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Logs<b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.file.store.dir').'logs/'.$config->get('app.log.file')) ?>">System Log</a></li>
+				<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.root').'logs/search.log') ?>">Search Log</a></li>
+				<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.root').'logs/feeds.log') ?>">Feed Log</a></li>
+				<li><a href="<?= FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.root').'logs/tasks.log') ?>">Cron Tasks Log</a></li>
+			</ul>
+		</li>
+		<li><a href="<?= FrontController::generateSecureURL('act=GenSecureQueryStrings') ?>">Generate Secure URL</a></li>
+		<li><a href="<?= FrontController::generateSecureURL('act=ViewMetrics') ?>">Code Metrics</a></li>
+		<li><a href="<?= FrontController::generateSecureURL('act=CacheManager') ?>">Cache</a></li>
+		<li><a href="<?= FrontController::generateSecureURL('act=TagManager') ?>">Tags</a></li>
+		<li><a href="<?= FrontController::generateSecureURL('act=ListDEnums') ?>">DEnums</a></li>
+		<li><a href="<?= FrontController::generateSecureURL('act=ListSequences') ?>">Sequences</a></li>
+		<li><a href="<?= FrontController::generateSecureURL('act=ViewTestResults') ?>">Unit Tests</a></li>
+	</ul>
+</nav>

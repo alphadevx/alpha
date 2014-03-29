@@ -17,7 +17,7 @@ if(!isset($config)) {
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -325,44 +325,47 @@ class ListAll extends AlphaController implements AlphaControllerInterface {
 		if($end > $this->BOCount)
 			$end = $this->BOCount;
 
-		if($this->BOCount > 0)
-			$html .= '<p align="center">Displaying '.($this->startPoint).' to '.$end.' of <strong>'.$this->BOCount.'</strong>.&nbsp;&nbsp;';
-		else
-			$html .= '<p align="center">The list is empty.&nbsp;&nbsp;';
+		if($this->BOCount > 0) {
+			$html .= '<ul class="pagination">';
+		}else{
+			$html .= '<p align="center">The list is empty.&nbsp;&nbsp;</p>';
+
+			return $html;
+		}
 
 		if ($this->startPoint > 1) {
 			// handle secure URLs
 			if(isset($_GET['tk']))
-				$html .= '<a href="'.FrontController::generateSecureURL('act=ListAll&bo='.$this->BOname.'&start='.($this->startPoint-$config->get('app.list.page.amount'))).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
+				$html .= '<li><a href="'.FrontController::generateSecureURL('act=ListAll&bo='.$this->BOname.'&start='.($this->startPoint-$config->get('app.list.page.amount'))).'">&lt;&lt;-Previous</a></li>';
 			else
-				$html .= '<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($this->startPoint-$config->get('app.list.page.amount')).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
+				$html .= '<li><a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($this->startPoint-$config->get('app.list.page.amount')).'">&lt;&lt;-Previous</a></li>';
 		}elseif($this->BOCount > $config->get('app.list.page.amount')){
-			$html .= '&lt;&lt;-Previous&nbsp;&nbsp;';
+			$html .= '<li class="disabled"><a href="#">&lt;&lt;-Previous</a></li>';
 		}
 		$page = 1;
 		for ($i = 0; $i < $this->BOCount; $i+=$config->get('app.list.page.amount')) {
 			if($i != ($this->startPoint-1)) {
 				// handle secure URLs
 				if(isset($_GET['tk']))
-					$html .= '&nbsp;<a href="'.FrontController::generateSecureURL('act=ListAll&bo='.$this->BOname.'&start='.($i+1)).'">'.$page.'</a>&nbsp;';
+					$html .= '<li><a href="'.FrontController::generateSecureURL('act=ListAll&bo='.$this->BOname.'&start='.($i+1)).'">'.$page.'</a></li>';
 				else
-					$html .= '&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($i+1).'">'.$page.'</a>&nbsp;';
+					$html .= '<li><a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($i+1).'">'.$page.'</a></li>';
 			}elseif($this->BOCount > $config->get('app.list.page.amount')){
-				$html .= '&nbsp;'.$page.'&nbsp;';
+				$html .= '<li class="active"><a href="#">'.$page.'</a></li>';
 			}
 			$page++;
 		}
 		if ($this->BOCount > $end) {
 			// handle secure URLs
 			if(isset($_GET['tk']))
-				$html .= '&nbsp;&nbsp;<a href="'.FrontController::generateSecureURL('act=ListAll&bo='.$this->BOname.'&start='.($this->startPoint+$config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a>';
+				$html .= '<li><a href="'.FrontController::generateSecureURL('act=ListAll&bo='.$this->BOname.'&start='.($this->startPoint+$config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a></li>';
 			else
-				$html .= '&nbsp;&nbsp;<a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($this->startPoint+$config->get('app.list.page.amount')).
-					'">Next-&gt;&gt;</a>';
+				$html .= '<li><a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($this->startPoint+$config->get('app.list.page.amount')).
+					'">Next-&gt;&gt;</a></li>';
 		}elseif($this->BOCount > $config->get('app.list.page.amount')){
-			$html .= '&nbsp;&nbsp;Next-&gt;&gt;';
+			$html .= '<li class="disabled"><a href="#">Next-&gt;&gt;</a></li>';
 		}
-		$html .= '</p>';
+		$html .= '</ul>';
 
 		return $html;
 	}

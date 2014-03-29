@@ -8,7 +8,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -113,28 +113,21 @@ class TextBox {
 	/**
 	 * Renders the HTML and javascript for the text box
 	 *
-	 * @param bool $tableTags Determines if table tags are also rendered for the TextBox
 	 * @param bool $markdown Set to true when rendering Markdown text content fields
 	 * @return string
 	 * @since 1.0
 	 */
-	public function render($tableTags=true, $markdown=false) {
+	public function render($markdown=false) {
+
 		global $config;
 
-		$html = '';
-
-		if($tableTags) {
-			$html .= '<tr><th colspan="2" style="text-align:center;">';
-			$html .= $this->label;
-			$html .= '</th></tr>';
-
-			$html .= '<tr><td colspan="2">';
-		}
+		$html = '<div class="form-group">';
+		$html .= '	<label for="'.$this->name.'">'.$this->label.'</label>';
 
 		if($markdown) {
 			$html .= '<input type="hidden" id="markdownTextBoxRows" name="markdownTextBoxRows" value=""/>';
 		}
-		$html .= '<textarea class="checkMax" maxlength="'.$this->textObject->getSize().'" id="text_field_'.$this->name.'_'.$this->identifier.'" style="width:100%;" rows="'.$this->rows.'" name="'.$this->name.'">';
+		$html .= '<textarea class="form-control" maxlength="'.$this->textObject->getSize().'" id="text_field_'.$this->name.'_'.$this->identifier.'" rows="'.$this->rows.'" name="'.$this->name.'">';
 
 		if($this->textObject->getAllowHTML())
 			$html .= InputFilter::decode($this->textObject->getValue(), true);
@@ -142,11 +135,6 @@ class TextBox {
 			$html .= InputFilter::decode($this->textObject->getValue());
 
 		$html .= '</textarea><br>';
-
-		if($tableTags) {
-			$html .= '</td></tr>';
-			$html .= '<tr><td colspan="2">';
-		}
 
 		if($markdown) {
 			$increaseTextArea = new Button("document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = ".
@@ -176,8 +164,8 @@ class TextBox {
 
 		$html .= $decreaseTextArea->render();
 
-		if($tableTags)
-			$html .= '</td></tr>';
+		$html .= '</div>';
+
 
 		if($this->textObject->getRule() != '') {
 			$html .= '<input type="hidden" id="'.$this->name.'_msg" value="'.$this->textObject->getHelper().'"/>';

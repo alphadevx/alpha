@@ -17,7 +17,7 @@ if(!isset($config)) {
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -96,6 +96,10 @@ class EditDEnum extends Edit implements AlphaControllerInterface {
 		global $config;
 
 		echo AlphaView::displayPageHead($this);
+
+		$message = $this->getStatusMessage();
+		if(!empty($message))
+			echo $message;
 
 		// ensure that a OID is provided
 		if (isset($params['oid'])) {
@@ -186,7 +190,7 @@ class EditDEnum extends Edit implements AlphaControllerInterface {
 
 					$this->setStatusMessage(AlphaView::displayUpdateMessage(get_class($this->BO).' '.$this->BO->getID().' saved successfully.'));
 
-					$this->doGET($params);
+					return $this->doGET($params);
 				}catch (FailedSaveException $e) {
 					self::$logger->error('Unable to save the DEnum of id ['.$params['oid'].'], error was ['.$e->getMessage().']');
 					AlphaDAO::rollback();
@@ -195,34 +199,24 @@ class EditDEnum extends Edit implements AlphaControllerInterface {
 				AlphaDAO::disconnect();
 			}
 		}catch(SecurityException $e) {
-			echo AlphaView::displayErrorMessage($e->getMessage());
+			$this->setStatusMessage(AlphaView::displayErrorMessage($e->getMessage()));
 			self::$logger->warn($e->getMessage());
 		}catch(IllegalArguementException $e) {
-			echo AlphaView::displayErrorMessage($e->getMessage());
+			$this->setStatusMessage(AlphaView::displayErrorMessage($e->getMessage()));
 			self::$logger->error($e->getMessage());
 		}catch(BONotFoundException $e) {
 			self::$logger->warn($e->getMessage());
-			echo AlphaView::displayErrorMessage('Failed to load the requested item from the database!');
+			$this->setStatusMessage(AlphaView::displayErrorMessage('Failed to load the requested item from the database!'));
 		}
 
-		self::$logger->debug('<<doPOST');
-	}
+		echo AlphaView::displayPageHead($this);
 
-	/**
-	 * Using this callback to blank the new_value field when the page loads, regardless of anything being posted
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function during_displayPageHead_callback() {
-		$html = '';
-		$html .= '<script language="javascript">';
-		$html .= 'function clearNewField() {';
-		$html .= '	document.getElementById("new_value").value = "";';
-		$html .= '}';
-		$html .= 'addOnloadEvent(clearNewField);';
-		$html .= '</script>';
-		return $html;
+		$message = $this->getStatusMessage();
+		if(!empty($message))
+			echo $message;
+
+		echo AlphaView::displayPageFoot($this);
+		self::$logger->debug('<<doPOST');
 	}
 
 	/**

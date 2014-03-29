@@ -8,7 +8,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -84,15 +84,17 @@ class Button {
 	 * @param string $title The title to appear on the button.
 	 * @param string $id The HTML id attribute for the button.
 	 * @param string $imgURL If provided, the button will be a clickable image using this image.
+	 * @param string $glyphIcon If provided, the Bootsrap glyphIcon to use for this button.
 	 * @since 1.0
 	 */
-	public function __construct($action, $title, $id, $imgURL='') {
+	public function __construct($action, $title, $id, $imgURL='', $glyphIcon='') {
 		global $config;
 
 		$this->action = $action;
 		$this->title = $title;
-		$this->id = $id;
+		$this->id = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt($id)) : $id);
 		$this->imgURL = $imgURL;
+		$this->glyphIcon = $glyphIcon;
 		$this->title = $title;
 	}
 
@@ -106,40 +108,28 @@ class Button {
 	public function render($width=0) {
 		$html = '';
 
-		if(empty($this->imgURL)) {
-			switch ($this->action) {
-				case 'submit':
-					$html .= '<script>
-						$(function() {
-							$("[Id=\''.$this->id.'\']").button();
-						});
-						</script>
-					';
-					$html .= '<input type="submit" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'"'.($width == 0? '':' style="width:'.$width.';"').'/>';
-				break;
-				case 'file':
-					$html .= '<script>
-						$(function() {
-							$("[Id=\''.$this->id.'\']").button();
-						});
-						</script>
-					';
-					$html .= '<input type="file" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'"'.($width == 0? '':' style="width:'.$width.';"').'/>';
-				break;
-				default:
-					$html .= '<script>
-						$(function() {
-							$("[Id=\''.$this->id.'\']").button();
-							$("[Id=\''.$this->id.'\']").click(function() { '.$this->action.'; });
-						});
-						</script>
-					';
-					$html .= '<input type="button" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'"'.($width == 0? '':' style="width:'.$width.';"').'/>';
-				break;
-			}
-		}else{
-			// in the special case where a clickable image is being used
+		if(!empty($this->glyphIcon)) {
+			$html .= '<button type="button" id="'.$this->id.'" name="'.$this->id.'" class="btn btn-default btn-xs"><span class="glyphicon '.$this->glyphIcon.'"></span> '.$this->title.'</button>';
+			$html .= '<script>document.getElementById(\''.$this->id.'\').onclick = function() { '.$this->action.'; };</script>';
+			return $html;
+		}
+
+		if(!empty($this->imgURL)) {
 			$html .= '<img src="'.$this->imgURL.'" alt="'.$this->title.'" onClick="'.$this->action.'" style="cursor:pointer; vertical-align:bottom;"/>';
+			return $html;
+		}
+
+		switch ($this->action) {
+			case 'submit':
+				$html .= '<input type="submit" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="btn btn-primary"'.($width == 0? '':' style="width:'.$width.';"').'/>';
+			break;
+			case 'file':
+				$html .= '<input type="file" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="btn btn-primary"'.($width == 0? '':' style="width:'.$width.';"').'/>';
+			break;
+			default:
+				$html .= '<input type="button" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="btn btn-primary"'.($width == 0? '':' style="width:'.$width.';"').'/>';
+				$html .= '<script>document.getElementById(\''.$this->id.'\').onclick = function() { '.$this->action.'; };</script>';
+			break;
 		}
 
 		return $html;

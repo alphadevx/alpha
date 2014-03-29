@@ -11,7 +11,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id: AlphaRendererProviderInterface.inc 1499 2012-02-16 19:29:16Z alphadev $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -103,8 +103,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$fields['formFields'] = $this->renderAllFields('create');
 
 		// buffer HTML output for Create and Cancel buttons
-		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('createBut')) : 'createBut');
-		$button = new Button('submit', 'Create', $fieldname);
+		$button = new Button('submit', 'Create', 'createBut');
 		$fields['createButton'] = $button->render();
 
 		$button = new Button("document.location.replace('".FrontController::generateSecureURL('act=ListBusinessObjects')."')", 'Cancel', 'cancelBut');
@@ -136,24 +135,35 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$fields['formFields'] = $this->renderAllFields('edit');
 
 		// buffer HTML output for Create and Cancel buttons
-		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('saveBut')) : 'saveBut');
-		$button = new Button('submit', 'Save', $fieldname);
+		$button = new Button('submit', 'Save', 'saveBut');
 		$fields['saveButton'] = $button->render();
 
-		$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
-				$('#dialogDiv').dialog({
-				buttons: {
-					'OK': function(event, ui) {
-						$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
-						$('#deleteForm').submit();
-					},
-					'Cancel': function(event, ui) {
-						$(this).dialog('close');
-					}
-				}
-			})
-			$('#dialogDiv').dialog('open');
-			return false;";
+		$js = "if(window.jQuery) {
+					BootstrapDialog.show({
+						title: 'Confirmation',
+			            message: 'Are you sure you wish to delete this item?',
+			            buttons: [
+			            	{
+			            		icon: 'glyphicon glyphicon-remove',
+				                label: 'Cancel',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself){
+				                    dialogItself.close();
+				                }
+			            	},
+			            	{
+				                icon: 'glyphicon glyphicon-ok',
+				                label: 'Okay',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself) {
+				                	$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
+									$('#deleteForm').submit();
+				                    dialogItself.close();
+				                }
+			            	}
+			            ]
+			        });
+				}";
 		$button = new Button($js, "Delete", "deleteBut");
 		$fields['deleteButton'] = $button->render();
 
@@ -263,20 +273,34 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "edit".$this->BO->getOID()."But");
 			$html .= $button->render();
 			$html .= '&nbsp;&nbsp;';
-			$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
-				$('#dialogDiv').dialog({
-				buttons: {
-					'OK': function(event, ui) {
-						$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
-						$('#deleteForm').submit();
-					},
-					'Cancel': function(event, ui) {
-						$(this).dialog('close');
-					}
-				}
-			})
-			$('#dialogDiv').dialog('open');
-			return false;";
+
+			$js = "if(window.jQuery) {
+					BootstrapDialog.show({
+						title: 'Confirmation',
+			            message: 'Are you sure you wish to delete this item?',
+			            buttons: [
+			            	{
+			            		icon: 'glyphicon glyphicon-remove',
+				                label: 'Cancel',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself){
+				                    dialogItself.close();
+				                }
+			            	},
+			            	{
+				                icon: 'glyphicon glyphicon-ok',
+				                label: 'Okay',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself) {
+				                	$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
+									$('#deleteForm').submit();
+				                    dialogItself.close();
+				                }
+			            	}
+			            ]
+			        });
+				}";
+
 			$button = new Button($js, "Delete", "delete".$this->BO->getOID()."But");
 			$html .= $button->render();
 		}
@@ -312,24 +336,37 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$html = '';
 		// render edit and delete buttons for admins only
 		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
-			$html .= '&nbsp;&nbsp;';
+
 			$button = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "editBut");
 			$html .= $button->render();
-			$html .= '&nbsp;&nbsp;';
-			$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
-				$('#dialogDiv').dialog({
-				buttons: {
-					'OK': function(event, ui) {
-						$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
-						$('#deleteForm').submit();
-					},
-					'Cancel': function(event, ui) {
-						$(this).dialog('close');
-					}
-				}
-			})
-			$('#dialogDiv').dialog('open');
-			return false;";
+
+			$js = "if(window.jQuery) {
+					BootstrapDialog.show({
+						title: 'Confirmation',
+			            message: 'Are you sure you wish to delete this item?',
+			            buttons: [
+			            	{
+			            		icon: 'glyphicon glyphicon-remove',
+				                label: 'Cancel',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself){
+				                    dialogItself.close();
+				                }
+			            	},
+			            	{
+				                icon: 'glyphicon glyphicon-ok',
+				                label: 'Okay',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself) {
+				                	$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
+									$('#deleteForm').submit();
+				                    dialogItself.close();
+				                }
+			            	}
+			            ]
+			        });
+				}";
+
 			$button = new Button($js, "Delete", "deleteBut");
 			$html .= $button->render();
 		}
@@ -410,42 +447,67 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		// recreate and update table buttons (if required)
 		$html = '';
 		if ($this->BO->checkTableNeedsUpdate() && $this->BO->checkTableExists()) {
-			$js = "$('#dialogDiv').text('Are you sure you wish to recreate this class table (all data will be lost)?');
-				$('#dialogDiv').dialog({
-				buttons: {
-					'OK': function(event, ui) {
-						//$('#admin_".get_class($this->BO)."_button_pressed').attr('value', 'recreateTableBut');
-						$('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('admin_'.get_class($this->BO).'_button_pressed')) : 'admin_'.get_class($this->BO).'_button_pressed')."\"]').attr('value', 'recreateTableBut');
-						$('#admin_".get_class($this->BO)."').submit();
-					},
-					'Cancel': function(event, ui) {
-						$(this).dialog('close');
-					}
-				}
-			})
-			$('#dialogDiv').dialog('open');
-			return false;";
+
+			$js = "if(window.jQuery) {
+					BootstrapDialog.show({
+						title: 'Confirmation',
+			            message: 'Are you sure you wish to recreate this class table (all data will be lost)?',
+			            buttons: [
+			            	{
+			            		icon: 'glyphicon glyphicon-remove',
+				                label: 'Cancel',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself){
+				                    dialogItself.close();
+				                }
+			            	},
+			            	{
+				                icon: 'glyphicon glyphicon-ok',
+				                label: 'Okay',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself) {
+				                	$('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('admin_'.get_class($this->BO).'_button_pressed')) : 'admin_'.get_class($this->BO).'_button_pressed')."\"]').attr('value', 'recreateTableBut');
+									$('#admin_".get_class($this->BO)."').submit();
+				                    dialogItself.close();
+				                }
+			            	}
+			            ]
+			        });
+				}";
 
 			$button = new Button($js , "Recreate Table", "recreateTableBut");
 			$html .= $button->render();
 			// hidden field so that we know which class to recreate the table for
 			$html .= '<input type="hidden" name="recreateTableClass" value="'.get_class($this->BO).'"/>';
 			$html .= '&nbsp;&nbsp;';
-			$js = "$('#dialogDiv').text('Are you sure you wish to attempt to modify this class table by adding new attributes?');
-				$('#dialogDiv').dialog({
-				buttons: {
-					'OK': function(event, ui) {
-						//$('#admin_".get_class($this->BO)."_button_pressed').attr('value', 'updateTableBut');
-						$('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('admin_'.get_class($this->BO).'_button_pressed')) : 'admin_'.get_class($this->BO).'_button_pressed')."\"]').attr('value', 'updateTableBut');
-						$('#admin_".get_class($this->BO)."').submit();
-					},
-					'Cancel': function(event, ui) {
-						$(this).dialog('close');
-					}
-				}
-			})
-			$('#dialogDiv').dialog('open');
-			return false;";
+
+			$js = "if(window.jQuery) {
+					BootstrapDialog.show({
+						title: 'Confirmation',
+			            message: 'Are you sure you wish to attempt to modify this class table by adding new attributes?',
+			            buttons: [
+			            	{
+			            		icon: 'glyphicon glyphicon-remove',
+				                label: 'Cancel',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself){
+				                    dialogItself.close();
+				                }
+			            	},
+			            	{
+				                icon: 'glyphicon glyphicon-ok',
+				                label: 'Okay',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself) {
+				                	$('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('admin_'.get_class($this->BO).'_button_pressed')) : 'admin_'.get_class($this->BO).'_button_pressed')."\"]').attr('value', 'updateTableBut');
+									$('#admin_".get_class($this->BO)."').submit();
+				                    dialogItself.close();
+				                }
+			            	}
+			            ]
+			        });
+				}";
+
 			$button = new Button($js , "Update Table", "updateTableBut");
 			$html .= $button->render();
 			// hidden field so that we know which class to update the table for
@@ -479,120 +541,13 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		if(!AlphaController::checkControllerDefExists(get_class($controller)))
 			throw new IllegalArguementException('The controller provided ['.get_class($controller).'] is not defined anywhere!');
 
-		$html = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">';
-
-		$html.= '<html>';
-		$html.= '<head>';
-		$html.= '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">';
-		$html.= '<title>'.$controller->getTitle().'</title>';
-		if($controller->getKeywords() != '')
-			$html.= '<meta name="Keywords" content="'.$controller->getKeywords().'">';
-		if($controller->getDescription() != '')
-			$html.= '<meta name="Description" content="'.$controller->getDescription().'">';
-		$html.= '<meta name="title" content="'.$controller->getTitle().'">';
-		$html.= '<meta name="robots" content="index,follow,NOODP">';
-		if ($controller->getBO() != null && $controller->getBO()->hasAttribute('URL')) {
-			$URL = $controller->getBO()->get('URL');
-			if($URL != '')
-				$html.= '<link rel="canonical" href="'.$URL.'" />';
-		}
-		$html.= '<meta http-equiv="imagetoolbar" content="no">';
-
-		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/lib/jquery/ui/themes/'.$config->get('app.css.theme').'/jquery.ui.all.css">';
-		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/css/alpha.css">';
-		$html.= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'config/css/overrides.css">';
-
-		$html.= '<script type="text/javascript" src="'.$config->get('app.url').'alpha/lib/jquery/jquery-1.5.1.min.js"></script>';
-		$html.= '<script type="text/javascript" src="'.$config->get('app.url').'alpha/scripts/validation.js"></script>';
-		$html.= '<script type="text/javascript" src="'.$config->get('app.url').'alpha/lib/jquery/contextMenu/jquery.contextMenu.js"></script>';
-
-		$html.= '<script type="text/javascript" src="'.$config->get('app.url').'alpha/lib/jquery/ui/jquery-ui-1.8.11.custom.min.js"></script>';
-
-		$html.= '<script type="text/javascript" src="'.$config->get('app.url').'alpha/lib/jquery/ui/jquery.ui.potato.menu.js"></script>';
-
-		$html.= '<script type="text/javascript" src="'.$config->get('app.url').'alpha/lib/jquery/ui/jquery.ui.checkbox.js"></script>';
-
-		// handle force-frames
-		if($config->get('app.force.frame')) {
-			// if no-forceframe=true or we are in the admin backend, don't force frame
-			if(!isset($_GET['no-forceframe']) && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') === false) {
-				$html.= '<script type="text/javascript">';
-				$html.= 'pageLoc = self.location;';
-				$html.= 'pageAdd = top.location;';
-
-				$html.= 'if (pageLoc == pageAdd) {';
-				$html.= '    contentSrc = escape(pageLoc);';
-				$html.= '    contPage = \''.$config->get('app.url').'?\' + contentSrc;';
-				$html.= '    top.location.href = contPage;';
-				$html.= '}';
-				$html.= '</script>';
-			}
-		}
-
-		if (isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
-			$html.= '<script type="text/javascript">';
-			$html.= '	(function($) {';
-			$html.= '		$(document).ready(function(){';
-			$html.= '		$("#adminmenu").ptMenu();';
-			$html.= '	});';
-			$html.= '})(jQuery);';
-			$html.= '</script>';
-		}
-
-		// general dialog defaults
-		$html.= '<script type="text/javascript">';
-		$html.= '	(function($) {';
-		$html.= '		var dialogCoords = [(screen.width/2)-200, (screen.height/2)-200];';
-		$html.= '		$(document).ready(function(){';
-		$html.= '			$.extend($.ui.dialog.prototype.options, {';
-		$html.= '				modal: true,';
-		$html.= '	        	resizable: false,';
-		$html.= '	        	draggable: false,';
-		$html.= '	        	autoOpen: false,';
-		$html.= '	        	height: 200,';
-		$html.= '	        	width: 400,';
-		$html.= '	        	position: dialogCoords,';
-		$html.= '	        	buttons: {';
-		$html.= '	        		"Cancel": function() {';
-		$html.= '						$(this).dialog("close");';
-		$html.= '					}';
-		$html.= '				}';
-		$html.= '			});';
-		$html.= '		});';
-		$html.= '	})(jQuery);';
-		$html.= '</script>';
-
-		// record selector JS
-		$html.= '<script type="text/javascript">';
-		$html.= '	(function($) {';
-		$html.= '		$(document).ready(function(){';
-		$html.= '			var dialogOpts = {';
-		$html.= '			    title: "Record selector",';
-		$html.= '			    modal: true,';
-		$html.= '			    resizable: false,';
-		$html.= '			    draggable: false,';
-		$html.= '			    autoOpen: false,';
-		$html.= '			    height: 300,';
-		$html.= '			    width: 600';
-		$html.= '			};';
-		$html.= '			$("#recordSelector").dialog(dialogOpts);';
-		$html.= '		});';
-		$html.= '	})(jQuery);';
-		$html.= '</script>';
-
-		// checkbox JS
-		$html.= '<script type="text/javascript">';
-		$html.= '	(function($) {';
-		$html.= '		$(document).ready(function(){';
-		$html .= '			$(":checkbox").checkbox();';
-		$html.= '		});';
-		$html.= '	})(jQuery);';
-		$html.= '</script>';
+		$html = AlphaView::loadTemplateFragment('html', 'head.phtml', array('title' => $controller->getTitle(), 'description' => $controller->getDescription()));
 
 		if(method_exists($controller, 'during_displayPageHead_callback'))
 			$html.= $controller->during_displayPageHead_callback();
 
 		$html.= '</head>';
+
 		try {
 			if($controller->getBO() != null)
 				$html.= '<body'.($controller->getBO()->get('bodyOnload') != '' ? ' onload="'.$controller->getBO()->get('bodyOnload').'"' : '').'>';
@@ -602,18 +557,11 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 			$html.= '<body>';
 		}
 
+		$html .= '<div class="container">';
+
 		if(method_exists($controller, 'insert_CMSDisplayStandardHeader_callback'))
 			$html.= $controller->insert_CMSDisplayStandardHeader_callback();
 
-		$html .= '<div id="recordSelector"></div>';
-
-		// TODO need to move this elsewhere as the $renderStatus param is no longer provided
-		/*if($renderStatus) {
-			// render a status message if there is any
-			$message = $controller->getStatusMessage();
-			if(!empty($message))
-				$html .= $message;
-		}*/
 
 		self::$logger->debug('<<displayPageHead [HTML]');
 		return $html;
@@ -629,11 +577,8 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 
 		self::$logger->debug('>>displayPageFoot(controller=['.get_class($controller).'])');
 
-		$html = '';
 
-		$html .= '<div id="dialogDiv"></div>';
-		$html .= '</body>';
-		$html .= '</html>';
+		$html = AlphaView::loadTemplateFragment('html', 'footer.phtml', array());
 
 		self::$logger->debug('<<displayPageFoot ['.$html.']');
 		return $html;
@@ -648,9 +593,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 			self::$logger = new Logger('AlphaRendererProviderHTML');
 		self::$logger->debug('>>displayUpdateMessage(message=['.$message.'])');
 
-		$html = '<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em;"> 
-				<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span> 
-				'.$message.'</p></div>';
+		$html = '<div class="alert alert-success">'.$message.'</div>';
 
 		self::$logger->debug('<<displayUpdateMessage ['.$html.']');
 		return $html;
@@ -665,9 +608,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 			self::$logger = new Logger('AlphaRendererProviderHTML');
 		self::$logger->debug('>>displayErrorMessage(message=['.$message.'])');
 
-		$html = '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;">
-				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
-				'.$message.'</p></div>';
+		$html = '<div class="alert alert-danger">'.$message.'</div>';
 
 		self::$logger->debug('<<displayErrorMessage ['.$html.']');
 		return $html;
@@ -683,7 +624,6 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$html = '<html><head>';
 		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/lib/jquery/ui/themes/'.$config->get('app.css.theme').'/jquery.ui.all.css">';
 		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/css/alpha.css">';
-		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'config/css/overrides.css">';
 		$html .= '<title>'.$code.' - '.$message.'</title></head>';
 		$html .= '<body>';
 		$html .= '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;">
@@ -850,8 +790,8 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * (non-PHPdoc)
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderBooleanField()
 	 */
-	public function renderBooleanField($name, $label, $mode, $value='', $tableTags=true) {
-		self::$logger->debug('>>renderBooleanField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+	public function renderBooleanField($name, $label, $mode, $value='') {
+		self::$logger->debug('>>renderBooleanField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
 		global $config;
 
@@ -860,42 +800,22 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		else
 			$fieldname = $name;
 
-		$html = '';
+		$html = '<div class="checkbox">';
+		$html .= '	<label>';
 
 		if ($mode == 'create') {
-			if($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= '<label for="'.$fieldname.'">'.$label.'</label>';
-				$html .= '</th>';
+			$html .= '		<input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'">';
+			$html .= '			'.$label;
 
-				$html .= '<td>';
-				$html .= '<input type="hidden" name="'.$fieldname.'" value="0">';
-				$html .= '<input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'" />';
-				$html .= '</td></tr>';
-			}else{
-				$html .= $label.'<select size="1" name="'.$fieldname.'"/>';
-				$html .= '<option value="0" selected>No</option>';
-				$html .= '<option value="1">Yes</option>';
-				$html .= '</select>';
-			}
 		}
 
 		if ($mode == 'edit') {
-			if($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= '<label for="'.$fieldname.'">'.$label.'</label>';
-				$html .= '</th>';
-
-				$html .= '<td>';
-				$html .= '<input type="hidden" name="'.$fieldname.'" value="0">';
-				$html .= '<input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'"'.($value == '1'? ' checked':'').' />';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<label for="'.$fieldname.'">'.$label.'</label>';
-				$html .= '<input type="hidden" name="'.$fieldname.'" value="0">';
-				$html .= '<input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'"'.($value == '1'? ' checked':'').' />';
-			}
+			$html .= '		<input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'"'.($value == '1'? ' checked':'').' />';
+			$html .= '			'.$label;
 		}
+
+		$html .= '	</label>';
+		$html .= '</div>';
 
 		self::$logger->debug('<<renderBooleanField ['.$html.']');
 		return $html;
@@ -905,8 +825,8 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * (non-PHPdoc)
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderEnumField()
 	 */
-	public function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
-		self::$logger->debug('>>renderEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+	public function renderEnumField($name, $label, $mode, $options, $value='') {
+		self::$logger->debug('>>renderEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
 		global $config;
 
@@ -915,55 +835,29 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		else
 			$fieldname = $name;
 
-		$html = '';
+		$html = '<div class="form-group">';
+		$html .= '	<label for="'.$fieldname.'">'.$label.'</label>';
 
 		if ($mode == 'create') {
-			if ($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $label;
-				$html .= '</th>';
-				$html .= '<td>';
-				$html .= '<select name="'.$fieldname.'"/>';
-				foreach ($options as $val) {
-					$html .= '<option value="'.$val.'">'.$val.'</option>';
-				}
-				$html .= '</select><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<select name="'.$fieldname.'"/>';
-				foreach ($options as $val) {
-					$html .= '<option value="'.$val.'">'.$val.'</option>';
-				}
-				$html .= '</select>';
+			$html .= '	<select name="'.$fieldname.'" id="'.$fieldname.'" class="form-control"/>';
+			foreach ($options as $val) {
+				$html .= '		<option value="'.$val.'">'.$val.'</option>';
 			}
+			$html .= '	</select>';
 		}
 
 		if ($mode == 'edit') {
-			if ($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $label;
-				$html .= '</th>';
-				$html .= '<td>';
-				$html .= '<select name="'.$fieldname.'"/>';
-				foreach ($options as $val) {
-					if ($value == $val)
-						$html .= '<option value="'.$val.'" selected>'.$val.'</option>';
-					else
-						$html .= '<option value="'.$val.'">'.$val.'</option>';
-				}
-				$html .= '</select><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<select name="'.$fieldname.'"/>';
-				foreach ($options as $val) {
-					if ($value == $val)
-						$html .= '<option value="'.$val.'" selected>'.$val.'</option>';
-					else
-						$html .= '<option value="'.$val.'">'.$val.'</option>';
-				}
-				$html .= '</select>';
+			$html .= '	<select name="'.$fieldname.'" id="'.$fieldname.'" class="form-control"/>';
+			foreach ($options as $val) {
+				if ($value == $val)
+					$html .= '		<option value="'.$val.'" selected>'.$val.'</option>';
+				else
+					$html .= '		<option value="'.$val.'">'.$val.'</option>';
 			}
+			$html .= '	</select>';
 		}
+
+		$html .= '</div>';
 
 		self::$logger->debug('<<renderEnumField ['.$html.']');
 		return $html;
@@ -1041,8 +935,8 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * (non-PHPdoc)
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderDefaultField()
 	 */
-	public function renderDefaultField($name, $label, $mode, $value='', $tableTags=true) {
-		self::$logger->debug('>>renderDefaultField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+	public function renderDefaultField($name, $label, $mode, $value='') {
+		self::$logger->debug('>>renderDefaultField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
 		global $config;
 
@@ -1054,48 +948,15 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$html = '';
 
 		if ($mode == 'create') {
-			if($tableTags) {
-				$html .= '<tr><th colspan="2">';
-				$html .= $label;
-				$html .= '</th></tr>';
-
-				$html .= '<tr><td colspan="2">';
-				$html .= '<textarea cols="100" rows="3" name="'.$fieldname.'">'. (isset ($_POST[$name]) ? $_POST[$name] : '').'</textarea><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<textarea cols="100" rows="3" name="'.$fieldname.'">'. (isset ($_POST[$name]) ? $_POST[$name] : '').'</textarea>';
-			}
+			$html .= '<textarea cols="100" rows="3" name="'.$fieldname.'">'. (isset ($_POST[$name]) ? $_POST[$name] : '').'</textarea>';
 		}
 
 		if ($mode == 'edit') {
-			if($tableTags) {
-				$html .= '<tr><th colspan="2">';
-				$html .= $label;
-				$html .= '</th></tr>';
-
-				$html .= '<tr><td colspan="2">';
-				$html .= '<textarea cols="100" rows="3" name="'.$fieldname.'">'.$value.'</textarea><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<textarea cols="100" rows="3" name="'.$fieldname.'">'.$value.'</textarea>';
-			}
+			$html .= '<textarea cols="100" rows="3" name="'.$fieldname.'">'.$value.'</textarea>';
 		}
 
 		if ($mode == 'view') {
-			if($tableTags) {
-				$html .= '<tr><th>';
-				$html .= $label;
-				$html .= '</th>';
-
-				$html .= '<td>&nbsp;';
-				if(method_exists($this, 'during_renderDefaultField_callback'))
-					$html .= $this->during_renderDefaultField_callback($name, $mode, $value);
-				else
-					$html .= $value;
-				$html .= '</td></tr>';
-			}else{
-				$html .= $value;
-			}
+			$html .= '<p><strong>'.$label.':</strong> '.$value.'</p>';
 		}
 
 		self::$logger->debug('<<renderDefaultField ['.$html.']');
@@ -1176,35 +1037,20 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * (non-PHPdoc)
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderStringField()
 	 */
-	public function renderStringField($name, $label, $mode, $value='', $tableTags=true) {
-		self::$logger->debug('>>renderStringField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+	public function renderStringField($name, $label, $mode, $value='') {
+		self::$logger->debug('>>renderStringField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
 		global $config;
-
-		if($config->get('security.encrypt.http.fieldnames'))
-			$fieldname = base64_encode(AlphaSecurityUtils::encrypt($name));
-		else
-			$fieldname = $name;
 
 		$html = '';
 
 		if ($mode == 'create' || $mode == 'edit') {
-			$string = new StringBox($this->BO->getPropObject($name), $this->BO->getDataLabel($name), $fieldname);
-			$html .= $string->render($tableTags);
+			$string = new StringBox($this->BO->getPropObject($name), $label, $name);
+			$html .= $string->render();
 		}
 
 		if ($mode == 'view') {
-			if($tableTags) {
-				$html .= '<tr><th>';
-				$html .= $label;
-				$html .= '</th>';
-
-				$html .= '<td>&nbsp;';
-				$html .= $value;
-				$html .= '</td></tr>';
-			}else{
-				$html .= $value;
-			}
+			$html .= '<p><strong>'.$label.':</strong> '.$value.'</p>';
 		}
 
 		self::$logger->debug('<<renderStringField ['.$html.']');
@@ -1220,11 +1066,6 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 
 		global $config;
 
-		if($config->get('security.encrypt.http.fieldnames'))
-			$fieldname = base64_encode(AlphaSecurityUtils::encrypt($name));
-		else
-			$fieldname = $name;
-
 		$html = '';
 
 		$rel = $this->BO->getPropObject($name);
@@ -1234,12 +1075,12 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 				try{
 					// check to see if the rel is on this class
 					$rel->getSide(get_class($this->BO));
-					$widget = new RecordSelector($rel, $label, $fieldname, get_class($this->BO));
+					$widget = new RecordSelector($rel, $label, $name, get_class($this->BO));
 					$html .= $widget->render($tableTags, $expanded, $buttons);
 				}catch (IllegalArguementException $iae) {
 					// the rel may be on a parent class
 					$parentClassName = ucfirst($this->BO->getTableName()).'Object';
-					$widget = new RecordSelector($rel, $label, $fieldname, $parentClassName);
+					$widget = new RecordSelector($rel, $label, $name, $parentClassName);
 					$html .= $widget->render($tableTags, $expanded, $buttons);
 				}
 			}else{

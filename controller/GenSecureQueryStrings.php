@@ -17,7 +17,7 @@ if(!isset($config)) {
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -112,7 +112,7 @@ class GenSecureQueryStrings extends AlphaController implements AlphaControllerIn
 
 		echo AlphaView::displayPageHead($this);
 
-		echo '<p style="width:90%; overflow:scroll;">';
+		echo '<p class="alert alert-success">';
 		if(isset($params['QS'])) {
 			echo FrontController::generateSecureURL($params['QS']);
 			self::$logger->action('Generated the secure URL in admin: '.FrontController::generateSecureURL($params['QS']));
@@ -141,12 +141,13 @@ class GenSecureQueryStrings extends AlphaController implements AlphaControllerIn
 		$html .= '<p>Example 2: to generate a secure URL for viewing an Atom news feed of the articles, enter'.
 			' <em>act=ViewFeed&bo=ArticleObject&type=Atom</em</p>';
 
-		$html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" accept-charset="UTF-8">';
-		$html .= '<input type="text" name="QS" size="100"/>';
+		$html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" accept-charset="UTF-8"><div class="form-group">';
+		$string = new StringBox(new String(''), 'Parameters', 'QS');
+		$html .= $string->render();
 		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('saveBut')) : 'saveBut');
 		$temp = new Button('submit', 'Generate', $fieldname);
 		$html .= $temp->render();
-		$html .= '</form>';
+		$html .= '</div></form>';
 
 		return $html;
 	}
