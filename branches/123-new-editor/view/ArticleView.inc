@@ -107,20 +107,33 @@ class ArticleView extends AlphaView {
 		$button = new Button('submit', 'Save', 'saveBut');
 		$fields['saveButton'] = $button->render();
 
-		$js = "$('#dialogDiv').text('Are you sure you wish to delete this item?');
-				$('#dialogDiv').dialog({
-				buttons: {
-					'OK': function(event, ui) {
-						$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
-						$('#deleteForm').submit();
-					},
-					'Cancel': function(event, ui) {
-						$(this).dialog('close');
-					}
-				}
-			})
-			$('#dialogDiv').dialog('open');
-			return false;";
+		$js = "if(window.jQuery) {
+					BootstrapDialog.show({
+						title: 'Confirmation',
+			            message: 'Are you sure you wish to delete this item?',
+			            buttons: [
+			            	{
+			            		icon: 'glyphicon glyphicon-remove',
+				                label: 'Cancel',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself){
+				                    dialogItself.close();
+				                }
+			            	},
+			            	{
+				                icon: 'glyphicon glyphicon-ok',
+				                label: 'Okay',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself) {
+				                	$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
+									$('#deleteForm').submit();
+				                    dialogItself.close();
+				                }
+			            	}
+			            ]
+			        });
+				}";
+
 		$button = new Button($js, "Delete", "deleteBut");
 		$fields['deleteButton'] = $button->render();
 
@@ -161,62 +174,76 @@ class ArticleView extends AlphaView {
 	protected function renderFileUploadSection() {
 		global $config;
 
-		$html = '<tr><td colspan="2">&nbsp;</td></tr><tr><th colspan="2" style="text-align:left;">File Attachments:</th></tr>';
+		$html = '<div class="form-group">';
+		$html .= '	<h3>File Attachments:</h3>';
 
 		if (is_dir($this->BO->getAttachmentsLocation())) {
 			$handle = opendir($this->BO->getAttachmentsLocation());
 
 			$fileCount = 0;
 
+			$html .= '<table class="table table-bordered">';
+
 	        // loop over the attachments directory
 		    while (false !== ($file = readdir($handle))) {
 		    	if($file != '.' && $file != '..') {
 		    		$fileCount++;
 
-			    	$html .= '<tr><td>';
-					$html .= '&nbsp;'.$file.'&nbsp;<em>('.number_format(filesize($this->BO->getAttachmentsLocation().'/'.$file)/1024).' KB)</em>';
-					$html .= '</td>';
-					$html .= '<td>';
-					$js = "$('#dialogDiv').text('Are you sure you want to delete the file ".$file."');
-							$('#dialogDiv').dialog({
-							buttons: {
-								'OK': function(event, ui) {
-									$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('file_to_delete')) : 'file_to_delete')."\"]').attr('value', '".$file."');
+		    		$html .= '<tr>';
+
+					$html .= '<td>'.$file.' <em>('.number_format(filesize($this->BO->getAttachmentsLocation().'/'.$file)/1024).' KB)</em></td>';
+
+					$js = "if(window.jQuery) {
+							BootstrapDialog.show({
+								title: 'Confirmation',
+					            message: 'Are you sure you wish to delete this item?',
+					            buttons: [
+					            	{
+					            		icon: 'glyphicon glyphicon-remove',
+						                label: 'Cancel',
+						                cssClass: 'btn btn-default btn-xs',
+						                action: function(dialogItself){
+						                    dialogItself.close();
+						                }
+					            	},
+					            	{
+						                icon: 'glyphicon glyphicon-ok',
+						                label: 'Okay',
+						                cssClass: 'btn btn-default btn-xs',
+						                action: function(dialogItself) {
+						                	$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('file_to_delete')) : 'file_to_delete')."\"]').attr('value', '".$file."');
 									$('#".get_class($this->BO).'_'.$this->BO->getID()."').submit();
-								},
-								'Cancel': function(event, ui) {
-									$(this).dialog('close');
-								}
-							}
-						})
-						$('#dialogDiv').dialog('open');
-						return false;";
+						                    dialogItself.close();
+						                }
+					            	}
+					            ]
+					        });
+						}";
 					$button = new Button($js, "Delete", "delete".$fileCount."But");
-					$html .= $button->render();
-					$html .= '</td></tr>';
+					$html .= '<td>'.$button->render().'</td>';
+					$html .= '</tr>';
 		    	}
 		    }
 
-			$html .= '<tr><td>';
-			$html .= 'Attachment file location';
-			$html .= '</td>';
+			$html .= '</table>';
+
 		}else{
 			// we will take this opportunity to create the attachments folder is it does
 			// not already exist.
 			$this->BO->createAttachmentsFolder();
 		}
 
-		$html .= '<td>';
-		$html .= '<input name="userfile" type="file" value="Browse..." size="70"/>';
-		$html .= '</td></tr>';
+		$html .= '<span class="btn btn-default btn-file">';
+		$html .= '<input name="userfile" type="file" value="Browse..."/>';
+		$html .= '</span>';
 
-		$html .= '<tr><td colspan="2">';
 		$temp = new Button('submit', 'Upload', 'uploadBut');
 		$html .= $temp->render();
-		$html .= '</td></tr>';
 
 		$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('file_to_delete')) : 'file_to_delete');
 		$html .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value=""/>';
+
+		$html .= '</div>';
 
 		return $html;
 	}
