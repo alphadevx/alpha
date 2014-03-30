@@ -1,20 +1,14 @@
 <form action="<?= $formAction ?>" id="<?= $formID ?>" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
-	<table class="edit_view">
 		<?= $formFields ?>
-		<tr><td colspan="2">
-		<?= $saveButton ?>
-		&nbsp;&nbsp;
-		<?= $deleteButton ?>
+		<div class="form-group lower spread">
+			<?= $saveButton ?>
+			<?= $deleteButton ?>
+			<?= $cancelButton ?>
 		<?php if(isset($tagsButton)) { ?>
-			&nbsp;&nbsp;
 			<?= $tagsButton ?>
 		<?php }?>
-		&nbsp;&nbsp;
-		<?= $cancelButton ?>
-		</td></tr>
+		</div>
 		<?= $fileAttachments; ?>
 		<?= $formSecurityFields ?>
-	</table>
 	<input type="hidden" name="<?= ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('version_num')) : 'version_num') ?>" value="<?= $version_num ?>"/>
 </form>
-<div id="helpPage"></div>

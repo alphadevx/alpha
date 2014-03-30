@@ -70,6 +70,9 @@
 	function validateField(field) {
 		var html = '';
 
+		if(!field.attr('id'))
+			return html;
+
 		if(field.attr('id').match(/_display/g)) {
 			var fieldName = field.attr('id').replace(/_display/g,'');
 			var fieldVal = $('[id="'+fieldName+'"]').val();
@@ -140,12 +143,6 @@
     });
 
 	var positionContainer = function(errorContainer, field) {
-		// uncomment of you want to re-enable animation effect
-		/*if(field[0].nodeName == 'INPUT' && field.attr('type') != 'hidden') {
-			errorContainer.animate({
-				top: field.offset().top - errorContainer.height()
-			});
-		}*/
 	};
 
 	var showContainer = function(errorContainer) {
