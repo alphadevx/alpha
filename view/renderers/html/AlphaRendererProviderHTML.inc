@@ -804,12 +804,14 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$html .= '	<label>';
 
 		if ($mode == 'create') {
+			$html .= '		<input type="hidden" name="'.$fieldname.'" value="0">';
 			$html .= '		<input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'">';
 			$html .= '			'.$label;
 
 		}
 
 		if ($mode == 'edit') {
+			$html .= '		<input type="hidden" name="'.$fieldname.'" value="0">';
 			$html .= '		<input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'"'.($value == '1'? ' checked':'').' />';
 			$html .= '			'.$label;
 		}
@@ -877,55 +879,29 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		else
 			$fieldname = $name;
 
-		$html = '';
+		$html = '<div class="form-group">';
+		$html .= '	<label for="'.$fieldname.'">'.$label.'</label>';
 
 		if ($mode == 'create') {
-			if($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $label;
-				$html .= '</th>';
-				$html .= '<td>';
-				$html .= '<select name="'.$fieldname.'"/>';
-				foreach (array_keys($options) as $index) {
-					$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
-				}
-				$html .= '</select><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<select name="'.$fieldname.'"/>';
-				foreach (array_keys($options) as $index) {
-					$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
-				}
-				$html .= '</select>';
+			$html .= '	<select name="'.$fieldname.'" id="'.$fieldname.'" class="form-control"/>';
+			foreach (array_keys($options) as $index) {
+				$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
 			}
+			$html .= '	</select>';
 		}
 
 		if ($mode == 'edit') {
-			if($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $label;
-				$html .= '</th>';
-				$html .= '<td>';
-				$html .= '<select name="'.$fieldname.'"/>';
-				foreach (array_keys($options) as $index) {
-					if ($value == $index)
-						$html .= '<option value="'.$index.'" selected>'.$options[$index].'</option>';
-					else
-						$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
-				}
-				$html .= '</select><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<select name="'.$fieldname.'"/>';
-				foreach (array_keys($options) as $index) {
-					if ($value == $index)
-						$html .= '<option value="'.$index.'" selected>'.$options[$index].'</option>';
-					else
-						$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
-				}
-				$html .= '</select>';
+			$html .= '	<select name="'.$fieldname.'" id="'.$fieldname.'" class="form-control"/>';
+			foreach (array_keys($options) as $index) {
+				if ($value == $index)
+					$html .= '<option value="'.$index.'" selected>'.$options[$index].'</option>';
+				else
+					$html .= '<option value="'.$index.'">'.$options[$index].'</option>';
 			}
+			$html .= '	</select>';
 		}
+
+		$html .= '</div>';
 
 		self::$logger->debug('<<renderDEnumField ['.$html.']');
 		return $html;

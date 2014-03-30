@@ -18,7 +18,7 @@ if(!isset($config)) {
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -100,6 +100,10 @@ class EditTags extends Edit implements AlphaControllerInterface {
 
 		echo AlphaView::displayPageHead($this);
 
+		$message = $this->getStatusMessage();
+		if(!empty($message))
+			echo $message;
+
 		// ensure that a bo is provided
 		if (isset($params['bo']))
 			$BOName = $params['bo'];
@@ -121,61 +125,60 @@ class EditTags extends Edit implements AlphaControllerInterface {
 
 			AlphaDAO::disconnect();
 
-			echo '<table cols="3" class="edit_view">';
 			echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" accept-charset="UTF-8">';
-			echo '<tr><td colspan="3"><h3>The following tags were found:</h3></td></tr>';
+			echo '<h3>The following tags were found:</h3>';
 
 			foreach($tags as $tag) {
-				echo '<tr><td>';
 				$labels = $tag->getDataLabels();
-				echo $labels['content'];
-				echo '</td><td>';
 
-				$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('content_'.$tag->getID())) : 'content_'.$tag->getID());
-				$temp = new StringBox($tag->getPropObject('content'), $labels['content'], $fieldname, '');
+				$temp = new StringBox($tag->getPropObject('content'), $labels['content'], 'content_'.$tag->getID(), '');
 				echo $temp->render(false);
-				echo '</td><td>';
 
-				$js = "$('#dialogDiv').text('Are you sure you wish to delete this tag?');
-							$('#dialogDiv').dialog({
-							buttons: {
-								'OK': function(event, ui) {
-									$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
+				$js = "if(window.jQuery) {
+					BootstrapDialog.show({
+						title: 'Confirmation',
+			            message: 'Are you sure you wish to delete this tag?',
+			            buttons: [
+			            	{
+			            		icon: 'glyphicon glyphicon-remove',
+				                label: 'Cancel',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself){
+				                    dialogItself.close();
+				                }
+			            	},
+			            	{
+				                icon: 'glyphicon glyphicon-ok',
+				                label: 'Okay',
+				                cssClass: 'btn btn-default btn-xs',
+				                action: function(dialogItself) {
+				                	$('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$tag->getID()."');
 									$('#deleteForm').submit();
-								},
-								'Cancel': function(event, ui) {
-									$(this).dialog('close');
-								}
-							}
-						})
-						$('#dialogDiv').dialog('open');
-						return false;";
+				                    dialogItself.close();
+				                }
+			            	}
+			            ]
+			        });
+				}";
 				$button = new Button($js, "Delete", "delete".$tag->getID()."But");
-				echo $button->render().'</td></tr>';
+				echo $button->render();
 			}
 
-			echo '<tr><td colspan="3"><h3>Add a new tag:</h3></td></tr>';
-			echo '<tr><td>';
-			echo 'New tag';
-			echo '</td><td>';
-			$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('new_value')) : 'new_value');
-			$temp = new StringBox(new String(), 'New tag', $fieldname, '');
+			echo '<h3>Add a new tag:</h3>';
+
+			$temp = new StringBox(new String(), 'New tag', 'new_value', '');
 			echo $temp->render(false);
-			echo '</td><td></td></tr>';
 
-			echo '<tr><td colspan="3">';
 
-			$fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('saveBut')) : 'saveBut');
-			$temp = new Button('submit', 'Save', $fieldname);
+			$temp = new Button('submit', 'Save', 'saveBut');
 			echo $temp->render();
 			echo '&nbsp;&nbsp;';
 			$temp = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.$params['bo'].'&oid='.$params['oid'])."'", 'Back to Object', 'cancelBut');
 			echo $temp->render();
-			echo '</td></tr>';
 
 			echo AlphaView::renderSecurityFields();
 
-			echo '</form></table>';
+			echo '</form>';
 
 			echo AlphaView::renderDeleteForm();
 
@@ -289,7 +292,7 @@ class EditTags extends Edit implements AlphaControllerInterface {
 
 					AlphaDAO::commit();
 
-					$this->setStatusMessage(AlphaView::displayUpdateMessage('Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' deleted successfully.'));					
+					$this->setStatusMessage(AlphaView::displayUpdateMessage('Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' deleted successfully.'));
 
 					$this->doGET($params);
 				}catch(AlphaException $e) {

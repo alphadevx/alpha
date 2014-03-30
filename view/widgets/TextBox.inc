@@ -113,20 +113,16 @@ class TextBox {
 	/**
 	 * Renders the HTML and javascript for the text box
 	 *
-	 * @param bool $markdown Set to true when rendering Markdown text content fields
 	 * @return string
 	 * @since 1.0
 	 */
-	public function render($markdown=false) {
+	public function render() {
 
 		global $config;
 
 		$html = '<div class="form-group">';
 		$html .= '	<label for="'.$this->name.'">'.$this->label.'</label>';
 
-		if($markdown) {
-			$html .= '<input type="hidden" id="markdownTextBoxRows" name="markdownTextBoxRows" value=""/>';
-		}
 		$html .= '<textarea class="form-control" maxlength="'.$this->textObject->getSize().'" id="text_field_'.$this->name.'_'.$this->identifier.'" rows="'.$this->rows.'" name="'.$this->name.'">';
 
 		if($this->textObject->getAllowHTML())
@@ -134,35 +130,7 @@ class TextBox {
 		else
 			$html .= InputFilter::decode($this->textObject->getValue());
 
-		$html .= '</textarea><br>';
-
-		if($markdown) {
-			$increaseTextArea = new Button("document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = ".
-				"(parseInt(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows) + 10);".
-				"document.getElementById('markdownTextBoxRows').value = (parseInt(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows));",
-		 		"Increase text area", $this->name."IncBut", $config->get('app.url')."/alpha/images/icons/arrow_down.png");
-		}else{
-			$increaseTextArea = new Button("document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = ".
-				"(parseInt(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows) + 10);",
-		 		"Increase text area", $this->name."IncBut", $config->get('app.url')."/alpha/images/icons/arrow_down.png");
-		}
-
-		$html .= $increaseTextArea->render();
-
-		if($markdown) {
-			$decreaseTextArea = new Button("if(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows > 10) ".
-				"{document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = (parseInt(document.getElementById('text_field_".
-				$this->name."_".$this->identifier."').rows) - 10)};".
-				"document.getElementById('markdownTextBoxRows').value = (parseInt(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows));",
-				"Decrease text area", $this->name."DecBut", $config->get('app.url')."/alpha/images/icons/arrow_up.png");
-		}else{
-			$decreaseTextArea = new Button("if(document.getElementById('text_field_".$this->name."_".$this->identifier."').rows > 10) ".
-				"{document.getElementById('text_field_".$this->name."_".$this->identifier."').rows = (parseInt(document.getElementById('text_field_".
-				$this->name."_".$this->identifier."').rows) - 10)};",
-				"Decrease text area", $this->name."DecBut", $config->get('app.url')."/alpha/images/icons/arrow_up.png");
-		}
-
-		$html .= $decreaseTextArea->render();
+		$html .= '</textarea>';
 
 		$html .= '</div>';
 

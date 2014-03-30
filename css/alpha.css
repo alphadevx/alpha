@@ -11,3 +11,7 @@ td.warn {background-color:yellow;}
 td.error {background-color:orange;}
 td.fatal {background-color:red; color:white;}
 td.sql {background-color:black; color:white;}
+
+div.wmd-preview {border:1px solid #CCCCCC; border-radius: 6px; padding:10px;}
+#wmd-image-button-0 {display: none;}
+#wmd-link-button-0 {display: none;}
