@@ -92,22 +92,22 @@ class ViewLog extends AlphaController implements AlphaControllerInterface{
 	 *
 	 * @param array $params
 	 * @since 1.0
-	 * @throws ResourceNotFoundException
 	 */
 	public function doGET($params) {
 		self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
 
 		try{
-			echo AlphaView::displayPageHead($this);
 
 			// load the business object (BO) definition
-			if (isset($params['logPath'])) {
+			if (isset($params['logPath']) && file_exists($params['logPath'])) {
 				$logPath = $params['logPath'];
 			}else{
-				throw new IllegalArguementException('No log file path available to view!');
+				throw new IllegalArguementException('No log file available to view!');
 			}
 
 			$this->logPath = $logPath;
+
+			echo AlphaView::displayPageHead($this);
 
 			$log = new LogFile($this->logPath);
 			if(preg_match("/alpha.*/", basename($this->logPath)))
@@ -121,8 +121,13 @@ class ViewLog extends AlphaController implements AlphaControllerInterface{
 
 			echo AlphaView::displayPageFoot($this);
 		}catch (IllegalArguementException $e) {
-			self::$logger->error($e->getMessage());
-			throw new ResourceNotFoundException('File not found');
+			self::$logger->warn($e->getMessage());
+
+			echo AlphaView::displayPageHead($this);
+
+			echo AlphaView::displayErrorMessage($e->getMessage());
+
+			echo AlphaView::displayPageFoot($this);
 		}
 
 		self::$logger->debug('<<doGET');
