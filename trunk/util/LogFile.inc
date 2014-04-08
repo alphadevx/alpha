@@ -212,6 +212,8 @@ class LogFile {
  		for($line = 0; $line < $totalLines; $line++) {
  			$count = count($cols);
 
+ 			echo '<tr>';
+
 	 		for($col = 0; $col < $count; $col++) {
 	 			$index = ($line*count($cols))+$col;
 
