@@ -195,10 +195,10 @@ class AlphaMetrics {
 		$count = 1;
 
 		$html = '<table class="table table-striped table-hover"><tr>';
-		$html .= '<th width="10%">File #:</th>';
-		$html .= '<th width="50%">File name:</th>';
-		$html .= '<th width="20%">Lines of Code (LOC):</th>';
-		$html .= '<th width="20%">Lines of Code (less comments):</th>';
+		$html .= '<th style="width:10%;">File #:</th>';
+		$html .= '<th style="width:50%;">File name:</th>';
+		$html .= '<th style="width:20%;">Lines of Code (LOC):</th>';
+		$html .= '<th style="width:20%;">Lines of Code (less comments):</th>';
 		$html .= '</tr>';
 		foreach(array_keys($this->filesLOCResult) as $result) {
 			$html .= "<tr><td>$count</td><td>$result</td><td>".$this->filesLOCResult[$result]."</td><td>".$this->filesLOCNoCommentsResult[$result]."</td></tr>";

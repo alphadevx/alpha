@@ -115,28 +115,6 @@ class ViewMetrics extends AlphaController implements AlphaControllerInterface{
 		self::$logger->debug('<<doPOST');
 	}
 
-	/**
-	 * Renders the JQuery code to do zebra-style table colouring
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function during_displayPageHead_callback() {
-		global $config;
-
-		$html = '<script type="text/javascript">'.
-			'$(document).ready(function(){'.
-			'	$(".list_view tr:even").addClass("zebraAlt");'.
-			'	$(".list_view tr").mouseover(function(){'.
-			'		$(this).addClass("zebraOver");'.
-			'	});'.
-			'	$(".list_view tr").mouseout(function(){'.
-			'		$(this).removeClass("zebraOver");'.
-			'	});'.
-			'});</script>';
-
-		return $html;
-	}
 
 	/**
 	 * Use this callback to inject in the admin menu template fragment

@@ -8,7 +8,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -539,20 +539,18 @@ class AlphaFileUtils {
 		    $dir = new DirectoryIterator($sourceDir);
 		    $fileCount = 0;
 
-			echo '<ul>';
-		    foreach ($dir as $file) {
+			foreach ($dir as $file) {
 		    	if(!in_array($file->getFilename(), $excludeFiles)) {
 			    	if($file->isDir() && !$file->isDot()) {
-			      		echo '<li><em>'.$file->getPathname().'</em></li>';
+			      		echo '<em>'.$file->getPathname().'</em><br>';
 			      		$fileCount += AlphaFileUtils::listDirectoryContents($file->getPathname(), $fileCount, $excludeFiles);
 			      	}elseif(!$file->isDot()){
 				        $fileName = $file->getFilename();
 				        $fileCount++;
-				        echo '<li>'.$fileName.'</li>';
+				        echo '&nbsp;&nbsp;&nbsp;&nbsp;'.$fileName.'<br>';
 			      	}
 			    }
 		    }
-			echo '</ul>';
 
 			return $fileCount;
 		}catch (Exception $e) {
