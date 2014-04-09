@@ -321,23 +321,6 @@ class EditTags extends Edit implements AlphaControllerInterface {
 
 		self::$logger->debug('<<doPOST');
 	}
-
-	/**
-	 * Using this callback to blank the new_value field when the page loads, regardless of anything being posted
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function during_displayPageHead_callback() {
-		$html = '';
-		$html .= '<script language="javascript">';
-		$html .= 'function clearNewField() {';
-		$html .= '	document.getElementById("new_value").value = "";';
-		$html .= '}';
-		$html .= 'addOnloadEvent(clearNewField);';
-		$html .= '</script>';
-		return $html;
-	}
 }
 
 // now build the new controller if this file is called directly
