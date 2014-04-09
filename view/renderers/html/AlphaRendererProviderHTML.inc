@@ -693,6 +693,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderIntegerField()
+	 * @todo remove table tags and use Bootstrap CSS
 	 */
 	public function renderIntegerField($name, $label, $mode, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderIntegerField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
@@ -741,6 +742,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	/**
 	 * (non-PHPdoc)
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderDoubleField()
+	 * @todo remove table tags and use Bootstrap CSS
 	 */
 	public function renderDoubleField($name, $label, $mode, $value='', $tableTags=true) {
 		self::$logger->debug('>>renderDoubleField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');

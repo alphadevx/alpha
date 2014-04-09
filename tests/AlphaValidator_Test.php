@@ -9,7 +9,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -173,6 +173,20 @@ class AlphaValidator_Test extends PHPUnit_Framework_TestCase {
     	$this->assertFalse(AlphaValidator::isSequence('1'));
     	$this->assertFalse(AlphaValidator::isSequence('1.0'));
     	$this->assertFalse(AlphaValidator::isSequence('DESI8'));
+    }
+
+    /**
+     * Validate that the provided value is a base64 string
+     *
+     * @since 1.2.3
+     */
+    public function testIsBase64() {
+        $this->assertTrue(AlphaValidator::isBase64('YWJjZA=='));
+        $this->assertTrue(AlphaValidator::isBase64('MTIzNA=='));
+        $this->assertTrue(AlphaValidator::isBase64('YWJjZDEyMzQ='));
+        $this->assertFalse(AlphaValidator::isBase64('abcde'));
+        $this->assertFalse(AlphaValidator::isBase64('12345'));
+        $this->assertFalse(AlphaValidator::isBase64('abcde12345'));
     }
 }
 
