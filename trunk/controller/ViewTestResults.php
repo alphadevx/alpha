@@ -498,17 +498,17 @@ class ViewTestResults extends AlphaController implements AlphaControllerInterfac
 	private function printTestResult($result) {
 		if($result->wasSuccessful()) {
 			echo '<div class="alert alert-success" style="padding: 0pt 0.7em;">';
-			echo '<p><span class="glyphicon glyphicon-ok" style="float: left; margin-right: 0.3em;"></span>';
+			echo '<div><span class="glyphicon glyphicon-ok" style="float: left; margin-right: 0.3em;"></span>';
 			echo '<strong>Success</strong><pre>';
 		}else{
 			echo '<div class="alert alert-danger" style="padding: 0pt 0.7em;">';
-			echo '<p><span class="glyphicon glyphicon-remove" style="float: left; margin-right: 0.3em;"></span>';
+			echo '<div><span class="glyphicon glyphicon-remove" style="float: left; margin-right: 0.3em;"></span>';
 			echo '<strong>Fail</strong><pre>';
 		}
 
 		$report = new PHPUnit_TextUI_ResultPrinter();
 		$report->printResult($result);
-		echo '</pre></p></div>';
+		echo '</pre></div></div>';
 	}
 
 	/**

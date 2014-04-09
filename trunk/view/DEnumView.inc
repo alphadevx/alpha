@@ -60,8 +60,8 @@ class DEnumView extends AlphaView {
 		$labels = $this->BO->getDataLabels();
 		$colCount = 1;
 
-		$html = '<table class="table">';
-		$html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
+		$html = '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
+		$html .= '<table class="table">';
 		// first render all of the table headers
 		$html .= '<tr>';
 		foreach($properties as $propObj) {
@@ -96,7 +96,7 @@ class DEnumView extends AlphaView {
 
 		$html .= '</tr>';
 
-		$html .= '<tr><td colspan="'.($colCount+1).'" align="center">';
+		$html .= '<tr><td colspan="'.($colCount+1).'" style="text-align:center;">';
 		// render edit buttons for admins only
 		if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
 			$html .= '&nbsp;&nbsp;';
@@ -105,8 +105,9 @@ class DEnumView extends AlphaView {
 		}
 		$html .= '</td></tr>';
 
-		$html .= '</form>';
 		$html .= '</table>';
+
+		$html .= '</form>';
 
 		return $html;
 	}
