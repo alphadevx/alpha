@@ -19,7 +19,7 @@ if($config->get('app.check.installed') && !AlphaDAO::isInstalled())
 
 echo AlphaView::loadTemplateFragment('html', 'head.phtml', array('title' => 'Alpha Framework', 'description' => 'Powered by the Alpha Framework'));
 
-if($request == '' && $isInstalled) { // process requests to the root (/) URL here with your code
+if(($request == '' || $request == '/') && $isInstalled) { // process requests to the root (/) URL here with your code
 	echo <<<EOCSS
 </head>
 <body>
