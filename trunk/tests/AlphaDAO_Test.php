@@ -9,7 +9,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -793,6 +793,29 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
     }
 
     /**
+     * Testing that you can add a DAO directly to the cache without saving
+     *
+     * @since 1.2.3
+     */
+    public function testAddToCache() {
+        global $config;
+
+        $oldSetting = $config->get('cache.provider.name');
+        $config->set('cache.provider.name', 'AlphaCacheProviderArray');
+
+        $this->person->setOID('123');
+        $this->person->addToCache();
+
+        $fromCache = new PersonObject();
+        $fromCache->setOID($this->person->getOID());
+
+        $this->assertTrue($fromCache->loadFromCache(), 'testing that the item loads from the cache');
+        $this->assertEquals('unitTestUser', $fromCache->get('displayName', true), 'testing that you can add a DAO directly to the cache without saving');
+
+        $config->set('cache.provider.name', $oldSetting);
+    }
+
+    /**
      * Testing that a saved record is subsequently retrievable from the cache
      *
      * @since 1.2.1
@@ -800,6 +823,7 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
     public function testLoadFromCache() {
 
         global $config;
+
         $oldSetting = $config->get('cache.provider.name');
         $config->set('cache.provider.name', 'AlphaCacheProviderArray');
 
@@ -822,6 +846,7 @@ class AlphaDAO_Test extends PHPUnit_Framework_TestCase {
     public function testRemoveFromCache() {
 
         global $config;
+
         $oldSetting = $config->get('cache.provider.name');
         $config->set('cache.provider.name', 'AlphaCacheProviderArray');
 
