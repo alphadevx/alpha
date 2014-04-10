@@ -182,6 +182,20 @@ class AlphaView_Test extends PHPUnit_Framework_TestCase {
 
     	$this->assertEquals('Test Article', $this->view->getBO()->get('title'), 'testing accessing the attached BO via getBO()');
     }
+
+    /**
+     * Testing that a generated HTML fragment can load from a file
+     *
+     * @since 1.2.3
+     */
+    public function testLoadTemplateFragment() {
+
+        $generatedHTML = AlphaView::loadTemplateFragment('html', 'footer.phtml', array());
+
+        $pos = strpos($generatedHTML, '<footer>');
+
+        $this->assertTrue(strpos($generatedHTML, '<footer>') > 0, 'Testing that a generated HTML fragment can load from a file');
+    }
 }
 
 ?>
