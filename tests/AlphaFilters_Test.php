@@ -53,6 +53,14 @@ class AlphaFilters_Test extends PHPUnit_Framework_TestCase {
 	 */
 	private $blacklistedClient;
 
+    /**
+     * Blacklisted IP
+     *
+     * @var BlacklistedIPObject
+     * @since 1.2.3
+     */
+    private $blacklistedIP;
+
 	/**
 	 * A "bad" (banned) user agent string for us to test with
 	 *
@@ -121,6 +129,11 @@ class AlphaFilters_Test extends PHPUnit_Framework_TestCase {
     	$this->blacklistedClient->rebuildTable();
     	$this->blacklistedClient->set('client', $this->badAgent);
     	$this->blacklistedClient->save();
+
+        $this->blacklistedIP = new BlacklistedIPObject();
+        $this->blacklistedIP->rebuildTable();
+        $this->blacklistedIP->set('IP', $this->badIP);
+        $this->blacklistedIP->save();
 
     	$this->badRequest1 = new BadRequestObject();
     	$this->badRequest1->rebuildTable();
@@ -207,6 +220,25 @@ class AlphaFilters_Test extends PHPUnit_Framework_TestCase {
     	}catch (ResourceNotAllowedException $e) {
     		$this->assertEquals('Not allowed!', $e->getMessage(), 'Testing that a user agent string/IP compbo cannot pass the ClientTempBlacklistFilter filter beyond the config limit');
     	}
+    }
+
+    /**
+     * Testing that a blacklisted IP cannot pass the IPBlacklistFilter filter
+     *
+     * @since 1.2.3
+     */
+    public function testIPBlacklistFilter() {
+        $_SERVER['REMOTE_ADDR'] = $this->badIP;
+        $_GET['act'] = 'Search';
+
+        try {
+            $front = new FrontController();
+            $front->registerFilter(new IPBlacklistFilter());
+            $front->loadController(false);
+            $this->fail('Testing that a blacklisted IP cannot pass the IPBlacklistFilter filter');
+        }catch (ResourceNotAllowedException $e) {
+            $this->assertEquals('Not allowed!', $e->getMessage(), 'Testing that a blacklisted IP cannot pass the IPBlacklistFilter filter');
+        }
     }
 }
 
