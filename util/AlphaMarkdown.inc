@@ -170,7 +170,7 @@ class AlphaMarkdown extends MarkdownExtra_Parser {
 		$col_count	= count($headers);
 
 		# Write column headers.
-		$text = "<table class=\"bordered\" border=\"1\">\n";
+		$text = "<table class=\"table table-bordered\">\n";
 		$text .= "<thead>\n";
 		$text .= "<tr>\n";
 		foreach ($headers as $n => $header)
