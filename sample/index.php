@@ -17,9 +17,11 @@ $isInstalled = true;
 if($config->get('app.check.installed') && !AlphaDAO::isInstalled())
 	$isInstalled = false;
 
-echo AlphaView::loadTemplateFragment('html', 'head.phtml', array('title' => 'Alpha Framework', 'description' => 'Powered by the Alpha Framework'));
 
 if(($request == '' || $request == '/') && $isInstalled) { // process requests to the root (/) URL here with your code
+
+	echo AlphaView::loadTemplateFragment('html', 'head.phtml', array('title' => 'Alpha Framework', 'description' => 'Powered by the Alpha Framework'));
+
 	echo <<<EOCSS
 </head>
 <body>
@@ -31,7 +33,8 @@ if(($request == '' || $request == '/') && $isInstalled) { // process requests to
 </div>
 EOCSS;
 
-echo AlphaView::loadTemplateFragment('html', 'footer.phtml', array());
+	echo AlphaView::loadTemplateFragment('html', 'footer.phtml', array());
+
 }else{ // process requests through the FrontController
 	try {
 		$front = new FrontController();

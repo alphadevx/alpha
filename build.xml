@@ -69,7 +69,7 @@
 
 	    <mkdir dir="${artifacts.dir}" />
 
-	    <zip destfile="${artifacts.dir}/alpha-1.2.2.zip">
+	    <zip destfile="${artifacts.dir}/alpha-${alpha.version.new}.zip">
 	      	<fileset dir="${build.dir}">
 	        	<include name="**/**" />
 	      	</fileset>
@@ -133,7 +133,7 @@
 	      source="."
 	      destination="docs/api/current"
 	      exclude="*/.svn/*,*/lib/*"
-	      title="Alpha Framework 1.2.2 API Documentation"
+	      title="Alpha Framework ${alpha.version.new} API Documentation"
         templateconfig="docs/apigen-template/config.neon"
 	      deprecated="true"
 	      php="no"
