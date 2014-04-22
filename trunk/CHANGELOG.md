@@ -1,6 +1,77 @@
 Alpha Framework Change log
 ==========================
 
+Version 1.2.3 April 22nd 2014
+-----------------------------
+
+2014-04-10 22:31:32 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/131 - added a unit test for AlphaView::loadTemplateFragment()
+
+2014-04-10 22:09:05 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/132 - added a unit test for IPBlacklistFilter
+
+2014-04-10 22:01:08 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/134 - the HTTP filters will be skipped if the user-agent string or IP are not provided on the request
+
+2014-04-10 21:10:30 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/166 - I have add a test for AlphaDAO::addToCache()
+
+2014-04-09 23:59:52 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/133 - added a unit test for AlphaValidator::isBase64() and improved the regex used in that method
+
+2014-04-09 23:18:37 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/7 - fixing the standard admin screens to output valid HTML5
+
+2014-04-08 23:54:10 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/7 - fixing the standard admin screens to output valid HTML5
+
+2014-04-03 20:30:25 GMT
+
+Merge branch '/branches/123-new-editor' into 'trunk'
+
+Merging\ViewLog fix
+
+Merged-on: https://www.assembla.com/code/alpha-framework/subversion/merge_requests/794523
+
+2014-03-30 23:26:22 GMT
+
+Merge branch '/branches/123-new-editor' into 'trunk'
+
+Merging new CMS editor
+
+Merged-on: https://www.assembla.com/code/alpha-framework/subversion/merge_requests/784073
+
+2014-03-29 15:19:05 GMT
+
+Merge branch '/branches/124-bootstrap' into 'trunk'
+
+Merging Twitter Bootstrap into the trunk
+
+Merged-on: https://www.assembla.com/code/alpha-framework/subversion/merge_requests/783433
+
+2013-12-18 22:33:25 GMT
+
+Merge branch '/branches/28-search-interface' into 'trunk'
+
+New search interface
+
+Merged-on: https://www.assembla.com/code/alpha-framework/subversion/merge_requests/622343
+
+2013-12-09 23:33:24 GMT
+
+Merge branch '/branches/13-convert-to-utf8' into 'trunk'
+
+Merging UTF8 support into trunk
+
+Merged-on: https://www.assembla.com/code/alpha-framework/subversion/merge_requests/607673
+
 Version 1.2.2 October 22nd 2013
 -------------------------------
 
