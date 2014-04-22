@@ -16,7 +16,7 @@ if(!isset($config)) {
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -166,7 +166,9 @@ class Login extends AlphaController implements AlphaControllerInterface {
 							header('Location: '.$url);
 							exit;
 						}else{
-							header('Location: '.$config->get('app.url').'alpha/controller/Install.php');
+							$url = FrontController::generateSecureURL('act=Install');
+							self::$logger->info('Redirecting to ['.$url.']');
+							header('Location: '.$url);
 							exit;
 						}
 					}else{

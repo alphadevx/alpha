@@ -17,7 +17,7 @@ if(!isset($config)) {
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -112,6 +112,8 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		global $config;
 
 		echo AlphaView::displayPageHead($this);
+
+		echo '<h1>Installing the '.$config->get('app.title').' application</h1>';
 
 		$this->createAppDirectories();
 
@@ -274,6 +276,7 @@ class Install extends AlphaController implements AlphaControllerInterface {
 		AlphaDAO::commit();
 
 		self::$logger->info('Finished installation!');
+		self::$logger->action('Installed the application');
 		self::$logger->debug('<<doGET');
 	}
 
@@ -490,8 +493,6 @@ class Install extends AlphaController implements AlphaControllerInterface {
 			echo AlphaView::displayErrorMessage('Aborting.');
 			exit;
 		}
-
-		self::$logger->action('Installed the application');
 	}
 
 	/**
