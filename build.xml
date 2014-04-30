@@ -3,12 +3,14 @@
 <project name="AlphaFramework" default="init" basedir=".">
 
   	<!-- Creates a new release of the Alpha Framework -->
-    <target name="releaseAlpha" depends="init, moveOldDocs, generateDocs">
+    <target name="releaseAlpha" depends="init, moveOldDocs">
 
         <exec command="svn add docs/api/current" />
 
         <version releasetype="${releasetype}" file="VERSION.txt" property="alpha.version.new" />
     	  <echo message="New version number is ${alpha.version.new}" />
+
+        <phingcall target="generateDocs" />
 
         <svncommit
             svnpath="/usr/bin/svn"
@@ -23,9 +25,9 @@
            username="${svn.username}"
            password="${svn.password}"
            nocache="true"
-           message="Creating the new tag tags/alpha-${alpha.version.new}"
+           message="Creating the new tag tags/${alpha.version.new}"
            repositoryurl="${svn.repo.url}/trunk"
-           todir="${svn.repo.url}/tags/alpha-${alpha.version.new}" />
+           todir="${svn.repo.url}/tags/${alpha.version.new}" />
 
         <phingcall target="buildAlphaReleaseArtifact" />
 
