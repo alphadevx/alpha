@@ -4,10 +4,10 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="generator" content="ApiGen 2.8.0" />
 
-	<title>Class StringBox | Alpha Framework 1.2.3 API Documentation</title>
+	<title>Class StringBox | Alpha Framework ${alpha.version.new} API Documentation</title>
 
 	<script type="text/javascript" src="resources/combined.js?197213082"></script>
-	<script type="text/javascript" src="elementlist.js?3363017373"></script>
+	<script type="text/javascript" src="elementlist.js?1938582898"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
 
 </head>
@@ -53,8 +53,6 @@
 				<li><a href="package-alpha..util..helpers.html">alpha::util::helpers</a>
 						</li>
 				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
-						</li>
-				<li><a href="package-alpha..util..search.html">alpha::util::search</a>
 						</li>
 				<li><a href="package-alpha..view.html">alpha::view</a>
 						</li>
@@ -147,7 +145,7 @@
 		<b>Package:</b> <a href="package-alpha..view..widgets.html">alpha::view::widgets</a><br />
 
 				<b>Copyright:</b>
-				Copyright (c) 2014, John Collins (founder of Alpha Framework). All rights
+				Copyright (c) 2012, John Collins (founder of Alpha Framework). All rights
 reserved.
 <pre>
 Redistribution and use in source and binary forms, with or
@@ -187,10 +185,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 				John Collins &lt;<a
 href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&gt;<br />
 				<b>Version:</b>
-				$Id: StringBox.inc 1745 2014-03-29 15:19:05Z alphadevx $<br />
+				$Id: StringBox.inc 1633 2013-01-22 16:43:56Z alphadevx $<br />
 				<b>Since:</b>
 				1.0<br />
-		<b>Located at</b> <a href="source-class-StringBox.html#3-153" title="Go to source code">view/widgets/StringBox.inc</a><br />
+		<b>Located at</b> <a href="source-class-StringBox.html#3-158" title="Go to source code">view/widgets/StringBox.inc</a><br />
 	</div>
 
 
@@ -208,7 +206,7 @@ href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&
 
 		<td class="name"><div>
 		<a class="anchor" href="#___construct">#</a>
-		<code><a href="source-class-StringBox.html#81-106" title="Go to source code">__construct</a>( <span><code><a href="class-String.html">String</a></code> <var>$string</var></span>, <span>string <var>$label</var></span>, <span>string <var>$name</var></span>, <span>integer <var>$size</var> = <span class="php-num">0</span></span> )</code>
+		<code><a href="source-class-StringBox.html#81-102" title="Go to source code">__construct</a>( <span><code><a href="class-String.html">String</a></code> <var>$string</var></span>, <span>string <var>$label</var></span>, <span>string <var>$name</var></span>, <span>integer <var>$size</var> = <span class="php-num">0</span></span> )</code>
 
 		<div class="description short">
 			
@@ -260,7 +258,7 @@ href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&
 
 		<td class="name"><div>
 		<a class="anchor" href="#_render">#</a>
-		<code><a href="source-class-StringBox.html#108-128" title="Go to source code">render</a>( <span>boolean <var>$readOnly</var> = <span class="php-keyword1">false</span></span> )</code>
+		<code><a href="source-class-StringBox.html#104-133" title="Go to source code">render</a>( <span>boolean <var>$tableTags</var> = <span class="php-keyword1">true</span></span>, <span>boolean <var>$readOnly</var> = <span class="php-keyword1">false</span></span> )</code>
 
 		<div class="description short">
 			
@@ -276,6 +274,8 @@ href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&
 
 				<h4>Parameters</h4>
 				<div class="list"><dl>
+					<dt><var>$tableTags</var></dt>
+					<dd><code>boolean</code><br>$tableTags determines if table tags are also rendered for the StringBox</dd>
 					<dt><var>$readOnly</var></dt>
 					<dd><code>boolean</code><br>$readOnly set to true to make the text box readonly (defaults to false)</dd>
 				</dl></div>
@@ -306,7 +306,7 @@ href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&
 
 		<td class="name"><div>
 		<a class="anchor" href="#_setStringObject">#</a>
-		<code><a href="source-class-StringBox.html#130-142" title="Go to source code">setStringObject</a>( <span><code><a href="class-String.html">String</a></code> <var>$string</var></span> )</code>
+		<code><a href="source-class-StringBox.html#135-147" title="Go to source code">setStringObject</a>( <span><code><a href="class-String.html">String</a></code> <var>$string</var></span> )</code>
 
 		<div class="description short">
 			
@@ -352,7 +352,7 @@ href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getStringObject">#</a>
-		<code><a href="source-class-StringBox.html#144-152" title="Go to source code">getStringObject</a>( )</code>
+		<code><a href="source-class-StringBox.html#149-157" title="Go to source code">getStringObject</a>( )</code>
 
 		<div class="description short">
 			
@@ -531,7 +531,7 @@ href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&
 </div>
 
 	<div id="footer">
-		Alpha Framework 1.2.3 API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+		Alpha Framework ${alpha.version.new} API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
 	</div>
 </div>
 </div>

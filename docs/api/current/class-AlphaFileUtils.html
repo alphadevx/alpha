@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class AlphaFileUtils | Alpha Framework 1.2.3 API Documentation</title>
+
+	<script type="text/javascript" src="resources/combined.js?197213082"></script>
+	<script type="text/javascript" src="elementlist.js?3363017373"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="http://www.alphaframework.org/" style="color:none; background-color:none;"><img src="resources/logo-small.png" /></a>
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Packages</h3>
+			<ul>
+				<li><a href="package-alpha..controller.html">alpha::controller</a>
+						</li>
+				<li><a href="package-alpha..controller..front.html">alpha::controller::front</a>
+						</li>
+				<li><a href="package-alpha..exceptions.html">alpha::exceptions</a>
+						</li>
+				<li><a href="package-alpha..model.html">alpha::model</a>
+						</li>
+				<li><a href="package-alpha..model..types.html">alpha::model::types</a>
+						</li>
+				<li><a href="package-alpha..tasks.html">alpha::tasks</a>
+						</li>
+				<li><a href="package-alpha..tests.html">alpha::tests</a>
+						</li>
+				<li class="active"><a href="package-alpha..util.html">alpha::util</a>
+						</li>
+				<li><a href="package-alpha..util..cache.html">alpha::util::cache</a>
+						</li>
+				<li><a href="package-alpha..util..codehighlight.html">alpha::util::codehighlight</a>
+						</li>
+				<li><a href="package-alpha..util..convertors.html">alpha::util::convertors</a>
+						</li>
+				<li><a href="package-alpha..util..feeds.html">alpha::util::feeds</a>
+						</li>
+				<li><a href="package-alpha..util..filters.html">alpha::util::filters</a>
+						</li>
+				<li><a href="package-alpha..util..graphs.html">alpha::util::graphs</a>
+						</li>
+				<li><a href="package-alpha..util..helpers.html">alpha::util::helpers</a>
+						</li>
+				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
+						</li>
+				<li><a href="package-alpha..util..search.html">alpha::util::search</a>
+						</li>
+				<li><a href="package-alpha..view.html">alpha::view</a>
+						</li>
+				<li><a href="package-alpha..view..renderers.html">alpha::view::renderers</a>
+						</li>
+				<li><a href="package-alpha..view..widgets.html">alpha::view::widgets</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-AlphaAgentUtils.html">AlphaAgentUtils</a></li>
+				<li><a href="class-AlphaAutoLoader.html">AlphaAutoLoader</a></li>
+				<li><a href="class-AlphaBackUpUtils.html">AlphaBackUpUtils</a></li>
+				<li><a href="class-AlphaConfig.html">AlphaConfig</a></li>
+				<li><a href="class-AlphaCronManager.html">AlphaCronManager</a></li>
+				<li><a href="class-AlphaErrorHandlers.html">AlphaErrorHandlers</a></li>
+				<li class="active"><a href="class-AlphaFileUtils.html">AlphaFileUtils</a></li>
+				<li><a href="class-AlphaImageUtils.html">AlphaImageUtils</a></li>
+				<li><a href="class-AlphaKPI.html">AlphaKPI</a></li>
+				<li><a href="class-AlphaMarkdown.html">AlphaMarkdown</a></li>
+				<li><a href="class-AlphaPHPServerUtils.html">AlphaPHPServerUtils</a></li>
+				<li><a href="class-AlphaSecurityUtils.html">AlphaSecurityUtils</a></li>
+				<li><a href="class-AlphaTCPDF.html">AlphaTCPDF</a></li>
+				<li><a href="class-InputFilter.html">InputFilter</a></li>
+				<li><a href="class-LogFile.html">LogFile</a></li>
+				<li><a href="class-Logger.html">Logger</a></li>
+				<li><a href="class-MarkdownFacade.html">MarkdownFacade</a></li>
+				<li><a href="class-TCPDFFacade.html">TCPDFFacade</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-AlphaTaskInterface.html">AlphaTaskInterface</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="package-alpha..util.html" title="Summary of alpha::util"><span>Package</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="deprecated.html" title="List of deprecated elements"><span>Deprecated</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class AlphaFileUtils</h1>
+
+
+	<div class="description">
+	
+<p>A utility class for carrying out various file system tasks</p>
+
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		<b>Package:</b> <a href="package-alpha..util.html">alpha::util</a><br />
+
+				<b>Copyright:</b>
+				Copyright (c) 2014, John Collins (founder of Alpha Framework). All rights
+reserved.
+<pre>
+Redistribution and use in source and binary forms, with or
+without modification, are permitted provided that the
+following conditions are met:
+
+* Redistributions of source code must retain the above
+  copyright notice, this list of conditions and the
+  following disclaimer.
+* Redistributions in binary form must reproduce the above
+  copyright notice, this list of conditions and the
+  following disclaimer in the documentation and/or other
+  materials provided with the distribution.
+* Neither the name of the Alpha Framework nor the names
+  of its contributors may be used to endorse or promote
+  products derived from this software without specific
+  prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre>
+<br />
+				<b>License:</b>
+				<a href="http://www.opensource.org/licenses/bsd-license.php">The BSD License</a><br />
+				<b>Author:</b>
+				John Collins &lt;<a
+href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&gt;<br />
+				<b>Version:</b>
+				$Id: AlphaFileUtils.inc 1756 2014-04-08 22:54:10Z alphadevx $<br />
+				<b>Since:</b>
+				1.0<br />
+		<b>Located at</b> <a href="source-class-AlphaFileUtils.html#3-671" title="Go to source code">util/AlphaFileUtils.inc</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="getMIMETypeByExtension" id="_getMIMETypeByExtension">
+
+		<td class="attributes"><code>
+			 public static
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getMIMETypeByExtension">#</a>
+		<code><a href="source-class-AlphaFileUtils.html#509-524" title="Go to source code">getMIMETypeByExtension</a>( <span>string <var>$ext</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Method that allows you to determine a MIME type for a file which you provide
+the extension for.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Method that allows you to determine a MIME type for a file which you provide
+the extension for.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$ext</var></dt>
+					<dd><code>string</code><br>$ext The file extension.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-IllegalArguementException.html">IllegalArguementException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="listDirectoryContents" id="_listDirectoryContents">
+
+		<td class="attributes"><code>
+			 public static
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_listDirectoryContents">#</a>
+		<code><a href="source-class-AlphaFileUtils.html#526-559" title="Go to source code">listDirectoryContents</a>( <span>string <var>$sourceDir</var></span>, <span>integer <var>$fileCount</var> = <span class="php-num">0</span></span>, <span>array <var>$excludeFiles</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Renders the contents of the directory as a HTML list.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders the contents of the directory as a HTML list.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sourceDir</var></dt>
+					<dd><code>string</code><br>$sourceDir The path to the source directory.</dd>
+					<dt><var>$fileCount</var></dt>
+					<dd><code>integer</code><br>$fileCount The current file count (used in recursive calls).</dd>
+					<dt><var>$excludeFiles</var></dt>
+					<dd><code>array</code><br>$excludeFiles An array of file names to exclude from the list rendered.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>The current filecount for the directory.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="deleteDirectoryContents" id="_deleteDirectoryContents">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_deleteDirectoryContents">#</a>
+		<code><a href="source-class-AlphaFileUtils.html#561-589" title="Go to source code">deleteDirectoryContents</a>( <span>string <var>$sourceDir</var></span>, <span>array <var>$excludeFiles</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Recursively deletes the contents of the directory indicated.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Recursively deletes the contents of the directory indicated.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sourceDir</var></dt>
+					<dd><code>string</code><br>$sourceDir The path to the source directory.</dd>
+					<dt><var>$excludeFiles</var></dt>
+					<dd><code>array</code><br>$excludeFiles An array of file names to exclude from the deletion.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="copy" id="_copy">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_copy">#</a>
+		<code><a href="source-class-AlphaFileUtils.html#591-625" title="Go to source code">copy</a>( <span>string <var>$source</var></span>, <span>string <var>$dest</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Recursively copies the indicated folder, or single file, to the desintation
+location</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Recursively copies the indicated folder, or single file, to the desintation
+location</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$source</var></dt>
+					<dd><code>string</code><br>$source The path to the source directory or file.</dd>
+					<dt><var>$dest</var></dt>
+					<dd><code>string</code><br>$dest The destination source directory or file.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="zip" id="_zip">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_zip">#</a>
+		<code><a href="source-class-AlphaFileUtils.html#627-670" title="Go to source code">zip</a>( <span>string <var>$source</var></span>, <span>string <var>$dest</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Recursively compresses the contens of the source directory indicated to the
+desintation zip archive</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Recursively compresses the contens of the source directory indicated to the
+desintation zip archive</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$source</var></dt>
+					<dd><code>string</code><br>$source The path to the source directory or file.</dd>
+					<dt><var>$dest</var></dt>
+					<dd><code>string</code><br>$dest The destination zip file file.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="extensionToMIMEMappings" id="$extensionToMIMEMappings">
+		<td class="attributes"><code>
+			private static 
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaFileUtils.html#49-507" title="Go to source code"><var>$extensionToMIMEMappings</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span> (
+	<span class="php-quote">'3dm'</span> =&gt; <span class="php-quote">'x-world/x-3dmf'</span>,
+	<span class="php-quote">'3dmf'</span> =&gt; <span class="php-quote">'x-world/x-3dmf'</span>,
+	<span class="php-quote">'a'</span> =&gt; <span class="php-quote">'application/octet-stream'</span>,
+	<span class="php-quote">'aab'</span> =&gt; <span class="php-quote">'application/x-authorware-bin'</span>,
+	<span class="php-quote">'aam'</span> =&gt; <span class="php-quote">'application/x-authorware-map'</span>,
+	<span class="php-quote">'aas'</span> =&gt; <span class="php-quote">'application/x-authorware-seg'</span>,
+	<span class="php-quote">'abc'</span> =&gt; <span class="php-quote">'text/vnd.abc'</span>,
+	<span class="php-quote">'acgi'</span> =&gt; <span class="php-quote">'text/html'</span>,
+	<span class="php-quote">'afl'</span> =&gt; <span class="php-quote">'video/animaflex'</span>,
+	<span class="php-quote">'ai'</span> =&gt; <span class="php-quote">'application/postscript'</span>,
+	<span class="php-quote">'aif'</span> =&gt; <span class="php-quote">'audio/aiff'</span>,
+	<span class="php-quote">'aifc'</span> =&gt; <span class="php-quote">'audio/aiff'</span>,
+	<span class="php-quote">'aiff'</span> =&gt; <span class="php-quote">'audio/aiff'</span>,
+	<span class="php-quote">'aim'</span> =&gt; <span class="php-quote">'application/x-aim'</span>,
+	<span class="php-quote">'aip'</span> =&gt; <span class="php-quote">'text/x-audiosoft-intra'</span>,
+	<span class="php-quote">'ani'</span> =&gt; <span class="php-quote">'application/x-navi-animation'</span>,
+	<span class="php-quote">'aos'</span> =&gt; <span class="php-quote">'application/x-nokia-9000-communicator-add-on-software'</span>,
+	<span class="php-quote">'aps'</span> =&gt; <span class="php-quote">'application/mime'</span>,
+	<span class="php-quote">'arc'</span> =&gt; <span class="php-quote">'application/octet-stream'</span>,
+	<span class="php-quote">'arj'</span> =&gt; <span class="php-quote">'application/arj'</span>,
+	<span class="php-quote">'art'</span> =&gt; <span class="php-quote">'image/x-jg'</span>,
+	<span class="php-quote">'asf'</span> =&gt; <span class="php-quote">'video/x-ms-asf'</span>,
+	<span class="php-quote">'asm'</span> =&gt; <span class="php-quote">'text/x-asm'</span>,
+	<span class="php-quote">'asp'</span> =&gt; <span class="php-quote">'text/asp'</span>,
+	<span class="php-quote">'asx'</span> =&gt; <span class="php-quote">'application/x-mplayer2'</span>,
+	<span class="php-quote">'au'</span> =&gt; <span class="php-quote">'audio/basic'</span>,
+	<span class="php-quote">'avi'</span> =&gt; <span class="php-quote">'application/x-troff-msvideo'</span>,
+	<span class="php-quote">'avs'</span> =&gt; <span class="php-quote">'video/avs-video'</span>,
+	<span class="php-quote">'bcpio'</span> =&gt; <span class="php-quote">'application/x-bcpio'</span>,
+	<span class="php-quote">'bin'</span> =&gt; <span class="php-quote">'application/octet-stream'</span>,
+	<span class="php-quote">'bm'</span> =&gt; <span class="php-quote">'image/bmp'</span>,
+	<span class="php-quote">'bmp'</span> =&gt; <span class="php-quote">'image/bmp'</span>,
+	<span class="php-quote">'boo'</span> =&gt; <span class="php-quote">'application/book'</span>,
+	<span class="php-quote">'book'</span> =&gt; <span class="php-quote">'application/book'</span>,
+	<span class="php-quote">'boz'</span> =&gt; <span class="php-quote">'application/x-bzip2'</span>,
+	<span class="php-quote">'bsh'</span> =&gt; <span class="php-quote">'application/x-bsh'</span>,
+	<span class="php-quote">'bz'</span> =&gt; <span class="php-quote">'application/x-bzip'</span>,
+	<span class="php-quote">'bz2'</span> =&gt; <span class="php-quote">'application/x-bzip2'</span>,
+	<span class="php-quote">'c'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'c++'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'cat'</span> =&gt; <span class="php-quote">'application/vnd.ms-pki.seccat'</span>,
+	<span class="php-quote">'cc'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'ccad'</span> =&gt; <span class="php-quote">'application/clariscad'</span>,
+	<span class="php-quote">'cco'</span> =&gt; <span class="php-quote">'application/x-cocoa'</span>,
+	<span class="php-quote">'cdf'</span> =&gt; <span class="php-quote">'application/cdf'</span>,
+	<span class="php-quote">'cer'</span> =&gt; <span class="php-quote">'application/pkix-cert'</span>,
+	<span class="php-quote">'cha'</span> =&gt; <span class="php-quote">'application/x-chat'</span>,
+	<span class="php-quote">'chat'</span> =&gt; <span class="php-quote">'application/x-chat'</span>,
+	<span class="php-quote">'class'</span> =&gt; <span class="php-quote">'application/java'</span>,
+	<span class="php-quote">'com'</span> =&gt; <span class="php-quote">'application/octet-stream'</span>,
+	<span class="php-quote">'conf'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'cpio'</span> =&gt; <span class="php-quote">'application/x-cpio'</span>,
+	<span class="php-quote">'cpp'</span> =&gt; <span class="php-quote">'text/x-c'</span>,
+	<span class="php-quote">'cpt'</span> =&gt; <span class="php-quote">'application/mac-compactpro'</span>,
+	<span class="php-quote">'crl'</span> =&gt; <span class="php-quote">'application/pkcs-crl'</span>,
+	<span class="php-quote">'crt'</span> =&gt; <span class="php-quote">'application/pkix-cert'</span>,
+	<span class="php-quote">'csh'</span> =&gt; <span class="php-quote">'application/x-csh'</span>,
+	<span class="php-quote">'css'</span> =&gt; <span class="php-quote">'application/x-pointplus'</span>,
+	<span class="php-quote">'cxx'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'dcr'</span> =&gt; <span class="php-quote">'application/x-director'</span>,
+	<span class="php-quote">'deepv'</span> =&gt; <span class="php-quote">'application/x-deepv'</span>,
+	<span class="php-quote">'def'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'der'</span> =&gt; <span class="php-quote">'application/x-x509-ca-cert'</span>,
+	<span class="php-quote">'dif'</span> =&gt; <span class="php-quote">'video/x-dv'</span>,
+	<span class="php-quote">'dir'</span> =&gt; <span class="php-quote">'application/x-director'</span>,
+	<span class="php-quote">'dl'</span> =&gt; <span class="php-quote">'video/dl'</span>,
+	<span class="php-quote">'doc'</span> =&gt; <span class="php-quote">'application/msword'</span>,
+	<span class="php-quote">'dot'</span> =&gt; <span class="php-quote">'application/msword'</span>,
+	<span class="php-quote">'docx'</span> =&gt; <span class="php-quote">'application/vnd.openxmlformats-officedocument.wordprocessingml.document'</span>,
+	<span class="php-quote">'dp'</span> =&gt; <span class="php-quote">'application/commonground'</span>,
+	<span class="php-quote">'drw'</span> =&gt; <span class="php-quote">'application/drafting'</span>,
+	<span class="php-quote">'dump'</span> =&gt; <span class="php-quote">'application/octet-stream'</span>,
+	<span class="php-quote">'dv'</span> =&gt; <span class="php-quote">'video/x-dv'</span>,
+	<span class="php-quote">'dvi'</span> =&gt; <span class="php-quote">'application/x-dvi'</span>,
+	<span class="php-quote">'dwf'</span> =&gt; <span class="php-quote">'drawing/x-dwf (old)'</span>,
+	<span class="php-quote">'dwg'</span> =&gt; <span class="php-quote">'application/acad'</span>,
+	<span class="php-quote">'dxf'</span> =&gt; <span class="php-quote">'application/dxf'</span>,
+	<span class="php-quote">'dxr'</span> =&gt; <span class="php-quote">'application/x-director'</span>,
+	<span class="php-quote">'el'</span> =&gt; <span class="php-quote">'text/x-script.elisp'</span>,
+	<span class="php-quote">'elc'</span> =&gt; <span class="php-quote">'application/x-bytecode.elisp (compiled elisp)'</span>,
+	<span class="php-quote">'env'</span> =&gt; <span class="php-quote">'application/x-envoy'</span>,
+	<span class="php-quote">'eps'</span> =&gt; <span class="php-quote">'application/postscript'</span>,
+	<span class="php-quote">'es'</span> =&gt; <span class="php-quote">'application/x-esrehber'</span>,
+	<span class="php-quote">'etx'</span> =&gt; <span class="php-quote">'text/x-setext'</span>,
+	<span class="php-quote">'evy'</span> =&gt; <span class="php-quote">'application/envoy'</span>,
+	<span class="php-quote">'exe'</span> =&gt; <span class="php-quote">'application/octet-stream'</span>,
+	<span class="php-quote">'f'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'f77'</span> =&gt; <span class="php-quote">'text/x-fortran'</span>,
+	<span class="php-quote">'f90'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'fdf'</span> =&gt; <span class="php-quote">'application/vnd.fdf'</span>,
+	<span class="php-quote">'fif'</span> =&gt; <span class="php-quote">'application/fractals'</span>,
+	<span class="php-quote">'fli'</span> =&gt; <span class="php-quote">'video/fli'</span>,
+	<span class="php-quote">'flo'</span> =&gt; <span class="php-quote">'image/florian'</span>,
+	<span class="php-quote">'flx'</span> =&gt; <span class="php-quote">'text/vnd.fmi.flexstor'</span>,
+	<span class="php-quote">'fmf'</span> =&gt; <span class="php-quote">'video/x-atomic3d-feature'</span>,
+	<span class="php-quote">'for'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'fpx'</span> =&gt; <span class="php-quote">'image/vnd.fpx'</span>,
+	<span class="php-quote">'frl'</span> =&gt; <span class="php-quote">'application/freeloader'</span>,
+	<span class="php-quote">'funk'</span> =&gt; <span class="php-quote">'audio/make'</span>,
+	<span class="php-quote">'g'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'g3'</span> =&gt; <span class="php-quote">'image/g3fax'</span>,
+	<span class="php-quote">'gif'</span> =&gt; <span class="php-quote">'image/gif'</span>,
+	<span class="php-quote">'gl'</span> =&gt; <span class="php-quote">'video/gl'</span>,
+	<span class="php-quote">'gsd'</span> =&gt; <span class="php-quote">'audio/x-gsm'</span>,
+	<span class="php-quote">'gsm'</span> =&gt; <span class="php-quote">'audio/x-gsm'</span>,
+	<span class="php-quote">'gsp'</span> =&gt; <span class="php-quote">'application/x-gsp'</span>,
+	<span class="php-quote">'gss'</span> =&gt; <span class="php-quote">'application/x-gss'</span>,
+	<span class="php-quote">'gtar'</span> =&gt; <span class="php-quote">'application/x-gtar'</span>,
+	<span class="php-quote">'gz'</span> =&gt; <span class="php-quote">'application/x-compressed'</span>,
+	<span class="php-quote">'gzip'</span> =&gt; <span class="php-quote">'application/x-gzip'</span>,
+	<span class="php-quote">'h'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'hdf'</span> =&gt; <span class="php-quote">'application/x-hdf'</span>,
+	<span class="php-quote">'help'</span> =&gt; <span class="php-quote">'application/x-helpfile'</span>,
+	<span class="php-quote">'hgl'</span> =&gt; <span class="php-quote">'application/vnd.hp-hpgl'</span>,
+	<span class="php-quote">'hh'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'hlb'</span> =&gt; <span class="php-quote">'text/x-script'</span>,
+	<span class="php-quote">'hlp'</span> =&gt; <span class="php-quote">'application/hlp'</span>,
+	<span class="php-quote">'hpg'</span> =&gt; <span class="php-quote">'application/vnd.hp-hpgl'</span>,
+	<span class="php-quote">'hpgl'</span> =&gt; <span class="php-quote">'application/vnd.hp-hpgl'</span>,
+	<span class="php-quote">'hqx'</span> =&gt; <span class="php-quote">'application/binhex'</span>,
+	<span class="php-quote">'hta'</span> =&gt; <span class="php-quote">'application/hta'</span>,
+	<span class="php-quote">'htc'</span> =&gt; <span class="php-quote">'text/x-component'</span>,
+	<span class="php-quote">'htm'</span> =&gt; <span class="php-quote">'text/html'</span>,
+	<span class="php-quote">'html'</span> =&gt; <span class="php-quote">'text/html'</span>,
+	<span class="php-quote">'htmls'</span> =&gt; <span class="php-quote">'text/html'</span>,
+	<span class="php-quote">'htt'</span> =&gt; <span class="php-quote">'text/webviewhtml'</span>,
+	<span class="php-quote">'htx'</span> =&gt; <span class="php-quote">'text/html'</span>,
+	<span class="php-quote">'ice'</span> =&gt; <span class="php-quote">'x-conference/x-cooltalk'</span>,
+	<span class="php-quote">'ico'</span> =&gt; <span class="php-quote">'image/x-icon'</span>,
+	<span class="php-quote">'idc'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'ief'</span> =&gt; <span class="php-quote">'image/ief'</span>,
+	<span class="php-quote">'iefs'</span> =&gt; <span class="php-quote">'image/ief'</span>,
+	<span class="php-quote">'iges'</span> =&gt; <span class="php-quote">'application/iges'</span>,
+	<span class="php-quote">'igs'</span> =&gt; <span class="php-quote">'application/iges'</span>,
+	<span class="php-quote">'ima'</span> =&gt; <span class="php-quote">'application/x-ima'</span>,
+	<span class="php-quote">'imap'</span> =&gt; <span class="php-quote">'application/x-httpd-imap'</span>,
+	<span class="php-quote">'inf'</span> =&gt; <span class="php-quote">'application/inf'</span>,
+	<span class="php-quote">'ins'</span> =&gt; <span class="php-quote">'application/x-internett-signup'</span>,
+	<span class="php-quote">'ip'</span> =&gt; <span class="php-quote">'application/x-ip2'</span>,
+	<span class="php-quote">'isu'</span> =&gt; <span class="php-quote">'video/x-isvideo'</span>,
+	<span class="php-quote">'it'</span> =&gt; <span class="php-quote">'audio/it'</span>,
+	<span class="php-quote">'iv'</span> =&gt; <span class="php-quote">'application/x-inventor'</span>,
+	<span class="php-quote">'ivr'</span> =&gt; <span class="php-quote">'i-world/i-vrml'</span>,
+	<span class="php-quote">'ivy'</span> =&gt; <span class="php-quote">'application/x-livescreen'</span>,
+	<span class="php-quote">'jam'</span> =&gt; <span class="php-quote">'audio/x-jam'</span>,
+	<span class="php-quote">'jav'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'java'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'jcm'</span> =&gt; <span class="php-quote">'application/x-java-commerce'</span>,
+	<span class="php-quote">'jfif'</span> =&gt; <span class="php-quote">'image/jpeg'</span>,
+	<span class="php-quote">'jfif-tbnl'</span> =&gt; <span class="php-quote">'image/jpeg'</span>,
+	<span class="php-quote">'jpe'</span> =&gt; <span class="php-quote">'image/jpeg'</span>,
+	<span class="php-quote">'jpeg'</span> =&gt; <span class="php-quote">'image/jpeg'</span>,
+	<span class="php-quote">'jpg'</span> =&gt; <span class="php-quote">'image/jpeg'</span>,
+	<span class="php-quote">'jps'</span> =&gt; <span class="php-quote">'image/x-jps'</span>,
+	<span class="php-quote">'js'</span> =&gt; <span class="php-quote">'application/x-javascript'</span>,
+	<span class="php-quote">'jut'</span> =&gt; <span class="php-quote">'image/jutvision'</span>,
+	<span class="php-quote">'kar'</span> =&gt; <span class="php-quote">'audio/midi'</span>,
+	<span class="php-quote">'ksh'</span> =&gt; <span class="php-quote">'application/x-ksh'</span>,
+	<span class="php-quote">'la'</span> =&gt; <span class="php-quote">'audio/nspaudio'</span>,
+	<span class="php-quote">'lam'</span> =&gt; <span class="php-quote">'audio/x-liveaudio'</span>,
+	<span class="php-quote">'latex'</span> =&gt; <span class="php-quote">'application/x-latex'</span>,
+	<span class="php-quote">'lha'</span> =&gt; <span class="php-quote">'application/lha'</span>,
+	<span class="php-quote">'lhx'</span> =&gt; <span class="php-quote">'application/octet-stream'</span>,
+	<span class="php-quote">'list'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'lma'</span> =&gt; <span class="php-quote">'audio/nspaudio'</span>,
+	<span class="php-quote">'log'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'lsp'</span> =&gt; <span class="php-quote">'application/x-lisp'</span>,
+	<span class="php-quote">'lst'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'lsx'</span> =&gt; <span class="php-quote">'text/x-la-asf'</span>,
+	<span class="php-quote">'ltx'</span> =&gt; <span class="php-quote">'application/x-latex'</span>,
+	<span class="php-quote">'lzh'</span> =&gt; <span class="php-quote">'application/octet-stream'</span>,
+	<span class="php-quote">'lzx'</span> =&gt; <span class="php-quote">'application/lzx'</span>,
+	<span class="php-quote">'m'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'m1v'</span> =&gt; <span class="php-quote">'video/mpeg'</span>,
+	<span class="php-quote">'m2a'</span> =&gt; <span class="php-quote">'audio/mpeg'</span>,
+	<span class="php-quote">'m2v'</span> =&gt; <span class="php-quote">'video/mpeg'</span>,
+	<span class="php-quote">'m3u'</span> =&gt; <span class="php-quote">'audio/x-mpequrl'</span>,
+	<span class="php-quote">'man'</span> =&gt; <span class="php-quote">'application/x-troff-man'</span>,
+	<span class="php-quote">'map'</span> =&gt; <span class="php-quote">'application/x-navimap'</span>,
+	<span class="php-quote">'mar'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'mbd'</span> =&gt; <span class="php-quote">'application/mbedlet'</span>,
+	<span class="php-quote">'mc$'</span> =&gt; <span class="php-quote">'application/x-magic-cap-package-1.0'</span>,
+	<span class="php-quote">'mcd'</span> =&gt; <span class="php-quote">'application/mcad'</span>,
+	<span class="php-quote">'mcf'</span> =&gt; <span class="php-quote">'image/vasa'</span>,
+	<span class="php-quote">'mcp'</span> =&gt; <span class="php-quote">'application/netmc'</span>,
+	<span class="php-quote">'me'</span> =&gt; <span class="php-quote">'application/x-troff-me'</span>,
+	<span class="php-quote">'mht'</span> =&gt; <span class="php-quote">'message/rfc822'</span>,
+	<span class="php-quote">'mhtml'</span> =&gt; <span class="php-quote">'message/rfc822'</span>,
+	<span class="php-quote">'mid'</span> =&gt; <span class="php-quote">'application/x-midi'</span>,
+	<span class="php-quote">'midi'</span> =&gt; <span class="php-quote">'application/x-midi'</span>,
+	<span class="php-quote">'mif'</span> =&gt; <span class="php-quote">'application/x-frame'</span>,
+	<span class="php-quote">'mime'</span> =&gt; <span class="php-quote">'message/rfc822'</span>,
+	<span class="php-quote">'mjf'</span> =&gt; <span class="php-quote">'audio/x-vnd.audioexplosion.mjuicemediafile'</span>,
+	<span class="php-quote">'mjpg'</span> =&gt; <span class="php-quote">'video/x-motion-jpeg'</span>,
+	<span class="php-quote">'mm'</span> =&gt; <span class="php-quote">'application/base64'</span>,
+	<span class="php-quote">'mme'</span> =&gt; <span class="php-quote">'application/base64'</span>,
+	<span class="php-quote">'mod'</span> =&gt; <span class="php-quote">'audio/mod'</span>,
+	<span class="php-quote">'moov'</span> =&gt; <span class="php-quote">'video/quicktime'</span>,
+	<span class="php-quote">'mov'</span> =&gt; <span class="php-quote">'video/quicktime'</span>,
+	<span class="php-quote">'movie'</span> =&gt; <span class="php-quote">'video/x-sgi-movie'</span>,
+	<span class="php-quote">'mp2'</span> =&gt; <span class="php-quote">'audio/mpeg'</span>,
+	<span class="php-quote">'mp3'</span> =&gt; <span class="php-quote">'audio/mpeg3'</span>,
+	<span class="php-quote">'mpa'</span> =&gt; <span class="php-quote">'audio/mpeg'</span>,
+	<span class="php-quote">'mpc'</span> =&gt; <span class="php-quote">'application/x-project'</span>,
+	<span class="php-quote">'mpe'</span> =&gt; <span class="php-quote">'video/mpeg'</span>,
+	<span class="php-quote">'mpeg'</span> =&gt; <span class="php-quote">'video/mpeg'</span>,
+	<span class="php-quote">'mpg'</span> =&gt; <span class="php-quote">'audio/mpeg'</span>,
+	<span class="php-quote">'mpga'</span> =&gt; <span class="php-quote">'audio/mpeg'</span>,
+	<span class="php-quote">'mpp'</span> =&gt; <span class="php-quote">'application/vnd.ms-project'</span>,
+	<span class="php-quote">'mpt'</span> =&gt; <span class="php-quote">'application/x-project'</span>,
+	<span class="php-quote">'mpv'</span> =&gt; <span class="php-quote">'application/x-project'</span>,
+	<span class="php-quote">'mpx'</span> =&gt; <span class="php-quote">'application/x-project'</span>,
+	<span class="php-quote">'mrc'</span> =&gt; <span class="php-quote">'application/marc'</span>,
+	<span class="php-quote">'ms'</span> =&gt; <span class="php-quote">'application/x-troff-ms'</span>,
+	<span class="php-quote">'mv'</span> =&gt; <span class="php-quote">'video/x-sgi-movie'</span>,
+	<span class="php-quote">'my'</span> =&gt; <span class="php-quote">'audio/make'</span>,
+	<span class="php-quote">'mzz'</span> =&gt; <span class="php-quote">'application/x-vnd.audioexplosion.mzz'</span>,
+	<span class="php-quote">'nap'</span> =&gt; <span class="php-quote">'image/naplps'</span>,
+	<span class="php-quote">'naplps'</span> =&gt; <span class="php-quote">'image/naplps'</span>,
+	<span class="php-quote">'nc'</span> =&gt; <span class="php-quote">'application/x-netcdf'</span>,
+	<span class="php-quote">'ncm'</span> =&gt; <span class="php-quote">'application/vnd.nokia.configuration-message'</span>,
+	<span class="php-quote">'nif'</span> =&gt; <span class="php-quote">'image/x-niff'</span>,
+	<span class="php-quote">'niff'</span> =&gt; <span class="php-quote">'image/x-niff'</span>,
+	<span class="php-quote">'nix'</span> =&gt; <span class="php-quote">'application/x-mix-transfer'</span>,
+	<span class="php-quote">'nsc'</span> =&gt; <span class="php-quote">'application/x-conference'</span>,
+	<span class="php-quote">'nvd'</span> =&gt; <span class="php-quote">'application/x-navidoc'</span>,
+	<span class="php-quote">'o'</span> =&gt; <span class="php-quote">'application/octet-stream'</span>,
+	<span class="php-quote">'oda'</span> =&gt; <span class="php-quote">'application/oda'</span>,
+	<span class="php-quote">'omc'</span> =&gt; <span class="php-quote">'application/x-omc'</span>,
+	<span class="php-quote">'omcd'</span> =&gt; <span class="php-quote">'application/x-omcdatamaker'</span>,
+	<span class="php-quote">'omcr'</span> =&gt; <span class="php-quote">'application/x-omcregerator'</span>,
+	<span class="php-quote">'p'</span> =&gt; <span class="php-quote">'text/x-pascal'</span>,
+	<span class="php-quote">'p10'</span> =&gt; <span class="php-quote">'application/pkcs10'</span>,
+	<span class="php-quote">'p12'</span> =&gt; <span class="php-quote">'application/pkcs-12'</span>,
+	<span class="php-quote">'p7a'</span> =&gt; <span class="php-quote">'application/x-pkcs7-signature'</span>,
+	<span class="php-quote">'p7c'</span> =&gt; <span class="php-quote">'application/pkcs7-mime'</span>,
+	<span class="php-quote">'p7m'</span> =&gt; <span class="php-quote">'application/pkcs7-mime'</span>,
+	<span class="php-quote">'p7r'</span> =&gt; <span class="php-quote">'application/x-pkcs7-certreqresp'</span>,
+	<span class="php-quote">'p7s'</span> =&gt; <span class="php-quote">'application/pkcs7-signature'</span>,
+	<span class="php-quote">'part'</span> =&gt; <span class="php-quote">'application/pro_eng'</span>,
+	<span class="php-quote">'pas'</span> =&gt; <span class="php-quote">'text/pascal'</span>,
+	<span class="php-quote">'pbm'</span> =&gt; <span class="php-quote">'image/x-portable-bitmap'</span>,
+	<span class="php-quote">'pcl'</span> =&gt; <span class="php-quote">'application/vnd.hp-pcl'</span>,
+	<span class="php-quote">'pct'</span> =&gt; <span class="php-quote">'image/x-pict'</span>,
+	<span class="php-quote">'pcx'</span> =&gt; <span class="php-quote">'image/x-pcx'</span>,
+	<span class="php-quote">'pdb'</span> =&gt; <span class="php-quote">'chemical/x-pdb'</span>,
+	<span class="php-quote">'pdf'</span> =&gt; <span class="php-quote">'application/pdf'</span>,
+	<span class="php-quote">'pfunk'</span> =&gt; <span class="php-quote">'audio/make'</span>,
+	<span class="php-quote">'pgm'</span> =&gt; <span class="php-quote">'image/x-portable-graymap'</span>,
+	<span class="php-quote">'pic'</span> =&gt; <span class="php-quote">'image/pict'</span>,
+	<span class="php-quote">'pict'</span> =&gt; <span class="php-quote">'image/pict'</span>,
+	<span class="php-quote">'pkg'</span> =&gt; <span class="php-quote">'application/x-newton-compatible-pkg'</span>,
+	<span class="php-quote">'pko'</span> =&gt; <span class="php-quote">'application/vnd.ms-pki.pko'</span>,
+	<span class="php-quote">'pl'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'plx'</span> =&gt; <span class="php-quote">'application/x-pixclscript'</span>,
+	<span class="php-quote">'pm'</span> =&gt; <span class="php-quote">'image/x-xpixmap'</span>,
+	<span class="php-quote">'pm4'</span> =&gt; <span class="php-quote">'application/x-pagemaker'</span>,
+	<span class="php-quote">'pm5'</span> =&gt; <span class="php-quote">'application/x-pagemaker'</span>,
+	<span class="php-quote">'png'</span> =&gt; <span class="php-quote">'image/png'</span>,
+	<span class="php-quote">'pnm'</span> =&gt; <span class="php-quote">'application/x-portable-anymap'</span>,
+	<span class="php-quote">'pot'</span> =&gt; <span class="php-quote">'application/mspowerpoint'</span>,
+	<span class="php-quote">'pov'</span> =&gt; <span class="php-quote">'model/x-pov'</span>,
+	<span class="php-quote">'ppa'</span> =&gt; <span class="php-quote">'application/vnd.ms-powerpoint'</span>,
+	<span class="php-quote">'ppm'</span> =&gt; <span class="php-quote">'image/x-portable-pixmap'</span>,
+	<span class="php-quote">'pps'</span> =&gt; <span class="php-quote">'application/mspowerpoint'</span>,
+	<span class="php-quote">'ppsx'</span> =&gt; <span class="php-quote">'application/vnd.openxmlformats-officedocument.presentationml.slideshow'</span>,
+	<span class="php-quote">'ppt'</span> =&gt; <span class="php-quote">'application/mspowerpoint'</span>,
+	<span class="php-quote">'pptx'</span> =&gt; <span class="php-quote">'application/vnd.openxmlformats-officedocument.presentationml.presentation'</span>,
+	<span class="php-quote">'ppz'</span> =&gt; <span class="php-quote">'application/mspowerpoint'</span>,
+	<span class="php-quote">'pre'</span> =&gt; <span class="php-quote">'application/x-freelance'</span>,
+	<span class="php-quote">'prt'</span> =&gt; <span class="php-quote">'application/pro_eng'</span>,
+	<span class="php-quote">'ps'</span> =&gt; <span class="php-quote">'application/postscript'</span>,
+	<span class="php-quote">'psd'</span> =&gt; <span class="php-quote">'application/octet-stream'</span>,
+	<span class="php-quote">'pvu'</span> =&gt; <span class="php-quote">'paleovu/x-pv'</span>,
+	<span class="php-quote">'pwz'</span> =&gt; <span class="php-quote">'application/vnd.ms-powerpoint'</span>,
+	<span class="php-quote">'py'</span> =&gt; <span class="php-quote">'text/x-script.phyton'</span>,
+	<span class="php-quote">'pyc'</span> =&gt; <span class="php-quote">'applicaiton/x-bytecode.python'</span>,
+	<span class="php-quote">'qcp'</span> =&gt; <span class="php-quote">'audio/vnd.qcelp'</span>,
+	<span class="php-quote">'qd3'</span> =&gt; <span class="php-quote">'x-world/x-3dmf'</span>,
+	<span class="php-quote">'qd3d'</span> =&gt; <span class="php-quote">'x-world/x-3dmf'</span>,
+	<span class="php-quote">'qif'</span> =&gt; <span class="php-quote">'image/x-quicktime'</span>,
+	<span class="php-quote">'qt'</span> =&gt; <span class="php-quote">'video/quicktime'</span>,
+	<span class="php-quote">'qtc'</span> =&gt; <span class="php-quote">'video/x-qtc'</span>,
+	<span class="php-quote">'qti'</span> =&gt; <span class="php-quote">'image/x-quicktime'</span>,
+	<span class="php-quote">'qtif'</span> =&gt; <span class="php-quote">'image/x-quicktime'</span>,
+	<span class="php-quote">'ra'</span> =&gt; <span class="php-quote">'audio/x-pn-realaudio'</span>,
+	<span class="php-quote">'ram'</span> =&gt; <span class="php-quote">'audio/x-pn-realaudio'</span>,
+	<span class="php-quote">'ras'</span> =&gt; <span class="php-quote">'application/x-cmu-raster'</span>,
+	<span class="php-quote">'rast'</span> =&gt; <span class="php-quote">'image/cmu-raster'</span>,
+	<span class="php-quote">'rexx'</span> =&gt; <span class="php-quote">'text/x-script.rexx'</span>,
+	<span class="php-quote">'rf'</span> =&gt; <span class="php-quote">'image/vnd.rn-realflash'</span>,
+	<span class="php-quote">'rgb'</span> =&gt; <span class="php-quote">'image/x-rgb'</span>,
+	<span class="php-quote">'rm'</span> =&gt; <span class="php-quote">'application/vnd.rn-realmedia'</span>,
+	<span class="php-quote">'rmi'</span> =&gt; <span class="php-quote">'audio/mid'</span>,
+	<span class="php-quote">'rmm'</span> =&gt; <span class="php-quote">'audio/x-pn-realaudio'</span>,
+	<span class="php-quote">'rmp'</span> =&gt; <span class="php-quote">'audio/x-pn-realaudio'</span>,
+	<span class="php-quote">'rng'</span> =&gt; <span class="php-quote">'application/ringing-tones'</span>,
+	<span class="php-quote">'rnx'</span> =&gt; <span class="php-quote">'application/vnd.rn-realplayer'</span>,
+	<span class="php-quote">'roff'</span> =&gt; <span class="php-quote">'application/x-troff'</span>,
+	<span class="php-quote">'rp'</span> =&gt; <span class="php-quote">'image/vnd.rn-realpix'</span>,
+	<span class="php-quote">'rpm'</span> =&gt; <span class="php-quote">'audio/x-pn-realaudio-plugin'</span>,
+	<span class="php-quote">'rt'</span> =&gt; <span class="php-quote">'text/richtext'</span>,
+	<span class="php-quote">'rtf'</span> =&gt; <span class="php-quote">'application/rtf'</span>,
+	<span class="php-quote">'rtx'</span> =&gt; <span class="php-quote">'application/rtf'</span>,
+	<span class="php-quote">'rv'</span> =&gt; <span class="php-quote">'video/vnd.rn-realvideo'</span>,
+	<span class="php-quote">'s'</span> =&gt; <span class="php-quote">'text/x-asm'</span>,
+	<span class="php-quote">'s3m'</span> =&gt; <span class="php-quote">'audio/s3m'</span>,
+	<span class="php-quote">'saveme'</span> =&gt; <span class="php-quote">'application/octet-stream'</span>,
+	<span class="php-quote">'sbk'</span> =&gt; <span class="php-quote">'application/x-tbook'</span>,
+	<span class="php-quote">'scm'</span> =&gt; <span class="php-quote">'application/x-lotusscreencam'</span>,
+	<span class="php-quote">'sdml'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'sdp'</span> =&gt; <span class="php-quote">'application/sdp'</span>,
+	<span class="php-quote">'sdr'</span> =&gt; <span class="php-quote">'application/sounder'</span>,
+	<span class="php-quote">'sea'</span> =&gt; <span class="php-quote">'application/sea'</span>,
+	<span class="php-quote">'set'</span> =&gt; <span class="php-quote">'application/set'</span>,
+	<span class="php-quote">'sgm'</span> =&gt; <span class="php-quote">'text/sgml'</span>,
+	<span class="php-quote">'sgml'</span> =&gt; <span class="php-quote">'text/sgml'</span>,
+	<span class="php-quote">'sh'</span> =&gt; <span class="php-quote">'application/x-bsh'</span>,
+	<span class="php-quote">'shar'</span> =&gt; <span class="php-quote">'application/x-bsh'</span>,
+	<span class="php-quote">'shtml'</span> =&gt; <span class="php-quote">'text/html'</span>,
+	<span class="php-quote">'sid'</span> =&gt; <span class="php-quote">'audio/x-psid'</span>,
+	<span class="php-quote">'sit'</span> =&gt; <span class="php-quote">'application/x-sit'</span>,
+	<span class="php-quote">'skd'</span> =&gt; <span class="php-quote">'application/x-koan'</span>,
+	<span class="php-quote">'skm'</span> =&gt; <span class="php-quote">'application/x-koan'</span>,
+	<span class="php-quote">'skp'</span> =&gt; <span class="php-quote">'application/x-koan'</span>,
+	<span class="php-quote">'skt'</span> =&gt; <span class="php-quote">'application/x-koan'</span>,
+	<span class="php-quote">'sl'</span> =&gt; <span class="php-quote">'application/x-seelogo'</span>,
+	<span class="php-quote">'smi'</span> =&gt; <span class="php-quote">'application/smil'</span>,
+	<span class="php-quote">'smil'</span> =&gt; <span class="php-quote">'application/smil'</span>,
+	<span class="php-quote">'snd'</span> =&gt; <span class="php-quote">'audio/basic'</span>,
+	<span class="php-quote">'sol'</span> =&gt; <span class="php-quote">'application/solids'</span>,
+	<span class="php-quote">'spc'</span> =&gt; <span class="php-quote">'application/x-pkcs7-certificates'</span>,
+	<span class="php-quote">'spl'</span> =&gt; <span class="php-quote">'application/futuresplash'</span>,
+	<span class="php-quote">'spr'</span> =&gt; <span class="php-quote">'application/x-sprite'</span>,
+	<span class="php-quote">'sprite'</span> =&gt; <span class="php-quote">'application/x-sprite'</span>,
+	<span class="php-quote">'src'</span> =&gt; <span class="php-quote">'application/x-wais-source'</span>,
+	<span class="php-quote">'ssi'</span> =&gt; <span class="php-quote">'text/x-server-parsed-html'</span>,
+	<span class="php-quote">'ssm'</span> =&gt; <span class="php-quote">'application/streamingmedia'</span>,
+	<span class="php-quote">'sst'</span> =&gt; <span class="php-quote">'application/vnd.ms-pki.certstore'</span>,
+	<span class="php-quote">'step'</span> =&gt; <span class="php-quote">'application/step'</span>,
+	<span class="php-quote">'stl'</span> =&gt; <span class="php-quote">'application/sla'</span>,
+	<span class="php-quote">'stp'</span> =&gt; <span class="php-quote">'application/step'</span>,
+	<span class="php-quote">'sv4cpio'</span> =&gt; <span class="php-quote">'application/x-sv4cpio'</span>,
+	<span class="php-quote">'sv4crc'</span> =&gt; <span class="php-quote">'application/x-sv4crc'</span>,
+	<span class="php-quote">'svf'</span> =&gt; <span class="php-quote">'image/vnd.dwg'</span>,
+	<span class="php-quote">'svr'</span> =&gt; <span class="php-quote">'application/x-world'</span>,
+	<span class="php-quote">'swf'</span> =&gt; <span class="php-quote">'application/x-shockwave-flash'</span>,
+	<span class="php-quote">'t'</span> =&gt; <span class="php-quote">'application/x-troff'</span>,
+	<span class="php-quote">'talk'</span> =&gt; <span class="php-quote">'text/x-speech'</span>,
+	<span class="php-quote">'tar'</span> =&gt; <span class="php-quote">'application/x-tar'</span>,
+	<span class="php-quote">'tbk'</span> =&gt; <span class="php-quote">'application/toolbook'</span>,
+	<span class="php-quote">'tcl'</span> =&gt; <span class="php-quote">'application/x-tcl'</span>,
+	<span class="php-quote">'tcsh'</span> =&gt; <span class="php-quote">'text/x-script.tcsh'</span>,
+	<span class="php-quote">'tex'</span> =&gt; <span class="php-quote">'application/x-tex'</span>,
+	<span class="php-quote">'texi'</span> =&gt; <span class="php-quote">'application/x-texinfo'</span>,
+	<span class="php-quote">'texinfo'</span> =&gt; <span class="php-quote">'application/x-texinfo'</span>,
+	<span class="php-quote">'text'</span> =&gt; <span class="php-quote">'application/plain'</span>,
+	<span class="php-quote">'tgz'</span> =&gt; <span class="php-quote">'application/gnutar'</span>,
+	<span class="php-quote">'tif'</span> =&gt; <span class="php-quote">'image/tiff'</span>,
+	<span class="php-quote">'tiff'</span> =&gt; <span class="php-quote">'image/tiff'</span>,
+	<span class="php-quote">'tr'</span> =&gt; <span class="php-quote">'application/x-troff'</span>,
+	<span class="php-quote">'tsi'</span> =&gt; <span class="php-quote">'audio/tsp-audio'</span>,
+	<span class="php-quote">'tsp'</span> =&gt; <span class="php-quote">'application/dsptype'</span>,
+	<span class="php-quote">'tsv'</span> =&gt; <span class="php-quote">'text/tab-separated-values'</span>,
+	<span class="php-quote">'turbot'</span> =&gt; <span class="php-quote">'image/florian'</span>,
+	<span class="php-quote">'txt'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+	<span class="php-quote">'uil'</span> =&gt; <span class="php-quote">'text/x-uil'</span>,
+	<span class="php-quote">'uni'</span> =&gt; <span class="php-quote">'text/uri-list'</span>,
+	<span class="php-quote">'unis'</span> =&gt; <span class="php-quote">'text/uri-list'</span>,
+	<span class="php-quote">'unv'</span> =&gt; <span class="php-quote">'application/i-deas'</span>,
+	<span class="php-quote">'uri'</span> =&gt; <span class="php-quote">'text/uri-list'</span>,
+	<span class="php-quote">'uris'</span> =&gt; <span class="php-quote">'text/uri-list'</span>,
+	<span class="php-quote">'ustar'</span> =&gt; <span class="php-quote">'application/x-ustar'</span>,
+	<span class="php-quote">'uu'</span> =&gt; <span class="php-quote">'application/octet-stream'</span>,
+	<span class="php-quote">'uue'</span> =&gt; <span class="php-quote">'text/x-uuencode'</span>,
+	<span class="php-quote">'vcd'</span> =&gt; <span class="php-quote">'application/x-cdlink'</span>,
+	<span class="php-quote">'vcs'</span> =&gt; <span class="php-quote">'text/x-vcalendar'</span>,
+	<span class="php-quote">'vda'</span> =&gt; <span class="php-quote">'application/vda'</span>,
+	<span class="php-quote">'vdo'</span> =&gt; <span class="php-quote">'video/vdo'</span>,
+	<span class="php-quote">'vew'</span> =&gt; <span class="php-quote">'application/groupwise'</span>,
+	<span class="php-quote">'viv'</span> =&gt; <span class="php-quote">'video/vivo'</span>,
+	<span class="php-quote">'vivo'</span> =&gt; <span class="php-quote">'video/vivo'</span>,
+	<span class="php-quote">'vmd'</span> =&gt; <span class="php-quote">'application/vocaltec-media-desc'</span>,
+	<span class="php-quote">'vmf'</span> =&gt; <span class="php-quote">'application/vocaltec-media-file'</span>,
+	<span class="php-quote">'voc'</span> =&gt; <span class="php-quote">'audio/voc'</span>,
+	<span class="php-quote">'vos'</span> =&gt; <span class="php-quote">'video/vosaic'</span>,
+	<span class="php-quote">'vox'</span> =&gt; <span class="php-quote">'audio/voxware'</span>,
+	<span class="php-quote">'vqe'</span> =&gt; <span class="php-quote">'audio/x-twinvq-plugin'</span>,
+	<span class="php-quote">'vqf'</span> =&gt; <span class="php-quote">'audio/x-twinvq'</span>,
+	<span class="php-quote">'vql'</span> =&gt; <span class="php-quote">'audio/x-twinvq-plugin'</span>,
+	<span class="php-quote">'vrml'</span> =&gt; <span class="php-quote">'application/x-vrml'</span>,
+	<span class="php-quote">'vrt'</span> =&gt; <span class="php-quote">'x-world/x-vrt'</span>,
+	<span class="php-quote">'vsd'</span> =&gt; <span class="php-quote">'application/x-visio'</span>,
+	<span class="php-quote">'vst'</span> =&gt; <span class="php-quote">'application/x-visio'</span>,
+	<span class="php-quote">'vsw'</span> =&gt; <span class="php-quote">'application/x-visio'</span>,
+	<span class="php-quote">'w60'</span> =&gt; <span class="php-quote">'application/wordperfect6.0'</span>,
+	<span class="php-quote">'w61'</span> =&gt; <span class="php-quote">'application/wordperfect6.1'</span>,
+	<span class="php-quote">'w6w'</span> =&gt; <span class="php-quote">'application/msword'</span>,
+	<span class="php-quote">'wav'</span> =&gt; <span class="php-quote">'audio/wav'</span>,
+	<span class="php-quote">'wb1'</span> =&gt; <span class="php-quote">'application/x-qpro'</span>,
+	<span class="php-quote">'wbmp'</span> =&gt; <span class="php-quote">'image/vnd.wap.wbmp'</span>,
+	<span class="php-quote">'web'</span> =&gt; <span class="php-quote">'application/vnd.xara'</span>,
+	<span class="php-quote">'wiz'</span> =&gt; <span class="php-quote">'application/msword'</span>,
+	<span class="php-quote">'wk1'</span> =&gt; <span class="php-quote">'application/x-123'</span>,
+	<span class="php-quote">'wmf'</span> =&gt; <span class="php-quote">'windows/metafile'</span>,
+	<span class="php-quote">'wml'</span> =&gt; <span class="php-quote">'text/vnd.wap.wml'</span>,
+	<span class="php-quote">'wmlc'</span> =&gt; <span class="php-quote">'application/vnd.wap.wmlc'</span>,
+	<span class="php-quote">'wmls'</span> =&gt; <span class="php-quote">'text/vnd.wap.wmlscript'</span>,
+	<span class="php-quote">'wmlsc'</span> =&gt; <span class="php-quote">'application/vnd.wap.wmlscriptc'</span>,
+	<span class="php-quote">'word'</span> =&gt; <span class="php-quote">'application/msword'</span>,
+	<span class="php-quote">'wp'</span> =&gt; <span class="php-quote">'application/wordperfect'</span>,
+	<span class="php-quote">'wp5'</span> =&gt; <span class="php-quote">'application/wordperfect'</span>,
+	<span class="php-quote">'wp6'</span> =&gt; <span class="php-quote">'application/wordperfect'</span>,
+	<span class="php-quote">'wpd'</span> =&gt; <span class="php-quote">'application/wordperfect'</span>,
+	<span class="php-quote">'wq1'</span> =&gt; <span class="php-quote">'application/x-lotus'</span>,
+	<span class="php-quote">'wri'</span> =&gt; <span class="php-quote">'application/mswrite'</span>,
+	<span class="php-quote">'wrl'</span> =&gt; <span class="php-quote">'application/x-world'</span>,
+	<span class="php-quote">'wrz'</span> =&gt; <span class="php-quote">'model/vrml'</span>,
+	<span class="php-quote">'wsc'</span> =&gt; <span class="php-quote">'text/scriplet'</span>,
+	<span class="php-quote">'wsrc'</span> =&gt; <span class="php-quote">'application/x-wais-source'</span>,
+	<span class="php-quote">'wtk'</span> =&gt; <span class="php-quote">'application/x-wintalk'</span>,
+	<span class="php-quote">'xbm'</span> =&gt; <span class="php-quote">'image/x-xbitmap'</span>,
+	<span class="php-quote">'xdr'</span> =&gt; <span class="php-quote">'video/x-amt-demorun'</span>,
+	<span class="php-quote">'xgz'</span> =&gt; <span class="php-quote">'xgl/drawing'</span>,
+	<span class="php-quote">'xif'</span> =&gt; <span class="php-quote">'image/vnd.xiff'</span>,
+	<span class="php-quote">'xl'</span> =&gt; <span class="php-quote">'application/excel'</span>,
+	<span class="php-quote">'xla'</span> =&gt; <span class="php-quote">'application/excel'</span>,
+	<span class="php-quote">'xlb'</span> =&gt; <span class="php-quote">'application/excel'</span>,
+	<span class="php-quote">'xlc'</span> =&gt; <span class="php-quote">'application/excel'</span>,
+	<span class="php-quote">'xld'</span> =&gt; <span class="php-quote">'application/excel'</span>,
+	<span class="php-quote">'xlk'</span> =&gt; <span class="php-quote">'application/excel'</span>,
+	<span class="php-quote">'xll'</span> =&gt; <span class="php-quote">'application/excel'</span>,
+	<span class="php-quote">'xlm'</span> =&gt; <span class="php-quote">'application/excel'</span>,
+	<span class="php-quote">'xls'</span> =&gt; <span class="php-quote">'application/excel'</span>,
+	<span class="php-quote">'xlsx'</span> =&gt; <span class="php-quote">'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'</span>,
+	<span class="php-quote">'xlt'</span> =&gt; <span class="php-quote">'application/excel'</span>,
+	<span class="php-quote">'xlv'</span> =&gt; <span class="php-quote">'application/excel'</span>,
+	<span class="php-quote">'xlw'</span> =&gt; <span class="php-quote">'application/excel'</span>,
+	<span class="php-quote">'xm'</span> =&gt; <span class="php-quote">'audio/xm'</span>,
+	<span class="php-quote">'xml'</span> =&gt; <span class="php-quote">'application/xml'</span>,
+	<span class="php-quote">'xmz'</span> =&gt; <span class="php-quote">'xgl/movie'</span>,
+	<span class="php-quote">'xpix'</span> =&gt; <span class="php-quote">'application/x-vnd.ls-xpix'</span>,
+	<span class="php-quote">'xpm'</span> =&gt; <span class="php-quote">'image/x-xpixmap'</span>,
+	<span class="php-quote">'x-png'</span> =&gt; <span class="php-quote">'image/png'</span>,
+	<span class="php-quote">'xsr'</span> =&gt; <span class="php-quote">'video/x-amt-showrun'</span>,
+	<span class="php-quote">'xwd'</span> =&gt; <span class="php-quote">'image/x-xwd'</span>,
+	<span class="php-quote">'xyz'</span> =&gt; <span class="php-quote">'chemical/x-pdb'</span>,
+	<span class="php-quote">'z'</span> =&gt; <span class="php-quote">'application/x-compress'</span>,
+	<span class="php-quote">'zip'</span> =&gt; <span class="php-quote">'application/zip'</span>,
+	<span class="php-quote">'zoo'</span> =&gt; <span class="php-quote">'application/octet-stream'</span>,
+	<span class="php-quote">'zsh'</span> =&gt; <span class="php-quote">'text/x-script.zsh'</span>,
+)</code></td>
+		<td class="description"><div>
+			<a href="#$extensionToMIMEMappings" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>A hash array for mapping file extensions to MIME types.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>A hash array for mapping file extensions to MIME types.</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Alpha Framework 1.2.3 API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

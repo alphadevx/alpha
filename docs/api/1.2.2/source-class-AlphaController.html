@@ -5,10 +5,10 @@
 	<meta name="generator" content="ApiGen 2.8.0" />
 	<meta name="robots" content="noindex" />
 
-	<title>File controller/AlphaController.inc | Alpha Framework 1.2.3 API Documentation</title>
+	<title>File controller/AlphaController.inc | Alpha Framework ${alpha.version.new} API Documentation</title>
 
 	<script type="text/javascript" src="resources/combined.js?197213082"></script>
-	<script type="text/javascript" src="elementlist.js?3363017373"></script>
+	<script type="text/javascript" src="elementlist.js?1938582898"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
 
 </head>
@@ -54,8 +54,6 @@
 				<li><a href="package-alpha..util..helpers.html">alpha::util::helpers</a>
 						</li>
 				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
-						</li>
-				<li><a href="package-alpha..util..search.html">alpha::util::search</a>
 						</li>
 				<li><a href="package-alpha..view.html">alpha::view</a>
 						</li>
@@ -163,9 +161,9 @@
 </span></span><span id="7" class="l"><a class="l" href="#7">   7: </a><span class="php-comment"> * @package alpha::controller
 </span></span><span id="8" class="l"><a class="l" href="#8">   8: </a><span class="php-comment"> * @since 1.0
 </span></span><span id="9" class="l"><a class="l" href="#9">   9: </a><span class="php-comment"> * @author John Collins &lt;dev@alphaframework.org&gt;
-</span></span><span id="10" class="l"><a class="l" href="#10">  10: </a><span class="php-comment"> * @version $Id: AlphaController.inc 1745 2014-03-29 15:19:05Z alphadevx $
+</span></span><span id="10" class="l"><a class="l" href="#10">  10: </a><span class="php-comment"> * @version $Id: AlphaController.inc 1665 2013-09-09 20:22:14Z alphadevx $
 </span></span><span id="11" class="l"><a class="l" href="#11">  11: </a><span class="php-comment"> * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
-</span></span><span id="12" class="l"><a class="l" href="#12">  12: </a><span class="php-comment"> * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
+</span></span><span id="12" class="l"><a class="l" href="#12">  12: </a><span class="php-comment"> * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
 </span></span><span id="13" class="l"><a class="l" href="#13">  13: </a><span class="php-comment"> * All rights reserved.
 </span></span><span id="14" class="l"><a class="l" href="#14">  14: </a><span class="php-comment"> *
 </span></span><span id="15" class="l"><a class="l" href="#15">  15: </a><span class="php-comment"> * &lt;pre&gt;
@@ -464,7 +462,7 @@
 </span><span id="308" class="l"><a class="l" href="#308"> 308: </a>                    <span class="php-var">$keywords</span> .= <span class="php-quote">','</span>.<span class="php-var">$tag</span>-&gt;get(<span class="php-quote">'content'</span>);
 </span><span id="309" class="l"><a class="l" href="#309"> 309: </a>            }
 </span><span id="310" class="l"><a class="l" href="#310"> 310: </a>
-</span><span id="311" class="l"><a class="l" href="#311"> 311: </a>            <span class="php-var">$this</span>-&gt;setKeywords(<span class="php-keyword2">mb_substr</span>(<span class="php-var">$keywords</span>, <span class="php-num">1</span>));
+</span><span id="311" class="l"><a class="l" href="#311"> 311: </a>            <span class="php-var">$this</span>-&gt;setKeywords(<span class="php-keyword2">substr</span>(<span class="php-var">$keywords</span>, <span class="php-num">1</span>));
 </span><span id="312" class="l"><a class="l" href="#312"> 312: </a>        }
 </span><span id="313" class="l"><a class="l" href="#313"> 313: </a>
 </span><span id="314" class="l"><a class="l" href="#314"> 314: </a>        self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;setBO'</span>);
@@ -1170,7 +1168,7 @@
 </span><span id="1014" class="l"><a class="l" href="#1014">1014: </a>        <span class="php-keyword1">global</span> <span class="php-var">$config</span>;
 </span><span id="1015" class="l"><a class="l" href="#1015">1015: </a>
 </span><span id="1016" class="l"><a class="l" href="#1016">1016: </a>        <span class="php-comment">// strip the Object part from the class name</span>
-</span><span id="1017" class="l"><a class="l" href="#1017">1017: </a>        <span class="php-var">$BOName</span> = <span class="php-keyword2">mb_substr</span>(<span class="php-var">$BOName</span>, <span class="php-num">0</span>, <span class="php-keyword2">mb_strpos</span>(<span class="php-var">$BOName</span>, <span class="php-quote">'Object'</span>));
+</span><span id="1017" class="l"><a class="l" href="#1017">1017: </a>        <span class="php-var">$BOName</span> = <span class="php-keyword2">substr</span>(<span class="php-var">$BOName</span>, <span class="php-num">0</span>, <span class="php-keyword2">strpos</span>(<span class="php-var">$BOName</span>, <span class="php-quote">'Object'</span>));
 </span><span id="1018" class="l"><a class="l" href="#1018">1018: </a>        <span class="php-comment">// uppercase the first letter of each word, e.g. create cart becomes Create Cart</span>
 </span><span id="1019" class="l"><a class="l" href="#1019">1019: </a>        <span class="php-var">$controllerName</span> = <span class="php-keyword2">ucwords</span>(<span class="php-var">$mode</span>.<span class="php-quote">' '</span>.<span class="php-var">$BOName</span>);
 </span><span id="1020" class="l"><a class="l" href="#1020">1020: </a>        <span class="php-comment">// remove spaces</span>
@@ -1204,7 +1202,7 @@
 </span><span id="1048" class="l"><a class="l" href="#1048">1048: </a>        <span class="php-keyword1">global</span> <span class="php-var">$config</span>;
 </span><span id="1049" class="l"><a class="l" href="#1049">1049: </a>
 </span><span id="1050" class="l"><a class="l" href="#1050">1050: </a>        <span class="php-comment">// strip the Object part from the class name</span>
-</span><span id="1051" class="l"><a class="l" href="#1051">1051: </a>        <span class="php-var">$BOName</span> = <span class="php-keyword2">mb_substr</span>(<span class="php-var">$BOName</span>, <span class="php-num">0</span>, <span class="php-keyword2">mb_strpos</span>(<span class="php-var">$BOName</span>, <span class="php-quote">'Object'</span>));
+</span><span id="1051" class="l"><a class="l" href="#1051">1051: </a>        <span class="php-var">$BOName</span> = <span class="php-keyword2">substr</span>(<span class="php-var">$BOName</span>, <span class="php-num">0</span>, <span class="php-keyword2">strpos</span>(<span class="php-var">$BOName</span>, <span class="php-quote">'Object'</span>));
 </span><span id="1052" class="l"><a class="l" href="#1052">1052: </a>        <span class="php-comment">// uppercase the first letter of each word, e.g. create cart becomes Create Cart</span>
 </span><span id="1053" class="l"><a class="l" href="#1053">1053: </a>        <span class="php-var">$controllerName</span> = <span class="php-keyword2">ucwords</span>(<span class="php-var">$mode</span>.<span class="php-quote">' '</span>.<span class="php-var">$BOName</span>);
 </span><span id="1054" class="l"><a class="l" href="#1054">1054: </a>        <span class="php-comment">// remove spaces</span>
@@ -1241,9 +1239,9 @@
 </span><span id="1085" class="l"><a class="l" href="#1085">1085: </a>                    <span class="php-keyword1">if</span>(<span class="php-keyword1">isset</span>(<span class="php-var">$_GET</span>[<span class="php-quote">'tk'</span>])) {
 </span><span id="1086" class="l"><a class="l" href="#1086">1086: </a>                        <span class="php-var">$params</span> = FrontController::decodeQueryParams(<span class="php-var">$_GET</span>[<span class="php-quote">'tk'</span>]);
 </span><span id="1087" class="l"><a class="l" href="#1087">1087: </a>                    }<span class="php-keyword1">else</span>{
-</span><span id="1088" class="l"><a class="l" href="#1088">1088: </a>                        <span class="php-var">$start</span> = <span class="php-keyword2">mb_strpos</span>(<span class="php-var">$_SERVER</span>[<span class="php-quote">'REQUEST_URI'</span>], <span class="php-quote">'/tk/'</span>)+<span class="php-num">3</span>;
-</span><span id="1089" class="l"><a class="l" href="#1089">1089: </a>                        <span class="php-var">$end</span> = <span class="php-keyword2">mb_strlen</span>(<span class="php-var">$_SERVER</span>[<span class="php-quote">'REQUEST_URI'</span>]);
-</span><span id="1090" class="l"><a class="l" href="#1090">1090: </a>                        <span class="php-var">$tk</span> = <span class="php-keyword2">mb_substr</span>(<span class="php-var">$_SERVER</span>[<span class="php-quote">'REQUEST_URI'</span>], <span class="php-var">$start</span>+<span class="php-num">1</span>, <span class="php-var">$end</span>-(<span class="php-var">$start</span>+<span class="php-num">1</span>));
+</span><span id="1088" class="l"><a class="l" href="#1088">1088: </a>                        <span class="php-var">$start</span> = <span class="php-keyword2">strpos</span>(<span class="php-var">$_SERVER</span>[<span class="php-quote">'REQUEST_URI'</span>], <span class="php-quote">'/tk/'</span>)+<span class="php-num">3</span>;
+</span><span id="1089" class="l"><a class="l" href="#1089">1089: </a>                        <span class="php-var">$end</span> = <span class="php-keyword2">strlen</span>(<span class="php-var">$_SERVER</span>[<span class="php-quote">'REQUEST_URI'</span>]);
+</span><span id="1090" class="l"><a class="l" href="#1090">1090: </a>                        <span class="php-var">$tk</span> = <span class="php-keyword2">substr</span>(<span class="php-var">$_SERVER</span>[<span class="php-quote">'REQUEST_URI'</span>], <span class="php-var">$start</span>+<span class="php-num">1</span>, <span class="php-var">$end</span>-(<span class="php-var">$start</span>+<span class="php-num">1</span>));
 </span><span id="1091" class="l"><a class="l" href="#1091">1091: </a>                        <span class="php-var">$params</span> = FrontController::decodeQueryParams(<span class="php-var">$tk</span>);
 </span><span id="1092" class="l"><a class="l" href="#1092">1092: </a>                    }
 </span><span id="1093" class="l"><a class="l" href="#1093">1093: </a>
@@ -1354,7 +1352,7 @@
 </span></span><span id="1198" class="l"><a class="l" href="#1198">1198: </a><span class="php-comment">     * @since 1.0
 </span></span><span id="1199" class="l"><a class="l" href="#1199">1199: </a><span class="php-comment">     */</span>
 </span><span id="1200" class="l"><a class="l" href="#1200">1200: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> <a id="_checkIfAccessingFromSecureURL" href="#_checkIfAccessingFromSecureURL">checkIfAccessingFromSecureURL</a>() {
-</span><span id="1201" class="l"><a class="l" href="#1201">1201: </a>        <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$_GET</span>[<span class="php-quote">'tk'</span>]) || <span class="php-keyword2">mb_strpos</span>(<span class="php-var">$_SERVER</span>[<span class="php-quote">'REQUEST_URI'</span>], <span class="php-quote">'/tk/'</span>) !== <span class="php-keyword1">false</span>)
+</span><span id="1201" class="l"><a class="l" href="#1201">1201: </a>        <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$_GET</span>[<span class="php-quote">'tk'</span>]) || <span class="php-keyword2">strpos</span>(<span class="php-var">$_SERVER</span>[<span class="php-quote">'REQUEST_URI'</span>], <span class="php-quote">'/tk/'</span>) !== <span class="php-keyword1">false</span>)
 </span><span id="1202" class="l"><a class="l" href="#1202">1202: </a>            <span class="php-keyword1">return</span> <span class="php-keyword1">true</span>;
 </span><span id="1203" class="l"><a class="l" href="#1203">1203: </a>        <span class="php-keyword1">else</span>
 </span><span id="1204" class="l"><a class="l" href="#1204">1204: </a>            <span class="php-keyword1">return</span> <span class="php-keyword1">false</span>;
@@ -1385,7 +1383,7 @@
 </span><span id="1229" class="l"><a class="l" href="#1229">1229: </a></span><span class="xlang">?&gt;</span></code></pre>
 
 	<div id="footer">
-		Alpha Framework 1.2.3 API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+		Alpha Framework ${alpha.version.new} API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
 	</div>
 </div>
 </div>

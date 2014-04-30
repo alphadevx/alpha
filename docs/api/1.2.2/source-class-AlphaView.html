@@ -5,10 +5,10 @@
 	<meta name="generator" content="ApiGen 2.8.0" />
 	<meta name="robots" content="noindex" />
 
-	<title>File view/AlphaView.inc | Alpha Framework 1.2.3 API Documentation</title>
+	<title>File view/AlphaView.inc | Alpha Framework ${alpha.version.new} API Documentation</title>
 
 	<script type="text/javascript" src="resources/combined.js?197213082"></script>
-	<script type="text/javascript" src="elementlist.js?3363017373"></script>
+	<script type="text/javascript" src="elementlist.js?1938582898"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
 
 </head>
@@ -54,8 +54,6 @@
 				<li><a href="package-alpha..util..helpers.html">alpha::util::helpers</a>
 						</li>
 				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
-						</li>
-				<li><a href="package-alpha..util..search.html">alpha::util::search</a>
 						</li>
 				<li class="active"><a href="package-alpha..view.html">alpha::view</a>
 						</li>
@@ -133,9 +131,9 @@
 </span></span><span id="7" class="l"><a class="l" href="#7">  7: </a><span class="php-comment"> * @package alpha::view
 </span></span><span id="8" class="l"><a class="l" href="#8">  8: </a><span class="php-comment"> * @since 1.0
 </span></span><span id="9" class="l"><a class="l" href="#9">  9: </a><span class="php-comment"> * @author John Collins &lt;dev@alphaframework.org&gt;
-</span></span><span id="10" class="l"><a class="l" href="#10"> 10: </a><span class="php-comment"> * @version $Id: AlphaView.inc 1745 2014-03-29 15:19:05Z alphadevx $
+</span></span><span id="10" class="l"><a class="l" href="#10"> 10: </a><span class="php-comment"> * @version $Id: AlphaView.inc 1664 2013-09-03 22:07:49Z alphadevx $
 </span></span><span id="11" class="l"><a class="l" href="#11"> 11: </a><span class="php-comment"> * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
-</span></span><span id="12" class="l"><a class="l" href="#12"> 12: </a><span class="php-comment"> * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
+</span></span><span id="12" class="l"><a class="l" href="#12"> 12: </a><span class="php-comment"> * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
 </span></span><span id="13" class="l"><a class="l" href="#13"> 13: </a><span class="php-comment"> * All rights reserved.
 </span></span><span id="14" class="l"><a class="l" href="#14"> 14: </a><span class="php-comment"> *
 </span></span><span id="15" class="l"><a class="l" href="#15"> 15: </a><span class="php-comment"> * &lt;pre&gt;
@@ -180,12 +178,12 @@
 </span></span><span id="54" class="l"><a class="l" href="#54"> 54: </a><span class="php-comment">     */</span>
 </span><span id="55" class="l"><a class="l" href="#55"> 55: </a>    <span class="php-keyword1">protected</span> <span class="php-var"><a id="$BO" href="#$BO">$BO</a></span>;
 </span><span id="56" class="l"><a class="l" href="#56"> 56: </a>
-</span><span id="57" class="l"><a class="l" href="#57"> 57: </a>    <span class="php-comment">/**
-</span></span><span id="58" class="l"><a class="l" href="#58"> 58: </a><span class="php-comment">     * The rendering provider that will be used to render the business object
-</span></span><span id="59" class="l"><a class="l" href="#59"> 59: </a><span class="php-comment">     *
-</span></span><span id="60" class="l"><a class="l" href="#60"> 60: </a><span class="php-comment">     * @var AlphaRendererProviderInterface
-</span></span><span id="61" class="l"><a class="l" href="#61"> 61: </a><span class="php-comment">     * @since 1.2
-</span></span><span id="62" class="l"><a class="l" href="#62"> 62: </a><span class="php-comment">     */</span>
+</span><span id="57" class="l"><a class="l" href="#57"> 57: </a>        <span class="php-comment">/**
+</span></span><span id="58" class="l"><a class="l" href="#58"> 58: </a><span class="php-comment">         * The rendering provider that will be used to render the business object
+</span></span><span id="59" class="l"><a class="l" href="#59"> 59: </a><span class="php-comment">         *
+</span></span><span id="60" class="l"><a class="l" href="#60"> 60: </a><span class="php-comment">         * @var AlphaRendererProviderInterface
+</span></span><span id="61" class="l"><a class="l" href="#61"> 61: </a><span class="php-comment">         * @since 1.2
+</span></span><span id="62" class="l"><a class="l" href="#62"> 62: </a><span class="php-comment">         */</span>
 </span><span id="63" class="l"><a class="l" href="#63"> 63: </a>    <span class="php-keyword1">protected</span> <span class="php-var"><a id="$provider" href="#$provider">$provider</a></span>;
 </span><span id="64" class="l"><a class="l" href="#64"> 64: </a>
 </span><span id="65" class="l"><a class="l" href="#65"> 65: </a>    <span class="php-comment">/**
@@ -844,62 +842,55 @@
 </span></span><span id="718" class="l"><a class="l" href="#718">718: </a><span class="php-comment">     * @param string $type Currently only html supported, later json and xml.
 </span></span><span id="719" class="l"><a class="l" href="#719">719: </a><span class="php-comment">     * @param string $fileName The name of the fragment file
 </span></span><span id="720" class="l"><a class="l" href="#720">720: </a><span class="php-comment">     * @param array $fields A hash array of field values to pass to the template fragment.
-</span></span><span id="721" class="l"><a class="l" href="#721">721: </a><span class="php-comment">     * @return string
-</span></span><span id="722" class="l"><a class="l" href="#722">722: </a><span class="php-comment">     * @since 1.2
-</span></span><span id="723" class="l"><a class="l" href="#723">723: </a><span class="php-comment">     * @throws IllegalArguementException
-</span></span><span id="724" class="l"><a class="l" href="#724">724: </a><span class="php-comment">     */</span>
-</span><span id="725" class="l"><a class="l" href="#725">725: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> <a id="_loadTemplateFragment" href="#_loadTemplateFragment">loadTemplateFragment</a>(<span class="php-var">$type</span>, <span class="php-var">$fileName</span>, <span class="php-var">$fields</span>) {
-</span><span id="726" class="l"><a class="l" href="#726">726: </a>        <span class="php-keyword1">if</span>(self::<span class="php-var">$logger</span> == <span class="php-keyword1">null</span>)
-</span><span id="727" class="l"><a class="l" href="#727">727: </a>            self::<span class="php-var">$logger</span> = <span class="php-keyword1">new</span> Logger(<span class="php-quote">'AlphaView'</span>);
-</span><span id="728" class="l"><a class="l" href="#728">728: </a>        self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&gt;&gt;loadTemplateFragment(type=['</span>.<span class="php-var">$type</span>.<span class="php-quote">'], fileName=['</span>.<span class="php-var">$fileName</span>.<span class="php-quote">'], fields=['</span>.<span class="php-keyword2">var_export</span>(<span class="php-var">$fields</span>, <span class="php-keyword1">true</span>).<span class="php-quote">'])'</span>);
-</span><span id="729" class="l"><a class="l" href="#729">729: </a>
-</span><span id="730" class="l"><a class="l" href="#730">730: </a>        <span class="php-keyword1">global</span> <span class="php-var">$config</span>;
-</span><span id="731" class="l"><a class="l" href="#731">731: </a>
-</span><span id="732" class="l"><a class="l" href="#732">732: </a>        <span class="php-comment">// loop over the $fields array and create a local variable for each key value</span>
-</span><span id="733" class="l"><a class="l" href="#733">733: </a>        <span class="php-keyword1">foreach</span> (<span class="php-keyword2">array_keys</span>(<span class="php-var">$fields</span>) <span class="php-keyword1">as</span> <span class="php-var">$fieldName</span>)
-</span><span id="734" class="l"><a class="l" href="#734">734: </a>            <span class="php-var">$</span>{<span class="php-var">$fieldName</span>} = <span class="php-var">$fields</span>[<span class="php-var">$fieldName</span>];
-</span><span id="735" class="l"><a class="l" href="#735">735: </a>
-</span><span id="736" class="l"><a class="l" href="#736">736: </a>        <span class="php-var">$customPath</span> = <span class="php-var">$config</span>-&gt;get(<span class="php-quote">'app.root'</span>).<span class="php-quote">'view/'</span>.<span class="php-var">$type</span>.<span class="php-quote">'/fragments/'</span>.<span class="php-var">$fileName</span>;
-</span><span id="737" class="l"><a class="l" href="#737">737: </a>        <span class="php-var">$defaultPath</span> = <span class="php-var">$config</span>-&gt;get(<span class="php-quote">'app.root'</span>).<span class="php-quote">'alpha/view/renderers/'</span>.<span class="php-var">$type</span>.<span class="php-quote">'/fragments/'</span>.<span class="php-var">$fileName</span>;
-</span><span id="738" class="l"><a class="l" href="#738">738: </a>
-</span><span id="739" class="l"><a class="l" href="#739">739: </a>        <span class="php-comment">// Check to see if a custom template exists for this BO, and if it does load that</span>
-</span><span id="740" class="l"><a class="l" href="#740">740: </a>        <span class="php-keyword1">if</span> (<span class="php-keyword2">file_exists</span>(<span class="php-var">$customPath</span>)) {
-</span><span id="741" class="l"><a class="l" href="#741">741: </a>            self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'Loading template ['</span>.<span class="php-var">$customPath</span>.<span class="php-quote">']'</span>);
-</span><span id="742" class="l"><a class="l" href="#742">742: </a>            <span class="php-keyword2">ob_start</span>();
-</span><span id="743" class="l"><a class="l" href="#743">743: </a>            <span class="php-keyword1">require</span> <span class="php-var">$customPath</span>;
-</span><span id="744" class="l"><a class="l" href="#744">744: </a>            <span class="php-var">$html</span> = <span class="php-keyword2">ob_get_clean</span>();
-</span><span id="745" class="l"><a class="l" href="#745">745: </a>            <span class="php-keyword1">return</span> <span class="php-var">$html</span>;
-</span><span id="746" class="l"><a class="l" href="#746">746: </a>        }<span class="php-keyword1">elseif</span> (<span class="php-keyword2">file_exists</span>(<span class="php-var">$defaultPath</span>)) {
-</span><span id="747" class="l"><a class="l" href="#747">747: </a>            self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'Loading template ['</span>.<span class="php-var">$defaultPath</span>.<span class="php-quote">']'</span>);
-</span><span id="748" class="l"><a class="l" href="#748">748: </a>            <span class="php-keyword2">ob_start</span>();
-</span><span id="749" class="l"><a class="l" href="#749">749: </a>            <span class="php-keyword1">require</span> <span class="php-var">$defaultPath</span>;
-</span><span id="750" class="l"><a class="l" href="#750">750: </a>            <span class="php-var">$html</span> = <span class="php-keyword2">ob_get_clean</span>();
-</span><span id="751" class="l"><a class="l" href="#751">751: </a>            <span class="php-keyword1">return</span> <span class="php-var">$html</span>;
-</span><span id="752" class="l"><a class="l" href="#752">752: </a>        }<span class="php-keyword1">else</span>{
-</span><span id="753" class="l"><a class="l" href="#753">753: </a>            <span class="php-keyword1">throw</span> <span class="php-keyword1">new</span> IllegalArguementException(<span class="php-quote">'Template fragment not found in ['</span>.<span class="php-var">$customPath</span>.<span class="php-quote">'] or ['</span>.<span class="php-var">$defaultPath</span>.<span class="php-quote">']!'</span>);
-</span><span id="754" class="l"><a class="l" href="#754">754: </a>        }
-</span><span id="755" class="l"><a class="l" href="#755">755: </a>
-</span><span id="756" class="l"><a class="l" href="#756">756: </a>        self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;loadTemplateFragment'</span>);
-</span><span id="757" class="l"><a class="l" href="#757">757: </a>    }
-</span><span id="758" class="l"><a class="l" href="#758">758: </a>
-</span><span id="759" class="l"><a class="l" href="#759">759: </a>    <span class="php-comment">/**
-</span></span><span id="760" class="l"><a class="l" href="#760">760: </a><span class="php-comment">     * Enables you to set an explicit type of AlphaRendererProviderInterface implementation to use for rendering the business
-</span></span><span id="761" class="l"><a class="l" href="#761">761: </a><span class="php-comment">     * object attached to this view.  Note that this has no affect on static methods of the AlphaView class, which always instantiate
-</span></span><span id="762" class="l"><a class="l" href="#762">762: </a><span class="php-comment">     * a new AlphaRendererProviderInterface provider each time they're called.
-</span></span><span id="763" class="l"><a class="l" href="#763">763: </a><span class="php-comment">     *
-</span></span><span id="764" class="l"><a class="l" href="#764">764: </a><span class="php-comment">     * @param string $ProviderClassName The name of the AlphaRendererProviderInterface implementation to use in this view object
-</span></span><span id="765" class="l"><a class="l" href="#765">765: </a><span class="php-comment">     * @since 1.2
-</span></span><span id="766" class="l"><a class="l" href="#766">766: </a><span class="php-comment">     * @throws IllegalArguementException
-</span></span><span id="767" class="l"><a class="l" href="#767">767: </a><span class="php-comment">     */</span>
-</span><span id="768" class="l"><a class="l" href="#768">768: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_setProvider" href="#_setProvider">setProvider</a>(<span class="php-var">$ProviderClassName</span>) {
-</span><span id="769" class="l"><a class="l" href="#769">769: </a>        <span class="php-var">$this</span>-&gt;provider = AlphaRendererProviderFactory::getInstance(<span class="php-var">$ProviderClassName</span>, <span class="php-var">$this</span>-&gt;BO);
-</span><span id="770" class="l"><a class="l" href="#770">770: </a>    }
-</span><span id="771" class="l"><a class="l" href="#771">771: </a>}
-</span><span id="772" class="l"><a class="l" href="#772">772: </a>
-</span><span id="773" class="l"><a class="l" href="#773">773: </a></span><span class="xlang">?&gt;</span></code></pre>
+</span></span><span id="721" class="l"><a class="l" href="#721">721: </a><span class="php-comment">     * @since 1.2
+</span></span><span id="722" class="l"><a class="l" href="#722">722: </a><span class="php-comment">     * @throws IllegalArguementException
+</span></span><span id="723" class="l"><a class="l" href="#723">723: </a><span class="php-comment">     */</span>
+</span><span id="724" class="l"><a class="l" href="#724">724: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> <a id="_loadTemplateFragment" href="#_loadTemplateFragment">loadTemplateFragment</a>(<span class="php-var">$type</span>, <span class="php-var">$fileName</span>, <span class="php-var">$fields</span>) {
+</span><span id="725" class="l"><a class="l" href="#725">725: </a>        <span class="php-keyword1">if</span>(self::<span class="php-var">$logger</span> == <span class="php-keyword1">null</span>)
+</span><span id="726" class="l"><a class="l" href="#726">726: </a>            self::<span class="php-var">$logger</span> = <span class="php-keyword1">new</span> Logger(<span class="php-quote">'AlphaView'</span>);
+</span><span id="727" class="l"><a class="l" href="#727">727: </a>        self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&gt;&gt;loadTemplateFragment(type=['</span>.<span class="php-var">$type</span>.<span class="php-quote">'], fileName=['</span>.<span class="php-var">$fileName</span>.<span class="php-quote">'], fields=['</span>.<span class="php-keyword2">var_export</span>(<span class="php-var">$fields</span>, <span class="php-keyword1">true</span>).<span class="php-quote">'])'</span>);
+</span><span id="728" class="l"><a class="l" href="#728">728: </a>
+</span><span id="729" class="l"><a class="l" href="#729">729: </a>        <span class="php-keyword1">global</span> <span class="php-var">$config</span>;
+</span><span id="730" class="l"><a class="l" href="#730">730: </a>
+</span><span id="731" class="l"><a class="l" href="#731">731: </a>        <span class="php-comment">// loop over the $fields array and create a local variable for each key value</span>
+</span><span id="732" class="l"><a class="l" href="#732">732: </a>        <span class="php-keyword1">foreach</span> (<span class="php-keyword2">array_keys</span>(<span class="php-var">$fields</span>) <span class="php-keyword1">as</span> <span class="php-var">$fieldName</span>)
+</span><span id="733" class="l"><a class="l" href="#733">733: </a>            <span class="php-var">$</span>{<span class="php-var">$fieldName</span>} = <span class="php-var">$fields</span>[<span class="php-var">$fieldName</span>];
+</span><span id="734" class="l"><a class="l" href="#734">734: </a>
+</span><span id="735" class="l"><a class="l" href="#735">735: </a>        <span class="php-var">$customPath</span> = <span class="php-var">$config</span>-&gt;get(<span class="php-quote">'app.root'</span>).<span class="php-quote">'view/'</span>.<span class="php-var">$type</span>.<span class="php-quote">'/fragments/'</span>.<span class="php-var">$fileName</span>;
+</span><span id="736" class="l"><a class="l" href="#736">736: </a>        <span class="php-var">$defaultPath</span> = <span class="php-var">$config</span>-&gt;get(<span class="php-quote">'app.root'</span>).<span class="php-quote">'alpha/view/renderers/'</span>.<span class="php-var">$type</span>.<span class="php-quote">'/fragments/'</span>.<span class="php-var">$fileName</span>;
+</span><span id="737" class="l"><a class="l" href="#737">737: </a>
+</span><span id="738" class="l"><a class="l" href="#738">738: </a>        <span class="php-comment">// Check to see if a custom template exists for this BO, and if it does load that</span>
+</span><span id="739" class="l"><a class="l" href="#739">739: </a>        <span class="php-keyword1">if</span> (<span class="php-keyword2">file_exists</span>(<span class="php-var">$customPath</span>)) {
+</span><span id="740" class="l"><a class="l" href="#740">740: </a>            self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'Loading template ['</span>.<span class="php-var">$customPath</span>.<span class="php-quote">']'</span>);
+</span><span id="741" class="l"><a class="l" href="#741">741: </a>            <span class="php-keyword1">require</span> <span class="php-var">$customPath</span>;
+</span><span id="742" class="l"><a class="l" href="#742">742: </a>        }<span class="php-keyword1">elseif</span> (<span class="php-keyword2">file_exists</span>(<span class="php-var">$defaultPath</span>)) {
+</span><span id="743" class="l"><a class="l" href="#743">743: </a>            self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'Loading template ['</span>.<span class="php-var">$defaultPath</span>.<span class="php-quote">']'</span>);
+</span><span id="744" class="l"><a class="l" href="#744">744: </a>            <span class="php-keyword1">require</span> <span class="php-var">$defaultPath</span>;
+</span><span id="745" class="l"><a class="l" href="#745">745: </a>        }<span class="php-keyword1">else</span>{
+</span><span id="746" class="l"><a class="l" href="#746">746: </a>            <span class="php-keyword1">throw</span> <span class="php-keyword1">new</span> IllegalArguementException(<span class="php-quote">'Template fragment not found in ['</span>.<span class="php-var">$customPath</span>.<span class="php-quote">'] or ['</span>.<span class="php-var">$defaultPath</span>.<span class="php-quote">']!'</span>);
+</span><span id="747" class="l"><a class="l" href="#747">747: </a>        }
+</span><span id="748" class="l"><a class="l" href="#748">748: </a>
+</span><span id="749" class="l"><a class="l" href="#749">749: </a>        self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;loadTemplateFragment'</span>);
+</span><span id="750" class="l"><a class="l" href="#750">750: </a>    }
+</span><span id="751" class="l"><a class="l" href="#751">751: </a>
+</span><span id="752" class="l"><a class="l" href="#752">752: </a>    <span class="php-comment">/**
+</span></span><span id="753" class="l"><a class="l" href="#753">753: </a><span class="php-comment">     * Enables you to set an explicit type of AlphaRendererProviderInterface implementation to use for rendering the business
+</span></span><span id="754" class="l"><a class="l" href="#754">754: </a><span class="php-comment">     * object attached to this view.  Note that this has no affect on static methods of the AlphaView class, which always instantiate
+</span></span><span id="755" class="l"><a class="l" href="#755">755: </a><span class="php-comment">     * a new AlphaRendererProviderInterface provider each time they're called.
+</span></span><span id="756" class="l"><a class="l" href="#756">756: </a><span class="php-comment">     *
+</span></span><span id="757" class="l"><a class="l" href="#757">757: </a><span class="php-comment">     * @param string $ProviderClassName The name of the AlphaRendererProviderInterface implementation to use in this view object
+</span></span><span id="758" class="l"><a class="l" href="#758">758: </a><span class="php-comment">     * @since 1.2
+</span></span><span id="759" class="l"><a class="l" href="#759">759: </a><span class="php-comment">     * @throws IllegalArguementException
+</span></span><span id="760" class="l"><a class="l" href="#760">760: </a><span class="php-comment">     */</span>
+</span><span id="761" class="l"><a class="l" href="#761">761: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_setProvider" href="#_setProvider">setProvider</a>(<span class="php-var">$ProviderClassName</span>) {
+</span><span id="762" class="l"><a class="l" href="#762">762: </a>        <span class="php-var">$this</span>-&gt;provider = AlphaRendererProviderFactory::getInstance(<span class="php-var">$ProviderClassName</span>, <span class="php-var">$this</span>-&gt;BO);
+</span><span id="763" class="l"><a class="l" href="#763">763: </a>    }
+</span><span id="764" class="l"><a class="l" href="#764">764: </a>}
+</span><span id="765" class="l"><a class="l" href="#765">765: </a>
+</span><span id="766" class="l"><a class="l" href="#766">766: </a></span><span class="xlang">?&gt;</span></code></pre>
 
 	<div id="footer">
-		Alpha Framework 1.2.3 API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+		Alpha Framework ${alpha.version.new} API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
 	</div>
 </div>
 </div>

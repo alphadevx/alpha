@@ -4,10 +4,10 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="generator" content="ApiGen 2.8.0" />
 
-	<title>Class Search | Alpha Framework 1.2.3 API Documentation</title>
+	<title>Class Search | Alpha Framework ${alpha.version.new} API Documentation</title>
 
 	<script type="text/javascript" src="resources/combined.js?197213082"></script>
-	<script type="text/javascript" src="elementlist.js?3363017373"></script>
+	<script type="text/javascript" src="elementlist.js?1938582898"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
 
 </head>
@@ -53,8 +53,6 @@
 				<li><a href="package-alpha..util..helpers.html">alpha::util::helpers</a>
 						</li>
 				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
-						</li>
-				<li><a href="package-alpha..util..search.html">alpha::util::search</a>
 						</li>
 				<li><a href="package-alpha..view.html">alpha::view</a>
 						</li>
@@ -233,10 +231,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 				John Collins &lt;<a
 href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&gt;<br />
 				<b>Version:</b>
-				$Id: Search.php 1701 2013-12-18 22:33:25Z alphadevx $<br />
+				$Id: Search.php 1652 2013-02-26 15:13:13Z alphadevx $<br />
 				<b>Since:</b>
 				1.0<br />
-		<b>Located at</b> <a href="source-class-Search.html#11-313" title="Go to source code">controller/Search.php</a><br />
+		<b>Located at</b> <a href="source-class-Search.html#11-399" title="Go to source code">controller/Search.php</a><br />
 	</div>
 
 
@@ -298,7 +296,7 @@ href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&
 
 		<td class="name"><div>
 		<a class="anchor" href="#_doGET">#</a>
-		<code><a href="source-class-Search.html#107-164" title="Go to source code">doGET</a>( <span>array <var>$params</var></span> )</code>
+		<code><a href="source-class-Search.html#107-181" title="Go to source code">doGET</a>( <span>array <var>$params</var></span> )</code>
 
 		<div class="description short">
 			
@@ -335,6 +333,56 @@ href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&
 		</div>
 		</div></td>
 	</tr>
+	<tr data-order="doTagSearch" id="_doTagSearch">
+
+		<td class="attributes"><code>
+			 protected 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_doTagSearch">#</a>
+		<code><a href="source-class-Search.html#183-226" title="Go to source code">doTagSearch</a>( <span>string <var>$query</var></span>, <span>string <var>$BOName</var></span>, <span>array <var>$BOIDs</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Searches for tags on the given BO type matching the query provided</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Searches for tags on the given BO type matching the query provided</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$query</var></dt>
+					<dd><code>string</code><br>$query</dd>
+					<dt><var>$BOName</var></dt>
+					<dd><code>string</code><br>$BOName</dd>
+					<dt><var>$BOIDs</var></dt>
+					<dd><code>array</code><br>$BOIDs</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.1<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
 	<tr data-order="renderResultList" id="_renderResultList">
 
 		<td class="attributes"><code>
@@ -346,7 +394,7 @@ href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&
 
 		<td class="name"><div>
 		<a class="anchor" href="#_renderResultList">#</a>
-		<code><a href="source-class-Search.html#166-209" title="Go to source code">renderResultList</a>( <span>array <var>$results</var></span>, <span>string <var>$query</var> = <span class="php-quote">''</span></span>, <span>boolean <var>$showTags</var> = <span class="php-keyword1">true</span></span> )</code>
+		<code><a href="source-class-Search.html#228-295" title="Go to source code">renderResultList</a>( <span>array <var>$BOIDs</var></span>, <span>string <var>$BO</var></span>, <span>string <var>$query</var> = <span class="php-quote">''</span></span>, <span>boolean <var>$showTags</var> = <span class="php-keyword1">true</span></span>, <span>boolean <var>$showScore</var> = <span class="php-keyword1">false</span></span> )</code>
 
 		<div class="description short">
 			
@@ -362,12 +410,16 @@ href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&
 
 				<h4>Parameters</h4>
 				<div class="list"><dl>
-					<dt><var>$results</var></dt>
-					<dd><code>array</code><br>$results</dd>
+					<dt><var>$BOIDs</var></dt>
+					<dd><code>array</code><br>$BOIDs</dd>
+					<dt><var>$BO</var></dt>
+					<dd><code>string</code><br>$BO</dd>
 					<dt><var>$query</var></dt>
 					<dd><code>string</code><br>$query</dd>
 					<dt><var>$showTags</var></dt>
 					<dd><code>boolean</code><br>$showTags</dd>
+					<dt><var>$showScore</var></dt>
+					<dd><code>boolean</code><br>$showScore</dd>
 				</dl></div>
 
 
@@ -392,7 +444,7 @@ href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&
 
 		<td class="name"><div>
 		<a class="anchor" href="#_doPOST">#</a>
-		<code><a href="source-class-Search.html#211-221" title="Go to source code">doPOST</a>( <span>array <var>$params</var></span> )</code>
+		<code><a href="source-class-Search.html#297-307" title="Go to source code">doPOST</a>( <span>array <var>$params</var></span> )</code>
 
 		<div class="description short">
 			
@@ -436,7 +488,7 @@ href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&
 
 		<td class="name"><div>
 		<a class="anchor" href="#_after_displayPageHead_callback">#</a>
-		<code><a href="source-class-Search.html#223-239" title="Go to source code">after_displayPageHead_callback</a>( )</code>
+		<code><a href="source-class-Search.html#309-325" title="Go to source code">after_displayPageHead_callback</a>( )</code>
 
 		<div class="description short">
 			
@@ -477,7 +529,7 @@ href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&
 
 		<td class="name"><div>
 		<a class="anchor" href="#_before_displayPageFoot_callback">#</a>
-		<code><a href="source-class-Search.html#241-253" title="Go to source code">before_displayPageFoot_callback</a>( )</code>
+		<code><a href="source-class-Search.html#327-339" title="Go to source code">before_displayPageFoot_callback</a>( )</code>
 
 		<div class="description short">
 			
@@ -518,7 +570,7 @@ href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&
 
 		<td class="name"><div>
 		<a class="anchor" href="#_renderPageLinks">#</a>
-		<code><a href="source-class-Search.html#255-312" title="Go to source code">renderPageLinks</a>( )</code>
+		<code><a href="source-class-Search.html#341-398" title="Go to source code">renderPageLinks</a>( )</code>
 
 		<div class="description short">
 			
@@ -769,7 +821,7 @@ href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&
 </div>
 
 	<div id="footer">
-		Alpha Framework 1.2.3 API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+		Alpha Framework ${alpha.version.new} API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
 	</div>
 </div>
 </div>

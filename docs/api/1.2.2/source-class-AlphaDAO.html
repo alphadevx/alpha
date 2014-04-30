@@ -5,10 +5,10 @@
 	<meta name="generator" content="ApiGen 2.8.0" />
 	<meta name="robots" content="noindex" />
 
-	<title>File model/AlphaDAO.inc | Alpha Framework 1.2.3 API Documentation</title>
+	<title>File model/AlphaDAO.inc | Alpha Framework ${alpha.version.new} API Documentation</title>
 
 	<script type="text/javascript" src="resources/combined.js?197213082"></script>
-	<script type="text/javascript" src="elementlist.js?3363017373"></script>
+	<script type="text/javascript" src="elementlist.js?1938582898"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
 
 </head>
@@ -54,8 +54,6 @@
 				<li><a href="package-alpha..util..helpers.html">alpha::util::helpers</a>
 						</li>
 				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
-						</li>
-				<li><a href="package-alpha..util..search.html">alpha::util::search</a>
 						</li>
 				<li><a href="package-alpha..view.html">alpha::view</a>
 						</li>
@@ -143,9 +141,9 @@
 </span></span><span id="6" class="l"><a class="l" href="#6">   6: </a><span class="php-comment"> * @package alpha::model
 </span></span><span id="7" class="l"><a class="l" href="#7">   7: </a><span class="php-comment"> * @since 1.0
 </span></span><span id="8" class="l"><a class="l" href="#8">   8: </a><span class="php-comment"> * @author John Collins &lt;dev@alphaframework.org&gt;
-</span></span><span id="9" class="l"><a class="l" href="#9">   9: </a><span class="php-comment"> * @version $Id: AlphaDAO.inc 1752 2014-03-30 22:26:22Z alphadevx $
+</span></span><span id="9" class="l"><a class="l" href="#9">   9: </a><span class="php-comment"> * @version $Id: AlphaDAO.inc 1656 2013-05-28 10:08:25Z alphadevx $
 </span></span><span id="10" class="l"><a class="l" href="#10">  10: </a><span class="php-comment"> * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
-</span></span><span id="11" class="l"><a class="l" href="#11">  11: </a><span class="php-comment"> * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
+</span></span><span id="11" class="l"><a class="l" href="#11">  11: </a><span class="php-comment"> * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
 </span></span><span id="12" class="l"><a class="l" href="#12">  12: </a><span class="php-comment"> * All rights reserved.
 </span></span><span id="13" class="l"><a class="l" href="#13">  13: </a><span class="php-comment"> *
 </span></span><span id="14" class="l"><a class="l" href="#14">  14: </a><span class="php-comment"> * &lt;pre&gt;
@@ -693,10 +691,10 @@
 </span><span id="556" class="l"><a class="l" href="#556"> 556: </a>            <span class="php-var">$propName</span> = <span class="php-var">$propObj</span>-&gt;name;
 </span><span id="557" class="l"><a class="l" href="#557"> 557: </a>            <span class="php-keyword1">if</span>(!<span class="php-keyword2">in_array</span>(<span class="php-var">$propName</span>, <span class="php-var">$this</span>-&gt;defaultAttributes) &amp;&amp; !<span class="php-keyword2">in_array</span>(<span class="php-var">$propName</span>, <span class="php-var">$this</span>-&gt;transientAttributes)) {
 </span><span id="558" class="l"><a class="l" href="#558"> 558: </a>                <span class="php-var">$propClass</span> = <span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>-&gt;getPropObject(<span class="php-var">$propName</span>));
-</span><span id="559" class="l"><a class="l" href="#559"> 559: </a>                <span class="php-keyword1">if</span> (<span class="php-keyword2">mb_strtoupper</span>(<span class="php-var">$propClass</span>) != <span class="php-quote">&quot;ENUM&quot;</span> &amp;&amp;
-</span><span id="560" class="l"><a class="l" href="#560"> 560: </a>                <span class="php-keyword2">mb_strtoupper</span>(<span class="php-var">$propClass</span>) != <span class="php-quote">&quot;DENUM&quot;</span> &amp;&amp;
-</span><span id="561" class="l"><a class="l" href="#561"> 561: </a>                <span class="php-keyword2">mb_strtoupper</span>(<span class="php-var">$propClass</span>) != <span class="php-quote">&quot;DENUMITEM&quot;</span> &amp;&amp;
-</span><span id="562" class="l"><a class="l" href="#562"> 562: </a>                <span class="php-keyword2">mb_strtoupper</span>(<span class="php-var">$propClass</span>) != <span class="php-quote">&quot;BOOLEAN&quot;</span>) {
+</span><span id="559" class="l"><a class="l" href="#559"> 559: </a>                <span class="php-keyword1">if</span> (<span class="php-keyword2">strtoupper</span>(<span class="php-var">$propClass</span>) != <span class="php-quote">&quot;ENUM&quot;</span> &amp;&amp;
+</span><span id="560" class="l"><a class="l" href="#560"> 560: </a>                <span class="php-keyword2">strtoupper</span>(<span class="php-var">$propClass</span>) != <span class="php-quote">&quot;DENUM&quot;</span> &amp;&amp;
+</span><span id="561" class="l"><a class="l" href="#561"> 561: </a>                <span class="php-keyword2">strtoupper</span>(<span class="php-var">$propClass</span>) != <span class="php-quote">&quot;DENUMITEM&quot;</span> &amp;&amp; 
+</span><span id="562" class="l"><a class="l" href="#562"> 562: </a>                <span class="php-keyword2">strtoupper</span>(<span class="php-var">$propClass</span>) != <span class="php-quote">&quot;BOOLEAN&quot;</span>) {
 </span><span id="563" class="l"><a class="l" href="#563"> 563: </a>                    <span class="php-keyword1">if</span> (<span class="php-var">$this</span>-&gt;getPropObject(<span class="php-var">$propName</span>) != <span class="php-keyword1">false</span> &amp;&amp; !<span class="php-keyword2">preg_match</span>(<span class="php-var">$this</span>-&gt;getPropObject(<span class="php-var">$propName</span>)-&gt;getRule(), <span class="php-var">$this</span>-&gt;getPropObject(<span class="php-var">$propName</span>)-&gt;getValue())) {
 </span><span id="564" class="l"><a class="l" href="#564"> 564: </a>                        <span class="php-keyword1">throw</span> <span class="php-keyword1">new</span> ValidationException(<span class="php-quote">'Failed to save, validation error is: '</span>.<span class="php-var">$this</span>-&gt;getPropObject(<span class="php-var">$propName</span>)-&gt;getHelper());
 </span><span id="565" class="l"><a class="l" href="#565"> 565: </a>                        <span class="php-var">$valid</span> = <span class="php-keyword1">false</span>;
@@ -1008,15 +1006,15 @@
 </span><span id="871" class="l"><a class="l" href="#871"> 871: </a>
 </span><span id="872" class="l"><a class="l" href="#872"> 872: </a>                <span class="php-keyword1">if</span>(<span class="php-keyword1">isset</span>(<span class="php-var">$_POST</span>[<span class="php-var">$propName</span>])) {
 </span><span id="873" class="l"><a class="l" href="#873"> 873: </a>                    <span class="php-comment">// we will accept &quot;on&quot; as a valid Boolean when dealing with checkboxes</span>
-</span><span id="874" class="l"><a class="l" href="#874"> 874: </a>                    <span class="php-keyword1">if</span>(<span class="php-keyword2">mb_strtoupper</span>(<span class="php-var">$propClass</span>) == <span class="php-quote">'BOOLEAN'</span> &amp;&amp; <span class="php-var">$_POST</span>[<span class="php-var">$propName</span>] == <span class="php-quote">'on'</span>) {
+</span><span id="874" class="l"><a class="l" href="#874"> 874: </a>                    <span class="php-keyword1">if</span>(<span class="php-keyword2">strtoupper</span>(<span class="php-var">$propClass</span>) == <span class="php-quote">'BOOLEAN'</span> &amp;&amp; <span class="php-var">$_POST</span>[<span class="php-var">$propName</span>] == <span class="php-quote">'on'</span>) {
 </span><span id="875" class="l"><a class="l" href="#875"> 875: </a>                        <span class="php-var">$_POST</span>[<span class="php-var">$propName</span>] = <span class="php-num">1</span>;
 </span><span id="876" class="l"><a class="l" href="#876"> 876: </a>                    }
 </span><span id="877" class="l"><a class="l" href="#877"> 877: </a>
-</span><span id="878" class="l"><a class="l" href="#878"> 878: </a>                    <span class="php-keyword1">if</span> (<span class="php-keyword2">mb_strtoupper</span>(<span class="php-var">$propClass</span>) != <span class="php-quote">'DATE'</span> &amp;&amp; <span class="php-keyword2">mb_strtoupper</span>(<span class="php-var">$propClass</span>) != <span class="php-quote">'TIMESTAMP'</span>) {
+</span><span id="878" class="l"><a class="l" href="#878"> 878: </a>                    <span class="php-keyword1">if</span> (<span class="php-keyword2">strtoupper</span>(<span class="php-var">$propClass</span>) != <span class="php-quote">'DATE'</span> &amp;&amp; <span class="php-keyword2">strtoupper</span>(<span class="php-var">$propClass</span>) != <span class="php-quote">'TIMESTAMP'</span>) {
 </span><span id="879" class="l"><a class="l" href="#879"> 879: </a>                        <span class="php-keyword1">if</span>(<span class="php-var">$filterAll</span>) {
 </span><span id="880" class="l"><a class="l" href="#880"> 880: </a>                            <span class="php-var">$this</span>-&gt;getPropObject(<span class="php-var">$propName</span>)-&gt;setValue(InputFilter::encode(<span class="php-var">$_POST</span>[<span class="php-var">$propName</span>], <span class="php-keyword1">false</span>));
 </span><span id="881" class="l"><a class="l" href="#881"> 881: </a>                        }<span class="php-keyword1">else</span>{
-</span><span id="882" class="l"><a class="l" href="#882"> 882: </a>                            <span class="php-keyword1">if</span>(<span class="php-keyword2">mb_strtoupper</span>(<span class="php-var">$propClass</span>) == <span class="php-quote">'TEXT'</span> &amp;&amp; !<span class="php-var">$this</span>-&gt;getPropObject(<span class="php-var">$propName</span>)-&gt;getAllowHTML())
+</span><span id="882" class="l"><a class="l" href="#882"> 882: </a>                            <span class="php-keyword1">if</span>(<span class="php-keyword2">strtoupper</span>(<span class="php-var">$propClass</span>) == <span class="php-quote">'TEXT'</span> &amp;&amp; !<span class="php-var">$this</span>-&gt;getPropObject(<span class="php-var">$propName</span>)-&gt;getAllowHTML())
 </span><span id="883" class="l"><a class="l" href="#883"> 883: </a>                                <span class="php-var">$this</span>-&gt;getPropObject(<span class="php-var">$propName</span>)-&gt;setValue(InputFilter::encode(<span class="php-var">$_POST</span>[<span class="php-var">$propName</span>], <span class="php-keyword1">false</span>));
 </span><span id="884" class="l"><a class="l" href="#884"> 884: </a>                            <span class="php-keyword1">else</span>
 </span><span id="885" class="l"><a class="l" href="#885"> 885: </a>                                <span class="php-var">$this</span>-&gt;getPropObject(<span class="php-var">$propName</span>)-&gt;setValue(InputFilter::encode(<span class="php-var">$_POST</span>[<span class="php-var">$propName</span>], <span class="php-keyword1">true</span>));
@@ -1059,7 +1057,7 @@
 </span><span id="922" class="l"><a class="l" href="#922"> 922: </a>
 </span><span id="923" class="l"><a class="l" href="#923"> 923: </a>                <span class="php-keyword1">if</span>(<span class="php-keyword1">isset</span>(<span class="php-var">$hashArray</span>[<span class="php-var">$propName</span>])) {
 </span><span id="924" class="l"><a class="l" href="#924"> 924: </a>
-</span><span id="925" class="l"><a class="l" href="#925"> 925: </a>                    <span class="php-keyword1">if</span> (<span class="php-keyword2">mb_strtoupper</span>(<span class="php-var">$propClass</span>) != <span class="php-quote">'DATE'</span> &amp;&amp; <span class="php-keyword2">mb_strtoupper</span>(<span class="php-var">$propClass</span>) != <span class="php-quote">'TIMESTAMP'</span>)
+</span><span id="925" class="l"><a class="l" href="#925"> 925: </a>                    <span class="php-keyword1">if</span> (<span class="php-keyword2">strtoupper</span>(<span class="php-var">$propClass</span>) != <span class="php-quote">'DATE'</span> &amp;&amp; <span class="php-keyword2">strtoupper</span>(<span class="php-var">$propClass</span>) != <span class="php-quote">'TIMESTAMP'</span>)
 </span><span id="926" class="l"><a class="l" href="#926"> 926: </a>                        <span class="php-var">$this</span>-&gt;getPropObject(<span class="php-var">$propName</span>)-&gt;setValue(<span class="php-var">$hashArray</span>[<span class="php-var">$propName</span>]);
 </span><span id="927" class="l"><a class="l" href="#927"> 927: </a>                    <span class="php-keyword1">else</span>
 </span><span id="928" class="l"><a class="l" href="#928"> 928: </a>                        <span class="php-var">$this</span>-&gt;getPropObject(<span class="php-var">$propName</span>)-&gt;populateFromString(<span class="php-var">$hashArray</span>[<span class="php-var">$propName</span>]);
@@ -1279,7 +1277,7 @@
 </span><span id="1142" class="l"><a class="l" href="#1142">1142: </a>
 </span><span id="1143" class="l"><a class="l" href="#1143">1143: </a>    <span class="php-comment">/**
 </span></span><span id="1144" class="l"><a class="l" href="#1144">1144: </a><span class="php-comment">     * Generic setter method for setting class properties.  Will use the method set.ucfirst($prop) instead if that
-</span></span><span id="1145" class="l"><a class="l" href="#1145">1145: </a><span class="php-comment">     * method exists at a child level (by default).  Set $noChildMethods to true if you don't want to use
+</span></span><span id="1145" class="l"><a class="l" href="#1145">1145: </a><span class="php-comment">     * method exists at a child level (by default).  Set $noChildMethods to true if you don't want to use 
 </span></span><span id="1146" class="l"><a class="l" href="#1146">1146: </a><span class="php-comment">     * any get.ucfirst($prop) method even if it exists, false otherwise (default).
 </span></span><span id="1147" class="l"><a class="l" href="#1147">1147: </a><span class="php-comment">     *
 </span></span><span id="1148" class="l"><a class="l" href="#1148">1148: </a><span class="php-comment">     * @param string $prop The name of the property to set.
@@ -1309,7 +1307,7 @@
 </span><span id="1172" class="l"><a class="l" href="#1172">1172: </a>
 </span><span id="1173" class="l"><a class="l" href="#1173">1173: </a>                <span class="php-comment">// complex types will have a setValue() method to call</span>
 </span><span id="1174" class="l"><a class="l" href="#1174">1174: </a>                <span class="php-keyword1">if</span> (<span class="php-keyword2">is_object</span>(<span class="php-var">$this</span>-&gt;<span class="php-var">$prop</span>) &amp;&amp; <span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>-&gt;<span class="php-var">$prop</span>) != <span class="php-keyword1">false</span>) {
-</span><span id="1175" class="l"><a class="l" href="#1175">1175: </a>                    <span class="php-keyword1">if</span> (<span class="php-keyword2">mb_strtoupper</span>(<span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>-&gt;<span class="php-var">$prop</span>)) != <span class="php-quote">'DATE'</span> &amp;&amp; <span class="php-keyword2">mb_strtoupper</span>(<span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>-&gt;<span class="php-var">$prop</span>)) != <span class="php-quote">'TIMESTAMP'</span>) {
+</span><span id="1175" class="l"><a class="l" href="#1175">1175: </a>                    <span class="php-keyword1">if</span> (<span class="php-keyword2">strtoupper</span>(<span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>-&gt;<span class="php-var">$prop</span>)) != <span class="php-quote">'DATE'</span> &amp;&amp; <span class="php-keyword2">strtoupper</span>(<span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>-&gt;<span class="php-var">$prop</span>)) != <span class="php-quote">'TIMESTAMP'</span>) {
 </span><span id="1176" class="l"><a class="l" href="#1176">1176: </a>                        <span class="php-var">$this</span>-&gt;<span class="php-var">$prop</span>-&gt;setValue(<span class="php-var">$value</span>);
 </span><span id="1177" class="l"><a class="l" href="#1177">1177: </a>                    }<span class="php-keyword1">else</span>{
 </span><span id="1178" class="l"><a class="l" href="#1178">1178: </a>                        <span class="php-comment">// Date and Timestamp objects have a special setter accepting a string</span>
@@ -1327,7 +1325,7 @@
 </span><span id="1190" class="l"><a class="l" href="#1190">1190: </a>    }
 </span><span id="1191" class="l"><a class="l" href="#1191">1191: </a>
 </span><span id="1192" class="l"><a class="l" href="#1192">1192: </a>    <span class="php-comment">/**
-</span></span><span id="1193" class="l"><a class="l" href="#1193">1193: </a><span class="php-comment">     * Gets the property object rather than the value for complex attributes.  Returns false if
+</span></span><span id="1193" class="l"><a class="l" href="#1193">1193: </a><span class="php-comment">     * Gets the property object rather than the value for complex attributes.  Returns false if 
 </span></span><span id="1194" class="l"><a class="l" href="#1194">1194: </a><span class="php-comment">     * the property exists but is private.
 </span></span><span id="1195" class="l"><a class="l" href="#1195">1195: </a><span class="php-comment">     *
 </span></span><span id="1196" class="l"><a class="l" href="#1196">1196: </a><span class="php-comment">     * @param string $prop The name of the property we are getting.
@@ -1771,7 +1769,7 @@
 </span><span id="1634" class="l"><a class="l" href="#1634">1634: </a>            <span class="php-comment">// loop over the business object directory</span>
 </span><span id="1635" class="l"><a class="l" href="#1635">1635: </a>            <span class="php-keyword1">while</span> (<span class="php-keyword1">false</span> !== (<span class="php-var">$file</span> = <span class="php-keyword2">readdir</span>(<span class="php-var">$handle</span>))) {
 </span><span id="1636" class="l"><a class="l" href="#1636">1636: </a>                <span class="php-keyword1">if</span> (<span class="php-keyword2">preg_match</span>(<span class="php-quote">&quot;/Object.inc/&quot;</span>, <span class="php-var">$file</span>)) {
-</span><span id="1637" class="l"><a class="l" href="#1637">1637: </a>                    <span class="php-var">$classname</span> = <span class="php-keyword2">mb_substr</span>(<span class="php-var">$file</span>, <span class="php-num">0</span>, -<span class="php-num">4</span>);
+</span><span id="1637" class="l"><a class="l" href="#1637">1637: </a>                    <span class="php-var">$classname</span> = <span class="php-keyword2">substr</span>(<span class="php-var">$file</span>, <span class="php-num">0</span>, -<span class="php-num">4</span>);
 </span><span id="1638" class="l"><a class="l" href="#1638">1638: </a>
 </span><span id="1639" class="l"><a class="l" href="#1639">1639: </a>                    <span class="php-keyword2">array_push</span>(<span class="php-var">$classNameArray</span>, <span class="php-var">$classname</span>);
 </span><span id="1640" class="l"><a class="l" href="#1640">1640: </a>                }
@@ -1785,7 +1783,7 @@
 </span><span id="1648" class="l"><a class="l" href="#1648">1648: </a>        <span class="php-comment">// loop over the business object directory</span>
 </span><span id="1649" class="l"><a class="l" href="#1649">1649: </a>        <span class="php-keyword1">while</span> (<span class="php-keyword1">false</span> !== (<span class="php-var">$file</span> = <span class="php-keyword2">readdir</span>(<span class="php-var">$handle</span>))) {
 </span><span id="1650" class="l"><a class="l" href="#1650">1650: </a>            <span class="php-keyword1">if</span> (<span class="php-keyword2">preg_match</span>(<span class="php-quote">&quot;/Object.inc/&quot;</span>, <span class="php-var">$file</span>)) {
-</span><span id="1651" class="l"><a class="l" href="#1651">1651: </a>                <span class="php-var">$classname</span> = <span class="php-keyword2">mb_substr</span>(<span class="php-var">$file</span>, <span class="php-num">0</span>, -<span class="php-num">4</span>);
+</span><span id="1651" class="l"><a class="l" href="#1651">1651: </a>                <span class="php-var">$classname</span> = <span class="php-keyword2">substr</span>(<span class="php-var">$file</span>, <span class="php-num">0</span>, -<span class="php-num">4</span>);
 </span><span id="1652" class="l"><a class="l" href="#1652">1652: </a>
 </span><span id="1653" class="l"><a class="l" href="#1653">1653: </a>                <span class="php-keyword2">array_push</span>(<span class="php-var">$classNameArray</span>, <span class="php-var">$classname</span>);
 </span><span id="1654" class="l"><a class="l" href="#1654">1654: </a>            }
@@ -2154,243 +2152,230 @@
 </span><span id="2017" class="l"><a class="l" href="#2017">2017: </a>    }
 </span><span id="2018" class="l"><a class="l" href="#2018">2018: </a>
 </span><span id="2019" class="l"><a class="l" href="#2019">2019: </a>    <span class="php-comment">/**
-</span></span><span id="2020" class="l"><a class="l" href="#2020">2020: </a><span class="php-comment">     * Returns the contents of the taggedAttributes array, or an empty array if that does not exist.
+</span></span><span id="2020" class="l"><a class="l" href="#2020">2020: </a><span class="php-comment">     * Setter for the BO version number.
 </span></span><span id="2021" class="l"><a class="l" href="#2021">2021: </a><span class="php-comment">     *
-</span></span><span id="2022" class="l"><a class="l" href="#2022">2022: </a><span class="php-comment">     * @return array
-</span></span><span id="2023" class="l"><a class="l" href="#2023">2023: </a><span class="php-comment">     * @since 1.2.3
+</span></span><span id="2022" class="l"><a class="l" href="#2022">2022: </a><span class="php-comment">     * @param integer $versionNumber The version number.
+</span></span><span id="2023" class="l"><a class="l" href="#2023">2023: </a><span class="php-comment">     * @since 1.0
 </span></span><span id="2024" class="l"><a class="l" href="#2024">2024: </a><span class="php-comment">     */</span>
-</span><span id="2025" class="l"><a class="l" href="#2025">2025: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_getTaggedAttributes" href="#_getTaggedAttributes">getTaggedAttributes</a>() {
-</span><span id="2026" class="l"><a class="l" href="#2026">2026: </a>        <span class="php-keyword1">if</span>(<span class="php-var">$this</span>-&gt;isTagged())
-</span><span id="2027" class="l"><a class="l" href="#2027">2027: </a>            <span class="php-keyword1">return</span> <span class="php-var">$this</span>-&gt;taggedAttributes;
-</span><span id="2028" class="l"><a class="l" href="#2028">2028: </a>        <span class="php-keyword1">else</span>
-</span><span id="2029" class="l"><a class="l" href="#2029">2029: </a>            <span class="php-keyword1">return</span> <span class="php-keyword1">array</span>();
-</span><span id="2030" class="l"><a class="l" href="#2030">2030: </a>    }
-</span><span id="2031" class="l"><a class="l" href="#2031">2031: </a>
-</span><span id="2032" class="l"><a class="l" href="#2032">2032: </a>    <span class="php-comment">/**
-</span></span><span id="2033" class="l"><a class="l" href="#2033">2033: </a><span class="php-comment">     * Setter for the BO version number.
-</span></span><span id="2034" class="l"><a class="l" href="#2034">2034: </a><span class="php-comment">     *
-</span></span><span id="2035" class="l"><a class="l" href="#2035">2035: </a><span class="php-comment">     * @param integer $versionNumber The version number.
-</span></span><span id="2036" class="l"><a class="l" href="#2036">2036: </a><span class="php-comment">     * @since 1.0
-</span></span><span id="2037" class="l"><a class="l" href="#2037">2037: </a><span class="php-comment">     */</span>
-</span><span id="2038" class="l"><a class="l" href="#2038">2038: </a>    <span class="php-keyword1">private</span> <span class="php-keyword1">function</span> <a id="_setVersion" href="#_setVersion">setVersion</a>(<span class="php-var">$versionNumber</span>) {
-</span><span id="2039" class="l"><a class="l" href="#2039">2039: </a>        <span class="php-var">$this</span>-&gt;version_num-&gt;setValue(<span class="php-var">$versionNumber</span>);
-</span><span id="2040" class="l"><a class="l" href="#2040">2040: </a>    }
+</span><span id="2025" class="l"><a class="l" href="#2025">2025: </a>    <span class="php-keyword1">private</span> <span class="php-keyword1">function</span> <a id="_setVersion" href="#_setVersion">setVersion</a>(<span class="php-var">$versionNumber</span>) {
+</span><span id="2026" class="l"><a class="l" href="#2026">2026: </a>        <span class="php-var">$this</span>-&gt;version_num-&gt;setValue(<span class="php-var">$versionNumber</span>);
+</span><span id="2027" class="l"><a class="l" href="#2027">2027: </a>    }
+</span><span id="2028" class="l"><a class="l" href="#2028">2028: </a>
+</span><span id="2029" class="l"><a class="l" href="#2029">2029: </a>    <span class="php-comment">/**
+</span></span><span id="2030" class="l"><a class="l" href="#2030">2030: </a><span class="php-comment">     * Cast a BO to another type of BO.  A new BO will be returned with the same OID and
+</span></span><span id="2031" class="l"><a class="l" href="#2031">2031: </a><span class="php-comment">     * version_num as the old BO, so this is NOT a true cast but is a copy.  All attribute
+</span></span><span id="2032" class="l"><a class="l" href="#2032">2032: </a><span class="php-comment">     * values will be copied accross.
+</span></span><span id="2033" class="l"><a class="l" href="#2033">2033: </a><span class="php-comment">     *
+</span></span><span id="2034" class="l"><a class="l" href="#2034">2034: </a><span class="php-comment">     * @param string $targetClassName The name of the target BO class.
+</span></span><span id="2035" class="l"><a class="l" href="#2035">2035: </a><span class="php-comment">     * @param AlphaDAO $originalBO The original business object.
+</span></span><span id="2036" class="l"><a class="l" href="#2036">2036: </a><span class="php-comment">     * @return AlphaDAO The new business object resulting from the cast.
+</span></span><span id="2037" class="l"><a class="l" href="#2037">2037: </a><span class="php-comment">     * @since 1.0
+</span></span><span id="2038" class="l"><a class="l" href="#2038">2038: </a><span class="php-comment">     */</span>
+</span><span id="2039" class="l"><a class="l" href="#2039">2039: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_cast" href="#_cast">cast</a>(<span class="php-var">$targetClassName</span>, <span class="php-var">$originalBO</span>) {
+</span><span id="2040" class="l"><a class="l" href="#2040">2040: </a>        AlphaDAO::loadClassDef(<span class="php-var">$targetClassName</span>);
 </span><span id="2041" class="l"><a class="l" href="#2041">2041: </a>
-</span><span id="2042" class="l"><a class="l" href="#2042">2042: </a>    <span class="php-comment">/**
-</span></span><span id="2043" class="l"><a class="l" href="#2043">2043: </a><span class="php-comment">     * Cast a BO to another type of BO.  A new BO will be returned with the same OID and
-</span></span><span id="2044" class="l"><a class="l" href="#2044">2044: </a><span class="php-comment">     * version_num as the old BO, so this is NOT a true cast but is a copy.  All attribute
-</span></span><span id="2045" class="l"><a class="l" href="#2045">2045: </a><span class="php-comment">     * values will be copied accross.
-</span></span><span id="2046" class="l"><a class="l" href="#2046">2046: </a><span class="php-comment">     *
-</span></span><span id="2047" class="l"><a class="l" href="#2047">2047: </a><span class="php-comment">     * @param string $targetClassName The name of the target BO class.
-</span></span><span id="2048" class="l"><a class="l" href="#2048">2048: </a><span class="php-comment">     * @param AlphaDAO $originalBO The original business object.
-</span></span><span id="2049" class="l"><a class="l" href="#2049">2049: </a><span class="php-comment">     * @return AlphaDAO The new business object resulting from the cast.
-</span></span><span id="2050" class="l"><a class="l" href="#2050">2050: </a><span class="php-comment">     * @since 1.0
-</span></span><span id="2051" class="l"><a class="l" href="#2051">2051: </a><span class="php-comment">     */</span>
-</span><span id="2052" class="l"><a class="l" href="#2052">2052: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_cast" href="#_cast">cast</a>(<span class="php-var">$targetClassName</span>, <span class="php-var">$originalBO</span>) {
-</span><span id="2053" class="l"><a class="l" href="#2053">2053: </a>        AlphaDAO::loadClassDef(<span class="php-var">$targetClassName</span>);
-</span><span id="2054" class="l"><a class="l" href="#2054">2054: </a>
-</span><span id="2055" class="l"><a class="l" href="#2055">2055: </a>        <span class="php-var">$BO</span> = <span class="php-keyword1">new</span> <span class="php-var">$targetClassName</span>;
-</span><span id="2056" class="l"><a class="l" href="#2056">2056: </a>        <span class="php-var">$BO</span>-&gt;setOID(<span class="php-var">$originalBO</span>-&gt;getOID());
-</span><span id="2057" class="l"><a class="l" href="#2057">2057: </a>        <span class="php-var">$BO</span>-&gt;setVersion(<span class="php-var">$originalBO</span>-&gt;getVersion());
-</span><span id="2058" class="l"><a class="l" href="#2058">2058: </a>
-</span><span id="2059" class="l"><a class="l" href="#2059">2059: </a>        <span class="php-comment">// get the class attributes</span>
-</span><span id="2060" class="l"><a class="l" href="#2060">2060: </a>        <span class="php-var">$originalBOreflection</span> = <span class="php-keyword1">new</span> ReflectionClass(<span class="php-keyword2">get_class</span>(<span class="php-var">$originalBO</span>));
-</span><span id="2061" class="l"><a class="l" href="#2061">2061: </a>        <span class="php-var">$originalBOproperties</span> = <span class="php-var">$originalBOreflection</span>-&gt;getProperties();
-</span><span id="2062" class="l"><a class="l" href="#2062">2062: </a>        <span class="php-var">$newBOreflection</span> = <span class="php-keyword1">new</span> ReflectionClass(<span class="php-var">$targetClassName</span>);
-</span><span id="2063" class="l"><a class="l" href="#2063">2063: </a>        <span class="php-var">$newBOproperties</span> = <span class="php-var">$newBOreflection</span>-&gt;getProperties();
-</span><span id="2064" class="l"><a class="l" href="#2064">2064: </a>
-</span><span id="2065" class="l"><a class="l" href="#2065">2065: </a>        <span class="php-comment">// copy the property values from the old BO to the new BO</span>
-</span><span id="2066" class="l"><a class="l" href="#2066">2066: </a>
-</span><span id="2067" class="l"><a class="l" href="#2067">2067: </a>        <span class="php-keyword1">if</span>(<span class="php-keyword2">count</span>(<span class="php-var">$originalBOproperties</span>) &lt; <span class="php-keyword2">count</span>(<span class="php-var">$newBOproperties</span>)) {
-</span><span id="2068" class="l"><a class="l" href="#2068">2068: </a>            <span class="php-comment">// the original BO is smaller, so loop over its properties</span>
-</span><span id="2069" class="l"><a class="l" href="#2069">2069: </a>            <span class="php-keyword1">foreach</span>(<span class="php-var">$originalBOproperties</span> <span class="php-keyword1">as</span> <span class="php-var">$propObj</span>) {
-</span><span id="2070" class="l"><a class="l" href="#2070">2070: </a>                <span class="php-var">$propName</span> = <span class="php-var">$propObj</span>-&gt;name;
-</span><span id="2071" class="l"><a class="l" href="#2071">2071: </a>                <span class="php-keyword1">if</span>(!<span class="php-keyword2">in_array</span>(<span class="php-var">$propName</span>, <span class="php-var">$this</span>-&gt;transientAttributes))
-</span><span id="2072" class="l"><a class="l" href="#2072">2072: </a>                    <span class="php-var">$BO</span>-&gt;set(<span class="php-var">$propName</span>, <span class="php-var">$originalBO</span>-&gt;get(<span class="php-var">$propName</span>));
-</span><span id="2073" class="l"><a class="l" href="#2073">2073: </a>            }
-</span><span id="2074" class="l"><a class="l" href="#2074">2074: </a>        }<span class="php-keyword1">else</span>{
-</span><span id="2075" class="l"><a class="l" href="#2075">2075: </a>            <span class="php-comment">// the new BO is smaller, so loop over its properties</span>
-</span><span id="2076" class="l"><a class="l" href="#2076">2076: </a>            <span class="php-keyword1">foreach</span>(<span class="php-var">$newBOproperties</span> <span class="php-keyword1">as</span> <span class="php-var">$propObj</span>) {
-</span><span id="2077" class="l"><a class="l" href="#2077">2077: </a>                <span class="php-var">$propName</span> = <span class="php-var">$propObj</span>-&gt;name;
-</span><span id="2078" class="l"><a class="l" href="#2078">2078: </a>                <span class="php-keyword1">if</span>(!<span class="php-keyword2">in_array</span>(<span class="php-var">$propName</span>, <span class="php-var">$this</span>-&gt;transientAttributes))
-</span><span id="2079" class="l"><a class="l" href="#2079">2079: </a>                    <span class="php-var">$BO</span>-&gt;set(<span class="php-var">$propName</span>, <span class="php-var">$originalBO</span>-&gt;get(<span class="php-var">$propName</span>));
-</span><span id="2080" class="l"><a class="l" href="#2080">2080: </a>            }
-</span><span id="2081" class="l"><a class="l" href="#2081">2081: </a>        }
-</span><span id="2082" class="l"><a class="l" href="#2082">2082: </a>
-</span><span id="2083" class="l"><a class="l" href="#2083">2083: </a>        <span class="php-keyword1">return</span> <span class="php-var">$BO</span>;
-</span><span id="2084" class="l"><a class="l" href="#2084">2084: </a>    }
-</span><span id="2085" class="l"><a class="l" href="#2085">2085: </a>
-</span><span id="2086" class="l"><a class="l" href="#2086">2086: </a>    <span class="php-comment">/**
-</span></span><span id="2087" class="l"><a class="l" href="#2087">2087: </a><span class="php-comment">     * Converts &quot;BusinessObject&quot; to &quot;Business&quot; and returns.
-</span></span><span id="2088" class="l"><a class="l" href="#2088">2088: </a><span class="php-comment">     *
-</span></span><span id="2089" class="l"><a class="l" href="#2089">2089: </a><span class="php-comment">     * @return string
+</span><span id="2042" class="l"><a class="l" href="#2042">2042: </a>        <span class="php-var">$BO</span> = <span class="php-keyword1">new</span> <span class="php-var">$targetClassName</span>;
+</span><span id="2043" class="l"><a class="l" href="#2043">2043: </a>        <span class="php-var">$BO</span>-&gt;setOID(<span class="php-var">$originalBO</span>-&gt;getOID());
+</span><span id="2044" class="l"><a class="l" href="#2044">2044: </a>        <span class="php-var">$BO</span>-&gt;setVersion(<span class="php-var">$originalBO</span>-&gt;getVersion());
+</span><span id="2045" class="l"><a class="l" href="#2045">2045: </a>
+</span><span id="2046" class="l"><a class="l" href="#2046">2046: </a>        <span class="php-comment">// get the class attributes</span>
+</span><span id="2047" class="l"><a class="l" href="#2047">2047: </a>        <span class="php-var">$originalBOreflection</span> = <span class="php-keyword1">new</span> ReflectionClass(<span class="php-keyword2">get_class</span>(<span class="php-var">$originalBO</span>));
+</span><span id="2048" class="l"><a class="l" href="#2048">2048: </a>        <span class="php-var">$originalBOproperties</span> = <span class="php-var">$originalBOreflection</span>-&gt;getProperties();
+</span><span id="2049" class="l"><a class="l" href="#2049">2049: </a>        <span class="php-var">$newBOreflection</span> = <span class="php-keyword1">new</span> ReflectionClass(<span class="php-var">$targetClassName</span>);
+</span><span id="2050" class="l"><a class="l" href="#2050">2050: </a>        <span class="php-var">$newBOproperties</span> = <span class="php-var">$newBOreflection</span>-&gt;getProperties();
+</span><span id="2051" class="l"><a class="l" href="#2051">2051: </a>
+</span><span id="2052" class="l"><a class="l" href="#2052">2052: </a>        <span class="php-comment">// copy the property values from the old BO to the new BO</span>
+</span><span id="2053" class="l"><a class="l" href="#2053">2053: </a>
+</span><span id="2054" class="l"><a class="l" href="#2054">2054: </a>        <span class="php-keyword1">if</span>(<span class="php-keyword2">count</span>(<span class="php-var">$originalBOproperties</span>) &lt; <span class="php-keyword2">count</span>(<span class="php-var">$newBOproperties</span>)) {
+</span><span id="2055" class="l"><a class="l" href="#2055">2055: </a>            <span class="php-comment">// the original BO is smaller, so loop over its properties</span>
+</span><span id="2056" class="l"><a class="l" href="#2056">2056: </a>            <span class="php-keyword1">foreach</span>(<span class="php-var">$originalBOproperties</span> <span class="php-keyword1">as</span> <span class="php-var">$propObj</span>) {
+</span><span id="2057" class="l"><a class="l" href="#2057">2057: </a>                <span class="php-var">$propName</span> = <span class="php-var">$propObj</span>-&gt;name;
+</span><span id="2058" class="l"><a class="l" href="#2058">2058: </a>                <span class="php-keyword1">if</span>(!<span class="php-keyword2">in_array</span>(<span class="php-var">$propName</span>, <span class="php-var">$this</span>-&gt;transientAttributes))
+</span><span id="2059" class="l"><a class="l" href="#2059">2059: </a>                    <span class="php-var">$BO</span>-&gt;set(<span class="php-var">$propName</span>, <span class="php-var">$originalBO</span>-&gt;get(<span class="php-var">$propName</span>));
+</span><span id="2060" class="l"><a class="l" href="#2060">2060: </a>            }
+</span><span id="2061" class="l"><a class="l" href="#2061">2061: </a>        }<span class="php-keyword1">else</span>{
+</span><span id="2062" class="l"><a class="l" href="#2062">2062: </a>            <span class="php-comment">// the new BO is smaller, so loop over its properties</span>
+</span><span id="2063" class="l"><a class="l" href="#2063">2063: </a>            <span class="php-keyword1">foreach</span>(<span class="php-var">$newBOproperties</span> <span class="php-keyword1">as</span> <span class="php-var">$propObj</span>) {
+</span><span id="2064" class="l"><a class="l" href="#2064">2064: </a>                <span class="php-var">$propName</span> = <span class="php-var">$propObj</span>-&gt;name;
+</span><span id="2065" class="l"><a class="l" href="#2065">2065: </a>                <span class="php-keyword1">if</span>(!<span class="php-keyword2">in_array</span>(<span class="php-var">$propName</span>, <span class="php-var">$this</span>-&gt;transientAttributes))
+</span><span id="2066" class="l"><a class="l" href="#2066">2066: </a>                    <span class="php-var">$BO</span>-&gt;set(<span class="php-var">$propName</span>, <span class="php-var">$originalBO</span>-&gt;get(<span class="php-var">$propName</span>));
+</span><span id="2067" class="l"><a class="l" href="#2067">2067: </a>            }
+</span><span id="2068" class="l"><a class="l" href="#2068">2068: </a>        }
+</span><span id="2069" class="l"><a class="l" href="#2069">2069: </a>
+</span><span id="2070" class="l"><a class="l" href="#2070">2070: </a>        <span class="php-keyword1">return</span> <span class="php-var">$BO</span>;
+</span><span id="2071" class="l"><a class="l" href="#2071">2071: </a>    }
+</span><span id="2072" class="l"><a class="l" href="#2072">2072: </a>
+</span><span id="2073" class="l"><a class="l" href="#2073">2073: </a>    <span class="php-comment">/**
+</span></span><span id="2074" class="l"><a class="l" href="#2074">2074: </a><span class="php-comment">     * Converts &quot;BusinessObject&quot; to &quot;Business&quot; and returns.
+</span></span><span id="2075" class="l"><a class="l" href="#2075">2075: </a><span class="php-comment">     *
+</span></span><span id="2076" class="l"><a class="l" href="#2076">2076: </a><span class="php-comment">     * @return string
+</span></span><span id="2077" class="l"><a class="l" href="#2077">2077: </a><span class="php-comment">     * @since 1.0
+</span></span><span id="2078" class="l"><a class="l" href="#2078">2078: </a><span class="php-comment">     */</span>
+</span><span id="2079" class="l"><a class="l" href="#2079">2079: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_getFriendlyClassName" href="#_getFriendlyClassName">getFriendlyClassName</a>() {
+</span><span id="2080" class="l"><a class="l" href="#2080">2080: </a>        <span class="php-var">$name</span> = <span class="php-keyword2">substr</span>(<span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>), <span class="php-num">0</span>, -<span class="php-num">6</span>);
+</span><span id="2081" class="l"><a class="l" href="#2081">2081: </a>
+</span><span id="2082" class="l"><a class="l" href="#2082">2082: </a>        <span class="php-keyword1">return</span> <span class="php-var">$name</span>;
+</span><span id="2083" class="l"><a class="l" href="#2083">2083: </a>    }
+</span><span id="2084" class="l"><a class="l" href="#2084">2084: </a>
+</span><span id="2085" class="l"><a class="l" href="#2085">2085: </a>    <span class="php-comment">/**
+</span></span><span id="2086" class="l"><a class="l" href="#2086">2086: </a><span class="php-comment">     * Check to see if an attribute exists on the BO.
+</span></span><span id="2087" class="l"><a class="l" href="#2087">2087: </a><span class="php-comment">     *
+</span></span><span id="2088" class="l"><a class="l" href="#2088">2088: </a><span class="php-comment">     * @param $attribute The attribute name.
+</span></span><span id="2089" class="l"><a class="l" href="#2089">2089: </a><span class="php-comment">     * @return boolean
 </span></span><span id="2090" class="l"><a class="l" href="#2090">2090: </a><span class="php-comment">     * @since 1.0
 </span></span><span id="2091" class="l"><a class="l" href="#2091">2091: </a><span class="php-comment">     */</span>
-</span><span id="2092" class="l"><a class="l" href="#2092">2092: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_getFriendlyClassName" href="#_getFriendlyClassName">getFriendlyClassName</a>() {
-</span><span id="2093" class="l"><a class="l" href="#2093">2093: </a>        <span class="php-var">$name</span> = <span class="php-keyword2">mb_substr</span>(<span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>), <span class="php-num">0</span>, -<span class="php-num">6</span>);
-</span><span id="2094" class="l"><a class="l" href="#2094">2094: </a>
-</span><span id="2095" class="l"><a class="l" href="#2095">2095: </a>        <span class="php-keyword1">return</span> <span class="php-var">$name</span>;
-</span><span id="2096" class="l"><a class="l" href="#2096">2096: </a>    }
-</span><span id="2097" class="l"><a class="l" href="#2097">2097: </a>
-</span><span id="2098" class="l"><a class="l" href="#2098">2098: </a>    <span class="php-comment">/**
-</span></span><span id="2099" class="l"><a class="l" href="#2099">2099: </a><span class="php-comment">     * Check to see if an attribute exists on the BO.
-</span></span><span id="2100" class="l"><a class="l" href="#2100">2100: </a><span class="php-comment">     *
-</span></span><span id="2101" class="l"><a class="l" href="#2101">2101: </a><span class="php-comment">     * @param $attribute The attribute name.
-</span></span><span id="2102" class="l"><a class="l" href="#2102">2102: </a><span class="php-comment">     * @return boolean
-</span></span><span id="2103" class="l"><a class="l" href="#2103">2103: </a><span class="php-comment">     * @since 1.0
-</span></span><span id="2104" class="l"><a class="l" href="#2104">2104: </a><span class="php-comment">     */</span>
-</span><span id="2105" class="l"><a class="l" href="#2105">2105: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_hasAttribute" href="#_hasAttribute">hasAttribute</a>(<span class="php-var">$attribute</span>) {
-</span><span id="2106" class="l"><a class="l" href="#2106">2106: </a>        <span class="php-keyword1">try</span>{
-</span><span id="2107" class="l"><a class="l" href="#2107">2107: </a>            <span class="php-var">$exists</span> = <span class="php-var">$this</span>-&gt;<span class="php-var">$attribute</span>;
-</span><span id="2108" class="l"><a class="l" href="#2108">2108: </a>            <span class="php-keyword1">return</span> <span class="php-keyword1">true</span>;
-</span><span id="2109" class="l"><a class="l" href="#2109">2109: </a>        }<span class="php-keyword1">catch</span>(Exception <span class="php-var">$e</span>) {
-</span><span id="2110" class="l"><a class="l" href="#2110">2110: </a>            <span class="php-keyword1">return</span> <span class="php-keyword1">false</span>;
-</span><span id="2111" class="l"><a class="l" href="#2111">2111: </a>        }
-</span><span id="2112" class="l"><a class="l" href="#2112">2112: </a>    }
+</span><span id="2092" class="l"><a class="l" href="#2092">2092: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_hasAttribute" href="#_hasAttribute">hasAttribute</a>(<span class="php-var">$attribute</span>) {
+</span><span id="2093" class="l"><a class="l" href="#2093">2093: </a>        <span class="php-keyword1">try</span>{
+</span><span id="2094" class="l"><a class="l" href="#2094">2094: </a>            <span class="php-var">$exists</span> = <span class="php-var">$this</span>-&gt;<span class="php-var">$attribute</span>;
+</span><span id="2095" class="l"><a class="l" href="#2095">2095: </a>            <span class="php-keyword1">return</span> <span class="php-keyword1">true</span>;
+</span><span id="2096" class="l"><a class="l" href="#2096">2096: </a>        }<span class="php-keyword1">catch</span>(Exception <span class="php-var">$e</span>) {
+</span><span id="2097" class="l"><a class="l" href="#2097">2097: </a>            <span class="php-keyword1">return</span> <span class="php-keyword1">false</span>;
+</span><span id="2098" class="l"><a class="l" href="#2098">2098: </a>        }
+</span><span id="2099" class="l"><a class="l" href="#2099">2099: </a>    }
+</span><span id="2100" class="l"><a class="l" href="#2100">2100: </a>
+</span><span id="2101" class="l"><a class="l" href="#2101">2101: </a>    <span class="php-comment">/**
+</span></span><span id="2102" class="l"><a class="l" href="#2102">2102: </a><span class="php-comment">     * Stores the business object to the configured cache instance
+</span></span><span id="2103" class="l"><a class="l" href="#2103">2103: </a><span class="php-comment">     *
+</span></span><span id="2104" class="l"><a class="l" href="#2104">2104: </a><span class="php-comment">     * @since 1.1
+</span></span><span id="2105" class="l"><a class="l" href="#2105">2105: </a><span class="php-comment">     */</span>
+</span><span id="2106" class="l"><a class="l" href="#2106">2106: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_addToCache" href="#_addToCache">addToCache</a>() {
+</span><span id="2107" class="l"><a class="l" href="#2107">2107: </a>        self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&gt;&gt;addToCache()'</span>);
+</span><span id="2108" class="l"><a class="l" href="#2108">2108: </a>        <span class="php-keyword1">global</span> <span class="php-var">$config</span>;
+</span><span id="2109" class="l"><a class="l" href="#2109">2109: </a>
+</span><span id="2110" class="l"><a class="l" href="#2110">2110: </a>        <span class="php-keyword1">try</span> {
+</span><span id="2111" class="l"><a class="l" href="#2111">2111: </a>            <span class="php-var">$cache</span> = AlphaCacheProviderFactory::getInstance(<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'cache.provider.name'</span>));
+</span><span id="2112" class="l"><a class="l" href="#2112">2112: </a>            <span class="php-var">$cache</span>-&gt;set(<span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>).<span class="php-quote">'-'</span>.<span class="php-var">$this</span>-&gt;getOID(), <span class="php-var">$this</span>, <span class="php-num">3600</span>);
 </span><span id="2113" class="l"><a class="l" href="#2113">2113: </a>
-</span><span id="2114" class="l"><a class="l" href="#2114">2114: </a>    <span class="php-comment">/**
-</span></span><span id="2115" class="l"><a class="l" href="#2115">2115: </a><span class="php-comment">     * Stores the business object to the configured cache instance
-</span></span><span id="2116" class="l"><a class="l" href="#2116">2116: </a><span class="php-comment">     *
-</span></span><span id="2117" class="l"><a class="l" href="#2117">2117: </a><span class="php-comment">     * @since 1.1
-</span></span><span id="2118" class="l"><a class="l" href="#2118">2118: </a><span class="php-comment">     */</span>
-</span><span id="2119" class="l"><a class="l" href="#2119">2119: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_addToCache" href="#_addToCache">addToCache</a>() {
-</span><span id="2120" class="l"><a class="l" href="#2120">2120: </a>        self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&gt;&gt;addToCache()'</span>);
-</span><span id="2121" class="l"><a class="l" href="#2121">2121: </a>        <span class="php-keyword1">global</span> <span class="php-var">$config</span>;
-</span><span id="2122" class="l"><a class="l" href="#2122">2122: </a>
-</span><span id="2123" class="l"><a class="l" href="#2123">2123: </a>        <span class="php-keyword1">try</span> {
-</span><span id="2124" class="l"><a class="l" href="#2124">2124: </a>            <span class="php-var">$cache</span> = AlphaCacheProviderFactory::getInstance(<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'cache.provider.name'</span>));
-</span><span id="2125" class="l"><a class="l" href="#2125">2125: </a>            <span class="php-var">$cache</span>-&gt;set(<span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>).<span class="php-quote">'-'</span>.<span class="php-var">$this</span>-&gt;getOID(), <span class="php-var">$this</span>, <span class="php-num">3600</span>);
-</span><span id="2126" class="l"><a class="l" href="#2126">2126: </a>
-</span><span id="2127" class="l"><a class="l" href="#2127">2127: </a>        }<span class="php-keyword1">catch</span>(Exception <span class="php-var">$e</span>) {
-</span><span id="2128" class="l"><a class="l" href="#2128">2128: </a>            self::<span class="php-var">$logger</span>-&gt;error(<span class="php-quote">'Error while attempting to store a business object to the ['</span>.<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'cache.provider.name'</span>).<span class="php-quote">'] 
-</span></span><span id="2129" class="l"><a class="l" href="#2129">2129: </a><span class="php-quote">                instance: ['</span>.<span class="php-var">$e</span>-&gt;getMessage().<span class="php-quote">']'</span>);
-</span><span id="2130" class="l"><a class="l" href="#2130">2130: </a>        }
-</span><span id="2131" class="l"><a class="l" href="#2131">2131: </a>
-</span><span id="2132" class="l"><a class="l" href="#2132">2132: </a>        self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;addToCache'</span>);
-</span><span id="2133" class="l"><a class="l" href="#2133">2133: </a>    }
-</span><span id="2134" class="l"><a class="l" href="#2134">2134: </a>
-</span><span id="2135" class="l"><a class="l" href="#2135">2135: </a>    <span class="php-comment">/**
-</span></span><span id="2136" class="l"><a class="l" href="#2136">2136: </a><span class="php-comment">     * Removes the business object from the configured cache instance
-</span></span><span id="2137" class="l"><a class="l" href="#2137">2137: </a><span class="php-comment">     *
-</span></span><span id="2138" class="l"><a class="l" href="#2138">2138: </a><span class="php-comment">     * @since 1.1
-</span></span><span id="2139" class="l"><a class="l" href="#2139">2139: </a><span class="php-comment">     */</span>
-</span><span id="2140" class="l"><a class="l" href="#2140">2140: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_removeFromCache" href="#_removeFromCache">removeFromCache</a>() {
-</span><span id="2141" class="l"><a class="l" href="#2141">2141: </a>        self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&gt;&gt;removeFromCache()'</span>);
-</span><span id="2142" class="l"><a class="l" href="#2142">2142: </a>        <span class="php-keyword1">global</span> <span class="php-var">$config</span>;
-</span><span id="2143" class="l"><a class="l" href="#2143">2143: </a>
-</span><span id="2144" class="l"><a class="l" href="#2144">2144: </a>        <span class="php-keyword1">try</span> {
-</span><span id="2145" class="l"><a class="l" href="#2145">2145: </a>            <span class="php-var">$cache</span> = AlphaCacheProviderFactory::getInstance(<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'cache.provider.name'</span>));
-</span><span id="2146" class="l"><a class="l" href="#2146">2146: </a>            <span class="php-var">$cache</span>-&gt;<span class="php-keyword2">delete</span>(<span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>).<span class="php-quote">'-'</span>.<span class="php-var">$this</span>-&gt;getOID());
-</span><span id="2147" class="l"><a class="l" href="#2147">2147: </a>        }<span class="php-keyword1">catch</span>(Exception <span class="php-var">$e</span>) {
-</span><span id="2148" class="l"><a class="l" href="#2148">2148: </a>            self::<span class="php-var">$logger</span>-&gt;error(<span class="php-quote">'Error while attempting to remove a business object from ['</span>.<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'cache.provider.name'</span>).<span class="php-quote">']
-</span></span><span id="2149" class="l"><a class="l" href="#2149">2149: </a><span class="php-quote">                instance: ['</span>.<span class="php-var">$e</span>-&gt;getMessage().<span class="php-quote">']'</span>);
-</span><span id="2150" class="l"><a class="l" href="#2150">2150: </a>        }
+</span><span id="2114" class="l"><a class="l" href="#2114">2114: </a>        }<span class="php-keyword1">catch</span>(Exception <span class="php-var">$e</span>) {
+</span><span id="2115" class="l"><a class="l" href="#2115">2115: </a>            self::<span class="php-var">$logger</span>-&gt;error(<span class="php-quote">'Error while attempting to store a business object to the ['</span>.<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'cache.provider.name'</span>).<span class="php-quote">'] 
+</span></span><span id="2116" class="l"><a class="l" href="#2116">2116: </a><span class="php-quote">                instance: ['</span>.<span class="php-var">$e</span>-&gt;getMessage().<span class="php-quote">']'</span>);
+</span><span id="2117" class="l"><a class="l" href="#2117">2117: </a>        }
+</span><span id="2118" class="l"><a class="l" href="#2118">2118: </a>
+</span><span id="2119" class="l"><a class="l" href="#2119">2119: </a>        self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;addToCache'</span>);
+</span><span id="2120" class="l"><a class="l" href="#2120">2120: </a>    }
+</span><span id="2121" class="l"><a class="l" href="#2121">2121: </a>
+</span><span id="2122" class="l"><a class="l" href="#2122">2122: </a>    <span class="php-comment">/**
+</span></span><span id="2123" class="l"><a class="l" href="#2123">2123: </a><span class="php-comment">     * Removes the business object from the configured cache instance
+</span></span><span id="2124" class="l"><a class="l" href="#2124">2124: </a><span class="php-comment">     *
+</span></span><span id="2125" class="l"><a class="l" href="#2125">2125: </a><span class="php-comment">     * @since 1.1
+</span></span><span id="2126" class="l"><a class="l" href="#2126">2126: </a><span class="php-comment">     */</span>
+</span><span id="2127" class="l"><a class="l" href="#2127">2127: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_removeFromCache" href="#_removeFromCache">removeFromCache</a>() {
+</span><span id="2128" class="l"><a class="l" href="#2128">2128: </a>        self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&gt;&gt;removeFromCache()'</span>);
+</span><span id="2129" class="l"><a class="l" href="#2129">2129: </a>        <span class="php-keyword1">global</span> <span class="php-var">$config</span>;
+</span><span id="2130" class="l"><a class="l" href="#2130">2130: </a>
+</span><span id="2131" class="l"><a class="l" href="#2131">2131: </a>        <span class="php-keyword1">try</span> {
+</span><span id="2132" class="l"><a class="l" href="#2132">2132: </a>            <span class="php-var">$cache</span> = AlphaCacheProviderFactory::getInstance(<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'cache.provider.name'</span>));
+</span><span id="2133" class="l"><a class="l" href="#2133">2133: </a>            <span class="php-var">$cache</span>-&gt;<span class="php-keyword2">delete</span>(<span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>).<span class="php-quote">'-'</span>.<span class="php-var">$this</span>-&gt;getOID());
+</span><span id="2134" class="l"><a class="l" href="#2134">2134: </a>        }<span class="php-keyword1">catch</span>(Exception <span class="php-var">$e</span>) {
+</span><span id="2135" class="l"><a class="l" href="#2135">2135: </a>            self::<span class="php-var">$logger</span>-&gt;error(<span class="php-quote">'Error while attempting to remove a business object from ['</span>.<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'cache.provider.name'</span>).<span class="php-quote">']
+</span></span><span id="2136" class="l"><a class="l" href="#2136">2136: </a><span class="php-quote">                instance: ['</span>.<span class="php-var">$e</span>-&gt;getMessage().<span class="php-quote">']'</span>);
+</span><span id="2137" class="l"><a class="l" href="#2137">2137: </a>        }
+</span><span id="2138" class="l"><a class="l" href="#2138">2138: </a>
+</span><span id="2139" class="l"><a class="l" href="#2139">2139: </a>        self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;removeFromCache'</span>);
+</span><span id="2140" class="l"><a class="l" href="#2140">2140: </a>    }
+</span><span id="2141" class="l"><a class="l" href="#2141">2141: </a>
+</span><span id="2142" class="l"><a class="l" href="#2142">2142: </a>    <span class="php-comment">/**
+</span></span><span id="2143" class="l"><a class="l" href="#2143">2143: </a><span class="php-comment">     * Attempts to load the business object from the configured cache instance
+</span></span><span id="2144" class="l"><a class="l" href="#2144">2144: </a><span class="php-comment">     *
+</span></span><span id="2145" class="l"><a class="l" href="#2145">2145: </a><span class="php-comment">     * @since 1.1
+</span></span><span id="2146" class="l"><a class="l" href="#2146">2146: </a><span class="php-comment">     * @return boolean
+</span></span><span id="2147" class="l"><a class="l" href="#2147">2147: </a><span class="php-comment">     */</span>
+</span><span id="2148" class="l"><a class="l" href="#2148">2148: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_loadFromCache" href="#_loadFromCache">loadFromCache</a>() {
+</span><span id="2149" class="l"><a class="l" href="#2149">2149: </a>        self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&gt;&gt;loadFromCache()'</span>);
+</span><span id="2150" class="l"><a class="l" href="#2150">2150: </a>        <span class="php-keyword1">global</span> <span class="php-var">$config</span>;
 </span><span id="2151" class="l"><a class="l" href="#2151">2151: </a>
-</span><span id="2152" class="l"><a class="l" href="#2152">2152: </a>        self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;removeFromCache'</span>);
-</span><span id="2153" class="l"><a class="l" href="#2153">2153: </a>    }
-</span><span id="2154" class="l"><a class="l" href="#2154">2154: </a>
-</span><span id="2155" class="l"><a class="l" href="#2155">2155: </a>    <span class="php-comment">/**
-</span></span><span id="2156" class="l"><a class="l" href="#2156">2156: </a><span class="php-comment">     * Attempts to load the business object from the configured cache instance
-</span></span><span id="2157" class="l"><a class="l" href="#2157">2157: </a><span class="php-comment">     *
-</span></span><span id="2158" class="l"><a class="l" href="#2158">2158: </a><span class="php-comment">     * @since 1.1
-</span></span><span id="2159" class="l"><a class="l" href="#2159">2159: </a><span class="php-comment">     * @return boolean
-</span></span><span id="2160" class="l"><a class="l" href="#2160">2160: </a><span class="php-comment">     */</span>
-</span><span id="2161" class="l"><a class="l" href="#2161">2161: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_loadFromCache" href="#_loadFromCache">loadFromCache</a>() {
-</span><span id="2162" class="l"><a class="l" href="#2162">2162: </a>        self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&gt;&gt;loadFromCache()'</span>);
-</span><span id="2163" class="l"><a class="l" href="#2163">2163: </a>        <span class="php-keyword1">global</span> <span class="php-var">$config</span>;
+</span><span id="2152" class="l"><a class="l" href="#2152">2152: </a>        <span class="php-keyword1">try</span> {
+</span><span id="2153" class="l"><a class="l" href="#2153">2153: </a>            <span class="php-var">$cache</span> = AlphaCacheProviderFactory::getInstance(<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'cache.provider.name'</span>));
+</span><span id="2154" class="l"><a class="l" href="#2154">2154: </a>            <span class="php-var">$BO</span> = <span class="php-var">$cache</span>-&gt;get(<span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>).<span class="php-quote">'-'</span>.<span class="php-var">$this</span>-&gt;getOID());
+</span><span id="2155" class="l"><a class="l" href="#2155">2155: </a>
+</span><span id="2156" class="l"><a class="l" href="#2156">2156: </a>            <span class="php-keyword1">if</span>(!<span class="php-var">$BO</span>) {
+</span><span id="2157" class="l"><a class="l" href="#2157">2157: </a>                self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'Cache miss on key ['</span>.<span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>).<span class="php-quote">'-'</span>.<span class="php-var">$this</span>-&gt;getOID().<span class="php-quote">']'</span>);
+</span><span id="2158" class="l"><a class="l" href="#2158">2158: </a>                self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;loadFromCache: [false]'</span>);
+</span><span id="2159" class="l"><a class="l" href="#2159">2159: </a>                <span class="php-keyword1">return</span> <span class="php-keyword1">false</span>;
+</span><span id="2160" class="l"><a class="l" href="#2160">2160: </a>            }<span class="php-keyword1">else</span>{
+</span><span id="2161" class="l"><a class="l" href="#2161">2161: </a>                <span class="php-comment">// get the class attributes</span>
+</span><span id="2162" class="l"><a class="l" href="#2162">2162: </a>                <span class="php-var">$reflection</span> = <span class="php-keyword1">new</span> ReflectionClass(<span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>));
+</span><span id="2163" class="l"><a class="l" href="#2163">2163: </a>                <span class="php-var">$properties</span> = <span class="php-var">$reflection</span>-&gt;getProperties();
 </span><span id="2164" class="l"><a class="l" href="#2164">2164: </a>
-</span><span id="2165" class="l"><a class="l" href="#2165">2165: </a>        <span class="php-keyword1">try</span> {
-</span><span id="2166" class="l"><a class="l" href="#2166">2166: </a>            <span class="php-var">$cache</span> = AlphaCacheProviderFactory::getInstance(<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'cache.provider.name'</span>));
-</span><span id="2167" class="l"><a class="l" href="#2167">2167: </a>            <span class="php-var">$BO</span> = <span class="php-var">$cache</span>-&gt;get(<span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>).<span class="php-quote">'-'</span>.<span class="php-var">$this</span>-&gt;getOID());
-</span><span id="2168" class="l"><a class="l" href="#2168">2168: </a>
-</span><span id="2169" class="l"><a class="l" href="#2169">2169: </a>            <span class="php-keyword1">if</span>(!<span class="php-var">$BO</span>) {
-</span><span id="2170" class="l"><a class="l" href="#2170">2170: </a>                self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'Cache miss on key ['</span>.<span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>).<span class="php-quote">'-'</span>.<span class="php-var">$this</span>-&gt;getOID().<span class="php-quote">']'</span>);
-</span><span id="2171" class="l"><a class="l" href="#2171">2171: </a>                self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;loadFromCache: [false]'</span>);
-</span><span id="2172" class="l"><a class="l" href="#2172">2172: </a>                <span class="php-keyword1">return</span> <span class="php-keyword1">false</span>;
-</span><span id="2173" class="l"><a class="l" href="#2173">2173: </a>            }<span class="php-keyword1">else</span>{
-</span><span id="2174" class="l"><a class="l" href="#2174">2174: </a>                <span class="php-comment">// get the class attributes</span>
-</span><span id="2175" class="l"><a class="l" href="#2175">2175: </a>                <span class="php-var">$reflection</span> = <span class="php-keyword1">new</span> ReflectionClass(<span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>));
-</span><span id="2176" class="l"><a class="l" href="#2176">2176: </a>                <span class="php-var">$properties</span> = <span class="php-var">$reflection</span>-&gt;getProperties();
-</span><span id="2177" class="l"><a class="l" href="#2177">2177: </a>
-</span><span id="2178" class="l"><a class="l" href="#2178">2178: </a>                <span class="php-keyword1">foreach</span>(<span class="php-var">$properties</span> <span class="php-keyword1">as</span> <span class="php-var">$propObj</span>) {
-</span><span id="2179" class="l"><a class="l" href="#2179">2179: </a>                    <span class="php-var">$propName</span> = <span class="php-var">$propObj</span>-&gt;name;
+</span><span id="2165" class="l"><a class="l" href="#2165">2165: </a>                <span class="php-keyword1">foreach</span>(<span class="php-var">$properties</span> <span class="php-keyword1">as</span> <span class="php-var">$propObj</span>) {
+</span><span id="2166" class="l"><a class="l" href="#2166">2166: </a>                    <span class="php-var">$propName</span> = <span class="php-var">$propObj</span>-&gt;name;
+</span><span id="2167" class="l"><a class="l" href="#2167">2167: </a>
+</span><span id="2168" class="l"><a class="l" href="#2168">2168: </a>                    <span class="php-comment">// filter transient attributes</span>
+</span><span id="2169" class="l"><a class="l" href="#2169">2169: </a>                    <span class="php-keyword1">if</span>(!<span class="php-keyword2">in_array</span>(<span class="php-var">$propName</span>, <span class="php-var">$this</span>-&gt;transientAttributes)) {
+</span><span id="2170" class="l"><a class="l" href="#2170">2170: </a>                        <span class="php-var">$this</span>-&gt;set(<span class="php-var">$propName</span>, <span class="php-var">$BO</span>-&gt;get(<span class="php-var">$propName</span>, <span class="php-keyword1">true</span>));
+</span><span id="2171" class="l"><a class="l" href="#2171">2171: </a>                    }<span class="php-keyword1">elseif</span>(!<span class="php-var">$propObj</span>-&gt;isPrivate() &amp;&amp; <span class="php-keyword1">isset</span>(<span class="php-var">$this</span>-&gt;<span class="php-var">$propName</span>) &amp;&amp; <span class="php-var">$this</span>-&gt;<span class="php-var">$propName</span> <span class="php-keyword1">instanceof</span> Relation) {
+</span><span id="2172" class="l"><a class="l" href="#2172">2172: </a>                        <span class="php-var">$prop</span> = <span class="php-var">$this</span>-&gt;getPropObject(<span class="php-var">$propName</span>);
+</span><span id="2173" class="l"><a class="l" href="#2173">2173: </a>
+</span><span id="2174" class="l"><a class="l" href="#2174">2174: </a>                        <span class="php-comment">// handle the setting of ONE-TO-MANY relation values</span>
+</span><span id="2175" class="l"><a class="l" href="#2175">2175: </a>                        <span class="php-keyword1">if</span>(<span class="php-var">$prop</span>-&gt;getRelationType() == <span class="php-quote">'ONE-TO-MANY'</span>) {
+</span><span id="2176" class="l"><a class="l" href="#2176">2176: </a>                            <span class="php-var">$this</span>-&gt;set(<span class="php-var">$propObj</span>-&gt;name, <span class="php-var">$this</span>-&gt;getOID());
+</span><span id="2177" class="l"><a class="l" href="#2177">2177: </a>                        }
+</span><span id="2178" class="l"><a class="l" href="#2178">2178: </a>                    }
+</span><span id="2179" class="l"><a class="l" href="#2179">2179: </a>                }
 </span><span id="2180" class="l"><a class="l" href="#2180">2180: </a>
-</span><span id="2181" class="l"><a class="l" href="#2181">2181: </a>                    <span class="php-comment">// filter transient attributes</span>
-</span><span id="2182" class="l"><a class="l" href="#2182">2182: </a>                    <span class="php-keyword1">if</span>(!<span class="php-keyword2">in_array</span>(<span class="php-var">$propName</span>, <span class="php-var">$this</span>-&gt;transientAttributes)) {
-</span><span id="2183" class="l"><a class="l" href="#2183">2183: </a>                        <span class="php-var">$this</span>-&gt;set(<span class="php-var">$propName</span>, <span class="php-var">$BO</span>-&gt;get(<span class="php-var">$propName</span>, <span class="php-keyword1">true</span>));
-</span><span id="2184" class="l"><a class="l" href="#2184">2184: </a>                    }<span class="php-keyword1">elseif</span>(!<span class="php-var">$propObj</span>-&gt;isPrivate() &amp;&amp; <span class="php-keyword1">isset</span>(<span class="php-var">$this</span>-&gt;<span class="php-var">$propName</span>) &amp;&amp; <span class="php-var">$this</span>-&gt;<span class="php-var">$propName</span> <span class="php-keyword1">instanceof</span> Relation) {
-</span><span id="2185" class="l"><a class="l" href="#2185">2185: </a>                        <span class="php-var">$prop</span> = <span class="php-var">$this</span>-&gt;getPropObject(<span class="php-var">$propName</span>);
-</span><span id="2186" class="l"><a class="l" href="#2186">2186: </a>
-</span><span id="2187" class="l"><a class="l" href="#2187">2187: </a>                        <span class="php-comment">// handle the setting of ONE-TO-MANY relation values</span>
-</span><span id="2188" class="l"><a class="l" href="#2188">2188: </a>                        <span class="php-keyword1">if</span>(<span class="php-var">$prop</span>-&gt;getRelationType() == <span class="php-quote">'ONE-TO-MANY'</span>) {
-</span><span id="2189" class="l"><a class="l" href="#2189">2189: </a>                            <span class="php-var">$this</span>-&gt;set(<span class="php-var">$propObj</span>-&gt;name, <span class="php-var">$this</span>-&gt;getOID());
-</span><span id="2190" class="l"><a class="l" href="#2190">2190: </a>                        }
-</span><span id="2191" class="l"><a class="l" href="#2191">2191: </a>                    }
-</span><span id="2192" class="l"><a class="l" href="#2192">2192: </a>                }
-</span><span id="2193" class="l"><a class="l" href="#2193">2193: </a>
-</span><span id="2194" class="l"><a class="l" href="#2194">2194: </a>                self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;loadFromCache: [true]'</span>);
-</span><span id="2195" class="l"><a class="l" href="#2195">2195: </a>                <span class="php-keyword1">return</span> <span class="php-keyword1">true</span>;
-</span><span id="2196" class="l"><a class="l" href="#2196">2196: </a>            }
-</span><span id="2197" class="l"><a class="l" href="#2197">2197: </a>        }<span class="php-keyword1">catch</span>(Exception <span class="php-var">$e</span>) {
-</span><span id="2198" class="l"><a class="l" href="#2198">2198: </a>            self::<span class="php-var">$logger</span>-&gt;error(<span class="php-quote">'Error while attempting to load a business object from ['</span>.<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'cache.provider.name'</span>).<span class="php-quote">']
-</span></span><span id="2199" class="l"><a class="l" href="#2199">2199: </a><span class="php-quote">             instance: ['</span>.<span class="php-var">$e</span>-&gt;getMessage().<span class="php-quote">']'</span>);
-</span><span id="2200" class="l"><a class="l" href="#2200">2200: </a>
-</span><span id="2201" class="l"><a class="l" href="#2201">2201: </a>            self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;loadFromCache: [false]'</span>);
-</span><span id="2202" class="l"><a class="l" href="#2202">2202: </a>            <span class="php-keyword1">return</span> <span class="php-keyword1">false</span>;
-</span><span id="2203" class="l"><a class="l" href="#2203">2203: </a>        }
-</span><span id="2204" class="l"><a class="l" href="#2204">2204: </a>    }
-</span><span id="2205" class="l"><a class="l" href="#2205">2205: </a>
-</span><span id="2206" class="l"><a class="l" href="#2206">2206: </a>    <span class="php-comment">/**
-</span></span><span id="2207" class="l"><a class="l" href="#2207">2207: </a><span class="php-comment">     * Sets the last query executed on this business object
-</span></span><span id="2208" class="l"><a class="l" href="#2208">2208: </a><span class="php-comment">     *
-</span></span><span id="2209" class="l"><a class="l" href="#2209">2209: </a><span class="php-comment">     * @param string $query
-</span></span><span id="2210" class="l"><a class="l" href="#2210">2210: </a><span class="php-comment">     * @since 1.1
-</span></span><span id="2211" class="l"><a class="l" href="#2211">2211: </a><span class="php-comment">     */</span>
-</span><span id="2212" class="l"><a class="l" href="#2212">2212: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_setLastQuery" href="#_setLastQuery">setLastQuery</a>(<span class="php-var">$query</span>) {
-</span><span id="2213" class="l"><a class="l" href="#2213">2213: </a>        self::<span class="php-var">$logger</span>-&gt;sql(<span class="php-var">$query</span>);
-</span><span id="2214" class="l"><a class="l" href="#2214">2214: </a>        <span class="php-var">$this</span>-&gt;lastQuery = <span class="php-var">$query</span>;
-</span><span id="2215" class="l"><a class="l" href="#2215">2215: </a>    }
-</span><span id="2216" class="l"><a class="l" href="#2216">2216: </a>
-</span><span id="2217" class="l"><a class="l" href="#2217">2217: </a>    <span class="php-comment">/**
-</span></span><span id="2218" class="l"><a class="l" href="#2218">2218: </a><span class="php-comment">     * Re-initialize the static logger property on the BO after de-serialize, as PHP does
-</span></span><span id="2219" class="l"><a class="l" href="#2219">2219: </a><span class="php-comment">     * not serialize static properties.
-</span></span><span id="2220" class="l"><a class="l" href="#2220">2220: </a><span class="php-comment">     *
-</span></span><span id="2221" class="l"><a class="l" href="#2221">2221: </a><span class="php-comment">     * @since 1.2
-</span></span><span id="2222" class="l"><a class="l" href="#2222">2222: </a><span class="php-comment">     */</span>
-</span><span id="2223" class="l"><a class="l" href="#2223">2223: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="___wakeup" href="#___wakeup">__wakeup</a>() {
-</span><span id="2224" class="l"><a class="l" href="#2224">2224: </a>        <span class="php-keyword1">if</span>(self::<span class="php-var">$logger</span> == <span class="php-keyword1">null</span>)
-</span><span id="2225" class="l"><a class="l" href="#2225">2225: </a>            self::<span class="php-var">$logger</span> = <span class="php-keyword1">new</span> Logger(<span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>));
-</span><span id="2226" class="l"><a class="l" href="#2226">2226: </a>    }
-</span><span id="2227" class="l"><a class="l" href="#2227">2227: </a>
-</span><span id="2228" class="l"><a class="l" href="#2228">2228: </a>    <span class="php-comment">/**
-</span></span><span id="2229" class="l"><a class="l" href="#2229">2229: </a><span class="php-comment">     * Sets maintainHistory attribute on this DAO
-</span></span><span id="2230" class="l"><a class="l" href="#2230">2230: </a><span class="php-comment">     *
-</span></span><span id="2231" class="l"><a class="l" href="#2231">2231: </a><span class="php-comment">     * @param boolean $maintainHistory
-</span></span><span id="2232" class="l"><a class="l" href="#2232">2232: </a><span class="php-comment">     * @throws IllegalArguementException
+</span><span id="2181" class="l"><a class="l" href="#2181">2181: </a>                self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;loadFromCache: [true]'</span>);
+</span><span id="2182" class="l"><a class="l" href="#2182">2182: </a>                <span class="php-keyword1">return</span> <span class="php-keyword1">true</span>;
+</span><span id="2183" class="l"><a class="l" href="#2183">2183: </a>            }
+</span><span id="2184" class="l"><a class="l" href="#2184">2184: </a>        }<span class="php-keyword1">catch</span>(Exception <span class="php-var">$e</span>) {
+</span><span id="2185" class="l"><a class="l" href="#2185">2185: </a>            self::<span class="php-var">$logger</span>-&gt;error(<span class="php-quote">'Error while attempting to load a business object from ['</span>.<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'cache.provider.name'</span>).<span class="php-quote">']
+</span></span><span id="2186" class="l"><a class="l" href="#2186">2186: </a><span class="php-quote">             instance: ['</span>.<span class="php-var">$e</span>-&gt;getMessage().<span class="php-quote">']'</span>);
+</span><span id="2187" class="l"><a class="l" href="#2187">2187: </a>
+</span><span id="2188" class="l"><a class="l" href="#2188">2188: </a>            self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;loadFromCache: [false]'</span>);
+</span><span id="2189" class="l"><a class="l" href="#2189">2189: </a>            <span class="php-keyword1">return</span> <span class="php-keyword1">false</span>;
+</span><span id="2190" class="l"><a class="l" href="#2190">2190: </a>        }
+</span><span id="2191" class="l"><a class="l" href="#2191">2191: </a>    }
+</span><span id="2192" class="l"><a class="l" href="#2192">2192: </a>
+</span><span id="2193" class="l"><a class="l" href="#2193">2193: </a>    <span class="php-comment">/**
+</span></span><span id="2194" class="l"><a class="l" href="#2194">2194: </a><span class="php-comment">     * Sets the last query executed on this business object
+</span></span><span id="2195" class="l"><a class="l" href="#2195">2195: </a><span class="php-comment">     *
+</span></span><span id="2196" class="l"><a class="l" href="#2196">2196: </a><span class="php-comment">     * @param string $query
+</span></span><span id="2197" class="l"><a class="l" href="#2197">2197: </a><span class="php-comment">     * @since 1.1
+</span></span><span id="2198" class="l"><a class="l" href="#2198">2198: </a><span class="php-comment">     */</span>
+</span><span id="2199" class="l"><a class="l" href="#2199">2199: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_setLastQuery" href="#_setLastQuery">setLastQuery</a>(<span class="php-var">$query</span>) {
+</span><span id="2200" class="l"><a class="l" href="#2200">2200: </a>        self::<span class="php-var">$logger</span>-&gt;sql(<span class="php-var">$query</span>);
+</span><span id="2201" class="l"><a class="l" href="#2201">2201: </a>        <span class="php-var">$this</span>-&gt;lastQuery = <span class="php-var">$query</span>;
+</span><span id="2202" class="l"><a class="l" href="#2202">2202: </a>    }
+</span><span id="2203" class="l"><a class="l" href="#2203">2203: </a>
+</span><span id="2204" class="l"><a class="l" href="#2204">2204: </a>    <span class="php-comment">/**
+</span></span><span id="2205" class="l"><a class="l" href="#2205">2205: </a><span class="php-comment">     * Re-initialize the static logger property on the BO after de-serialize, as PHP does
+</span></span><span id="2206" class="l"><a class="l" href="#2206">2206: </a><span class="php-comment">     * not serialize static properties.
+</span></span><span id="2207" class="l"><a class="l" href="#2207">2207: </a><span class="php-comment">     *
+</span></span><span id="2208" class="l"><a class="l" href="#2208">2208: </a><span class="php-comment">     * @since 1.2
+</span></span><span id="2209" class="l"><a class="l" href="#2209">2209: </a><span class="php-comment">     */</span>
+</span><span id="2210" class="l"><a class="l" href="#2210">2210: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="___wakeup" href="#___wakeup">__wakeup</a>() {
+</span><span id="2211" class="l"><a class="l" href="#2211">2211: </a>        <span class="php-keyword1">if</span>(self::<span class="php-var">$logger</span> == <span class="php-keyword1">null</span>)
+</span><span id="2212" class="l"><a class="l" href="#2212">2212: </a>            self::<span class="php-var">$logger</span> = <span class="php-keyword1">new</span> Logger(<span class="php-keyword2">get_class</span>(<span class="php-var">$this</span>));
+</span><span id="2213" class="l"><a class="l" href="#2213">2213: </a>    }
+</span><span id="2214" class="l"><a class="l" href="#2214">2214: </a>
+</span><span id="2215" class="l"><a class="l" href="#2215">2215: </a>    <span class="php-comment">/**
+</span></span><span id="2216" class="l"><a class="l" href="#2216">2216: </a><span class="php-comment">     * Sets maintainHistory attribute on this DAO
+</span></span><span id="2217" class="l"><a class="l" href="#2217">2217: </a><span class="php-comment">     *
+</span></span><span id="2218" class="l"><a class="l" href="#2218">2218: </a><span class="php-comment">     * @param boolean $maintainHistory
+</span></span><span id="2219" class="l"><a class="l" href="#2219">2219: </a><span class="php-comment">     * @throws IllegalArguementException
+</span></span><span id="2220" class="l"><a class="l" href="#2220">2220: </a><span class="php-comment">     * @since 1.2
+</span></span><span id="2221" class="l"><a class="l" href="#2221">2221: </a><span class="php-comment">     */</span>
+</span><span id="2222" class="l"><a class="l" href="#2222">2222: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_setMaintainHistory" href="#_setMaintainHistory">setMaintainHistory</a>(<span class="php-var">$maintainHistory</span>) {
+</span><span id="2223" class="l"><a class="l" href="#2223">2223: </a>        <span class="php-keyword1">if</span>(!<span class="php-keyword2">is_bool</span>(<span class="php-var">$maintainHistory</span>))
+</span><span id="2224" class="l"><a class="l" href="#2224">2224: </a>            <span class="php-keyword1">throw</span> <span class="php-keyword1">new</span> IllegalArguementException(<span class="php-quote">'Non-boolean value ['</span>.<span class="php-var">$maintainHistory</span>.<span class="php-quote">'] passed to setMaintainHistory method!'</span>);
+</span><span id="2225" class="l"><a class="l" href="#2225">2225: </a>
+</span><span id="2226" class="l"><a class="l" href="#2226">2226: </a>        <span class="php-var">$this</span>-&gt;maintainHistory = <span class="php-var">$maintainHistory</span>;
+</span><span id="2227" class="l"><a class="l" href="#2227">2227: </a>    }
+</span><span id="2228" class="l"><a class="l" href="#2228">2228: </a>
+</span><span id="2229" class="l"><a class="l" href="#2229">2229: </a>    <span class="php-comment">/**
+</span></span><span id="2230" class="l"><a class="l" href="#2230">2230: </a><span class="php-comment">     * Gets the value of the  maintainHistory attribute
+</span></span><span id="2231" class="l"><a class="l" href="#2231">2231: </a><span class="php-comment">     *
+</span></span><span id="2232" class="l"><a class="l" href="#2232">2232: </a><span class="php-comment">     * @returns boolean
 </span></span><span id="2233" class="l"><a class="l" href="#2233">2233: </a><span class="php-comment">     * @since 1.2
 </span></span><span id="2234" class="l"><a class="l" href="#2234">2234: </a><span class="php-comment">     */</span>
-</span><span id="2235" class="l"><a class="l" href="#2235">2235: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_setMaintainHistory" href="#_setMaintainHistory">setMaintainHistory</a>(<span class="php-var">$maintainHistory</span>) {
-</span><span id="2236" class="l"><a class="l" href="#2236">2236: </a>        <span class="php-keyword1">if</span>(!<span class="php-keyword2">is_bool</span>(<span class="php-var">$maintainHistory</span>))
-</span><span id="2237" class="l"><a class="l" href="#2237">2237: </a>            <span class="php-keyword1">throw</span> <span class="php-keyword1">new</span> IllegalArguementException(<span class="php-quote">'Non-boolean value ['</span>.<span class="php-var">$maintainHistory</span>.<span class="php-quote">'] passed to setMaintainHistory method!'</span>);
-</span><span id="2238" class="l"><a class="l" href="#2238">2238: </a>
-</span><span id="2239" class="l"><a class="l" href="#2239">2239: </a>        <span class="php-var">$this</span>-&gt;maintainHistory = <span class="php-var">$maintainHistory</span>;
-</span><span id="2240" class="l"><a class="l" href="#2240">2240: </a>    }
-</span><span id="2241" class="l"><a class="l" href="#2241">2241: </a>
-</span><span id="2242" class="l"><a class="l" href="#2242">2242: </a>    <span class="php-comment">/**
-</span></span><span id="2243" class="l"><a class="l" href="#2243">2243: </a><span class="php-comment">     * Gets the value of the  maintainHistory attribute
-</span></span><span id="2244" class="l"><a class="l" href="#2244">2244: </a><span class="php-comment">     *
-</span></span><span id="2245" class="l"><a class="l" href="#2245">2245: </a><span class="php-comment">     * @returns boolean
-</span></span><span id="2246" class="l"><a class="l" href="#2246">2246: </a><span class="php-comment">     * @since 1.2
-</span></span><span id="2247" class="l"><a class="l" href="#2247">2247: </a><span class="php-comment">     */</span>
-</span><span id="2248" class="l"><a class="l" href="#2248">2248: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_getMaintainHistory" href="#_getMaintainHistory">getMaintainHistory</a>() {
-</span><span id="2249" class="l"><a class="l" href="#2249">2249: </a>        <span class="php-keyword1">return</span> <span class="php-var">$this</span>-&gt;maintainHistory;
-</span><span id="2250" class="l"><a class="l" href="#2250">2250: </a>    }
-</span><span id="2251" class="l"><a class="l" href="#2251">2251: </a>}
-</span><span id="2252" class="l"><a class="l" href="#2252">2252: </a>
-</span><span id="2253" class="l"><a class="l" href="#2253">2253: </a></span><span class="xlang">?&gt;</span></code></pre>
+</span><span id="2235" class="l"><a class="l" href="#2235">2235: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_getMaintainHistory" href="#_getMaintainHistory">getMaintainHistory</a>() {
+</span><span id="2236" class="l"><a class="l" href="#2236">2236: </a>        <span class="php-keyword1">return</span> <span class="php-var">$this</span>-&gt;maintainHistory;
+</span><span id="2237" class="l"><a class="l" href="#2237">2237: </a>    }
+</span><span id="2238" class="l"><a class="l" href="#2238">2238: </a>}
+</span><span id="2239" class="l"><a class="l" href="#2239">2239: </a>
+</span><span id="2240" class="l"><a class="l" href="#2240">2240: </a></span><span class="xlang">?&gt;</span></code></pre>
 
 	<div id="footer">
-		Alpha Framework 1.2.3 API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+		Alpha Framework ${alpha.version.new} API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
 	</div>
 </div>
 </div>

@@ -5,10 +5,10 @@
 	<meta name="generator" content="ApiGen 2.8.0" />
 	<meta name="robots" content="noindex" />
 
-	<title>File controller/Login.php | Alpha Framework 1.2.3 API Documentation</title>
+	<title>File controller/Login.php | Alpha Framework ${alpha.version.new} API Documentation</title>
 
 	<script type="text/javascript" src="resources/combined.js?197213082"></script>
-	<script type="text/javascript" src="elementlist.js?3363017373"></script>
+	<script type="text/javascript" src="elementlist.js?1938582898"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
 
 </head>
@@ -54,8 +54,6 @@
 				<li><a href="package-alpha..util..helpers.html">alpha::util::helpers</a>
 						</li>
 				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
-						</li>
-				<li><a href="package-alpha..util..search.html">alpha::util::search</a>
 						</li>
 				<li><a href="package-alpha..view.html">alpha::view</a>
 						</li>
@@ -170,9 +168,9 @@
 </span></span><span id="14" class="l"><a class="l" href="#14"> 14: </a><span class="php-comment"> * @package alpha::controller
 </span></span><span id="15" class="l"><a class="l" href="#15"> 15: </a><span class="php-comment"> * @since 1.0
 </span></span><span id="16" class="l"><a class="l" href="#16"> 16: </a><span class="php-comment"> * @author John Collins &lt;dev@alphaframework.org&gt;
-</span></span><span id="17" class="l"><a class="l" href="#17"> 17: </a><span class="php-comment"> * @version $Id: Login.php 1765 2014-04-22 21:26:23Z alphadevx $
+</span></span><span id="17" class="l"><a class="l" href="#17"> 17: </a><span class="php-comment"> * @version $Id: Login.php 1645 2013-02-14 16:11:19Z alphadevx $
 </span></span><span id="18" class="l"><a class="l" href="#18"> 18: </a><span class="php-comment"> * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
-</span></span><span id="19" class="l"><a class="l" href="#19"> 19: </a><span class="php-comment"> * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
+</span></span><span id="19" class="l"><a class="l" href="#19"> 19: </a><span class="php-comment"> * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
 </span></span><span id="20" class="l"><a class="l" href="#20"> 20: </a><span class="php-comment"> * All rights reserved.
 </span></span><span id="21" class="l"><a class="l" href="#21"> 21: </a><span class="php-comment"> *
 </span></span><span id="22" class="l"><a class="l" href="#22"> 22: </a><span class="php-comment"> * &lt;pre&gt;
@@ -322,155 +320,147 @@
 </span><span id="166" class="l"><a class="l" href="#166">166: </a>                            <span class="php-keyword2">header</span>(<span class="php-quote">'Location: '</span>.<span class="php-var">$url</span>);
 </span><span id="167" class="l"><a class="l" href="#167">167: </a>                            <span class="php-keyword1">exit</span>;
 </span><span id="168" class="l"><a class="l" href="#168">168: </a>                        }<span class="php-keyword1">else</span>{
-</span><span id="169" class="l"><a class="l" href="#169">169: </a>                            <span class="php-var">$url</span> = FrontController::generateSecureURL(<span class="php-quote">'act=Install'</span>);
-</span><span id="170" class="l"><a class="l" href="#170">170: </a>                            self::<span class="php-var">$logger</span>-&gt;info(<span class="php-quote">'Redirecting to ['</span>.<span class="php-var">$url</span>.<span class="php-quote">']'</span>);
-</span><span id="171" class="l"><a class="l" href="#171">171: </a>                            <span class="php-keyword2">header</span>(<span class="php-quote">'Location: '</span>.<span class="php-var">$url</span>);
-</span><span id="172" class="l"><a class="l" href="#172">172: </a>                            <span class="php-keyword1">exit</span>;
-</span><span id="173" class="l"><a class="l" href="#173">173: </a>                        }
-</span><span id="174" class="l"><a class="l" href="#174">174: </a>                    }<span class="php-keyword1">else</span>{
-</span><span id="175" class="l"><a class="l" href="#175">175: </a>                        <span class="php-keyword1">throw</span> <span class="php-keyword1">new</span> ValidationException(<span class="php-quote">'Failed to login user '</span>.<span class="php-var">$params</span>[<span class="php-quote">'email'</span>].<span class="php-quote">', the password is incorrect!'</span>);
-</span><span id="176" class="l"><a class="l" href="#176">176: </a>                    }
-</span><span id="177" class="l"><a class="l" href="#177">177: </a>                }<span class="php-keyword1">else</span>{
-</span><span id="178" class="l"><a class="l" href="#178">178: </a>                    <span class="php-comment">// here we are attempting to load the person from the email address</span>
-</span><span id="179" class="l"><a class="l" href="#179">179: </a>                    <span class="php-var">$this</span>-&gt;personObject-&gt;loadByAttribute(<span class="php-quote">'email'</span>, <span class="php-var">$params</span>[<span class="php-quote">'email'</span>], <span class="php-keyword1">true</span>);
+</span><span id="169" class="l"><a class="l" href="#169">169: </a>                            <span class="php-keyword2">header</span>(<span class="php-quote">'Location: '</span>.<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'app.url'</span>).<span class="php-quote">'alpha/controller/Install.php'</span>);
+</span><span id="170" class="l"><a class="l" href="#170">170: </a>                            <span class="php-keyword1">exit</span>;
+</span><span id="171" class="l"><a class="l" href="#171">171: </a>                        }
+</span><span id="172" class="l"><a class="l" href="#172">172: </a>                    }<span class="php-keyword1">else</span>{
+</span><span id="173" class="l"><a class="l" href="#173">173: </a>                        <span class="php-keyword1">throw</span> <span class="php-keyword1">new</span> ValidationException(<span class="php-quote">'Failed to login user '</span>.<span class="php-var">$params</span>[<span class="php-quote">'email'</span>].<span class="php-quote">', the password is incorrect!'</span>);
+</span><span id="174" class="l"><a class="l" href="#174">174: </a>                    }
+</span><span id="175" class="l"><a class="l" href="#175">175: </a>                }<span class="php-keyword1">else</span>{
+</span><span id="176" class="l"><a class="l" href="#176">176: </a>                    <span class="php-comment">// here we are attempting to load the person from the email address</span>
+</span><span id="177" class="l"><a class="l" href="#177">177: </a>                    <span class="php-var">$this</span>-&gt;personObject-&gt;loadByAttribute(<span class="php-quote">'email'</span>, <span class="php-var">$params</span>[<span class="php-quote">'email'</span>], <span class="php-keyword1">true</span>);
+</span><span id="178" class="l"><a class="l" href="#178">178: </a>
+</span><span id="179" class="l"><a class="l" href="#179">179: </a>                    AlphaDAO::disconnect();
 </span><span id="180" class="l"><a class="l" href="#180">180: </a>
-</span><span id="181" class="l"><a class="l" href="#181">181: </a>                    AlphaDAO::disconnect();
-</span><span id="182" class="l"><a class="l" href="#182">182: </a>
-</span><span id="183" class="l"><a class="l" href="#183">183: </a>                    <span class="php-comment">// checking to see if the account has been disabled</span>
-</span><span id="184" class="l"><a class="l" href="#184">184: </a>                    <span class="php-keyword1">if</span> (!<span class="php-var">$this</span>-&gt;personObject-&gt;isTransient() &amp;&amp; <span class="php-var">$this</span>-&gt;personObject-&gt;get(<span class="php-quote">'state'</span>) == <span class="php-quote">'Disabled'</span>)
-</span><span id="185" class="l"><a class="l" href="#185">185: </a>                        <span class="php-keyword1">throw</span> <span class="php-keyword1">new</span> SecurityException(<span class="php-quote">'Failed to login user '</span>.<span class="php-var">$params</span>[<span class="php-quote">'email'</span>].<span class="php-quote">', that account has been disabled!'</span>);
-</span><span id="186" class="l"><a class="l" href="#186">186: </a>
-</span><span id="187" class="l"><a class="l" href="#187">187: </a>                    <span class="php-comment">// check the password</span>
-</span><span id="188" class="l"><a class="l" href="#188">188: </a>                    <span class="php-var">$this</span>-&gt;doLoginAndRedirect(<span class="php-var">$params</span>[<span class="php-quote">'password'</span>]);
-</span><span id="189" class="l"><a class="l" href="#189">189: </a>                }
+</span><span id="181" class="l"><a class="l" href="#181">181: </a>                    <span class="php-comment">// checking to see if the account has been disabled</span>
+</span><span id="182" class="l"><a class="l" href="#182">182: </a>                    <span class="php-keyword1">if</span> (!<span class="php-var">$this</span>-&gt;personObject-&gt;isTransient() &amp;&amp; <span class="php-var">$this</span>-&gt;personObject-&gt;get(<span class="php-quote">'state'</span>) == <span class="php-quote">'Disabled'</span>)
+</span><span id="183" class="l"><a class="l" href="#183">183: </a>                        <span class="php-keyword1">throw</span> <span class="php-keyword1">new</span> SecurityException(<span class="php-quote">'Failed to login user '</span>.<span class="php-var">$params</span>[<span class="php-quote">'email'</span>].<span class="php-quote">', that account has been disabled!'</span>);
+</span><span id="184" class="l"><a class="l" href="#184">184: </a>
+</span><span id="185" class="l"><a class="l" href="#185">185: </a>                    <span class="php-comment">// check the password</span>
+</span><span id="186" class="l"><a class="l" href="#186">186: </a>                    <span class="php-var">$this</span>-&gt;doLoginAndRedirect(<span class="php-var">$params</span>[<span class="php-quote">'password'</span>]);
+</span><span id="187" class="l"><a class="l" href="#187">187: </a>                }
+</span><span id="188" class="l"><a class="l" href="#188">188: </a>
+</span><span id="189" class="l"><a class="l" href="#189">189: </a>                <span class="php-keyword1">echo</span> AlphaView::displayPageHead(<span class="php-var">$this</span>);
 </span><span id="190" class="l"><a class="l" href="#190">190: </a>
-</span><span id="191" class="l"><a class="l" href="#191">191: </a>                <span class="php-keyword1">echo</span> AlphaView::displayPageHead(<span class="php-var">$this</span>);
-</span><span id="192" class="l"><a class="l" href="#192">192: </a>
-</span><span id="193" class="l"><a class="l" href="#193">193: </a>                <span class="php-keyword1">echo</span> <span class="php-var">$this</span>-&gt;personView-&gt;displayLoginForm();
-</span><span id="194" class="l"><a class="l" href="#194">194: </a>            }
-</span><span id="195" class="l"><a class="l" href="#195">195: </a>
-</span><span id="196" class="l"><a class="l" href="#196">196: </a>            <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$params</span>[<span class="php-quote">'resetBut'</span>])) {
-</span><span id="197" class="l"><a class="l" href="#197">197: </a>                <span class="php-comment">// here we are attempting to load the person from the email address</span>
-</span><span id="198" class="l"><a class="l" href="#198">198: </a>                <span class="php-var">$this</span>-&gt;personObject-&gt;loadByAttribute(<span class="php-quote">'email'</span>, <span class="php-var">$params</span>[<span class="php-quote">'email'</span>]);
+</span><span id="191" class="l"><a class="l" href="#191">191: </a>                <span class="php-keyword1">echo</span> <span class="php-var">$this</span>-&gt;personView-&gt;displayLoginForm();
+</span><span id="192" class="l"><a class="l" href="#192">192: </a>            }
+</span><span id="193" class="l"><a class="l" href="#193">193: </a>
+</span><span id="194" class="l"><a class="l" href="#194">194: </a>            <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$params</span>[<span class="php-quote">'resetBut'</span>])) {
+</span><span id="195" class="l"><a class="l" href="#195">195: </a>                <span class="php-comment">// here we are attempting to load the person from the email address</span>
+</span><span id="196" class="l"><a class="l" href="#196">196: </a>                <span class="php-var">$this</span>-&gt;personObject-&gt;loadByAttribute(<span class="php-quote">'email'</span>, <span class="php-var">$params</span>[<span class="php-quote">'email'</span>]);
+</span><span id="197" class="l"><a class="l" href="#197">197: </a>
+</span><span id="198" class="l"><a class="l" href="#198">198: </a>                AlphaDAO::disconnect();
 </span><span id="199" class="l"><a class="l" href="#199">199: </a>
-</span><span id="200" class="l"><a class="l" href="#200">200: </a>                AlphaDAO::disconnect();
-</span><span id="201" class="l"><a class="l" href="#201">201: </a>
-</span><span id="202" class="l"><a class="l" href="#202">202: </a>                <span class="php-comment">// generate a new random password</span>
-</span><span id="203" class="l"><a class="l" href="#203">203: </a>                <span class="php-var">$new_password</span> = <span class="php-var">$this</span>-&gt;personObject-&gt;generatePassword();
-</span><span id="204" class="l"><a class="l" href="#204">204: </a>
-</span><span id="205" class="l"><a class="l" href="#205">205: </a>                <span class="php-comment">// now encrypt and save the new password, then e-mail the user</span>
-</span><span id="206" class="l"><a class="l" href="#206">206: </a>                <span class="php-var">$this</span>-&gt;personObject-&gt;set(<span class="php-quote">'password'</span>, <span class="php-keyword2">crypt</span>(<span class="php-var">$new_password</span>));
-</span><span id="207" class="l"><a class="l" href="#207">207: </a>                <span class="php-var">$this</span>-&gt;personObject-&gt;save();
-</span><span id="208" class="l"><a class="l" href="#208">208: </a>
-</span><span id="209" class="l"><a class="l" href="#209">209: </a>                <span class="php-var">$message</span> = <span class="php-quote">'The password for your account has been reset to '</span>.<span class="php-var">$new_password</span>.<span class="php-quote">' as you requested.  You can now login to the site using your '</span>.
-</span><span id="210" class="l"><a class="l" href="#210">210: </a>                    <span class="php-quote">'e-mail address and this new password as before.'</span>;
-</span><span id="211" class="l"><a class="l" href="#211">211: </a>                <span class="php-var">$subject</span> = <span class="php-quote">'Password change request'</span>;
+</span><span id="200" class="l"><a class="l" href="#200">200: </a>                <span class="php-comment">// generate a new random password</span>
+</span><span id="201" class="l"><a class="l" href="#201">201: </a>                <span class="php-var">$new_password</span> = <span class="php-var">$this</span>-&gt;personObject-&gt;generatePassword();
+</span><span id="202" class="l"><a class="l" href="#202">202: </a>
+</span><span id="203" class="l"><a class="l" href="#203">203: </a>                <span class="php-comment">// now encrypt and save the new password, then e-mail the user</span>
+</span><span id="204" class="l"><a class="l" href="#204">204: </a>                <span class="php-var">$this</span>-&gt;personObject-&gt;set(<span class="php-quote">'password'</span>, <span class="php-keyword2">crypt</span>(<span class="php-var">$new_password</span>));
+</span><span id="205" class="l"><a class="l" href="#205">205: </a>                <span class="php-var">$this</span>-&gt;personObject-&gt;save();
+</span><span id="206" class="l"><a class="l" href="#206">206: </a>
+</span><span id="207" class="l"><a class="l" href="#207">207: </a>                <span class="php-var">$message</span> = <span class="php-quote">'The password for your account has been reset to '</span>.<span class="php-var">$new_password</span>.<span class="php-quote">' as you requested.  You can now login to the site using your '</span>.
+</span><span id="208" class="l"><a class="l" href="#208">208: </a>                    <span class="php-quote">'e-mail address and this new password as before.'</span>;
+</span><span id="209" class="l"><a class="l" href="#209">209: </a>                <span class="php-var">$subject</span> = <span class="php-quote">'Password change request'</span>;
+</span><span id="210" class="l"><a class="l" href="#210">210: </a>
+</span><span id="211" class="l"><a class="l" href="#211">211: </a>                <span class="php-var">$this</span>-&gt;personObject-&gt;sendMail(<span class="php-var">$message</span>, <span class="php-var">$subject</span>);
 </span><span id="212" class="l"><a class="l" href="#212">212: </a>
-</span><span id="213" class="l"><a class="l" href="#213">213: </a>                <span class="php-var">$this</span>-&gt;personObject-&gt;sendMail(<span class="php-var">$message</span>, <span class="php-var">$subject</span>);
-</span><span id="214" class="l"><a class="l" href="#214">214: </a>
-</span><span id="215" class="l"><a class="l" href="#215">215: </a>                <span class="php-keyword1">echo</span> AlphaView::displayUpdateMessage(<span class="php-quote">'The password for the user &lt;strong&gt;'</span>.<span class="php-var">$params</span>[<span class="php-quote">'email'</span>].<span class="php-quote">'&lt;/strong&gt; has been reset, and the new password '</span>.
-</span><span id="216" class="l"><a class="l" href="#216">216: </a>                    <span class="php-quote">'has been sent to that e-mail address.'</span>);
-</span><span id="217" class="l"><a class="l" href="#217">217: </a>                <span class="php-keyword1">echo</span> <span class="php-quote">'&lt;a href=&quot;'</span>.<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'app.url'</span>).<span class="php-quote">'&quot;&gt;Home Page&lt;/a&gt;'</span>;
-</span><span id="218" class="l"><a class="l" href="#218">218: </a>            }
-</span><span id="219" class="l"><a class="l" href="#219">219: </a>        }<span class="php-keyword1">catch</span>(ValidationException <span class="php-var">$e</span>) {
-</span><span id="220" class="l"><a class="l" href="#220">220: </a>            <span class="php-keyword1">echo</span> AlphaView::displayPageHead(<span class="php-var">$this</span>);
+</span><span id="213" class="l"><a class="l" href="#213">213: </a>                <span class="php-keyword1">echo</span> AlphaView::displayUpdateMessage(<span class="php-quote">'The password for the user &lt;strong&gt;'</span>.<span class="php-var">$params</span>[<span class="php-quote">'email'</span>].<span class="php-quote">'&lt;/strong&gt; has been reset, and the new password '</span>.
+</span><span id="214" class="l"><a class="l" href="#214">214: </a>                    <span class="php-quote">'has been sent to that e-mail address.'</span>);
+</span><span id="215" class="l"><a class="l" href="#215">215: </a>                <span class="php-keyword1">echo</span> <span class="php-quote">'&lt;a href=&quot;'</span>.<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'app.url'</span>).<span class="php-quote">'&quot;&gt;Home Page&lt;/a&gt;'</span>;
+</span><span id="216" class="l"><a class="l" href="#216">216: </a>            }
+</span><span id="217" class="l"><a class="l" href="#217">217: </a>        }<span class="php-keyword1">catch</span>(ValidationException <span class="php-var">$e</span>) {
+</span><span id="218" class="l"><a class="l" href="#218">218: </a>            <span class="php-keyword1">echo</span> AlphaView::displayPageHead(<span class="php-var">$this</span>);
+</span><span id="219" class="l"><a class="l" href="#219">219: </a>
+</span><span id="220" class="l"><a class="l" href="#220">220: </a>            <span class="php-keyword1">echo</span> AlphaView::displayErrorMessage(<span class="php-var">$e</span>-&gt;getMessage());
 </span><span id="221" class="l"><a class="l" href="#221">221: </a>
-</span><span id="222" class="l"><a class="l" href="#222">222: </a>            <span class="php-keyword1">echo</span> AlphaView::displayErrorMessage(<span class="php-var">$e</span>-&gt;getMessage());
+</span><span id="222" class="l"><a class="l" href="#222">222: </a>            <span class="php-keyword1">echo</span> <span class="php-var">$this</span>-&gt;personView-&gt;displayLoginForm();
 </span><span id="223" class="l"><a class="l" href="#223">223: </a>
-</span><span id="224" class="l"><a class="l" href="#224">224: </a>            <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$params</span>[<span class="php-quote">'reset'</span>]))
-</span><span id="225" class="l"><a class="l" href="#225">225: </a>                <span class="php-keyword1">echo</span> <span class="php-var">$this</span>-&gt;personView-&gt;displayResetForm();
-</span><span id="226" class="l"><a class="l" href="#226">226: </a>            <span class="php-keyword1">else</span>
-</span><span id="227" class="l"><a class="l" href="#227">227: </a>                <span class="php-keyword1">echo</span> <span class="php-var">$this</span>-&gt;personView-&gt;displayLoginForm();
-</span><span id="228" class="l"><a class="l" href="#228">228: </a>
-</span><span id="229" class="l"><a class="l" href="#229">229: </a>            self::<span class="php-var">$logger</span>-&gt;warn(<span class="php-var">$e</span>-&gt;getMessage());
-</span><span id="230" class="l"><a class="l" href="#230">230: </a>        }<span class="php-keyword1">catch</span>(SecurityException <span class="php-var">$e</span>) {
-</span><span id="231" class="l"><a class="l" href="#231">231: </a>            <span class="php-keyword1">echo</span> AlphaView::displayPageHead(<span class="php-var">$this</span>);
-</span><span id="232" class="l"><a class="l" href="#232">232: </a>
-</span><span id="233" class="l"><a class="l" href="#233">233: </a>            <span class="php-keyword1">echo</span> AlphaView::displayErrorMessage(<span class="php-var">$e</span>-&gt;getMessage());
-</span><span id="234" class="l"><a class="l" href="#234">234: </a>
-</span><span id="235" class="l"><a class="l" href="#235">235: </a>            self::<span class="php-var">$logger</span>-&gt;warn(<span class="php-var">$e</span>-&gt;getMessage());
-</span><span id="236" class="l"><a class="l" href="#236">236: </a>        }<span class="php-keyword1">catch</span>(BONotFoundException <span class="php-var">$e</span>) {
-</span><span id="237" class="l"><a class="l" href="#237">237: </a>            <span class="php-keyword1">echo</span> AlphaView::displayPageHead(<span class="php-var">$this</span>);
-</span><span id="238" class="l"><a class="l" href="#238">238: </a>
-</span><span id="239" class="l"><a class="l" href="#239">239: </a>            <span class="php-keyword1">echo</span> AlphaView::displayErrorMessage(<span class="php-quote">'Failed to find the user \''</span>.<span class="php-var">$params</span>[<span class="php-quote">'email'</span>].<span class="php-quote">'\''</span>);
+</span><span id="224" class="l"><a class="l" href="#224">224: </a>            self::<span class="php-var">$logger</span>-&gt;warn(<span class="php-var">$e</span>-&gt;getMessage());
+</span><span id="225" class="l"><a class="l" href="#225">225: </a>        }<span class="php-keyword1">catch</span>(SecurityException <span class="php-var">$e</span>) {
+</span><span id="226" class="l"><a class="l" href="#226">226: </a>            <span class="php-keyword1">echo</span> AlphaView::displayPageHead(<span class="php-var">$this</span>);
+</span><span id="227" class="l"><a class="l" href="#227">227: </a>
+</span><span id="228" class="l"><a class="l" href="#228">228: </a>            <span class="php-keyword1">echo</span> AlphaView::displayErrorMessage(<span class="php-var">$e</span>-&gt;getMessage());
+</span><span id="229" class="l"><a class="l" href="#229">229: </a>
+</span><span id="230" class="l"><a class="l" href="#230">230: </a>            self::<span class="php-var">$logger</span>-&gt;warn(<span class="php-var">$e</span>-&gt;getMessage());
+</span><span id="231" class="l"><a class="l" href="#231">231: </a>        }<span class="php-keyword1">catch</span>(BONotFoundException <span class="php-var">$e</span>) {
+</span><span id="232" class="l"><a class="l" href="#232">232: </a>            <span class="php-keyword1">echo</span> AlphaView::displayPageHead(<span class="php-var">$this</span>);
+</span><span id="233" class="l"><a class="l" href="#233">233: </a>
+</span><span id="234" class="l"><a class="l" href="#234">234: </a>            <span class="php-keyword1">echo</span> AlphaView::displayErrorMessage(<span class="php-quote">'Failed to find the user \''</span>.<span class="php-var">$params</span>[<span class="php-quote">'email'</span>].<span class="php-quote">'\''</span>);
+</span><span id="235" class="l"><a class="l" href="#235">235: </a>
+</span><span id="236" class="l"><a class="l" href="#236">236: </a>            <span class="php-keyword1">echo</span> <span class="php-var">$this</span>-&gt;personView-&gt;displayLoginForm();
+</span><span id="237" class="l"><a class="l" href="#237">237: </a>
+</span><span id="238" class="l"><a class="l" href="#238">238: </a>            self::<span class="php-var">$logger</span>-&gt;warn(<span class="php-var">$e</span>-&gt;getMessage());
+</span><span id="239" class="l"><a class="l" href="#239">239: </a>        }
 </span><span id="240" class="l"><a class="l" href="#240">240: </a>
-</span><span id="241" class="l"><a class="l" href="#241">241: </a>            <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$params</span>[<span class="php-quote">'reset'</span>]))
-</span><span id="242" class="l"><a class="l" href="#242">242: </a>                <span class="php-keyword1">echo</span> <span class="php-var">$this</span>-&gt;personView-&gt;displayResetForm();
-</span><span id="243" class="l"><a class="l" href="#243">243: </a>            <span class="php-keyword1">else</span>
-</span><span id="244" class="l"><a class="l" href="#244">244: </a>                <span class="php-keyword1">echo</span> <span class="php-var">$this</span>-&gt;personView-&gt;displayLoginForm();
-</span><span id="245" class="l"><a class="l" href="#245">245: </a>
-</span><span id="246" class="l"><a class="l" href="#246">246: </a>            self::<span class="php-var">$logger</span>-&gt;warn(<span class="php-var">$e</span>-&gt;getMessage());
-</span><span id="247" class="l"><a class="l" href="#247">247: </a>        }
-</span><span id="248" class="l"><a class="l" href="#248">248: </a>
-</span><span id="249" class="l"><a class="l" href="#249">249: </a>        <span class="php-keyword1">echo</span> AlphaView::displayPageFoot(<span class="php-var">$this</span>);
-</span><span id="250" class="l"><a class="l" href="#250">250: </a>        self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;doPOST'</span>);
-</span><span id="251" class="l"><a class="l" href="#251">251: </a>    }
-</span><span id="252" class="l"><a class="l" href="#252">252: </a>
-</span><span id="253" class="l"><a class="l" href="#253">253: </a>    <span class="php-comment">/**
-</span></span><span id="254" class="l"><a class="l" href="#254">254: </a><span class="php-comment">     * Login the user and re-direct to the defined destination
-</span></span><span id="255" class="l"><a class="l" href="#255">255: </a><span class="php-comment">     *
-</span></span><span id="256" class="l"><a class="l" href="#256">256: </a><span class="php-comment">     * @param string $password The password supplied by the user logging in
-</span></span><span id="257" class="l"><a class="l" href="#257">257: </a><span class="php-comment">     * @throws ValidationException
-</span></span><span id="258" class="l"><a class="l" href="#258">258: </a><span class="php-comment">     * @since 1.0
-</span></span><span id="259" class="l"><a class="l" href="#259">259: </a><span class="php-comment">     */</span>
-</span><span id="260" class="l"><a class="l" href="#260">260: </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> <a id="_doLoginAndRedirect" href="#_doLoginAndRedirect">doLoginAndRedirect</a>(<span class="php-var">$password</span>) {
-</span><span id="261" class="l"><a class="l" href="#261">261: </a>        self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&gt;&gt;doLoginAndRedirect(password=['</span>.<span class="php-var">$password</span>.<span class="php-quote">'])'</span>);
-</span><span id="262" class="l"><a class="l" href="#262">262: </a>
-</span><span id="263" class="l"><a class="l" href="#263">263: </a>        <span class="php-keyword1">global</span> <span class="php-var">$config</span>;
+</span><span id="241" class="l"><a class="l" href="#241">241: </a>        <span class="php-keyword1">echo</span> AlphaView::displayPageFoot(<span class="php-var">$this</span>);
+</span><span id="242" class="l"><a class="l" href="#242">242: </a>        self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;doPOST'</span>);
+</span><span id="243" class="l"><a class="l" href="#243">243: </a>    }
+</span><span id="244" class="l"><a class="l" href="#244">244: </a>
+</span><span id="245" class="l"><a class="l" href="#245">245: </a>    <span class="php-comment">/**
+</span></span><span id="246" class="l"><a class="l" href="#246">246: </a><span class="php-comment">     * Login the user and re-direct to the defined destination
+</span></span><span id="247" class="l"><a class="l" href="#247">247: </a><span class="php-comment">     *
+</span></span><span id="248" class="l"><a class="l" href="#248">248: </a><span class="php-comment">     * @param string $password The password supplied by the user logging in
+</span></span><span id="249" class="l"><a class="l" href="#249">249: </a><span class="php-comment">     * @throws ValidationException
+</span></span><span id="250" class="l"><a class="l" href="#250">250: </a><span class="php-comment">     * @since 1.0
+</span></span><span id="251" class="l"><a class="l" href="#251">251: </a><span class="php-comment">     */</span>
+</span><span id="252" class="l"><a class="l" href="#252">252: </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> <a id="_doLoginAndRedirect" href="#_doLoginAndRedirect">doLoginAndRedirect</a>(<span class="php-var">$password</span>) {
+</span><span id="253" class="l"><a class="l" href="#253">253: </a>        self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&gt;&gt;doLoginAndRedirect(password=['</span>.<span class="php-var">$password</span>.<span class="php-quote">'])'</span>);
+</span><span id="254" class="l"><a class="l" href="#254">254: </a>
+</span><span id="255" class="l"><a class="l" href="#255">255: </a>        <span class="php-keyword1">global</span> <span class="php-var">$config</span>;
+</span><span id="256" class="l"><a class="l" href="#256">256: </a>
+</span><span id="257" class="l"><a class="l" href="#257">257: </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$this</span>-&gt;personObject-&gt;isTransient() &amp;&amp; <span class="php-var">$this</span>-&gt;personObject-&gt;get(<span class="php-quote">'state'</span>) == <span class="php-quote">'Active'</span>) {
+</span><span id="258" class="l"><a class="l" href="#258">258: </a>            <span class="php-keyword1">if</span> (<span class="php-keyword2">crypt</span>(<span class="php-var">$password</span>, <span class="php-var">$this</span>-&gt;personObject-&gt;get(<span class="php-quote">'password'</span>)) == <span class="php-var">$this</span>-&gt;personObject-&gt;get(<span class="php-quote">'password'</span>)) {
+</span><span id="259" class="l"><a class="l" href="#259">259: </a>
+</span><span id="260" class="l"><a class="l" href="#260">260: </a>                <span class="php-var">$_SESSION</span>[<span class="php-quote">'currentUser'</span>] = <span class="php-var">$this</span>-&gt;personObject;
+</span><span id="261" class="l"><a class="l" href="#261">261: </a>
+</span><span id="262" class="l"><a class="l" href="#262">262: </a>                self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'Logging in ['</span>.<span class="php-var">$this</span>-&gt;personObject-&gt;get(<span class="php-quote">'email'</span>).<span class="php-quote">'] at ['</span>.<span class="php-keyword2">date</span>(<span class="php-quote">&quot;Y-m-d H:i:s&quot;</span>).<span class="php-quote">']'</span>);
+</span><span id="263" class="l"><a class="l" href="#263">263: </a>                self::<span class="php-var">$logger</span>-&gt;action(<span class="php-quote">'Login'</span>);
 </span><span id="264" class="l"><a class="l" href="#264">264: </a>
-</span><span id="265" class="l"><a class="l" href="#265">265: </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$this</span>-&gt;personObject-&gt;isTransient() &amp;&amp; <span class="php-var">$this</span>-&gt;personObject-&gt;get(<span class="php-quote">'state'</span>) == <span class="php-quote">'Active'</span>) {
-</span><span id="266" class="l"><a class="l" href="#266">266: </a>            <span class="php-keyword1">if</span> (<span class="php-keyword2">crypt</span>(<span class="php-var">$password</span>, <span class="php-var">$this</span>-&gt;personObject-&gt;get(<span class="php-quote">'password'</span>)) == <span class="php-var">$this</span>-&gt;personObject-&gt;get(<span class="php-quote">'password'</span>)) {
-</span><span id="267" class="l"><a class="l" href="#267">267: </a>
-</span><span id="268" class="l"><a class="l" href="#268">268: </a>                <span class="php-var">$_SESSION</span>[<span class="php-quote">'currentUser'</span>] = <span class="php-var">$this</span>-&gt;personObject;
-</span><span id="269" class="l"><a class="l" href="#269">269: </a>
-</span><span id="270" class="l"><a class="l" href="#270">270: </a>                self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'Logging in ['</span>.<span class="php-var">$this</span>-&gt;personObject-&gt;get(<span class="php-quote">'email'</span>).<span class="php-quote">'] at ['</span>.<span class="php-keyword2">date</span>(<span class="php-quote">&quot;Y-m-d H:i:s&quot;</span>).<span class="php-quote">']'</span>);
-</span><span id="271" class="l"><a class="l" href="#271">271: </a>                self::<span class="php-var">$logger</span>-&gt;action(<span class="php-quote">'Login'</span>);
-</span><span id="272" class="l"><a class="l" href="#272">272: </a>
-</span><span id="273" class="l"><a class="l" href="#273">273: </a>                <span class="php-keyword1">if</span> (<span class="php-var">$this</span>-&gt;getNextJob() != <span class="php-quote">''</span>) {
-</span><span id="274" class="l"><a class="l" href="#274">274: </a>                    self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;doLoginAndRedirect'</span>);
-</span><span id="275" class="l"><a class="l" href="#275">275: </a>                    <span class="php-var">$url</span> = FrontController::generateSecureURL(<span class="php-quote">'act='</span>.<span class="php-var">$this</span>-&gt;getNextJob());
-</span><span id="276" class="l"><a class="l" href="#276">276: </a>                    <span class="php-keyword2">header</span>(<span class="php-quote">'Location: '</span>.<span class="php-var">$url</span>);
-</span><span id="277" class="l"><a class="l" href="#277">277: </a>                    <span class="php-keyword1">exit</span>;
-</span><span id="278" class="l"><a class="l" href="#278">278: </a>                }<span class="php-keyword1">else</span>{
-</span><span id="279" class="l"><a class="l" href="#279">279: </a>                    self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;doLoginAndRedirect'</span>);
-</span><span id="280" class="l"><a class="l" href="#280">280: </a>                    <span class="php-keyword2">header</span>(<span class="php-quote">'Location: '</span>.<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'app.url'</span>));
-</span><span id="281" class="l"><a class="l" href="#281">281: </a>                    <span class="php-keyword1">exit</span>;
-</span><span id="282" class="l"><a class="l" href="#282">282: </a>                }
-</span><span id="283" class="l"><a class="l" href="#283">283: </a>            }<span class="php-keyword1">else</span>{
-</span><span id="284" class="l"><a class="l" href="#284">284: </a>                <span class="php-keyword1">throw</span> <span class="php-keyword1">new</span> ValidationException(<span class="php-quote">'Failed to login user '</span>.<span class="php-var">$this</span>-&gt;personObject-&gt;get(<span class="php-quote">'email'</span>).<span class="php-quote">', the password is incorrect!'</span>);
-</span><span id="285" class="l"><a class="l" href="#285">285: </a>                self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;doLoginAndRedirect'</span>);
-</span><span id="286" class="l"><a class="l" href="#286">286: </a>            }
-</span><span id="287" class="l"><a class="l" href="#287">287: </a>        }
-</span><span id="288" class="l"><a class="l" href="#288">288: </a>    }
-</span><span id="289" class="l"><a class="l" href="#289">289: </a>
-</span><span id="290" class="l"><a class="l" href="#290">290: </a>    <span class="php-comment">/**
-</span></span><span id="291" class="l"><a class="l" href="#291">291: </a><span class="php-comment">     * Displays the application version number on the login screen.
-</span></span><span id="292" class="l"><a class="l" href="#292">292: </a><span class="php-comment">     *
-</span></span><span id="293" class="l"><a class="l" href="#293">293: </a><span class="php-comment">     * @return string
-</span></span><span id="294" class="l"><a class="l" href="#294">294: </a><span class="php-comment">     * @since 1.0
-</span></span><span id="295" class="l"><a class="l" href="#295">295: </a><span class="php-comment">     */</span>
-</span><span id="296" class="l"><a class="l" href="#296">296: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_before_displayPageFoot_callback" href="#_before_displayPageFoot_callback">before_displayPageFoot_callback</a>() {
-</span><span id="297" class="l"><a class="l" href="#297">297: </a>        <span class="php-keyword1">global</span> <span class="php-var">$config</span>;
+</span><span id="265" class="l"><a class="l" href="#265">265: </a>                <span class="php-keyword1">if</span> (<span class="php-var">$this</span>-&gt;getNextJob() != <span class="php-quote">''</span>) {
+</span><span id="266" class="l"><a class="l" href="#266">266: </a>                    self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;doLoginAndRedirect'</span>);
+</span><span id="267" class="l"><a class="l" href="#267">267: </a>                    <span class="php-var">$url</span> = FrontController::generateSecureURL(<span class="php-quote">'act='</span>.<span class="php-var">$this</span>-&gt;getNextJob());
+</span><span id="268" class="l"><a class="l" href="#268">268: </a>                    <span class="php-keyword2">header</span>(<span class="php-quote">'Location: '</span>.<span class="php-var">$url</span>);
+</span><span id="269" class="l"><a class="l" href="#269">269: </a>                    <span class="php-keyword1">exit</span>;
+</span><span id="270" class="l"><a class="l" href="#270">270: </a>                }<span class="php-keyword1">else</span>{
+</span><span id="271" class="l"><a class="l" href="#271">271: </a>                    self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;doLoginAndRedirect'</span>);
+</span><span id="272" class="l"><a class="l" href="#272">272: </a>                    <span class="php-keyword2">header</span>(<span class="php-quote">'Location: '</span>.<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'app.url'</span>));
+</span><span id="273" class="l"><a class="l" href="#273">273: </a>                    <span class="php-keyword1">exit</span>;
+</span><span id="274" class="l"><a class="l" href="#274">274: </a>                }
+</span><span id="275" class="l"><a class="l" href="#275">275: </a>            }<span class="php-keyword1">else</span>{
+</span><span id="276" class="l"><a class="l" href="#276">276: </a>                <span class="php-keyword1">throw</span> <span class="php-keyword1">new</span> ValidationException(<span class="php-quote">'Failed to login user '</span>.<span class="php-var">$this</span>-&gt;personObject-&gt;get(<span class="php-quote">'email'</span>).<span class="php-quote">', the password is incorrect!'</span>);
+</span><span id="277" class="l"><a class="l" href="#277">277: </a>                self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'&lt;&lt;doLoginAndRedirect'</span>);
+</span><span id="278" class="l"><a class="l" href="#278">278: </a>            }
+</span><span id="279" class="l"><a class="l" href="#279">279: </a>        }
+</span><span id="280" class="l"><a class="l" href="#280">280: </a>    }
+</span><span id="281" class="l"><a class="l" href="#281">281: </a>
+</span><span id="282" class="l"><a class="l" href="#282">282: </a>    <span class="php-comment">/**
+</span></span><span id="283" class="l"><a class="l" href="#283">283: </a><span class="php-comment">     * Displays the application version number on the login screen.
+</span></span><span id="284" class="l"><a class="l" href="#284">284: </a><span class="php-comment">     *
+</span></span><span id="285" class="l"><a class="l" href="#285">285: </a><span class="php-comment">     * @return string
+</span></span><span id="286" class="l"><a class="l" href="#286">286: </a><span class="php-comment">     * @since 1.0
+</span></span><span id="287" class="l"><a class="l" href="#287">287: </a><span class="php-comment">     */</span>
+</span><span id="288" class="l"><a class="l" href="#288">288: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_before_displayPageFoot_callback" href="#_before_displayPageFoot_callback">before_displayPageFoot_callback</a>() {
+</span><span id="289" class="l"><a class="l" href="#289">289: </a>        <span class="php-keyword1">global</span> <span class="php-var">$config</span>;
+</span><span id="290" class="l"><a class="l" href="#290">290: </a>
+</span><span id="291" class="l"><a class="l" href="#291">291: </a>        <span class="php-keyword1">return</span> <span class="php-quote">'&lt;p&gt;&lt;em&gt;Version '</span>.<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'app.version'</span>).<span class="php-quote">'&lt;/em&gt;&lt;/p&gt;'</span>;
+</span><span id="292" class="l"><a class="l" href="#292">292: </a>    }
+</span><span id="293" class="l"><a class="l" href="#293">293: </a>}
+</span><span id="294" class="l"><a class="l" href="#294">294: </a>
+</span><span id="295" class="l"><a class="l" href="#295">295: </a><span class="php-comment">// now build the new controller if this file is called directly</span>
+</span><span id="296" class="l"><a class="l" href="#296">296: </a><span class="php-keyword1">if</span> (<span class="php-quote">'Login.php'</span> == <span class="php-keyword2">basename</span>(<span class="php-var">$_SERVER</span>[<span class="php-quote">'PHP_SELF'</span>])) {
+</span><span id="297" class="l"><a class="l" href="#297">297: </a>    <span class="php-var">$controller</span> = <span class="php-keyword1">new</span> Login();
 </span><span id="298" class="l"><a class="l" href="#298">298: </a>
-</span><span id="299" class="l"><a class="l" href="#299">299: </a>        <span class="php-keyword1">return</span> <span class="php-quote">'&lt;p&gt;&lt;em&gt;Version '</span>.<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'app.version'</span>).<span class="php-quote">'&lt;/em&gt;&lt;/p&gt;'</span>;
-</span><span id="300" class="l"><a class="l" href="#300">300: </a>    }
-</span><span id="301" class="l"><a class="l" href="#301">301: </a>}
-</span><span id="302" class="l"><a class="l" href="#302">302: </a>
-</span><span id="303" class="l"><a class="l" href="#303">303: </a><span class="php-comment">// now build the new controller if this file is called directly</span>
-</span><span id="304" class="l"><a class="l" href="#304">304: </a><span class="php-keyword1">if</span> (<span class="php-quote">'Login.php'</span> == <span class="php-keyword2">basename</span>(<span class="php-var">$_SERVER</span>[<span class="php-quote">'PHP_SELF'</span>])) {
-</span><span id="305" class="l"><a class="l" href="#305">305: </a>    <span class="php-var">$controller</span> = <span class="php-keyword1">new</span> Login();
-</span><span id="306" class="l"><a class="l" href="#306">306: </a>
-</span><span id="307" class="l"><a class="l" href="#307">307: </a>    <span class="php-keyword1">if</span>(!<span class="php-keyword1">empty</span>(<span class="php-var">$_POST</span>)) {
-</span><span id="308" class="l"><a class="l" href="#308">308: </a>        <span class="php-var">$controller</span>-&gt;doPOST(<span class="php-var">$_POST</span>);
-</span><span id="309" class="l"><a class="l" href="#309">309: </a>    }<span class="php-keyword1">else</span>{
-</span><span id="310" class="l"><a class="l" href="#310">310: </a>        <span class="php-var">$controller</span>-&gt;doGET(<span class="php-var">$_GET</span>);
-</span><span id="311" class="l"><a class="l" href="#311">311: </a>    }
-</span><span id="312" class="l"><a class="l" href="#312">312: </a>}
-</span><span id="313" class="l"><a class="l" href="#313">313: </a>
-</span><span id="314" class="l"><a class="l" href="#314">314: </a></span><span class="xlang">?&gt;</span></code></pre>
+</span><span id="299" class="l"><a class="l" href="#299">299: </a>    <span class="php-keyword1">if</span>(!<span class="php-keyword1">empty</span>(<span class="php-var">$_POST</span>)) {
+</span><span id="300" class="l"><a class="l" href="#300">300: </a>        <span class="php-var">$controller</span>-&gt;doPOST(<span class="php-var">$_POST</span>);
+</span><span id="301" class="l"><a class="l" href="#301">301: </a>    }<span class="php-keyword1">else</span>{
+</span><span id="302" class="l"><a class="l" href="#302">302: </a>        <span class="php-var">$controller</span>-&gt;doGET(<span class="php-var">$_GET</span>);
+</span><span id="303" class="l"><a class="l" href="#303">303: </a>    }
+</span><span id="304" class="l"><a class="l" href="#304">304: </a>}
+</span><span id="305" class="l"><a class="l" href="#305">305: </a>
+</span><span id="306" class="l"><a class="l" href="#306">306: </a></span><span class="xlang">?&gt;</span></code></pre>
 
 	<div id="footer">
-		Alpha Framework 1.2.3 API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+		Alpha Framework ${alpha.version.new} API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
 	</div>
 </div>
 </div>

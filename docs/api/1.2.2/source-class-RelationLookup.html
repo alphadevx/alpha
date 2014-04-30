@@ -5,10 +5,10 @@
 	<meta name="generator" content="ApiGen 2.8.0" />
 	<meta name="robots" content="noindex" />
 
-	<title>File model/types/RelationLookup.inc | Alpha Framework 1.2.3 API Documentation</title>
+	<title>File model/types/RelationLookup.inc | Alpha Framework ${alpha.version.new} API Documentation</title>
 
 	<script type="text/javascript" src="resources/combined.js?197213082"></script>
-	<script type="text/javascript" src="elementlist.js?3363017373"></script>
+	<script type="text/javascript" src="elementlist.js?1938582898"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
 
 </head>
@@ -54,8 +54,6 @@
 				<li><a href="package-alpha..util..helpers.html">alpha::util::helpers</a>
 						</li>
 				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
-						</li>
-				<li><a href="package-alpha..util..search.html">alpha::util::search</a>
 						</li>
 				<li><a href="package-alpha..view.html">alpha::view</a>
 						</li>
@@ -144,7 +142,7 @@
 </span></span><span id="7" class="l"><a class="l" href="#7">  7: </a><span class="php-comment"> * @package alpha::model::types
 </span></span><span id="8" class="l"><a class="l" href="#8">  8: </a><span class="php-comment"> * @since 1.0
 </span></span><span id="9" class="l"><a class="l" href="#9">  9: </a><span class="php-comment"> * @author John Collins &lt;dev@alphaframework.org&gt;
-</span></span><span id="10" class="l"><a class="l" href="#10"> 10: </a><span class="php-comment"> * @version $Id: RelationLookup.inc 1693 2013-12-09 23:33:24Z alphadevx $
+</span></span><span id="10" class="l"><a class="l" href="#10"> 10: </a><span class="php-comment"> * @version $Id: RelationLookup.inc 1618 2012-12-19 16:51:08Z alphadevx $
 </span></span><span id="11" class="l"><a class="l" href="#11"> 11: </a><span class="php-comment"> * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
 </span></span><span id="12" class="l"><a class="l" href="#12"> 12: </a><span class="php-comment"> * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
 </span></span><span id="13" class="l"><a class="l" href="#13"> 13: </a><span class="php-comment"> * All rights reserved.
@@ -314,8 +312,8 @@
 </span></span><span id="177" class="l"><a class="l" href="#177">177: </a><span class="php-comment">     */</span>
 </span><span id="178" class="l"><a class="l" href="#178">178: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_getTableName" href="#_getTableName">getTableName</a>() {
 </span><span id="179" class="l"><a class="l" href="#179">179: </a>        <span class="php-keyword1">if</span>(<span class="php-keyword1">isset</span>(<span class="php-var">$this</span>-&gt;leftClassName) &amp;&amp; <span class="php-keyword1">isset</span>(<span class="php-var">$this</span>-&gt;rightClassName)) {
-</span><span id="180" class="l"><a class="l" href="#180">180: </a>            <span class="php-var">$left</span> = <span class="php-keyword2">mb_substr</span>(<span class="php-var">$this</span>-&gt;leftClassName, <span class="php-num">0</span>, <span class="php-keyword2">mb_strpos</span>(<span class="php-var">$this</span>-&gt;leftClassName, <span class="php-quote">'Object'</span>));
-</span><span id="181" class="l"><a class="l" href="#181">181: </a>            <span class="php-var">$right</span> = <span class="php-keyword2">mb_substr</span>(<span class="php-var">$this</span>-&gt;rightClassName, <span class="php-num">0</span>, <span class="php-keyword2">mb_strpos</span>(<span class="php-var">$this</span>-&gt;rightClassName, <span class="php-quote">'Object'</span>));
+</span><span id="180" class="l"><a class="l" href="#180">180: </a>            <span class="php-var">$left</span> = <span class="php-keyword2">substr</span>(<span class="php-var">$this</span>-&gt;leftClassName, <span class="php-num">0</span>, <span class="php-keyword2">strpos</span>(<span class="php-var">$this</span>-&gt;leftClassName, <span class="php-quote">'Object'</span>));
+</span><span id="181" class="l"><a class="l" href="#181">181: </a>            <span class="php-var">$right</span> = <span class="php-keyword2">substr</span>(<span class="php-var">$this</span>-&gt;rightClassName, <span class="php-num">0</span>, <span class="php-keyword2">strpos</span>(<span class="php-var">$this</span>-&gt;rightClassName, <span class="php-quote">'Object'</span>));
 </span><span id="182" class="l"><a class="l" href="#182">182: </a>            self::<span class="php-var">$logger</span>-&gt;debug(<span class="php-quote">'Setting table name to ['</span>.<span class="php-var">$left</span>.<span class="php-quote">'2'</span>.<span class="php-var">$right</span>.<span class="php-quote">']'</span>);
 </span><span id="183" class="l"><a class="l" href="#183">183: </a>            <span class="php-keyword1">return</span> <span class="php-var">$left</span>.<span class="php-quote">'2'</span>.<span class="php-var">$right</span>;
 </span><span id="184" class="l"><a class="l" href="#184">184: </a>        }<span class="php-keyword1">else</span>{
@@ -410,7 +408,7 @@
 </span><span id="273" class="l"><a class="l" href="#273">273: </a></span>}</code></pre>
 
 	<div id="footer">
-		Alpha Framework 1.2.3 API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+		Alpha Framework ${alpha.version.new} API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
 	</div>
 </div>
 </div>

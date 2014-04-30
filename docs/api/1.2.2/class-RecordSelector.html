@@ -4,10 +4,10 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="generator" content="ApiGen 2.8.0" />
 
-	<title>Class RecordSelector | Alpha Framework 1.2.3 API Documentation</title>
+	<title>Class RecordSelector | Alpha Framework ${alpha.version.new} API Documentation</title>
 
 	<script type="text/javascript" src="resources/combined.js?197213082"></script>
-	<script type="text/javascript" src="elementlist.js?3363017373"></script>
+	<script type="text/javascript" src="elementlist.js?1938582898"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
 
 </head>
@@ -53,8 +53,6 @@
 				<li><a href="package-alpha..util..helpers.html">alpha::util::helpers</a>
 						</li>
 				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
-						</li>
-				<li><a href="package-alpha..util..search.html">alpha::util::search</a>
 						</li>
 				<li><a href="package-alpha..view.html">alpha::view</a>
 						</li>
@@ -147,7 +145,7 @@
 		<b>Package:</b> <a href="package-alpha..view..widgets.html">alpha::view::widgets</a><br />
 
 				<b>Copyright:</b>
-				Copyright (c) 2014, John Collins (founder of Alpha Framework). All rights
+				Copyright (c) 2012, John Collins (founder of Alpha Framework). All rights
 reserved.
 <pre>
 Redistribution and use in source and binary forms, with or
@@ -187,10 +185,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 				John Collins &lt;<a
 href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&gt;<br />
 				<b>Version:</b>
-				$Id: RecordSelector.inc 1745 2014-03-29 15:19:05Z alphadevx $<br />
+				$Id: RecordSelector.inc 1548 2012-07-29 17:07:07Z alphadevx $<br />
 				<b>Since:</b>
 				1.0<br />
-		<b>Located at</b> <a href="source-class-RecordSelector.html#3-513" title="Go to source code">view/widgets/RecordSelector.inc</a><br />
+		<b>Located at</b> <a href="source-class-RecordSelector.html#11-537" title="Go to source code">view/widgets/RecordSelector.inc</a><br />
 	</div>
 
 
@@ -208,7 +206,7 @@ href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&
 
 		<td class="name"><div>
 		<a class="anchor" href="#___construct">#</a>
-		<code><a href="source-class-RecordSelector.html#97-120" title="Go to source code">__construct</a>( <span><code><a href="class-Relation.html">Relation</a></code> <var>$relation</var></span>, <span>string <var>$label</var> = <span class="php-quote">''</span></span>, <span>string <var>$name</var> = <span class="php-quote">''</span></span>, <span>string <var>$accessingClassName</var> = <span class="php-quote">''</span></span> )</code>
+		<code><a href="source-class-RecordSelector.html#105-128" title="Go to source code">__construct</a>( <span><code><a href="class-Relation.html">Relation</a></code> <var>$relation</var></span>, <span>string <var>$label</var> = <span class="php-quote">''</span></span>, <span>string <var>$name</var> = <span class="php-quote">''</span></span>, <span>string <var>$accessingClassName</var> = <span class="php-quote">''</span></span> )</code>
 
 		<div class="description short">
 			
@@ -260,7 +258,7 @@ href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&
 
 		<td class="name"><div>
 		<a class="anchor" href="#_render">#</a>
-		<code><a href="source-class-RecordSelector.html#122-354" title="Go to source code">render</a>( <span>boolean <var>$expanded</var> = <span class="php-keyword1">false</span></span>, <span>boolean <var>$buttons</var> = <span class="php-keyword1">true</span></span> )</code>
+		<code><a href="source-class-RecordSelector.html#130-329" title="Go to source code">render</a>( <span>boolean <var>$tableTags</var> = <span class="php-keyword1">true</span></span>, <span>boolean <var>$expanded</var> = <span class="php-keyword1">false</span></span>, <span>boolean <var>$buttons</var> = <span class="php-keyword1">true</span></span> )</code>
 
 		<div class="description short">
 			
@@ -278,6 +276,8 @@ forms.</p>
 
 				<h4>Parameters</h4>
 				<div class="list"><dl>
+					<dt><var>$tableTags</var></dt>
+					<dd><code>boolean</code><br>$tableTags Include table tags and label (optional)</dd>
 					<dt><var>$expanded</var></dt>
 					<dd><code>boolean</code><br>$expanded Render the related fields in expanded format or not (optional)</dd>
 					<dt><var>$buttons</var></dt>
@@ -310,7 +310,7 @@ forms.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_renderSelector">#</a>
-		<code><a href="source-class-RecordSelector.html#356-512" title="Go to source code">renderSelector</a>( <span>array <var>$lookupOIDs</var> = <span class="php-keyword1">array</span>()</span> )</code>
+		<code><a href="source-class-RecordSelector.html#331-458" title="Go to source code">renderSelector</a>( <span>array <var>$lookupOIDs</var> = <span class="php-keyword1">array</span>()</span> )</code>
 
 		<div class="description short">
 			
@@ -332,6 +332,88 @@ window.</p>
 					<dd><code>array</code><br>$lookupOIDs An optional array of related look-up OIDs, only required for
 rendering MANY-TO-MANY rels</dd>
 				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="displayPageHead" id="_displayPageHead">
+
+		<td class="attributes"><code>
+			 private 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_displayPageHead">#</a>
+		<code><a href="source-class-RecordSelector.html#460-523" title="Go to source code">displayPageHead</a>( )</code>
+
+		<div class="description short">
+			
+<p>Renders the header HTML and JS for the record selector pop-up page.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders the header HTML and JS for the record selector pop-up page.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="displayPageFoot" id="_displayPageFoot">
+
+		<td class="attributes"><code>
+			 private 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_displayPageFoot">#</a>
+		<code><a href="source-class-RecordSelector.html#525-536" title="Go to source code">displayPageFoot</a>( )</code>
+
+		<div class="description short">
+			
+<p>Renders the footer HTML and JS for the record selector pop-up page.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Renders the footer HTML and JS for the record selector pop-up page.</p>
+
+
+
 
 				<h4>Returns</h4>
 				<div class="list">
@@ -370,7 +452,7 @@ rendering MANY-TO-MANY rels</dd>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-RecordSelector.html#48-54" title="Go to source code"><var>$relationObject</var></a>
+				<a href="source-class-RecordSelector.html#56-62" title="Go to source code"><var>$relationObject</var></a>
 		</td>
 		<td class="value"><code><span class="php-keyword1">null</span></code></td>
 		<td class="description"><div>
@@ -401,7 +483,7 @@ rendering MANY-TO-MANY rels</dd>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-RecordSelector.html#56-62" title="Go to source code"><var>$label</var></a>
+				<a href="source-class-RecordSelector.html#64-70" title="Go to source code"><var>$label</var></a>
 		</td>
 		<td class="value"><code></code></td>
 		<td class="description"><div>
@@ -432,7 +514,7 @@ rendering MANY-TO-MANY rels</dd>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-RecordSelector.html#64-71" title="Go to source code"><var>$accessingClassName</var></a>
+				<a href="source-class-RecordSelector.html#72-79" title="Go to source code"><var>$accessingClassName</var></a>
 		</td>
 		<td class="value"><code></code></td>
 		<td class="description"><div>
@@ -465,7 +547,7 @@ rendering MANY-TO-MANY rels</dd>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-RecordSelector.html#73-79" title="Go to source code"><var>$onloadJS</var></a>
+				<a href="source-class-RecordSelector.html#81-87" title="Go to source code"><var>$onloadJS</var></a>
 		</td>
 		<td class="value"><code><span class="php-quote">''</span></code></td>
 		<td class="description"><div>
@@ -496,7 +578,7 @@ rendering MANY-TO-MANY rels</dd>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-RecordSelector.html#81-87" title="Go to source code"><var>$name</var></a>
+				<a href="source-class-RecordSelector.html#89-95" title="Go to source code"><var>$name</var></a>
 		</td>
 		<td class="value"><code></code></td>
 		<td class="description"><div>
@@ -527,7 +609,7 @@ rendering MANY-TO-MANY rels</dd>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-RecordSelector.html#89-95" title="Go to source code"><var>$logger</var></a>
+				<a href="source-class-RecordSelector.html#97-103" title="Go to source code"><var>$logger</var></a>
 		</td>
 		<td class="value"><code><span class="php-keyword1">null</span></code></td>
 		<td class="description"><div>
@@ -561,7 +643,7 @@ rendering MANY-TO-MANY rels</dd>
 </div>
 
 	<div id="footer">
-		Alpha Framework 1.2.3 API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+		Alpha Framework ${alpha.version.new} API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
 	</div>
 </div>
 </div>

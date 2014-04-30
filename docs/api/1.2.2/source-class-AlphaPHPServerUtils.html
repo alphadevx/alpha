@@ -5,10 +5,10 @@
 	<meta name="generator" content="ApiGen 2.8.0" />
 	<meta name="robots" content="noindex" />
 
-	<title>File util/AlphaPHPServerUtils.inc | Alpha Framework 1.2.3 API Documentation</title>
+	<title>File util/AlphaPHPServerUtils.inc | Alpha Framework ${alpha.version.new} API Documentation</title>
 
 	<script type="text/javascript" src="resources/combined.js?197213082"></script>
-	<script type="text/javascript" src="elementlist.js?3363017373"></script>
+	<script type="text/javascript" src="elementlist.js?1938582898"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
 
 </head>
@@ -54,8 +54,6 @@
 				<li><a href="package-alpha..util..helpers.html">alpha::util::helpers</a>
 						</li>
 				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
-						</li>
-				<li><a href="package-alpha..util..search.html">alpha::util::search</a>
 						</li>
 				<li><a href="package-alpha..view.html">alpha::view</a>
 						</li>
@@ -147,9 +145,9 @@
 </span></span><span id="6" class="l"><a class="l" href="#6">  6: </a><span class="php-comment"> * @package alpha::util
 </span></span><span id="7" class="l"><a class="l" href="#7">  7: </a><span class="php-comment"> * @since 1.2.2
 </span></span><span id="8" class="l"><a class="l" href="#8">  8: </a><span class="php-comment"> * @author John Collins &lt;dev@alphaframework.org&gt;
-</span></span><span id="9" class="l"><a class="l" href="#9">  9: </a><span class="php-comment"> * @version $Id: AlphaPHPServerUtils.inc 1745 2014-03-29 15:19:05Z alphadevx $
+</span></span><span id="9" class="l"><a class="l" href="#9">  9: </a><span class="php-comment"> * @version $Id: AlphaPHPServerUtils.inc 1671 2013-09-22 21:10:24Z alphadevx $
 </span></span><span id="10" class="l"><a class="l" href="#10"> 10: </a><span class="php-comment"> * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
-</span></span><span id="11" class="l"><a class="l" href="#11"> 11: </a><span class="php-comment"> * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
+</span></span><span id="11" class="l"><a class="l" href="#11"> 11: </a><span class="php-comment"> * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
 </span></span><span id="12" class="l"><a class="l" href="#12"> 12: </a><span class="php-comment"> * All rights reserved.
 </span></span><span id="13" class="l"><a class="l" href="#13"> 13: </a><span class="php-comment"> *
 </span></span><span id="14" class="l"><a class="l" href="#14"> 14: </a><span class="php-comment"> * &lt;pre&gt;
@@ -199,7 +197,7 @@
 </span></span><span id="58" class="l"><a class="l" href="#58"> 58: </a><span class="php-comment">     */</span>
 </span><span id="59" class="l"><a class="l" href="#59"> 59: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> <a id="_start" href="#_start">start</a>(<span class="php-var">$host</span>, <span class="php-var">$port</span>, <span class="php-var">$docRoot</span>) {
 </span><span id="60" class="l"><a class="l" href="#60"> 60: </a>        <span class="php-comment">// we are on Windows</span>
-</span><span id="61" class="l"><a class="l" href="#61"> 61: </a>        <span class="php-keyword1">if</span> (<span class="php-keyword2">mb_strtoupper</span>(<span class="php-keyword2">mb_substr</span>(PHP_OS, <span class="php-num">0</span>, <span class="php-num">3</span>)) === <span class="php-quote">'WIN'</span>) {
+</span><span id="61" class="l"><a class="l" href="#61"> 61: </a>        <span class="php-keyword1">if</span> (<span class="php-keyword2">strtoupper</span>(<span class="php-keyword2">substr</span>(PHP_OS, <span class="php-num">0</span>, <span class="php-num">3</span>)) === <span class="php-quote">'WIN'</span>) {
 </span><span id="62" class="l"><a class="l" href="#62"> 62: </a>            <span class="php-comment">// Command that starts the built-in web server</span>
 </span><span id="63" class="l"><a class="l" href="#63"> 63: </a>            <span class="php-var">$command</span> = <span class="php-keyword2">sprintf</span>(
 </span><span id="64" class="l"><a class="l" href="#64"> 64: </a>                <span class="php-quote">'php -S %s:%d -t %s'</span>,
@@ -250,7 +248,7 @@
 </span></span><span id="109" class="l"><a class="l" href="#109">109: </a><span class="php-comment">     */</span>
 </span><span id="110" class="l"><a class="l" href="#110">110: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> <a id="_stop" href="#_stop">stop</a>(<span class="php-var">$PID</span>) {
 </span><span id="111" class="l"><a class="l" href="#111">111: </a>        <span class="php-comment">// we are on Windows</span>
-</span><span id="112" class="l"><a class="l" href="#112">112: </a>        <span class="php-keyword1">if</span> (<span class="php-keyword2">mb_strtoupper</span>(<span class="php-keyword2">mb_substr</span>(PHP_OS, <span class="php-num">0</span>, <span class="php-num">3</span>)) === <span class="php-quote">'WIN'</span>) {
+</span><span id="112" class="l"><a class="l" href="#112">112: </a>        <span class="php-keyword1">if</span> (<span class="php-keyword2">strtoupper</span>(<span class="php-keyword2">substr</span>(PHP_OS, <span class="php-num">0</span>, <span class="php-num">3</span>)) === <span class="php-quote">'WIN'</span>) {
 </span><span id="113" class="l"><a class="l" href="#113">113: </a>            <span class="php-keyword2">exec</span>(<span class="php-quote">&quot;taskkill /F /pid </span><span class="php-var">$PID</span><span class="php-quote">&quot;</span>);
 </span><span id="114" class="l"><a class="l" href="#114">114: </a>        }<span class="php-keyword1">else</span>{ <span class="php-comment">// we are on Linux</span>
 </span><span id="115" class="l"><a class="l" href="#115">115: </a>            <span class="php-keyword2">exec</span>(<span class="php-quote">&quot;kill -9 </span><span class="php-var">$PID</span><span class="php-quote">&quot;</span>);
@@ -266,7 +264,7 @@
 </span><span id="125" class="l"><a class="l" href="#125">125: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> <a id="_status" href="#_status">status</a>(<span class="php-var">$PID</span>) {
 </span><span id="126" class="l"><a class="l" href="#126">126: </a>        <span class="php-var">$output</span> = <span class="php-keyword1">array</span>();
 </span><span id="127" class="l"><a class="l" href="#127">127: </a>        <span class="php-comment">// we are on Windows</span>
-</span><span id="128" class="l"><a class="l" href="#128">128: </a>        <span class="php-keyword1">if</span> (<span class="php-keyword2">mb_strtoupper</span>(<span class="php-keyword2">mb_substr</span>(PHP_OS, <span class="php-num">0</span>, <span class="php-num">3</span>)) === <span class="php-quote">'WIN'</span>) {
+</span><span id="128" class="l"><a class="l" href="#128">128: </a>        <span class="php-keyword1">if</span> (<span class="php-keyword2">strtoupper</span>(<span class="php-keyword2">substr</span>(PHP_OS, <span class="php-num">0</span>, <span class="php-num">3</span>)) === <span class="php-quote">'WIN'</span>) {
 </span><span id="129" class="l"><a class="l" href="#129">129: </a>            <span class="php-keyword2">exec</span>(<span class="php-quote">&quot;tasklist /fi \&quot;PID eq </span><span class="php-var">$PID</span><span class="php-quote">\&quot;&quot;</span>, <span class="php-var">$output</span>);
 </span><span id="130" class="l"><a class="l" href="#130">130: </a>
 </span><span id="131" class="l"><a class="l" href="#131">131: </a>            <span class="php-keyword1">if</span>(<span class="php-keyword1">isset</span>(<span class="php-var">$output</span>[<span class="php-num">0</span>]) &amp;&amp; <span class="php-var">$output</span>[<span class="php-num">0</span>] == <span class="php-quote">'INFO: No tasks are running which match the specified criteria.'</span>)
@@ -288,7 +286,7 @@
 </span><span id="147" class="l"><a class="l" href="#147">147: </a></span><span class="xlang">?&gt;</span></code></pre>
 
 	<div id="footer">
-		Alpha Framework 1.2.3 API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+		Alpha Framework ${alpha.version.new} API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
 	</div>
 </div>
 </div>

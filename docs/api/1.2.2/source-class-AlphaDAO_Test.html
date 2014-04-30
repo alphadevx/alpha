@@ -5,10 +5,10 @@
 	<meta name="generator" content="ApiGen 2.8.0" />
 	<meta name="robots" content="noindex" />
 
-	<title>File tests/AlphaDAO_Test.php | Alpha Framework 1.2.3 API Documentation</title>
+	<title>File tests/AlphaDAO_Test.php | Alpha Framework ${alpha.version.new} API Documentation</title>
 
 	<script type="text/javascript" src="resources/combined.js?197213082"></script>
-	<script type="text/javascript" src="elementlist.js?3363017373"></script>
+	<script type="text/javascript" src="elementlist.js?1938582898"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
 
 </head>
@@ -55,8 +55,6 @@
 						</li>
 				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
 						</li>
-				<li><a href="package-alpha..util..search.html">alpha::util::search</a>
-						</li>
 				<li><a href="package-alpha..view.html">alpha::view</a>
 						</li>
 				<li><a href="package-alpha..view..renderers.html">alpha::view::renderers</a>
@@ -93,7 +91,6 @@
 				<li><a href="class-Integer_Test.html">Integer_Test</a></li>
 				<li><a href="class-Relation_Test.html">Relation_Test</a></li>
 				<li><a href="class-RelationLookup_Test.html">RelationLookup_Test</a></li>
-				<li><a href="class-SearchProviderTags_Test.html">SearchProviderTags_Test</a></li>
 				<li><a href="class-Sequence_Test.html">Sequence_Test</a></li>
 				<li><a href="class-String_Test.html">String_Test</a></li>
 				<li><a href="class-Tag_Test.html">Tag_Test</a></li>
@@ -153,9 +150,9 @@
 </span></span><span id="7" class="l"><a class="l" href="#7">  7: </a><span class="php-comment"> * @package alpha::tests
 </span></span><span id="8" class="l"><a class="l" href="#8">  8: </a><span class="php-comment"> * @since 1.0
 </span></span><span id="9" class="l"><a class="l" href="#9">  9: </a><span class="php-comment"> * @author John Collins &lt;dev@alphaframework.org&gt;
-</span></span><span id="10" class="l"><a class="l" href="#10"> 10: </a><span class="php-comment"> * @version $Id: AlphaDAO_Test.php 1759 2014-04-10 20:10:30Z alphadevx $
+</span></span><span id="10" class="l"><a class="l" href="#10"> 10: </a><span class="php-comment"> * @version $Id: AlphaDAO_Test.php 1624 2012-12-21 12:17:55Z alphadevx $
 </span></span><span id="11" class="l"><a class="l" href="#11"> 11: </a><span class="php-comment"> * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
-</span></span><span id="12" class="l"><a class="l" href="#12"> 12: </a><span class="php-comment"> * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
+</span></span><span id="12" class="l"><a class="l" href="#12"> 12: </a><span class="php-comment"> * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
 </span></span><span id="13" class="l"><a class="l" href="#13"> 13: </a><span class="php-comment"> * All rights reserved.
 </span></span><span id="14" class="l"><a class="l" href="#14"> 14: </a><span class="php-comment"> *
 </span></span><span id="15" class="l"><a class="l" href="#15"> 15: </a><span class="php-comment"> * &lt;pre&gt;
@@ -447,7 +444,7 @@
 </span><span id="301" class="l"><a class="l" href="#301">301: </a>            <span class="php-var">$this</span>-&gt;fail(<span class="php-quote">'Testing the validation method'</span>);
 </span><span id="302" class="l"><a class="l" href="#302">302: </a>        }<span class="php-keyword1">catch</span> (ValidationException <span class="php-var">$e</span>) {
 </span><span id="303" class="l"><a class="l" href="#303">303: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'Failed to save, validation error is:'</span>,
-</span><span id="304" class="l"><a class="l" href="#304">304: </a>                            <span class="php-keyword2">mb_substr</span>(<span class="php-var">$e</span>-&gt;getMessage(), <span class="php-num">0</span>, <span class="php-num">36</span>),
+</span><span id="304" class="l"><a class="l" href="#304">304: </a>                            <span class="php-keyword2">substr</span>(<span class="php-var">$e</span>-&gt;getMessage(), <span class="php-num">0</span>, <span class="php-num">36</span>),
 </span><span id="305" class="l"><a class="l" href="#305">305: </a>                            <span class="php-quote">'Testing the validation method'</span>);
 </span><span id="306" class="l"><a class="l" href="#306">306: </a>        }
 </span><span id="307" class="l"><a class="l" href="#307">307: </a>    }
@@ -471,7 +468,7 @@
 </span><span id="325" class="l"><a class="l" href="#325">325: </a>            <span class="php-var">$this</span>-&gt;fail(<span class="php-quote">'Testing the delete method'</span>);
 </span><span id="326" class="l"><a class="l" href="#326">326: </a>        }<span class="php-keyword1">catch</span> (BONotFoundException <span class="php-var">$e</span>) {
 </span><span id="327" class="l"><a class="l" href="#327">327: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'Failed to load object'</span>,
-</span><span id="328" class="l"><a class="l" href="#328">328: </a>                            <span class="php-keyword2">mb_substr</span>(<span class="php-var">$e</span>-&gt;getMessage(), <span class="php-num">0</span>, <span class="php-num">21</span>),
+</span><span id="328" class="l"><a class="l" href="#328">328: </a>                            <span class="php-keyword2">substr</span>(<span class="php-var">$e</span>-&gt;getMessage(), <span class="php-num">0</span>, <span class="php-num">21</span>),
 </span><span id="329" class="l"><a class="l" href="#329">329: </a>                            <span class="php-quote">'Testing the delete method'</span>);
 </span><span id="330" class="l"><a class="l" href="#330">330: </a>        }
 </span><span id="331" class="l"><a class="l" href="#331">331: </a>    }
@@ -791,37 +788,37 @@
 </span><span id="645" class="l"><a class="l" href="#645">645: </a>        <span class="php-var">$this</span>-&gt;person-&gt;save();
 </span><span id="646" class="l"><a class="l" href="#646">646: </a>
 </span><span id="647" class="l"><a class="l" href="#647">647: </a>        <span class="php-keyword1">if</span>(<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'db.provider.name'</span>) == <span class="php-quote">'AlphaDAOProviderMySQL'</span>) {
-</span><span id="648" class="l"><a class="l" href="#648">648: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'INSERT INTO Person'</span>, <span class="php-keyword2">mb_substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">18</span>),
+</span><span id="648" class="l"><a class="l" href="#648">648: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'INSERT INTO Person'</span>, <span class="php-keyword2">substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">18</span>),
 </span><span id="649" class="l"><a class="l" href="#649">649: </a>                <span class="php-quote">'Testing the getLastQuery method after various persistance calls'</span>);
 </span><span id="650" class="l"><a class="l" href="#650">650: </a>            <span class="php-var">$this</span>-&gt;person-&gt;checkTableNeedsUpdate();
-</span><span id="651" class="l"><a class="l" href="#651">651: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'SHOW INDEX FROM Person'</span>, <span class="php-keyword2">mb_substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">22</span>),
+</span><span id="651" class="l"><a class="l" href="#651">651: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'SHOW INDEX FROM Person'</span>, <span class="php-keyword2">substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">22</span>),
 </span><span id="652" class="l"><a class="l" href="#652">652: </a>                <span class="php-quote">'Testing the getLastQuery method after various persistance calls'</span>);
 </span><span id="653" class="l"><a class="l" href="#653">653: </a>            <span class="php-var">$this</span>-&gt;person-&gt;getCount();
-</span><span id="654" class="l"><a class="l" href="#654">654: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'SELECT COUNT(OID)'</span>, <span class="php-keyword2">mb_substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">17</span>),
+</span><span id="654" class="l"><a class="l" href="#654">654: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'SELECT COUNT(OID)'</span>, <span class="php-keyword2">substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">17</span>),
 </span><span id="655" class="l"><a class="l" href="#655">655: </a>                <span class="php-quote">'Testing the getLastQuery method after various persistance calls'</span>);
 </span><span id="656" class="l"><a class="l" href="#656">656: </a>            <span class="php-var">$this</span>-&gt;person-&gt;getMAX();
-</span><span id="657" class="l"><a class="l" href="#657">657: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'SELECT MAX(OID)'</span>, <span class="php-keyword2">mb_substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">15</span>),
+</span><span id="657" class="l"><a class="l" href="#657">657: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'SELECT MAX(OID)'</span>, <span class="php-keyword2">substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">15</span>),
 </span><span id="658" class="l"><a class="l" href="#658">658: </a>                <span class="php-quote">'Testing the getLastQuery method after various persistance calls'</span>);
 </span><span id="659" class="l"><a class="l" href="#659">659: </a>            <span class="php-var">$this</span>-&gt;person-&gt;load(<span class="php-var">$this</span>-&gt;person-&gt;getID());
-</span><span id="660" class="l"><a class="l" href="#660">660: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'SHOW COLUMNS FROM Person'</span>, <span class="php-keyword2">mb_substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">24</span>),
+</span><span id="660" class="l"><a class="l" href="#660">660: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'SHOW COLUMNS FROM Person'</span>, <span class="php-keyword2">substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">24</span>),
 </span><span id="661" class="l"><a class="l" href="#661">661: </a>                <span class="php-quote">'Testing the getLastQuery method after various persistance calls'</span>);
 </span><span id="662" class="l"><a class="l" href="#662">662: </a>        }
 </span><span id="663" class="l"><a class="l" href="#663">663: </a>
 </span><span id="664" class="l"><a class="l" href="#664">664: </a>        <span class="php-keyword1">if</span>(<span class="php-var">$config</span>-&gt;get(<span class="php-quote">'db.provider.name'</span>) == <span class="php-quote">'AlphaDAOProviderSQLite'</span>) {
-</span><span id="665" class="l"><a class="l" href="#665">665: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'PRAGMA table_info(Person)'</span>, <span class="php-keyword2">mb_substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">25</span>),
+</span><span id="665" class="l"><a class="l" href="#665">665: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'PRAGMA table_info(Person)'</span>, <span class="php-keyword2">substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">25</span>),
 </span><span id="666" class="l"><a class="l" href="#666">666: </a>                    <span class="php-quote">'Testing the getLastQuery method after various persistance calls'</span>);
 </span><span id="667" class="l"><a class="l" href="#667">667: </a>            <span class="php-var">$this</span>-&gt;person-&gt;checkTableNeedsUpdate();
-</span><span id="668" class="l"><a class="l" href="#668">668: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'SELECT name FROM sqlite_master WHERE type=\'index\''</span>, <span class="php-keyword2">mb_substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">49</span>),
+</span><span id="668" class="l"><a class="l" href="#668">668: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'SELECT name FROM sqlite_master WHERE type=\'index\''</span>, <span class="php-keyword2">substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">49</span>),
 </span><span id="669" class="l"><a class="l" href="#669">669: </a>                    <span class="php-quote">'Testing the getLastQuery method after various persistance calls'</span>);
 </span><span id="670" class="l"><a class="l" href="#670">670: </a>            <span class="php-var">$this</span>-&gt;person-&gt;getCount();
-</span><span id="671" class="l"><a class="l" href="#671">671: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'SELECT COUNT(OID)'</span>, <span class="php-keyword2">mb_substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">17</span>),
+</span><span id="671" class="l"><a class="l" href="#671">671: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'SELECT COUNT(OID)'</span>, <span class="php-keyword2">substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">17</span>),
 </span><span id="672" class="l"><a class="l" href="#672">672: </a>                    <span class="php-quote">'Testing the getLastQuery method after various persistance calls'</span>);
 </span><span id="673" class="l"><a class="l" href="#673">673: </a>            <span class="php-var">$this</span>-&gt;person-&gt;getMAX();
-</span><span id="674" class="l"><a class="l" href="#674">674: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'SELECT MAX(OID)'</span>, <span class="php-keyword2">mb_substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">15</span>),
+</span><span id="674" class="l"><a class="l" href="#674">674: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'SELECT MAX(OID)'</span>, <span class="php-keyword2">substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">15</span>),
 </span><span id="675" class="l"><a class="l" href="#675">675: </a>                    <span class="php-quote">'Testing the getLastQuery method after various persistance calls'</span>);
 </span><span id="676" class="l"><a class="l" href="#676">676: </a>            <span class="php-var">$this</span>-&gt;person-&gt;load(<span class="php-var">$this</span>-&gt;person-&gt;getID());
 </span><span id="677" class="l"><a class="l" href="#677">677: </a>            <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'SELECT displayName,email,password,state,URL,OID,version_num,created_ts,created_by,updated_ts,updated_by FROM Person WHERE OID = :OID LIMIT 1;'</span>, 
-</span><span id="678" class="l"><a class="l" href="#678">678: </a>                    <span class="php-keyword2">mb_substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">150</span>),
+</span><span id="678" class="l"><a class="l" href="#678">678: </a>                    <span class="php-keyword2">substr</span>(<span class="php-var">$this</span>-&gt;person-&gt;getLastQuery(), <span class="php-num">0</span>, <span class="php-num">150</span>),
 </span><span id="679" class="l"><a class="l" href="#679">679: </a>                    <span class="php-quote">'Testing the getLastQuery method after various persistance calls'</span>);
 </span><span id="680" class="l"><a class="l" href="#680">680: </a>        }
 </span><span id="681" class="l"><a class="l" href="#681">681: </a>    }
@@ -939,112 +936,87 @@
 </span><span id="793" class="l"><a class="l" href="#793">793: </a>    }
 </span><span id="794" class="l"><a class="l" href="#794">794: </a>
 </span><span id="795" class="l"><a class="l" href="#795">795: </a>    <span class="php-comment">/**
-</span></span><span id="796" class="l"><a class="l" href="#796">796: </a><span class="php-comment">     * Testing that you can add a DAO directly to the cache without saving
+</span></span><span id="796" class="l"><a class="l" href="#796">796: </a><span class="php-comment">     * Testing that a saved record is subsequently retrievable from the cache
 </span></span><span id="797" class="l"><a class="l" href="#797">797: </a><span class="php-comment">     *
-</span></span><span id="798" class="l"><a class="l" href="#798">798: </a><span class="php-comment">     * @since 1.2.3
+</span></span><span id="798" class="l"><a class="l" href="#798">798: </a><span class="php-comment">     * @since 1.2.1
 </span></span><span id="799" class="l"><a class="l" href="#799">799: </a><span class="php-comment">     */</span>
-</span><span id="800" class="l"><a class="l" href="#800">800: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_testAddToCache" href="#_testAddToCache">testAddToCache</a>() {
-</span><span id="801" class="l"><a class="l" href="#801">801: </a>        <span class="php-keyword1">global</span> <span class="php-var">$config</span>;
-</span><span id="802" class="l"><a class="l" href="#802">802: </a>
+</span><span id="800" class="l"><a class="l" href="#800">800: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_testLoadFromCache" href="#_testLoadFromCache">testLoadFromCache</a>() {
+</span><span id="801" class="l"><a class="l" href="#801">801: </a>
+</span><span id="802" class="l"><a class="l" href="#802">802: </a>        <span class="php-keyword1">global</span> <span class="php-var">$config</span>;
 </span><span id="803" class="l"><a class="l" href="#803">803: </a>        <span class="php-var">$oldSetting</span> = <span class="php-var">$config</span>-&gt;get(<span class="php-quote">'cache.provider.name'</span>);
 </span><span id="804" class="l"><a class="l" href="#804">804: </a>        <span class="php-var">$config</span>-&gt;set(<span class="php-quote">'cache.provider.name'</span>, <span class="php-quote">'AlphaCacheProviderArray'</span>);
 </span><span id="805" class="l"><a class="l" href="#805">805: </a>
-</span><span id="806" class="l"><a class="l" href="#806">806: </a>        <span class="php-var">$this</span>-&gt;person-&gt;setOID(<span class="php-quote">'123'</span>);
-</span><span id="807" class="l"><a class="l" href="#807">807: </a>        <span class="php-var">$this</span>-&gt;person-&gt;addToCache();
-</span><span id="808" class="l"><a class="l" href="#808">808: </a>
-</span><span id="809" class="l"><a class="l" href="#809">809: </a>        <span class="php-var">$fromCache</span> = <span class="php-keyword1">new</span> PersonObject();
-</span><span id="810" class="l"><a class="l" href="#810">810: </a>        <span class="php-var">$fromCache</span>-&gt;setOID(<span class="php-var">$this</span>-&gt;person-&gt;getOID());
-</span><span id="811" class="l"><a class="l" href="#811">811: </a>
-</span><span id="812" class="l"><a class="l" href="#812">812: </a>        <span class="php-var">$this</span>-&gt;assertTrue(<span class="php-var">$fromCache</span>-&gt;loadFromCache(), <span class="php-quote">'testing that the item loads from the cache'</span>);
-</span><span id="813" class="l"><a class="l" href="#813">813: </a>        <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'unitTestUser'</span>, <span class="php-var">$fromCache</span>-&gt;get(<span class="php-quote">'displayName'</span>, <span class="php-keyword1">true</span>), <span class="php-quote">'testing that you can add a DAO directly to the cache without saving'</span>);
-</span><span id="814" class="l"><a class="l" href="#814">814: </a>
-</span><span id="815" class="l"><a class="l" href="#815">815: </a>        <span class="php-var">$config</span>-&gt;set(<span class="php-quote">'cache.provider.name'</span>, <span class="php-var">$oldSetting</span>);
-</span><span id="816" class="l"><a class="l" href="#816">816: </a>    }
-</span><span id="817" class="l"><a class="l" href="#817">817: </a>
-</span><span id="818" class="l"><a class="l" href="#818">818: </a>    <span class="php-comment">/**
-</span></span><span id="819" class="l"><a class="l" href="#819">819: </a><span class="php-comment">     * Testing that a saved record is subsequently retrievable from the cache
-</span></span><span id="820" class="l"><a class="l" href="#820">820: </a><span class="php-comment">     *
-</span></span><span id="821" class="l"><a class="l" href="#821">821: </a><span class="php-comment">     * @since 1.2.1
-</span></span><span id="822" class="l"><a class="l" href="#822">822: </a><span class="php-comment">     */</span>
-</span><span id="823" class="l"><a class="l" href="#823">823: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_testLoadFromCache" href="#_testLoadFromCache">testLoadFromCache</a>() {
-</span><span id="824" class="l"><a class="l" href="#824">824: </a>
-</span><span id="825" class="l"><a class="l" href="#825">825: </a>        <span class="php-keyword1">global</span> <span class="php-var">$config</span>;
-</span><span id="826" class="l"><a class="l" href="#826">826: </a>
-</span><span id="827" class="l"><a class="l" href="#827">827: </a>        <span class="php-var">$oldSetting</span> = <span class="php-var">$config</span>-&gt;get(<span class="php-quote">'cache.provider.name'</span>);
-</span><span id="828" class="l"><a class="l" href="#828">828: </a>        <span class="php-var">$config</span>-&gt;set(<span class="php-quote">'cache.provider.name'</span>, <span class="php-quote">'AlphaCacheProviderArray'</span>);
+</span><span id="806" class="l"><a class="l" href="#806">806: </a>        <span class="php-var">$this</span>-&gt;person-&gt;save();
+</span><span id="807" class="l"><a class="l" href="#807">807: </a>
+</span><span id="808" class="l"><a class="l" href="#808">808: </a>        <span class="php-var">$fromCache</span> = <span class="php-keyword1">new</span> PersonObject();
+</span><span id="809" class="l"><a class="l" href="#809">809: </a>        <span class="php-var">$fromCache</span>-&gt;setOID(<span class="php-var">$this</span>-&gt;person-&gt;getOID());
+</span><span id="810" class="l"><a class="l" href="#810">810: </a>
+</span><span id="811" class="l"><a class="l" href="#811">811: </a>        <span class="php-var">$this</span>-&gt;assertTrue(<span class="php-var">$fromCache</span>-&gt;loadFromCache(), <span class="php-quote">'testing that the item loads from the cache'</span>);
+</span><span id="812" class="l"><a class="l" href="#812">812: </a>        <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'unitTestUser'</span>, <span class="php-var">$fromCache</span>-&gt;get(<span class="php-quote">'displayName'</span>, <span class="php-keyword1">true</span>), <span class="php-quote">'testing that a saved record is subsequently retrievable from the cache'</span>);
+</span><span id="813" class="l"><a class="l" href="#813">813: </a>
+</span><span id="814" class="l"><a class="l" href="#814">814: </a>        <span class="php-var">$config</span>-&gt;set(<span class="php-quote">'cache.provider.name'</span>, <span class="php-var">$oldSetting</span>);
+</span><span id="815" class="l"><a class="l" href="#815">815: </a>    }
+</span><span id="816" class="l"><a class="l" href="#816">816: </a>
+</span><span id="817" class="l"><a class="l" href="#817">817: </a>    <span class="php-comment">/**
+</span></span><span id="818" class="l"><a class="l" href="#818">818: </a><span class="php-comment">     * Testing the removeFromCache method
+</span></span><span id="819" class="l"><a class="l" href="#819">819: </a><span class="php-comment">     *
+</span></span><span id="820" class="l"><a class="l" href="#820">820: </a><span class="php-comment">     * @since 1.2.1
+</span></span><span id="821" class="l"><a class="l" href="#821">821: </a><span class="php-comment">     */</span>
+</span><span id="822" class="l"><a class="l" href="#822">822: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_testRemoveFromCache" href="#_testRemoveFromCache">testRemoveFromCache</a>() {
+</span><span id="823" class="l"><a class="l" href="#823">823: </a>
+</span><span id="824" class="l"><a class="l" href="#824">824: </a>        <span class="php-keyword1">global</span> <span class="php-var">$config</span>;
+</span><span id="825" class="l"><a class="l" href="#825">825: </a>        <span class="php-var">$oldSetting</span> = <span class="php-var">$config</span>-&gt;get(<span class="php-quote">'cache.provider.name'</span>);
+</span><span id="826" class="l"><a class="l" href="#826">826: </a>        <span class="php-var">$config</span>-&gt;set(<span class="php-quote">'cache.provider.name'</span>, <span class="php-quote">'AlphaCacheProviderArray'</span>);
+</span><span id="827" class="l"><a class="l" href="#827">827: </a>
+</span><span id="828" class="l"><a class="l" href="#828">828: </a>        <span class="php-var">$this</span>-&gt;person-&gt;save();
 </span><span id="829" class="l"><a class="l" href="#829">829: </a>
-</span><span id="830" class="l"><a class="l" href="#830">830: </a>        <span class="php-var">$this</span>-&gt;person-&gt;save();
-</span><span id="831" class="l"><a class="l" href="#831">831: </a>
-</span><span id="832" class="l"><a class="l" href="#832">832: </a>        <span class="php-var">$fromCache</span> = <span class="php-keyword1">new</span> PersonObject();
-</span><span id="833" class="l"><a class="l" href="#833">833: </a>        <span class="php-var">$fromCache</span>-&gt;setOID(<span class="php-var">$this</span>-&gt;person-&gt;getOID());
+</span><span id="830" class="l"><a class="l" href="#830">830: </a>        <span class="php-var">$fromCache</span> = <span class="php-keyword1">new</span> PersonObject();
+</span><span id="831" class="l"><a class="l" href="#831">831: </a>        <span class="php-var">$fromCache</span>-&gt;setOID(<span class="php-var">$this</span>-&gt;person-&gt;getOID());
+</span><span id="832" class="l"><a class="l" href="#832">832: </a>
+</span><span id="833" class="l"><a class="l" href="#833">833: </a>        <span class="php-var">$this</span>-&gt;assertTrue(<span class="php-var">$fromCache</span>-&gt;loadFromCache(), <span class="php-quote">'testing that the item loads from the cache'</span>);
 </span><span id="834" class="l"><a class="l" href="#834">834: </a>
-</span><span id="835" class="l"><a class="l" href="#835">835: </a>        <span class="php-var">$this</span>-&gt;assertTrue(<span class="php-var">$fromCache</span>-&gt;loadFromCache(), <span class="php-quote">'testing that the item loads from the cache'</span>);
-</span><span id="836" class="l"><a class="l" href="#836">836: </a>        <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'unitTestUser'</span>, <span class="php-var">$fromCache</span>-&gt;get(<span class="php-quote">'displayName'</span>, <span class="php-keyword1">true</span>), <span class="php-quote">'testing that a saved record is subsequently retrievable from the cache'</span>);
-</span><span id="837" class="l"><a class="l" href="#837">837: </a>
-</span><span id="838" class="l"><a class="l" href="#838">838: </a>        <span class="php-var">$config</span>-&gt;set(<span class="php-quote">'cache.provider.name'</span>, <span class="php-var">$oldSetting</span>);
-</span><span id="839" class="l"><a class="l" href="#839">839: </a>    }
-</span><span id="840" class="l"><a class="l" href="#840">840: </a>
-</span><span id="841" class="l"><a class="l" href="#841">841: </a>    <span class="php-comment">/**
-</span></span><span id="842" class="l"><a class="l" href="#842">842: </a><span class="php-comment">     * Testing the removeFromCache method
-</span></span><span id="843" class="l"><a class="l" href="#843">843: </a><span class="php-comment">     *
-</span></span><span id="844" class="l"><a class="l" href="#844">844: </a><span class="php-comment">     * @since 1.2.1
-</span></span><span id="845" class="l"><a class="l" href="#845">845: </a><span class="php-comment">     */</span>
-</span><span id="846" class="l"><a class="l" href="#846">846: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_testRemoveFromCache" href="#_testRemoveFromCache">testRemoveFromCache</a>() {
-</span><span id="847" class="l"><a class="l" href="#847">847: </a>
-</span><span id="848" class="l"><a class="l" href="#848">848: </a>        <span class="php-keyword1">global</span> <span class="php-var">$config</span>;
-</span><span id="849" class="l"><a class="l" href="#849">849: </a>
-</span><span id="850" class="l"><a class="l" href="#850">850: </a>        <span class="php-var">$oldSetting</span> = <span class="php-var">$config</span>-&gt;get(<span class="php-quote">'cache.provider.name'</span>);
-</span><span id="851" class="l"><a class="l" href="#851">851: </a>        <span class="php-var">$config</span>-&gt;set(<span class="php-quote">'cache.provider.name'</span>, <span class="php-quote">'AlphaCacheProviderArray'</span>);
-</span><span id="852" class="l"><a class="l" href="#852">852: </a>
-</span><span id="853" class="l"><a class="l" href="#853">853: </a>        <span class="php-var">$this</span>-&gt;person-&gt;save();
-</span><span id="854" class="l"><a class="l" href="#854">854: </a>
-</span><span id="855" class="l"><a class="l" href="#855">855: </a>        <span class="php-var">$fromCache</span> = <span class="php-keyword1">new</span> PersonObject();
-</span><span id="856" class="l"><a class="l" href="#856">856: </a>        <span class="php-var">$fromCache</span>-&gt;setOID(<span class="php-var">$this</span>-&gt;person-&gt;getOID());
-</span><span id="857" class="l"><a class="l" href="#857">857: </a>
-</span><span id="858" class="l"><a class="l" href="#858">858: </a>        <span class="php-var">$this</span>-&gt;assertTrue(<span class="php-var">$fromCache</span>-&gt;loadFromCache(), <span class="php-quote">'testing that the item loads from the cache'</span>);
-</span><span id="859" class="l"><a class="l" href="#859">859: </a>
-</span><span id="860" class="l"><a class="l" href="#860">860: </a>        <span class="php-var">$fromCache</span>-&gt;removeFromCache();
-</span><span id="861" class="l"><a class="l" href="#861">861: </a>
-</span><span id="862" class="l"><a class="l" href="#862">862: </a>        <span class="php-var">$this</span>-&gt;assertFalse(<span class="php-var">$fromCache</span>-&gt;loadFromCache(), <span class="php-quote">'testing that the item is gone from the cache'</span>);
-</span><span id="863" class="l"><a class="l" href="#863">863: </a>
-</span><span id="864" class="l"><a class="l" href="#864">864: </a>        <span class="php-var">$config</span>-&gt;set(<span class="php-quote">'cache.provider.name'</span>, <span class="php-var">$oldSetting</span>);
-</span><span id="865" class="l"><a class="l" href="#865">865: </a>    }
+</span><span id="835" class="l"><a class="l" href="#835">835: </a>        <span class="php-var">$fromCache</span>-&gt;removeFromCache();
+</span><span id="836" class="l"><a class="l" href="#836">836: </a>
+</span><span id="837" class="l"><a class="l" href="#837">837: </a>        <span class="php-var">$this</span>-&gt;assertFalse(<span class="php-var">$fromCache</span>-&gt;loadFromCache(), <span class="php-quote">'testing that the item is gone from the cache'</span>);
+</span><span id="838" class="l"><a class="l" href="#838">838: </a>
+</span><span id="839" class="l"><a class="l" href="#839">839: </a>        <span class="php-var">$config</span>-&gt;set(<span class="php-quote">'cache.provider.name'</span>, <span class="php-var">$oldSetting</span>);
+</span><span id="840" class="l"><a class="l" href="#840">840: </a>    }
+</span><span id="841" class="l"><a class="l" href="#841">841: </a>
+</span><span id="842" class="l"><a class="l" href="#842">842: </a>    <span class="php-comment">/**
+</span></span><span id="843" class="l"><a class="l" href="#843">843: </a><span class="php-comment">     * Testing the getFriendlyClassName() method
+</span></span><span id="844" class="l"><a class="l" href="#844">844: </a><span class="php-comment">     *
+</span></span><span id="845" class="l"><a class="l" href="#845">845: </a><span class="php-comment">     * @since 1.2.1
+</span></span><span id="846" class="l"><a class="l" href="#846">846: </a><span class="php-comment">     */</span>
+</span><span id="847" class="l"><a class="l" href="#847">847: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_testGetFriendlyClassName" href="#_testGetFriendlyClassName">testGetFriendlyClassName</a>() {
+</span><span id="848" class="l"><a class="l" href="#848">848: </a>        <span class="php-var">$person</span> = <span class="php-keyword1">new</span> PersonObject();
+</span><span id="849" class="l"><a class="l" href="#849">849: </a>        <span class="php-var">$article</span> = <span class="php-keyword1">new</span> ArticleObject();
+</span><span id="850" class="l"><a class="l" href="#850">850: </a>        <span class="php-var">$comment</span> = <span class="php-keyword1">new</span> ArticleCommentObject();
+</span><span id="851" class="l"><a class="l" href="#851">851: </a>
+</span><span id="852" class="l"><a class="l" href="#852">852: </a>        <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'Person'</span>, <span class="php-var">$person</span>-&gt;getFriendlyClassName(), <span class="php-quote">'testing the getFriendlyClassName() method'</span>);
+</span><span id="853" class="l"><a class="l" href="#853">853: </a>        <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'Article'</span>, <span class="php-var">$article</span>-&gt;getFriendlyClassName(), <span class="php-quote">'testing the getFriendlyClassName() method'</span>);
+</span><span id="854" class="l"><a class="l" href="#854">854: </a>        <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'ArticleComment'</span>, <span class="php-var">$comment</span>-&gt;getFriendlyClassName(), <span class="php-quote">'testing the getFriendlyClassName() method'</span>);
+</span><span id="855" class="l"><a class="l" href="#855">855: </a>    }
+</span><span id="856" class="l"><a class="l" href="#856">856: </a>
+</span><span id="857" class="l"><a class="l" href="#857">857: </a>    <span class="php-comment">/**
+</span></span><span id="858" class="l"><a class="l" href="#858">858: </a><span class="php-comment">     * Testing the cast() method
+</span></span><span id="859" class="l"><a class="l" href="#859">859: </a><span class="php-comment">     *
+</span></span><span id="860" class="l"><a class="l" href="#860">860: </a><span class="php-comment">     * @since 1.2.1
+</span></span><span id="861" class="l"><a class="l" href="#861">861: </a><span class="php-comment">     */</span>
+</span><span id="862" class="l"><a class="l" href="#862">862: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_testCast" href="#_testCast">testCast</a>() {
+</span><span id="863" class="l"><a class="l" href="#863">863: </a>        <span class="php-var">$original</span> = <span class="php-keyword1">new</span> BadRequestObject();
+</span><span id="864" class="l"><a class="l" href="#864">864: </a>        <span class="php-var">$original</span>-&gt;set(<span class="php-quote">'IP'</span>, <span class="php-quote">'127.0.0.1'</span>);
+</span><span id="865" class="l"><a class="l" href="#865">865: </a>        <span class="php-var">$copy</span> = <span class="php-var">$original</span>-&gt;cast(<span class="php-quote">'BlacklistedIPObject'</span>, <span class="php-var">$original</span>);
 </span><span id="866" class="l"><a class="l" href="#866">866: </a>
-</span><span id="867" class="l"><a class="l" href="#867">867: </a>    <span class="php-comment">/**
-</span></span><span id="868" class="l"><a class="l" href="#868">868: </a><span class="php-comment">     * Testing the getFriendlyClassName() method
-</span></span><span id="869" class="l"><a class="l" href="#869">869: </a><span class="php-comment">     *
-</span></span><span id="870" class="l"><a class="l" href="#870">870: </a><span class="php-comment">     * @since 1.2.1
-</span></span><span id="871" class="l"><a class="l" href="#871">871: </a><span class="php-comment">     */</span>
-</span><span id="872" class="l"><a class="l" href="#872">872: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_testGetFriendlyClassName" href="#_testGetFriendlyClassName">testGetFriendlyClassName</a>() {
-</span><span id="873" class="l"><a class="l" href="#873">873: </a>        <span class="php-var">$person</span> = <span class="php-keyword1">new</span> PersonObject();
-</span><span id="874" class="l"><a class="l" href="#874">874: </a>        <span class="php-var">$article</span> = <span class="php-keyword1">new</span> ArticleObject();
-</span><span id="875" class="l"><a class="l" href="#875">875: </a>        <span class="php-var">$comment</span> = <span class="php-keyword1">new</span> ArticleCommentObject();
-</span><span id="876" class="l"><a class="l" href="#876">876: </a>
-</span><span id="877" class="l"><a class="l" href="#877">877: </a>        <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'Person'</span>, <span class="php-var">$person</span>-&gt;getFriendlyClassName(), <span class="php-quote">'testing the getFriendlyClassName() method'</span>);
-</span><span id="878" class="l"><a class="l" href="#878">878: </a>        <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'Article'</span>, <span class="php-var">$article</span>-&gt;getFriendlyClassName(), <span class="php-quote">'testing the getFriendlyClassName() method'</span>);
-</span><span id="879" class="l"><a class="l" href="#879">879: </a>        <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-quote">'ArticleComment'</span>, <span class="php-var">$comment</span>-&gt;getFriendlyClassName(), <span class="php-quote">'testing the getFriendlyClassName() method'</span>);
-</span><span id="880" class="l"><a class="l" href="#880">880: </a>    }
-</span><span id="881" class="l"><a class="l" href="#881">881: </a>
-</span><span id="882" class="l"><a class="l" href="#882">882: </a>    <span class="php-comment">/**
-</span></span><span id="883" class="l"><a class="l" href="#883">883: </a><span class="php-comment">     * Testing the cast() method
-</span></span><span id="884" class="l"><a class="l" href="#884">884: </a><span class="php-comment">     *
-</span></span><span id="885" class="l"><a class="l" href="#885">885: </a><span class="php-comment">     * @since 1.2.1
-</span></span><span id="886" class="l"><a class="l" href="#886">886: </a><span class="php-comment">     */</span>
-</span><span id="887" class="l"><a class="l" href="#887">887: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_testCast" href="#_testCast">testCast</a>() {
-</span><span id="888" class="l"><a class="l" href="#888">888: </a>        <span class="php-var">$original</span> = <span class="php-keyword1">new</span> BadRequestObject();
-</span><span id="889" class="l"><a class="l" href="#889">889: </a>        <span class="php-var">$original</span>-&gt;set(<span class="php-quote">'IP'</span>, <span class="php-quote">'127.0.0.1'</span>);
-</span><span id="890" class="l"><a class="l" href="#890">890: </a>        <span class="php-var">$copy</span> = <span class="php-var">$original</span>-&gt;cast(<span class="php-quote">'BlacklistedIPObject'</span>, <span class="php-var">$original</span>);
-</span><span id="891" class="l"><a class="l" href="#891">891: </a>
-</span><span id="892" class="l"><a class="l" href="#892">892: </a>        <span class="php-var">$this</span>-&gt;assertTrue(<span class="php-var">$copy</span> <span class="php-keyword1">instanceof</span> BlacklistedIPObject, <span class="php-quote">'testing the cast() method'</span>);
-</span><span id="893" class="l"><a class="l" href="#893">893: </a>        <span class="php-var">$this</span>-&gt;assertTrue(<span class="php-var">$copy</span>-&gt;hasAttribute(<span class="php-quote">'IP'</span>), <span class="php-quote">'testing the cast() method'</span>);
-</span><span id="894" class="l"><a class="l" href="#894">894: </a>        <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-var">$original</span>-&gt;get(<span class="php-quote">'IP'</span>), <span class="php-var">$copy</span>-&gt;get(<span class="php-quote">'IP'</span>), <span class="php-quote">'testing the cast() method'</span>);
-</span><span id="895" class="l"><a class="l" href="#895">895: </a>    }
-</span><span id="896" class="l"><a class="l" href="#896">896: </a>}
-</span><span id="897" class="l"><a class="l" href="#897">897: </a>
-</span><span id="898" class="l"><a class="l" href="#898">898: </a></span><span class="xlang">?&gt;</span></code></pre>
+</span><span id="867" class="l"><a class="l" href="#867">867: </a>        <span class="php-var">$this</span>-&gt;assertTrue(<span class="php-var">$copy</span> <span class="php-keyword1">instanceof</span> BlacklistedIPObject, <span class="php-quote">'testing the cast() method'</span>);
+</span><span id="868" class="l"><a class="l" href="#868">868: </a>        <span class="php-var">$this</span>-&gt;assertTrue(<span class="php-var">$copy</span>-&gt;hasAttribute(<span class="php-quote">'IP'</span>), <span class="php-quote">'testing the cast() method'</span>);
+</span><span id="869" class="l"><a class="l" href="#869">869: </a>        <span class="php-var">$this</span>-&gt;assertEquals(<span class="php-var">$original</span>-&gt;get(<span class="php-quote">'IP'</span>), <span class="php-var">$copy</span>-&gt;get(<span class="php-quote">'IP'</span>), <span class="php-quote">'testing the cast() method'</span>);
+</span><span id="870" class="l"><a class="l" href="#870">870: </a>    }
+</span><span id="871" class="l"><a class="l" href="#871">871: </a>}
+</span><span id="872" class="l"><a class="l" href="#872">872: </a>
+</span><span id="873" class="l"><a class="l" href="#873">873: </a></span><span class="xlang">?&gt;</span></code></pre>
 
 	<div id="footer">
-		Alpha Framework 1.2.3 API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+		Alpha Framework ${alpha.version.new} API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
 	</div>
 </div>
 </div>

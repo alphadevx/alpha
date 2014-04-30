@@ -5,10 +5,10 @@
 	<meta name="generator" content="ApiGen 2.8.0" />
 	<meta name="robots" content="noindex" />
 
-	<title>File tests/AlphaValidator_Test.php | Alpha Framework 1.2.3 API Documentation</title>
+	<title>File tests/AlphaValidator_Test.php | Alpha Framework ${alpha.version.new} API Documentation</title>
 
 	<script type="text/javascript" src="resources/combined.js?197213082"></script>
-	<script type="text/javascript" src="elementlist.js?3363017373"></script>
+	<script type="text/javascript" src="elementlist.js?1938582898"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
 
 </head>
@@ -55,8 +55,6 @@
 						</li>
 				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
 						</li>
-				<li><a href="package-alpha..util..search.html">alpha::util::search</a>
-						</li>
 				<li><a href="package-alpha..view.html">alpha::view</a>
 						</li>
 				<li><a href="package-alpha..view..renderers.html">alpha::view::renderers</a>
@@ -93,7 +91,6 @@
 				<li><a href="class-Integer_Test.html">Integer_Test</a></li>
 				<li><a href="class-Relation_Test.html">Relation_Test</a></li>
 				<li><a href="class-RelationLookup_Test.html">RelationLookup_Test</a></li>
-				<li><a href="class-SearchProviderTags_Test.html">SearchProviderTags_Test</a></li>
 				<li><a href="class-Sequence_Test.html">Sequence_Test</a></li>
 				<li><a href="class-String_Test.html">String_Test</a></li>
 				<li><a href="class-Tag_Test.html">Tag_Test</a></li>
@@ -153,9 +150,9 @@
 </span></span><span id="7" class="l"><a class="l" href="#7">  7: </a><span class="php-comment"> * @package alpha::tests
 </span></span><span id="8" class="l"><a class="l" href="#8">  8: </a><span class="php-comment"> * @since 1.0
 </span></span><span id="9" class="l"><a class="l" href="#9">  9: </a><span class="php-comment"> * @author John Collins &lt;dev@alphaframework.org&gt;
-</span></span><span id="10" class="l"><a class="l" href="#10"> 10: </a><span class="php-comment"> * @version $Id: AlphaValidator_Test.php 1758 2014-04-09 22:59:52Z alphadevx $
+</span></span><span id="10" class="l"><a class="l" href="#10"> 10: </a><span class="php-comment"> * @version $Id: AlphaValidator_Test.php 1633 2013-01-22 16:43:56Z alphadevx $
 </span></span><span id="11" class="l"><a class="l" href="#11"> 11: </a><span class="php-comment"> * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
-</span></span><span id="12" class="l"><a class="l" href="#12"> 12: </a><span class="php-comment"> * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
+</span></span><span id="12" class="l"><a class="l" href="#12"> 12: </a><span class="php-comment"> * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
 </span></span><span id="13" class="l"><a class="l" href="#13"> 13: </a><span class="php-comment"> * All rights reserved.
 </span></span><span id="14" class="l"><a class="l" href="#14"> 14: </a><span class="php-comment"> *
 </span></span><span id="15" class="l"><a class="l" href="#15"> 15: </a><span class="php-comment"> * &lt;pre&gt;
@@ -320,26 +317,12 @@
 </span><span id="174" class="l"><a class="l" href="#174">174: </a>        <span class="php-var">$this</span>-&gt;assertFalse(AlphaValidator::isSequence(<span class="php-quote">'1.0'</span>));
 </span><span id="175" class="l"><a class="l" href="#175">175: </a>        <span class="php-var">$this</span>-&gt;assertFalse(AlphaValidator::isSequence(<span class="php-quote">'DESI8'</span>));
 </span><span id="176" class="l"><a class="l" href="#176">176: </a>    }
-</span><span id="177" class="l"><a class="l" href="#177">177: </a>
-</span><span id="178" class="l"><a class="l" href="#178">178: </a>    <span class="php-comment">/**
-</span></span><span id="179" class="l"><a class="l" href="#179">179: </a><span class="php-comment">     * Validate that the provided value is a base64 string
-</span></span><span id="180" class="l"><a class="l" href="#180">180: </a><span class="php-comment">     *
-</span></span><span id="181" class="l"><a class="l" href="#181">181: </a><span class="php-comment">     * @since 1.2.3
-</span></span><span id="182" class="l"><a class="l" href="#182">182: </a><span class="php-comment">     */</span>
-</span><span id="183" class="l"><a class="l" href="#183">183: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_testIsBase64" href="#_testIsBase64">testIsBase64</a>() {
-</span><span id="184" class="l"><a class="l" href="#184">184: </a>        <span class="php-var">$this</span>-&gt;assertTrue(AlphaValidator::isBase64(<span class="php-quote">'YWJjZA=='</span>));
-</span><span id="185" class="l"><a class="l" href="#185">185: </a>        <span class="php-var">$this</span>-&gt;assertTrue(AlphaValidator::isBase64(<span class="php-quote">'MTIzNA=='</span>));
-</span><span id="186" class="l"><a class="l" href="#186">186: </a>        <span class="php-var">$this</span>-&gt;assertTrue(AlphaValidator::isBase64(<span class="php-quote">'YWJjZDEyMzQ='</span>));
-</span><span id="187" class="l"><a class="l" href="#187">187: </a>        <span class="php-var">$this</span>-&gt;assertFalse(AlphaValidator::isBase64(<span class="php-quote">'abcde'</span>));
-</span><span id="188" class="l"><a class="l" href="#188">188: </a>        <span class="php-var">$this</span>-&gt;assertFalse(AlphaValidator::isBase64(<span class="php-quote">'12345'</span>));
-</span><span id="189" class="l"><a class="l" href="#189">189: </a>        <span class="php-var">$this</span>-&gt;assertFalse(AlphaValidator::isBase64(<span class="php-quote">'abcde12345'</span>));
-</span><span id="190" class="l"><a class="l" href="#190">190: </a>    }
-</span><span id="191" class="l"><a class="l" href="#191">191: </a>}
-</span><span id="192" class="l"><a class="l" href="#192">192: </a>
-</span><span id="193" class="l"><a class="l" href="#193">193: </a></span><span class="xlang">?&gt;</span></code></pre>
+</span><span id="177" class="l"><a class="l" href="#177">177: </a>}
+</span><span id="178" class="l"><a class="l" href="#178">178: </a>
+</span><span id="179" class="l"><a class="l" href="#179">179: </a></span><span class="xlang">?&gt;</span></code></pre>
 
 	<div id="footer">
-		Alpha Framework 1.2.3 API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+		Alpha Framework ${alpha.version.new} API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
 	</div>
 </div>
 </div>
