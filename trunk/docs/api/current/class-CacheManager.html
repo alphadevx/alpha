@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class CacheManager | Alpha Framework 1.2.3 API Documentation</title>
+
+	<script type="text/javascript" src="resources/combined.js?197213082"></script>
+	<script type="text/javascript" src="elementlist.js?3363017373"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="http://www.alphaframework.org/" style="color:none; background-color:none;"><img src="resources/logo-small.png" /></a>
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Packages</h3>
+			<ul>
+				<li class="active"><a href="package-alpha..controller.html">alpha::controller</a>
+						</li>
+				<li><a href="package-alpha..controller..front.html">alpha::controller::front</a>
+						</li>
+				<li><a href="package-alpha..exceptions.html">alpha::exceptions</a>
+						</li>
+				<li><a href="package-alpha..model.html">alpha::model</a>
+						</li>
+				<li><a href="package-alpha..model..types.html">alpha::model::types</a>
+						</li>
+				<li><a href="package-alpha..tasks.html">alpha::tasks</a>
+						</li>
+				<li><a href="package-alpha..tests.html">alpha::tests</a>
+						</li>
+				<li><a href="package-alpha..util.html">alpha::util</a>
+						</li>
+				<li><a href="package-alpha..util..cache.html">alpha::util::cache</a>
+						</li>
+				<li><a href="package-alpha..util..codehighlight.html">alpha::util::codehighlight</a>
+						</li>
+				<li><a href="package-alpha..util..convertors.html">alpha::util::convertors</a>
+						</li>
+				<li><a href="package-alpha..util..feeds.html">alpha::util::feeds</a>
+						</li>
+				<li><a href="package-alpha..util..filters.html">alpha::util::filters</a>
+						</li>
+				<li><a href="package-alpha..util..graphs.html">alpha::util::graphs</a>
+						</li>
+				<li><a href="package-alpha..util..helpers.html">alpha::util::helpers</a>
+						</li>
+				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
+						</li>
+				<li><a href="package-alpha..util..search.html">alpha::util::search</a>
+						</li>
+				<li><a href="package-alpha..view.html">alpha::view</a>
+						</li>
+				<li><a href="package-alpha..view..renderers.html">alpha::view::renderers</a>
+						</li>
+				<li><a href="package-alpha..view..widgets.html">alpha::view::widgets</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-AlphaController.html">AlphaController</a></li>
+				<li class="active"><a href="class-CacheManager.html">CacheManager</a></li>
+				<li><a href="class-Create.html">Create</a></li>
+				<li><a href="class-CreateArticle.html">CreateArticle</a></li>
+				<li><a href="class-Detail.html">Detail</a></li>
+				<li><a href="class-Edit.html">Edit</a></li>
+				<li><a href="class-EditArticle.html">EditArticle</a></li>
+				<li><a href="class-EditDEnum.html">EditDEnum</a></li>
+				<li><a href="class-EditTags.html">EditTags</a></li>
+				<li><a href="class-GenSecureQueryStrings.html">GenSecureQueryStrings</a></li>
+				<li><a href="class-Install.html">Install</a></li>
+				<li><a href="class-ListAll.html">ListAll</a></li>
+				<li><a href="class-ListBusinessObjects.html">ListBusinessObjects</a></li>
+				<li><a href="class-ListDEnums.html">ListDEnums</a></li>
+				<li><a href="class-ListSequences.html">ListSequences</a></li>
+				<li><a href="class-Login.html">Login</a></li>
+				<li><a href="class-Logout.html">Logout</a></li>
+				<li><a href="class-PreviewArticle.html">PreviewArticle</a></li>
+				<li><a href="class-Search.html">Search</a></li>
+				<li><a href="class-TagManager.html">TagManager</a></li>
+				<li><a href="class-ViewArticle.html">ViewArticle</a></li>
+				<li><a href="class-ViewArticleFile.html">ViewArticleFile</a></li>
+				<li><a href="class-ViewArticlePDF.html">ViewArticlePDF</a></li>
+				<li><a href="class-ViewArticlePrint.html">ViewArticlePrint</a></li>
+				<li><a href="class-ViewArticleTitle.html">ViewArticleTitle</a></li>
+				<li><a href="class-ViewAttachment.html">ViewAttachment</a></li>
+				<li><a href="class-ViewExcel.html">ViewExcel</a></li>
+				<li><a href="class-ViewFeed.html">ViewFeed</a></li>
+				<li><a href="class-ViewImage.html">ViewImage</a></li>
+				<li><a href="class-ViewLog.html">ViewLog</a></li>
+				<li><a href="class-ViewMetrics.html">ViewMetrics</a></li>
+				<li><a href="class-ViewRecordSelector.html">ViewRecordSelector</a></li>
+				<li><a href="class-ViewTestResults.html">ViewTestResults</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-AlphaControllerInterface.html">AlphaControllerInterface</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="package-alpha..controller.html" title="Summary of alpha::controller"><span>Package</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="deprecated.html" title="List of deprecated elements"><span>Deprecated</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class CacheManager</h1>
+
+
+	<div class="description">
+	
+<p>Controller used to clear out the CMS cache when required</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+			<a href="class-AlphaController.html"><span>AlphaController</span></a>
+			
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by" />
+<b><span>CacheManager</span></b>			
+			 implements 
+				<a href="class-AlphaControllerInterface.html"><span>AlphaControllerInterface</span></a>
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		<b>Package:</b> <a href="package-alpha..controller.html">alpha::controller</a><br />
+
+				<b>Copyright:</b>
+				Copyright (c) 2014, John Collins (founder of Alpha Framework). All rights
+reserved.
+<pre>
+Redistribution and use in source and binary forms, with or
+without modification, are permitted provided that the
+following conditions are met:
+
+* Redistributions of source code must retain the above
+  copyright notice, this list of conditions and the
+  following disclaimer.
+* Redistributions in binary form must reproduce the above
+  copyright notice, this list of conditions and the
+  following disclaimer in the documentation and/or other
+  materials provided with the distribution.
+* Neither the name of the Alpha Framework nor the names
+  of its contributors may be used to endorse or promote
+  products derived from this software without specific
+  prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre>
+<br />
+				<b>License:</b>
+				<a href="http://www.opensource.org/licenses/bsd-license.php">The BSD License</a><br />
+				<b>Author:</b>
+				John Collins &lt;<a
+href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&gt;<br />
+				<b>Version:</b>
+				$Id: CacheManager.php 1745 2014-03-29 15:19:05Z alphadevx $<br />
+				<b>Since:</b>
+				1.0<br />
+		<b>Located at</b> <a href="source-class-CacheManager.html#11-221" title="Go to source code">controller/CacheManager.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-CacheManager.html#73-91" title="Go to source code">__construct</a>( )</code>
+
+		<div class="description short">
+			
+<p>constructor to set up the object</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>constructor to set up the object</p>
+
+
+
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-AlphaController.html#___construct">AlphaController::__construct()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="doGET" id="_doGET">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_doGET">#</a>
+		<code><a href="source-class-CacheManager.html#93-159" title="Go to source code">doGET</a>( <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Handle GET requests</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Handle GET requests</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$params</var></dt>
+					<dd><code>array</code><br>$params</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-IllegalArguementException.html">IllegalArguementException</a></code></code><br />
+				</div>
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaControllerInterface.html#_doGET">AlphaControllerInterface::doGET()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="doPOST" id="_doPOST">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_doPOST">#</a>
+		<code><a href="source-class-CacheManager.html#161-209" title="Go to source code">doPOST</a>( <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Handle POST requests</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Handle POST requests</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$params</var></dt>
+					<dd><code>array</code><br>$params</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaControllerInterface.html#_doPOST">AlphaControllerInterface::doPOST()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="after_displayPageHead_callback" id="_after_displayPageHead_callback">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_after_displayPageHead_callback">#</a>
+		<code><a href="source-class-CacheManager.html#211-220" title="Go to source code">after_displayPageHead_callback</a>( )</code>
+
+		<div class="description short">
+			
+<p>Use this callback to inject in the admin menu template fragment</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Use this callback to inject in the admin menu template fragment</p>
+
+
+
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-AlphaController.html#methods" style="color:#ffffff;">AlphaController</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-AlphaController.html#_abort">abort()</a>, 
+			<a href="class-AlphaController.html#_accessError">accessError()</a>, 
+			<a href="class-AlphaController.html#_checkControllerDefExists">checkControllerDefExists()</a>, 
+			<a href="class-AlphaController.html#_checkIfAccessingFromSecureURL">checkIfAccessingFromSecureURL()</a>, 
+			<a href="class-AlphaController.html#_checkRights">checkRights()</a>, 
+			<a href="class-AlphaController.html#_checkSecurityFields">checkSecurityFields()</a>, 
+			<a href="class-AlphaController.html#_commit">commit()</a>, 
+			<a href="class-AlphaController.html#_generateSecurityFields">generateSecurityFields()</a>, 
+			<a href="class-AlphaController.html#_getBO">getBO()</a>, 
+			<a href="class-AlphaController.html#_getCustomControllerName">getCustomControllerName()</a>, 
+			<a href="class-AlphaController.html#_getDescription">getDescription()</a>, 
+			<a href="class-AlphaController.html#_getDirtyObjects">getDirtyObjects()</a>, 
+			<a href="class-AlphaController.html#_getEndTime">getEndTime()</a>, 
+			<a href="class-AlphaController.html#_getFirstJob">getFirstJob()</a>, 
+			<a href="class-AlphaController.html#_getKeywords">getKeywords()</a>, 
+			<a href="class-AlphaController.html#_getLastJob">getLastJob()</a>, 
+			<a href="class-AlphaController.html#_getMAXDuration">getMAXDuration()</a>, 
+			<a href="class-AlphaController.html#_getName">getName()</a>, 
+			<a href="class-AlphaController.html#_getNewObjects">getNewObjects()</a>, 
+			<a href="class-AlphaController.html#_getNextJob">getNextJob()</a>, 
+			<a href="class-AlphaController.html#_getPreviousJob">getPreviousJob()</a>, 
+			<a href="class-AlphaController.html#_getStartTime">getStartTime()</a>, 
+			<a href="class-AlphaController.html#_getStatusMessage">getStatusMessage()</a>, 
+			<a href="class-AlphaController.html#_getTitle">getTitle()</a>, 
+			<a href="class-AlphaController.html#_getUnitDuration">getUnitDuration()</a>, 
+			<a href="class-AlphaController.html#_getVisibility">getVisibility()</a>, 
+			<a href="class-AlphaController.html#_loadControllerDef">loadControllerDef()</a>, 
+			<a href="class-AlphaController.html#_loadCustomController">loadCustomController()</a>, 
+			<a href="class-AlphaController.html#_markDirty">markDirty()</a>, 
+			<a href="class-AlphaController.html#_markNew">markNew()</a>, 
+			<a href="class-AlphaController.html#_setBO">setBO()</a>, 
+			<a href="class-AlphaController.html#_setDescription">setDescription()</a>, 
+			<a href="class-AlphaController.html#_setKeywords">setKeywords()</a>, 
+			<a href="class-AlphaController.html#_setName">setName()</a>, 
+			<a href="class-AlphaController.html#_setStatusMessage">setStatusMessage()</a>, 
+			<a href="class-AlphaController.html#_setTitle">setTitle()</a>, 
+			<a href="class-AlphaController.html#_setUnitEndTime">setUnitEndTime()</a>, 
+			<a href="class-AlphaController.html#_setUnitMAXDuration">setUnitMAXDuration()</a>, 
+			<a href="class-AlphaController.html#_setUnitOfWork">setUnitOfWork()</a>, 
+			<a href="class-AlphaController.html#_setUnitStartTime">setUnitStartTime()</a>, 
+			<a href="class-AlphaController.html#_setVisibility">setVisibility()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="dataDir" id="$dataDir">
+		<td class="attributes"><code>
+			private  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-CacheManager.html#57-63" title="Go to source code"><var>$dataDir</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$dataDir" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The root of the cache directory</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The root of the cache directory</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="logger" id="$logger">
+		<td class="attributes"><code>
+			private static 
+			<code><a href="class-Logger.html">Logger</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-CacheManager.html#65-71" title="Go to source code"><var>$logger</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">null</span></code></td>
+		<td class="description"><div>
+			<a href="#$logger" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Trace logger</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Trace logger</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Properties inherited from <a href="class-AlphaController.html#properties" style="color:#ffffff;">AlphaController</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-AlphaController.html#$BO"><var>$BO</var></a>, 
+			<a href="class-AlphaController.html#$description"><var>$description</var></a>, 
+			<a href="class-AlphaController.html#$dirtyObjects"><var>$dirtyObjects</var></a>, 
+			<a href="class-AlphaController.html#$firstJob"><var>$firstJob</var></a>, 
+			<a href="class-AlphaController.html#$keywords"><var>$keywords</var></a>, 
+			<a href="class-AlphaController.html#$lastJob"><var>$lastJob</var></a>, 
+			<a href="class-AlphaController.html#$name"><var>$name</var></a>, 
+			<a href="class-AlphaController.html#$newObjects"><var>$newObjects</var></a>, 
+			<a href="class-AlphaController.html#$nextJob"><var>$nextJob</var></a>, 
+			<a href="class-AlphaController.html#$previousJob"><var>$previousJob</var></a>, 
+			<a href="class-AlphaController.html#$statusMessage"><var>$statusMessage</var></a>, 
+			<a href="class-AlphaController.html#$title"><var>$title</var></a>, 
+			<a href="class-AlphaController.html#$unitEndTime"><var>$unitEndTime</var></a>, 
+			<a href="class-AlphaController.html#$unitMAXDuration"><var>$unitMAXDuration</var></a>, 
+			<a href="class-AlphaController.html#$unitOfWork"><var>$unitOfWork</var></a>, 
+			<a href="class-AlphaController.html#$unitStartTime"><var>$unitStartTime</var></a>, 
+			<a href="class-AlphaController.html#$visibility"><var>$visibility</var></a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Alpha Framework 1.2.3 API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>
