@@ -1,0 +1,3528 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Docs For Class AlphaController</title>
+	<link rel="stylesheet" type="text/css" href="../media/style.css">
+	<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+</head>
+<body>
+
+<table border="0" cellspacing="0" cellpadding="0" height="48" width="100%">
+  <tr>
+	<td class="header-top-left"><a href="http://www.alphaframework.org/"><img src="../media/logo.png" border="0" alt="Alpha Framework" /></a></td>
+    <td class="header-top-right">alpha--controller<br /><div class="header-top-right-subpackage"></div></td>
+  </tr>
+  <tr><td colspan="2" class="header-line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+  <tr>
+    <td colspan="2" class="header-menu">
+      
+                        
+                                                                                                                                                                                                                                        		[ <a href="../classtrees_alpha--controller.html" class="menu">class tree: alpha--controller</a> ]
+		[ <a href="../elementindex_alpha--controller.html" class="menu">index: alpha--controller</a> ]
+            [ <a href="../elementindex.html" class="menu">all elements</a> ]
+    </td>
+  </tr>
+  <tr><td colspan="2" class="header-line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="table-layout:fixed;">
+  <tr valign="top">
+    <td width="195" class="menu">
+		<div class="package-title">alpha--controller</div>
+      <b>Packages:</b><br />
+  <div class="package">
+              <a href="../li_alpha--controller.html">alpha--controller</a><br />
+              <a href="../li_alpha--controller--front.html">alpha--controller--front</a><br />
+              <a href="../li_alpha--exceptions.html">alpha--exceptions</a><br />
+              <a href="../li_alpha--model.html">alpha--model</a><br />
+              <a href="../li_alpha--model--types.html">alpha--model--types</a><br />
+              <a href="../li_alpha--service.html">alpha--service</a><br />
+              <a href="../li_alpha--tests.html">alpha--tests</a><br />
+              <a href="../li_alpha--util.html">alpha--util</a><br />
+              <a href="../li_alpha--util--convertors.html">alpha--util--convertors</a><br />
+              <a href="../li_alpha--util--feeds.html">alpha--util--feeds</a><br />
+              <a href="../li_alpha--util--filters.html">alpha--util--filters</a><br />
+              <a href="../li_alpha--util--graphs.html">alpha--util--graphs</a><br />
+              <a href="../li_alpha--util--helpers.html">alpha--util--helpers</a><br />
+              <a href="../li_alpha--util--metrics.html">alpha--util--metrics</a><br />
+              <a href="../li_alpha--view.html">alpha--view</a><br />
+              <a href="../li_alpha--view--widgets.html">alpha--view--widgets</a><br />
+      	</div>
+      <br />
+                        <b>Files:</b><br />
+        <div class="package">
+				<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---AlphaController.inc.html">AlphaController.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---AlphaControllerInterface.inc.html">AlphaControllerInterface.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---CacheManager.php.html">CacheManager.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---Create.php.html">Create.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---CreateArticle.php.html">CreateArticle.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---Detail.php.html">Detail.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---Edit.php.html">Edit.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---EditArticle.php.html">EditArticle.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---EditDEnum.php.html">EditDEnum.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---EditTags.php.html">EditTags.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---GenSecureQueryStrings.php.html">GenSecureQueryStrings.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---Install.php.html">Install.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---ListAll.php.html">ListAll.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---ListBusinessObjects.php.html">ListBusinessObjects.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---ListDEnums.php.html">ListDEnums.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---ListSequences.php.html">ListSequences.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---Login.php.html">Login.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---Logout.php.html">Logout.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---PreviewArticle.php.html">PreviewArticle.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---Search.php.html">Search.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---TagManager.php.html">TagManager.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---ViewArticle.php.html">ViewArticle.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---ViewArticleFile.php.html">ViewArticleFile.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---ViewArticlePDF.php.html">ViewArticlePDF.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---ViewArticlePrint.php.html">ViewArticlePrint.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---ViewArticleTitle.php.html">ViewArticleTitle.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---ViewAttachment.php.html">ViewAttachment.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---ViewExcel.php.html">ViewExcel.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---ViewFeed.php.html">ViewFeed.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---ViewImage.php.html">ViewImage.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---ViewLog.php.html">ViewLog.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---ViewMetrics.php.html">ViewMetrics.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---ViewRecordSelector.php.html">ViewRecordSelector.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--controller/_controller---ViewTestResults.php.html">ViewTestResults.php</a></span><br />
+	  </div>
+            <br />
+            <b>Interfaces:</b><br />
+        <div class="package">
+		    		<a href="../alpha--controller/AlphaControllerInterface.html">AlphaControllerInterface</a>    	 <br />
+	  </div>
+                  <b>Classes:</b><br />
+        <div class="package">
+		    		<a href="../alpha--controller/AlphaController.html">AlphaController</a>    	 <br />
+	    		<a href="../alpha--controller/CacheManager.html">CacheManager</a>    	 <br />
+	    		<a href="../alpha--controller/Create.html">Create</a>    	 <br />
+	    		<a href="../alpha--controller/CreateArticle.html">CreateArticle</a>    	 <br />
+	    		<a href="../alpha--controller/Detail.html">Detail</a>    	 <br />
+	    		<a href="../alpha--controller/Edit.html">Edit</a>    	 <br />
+	    		<a href="../alpha--controller/EditArticle.html">EditArticle</a>    	 <br />
+	    		<a href="../alpha--controller/EditDEnum.html">EditDEnum</a>    	 <br />
+	    		<a href="../alpha--controller/EditTags.html">EditTags</a>    	 <br />
+	    		<a href="../alpha--controller/GenSecureQueryStrings.html">GenSecureQueryStrings</a>    	 <br />
+	    		<a href="../alpha--controller/Install.html">Install</a>    	 <br />
+	    		<a href="../alpha--controller/ListAll.html">ListAll</a>    	 <br />
+	    		<a href="../alpha--controller/ListBusinessObjects.html">ListBusinessObjects</a>    	 <br />
+	    		<a href="../alpha--controller/ListDEnums.html">ListDEnums</a>    	 <br />
+	    		<a href="../alpha--controller/ListSequences.html">ListSequences</a>    	 <br />
+	    		<a href="../alpha--controller/Login.html">Login</a>    	 <br />
+	    		<a href="../alpha--controller/Logout.html">Logout</a>    	 <br />
+	    		<a href="../alpha--controller/PreviewArticle.html">PreviewArticle</a>    	 <br />
+	    		<a href="../alpha--controller/Search.html">Search</a>    	 <br />
+	    		<a href="../alpha--controller/TagManager.html">TagManager</a>    	 <br />
+	    		<a href="../alpha--controller/ViewArticle.html">ViewArticle</a>    	 <br />
+	    		<a href="../alpha--controller/ViewArticleFile.html">ViewArticleFile</a>    	 <br />
+	    		<a href="../alpha--controller/ViewArticlePDF.html">ViewArticlePDF</a>    	 <br />
+	    		<a href="../alpha--controller/ViewArticlePrint.html">ViewArticlePrint</a>    	 <br />
+	    		<a href="../alpha--controller/ViewArticleTitle.html">ViewArticleTitle</a>    	 <br />
+	    		<a href="../alpha--controller/ViewAttachment.html">ViewAttachment</a>    	 <br />
+	    		<a href="../alpha--controller/ViewExcel.html">ViewExcel</a>    	 <br />
+	    		<a href="../alpha--controller/ViewFeed.html">ViewFeed</a>    	 <br />
+	    		<a href="../alpha--controller/ViewImage.html">ViewImage</a>    	 <br />
+	    		<a href="../alpha--controller/ViewLog.html">ViewLog</a>    	 <br />
+	    		<a href="../alpha--controller/ViewMetrics.html">ViewMetrics</a>    	 <br />
+	    		<a href="../alpha--controller/ViewRecordSelector.html">ViewRecordSelector</a>    	 <br />
+	    		<a href="../alpha--controller/ViewTestResults.html">ViewTestResults</a>    	 <br />
+	  </div>
+                </td>
+    <td width="800">
+      <table cellpadding="10" cellspacing="0" width="100%" border="0"><tr><td valign="top">
+
+<h1>Class: AlphaController</h1>
+Source Location: /controller/AlphaController.inc<br /><br />
+
+<h2 class="class-name">Class AlphaController</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Class Overview</div>
+	<div class="nav-bar">
+					<span class="disabled">Class Overview</span>
+							| <a href="#sec-descendants">Descendants</a>
+				
+											| <a href="#sec-var-summary">Property Summary</a> | <a href="#sec-vars">Properties Detail</a>
+														| <a href="#sec-method-summary">Method Summary</a> | <a href="#sec-methods">Methods Detail</a>
+								</div>
+	<div class="info-box-body">
+		<table width="100%" border="0">
+		<tr><td valign="top" width="60%" class="class-overview">
+
+        		<p class="short-description"><strong>The master controller class for the Alpha Framework.
+</strong></p>
+
+		<p class="notes">
+			Located in <a class="field" href="_controller---AlphaController.inc.html">/controller/AlphaController.inc</a> [<span class="field">line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a64">64</a></span>]
+		</p>
+
+		
+		<pre></pre>
+
+		
+				<strong>Author(s):</strong>
+		<ul>
+		  			 			 <li>John Collins &lt;dev@alphaframework.org&gt;</li>
+			 		  			 		  			 		  			 		  			 		  			 		  		</ul>
+		
+		<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Abstract:</strong>&nbsp;&nbsp;</td><td></td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+				<tr><td><strong>Version:</strong>&nbsp;&nbsp;</td><td>$Id: AlphaController.inc 1341 2011-03-17 15:02:02Z johnc $</td></tr>
+				<tr><td><strong>Copyright:</strong>&nbsp;&nbsp;</td><td><p>Copyright (c) 2011, John Collins (founder of Alpha Framework).  All rights reserved.</p><p><pre> Redistribution and use in source and binary forms, with or
+ without modification, are permitted provided that the
+ following conditions are met:
+
+ * Redistributions of source code must retain the above
+   copyright notice, this list of conditions and the
+   following disclaimer.
+ * Redistributions in binary form must reproduce the above
+   copyright notice, this list of conditions and the
+   following disclaimer in the documentation and/or other
+   materials provided with the distribution.
+ * Neither the name of the Alpha Framework nor the names
+   of its contributors may be used to endorse or promote
+   products derived from this software without specific
+   prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+ CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</pre></p></td></tr>
+				<tr><td><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td></tr>
+				<tr><td><strong>License:</strong>&nbsp;&nbsp;</td><td><a href="http://www.opensource.org/licenses/bsd-license.php">The BSD License</a></td></tr>
+	</table>
+		</td>
+
+				<td valign="top" width="20%" class="class-overview">
+		<p class="short-description"><strong><a href="#sec_vars">Properties</a></strong></p>
+		<ul>
+		  		  <li><a href="../alpha--controller/AlphaController.html#var$BO">$BO</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#var$description">$description</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#var$dirtyObjects">$dirtyObjects</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#var$firstJob">$firstJob</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#var$keywords">$keywords</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#var$lastJob">$lastJob</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#var$name">$name</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#var$newObjects">$newObjects</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#var$nextJob">$nextJob</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#var$previousJob">$previousJob</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#var$statusMessage">$statusMessage</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#var$title">$title</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#var$unitEndTime">$unitEndTime</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#var$unitMAXDuration">$unitMAXDuration</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#var$unitOfWork">$unitOfWork</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#var$unitStartTime">$unitStartTime</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#var$visibility">$visibility</a></li>
+		  		</ul>
+		</td>
+		
+				<td valign="top" width="20%" class="class-overview">
+		<p class="short-description"><strong><a href="#sec_methods">Methods</a></strong></p>
+		<ul>
+		  		  <li><a href="../alpha--controller/AlphaController.html#method__construct">__construct</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodabort">abort</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodaccessError">accessError</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodcheckControllerDefExists">checkControllerDefExists</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodcheckIfAccessingFromSecureURL">checkIfAccessingFromSecureURL</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodcheckRights">checkRights</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodcheckSecurityFields">checkSecurityFields</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodcommit">commit</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodgenerateSecurityFields">generateSecurityFields</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodgetBO">getBO</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodgetCustomControllerName">getCustomControllerName</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodgetDescription">getDescription</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodgetDirtyObjects">getDirtyObjects</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodgetEndTime">getEndTime</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodgetFirstJob">getFirstJob</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodgetKeywords">getKeywords</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodgetLastJob">getLastJob</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodgetMAXDuration">getMAXDuration</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodgetName">getName</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodgetNewObjects">getNewObjects</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodgetNextJob">getNextJob</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodgetPreviousJob">getPreviousJob</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodgetStartTime">getStartTime</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodgetStatusMessage">getStatusMessage</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodgetTitle">getTitle</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodgetUnitDuration">getUnitDuration</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodgetVisibility">getVisibility</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodloadControllerDef">loadControllerDef</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodloadCustomController">loadCustomController</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodmarkDirty">markDirty</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodmarkNew">markNew</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodsetBO">setBO</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodsetDescription">setDescription</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodsetKeywords">setKeywords</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodsetName">setName</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodsetStatusMessage">setStatusMessage</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodsetTitle">setTitle</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodsetUnitEndTime">setUnitEndTime</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodsetUnitMAXDuration">setUnitMAXDuration</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodsetUnitOfWork">setUnitOfWork</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodsetUnitStartTime">setUnitStartTime</a></li>
+		  		  <li><a href="../alpha--controller/AlphaController.html#methodsetVisibility">setVisibility</a></li>
+		  		</ul>
+		</td>
+		
+		</tr></table>
+		<div class="top">[ <a href="#top">Top</a> ]</div>
+	</div>
+</div>
+
+	<a name="sec-descendants"></a>
+	<div class="info-box">
+		<div class="info-box-title">Descendants</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Class Overview</a>
+							| <span class="disabled">Descendants</span>
+															| <a href="#sec-var-summary">Property Summary</a> | <a href="#sec-vars">Properties Detail</a>
+														| <a href="#sec-method-summary">Method Summary</a> | <a href="#sec-methods">Methods Detail</a>
+									</div>
+		<div class="info-box-body">
+			<table cellpadding="2" cellspacing="0" class="class-table">
+				<tr>
+					<th class="class-table-header">Child Class</th>
+					<th class="class-table-header">Description</th>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/CacheManager.html">CacheManager</a></td>
+					<td>
+											Controller used to clear out the CMS cache when required
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/Create.html">Create</a></td>
+					<td>
+											Controller used to create a new BO, whose classname must be supplied in GET vars
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/CreateArticle.html">CreateArticle</a></td>
+					<td>
+											Controller used to create a new article in the database
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/Detail.html">Detail</a></td>
+					<td>
+											Controller used to display the details of a BO, which must be supplied in GET vars
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/Edit.html">Edit</a></td>
+					<td>
+											Controller used to edit BO, which must be supplied in GET vars
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/EditArticle.html">EditArticle</a></td>
+					<td>
+											Controller used to edit an existing article
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/GenSecureQueryStrings.html">GenSecureQueryStrings</a></td>
+					<td>
+											Controller used to generate secure URLs from the query strings provided
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/Install.html">Install</a></td>
+					<td>
+											Controller used install the database
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/ListAll.html">ListAll</a></td>
+					<td>
+											Controller used to list a BO, which must be supplied in GET vars
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/ListBusinessObjects.html">ListBusinessObjects</a></td>
+					<td>
+											Controller used to list all of the business objects for the system
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/Login.html">Login</a></td>
+					<td>
+											Login controller that adds the current user object to the session
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/Logout.html">Logout</a></td>
+					<td>
+											Logout controller that removes the current user object from the session
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/PreviewArticle.html">PreviewArticle</a></td>
+					<td>
+											Article for previewing Markdown content in the markItUp TextBox widget
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/Search.html">Search</a></td>
+					<td>
+											Generic tag-based search engine controller
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/TagManager.html">TagManager</a></td>
+					<td>
+											Controller used to allow an admin to manage tags in the database
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/ViewArticle.html">ViewArticle</a></td>
+					<td>
+											Controller used to display a Markdown version of an article
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/ViewArticlePDF.html">ViewArticlePDF</a></td>
+					<td>
+											Controller used to display PDF version of an article where the title is provided in GET vars
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/ViewAttachment.html">ViewAttachment</a></td>
+					<td>
+											Controller used to view (download) an attachment file on an ArticleObject
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/ViewExcel.html">ViewExcel</a></td>
+					<td>
+											Controller for viewing Business Objects as Excel spreadsheets
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/ViewFeed.html">ViewFeed</a></td>
+					<td>
+											Controller for viewing news feeds
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/ViewImage.html">ViewImage</a></td>
+					<td>
+											Controller for viewing an image rendered with the Image widget.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/ViewLog.html">ViewLog</a></td>
+					<td>
+											Controller used to display a log file, the path for which must be supplied in GET vars
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/ViewMetrics.html">ViewMetrics</a></td>
+					<td>
+											Controller used to display the software metrics for the application
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/ViewRecordSelector.html">ViewRecordSelector</a></td>
+					<td>
+											Controller for viewing a RecordSelector widget.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../alpha--controller/ViewTestResults.html">ViewTestResults</a></td>
+					<td>
+											Controller which displays all of the unit test results
+										</td>
+				</tr>
+							</table>
+			<br /><div class="top">[ <a href="#top">Top</a> ]</div>
+		</div>
+	</div>
+
+
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Property Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Class Overview</a>
+							| <a href="#sec-descendants">Descendants</a>
+									| <span class="disabled">Property Summary</span> | <a href="#sec-vars">Properties Detail</a>
+												| <a href="#sec-method-summary">Method Summary</a> | <a href="#sec-methods">Methods Detail</a>
+							    				</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+			<table border="0" cellspacing="0" cellpadding="0" class="var-summary">
+																																																																																																																			<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary"><a href="../alpha--model/AlphaDAO.html">AlphaDAO</a></span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$BO" title="details" class="var-name-summary">$BO</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">Optionally, a BO may be set for the default validation form handling code to load in the displayPageHead()  method.  The definition of this BO class will need to be included in the child controller.</td></tr>
+				</div>
+													<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary">string</span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$description" title="details" class="var-name-summary">$description</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">Meta description for the controller page.</td></tr>
+				</div>
+													<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary">array</span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$dirtyObjects" title="details" class="var-name-summary">$dirtyObjects</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">An array for storing dirty objects in a session (i.e. persistent business  objects that have not been updated in the database yet).</td></tr>
+				</div>
+													<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary">string</span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$firstJob" title="details" class="var-name-summary">$firstJob</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">The name of the first controller that is used in this unit of work.</td></tr>
+				</div>
+													<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary">string</span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$keywords" title="details" class="var-name-summary">$keywords</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">Meta keywords for the controller page, generally populated from tags</td></tr>
+				</div>
+													<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary">string</span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$lastJob" title="details" class="var-name-summary">$lastJob</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">The name of the last controller that is used in this unit of work.</td></tr>
+				</div>
+													<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary">string</span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$name" title="details" class="var-name-summary">$name</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">The name of the controller</td></tr>
+				</div>
+													<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary">array</span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$newObjects" title="details" class="var-name-summary">$newObjects</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">An array for storing new objects in a session (transient business objects that  have no OID yet).</td></tr>
+				</div>
+													<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary">string</span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$nextJob" title="details" class="var-name-summary">$nextJob</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">The name of the next controller that is used in this unit of work.</td></tr>
+				</div>
+													<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary">string</span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$previousJob" title="details" class="var-name-summary">$previousJob</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">The name of the previous controller that is used in this unit of work.</td></tr>
+				</div>
+													<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary">string</span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$statusMessage" title="details" class="var-name-summary">$statusMessage</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">Used to set status update messages to display to the user (messages stored between requests  in _SESSION).  Useful for when you want to display a message to a user after POSTing a request,  or when moving from one page to the next.</td></tr>
+				</div>
+													<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary">string</span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$title" title="details" class="var-name-summary">$title</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">The title to be displayed on the controller page</td></tr>
+				</div>
+													<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary">Timestamp.</span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$unitEndTime" title="details" class="var-name-summary">$unitEndTime</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">Stores the end time of a unit of work transaction.</td></tr>
+				</div>
+													<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary"><a href="../alpha--model--types/Integer.html">Integer</a></span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$unitMAXDuration" title="details" class="var-name-summary">$unitMAXDuration</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">Stores the maximum allowed time duration (in seconds) of the unit of work.</td></tr>
+				</div>
+													<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary">string</span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$unitOfWork" title="details" class="var-name-summary">$unitOfWork</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">Used to determine if the controller is part of a unit of work sequence  (either empty or the name of the unit).</td></tr>
+				</div>
+													<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary"><a href="../alpha--model--types/Timestamp.html">Timestamp</a></span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$unitStartTime" title="details" class="var-name-summary">$unitStartTime</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">Stores the start time of a unit of work transaction.</td></tr>
+				</div>
+													<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary">string</span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$visibility" title="details" class="var-name-summary">$visibility</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">Used to set access privileages for the controller to the name of the rights group  allowed to access it.  'Public' by default.</td></tr>
+				</div>
+										</table>
+			</div>
+			<br /><div class="top">[ <a href="#top">Top</a> ]</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Class Overview</a>
+							| <a href="#sec-descendants">Descendants</a>
+																		| <a href="#sec-var-summary">Property Summary</a> | <a href="#sec-vars">Properties Detail</a>
+							    					| <span class="disabled">Method Summary</span> | <a href="#sec-methods">Methods Detail</a>
+		</div>
+		<div class="info-box-body">
+			<div class="method-summary">
+				<table border="0" cellspacing="0" cellpadding="0" class="method-summary">
+																																				<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">boolean</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#checkControllerDefExists" title="details" class="method-name">checkControllerDefExists</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Checks that the definition for the controller classname provided exists.  Will also return true  if you pass &quot;/&quot; for the root of the web application.</td></tr>
+				</div>
+																<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">boolean</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#checkIfAccessingFromSecureURL" title="details" class="method-name">checkIfAccessingFromSecureURL</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Static function for determining if the current request URL is a secure one (has a tk string or not)</td></tr>
+				</div>
+																								<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">boolean</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#checkSecurityFields" title="details" class="method-name">checkSecurityFields</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Method to check the validity of the two hidden form security  fields which aim to ensure that a post to the controller is being sent from  the same server that is hosting it.</td></tr>
+				</div>
+																								<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">array</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#generateSecurityFields" title="details" class="method-name">generateSecurityFields</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Generates the two security fields to prevent remote form processing.</td></tr>
+				</div>
+																								<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">string</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#getCustomControllerName" title="details" class="method-name">getCustomControllerName</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Returns the name of a custom controller if one is found, otherwise returns null.</td></tr>
+				</div>
+																																																																																																																																																<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">void</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#loadControllerDef" title="details" class="method-name">loadControllerDef</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Loads the definition for the controller classname provided.</td></tr>
+				</div>
+																																																																																																																																				<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">AlphaController</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#__construct" title="details" class="method-name">__construct</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Constructor for the AlphaController that starts a new session if required, and handles  the population of new/dirty objects from the session when available.  Accepts the name  of the rights group that has access to this controller, 'Public' by default.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#abort" title="details" class="method-name">abort</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Method to clearup a cancelled unit of work.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#accessError" title="details" class="method-name">accessError</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Method to display an access error for trespassing users.  HTTP response header code will be 403.</td></tr>
+				</div>
+																																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">boolean</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#checkRights" title="details" class="method-name">checkRights</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Checks the user rights of the currently logged-in person against the page  visibility set for this controller.  Will return false if the user has  not got the correct rights.</td></tr>
+				</div>
+																								<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#commit" title="details" class="method-name">commit</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Commits (saves) all of the new and modified (dirty) objects in the unit of work to the database.</td></tr>
+				</div>
+																								<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">mixed</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getBO" title="details" class="method-name">getBO</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Get the BO for this controller (if any).</td></tr>
+				</div>
+																								<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">string</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getDescription" title="details" class="method-name">getDescription</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Getter for the page description.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getDirtyObjects" title="details" class="method-name">getDirtyObjects</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Getter for the dirty objects array.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result"><a href="../alpha--model--types/Timestamp.html">Timestamp</a></span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getEndTime" title="details" class="method-name">getEndTime</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Getter for the unit end time.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">string</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getFirstJob" title="details" class="method-name">getFirstJob</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Gets the name of the first job in this unit of work.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">string</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getKeywords" title="details" class="method-name">getKeywords</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Getter for the page keywords.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">string</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getLastJob" title="details" class="method-name">getLastJob</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Gets the name of the last job in this unit of work.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result"><a href="../alpha--model--types/Integer.html">Integer</a></span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getMAXDuration" title="details" class="method-name">getMAXDuration</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Getter for the unit of work MAX duration.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">string</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getName" title="details" class="method-name">getName</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Get the name of the unit of work job.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getNewObjects" title="details" class="method-name">getNewObjects</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Getter for the new objects array.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">string</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getNextJob" title="details" class="method-name">getNextJob</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Gets the name of the next job in this unit of work</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">string</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getPreviousJob" title="details" class="method-name">getPreviousJob</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Gets the name of the previous job in this unit of work</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result"><a href="../alpha--model--types/Timestamp.html">Timestamp</a></span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getStartTime" title="details" class="method-name">getStartTime</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Getter for the unit start time.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">string</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getStatusMessage" title="details" class="method-name">getStatusMessage</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Gets the current status message for this controller.  Note that by getting the current  status message, you clear out the value stored in _SESSION so this method can only be used  to get the status message once for display purposes.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">string</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getTitle" title="details" class="method-name">getTitle</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Getter for the page title.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">integer</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getUnitDuration" title="details" class="method-name">getUnitDuration</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Calculates and returns the unit of work current duration in seconds.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">string</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getVisibility" title="details" class="method-name">getVisibility</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Get the name of the rights group that has access to this controller.</td></tr>
+				</div>
+																								<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#loadCustomController" title="details" class="method-name">loadCustomController</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Does a HTTP redirect to a custom controller if one is found.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#markDirty" title="details" class="method-name">markDirty</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Adds the supplied business object to the dirtyObjects array in the session.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#markNew" title="details" class="method-name">markNew</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Adds a newly created business object to the newObjects array in the session.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setBO" title="details" class="method-name">setBO</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Setter for the BO for this controller.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setDescription" title="details" class="method-name">setDescription</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Setter for the page description.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setKeywords" title="details" class="method-name">setKeywords</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Setter for the page keywords, should pass a comma-seperated list as a string.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setName" title="details" class="method-name">setName</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Setter for the unit of work job name.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setStatusMessage" title="details" class="method-name">setStatusMessage</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Set the status message in the _SESSION to the value provided.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setTitle" title="details" class="method-name">setTitle</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Setter for the page title.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setUnitEndTime" title="details" class="method-name">setUnitEndTime</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Setter for the unit end time (value will be stored in the session as key unitEndTime).</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setUnitMAXDuration" title="details" class="method-name">setUnitMAXDuration</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Setter for the unit MAX duration.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setUnitOfWork" title="details" class="method-name">setUnitOfWork</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Sets the name of the controller job sequence to the values in the supplied  array (and stores the array in the session).</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setUnitStartTime" title="details" class="method-name">setUnitStartTime</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Setter for the unit start time (value will be stored in the session as key unitStartTime).</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setVisibility" title="details" class="method-name">setVisibility</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Setter for the name of the rights group that has access to this controller.</td></tr>
+				</div>
+												</table>
+			</div>
+			<br /><div class="top">[ <a href="#top">Top</a> ]</div>
+		</div>
+	</div>
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Properties</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Class Overview</a>
+							| <a href="#sec-descendants">Descendants</a>
+													| <a href="#sec-var-summary">Property Summary</a> | <span class="disabled">Properties Detail</span>
+															| <a href="#sec-method-summary">Method Summary</a> | <a href="#sec-methods">Methods Detail</a>
+												</div>
+		<div class="info-box-body">
+			<a name="var$BO" id="$BO"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type"><a href="../alpha--model/AlphaDAO.html">AlphaDAO</a></span>&nbsp;&nbsp;
+			<span class="var-name">$BO</span>
+			 = <span class="var-default"> null</span>			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a89">89</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Optionally, a BO may be set for the default validation form handling code to load in the displayPageHead()  method.  The definition of this BO class will need to be included in the child controller.
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../alpha--controller/Create.html#var$BO">Create::$BO</a>
+								: The new BO to be created
+							</li>
+					<li>
+				<a href="../alpha--controller/CreateArticle.html#var$BO">CreateArticle::$BO</a>
+								: The new article to be created
+							</li>
+					<li>
+				<a href="../alpha--controller/Detail.html#var$BO">Detail::$BO</a>
+								: The BO to be displayed
+							</li>
+					<li>
+				<a href="../alpha--controller/Edit.html#var$BO">Edit::$BO</a>
+								: The business object to be edited
+							</li>
+					<li>
+				<a href="../alpha--controller/EditArticle.html#var$BO">EditArticle::$BO</a>
+								: The new article to be edited
+							</li>
+					<li>
+				<a href="../alpha--controller/ViewArticle.html#var$BO">ViewArticle::$BO</a>
+								: The article to be rendered
+							</li>
+				</ul>
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="var$description" id="$description"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">string</span>&nbsp;&nbsp;
+			<span class="var-name">$description</span>
+						<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a196">196</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Meta description for the controller page.
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../alpha--controller/ViewFeed.html#var$description">ViewFeed::$description</a>
+								: The description of the feed
+							</li>
+				</ul>
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="var$dirtyObjects" id="$dirtyObjects"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>&nbsp;&nbsp;
+			<span class="var-name">$dirtyObjects</span>
+			 = <span class="var-default">array()</span>			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a163">163</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>An array for storing dirty objects in a session (i.e. persistent business  objects that have not been updated in the database yet).
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="var$firstJob" id="$firstJob"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">string</span>&nbsp;&nbsp;
+			<span class="var-name">$firstJob</span>
+						<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a130">130</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>The name of the first controller that is used in this unit of work.
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="var$keywords" id="$keywords"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">string</span>&nbsp;&nbsp;
+			<span class="var-name">$keywords</span>
+						<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a188">188</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Meta keywords for the controller page, generally populated from tags
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="var$lastJob" id="$lastJob"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">string</span>&nbsp;&nbsp;
+			<span class="var-name">$lastJob</span>
+						<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a154">154</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>The name of the last controller that is used in this unit of work.
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="var$name" id="$name"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">string</span>&nbsp;&nbsp;
+			<span class="var-name">$name</span>
+						<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a71">71</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>The name of the controller
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="var$newObjects" id="$newObjects"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>&nbsp;&nbsp;
+			<span class="var-name">$newObjects</span>
+			 = <span class="var-default">array()</span>			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a172">172</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>An array for storing new objects in a session (transient business objects that  have no OID yet).
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="var$nextJob" id="$nextJob"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">string</span>&nbsp;&nbsp;
+			<span class="var-name">$nextJob</span>
+						<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a138">138</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>The name of the next controller that is used in this unit of work.
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="var$previousJob" id="$previousJob"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">string</span>&nbsp;&nbsp;
+			<span class="var-name">$previousJob</span>
+						<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a146">146</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>The name of the previous controller that is used in this unit of work.
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="var$statusMessage" id="$statusMessage"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">string</span>&nbsp;&nbsp;
+			<span class="var-name">$statusMessage</span>
+						<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a206">206</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Used to set status update messages to display to the user (messages stored between requests  in _SESSION).  Useful for when you want to display a message to a user after POSTing a request,  or when moving from one page to the next.
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="var$title" id="$title"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">string</span>&nbsp;&nbsp;
+			<span class="var-name">$title</span>
+						<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a180">180</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>The title to be displayed on the controller page
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../alpha--controller/ViewFeed.html#var$title">ViewFeed::$title</a>
+								: The title of the feed
+							</li>
+				</ul>
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="var$unitEndTime" id="$unitEndTime"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">Timestamp.</span>&nbsp;&nbsp;
+			<span class="var-name">$unitEndTime</span>
+						<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a114">114</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Stores the end time of a unit of work transaction.
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="var$unitMAXDuration" id="$unitMAXDuration"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type"><a href="../alpha--model--types/Integer.html">Integer</a></span>&nbsp;&nbsp;
+			<span class="var-name">$unitMAXDuration</span>
+						<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a122">122</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Stores the maximum allowed time duration (in seconds) of the unit of work.
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="var$unitOfWork" id="$unitOfWork"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">string</span>&nbsp;&nbsp;
+			<span class="var-name">$unitOfWork</span>
+						<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a98">98</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Used to determine if the controller is part of a unit of work sequence  (either empty or the name of the unit).
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="var$unitStartTime" id="$unitStartTime"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type"><a href="../alpha--model--types/Timestamp.html">Timestamp</a></span>&nbsp;&nbsp;
+			<span class="var-name">$unitStartTime</span>
+						<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a106">106</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Stores the start time of a unit of work transaction.
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="var$visibility" id="$visibility"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">string</span>&nbsp;&nbsp;
+			<span class="var-name">$visibility</span>
+			 = <span class="var-default"> 'Public'</span>			<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a80">80</a>]</span>
+		</span>
+	</div>
+
+	<p class="short-description"><strong>Used to set access privileages for the controller to the name of the rights group  allowed to access it.  'Public' by default.
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+	
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+		</div>
+	</div>
+
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Class Overview</a>
+							| <a href="#sec-descendants">Descendants</a>
+																		| <a href="#sec-var-summary">Property Summary</a> | <a href="#sec-vars">Properties Detail</a>
+																	| <a href="#sec-method-summary">Method Summary</a> | <span class="disabled">Methods Detail</span>
+					</div>
+		<div class="info-box-body">
+			<a name='method_detail'></a>
+<a name="methodcheckControllerDefExists" id="checkControllerDefExists"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">static method checkControllerDefExists</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a1159">1159</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static boolean checkControllerDefExists(
+string
+$controllerName&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Checks that the definition for the controller classname provided exists.  Will also return true  if you pass &quot;/&quot; for the root of the web application.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$controllerName:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodcheckIfAccessingFromSecureURL" id="checkIfAccessingFromSecureURL"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">static method checkIfAccessingFromSecureURL</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a1209">1209</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static boolean checkIfAccessingFromSecureURL(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Static function for determining if the current request URL is a secure one (has a tk string or not)
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>True if the current URL contains a tk value, false otherwise</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodcheckSecurityFields" id="checkSecurityFields"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">static method checkSecurityFields</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a948">948</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static boolean checkSecurityFields(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Method to check the validity of the two hidden form security  fields which aim to ensure that a post to the controller is being sent from  the same server that is hosting it.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgenerateSecurityFields" id="generateSecurityFields"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">static method generateSecurityFields</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a996">996</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static array generateSecurityFields(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Generates the two security fields to prevent remote form processing.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>An array containing the two fields</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetCustomControllerName" id="getCustomControllerName"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">static method getCustomControllerName</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a1018">1018</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static string getCustomControllerName(
+string
+$BOName, string
+$mode&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Returns the name of a custom controller if one is found, otherwise returns null.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$BOName:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The classname of the business object</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$mode:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The mode of the controller (create, view, edit)</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodloadControllerDef" id="loadControllerDef"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">static method loadControllerDef</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a1186">1186</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static void loadControllerDef(
+string
+$controllerName&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Loads the definition for the controller classname provided.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$controllerName:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>IllegalArguementException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+
+<a name="method__construct" id="__construct"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">Constructor __construct</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a224">224</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>AlphaController __construct(
+[string
+$visibility = 'Public']&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Constructor for the AlphaController that starts a new session if required, and handles  the population of new/dirty objects from the session when available.  Accepts the name  of the rights group that has access to this controller, 'Public' by default.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$visibility:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The name of the rights group that can access this controller.</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../alpha--controller/CacheManager.html#method__construct">CacheManager::__construct()</a>
+								: constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/Create.html#method__construct">Create::__construct()</a>
+								: Constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/CreateArticle.html#method__construct">CreateArticle::__construct()</a>
+								: constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/Detail.html#method__construct">Detail::__construct()</a>
+								: constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/Edit.html#method__construct">Edit::__construct()</a>
+								: constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/EditDEnum.html#method__construct">EditDEnum::__construct()</a>
+								: constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/EditTags.html#method__construct">EditTags::__construct()</a>
+								: constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/EditArticle.html#method__construct">EditArticle::__construct()</a>
+								: constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/GenSecureQueryStrings.html#method__construct">GenSecureQueryStrings::__construct()</a>
+								: Constructor
+							</li>
+					<li>
+				<a href="../alpha--controller/Install.html#method__construct">Install::__construct()</a>
+								: the constructor
+							</li>
+					<li>
+				<a href="../alpha--controller/ListAll.html#method__construct">ListAll::__construct()</a>
+								: Constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/ListDEnums.html#method__construct">ListDEnums::__construct()</a>
+								: constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/ListSequences.html#method__construct">ListSequences::__construct()</a>
+								: constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/ListBusinessObjects.html#method__construct">ListBusinessObjects::__construct()</a>
+								: the constructor
+							</li>
+					<li>
+				<a href="../alpha--controller/Login.html#method__construct">Login::__construct()</a>
+								: constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/Logout.html#method__construct">Logout::__construct()</a>
+								: constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/PreviewArticle.html#method__construct">PreviewArticle::__construct()</a>
+								: Constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/Search.html#method__construct">Search::__construct()</a>
+								: constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/TagManager.html#method__construct">TagManager::__construct()</a>
+								: constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/ViewArticle.html#method__construct">ViewArticle::__construct()</a>
+								: constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/ViewArticlePrint.html#method__construct">ViewArticlePrint::__construct()</a>
+								: Constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/ViewArticleTitle.html#method__construct">ViewArticleTitle::__construct()</a>
+								: Constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/ViewArticlePDF.html#method__construct">ViewArticlePDF::__construct()</a>
+								: Constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/ViewAttachment.html#method__construct">ViewAttachment::__construct()</a>
+								: The constructor
+							</li>
+					<li>
+				<a href="../alpha--controller/ViewExcel.html#method__construct">ViewExcel::__construct()</a>
+								: Constructor
+							</li>
+					<li>
+				<a href="../alpha--controller/ViewFeed.html#method__construct">ViewFeed::__construct()</a>
+								: constructor to set up the object
+							</li>
+					<li>
+				<a href="../alpha--controller/ViewImage.html#method__construct">ViewImage::__construct()</a>
+								: Constructor
+							</li>
+					<li>
+				<a href="../alpha--controller/ViewLog.html#method__construct">ViewLog::__construct()</a>
+								: The constructor
+							</li>
+					<li>
+				<a href="../alpha--controller/ViewMetrics.html#method__construct">ViewMetrics::__construct()</a>
+								: The constructor
+							</li>
+					<li>
+				<a href="../alpha--controller/ViewRecordSelector.html#method__construct">ViewRecordSelector::__construct()</a>
+								: Constructor
+							</li>
+					<li>
+				<a href="../alpha--controller/ViewTestResults.html#method__construct">ViewTestResults::__construct()</a>
+								: The constructor
+							</li>
+				</ul>
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodabort" id="abort"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">abort</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a752">752</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void abort(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Method to clearup a cancelled unit of work.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>AlphaException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodaccessError" id="accessError"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">accessError</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a862">862</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void accessError(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Method to display an access error for trespassing users.  HTTP response header code will be 403.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodcheckRights" id="checkRights"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">checkRights</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a893">893</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>boolean checkRights(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Checks the user rights of the currently logged-in person against the page  visibility set for this controller.  Will return false if the user has  not got the correct rights.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../alpha--controller/Install.html#methodcheckRights">Install::checkRights()</a>
+								: Custom version of the check rights method that only checks for a session for the config admin username/password,  when the system database is not set-up
+							</li>
+				</ul>
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodcommit" id="commit"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">commit</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a683">683</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void commit(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Commits (saves) all of the new and modified (dirty) objects in the unit of work to the database.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>FailedUnitCommitException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetBO" id="getBO"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getBO</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a293">293</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>mixed getBO(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Get the BO for this controller (if any).
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetDescription" id="getDescription"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">getDescription</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a815">815</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>string getDescription(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Getter for the page description.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetDirtyObjects" id="getDirtyObjects"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getDirtyObjects</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a637">637</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>array getDirtyObjects(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Getter for the dirty objects array.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetEndTime" id="getEndTime"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">getEndTime</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a527">527</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code><a href="../alpha--model--types/Timestamp.html">Timestamp</a> getEndTime(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Getter for the unit end time.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetFirstJob" id="getFirstJob"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getFirstJob</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a380">380</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>string getFirstJob(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Gets the name of the first job in this unit of work.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetKeywords" id="getKeywords"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">getKeywords</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a839">839</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>string getKeywords(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Getter for the page keywords.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetLastJob" id="getLastJob"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getLastJob</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a416">416</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>string getLastJob(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Gets the name of the last job in this unit of work.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetMAXDuration" id="getMAXDuration"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">getMAXDuration</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a560">560</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code><a href="../alpha--model--types/Integer.html">Integer</a> getMAXDuration(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Getter for the unit of work MAX duration.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetName" id="getName"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getName</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a332">332</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>string getName(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Get the name of the unit of work job.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetNewObjects" id="getNewObjects"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">getNewObjects</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a671">671</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>array getNewObjects(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Getter for the new objects array.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetNextJob" id="getNextJob"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getNextJob</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a392">392</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>string getNextJob(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Gets the name of the next job in this unit of work
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetPreviousJob" id="getPreviousJob"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">getPreviousJob</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a404">404</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>string getPreviousJob(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Gets the name of the previous job in this unit of work
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetStartTime" id="getStartTime"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getStartTime</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a494">494</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code><a href="../alpha--model--types/Timestamp.html">Timestamp</a> getStartTime(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Getter for the unit start time.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetStatusMessage" id="getStatusMessage"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">getStatusMessage</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a1146">1146</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>string getStatusMessage(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Gets the current status message for this controller.  Note that by getting the current  status message, you clear out the value stored in _SESSION so this method can only be used  to get the status message once for display purposes.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetTitle" id="getTitle"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getTitle</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a791">791</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>string getTitle(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Getter for the page title.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetUnitDuration" id="getUnitDuration"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">getUnitDuration</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a584">584</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>integer getUnitDuration(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Calculates and returns the unit of work current duration in seconds.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetVisibility" id="getVisibility"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getVisibility</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a356">356</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>string getVisibility(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Get the name of the rights group that has access to this controller.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodloadCustomController" id="loadCustomController"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">loadCustomController</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a1054">1054</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void loadCustomController(
+string
+$BOName, string
+$mode&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Does a HTTP redirect to a custom controller if one is found.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$BOName:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The classname of the business object</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$mode:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The mode of the controller (create, view, edit)</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>FileNotFoundException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodmarkDirty" id="markDirty"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">markDirty</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a615">615</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void markDirty(
+<a href="../alpha--model/AlphaDAO.html">AlphaDAO</a>
+$object&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Adds the supplied business object to the dirtyObjects array in the session.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type"><a href="../alpha--model/AlphaDAO.html">AlphaDAO</a></span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$object:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodmarkNew" id="markNew"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">markNew</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a649">649</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void markNew(
+<a href="../alpha--model/AlphaDAO.html">AlphaDAO</a>
+$object&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Adds a newly created business object to the newObjects array in the session.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type"><a href="../alpha--model/AlphaDAO.html">AlphaDAO</a></span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$object:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetBO" id="setBO"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">setBO</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a305">305</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setBO(
+<a href="../alpha--model/AlphaDAO.html">AlphaDAO</a>
+$BO&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Setter for the BO for this controller.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type"><a href="../alpha--model/AlphaDAO.html">AlphaDAO</a></span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$BO:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetDescription" id="setDescription"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">setDescription</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a827">827</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setDescription(
+string
+$description&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Setter for the page description.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$description:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetKeywords" id="setKeywords"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">setKeywords</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a851">851</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setKeywords(
+string
+$keywords&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Setter for the page keywords, should pass a comma-seperated list as a string.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$keywords:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetName" id="setName"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">setName</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a344">344</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setName(
+string
+$name&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Setter for the unit of work job name.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$name:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetStatusMessage" id="setStatusMessage"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">setStatusMessage</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a1133">1133</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setStatusMessage(
+string
+$message&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Set the status message in the _SESSION to the value provided.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$message:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetTitle" id="setTitle"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">setTitle</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a803">803</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setTitle(
+string
+$title&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Setter for the page title.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$title:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetUnitEndTime" id="setUnitEndTime"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">setUnitEndTime</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a544">544</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setUnitEndTime(
+integer
+$year, integer
+$month, integer
+$day, integer
+$hour, integer
+$minute, integer
+$second&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Setter for the unit end time (value will be stored in the session as key unitEndTime).
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$year:&nbsp;</span></td>
+				<td>
+							</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$month:&nbsp;</span></td>
+				<td>
+							</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$day:&nbsp;</span></td>
+				<td>
+							</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$hour:&nbsp;</span></td>
+				<td>
+							</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$minute:&nbsp;</span></td>
+				<td>
+							</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$second:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetUnitMAXDuration" id="setUnitMAXDuration"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">setUnitMAXDuration</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a572">572</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setUnitMAXDuration(
+integer
+$duration&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Setter for the unit MAX duration.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$duration:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The desired duration in seconds.</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetUnitOfWork" id="setUnitOfWork"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">setUnitOfWork</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a430">430</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setUnitOfWork(
+array
+$jobs&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Sets the name of the controller job sequence to the values in the supplied  array (and stores the array in the session).
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$jobs:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The names of the controllers in this unit of work sequence.</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>IllegalArguementException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetUnitStartTime" id="setUnitStartTime"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">setUnitStartTime</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a511">511</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setUnitStartTime(
+integer
+$year, integer
+$month, integer
+$day, integer
+$hour, integer
+$minute, integer
+$second&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Setter for the unit start time (value will be stored in the session as key unitStartTime).
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$year:&nbsp;</span></td>
+				<td>
+							</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$month:&nbsp;</span></td>
+				<td>
+							</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$day:&nbsp;</span></td>
+				<td>
+							</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$hour:&nbsp;</span></td>
+				<td>
+							</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$minute:&nbsp;</span></td>
+				<td>
+							</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$second:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetVisibility" id="setVisibility"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">setVisibility</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--controller__controllerAlphaController.inc.html#a368">368</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setVisibility(
+string
+$visibility&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Setter for the name of the rights group that has access to this controller.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$visibility:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.0</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+		</div>
+	</div>
+
+
+        <div class="credit">
+		    <hr class="separator" />
+		    Documentation generated on Thu, 17 Mar 2011 16:43:10 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+	      </div>
+      </td></tr></table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
