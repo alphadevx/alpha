@@ -1,0 +1,10 @@
+<form action="<?= $formAction ?>" id="<?= $formID ?>" method="POST" accept-charset="UTF-8">
+	<?= $formFields ?>
+	<div class="form-group lower spread">
+		<?= $saveButton ?>
+		<?= $deleteButton ?>
+		<?= $cancelButton ?>
+	</div>
+	<?= $formSecurityFields ?>
+	<input type="hidden" name="<?= ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('version_num')) : 'version_num') ?>" value="<?= $version_num ?>"/>
+</form>
