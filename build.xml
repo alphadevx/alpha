@@ -5,10 +5,10 @@
   	<!-- Creates a new release of the Alpha Framework -->
     <target name="releaseAlpha" depends="init, moveOldDocs">
 
-        <exec command="svn add docs/api/current" />
-
         <version releasetype="${releasetype}" file="VERSION.txt" property="alpha.version.new" />
     	  <echo message="New version number is ${alpha.version.new}" />
+
+        <exec command="svn add docs/api/current" />
 
         <phingcall target="generateDocs" />
 
