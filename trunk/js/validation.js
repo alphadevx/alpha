@@ -96,7 +96,7 @@
 			}
 
 			if(rule.match(/is\ checked/g)) {
-				if($('[id="'+fieldName+'"]').attr('checked')) {
+				if($('[id="'+fieldName+'"]').is(':checked')) {
 					return html;
 				}else{
 					return '<p>'+$('[id="'+fieldName+'_msg"]').val()+'</p>';
