@@ -125,9 +125,7 @@ class EditArticle extends AlphaController implements AlphaControllerInterface {
 			self::$logger->error($e->getMessage());
 		}catch(BONotFoundException $e) {
 			self::$logger->warn($e->getMessage());
-			echo '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;">
-				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
-				<strong>Error:</strong> Failed to load the requested article from the database!</p></div>';
+			echo AlphaView::displayErrorMessage('Failed to load the requested article from the database!');
 		}
 
 		echo AlphaView::renderDeleteForm();

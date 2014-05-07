@@ -631,10 +631,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		$html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/css/alpha.css">';
 		$html .= '<title>'.$code.' - '.$message.'</title></head>';
 		$html .= '<body>';
-		$html .= '<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;">
-				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
-				<strong>'.$code.':</strong> '.$message.'</p>
-				</div>';
+		$html .= self::displayErrorMessage('<strong>'.$code.':</strong> '.$message);
 		$html .= '</body></html>';
 
 		return $html;
