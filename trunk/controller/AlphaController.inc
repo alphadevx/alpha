@@ -897,6 +897,16 @@ abstract class AlphaController {
 		}else{
 			// the person is logged in?
 			if (isset($_SESSION['currentUser'])) {
+
+				// if the visibility is 'Session', just being logged in enough
+				if ($this->getVisibility() == 'Session') {
+					if(method_exists($this, 'after_checkRights_callback'))
+						$this->after_checkRights_callback();
+
+					self::$logger->debug('<<checkRights [true]');
+					return true;
+				}
+
 				// checking for admins (can access everything)
 				if ($_SESSION['currentUser']->inGroup('Admin')) {
 					if(method_exists($this, 'after_checkRights_callback'))
@@ -1223,6 +1233,33 @@ abstract class AlphaController {
 			unset($_REQUEST[$fieldname]);
 
 		}
+	}
+
+	/**
+	 * Converts the supplied string to a "slug" that is URL safe and suitable for SEO
+	 *
+	 * @param string $URLPart The part of the URL to use as the slug
+	 * @param string $seperator The URL seperator to use (default is -)
+	 * @param array $filter An optional array of charactors to filter out
+	 * @param boolean $crc32Prefix Set to true if you want to prefix the slug with the CRC32 hash of the URLPart supplied
+	 * @return string A URL slug
+	 * @since 1.2.4
+	 */
+	public static function generateURLSlug($URLPart, $seperator = '-', $filter = array(), $crc32Prefix = false) {
+		$URLPart = trim($URLPart);
+
+    	if(count($filter) > 0)
+        	$URLPart = str_replace($filter, ' ', $URLPart);
+
+	    $clean = iconv('UTF-8', 'ASCII//TRANSLIT', $URLPart);
+    	$clean = preg_replace("/[^a-zA-Z0-9\/\._|+ -]/", '', $clean);
+    	$clean = strtolower(trim($clean, '-'));
+    	$clean = preg_replace("/[\.\/_|+ -]+/", $seperator, $clean);
+
+    	if($crc32Prefix)
+    		$clean = hexdec(hash('crc32b', $URLPart)).$seperator.$clean;
+
+    	return $clean;
 	}
 }
 
