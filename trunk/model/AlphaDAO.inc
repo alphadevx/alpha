@@ -2242,11 +2242,40 @@ abstract class AlphaDAO {
 	/**
      * Gets the value of the  maintainHistory attribute
      *
-     * @returns boolean
+     * @return boolean
      * @since 1.2
      */
     public function	getMaintainHistory() {
         return $this->maintainHistory;
+    }
+
+    /**
+     * Return a hash array of the object containing attribute names and simplfied values.
+     *
+     * @return array
+     * @since  1.2.4
+     */
+    public function toArray() {
+    	// get the class attributes
+		$reflection = new ReflectionClass(get_class($this));
+		$properties = $reflection->getProperties();
+
+		$propArray = array();
+
+		foreach($properties as $propObj) {
+			$propName = $propObj->name;
+
+			if(!in_array($propName, $this->transientAttributes)) {
+				$val = $this->get($propName);
+
+				if (is_object($val))
+					$val = $val->getValue();
+
+				$propArray[$propName] = $val;
+			}
+		}
+
+		return $propArray;
     }
 }
 
