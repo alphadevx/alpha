@@ -190,13 +190,13 @@ class RecordSelector {
 			if(count($objects) > 0) {
 				// render tags differently
 				if($this->name == 'tags' && $this->relationObject->getRelatedClass() == 'TagObject') {
-					$html .= '<tr><th>'.$this->label.'</th><td>';
+					$html .= '<p><strong>'.$this->label.':</strong>';
 
 					foreach($objects as $tag) {
 						$html .= ' <a href="'.$config->get('app.url').'search/q/'.$tag->get('content').'">'.$tag->get('content').'</a>';
 					}
 
-					$html .= '</td></tr>';
+					$html .= '</p>';
 				}else{
 					$html .= '<div><strong>'.$this->label.':</strong>';
 					if($buttons) {
