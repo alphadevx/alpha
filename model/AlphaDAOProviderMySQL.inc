@@ -811,7 +811,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 						$prop = $this->BO->getPropObject($propName);
 
 						// handle the saving of MANY-TO-MANY relation values
-						if($prop->getRelationType() == 'MANY-TO-MANY') {
+						if($prop->getRelationType() == 'MANY-TO-MANY' && isset($_POST[$propName]) && $_POST[$propName] != '00000000000') {
 							try {
 								try{
 									// check to see if the rel is on this class
@@ -832,8 +832,7 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 									throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
 								}
 
-								if(isset($_POST[$propName]) && $_POST[$propName] != '00000000000')
-									$OIDs = explode(',', $_POST[$propName]);
+								$OIDs = explode(',', $_POST[$propName]);
 
 								if(isset($OIDs) && !empty($OIDs[0])) {
 									// now for each posted OID, create a new RelationLookup record and save
