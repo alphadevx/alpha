@@ -9,7 +9,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -67,10 +67,11 @@ interface SearchProviderInterface {
 	 * @param string $returnType Use this filter to determine that only business objects of a certain class hould be returned (default is to return all classes indexed).
 	 * @param integer $start Start point for pagination.
 	 * @param integer $limit The maximum amount to return in the list (for pagination).
+	 * @param string $distinct Related items will only be returned that have distinct values in this named field.
 	 * @return array An array of related business objects.
 	 * @since 1.2.3
 	 */
-	public function getRelated(AlphaDAO $sourceObject, $returnType = 'all', $start = 0, $limit = 10);
+	public function getRelated(AlphaDAO $sourceObject, $returnType = 'all', $start = 0, $limit = 10, $distinct = '');
 
 	/**
 	 * Adds/updates the business object provided to the search engine index.
