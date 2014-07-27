@@ -8,7 +8,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -198,10 +198,8 @@ class String extends AlphaType implements AlphaTypeInterface {
 	 */
 	public function isRequired($req=true) {
 		if ($req) {
-			$this->validationRule = REQUIRED_STRING;
+			$this->validationRule = AlphaValidator::REQUIRED_STRING;
 			$this->helper = 'This string requires a value!';
-		}else{
-			$this->validationRule = DEFAULT_STRING;
 		}
 	}
 
