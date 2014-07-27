@@ -9,7 +9,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -211,6 +211,37 @@ class RelationLookup extends AlphaDAO implements AlphaTypeInterface {
 			$this->after_loadAllByAttribute_callback();
 
 		self::$logger->debug('<<loadAllByAttribute ['.count($objects).']');
+		return $objects;
+	}
+
+	/**
+	 * This custom version provides the left/right class names to the business object constructor, required
+	 * for RelationLookup objects.
+	 *
+	 * (non-PHPdoc)
+	 * @see alpha/model/AlphaDAO::loadAllByAttributes()
+	 */
+	public function loadAllByAttributes($attributes=array(), $values=array(), $start=0, $limit=0, $orderBy='OID', $order='ASC', $ignoreClassType=false) {
+		self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.
+			$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
+
+		if(method_exists($this, 'before_loadAllByAttributes_callback'))
+			$this->before_loadAllByAttributes_callback();
+
+		global $config;
+
+		if(!is_array($attributes) || !is_array($values)) {
+			throw new IllegalArguementException('Illegal arrays attributes=['.var_export($attributes, true).'] and values=['.var_export($values, true).
+				'] provided to loadAllByAttributes');
+		}
+
+		$provider = AlphaDAOProviderFactory::getInstance($config->get('db.provider.name'), $this);
+		$objects = $provider->loadAllByAttributes($attributes, $values, $start, $limit, $orderBy, $order, $ignoreClassType, array($this->leftClassName, $this->rightClassName));
+
+		if(method_exists($this, 'after_loadAllByAttributes_callback'))
+			$this->after_loadAllByAttributes_callback();
+
+		self::$logger->debug('<<loadAllByAttributes ['.count($objects).']');
 		return $objects;
 	}
 
