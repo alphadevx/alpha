@@ -8,7 +8,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -528,6 +528,41 @@ class Timestamp extends AlphaType implements AlphaTypeInterface {
 	 */
 	public function setHelper($helper) {
 		$this->helper = $helper;
+	}
+
+	/**
+	 * Returns the difference between now and this timestamp value, in a human-readable format, e.g: 3 days ago, 3 days from now.
+	 *
+	 * @return string
+	 * @since 1.2.4
+	 */
+	public function getTimeAway() {
+
+	    $periods = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade');
+    	$lengths = array('60', '60', '24', '7', '4.35', '12', '10');
+
+		$now = time();
+    	$unixTS = $this->getUnixValue();
+
+    	if($now > $unixTS) {
+        	$difference = $now - $unixTS;
+        	$tense = 'ago';
+    	} else {
+        	$difference = $unixTS - $now;
+        	$tense = 'from now';
+    	}
+
+    	for($i = 0; $difference >= $lengths[$i] && $i < count($lengths)-1; $i++) {
+        	$difference /= $lengths[$i];
+    	}
+
+		$difference = round($difference);
+
+		if($difference != 1) {
+        	$periods[$i].= 's';
+    	}
+
+	    return $difference.' '.$periods[$i].' '.$tense;
 	}
 }
 
