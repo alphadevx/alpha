@@ -17,7 +17,7 @@ if(!isset($config)) {
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -275,40 +275,83 @@ class Search extends AlphaController implements AlphaControllerInterface {
 				$html .= AlphaView::displayUpdateMessage('There were no search results for your query.');
 		}
 
+		$html .= '<ul class="pagination">';
+
 		if ($this->startPoint > 0) {
 			// handle secure URLs
 			if(isset($_GET['tk']))
-				$html .= '<a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint-$config->get('app.list.page.amount'))).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
+				$html .= '<li><a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint-$config->get('app.list.page.amount'))).'">&laquo;</a></li>';
 			else
-				$html .= '<a href="'.$config->get('app.url').'search/q/'.$this->query.'/start/'.($this->startPoint-$config->get('app.list.page.amount')).'">&lt;&lt;-Previous</a>&nbsp;&nbsp;';
+				$html .= '<li><a href="'.$config->get('app.url').'search/q/'.$this->query.'/start/'.($this->startPoint-$config->get('app.list.page.amount')).'">&laquo;</a></li>';
 		}elseif($this->resultCount > $config->get('app.list.page.amount')){
-			$html .= '&lt;&lt;-Previous&nbsp;&nbsp;';
+			$html .= '<li class="disabled"><a href="#">&laquo;</a></li>';
 		}
 		$page = 1;
 		for ($i = 0; $i < $this->resultCount; $i+=$config->get('app.list.page.amount')) {
 			if($i != $this->startPoint) {
 				// handle secure URLs
 				if(isset($_GET['tk']))
-					$html .= '&nbsp;<a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.$i).'">'.$page.'</a>&nbsp;';
+					$html .= '<li><a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.$i).'">'.$page.'</a></li>';
 				else
-					$html .= '&nbsp;<a href="'.$config->get('app.url').'search/q/'.$this->query.'/start/'.$i.'">'.$page.'</a>&nbsp;';
+					$html .= '<li><a href="'.$config->get('app.url').'search/q/'.$this->query.'/start/'.$i.'">'.$page.'</a></li>';
 			}elseif($this->resultCount > $config->get('app.list.page.amount')){
-				$html .= '&nbsp;'.$page.'&nbsp;';
+				$html .= '<li class="active"><a href="#">'.$page.'</a></li>';
 			}
 			$page++;
 		}
 		if ($this->resultCount > $end) {
 			// handle secure URLs
 			if(isset($_GET['tk']))
-				$html .= '&nbsp;&nbsp;<a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint+$config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a>';
+				$html .= '<li><a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint+$config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a></li>';
 			else
-				$html .= '&nbsp;&nbsp;<a href="'.$config->get('app.url').'search/q/'.$this->query.'/start/'.($this->startPoint+$config->get('app.list.page.amount')).'">Next-&gt;&gt;</a>';
+				$html .= '<li><a href="'.$config->get('app.url').'search/q/'.$this->query.'/start/'.($this->startPoint+$config->get('app.list.page.amount')).'">&raquo;</a></li>';
 		}elseif($this->resultCount > $config->get('app.list.page.amount')){
-			$html .= '&nbsp;&nbsp;Next-&gt;&gt;';
+			$html .= '<li class="disabled"><a href="#">&raquo;</a></li>';
 		}
+		$html .= '</ul>';
 		$html .= '</p>';
 
 		return $html;
+	}
+
+	/**
+	 * Get the search result count
+	 *
+	 * @return int
+	 * @since 1.2.4
+	 */
+	public function getResultCount() {
+		return $this->resultCount;
+	}
+
+	/**
+	 * Set the search result count
+	 *
+	 * @param int $resultCount
+	 * @since 1.2.4
+	 */
+	protected function setResultCount($resultCount) {
+		$this->resultCount = $resultCount;
+	}
+
+	/**
+	 * Get the search query
+	 *
+	 * @return string
+	 * @since 1.2.4
+	 */
+	public function getSearchQuery() {
+		return $this->query;
+	}
+
+	/**
+	 * Set the search query
+	 *
+	 * @param string $query
+	 * @since 1.2.4
+	 */
+	protected function setSearchQuery($query) {
+		$this->query = $query;
 	}
 }
 
