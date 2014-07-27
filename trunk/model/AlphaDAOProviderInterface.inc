@@ -9,7 +9,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -132,12 +132,13 @@ interface AlphaDAOProviderInterface {
 	 * @param string $orderBy The name of the field to sort the objects by.
 	 * @param string $order The order to sort the objects by.
 	 * @param boolean $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
+	 * @param array $constructorArgs An optional array of contructor arguements to pass to the BOs that will be generated and returned.  Supports a maximum of 5 arguements.
 	 * @return array An array containing objects of this type of business object.
 	 * @since 1.1
 	 * @throws BONotFoundException
 	 * @throws IllegalArguementException
 	 */
-	public function loadAllByAttributes($attributes=array(), $values=array(), $start=0, $limit=0, $orderBy='OID', $order='ASC', $ignoreClassType=false);
+	public function loadAllByAttributes($attributes=array(), $values=array(), $start=0, $limit=0, $orderBy='OID', $order='ASC', $ignoreClassType=false, $constructorArgs=array());
 
 	/**
 	 * Loads all of the objects of this class that where updated (updated_ts value) on the date indicated.

@@ -8,7 +8,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -508,9 +508,9 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 	 * (non-PHPdoc)
 	 * @see alpha/model/AlphaDAOProviderInterface::loadAllByAttributes()
 	 */
-	public function loadAllByAttributes($attributes=array(), $values=array(), $start=0, $limit=0, $orderBy='OID', $order='ASC', $ignoreClassType=false) {
+	public function loadAllByAttributes($attributes=array(), $values=array(), $start=0, $limit=0, $orderBy='OID', $order='ASC', $ignoreClassType=false, $constructorArgs=array()) {
 		self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.
-			$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
+			$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
 
 		$whereClause = ' WHERE';
 
@@ -573,7 +573,33 @@ class AlphaDAOProviderMySQL implements AlphaDAOProviderInterface {
 
 		foreach($result as $row) {
 			try {
-				$obj = new $BO_Class();
+				$argsCount = count($constructorArgs);
+
+				if($argsCount < 1) {
+					$obj = new $BO_Class();
+				}else{
+					switch ($argsCount) {
+						case 1:
+							$obj = new $BO_Class($constructorArgs[0]);
+						break;
+						case 2:
+							$obj = new $BO_Class($constructorArgs[0],$constructorArgs[1]);
+						break;
+						case 3:
+							$obj = new $BO_Class($constructorArgs[0],$constructorArgs[1],$constructorArgs[2]);
+						break;
+						case 4:
+							$obj = new $BO_Class($constructorArgs[0],$constructorArgs[1],$constructorArgs[2],$constructorArgs[3]);
+						break;
+						case 5:
+							$obj = new $BO_Class($constructorArgs[0],$constructorArgs[1],$constructorArgs[2],$constructorArgs[3],$constructorArgs[4]);
+						break;
+						default:
+							throw new IllegalArguementException('Too many elements in the $constructorArgs array passed to the loadAllByAttribute method!');
+						break;
+					}
+				}
+
 				$obj->load($row['OID']);
 				$objects[$count] = $obj;
 				$count++;
