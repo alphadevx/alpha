@@ -598,7 +598,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 			self::$logger = new Logger('AlphaRendererProviderHTML');
 		self::$logger->debug('>>displayUpdateMessage(message=['.$message.'])');
 
-		$html = '<div class="alert alert-success">'.$message.'</div>';
+		$html = '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'.$message.'</div>';
 
 		self::$logger->debug('<<displayUpdateMessage ['.$html.']');
 		return $html;
@@ -947,25 +947,20 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * (non-PHPdoc)
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderTextField()
 	 */
-	public function renderTextField($name, $label, $mode, $value='', $tableTags=true) {
-		self::$logger->debug('>>renderTextField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+	public function renderTextField($name, $label, $mode, $value='') {
+		self::$logger->debug('>>renderTextField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
 		global $config;
-
-		if($config->get('security.encrypt.http.fieldnames'))
-			$fieldname = base64_encode(AlphaSecurityUtils::encrypt($name));
-		else
-			$fieldname = $name;
 
 		$html = '';
 
 		if ($mode == 'create') {
 			// give 10 rows for content fields (other 5 by default)
 			if($name == 'content')
-				$text = new TextBox($this->BO->getPropObject($name), $label, $fieldname, 10);
+				$text = new TextBox($this->BO->getPropObject($name), $label, $name, 10);
 			else
-				$text = new TextBox($this->BO->getPropObject($name), $label, $fieldname);
-			$html .= $text->render($tableTags);
+				$text = new TextBox($this->BO->getPropObject($name), $label, $name);
+			$html .= $text->render();
 		}
 
 		if ($mode == 'edit') {
@@ -974,25 +969,23 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 				$viewState = ViewState::getInstance();
 
 				if($viewState->get('markdownTextBoxRows') == '')
-					$text = new TextBox($this->BO->getPropObject($name), $label, $fieldname, 10);
+					$text = new TextBox($this->BO->getPropObject($name), $label, $name, 10);
 				else
-					$text = new TextBox($this->BO->getPropObject($name), $label, $fieldname, (integer)$viewState->get('markdownTextBoxRows'));
+					$text = new TextBox($this->BO->getPropObject($name), $label, $name, (integer)$viewState->get('markdownTextBoxRows'));
 
-				$html .= $text->render($tableTags, true);
+				$html .= $text->render();
 			}else{
-				$text = new TextBox($this->BO->getPropObject($name), $label, $fieldname);
-				$html .= $text->render($tableTags);
+				$text = new TextBox($this->BO->getPropObject($name), $label, $name);
+				$html .= $text->render();
 			}
 		}
 
 		if ($mode == 'view') {
-			if($tableTags)
-				$html .= '<tr><th>';
+			$html .= '<p><strong>';
 
 			$html .= $label;
 
-			if($tableTags)
-				$html .= '</th>';
+			$html .= ':</strong>';
 
 			// filter ouput to prevent malicious injection
 			$value = InputFilter::encode($value);
@@ -1000,13 +993,11 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 			// ensures that line returns are rendered
 			$value = str_replace("\n", '<br>', $value);
 
-			if($tableTags)
-				$html .= '<td>&nbsp;';
+			$html .= '&nbsp;';
 
 			$html .= $value;
 
-			if($tableTags)
-				$html .= '</td></tr>';
+			$html .= '</p>';
 		}
 
 		self::$logger->debug('<<renderTextField ['.$html.']');
