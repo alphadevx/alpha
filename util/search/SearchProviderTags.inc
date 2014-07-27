@@ -10,7 +10,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -145,7 +145,7 @@ class SearchProviderTags implements SearchProviderInterface {
 	/**
      * {@inheritdoc}
      */
-	public function getRelated(AlphaDAO $sourceObject, $returnType = 'all', $start = 0, $limit = 10) {
+	public function getRelated(AlphaDAO $sourceObject, $returnType = 'all', $start = 0, $limit = 10, $distinct = '') {
 
 		// all the tags on the source object for comparison
 		$tags = $sourceObject->getPropObject('tags')->getRelatedObjects();
@@ -154,17 +154,49 @@ class SearchProviderTags implements SearchProviderInterface {
 		$results = array();
 		// matching tags with weights
 		$matches = array();
+		// only used in conjunction with distinct param
+		$distinctValues = array();
 
 		foreach($tags as $tag) {
 			$tagObject = new TagObject();
-			$matchingTags = $tagObject->query("SELECT * FROM ".$tagObject->getTableName()." WHERE 
-				content='".$tag->get('content')."' AND NOT 
-				(taggedOID = '".$sourceObject->getOID()."' AND taggedClass = '".get_class($sourceObject)."');");
+
+			if ($distinct == '') {
+				$matchingTags = $tagObject->query("SELECT * FROM ".$tagObject->getTableName()." WHERE 
+					content='".$tag->get('content')."' AND NOT 
+					(taggedOID = '".$sourceObject->getOID()."' AND taggedClass = '".get_class($sourceObject)."');");
+			}else{
+				// filter out results where the source object field is identical to distinct param
+				$matchingTags = $tagObject->query("SELECT * FROM ".$tagObject->getTableName()." WHERE 
+					content='".$tag->get('content')."' AND NOT 
+					(taggedOID = '".$sourceObject->getOID()."' AND taggedClass = '".get_class($sourceObject)."')
+					AND taggedOID IN (SELECT OID FROM ".$sourceObject->getTableName()." WHERE ".$distinct." != '".addslashes($sourceObject->get($distinct))."');");
+			}
 
 			foreach($matchingTags as $matchingTag) {
 				if ($returnType == 'all' || $tag->get('taggedClass') == $returnType) {
 
 					$key = $matchingTag['taggedClass'].'-'.$matchingTag['taggedOID'];
+
+					// matches on the distinct if defined need to be skipped
+					if ($distinct != '') {
+						try {
+
+							$BO = new $matchingTag['taggedClass'];
+							$BO->load($matchingTag['taggedOID']);
+
+							// skip where the source object field is identical
+							if ($sourceObject->get($distinct) == $BO->get($distinct))
+								continue;
+
+							if(!in_array($BO->get($distinct), $distinctValues)) {
+								$distinctValues[] = $BO->get($distinct);
+							}else{
+								continue;
+							}
+						}catch (BONotFoundException $e) {
+							self::$logger->warn('Error loading object ['.$matchingTag['taggedOID'].'] of type ['.$matchingTag['taggedClass'].'], probable orphan');
+						}
+					}
 
 					if(isset($matches[$key])) {
 						// increment the weight if the same BO is tagged more than once
