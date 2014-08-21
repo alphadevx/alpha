@@ -10,7 +10,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -56,12 +56,29 @@ class AlphaCacheProviderMemcache implements AlphaCacheProviderInterface {
 	private static $logger = null;
 
 	/**
+     * Connection to the cache server
+     *
+     * @var Memcache
+     * @since 1.2.4
+     */
+    private $connection;
+
+	/**
 	 * Constructor
 	 *
 	 * @since 1.1
 	 */
 	public function __construct() {
 		self::$logger = new Logger('AlphaCacheProviderMemcache');
+
+		global $config;
+
+      	try {
+	      	$this->connection = new Memcache();
+	      	$this->connection->connect($config->get('cache.memcached.host'), $config->get('cache.memcached.port'));
+      	}catch(Exception $e) {
+      		self::$logger->error('Error while attempting to load connect to Memcache cache: ['.$e->getMessage().']');
+      	}
 	}
 
 	/**
@@ -72,18 +89,14 @@ class AlphaCacheProviderMemcache implements AlphaCacheProviderInterface {
 	public function get($key) {
 		self::$logger->debug('>>get(key=['.$key.'])');
 
-		global $config;
-
       	try {
-	      	$memcache = new Memcache();
-	      	$memcache->connect($config->get('cache.memcached.host'), 11211);
 
-	      	$value = $memcache->get($key);
+	      	$value = $this->connection->get($key);
 
 	      	self::$logger->debug('<<get: ['.print_r($value, true).'])');
 	      	return $value;
       	}catch(Exception $e) {
-      		self::$logger->error('Error while attempting to load a business object from Memcached instance: ['.$e->getMessage().']');
+      		self::$logger->error('Error while attempting to load a business object from Memcache instance: ['.$e->getMessage().']');
       		self::$logger->debug('<<get: [false])');
 	        return false;
       	}
@@ -95,16 +108,12 @@ class AlphaCacheProviderMemcache implements AlphaCacheProviderInterface {
 	 * @since 1.1
 	 */
 	public function set($key, $value, $expiry=0) {
-		global $config;
 
 		try {
-	      	$memcache = new Memcache();
-		    $memcache->connect($config->get('cache.memcached.host'), 11211);
-
 		    if($expiry > 0)
-		    	$memcache->set($key, $value, MEMCACHE_COMPRESSED, $expiry);
+		    	$this->connection->set($key, $value, MEMCACHE_COMPRESSED, $expiry);
 		    else
-		    	$memcache->set($key, $value, MEMCACHE_COMPRESSED);
+		    	$this->connection->set($key, $value, MEMCACHE_COMPRESSED);
 
       	}catch(Exception $e) {
       		self::$logger->error('Error while attempting to store a value to Memcached instance: ['.$e->getMessage().']');
@@ -117,12 +126,9 @@ class AlphaCacheProviderMemcache implements AlphaCacheProviderInterface {
 	 * @since 1.1
 	 */
 	public function delete($key) {
-		global $config;
 
 		try {
-      		$memcache = new Memcache();
-      		$memcache->connect($config->get('cache.memcached.host'), 11211);
-      		$memcache->delete($key);
+      		$this->connection->delete($key);
 		}catch(Exception $e) {
       		self::$logger->error('Error while attempting to remove a value from Memcached instance: ['.$e->getMessage().']');
       	}
