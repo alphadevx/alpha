@@ -404,7 +404,28 @@ class Image {
 	 * @since 1.0
 	 */
 	private function loadCache() {
-		readfile($this->filename);
+		global $config;
+
+		$modified = filemtime($this->source);
+
+		header("Last-Modified: ".date("D, d M Y H:i:s", $modified)." GMT");
+		header("Cache-Control: max-age=1800");
+
+		// exit if not modified
+		if (array_key_exists('HTTP_IF_MODIFIED_SINCE', $_SERVER)) {
+		    if (strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $modified) {
+		        header("HTTP/1.1 304 Not Modified");
+		        exit;
+		    }
+		}
+
+		if($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
+			header("Content-Type: image/png");
+			readfile($this->filename);
+		}else{
+			header("Content-Type: image/jpeg");
+			readfile($this->filename);
+		}
 	}
 
 	/**
