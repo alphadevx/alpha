@@ -77,6 +77,7 @@ class SearchProviderTags implements SearchProviderInterface {
      * {@inheritdoc}
      */
 	public function search($query, $returnType = 'all', $start = 0, $limit = 10) {
+		global $config;
 
 		// explode the user's query into a set of tokenized transient TagObjects
 		$queryTags = TagObject::tokenize($query, '', '', false);
@@ -93,23 +94,35 @@ class SearchProviderTags implements SearchProviderInterface {
 		// matching tags with weights
 		$matches = array();
 
-		/*
-		 * Build an array of BOs for the matching tags from the DB:
-		 * array key = BO ID
-		 * array value = weight (the amount of tags matching the BO)
-		 */
-		foreach($matchingTags as $tag) {
-			if ($returnType == 'all' || $tag->get('taggedClass') == $returnType) {
+		if ($config->get('cache.provider.name') != '' && count($queryTags) == 1) { // for now, we are only caching on single tags
+			$key = $queryTags[0]->get('content');
+			$matches = $this->loadFromCache($key);
+		}
 
-				$key = $tag->get('taggedClass').'-'.$tag->get('taggedOID');
+		if (count($matches) == 0) {
+			/*
+			 * Build an array of BOs for the matching tags from the DB:
+			 * array key = BO ID
+			 * array value = weight (the amount of tags matching the BO)
+			 */
+			foreach($matchingTags as $tag) {
+				if ($returnType == 'all' || $tag->get('taggedClass') == $returnType) {
 
-				if(isset($matches[$key])) {
-					// increment the weight if the same BO is tagged more than once
-					$weight = intval($matches[$key]) + 1;
-					$matches[$key] = $weight;
-				}else{
-					$matches[$key] = 1;
+					$key = $tag->get('taggedClass').'-'.$tag->get('taggedOID');
+
+					if(isset($matches[$key])) {
+						// increment the weight if the same BO is tagged more than once
+						$weight = intval($matches[$key]) + 1;
+						$matches[$key] = $weight;
+					}else{
+						$matches[$key] = 1;
+					}
 				}
+			}
+
+			if ($config->get('cache.provider.name') != '' && count($queryTags) == 1) { // for now, we are only caching on single tags
+				$key = $queryTags[0]->get('content');
+				$this->addToCache($key, $matches);
 			}
 		}
 
@@ -268,6 +281,51 @@ class SearchProviderTags implements SearchProviderInterface {
 	public function getNumberFound() {
 		return $this->numberFound;
 	}
+
+	/**
+	 * Load the tag search matches from the cache
+	 *
+	 * @since 1.2.4
+	 */
+   	private function loadFromCache($key) {
+      	global $config;
+
+      	try {
+	      	$cache = AlphaCacheProviderFactory::getInstance($config->get('cache.provider.name'));
+      		$matches = $cache->get($key);
+
+	      	if(!$matches) {
+				self::$logger->debug('Cache miss on key ['.$key.']');
+	        	return array();
+	      	}else{
+				self::$logger->debug('Cache hit on key ['.$key.']');
+	        	return $matches;
+	      	}
+      	}catch(Exception $e) {
+      		self::$logger->error('Error while attempting to load a search result from ['.$config->get('cache.provider.name').'] 
+      		 instance: ['.$e->getMessage().']');
+
+	        return array();
+      	}
+	}
+
+	/**
+	 * Add the tag search matches to the cache
+	 *
+	 * @since 1.2.4
+	 */
+	public function addToCache($key, $matches) {
+      	global $config;
+
+      	try {
+      		$cache = AlphaCacheProviderFactory::getInstance($config->get('cache.provider.name'));
+      		$cache->set($key, $matches, 86400); // cache search matches for a day
+
+      	}catch(Exception $e) {
+      		self::$logger->error('Error while attempting to store a search matches array to the ['.$config->get('cache.provider.name').'] 
+      			instance: ['.$e->getMessage().']');
+      	}
+   	}
 }
 
 ?>
