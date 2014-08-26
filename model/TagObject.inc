@@ -259,6 +259,35 @@ class TagObject extends AlphaDAO {
 	public static function cleanTagContent($content) {
 		return trim(mb_strtolower(str_replace(' ', '', $content)));
 	}
+
+	/**
+	 * Remove the tag search matches from the cache
+	 *
+	 * @since 1.2.4
+	 */
+	protected function after_save_callback() {
+		global $config;
+
+		if ($config->get('cache.provider.name') != '') {
+			try {
+	      		$cache = AlphaCacheProviderFactory::getInstance($config->get('cache.provider.name'));
+	      		$cache->delete($this->get('content'));
+
+	      	}catch(Exception $e) {
+	      		self::$logger->error('Error while attempting to remove search matches array from the ['.$config->get('cache.provider.name').'] 
+	      			instance: ['.$e->getMessage().']');
+	      	}
+		}
+	}
+
+	/**
+	 * Remove the tag search matches from the cache
+	 *
+	 * @since 1.2.4
+	 */
+	protected function before_delete_callback() {
+		$this->after_save_callback();
+	}
 }
 
 ?>
