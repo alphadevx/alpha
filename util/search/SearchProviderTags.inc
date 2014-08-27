@@ -160,8 +160,7 @@ class SearchProviderTags implements SearchProviderInterface {
      */
 	public function getRelated(AlphaDAO $sourceObject, $returnType = 'all', $start = 0, $limit = 10, $distinct = '') {
 
-		// all the tags on the source object for comparison
-		$tags = $sourceObject->getPropObject('tags')->getRelatedObjects();
+		global $config;
 
 		// the result objects
 		$results = array();
@@ -170,54 +169,69 @@ class SearchProviderTags implements SearchProviderInterface {
 		// only used in conjunction with distinct param
 		$distinctValues = array();
 
-		foreach($tags as $tag) {
-			$tagObject = new TagObject();
+		if ($config->get('cache.provider.name') != '') {
+			$key = get_class($sourceObject).'-'.$sourceObject->getOID().'-related'.($distinct == '' ? '' : '-distinct');
+			$matches = $this->loadFromCache($key);
+		}
 
-			if ($distinct == '') {
-				$matchingTags = $tagObject->query("SELECT * FROM ".$tagObject->getTableName()." WHERE 
-					content='".$tag->get('content')."' AND NOT 
-					(taggedOID = '".$sourceObject->getOID()."' AND taggedClass = '".get_class($sourceObject)."');");
-			}else{
-				// filter out results where the source object field is identical to distinct param
-				$matchingTags = $tagObject->query("SELECT * FROM ".$tagObject->getTableName()." WHERE 
-					content='".$tag->get('content')."' AND NOT 
-					(taggedOID = '".$sourceObject->getOID()."' AND taggedClass = '".get_class($sourceObject)."')
-					AND taggedOID IN (SELECT OID FROM ".$sourceObject->getTableName()." WHERE ".$distinct." != '".addslashes($sourceObject->get($distinct))."');");
-			}
+		if (count($matches) == 0) {
+			// all the tags on the source object for comparison
+			$tags = $sourceObject->getPropObject('tags')->getRelatedObjects();
 
-			foreach($matchingTags as $matchingTag) {
-				if ($returnType == 'all' || $tag->get('taggedClass') == $returnType) {
+			foreach($tags as $tag) {
+				$tagObject = new TagObject();
 
-					$key = $matchingTag['taggedClass'].'-'.$matchingTag['taggedOID'];
+				if ($distinct == '') {
+					$matchingTags = $tagObject->query("SELECT * FROM ".$tagObject->getTableName()." WHERE 
+						content='".$tag->get('content')."' AND NOT 
+						(taggedOID = '".$sourceObject->getOID()."' AND taggedClass = '".get_class($sourceObject)."');");
+				}else{
+					// filter out results where the source object field is identical to distinct param
+					$matchingTags = $tagObject->query("SELECT * FROM ".$tagObject->getTableName()." WHERE 
+						content='".$tag->get('content')."' AND NOT 
+						(taggedOID = '".$sourceObject->getOID()."' AND taggedClass = '".get_class($sourceObject)."')
+						AND taggedOID IN (SELECT OID FROM ".$sourceObject->getTableName()." WHERE ".$distinct." != '".addslashes($sourceObject->get($distinct))."');");
+				}
 
-					// matches on the distinct if defined need to be skipped
-					if ($distinct != '') {
-						try {
+				foreach($matchingTags as $matchingTag) {
+					if ($returnType == 'all' || $tag->get('taggedClass') == $returnType) {
 
-							$BO = new $matchingTag['taggedClass'];
-							$BO->load($matchingTag['taggedOID']);
+						$key = $matchingTag['taggedClass'].'-'.$matchingTag['taggedOID'];
 
-							// skip where the source object field is identical
-							if ($sourceObject->get($distinct) == $BO->get($distinct))
-								continue;
+						// matches on the distinct if defined need to be skipped
+						if ($distinct != '') {
+							try {
 
-							if(!in_array($BO->get($distinct), $distinctValues)) {
-								$distinctValues[] = $BO->get($distinct);
-							}else{
-								continue;
+								$BO = new $matchingTag['taggedClass'];
+								$BO->load($matchingTag['taggedOID']);
+
+								// skip where the source object field is identical
+								if ($sourceObject->get($distinct) == $BO->get($distinct))
+									continue;
+
+								if(!in_array($BO->get($distinct), $distinctValues)) {
+									$distinctValues[] = $BO->get($distinct);
+								}else{
+									continue;
+								}
+							}catch (BONotFoundException $e) {
+								self::$logger->warn('Error loading object ['.$matchingTag['taggedOID'].'] of type ['.$matchingTag['taggedClass'].'], probable orphan');
 							}
-						}catch (BONotFoundException $e) {
-							self::$logger->warn('Error loading object ['.$matchingTag['taggedOID'].'] of type ['.$matchingTag['taggedClass'].'], probable orphan');
+						}
+
+						if(isset($matches[$key])) {
+							// increment the weight if the same BO is tagged more than once
+							$weight = intval($matches[$key]) + 1;
+							$matches[$key] = $weight;
+						}else{
+							$matches[$key] = 1;
 						}
 					}
+				}
 
-					if(isset($matches[$key])) {
-						// increment the weight if the same BO is tagged more than once
-						$weight = intval($matches[$key]) + 1;
-						$matches[$key] = $weight;
-					}else{
-						$matches[$key] = 1;
-					}
+				if ($config->get('cache.provider.name') != '') {
+					$key = get_class($sourceObject).'-'.$sourceObject->getOID().'-related'.($distinct == '' ? '' : '-distinct');
+					$this->addToCache($key, $matches);
 				}
 			}
 		}
