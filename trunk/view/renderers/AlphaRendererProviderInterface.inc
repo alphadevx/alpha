@@ -172,11 +172,10 @@ interface AlphaRendererProviderInterface {
 	 * @param string $label The label to apply to the field
 	 * @param string $mode The field mode (create/edit/view)
 	 * @param string $value The field value (optional)
-	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.2
 	 */
-	public function renderIntegerField($name, $label, $mode, $value='', $tableTags=true);
+	public function renderIntegerField($name, $label, $mode, $value='');
 
 	/**
 	 * Renders an Double field value.
@@ -185,11 +184,10 @@ interface AlphaRendererProviderInterface {
 	 * @param string $label The label to apply to the field
 	 * @param string $mode The field mode (create/edit/view)
 	 * @param string $value The field value (optional)
-	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.2
 	 */
-	public function renderDoubleField($name, $label, $mode, $value='', $tableTags=true);
+	public function renderDoubleField($name, $label, $mode, $value='');
 
 	/**
 	 * Renders an Boolean field value.
@@ -224,11 +222,10 @@ interface AlphaRendererProviderInterface {
 	 * @param string $mode The field mode (create/edit/view)
 	 * @param array $options The DEnum options
 	 * @param string $value The field value (optional)
-	 * @param bool $tableTags Include table tags and label (optional)
 	 * @return string
 	 * @since 1.2
 	 */
-	public function renderDEnumField($name, $label, $mode, $options, $value='', $tableTags=true);
+	public function renderDEnumField($name, $label, $mode, $options, $value='');
 
 	/**
 	 * Method to render a field when type is not known.
@@ -273,13 +270,12 @@ interface AlphaRendererProviderInterface {
 	 * @param string $label The label to apply to the field
 	 * @param string $mode The field mode (create/edit/view)
 	 * @param string $value The field value (optional)
-	 * @param bool $tableTags Include table tags and label (optional)
 	 * @param bool $expanded Render the related fields in expanded format or not (optional)
 	 * @param bool $buttons Render buttons for expanding/contacting the related fields (optional)
 	 * @return string
 	 * @since 1.2
 	 */
-	public function renderRelationField($name, $label, $mode, $value='', $tableTags=true, $expanded=false, $buttons=true);
+	public function renderRelationField($name, $label, $mode, $value='', $expanded=false, $buttons=true);
 
 	/**
 	 * Convenience method that renders all fields for the current BO in edit/create/view mode.

@@ -126,7 +126,6 @@ class RecordSelector {
 	 * @param bool $buttons Render buttons for expanding/contacting the related fields (optional)
 	 * @return string
 	 * @since 1.0
-	 * @todo Remove $tableTags param
 	 */
 	public function render($expanded=false, $buttons=true) {
 		self::$logger->debug('>>render(expanded=['.$expanded.'], buttons=['.$buttons.'])');
