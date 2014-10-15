@@ -697,8 +697,8 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderIntegerField()
 	 * @todo remove table tags and use Bootstrap CSS
 	 */
-	public function renderIntegerField($name, $label, $mode, $value='', $tableTags=true) {
-		self::$logger->debug('>>renderIntegerField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+	public function renderIntegerField($name, $label, $mode, $value='') {
+		self::$logger->debug('>>renderIntegerField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
 		global $config;
 
@@ -707,35 +707,18 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		else
 			$fieldname = $name;
 
-		$html = '';
+		$html = '<div class="form-group">';
+		$html .= '	<label for="'.$fieldname.'">'.$label.'</label>';
 
 		if ($mode == 'create') {
-			if($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $label;
-				$html .= '</th>';
-
-				$html .= '<td>';
-				$html .= '<input type="text" style="width:100%;" name="'.$fieldname.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<input type="text" style="width:100%;" name="'.$fieldname.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
-			}
+			$html .= '<input type="text" style="width:100%;" name="'.$fieldname.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/>';
 		}
 
 		if ($mode == 'edit') {
-			if($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $label;
-				$html .= '</th>';
-
-				$html .= '<td>';
-				$html .= '<input type="text" style="width:100%;" name="'.$fieldname.'" value="'.$value.'"/><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<input type="text" style="width:100%;" name="'.$fieldname.'" value="'.$value.'"/>';
-			}
+			$html .= '<input type="text" style="width:100%;" name="'.$fieldname.'" value="'.$value.'"/>';
 		}
+
+		$html .= '</div>';
 
 		self::$logger->debug('<<renderIntegerField ['.$html.']');
 		return $html;
@@ -746,8 +729,8 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderDoubleField()
 	 * @todo remove table tags and use Bootstrap CSS
 	 */
-	public function renderDoubleField($name, $label, $mode, $value='', $tableTags=true) {
-		self::$logger->debug('>>renderDoubleField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+	public function renderDoubleField($name, $label, $mode, $value='') {
+		self::$logger->debug('>>renderDoubleField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
 		global $config;
 
@@ -756,35 +739,18 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		else
 			$fieldname = $name;
 
-		$html = '';
+		$html = '<div class="form-group">';
+		$html .= '	<label for="'.$fieldname.'">'.$label.'</label>';
 
 		if ($mode == 'create') {
-			if($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $label;
-				$html .= '</th>';
-
-				$html .= '<td>';
-				$html .= '<input type="text" size="13" name="'.$fieldname.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<input type="text" size="13" name="'.$fieldname.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/>';
-			}
+			$html .= '<input type="text" size="13" name="'.$fieldname.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/>';
 		}
 
 		if ($mode == 'edit') {
-			if($tableTags) {
-				$html .= '<tr><th style="width:25%;">';
-				$html .= $label;
-				$html .= '</th>';
-
-				$html .= '<td>';
-				$html .= '<input type="text" size="13" name="'.$fieldname.'" value="'.$value.'"/><br>';
-				$html .= '</td></tr>';
-			}else{
-				$html .= '<input type="text" size="13" name="'.$fieldname.'" value="'.$value.'"/>';
-			}
+			$html .= '<input type="text" size="13" name="'.$fieldname.'" value="'.$value.'"/>';
 		}
+
+		$html .= '</div>';
 
 		self::$logger->debug('<<renderDoubleField ['.$html.']');
 		return $html;
@@ -873,8 +839,8 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * (non-PHPdoc)
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderDEnumField()
 	 */
-	public function renderDEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
-		self::$logger->debug('>>renderDEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+	public function renderDEnumField($name, $label, $mode, $options, $value='') {
+		self::$logger->debug('>>renderDEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
 		global $config;
 
@@ -1032,8 +998,8 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 	 * (non-PHPdoc)
 	 * @see alpha/view/renderers/AlphaRendererProviderInterface::renderRelationField()
 	 */
-	public function renderRelationField($name, $label, $mode, $value='', $tableTags=true, $expanded=false, $buttons=true) {
-		self::$logger->debug('>>renderRelationField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'], expanded=['.$expanded.'], buttons=['.$buttons.'])');
+	public function renderRelationField($name, $label, $mode, $value='', $expanded=false, $buttons=true) {
+		self::$logger->debug('>>renderRelationField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], expanded=['.$expanded.'], buttons=['.$buttons.'])');
 
 		global $config;
 
@@ -1047,16 +1013,16 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 					// check to see if the rel is on this class
 					$rel->getSide(get_class($this->BO));
 					$widget = new RecordSelector($rel, $label, $name, get_class($this->BO));
-					$html .= $widget->render($tableTags, $expanded, $buttons);
+					$html .= $widget->render($expanded, $buttons);
 				}catch (IllegalArguementException $iae) {
 					// the rel may be on a parent class
 					$parentClassName = ucfirst($this->BO->getTableName()).'Object';
 					$widget = new RecordSelector($rel, $label, $name, $parentClassName);
-					$html .= $widget->render($tableTags, $expanded, $buttons);
+					$html .= $widget->render($expanded, $buttons);
 				}
 			}else{
 				$rel = new RecordSelector($rel, $label, $name);
-				$html .= $rel->render($tableTags, $expanded, $buttons);
+				$html .= $rel->render($expanded, $buttons);
 			}
 		}
 
@@ -1075,7 +1041,7 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 				}
 			}else{
 				$rel = new RecordSelector($rel, $label, $name);
-				$html .= $rel->render($tableTags, $expanded, $buttons);
+				$html .= $rel->render($expanded, $buttons);
 			}
 		}
 
