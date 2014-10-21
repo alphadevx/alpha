@@ -9,7 +9,7 @@
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2014, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -191,7 +191,7 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 
     	$dirtyObjects = $this->controller->getDirtyObjects();
 
-    	$this->assertEquals('http://unitTestUser/', $dirtyObjects[0]->get('URL'), 'Testing that objects are being added to the dirtyObject array correctly');	
+    	$this->assertEquals('http://unitTestUser/', $dirtyObjects[0]->get('URL'), 'Testing that objects are being added to the dirtyObject array correctly');
     }
 
 	/**
@@ -209,7 +209,7 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 
     	$dirty = $controller2->getDirtyObjects();
 
-    	$this->assertEquals('changed@test.com', $dirty[0]->get('email'), 'Testing that objects are being added to the dirtyObject array correctly and that this array is in the session being shared by controllers');	
+    	$this->assertEquals('changed@test.com', $dirty[0]->get('email'), 'Testing that objects are being added to the dirtyObject array correctly and that this array is in the session being shared by controllers');
     }
 
     /**
@@ -222,7 +222,7 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 
     	$newObjects = $this->controller->getNewObjects();
 
-    	$this->assertEquals('http://unitTestUser/', $newObjects[0]->get('URL'), 'Testing that objects are being added to the newObject array correctly');	
+    	$this->assertEquals('http://unitTestUser/', $newObjects[0]->get('URL'), 'Testing that objects are being added to the newObject array correctly');
     }
 
 	/**
@@ -241,7 +241,7 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
 
     	$new = $controller2->getNewObjects();
 
-    	$this->assertEquals('newuser@test.com', $new[0]->get('email'), 'Testing that objects are being added to the newObjects array correctly and that this array is in the session being shared by controllers');	
+    	$this->assertEquals('newuser@test.com', $new[0]->get('email'), 'Testing that objects are being added to the newObjects array correctly and that this array is in the session being shared by controllers');
     }
 
     /**
@@ -250,6 +250,7 @@ class AlphaController_Test extends PHPUnit_Framework_TestCase {
      * @since 1.0
      */
     public function testRightsAccess() {
+        $this->group = new RightsObject();
     	$this->group->set('name', 'testgroup');
     	$this->group->save();
 
