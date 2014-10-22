@@ -1,0 +1,2474 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Docs For Class AlphaDAOProviderInterface</title>
+	<link rel="stylesheet" type="text/css" href="../media/style.css">
+	<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+</head>
+<body>
+
+<table border="0" cellspacing="0" cellpadding="0" height="48" width="100%">
+  <tr>
+	<td class="header-top-left"><a href="http://www.alphaframework.org/"><img src="../media/logo.png" border="0" alt="Alpha Framework" /></a></td>
+    <td class="header-top-right">alpha--model<br /><div class="header-top-right-subpackage"></div></td>
+  </tr>
+  <tr><td colspan="2" class="header-line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+  <tr>
+    <td colspan="2" class="header-menu">
+      
+                                                                  
+                                                                                                                                                                                                                          		[ <a href="../classtrees_alpha--model.html" class="menu">class tree: alpha--model</a> ]
+		[ <a href="../elementindex_alpha--model.html" class="menu">index: alpha--model</a> ]
+            [ <a href="../elementindex.html" class="menu">all elements</a> ]
+    </td>
+  </tr>
+  <tr><td colspan="2" class="header-line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="table-layout:fixed;">
+  <tr valign="top">
+    <td width="195" class="menu">
+		<div class="package-title">alpha--model</div>
+      <b>Packages:</b><br />
+  <div class="package">
+              <a href="../li_alpha--controller.html">alpha--controller</a><br />
+              <a href="../li_alpha--controller--front.html">alpha--controller--front</a><br />
+              <a href="../li_alpha--exceptions.html">alpha--exceptions</a><br />
+              <a href="../li_alpha--model.html">alpha--model</a><br />
+              <a href="../li_alpha--model--types.html">alpha--model--types</a><br />
+              <a href="../li_alpha--service.html">alpha--service</a><br />
+              <a href="../li_alpha--tasks.html">alpha--tasks</a><br />
+              <a href="../li_alpha--tests.html">alpha--tests</a><br />
+              <a href="../li_alpha--util.html">alpha--util</a><br />
+              <a href="../li_alpha--util--cache.html">alpha--util--cache</a><br />
+              <a href="../li_alpha--util--convertors.html">alpha--util--convertors</a><br />
+              <a href="../li_alpha--util--feeds.html">alpha--util--feeds</a><br />
+              <a href="../li_alpha--util--filters.html">alpha--util--filters</a><br />
+              <a href="../li_alpha--util--graphs.html">alpha--util--graphs</a><br />
+              <a href="../li_alpha--util--helpers.html">alpha--util--helpers</a><br />
+              <a href="../li_alpha--util--metrics.html">alpha--util--metrics</a><br />
+              <a href="../li_alpha--view.html">alpha--view</a><br />
+              <a href="../li_alpha--view--widgets.html">alpha--view--widgets</a><br />
+      	</div>
+      <br />
+                        <b>Files:</b><br />
+        <div class="package">
+				<span style="padding-left: 1em;"><a href="../alpha--model/_model---AlphaDAO.inc.html">AlphaDAO.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--model/_model---AlphaDAOProviderFactory.inc.html">AlphaDAOProviderFactory.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--model/_model---AlphaDAOProviderInterface.inc.html">AlphaDAOProviderInterface.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--model/_model---AlphaDAOProviderMySQL.inc.html">AlphaDAOProviderMySQL.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--model/_model---ArticleCommentObject.inc.html">ArticleCommentObject.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--model/_model---ArticleObject.inc.html">ArticleObject.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--model/_model---ArticleVoteObject.inc.html">ArticleVoteObject.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--model/_model---BadRequestObject.inc.html">BadRequestObject.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--model/_model---BlacklistedClientObject.inc.html">BlacklistedClientObject.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--model/_model---PersonObject.inc.html">PersonObject.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--model/_model---RightsObject.inc.html">RightsObject.inc</a></span><br />
+			<span style="padding-left: 1em;"><a href="../alpha--model/_model---TagObject.inc.html">TagObject.inc</a></span><br />
+	  </div>
+            <br />
+            <b>Interfaces:</b><br />
+        <div class="package">
+		    		<a href="../alpha--model/AlphaDAOProviderInterface.html">AlphaDAOProviderInterface</a>    	 <br />
+	  </div>
+                  <b>Classes:</b><br />
+        <div class="package">
+		    		<a href="../alpha--model/AlphaDAO.html">AlphaDAO</a>    	 <br />
+	    		<a href="../alpha--model/AlphaDAOProviderFactory.html">AlphaDAOProviderFactory</a>    	 <br />
+	    		<a href="../alpha--model/AlphaDAOProviderMySQL.html">AlphaDAOProviderMySQL</a>    	 <br />
+	    		<a href="../alpha--model/ArticleCommentObject.html">ArticleCommentObject</a>    	 <br />
+	    		<a href="../alpha--model/ArticleObject.html">ArticleObject</a>    	 <br />
+	    		<a href="../alpha--model/ArticleVoteObject.html">ArticleVoteObject</a>    	 <br />
+	    		<a href="../alpha--model/BadRequestObject.html">BadRequestObject</a>    	 <br />
+	    		<a href="../alpha--model/BlacklistedClientObject.html">BlacklistedClientObject</a>    	 <br />
+	    		<a href="../alpha--model/PersonObject.html">PersonObject</a>    	 <br />
+	    		<a href="../alpha--model/RightsObject.html">RightsObject</a>    	 <br />
+	    		<a href="../alpha--model/TagObject.html">TagObject</a>    	 <br />
+	  </div>
+                </td>
+    <td width="800">
+      <table cellpadding="10" cellspacing="0" width="100%" border="0"><tr><td valign="top">
+
+<h1>Interface: AlphaDAOProviderInterface</h1>
+Source Location: /model/AlphaDAOProviderInterface.inc<br /><br />
+
+<h2 class="class-name">Interface AlphaDAOProviderInterface</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Interface Overview</div>
+	<div class="nav-bar">
+					<span class="disabled">Interface Overview</span>
+						
+													| <a href="#sec-method-summary">Method Summary</a> | <a href="#sec-methods">Methods Detail</a>
+								</div>
+	<div class="info-box-body">
+		<table width="100%" border="0">
+		<tr><td valign="top" width="60%" class="class-overview">
+
+        		<p class="short-description"><strong>An interface that defines all of the Data Access Object (DAO) methods that should be  included in a provider that implements this interface.
+</strong></p>
+
+		<p class="notes">
+			Located in <a class="field" href="_model---AlphaDAOProviderInterface.inc.html">/model/AlphaDAOProviderInterface.inc</a> [<span class="field">line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a48">48</a></span>]
+		</p>
+
+		
+		<pre></pre>
+
+		
+				<strong>Author(s):</strong>
+		<ul>
+		  			 			 <li>John Collins &lt;dev@alphaframework.org&gt;</li>
+			 		  			 		  			 		  			 		  			 		  		</ul>
+		
+		
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+				<tr><td><strong>Version:</strong>&nbsp;&nbsp;</td><td>$Id: AlphaDAOProviderInterface.inc 1453 2011-12-04 15:12:54Z johnc $</td></tr>
+				<tr><td><strong>Copyright:</strong>&nbsp;&nbsp;</td><td><p>Copyright (c) 2011, John Collins (founder of Alpha Framework).  All rights reserved.</p><p><pre> Redistribution and use in source and binary forms, with or
+ without modification, are permitted provided that the
+ following conditions are met:
+
+ * Redistributions of source code must retain the above
+   copyright notice, this list of conditions and the
+   following disclaimer.
+ * Redistributions in binary form must reproduce the above
+   copyright notice, this list of conditions and the
+   following disclaimer in the documentation and/or other
+   materials provided with the distribution.
+ * Neither the name of the Alpha Framework nor the names
+   of its contributors may be used to endorse or promote
+   products derived from this software without specific
+   prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+ CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</pre></p></td></tr>
+				<tr><td><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td></tr>
+				<tr><td><strong>License:</strong>&nbsp;&nbsp;</td><td><a href="http://www.opensource.org/licenses/bsd-license.php">The BSD License</a></td></tr>
+	</table>
+		</td>
+
+		
+				<td valign="top" width="20%" class="class-overview">
+		<p class="short-description"><strong><a href="#sec_methods">Methods</a></strong></p>
+		<ul>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodaddProperty">addProperty</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodbegin">begin</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodcheckBOTableExists">checkBOTableExists</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodcheckRecordExists">checkRecordExists</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodcheckTableExists">checkTableExists</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodcheckTableNeedsUpdate">checkTableNeedsUpdate</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodcommit">commit</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodcreateForeignIndex">createForeignIndex</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodcreateUniqueIndex">createUniqueIndex</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methoddelete">delete</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methoddisconnect">disconnect</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methoddropTable">dropTable</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodfindMissingFields">findMissingFields</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodgetConnection">getConnection</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodgetCount">getCount</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodgetIndexes">getIndexes</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodgetLastDatabaseError">getLastDatabaseError</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodgetMAX">getMAX</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodgetVersion">getVersion</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodisTableOverloaded">isTableOverloaded</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodload">load</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodloadAll">loadAll</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodloadAllByAttribute">loadAllByAttribute</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodloadAllByAttributes">loadAllByAttributes</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodloadAllByDayUpdated">loadAllByDayUpdated</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodloadAllFieldValuesByAttribute">loadAllFieldValuesByAttribute</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodloadByAttribute">loadByAttribute</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodmakeTable">makeTable</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodquery">query</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodrebuildTable">rebuildTable</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodreload">reload</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodrollback">rollback</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodsave">save</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodsaveAttribute">saveAttribute</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodsetBO">setBO</a></li>
+		  		  <li><a href="../alpha--model/AlphaDAOProviderInterface.html#methodsetEnumOptions">setEnumOptions</a></li>
+		  		</ul>
+		</td>
+		
+		</tr></table>
+		<div class="top">[ <a href="#top">Top</a> ]</div>
+	</div>
+</div>
+
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Class Overview</a>
+									    					| <span class="disabled">Method Summary</span> | <a href="#sec-methods">Methods Detail</a>
+		</div>
+		<div class="info-box-body">
+			<div class="method-summary">
+				<table border="0" cellspacing="0" cellpadding="0" class="method-summary">
+																				<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">void</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#begin" title="details" class="method-name">begin</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Starts a new database transaction.</td></tr>
+				</div>
+																<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">boolean</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#checkBOTableExists" title="details" class="method-name">checkBOTableExists</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Static method to check the database and see if the table for the indicated BO class name  exists (assumes table name will be $BOClassName less &quot;Object&quot;).</td></tr>
+				</div>
+																																								<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">void</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#commit" title="details" class="method-name">commit</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Commits the current database transaction.</td></tr>
+				</div>
+																																								<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">void</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#disconnect" title="details" class="method-name">disconnect</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Disconnects the current database connection if one exists (self::$connection is set)</td></tr>
+				</div>
+																																<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">mysqli</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#getConnection" title="details" class="method-name">getConnection</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Gets the current connection singleton, or creates a new one if none exists</td></tr>
+				</div>
+																																<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">string</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#getLastDatabaseError" title="details" class="method-name">getLastDatabaseError</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Returns the last database error string for the current connection.</td></tr>
+				</div>
+																																																																																																																																<div class="method-definition">
+					<tr><td class="method-definition">static
+											<span class="method-result">void</span>&nbsp;&nbsp;
+					</td>
+					<td class="method-definition"><a href="#rollback" title="details" class="method-name">rollback</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Aborts the current database transaction.</td></tr>
+				</div>
+																																																				<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#addProperty" title="details" class="method-name">addProperty</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Adds in a new class property without loosing existing data (does an ALTER TABLE query on the  database).</td></tr>
+				</div>
+																																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">boolean</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#checkRecordExists" title="details" class="method-name">checkRecordExists</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Checks that a record exists for the BO in the database.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">boolean</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#checkTableExists" title="details" class="method-name">checkTableExists</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Checks to see if the table exists in the database for the current business class.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">boolean</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#checkTableNeedsUpdate" title="details" class="method-name">checkTableNeedsUpdate</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Checks to see if the table in the database matches (for fields) the business class definition, i.e. if the  database table is in sync with the class definition.</td></tr>
+				</div>
+																								<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#createForeignIndex" title="details" class="method-name">createForeignIndex</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Creates a foreign key constraint (index) in the database on the given attribute.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#createUniqueIndex" title="details" class="method-name">createUniqueIndex</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Creates a unique index in the database on the given attribute(s).</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#delete" title="details" class="method-name">delete</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Deletes the current object from the database.</td></tr>
+				</div>
+																								<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#dropTable" title="details" class="method-name">dropTable</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Drops the table if the model requirements have changed.  All data is lost!</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#findMissingFields" title="details" class="method-name">findMissingFields</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Returns an array containing any properties on the class which have not been created on the database  table yet.</td></tr>
+				</div>
+																								<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">integer</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getCount" title="details" class="method-name">getCount</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Gets the count from the database for the amount of objects of this class.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getIndexes" title="details" class="method-name">getIndexes</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Gets an array of all of the names of the active database indexes for this class.</td></tr>
+				</div>
+																								<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">integer</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getMAX" title="details" class="method-name">getMAX</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Gets the maximum OID value from the database for this class type.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">integer</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getVersion" title="details" class="method-name">getVersion</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Gets the version_num of the object from the database (returns 0 if the BO is not saved yet).</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">bool</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#isTableOverloaded" title="details" class="method-name">isTableOverloaded</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Checks to see if the table name matches the classname, and if not if the table  name matches the classname name of another BO, i.e. the table is used to store  multiple types of BOs.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#load" title="details" class="method-name">load</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Populates the child object with the properties retrived from the database for the object $OID.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#loadAll" title="details" class="method-name">loadAll</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Loads all of the objects of this class into an array which is returned.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#loadAllByAttribute" title="details" class="method-name">loadAllByAttribute</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Loads all of the objects of this class by the specified attribute into an array which is returned.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#loadAllByAttributes" title="details" class="method-name">loadAllByAttributes</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Loads all of the objects of this class by the specified attributes into an array which is returned.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#loadAllByDayUpdated" title="details" class="method-name">loadAllByDayUpdated</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Loads all of the objects of this class that where updated (updated_ts value) on the date indicated.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#loadAllFieldValuesByAttribute" title="details" class="method-name">loadAllFieldValuesByAttribute</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Loads all of the specified attribute values of this class by the specified attribute into an  array which is returned.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#loadByAttribute" title="details" class="method-name">loadByAttribute</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Populates the child object from the database table by the given attribute value.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#makeTable" title="details" class="method-name">makeTable</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Builds a new database table for the BO class.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#query" title="details" class="method-name">query</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Returns a 2d array, where each element in the array is another array  representing a database row.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#rebuildTable" title="details" class="method-name">rebuildTable</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Re-builds the table if the model requirements have changed.  All data is lost!</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#reload" title="details" class="method-name">reload</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Reloads the object from the database, overwritting any attribute values in memory.</td></tr>
+				</div>
+																								<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#save" title="details" class="method-name">save</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Saves the object.  If $this-&gt;OID is empty or null it will INSERT, otherwise UPDATE.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#saveAttribute" title="details" class="method-name">saveAttribute</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Saves the field specified with the value supplied.  Only works for persistent BOs.  Note that no Alpha type  validation is performed with this method!</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setBO" title="details" class="method-name">setBO</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Provide the BO that we are going to map the data to from this provider.</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#setEnumOptions" title="details" class="method-name">setEnumOptions</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Populate all of the enum options for this object from the database.</td></tr>
+				</div>
+												</table>
+			</div>
+			<br /><div class="top">[ <a href="#top">Top</a> ]</div>
+		</div>
+	</div>
+
+
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Class Overview</a>
+																			| <a href="#sec-method-summary">Method Summary</a> | <span class="disabled">Methods Detail</span>
+					</div>
+		<div class="info-box-body">
+			<a name='method_detail'></a>
+<a name="methodbegin" id="begin"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">static method begin</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a381">381</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static void begin(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Starts a new database transaction.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>AlphaException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodcheckBOTableExists" id="checkBOTableExists"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">static method checkBOTableExists</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a292">292</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static boolean checkBOTableExists(
+string
+$BOClassName&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Static method to check the database and see if the table for the indicated BO class name  exists (assumes table name will be $BOClassName less &quot;Object&quot;).
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$BOClassName:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The name of the business object class we are checking.</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>AlphaException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodcommit" id="commit"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">static method commit</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a389">389</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static void commit(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Commits the current database transaction.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>FailedSaveException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methoddisconnect" id="disconnect"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">static method disconnect</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a62">62</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static void disconnect(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Disconnects the current database connection if one exists (self::$connection is set)
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetConnection" id="getConnection"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">static method getConnection</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a55">55</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static mysqli getConnection(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Gets the current connection singleton, or creates a new one if none exists
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetLastDatabaseError" id="getLastDatabaseError"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">static method getLastDatabaseError</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a70">70</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static string getLastDatabaseError(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Returns the last database error string for the current connection.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodrollback" id="rollback"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">static method rollback</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a397">397</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>static void rollback(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Aborts the current database transaction.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>AlphaException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+
+<a name="methodaddProperty" id="addProperty"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">addProperty</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a244">244</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void addProperty(
+string
+$propName&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Adds in a new class property without loosing existing data (does an ALTER TABLE query on the  database).
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$propName:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The name of the new field to add to the database table.</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>AlphaException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodcheckRecordExists" id="checkRecordExists"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">checkRecordExists</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a362">362</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>boolean checkRecordExists(
+int
+$OID&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Checks that a record exists for the BO in the database.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">int</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$OID:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The Object ID of the object we want to see whether it exists or not.</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>AlphaException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodcheckTableExists" id="checkTableExists"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">checkTableExists</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a281">281</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>boolean checkTableExists(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Checks to see if the table exists in the database for the current business class.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>AlphaException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodcheckTableNeedsUpdate" id="checkTableNeedsUpdate"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">checkTableNeedsUpdate</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a302">302</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>boolean checkTableNeedsUpdate(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Checks to see if the table in the database matches (for fields) the business class definition, i.e. if the  database table is in sync with the class definition.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>AlphaException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodcreateForeignIndex" id="createForeignIndex"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">createForeignIndex</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a333">333</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void createForeignIndex(
+string
+$attributeName, string
+$relatedClass, string
+$relatedClassAttribute, bool
+$allowNullValues&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Creates a foreign key constraint (index) in the database on the given attribute.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$attributeName:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The name of the attribute to apply the index on.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$relatedClass:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The name of the related class in the format &quot;NameObject&quot;.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$relatedClassAttribute:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The name of the field to relate to on the related class.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">bool</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$allowNullValues:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> For foreign key indexes that don't allow null values, set this to false (default is true).</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>FailedIndexCreateException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodcreateUniqueIndex" id="createUniqueIndex"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">createUniqueIndex</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a344">344</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void createUniqueIndex(
+string
+$attribute1Name, [string
+$attribute2Name = ''], [string
+$attribute3Name = '']&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Creates a unique index in the database on the given attribute(s).
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$attribute1Name:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The first attribute to mark unique in the database.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$attribute2Name:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The second attribute to mark unique in the databse (optional, use only for composite keys).</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$attribute3Name:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The third attribute to mark unique in the databse (optional, use only for composite keys).</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>FailedIndexCreateException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methoddelete" id="delete"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">delete</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a200">200</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void delete(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Deletes the current object from the database.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>FailedDeleteException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methoddropTable" id="dropTable"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">dropTable</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a234">234</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void dropTable(
+[string
+$tableName = null]&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Drops the table if the model requirements have changed.  All data is lost!
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$tableName:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> Optional table name, leave blank for the defined table for this class to be dropped</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>AlphaException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodfindMissingFields" id="findMissingFields"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">findMissingFields</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a312">312</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>array findMissingFields(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Returns an array containing any properties on the class which have not been created on the database  table yet.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>An array of missing fields in the database table.</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>AlphaException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetCount" id="getCount"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getCount</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a264">264</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>integer getCount(
+[
+$attributes = array()], [array
+$values = array()], array
+$atributes&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Gets the count from the database for the amount of objects of this class.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$atributes:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The attributes to count the objects by (optional).</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$values:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The values of the attributes to count the objects by (optional).</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type"></span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$attributes:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>AlphaException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetIndexes" id="getIndexes"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">getIndexes</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a321">321</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>array getIndexes(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Gets an array of all of the names of the active database indexes for this class.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>An array of database indexes on this table.</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>AlphaException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetMAX" id="getMAX"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getMAX</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a253">253</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>integer getMAX(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Gets the maximum OID value from the database for this class type.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>The maximum OID value in the class table.</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>AlphaException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetVersion" id="getVersion"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">getVersion</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a209">209</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>integer getVersion(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Gets the version_num of the object from the database (returns 0 if the BO is not saved yet).
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>BONotFoundException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodisTableOverloaded" id="isTableOverloaded"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">isTableOverloaded</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a373">373</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>bool isTableOverloaded(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Checks to see if the table name matches the classname, and if not if the table  name matches the classname name of another BO, i.e. the table is used to store  multiple types of BOs.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>BadBOTableNameException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodload" id="load"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">load</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a79">79</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void load(
+integer
+$OID&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Populates the child object with the properties retrived from the database for the object $OID.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$OID:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The object ID of the business object to load.</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>BONotFoundException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodloadAll" id="loadAll"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">loadAll</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a105">105</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>array loadAll(
+[integer
+$start = 0], [integer
+$limit = 0], [string
+$orderBy = 'OID'], [string
+$order = 'ASC'], [boolean
+$ignoreClassType = false]&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Loads all of the objects of this class into an array which is returned.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$start:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The start of the SQL LIMIT clause, useful for pagination.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$limit:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The amount (limit) of objects to load, useful for pagination.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$orderBy:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The name of the field to sort the objects by.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$order:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The order to sort the objects by.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">boolean</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$ignoreClassType:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> Default is false, set to true if you want to load from overloaded tables and ignore the class type</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>An array containing objects of this type of business object.</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>BONotFoundException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodloadAllByAttribute" id="loadAllByAttribute"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">loadAllByAttribute</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a123">123</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>array loadAllByAttribute(
+
+$attribute, string
+$value, [integer
+$start = 0], [integer
+$limit = 0], [string
+$orderBy = &quot;OID&quot;], [string
+$order = &quot;ASC&quot;], [boolean
+$ignoreClassType = false], [array
+$constructorArgs = array()], string
+$atribute&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Loads all of the objects of this class by the specified attribute into an array which is returned.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$atribute:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The attribute to load the objects by.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$value:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The value of the attribute to load the objects by.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$start:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The start of the SQL LIMIT clause, useful for pagination.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$limit:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The amount (limit) of objects to load, useful for pagination.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$orderBy:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The name of the field to sort the objects by.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$order:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The order to sort the objects by.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">boolean</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$ignoreClassType:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> Default is false, set to true if you want to load from overloaded tables and ignore the class type.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$constructorArgs:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> An optional array of contructor arguements to pass to the BOs that will be generated and returned.  Supports a maximum of 5 arguements.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type"></span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$attribute:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>An array containing objects of this type of business object.</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>BONotFoundException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>IllegalArguementException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodloadAllByAttributes" id="loadAllByAttributes"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">loadAllByAttributes</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a140">140</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>array loadAllByAttributes(
+[
+$attributes = array()], [array
+$values = array()], [integer
+$start = 0], [integer
+$limit = 0], [string
+$orderBy = 'OID'], [string
+$order = 'ASC'], [boolean
+$ignoreClassType = false], array
+$atributes&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Loads all of the objects of this class by the specified attributes into an array which is returned.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$atributes:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The attributes to load the objects by.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$values:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The values of the attributes to load the objects by.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$start:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The start of the SQL LIMIT clause, useful for pagination.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$limit:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The amount (limit) of objects to load, useful for pagination.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$orderBy:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The name of the field to sort the objects by.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$order:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The order to sort the objects by.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">boolean</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$ignoreClassType:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> Default is false, set to true if you want to load from overloaded tables and ignore the class type</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type"></span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$attributes:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>An array containing objects of this type of business object.</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>BONotFoundException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>IllegalArguementException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodloadAllByDayUpdated" id="loadAllByDayUpdated"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">loadAllByDayUpdated</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a155">155</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>array loadAllByDayUpdated(
+string
+$date, [integer
+$start = 0], [integer
+$limit = 0], [string
+$orderBy = &quot;OID&quot;], [string
+$order = &quot;ASC&quot;], [boolean
+$ignoreClassType = false]&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Loads all of the objects of this class that where updated (updated_ts value) on the date indicated.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$date:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The date for which to load the objects updated on, in the format 'YYYY-MM-DD'.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$start:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The start of the SQL LIMIT clause, useful for pagination.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$limit:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The amount (limit) of objects to load, useful for pagination.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$orderBy:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The name of the field to sort the objects by.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$order:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The order to sort the objects by.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">boolean</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$ignoreClassType:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> Default is false, set to true if you want to load from overloaded tables and ignore the class type</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>An array containing objects of this type of business object.</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>BONotFoundException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodloadAllFieldValuesByAttribute" id="loadAllFieldValuesByAttribute"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">loadAllFieldValuesByAttribute</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a170">170</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>array loadAllFieldValuesByAttribute(
+string
+$attribute, string
+$value, string
+$returnAttribute, [string
+$order = 'ASC'], [boolean
+$ignoreClassType = false]&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Loads all of the specified attribute values of this class by the specified attribute into an  array which is returned.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$attribute:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The attribute name to load the field values by.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$value:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The value of the attribute to load the field values by.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$returnAttribute:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The name of the attribute to return.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$order:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The order to sort the BOs by.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">boolean</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$ignoreClassType:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> Default is false, set to true if you want to load from overloaded tables and ignore the class type.</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>An array of field values.</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>BONotFoundException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodloadByAttribute" id="loadByAttribute"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">loadByAttribute</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a91">91</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void loadByAttribute(
+
+$attribute, string
+$value, [boolean
+$ignoreClassType = false], [array
+$loadAttributes = array()], string
+$atribute&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Populates the child object from the database table by the given attribute value.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$atribute:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The name of the attribute to load the object by.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$value:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The value of the attribute to load the object by.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">boolean</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$ignoreClassType:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> Default is false, set to true if you want to load from overloaded tables and ignore the class type</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$loadAttributes:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The attributes to load from the database to this object (leave blank to load all attributes)</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type"></span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$attribute:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>BONotFoundException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodmakeTable" id="makeTable"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">makeTable</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a217">217</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void makeTable(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Builds a new database table for the BO class.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>AlphaException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodquery" id="query"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">query</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a416">416</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>array query(
+string
+$sqlQuery&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Returns a 2d array, where each element in the array is another array  representing a database row.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$sqlQuery:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>CustomQueryException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodrebuildTable" id="rebuildTable"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">rebuildTable</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a225">225</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void rebuildTable(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Re-builds the table if the model requirements have changed.  All data is lost!
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>AlphaException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodreload" id="reload"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">reload</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a352">352</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void reload(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Reloads the object from the database, overwritting any attribute values in memory.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>AlphaException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsave" id="save"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">save</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a180">180</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void save(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Saves the object.  If $this-&gt;OID is empty or null it will INSERT, otherwise UPDATE.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>FailedSaveException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>LockingException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>ValidationException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsaveAttribute" id="saveAttribute"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">saveAttribute</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a192">192</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void saveAttribute(
+string
+$attribute, mixed
+$value&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Saves the field specified with the value supplied.  Only works for persistent BOs.  Note that no Alpha type  validation is performed with this method!
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$attribute:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The name of the attribute to save.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">mixed</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$value:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The value of the attribute to save.</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>IllegalArguementException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>FailedSaveException</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetBO" id="setBO"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">setBO</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a405">405</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setBO(
+<a href="../alpha--model/AlphaDAO.html">AlphaDAO</a>
+$BO&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Provide the BO that we are going to map the data to from this provider.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type"><a href="../alpha--model/AlphaDAO.html">AlphaDAO</a></span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$BO:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsetEnumOptions" id="setEnumOptions"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">setEnumOptions</span>&nbsp;&nbsp;<span class="smalllinenumber">[line <a href="../__filesource/fsource_alpha--model__modelAlphaDAOProviderInterface.inc.html#a272">272</a>]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void setEnumOptions(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p class="short-description"><strong>Populate all of the enum options for this object from the database.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Since:</strong>&nbsp;&nbsp;</td><td>1.1</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Throws:</strong>&nbsp;&nbsp;</td><td>AlphaException</td>
+  </tr>
+</table>
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+		</div>
+	</div>
+
+
+        <div class="credit">
+		    <hr class="separator" />
+		    Documentation generated on Tue, 13 Dec 2011 20:25:49 +0000 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+	      </div>
+      </td></tr></table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

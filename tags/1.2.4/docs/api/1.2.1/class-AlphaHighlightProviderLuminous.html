@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class AlphaHighlightProviderLuminous | Alpha Framework ${alpha.version.new} API Documentation</title>
+
+	<script type="text/javascript" src="resources/combined.js?197213082"></script>
+	<script type="text/javascript" src="elementlist.js?3859037951"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="http://www.alphaframework.org/" style="color:none; background-color:none;"><img src="resources/logo-small.png" /></a>
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Packages</h3>
+			<ul>
+				<li><a href="package-alpha..controller.html">alpha::controller</a>
+						</li>
+				<li><a href="package-alpha..controller..front.html">alpha::controller::front</a>
+						</li>
+				<li><a href="package-alpha..exceptions.html">alpha::exceptions</a>
+						</li>
+				<li><a href="package-alpha..model.html">alpha::model</a>
+						</li>
+				<li><a href="package-alpha..model..types.html">alpha::model::types</a>
+						</li>
+				<li><a href="package-alpha..tasks.html">alpha::tasks</a>
+						</li>
+				<li><a href="package-alpha..tests.html">alpha::tests</a>
+						</li>
+				<li><a href="package-alpha..util.html">alpha::util</a>
+						</li>
+				<li><a href="package-alpha..util..cache.html">alpha::util::cache</a>
+						</li>
+				<li class="active"><a href="package-alpha..util..codehighlight.html">alpha::util::codehighlight</a>
+						</li>
+				<li><a href="package-alpha..util..convertors.html">alpha::util::convertors</a>
+						</li>
+				<li><a href="package-alpha..util..feeds.html">alpha::util::feeds</a>
+						</li>
+				<li><a href="package-alpha..util..filters.html">alpha::util::filters</a>
+						</li>
+				<li><a href="package-alpha..util..graphs.html">alpha::util::graphs</a>
+						</li>
+				<li><a href="package-alpha..util..helpers.html">alpha::util::helpers</a>
+						</li>
+				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
+						</li>
+				<li><a href="package-alpha..view.html">alpha::view</a>
+						</li>
+				<li><a href="package-alpha..view..renderers.html">alpha::view::renderers</a>
+						</li>
+				<li><a href="package-alpha..view..widgets.html">alpha::view::widgets</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-AlphaHighlightProviderFactory.html">AlphaHighlightProviderFactory</a></li>
+				<li><a href="class-AlphaHighlightProviderGeshi.html">AlphaHighlightProviderGeshi</a></li>
+				<li class="active"><a href="class-AlphaHighlightProviderLuminous.html">AlphaHighlightProviderLuminous</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-AlphaHighlightProviderInterface.html">AlphaHighlightProviderInterface</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="package-alpha..util..codehighlight.html" title="Summary of alpha::util::codehighlight"><span>Package</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="deprecated.html" title="List of deprecated elements"><span>Deprecated</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class AlphaHighlightProviderLuminous</h1>
+
+
+	<div class="description">
+	
+<p>Wraps Luminous in the standard API defined in
+AlphaHighlightProviderInterface, for use in the Alpha CMS module. Note that
+Luminous is not included in Alpha, so you will need to download it from
+here:</p>
+
+<p>(PHP 5.3)</p>
+
+<p><a
+href="http://luminous.asgaard.co.uk/index.php/page/index">http://luminous.asgaard.co.uk/index.php/page/index</a></p>
+
+<p>(PHP 5.2, you will need to use the older version)</p>
+
+<p><a
+href="http://code.google.com/p/luminous/">http://code.google.com/p/luminous/</a></p>
+
+<p>Once downloaded, place in the [application]/lib/luminous directory which is
+where this class will attempt to load it from.</p>
+
+<p>Also note that Luminous requires it's own .css file to be loaded in the page
+that is displaying the highlighted code. The following callback in your
+controller will inject the desired .css file:</p>
+
+<p>public function during_displayPageHead_callback() { global $config;<br />
+$html = '&lt;link type="text/css" rel="StyleSheet"
+href="'.$config-&gt;get('app.url').'lib/luminous/style/luminous.css"&gt;';<br />
+return $html; }</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+<b><span>AlphaHighlightProviderLuminous</span></b>			
+			 implements 
+				<a href="class-AlphaHighlightProviderInterface.html"><span>AlphaHighlightProviderInterface</span></a>
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		<b>Package:</b> <a href="package-alpha..util..codehighlight.html">alpha::util::codehighlight</a><br />
+
+				<b>Copyright:</b>
+				Copyright (c) 2012, John Collins (founder of Alpha Framework). All rights
+reserved.
+<pre>
+Redistribution and use in source and binary forms, with or
+without modification, are permitted provided that the
+following conditions are met:
+
+* Redistributions of source code must retain the above
+  copyright notice, this list of conditions and the
+  following disclaimer.
+* Redistributions in binary form must reproduce the above
+  copyright notice, this list of conditions and the
+  following disclaimer in the documentation and/or other
+  materials provided with the distribution.
+* Neither the name of the Alpha Framework nor the names
+  of its contributors may be used to endorse or promote
+  products derived from this software without specific
+  prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre>
+<br />
+				<b>License:</b>
+				<a href="http://www.opensource.org/licenses/bsd-license.php">The BSD License</a><br />
+				<b>Author:</b>
+				John Collins &lt;<a
+href="mailto:dev&#64;alphaframework.org">dev&#64;<!---->alphaframework.org</a>&gt;<br />
+				<b>Version:</b>
+				$Id: AlphaHighlightProviderLuminous.inc 1548 2012-07-29 17:07:07Z alphadevx $<br />
+				<b>Since:</b>
+				1.2<br />
+		<b>Located at</b> <a href="source-class-AlphaHighlightProviderLuminous.html#5-96" title="Go to source code">util/codehighlight/AlphaHighlightProviderLuminous.inc</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="highlight" id="_highlight">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_highlight">#</a>
+		<code><a href="source-class-AlphaHighlightProviderLuminous.html#76-95" title="Go to source code">highlight</a>( <span>string <var>$source</var></span>, <span>string <var>$language</var></span> )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$source</var></dt>
+					<dd><code>string</code><br>$source The source code string.</dd>
+					<dt><var>$language</var></dt>
+					<dd><code>string</code><br>$language The language identifier that will be passed as-is to the implementing
+class.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br>The colour-highlighted code.<br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+				<h4>See</h4>
+				<div class="list">
+						alpha/util/codehighlight/AlphaHighlightProviderInterface::highlight()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaHighlightProviderInterface.html#_highlight">AlphaHighlightProviderInterface::highlight()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Alpha Framework ${alpha.version.new} API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>
