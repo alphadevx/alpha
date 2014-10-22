@@ -1,6 +1,125 @@
 Alpha Framework Change log
 ==========================
 
+Version 1.2.4 October 22nd 2014
+-------------------------------
+
+2014-10-15 23:38:35 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/151 - removed the tableTags params from the public AlphaRendererProviderInterface and RecordSelector methods, as HTML tables are no longer in use in these methods since switching to Bootstrap
+
+2014-08-27 22:03:08 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/137 - added caching support to the SearchProviderTags::getRelated() method
+
+2014-08-26 23:14:42 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/137 - added limited caching support to the SearchProviderTags class for searches on a single tag
+
+2014-08-25 23:22:31 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/101 - added an APC/APCu implementation of AlphaCacheProviderInterface
+
+2014-08-23 00:46:56 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/136 - added correct Content-Type header and caching headers to the Image::loadCache() method to ask the browser to cache the images
+
+2014-08-21 23:06:59 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/109 - added the Redis implementation of AlphaCacheProviderInterface, along with appropriate configuration settings, and updated the Memcache cache provider to read the port number from configuration and only connect on instantiation once rather than on each read/write call
+
+2014-07-27 22:19:32 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/160 - fixed a bug that resulted in the premature deletion of MANY-TO-MANY RelationLookup objects under certain conditions
+
+2014-07-27 22:19:07 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/160 - fixed a bug that resulted in the premature deletion of MANY-TO-MANY RelationLookup objects under certain conditions
+
+2014-07-27 15:11:52 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/159 - added the  param to AlphaDAOProviderInterface::loadAllByAttributes()
+
+2014-07-27 15:06:13 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/158 - added the RelationLookup::loadAllByAttributes() method
+
+2014-07-27 15:01:39 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/157 - String::isRequired() is now using the AlphaValidator::REQUIRED_STRING constant
+
+2014-07-27 14:57:01 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/156 - updated the Search controller to use the Bootstrap3 pagination CSS class
+
+2014-07-27 14:51:07 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/155 - added the optional  param to SearchProviderInterface::getRelated()
+
+2014-07-27 12:32:52 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/153 - added the Timestamp::getTimeAway() method
+
+2014-07-27 12:26:09 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/152 - the AlphaRendererProviderFactory now checks for the application/json in the Accept header before injecting in the new AlphaRendererProviderJSON instance
+
+2014-07-27 12:17:33 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/151 - removed the  param from AlphaRendererProviderInterface::renderTextField()
+
+2014-07-27 12:09:41 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/150 - success notifications are now dismissable via an x button
+
+2014-07-27 12:04:41 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/149 - removed more HTML table tags from the RecordSelector widget
+
+2014-07-27 11:59:09 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/148 - fixed StringBox to use disabled rather than readonly property for Bootstrap compatibility
+
+2014-07-20 21:28:43 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/146 - added the AlphaDAO::toArray() method
+
+2014-07-20 21:21:24 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/145 - Add a Session level of controller visibility and also added the AlphaController::generateURLSlug() method
+
+2014-05-07 23:31:04 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/142 - replaced JQuery UI CSS classses in the error page with Bootstrap CSS classes
+
+2014-05-05 21:11:40 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/141 - added support for security.encrypt.http.fieldnames setting
+
+2014-05-05 21:08:55 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/140 - added support for the allowCSSOverrides flag to the head template.
+
+2014-05-05 21:04:39 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/139 - fixed the JQuery for testing if a checkbox is checked or not
+
+2014-04-30 22:14:40 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/44 - fixed a bug resulting in the build number not being inserted into the generated API docs during Alpha release, and removed the alpha- prefix from tags
+
+2014-04-22 22:26:23 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/135 - added a logout link to the admin menu
+
+2014-04-12 19:53:04 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/123 - fixed a bug in the sample index.php file resulting in the header being rendered twice
+
+2014-04-11 23:32:12 GMT
+
+https://www.assembla.com/spaces/alpha-framework/tickets/123 - updated the CSS classes used in AlphaMarkdown::_doTable_callback() to use Bootstrap classes
+
 Version 1.2.3 April 22nd 2014
 -----------------------------
 
