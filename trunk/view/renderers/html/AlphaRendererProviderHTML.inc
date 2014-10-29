@@ -541,11 +541,12 @@ class AlphaRendererProviderHTML implements AlphaRendererProviderInterface {
 		if(!AlphaController::checkControllerDefExists(get_class($controller)))
 			throw new IllegalArguementException('The controller provided ['.get_class($controller).'] is not defined anywhere!');
 
+		$allowCSSOverrides = true;
+
 		if (isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
 			$allowCSSOverrides = false;
-		}else{
-			$allowCSSOverrides = true;
 		}
+
 		$html = AlphaView::loadTemplateFragment('html', 'head.phtml', array('title' => $controller->getTitle(), 'description' => $controller->getDescription(), 'allowCSSOverrides' => $allowCSSOverrides));
 
 		if(method_exists($controller, 'during_displayPageHead_callback'))
