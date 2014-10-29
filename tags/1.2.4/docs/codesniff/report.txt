@@ -1,0 +1,179 @@
+Buildfile: W:\alphaframework.org\alpha\build.xml
+
+Alpha > codesniff:
+
+[phpcodesniffer] The list of used sniffs (#116): 
+- Generic_Sniffs_Classes_DuplicateClassNameSniff
+- Generic_Sniffs_CodeAnalysis_EmptyStatementSniff
+- Generic_Sniffs_CodeAnalysis_ForLoopShouldBeWhileLoopSniff
+- Generic_Sniffs_CodeAnalysis_ForLoopWithTestFunctionCallSniff
+- Generic_Sniffs_CodeAnalysis_JumbledIncrementerSniff
+- Generic_Sniffs_CodeAnalysis_UnconditionalIfStatementSniff
+- Generic_Sniffs_CodeAnalysis_UnnecessaryFinalModifierSniff
+- Generic_Sniffs_CodeAnalysis_UnusedFunctionParameterSniff
+- Generic_Sniffs_CodeAnalysis_UselessOverridingMethodSniff
+- Generic_Sniffs_Commenting_TodoSniff
+- Generic_Sniffs_Formatting_DisallowMultipleStatementsSniff
+- Generic_Sniffs_Formatting_NoSpaceAfterCastSniff
+- Generic_Sniffs_Files_LineLengthSniff
+- Generic_Sniffs_Functions_CallTimePassByReferenceSniff
+- Generic_Sniffs_Functions_FunctionCallArgumentSpacingSniff
+- Generic_Sniffs_Functions_OpeningFunctionBraceKernighanRitchieSniff
+- Generic_Sniffs_Metrics_NestingLevelSniff
+- Generic_Sniffs_Metrics_CyclomaticComplexitySniff
+- Generic_Sniffs_NamingConventions_ConstructorNameSniff
+- Generic_Sniffs_NamingConventions_UpperCaseConstantNameSniff
+- Generic_Sniffs_PHP_ForbiddenFunctionsSniff
+- Generic_Sniffs_PHP_NoSilencedErrorsSniff
+- Generic_Sniffs_Strings_UnnecessaryStringConcatSniff
+- Squiz_Sniffs_Arrays_ArrayBracketSpacingSniff
+- Squiz_Sniffs_Arrays_ArrayDeclarationSniff
+- Squiz_Sniffs_Classes_ClassDeclarationSniff
+- Squiz_Sniffs_Classes_ClassFileNameSniff
+- Squiz_Sniffs_Classes_DuplicatePropertySniff
+- Squiz_Sniffs_Classes_LowercaseClassKeywordsSniff
+- Squiz_Sniffs_Classes_SelfMemberReferenceSniff
+- Squiz_Sniffs_Classes_ValidClassNameSniff
+- Squiz_Sniffs_CodeAnalysis_EmptyStatementSniff
+- Squiz_Sniffs_Commenting_BlockCommentSniff
+- Squiz_Sniffs_Commenting_ClosingDeclarationCommentSniff
+- Squiz_Sniffs_Commenting_DocCommentAlignmentSniff
+- Squiz_Sniffs_Commenting_EmptyCatchCommentSniff
+- Squiz_Sniffs_Commenting_FileCommentSniff
+- Squiz_Sniffs_Commenting_FunctionCommentSniff
+- Squiz_Sniffs_Commenting_FunctionCommentThrowTagSniff
+- Squiz_Sniffs_Commenting_InlineCommentSniff
+- Squiz_Sniffs_Commenting_PostStatementCommentSniff
+- Squiz_Sniffs_Commenting_VariableCommentSniff
+- Squiz_Sniffs_ControlStructures_ControlSignatureSniff
+- Squiz_Sniffs_ControlStructures_ElseIfDeclarationSniff
+- Squiz_Sniffs_ControlStructures_ForEachLoopDeclarationSniff
+- Squiz_Sniffs_ControlStructures_ForLoopDeclarationSniff
+- Squiz_Sniffs_ControlStructures_InlineIfDeclarationSniff
+- Squiz_Sniffs_ControlStructures_LowercaseDeclarationSniff
+- Squiz_Sniffs_ControlStructures_SwitchDeclarationSniff
+- Squiz_Sniffs_Debug_JavaScriptLintSniff
+- Squiz_Sniffs_Debug_JSLintSniff
+- Squiz_Sniffs_Files_FileExtensionSniff
+- Squiz_Sniffs_Formatting_OperatorBracketSniff
+- Squiz_Sniffs_Formatting_OutputBufferingIndentSniff
+- Squiz_Sniffs_Functions_FunctionDeclarationArgumentSpacingSniff
+- Squiz_Sniffs_Functions_FunctionDeclarationSniff
+- Squiz_Sniffs_Functions_FunctionDuplicateArgumentSniff
+- Squiz_Sniffs_Functions_GlobalFunctionSniff
+- Squiz_Sniffs_Functions_LowercaseFunctionKeywordsSniff
+- Squiz_Sniffs_Functions_MultiLineFunctionDeclarationSniff
+- Squiz_Sniffs_NamingConventions_ConstantCaseSniff
+- Squiz_Sniffs_NamingConventions_ValidFunctionNameSniff
+- Squiz_Sniffs_NamingConventions_ValidVariableNameSniff
+- Squiz_Sniffs_Objects_DisallowObjectStringIndexSniff
+- Squiz_Sniffs_Objects_ObjectInstantiationSniff
+- Squiz_Sniffs_Objects_ObjectMemberCommaSniff
+- Squiz_Sniffs_Operators_ComparisonOperatorUsageSniff
+- Squiz_Sniffs_Operators_IncrementDecrementUsageSniff
+- Squiz_Sniffs_Operators_ValidLogicalOperatorsSniff
+- Squiz_Sniffs_PHP_CommentedOutCodeSniff
+- Squiz_Sniffs_PHP_DisallowComparisonAssignmentSniff
+- Squiz_Sniffs_PHP_DisallowInlineIfSniff
+- Squiz_Sniffs_PHP_DisallowMultipleAssignmentsSniff
+- Squiz_Sniffs_PHP_DisallowObEndFlushSniff
+- Squiz_Sniffs_PHP_DisallowSizeFunctionsInLoopsSniff
+- Squiz_Sniffs_PHP_DiscouragedFunctionsSniff
+- Squiz_Sniffs_PHP_EmbeddedPhpSniff
+- Squiz_Sniffs_PHP_ForbiddenFunctionsSniff
+- Squiz_Sniffs_PHP_GlobalKeywordSniff
+- Squiz_Sniffs_PHP_HeredocSniff
+- Squiz_Sniffs_PHP_InnerFunctionsSniff
+- Squiz_Sniffs_PHP_LowercasePHPFunctionsSniff
+- Squiz_Sniffs_PHP_NonExecutableCodeSniff
+- Squiz_Sniffs_Scope_MemberVarScopeSniff
+- Squiz_Sniffs_Scope_MethodScopeSniff
+- Squiz_Sniffs_Scope_StaticThisUsageSniff
+- Squiz_Sniffs_Strings_ConcatenationSpacingSniff
+- Squiz_Sniffs_Strings_DoubleQuoteUsageSniff
+- Squiz_Sniffs_Strings_EchoedStringsSniff
+- Squiz_Sniffs_WhiteSpace_CastSpacingSniff
+- Squiz_Sniffs_WhiteSpace_ControlStructureSpacingSniff
+- Squiz_Sniffs_WhiteSpace_FunctionClosingBraceSpaceSniff
+- Squiz_Sniffs_WhiteSpace_FunctionOpeningBraceSpaceSniff
+- Squiz_Sniffs_WhiteSpace_FunctionSpacingSniff
+- Squiz_Sniffs_WhiteSpace_LanguageConstructSpacingSniff
+- Squiz_Sniffs_WhiteSpace_LogicalOperatorSpacingSniff
+- Squiz_Sniffs_WhiteSpace_MemberVarSpacingSniff
+- Squiz_Sniffs_WhiteSpace_ObjectOperatorSpacingSniff
+- Squiz_Sniffs_WhiteSpace_OperatorSpacingSniff
+- Squiz_Sniffs_WhiteSpace_PropertyLabelSpacingSniff
+- Squiz_Sniffs_WhiteSpace_ScopeClosingBraceSniff
+- Squiz_Sniffs_WhiteSpace_ScopeIndentSniff
+- Squiz_Sniffs_WhiteSpace_ScopeKeywordSpacingSniff
+- Squiz_Sniffs_WhiteSpace_SemicolonSpacingSniff
+- Squiz_Sniffs_WhiteSpace_SuperfluousWhitespaceSniff
+- Generic_Sniffs_ControlStructures_InlineControlStructureSniff
+- Generic_Sniffs_Formatting_SpaceAfterCastSniff
+- Generic_Sniffs_PHP_DisallowShortOpenTagSniff
+- Generic_Sniffs_WhiteSpace_DisallowTabIndentSniff
+- PEAR_Sniffs_ControlStructures_MultiLineConditionSniff
+- PEAR_Sniffs_Files_IncludingFileSniff
+- PEAR_Sniffs_Formatting_MultiLineAssignmentSniff
+- PEAR_Sniffs_Functions_FunctionCallSignatureSniff
+- Zend_Sniffs_Debug_CodeAnalyzerSniff
+- Generic_Sniffs_Files_LineEndingsSniff
+- Generic_Sniffs_Formatting_MultipleStatementAlignmentSniff
+
+[phpcodesniffer] W:\alphaframework.org\alpha\.\controller\Search.php: 1 warning detected
+[phpcodesniffer] WARNING in line 118 column 9: Function's nesting level (7) exceeds 5; consider refactoring the function
+[phpcodesniffer] W:\alphaframework.org\alpha\.\model\AlphaDAO.inc: 4 warnings detected
+[phpcodesniffer] WARNING in line 825 column 9: Function's nesting level (10) exceeds 5; consider refactoring the function
+[phpcodesniffer] WARNING in line 825 column 9: Function's cyclomatic complexity (37) exceeds 20; consider refactoring the function
+[phpcodesniffer] WARNING in line 2280 column 12: Function's nesting level (7) exceeds 5; consider refactoring the function
+[phpcodesniffer] WARNING in line 2280 column 12: Function's cyclomatic complexity (26) exceeds 20; consider refactoring the function
+[phpcodesniffer] W:\alphaframework.org\alpha\.\model\TagObject.inc: 1 warning detected
+[phpcodesniffer] WARNING in line 281 column 17: The method parameter $key is never used
+[phpcodesniffer] W:\alphaframework.org\alpha\.\tests\AlphaController_Test.php: 2 warnings detected
+[phpcodesniffer] WARNING in line 86 column 2: This comment is 47% valid code; is this commented out code?
+[phpcodesniffer] WARNING in line 99 column 2: This comment is 47% valid code; is this commented out code?
+[phpcodesniffer] W:\alphaframework.org\alpha\.\tests\AlphaView_Test.php: 2 warnings detected
+[phpcodesniffer] WARNING in line 61 column 2: This comment is 47% valid code; is this commented out code?
+[phpcodesniffer] WARNING in line 71 column 2: This comment is 47% valid code; is this commented out code?
+[phpcodesniffer] W:\alphaframework.org\alpha\.\tests\FrontController_Test.php: 2 warnings detected
+[phpcodesniffer] WARNING in line 60 column 2: This comment is 47% valid code; is this commented out code?
+[phpcodesniffer] WARNING in line 73 column 2: This comment is 47% valid code; is this commented out code?
+[phpcodesniffer] W:\alphaframework.org\alpha\.\tests\Text_Test.php: 1 warning detected
+[phpcodesniffer] WARNING in line 117 column 162: Line exceeds 160 characters; contains 161 characters
+[phpcodesniffer] W:\alphaframework.org\alpha\.\util\AlphaTCPDF.inc: 2 warnings detected
+[phpcodesniffer] WARNING in line 118 column 12: Function's nesting level (7) exceeds 5; consider refactoring the function
+[phpcodesniffer] WARNING in line 118 column 12: Function's cyclomatic complexity (77) exceeds 20; consider refactoring the function
+[phpcodesniffer] W:\alphaframework.org\alpha\.\util\TCPDFFacade.inc: 3 warnings detected
+[phpcodesniffer] WARNING in line 174 column 3: Comment refers to a TODO task "inject tags here?"
+[phpcodesniffer] WARNING in line 175 column 3: This comment is 75% valid code; is this commented out code?
+[phpcodesniffer] WARNING in line 216 column 11: The method parameter $attachURL is never used
+[phpcodesniffer] W:\alphaframework.org\alpha\.\util\feeds\Atom.inc: 2 warnings detected
+[phpcodesniffer] WARNING in line 82 column 2: This comment is 44% valid code; is this commented out code?
+[phpcodesniffer] WARNING in line 124 column 2: This comment is 44% valid code; is this commented out code?
+[phpcodesniffer] W:\alphaframework.org\alpha\.\util\feeds\RSS.inc: 2 warnings detected
+[phpcodesniffer] WARNING in line 93 column 2: This comment is 44% valid code; is this commented out code?
+[phpcodesniffer] WARNING in line 102 column 2: This comment is 44% valid code; is this commented out code?
+[phpcodesniffer] W:\alphaframework.org\alpha\.\view\AlphaView.inc: 2 warnings detected
+[phpcodesniffer] WARNING in line 717 column 165: Line exceeds 160 characters; contains 164 characters
+[phpcodesniffer] WARNING in line 1375 column 9: Function's cyclomatic complexity (26) exceeds 20; consider refactoring the function
+[phpcodesniffer] W:\alphaframework.org\alpha\.\view\ArticleCommentView.inc: 2 warnings detected
+[phpcodesniffer] WARNING in line 95 column 9: The method parameter $fields is never used
+[phpcodesniffer] WARNING in line 124 column 9: The method parameter $fields is never used
+[phpcodesniffer] W:\alphaframework.org\alpha\.\view\PersonView.inc: 1 warning detected
+[phpcodesniffer] WARNING in line 136 column 165: Line exceeds 160 characters; contains 164 characters
+[phpcodesniffer] W:\alphaframework.org\alpha\.\view\ViewState.inc: 1 warning detected
+[phpcodesniffer] WARNING in line 78 column 1: @var tag is not allowed in function comment
+[phpcodesniffer] W:\alphaframework.org\alpha\.\view\widgets\Image.inc: 2 warnings detected
+[phpcodesniffer] WARNING in line 238 column 162: Line exceeds 160 characters; contains 161 characters
+[phpcodesniffer] WARNING in line 240 column 162: Line exceeds 160 characters; contains 161 characters
+[phpcodesniffer] W:\alphaframework.org\alpha\.\view\widgets\RecordSelector.inc: 3 warnings detected
+[phpcodesniffer] WARNING in line 142 column 9: Function's nesting level (7) exceeds 5; consider refactoring the function
+[phpcodesniffer] WARNING in line 142 column 9: Function's cyclomatic complexity (24) exceeds 20; consider refactoring the function
+[phpcodesniffer] WARNING in line 394 column 166: Line exceeds 160 characters; contains 165 characters
+[phpcodesniffer] 140 files where checked
+[phpcodesniffer] 33 warnings detected
+
+BUILD FINISHED
+
+Total time: 2 minutes  4.74 seconds
+

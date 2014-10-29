@@ -1,0 +1,27 @@
+<table class="table table-bordered">
+	<tr>
+		<th>Class name</th>
+		<th>Table name</th>
+		<th>Table row count</th>
+		<th>Table exists?</th>
+		<th>Table needs updating?</th>
+	</tr>
+	<tr>
+		<td><?= $className ?></td>
+		<td><?= $tableName ?></td>
+		<td><?= $count ?></td>
+		<td><?= $tableExists ?></td>
+		<td><?= $tableNeedsUpdate ?></td>
+	</tr>
+	<tr>
+		<td colspan="5" class="centered spread">
+			<form action="<?= $formAction ?>" id="admin_<?= $className ?>" method="POST" accept-charset="UTF-8">
+				<?= $createButton ?>
+				<?= $listButton ?>
+				<?= $createTableButton ?>
+				<?= $recreateOrUpdateButtons ?>
+				<?= $formSecurityFields ?>
+			</form>
+		</td>
+	</tr>
+</table>
