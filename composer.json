@@ -1,0 +1,39 @@
+{
+    "name": "alpha/alpha",
+    "type": "framework",
+    "description": "Alpha Framework is a full-stack MVC framework for PHP",
+    "keywords": ["mvc","rest","http","framework","fullstack"],
+    "homepage": "http://www.alphaframework.org/",
+    "license": "BSD-2-Clause",
+    "authors": [
+        {
+            "name": "John Collins",
+            "email": "dev@alphaframework.org",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "dev@alphaframework.org",
+        "issues": "https://www.assembla.com/spaces/alpha-framework/tickets",
+        "wiki": "http://www.alphaframework.org/article/Documentation",
+        "source": "https://www.assembla.com/code/alpha-framework/subversion/nodes"
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "tecnick.com/tcpdf": "6.0.097",
+        "michelf/php-markdown": "1.4.0",
+        "themattharris/tmhoauth": "0.8.4",
+        "geshi/geshi": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.3.4"
+    },
+    "suggest": {
+        "ext-mcrypt": "Required for HTTP cookie encryption"
+    },
+    "autoload": {
+        "psr-0": {
+            "Alpha": "."
+        }
+    }
+}
