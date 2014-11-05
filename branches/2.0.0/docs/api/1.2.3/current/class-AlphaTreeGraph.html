@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class AlphaTreeGraph | Alpha Framework 1.2.4 API Documentation</title>
+
+	<script type="text/javascript" src="resources/combined.js?197213082"></script>
+	<script type="text/javascript" src="elementlist.js?2642798782"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="http://www.alphaframework.org/" style="color:none; background-color:none;"><img src="resources/logo-small.png" /></a>
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Packages</h3>
+			<ul>
+				<li><a href="package-alpha..controller.html">alpha::controller</a>
+						</li>
+				<li><a href="package-alpha..controller..front.html">alpha::controller::front</a>
+						</li>
+				<li><a href="package-alpha..exceptions.html">alpha::exceptions</a>
+						</li>
+				<li><a href="package-alpha..model.html">alpha::model</a>
+						</li>
+				<li><a href="package-alpha..model..types.html">alpha::model::types</a>
+						</li>
+				<li><a href="package-alpha..tasks.html">alpha::tasks</a>
+						</li>
+				<li><a href="package-alpha..tests.html">alpha::tests</a>
+						</li>
+				<li><a href="package-alpha..util.html">alpha::util</a>
+						</li>
+				<li><a href="package-alpha..util..cache.html">alpha::util::cache</a>
+						</li>
+				<li><a href="package-alpha..util..codehighlight.html">alpha::util::codehighlight</a>
+						</li>
+				<li><a href="package-alpha..util..convertors.html">alpha::util::convertors</a>
+						</li>
+				<li><a href="package-alpha..util..feeds.html">alpha::util::feeds</a>
+						</li>
+				<li><a href="package-alpha..util..filters.html">alpha::util::filters</a>
+						</li>
+				<li class="active"><a href="package-alpha..util..graphs.html">alpha::util::graphs</a>
+						</li>
+				<li><a href="package-alpha..util..helpers.html">alpha::util::helpers</a>
+						</li>
+				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
+						</li>
+				<li><a href="package-alpha..util..search.html">alpha::util::search</a>
+						</li>
+				<li><a href="package-alpha..view.html">alpha::view</a>
+						</li>
+				<li><a href="package-alpha..view..renderers.html">alpha::view::renderers</a>
+						</li>
+				<li><a href="package-alpha..view..widgets.html">alpha::view::widgets</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-AlphaGraphNode.html">AlphaGraphNode</a></li>
+				<li class="active"><a href="class-AlphaTreeGraph.html">AlphaTreeGraph</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="package-alpha..util..graphs.html" title="Summary of alpha::util::graphs"><span>Package</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="deprecated.html" title="List of deprecated elements"><span>Deprecated</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class AlphaTreeGraph</h1>
+
+
+	<div class="description">
+	
+<p>Maintains the geometry for a tree graph</p>
+
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		<b>Package:</b> <a href="package-alpha..util..graphs.html">alpha::util::graphs</a><br />
+
+				<b>Copyright:</b>
+				Copyright (c) 2012, John Collins (founder of Alpha Framework). All rights
+reserved.
+<pre>
+Redistribution and use in source and binary forms, with or
+without modification, are permitted provided that the
+following conditions are met:
+
+* Redistributions of source code must retain the above
+  copyright notice, this list of conditions and the
+  following disclaimer.
+* Redistributions in binary form must reproduce the above
+  copyright notice, this list of conditions and the
+  following disclaimer in the documentation and/or other
+  materials provided with the distribution.
+* Neither the name of the Alpha Framework nor the names
+  of its contributors may be used to endorse or promote
+  products derived from this software without specific
+  prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre>
+<br />
+				<b>License:</b>
+				<a href="http://www.opensource.org/licenses/bsd-license.php">The BSD License</a><br />
+				<b>Author:</b>
+				John Collins &lt;<a
+href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&gt;<br />
+				<b>Version:</b>
+				$Id: AlphaTreeGraph.inc 1496 2012-02-12 20:32:21Z alphadev $<br />
+				<b>Since:</b>
+				1.0<br />
+		<b>Located at</b> <a href="source-class-AlphaTreeGraph.html#3-440" title="Go to source code">util/graphs/AlphaTreeGraph.inc</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-AlphaTreeGraph.html#137-152" title="Go to source code">__construct</a>( <span>integer <var>$rowSpace</var> = <span class="php-num">40</span> </span>, <span>integer <var>$colSpace</var> = <span class="php-num">40</span></span>, <span>integer <var>$branchSpace</var> = <span class="php-num">80</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Constructor</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Constructor</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$rowSpace</var></dt>
+					<dd><code>integer</code><br>$rowSpace</dd>
+					<dt><var>$colSpace</var></dt>
+					<dd><code>integer</code><br>$colSpace</dd>
+					<dt><var>$branchSpace</var></dt>
+					<dd><code>integer</code><br>$branchSpace</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="add" id="_add">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_add">#</a>
+		<code><a href="source-class-AlphaTreeGraph.html#155-181" title="Go to source code">add</a>( <span>integer <var>$id</var></span>, <span>integer <var>$pid</var></span>, <span>string <var>$message</var> = <span class="php-quote">''</span></span>, <span>integer <var>$w</var> = <span class="php-num">0</span></span>, <span>integer <var>$h</var> = <span class="php-num">0</span></span>, <span>string <var>$nodeColour</var></span>, <span>string <var>$URL</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Add a new node to the graph</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add a new node to the graph</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$id</var></dt>
+					<dd><code>integer</code><br>$id</dd>
+					<dt><var>$pid</var></dt>
+					<dd><code>integer</code><br>$pid</dd>
+					<dt><var>$message</var></dt>
+					<dd><code>string</code><br>$message</dd>
+					<dt><var>$w</var></dt>
+					<dd><code>integer</code><br>$w</dd>
+					<dt><var>$h</var></dt>
+					<dd><code>integer</code><br>$h</dd>
+					<dt><var>$nodeColour</var></dt>
+					<dd><code>string</code><br>$nodeColour</dd>
+					<dt><var>$URL</var></dt>
+					<dd><code>string</code><br>$URL</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="firstPass" id="_firstPass">
+
+		<td class="attributes"><code>
+			 private 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_firstPass">#</a>
+		<code><a href="source-class-AlphaTreeGraph.html#183-223" title="Go to source code">firstPass</a>( <span><code><a href="class-AlphaGraphNode.html">AlphaGraphNode</a></code> <var>$node</var></span>, <span>integer <var>$level</var></span> )</code>
+
+		<div class="description short">
+			
+<p>The first pass of the graph</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>The first pass of the graph</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$node</var></dt>
+					<dd><code><code><a href="class-AlphaGraphNode.html">AlphaGraphNode</a></code></code><br>$node</dd>
+					<dt><var>$level</var></dt>
+					<dd><code>integer</code><br>$level</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="secondPass" id="_secondPass">
+
+		<td class="attributes"><code>
+			 private 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_secondPass">#</a>
+		<code><a href="source-class-AlphaTreeGraph.html#225-255" title="Go to source code">secondPass</a>( <span><code><a href="class-AlphaGraphNode.html">AlphaGraphNode</a></code> <var>$node</var></span>, <span>integer <var>$level</var></span>, <span>integer <var>$x</var> = <span class="php-num">0</span></span>, <span>integer <var>$y</var> = <span class="php-num">0</span></span> )</code>
+
+		<div class="description short">
+			
+<p>The second pass of the graph</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>The second pass of the graph</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$node</var></dt>
+					<dd><code><code><a href="class-AlphaGraphNode.html">AlphaGraphNode</a></code></code><br>$node</dd>
+					<dt><var>$level</var></dt>
+					<dd><code>integer</code><br>$level</dd>
+					<dt><var>$x</var></dt>
+					<dd><code>integer</code><br>$x</dd>
+					<dt><var>$y</var></dt>
+					<dd><code>integer</code><br>$y</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="layout" id="_layout">
+
+		<td class="attributes"><code>
+			 private 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_layout">#</a>
+		<code><a href="source-class-AlphaTreeGraph.html#257-317" title="Go to source code">layout</a>( <span><code><a href="class-AlphaGraphNode.html">AlphaGraphNode</a></code> <var>$node</var></span>, <span>integer <var>$level</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Handles the laying out of multi-branch trees</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Handles the laying out of multi-branch trees</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$node</var></dt>
+					<dd><code><code><a href="class-AlphaGraphNode.html">AlphaGraphNode</a></code></code><br>$node</dd>
+					<dt><var>$level</var></dt>
+					<dd><code>integer</code><br>$level</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setNeighbours" id="_setNeighbours">
+
+		<td class="attributes"><code>
+			 private 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setNeighbours">#</a>
+		<code><a href="source-class-AlphaTreeGraph.html#319-334" title="Go to source code">setNeighbours</a>( <span><code><a href="class-AlphaGraphNode.html">AlphaGraphNode</a></code> <var>$node</var></span>, <span>integer <var>$level</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Setup neighbour nodes</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Setup neighbour nodes</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$node</var></dt>
+					<dd><code><code><a href="class-AlphaGraphNode.html">AlphaGraphNode</a></code></code><br>$node</dd>
+					<dt><var>$level</var></dt>
+					<dd><code>integer</code><br>$level</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getLeftmost" id="_getLeftmost">
+
+		<td class="attributes"><code>
+			 private 
+			<code><a href="class-AlphaGraphNode.html">AlphaGraphNode</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getLeftmost">#</a>
+		<code><a href="source-class-AlphaTreeGraph.html#336-367" title="Go to source code">getLeftmost</a>( <span><code><a href="class-AlphaGraphNode.html">AlphaGraphNode</a></code> <var>$node</var></span>, <span>integer <var>$level</var></span>, <span>integer <var>$maxlevel</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Get left most node in the branch</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get left most node in the branch</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$node</var></dt>
+					<dd><code><code><a href="class-AlphaGraphNode.html">AlphaGraphNode</a></code></code><br>$node</dd>
+					<dt><var>$level</var></dt>
+					<dd><code>integer</code><br>$level</dd>
+					<dt><var>$maxlevel</var></dt>
+					<dd><code>integer</code><br>$maxlevel</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaGraphNode.html">AlphaGraphNode</a></code></code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="render" id="_render">
+
+		<td class="attributes"><code>
+			 protected 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_render">#</a>
+		<code><a href="source-class-AlphaTreeGraph.html#369-383" title="Go to source code">render</a>( )</code>
+
+		<div class="description short">
+			
+<p>Render the chart in memory</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Render the chart in memory</p>
+
+
+
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getWidth" id="_getWidth">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getWidth">#</a>
+		<code><a href="source-class-AlphaTreeGraph.html#385-395" title="Go to source code">getWidth</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the width of the graph, will invoke render() if not already rendered</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the width of the graph, will invoke render() if not already rendered</p>
+
+
+
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getHeight" id="_getHeight">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getHeight">#</a>
+		<code><a href="source-class-AlphaTreeGraph.html#397-407" title="Go to source code">getHeight</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the heith of the graph, will invoke render() if not already rendered</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the heith of the graph, will invoke render() if not already rendered</p>
+
+
+
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="next" id="_next">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-AlphaGraphNode.html">AlphaGraphNode</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_next">#</a>
+		<code><a href="source-class-AlphaTreeGraph.html#409-426" title="Go to source code">next</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the next AlphaGraphNode instance in the graph, will invoke render() if
+not already rendered</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the next AlphaGraphNode instance in the graph, will invoke render() if
+not already rendered</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaGraphNode.html">AlphaGraphNode</a></code></code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="hasNext" id="_hasNext">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_hasNext">#</a>
+		<code><a href="source-class-AlphaTreeGraph.html#428-439" title="Go to source code">hasNext</a>( )</code>
+
+		<div class="description short">
+			
+<p>Check to see if another AlphaGraphNode instance in the graph is available</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Check to see if another AlphaGraphNode instance in the graph is available</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="previousLevelNodes" id="$previousLevelNodes">
+		<td class="attributes"><code>
+			private  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaTreeGraph.html#49-55" title="Go to source code"><var>$previousLevelNodes</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$previousLevelNodes" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>An array of nodes on the previous level</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>An array of nodes on the previous level</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="nodes" id="$nodes">
+		<td class="attributes"><code>
+			private  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaTreeGraph.html#57-63" title="Go to source code"><var>$nodes</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$nodes" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>An array of nodes in this graph</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>An array of nodes in this graph</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="root" id="$root">
+		<td class="attributes"><code>
+			private  
+			<code><a href="class-AlphaGraphNode.html">AlphaGraphNode</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaTreeGraph.html#65-71" title="Go to source code"><var>$root</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$root" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The root node of the graph</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The root node of the graph</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="rowSpace" id="$rowSpace">
+		<td class="attributes"><code>
+			private  
+			integer
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaTreeGraph.html#73-79" title="Go to source code"><var>$rowSpace</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$rowSpace" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The amount of space between graph rows</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The amount of space between graph rows</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="colSpace" id="$colSpace">
+		<td class="attributes"><code>
+			private  
+			integer
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaTreeGraph.html#81-87" title="Go to source code"><var>$colSpace</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$colSpace" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The amount of space between graph columns</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The amount of space between graph columns</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="branchSpace" id="$branchSpace">
+		<td class="attributes"><code>
+			private  
+			integer
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaTreeGraph.html#89-95" title="Go to source code"><var>$branchSpace</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$branchSpace" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The amount of space between graph branches</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The amount of space between graph branches</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="isRendered" id="$isRendered">
+		<td class="attributes"><code>
+			private  
+			boolean
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaTreeGraph.html#97-103" title="Go to source code"><var>$isRendered</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">false</span></code></td>
+		<td class="description"><div>
+			<a href="#$isRendered" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Flag to track whether the chart is rendered or not</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Flag to track whether the chart is rendered or not</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="position" id="$position">
+		<td class="attributes"><code>
+			private  
+			integer
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaTreeGraph.html#105-111" title="Go to source code"><var>$position</var></a>
+		</td>
+		<td class="value"><code><span class="php-num">0</span></code></td>
+		<td class="description"><div>
+			<a href="#$position" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The index of the current node in the graph we are inspecting</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The index of the current node in the graph we are inspecting</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="height" id="$height">
+		<td class="attributes"><code>
+			private  
+			integer
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaTreeGraph.html#113-119" title="Go to source code"><var>$height</var></a>
+		</td>
+		<td class="value"><code><span class="php-num">0</span></code></td>
+		<td class="description"><div>
+			<a href="#$height" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The height of the graph</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The height of the graph</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="width" id="$width">
+		<td class="attributes"><code>
+			private  
+			integer
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaTreeGraph.html#121-127" title="Go to source code"><var>$width</var></a>
+		</td>
+		<td class="value"><code><span class="php-num">0</span></code></td>
+		<td class="description"><div>
+			<a href="#$width" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The width of the graph</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The width of the graph</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="logger" id="$logger">
+		<td class="attributes"><code>
+			private static 
+			<code><a href="class-Logger.html">Logger</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaTreeGraph.html#129-135" title="Go to source code"><var>$logger</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">null</span></code></td>
+		<td class="description"><div>
+			<a href="#$logger" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Trace logger</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Trace logger</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.0<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Alpha Framework 1.2.4 API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

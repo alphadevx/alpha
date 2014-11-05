@@ -1,0 +1,2343 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class AlphaDAOProviderSQLite | Alpha Framework 1.2.3 API Documentation</title>
+
+	<script type="text/javascript" src="resources/combined.js?197213082"></script>
+	<script type="text/javascript" src="elementlist.js?3363017373"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1370165062" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="http://www.alphaframework.org/" style="color:none; background-color:none;"><img src="resources/logo-small.png" /></a>
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Packages</h3>
+			<ul>
+				<li><a href="package-alpha..controller.html">alpha::controller</a>
+						</li>
+				<li><a href="package-alpha..controller..front.html">alpha::controller::front</a>
+						</li>
+				<li><a href="package-alpha..exceptions.html">alpha::exceptions</a>
+						</li>
+				<li class="active"><a href="package-alpha..model.html">alpha::model</a>
+						</li>
+				<li><a href="package-alpha..model..types.html">alpha::model::types</a>
+						</li>
+				<li><a href="package-alpha..tasks.html">alpha::tasks</a>
+						</li>
+				<li><a href="package-alpha..tests.html">alpha::tests</a>
+						</li>
+				<li><a href="package-alpha..util.html">alpha::util</a>
+						</li>
+				<li><a href="package-alpha..util..cache.html">alpha::util::cache</a>
+						</li>
+				<li><a href="package-alpha..util..codehighlight.html">alpha::util::codehighlight</a>
+						</li>
+				<li><a href="package-alpha..util..convertors.html">alpha::util::convertors</a>
+						</li>
+				<li><a href="package-alpha..util..feeds.html">alpha::util::feeds</a>
+						</li>
+				<li><a href="package-alpha..util..filters.html">alpha::util::filters</a>
+						</li>
+				<li><a href="package-alpha..util..graphs.html">alpha::util::graphs</a>
+						</li>
+				<li><a href="package-alpha..util..helpers.html">alpha::util::helpers</a>
+						</li>
+				<li><a href="package-alpha..util..metrics.html">alpha::util::metrics</a>
+						</li>
+				<li><a href="package-alpha..util..search.html">alpha::util::search</a>
+						</li>
+				<li><a href="package-alpha..view.html">alpha::view</a>
+						</li>
+				<li><a href="package-alpha..view..renderers.html">alpha::view::renderers</a>
+						</li>
+				<li><a href="package-alpha..view..widgets.html">alpha::view::widgets</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-ActionLogObject.html">ActionLogObject</a></li>
+				<li><a href="class-AlphaDAO.html">AlphaDAO</a></li>
+				<li><a href="class-AlphaDAOProviderFactory.html">AlphaDAOProviderFactory</a></li>
+				<li><a href="class-AlphaDAOProviderMySQL.html">AlphaDAOProviderMySQL</a></li>
+				<li class="active"><a href="class-AlphaDAOProviderSQLite.html">AlphaDAOProviderSQLite</a></li>
+				<li><a href="class-ArticleCommentObject.html">ArticleCommentObject</a></li>
+				<li><a href="class-ArticleObject.html">ArticleObject</a></li>
+				<li><a href="class-ArticleVoteObject.html">ArticleVoteObject</a></li>
+				<li><a href="class-BadRequestObject.html">BadRequestObject</a></li>
+				<li><a href="class-BlacklistedClientObject.html">BlacklistedClientObject</a></li>
+				<li><a href="class-BlacklistedIPObject.html">BlacklistedIPObject</a></li>
+				<li><a href="class-PersonObject.html">PersonObject</a></li>
+				<li><a href="class-RightsObject.html">RightsObject</a></li>
+				<li><a href="class-TagObject.html">TagObject</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-AlphaDAOProviderInterface.html">AlphaDAOProviderInterface</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="package-alpha..model.html" title="Summary of alpha::model"><span>Package</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="deprecated.html" title="List of deprecated elements"><span>Deprecated</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class AlphaDAOProviderSQLite</h1>
+
+
+	<div class="description">
+	
+<p>SQLite DAO provider (uses the SQLite3 native API in PHP).</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+<b><span>AlphaDAOProviderSQLite</span></b>			
+			 implements 
+				<a href="class-AlphaDAOProviderInterface.html"><span>AlphaDAOProviderInterface</span></a>
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		<b>Package:</b> <a href="package-alpha..model.html">alpha::model</a><br />
+
+				<b>Copyright:</b>
+				Copyright (c) 2012, John Collins (founder of Alpha Framework). All rights
+reserved.
+<pre>
+Redistribution and use in source and binary forms, with or
+without modification, are permitted provided that the
+following conditions are met:
+
+* Redistributions of source code must retain the above
+  copyright notice, this list of conditions and the
+  following disclaimer.
+* Redistributions in binary form must reproduce the above
+  copyright notice, this list of conditions and the
+  following disclaimer in the documentation and/or other
+  materials provided with the distribution.
+* Neither the name of the Alpha Framework nor the names
+  of its contributors may be used to endorse or promote
+  products derived from this software without specific
+  prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre>
+<br />
+				<b>License:</b>
+				<a href="http://www.opensource.org/licenses/bsd-license.php">The BSD License</a><br />
+				<b>Author:</b>
+				John Collins &lt;<a
+href="mailto:dev&#64;alphaframework.org">dev&#64;<!-- -->alphaframework.org</a>&gt;<br />
+				<b>Version:</b>
+				$Id: AlphaDAOProviderSQLite.inc 1693 2013-12-09 23:33:24Z alphadevx $<br />
+				<b>Since:</b>
+				1.2<br />
+		<b>Located at</b> <a href="source-class-AlphaDAOProviderSQLite.html#3-2011" title="Go to source code">model/AlphaDAOProviderSQLite.inc</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#72-82" title="Go to source code">__construct</a>( )</code>
+
+		<div class="description short">
+			
+<p>The constructor</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>The constructor</p>
+
+
+
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getConnection" id="_getConnection">
+
+		<td class="attributes"><code>
+			 public static
+			mysqli
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getConnection">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#84-100" title="Go to source code">getConnection</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mysqli</code><br />
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::getConnection()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_getConnection">AlphaDAOProviderInterface::getConnection()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="disconnect" id="_disconnect">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_disconnect">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#102-111" title="Go to source code">disconnect</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::disconnect()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_disconnect">AlphaDAOProviderInterface::disconnect()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getLastDatabaseError" id="_getLastDatabaseError">
+
+		<td class="attributes"><code>
+			 public static
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getLastDatabaseError">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#113-119" title="Go to source code">getLastDatabaseError</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::getLastDatabaseError()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_getLastDatabaseError">AlphaDAOProviderInterface::getLastDatabaseError()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="query" id="_query">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_query">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#121-140" title="Go to source code">query</a>( <span>string <var>$sqlQuery</var></span> )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sqlQuery</var></dt>
+					<dd><code>string</code><br>$sqlQuery</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-CustomQueryException.html">CustomQueryException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::query()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_query">AlphaDAOProviderInterface::query()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="load" id="_load">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_load">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#142-232" title="Go to source code">load</a>( <span>integer <var>$OID</var></span> )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$OID</var></dt>
+					<dd><code>integer</code><br>$OID The object ID of the business object to load.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BONotFoundException.html">BONotFoundException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::load()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_load">AlphaDAOProviderInterface::load()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="loadByAttribute" id="_loadByAttribute">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_loadByAttribute">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#234-346" title="Go to source code">loadByAttribute</a>( <span>string <var>$attribute</var></span>, <span>string <var>$value</var></span>, <span>boolean <var>$ignoreClassType</var> = <span class="php-keyword1">false</span></span>, <span>array <var>$loadAttributes</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$attribute</var></dt>
+					<dd><code>string</code><br>$atribute The name of the attribute to load the object by.</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>string</code><br>$value The value of the attribute to load the object by.</dd>
+					<dt><var>$ignoreClassType</var></dt>
+					<dd><code>boolean</code><br>$ignoreClassType Default is false, set to true if you want to load from
+overloaded tables and ignore the class type</dd>
+					<dt><var>$loadAttributes</var></dt>
+					<dd><code>array</code><br>$loadAttributes The attributes to load from the database to this object (leave
+blank to load all attributes)</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BONotFoundException.html">BONotFoundException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::loadByAttribute()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_loadByAttribute">AlphaDAOProviderInterface::loadByAttribute()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="loadAll" id="_loadAll">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_loadAll">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#348-402" title="Go to source code">loadAll</a>( <span>integer <var>$start</var> = <span class="php-num">0</span></span>, <span>integer <var>$limit</var> = <span class="php-num">0</span></span>, <span>string <var>$orderBy</var> = <span class="php-quote">'OID'</span></span>, <span>string <var>$order</var> = <span class="php-quote">'ASC'</span></span>, <span>boolean <var>$ignoreClassType</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$start</var></dt>
+					<dd><code>integer</code><br>$start The start of the SQL LIMIT clause, useful for pagination.</dd>
+					<dt><var>$limit</var></dt>
+					<dd><code>integer</code><br>$limit The amount (limit) of objects to load, useful for pagination.</dd>
+					<dt><var>$orderBy</var></dt>
+					<dd><code>string</code><br>$orderBy The name of the field to sort the objects by.</dd>
+					<dt><var>$order</var></dt>
+					<dd><code>string</code><br>$order The order to sort the objects by.</dd>
+					<dt><var>$ignoreClassType</var></dt>
+					<dd><code>boolean</code><br>$ignoreClassType Default is false, set to true if you want to load from
+overloaded tables and ignore the class type</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>An array containing objects of this type of business object.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BONotFoundException.html">BONotFoundException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::loadAll()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_loadAll">AlphaDAOProviderInterface::loadAll()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="loadAllByAttribute" id="_loadAllByAttribute">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_loadAllByAttribute">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#404-504" title="Go to source code">loadAllByAttribute</a>( <span>string <var>$attribute</var></span>, <span>string <var>$value</var></span>, <span>integer <var>$start</var> = <span class="php-num">0</span></span>, <span>integer <var>$limit</var> = <span class="php-num">0</span></span>, <span>string <var>$orderBy</var> = <span class="php-quote">&quot;OID&quot;</span></span>, <span>string <var>$order</var> = <span class="php-quote">&quot;ASC&quot;</span></span>, <span>boolean <var>$ignoreClassType</var> = <span class="php-keyword1">false</span></span>, <span>array <var>$constructorArgs</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$attribute</var></dt>
+					<dd><code>string</code><br>$atribute The attribute to load the objects by.</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>string</code><br>$value The value of the attribute to load the objects by.</dd>
+					<dt><var>$start</var></dt>
+					<dd><code>integer</code><br>$start The start of the SQL LIMIT clause, useful for pagination.</dd>
+					<dt><var>$limit</var></dt>
+					<dd><code>integer</code><br>$limit The amount (limit) of objects to load, useful for pagination.</dd>
+					<dt><var>$orderBy</var></dt>
+					<dd><code>string</code><br>$orderBy The name of the field to sort the objects by.</dd>
+					<dt><var>$order</var></dt>
+					<dd><code>string</code><br>$order The order to sort the objects by.</dd>
+					<dt><var>$ignoreClassType</var></dt>
+					<dd><code>boolean</code><br>$ignoreClassType Default is false, set to true if you want to load from
+overloaded tables and ignore the class type.</dd>
+					<dt><var>$constructorArgs</var></dt>
+					<dd><code>array</code><br>$constructorArgs An optional array of contructor arguements to pass to the BOs
+that will be generated and returned. Supports a maximum of 5 arguements.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>An array containing objects of this type of business object.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BONotFoundException.html">BONotFoundException</a></code></code><br />
+					<code><code><a href="class-IllegalArguementException.html">IllegalArguementException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::loadAllByAttribute()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_loadAllByAttribute">AlphaDAOProviderInterface::loadAllByAttribute()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="loadAllByAttributes" id="_loadAllByAttributes">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_loadAllByAttributes">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#506-592" title="Go to source code">loadAllByAttributes</a>( <span>array <var>$attributes</var> = <span class="php-keyword1">array</span>()</span>, <span>array <var>$values</var> = <span class="php-keyword1">array</span>()</span>, <span>integer <var>$start</var> = <span class="php-num">0</span></span>, <span>integer <var>$limit</var> = <span class="php-num">0</span></span>, <span>string <var>$orderBy</var> = <span class="php-quote">'OID'</span></span>, <span>string <var>$order</var> = <span class="php-quote">'ASC'</span></span>, <span>boolean <var>$ignoreClassType</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$attributes</var></dt>
+					<dd><code>array</code><br>$atributes The attributes to load the objects by.</dd>
+					<dt><var>$values</var></dt>
+					<dd><code>array</code><br>$values The values of the attributes to load the objects by.</dd>
+					<dt><var>$start</var></dt>
+					<dd><code>integer</code><br>$start The start of the SQL LIMIT clause, useful for pagination.</dd>
+					<dt><var>$limit</var></dt>
+					<dd><code>integer</code><br>$limit The amount (limit) of objects to load, useful for pagination.</dd>
+					<dt><var>$orderBy</var></dt>
+					<dd><code>string</code><br>$orderBy The name of the field to sort the objects by.</dd>
+					<dt><var>$order</var></dt>
+					<dd><code>string</code><br>$order The order to sort the objects by.</dd>
+					<dt><var>$ignoreClassType</var></dt>
+					<dd><code>boolean</code><br>$ignoreClassType Default is false, set to true if you want to load from
+overloaded tables and ignore the class type</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>An array containing objects of this type of business object.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BONotFoundException.html">BONotFoundException</a></code></code><br />
+					<code><code><a href="class-IllegalArguementException.html">IllegalArguementException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::loadAllByAttributes()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_loadAllByAttributes">AlphaDAOProviderInterface::loadAllByAttributes()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="loadAllByDayUpdated" id="_loadAllByDayUpdated">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_loadAllByDayUpdated">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#594-633" title="Go to source code">loadAllByDayUpdated</a>( <span>string <var>$date</var></span>, <span>integer <var>$start</var> = <span class="php-num">0</span></span>, <span>integer <var>$limit</var> = <span class="php-num">0</span></span>, <span>string <var>$orderBy</var> = <span class="php-quote">&quot;OID&quot;</span></span>, <span>string <var>$order</var> = <span class="php-quote">&quot;ASC&quot;</span></span>, <span>boolean <var>$ignoreClassType</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$date</var></dt>
+					<dd><code>string</code><br>$date The date for which to load the objects updated on, in the format
+'YYYY-MM-DD'.</dd>
+					<dt><var>$start</var></dt>
+					<dd><code>integer</code><br>$start The start of the SQL LIMIT clause, useful for pagination.</dd>
+					<dt><var>$limit</var></dt>
+					<dd><code>integer</code><br>$limit The amount (limit) of objects to load, useful for pagination.</dd>
+					<dt><var>$orderBy</var></dt>
+					<dd><code>string</code><br>$orderBy The name of the field to sort the objects by.</dd>
+					<dt><var>$order</var></dt>
+					<dd><code>string</code><br>$order The order to sort the objects by.</dd>
+					<dt><var>$ignoreClassType</var></dt>
+					<dd><code>boolean</code><br>$ignoreClassType Default is false, set to true if you want to load from
+overloaded tables and ignore the class type</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>An array containing objects of this type of business object.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BONotFoundException.html">BONotFoundException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::loadAllByDayUpdated()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_loadAllByDayUpdated">AlphaDAOProviderInterface::loadAllByDayUpdated()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="loadAllFieldValuesByAttribute" id="_loadAllFieldValuesByAttribute">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_loadAllFieldValuesByAttribute">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#635-669" title="Go to source code">loadAllFieldValuesByAttribute</a>( <span>string <var>$attribute</var></span>, <span>string <var>$value</var></span>, <span>string <var>$returnAttribute</var></span>, <span>string <var>$order</var> = <span class="php-quote">'ASC'</span></span>, <span>boolean <var>$ignoreClassType</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$attribute</var></dt>
+					<dd><code>string</code><br>$attribute The attribute name to load the field values by.</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>string</code><br>$value The value of the attribute to load the field values by.</dd>
+					<dt><var>$returnAttribute</var></dt>
+					<dd><code>string</code><br>$returnAttribute The name of the attribute to return.</dd>
+					<dt><var>$order</var></dt>
+					<dd><code>string</code><br>$order The order to sort the BOs by.</dd>
+					<dt><var>$ignoreClassType</var></dt>
+					<dd><code>boolean</code><br>$ignoreClassType Default is false, set to true if you want to load from
+overloaded tables and ignore the class type.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>An array of field values.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BONotFoundException.html">BONotFoundException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::loadAllFieldValuesByAttribute()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_loadAllFieldValuesByAttribute">AlphaDAOProviderInterface::loadAllFieldValuesByAttribute()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="save" id="_save">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_save">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#671-895" title="Go to source code">save</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-FailedSaveException.html">FailedSaveException</a></code></code><br />
+					<code><code><a href="class-LockingException.html">LockingException</a></code></code><br />
+					<code><code><a href="class-ValidationException.html">ValidationException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::save()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_save">AlphaDAOProviderInterface::save()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="saveAttribute" id="_saveAttribute">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_saveAttribute">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#897-935" title="Go to source code">saveAttribute</a>( <span>string <var>$attribute</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$attribute</var></dt>
+					<dd><code>string</code><br>$attribute The name of the attribute to save.</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>mixed</code><br>$value The value of the attribute to save.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-IllegalArguementException.html">IllegalArguementException</a></code></code><br />
+					<code><code><a href="class-FailedSaveException.html">FailedSaveException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::saveAttribute()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_saveAttribute">AlphaDAOProviderInterface::saveAttribute()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="saveHistory" id="_saveHistory">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_saveHistory">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#937-1001" title="Go to source code">saveHistory</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-FailedSaveException.html">FailedSaveException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::saveHistory()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_saveHistory">AlphaDAOProviderInterface::saveHistory()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="delete" id="_delete">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_delete">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1003-1027" title="Go to source code">delete</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-FailedDeleteException.html">FailedDeleteException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::delete()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_delete">AlphaDAOProviderInterface::delete()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getVersion" id="_getVersion">
+
+		<td class="attributes"><code>
+			 public 
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getVersion">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1029-1069" title="Go to source code">getVersion</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BONotFoundException.html">BONotFoundException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::getVersion()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_getVersion">AlphaDAOProviderInterface::getVersion()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="makeTable" id="_makeTable">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_makeTable">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1071-1171" title="Go to source code">makeTable</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::makeTable()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_makeTable">AlphaDAOProviderInterface::makeTable()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="makeHistoryTable" id="_makeHistoryTable">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_makeHistoryTable">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1173-1248" title="Go to source code">makeHistoryTable</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::makeHistoryTable()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_makeHistoryTable">AlphaDAOProviderInterface::makeHistoryTable()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rebuildTable" id="_rebuildTable">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_rebuildTable">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1250-1270" title="Go to source code">rebuildTable</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::rebuildTable()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_rebuildTable">AlphaDAOProviderInterface::rebuildTable()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="dropTable" id="_dropTable">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_dropTable">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1272-1293" title="Go to source code">dropTable</a>( <span>string <var>$tableName</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$tableName</var></dt>
+					<dd><code>string</code><br>$tableName Optional table name, leave blank for the defined table for this class
+to be dropped</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::dropTable()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_dropTable">AlphaDAOProviderInterface::dropTable()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addProperty" id="_addProperty">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addProperty">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1295-1363" title="Go to source code">addProperty</a>( <span>string <var>$propName</var></span> )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$propName</var></dt>
+					<dd><code>string</code><br>$propName The name of the new field to add to the database table.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::addProperty()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_addProperty">AlphaDAOProviderInterface::addProperty()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getMAX" id="_getMAX">
+
+		<td class="attributes"><code>
+			 public 
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getMAX">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1365-1392" title="Go to source code">getMAX</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>The maximum OID value in the class table.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::getMAX()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_getMAX">AlphaDAOProviderInterface::getMAX()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getCount" id="_getCount">
+
+		<td class="attributes"><code>
+			 public 
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getCount">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1394-1433" title="Go to source code">getCount</a>( <span>array <var>$attributes</var> = <span class="php-keyword1">array</span>()</span>, <span>array <var>$values</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$attributes</var></dt>
+					<dd><code>array</code><br>$atributes The attributes to count the objects by (optional).</dd>
+					<dt><var>$values</var></dt>
+					<dd><code>array</code><br>$values The values of the attributes to count the objects by (optional).</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::getCount()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_getCount">AlphaDAOProviderInterface::getCount()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getHistoryCount" id="_getHistoryCount">
+
+		<td class="attributes"><code>
+			 public 
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getHistoryCount">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1435-1460" title="Go to source code">getHistoryCount</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::getHistoryCount()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_getHistoryCount">AlphaDAOProviderInterface::getHistoryCount()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setEnumOptions" id="_setEnumOptions">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setEnumOptions">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1462-1471" title="Go to source code">setEnumOptions</a>( )</code>
+
+		<div class="description short">
+			
+<p>Given that Enum values are not saved in the database for SQLite, an
+implementation is not required here.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Given that Enum values are not saved in the database for SQLite, an
+implementation is not required here.</p>
+
+<p>(non-PHPdoc)</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-NotImplementedException.html">NotImplementedException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::setEnumOptions()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_setEnumOptions">AlphaDAOProviderInterface::setEnumOptions()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="checkTableExists" id="_checkTableExists">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_checkTableExists">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1473-1504" title="Go to source code">checkTableExists</a>( <span>boolean <var>$checkHistoryTable</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$checkHistoryTable</var></dt>
+					<dd><code>boolean</code><br>$checkHistoryTable Set to true if you want to check for the existance of the
+_history table for this DAO.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::checkTableExists()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_checkTableExists">AlphaDAOProviderInterface::checkTableExists()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="checkBOTableExists" id="_checkBOTableExists">
+
+		<td class="attributes"><code>
+			 public static
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_checkBOTableExists">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1506-1542" title="Go to source code">checkBOTableExists</a>( <span>string <var>$BOClassName</var></span>, <span>boolean <var>$checkHistoryTable</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$BOClassName</var></dt>
+					<dd><code>string</code><br>$BOClassName The name of the business object class we are checking.</dd>
+					<dt><var>$checkHistoryTable</var></dt>
+					<dd><code>boolean</code><br>$checkHistoryTable Set to true if you want to check for the existance of the
+_history table for this DAO.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::checkBOTableExists()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_checkBOTableExists">AlphaDAOProviderInterface::checkBOTableExists()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="checkTableNeedsUpdate" id="_checkTableNeedsUpdate">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_checkTableNeedsUpdate">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1544-1618" title="Go to source code">checkTableNeedsUpdate</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::checkTableNeedsUpdate()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_checkTableNeedsUpdate">AlphaDAOProviderInterface::checkTableNeedsUpdate()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="findMissingFields" id="_findMissingFields">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_findMissingFields">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1620-1679" title="Go to source code">findMissingFields</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>An array of missing fields in the database table.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::findMissingFields()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_findMissingFields">AlphaDAOProviderInterface::findMissingFields()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getIndexes" id="_getIndexes">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getIndexes">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1681-1704" title="Go to source code">getIndexes</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>An array of database indexes on this table.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::getIndexes()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_getIndexes">AlphaDAOProviderInterface::getIndexes()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="checkIndexes" id="_checkIndexes">
+
+		<td class="attributes"><code>
+			 private 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_checkIndexes">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1706-1756" title="Go to source code">checkIndexes</a>( )</code>
+
+		<div class="description short">
+			
+<p>Checks to see if all of the indexes are in place for the BO's table, creates
+those that are missing.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Checks to see if all of the indexes are in place for the BO's table, creates
+those that are missing.</p>
+
+
+
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.2<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="createForeignIndex" id="_createForeignIndex">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_createForeignIndex">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1758-1811" title="Go to source code">createForeignIndex</a>( <span>string <var>$attributeName</var></span>, <span>string <var>$relatedClass</var></span>, <span>string <var>$relatedClassAttribute</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Note that SQLite 3.6.19 is requrired for foreign key support.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Note that SQLite 3.6.19 is requrired for foreign key support.</p>
+
+<p>(non-PHPdoc)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$attributeName</var></dt>
+					<dd><code>string</code><br>$attributeName The name of the attribute to apply the index on.</dd>
+					<dt><var>$relatedClass</var></dt>
+					<dd><code>string</code><br>$relatedClass The name of the related class in the format "NameObject".</dd>
+					<dt><var>$relatedClassAttribute</var></dt>
+					<dd><code>string</code><br>$relatedClassAttribute The name of the field to relate to on the related class.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-FailedIndexCreateException.html">FailedIndexCreateException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::createForeignIndex()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_createForeignIndex">AlphaDAOProviderInterface::createForeignIndex()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="createUniqueIndex" id="_createUniqueIndex">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_createUniqueIndex">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1813-1840" title="Go to source code">createUniqueIndex</a>( <span>string <var>$attribute1Name</var></span>, <span>string <var>$attribute2Name</var> = <span class="php-quote">''</span></span>, <span>string <var>$attribute3Name</var> = <span class="php-quote">''</span></span> )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$attribute1Name</var></dt>
+					<dd><code>string</code><br>$attribute1Name The first attribute to mark unique in the database.</dd>
+					<dt><var>$attribute2Name</var></dt>
+					<dd><code>string</code><br>$attribute2Name The second attribute to mark unique in the databse (optional,
+use only for composite keys).</dd>
+					<dt><var>$attribute3Name</var></dt>
+					<dd><code>string</code><br>$attribute3Name The third attribute to mark unique in the databse (optional, use
+only for composite keys).</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-FailedIndexCreateException.html">FailedIndexCreateException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::createUniqueIndex()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_createUniqueIndex">AlphaDAOProviderInterface::createUniqueIndex()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="reload" id="_reload">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_reload">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1842-1856" title="Go to source code">reload</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::reload()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_reload">AlphaDAOProviderInterface::reload()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="checkRecordExists" id="_checkRecordExists">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_checkRecordExists">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1858-1894" title="Go to source code">checkRecordExists</a>( <span>integer <var>$OID</var></span> )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$OID</var></dt>
+					<dd><code>integer</code><br>$OID The Object ID of the object we want to see whether it exists or not.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::checkRecordExists()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_checkRecordExists">AlphaDAOProviderInterface::checkRecordExists()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isTableOverloaded" id="_isTableOverloaded">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isTableOverloaded">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1896-1951" title="Go to source code">isTableOverloaded</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BadBOTableNameException.html">BadBOTableNameException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::isTableOverloaded()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_isTableOverloaded">AlphaDAOProviderInterface::isTableOverloaded()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="begin" id="_begin">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_begin">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1953-1966" title="Go to source code">begin</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::begin()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_begin">AlphaDAOProviderInterface::begin()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="commit" id="_commit">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_commit">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1968-1981" title="Go to source code">commit</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-FailedSaveException.html">FailedSaveException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::commit()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_commit">AlphaDAOProviderInterface::commit()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rollback" id="_rollback">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_rollback">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#1983-2002" title="Go to source code">rollback</a>( )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-AlphaException.html">AlphaException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::rollback()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_rollback">AlphaDAOProviderInterface::rollback()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setBO" id="_setBO">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setBO">#</a>
+		<code><a href="source-class-AlphaDAOProviderSQLite.html#2004-2010" title="Go to source code">setBO</a>( <span><code><a href="class-AlphaDAO.html">AlphaDAO</a></code> <var>$BO</var></span> )</code>
+
+		<div class="description short">
+			
+<p>(non-PHPdoc)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>(non-PHPdoc)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$BO</var></dt>
+					<dd><code><code><a href="class-AlphaDAO.html">AlphaDAO</a></code></code><br>$BO</dd>
+				</dl></div>
+
+
+
+				<h4>See</h4>
+				<div class="list">
+						alpha/model/AlphaDAOProviderInterface::setBO()<br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-AlphaDAOProviderInterface.html#_setBO">AlphaDAOProviderInterface::setBO()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="logger" id="$logger">
+		<td class="attributes"><code>
+			private static 
+			<code><a href="class-Logger.html">Logger</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaDAOProviderSQLite.html#48-54" title="Go to source code"><var>$logger</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">null</span></code></td>
+		<td class="description"><div>
+			<a href="#$logger" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Trace logger</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Trace logger</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.2<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="connection" id="$connection">
+		<td class="attributes"><code>
+			private static 
+			SQLite3
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaDAOProviderSQLite.html#56-62" title="Go to source code"><var>$connection</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$connection" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Database connection</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Database connection</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.2<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="BO" id="$BO">
+		<td class="attributes"><code>
+			private  
+			<code><a href="class-AlphaDAO.html">AlphaDAO</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-AlphaDAOProviderSQLite.html#64-70" title="Go to source code"><var>$BO</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$BO" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The business object that we are mapping back to</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The business object that we are mapping back to</p>
+
+
+					<h4>Since</h4>
+					<div class="list">
+							1.2<br />
+					</div>
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Alpha Framework 1.2.3 API Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>
