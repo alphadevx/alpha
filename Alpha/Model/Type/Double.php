@@ -6,7 +6,7 @@ use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- * The String complex data type
+ * The Double complex data type
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
@@ -48,120 +48,97 @@ use Alpha\Exception\IllegalArguementException;
  * </pre>
  *
  */
-class String extends Type implements TypeInterface
+class Double extends Type implements TypeInterface
 {
 	/**
-	 * The value of the string
+	 * The value of the Double
+	 *
+	 * @var double
+	 * @since 1.0
+	 */
+ 	private $value;
+
+	/**
+	 * The validation rule (reg-ex) applied to Double values
 	 *
 	 * @var string
 	 * @since 1.0
 	 */
-	private $value;
+ 	private $validationRule;
 
 	/**
-	 * The validation rule for the string type
+	 * The error message for the Double type when validation fails
 	 *
 	 * @var string
 	 * @since 1.0
 	 */
-	private $validationRule;
+	protected $helper = 'Not a valid double value!';
 
 	/**
-	 * The error message for the string type when validation fails
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	protected $helper = 'Not a valid string value!';
-
-	/**
-	 * The size of the value for the this String
+	 * The size of the value for the Double
 	 *
 	 * @var integer
 	 * @since 1.0
 	 */
-	private $size = 255;
+	private $size = 13;
 
 	/**
-	 * The absolute maximum size of the value for the this String
+	 * The absolute maximum size of the value for the this double
 	 *
 	 * @var integer
 	 * @since 1.0
 	 */
-	const MAX_SIZE = 255;
-
-	/**
-	 * Simple boolean to determine if the string is a password or not
-	 *
-	 * @var boolean
-	 * @since 1.0
-	 */
-	private $password = false;
+	const MAX_SIZE = 13;
 
 	/**
 	 * Constructor
 	 *
-	 * @param string $val
+	 * @param double $val
 	 * @since 1.0
 	 * @throws Alpha\Exception\IllegalArguementException
 	 */
-	public function __construct($val='')
+	public function __construct($val=0.0)
 	{
+		$this->validationRule = Validator::REQUIRED_DOUBLE;
 
-		$this->validationRule = Validator::ALLOW_ALL;
+		if(!Validator::isDouble($val))
+			throw new IllegalArguementException($this->helper);
 
 		if (mb_strlen($val) <= $this->size) {
-			if (preg_match($this->validationRule, $val)) {
-				$this->value = $val;
-			}else{
-				throw new IllegalArguementException($this->helper);
-			}
+			$this->value = $val;
 		}else{
 			throw new IllegalArguementException($this->helper);
 		}
 	}
 
 	/**
-	 * Setter for the value
+	 * Setter for the Double value
 	 *
-	 * @param string $val
+	 * @param double $val
 	 * @since 1.0
 	 * @throws Alpha\Exception\IllegalArguementException
 	 */
 	public function setValue($val)
 	{
+		if(!Validator::isDouble($val))
+			throw new IllegalArguementException($this->helper);
 
 		if (mb_strlen($val) <= $this->size) {
-			if (preg_match($this->validationRule, $val)) {
-				$this->value = $val;
-			}else{
-				throw new IllegalArguementException($this->helper);
-			}
+			$this->value = $val;
 		}else{
 			throw new IllegalArguementException($this->helper);
 		}
 	}
 
 	/**
-	 * Getter for the value
+	 * Getter for the Double value
 	 *
-	 * @return string
+	 * @return double
 	 * @since 1.0
 	 */
 	public function getValue()
 	{
 		return $this->value;
-	}
-
-	/**
-	 * Setter to override the default validation rule
-	 *
-	 * @param string $rule
-	 * @since 1.0
-	 */
-	public function setRule($rule)
-	{
-		$this->validationRule = $rule;
 	}
 
 	/**
@@ -176,7 +153,7 @@ class String extends Type implements TypeInterface
 	}
 
 	/**
-	 * Used to set the allowable size of the String in the database field
+	 * Used to set the allowable size of the Double in the database field
 	 *
 	 * @param integer $size
 	 * @since 1.0
@@ -187,60 +164,34 @@ class String extends Type implements TypeInterface
 		if ($size <= self::MAX_SIZE) {
 			$this->size = $size;
 		}else{
-			throw new IllegalArguementException('Error: the value '.$size.' provided by setSize is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
+			throw new IllegalArguementException('The value '.$size.' provided by setSize is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
 		}
 	}
 
 	/**
 	 * Get the allowable size of the Double in the database field
 	 *
-	 * @return integer
+	 * @param boolean $databaseDimension
+	 * @return mixed
 	 * @since 1.0
 	 */
-	public function getSize()
+	public function getSize($databaseDimension=false)
 	{
-		return $this->size;
+		if($databaseDimension)
+			return $this->size.',2';
+		else
+			return $this->size;
 	}
 
 	/**
-	 * Sets up an appropriate validation rule for a required field
+	 * Used to convert the object to a printable string
 	 *
-	 * @param bool $req
+	 * @return string
 	 * @since 1.0
 	 */
-	public function isRequired($req=true)
+	public function __toString()
 	{
-		if ($req) {
-			$this->validationRule = Validator::REQUIRED_STRING;
-			$this->helper = 'This string requires a value!';
-		}
-	}
-
-	/**
-	 * Define the string as a password (making it required by validation rule)
-	 *
-	 * @param boolean $pass
-	 * @since 1.0
-	 */
-	public function isPassword($pass=true)
-	{
-		$this->password = $pass;
-
-		if($pass) {
-			$this->validationRule = '/\w+/';
-			$this->helper = 'Password is required!';
-		}
-	}
-
-	/**
-	 * Checks to see if the string is a password or not
-	 *
-	 * @return boolean
-	 * @since 1.0
-	 */
-	public function checkIsPassword()
-	{
-		return $this->password;
+		return strval(sprintf("%01.2f", $this->value));
 	}
 }
 

@@ -45,7 +45,6 @@ namespace Alpha\Exception;
  * </pre>
  *
  */
-class IllegalArguementException extends \Exception {
-}
+class IllegalArguementException extends \Exception {}
 
 ?>

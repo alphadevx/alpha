@@ -50,7 +50,8 @@ use Alpha\Util\Config\ConfigProvider;
  * </pre>
  *
  */
-class DateTest extends \PHPUnit_Framework_TestCase {
+class DateTest extends \PHPUnit_Framework_TestCase
+{
 
 	/**
 	 * An Date for testing
@@ -67,8 +68,8 @@ class DateTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    protected function setUp() {
-
+    protected function setUp()
+    {
     	$config = ConfigProvider::getInstance();
 
     	// override setting to ensure dates default to now
@@ -84,7 +85,8 @@ class DateTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    protected function tearDown() {
+    protected function tearDown()
+    {
         unset($this->date1);
     }
 
@@ -93,7 +95,8 @@ class DateTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testDefaultDateValue() {
+    public function testDefaultDateValue()
+    {
     	$this->assertEquals(date("Y-m-d"), $this->date1->getValue(), "testing the constructor has set the Date to today by default");
     }
 
@@ -102,7 +105,8 @@ class DateTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testSetValuePass() {
+    public function testSetValuePass()
+    {
     	$this->date1->setDateValue(2000, 1, 1);
 
     	$this->assertEquals("2000-01-01", $this->date1->getValue(), "testing the setValue method");
@@ -113,7 +117,8 @@ class DateTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testSetValueInvalidMonth() {
+    public function testSetValueInvalidMonth()
+    {
     	try {
     		$this->date1->setDateValue(2000, 'blah', 1);
     		$this->fail("testing the setValue method with a bad month");
@@ -129,7 +134,8 @@ class DateTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testSetValueInvalidValue() {
+    public function testSetValueInvalidValue()
+    {
     	try {
     		$this->date1->setDateValue(2000, 13, 1);
     		$this->fail("testing the setValue method with a bad date value (out of range)");
@@ -145,7 +151,8 @@ class DateTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testPopulateFromString() {
+    public function testPopulateFromString()
+    {
     	$this->date1->populateFromString("2007-08-13");
 
     	$this->assertEquals("2007-08-13", $this->date1->getValue(), "testing the populateFromString method");
@@ -183,7 +190,8 @@ class DateTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testValidationOnConstructor() {
+    public function testValidationOnConstructor()
+    {
     	try {
     		$date = new Date("blah");
     		$this->fail("testing that the validation will cause an invalid date to fail on the constructor");
@@ -197,7 +205,8 @@ class DateTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testGetEuroValue() {
+    public function testGetEuroValue()
+    {
     	$this->assertEquals(date("d/m/y"), $this->date1->getEuroValue(), "testing the getEuroValue method for converting to European date format");
     }
 
@@ -206,7 +215,8 @@ class DateTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testGetWeekday() {
+    public function testGetWeekday()
+    {
     	$this->assertEquals(date('l'), $this->date1->getWeekday(), "testing the getWeekday() method when the default constructor is used");
     }
 
@@ -215,7 +225,8 @@ class DateTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.2.1
      */
-    public function testGetUnixValue() {
+    public function testGetUnixValue()
+    {
         $date = new Date('2012-12-10');
 
         $this->assertEquals('1355097600', $date->getUnixValue(), 'testing the getUnixValue() method');
@@ -226,7 +237,8 @@ class DateTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.2.1
      */
-    public function testGetUSValue() {
+    public function testGetUSValue()
+    {
         $this->assertEquals(date("m/d/y"), $this->date1->getUSValue(), "testing the getUSValue method for converting to US date format");
     }
 }

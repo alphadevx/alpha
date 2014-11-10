@@ -48,7 +48,8 @@ use Alpha\Exception\IllegalArguementException;
  * </pre>
  *
  */
-class ConfigProvider {
+class ConfigProvider
+{
 	/**
 	 * Array to store the config variables
 	 *
@@ -70,7 +71,7 @@ class ConfigProvider {
 	 *
 	 * @since 1.0
 	 */
-	private function __construct () {}
+	private function __construct() {}
 
 	/**
 	 * Get the config object instance
@@ -78,7 +79,8 @@ class ConfigProvider {
 	 * @return Alpha\Util\Config\ConfigProvider
 	 * @since 1.0
 	 */
-	public static function getInstance() {
+	public static function getInstance()
+	{
 		if (!isset(self::$instance)) {
 			self::$instance = new ConfigProvider();
 			self::$instance->setRootPath();
@@ -104,10 +106,11 @@ class ConfigProvider {
 	 *
 	 * @param $key string
 	 * @return string
-	 * @throws use Alpha\Exception\IllegalArguementException;
+	 * @throws Alpha\Exception\IllegalArguementException;
 	 * @since 1.0
 	 */
-	public function get($key) {
+	public function get($key)
+	{
 		if(array_key_exists($key, $this->configVars))
 			return $this->configVars[$key];
 		else
@@ -121,7 +124,8 @@ class ConfigProvider {
 	 * @param $val string
 	 * @since 1.0
 	 */
-	public function set($key, $val) {
+	public function set($key, $val)
+	{
 		/*
 		 * If you need to alter a config option after it has been set in the .ini
 		 * files, you can override this class and implement this callback method
@@ -137,7 +141,8 @@ class ConfigProvider {
 	 *
 	 * @since 1.0
 	 */
-	private function setRootPath() {
+	private function setRootPath()
+	{
 		$currentScript = __FILE__;
 
 		// reverse the slashes in case we are running on Windows
@@ -175,7 +180,8 @@ class ConfigProvider {
 	 *
 	 * @since 1.0
 	 */
-	private function setIncludePath() {
+	private function setIncludePath()
+	{
 		$config = self::getInstance();
 		$rootPath = $config->get('rootPath');
 
@@ -188,7 +194,8 @@ class ConfigProvider {
 	 *
 	 * @since 1.0
 	 */
-	private function loadConfig() {
+	private function loadConfig()
+	{
 		$rootPath = $this->get('rootPath');
 
 		// first we need to see if we are in dev, pro or test environment

@@ -45,14 +45,16 @@ namespace Alpha\Model\Type;
  * </pre>
  *
  */
-abstract class Type {
+abstract class Type
+{
 	/**
 	 * Used to get the validation helper message string
 	 *
 	 * @return string
 	 * @since 1.0
 	 */
-	public function getHelper() {
+	public function getHelper()
+	{
 		return $this->helper;
 	}
 
@@ -62,7 +64,8 @@ abstract class Type {
 	 * @param string $helper
 	 * @since 1.0
 	 */
-	public function setHelper($helper) {
+	public function setHelper($helper)
+	{
 		$this->helper = $helper;
 	}
 
@@ -72,7 +75,8 @@ abstract class Type {
 	 * @return string
 	 * @since 1.0
 	 */
-	public function __toString() {
+	public function __toString()
+	{
 		return strval($this->getValue());
 	}
 }
