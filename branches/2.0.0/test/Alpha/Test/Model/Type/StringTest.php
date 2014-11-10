@@ -50,7 +50,8 @@ use Alpha\Exception\IllegalArguementException;
  * </pre>
  *
  */
-class StringTest extends \PHPUnit_Framework_TestCase {
+class StringTest extends \PHPUnit_Framework_TestCase
+{
 	/**
 	 * A String for testing
 	 *
@@ -90,7 +91,8 @@ class StringTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    protected function setUp() {
+    protected function setUp()
+    {
         $this->str1 = new String();
     }
 
@@ -101,7 +103,8 @@ class StringTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    protected function tearDown() {
+    protected function tearDown()
+    {
         unset($this->str1);
     }
 
@@ -110,7 +113,8 @@ class StringTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testConstructorPass() {
+    public function testConstructorPass()
+    {
     	$this->str1 = new String('A String Value!');
 
     	$this->assertEquals('A String Value!', $this->str1->getValue(), "testing the String constructor for pass");
@@ -121,7 +125,8 @@ class StringTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testSetUsernameValueInvalid() {
+    public function testSetUsernameValueInvalid()
+    {
     	try {
     		$this->str1->setRule(Validator::REQUIRED_USERNAME);
     		$this->str1->setSize(70);
@@ -141,7 +146,8 @@ class StringTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testSetUsernameValueValid() {
+    public function testSetUsernameValueValid()
+    {
     	try {
     		$this->str1->setRule(Validator::REQUIRED_USERNAME);
     		$this->str1->setSize(70);
@@ -158,7 +164,8 @@ class StringTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testSetEmailValueInvalid() {
+    public function testSetEmailValueInvalid()
+    {
     	try {
     		$this->str1->setRule(Validator::REQUIRED_EMAIL);
     		$this->str1->setSize(70);
@@ -178,7 +185,8 @@ class StringTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testSetEmailValueValid() {
+    public function testSetEmailValueValid()
+    {
     	try {
     		$this->str1->setRule(Validator::REQUIRED_EMAIL);
     		$this->str1->setSize(70);
@@ -204,7 +212,8 @@ class StringTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testSetURLValueInvalid() {
+    public function testSetURLValueInvalid()
+    {
     	try {
     		$this->str1->setRule(Validator::OPTIONAL_HTTP_URL);
 			$this->str1->setHelper($this->urlHelper);
@@ -223,7 +232,8 @@ class StringTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testSetURLValueValid() {
+    public function testSetURLValueValid()
+    {
     	try {
     		$this->str1->setRule(Validator::OPTIONAL_HTTP_URL);
 			$this->str1->setHelper($this->urlHelper);
@@ -244,7 +254,8 @@ class StringTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testSetSizeInvalid() {
+    public function testSetSizeInvalid()
+    {
     	$this->str1 = new String();
     	$this->str1->setSize(4);
 
@@ -263,7 +274,8 @@ class StringTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testToString() {
+    public function testToString()
+    {
     	$this->str1 = new String('__toString result');
 
     	$this->assertEquals('The value of __toString result', 'The value of '.$this->str1, 'testing the __toString method');
@@ -274,7 +286,8 @@ class StringTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testIsPassword() {
+    public function testIsPassword()
+    {
     	$this->str1->isPassword();
 
     	$this->assertTrue($this->str1->checkIsPassword(), 'testing to see if the password setter/inspector is working');
@@ -285,7 +298,8 @@ class StringTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testIsPasswordRequired() {
+    public function testIsPasswordRequired()
+    {
     	$this->str1->isPassword();
 
     	try {

@@ -49,7 +49,8 @@ use Alpha\Exception\IllegalArguementException;
  * </pre>
  *
  */
-class ConfigProviderTest extends \PHPUnit_Framework_TestCase {
+class ConfigProviderTest extends \PHPUnit_Framework_TestCase
+{
 	/**
 	 * A copy of the global config singleton that we will use for testing
 	 *
@@ -64,7 +65,8 @@ class ConfigProviderTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    protected function setUp() {
+    protected function setUp()
+    {
     	$config = ConfigProvider::getInstance();
 
     	$this->configCopy = clone $config;
@@ -77,7 +79,8 @@ class ConfigProviderTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    protected function tearDown() {
+    protected function tearDown()
+    {
     	unset($this->configCopy);
     }
 
@@ -86,7 +89,8 @@ class ConfigProviderTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testGetInstance() {
+    public function testGetInstance()
+    {
     	$config1 = ConfigProvider::getInstance();
     	$config2 = ConfigProvider::getInstance();
 
@@ -100,7 +104,8 @@ class ConfigProviderTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testGetBad() {
+    public function testGetBad()
+    {
     	try {
     		$this->configCopy->get('keyDoesNotExist');
     		$this->fail('Testing that attempting to access a config value that is not set will cause an exception');

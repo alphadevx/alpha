@@ -45,7 +45,8 @@ namespace Alpha\Util\Helper;
  * </pre>
  *
  */
-class Validator {
+class Validator
+{
 	/**
 	 * Allows any kind of input, including blanks
 	 *
@@ -165,7 +166,8 @@ class Validator {
 	 * @return boolean
 	 * @since 1.0
 	 */
-	public static function isInteger($value) {
+	public static function isInteger($value)
+	{
 		if (preg_match(self::REQUIRED_INTEGER, $value))
 			return (is_numeric($value) ? intval($value) == $value : false);
 		else
@@ -179,7 +181,8 @@ class Validator {
 	 * @return boolean
 	 * @since 1.0
 	 */
-	public static function isDouble($value) {
+	public static function isDouble($value)
+	{
 		if (preg_match(self::REQUIRED_DOUBLE, $value))
 			return (is_numeric($value) ? doubleval($value) == $value : false);
 		else
@@ -193,7 +196,8 @@ class Validator {
 	 * @return boolean
 	 * @since 1.0
 	 */
-	public static function isBoolean($value) {
+	public static function isBoolean($value)
+	{
 		$acceptable = array(true, false, "true", "false", 1, 0, "1", "0");
 
 		if(!in_array($value, $acceptable, true))
@@ -209,7 +213,8 @@ class Validator {
 	 * @return boolean
 	 * @since 1.0
 	 */
-	public static function isAlpha($value) {
+	public static function isAlpha($value)
+	{
 		if(preg_match(self::REQUIRED_ALPHA, $value))
 			return true;
 		else
@@ -223,7 +228,8 @@ class Validator {
 	 * @return boolean
 	 * @since 1.0
 	 */
-	public static function isAlphaNum($value) {
+	public static function isAlphaNum($value)
+	{
 		if(preg_match(self::REQUIRED_ALPHA_NUMBEIC, $value))
 			return true;
 		else
@@ -237,7 +243,8 @@ class Validator {
 	 * @return boolean
 	 * @since 1.0
 	 */
-	public static function isSequence($value) {
+	public static function isSequence($value)
+	{
 		if(preg_match(self::REQUIRED_SEQUENCE, $value))
 			return true;
 		else
@@ -251,7 +258,8 @@ class Validator {
 	 * @return boolean
 	 * @since 1.0
 	 */
-	public static function isURL($url) {
+	public static function isURL($url)
+	{
 		if(preg_match(self::REQUIRED_HTTP_URL, $url)) {
 			if(!filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED))
 				return false;
@@ -269,7 +277,8 @@ class Validator {
 	 * @return boolean
 	 * @since 1.0
 	 */
-	public static function isIP($ip) {
+	public static function isIP($ip)
+	{
 		if(preg_match(self::REQUIRED_IP, $ip)) {
 			if(!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
 				return false;
@@ -287,7 +296,8 @@ class Validator {
 	 * @return boolean
 	 * @since 1.0
 	 */
-	public static function isEmail($email) {
+	public static function isEmail($email)
+	{
 		if(preg_match(self::REQUIRED_EMAIL, $email)) {
 			if(!filter_var($email, FILTER_VALIDATE_EMAIL))
 				return false;
@@ -305,7 +315,8 @@ class Validator {
 	 * @return boolean
 	 * @since 1.2.2
 	 */
-	public static function isBase64($value) {
+	public static function isBase64($value)
+	{
 		return (bool)preg_match('/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/', $value);
 	}
 }

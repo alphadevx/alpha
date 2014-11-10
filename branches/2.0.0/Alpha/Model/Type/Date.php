@@ -49,8 +49,8 @@ use Alpha\Util\Config\ConfigProvider;
  * </pre>
  *
  */
-class Date extends Type implements TypeInterface {
-
+class Date extends Type implements TypeInterface
+{
 	/**
 	 * The year part
 	 *
@@ -106,8 +106,8 @@ class Date extends Type implements TypeInterface {
 	 * @since 1.0
 	 * @throws Alpha\Exception\IllegalArguementException
 	 */
- 	public function __construct($date='') {
-
+ 	public function __construct($date='')
+ 	{
  		$config = ConfigProvider::getInstance();
 
  		$this->validationRule = Validator::ALLOW_ALL;
@@ -139,7 +139,8 @@ class Date extends Type implements TypeInterface {
  	 * @since 1.0
  	 * @throws Alpha\Exception\IllegalArguementException
  	 */
- 	public function setValue($date) {
+ 	public function setValue($date)
+ 	{
  		$this->populateFromString($date);
  	}
 
@@ -152,7 +153,8 @@ class Date extends Type implements TypeInterface {
  	 * @throws Alpha\Exception\IllegalArguementException
  	 * @since 1.0
  	 */
- 	public function setDateValue($year, $month, $day) {
+ 	public function setDateValue($year, $month, $day)
+ 	{
  		$valid = null;
 
  		if (!preg_match('/^[0-9]{4}$/', $year))
@@ -181,7 +183,8 @@ class Date extends Type implements TypeInterface {
  	 * @return string
  	 * @since 1.0
  	 */
- 	public function getValue() {
+ 	public function getValue()
+ 	{
  		return $this->year.'-'.$this->month.'-'.$this->day;
  	}
 
@@ -191,7 +194,8 @@ class Date extends Type implements TypeInterface {
  	 * @return integer
  	 * @since 1.0
  	 */
- 	public function getUnixValue() {
+ 	public function getUnixValue()
+ 	{
  		return mktime(0, 0, 0, $this->month, $this->day, $this->year);
  	}
 
@@ -201,7 +205,8 @@ class Date extends Type implements TypeInterface {
  	 * @return string
  	 * @since 1.0
  	 */
- 	public function getEuroValue() {
+ 	public function getEuroValue()
+ 	{
  		return $this->day.'/'.$this->month.'/'.mb_substr($this->year, 2, 2);
  	}
 
@@ -211,7 +216,8 @@ class Date extends Type implements TypeInterface {
  	 * @return string
  	 * @since 1.0
  	 */
- 	public function getUSValue() {
+ 	public function getUSValue()
+ 	{
  		return $this->month.'/'.$this->day.'/'.mb_substr($this->year, 2, 2);
  	}
 
@@ -221,7 +227,8 @@ class Date extends Type implements TypeInterface {
  	 * @return integer
  	 * @since 1.0
  	 */
- 	public function getYear() {
+ 	public function getYear()
+ 	{
  		return $this->year;
  	}
 
@@ -231,7 +238,8 @@ class Date extends Type implements TypeInterface {
  	 * @return integer
  	 * @since 1.0
  	 */
- 	public function getMonth() {
+ 	public function getMonth()
+ 	{
  		return $this->month;
  	}
 
@@ -241,7 +249,8 @@ class Date extends Type implements TypeInterface {
  	 * @return integer
  	 * @since 1.0
  	 */
- 	public function getDay() {
+ 	public function getDay()
+ 	{
  		return $this->day;
  	}
 
@@ -251,7 +260,8 @@ class Date extends Type implements TypeInterface {
  	 * @return string
  	 * @since 1.0
  	 */
- 	public function getWeekday() {
+ 	public function getWeekday()
+ 	{
  		return $this->weekday;
  	}
 
@@ -262,7 +272,8 @@ class Date extends Type implements TypeInterface {
  	 * @throws Alpha\Exception\IllegalArguementException
  	 * @since 1.0
  	 */
- 	public function populateFromString($date) {
+ 	public function populateFromString($date)
+ 	{
  		$valid = null;
 
  		if($date == '' || $date == '0000-00-00') {
@@ -317,7 +328,8 @@ class Date extends Type implements TypeInterface {
  	 * @return string
  	 * @since 1.0
  	 */
- 	public function getRule() {
+ 	public function getRule()
+ 	{
 		return $this->validationRule;
 	}
 
@@ -327,7 +339,8 @@ class Date extends Type implements TypeInterface {
 	 * @param string $rule
 	 * @since 1.0
 	 */
-	public function setRule($rule) {
+	public function setRule($rule)
+	{
 		$this->validationRule = $rule;
 	}
 }

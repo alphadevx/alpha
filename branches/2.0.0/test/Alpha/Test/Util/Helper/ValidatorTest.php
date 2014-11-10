@@ -48,13 +48,15 @@ use Alpha\Util\Helper\Validator;
  * </pre>
  *
  */
-class ValidatorTest extends \PHPUnit_Framework_TestCase {
+class ValidatorTest extends \PHPUnit_Framework_TestCase
+{
     /**
      * Validate that the provided value is a valid integer
      *
      * @since 1.0
      */
-    public function testIsInteger() {
+    public function testIsInteger()
+    {
         $this->assertTrue(Validator::isInteger(100));
 		$this->assertTrue(Validator::isInteger(-100));
 		$this->assertTrue(Validator::isInteger(0));
@@ -71,7 +73,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testIsDouble() {
+    public function testIsDouble()
+    {
         $this->assertTrue(Validator::isDouble(10.0));
 		$this->assertTrue(Validator::isDouble(-10.0));
 		$this->assertTrue(Validator::isDouble(0.10));
@@ -85,7 +88,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testIsBoolean() {
+    public function testIsBoolean()
+    {
         $this->assertTrue(Validator::isBoolean(true));
 		$this->assertTrue(Validator::isBoolean(1));
 		$this->assertTrue(Validator::isBoolean(0));
@@ -99,7 +103,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testIsAlpha() {
+    public function testIsAlpha()
+    {
         $this->assertTrue(Validator::isAlpha('test'));
 		$this->assertTrue(Validator::isAlpha('Test'));
 		$this->assertTrue(Validator::isAlpha('TEST'));
@@ -113,7 +118,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testIsAlphaNum() {
+    public function testIsAlphaNum()
+    {
         $this->assertTrue(Validator::isAlphaNum('test1'));
 		$this->assertTrue(Validator::isAlphaNum('1Test'));
 		$this->assertTrue(Validator::isAlphaNum('1TEST1'));
@@ -127,7 +133,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testIsURL() {
+    public function testIsURL()
+    {
         $this->assertTrue(Validator::isURL('http://www.alphaframework.org'));
 		$this->assertTrue(Validator::isURL('http://www.alphaframework.org/controller/View.php?some=value'));
 		$this->assertTrue(Validator::isURL('http://alphaframework.org/'));
@@ -141,7 +148,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testIsIP() {
+    public function testIsIP()
+    {
         $this->assertTrue(Validator::isIP('127.0.0.1'));
 		$this->assertTrue(Validator::isIP('254.254.254.254'));
 		$this->assertTrue(Validator::isIP('100.100.100.100'));
@@ -155,7 +163,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testIsEmail() {
+    public function testIsEmail()
+    {
         $this->assertTrue(Validator::isEmail('nobody@alphaframework.org'));
 		$this->assertTrue(Validator::isEmail('no.body@alphaframework.com'));
 		$this->assertTrue(Validator::isEmail('no_body1@alphaframework.net'));
@@ -169,7 +178,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.0
      */
-    public function testIsSequence() {
+    public function testIsSequence()
+    {
     	$this->assertTrue(Validator::isSequence('BARS-150'));
     	$this->assertTrue(Validator::isSequence('ALPH-15'));
     	$this->assertTrue(Validator::isSequence('DESI-1'));
@@ -183,7 +193,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
      *
      * @since 1.2.3
      */
-    public function testIsBase64() {
+    public function testIsBase64()
+    {
         $this->assertTrue(Validator::isBase64('YWJjZA=='));
         $this->assertTrue(Validator::isBase64('MTIzNA=='));
         $this->assertTrue(Validator::isBase64('YWJjZDEyMzQ='));

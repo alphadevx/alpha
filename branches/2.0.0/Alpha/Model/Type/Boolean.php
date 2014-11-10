@@ -48,7 +48,8 @@ use Alpha\Exception\IllegalArguementException;
  * </pre>
  *
  */
-class Boolean extends Type implements TypeInterface {
+class Boolean extends Type implements TypeInterface
+{
 	/**
 	 * The value of the Boolean
 	 *
@@ -81,7 +82,8 @@ class Boolean extends Type implements TypeInterface {
 	 * @since 1.0
 	 * @throws Alpha\Exception\IllegalArguementException
 	 */
-	public function __construct($val=true) {
+	public function __construct($val=true)
+	{
 		if(!Validator::isBoolean($val))
 			throw new IllegalArguementException($this->helper);
 
@@ -103,7 +105,8 @@ class Boolean extends Type implements TypeInterface {
 	 * @since 1.0
 	 * @throws Alpha\Exception\IllegalArguementException
 	 */
-	public function setValue($val) {
+	public function setValue($val)
+	{
 		if(!Validator::isBoolean($val))
 			throw new IllegalArguementException($this->helper);
 
@@ -124,7 +127,8 @@ class Boolean extends Type implements TypeInterface {
 	 * @return integer
 	 * @since 1.0
 	 */
-	public function getValue() {
+	public function getValue()
+	{
 		return $this->value;
 	}
 
@@ -134,7 +138,8 @@ class Boolean extends Type implements TypeInterface {
 	 * @return boolean
 	 * @since 1.0
 	 */
-	public function getBooleanValue() {
+	public function getBooleanValue()
+	{
 		return $this->booleanValue;
 	}
 
@@ -144,7 +149,8 @@ class Boolean extends Type implements TypeInterface {
 	 * @return string
 	 * @since 1.0
 	 */
-	public function __toString() {
+	public function __toString()
+	{
 		return ($this->value ? 'true' : 'false');
 	}
 }
