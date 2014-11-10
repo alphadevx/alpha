@@ -1,0 +1,7 @@
+<phpunit>
+<filter>
+	<whitelist addUncoveredFilesFromWhitelist="false">
+    	<directory suffix=".php">Alpha</directory>
+    </whitelist>
+</filter>
+</phpunit>
