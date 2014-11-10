@@ -1,12 +1,12 @@
 
 
 Code Coverage Report:      
-  2014-11-10 16:25:02      
+  2014-11-10 16:37:27      
                            
  Summary:                  
-  Classes: 11.11% (1/9)    
-  Methods: 54.93% (39/71)  
-  Lines:   80.47% (272/338)
+  Classes: 10.00% (1/10)   
+  Methods: 46.81% (44/94)  
+  Lines:   71.05% (373/525)
 
 \Alpha\Model\Type::Boolean
   Methods:  80.00% ( 4/ 5)   Lines:  91.30% ( 21/ 23)
@@ -20,6 +20,8 @@ Code Coverage Report:
   Methods:  50.00% ( 5/10)   Lines:  74.36% ( 29/ 39)
 \Alpha\Model\Type::Text
   Methods:  33.33% ( 3/ 9)   Lines:  73.33% ( 22/ 30)
+\Alpha\Model\Type::Timestamp
+  Methods:  21.74% ( 5/23)   Lines:  54.01% (101/187)
 \Alpha\Model\Type::Type
   Methods:  66.67% ( 2/ 3)   Lines:  75.00% (  3/  4)
 \Alpha\Util\Config::ConfigProvider
