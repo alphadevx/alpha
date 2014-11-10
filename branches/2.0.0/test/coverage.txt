@@ -1,12 +1,12 @@
 
 
 Code Coverage Report:      
-  2014-11-10 15:52:18      
+  2014-11-10 16:09:06      
                            
  Summary:                  
-  Classes: 14.29% (1/7)    
-  Methods: 60.00% (33/55)  
-  Lines:   80.92% (229/283)
+  Classes: 12.50% (1/8)    
+  Methods: 58.06% (36/62)  
+  Lines:   81.17% (250/308)
 
 \Alpha\Model\Type::Boolean
   Methods:  80.00% ( 4/ 5)   Lines:  91.30% ( 21/ 23)
@@ -14,6 +14,8 @@ Code Coverage Report:
   Methods:  42.86% ( 6/14)   Lines:  79.27% ( 65/ 82)
 \Alpha\Model\Type::Double
   Methods:  42.86% ( 3/ 7)   Lines:  80.00% ( 20/ 25)
+\Alpha\Model\Type::Integer
+  Methods:  42.86% ( 3/ 7)   Lines:  84.00% ( 21/ 25)
 \Alpha\Model\Type::String
   Methods:  50.00% ( 5/10)   Lines:  74.36% ( 29/ 39)
 \Alpha\Model\Type::Type
