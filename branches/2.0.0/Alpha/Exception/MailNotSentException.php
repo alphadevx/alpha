@@ -3,7 +3,7 @@
 namespace Alpha\Exception;
 
 /**
- * The exception class for an illegal arguement (parameter) being passed to a method
+ * The exception class for errors sending email
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
@@ -45,6 +45,6 @@ namespace Alpha\Exception;
  * </pre>
  *
  */
-class IllegalArguementException extends AlphaException {}
+class MailNotSentException extends AlphaException {}
 
 ?>
