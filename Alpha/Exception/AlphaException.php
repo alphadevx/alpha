@@ -3,7 +3,7 @@
 namespace Alpha\Exception;
 
 /**
- * The exception class for an illegal arguement (parameter) being passed to a method
+ * The parent exception class for Alpha
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
@@ -45,6 +45,29 @@ namespace Alpha\Exception;
  * </pre>
  *
  */
-class IllegalArguementException extends AlphaException {}
+class AlphaException extends Exception
+{
+	/**
+	 * Set the message for the exception
+	 *
+	 * @param string $message
+	 * @since 1.0
+	 */
+	public function setMessage($message)
+	{
+		$this->message = $message;
+	}
+
+	/**
+	 * Set the filename for the exception
+	 *
+	 * @param string $file
+	 * @since 1.0
+	 */
+	public function setFile($file)
+	{
+		$this->file = $file;
+	}
+}
 
 ?>

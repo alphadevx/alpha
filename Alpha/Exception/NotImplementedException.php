@@ -3,9 +3,11 @@
 namespace Alpha\Exception;
 
 /**
- * The exception class for an illegal arguement (parameter) being passed to a method
+ * The exception class for when an expected method of an interface
+ * has not been implemented by the provider throwing this exception.
  *
- * @since 1.0
+ * @package alpha::exceptions
+ * @since 1.2
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
@@ -45,6 +47,6 @@ namespace Alpha\Exception;
  * </pre>
  *
  */
-class IllegalArguementException extends AlphaException {}
+class NotImplementedException extends AlphaException {}
 
 ?>

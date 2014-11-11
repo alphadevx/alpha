@@ -3,13 +3,13 @@
 namespace Alpha\Exception;
 
 /**
- * The exception class for an illegal arguement (parameter) being passed to a method
+ * The exception class for when a custom SQL query failed to run.
  *
- * @since 1.0
+ * @since 1.1
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2013, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -45,6 +45,6 @@ namespace Alpha\Exception;
  * </pre>
  *
  */
-class IllegalArguementException extends AlphaException {}
+class CustomQueryException extends AlphaException {}
 
 ?>

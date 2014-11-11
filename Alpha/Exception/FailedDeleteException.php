@@ -1,9 +1,7 @@
 <?php
 
-namespace Alpha\Exception;
-
 /**
- * The exception class for an illegal arguement (parameter) being passed to a method
+ * The exception class for record failed delete errors
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
@@ -45,6 +43,6 @@ namespace Alpha\Exception;
  * </pre>
  *
  */
-class IllegalArguementException extends AlphaException {}
+class FailedDeleteException extends AlphaException {}
 
 ?>
