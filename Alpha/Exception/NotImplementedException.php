@@ -6,7 +6,6 @@ namespace Alpha\Exception;
  * The exception class for when an expected method of an interface
  * has not been implemented by the provider throwing this exception.
  *
- * @package alpha::exceptions
  * @since 1.2
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
