@@ -1,11 +1,17 @@
 <?php
 
-namespace Alpha\Exception;
+namespace Alpha\Model;
+
+use Alpha\Util\Logging\Logger;
+use Alpha\Util\Config\ConfigProvider;
+use Alpha\Exception\IllegalArguementException;
 
 /**
- * The parent exception class for Alpha
  *
- * @since 1.0
+ * A factory for creating active record provider implementations that implement the
+ * ActiveRecordProviderInterface interface.
+ *
+ * @since 1.1
  * @author John Collins <dev@alphaframework.org>
  * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
@@ -45,28 +51,51 @@ namespace Alpha\Exception;
  * </pre>
  *
  */
-class AlphaException extends \Exception
+class ActiveRecordProviderFactory
 {
 	/**
-	 * Set the message for the exception
+	 * Trace logger
 	 *
-	 * @param string $message
-	 * @since 1.0
+	 * @var Alpha\Util\Logging\Logger
+	 * @since 1.1
 	 */
-	public function setMessage($message)
-	{
-		$this->message = $message;
-	}
+	private static $logger = null;
 
 	/**
-	 * Set the filename for the exception
+	 * A static method that attempts to return a ActiveRecordProviderInterface instance
+	 * based on the name of the provider class supplied.
 	 *
-	 * @param string $file
-	 * @since 1.0
+	 * @param $providerName The fully-qualified class name of the provider class.
+	 * @param $BO The active record instance to pass to the persistance provider for mapping.
+	 * @throws Alpha\Exception\IllegalArguementException
+	 * @return Alpha\Model\ActiveRecordProviderInterface
+	 * @since 1.1
 	 */
-	public function setFile($file)
+	public static function getInstance($providerName, $BO)
 	{
-		$this->file = $file;
+		if(self::$logger == null)
+			self::$logger = new Logger('ActiveRecordProviderFactory');
+
+		self::$logger->debug('>>getInstance(providerName=['.$providerName.'], BO=['.print_r($BO, true).'])');
+
+		$config = ConfigProvider::getInstance();
+
+		if(class_exists($providerName)) {
+
+			$instance = new $providerName;
+
+			if(!$instance instanceof ActiveRecordProviderInterface)
+				throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected ActiveRecordProviderInterface interface!');
+
+			$instance->setBO($BO);
+
+			self::$logger->debug('<<getInstance: [Object '.$providerName.']');
+			return $instance;
+		}else{
+			throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
+		}
+
+		self::$logger->debug('<<getInstance');
 	}
 }
 
