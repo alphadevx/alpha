@@ -2,6 +2,7 @@
 
 namespace Alpha\Test\Model\Type;
 
+use Alpha\Test\Model\ModelTestCase;
 use Alpha\Model\Person;
 use Alpha\Model\Rights;
 use Alpha\Model\Article;
@@ -16,7 +17,7 @@ use Alpha\Exception\AlphaException;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id$
+ * @version $Id: RelationTest.php 1844 2014-11-17 21:51:12Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -54,7 +55,7 @@ use Alpha\Exception\AlphaException;
  * </pre>
  *
  */
-class RelationTest extends \PHPUnit_Framework_TestCase
+class RelationTest extends ModelTestCase
 {
 	/**
 	 * A Relation for testing
@@ -81,6 +82,7 @@ class RelationTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        parent::setUp();
         $this->rel1 = new Relation();
 
         $rights = new Rights();
@@ -113,6 +115,7 @@ class RelationTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
+        parent::tearDown();
         unset($this->rel1);
         $person = new Person();
         $person->dropTable();

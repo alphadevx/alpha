@@ -2,6 +2,7 @@
 
 namespace Alpha\Test\Model\Type;
 
+use Alpha\Test\Model\ModelTestCase;
 use Alpha\Model\Person;
 use Alpha\Model\Rights;
 use Alpha\Model\Article;
@@ -16,7 +17,7 @@ use Alpha\Exception\FailedLookupCreateException;
  *
  * @since 1.2.1
  * @author John Collins <dev@alphaframework.org>
- * @version $Id$
+ * @version $Id: RelationLookupTest.php 1846 2014-11-18 22:20:56Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -54,7 +55,7 @@ use Alpha\Exception\FailedLookupCreateException;
  * </pre>
  *
  */
-class RelationLookupTest extends \PHPUnit_Framework_TestCase
+class RelationLookupTest extends ModelTestCase
 {
 	/**
      * Called before the test functions will be executed
@@ -65,6 +66,7 @@ class RelationLookupTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        parent::setUp();
         $rights = new Rights();
         $rights->rebuildTable();
 
@@ -88,6 +90,7 @@ class RelationLookupTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
+        parent::tearDown();
         $person = new Person();
         $person->dropTable();
 

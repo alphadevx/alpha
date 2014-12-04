@@ -11,7 +11,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @since 1.2.1
  * @author John Collins <dev@alphaframework.org>
- * @version $Id$
+ * @version $Id: ActiveRecordProviderFactoryTest.php 1842 2014-11-12 22:27:01Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.

@@ -12,7 +12,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id$
+ * @version $Id: BooleanTest.php 1835 2014-11-10 15:59:23Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
  * All rights reserved.

@@ -2,6 +2,7 @@
 
 namespace Alpha\Test\Model\Type;
 
+use Alpha\Test\Model\ModelTestCase;
 use Alpha\Model\Type\Enum;
 use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
@@ -12,7 +13,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id$
+ * @version $Id: EnumTest.php 1839 2014-11-10 18:01:20Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -50,7 +51,7 @@ use Alpha\Exception\IllegalArguementException;
  * </pre>
  *
  */
-class EnumTest extends \PHPUnit_Framework_TestCase
+class EnumTest extends ModelTestCase
 {
 	/**
 	 * An Enum for testing
@@ -78,6 +79,7 @@ class EnumTest extends \PHPUnit_Framework_TestCase
      */
     /*protected function setUp()
     {
+        parent::setUp();
         $this->enum1 = new Enum();
 
         $rights = new RightsObject();
@@ -101,6 +103,7 @@ class EnumTest extends \PHPUnit_Framework_TestCase
      */
     /*protected function tearDown()
     {
+        parent::tearDown();
         unset($this->enum1);
         $this->person->dropTable();
         $rights = new RightsObject();

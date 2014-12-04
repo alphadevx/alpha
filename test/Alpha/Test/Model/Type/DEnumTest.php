@@ -1,7 +1,8 @@
 <?php
 
-use Alpha\Test\Model\Type;
+namespace Alpha\Test\Model\Type;
 
+use Alpha\Test\Model\ModelTestCase;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
 use Alpha\Exception\AlphaException;
@@ -12,7 +13,7 @@ use Alpha\Exception\AlphaException;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id$
+ * @version $Id: DEnumTest.php 1845 2014-11-18 22:18:55Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -50,7 +51,7 @@ use Alpha\Exception\AlphaException;
  * </pre>
  *
  */
-class DEnumTest extends \PHPUnit_Framework_TestCase
+class DEnumTest extends ModelTestCase
 {
 	/**
 	 * A DEnum for testing
@@ -69,6 +70,8 @@ class DEnumTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        parent::setUp();
+
         $denum = new DEnum();
         $denum->rebuildTable();
         $item = new DEnumItem();
@@ -89,6 +92,8 @@ class DEnumTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
+        parent::tearDown();
+
     	$item = new DEnumItem();
         $item->dropTable();
     	$this->denum1->dropTable();

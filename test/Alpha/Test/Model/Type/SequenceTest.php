@@ -2,6 +2,7 @@
 
 namespace Alpha\Test\Model\Type;
 
+use Alpha\Test\Model\ModelTestCase;
 use Alpha\Model\Type\Sequence;
 use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
@@ -11,7 +12,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id$
+ * @version $Id: SequenceTest.php 1843 2014-11-13 22:41:33Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -49,7 +50,7 @@ use Alpha\Exception\IllegalArguementException;
  * </pre>
  *
  */
-class SequenceTest extends \PHPUnit_Framework_TestCase
+class SequenceTest extends ModelTestCase
 {
 	/**
 	 * a Sequence for testing
@@ -68,6 +69,7 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        parent::setUp();
         $this->sequence = new Sequence();
         $this->sequence->rebuildTable();
         $this->sequence->set('prefix', 'TEST');
@@ -84,6 +86,7 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
+        parent::tearDown();
     	$this->sequence->dropTable();
         unset($this->sequence);
     }
