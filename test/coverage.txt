@@ -1,23 +1,31 @@
 
 
 Code Coverage Report:        
-  2014-11-18 13:52:54        
+  2014-12-05 00:14:29        
                              
  Summary:                    
-  Classes: 13.79% (4/29)     
-  Methods: 36.75% (129/351)  
-  Lines:   48.04% (1646/3426)
+  Classes: 22.22% (8/36)     
+  Methods: 40.89% (166/406)  
+  Lines:   50.56% (2395/4737)
 
+\Alpha\Exception::AlphaException
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  4/  4)
 \Alpha\Model::ActiveRecord
-  Methods:  29.76% (25/84)   Lines:  37.09% (316/852)
+  Methods:  53.57% (45/84)   Lines:  71.85% (615/856)
 \Alpha\Model::ActiveRecordProviderFactory
   Methods: 100.00% ( 1/ 1)   Lines: 100.00% ( 12/ 12)
+\Alpha\Model::ActiveRecordProviderMySQL
+  Methods:  15.91% ( 7/44)   Lines:  64.92% (807/1243)
 \Alpha\Model::ActiveRecordProviderSQLite
-  Methods:   7.32% ( 3/41)   Lines:  37.89% (416/1098)
+  Methods:   4.88% ( 2/41)   Lines:   0.55% (  6/1100)
 \Alpha\Model::Article
   Methods:  11.76% ( 2/17)   Lines:  42.07% ( 61/145)
 \Alpha\Model::ArticleComment
   Methods: 100.00% ( 1/ 1)   Lines: 100.00% ( 10/ 10)
+\Alpha\Model::BadRequest
+  Methods:  50.00% ( 1/ 2)   Lines:  40.00% (  8/ 20)
+\Alpha\Model::BlacklistedIP
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  5/  5)
 \Alpha\Model::Person
   Methods:  50.00% ( 6/12)   Lines:  67.23% ( 80/119)
 \Alpha\Model::Rights
@@ -49,14 +57,22 @@ Code Coverage Report:
 \Alpha\Model\Type::Text
   Methods:  55.56% ( 5/ 9)   Lines:  83.33% ( 25/ 30)
 \Alpha\Model\Type::Timestamp
-  Methods:  26.09% ( 6/23)   Lines:  55.08% (103/187)
+  Methods:  30.43% ( 7/23)   Lines:  55.61% (104/187)
 \Alpha\Model\Type::Type
   Methods: 100.00% ( 3/ 3)   Lines: 100.00% (  4/  4)
+\Alpha\Util::ErrorHandlers
+  Methods:  50.00% ( 1/ 2)   Lines:  57.14% (  4/  7)
+\Alpha\Util\Cache::CacheProviderArray
+  Methods: 100.00% ( 4/ 4)   Lines: 100.00% ( 13/ 13)
+\Alpha\Util\Cache::CacheProviderFactory
+  Methods:   0.00% ( 0/ 1)   Lines:  90.00% (  9/ 10)
 \Alpha\Util\Config::ConfigProvider
   Methods:  50.00% ( 3/ 6)   Lines:  74.67% ( 56/ 75)
 \Alpha\Util\Helper::Validator
   Methods: 100.00% (10/10)   Lines: 100.00% ( 35/ 35)
+\Alpha\Util\Http::AgentUtils
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  7/  7)
 \Alpha\Util\Logging::LogFile
   Methods:  42.86% ( 3/ 7)   Lines:  22.35% ( 19/ 85)
 \Alpha\Util\Logging::Logger
-  Methods:  20.00% ( 2/10)   Lines:  23.94% ( 17/ 71)
+  Methods:  20.00% ( 2/10)   Lines:  26.76% ( 19/ 71)
