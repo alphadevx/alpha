@@ -12,7 +12,6 @@ use Alpha\Util\Logging\Logger;
  *
  * @since 1.1
  * @author John Collins <dev@alphaframework.org>
- * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -61,7 +60,7 @@ class CacheProviderFactory
 	private static $logger = null;
 
 	/**
-	 * A static method that attempts to return a AlphaCacheProviderInterface instance
+	 * A static method that attempts to return a CacheProviderInterface instance
 	 * based on the name of the provider class supplied.
 	 *
 	 * @param $providerName The class name of the provider class (fully qualified).

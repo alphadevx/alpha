@@ -12,7 +12,6 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @since 1.1
  * @author John Collins <dev@alphaframework.org>
- * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -88,9 +87,7 @@ class CacheProviderMemcache implements CacheProviderInterface
 	}
 
 	/**
-	 * (non-PHPdoc)
-	 * @see alpha/util/cache/AlphaCacheProviderInterface::get()
-	 * @since 1.1
+	 * {@inheritDoc}
 	 */
 	public function get($key)
 	{
@@ -110,9 +107,7 @@ class CacheProviderMemcache implements CacheProviderInterface
 	}
 
 	/**
-	 * (non-PHPdoc)
-	 * @see alpha/util/cache/AlphaCacheProviderInterface::set()
-	 * @since 1.1
+	 * {@inheritDoc}
 	 */
 	public function set($key, $value, $expiry=0)
 	{
@@ -128,9 +123,7 @@ class CacheProviderMemcache implements CacheProviderInterface
 	}
 
 	/**
-	 * (non-PHPdoc)
-	 * @see alpha/util/cache/AlphaCacheProviderInterface::delete()
-	 * @since 1.1
+	 * {@inheritDoc}
 	 */
 	public function delete($key)
 	{

@@ -1,15 +1,12 @@
 <?php
 
-namespace Alpha\Util\Cache;
-
-use Alpha\Util\Logging\Logger;
+namespace Alpha\Util\Http\Session;
 
 /**
  *
- * An implementation of the CacheProviderInterface interface that uses APC/APCu as the
- * target store.
+ * An interface that describes the use of sessions.
  *
- * @since 1.2.4
+ * @since 2.0
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -48,74 +45,48 @@ use Alpha\Util\Logging\Logger;
  * </pre>
  *
  */
-class CacheProviderAPC implements CacheProviderInterface
+interface SessionInterface
 {
-    /**
-     * Trace logger
-     *
-     * @var Alpha\Util\Logging\Logger
-     * @since 1.2.4
-     */
-    private static $logger = null;
+	/**
+	 * Starts a new session, or resumes an existing session if there is already a session ID available.
+	 *
+	 * @since 2.0
+	 */
+	public function init();
 
+	/**
+	 * Destroys the current session.
+	 *
+	 * @since 2.0
+	 */
+	public function destroy();
 
-    /**
-     * Constructor
-     *
-     * @since 1.2.4
-     */
-    public function __construct()
-    {
-        self::$logger = new Logger('CacheProviderAPC');
-    }
+	/**
+	 * Get the key value from the session.  Returns false if nothing is found.
+	 *
+	 * @param $key
+	 * @since 2.0
+	 * @return mixed
+	 */
+	public function get($key);
 
-    /**
-     * {@inheritDoc}
-     */
-    public function get($key)
-    {
-        self::$logger->debug('>>get(key=['.$key.'])');
+	/**
+	 * Stores the value provided at that key in the session.
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * @since 2.0
+	 */
+	public function set($key, $value);
 
-        try {
-            $value = apc_fetch($key);
-
-            self::$logger->debug('<<get: ['.print_r($value, true).'])');
-
-            return $value;
-        } catch(\Exception $e) {
-            self::$logger->error('Error while attempting to load a business object from APC cache: ['.$e->getMessage().']');
-            self::$logger->debug('<<get: [false])');
-            return false;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function set($key, $value, $expiry=0)
-    {
-        try {
-            if($expiry > 0)
-                apc_store($key, $value, $expiry);
-            else
-                apc_store($key, $value);
-
-          } catch(\Exception $e) {
-              self::$logger->error('Error while attempting to store a value to APC cache: ['.$e->getMessage().']');
-          }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function delete($key)
-    {
-        try {
-            apc_delete($key);
-        } catch(\Exception $e) {
-            self::$logger->error('Error while attempting to remove a value from APC cache: ['.$e->getMessage().']');
-        }
-    }
+	/**
+	 * Deletes the value provided at that key in the session.
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * @since 2.0
+	 */
+	public function delete($key);
 }
 
 ?>

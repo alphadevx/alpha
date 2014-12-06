@@ -12,7 +12,6 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @since 1.2.4
  * @author John Collins <dev@alphaframework.org>
- * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -75,7 +74,7 @@ class CacheProviderRedis implements CacheProviderInterface
      */
     public function __construct()
     {
-        self::$logger = new Logger('AlphaCacheProviderRedis');
+        self::$logger = new Logger('CacheProviderRedis');
 
         $config = ConfigProvider::getInstance();
 
@@ -89,10 +88,8 @@ class CacheProviderRedis implements CacheProviderInterface
         }
     }
 
-    /**
-     * (non-PHPdoc)
-     * @see alpha/util/cache/AlphaCacheProviderInterface::get()
-     * @since 1.2.4
+   /**
+     * {@inheritDoc}
      */
     public function get($key)
     {
@@ -111,9 +108,7 @@ class CacheProviderRedis implements CacheProviderInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * @see alpha/util/cache/AlphaCacheProviderInterface::set()
-     * @since 1.2.4
+     * {@inheritDoc}
      */
     public function set($key, $value, $expiry=0)
     {
@@ -129,9 +124,7 @@ class CacheProviderRedis implements CacheProviderInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * @see alpha/util/cache/AlphaCacheProviderInterface::delete()
-     * @since 1.2.4
+     * {@inheritDoc}
      */
     public function delete($key)
     {

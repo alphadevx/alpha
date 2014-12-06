@@ -1,15 +1,14 @@
 <?php
 
-namespace Alpha\Util\Cache;
+namespace Alpha\Util\Http\Session;
 
 use Alpha\Util\Logging\Logger;
 
 /**
  *
- * An implementation of the CacheProviderInterface interface that uses APC/APCu as the
- * target store.
+ * Provides a session handle that stores session data in an array, useful for testing only.
  *
- * @since 1.2.4
+ * @since 2.0
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -48,74 +47,84 @@ use Alpha\Util\Logging\Logger;
  * </pre>
  *
  */
-class CacheProviderAPC implements CacheProviderInterface
+class SessionProviderArray implements SessionInterface
 {
-    /**
+	/**
      * Trace logger
      *
      * @var Alpha\Util\Logging\Logger
-     * @since 1.2.4
+     * @since 2.0
      */
     private static $logger = null;
 
+    /**
+     * The hash array containing the session items.
+     *
+     * @var array
+     * @since 2.0
+     */
+    public static $sessionArray = array();
 
     /**
      * Constructor
      *
-     * @since 1.2.4
+     * @since 2.0
      */
     public function __construct()
     {
-        self::$logger = new Logger('CacheProviderAPC');
+        self::$logger = new Logger('SessionProviderArray');
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function get($key)
-    {
-        self::$logger->debug('>>get(key=['.$key.'])');
+	/**
+	 * {@inheritDoc}
+	 */
+	public function init()
+	{
+		self::$sessionArray = array();
+	}
 
-        try {
-            $value = apc_fetch($key);
+	/**
+	 * {@inheritDoc}
+	 */
+	public function destroy()
+	{
+		unset(self::$sessionArray);
+	}
 
-            self::$logger->debug('<<get: ['.print_r($value, true).'])');
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get($key)
+	{
+		self::$logger->debug('>>get(key=['.$key.'])');
 
-            return $value;
-        } catch(\Exception $e) {
-            self::$logger->error('Error while attempting to load a business object from APC cache: ['.$e->getMessage().']');
-            self::$logger->debug('<<get: [false])');
+        self::$logger->debug('Getting value for key ['.$key.']');
+
+        if (array_key_exists($key, self::$sessionArray))
+            return self::$sessionArray[$key];
+        else
             return false;
-        }
-    }
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public function set($key, $value, $expiry=0)
-    {
-        try {
-            if($expiry > 0)
-                apc_store($key, $value, $expiry);
-            else
-                apc_store($key, $value);
+	/**
+	 * {@inheritDoc}
+	 */
+	public function set($key, $value)
+	{
+		self::$logger->debug('Setting value for key ['.$key.']');
 
-          } catch(\Exception $e) {
-              self::$logger->error('Error while attempting to store a value to APC cache: ['.$e->getMessage().']');
-          }
-    }
+        self::$sessionArray[$key] = $value;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public function delete($key)
-    {
-        try {
-            apc_delete($key);
-        } catch(\Exception $e) {
-            self::$logger->error('Error while attempting to remove a value from APC cache: ['.$e->getMessage().']');
-        }
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public function delete($key)
+	{
+		self::$logger->debug('Removing value for key ['.$key.']');
+
+        unset(self::$sessionArray[$key]);
+	}
 }
 
 ?>

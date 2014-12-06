@@ -78,9 +78,7 @@ class CacheProviderArray implements CacheProviderInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * @see alpha/util/cache/AlphaCacheProviderInterface::get()
-     * @since 1.2.1
+     * {@inheritDoc}
      */
     public function get($key)
     {
@@ -95,9 +93,7 @@ class CacheProviderArray implements CacheProviderInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * @see alpha/util/cache/AlphaCacheProviderInterface::set()
-     * @since 1.2.1
+     * {@inheritDoc}
      */
     public function set($key, $value, $expiry=0)
     {
@@ -107,9 +103,7 @@ class CacheProviderArray implements CacheProviderInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * @see alpha/util/cache/AlphaCacheProviderInterface::delete()
-     * @since 1.2.1
+     * {@inheritDoc}
      */
     public function delete($key)
     {

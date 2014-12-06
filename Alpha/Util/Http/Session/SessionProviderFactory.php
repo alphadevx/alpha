@@ -1,15 +1,16 @@
 <?php
 
-namespace Alpha\Util\Cache;
+namespace Alpha\Util\Http\Session;
 
+use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Logging\Logger;
 
 /**
  *
- * An implementation of the CacheProviderInterface interface that uses APC/APCu as the
- * target store.
+ * A factory for creating session provider implementations that implement the
+ * SessionProviderInterface interface.
  *
- * @since 1.2.4
+ * @since 2.0
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -48,74 +49,47 @@ use Alpha\Util\Logging\Logger;
  * </pre>
  *
  */
-class CacheProviderAPC implements CacheProviderInterface
+class SessionProviderFactory
 {
-    /**
-     * Trace logger
-     *
-     * @var Alpha\Util\Logging\Logger
-     * @since 1.2.4
-     */
-    private static $logger = null;
+	/**
+	 * Trace logger
+	 *
+	 * @var Alpha\Util\Logging\Logger
+	 * @since 2.0
+	 */
+	private static $logger = null;
 
+	/**
+	 * A static method that attempts to return a SessionProviderInterface instance
+	 * based on the name of the provider class supplied.
+	 *
+	 * @param $providerName The class name of the provider class (fully qualified).
+	 * @throws Alpha\Exception\IllegalArguementException
+	 * @return Alpha\Util\Http\Session\SessionProviderInterface
+	 * @since 2.0
+	 */
+	public static function getInstance($providerName)
+	{
+		if(self::$logger == null)
+			self::$logger = new Logger('SessionProviderFactory');
 
-    /**
-     * Constructor
-     *
-     * @since 1.2.4
-     */
-    public function __construct()
-    {
-        self::$logger = new Logger('CacheProviderAPC');
-    }
+		self::$logger->debug('>>getInstance(providerName=['.$providerName.'])');
 
-    /**
-     * {@inheritDoc}
-     */
-    public function get($key)
-    {
-        self::$logger->debug('>>get(key=['.$key.'])');
+		if (class_exists($providerName)) {
 
-        try {
-            $value = apc_fetch($key);
+			$instance = new $providerName;
 
-            self::$logger->debug('<<get: ['.print_r($value, true).'])');
+			if(!$instance instanceof SessionProviderInterface)
+				throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected SessionProviderInterface intwerface!');
 
-            return $value;
-        } catch(\Exception $e) {
-            self::$logger->error('Error while attempting to load a business object from APC cache: ['.$e->getMessage().']');
-            self::$logger->debug('<<get: [false])');
-            return false;
-        }
-    }
+			self::$logger->debug('<<getInstance: [Object '.$providerName.']');
+			return $instance;
+		} else {
+			throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
+		}
 
-    /**
-     * {@inheritDoc}
-     */
-    public function set($key, $value, $expiry=0)
-    {
-        try {
-            if($expiry > 0)
-                apc_store($key, $value, $expiry);
-            else
-                apc_store($key, $value);
-
-          } catch(\Exception $e) {
-              self::$logger->error('Error while attempting to store a value to APC cache: ['.$e->getMessage().']');
-          }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function delete($key)
-    {
-        try {
-            apc_delete($key);
-        } catch(\Exception $e) {
-            self::$logger->error('Error while attempting to remove a value from APC cache: ['.$e->getMessage().']');
-        }
-    }
+		self::$logger->debug('<<getInstance');
+	}
 }
 
 ?>
