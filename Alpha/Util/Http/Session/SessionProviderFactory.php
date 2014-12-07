@@ -78,6 +78,7 @@ class SessionProviderFactory
 		if (class_exists($providerName)) {
 
 			$instance = new $providerName;
+            $instance->init();
 
 			if(!$instance instanceof SessionProviderInterface)
 				throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected SessionProviderInterface intwerface!');

@@ -45,7 +45,7 @@ namespace Alpha\Util\Http\Session;
  * </pre>
  *
  */
-interface SessionInterface
+interface SessionProviderInterface
 {
 	/**
 	 * Starts a new session, or resumes an existing session if there is already a session ID available.

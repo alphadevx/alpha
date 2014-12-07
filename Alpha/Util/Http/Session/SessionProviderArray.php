@@ -47,7 +47,7 @@ use Alpha\Util\Logging\Logger;
  * </pre>
  *
  */
-class SessionProviderArray implements SessionInterface
+class SessionProviderArray implements SessionProviderInterface
 {
 	/**
      * Trace logger
@@ -78,17 +78,14 @@ class SessionProviderArray implements SessionInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function init()
-	{
-		self::$sessionArray = array();
-	}
+	public function init() {}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function destroy()
 	{
-		unset(self::$sessionArray);
+		self::$sessionArray = array();
 	}
 
 	/**

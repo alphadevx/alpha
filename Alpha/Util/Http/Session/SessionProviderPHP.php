@@ -48,7 +48,7 @@ use Alpha\Util\Config\ConfigProvider;
  * </pre>
  *
  */
-class SessionProviderPHP implements SessionInterface
+class SessionProviderPHP implements SessionProviderInterface
 {
 	/**
      * Trace logger
