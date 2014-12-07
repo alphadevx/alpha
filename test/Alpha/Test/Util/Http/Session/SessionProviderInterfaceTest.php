@@ -50,10 +50,11 @@ use Alpha\Util\Config\ConfigProvider;
  */
 class SessionProviderInterfaceTest extends \PHPUnit_Framework_TestCase
 {
-    public function testSetAndGet()
+    /**
+     * @dataProvider getProviders
+     */
+    public function testSetAndGet($provider)
     {
-        $provider = SessionProviderFactory::getInstance('Alpha\Util\Http\Session\SessionProviderArray');
-
         $provider->set('somekey', 'somevalue');
 
         $this->assertEquals('somevalue', $provider->get('somekey'), 'Testing setting and getting a value from the session');
@@ -100,6 +101,14 @@ class SessionProviderInterfaceTest extends \PHPUnit_Framework_TestCase
         $provider = SessionProviderFactory::getInstance('Alpha\Util\Http\Session\SessionProviderArray');
 
         $this->assertEquals('stillhere', $provider->get('itisstillthere'), 'Testing values survive re-initialization of session');
+    }
+
+    private function getProviders()
+    {
+        $arrayProvider = SessionProviderFactory::getInstance('Alpha\Util\Http\Session\SessionProviderArray');
+        $PHPSessionProvider = SessionProviderFactory::getInstance('Alpha\Util\Http\Session\SessionProviderPHP');
+
+        return array($arrayProvider, $PHPSessionProvider);
     }
 }
 
