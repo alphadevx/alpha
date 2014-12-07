@@ -60,10 +60,11 @@ class SessionProviderInterfaceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('somevalue', $provider->get('somekey'), 'Testing setting and getting a value from the session');
     }
 
-    public function testDelete()
+    /**
+     * @dataProvider getProviders
+     */
+    public function testDelete($provider)
     {
-        $provider = SessionProviderFactory::getInstance('Alpha\Util\Http\Session\SessionProviderArray');
-
         $provider->set('somekey', 'somevalue');
 
         $this->assertEquals('somevalue', $provider->get('somekey'), 'Testing setting and getting a value from the session');
@@ -73,10 +74,11 @@ class SessionProviderInterfaceTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($provider->get('somekey'), 'Testing deleting a value from the session');
     }
 
-    public function testDestroy()
+    /**
+     * @dataProvider getProviders
+     */
+    public function testDestroy($provider)
     {
-        $provider = SessionProviderFactory::getInstance('Alpha\Util\Http\Session\SessionProviderArray');
-
         $provider->set('somekey', 'somevalue');
         $provider->set('someotherkey', 'someothervalue');
 
@@ -89,26 +91,29 @@ class SessionProviderInterfaceTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($provider->get('someotherkey'), 'Testing destroying session');
     }
 
-    public function testInit()
+    /**
+     * @dataProvider getProviders
+     */
+    public function testInit($provider)
     {
-        $provider = SessionProviderFactory::getInstance('Alpha\Util\Http\Session\SessionProviderArray');
-
         $provider->set('itisstillthere', 'stillhere');
 
         $this->assertEquals('stillhere', $provider->get('itisstillthere'), 'Testing values survive re-initialization of session');
 
-        unset($provider);
-        $provider = SessionProviderFactory::getInstance('Alpha\Util\Http\Session\SessionProviderArray');
+        $provider = SessionProviderFactory::getInstance(get_class($provider));
 
         $this->assertEquals('stillhere', $provider->get('itisstillthere'), 'Testing values survive re-initialization of session');
     }
 
-    private function getProviders()
+    public function getProviders()
     {
         $arrayProvider = SessionProviderFactory::getInstance('Alpha\Util\Http\Session\SessionProviderArray');
         $PHPSessionProvider = SessionProviderFactory::getInstance('Alpha\Util\Http\Session\SessionProviderPHP');
 
-        return array($arrayProvider, $PHPSessionProvider);
+        return array(
+            array($arrayProvider),
+            array($PHPSessionProvider)
+        );
     }
 }
 

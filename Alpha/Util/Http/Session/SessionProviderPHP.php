@@ -58,17 +58,28 @@ class SessionProviderPHP implements SessionProviderInterface
      */
     private static $logger = null;
 
+    /**
+     * Constructor
+     *
+     * @since 2.0
+     */
+    public function __construct()
+    {
+        self::$logger = new Logger('SessionProviderPHP');
+    }
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function init()
 	{
-		$config = ConfigProvider::getInstance();
-		$url = parse_url($config->get('app.url'));
-	 	$hostname = $url['host'];
-	 	session_set_cookie_params(0, '/', $hostname, false, true);
-	 	session_start();
+		if (session_id() == '' && !headers_sent()) {
+            $config = ConfigProvider::getInstance();
+    		$url = parse_url($config->get('app.url'));
+    	 	$hostname = $url['host'];
+    	 	session_set_cookie_params(0, '/', $hostname, false, true);
+    	 	session_start();
+        }
 	}
 
 	/**
