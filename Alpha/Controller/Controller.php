@@ -7,6 +7,8 @@ use Alpha\Model\Type\Integer;
 use Alpha\Model\ActiveRecord;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
+use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Logging\Logger;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\FailedUnitCommitException;
 use Alpha\Exception\FailedSaveException;
@@ -195,7 +197,7 @@ abstract class Controller
 
 	/**
 	 * Used to set status update messages to display to the user (messages stored between requests
-	 * in _SESSION).  Useful for when you want to display a message to a user after POSTing a request,
+	 * in session).  Useful for when you want to display a message to a user after POSTing a request,
 	 * or when moving from one page to the next.
 	 *
 	 * @var string
@@ -225,14 +227,6 @@ abstract class Controller
 		self::$logger->debug('>>__construct(visibility=['.$visibility.'])');
 
 	 	$config = ConfigProvider::getInstance();
-
-	 	// kick off new session, or reuse existing one
-	 	if (!isset($_SESSION)) {
-	 		$url = parse_url($config->get('app.url'));
-	 		$hostname = $url['host'];
-	 		session_set_cookie_params(0, '/', $hostname, false, true);
-	 		session_start();
-	 	}
 
 	 	// set the access rights to the group name indicated
 	 	$this->visibility = $visibility;
@@ -272,17 +266,20 @@ abstract class Controller
 		if ($this->name == '')
 	 		$this->setName(get_class($this));
 
-	 	if (isset($_SESSION['unitOfWork']) && is_array($_SESSION['unitOfWork']))
-	 		$this->setUnitOfWork($_SESSION['unitOfWork']);
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
 
-	 	if (isset($_SESSION['dirtyObjects']) && is_array($_SESSION['dirtyObjects']))
-	 		$this->dirtyObjects = $_SESSION['dirtyObjects'];
+	 	if ($session->get('unitOfWork') !== false && is_array($session->get('unitOfWork')))
+	 		$this->setUnitOfWork($session->get('unitOfWork'));
 
-	 	if (isset($_SESSION['newObjects']) && is_array($_SESSION['newObjects']))
-	 		$this->newObjects = $_SESSION['newObjects'];
+	 	if ($session->get('dirtyObjects') !== false && is_array($session->get('dirtyObjects')))
+	 		$this->dirtyObjects = $session->get('dirtyObjects');
 
-	 	if (isset($_SESSION['statusMessage']))
-	 		$this->setStatusMessage($_SESSION['statusMessage']);
+	 	if ($session->get('newObjects') && is_array($session->get('newObjects')))
+	 		$this->newObjects = $session->get('newObjects');
+
+	 	if ($session->get('statusMessage') !== false)
+	 		$this->setStatusMessage($session->get('statusMessage'));
 
 	 	if ($config->get('security.encrypt.http.fieldnames') && !empty($_POST))
 			$this->decryptFieldNames();
@@ -463,7 +460,10 @@ abstract class Controller
 		}
 
 		// clear out any previous unit of work from the session
-		$_SESSION['unitOfWork'] = null;
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+		$session->delete('unitOfWork');
 		$this->dirtyObjects = array();
 		$this->newObjects = array();
 
@@ -494,7 +494,7 @@ abstract class Controller
 	 		}
 	 	}
 
-	 	$_SESSION['unitOfWork'] = $jobs;
+	 	$session->set('unitOfWork', $jobs);
 
 	 	if (method_exists($this, 'after_setUnitOfWork_callback'))
 			$this->after_setUnitOfWork_callback();
@@ -530,8 +530,12 @@ abstract class Controller
 	 	self::$logger->debug('>>setUnitStartTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'],
 	 		second=['.$second.'])');
 
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
 	 	$this->unitStartTime->setTimestampValue($year, $month, $day, $hour, $minute, $second);
-	 	$_SESSION['unitStartTime'] = $this->unitStartTime->getValue();
+	 	$session->set('unitStartTime', $this->unitStartTime->getValue());
 
 	 	self::$logger->debug('<<setUnitStartTime');
 	}
@@ -565,8 +569,12 @@ abstract class Controller
 	 	self::$logger->debug('>>setUnitEndTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'],
 	 	 second=['.$second.'])');
 
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
 	 	$this->unitEndTime->setTimestampValue($year, $month, $day, $hour, $minute, $second);
-	 	$_SESSION['unitEndTime'] = $this->unitEndTime->getValue();
+	 	$session->set('unitEndTime', $this->unitEndTime->getValue());
 
 	 	self::$logger->debug('<<setUnitEndTime');
 	}
@@ -644,7 +652,11 @@ abstract class Controller
 
 	 	$this->dirtyObjects[count($this->dirtyObjects)] = $object;
 
-	 	$_SESSION['dirtyObjects'] = $this->dirtyObjects;
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+	 	$session->set('dirtyObjects', $this->dirtyObjects);
 
 	 	if (method_exists($this, 'after_markDirty_callback'))
 			$this->after_markDirty_callback();
@@ -680,7 +692,11 @@ abstract class Controller
 
 	 	$this->newObjects[count($this->newObjects)] = $object;
 
-	 	$_SESSION['newObjects'] = $this->newObjects;
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+	 	$session->set('newObjects', $this->newObjects);
 
 	 	if (method_exists($this, 'after_markNew_callback'))
 			$this->after_markNew_callback();
@@ -804,11 +820,15 @@ abstract class Controller
 	 */
 	private function clearUnitOfWorkAttributes()
 	{
-		$_SESSION['unitOfWork'] = null;
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+		$session->delete('unitOfWork');
 		$this->unitOfWork = null;
-		$_SESSION['dirtyObjects'] = null;
+		$session->delete('dirtyObjects');
 		$this->dirtyObjects = array();
-		$_SESSION['newObjects'] = null;
+		$session->delete('newObjects');
 		$this->newObjects = array();
 	}
 
@@ -870,7 +890,8 @@ abstract class Controller
 	 * @return string
 	 * @since 1.0
 	 */
-	public function getKeywords() {
+	public function getKeywords()
+    {
 		self::$logger->debug('>>getKeywords()');
 		self::$logger->debug('<<getKeywords ['.$this->keywords.']');
 		return $this->keywords;
@@ -903,8 +924,11 @@ abstract class Controller
 
 		$config = ConfigProvider::getInstance();
 
-		if(isset($_SESSION['currentUser']))
-			self::$logger->warn('The user ['.$_SESSION['currentUser']->get('email').'] attempted to access the resource ['.$_SERVER['REQUEST_URI'].'] but was denied due to insufficient rights');
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+		if($session->get('currentUser') !== false)
+			self::$logger->warn('The user ['.$session->get('currentUser')->get('email').'] attempted to access the resource ['.$_SERVER['REQUEST_URI'].'] but was denied due to insufficient rights');
 		else
 			self::$logger->warn('An unknown user attempted to access the resource ['.$_SERVER['REQUEST_URI'].'] but was denied due to insufficient rights');
 
@@ -930,6 +954,11 @@ abstract class Controller
 	{
 		self::$logger->debug('>>checkRights()');
 
+        $config = ConfigProvider::getInstance();
+
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
 		if (method_exists($this, 'before_checkRights_callback'))
 			$this->before_checkRights_callback();
 
@@ -942,7 +971,7 @@ abstract class Controller
 			return true;
 		} else {
 			// the person is logged in?
-			if (isset($_SESSION['currentUser'])) {
+			if ($session->get('currentUser') !== false) {
 
 				// if the visibility is 'Session', just being logged in enough
 				if ($this->getVisibility() == 'Session') {
@@ -954,20 +983,20 @@ abstract class Controller
 				}
 
 				// checking for admins (can access everything)
-				if ($_SESSION['currentUser']->inGroup('Admin')) {
+				if ($session->get('currentUser')->inGroup('Admin')) {
 					if (method_exists($this, 'after_checkRights_callback'))
 						$this->after_checkRights_callback();
 
 					self::$logger->debug('<<checkRights [true]');
 					return true;
-				} elseif ($_SESSION['currentUser']->inGroup($this->getVisibility())) {
+				} elseif ($session->get('currentUser')->inGroup($this->getVisibility())) {
 					if (method_exists($this, 'after_checkRights_callback'))
 						$this->after_checkRights_callback();
 
 					self::$logger->debug('<<checkRights [true]');
 					return true;
 				// the person is editing their own profile which is allowed
-				} elseif (get_class($this->BO) == 'Person' && $_SESSION['currentUser']->getDisplayName() == $this->BO->getDisplayName()) {
+				} elseif (get_class($this->BO) == 'Person' && $session->get('currentUser')->getDisplayName() == $this->BO->getDisplayName()) {
 					if (method_exists($this, 'after_checkRights_callback'))
 						$this->after_checkRights_callback();
 
@@ -1041,9 +1070,10 @@ abstract class Controller
 	 * @return array An array containing the two fields
 	 * @since 1.0
 	 */
-	public static function generateSecurityFields() {
+	public static function generateSecurityFields()
+    {
 		if(self::$logger == null)
-			self::$logger = new Logger('AlphaController');
+			self::$logger = new Logger('Controller');
 		self::$logger->debug('>>generateSecurityFields()');
 
 		// the server hostname + today's date
@@ -1063,12 +1093,13 @@ abstract class Controller
 	 * @return string
 	 * @since 1.0
 	 */
-	public static function getCustomControllerName($BOName, $mode) {
+	public static function getCustomControllerName($BOName, $mode)
+    {
 		if(self::$logger == null)
-			self::$logger = new Logger('AlphaController');
+			self::$logger = new Logger('Controller');
 		self::$logger->debug('>>getCustomControllerName(BOName=['.$BOName.'], mode=['.$mode.'])');
 
-		global $config;
+		$config = ConfigProvider::getInstance();
 
 		// strip the Object part from the class name
 		$BOName = mb_substr($BOName, 0, mb_strpos($BOName, 'Object'));
@@ -1082,10 +1113,10 @@ abstract class Controller
 		if (file_exists($config->get('app.root').'controller/'.$controllerName.'.php')) {
 			self::$logger->debug('<<getCustomControllerName');
 			return $controllerName;
-		}elseif (file_exists($config->get('app.root').'alpha/controller/'.$controllerName.'.php')) {
+		} elseif (file_exists($config->get('app.root').'alpha/controller/'.$controllerName.'.php')) {
 			self::$logger->debug('<<getCustomControllerName');
 			return $controllerName;
-		}else{
+		} else{
 			self::$logger->debug('<<getCustomControllerName');
 			return null;
 		}
@@ -1096,13 +1127,14 @@ abstract class Controller
 	 *
 	 * @param string $BOName The classname of the business object
 	 * @param string $mode The mode of the controller (create, view, edit)
-	 * @throws FileNotFoundException
+	 * @throws Alpha\Exception\FileNotFoundException
 	 * @since 1.0
 	 */
-	protected function loadCustomController($BOName, $mode) {
+	protected function loadCustomController($BOName, $mode)
+    {
 		self::$logger->debug('>>loadCustomController(BOName=['.$BOName.'], mode=['.$mode.'])');
 
-		global $config;
+		$config = ConfigProvider::getInstance();
 
 		// strip the Object part from the class name
 		$BOName = mb_substr($BOName, 0, mb_strpos($BOName, 'Object'));
@@ -1114,11 +1146,11 @@ abstract class Controller
 		self::$logger->debug('Custom controller name is ['.$controllerName.']');
 
 		// just making sure that we are not already using the custom controller
-		if(get_class($this) != $controllerName) {
+		if (get_class($this) != $controllerName) {
 			if (file_exists($config->get('app.root').'controller/'.$controllerName.'.php')) {
 				self::$logger->debug('Custom controller found, redirecting...');
 				// handle secure URLs
-				if(isset($_GET['tk'])) {
+				if (isset($_GET['tk'])) {
 					$params = FrontController::decodeQueryParams($_GET['tk']);
 					$params = preg_replace('/act=.*\&/', 'act='.$controllerName.'&', $params);
 					self::$logger->debug('Params are ['.$params.']');
@@ -1128,20 +1160,20 @@ abstract class Controller
 					header('Location: '.$url);
 					self::$logger->debug('<<loadCustomController');
 					exit;
-				}else{
+				} else {
 					$url = $config->get('app.url').'controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING'];
 					self::$logger->debug('Redirecting to ['.$url.']');
 					header('Location: '.$url);
 					self::$logger->debug('<<loadCustomController');
 					exit;
 				}
-			}elseif (file_exists($config->get('app.root').'alpha/controller/'.$controllerName.'.php')) {
+			} elseif (file_exists($config->get('app.root').'alpha/controller/'.$controllerName.'.php')) {
 				self::$logger->debug('Custom controller found, redirecting...');
 				// handle secure URLs
-				if(self::checkIfAccessingFromSecureURL()) {
-					if(isset($_GET['tk'])) {
+				if (self::checkIfAccessingFromSecureURL()) {
+					if (isset($_GET['tk'])) {
 						$params = FrontController::decodeQueryParams($_GET['tk']);
-					}else{
+					} else {
 						$start = mb_strpos($_SERVER['REQUEST_URI'], '/tk/')+3;
 						$end = mb_strlen($_SERVER['REQUEST_URI']);
 						$tk = mb_substr($_SERVER['REQUEST_URI'], $start+1, $end-($start+1));
@@ -1156,14 +1188,14 @@ abstract class Controller
 					header('Location: '.$url);
 					self::$logger->debug('<<loadCustomController');
 					exit;
-				}else{
+				} else {
 					$url = $config->get('app.url').'alpha/controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING'];
 					self::$logger->debug('Redirecting to ['.$url.']');
 					header('Location: '.$url);
 					self::$logger->debug('<<loadCustomController');
 					exit;
 				}
-			}else{
+			} else {
 				// throw an exception if we have gotten this far and no custom controller was found
 				throw new FileNotFoundException('The controller ['.$controllerName.'] could not be loaded as it does not exist');
 			}
@@ -1173,26 +1205,36 @@ abstract class Controller
 	}
 
 	/**
-	 * Set the status message in the _SESSION to the value provided.
+	 * Set the status message in the session to the value provided.
 	 *
 	 * @param string $message
      * @since 1.0
 	 */
-	public function setStatusMessage($message) {
+	public function setStatusMessage($message)
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
 		$this->statusMessage = $message;
-		$_SESSION['statusMessage'] = $message;
+		$session->set('statusMessage', $message);
 	}
 
 	/**
 	 * Gets the current status message for this controller.  Note that by getting the current
-	 * status message, you clear out the value stored in _SESSION so this method can only be used
+	 * status message, you clear out the value stored in the session so this method can only be used
 	 * to get the status message once for display purposes.
 	 *
 	 * @return string
      * @since 1.0
 	 */
-	public function getStatusMessage() {
-		$_SESSION['statusMessage'] = null;
+	public function getStatusMessage()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+		$session->delete('statusMessage');
 		return $this->statusMessage;
 	}
 
@@ -1204,20 +1246,21 @@ abstract class Controller
 	 * @return boolean
 	 * @since 1.0
 	 */
-	public static function checkControllerDefExists($controllerName) {
+	public static function checkControllerDefExists($controllerName)
+    {
 		if(self::$logger == null)
-			self::$logger = new Logger('AlphaController');
+			self::$logger = new Logger('Controller');
 		self::$logger->debug('>>checkControllerDefExists(controllerName=['.$controllerName.'])');
 
-		global $config;
+		$config = ConfigProvider::getInstance();
 
 		$exists = false;
 
-		if($controllerName == '/')
+		if ($controllerName == '/')
 			$exists = true;
-		if(file_exists($config->get('app.root').'controller/'.$controllerName.'.php'))
+		if (file_exists($config->get('app.root').'controller/'.$controllerName.'.php'))
 			$exists = true;
-		if(file_exists($config->get('app.root').'alpha/controller/'.$controllerName.'.php'))
+		if (file_exists($config->get('app.root').'alpha/controller/'.$controllerName.'.php'))
 			$exists = true;
 
 		self::$logger->debug('<<checkControllerDefExists ['.$exists.']');
@@ -1228,19 +1271,20 @@ abstract class Controller
 	 * Loads the definition for the controller classname provided.
 	 *
 	 * @param string $controllerName
-	 * @throws IllegalArguementException
+	 * @throws Alpha\Exception\IllegalArguementException
 	 * @since 1.0
 	 */
-	public static function loadControllerDef($controllerName) {
-		if(self::$logger == null)
-			self::$logger = new Logger('AlphaController');
+	public static function loadControllerDef($controllerName)
+    {
+		if (self::$logger == null)
+			self::$logger = new Logger('Controller');
 		self::$logger->debug('>>loadControllerDef(controllerName=['.$controllerName.'])');
 
-		global $config;
+		$config = ConfigProvider::getInstance();
 
-		if(file_exists($config->get('app.root').'controller/'.$controllerName.'.php'))
+		if (file_exists($config->get('app.root').'controller/'.$controllerName.'.php'))
 			require_once $config->get('app.root').'controller/'.$controllerName.'.php';
-		elseif(file_exists($config->get('app.root').'alpha/controller/'.$controllerName.'.php'))
+		elseif (file_exists($config->get('app.root').'alpha/controller/'.$controllerName.'.php'))
 			require_once $config->get('app.root').'alpha/controller/'.$controllerName.'.php';
 		else
 			throw new IllegalArguementException('The class ['.$controllerName.'] is not defined anywhere!');
@@ -1254,7 +1298,8 @@ abstract class Controller
 	 * @return boolean True if the current URL contains a tk value, false otherwise
 	 * @since 1.0
 	 */
-	public static function checkIfAccessingFromSecureURL() {
+	public static function checkIfAccessingFromSecureURL()
+    {
 		if (isset($_GET['tk']) || mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false)
 			return true;
 		else
@@ -1266,11 +1311,12 @@ abstract class Controller
 	 *
 	 * @since 1.2.2
 	 */
-	private function decryptFieldNames() {
+	private function decryptFieldNames()
+    {
 		foreach(array_keys($_POST) as $fieldname) {
 
 			// set request params where fieldnames provided are based64 encoded and encrypted
-			if(AlphaValidator::isBase64($fieldname)) {
+			if (Validator::isBase64($fieldname)) {
 				$_REQUEST[trim(AlphaSecurityUtils::decrypt(base64_decode($fieldname)))] = $_POST[$fieldname];
 				$_POST[trim(AlphaSecurityUtils::decrypt(base64_decode($fieldname)))] = $_POST[$fieldname];
 			}
@@ -1292,7 +1338,8 @@ abstract class Controller
 	 * @return string A URL slug
 	 * @since 1.2.4
 	 */
-	public static function generateURLSlug($URLPart, $seperator = '-', $filter = array(), $crc32Prefix = false) {
+	public static function generateURLSlug($URLPart, $seperator = '-', $filter = array(), $crc32Prefix = false)
+    {
 		$URLPart = trim($URLPart);
 
     	if(count($filter) > 0)
