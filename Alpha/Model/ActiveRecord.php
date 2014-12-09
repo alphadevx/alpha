@@ -1709,7 +1709,7 @@ abstract class ActiveRecord
 
 	    // now loop over the core BOs provided with Alpha
 
-	    $handle = opendir($config->get('app.root').'alpha/Alpha/Model');
+	    $handle = opendir($config->get('app.root').'Alpha/Model');
 
         // loop over the business object directory
 	    while (false !== ($file = readdir($handle))) {
@@ -2094,7 +2094,7 @@ abstract class ActiveRecord
   	 */
   	public function isTagged()
   	{
-  		if (isset($this->taggedAttributes) && isset($this->tags) && $this->tags instanceof Relation)
+  		if (isset($this->taggedAttributes) && isset($this->tags) && $this->tags instanceof \Alpha\Model\Type\Relation)
   			return true;
   		else
   			return false;

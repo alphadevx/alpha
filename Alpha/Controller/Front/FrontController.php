@@ -137,6 +137,11 @@ class FrontController
 		if (!mb_check_encoding())
 			throw new BadRequestException('Request character encoding does not match expected UTF-8');
 
+        if (!isset($_SERVER['REQUEST_URI'])) {
+            self::$logger->warn('No controller action set for the front controller, request URI not set');
+            throw new ResourceNotFoundException('The file that you have requested cannot be found!');
+        }
+
 		self::$logger->debug('Requested URL is ['.$_SERVER['REQUEST_URI'].']');
 
 		// direct calls to the front controller
@@ -144,15 +149,15 @@ class FrontController
 			self::$logger->debug('Processing direct request to the front controller');
 			$this->pageController = $_GET['act'];
 		// calls to the front controller via mod_rewrite
-		}elseif($config->get('app.use.mod.rewrite') && !isset($_GET['tk'])) {
+		} elseif($config->get('app.use.mod.rewrite') && !isset($_GET['tk'])) {
 			self::$logger->debug('Processing a mod_rewrite request');
 			$this->handleModRewriteRequests();
 		// direct calls to the front controller with an encrypted query string
-		}else{
+		} else{
 			if (!isset($_GET['tk'])) {
-				self::$logger->warn('No controller action set for the front controller, URL is ['.$_SERVER['REQUEST_URI'].']');
+				self::$logger->warn('No controller action set for the front controller, URL is ['.$url.']');
 				throw new ResourceNotFoundException('The file that you have requested cannot be found!');
-			}else{
+			} else{
 				self::$logger->debug('Processing a direct request to the front controller with an encrypted token param');
 				$this->setEncrypt(true);
 				try {
@@ -162,7 +167,7 @@ class FrontController
 						$this->pageController = $_GET['act'];
 					else
 						throw new SecurityException('No act param provided in the secure token!');
-				}catch (SecurityException $e) {
+				} catch (SecurityException $e) {
 					self::$logger->error('Error while attempting to decode a secure token in the FrontController: '.$e->getMessage());
 					throw new ResourceNotFoundException('The file that you have requested cannot be found!');
 				}
@@ -547,8 +552,7 @@ class FrontController
 		self::$logger->debug('>>handleModRewriteRequests');
 		$config = ConfigProvider::getInstance();
 
-		// strip off the system URL from the request URL
-		$request = str_replace($config->get('app.url'), '', 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+		$request = $_SERVER['REQUEST_URI'];
 		self::$logger->debug('$request is ['.$request.']');
 		$params = self::multipleExplode($request, array('/','?','&'));
 		self::$logger->debug('$params are ['.var_export($params, true).']');

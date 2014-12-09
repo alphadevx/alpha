@@ -235,7 +235,7 @@ abstract class Controller
 	 	if (!$this->checkRights()) {
 	 		$this->accessError();
 	 		// no more execution should take place
-	 		exit;
+	 		return;
 	 	}
 
 	 	// if configured to do so, force redirect to the front controller
@@ -455,7 +455,7 @@ abstract class Controller
 
 		// validate that each controller name in the array actually exists
 		foreach ($jobs as $job) {
-			if (!AlphaController::checkControllerDefExists($job))
+			if (!Controller::checkControllerDefExists($job))
 				throw new IllegalArguementException('The controller name ['.$job.'] provided in the jobs array is not defined anywhere!');
 		}
 
@@ -927,14 +927,19 @@ abstract class Controller
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
 
+        if (!isset($_SERVER['REQUEST_URI']))
+            $_SERVER['REQUEST_URI'] = '/';
+
 		if($session->get('currentUser') !== false)
 			self::$logger->warn('The user ['.$session->get('currentUser')->get('email').'] attempted to access the resource ['.$_SERVER['REQUEST_URI'].'] but was denied due to insufficient rights');
 		else
 			self::$logger->warn('An unknown user attempted to access the resource ['.$_SERVER['REQUEST_URI'].'] but was denied due to insufficient rights');
 
-		header('HTTP/1.1 403 Forbidden');
-		$front = new FrontController();
-		echo View::renderErrorPage(403, 'You do not have the correct access rights to view this page.  If you have not logged in yet, try going back to the home page and logging in from there.');
+        if (!headers_sent()) {
+		  header('HTTP/1.1 403 Forbidden');
+		  $front = new FrontController();
+		  echo View::renderErrorPage(403, 'You do not have the correct access rights to view this page.  If you have not logged in yet, try going back to the home page and logging in from there.');
+        }
 
 		if (method_exists($this, 'after_accessError_callback'))
 			$this->after_accessError_callback();
@@ -1027,10 +1032,13 @@ abstract class Controller
 			self::$logger = new Logger('AlphaController');
 		self::$logger->debug('>>checkSecurityFields()');
 
+        $host = (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost');
+        $ip = (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1');
+
 		// the server hostname + today's date
-		$var1 = base64_encode(SecurityUtils::encrypt($_SERVER['HTTP_HOST'].date("Ymd")));
+		$var1 = base64_encode(SecurityUtils::encrypt($host.date("Ymd")));
 		// the server's IP plus $var1
-		$var2 = base64_encode(SecurityUtils::encrypt($_SERVER['REMOTE_ADDR'].$var1));
+		$var2 = base64_encode(SecurityUtils::encrypt($ip.$var1));
 
 		if (empty($_REQUEST['var1']) || empty($_REQUEST['var2'])) {
 			self::$logger->warn('The required var1/var2 params where not provided on the HTTP request');
@@ -1049,9 +1057,9 @@ abstract class Controller
 			 */
 
 			// the server hostname + today's date less 1 hour (i.e. yesterday where time is < 1:00AM)
-			$var1 = base64_encode(SecurityUtils::encrypt($_SERVER['HTTP_HOST'].date("Ymd", (time()-3600))));
+			$var1 = base64_encode(SecurityUtils::encrypt($host.date("Ymd", (time()-3600))));
 			// the server's IP plus $var1
-			$var2 = base64_encode(SecurityUtils::encrypt($_SERVER['REMOTE_ADDR'].$var1));
+			$var2 = base64_encode(SecurityUtils::encrypt($ip.$var1));
 
 			if ($var1 == $_REQUEST['var1'] && $var2 == $_REQUEST['var2']) {
 				self::$logger->debug('<<checkSecurityFields [true]');
@@ -1076,10 +1084,13 @@ abstract class Controller
 			self::$logger = new Logger('Controller');
 		self::$logger->debug('>>generateSecurityFields()');
 
+        $host = (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost');
+        $ip = (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1');
+
 		// the server hostname + today's date
-		$var1 = base64_encode(AlphaSecurityUtils::encrypt($_SERVER['HTTP_HOST'].date("Ymd")));
+		$var1 = base64_encode(SecurityUtils::encrypt($host.date("Ymd")));
 		// the server's IP plus $var1
-		$var2 = base64_encode(AlphaSecurityUtils::encrypt($_SERVER['REMOTE_ADDR'].$var1));
+		$var2 = base64_encode(SecurityUtils::encrypt($ip.$var1));
 
 		self::$logger->debug('<<generateSecurityFields [array('.$var1.', '.$var2.')]');
 		return array($var1, $var2);
@@ -1282,10 +1293,10 @@ abstract class Controller
 
 		$config = ConfigProvider::getInstance();
 
-		if (file_exists($config->get('app.root').'controller/'.$controllerName.'.php'))
-			require_once $config->get('app.root').'controller/'.$controllerName.'.php';
-		elseif (file_exists($config->get('app.root').'alpha/controller/'.$controllerName.'.php'))
-			require_once $config->get('app.root').'alpha/controller/'.$controllerName.'.php';
+		if (file_exists($config->get('app.root').'Controller/'.$controllerName.'.php'))
+			require_once $config->get('app.root').'Controller/'.$controllerName.'.php';
+		elseif (file_exists($config->get('app.root').'Alpha/Controller/'.$controllerName.'.php'))
+			require_once $config->get('app.root').'Alpha/Controller/'.$controllerName.'.php';
 		else
 			throw new IllegalArguementException('The class ['.$controllerName.'] is not defined anywhere!');
 

@@ -215,34 +215,34 @@ class Tag extends ActiveRecord
 
 		array_walk($lowerWords, 'Alpha\Model\Tag::lowercaseArrayElement');
 
-		if($applyStopwords) {
-			if(file_exists($config->get('app.root').'config/stopwords-'.$config->get('search.stop.words.size').'.ini')) {
+		if ($applyStopwords) {
+			if (file_exists($config->get('app.root').'config/stopwords-'.$config->get('search.stop.words.size').'.ini')) {
 				$stopwords = file($config->get('app.root').'config/stopwords-'.$config->get('search.stop.words.size').'.ini', FILE_IGNORE_NEW_LINES);
-			}elseif(file_exists($config->get('app.root').'alpha/stopwords-'.$config->get('search.stop.words.size').'.ini')) {
-				$stopwords = file($config->get('app.root').'alpha/stopwords-'.$config->get('search.stop.words.size').'.ini', FILE_IGNORE_NEW_LINES);
-			}else{
+			} elseif (file_exists($config->get('app.root').'Alpha/stopwords-'.$config->get('search.stop.words.size').'.ini')) {
+				$stopwords = file($config->get('app.root').'Alpha/stopwords-'.$config->get('search.stop.words.size').'.ini', FILE_IGNORE_NEW_LINES);
+			} else {
 				throw new AlphaException('Unable to find a stopwords-'.$config->get('search.stop.words.size').'.ini file in the application!');
 			}
 
 			array_walk($stopwords, 'Alpha\Model\Tag::lowercaseArrayElement');
 
 			$filtered = array_diff($lowerWords, $stopwords);
-		}else{
+		} else {
 			$filtered = $lowerWords;
 		}
 
 		$tagObjects = array();
 		$tagContents = array();
-		foreach($filtered as $tagContent) {
+		foreach ($filtered as $tagContent) {
 			// we only want to create word tags
-			if(Validator::isAlpha($tagContent)) {
+			if (Validator::isAlpha($tagContent)) {
 				// just making sure that we haven't added this one in already
-				if(!in_array($tagContent, $tagContents) && !empty($tagContent)) {
+				if (!in_array($tagContent, $tagContents) && !empty($tagContent)) {
 					$tag = new Tag();
 					$tag->set('content', trim(mb_strtolower($tagContent)));
-					if(!empty($taggedClass))
+					if (!empty($taggedClass))
 						$tag->set('taggedClass', $taggedClass);
-					if(!empty($taggedOID))
+					if (!empty($taggedOID))
 						$tag->set('taggedOID', $taggedOID);
 
 					array_push($tagObjects, $tag);
