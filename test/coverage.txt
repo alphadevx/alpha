@@ -1,12 +1,12 @@
 
 
 Code Coverage Report:        
-  2014-12-09 23:17:51        
+  2014-12-11 13:30:38        
                              
  Summary:                    
-  Classes: 21.95% (9/41)     
-  Methods: 50.24% (213/424)  
-  Lines:   67.55% (2741/4058)
+  Classes: 24.44% (11/45)    
+  Methods: 50.34% (222/441)  
+  Lines:   67.81% (2836/4182)
 
 \Alpha\Controller::Controller
   Methods:  48.89% (22/45)   Lines:  66.81% (318/476)
@@ -70,6 +70,14 @@ Code Coverage Report:
   Methods:   0.00% ( 0/ 1)   Lines:  90.00% (  9/ 10)
 \Alpha\Util\Config::ConfigProvider
   Methods:  33.33% ( 2/ 6)   Lines:  12.00% (  9/ 75)
+\Alpha\Util\Feed::Atom
+  Methods:  75.00% ( 3/ 4)   Lines:  76.19% ( 16/ 21)
+\Alpha\Util\Feed::Feed
+  Methods:  44.44% ( 4/ 9)   Lines:  85.71% ( 72/ 84)
+\Alpha\Util\Feed::RSS
+  Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 16/ 16)
+\Alpha\Util\Feed::RSS2
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  3/  3)
 \Alpha\Util\Helper::Validator
   Methods: 100.00% (10/10)   Lines: 100.00% ( 35/ 35)
 \Alpha\Util\Http::AgentUtils
@@ -81,8 +89,8 @@ Code Coverage Report:
 \Alpha\Util\Http\Session::SessionProviderPHP
   Methods:  83.33% ( 5/ 6)   Lines:  75.00% ( 18/ 24)
 \Alpha\Util\Logging::LogFile
-  Methods:  57.14% ( 4/ 7)   Lines:  31.76% ( 27/ 85)
+  Methods:  42.86% ( 3/ 7)   Lines:  22.35% ( 19/ 85)
 \Alpha\Util\Logging::Logger
-  Methods:  40.00% ( 4/10)   Lines:  38.03% ( 27/ 71)
+  Methods:  30.00% ( 3/10)   Lines:  32.39% ( 23/ 71)
 \Alpha\Util\Security::SecurityUtils
   Methods:  50.00% ( 1/ 2)   Lines:  66.67% (  8/ 12)
