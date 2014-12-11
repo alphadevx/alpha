@@ -4,7 +4,7 @@ namespace Alpha\Model;
 
 use Alpha\Model\Type\String;
 use Alpha\Util\Logging\Logger;
-use Alpha\Util\Config\ConfigManager;
+use Alpha\Util\Config\ConfigProvider;
 use Alpha\Exception\AlphaException;
 
 /**
@@ -14,7 +14,6 @@ use Alpha\Exception\AlphaException;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id: BadRequestObject.inc 1670 2013-09-12 20:41:08Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -132,7 +131,7 @@ class BadRequest extends ActiveRecord
 	 */
 	public function getBadRequestCount()
 	{
-		$config = ConfigManager::getInstance();
+		$config = ConfigProvider::getInstance();
 
 		// the datetime interval syntax between MySQL and SQLite3 is a little different
 		if ($config->get('db.provider.name') == 'Alpha\Model\ActiveRecordProviderMySQL') {

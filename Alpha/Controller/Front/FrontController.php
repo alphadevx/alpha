@@ -4,12 +4,14 @@ namespace Alpha\Controller\Front;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\SecurityUtils;
+use Alpha\Util\Http\Filter\FilterInterface;
 use Alpha\Exception\BadRequestException;
 use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\ResourceNotAllowedException;
 use Alpha\Exception\SecurityException;
 use Alpha\Exception\LibraryNotInstalledException;
-use Alpha\Util\SecurityUtils;
+use Alpha\Exception\IllegalArguementException;
 use Alpha\Controller\Controller;
 
 /**
@@ -626,13 +628,13 @@ class FrontController
 	/**
 	 * Add the supplied filter object to the list of filters ran on each request to the front controller
 	 *
-	 * @param Alpha\Util\Filter\AlphaFilterInterface $filterObject
+	 * @param Alpha\Util\Http\Filter\FilterInterface $filterObject
 	 * @throws Alpha\Exception\IllegalArguementException
 	 * @since 1.0
 	 */
 	public function registerFilter($filterObject)
 	{
-		if($filterObject instanceof AlphaFilterInterface)
+		if ($filterObject instanceof FilterInterface)
 			array_push($this->filters, $filterObject);
 		else
 			throw new IllegalArguementException('Supplied filter object is not a valid AlphaFilterInterface instance!');
