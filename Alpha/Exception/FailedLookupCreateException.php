@@ -7,7 +7,6 @@ namespace Alpha\Exception;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id: FailedLookupCreateException.inc 1654 2013-03-08 17:13:14Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.

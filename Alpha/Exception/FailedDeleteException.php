@@ -1,11 +1,12 @@
 <?php
 
+namespace Alpha\Exception;
+
 /**
  * The exception class for record failed delete errors
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
