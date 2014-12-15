@@ -6,150 +6,150 @@ Version 1.2.4 October 22nd 2014
 
 2014-10-15 23:38:35 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/151 - removed the tableTags params from the public AlphaRendererProviderInterface and RecordSelector methods, as HTML tables are no longer in use in these methods since switching to Bootstrap
+https://github.com/alphadevx/alpha/issues/151 - removed the tableTags params from the public AlphaRendererProviderInterface and RecordSelector methods, as HTML tables are no longer in use in these methods since switching to Bootstrap
 
 2014-08-27 22:03:08 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/137 - added caching support to the SearchProviderTags::getRelated() method
+https://github.com/alphadevx/alpha/issues/137 - added caching support to the SearchProviderTags::getRelated() method
 
 2014-08-26 23:14:42 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/137 - added limited caching support to the SearchProviderTags class for searches on a single tag
+https://github.com/alphadevx/alpha/issues/137 - added limited caching support to the SearchProviderTags class for searches on a single tag
 
 2014-08-25 23:22:31 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/101 - added an APC/APCu implementation of AlphaCacheProviderInterface
+https://github.com/alphadevx/alpha/issues/101 - added an APC/APCu implementation of AlphaCacheProviderInterface
 
 2014-08-23 00:46:56 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/136 - added correct Content-Type header and caching headers to the Image::loadCache() method to ask the browser to cache the images
+https://github.com/alphadevx/alpha/issues/136 - added correct Content-Type header and caching headers to the Image::loadCache() method to ask the browser to cache the images
 
 2014-08-21 23:06:59 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/109 - added the Redis implementation of AlphaCacheProviderInterface, along with appropriate configuration settings, and updated the Memcache cache provider to read the port number from configuration and only connect on instantiation once rather than on each read/write call
+https://github.com/alphadevx/alpha/issues/109 - added the Redis implementation of AlphaCacheProviderInterface, along with appropriate configuration settings, and updated the Memcache cache provider to read the port number from configuration and only connect on instantiation once rather than on each read/write call
 
 2014-07-27 22:19:32 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/160 - fixed a bug that resulted in the premature deletion of MANY-TO-MANY RelationLookup objects under certain conditions
+https://github.com/alphadevx/alpha/issues/160 - fixed a bug that resulted in the premature deletion of MANY-TO-MANY RelationLookup objects under certain conditions
 
 2014-07-27 22:19:07 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/160 - fixed a bug that resulted in the premature deletion of MANY-TO-MANY RelationLookup objects under certain conditions
+https://github.com/alphadevx/alpha/issues/160 - fixed a bug that resulted in the premature deletion of MANY-TO-MANY RelationLookup objects under certain conditions
 
 2014-07-27 15:11:52 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/159 - added the  param to AlphaDAOProviderInterface::loadAllByAttributes()
+https://github.com/alphadevx/alpha/issues/159 - added the  param to AlphaDAOProviderInterface::loadAllByAttributes()
 
 2014-07-27 15:06:13 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/158 - added the RelationLookup::loadAllByAttributes() method
+https://github.com/alphadevx/alpha/issues/158 - added the RelationLookup::loadAllByAttributes() method
 
 2014-07-27 15:01:39 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/157 - String::isRequired() is now using the AlphaValidator::REQUIRED_STRING constant
+https://github.com/alphadevx/alpha/issues/157 - String::isRequired() is now using the AlphaValidator::REQUIRED_STRING constant
 
 2014-07-27 14:57:01 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/156 - updated the Search controller to use the Bootstrap3 pagination CSS class
+https://github.com/alphadevx/alpha/issues/156 - updated the Search controller to use the Bootstrap3 pagination CSS class
 
 2014-07-27 14:51:07 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/155 - added the optional  param to SearchProviderInterface::getRelated()
+https://github.com/alphadevx/alpha/issues/155 - added the optional  param to SearchProviderInterface::getRelated()
 
 2014-07-27 12:32:52 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/153 - added the Timestamp::getTimeAway() method
+https://github.com/alphadevx/alpha/issues/153 - added the Timestamp::getTimeAway() method
 
 2014-07-27 12:26:09 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/152 - the AlphaRendererProviderFactory now checks for the application/json in the Accept header before injecting in the new AlphaRendererProviderJSON instance
+https://github.com/alphadevx/alpha/issues/152 - the AlphaRendererProviderFactory now checks for the application/json in the Accept header before injecting in the new AlphaRendererProviderJSON instance
 
 2014-07-27 12:17:33 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/151 - removed the  param from AlphaRendererProviderInterface::renderTextField()
+https://github.com/alphadevx/alpha/issues/151 - removed the  param from AlphaRendererProviderInterface::renderTextField()
 
 2014-07-27 12:09:41 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/150 - success notifications are now dismissable via an x button
+https://github.com/alphadevx/alpha/issues/150 - success notifications are now dismissable via an x button
 
 2014-07-27 12:04:41 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/149 - removed more HTML table tags from the RecordSelector widget
+https://github.com/alphadevx/alpha/issues/149 - removed more HTML table tags from the RecordSelector widget
 
 2014-07-27 11:59:09 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/148 - fixed StringBox to use disabled rather than readonly property for Bootstrap compatibility
+https://github.com/alphadevx/alpha/issues/148 - fixed StringBox to use disabled rather than readonly property for Bootstrap compatibility
 
 2014-07-20 21:28:43 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/146 - added the AlphaDAO::toArray() method
+https://github.com/alphadevx/alpha/issues/146 - added the AlphaDAO::toArray() method
 
 2014-07-20 21:21:24 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/145 - Add a Session level of controller visibility and also added the AlphaController::generateURLSlug() method
+https://github.com/alphadevx/alpha/issues/145 - Add a Session level of controller visibility and also added the AlphaController::generateURLSlug() method
 
 2014-05-07 23:31:04 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/142 - replaced JQuery UI CSS classses in the error page with Bootstrap CSS classes
+https://github.com/alphadevx/alpha/issues/142 - replaced JQuery UI CSS classses in the error page with Bootstrap CSS classes
 
 2014-05-05 21:11:40 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/141 - added support for security.encrypt.http.fieldnames setting
+https://github.com/alphadevx/alpha/issues/141 - added support for security.encrypt.http.fieldnames setting
 
 2014-05-05 21:08:55 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/140 - added support for the allowCSSOverrides flag to the head template.
+https://github.com/alphadevx/alpha/issues/140 - added support for the allowCSSOverrides flag to the head template.
 
 2014-05-05 21:04:39 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/139 - fixed the JQuery for testing if a checkbox is checked or not
+https://github.com/alphadevx/alpha/issues/139 - fixed the JQuery for testing if a checkbox is checked or not
 
 2014-04-30 22:14:40 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/44 - fixed a bug resulting in the build number not being inserted into the generated API docs during Alpha release, and removed the alpha- prefix from tags
+https://github.com/alphadevx/alpha/issues/44 - fixed a bug resulting in the build number not being inserted into the generated API docs during Alpha release, and removed the alpha- prefix from tags
 
 2014-04-22 22:26:23 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/135 - added a logout link to the admin menu
+https://github.com/alphadevx/alpha/issues/135 - added a logout link to the admin menu
 
 2014-04-12 19:53:04 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/123 - fixed a bug in the sample index.php file resulting in the header being rendered twice
+https://github.com/alphadevx/alpha/issues/123 - fixed a bug in the sample index.php file resulting in the header being rendered twice
 
 2014-04-11 23:32:12 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/123 - updated the CSS classes used in AlphaMarkdown::_doTable_callback() to use Bootstrap classes
+https://github.com/alphadevx/alpha/issues/123 - updated the CSS classes used in AlphaMarkdown::_doTable_callback() to use Bootstrap classes
 
 Version 1.2.3 April 22nd 2014
 -----------------------------
 
 2014-04-10 22:31:32 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/131 - added a unit test for AlphaView::loadTemplateFragment()
+https://github.com/alphadevx/alpha/issues/131 - added a unit test for AlphaView::loadTemplateFragment()
 
 2014-04-10 22:09:05 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/132 - added a unit test for IPBlacklistFilter
+https://github.com/alphadevx/alpha/issues/132 - added a unit test for IPBlacklistFilter
 
 2014-04-10 22:01:08 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/134 - the HTTP filters will be skipped if the user-agent string or IP are not provided on the request
+https://github.com/alphadevx/alpha/issues/134 - the HTTP filters will be skipped if the user-agent string or IP are not provided on the request
 
 2014-04-10 21:10:30 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/166 - I have add a test for AlphaDAO::addToCache()
+https://github.com/alphadevx/alpha/issues/166 - I have add a test for AlphaDAO::addToCache()
 
 2014-04-09 23:59:52 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/133 - added a unit test for AlphaValidator::isBase64() and improved the regex used in that method
+https://github.com/alphadevx/alpha/issues/133 - added a unit test for AlphaValidator::isBase64() and improved the regex used in that method
 
 2014-04-09 23:18:37 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/7 - fixing the standard admin screens to output valid HTML5
+https://github.com/alphadevx/alpha/issues/7 - fixing the standard admin screens to output valid HTML5
 
 2014-04-08 23:54:10 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/7 - fixing the standard admin screens to output valid HTML5
+https://github.com/alphadevx/alpha/issues/7 - fixing the standard admin screens to output valid HTML5
 
 2014-04-03 20:30:25 GMT
 
@@ -196,55 +196,55 @@ Version 1.2.2 October 22nd 2013
 
 2013-10-19 13:36:29 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/105 - the hidden version_num fieldname is now encrypted when security.encrypt.http.fieldnames = true in configuration
+https://github.com/alphadevx/alpha/issues/105 - the hidden version_num fieldname is now encrypted when security.encrypt.http.fieldnames = true in configuration
 
 2013-10-15 21:34:29 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/122 - fixed the AlphaCronManager and BackupTask classes to use the new app.file.store.dir for writting their logs
+https://github.com/alphadevx/alpha/issues/122 - fixed the AlphaCronManager and BackupTask classes to use the new app.file.store.dir for writting their logs
 
 2013-09-22 22:10:24 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/119 - added the AlphaPHPServerUtils class for controlling the built-in HTTP server in PHP 5.4 (starting/stopping/PID status checks)
+https://github.com/alphadevx/alpha/issues/119 - added the AlphaPHPServerUtils class for controlling the built-in HTTP server in PHP 5.4 (starting/stopping/PID status checks)
 
 2013-09-12 21:41:08 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/78 - fixed broken support for the security.encrypt.http.fieldnames in a view more core views and controllers
+https://github.com/alphadevx/alpha/issues/78 - fixed broken support for the security.encrypt.http.fieldnames in a view more core views and controllers
 
 2013-09-12 21:38:17 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/121 - the Image widget no longer creates unnessary image files in the app root. In addition, the var1 and var2 security fields are now URL encoded/decoded by this widget as they are passed in the URL via the ViewImage controller, and are not always URL safe.
+https://github.com/alphadevx/alpha/issues/121 - the Image widget no longer creates unnessary image files in the app root. In addition, the var1 and var2 security fields are now URL encoded/decoded by this widget as they are passed in the URL via the ViewImage controller, and are not always URL safe.
 
 2013-09-12 21:30:36 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/120 - added calls to the Logger::notifyAdmin() method from Logger::error() and Logger::fatal()
+https://github.com/alphadevx/alpha/issues/120 - added calls to the Logger::notifyAdmin() method from Logger::error() and Logger::fatal()
 
 2013-09-12 21:21:40 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/78 - fixed support for security.encrypt.http.fieldnames in the GenSecureQueryStrings controller
+https://github.com/alphadevx/alpha/issues/78 - fixed support for security.encrypt.http.fieldnames in the GenSecureQueryStrings controller
 
 2013-09-12 21:20:52 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/78 - fixed support for security.encrypt.http.fieldnames in the EditTags controller
+https://github.com/alphadevx/alpha/issues/78 - fixed support for security.encrypt.http.fieldnames in the EditTags controller
 
 2013-09-09 21:22:14 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/78 - fixed more instances of security.encrypt.http.fieldnames not being supported correctly in the scaffolded screens
+https://github.com/alphadevx/alpha/issues/78 - fixed more instances of security.encrypt.http.fieldnames not being supported correctly in the scaffolded screens
 
 2013-09-03 23:07:49 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/118 - the AlphaView::renderDoubleField(), AlphaView::renderEnumField(), and AlphaView::renderDEnumField() methods are no longer incorrectly defined as static
+https://github.com/alphadevx/alpha/issues/118 - the AlphaView::renderDoubleField(), AlphaView::renderEnumField(), and AlphaView::renderDEnumField() methods are no longer incorrectly defined as static
 
 2013-08-04 11:22:45 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/106 - fixed broken support for security.encrypt.http.fieldnames = true in the AlphaRendererProviderHTML::renderBooleanField() method and in the jquery.ui.checkbox Javascript
+https://github.com/alphadevx/alpha/issues/106 - fixed broken support for security.encrypt.http.fieldnames = true in the AlphaRendererProviderHTML::renderBooleanField() method and in the jquery.ui.checkbox Javascript
 
 2013-07-09 23:23:29 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/103 - improved the database result checking code in the AlphaDAOProviderMySQL::checkTableExists() method to make it more robust
+https://github.com/alphadevx/alpha/issues/103 - improved the database result checking code in the AlphaDAOProviderMySQL::checkTableExists() method to make it more robust
 
 2013-07-09 23:16:53 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/104 - the AlphaController::decryptFieldNames() now only sets unencrypted fieldname/value pairs in the request when the security.encrypt.http.fieldnames setting is enabled
+https://github.com/alphadevx/alpha/issues/104 - the AlphaController::decryptFieldNames() now only sets unencrypted fieldname/value pairs in the request when the security.encrypt.http.fieldnames setting is enabled
 
 2013-07-07 19:23:50 GMT
 
@@ -256,313 +256,313 @@ Code clean-up (white spaces and copyright) of MarkdownFacade and AlphaView class
 
 2013-06-05 10:52:49 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/83 - updated the folder permissions set by the install controller to make group level permissions more permissive, and permissions for others more restrictive
+https://github.com/alphadevx/alpha/issues/83 - updated the folder permissions set by the install controller to make group level permissions more permissive, and permissions for others more restrictive
 
 2013-06-04 10:37:40 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/95 - fixed support for MANY-TO-MANY relations where a DAO is related to itself
+https://github.com/alphadevx/alpha/issues/95 - fixed support for MANY-TO-MANY relations where a DAO is related to itself
 
 2013-05-28 11:08:25 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/96 - added the AlphaDAO::populateFromArray() method
+https://github.com/alphadevx/alpha/issues/96 - added the AlphaDAO::populateFromArray() method
 
 2013-05-20 15:58:33 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/92 - added optional support for the X-Frame-Options header via the new security.http.header.x.frame.options setting
+https://github.com/alphadevx/alpha/issues/92 - added optional support for the X-Frame-Options header via the new security.http.header.x.frame.options setting
 
 2013-03-08 17:13:14 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/84 - added Logger::action() calls to the ViewTestResults controller, and cleaned up white spaces in the controller and exception packages
+https://github.com/alphadevx/alpha/issues/84 - added Logger::action() calls to the ViewTestResults controller, and cleaned up white spaces in the controller and exception packages
 
 2013-02-27 16:47:12 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/84 - added Logger::action() calls to the ViewArticle controller
+https://github.com/alphadevx/alpha/issues/84 - added Logger::action() calls to the ViewArticle controller
 
 2013-02-26 15:13:13 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/84 - added more Logger::action() calls to the standard controllers
+https://github.com/alphadevx/alpha/issues/84 - added more Logger::action() calls to the standard controllers
 
 2013-02-22 16:50:48 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/84 - added Logger::action() calls to the ListBusinessObjects controller
+https://github.com/alphadevx/alpha/issues/84 - added Logger::action() calls to the ListBusinessObjects controller
 
 2013-02-22 16:18:53 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/84 - added more Logger::action() calls to the standard controllers
+https://github.com/alphadevx/alpha/issues/84 - added more Logger::action() calls to the standard controllers
 
 2013-02-21 16:39:18 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/84 - fixed support for the security.encrypt.http.fieldnames setting in the EditTags controller, and added calls to Logger::action() to this class
+https://github.com/alphadevx/alpha/issues/84 - fixed support for the security.encrypt.http.fieldnames setting in the EditTags controller, and added calls to Logger::action() to this class
 
 2013-02-20 16:32:20 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/84 - added a relation to person model to pull in actions carried out by the person
+https://github.com/alphadevx/alpha/issues/84 - added a relation to person model to pull in actions carried out by the person
 
 2013-02-19 16:11:21 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/84 - added more Logger::action() calls to the standard controllers
+https://github.com/alphadevx/alpha/issues/84 - added more Logger::action() calls to the standard controllers
 
 2013-02-15 14:43:16 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/84 - added more Logger::action() calls to the standard controllers
+https://github.com/alphadevx/alpha/issues/84 - added more Logger::action() calls to the standard controllers
 
 2013-02-14 16:11:19 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/85 - I have added the new ActionLogObject class, and some sample logging calls to the Login/Logout controllers
+https://github.com/alphadevx/alpha/issues/85 - I have added the new ActionLogObject class, and some sample logging calls to the Login/Logout controllers
 
 2013-02-12 22:34:51 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/78 - removed the encryption of id and name attributes from buttons as this was resulting in id attributes that were invalid (for example CSS rules were being ignored)
+https://github.com/alphadevx/alpha/issues/78 - removed the encryption of id and name attributes from buttons as this was resulting in id attributes that were invalid (for example CSS rules were being ignored)
 
 2013-02-12 22:30:48 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/90 - the AlphaDAOProviderMySQL::loadAllByAttribute() method no longer ignores the limit param when the start = 0
+https://github.com/alphadevx/alpha/issues/90 - the AlphaDAOProviderMySQL::loadAllByAttribute() method no longer ignores the limit param when the start = 0
 
 2013-02-08 16:03:10 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/78 - I have updated the HTML generated in the DEnumView class to support security.encrypt.http.fieldnames being set to true
+https://github.com/alphadevx/alpha/issues/78 - I have updated the HTML generated in the DEnumView class to support security.encrypt.http.fieldnames being set to true
 
 2013-02-08 15:09:22 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/78 - I have updated the HTML generated in the adminView() method to support security.encrypt.http.fieldnames being set to true
+https://github.com/alphadevx/alpha/issues/78 - I have updated the HTML generated in the adminView() method to support security.encrypt.http.fieldnames being set to true
 
 2013-01-27 20:22:18 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/78 - fixed the default delete button Javascript and AlphaRendererProviderHTML::renderDeleteForm() method to support security.encrypt.http.fieldnames being set to true
+https://github.com/alphadevx/alpha/issues/78 - fixed the default delete button Javascript and AlphaRendererProviderHTML::renderDeleteForm() method to support security.encrypt.http.fieldnames being set to true
 
 2013-01-25 11:53:35 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/87 - updated the sample .htaccess to remove unused directives and to ensure that directory listings are switched off for the app directories
+https://github.com/alphadevx/alpha/issues/87 - updated the sample .htaccess to remove unused directives and to ensure that directory listings are switched off for the app directories
 
 2013-01-24 14:05:13 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/78 - updated the PersonView class to support the new security.encrypt.http.fieldnames setting
+https://github.com/alphadevx/alpha/issues/78 - updated the PersonView class to support the new security.encrypt.http.fieldnames setting
 
 2013-01-24 12:29:12 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/78 - non-ecrypted POST fieldnames will be wiped from the request (along with their values) if security.encrypt.http.fieldnames is enabled
+https://github.com/alphadevx/alpha/issues/78 - non-ecrypted POST fieldnames will be wiped from the request (along with their values) if security.encrypt.http.fieldnames is enabled
 
 2013-01-24 12:27:12 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/78 - the var1/var2 security fieldnames are now encrypted if security.encrypt.http.fieldnames is enabled
+https://github.com/alphadevx/alpha/issues/78 - the var1/var2 security fieldnames are now encrypted if security.encrypt.http.fieldnames is enabled
 
 2013-01-24 12:24:15 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/78 - updated the Button widget to support the new security.encrypt.http.fieldnames setting, and removed the deprecated Button::renderJavascript() method
+https://github.com/alphadevx/alpha/issues/78 - updated the Button widget to support the new security.encrypt.http.fieldnames setting, and removed the deprecated Button::renderJavascript() method
 
 2013-01-24 11:39:50 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/85 - added the HttpOnly flag to the PHPSESSID cookie set by Alpha
+https://github.com/alphadevx/alpha/issues/85 - added the HttpOnly flag to the PHPSESSID cookie set by Alpha
 
 2013-01-22 16:43:56 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/78 - added the renderStringField() method to the AlphaRendererProviderInterface and AlphaRendererProviderHTML implmentation, fixed a type-check bug in AlphaValidatorLLisDouble(), fixed some broken unit tests due to the name change of the security.query.string.key setting, and finally added more support for security.encrypt.http.fieldnames to the AlphaRendererProviderHTML class.
+https://github.com/alphadevx/alpha/issues/78 - added the renderStringField() method to the AlphaRendererProviderInterface and AlphaRendererProviderHTML implmentation, fixed a type-check bug in AlphaValidatorLLisDouble(), fixed some broken unit tests due to the name change of the security.query.string.key setting, and finally added more support for security.encrypt.http.fieldnames to the AlphaRendererProviderHTML class.
 
 2013-01-21 23:26:23 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/78 - added support for the new security.encrypt.http.fieldnames setting to StringBox and TextBox, in addition to adding support at the controller level for automatically decrypting POST fieldnames when security.encrypt.http.fieldnames is enabled
+https://github.com/alphadevx/alpha/issues/78 - added support for the new security.encrypt.http.fieldnames setting to StringBox and TextBox, in addition to adding support at the controller level for automatically decrypting POST fieldnames when security.encrypt.http.fieldnames is enabled
 
 2013-01-20 21:01:12 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/44 - manually adding in the correct version number in the current API docs
+https://github.com/alphadevx/alpha/issues/44 - manually adding in the correct version number in the current API docs
 
 2013-01-17 17:20:05 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/80 - added the AlphaSecurityUtils class to centralize encrypt/decrypt logic, changed the security.query.string.key setting to security.encryption.key which is more generic, and finally updated the AlphaController::checkSecurityFields() and AlphaController::generateSecurityFields() methods to use strong encryption (TripleDES rather than MD5)
+https://github.com/alphadevx/alpha/issues/80 - added the AlphaSecurityUtils class to centralize encrypt/decrypt logic, changed the security.query.string.key setting to security.encryption.key which is more generic, and finally updated the AlphaController::checkSecurityFields() and AlphaController::generateSecurityFields() methods to use strong encryption (TripleDES rather than MD5)
 
 2013-01-09 16:34:50 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/77 - switching from application/x-compressed to application/zip in the MIME-type file mappings in AlphaFileUtils
+https://github.com/alphadevx/alpha/issues/77 - switching from application/x-compressed to application/zip in the MIME-type file mappings in AlphaFileUtils
 
 Version 1.2.1 December 21st 2012
 --------------------------------
 
 2012-12-21 11:42:53 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/43 - fixed the folder layout problems with the zip archive generated by the release script
+https://github.com/alphadevx/alpha/issues/43 - fixed the folder layout problems with the zip archive generated by the release script
 
 2012-12-20 12:33:13 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/60 - added a unit test for RelationLookup::loadAllByAttribute()
+https://github.com/alphadevx/alpha/issues/60 - added a unit test for RelationLookup::loadAllByAttribute()
 
 2012-12-20 11:48:42 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/61 - added some unit tests for the RelationLookup::setValue() method
+https://github.com/alphadevx/alpha/issues/61 - added some unit tests for the RelationLookup::setValue() method
 
 2012-12-20 11:26:50 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/59 - added a unit test for RelationLookup::getTableName()
+https://github.com/alphadevx/alpha/issues/59 - added a unit test for RelationLookup::getTableName()
 
 2012-12-19 16:51:08 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/58 - added a unit test for RelationLookup::__construct() and fixed a bug in RelationLookup::getTableName() that sometimes results in the wrong table name being returned.
+https://github.com/alphadevx/alpha/issues/58 - added a unit test for RelationLookup::__construct() and fixed a bug in RelationLookup::getTableName() that sometimes results in the wrong table name being returned.
 
 2012-12-19 15:05:31 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/55 - added a unit test for Relation::getRelatedObjects(), and added RisghtObject::after_save_callback() to setup the rels on those objects once they are saved
+https://github.com/alphadevx/alpha/issues/55 - added a unit test for Relation::getRelatedObjects(), and added RisghtObject::after_save_callback() to setup the rels on those objects once they are saved
 
 2012-12-19 12:12:14 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/56 - added a unit test for Relation::getRelatedObject()
+https://github.com/alphadevx/alpha/issues/56 - added a unit test for Relation::getRelatedObject()
 
 2012-12-19 11:28:46 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/54 - added a unit test for the Relation::getRelatedClassDisplayFieldValue() method on ONE-TO-MANY and MANY-TO-MANY relations
+https://github.com/alphadevx/alpha/issues/54 - added a unit test for the Relation::getRelatedClassDisplayFieldValue() method on ONE-TO-MANY and MANY-TO-MANY relations
 
 2012-12-18 16:58:39 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/57 - added a unit test for Relation::getSide()
+https://github.com/alphadevx/alpha/issues/57 - added a unit test for Relation::getSide()
 
 2012-12-18 16:13:09 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/69 - added a unit test for AlphaDAO::cast()
+https://github.com/alphadevx/alpha/issues/69 - added a unit test for AlphaDAO::cast()
 
 2012-12-18 12:16:22 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/70 - added a some unit tests to cover AlphaDAOProviderFactory::getInstance()
+https://github.com/alphadevx/alpha/issues/70 - added a some unit tests to cover AlphaDAOProviderFactory::getInstance()
 
 2012-12-18 11:21:25 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/62 - added a unit test for Timestamp::getUnixValue()
+https://github.com/alphadevx/alpha/issues/62 - added a unit test for Timestamp::getUnixValue()
 
 2012-12-17 16:57:00 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/68 - added a test for AlphaDAO::getFriendlyClassName()
+https://github.com/alphadevx/alpha/issues/68 - added a test for AlphaDAO::getFriendlyClassName()
 
 2012-12-17 16:30:47 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/65 - added a test for AlphaDAO::removeFromCache()
+https://github.com/alphadevx/alpha/issues/65 - added a test for AlphaDAO::removeFromCache()
 
 2012-12-17 15:08:19 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/64 - added the AlphaCacheProviderArray class which is useful for unit tests, a new unit test for AlphaDAO::loadFromCache() which makes use of this new array cache implementation, fixed a bug in AlphaDAO::loadFromCache() and finally updated the AlphaDAO save methods to add the saved record to the cache after removing any old instance of it.
+https://github.com/alphadevx/alpha/issues/64 - added the AlphaCacheProviderArray class which is useful for unit tests, a new unit test for AlphaDAO::loadFromCache() which makes use of this new array cache implementation, fixed a bug in AlphaDAO::loadFromCache() and finally updated the AlphaDAO save methods to add the saved record to the cache after removing any old instance of it.
 
 2012-12-17 11:26:17 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/53 - added a unit test for Relation::getRelatedClass()
+https://github.com/alphadevx/alpha/issues/53 - added a unit test for Relation::getRelatedClass()
 
 2012-12-14 16:58:31 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/67 - added test for AlphaDAO::hasAttribute()
+https://github.com/alphadevx/alpha/issues/67 - added test for AlphaDAO::hasAttribute()
 
 2012-12-13 15:41:06 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/51 - added three more test cases to Date_Test::testPopulateFromString() to test the error generation on the Date::populateFromString() method
+https://github.com/alphadevx/alpha/issues/51 - added three more test cases to Date_Test::testPopulateFromString() to test the error generation on the Date::populateFromString() method
 
 2012-12-13 15:07:00 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/50 - added a unit test for Date::getUSValue()
+https://github.com/alphadevx/alpha/issues/50 - added a unit test for Date::getUSValue()
 
 2012-12-13 14:44:38 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/44 - the generated API docs now include the new version number in the headline on the home page
+https://github.com/alphadevx/alpha/issues/44 - the generated API docs now include the new version number in the headline on the home page
 
 2012-12-10 12:04:46 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/20 - added the  param to the AlphaFileUtils::listDirectoryContents() and AlphaFileUtils::deleteDirectoryContents() methods to filter out certain files, and used this in the CacheManager controller to exclude .htaccess files from being listed/deleted from the cache directories.
+https://github.com/alphadevx/alpha/issues/20 - added the  param to the AlphaFileUtils::listDirectoryContents() and AlphaFileUtils::deleteDirectoryContents() methods to filter out certain files, and used this in the CacheManager controller to exclude .htaccess files from being listed/deleted from the cache directories.
 
 2012-12-10 11:28:50 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/49 - added a unit test for Date::getUnixValue()
+https://github.com/alphadevx/alpha/issues/49 - added a unit test for Date::getUnixValue()
 
 2012-12-10 10:51:41 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/48 - added a unit test for DEnumItem::loadItems()
+https://github.com/alphadevx/alpha/issues/48 - added a unit test for DEnumItem::loadItems()
 
 2012-11-29 12:31:15 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/25 - added a unit test for AlphaDAO::saveHistory(), and fixed a bug in the implementations of AlphaDAOProviderInterface::saveAttribute() that related to the version_num value not being incremented on the updated records
+https://github.com/alphadevx/alpha/issues/25 - added a unit test for AlphaDAO::saveHistory(), and fixed a bug in the implementations of AlphaDAOProviderInterface::saveAttribute() that related to the version_num value not being incremented on the updated records
 
 2012-11-29 11:03:01 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/26 - added a unit test to ensure that _history tables are created automatically when the main table is created, and tidied up the calls to makeTable() in the DAO providers.
+https://github.com/alphadevx/alpha/issues/26 - added a unit test to ensure that _history tables are created automatically when the main table is created, and tidied up the calls to makeTable() in the DAO providers.
 
 2012-11-27 17:05:17 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/52 - added a new unit test to cover the Integer::zeroPad() method.
+https://github.com/alphadevx/alpha/issues/52 - added a new unit test to cover the Integer::zeroPad() method.
 
 2012-11-27 16:16:55 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/47 - added a new unit test to cover the AlphaController::checkIfAccessingFromSecureURL() method.
+https://github.com/alphadevx/alpha/issues/47 - added a new unit test to cover the AlphaController::checkIfAccessingFromSecureURL() method.
 
 2012-11-27 15:43:56 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/46 - added a new unit test to cover the AlphaController::checkControllerDefExists() method.
+https://github.com/alphadevx/alpha/issues/46 - added a new unit test to cover the AlphaController::checkControllerDefExists() method.
 
 2012-11-21 15:43:59 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/45 - added a new unit test to cover the FrontController::generateSecureURL() method.
+https://github.com/alphadevx/alpha/issues/45 - added a new unit test to cover the FrontController::generateSecureURL() method.
 
 2012-11-21 15:05:52 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/71 - the ViewTestResults controller now overwrites the PHP include_path with the path to the bundled PHPUnit library rather than appending to the existing include_path.
+https://github.com/alphadevx/alpha/issues/71 - the ViewTestResults controller now overwrites the PHP include_path with the path to the bundled PHPUnit library rather than appending to the existing include_path.
 
 Version 1.2: November 15th 2012
 -------------------------------
 
 2012-11-12 15:36:46 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/42 - added an APIGen template for Alpha Framework
+https://github.com/alphadevx/alpha/issues/42 - added an APIGen template for Alpha Framework
 
 2012-11-05 23:05:20 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/10 - added support for parsing multiple server names for each environment in the servers.ini file.
+https://github.com/alphadevx/alpha/issues/10 - added support for parsing multiple server names for each environment in the servers.ini file.
 
 2012-11-04 16:35:22 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/5 - added an app release target
+https://github.com/alphadevx/alpha/issues/5 - added an app release target
 
 2012-10-30 15:48:57 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/41 - fixed a case sensitivity bug while attempting to load the TextBox class.
+https://github.com/alphadevx/alpha/issues/41 - fixed a case sensitivity bug while attempting to load the TextBox class.
 
 2012-10-30 15:30:35 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/40 - removed references to NewsObject and BlogEntryObject classes.
+https://github.com/alphadevx/alpha/issues/40 - removed references to NewsObject and BlogEntryObject classes.
 
 2012-10-30 15:08:38 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/5 - added a new build.xml for creating Alpha Framework releases in SVN and release artifacts
+https://github.com/alphadevx/alpha/issues/5 - added a new build.xml for creating Alpha Framework releases in SVN and release artifacts
 
 2012-10-26 14:52:26 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/5 - adding in a VERSION.txt file to track Alpha release versions, and a revised build.xml file for Phing which is still work in progress.
+https://github.com/alphadevx/alpha/issues/5 - adding in a VERSION.txt file to track Alpha release versions, and a revised build.xml file for Phing which is still work in progress.
 
 2012-10-24 23:21:51 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/31 - I have added in the cms.url.title.separator setting to enable the app developer to choose the character they want to use as the space separator in article URLs that contain the article title.
+https://github.com/alphadevx/alpha/issues/31 - I have added in the cms.url.title.separator setting to enable the app developer to choose the character they want to use as the space separator in article URLs that contain the article title.
 
 2012-10-23 23:16:09 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/14 - added the security.ip.blacklist.filter.enabled config setting for switching on/off the IP blacklist filter.
+https://github.com/alphadevx/alpha/issues/14 - added the security.ip.blacklist.filter.enabled config setting for switching on/off the IP blacklist filter.
 
 2012-10-23 23:03:26 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/8 - added a call to php_uname() in the AlphaConfig::loadConfig() method, to further ensure that the hostname of the current server can be determinined.
+https://github.com/alphadevx/alpha/issues/8 - added a call to php_uname() in the AlphaConfig::loadConfig() method, to further ensure that the hostname of the current server can be determinined.
 
 2012-10-23 15:06:12 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/14 - added an optional IP filter for blocking bad IP addresses from making requests to the application.
+https://github.com/alphadevx/alpha/issues/14 - added an optional IP filter for blocking bad IP addresses from making requests to the application.
 
 2012-10-23 14:23:23 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/39 - added the cms.allow.print.versions config option to switch on/off links to print versions of articles in the CMS
+https://github.com/alphadevx/alpha/issues/39 - added the cms.allow.print.versions config option to switch on/off links to print versions of articles in the CMS
 
 2012-10-07 17:10:56 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added the implemented of the createForeignIndex() method to the SQLite3 DAO provider, and added the optional BO parameter to the begin/commit/rollback methods in the AlphaDAO class.
+https://github.com/alphadevx/alpha/issues/4 - added the implemented of the createForeignIndex() method to the SQLite3 DAO provider, and added the optional BO parameter to the begin/commit/rollback methods in the AlphaDAO class.
 
 2012-10-01 22:45:38 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - fixed a syntax bug in the SQLite provider class.
+https://github.com/alphadevx/alpha/issues/4 - fixed a syntax bug in the SQLite provider class.
 
 2012-10-01 22:27:18 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/18 - fixed a bug that was causing the autoloader to be invoked on the string of the requested URL.
+https://github.com/alphadevx/alpha/issues/18 - fixed a bug that was causing the autoloader to be invoked on the string of the requested URL.
 
 2012-08-10 12:40:11 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added in the first (draft, untested!) createForeignIndex() implementation in the SQLite3 DAO provider, and updated the makeTable() method there to create foreign keys on table creation (the only way that SQLite3 supports).
+https://github.com/alphadevx/alpha/issues/4 - added in the first (draft, untested!) createForeignIndex() implementation in the SQLite3 DAO provider, and updated the makeTable() method there to create foreign keys on table creation (the only way that SQLite3 supports).
 
 2012-08-05 20:59:16 GMT
 
@@ -570,11 +570,11 @@ The Image class now sets the filename param in calls to imagepng() and imagejpg(
 
 2012-08-05 20:57:34 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/16 - fixed the path to the KPI logs
+https://github.com/alphadevx/alpha/issues/16 - fixed the path to the KPI logs
 
 2012-08-05 20:56:14 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/16 - fixed the path to the search controller log
+https://github.com/alphadevx/alpha/issues/16 - fixed the path to the search controller log
 
 2012-08-04 22:07:27 GMT
 
@@ -586,23 +586,23 @@ Fixed a bug in the path to the KPI logs
 
 2012-08-04 15:36:54 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - all existing unit tests are now passing while using SQLite3.
+https://github.com/alphadevx/alpha/issues/4 - all existing unit tests are now passing while using SQLite3.
 
 2012-08-03 23:37:11 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - the rollback() method in the SQLite3 provider now silently swallows complaints from the database that you cannot rollback due to a transaction not being in progress.
+https://github.com/alphadevx/alpha/issues/4 - the rollback() method in the SQLite3 provider now silently swallows complaints from the database that you cannot rollback due to a transaction not being in progress.
 
 2012-08-03 22:47:25 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added implementation of the createUniqueIndex() method in the SQLite3 DAO provider, and fixed some bugs with the loadAllByAttributes() method in the same class.
+https://github.com/alphadevx/alpha/issues/4 - added implementation of the createUniqueIndex() method in the SQLite3 DAO provider, and fixed some bugs with the loadAllByAttributes() method in the same class.
 
 2012-08-02 22:41:29 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - fixing broken unit tests when using SQLite3.
+https://github.com/alphadevx/alpha/issues/4 - fixing broken unit tests when using SQLite3.
 
 2012-08-02 21:55:24 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - fixed a bug in the save method of the SQLite3 DAO provider that resulted in the version_num not being incremented on updates.
+https://github.com/alphadevx/alpha/issues/4 - fixed a bug in the save method of the SQLite3 DAO provider that resulted in the version_num not being incremented on updates.
 
 2012-08-01 22:32:49 GMT
 
@@ -610,23 +610,23 @@ Updated the error handler for uncaught PHP exceptions to also log the source fil
 
 2012-08-01 22:31:51 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - fixed the result set looping in the AlphaDAOProviderSQLite::loadAllByAttribute() method.
+https://github.com/alphadevx/alpha/issues/4 - fixed the result set looping in the AlphaDAOProviderSQLite::loadAllByAttribute() method.
 
 2012-07-31 23:08:19 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - improved the error handling in the constructor of the DEnum class to handle installation scenarios more safely when the DEnum table may not exist or may not be populated yet.
+https://github.com/alphadevx/alpha/issues/4 - improved the error handling in the constructor of the DEnum class to handle installation scenarios more safely when the DEnum table may not exist or may not be populated yet.
 
 2012-07-31 23:06:01 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - fixed bug in binding params to SQLite3 insert/update statements, and fixed a bug with the creation of the OID auto-increment primary key on each SQLite3 table.
+https://github.com/alphadevx/alpha/issues/4 - fixed bug in binding params to SQLite3 insert/update statements, and fixed a bug with the creation of the OID auto-increment primary key on each SQLite3 table.
 
 2012-07-31 23:02:28 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - AlphaDAO::setEnumOptions() now handles NotImplementedException exceptions coming back from the SQLite3 provider by logging them as warnings.
+https://github.com/alphadevx/alpha/issues/4 - AlphaDAO::setEnumOptions() now handles NotImplementedException exceptions coming back from the SQLite3 provider by logging them as warnings.
 
 2012-07-30 23:50:59 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - fixed syntax bugs in the getIndexes() and makeTable() methods, and coverted some database calls to exec() from query() where a result set is not expected.
+https://github.com/alphadevx/alpha/issues/4 - fixed syntax bugs in the getIndexes() and makeTable() methods, and coverted some database calls to exec() from query() where a result set is not expected.
 
 2012-07-30 23:47:55 GMT
 
@@ -638,223 +638,223 @@ Fixed invalid path to the logs dir in the Install controller
 
 2012-07-29 22:15:40 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/16 - added in the app.file.store.dir setting to allow us to have the data files stored outside of the web application deployment directory.
+https://github.com/alphadevx/alpha/issues/16 - added in the app.file.store.dir setting to allow us to have the data files stored outside of the web application deployment directory.
 
 2012-07-29 18:48:54 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/30 - re-ordered the settings in the config files, to group together related settings under related headings.
+https://github.com/alphadevx/alpha/issues/30 - re-ordered the settings in the config files, to group together related settings under related headings.
 
 2012-07-29 18:07:07 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/30 - removed the "sys" prefix from the config file settings, and renamed each setting to a namespaced version with a dot seperator.  Mapping of old-to-new config values in the comment here: http://www.assembla.com/spaces/alpha-framework/tickets/30
+https://github.com/alphadevx/alpha/issues/30 - removed the "sys" prefix from the config file settings, and renamed each setting to a namespaced version with a dot seperator.  Mapping of old-to-new config values in the comment here: http://www.assembla.com/spaces/alpha-framework/tickets/30
 
 2012-07-24 21:36:02 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - fixed a syntax bug with the AlphaDAOProviderSQLite::makeHistoryTable() method
+https://github.com/alphadevx/alpha/issues/4 - fixed a syntax bug with the AlphaDAOProviderSQLite::makeHistoryTable() method
 
 2012-07-24 16:07:04 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added setBO($BO) to AlphaDAOProviderSQLite.
+https://github.com/alphadevx/alpha/issues/4 - added setBO($BO) to AlphaDAOProviderSQLite.
 
 2012-07-24 15:51:26 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added implementations of begin/commit/rollback to the SQLite DAO provider.
+https://github.com/alphadevx/alpha/issues/4 - added implementations of begin/commit/rollback to the SQLite DAO provider.
 
 2012-07-05 11:17:41 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - Added initial implementations for reload(), checkRecordExists(), and isTableOverloaded() to the AlphaDAOProviderSQLite provider class.
+https://github.com/alphadevx/alpha/issues/4 - Added initial implementations for reload(), checkRecordExists(), and isTableOverloaded() to the AlphaDAOProviderSQLite provider class.
 
 2012-07-03 10:23:42 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added initial implementations of AlphaDAOProviderSQLite::getIndexes() and AlphaDAOProviderSQLite::checkIndexes()
+https://github.com/alphadevx/alpha/issues/4 - added initial implementations of AlphaDAOProviderSQLite::getIndexes() and AlphaDAOProviderSQLite::checkIndexes()
 
 2012-06-28 10:36:09 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - Added the AlphaDAOProviderSQLite::findMissingFields() method implementation
+https://github.com/alphadevx/alpha/issues/4 - Added the AlphaDAOProviderSQLite::findMissingFields() method implementation
 
 2012-06-21 12:04:31 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added AlphaDAOProviderSQLite::checkTableNeedsUpdate() implementation
+https://github.com/alphadevx/alpha/issues/4 - added AlphaDAOProviderSQLite::checkTableNeedsUpdate() implementation
 
 2012-06-20 12:22:55 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added implementations for the methods for checking that tables exists to the SQLite DAO provider
+https://github.com/alphadevx/alpha/issues/4 - added implementations for the methods for checking that tables exists to the SQLite DAO provider
 
 2012-06-20 11:20:13 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added implementations for getMAX(), getCount(), and getHistoryCount() to the AlphaDAOProviderSQLite class
+https://github.com/alphadevx/alpha/issues/4 - added implementations for getMAX(), getCount(), and getHistoryCount() to the AlphaDAOProviderSQLite class
 
 2012-06-20 10:35:35 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added the dropTable() and addProperty() implementations to AlphaDAOProviderSQLite.inc
+https://github.com/alphadevx/alpha/issues/4 - added the dropTable() and addProperty() implementations to AlphaDAOProviderSQLite.inc
 
 2012-06-19 11:59:06 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added the makeTable(), makeHistoryTable(), and rebuildTable() implementations to the SQLite DAO provider class.
+https://github.com/alphadevx/alpha/issues/4 - added the makeTable(), makeHistoryTable(), and rebuildTable() implementations to the SQLite DAO provider class.
 
 2012-06-18 10:17:44 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added implementations for saveHistory(), delete(), and getVersion() to the SQLite DAO provider class.
+https://github.com/alphadevx/alpha/issues/4 - added implementations for saveHistory(), delete(), and getVersion() to the SQLite DAO provider class.
 
 2012-06-15 12:16:17 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added the AlphaDAOProviderSQLite::saveAttribute() implementation
+https://github.com/alphadevx/alpha/issues/4 - added the AlphaDAOProviderSQLite::saveAttribute() implementation
 
 2012-06-15 11:12:25 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added the initial cut of the save() method to the SQLite DAO provider implementation.
+https://github.com/alphadevx/alpha/issues/4 - added the initial cut of the save() method to the SQLite DAO provider implementation.
 
 2012-06-13 11:11:39 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - Adding implementations of loadAllByDayUpdated(...) and loadAllFieldValuesByAttribute(...) to AlphaDAOProviderSQLite
+https://github.com/alphadevx/alpha/issues/4 - Adding implementations of loadAllByDayUpdated(...) and loadAllFieldValuesByAttribute(...) to AlphaDAOProviderSQLite
 
 2012-06-12 14:47:33 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added the SQLite DAO provider implementations of loadAllByAttribute() and loadAllByAttributes().
+https://github.com/alphadevx/alpha/issues/4 - added the SQLite DAO provider implementations of loadAllByAttribute() and loadAllByAttributes().
 
 2012-06-11 10:47:30 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added the SQLite implemenations of the loadByAttribute() and loadAll() methods to it's DAO provider class.
+https://github.com/alphadevx/alpha/issues/4 - added the SQLite implemenations of the loadByAttribute() and loadAll() methods to it's DAO provider class.
 
 2012-05-31 11:48:32 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added the load() method to the AlphaDAOProviderSQLite class
+https://github.com/alphadevx/alpha/issues/4 - added the load() method to the AlphaDAOProviderSQLite class
 
 2012-05-30 09:57:32 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added the AlphaDAOProviderSQLite::query() method implementation
+https://github.com/alphadevx/alpha/issues/4 - added the AlphaDAOProviderSQLite::query() method implementation
 
 2012-05-29 15:55:06 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added implementations to AlphaDAOProviderSQLite for disconnect() and getLastDatabaseError()
+https://github.com/alphadevx/alpha/issues/4 - added implementations to AlphaDAOProviderSQLite for disconnect() and getLastDatabaseError()
 
 2012-05-29 15:41:41 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added the AlphaDAOProviderSQLite::getConnection() method, along with the new sysDBFilePath configuration property
+https://github.com/alphadevx/alpha/issues/4 - added the AlphaDAOProviderSQLite::getConnection() method, along with the new sysDBFilePath configuration property
 
 2012-05-28 16:23:57 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/4 - added in a stub implementation of the AlphaDAOProviderSQLite class, and the NotImplementedException class for handling when a method is not implemented by a provider.
+https://github.com/alphadevx/alpha/issues/4 - added in a stub implementation of the AlphaDAOProviderSQLite class, and the NotImplementedException class for handling when a method is not implemented by a provider.
 
 2012-05-16 14:49:36 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/2 - the date format used in the names of the backup directories and file names has changed from dd-mm-yyyy to yyyy-mm-dd
+https://github.com/alphadevx/alpha/issues/2 - the date format used in the names of the backup directories and file names has changed from dd-mm-yyyy to yyyy-mm-dd
 
 2012-05-10 13:58:19 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/3 - added the AlphaDAO::getHistoryCount() method for returning a count of the history records for the current DAO
+https://github.com/alphadevx/alpha/issues/3 - added the AlphaDAO::getHistoryCount() method for returning a count of the history records for the current DAO
 
 2012-05-09 12:32:55 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/3 - added the AlphaDAO::saveHistory() method, which is called internally in the model layer when a business object has been flagged for history retention.
+https://github.com/alphadevx/alpha/issues/3 - added the AlphaDAO::saveHistory() method, which is called internally in the model layer when a business object has been flagged for history retention.
 
 2012-05-08 11:51:46 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/3 - added code to the model layer for checking for the existance of the _history tables, and creating them when they do not exist
+https://github.com/alphadevx/alpha/issues/3 - added code to the model layer for checking for the existance of the _history tables, and creating them when they do not exist
 
 2012-05-04 11:01:54 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - added the $provider property to the AlphaView class, along with the AlphaView::setProvider() method to set it to a specific implementation of the AlphaRendererProviderInterface is you want to.
+https://github.com/alphadevx/alpha/issues/12 - added the $provider property to the AlphaView class, along with the AlphaView::setProvider() method to set it to a specific implementation of the AlphaRendererProviderInterface is you want to.
 
 2012-05-02 11:04:19 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - rearranged the folders and files under alpha/view/renderers to support the structure proposed for this ticket, and made any necessary code changes to support this.
+https://github.com/alphadevx/alpha/issues/12 - rearranged the folders and files under alpha/view/renderers to support the structure proposed for this ticket, and made any necessary code changes to support this.
 
 2012-05-02 10:26:34 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - removed the old templates directory
+https://github.com/alphadevx/alpha/issues/12 - removed the old templates directory
 
 2012-05-01 22:17:21 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - added the sysRendererProviderName config parameter.
+https://github.com/alphadevx/alpha/issues/12 - added the sysRendererProviderName config parameter.
 
 2012-05-01 22:12:07 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - finished off the remaining todo items in AlphaView to get the class to use the AlphaRendererProviderHTML implementation.
+https://github.com/alphadevx/alpha/issues/12 - finished off the remaining todo items in AlphaView to get the class to use the AlphaRendererProviderHTML implementation.
 
 2012-04-25 22:54:26 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12- AlphaView::display[Update/Error]Message() now use the implementations from the AlphaRendererProviderHTML class.
+https://github.com/alphadevx/alpha/issues/12- AlphaView::display[Update/Error]Message() now use the implementations from the AlphaRendererProviderHTML class.
 
 2012-04-25 22:37:35 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - adding the admin menu HTML fragment to the create/edit article controllers.
+https://github.com/alphadevx/alpha/issues/12 - adding the admin menu HTML fragment to the create/edit article controllers.
 
 2012-04-25 22:28:33 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12- AlphaView::displayPageFoot() now uses the implementation from the AlphaRendererProviderHTML implementation.
+https://github.com/alphadevx/alpha/issues/12- AlphaView::displayPageFoot() now uses the implementation from the AlphaRendererProviderHTML implementation.
 
 2012-04-24 22:26:19 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12- AlphaView::displayPageHead() now uses the implementation from the AlphaRendererProviderHTML implementation, and the renderMenu and renderStatus params have been removed from that method.
+https://github.com/alphadevx/alpha/issues/12- AlphaView::displayPageHead() now uses the implementation from the AlphaRendererProviderHTML implementation, and the renderMenu and renderStatus params have been removed from that method.
 
 2012-04-24 22:21:20 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - added in the adminmenu.phtml fragment template that contains the HTML for the backend admin menu, and modified the admin and generic CRUD controllers to use this.
+https://github.com/alphadevx/alpha/issues/12 - added in the adminmenu.phtml fragment template that contains the HTML for the backend admin menu, and modified the admin and generic CRUD controllers to use this.
 
 2012-04-24 22:19:22 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - added in the adminmenu.phtml fragment template that contains the HTML for the backend admin menu, and modified the admin and generic CRUD controllers to use this.
+https://github.com/alphadevx/alpha/issues/12 - added in the adminmenu.phtml fragment template that contains the HTML for the backend admin menu, and modified the admin and generic CRUD controllers to use this.
 
 2012-02-21 22:08:56 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - the main view methods in AlphaView now inject in the rendering provider (currently only HTML) via the new AlphaRendererProviderFactory
+https://github.com/alphadevx/alpha/issues/12 - the main view methods in AlphaView now inject in the rendering provider (currently only HTML) via the new AlphaRendererProviderFactory
 
 2012-02-21 16:03:53 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - added the remaining methods to AlphaRendererProviderHTML
+https://github.com/alphadevx/alpha/issues/12 - added the remaining methods to AlphaRendererProviderHTML
 
 2012-02-21 15:54:52 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - added the remaining static methods to AlphaRendererProviderHTML
+https://github.com/alphadevx/alpha/issues/12 - added the remaining static methods to AlphaRendererProviderHTML
 
 2012-02-17 14:35:22 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - added initial implementation of AlphaRendererProviderHTML::displayPageHead and AlphaRendererProviderHTML::displayPageFoot
+https://github.com/alphadevx/alpha/issues/12 - added initial implementation of AlphaRendererProviderHTML::displayPageHead and AlphaRendererProviderHTML::displayPageFoot
 
 2012-02-17 14:26:49 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - added initial implementation of AlphaRendererProviderHTML::adminView
+https://github.com/alphadevx/alpha/issues/12 - added initial implementation of AlphaRendererProviderHTML::adminView
 
 2012-02-17 12:19:55 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - added initial implementation of AlphaRendererProviderHTML::detailedView
+https://github.com/alphadevx/alpha/issues/12 - added initial implementation of AlphaRendererProviderHTML::detailedView
 
 2012-02-17 12:16:59 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - added initial implementation of AlphaRendererProviderHTML::listView
+https://github.com/alphadevx/alpha/issues/12 - added initial implementation of AlphaRendererProviderHTML::listView
 
 2012-02-17 11:58:52 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - added initial implementation of AlphaRendererProviderHTML::editView
+https://github.com/alphadevx/alpha/issues/12 - added initial implementation of AlphaRendererProviderHTML::editView
 
 2012-02-17 11:36:48 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - added initial implementation of AlphaRendererProviderHTML::createView along with supporting methods
+https://github.com/alphadevx/alpha/issues/12 - added initial implementation of AlphaRendererProviderHTML::createView along with supporting methods
 
 2012-02-16 19:52:05 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - added a stub implementation of AlphaRendererProviderHTML (real implementation to follow in stages)
+https://github.com/alphadevx/alpha/issues/12 - added a stub implementation of AlphaRendererProviderHTML (real implementation to follow in stages)
 
 2012-02-16 19:50:56 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - copied the existing HTML templates to their new location
+https://github.com/alphadevx/alpha/issues/12 - copied the existing HTML templates to their new location
 
 2012-02-16 19:29:16 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/12 - added in the interface and factory class for the new alpha::view::renderer package
+https://github.com/alphadevx/alpha/issues/12 - added in the interface and factory class for the new alpha::view::renderer package
 
 2012-02-14 20:44:40 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/1 - added alpha/util/fitlers to list of dirs to inspect when auto-loading, and added an explicit include to the AlphaErrorHandlers class from AlphaAutoLoader
+https://github.com/alphadevx/alpha/issues/1 - added alpha/util/fitlers to list of dirs to inspect when auto-loading, and added an explicit include to the AlphaErrorHandlers class from AlphaAutoLoader
 
 2012-02-14 20:28:45 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/1 - finished switching the framework over to using the class auto-loader class class
+https://github.com/alphadevx/alpha/issues/1 - finished switching the framework over to using the class auto-loader class class
 
 2012-02-12 20:32:21 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/1 - fixed a bug in the auto-loader class AlphaAutoLoader, and started to switch the framework over to using this class
+https://github.com/alphadevx/alpha/issues/1 - fixed a bug in the auto-loader class AlphaAutoLoader, and started to switch the framework over to using this class
 
 2012-02-12 20:26:24 GMT
 
@@ -862,7 +862,7 @@ Removed an old obsolete version of Markdown from the lib dir
 
 2012-02-10 16:10:03 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/1 - added the first (untested) draft of the class auto-loader
+https://github.com/alphadevx/alpha/issues/1 - added the first (untested) draft of the class auto-loader
 
 2012-02-01 21:12:54 GMT
 
@@ -870,11 +870,11 @@ Updated license date
 
 2012-02-01 20:03:35 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/9 - Added an abstracted interface for handling code highlighters
+https://github.com/alphadevx/alpha/issues/9 - Added an abstracted interface for handling code highlighters
 
 2012-01-31 20:39:48 GMT
 
-https://www.assembla.com/spaces/alpha-framework/tickets/9 - removed Geshi from the Alpha repo
+https://github.com/alphadevx/alpha/issues/9 - removed Geshi from the Alpha repo
 
 2012-01-28 18:15:41 GMT
 
