@@ -1269,9 +1269,9 @@ abstract class Controller
 
 		if ($controllerName == '/')
 			$exists = true;
-		if (file_exists($config->get('app.root').'controller/'.$controllerName.'.php'))
+		if (file_exists($config->get('app.root').'Controller/'.$controllerName.'.php'))
 			$exists = true;
-		if (file_exists($config->get('app.root').'alpha/controller/'.$controllerName.'.php'))
+		if (file_exists($config->get('app.root').'Alpha/Controller/'.$controllerName.'.php'))
 			$exists = true;
 
 		self::$logger->debug('<<checkControllerDefExists ['.$exists.']');

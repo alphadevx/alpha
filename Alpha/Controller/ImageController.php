@@ -50,7 +50,7 @@ use Alpha\Util\Logging\Logger;
  * </pre>
  *
  */
-class ViewImage extends Controller implements ControllerInterface
+class ImageController extends Controller implements ControllerInterface
 {
     /**
      * Trace logger
@@ -68,7 +68,7 @@ class ViewImage extends Controller implements ControllerInterface
      */
     public function __construct($visibility='Public')
     {
-        self::$logger = new Logger('ViewImage');
+        self::$logger = new Logger('ImageController');
         self::$logger->debug('>>__construct()');
 
         // ensure that the super class constructor is called, indicating the rights group
@@ -97,7 +97,7 @@ class ViewImage extends Controller implements ControllerInterface
             $imgScale = (boolean)$params['sc'];
             $imgSecure = (boolean)$params['se'];
         } catch (\Exception $e) {
-            self::$logger->error('Required param missing for ViewImage controller['.$e->getMessage().']');
+            self::$logger->error('Required param missing for ImageController controller['.$e->getMessage().']');
             throw new ResourceNotFoundException('File not found');
         }
 

@@ -50,7 +50,7 @@ use Alpha\View\View;
  * </pre>
  *
  */
-class ViewLog extends Controller implements ControllerInterface
+class LogController extends Controller implements ControllerInterface
 {
 	/**
 	 * The path to the log that we are displaying
@@ -75,7 +75,7 @@ class ViewLog extends Controller implements ControllerInterface
 	 */
 	public function __construct()
 	{
-		self::$logger = new Logger('ViewLog');
+		self::$logger = new Logger('LogController');
 		self::$logger->debug('>>__construct()');
 
 		// ensure that the super class constructor is called, indicating the rights group
