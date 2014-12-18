@@ -1,6 +1,6 @@
 <?php
 
-namespace Alpha\View\ArticleView;
+namespace Alpha\View;
 
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\MarkdownFacade;

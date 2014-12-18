@@ -26,7 +26,6 @@ use ReflectionProperty;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id: AlphaDAO.inc 1797 2014-07-20 20:28:43Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -1910,11 +1909,11 @@ abstract class ActiveRecord
 
 		$exists = false;
 
-		if(file_exists($config->get('app.root').'model/'.$classname.'.inc'))
+		if(file_exists($config->get('app.root').'Model/'.$classname.'.php'))
 			$exists = true;
-		if(file_exists($config->get('app.root').'alpha/model/'.$classname.'.inc'))
+		if(file_exists($config->get('app.root').'Alpha/Model/'.$classname.'.php'))
 			$exists = true;
-		if(file_exists($config->get('app.root').'alpha/model/types/'.$classname.'.inc'))
+		if(file_exists($config->get('app.root').'Alpha/Model/Type/'.$classname.'.php'))
 			$exists = true;
 
 		self::$logger->debug('<<checkClassDefExists ['.$exists.']');

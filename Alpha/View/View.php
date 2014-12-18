@@ -3,8 +3,11 @@
 namespace Alpha\View;
 
 use Alpha\Util\Logging\Logger;
+use Alpha\Util\Config\ConfigProvider;
 use Alpha\Model\ActiveRecord;
 use Alpha\Exception\IllegalArguementException;
+use Alpha\View\Renderer\RendererProviderFactory;
+use ReflectionClass;
 
 /**
  *
@@ -76,19 +79,23 @@ class View
     private static $logger = null;
 
     /**
-     * Constructor for the AlphaView.  As this is protected, use the AlphaView::getInstance method from a public scope.
+     * Constructor for the View.  As this is protected, use the View::getInstance method from a public scope.
      *
      * @param Alpha\Model\ActiveRecord $BO
      * @throws Alpha\Exception\IllegalArguementException
      * @since 1.0
      */
-    protected function __construct($BO) {
-        self::$logger = new Logger('AlphaView');
+    protected function __construct($BO)
+    {
+        self::$logger = new Logger('View');
         self::$logger->debug('>>__construct(BO=['.var_export($BO, true).'])');
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
-        if(ActiveRecord::checkClassDefExists(get_class($BO)))
+        $class = new ReflectionClass($BO);
+        $className = $class->getShortname();
+
+        if (ActiveRecord::checkClassDefExists($className))
             $this->BO = $BO;
         else
             throw new IllegalArguementException('The BO provided ['.get_class($BO).'] is not defined anywhere!');
@@ -99,63 +106,58 @@ class View
     }
 
     /**
-     * Static method which returns a AlphaView object or a custom child view for the BO specified
+     * Static method which returns a View object or a custom child view for the BO specified
      * if one exists
      *
-     * @param AlphaDAO $BO The main business object that this view is going to render
+     * @param ActiveRecord $BO The main business object that this view is going to render
      * @param boolean $returnParent Flag to enforce the return of this object instead of a child (defaults to false)
-     * @return AlphaView Returns a AlphaView object, or a child view object from the /view directory if one exists for this BO
+     * @return View Returns a View object, or a child view object if one exists for this BO
      * @since 1.0
      */
-    public static function getInstance($BO, $returnParent=false) {
+    public static function getInstance($BO, $returnParent=false)
+    {
         if(self::$logger == null)
-            self::$logger = new Logger('AlphaView');
+            self::$logger = new Logger('View');
         self::$logger->debug('>>getInstance(BO=['.var_export($BO, true).'], returnParent=['.$returnParent.'])');
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
-        $filename = get_class($BO);
-        // remove the Object part
-        $filename = str_replace('Object', '', $filename);
-        // replace _ with space, then uppercase words
-        $filename = str_replace('_', ' ', $filename);
-        $filename = ucwords($filename).'View';
-        // finally, remove spaces
-        $filename = str_replace(' ', '', $filename);
+        $class = new ReflectionClass($BO);
+        $childView = $class->getShortname();
+        $childView = $childView.'View';
 
         // Check to see if a custom view exists for this BO, and if it does return that view instead
         if (!$returnParent) {
-            if (file_exists($config->get('app.root').'view/'.$filename.'.inc')) {
-                require_once $config->get('app.root').'view/'.$filename.'.inc';
-
-                self::$logger->debug('<<getInstance [new '.$filename.'('.get_class($BO).')]');
-                return new $filename($BO);
-            }elseif (file_exists($config->get('app.root').'alpha/view/'.$filename.'.inc')) {
-                require_once $config->get('app.root').'alpha/view/'.$filename.'.inc';
-
-                self::$logger->debug('<<getInstance [new '.$filename.'('.get_class($BO).')]');
-                return new $filename($BO);
-            }else{
-                self::$logger->debug('<<getInstance [new AlphaView('.get_class($BO).', true)]');
-                return new AlphaView($BO, true);
+            if (class_exists('\Alpha\View\\'.$childView)) {
+                self::$logger->debug('<<getInstance [new '.'\Alpha\View\\'.$childView.'('.get_class($BO).')]');
+                eval('$instance = new \Alpha\View\\'.$childView.'($BO);');
+                return $instance;
+            } elseif (class_exists('\View\\'.$childView)) {
+                self::$logger->debug('<<getInstance [new '.'\View\\'.$childView.'('.get_class($BO).')]');
+                eval('$instance = new \View\\'.$childView.'($BO);');
+                return $instance;
+            } else {
+                self::$logger->debug('<<getInstance [new View('.get_class($BO).', true)]');
+                return new View($BO, true);
             }
-        }else{
-            self::$logger->debug('<<getInstance [new AlphaView('.get_class($BO).', true)]');
-            return new AlphaView($BO, true);
+        } else {
+            self::$logger->debug('<<getInstance [new View('.get_class($BO).', true)]');
+            return new View($BO, true);
         }
     }
 
     /**
      * Simple setter for the view business object
      *
-     * @param AlphaDAO $BO
-     * @throws IllegalArguementException
+     * @param Alpha\Model\ActiveRecord $BO
+     * @throws Alpha\Exception\IllegalArguementException
      * @since 1.0
      */
-    public function setBO($BO) {
+    public function setBO($BO)
+    {
         self::$logger->debug('>>setBO(BO=['.var_export($BO, true).'])');
 
-        if(AlphaDAO::checkClassDefExists(get_class($BO)))
+        if ($BO instanceof \Alpha\Model\ActiveRecord)
             $this->BO = $BO;
         else
             throw new IllegalArguementException('The BO provided ['.get_class($BO).'] is not defined anywhere!');
@@ -166,10 +168,11 @@ class View
     /**
      * Gets the BO attached to this view (if any)
      *
-     * @return AlphaDAO
+     * @return Alpha\Model\ActiveRecord
      * @since 1.0
      */
-    public function getBO() {
+    public function getBO()
+    {
         return $this->BO;
     }
 
@@ -179,13 +182,14 @@ class View
      * @param array $fields Hash array of fields to pass to the template
      * @since 1.0
      */
-    public function createView($fields=array()) {
+    public function createView($fields=array())
+    {
         self::$logger->debug('>>createView(fields=['.var_export($fields, true).'])');
 
         if(method_exists($this, 'before_createView_callback'))
             $this->before_createView_callback();
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
         $body = $this->provider->createView($fields);
 
@@ -203,13 +207,14 @@ class View
      * @param array $fields Hash array of fields to pass to the template
      * @since 1.0
      */
-    public function editView($fields=array()) {
+    public function editView($fields=array())
+    {
         self::$logger->debug('>>editView(fields=['.var_export($fields, true).'])');
 
         if(method_exists($this, 'before_editView_callback'))
             $this->before_editView_callback();
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
         $body = $this->provider->editView($fields);
 
@@ -227,13 +232,14 @@ class View
      * @param array $fields Hash array of fields to pass to the template
      * @since 1.0
      */
-    public function listView($fields=array()) {
+    public function listView($fields=array())
+    {
         self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
 
         if(method_exists($this, 'before_listView_callback'))
             $this->before_listView_callback();
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
         $body = $this->provider->listView($fields);
 
@@ -251,13 +257,14 @@ class View
      * @param array $fields Hash array of fields to pass to the template
      * @since 1.0
      */
-    public function detailedView($fields=array()) {
+    public function detailedView($fields=array())
+    {
         self::$logger->debug('>>detailedView(fields=['.var_export($fields, true).'])');
 
         if(method_exists($this, 'before_detailedView_callback'))
             $this->before_detailedView_callback();
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
         $body = $this->provider->detailedView($fields);
 
@@ -275,13 +282,14 @@ class View
      * @param array $fields Hash array of fields to pass to the template
      * @since 1.0
      */
-    public function adminView($fields=array()) {
+    public function adminView($fields=array())
+    {
         self::$logger->debug('>>adminView(fields=['.var_export($fields, true).'])');
 
         if(method_exists($this, 'before_adminView_callback'))
             $this->before_adminView_callback();
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
         $body = $this->provider->adminView($fields);
 
@@ -296,22 +304,23 @@ class View
     /**
      * Method to render the page header content
      *
-     * @param AlphaController $controller
+     * @param Alpha\Controller\Controller $controller
      * @return string
-     * @throws IllegalArguementException
+     * @throws Alpha\Exception\IllegalArguementException
      * @since 1.0
      */
-    public static function displayPageHead($controller) {
+    public static function displayPageHead($controller)
+    {
         if(self::$logger == null)
-            self::$logger = new Logger('AlphaView');
+            self::$logger = new Logger('View');
         self::$logger->debug('>>displayPageHead(controller=['.var_export($controller, true).'])');
 
         if(method_exists($controller, 'before_displayPageHead_callback'))
             $controller->before_displayPageHead_callback();
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
-        $provider = AlphaRendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new PersonObject());
+        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new Person());
         eval('$header = '.get_class($provider).'::displayPageHead($controller);');
 
         if(method_exists($controller, 'after_displayPageHead_callback'))
@@ -324,24 +333,25 @@ class View
     /**
      * Method to render the page footer content
      *
-     * @param AlphaController $controller
+     * @param Alpha\Aonctoller\Controller $controller
      * @return string
      * @since 1.0
      */
-    public static function displayPageFoot($controller) {
+    public static function displayPageFoot($controller)
+    {
         if(self::$logger == null)
-            self::$logger = new Logger('AlphaView');
+            self::$logger = new Logger('View');
 
         self::$logger->debug('>>displayPageFoot(controller=['.get_class($controller).'])');
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
         $footer = '';
 
         if(method_exists($controller, 'before_displayPageFoot_callback'))
             $footer .= $controller->before_displayPageFoot_callback();
 
-        $provider = AlphaRendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new PersonObject());
+        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new Person());
         eval('$footer .= '.get_class($provider).'::displayPageFoot($controller);');
 
         if(method_exists($controller, 'after_displayPageFoot_callback'))
@@ -358,14 +368,15 @@ class View
      * @return string
      * @since 1.0
      */
-    public static function displayUpdateMessage($message) {
+    public static function displayUpdateMessage($message)
+    {
         if(self::$logger == null)
-            self::$logger = new Logger('AlphaView');
+            self::$logger = new Logger('View');
         self::$logger->debug('>>displayUpdateMessage(message=['.$message.'])');
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
-        $provider = AlphaRendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new PersonObject());
+        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new Person());
         eval('$message = '.get_class($provider).'::displayUpdateMessage($message);');
 
         self::$logger->debug('<<displayUpdateMessage ['.$message.']');
@@ -379,14 +390,15 @@ class View
      * @return string
      * @since 1.0
      */
-    public static function displayErrorMessage($message) {
+    public static function displayErrorMessage($message)
+    {
         if(self::$logger == null)
-            self::$logger = new Logger('AlphaView');
+            self::$logger = new Logger('View');
         self::$logger->debug('>>displayErrorMessage(message=['.$message.'])');
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
-        $provider = AlphaRendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new PersonObject());
+        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new Person());
         eval('$message = '.get_class($provider).'::displayErrorMessage($message);');
 
         self::$logger->debug('<<displayErrorMessage ['.$message.']');
@@ -401,14 +413,15 @@ class View
      * @return string
      * @since 1.0
      */
-    public static function renderErrorPage($code, $message) {
+    public static function renderErrorPage($code, $message)
+    {
         if(self::$logger == null)
-            self::$logger = new Logger('AlphaView');
+            self::$logger = new Logger('View');
         self::$logger->debug('>>renderErrorPage(code=['.$code.'],message=['.$message.'])');
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
-        $provider = AlphaRendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new PersonObject());
+        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new Person());
         eval('$message = '.get_class($provider).'::renderErrorPage($code, $message);');
 
         self::$logger->debug('<<renderErrorPage ['.$message.']');
@@ -423,12 +436,12 @@ class View
      */
     public static function renderDeleteForm() {
         if(self::$logger == null)
-            self::$logger = new Logger('AlphaView');
+            self::$logger = new Logger('View');
         self::$logger->debug('>>renderDeleteForm()');
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
-        $provider = AlphaRendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new PersonObject());
+        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new Person());
         eval('$html = '.get_class($provider).'::renderDeleteForm();');
 
         self::$logger->debug('<<renderDeleteForm ['.$html.']');
@@ -437,20 +450,21 @@ class View
 
     /**
      * Method to render a HTML form with two hidden, hashed (MD5) form fields to be used as
-     * a check to ensure that a post to the controller is being sent from the same server 
+     * a check to ensure that a post to the controller is being sent from the same server
      * as hosting it.
      *
      * @return string
      * @since 1.0
      */
-    public static function renderSecurityFields() {
+    public static function renderSecurityFields()
+    {
         if(self::$logger == null)
-            self::$logger = new Logger('AlphaView');
+            self::$logger = new Logger('View');
         self::$logger->debug('>>renderSecurityFields()');
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
-        $provider = AlphaRendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new PersonObject());
+        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new Person());
         eval('$html = '.get_class($provider).'::renderSecurityFields();');
 
         self::$logger->debug('<<renderSecurityFields ['.$html.']');
@@ -468,10 +482,11 @@ class View
      * @return string
      * @since 1.0
      */
-    public function renderIntegerField($name, $label, $mode, $value='', $tableTags=true) {
+    public function renderIntegerField($name, $label, $mode, $value = '', $tableTags = true)
+    {
         self::$logger->debug('>>renderIntegerField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
         $html = $this->provider->renderIntegerField($name, $label, $mode, $value, $tableTags);
 
@@ -490,10 +505,11 @@ class View
      * @return string
      * @since 1.0
      */
-    public function renderDoubleField($name, $label, $mode, $value='', $tableTags=true) {
+    public function renderDoubleField($name, $label, $mode, $value = '', $tableTags = true)
+    {
         self::$logger->debug('>>renderDoubleField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
         $html = $this->provider->renderDoubleField($name, $label, $mode, $value, $tableTags);
 
@@ -512,10 +528,11 @@ class View
      * @return string
      * @since 1.0
      */
-    public function renderBooleanField($name, $label, $mode, $value='', $tableTags=true) {
+    public function renderBooleanField($name, $label, $mode, $value = '', $tableTags = true)
+    {
         self::$logger->debug('>>renderBooleanField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
         $html = $this->provider->renderBooleanField($name, $label, $mode, $value, $tableTags);
 
@@ -535,10 +552,11 @@ class View
      * @return string
      * @since 1.0
      */
-    public function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
+    public function renderEnumField($name, $label, $mode, $options, $value='', $tableTags=true)
+    {
         self::$logger->debug('>>renderEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
         $html = $this->provider->renderEnumField($name, $label, $mode, $options, $value, $tableTags);
 
@@ -558,10 +576,11 @@ class View
      * @return string
      * @since 1.0
      */
-    public function renderDEnumField($name, $label, $mode, $options, $value='', $tableTags=true) {
+    public function renderDEnumField($name, $label, $mode, $options, $value = '', $tableTags = true)
+    {
         self::$logger->debug('>>renderDEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
         $html = $this->provider->renderDEnumField($name, $label, $mode, $options, $value, $tableTags);
 
@@ -580,10 +599,11 @@ class View
      * @return string
      * @since 1.0
      */
-    public function renderDefaultField($name, $label, $mode, $value='', $tableTags=true) {
+    public function renderDefaultField($name, $label, $mode, $value = '', $tableTags = true)
+    {
         self::$logger->debug('>>renderDefaultField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
         $html = $this->provider->renderDefaultField($name, $label, $mode, $value, $tableTags);
 
@@ -602,10 +622,11 @@ class View
      * @return string
      * @since 1.0
      */
-    public function renderTextField($name, $label, $mode, $value='', $tableTags=true) {
+    public function renderTextField($name, $label, $mode, $value = '', $tableTags = true)
+    {
         self::$logger->debug('>>renderTextField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
         $html = $this->provider->renderTextField($name, $label, $mode, $value, $tableTags);
 
@@ -626,10 +647,11 @@ class View
      * @return string
      * @since 1.0
      */
-    public function renderRelationField($name, $label, $mode, $value='', $tableTags=true, $expanded=false, $buttons=true) {
+    public function renderRelationField($name, $label, $mode, $value = '', $tableTags = true, $expanded = false, $buttons = true)
+    {
         self::$logger->debug('>>renderRelationField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'], expanded=['.$expanded.'], buttons=['.$buttons.'])');
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
         $html = $this->provider->renderRelationField($name, $label, $mode, $value, $tableTags, $expanded, $buttons);
 
@@ -646,10 +668,11 @@ class View
      * @return string
      * @since 1.0
      */
-    public function renderAllFields($mode, $filterFields=array(), $readOnlyFields=array()) {
+    public function renderAllFields($mode, $filterFields = array(), $readOnlyFields = array())
+    {
         self::$logger->debug('>>renderAllFields(mode=['.$mode.'], filterFields=['.var_export($filterFields, true).'], readOnlyFields=['.var_export($readOnlyFields, true).'])');
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
         $html = $this->provider->renderAllFields($mode, $filterFields, $readOnlyFields);
 
@@ -661,16 +684,17 @@ class View
      * Loads a template for the BO specified if one exists.  Lower level custom templates
      * take precedence.
      *
-     * @param AlphaDAO $BO
+     * @param Alpha\Model\ActiveRecord $BO
      * @param string $mode
      * @param array $fields
      * @since 1.0
-     * @throws IllegalArguementException
+     * @throws Alpha\Exception\IllegalArguementException
      */
-    public static function loadTemplate($BO, $mode, $fields) {
+    public static function loadTemplate($BO, $mode, $fields)
+    {
         self::$logger->debug('>>loadTemplate(BO=['.var_export($BO, true).'], mode=['.$mode.'], fields=['.var_export($fields, true).'])');
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
         // for each BO property, create a local variable holding its value
         $reflection = new ReflectionClass(get_class($BO));
@@ -696,21 +720,21 @@ class View
         $filename = $mode.'.phtml';
         $classTemplateDir = get_class($BO);
 
-        $customPath = $config->get('app.root').'view/html/templates/'.$classTemplateDir.'/'.$filename;
-        $defaultPath1 = $config->get('app.root').'alpha/view/renderers/html/templates/'.$classTemplateDir.'/'.$filename;
-        $defaultPath2 = $config->get('app.root').'alpha/view/renderers/html/templates/'.$filename;
+        $customPath = $config->get('app.root').'View/Html/Templates/'.$classTemplateDir.'/'.$filename;
+        $defaultPath1 = $config->get('app.root').'Alpha/View/Renderers/Html/Templates/'.$classTemplateDir.'/'.$filename;
+        $defaultPath2 = $config->get('app.root').'Alpha/View/Renderers/Html/Templates/'.$filename;
 
         // Check to see if a custom template exists for this BO, and if it does load that
         if (file_exists($customPath)) {
             self::$logger->debug('Loading template ['.$customPath.']');
             require $customPath;
-        }elseif (file_exists($defaultPath1)) {
+        } elseif (file_exists($defaultPath1)) {
             self::$logger->debug('Loading template ['.$defaultPath1.']');
             require $defaultPath1;
-        }elseif (file_exists($defaultPath2)) {
+        } elseif (file_exists($defaultPath2)) {
             self::$logger->debug('Loading template ['.$defaultPath2.']');
             require $defaultPath2;
-        }else{
+        } else{
             throw new IllegalArguementException('No ['.$mode.'] HTML template found for class ['.get_class($BO).']');
         }
 
@@ -718,28 +742,29 @@ class View
     }
 
     /**
-     * Loads a template fragment from the renderers/[type]/fragments/[filename.ext] location.
+     * Loads a template fragment from the Renderer/[type]/Fragments/[filename.ext] location.
      *
      * @param string $type Currently only html supported, later json and xml.
      * @param string $fileName The name of the fragment file
      * @param array $fields A hash array of field values to pass to the template fragment.
      * @return string
      * @since 1.2
-     * @throws IllegalArguementException
+     * @throws Alpha\Exception\IllegalArguementException
      */
-    public static function loadTemplateFragment($type, $fileName, $fields) {
+    public static function loadTemplateFragment($type, $fileName, $fields)
+    {
         if(self::$logger == null)
-            self::$logger = new Logger('AlphaView');
+            self::$logger = new Logger('View');
         self::$logger->debug('>>loadTemplateFragment(type=['.$type.'], fileName=['.$fileName.'], fields=['.var_export($fields, true).'])');
 
-        global $config;
+        $config = ConfigProvider::getInstance();
 
         // loop over the $fields array and create a local variable for each key value
         foreach (array_keys($fields) as $fieldName)
             ${$fieldName} = $fields[$fieldName];
 
-        $customPath = $config->get('app.root').'view/'.$type.'/fragments/'.$fileName;
-        $defaultPath = $config->get('app.root').'alpha/view/renderers/'.$type.'/fragments/'.$fileName;
+        $customPath = $config->get('app.root').'View/'.ucfirst($type).'/Fragments/'.$fileName;
+        $defaultPath = $config->get('app.root').'Alpha/View/Renderer/'.ucfirst($type).'/Fragments/'.$fileName;
 
         // Check to see if a custom template exists for this BO, and if it does load that
         if (file_exists($customPath)) {
@@ -748,13 +773,13 @@ class View
             require $customPath;
             $html = ob_get_clean();
             return $html;
-        }elseif (file_exists($defaultPath)) {
+        } elseif (file_exists($defaultPath)) {
             self::$logger->debug('Loading template ['.$defaultPath.']');
             ob_start();
             require $defaultPath;
             $html = ob_get_clean();
             return $html;
-        }else{
+        } else {
             throw new IllegalArguementException('Template fragment not found in ['.$customPath.'] or ['.$defaultPath.']!');
         }
 
@@ -762,16 +787,17 @@ class View
     }
 
     /**
-     * Enables you to set an explicit type of AlphaRendererProviderInterface implementation to use for rendering the business
-     * object attached to this view.  Note that this has no affect on static methods of the AlphaView class, which always instantiate
-     * a new AlphaRendererProviderInterface provider each time they're called.
+     * Enables you to set an explicit type of RendererProviderInterface implementation to use for rendering the business
+     * object attached to this view.  Note that this has no affect on static methods of the View class, which always instantiate
+     * a new RendererProviderInterface provider each time they're called.
      *
      * @param string $ProviderClassName The name of the AlphaRendererProviderInterface implementation to use in this view object
      * @since 1.2
-     * @throws IllegalArguementException
+     * @throws Alpha\Exception\IllegalArguementException
      */
-    public function setProvider($ProviderClassName) {
-        $this->provider = AlphaRendererProviderFactory::getInstance($ProviderClassName, $this->BO);
+    public function setProvider($ProviderClassName)
+    {
+        $this->provider = RendererProviderFactory::getInstance($ProviderClassName, $this->BO);
     }
 }
 

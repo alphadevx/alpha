@@ -82,10 +82,10 @@ class RendererProviderFactory
         if ($providerName == 'auto') {
             if (isset($_SERVER['HTTP_ACCEPT']) && $_SERVER['HTTP_ACCEPT'] == 'application/json') {
                 // use the JSON renderer
-                $providerName = 'Alpha\View\Renderer\RendererProviderJSON';
+                $providerName = 'Alpha\View\Renderer\Json\RendererProviderJSON';
             } else {
                 // use the HTML renderer
-                $providerName = 'Alpha\View\Renderer\RendererProviderHTML';
+                $providerName = 'Alpha\View\Renderer\Html\RendererProviderHTML';
             }
         }
 

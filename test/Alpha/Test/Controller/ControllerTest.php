@@ -2,7 +2,7 @@
 
 namespace Alpha\Test\Controller;
 
-use Alpha\Controller\ViewImage;
+use Alpha\Controller\ImageController;
 use Alpha\Controller\Controller;
 use Alpha\Model\Article;
 use Alpha\Model\Person;
@@ -65,7 +65,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Sample controller for testing with
 	 *
-	 * @var Alpha\Controller\ViewImage
+	 * @var Alpha\Controller\ImageController
 	 * @since 1.0
 	 */
 	private $controller;
@@ -115,7 +115,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $article = new Article();
         $article->rebuildTable();
 
-    	$this->controller = new ViewImage();
+    	$this->controller = new ImageController();
 
     	$this->person = $this->createPersonObject('unitTestUser');
     	$this->person->rebuildTable();
@@ -234,7 +234,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     	$this->controller->markDirty($this->person);
 
     	// calling the constructor of the other controller will check the session
-    	$controller2 = new ViewImage();
+    	$controller2 = new ImageController();
 
     	$dirty = $controller2->getDirtyObjects();
 
@@ -268,7 +268,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     	$this->controller->markNew($person);
 
     	// calling the constructor of the other controller will check the session
-    	$controller2 = new ViewImage();
+    	$controller2 = new ImageController();
 
     	$new = $controller2->getNewObjects();
 
@@ -299,7 +299,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 		$session->set('currentUser', $this->person);
 
 		try {
-			$controller = new ViewImage('testgroup');
+			$controller = new ImageController('testgroup');
 		} catch (PHPException $e) {
 			$this->fail('failed to access a controller that I have access to by rights group membership');
 		}
@@ -312,8 +312,8 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetUnitDurationEqual()
     {
-    	$controller1 = new ViewImage();
-    	$controller2 = new ViewImage();
+    	$controller1 = new ImageController();
+    	$controller2 = new ImageController();
         $controller1->setUnitEndTime(2005, 10, 30, 21, 15, 15);
     	$controller2->setUnitEndTime(2005, 10, 30, 21, 15, 15);
 
@@ -327,8 +327,8 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetUnitDurationGreater()
     {
-        $controller1 = new ViewImage();
-    	$controller2 = new ViewImage();
+        $controller1 = new ImageController();
+    	$controller2 = new ImageController();
         $controller1->setUnitEndTime(2006, 10, 30, 21, 15, 15);
     	$controller2->setUnitEndTime(2005, 10, 30, 21, 15, 15);
 
@@ -343,7 +343,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     public function testSetUnitOfWorkBadControllerName()
     {
     	try {
-    		$this->controller->setUnitOfWork(array('ViewImage','Edit','Create','ListAll','BadControllerName'));
+    		$this->controller->setUnitOfWork(array('ImageController','LogController','BadControllerName'));
     		$this->fail('Passed a bad controller name BadControllerName to setUnitOfWork() and did not get the expected exception!');
     	} catch (IllegalArguementException $e) {
     		$this->assertEquals('', $this->controller->getFirstJob(), 'Testing the setUnitOfWork method with a bad controller name');
@@ -357,10 +357,10 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetUnitOfWorkNext()
     {
-    	$this->controller->setName('ViewImage');
-    	$this->controller->setUnitOfWork(array('ViewImage','Edit','Create','ListAll','Detail'));
+    	$this->controller->setName('ImageController');
+    	$this->controller->setUnitOfWork(array('ImageController','LogController'));
 
-    	$this->assertEquals('Edit', $this->controller->getNextJob(), 'Testing the setUnitOfWork method and getNextJob');
+    	$this->assertEquals('LogController', $this->controller->getNextJob(), 'Testing the setUnitOfWork method and getNextJob');
     }
 
 	/**
@@ -370,10 +370,10 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetUnitOfWorkFirst()
     {
-    	$this->controller->setName('ListAll');
-    	$this->controller->setUnitOfWork(array('ViewImage','Edit','Create','ListAll','Detail'));
+    	$this->controller->setName('ImageController');
+    	$this->controller->setUnitOfWork(array('ImageController','LogController'));
 
-    	$this->assertEquals('ViewImage', $this->controller->getFirstJob(), 'Testing the setUnitOfWork method and getFirstJob');
+    	$this->assertEquals('ImageController', $this->controller->getFirstJob(), 'Testing the setUnitOfWork method and getFirstJob');
     }
 
 	/**
@@ -383,10 +383,10 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetUnitOfWorkPrevious()
     {
-    	$this->controller->setName('ListAll');
-    	$this->controller->setUnitOfWork(array('ViewImage','Edit','Create','ListAll','Detail'));
+    	$this->controller->setName('LogController');
+    	$this->controller->setUnitOfWork(array('ImageController','LogController'));
 
-    	$this->assertEquals('Create', $this->controller->getPreviousJob(), 'Testing the setUnitOfWork method and getPreviousJob');
+    	$this->assertEquals('ImageController', $this->controller->getPreviousJob(), 'Testing the setUnitOfWork method and getPreviousJob');
     }
 
 	/**
@@ -396,10 +396,10 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetUnitOfWorkLast()
     {
-    	$this->controller->setName('ListAll');
-    	$this->controller->setUnitOfWork(array('ViewImage','Edit','Create','ListAll','Detail'));
+    	$this->controller->setName('ImageController');
+    	$this->controller->setUnitOfWork(array('ImageController','LogController'));
 
-    	$this->assertEquals('Detail', $this->controller->getLastJob(), 'Testing the setUnitOfWork method and getLastJob');
+    	$this->assertEquals('LogController', $this->controller->getLastJob(), 'Testing the setUnitOfWork method and getLastJob');
     }
 
 	/**
@@ -470,7 +470,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     	$this->controller->markNew($person);
 
     	// calling the constructor of the other controller will check the session
-    	$controller2 = new ViewImage();
+    	$controller2 = new ImageController();
 
     	$new = $controller2->getNewObjects();
 
@@ -490,7 +490,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      * @since 1.0
      */
     public function testConstructorJobControllerName() {
-    	$this->assertEquals('Alpha\Controller\ViewImage', $this->controller->getName(), 'Testing that the AlphaController constructor defaults to using the controller name as the AlphaController->name of the controller');
+    	$this->assertEquals('Alpha\Controller\ImageController', $this->controller->getName(), 'Testing that the AlphaController constructor defaults to using the controller name as the AlphaController->name of the controller');
     }
 
     /**
@@ -510,14 +510,14 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     public function testCheckRights()
     {
         $config = ConfigProvider::getInstance();
-        $_SERVER['REQUEST_URI'] = 'ViewImage';
-    	$controller = new ViewImage('Admin');
+        $_SERVER['REQUEST_URI'] = 'ImageController';
+    	$controller = new ImageController('Admin');
     	$sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
         $session->delete('currentUser');
 
 		$this->assertFalse($controller->checkRights(), 'Testing that a user with no session cannot access an Admin controller');
-		$controller = new ViewImage('Public');
+		$controller = new ImageController('Public');
 		$this->assertTrue($controller->checkRights(), 'Testing that a user with no session can access a Public controller');
     }
 
@@ -565,7 +565,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     {
     	$this->controller->setStatusMessage('test message');
 
-    	$controller = new ViewImage();
+    	$controller = new ImageController();
 
     	$this->assertEquals('test message', $controller->getStatusMessage(), 'Testing that status messages can be shared between controllers via the session');
     }
@@ -605,7 +605,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     public function testCheckControllerDefExists()
     {
         $this->assertTrue(Controller::checkControllerDefExists('/'), 'Testing that the / controller always exists');
-        $this->assertTrue(Controller::checkControllerDefExists('ViewImage'), 'Testing that a good controller classname returns true');
+        $this->assertTrue(Controller::checkControllerDefExists('ImageController'), 'Testing that a good controller classname returns true');
         $this->assertFalse(Controller::checkControllerDefExists('DoesNotExist'), 'Testing that a bad controller classname returns false');
     }
 
