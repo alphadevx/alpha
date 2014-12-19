@@ -4,7 +4,7 @@ namespace Alpha\Controller\Front;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\SecurityUtils;
+use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Http\Filter\FilterInterface;
 use Alpha\Exception\BadRequestException;
 use Alpha\Exception\ResourceNotFoundException;
@@ -94,7 +94,7 @@ class FrontController
 
 	/**
 	 * An array of HTTP filters applied to each request to the front controller.  Each
-	 * member must implement AlphaFilterInterface!
+	 * member must implement FilterInterface!
 	 *
 	 * @var array
 	 * @since 1.0
@@ -139,12 +139,10 @@ class FrontController
 		if (!mb_check_encoding())
 			throw new BadRequestException('Request character encoding does not match expected UTF-8');
 
-        if (!isset($_SERVER['REQUEST_URI'])) {
+        if (!isset($_GET['act']) && !isset($_SERVER['REQUEST_URI']) && !isset($_GET['tk'])) {
             self::$logger->warn('No controller action set for the front controller, request URI not set');
             throw new ResourceNotFoundException('The file that you have requested cannot be found!');
         }
-
-		self::$logger->debug('Requested URL is ['.$_SERVER['REQUEST_URI'].']');
 
 		// direct calls to the front controller
 		if (isset($_GET['act'])) {
@@ -260,7 +258,7 @@ class FrontController
 			// replace any troublesome characters from the URL with the original values
 			$token = strtr($_GET['tk'], '-_', '+/');
 			$token = base64_decode($token);
-			$this->queryString = trim(AlphaSecurityUtils::decrypt($token));
+			$this->queryString = trim(SecurityUtils::decrypt($token));
 		}
 	}
 
@@ -277,7 +275,7 @@ class FrontController
 		// replace any troublesome characters from the URL with the original values
 		$token = strtr($tk, '-_', '+/');
 		$token = base64_decode($token);
-		$params = trim(AlphaSecurityUtils::decrypt($token));
+		$params = trim(SecurityUtils::decrypt($token));
 
 		return $params;
 	}
@@ -301,7 +299,7 @@ class FrontController
 
 		$parameters = array();
 
-		foreach($pairs as $pair) {
+		foreach ($pairs as $pair) {
 			$split = explode('=', $pair);
 			$parameters[$split[0]] = $split[1];
 		}
@@ -320,8 +318,8 @@ class FrontController
 	{
 		$config = ConfigProvider::getInstance();
 
-		if($allowRedirects && $config->get('app.check.installed') && $this->pageController != 'Install' && $this->pageController != 'Login') {
-			if(!ActiveRecord::isInstalled()) {
+		if ($allowRedirects && $config->get('app.check.installed') && $this->pageController != 'Install' && $this->pageController != 'Login') {
+			if (!ActiveRecord::isInstalled()) {
 				self::$logger->info('Invoking the Install controller as the system DB is not installed...');
 				$url = FrontController::generateSecureURL('act=Install');
 				self::$logger->info('Redirecting to ['.$url.']');
@@ -334,11 +332,11 @@ class FrontController
 		foreach ($this->filters as $filter)
 			$filter->process();
 
-		if($allowRedirects) {
+		if ($allowRedirects) {
 			// if there is an alias configured for the above page controller, redirect there
-			if($config->get('app.force.front.controller') && $this->hasAlias($this->pageController)) {
+			if ($config->get('app.force.front.controller') && $this->hasAlias($this->pageController)) {
 				// make sure that it is not already an alias-based request to prevent re-direct loop
-				if(empty($this->currentAlias)) {
+				if (empty($this->currentAlias)) {
 					// set the correct HTTP header for the response
 			    	header('HTTP/1.1 301 Moved Permanently');
 
@@ -352,7 +350,7 @@ class FrontController
 
 			    		$URL = $config->get('app.url').'/'.$this->getControllerAlias($this->pageController).'/'.
 			    			$this->getControllerParam($this->pageController).$param;
-			    	}else{
+			    	} else {
 			    		$URL = $config->get('app.url').'/'.$this->getControllerAlias($this->pageController);
 			    	}
 
@@ -366,24 +364,24 @@ class FrontController
 			Controller::loadControllerDef($this->pageController);
 			$pageController = new $this->pageController();
 
-	    	if(!empty($_POST)) {
+	    	if (!empty($_POST)) {
 				$pageController->doPOST($_REQUEST);
-			}else{
+			} else {
 				$pageController->doGET($_GET);
 			}
-		}catch (LibraryNotInstalledException $e) {
+		} catch (LibraryNotInstalledException $e) {
 			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".var_export($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
 			throw new LibraryNotInstalledException($e->getMessage());
-		}catch (ResourceNotAllowedException $e) {
+		} catch (ResourceNotAllowedException $e) {
 			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".var_export($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
 			throw new ResourceNotAllowedException($e->getMessage());
-		}catch (ResourceNotFoundException $e) {
+		} catch (ResourceNotFoundException $e) {
 			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".var_export($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
 			throw new ResourceNotFoundException($e->getMessage());
-		}catch (IllegalArguementException $e) {
+		} catch (IllegalArguementException $e) {
 			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".var_export($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
 
-			if($config->get('security.client.temp.blacklist.filter.enabled')) {
+			if ($config->get('security.client.temp.blacklist.filter.enabled')) {
 				if(isset($_SERVER['HTTP_USER_AGENT']) && isset($_SERVER['REMOTE_ADDR']) && isset($_SERVER['REQUEST_URI'])) {
 					$request = new BadRequestObject();
 					$request->set('client', $_SERVER['HTTP_USER_AGENT']);
@@ -394,7 +392,7 @@ class FrontController
 			}
 
 			throw new ResourceNotFoundException('The file that you have requested cannot be found!');
-		}catch (AlphaException $e) {
+		} catch (AlphaException $e) {
 			self::$logger->warn($e->getMessage()."\nStacktrace:\n".$e->getTraceAsString()."\nRequest params:\n".var_export($_REQUEST, true)."\nRequested resource:\n".$_SERVER['REQUEST_URI']);
 
 			if($config->get('security.client.temp.blacklist.filter.enabled')) {
@@ -423,7 +421,7 @@ class FrontController
 	public function registerAlias($controller, $alias, $param=null)
 	{
 		$this->controllerAlias[$alias] = $controller;
-		if(isset($param))
+		if (isset($param))
 			$this->controllerAlias[$alias.'_param'] = $param;
 
 		// set up the page controller
@@ -439,7 +437,7 @@ class FrontController
 	 */
 	public function checkAlias($alias)
 	{
-		if(array_key_exists($alias, $this->controllerAlias))
+		if (array_key_exists($alias, $this->controllerAlias))
 			return true;
 		else
 			return false;
@@ -454,7 +452,7 @@ class FrontController
 	 */
 	public function hasAlias($controller)
 	{
-		if(in_array($controller, $this->controllerAlias))
+		if (in_array($controller, $this->controllerAlias))
 			return true;
 		else
 			return false;
@@ -469,7 +467,7 @@ class FrontController
 	 */
 	public function getAliasController($alias)
 	{
-		if(array_key_exists($alias, $this->controllerAlias))
+		if (array_key_exists($alias, $this->controllerAlias))
 			return $this->controllerAlias[$alias];
 	}
 
@@ -482,7 +480,7 @@ class FrontController
 	 */
 	public function getControllerAlias($controller)
 	{
-		if(in_array($controller, $this->controllerAlias)) {
+		if (in_array($controller, $this->controllerAlias)) {
 			$keys = array_keys($this->controllerAlias, $controller);
 			// there should only ever be one key per controller
 			return $keys[0];
@@ -498,7 +496,7 @@ class FrontController
 	 */
 	public function getAliasParam($alias)
 	{
-		if(array_key_exists($alias.'_param', $this->controllerAlias))
+		if (array_key_exists($alias.'_param', $this->controllerAlias))
 			return $this->controllerAlias[$alias.'_param'];
 		else
 			return '';
@@ -514,7 +512,7 @@ class FrontController
 	public function getControllerParam($controller)
 	{
 		$alias = $this->getControllerAlias($controller);
-		if(array_key_exists($alias.'_param', $this->controllerAlias))
+		if (array_key_exists($alias.'_param', $this->controllerAlias))
 			return $this->controllerAlias[$alias.'_param'];
 		else
 			return '';
@@ -535,7 +533,7 @@ class FrontController
 
 		array_pop($delimiters);
 
-		foreach($delimiters as $delimiter) {
+		foreach ($delimiters as $delimiter) {
 			$string = str_replace($delimiter, $mainDelim, $string);
 		}
 
@@ -568,17 +566,17 @@ class FrontController
 			Controller::loadControllerDef($params[0]);
 			self::$logger->debug('Page controller name set on the request URL is ['.$params[0].']');
 			$this->pageController = $params[0];
-		}catch (IllegalArguementException $iae) {
+		} catch (IllegalArguementException $iae) {
 			// handle request with alias
 			self::$logger->debug('The supplied controller alias is ['.$this->currentAlias.']');
 
 			// check to see if the controller is an alias for something
-			if($this->checkAlias($this->currentAlias)) {
+			if ($this->checkAlias($this->currentAlias)) {
 				$this->pageController = $this->getAliasController($this->currentAlias);
 				self::$logger->debug('Page controller name obtained from the URL alias is ['.$this->pageController.']');
 
-				if(isset($params[1])) {
-					if(!empty($_POST))
+				if (isset($params[1])) {
+					if (!empty($_POST))
 						$_REQUEST[$this->getAliasParam($this->currentAlias)] = $params[1];
 					else
 						$_GET[$this->getAliasParam($this->currentAlias)] = $params[1];
@@ -590,19 +588,19 @@ class FrontController
 		self::$logger->debug('currentAlias is ['.$this->currentAlias.']');
 
 		// now populate the _GET vars
-		if($this->currentAlias == 'tk') {
+		if ($this->currentAlias == 'tk') {
 			self::$logger->debug('Setting the GET vars for a mod_rewrite request with a tk param');
 			$this->setEncrypt(true);
 			$this->queryString = FrontController::decodeQueryParams($params[1]);
 			$_GET['tk'] = $params[1];
 			$this->populateGetVars();
 			$this->pageController = $_GET['act'];
-		}else{
+		} else {
 			$count = count($params);
 
-			for($i = 1; $i < $count; $i+=2) {
-				if(isset($params[$i+1])) {
-					if(!empty($_POST))
+			for ($i = 1; $i < $count; $i+=2) {
+				if (isset($params[$i+1])) {
+					if (!empty($_POST))
 						$_REQUEST[$params[$i]] = $params[$i+1];
 					else
 						$_GET[$params[$i]] = $params[$i+1];
@@ -637,7 +635,7 @@ class FrontController
 		if ($filterObject instanceof FilterInterface)
 			array_push($this->filters, $filterObject);
 		else
-			throw new IllegalArguementException('Supplied filter object is not a valid AlphaFilterInterface instance!');
+			throw new IllegalArguementException('Supplied filter object is not a valid FilterInterface instance!');
 	}
 
 	/**
