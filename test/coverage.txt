@@ -1,12 +1,12 @@
 
 
 Code Coverage Report:        
-  2014-12-19 01:07:35        
+  2014-12-19 11:54:21        
                              
  Summary:                    
-  Classes: 23.21% (13/56)    
-  Methods: 46.25% (247/534)  
-  Lines:   58.71% (3178/5413)
+  Classes: 22.81% (13/57)    
+  Methods: 46.04% (250/543)  
+  Lines:   57.67% (3208/5563)
 
 \Alpha\Controller::Controller
   Methods:  51.11% (23/45)   Lines:  67.44% (321/476)
@@ -112,3 +112,5 @@ Code Coverage Report:
   Methods:   0.00% ( 0/ 1)   Lines:  88.89% ( 16/ 18)
 \Alpha\View\Renderer\Html::RendererProviderHTML
   Methods:   8.33% ( 2/24)   Lines:   1.11% (  6/542)
+\Alpha\View\Widget::Image
+  Methods:  33.33% ( 3/ 9)   Lines:  20.00% ( 30/150)

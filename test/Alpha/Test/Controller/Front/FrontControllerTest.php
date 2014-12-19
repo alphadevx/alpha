@@ -55,35 +55,6 @@ use Alpha\Model\BadRequest;
 class FrontControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * A controller token to test with
-     *
-     * @var string
-     * @since 1.0
-     */
-    //private $token;
-
-    /**
-     * Set up tests
-     *
-     * @since 1.0
-     */
-    /*protected function setUp() {
-        if (!isset($this->token))
-            $this->token = $_GET['tk'];
-        $_GET['tk'] = null;
-        $_GET['act'] = null;
-    }
-
-    /**
-     * Tear down tests
-     *
-     * @since 1.0
-     */
-   /* protected function tearDown() {
-        $_GET['tk'] = $this->token;
-    }
-
-    /**
      * Testing that the constructor will detect the page controller action we want to invoke from the global _GET array
      *
      * @since 1.0
