@@ -1,12 +1,12 @@
 
 
 Code Coverage Report:        
-  2014-12-19 11:54:21        
+  2014-12-20 21:14:18        
                              
  Summary:                    
   Classes: 22.81% (13/57)    
   Methods: 46.04% (250/543)  
-  Lines:   57.67% (3208/5563)
+  Lines:   57.65% (3207/5563)
 
 \Alpha\Controller::Controller
   Methods:  51.11% (23/45)   Lines:  67.44% (321/476)
@@ -37,7 +37,7 @@ Code Coverage Report:
 \Alpha\Model::Rights
   Methods:  83.33% ( 5/ 6)   Lines:  90.91% ( 20/ 22)
 \Alpha\Model::Tag
-  Methods:  25.00% ( 2/ 8)   Lines:  64.10% ( 50/ 78)
+  Methods:  25.00% ( 2/ 8)   Lines:  62.82% ( 49/ 78)
 \Alpha\Model\Type::Boolean
   Methods:  80.00% ( 4/ 5)   Lines:  91.30% ( 21/ 23)
 \Alpha\Model\Type::DEnum

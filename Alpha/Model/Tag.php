@@ -18,7 +18,6 @@ use Alpha\Util\Logging\Logger;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -125,9 +124,9 @@ class Tag extends ActiveRecord
 	}
 
 	/**
-	 * Returns an array of TagObjects matching the class and OID provided
+	 * Returns an array of Tags matching the class and OID provided
 	 *
-	 * @param $taggedClass The class name of the DAO that has been tagged.
+	 * @param $taggedClass The class name of the DAO that has been tagged (with namespace).
 	 * @param $taggedOID The Object ID of the DAO that has been tagged.
 	 * @return array
 	 * @since 1.0
@@ -193,17 +192,17 @@ class Tag extends ActiveRecord
 
 	/**
 	 * Splits the passed content by spaces, filters (removes) stop words from stopwords.ini,
-	 * and returns an array of TagObject instances.
+	 * and returns an array of Tag instances.
 	 *
 	 * @param $content
-	 * @param $taggedClass Optionally provide a BO class name
+	 * @param $taggedClass Optionally provide a BO class name (with namespace)
 	 * @param $taggedOID Optionally provide a BO instance OID
 	 * @param $applyStopwords Defaults true, set to false if you want to ignore the stopwords.
 	 * @return array
 	 * @throws Alpha\Exception\AlphaException
 	 * @since 1.0
 	 */
-	public static function tokenize($content, $taggedClass='', $taggedOID='', $applyStopwords=true)
+	public static function tokenize($content, $taggedClass = '', $taggedOID = '', $applyStopwords = true)
 	{
 		if(self::$logger == null)
 			self::$logger = new Logger('Tag');

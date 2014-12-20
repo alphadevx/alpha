@@ -18,7 +18,6 @@ use Alpha\Controller\Front\FrontController;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -270,14 +269,12 @@ class Article extends ActiveRecord
 			// update the empty tags values to reference this OID
 			$this->tags->setValue($this->OID);
 
-			$this->setupRels();
-
-			foreach($this->taggedAttributes as $tagged) {
-				$tags = Tag::tokenize($this->get($tagged), get_class($this), $this->getOID());
-				foreach($tags as $tag) {
+			foreach ($this->taggedAttributes as $tagged) {
+				$tags = Tag::tokenize($this->get($tagged), 'Alpha\Model\Article', $this->getOID());
+				foreach ($tags as $tag) {
 					try {
 						$tag->save();
-					}catch(ValidationException $e){
+					} catch(ValidationException $e){
 						/*
 						 * The unique key has most-likely been violated because this BO is already tagged with this
 						 * value, so we can ignore in this case.
@@ -286,6 +283,8 @@ class Article extends ActiveRecord
 				}
 			}
 		}
+
+        $this->setupRels();
 	}
 
 	/**
@@ -310,30 +309,30 @@ class Article extends ActiveRecord
 		global $front;
 
 		// check the config to see if we are using mod_rewrite
-		if($config->get('app.use.mod.rewrite')) {
+		if ($config->get('app.use.mod.rewrite')) {
 			// check to see if an alias is registered for the view_article_title controller, otherwise use the long URL version
-			if(isset($front) && $front->hasAlias('ViewArticleTitle')) {
+			if (isset($front) && $front->hasAlias('ViewArticleTitle')) {
 				$alias = $front->getControllerAlias('ViewArticleTitle');
 
 				$this->URL = $config->get('app.url').$alias.'/'.str_replace(' ', '-', $this->title->getValue());
-			}else{
+			} else {
 				$this->URL = $config->get('app.url').'ViewArticleTitle/title/'.str_replace(' ', $config->get('cms.url.title.separator'), $this->title->getValue());
 			}
-		}else{
+		} else {
 			$this->URL = $config->get('app.url').'alpha/controller/ViewArticle.php?oid='.$this->getID();
 		}
 
 		// now set up the print version URL
-		if($config->get('app.use.mod.rewrite')) {
+		if ($config->get('app.use.mod.rewrite')) {
 			// check to see if an alias is registered for the view_article_title controller, otherwise use the long URL version
-			if(isset($front) && $front->hasAlias('ViewArticlePrint')) {
+			if (isset($front) && $front->hasAlias('ViewArticlePrint')) {
 				$alias = $front->getControllerAlias('ViewArticlePrint');
 
 				$this->printURL = $config->get('app.url').$alias.'/'.str_replace(' ', '-', $this->title->getValue());
-			}else{
+			} else {
 				$this->printURL = $config->get('app.url').'ViewArticlePrint/title/'.str_replace(' ', $config->get('cms.url.title.separator'), $this->title->getValue());
 			}
-		}else{
+		} else {
 			$this->printURL = $config->get('app.url').'alpha/controller/ViewArticlePrint.php?title='.$this->title->getValue();
 		}
 
@@ -352,7 +351,7 @@ class Article extends ActiveRecord
      */
 	public function loadRecentWithLimit($limit, $excludeID = '')
 	{
-		if($excludeID != '') {
+		if ($excludeID != '') {
             $denum = new DEnum('Article::section');
             $excludeID = $denum->getOptionID($excludeID);
         }
@@ -363,7 +362,7 @@ class Article extends ActiveRecord
 
 		$OIDs = array();
 
-		foreach($result as $row)
+		foreach ($result as $row)
 			array_push($OIDs, $row['OID']);
 
 		return $OIDs;
@@ -417,16 +416,16 @@ class Article extends ActiveRecord
 	public function createAttachmentsFolder()
 	{
 		// create the attachment directory for the article
-		try{
+		try {
 			mkdir($this->getAttachmentsLocation());
-		}catch (\Exception $e) {
+		} catch (\Exception $e) {
 			throw new AlphaException('Unable to create the folder ['.$this->getAttachmentsLocation().'] for the article.');
 		}
 
 		// ...and set write permissions on the folder
-		try{
+		try {
 			chmod($this->getAttachmentsLocation(), 0777);
-		}catch (\Exception $e) {
+		} catch (\Exception $e) {
 			throw new AlphaException('Unable to set write permissions on the folder ['.$this->getAttachmentsLocation().'].');
 		}
 	}
@@ -445,12 +444,12 @@ class Article extends ActiveRecord
 		$total_score = 0;
 		$vote_count = count($votes);
 
-		for($i = 0; $i < $vote_count; $i++){
+		for ($i = 0; $i < $vote_count; $i++){
 			$total_score += $votes[$i]->get('score');
 		}
 
-		if($vote_count > 0)
-		$score = $total_score/$vote_count;
+		if ($vote_count > 0)
+            $score = $total_score/$vote_count;
 
 		return sprintf("%01.2f", $score);
 	}
@@ -489,14 +488,14 @@ class Article extends ActiveRecord
 
 		$result = $this->query($sqlQuery);
 
-		if(!isset($result[0])) {
+		if (!isset($result[0])) {
 			throw new AlphaException('Failed to check if the current user voted for the article ['.$this->OID.'], query ['.$sqlQuery.']');
 			return false;
 		}
 
 		$row = $result[0];
 
-		if($row['usersVote'] == "0")
+		if ($row['usersVote'] == "0")
 			return false;
 		else
 			return true;
@@ -524,10 +523,10 @@ class Article extends ActiveRecord
 	 */
 	public function loadContentFromFile($filePath)
 	{
-		try{
+		try {
 			$this->content->setValue(file_get_contents($filePath));
 			$this->filePath = $filePath;
-		}catch (\Exception $e) {
+		} catch (\Exception $e) {
 			throw new FileNotFoundException($e->getMessage());
 		}
 	}
@@ -553,13 +552,13 @@ class Article extends ActiveRecord
 	 */
 	public function getContentFileDate()
 	{
-		if($this->filePath != '') {
-			try{
+		if ($this->filePath != '') {
+			try {
 				return date("Y-m-d H:i:s", filemtime($this->filePath));
-			}catch (\Exception $e) {
+			} catch (\Exception $e) {
 				throw new FileNotFoundException($e->getMessage());
 			}
-		}else{
+		} else {
 			throw new FileNotFoundException('Error trying to access an article content file when none is set!');
 		}
 	}
