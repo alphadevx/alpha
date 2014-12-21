@@ -1,12 +1,12 @@
 
 
 Code Coverage Report:        
-  2014-12-20 21:14:18        
+  2014-12-21 13:20:55        
                              
  Summary:                    
-  Classes: 22.81% (13/57)    
-  Methods: 46.04% (250/543)  
-  Lines:   57.65% (3207/5563)
+  Classes: 23.73% (14/59)    
+  Methods: 46.38% (256/552)  
+  Lines:   58.15% (3321/5711)
 
 \Alpha\Controller::Controller
   Methods:  51.11% (23/45)   Lines:  67.44% (321/476)
@@ -23,7 +23,7 @@ Code Coverage Report:
 \Alpha\Model::ActiveRecordProviderSQLite
   Methods:  19.51% ( 8/41)   Lines:  67.91% (747/1100)
 \Alpha\Model::Article
-  Methods:  17.65% ( 3/17)   Lines:  43.45% ( 63/145)
+  Methods:  17.65% ( 3/17)   Lines:  51.72% ( 75/145)
 \Alpha\Model::ArticleComment
   Methods: 100.00% ( 1/ 1)   Lines: 100.00% ( 10/ 10)
 \Alpha\Model::BadRequest
@@ -37,9 +37,9 @@ Code Coverage Report:
 \Alpha\Model::Rights
   Methods:  83.33% ( 5/ 6)   Lines:  90.91% ( 20/ 22)
 \Alpha\Model::Tag
-  Methods:  25.00% ( 2/ 8)   Lines:  62.82% ( 49/ 78)
+  Methods:  37.50% ( 3/ 8)   Lines:  66.67% ( 52/ 78)
 \Alpha\Model\Type::Boolean
-  Methods:  80.00% ( 4/ 5)   Lines:  91.30% ( 21/ 23)
+  Methods: 100.00% ( 5/ 5)   Lines: 100.00% ( 23/ 23)
 \Alpha\Model\Type::DEnum
   Methods:  41.67% ( 5/12)   Lines:  87.30% ( 55/ 63)
 \Alpha\Model\Type::DEnumItem
@@ -104,6 +104,10 @@ Code Coverage Report:
   Methods:  42.86% ( 3/ 7)   Lines:  22.35% ( 19/ 85)
 \Alpha\Util\Logging::Logger
   Methods:  30.00% ( 3/10)   Lines:  32.39% ( 23/ 71)
+\Alpha\Util\Search::SearchProviderFactory
+  Methods:   0.00% ( 0/ 1)   Lines:  90.91% ( 10/ 11)
+\Alpha\Util\Search::SearchProviderTags
+  Methods:  50.00% ( 4/ 8)   Lines:  63.50% ( 87/137)
 \Alpha\Util\Security::SecurityUtils
   Methods: 100.00% ( 2/ 2)   Lines: 100.00% ( 12/ 12)
 \Alpha\View::View
