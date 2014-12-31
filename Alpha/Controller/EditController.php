@@ -4,18 +4,19 @@ namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Helper\Validator;
+use Alpha\Model\ActiveRecord;
 use Alpha\View\View;
 use Alpha\View\Widget\Button;
-use Alpha\Model\ActiveRecord;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\ResourceNotAllowedException;
 use Alpha\Exception\SecurityException;
 use Alpha\Exception\AlphaException;
+use Alpha\Exception\LockingException;
 
 /**
- * Controller used to display the details of a BO
+ *
+ * Controller used to edit BO
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
@@ -56,10 +57,10 @@ use Alpha\Exception\AlphaException;
  * </pre>
  *
  */
-class ViewController extends Controller implements ControllerInterface
+class EditController extends Controller implements ControllerInterface
 {
     /**
-     * The BO to be displayed
+     * The business object to be edited
      *
      * @var Alpha\Model\ActiveRecord
      * @since 1.0
@@ -72,10 +73,18 @@ class ViewController extends Controller implements ControllerInterface
      * @var string
      * @since 1.0
      */
-    private $BOName;
+    protected $BOName;
 
     /**
-     * The default View object used for rendering the business object
+     * The OID of the BO to be edited
+     *
+     * @var integer
+     * @since 1.0
+     */
+    private $BOoid;
+
+    /**
+     * The View object used for rendering the object to edit
      *
      * @var Alpha\View\View
      * @since 1.0
@@ -96,13 +105,12 @@ class ViewController extends Controller implements ControllerInterface
      * @param string $visibility The name of the rights group that can access this controller.
      * @since 1.0
      */
-    public function __construct($visibility='Standard')
+    public function __construct($visibility='Admin')
     {
-        self::$logger = new Logger('ViewController');
+        self::$logger = new Logger('EditController');
         self::$logger->debug('>>__construct()');
 
         $config = ConfigProvider::getInstance();
-
         // ensure that the super class constructor is called, indicating the rights group
         parent::__construct($visibility);
 
@@ -113,8 +121,6 @@ class ViewController extends Controller implements ControllerInterface
      * Handle GET requests
      *
      * @param array $params
-     * @throws Alpha\Exception\ResourceNotFoundException
-     * @throws Alpha\Exception\IllegalArguementException
      * @since 1.0
      */
     public function doGET($params)
@@ -124,87 +130,125 @@ class ViewController extends Controller implements ControllerInterface
         try{
             // load the business object (BO) definition
             if (isset($params['bo']) && isset($params['oid'])) {
-                if(!AlphaValidator::isInteger($params['oid']))
-                    throw new IllegalArguementException('Invalid oid ['.$params['oid'].'] provided on the request!');
-
                 $BOName = $params['bo'];
                 ActiveRecord::loadClassDef($BOName);
 
                 /*
-                *  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
-                */
-                if ($this->getCustomControllerName($BOName, 'view') != null)
-                    $this->loadCustomController($BOName, 'view');
+                 *  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
+                 */
+                if ($this->getCustomControllerName($BOName, 'edit') != null)
+                    $this->loadCustomController($BOName, 'edit');
 
                 $this->BO = new $BOName();
                 $this->BO->load($params['oid']);
+
                 ActiveRecord::disconnect();
 
                 $this->BOName = $BOName;
+
                 $this->BOView = View::getInstance($this->BO);
 
+                // set up the title and meta details
+                if ($this->title == '')
+                    $this->setTitle('Editing a '.$BOName);
+                if ($this->description == '')
+                    $this->setDescription('Page to edit a '.$BOName.'.');
+                if ($this->keywords == '')
+                    $this->setKeywords('edit,'.$BOName);
+
                 echo View::displayPageHead($this);
+
                 echo View::renderDeleteForm();
-                echo $this->BOView->detailedView();
+
+                echo $this->BOView->editView();
             } else {
-                throw new IllegalArguementException('No BO available to display!');
+                throw new IllegalArguementException('No BO available to edit!');
             }
         } catch (IllegalArguementException $e) {
-            self::$logger->warn($e->getMessage());
-            throw new ResourceNotFoundException('The file that you have requested cannot be found!');
+            self::$logger->error($e->getMessage());
         } catch (BONotFoundException $e) {
             self::$logger->warn($e->getMessage());
-            throw new ResourceNotFoundException('The item that you have requested cannot be found!');
+            echo '<p class="error"><br>Failed to load the requested item from the database!</p>';
         }
 
         echo View::displayPageFoot($this);
+
         self::$logger->debug('<<doGET');
     }
 
     /**
-     * Method to handle POST requests
+     * Handle POST requests
      *
      * @param array $params
-     * @throws Alpha\Exception\IllegalArguementException
-     * @throws Alpha\Exception\SecurityException
+     * @param string $saveMessage Optional status message to display on successful save of the BO, otherwise default will be used
      * @since 1.0
      */
-    public function doPOST($params)
+    public function doPOST($params, $saveMessage='')
     {
         self::$logger->debug('>>doPOST(params=['.var_export($params, true).'])');
 
         $config = ConfigProvider::getInstance();
 
-        echo View::displayPageHead($this);
-
         try {
             // check the hidden security fields before accepting the form POST data
-            if (!$this->checkSecurityFields())
+            if (!$this->checkSecurityFields()) {
                 throw new SecurityException('This page cannot accept post data from remote servers!');
+                self::$logger->debug('<<doPOST');
+            }
 
             // load the business object (BO) definition
-            if (isset($params['bo'])) {
+            if (isset($params['bo']) && isset($params['oid'])) {
                 $BOName = $params['bo'];
                 ActiveRecord::loadClassDef($BOName);
 
                 $this->BO = new $BOName();
-                $this->BOname = $BOName;
+                $this->BO->load($params['oid']);
+
                 $this->BOView = View::getInstance($this->BO);
 
-                if (!empty($params['deleteOID'])) {
-                    if (!Validator::isInteger($params['deleteOID']))
-                        throw new IllegalArguementException('Invalid deleteOID ['.$params['deleteOID'].'] provided on the request!');
+                // set up the title and meta details
+                $this->setTitle('Editing a '.$BOName);
+                $this->setDescription('Page to edit a '.$BOName.'.');
+                $this->setKeywords('edit,'.$BOName);
 
+                echo View::displayPageHead($this);
+
+                if (isset($params['saveBut'])) {
+
+                    // populate the transient object from post data
+                    $this->BO->populateFromPost();
+
+                    try {
+                        $this->BO->save();
+
+                        self::$logger->action('Saved '.$BOName.' instance with OID '.$this->BO->getOID());
+
+                        if($saveMessage == '')
+                            echo View::displayUpdateMessage(get_class($this->BO).' '.$this->BO->getID().' saved successfully.');
+                        else
+                            echo View::displayUpdateMessage($saveMessage);
+                    } catch (LockingException $e) {
+                        $this->BO->reload();
+                        echo View::displayErrorMessage($e->getMessage());
+                    }
+
+                    ActiveRecord::disconnect();
+
+                    echo $this->BOView->editView();
+                }
+
+                if (!empty($params['deleteOID'])) {
                     $temp = new $BOName();
                     $temp->load($params['deleteOID']);
 
                     try {
-                        ActiveRecord::begin();
                         $temp->delete();
-                        self::$logger->action('Deleted '.$BOName.' instance with OID '.$params['deleteOID']);
-                        ActiveRecord::commit();
 
-                        echo View::displayUpdateMessage($BOName.' '.$params['deleteOID'].' deleted successfully.');
+                        self::$logger->action('Deleted '.$BOName.' instance with OID '.$params['deleteOID']);
+
+                        ActiveRecord::disconnect();
+
+                        echo View::displayUpdateMessage($this->BOName.' '.$params['deleteOID'].' deleted successfully.');
 
                         echo '<center>';
 
@@ -215,43 +259,26 @@ class ViewController extends Controller implements ControllerInterface
                         echo '</center>';
                     } catch (AlphaException $e) {
                         self::$logger->error($e->getMessage());
-                        echo View::displayErrorMessage('Error deleting the BO of OID ['.$params['deleteOID'].'], check the log!');
-                        ActiveRecord::rollback();
+                        echo View::displayErrorMessage('Error deleting the OID ['.$params['deleteOID'].'], check the log!');
                     }
-
-                    ActiveRecord::disconnect();
                 }
             } else {
-                throw new IllegalArguementException('No BO available to display!');
+                throw new IllegalArguementException('No BO available to edit!');
             }
         } catch (SecurityException $e) {
+            echo View::displayErrorMessage($e->getMessage());
             self::$logger->warn($e->getMessage());
-            throw new ResourceNotAllowedException($e->getMessage());
         } catch (IllegalArguementException $e) {
-            self::$logger->warn($e->getMessage());
-            throw new ResourceNotFoundException('The file that you have requested cannot be found!');
+            echo View::displayErrorMessage($e->getMessage());
+            self::$logger->error($e->getMessage());
         } catch (BONotFoundException $e) {
             self::$logger->warn($e->getMessage());
-            throw new ResourceNotFoundException('The item that you have requested cannot be found!');
+            echo View::displayErrorMessage('Failed to load the requested item from the database!');
         }
 
         echo View::displayPageFoot($this);
-        self::$logger->debug('<<doPOST');
-    }
 
-    /**
-     * Sets up the title etc.
-     *
-     * @since 1.0
-     */
-    public function before_displayPageHead_callback()
-    {
-        if ($this->title == '' && isset($this->BO))
-            $this->setTitle('Displaying '.$this->BOName.' number '.$this->BO->getID());
-        if ($this->description == '' && isset($this->BO))
-            $this->setDescription('Page to display '.$this->BOName.' number '.$this->BO->getID());
-        if ($this->keywords == '')
-            $this->setKeywords('display,details,'.$this->BOName);
+        self::$logger->debug('<<doPOST');
     }
 
     /**
@@ -265,7 +292,7 @@ class ViewController extends Controller implements ControllerInterface
         $menu = '';
 
         if (isset($_SESSION['currentUser']) && ActiveRecord::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
-            $menu .= AlphaView::loadTemplateFragment('html', 'adminmenu.phtml', array());
+            $menu .= View::loadTemplateFragment('html', 'adminmenu.phtml', array());
         }
 
         return $menu;
