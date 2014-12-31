@@ -7,6 +7,7 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\View\View;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\ResourceNotFoundException;
+use Alpha\Exception\ResourceNotAllowedException;
 use Alpha\Exception\SecurityException;
 use Alpha\Exception\AlphaException;
 use Alpha\Exception\ValidationException;
