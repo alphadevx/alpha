@@ -88,8 +88,6 @@ class ArticleController extends Controller implements ControllerInterface
         self::$logger = new Logger('ArticleController');
         self::$logger->debug('>>__construct()');
 
-        $config = ConfigProvider::getInstance();
-
         // ensure that the super class constructor is called, indicating the rights group
         parent::__construct('Standard');
 
