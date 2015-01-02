@@ -8,6 +8,7 @@ use Alpha\View\View;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\SecurityException;
 use Alpha\Exception\FailedSaveException;
+use Alpha\Exception\AlphaException;
 use Alpha\Model\ActiveRecord;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
@@ -55,7 +56,7 @@ use Alpha\Model\Type\DEnumItem;
  * </pre>
  *
  */
-class DEnumController extends EditController implements ControllerInterface
+class DEnumController extends ListController implements ControllerInterface
 {
     /**
      * Trace logger
@@ -78,11 +79,6 @@ class DEnumController extends EditController implements ControllerInterface
         // ensure that the super class constructor is called, indicating the rights group
         parent::__construct('Admin');
 
-        // set up the title and meta details
-        $this->setTitle('Editing a DEnum');
-        $this->setDescription('Page to edit a DEnum.');
-        $this->setKeywords('edit,DEnum');
-
         $this->BO = new DEnum();
 
         self::$logger->debug('<<__construct');
@@ -92,7 +88,6 @@ class DEnumController extends EditController implements ControllerInterface
      * Handle GET requests
      *
      * @param array $params
-     * @throws Alpha\Exception\IllegalArguementException
      * @since 1.0
      */
     public function doGET($params)
@@ -101,34 +96,67 @@ class DEnumController extends EditController implements ControllerInterface
 
         $config = ConfigProvider::getInstance();
 
-        echo View::displayPageHead($this);
-
         $message = $this->getStatusMessage();
         if (!empty($message))
             echo $message;
 
-        // ensure that a OID is provided
+        // load one DEnum
         if (isset($params['oid'])) {
             $BOoid = $params['oid'];
-        } else {
-            throw new IllegalArguementException('Could not load the DEnum object as an oid was not supplied!');
-            return;
-        }
 
-        try {
-            $this->BO->load($BOoid);
+            // set up the title and meta details
+            $this->setTitle('Editing a DEnum');
+            $this->setDescription('Page to edit a DEnum.');
+            $this->setKeywords('edit,DEnum');
+
+            echo View::displayPageHead($this);
+
+            try {
+                $this->BO->load($BOoid);
+
+                ActiveRecord::disconnect();
+
+                $this->BOName = 'DEnum';
+
+                $this->BOView = View::getInstance($this->BO);
+
+                echo View::renderDeleteForm();
+
+                echo $this->BOView->editView();
+            } catch (RecordNotFoundException $e) {
+                self::$logger->error('Unable to load the DEnum of id ['.$params['oid'].'], error was ['.$e->getMessage().']');
+            }
+        } else { // load all DEnums
+            // set up the title and meta details
+            $this->setTitle('Listing all DEnums');
+            $this->setDescription('Page to list all DEnums.');
+            $this->setKeywords('list,all,DEnums');
+
+            echo View::displayPageHead($this);
+
+            // make sure that the DEnum tables exist
+            if(!$this->BO->checkTableExists()) {
+                echo View::displayErrorMessage('Warning! The DEnum tables do not exist, attempting to create them now...');
+                $this->createDEnumTables();
+            }
+
+            // get all of the BOs and invoke the list view on each one
+
+            // set the start point for the list pagination
+            if (isset($params['start']) ? $this->startPoint = $params['start']: $this->startPoint = 1);
+
+            $objects = $this->BO->loadAll($this->startPoint);
 
             ActiveRecord::disconnect();
 
-            $this->BOName = 'DEnum';
-
-            $this->BOView = View::getInstance($this->BO);
+            $this->BOCount = $this->BO->getCount();
 
             echo View::renderDeleteForm();
 
-            echo $this->BOView->editView();
-        } catch (RecordNotFoundException $e) {
-            self::$logger->error('Unable to load the DEnum of id ['.$params['oid'].'], error was ['.$e->getMessage().']');
+            foreach ($objects as $object) {
+                $temp = View::getInstance($object);
+                echo $temp->listView();
+            }
         }
 
         echo View::displayPageFoot($this);
@@ -225,6 +253,40 @@ class DEnumController extends EditController implements ControllerInterface
 
         echo View::displayPageFoot($this);
         self::$logger->debug('<<doPOST');
+    }
+
+    /**
+     * Method to create the DEnum tables if they don't exist
+     *
+     * @since 1.0
+     */
+    private function createDEnumTables()
+    {
+        $tmpDEnum = new DEnum();
+
+        echo '<p>Attempting to build table '.DEnum::TABLE_NAME.' for class DEnum : </p>';
+
+        try {
+            $tmpDEnum->makeTable();
+            echo View::displayUpdateMessage('Successfully re-created the database table '.DEnum::TABLE_NAME);
+            self::$logger->action('Re-created the table '.DEnum::TABLE_NAME);
+        } catch (AlphaException $e) {
+            echo View::displayErrorMessage('Failed re-created the database table '.DEnum::TABLE_NAME.', check the log');
+            self::$logger->error($e->getMessage());
+        }
+
+        $tmpDEnumItem = new DEnumItem();
+
+        echo '<p>Attempting to build table '.DEnumItem::TABLE_NAME.' for class DEnumItem : </p>';
+
+        try {
+            $tmpDEnumItem->makeTable();
+            echo View::displayUpdateMessage('Successfully re-created the database table '.DEnumItem::TABLE_NAME);
+            self::$logger->action('Re-created the table '.DEnumItem::TABLE_NAME);
+        } catch (AlphaException $e) {
+            echo View::displayErrorMessage('Failed re-created the database table '.DEnumItem::TABLE_NAME.', check the log');
+            self::$logger->error($e->getMessage());
+        }
     }
 
     /**
