@@ -6,6 +6,7 @@ use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Helper\Validator;
+use Alpha\Util\Extension\MarkdownFacade;
 use Alpha\Model\Article;
 use Alpha\View\View;
 use Alpha\View\ViewState;
@@ -193,6 +194,36 @@ class ArticleController extends Controller implements ControllerInterface
 
             if (isset($params['cancelBut'])) {
                 header('Location: '.FrontController::generateSecureURL('act=ListBusinessObjects'));
+            }
+
+            if(isset($params['data'])) { // previewing an article
+                // allow the consumer to optionally indicate another BO than Article
+                if (isset($params['bo']) && class_exists($params['bo']))
+                    $temp = new $params['bo'];
+                else
+                    $temp = new Article();
+
+                $temp->set('content', $params['data']);
+
+                if (isset($params['oid']))
+                    $temp->set('OID', $params['oid']);
+
+                $parser = new MarkdownFacade($temp, false);
+
+                // render a simple HTML header
+                echo '<html>';
+                echo '<head>';
+                echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/lib/jquery/ui/themes/'.$config->get('app.css.theme').'/jquery.ui.all.css">';
+                echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/css/alpha.css">';
+                echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'config/css/overrides.css">';
+                echo '</head>';
+                echo '<body>';
+
+                // transform text using parser.
+                echo $parser->getContent();
+
+                echo '</body>';
+                echo '</html>';
             }
         } catch (SecurityException $e) {
             echo View::displayPageHead($this);
