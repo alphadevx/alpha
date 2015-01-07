@@ -4,7 +4,7 @@ namespace Alpha\Controller;
 
 use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\IllegalArguementException;
-use Alpha\View\Widgets\Image;
+use Alpha\View\Widget\Image;
 use Alpha\Util\Logging\Logger;
 
 /**
