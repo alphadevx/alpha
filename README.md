@@ -1,5 +1,5 @@
-Alpha Framework 1.2.4
-=====================
+Alpha Framework (2.0 alpha)
+===========================
 
 Introduction
 ------------
