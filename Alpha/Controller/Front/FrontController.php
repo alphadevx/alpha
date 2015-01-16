@@ -20,7 +20,6 @@ use Alpha\Controller\Controller;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id: FrontController.inc 1693 2013-12-09 23:33:24Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
