@@ -23,6 +23,7 @@ use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\ResourceNotAllowedException;
 use Alpha\Exception\RecordNotFoundException;
 use Alpha\Exception\FailedSaveException;
+use Alpha\Exception\FileNotFoundException;
 use Alpha\Model\ActiveRecord;
 use Alpha\Controller\Front\FrontController;
 
@@ -124,6 +125,38 @@ class ArticleController extends Controller implements ControllerInterface
         self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
 
         $this->mode = (isset($params['mode']) && in_array($params['mode'], array('create','edit')) ? $params['mode'] : 'read');
+
+        if ($this->mode = 'read' && isset($params['file']) {
+            try {
+
+                $this->BO = new Article();
+
+                // just checking to see if the file path is absolute or not
+                if (mb_substr($params['file'], 0, 1) == '/')
+                    $this->BO->loadContentFromFile($params['file']);
+                else
+                    $this->BO->loadContentFromFile($config->get('app.root').'alpha/docs/'.$params['file']);
+
+            } catch (IllegalArguementException $e) {
+                self::$logger->error($e->getMessage());
+                throw new ResourceNotFoundException($e->getMessage());
+            } catch (FileNotFoundException $e) {
+                self::$logger->warn($e->getMessage().' File path is ['.$params['file'].']');
+                throw new ResourceNotFoundException('Failed to load the requested article from the file system!');
+            }
+
+            $this->setTitle($this->BO->get('title'));
+
+            $BOView = View::getInstance($this->BO);
+
+            echo View::displayPageHead($this, false);
+
+            echo $BOView->markdownView();
+
+            echo View::displayPageFoot($this);
+
+            return;
+        }
 
         if ($this->mode == 'edit' && isset($params['oid'])) {
             if (!Validator::isInteger($params['oid']))
