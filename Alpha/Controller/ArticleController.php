@@ -8,6 +8,7 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Helper\Validator;
 use Alpha\Util\Extension\MarkdownFacade;
+use Alpha\Util\Extension\TCPDFFacade;
 use Alpha\Model\Article;
 use Alpha\Model\ArticleVote;
 use Alpha\Model\ArticleComment;
@@ -156,6 +157,28 @@ class ArticleController extends Controller implements ControllerInterface
             echo View::displayPageFoot($this);
 
             return;
+        }
+
+        if ($this->mode = 'read' && isset($params['title'] && isset($params['pdf']) {
+            try {
+                $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
+
+                $this->BO = new $this->BOName;
+                $this->BO->loadByAttribute('title', $title);
+
+                ActiveRecord::disconnect();
+
+                $pdf = new TCPDFFacade($this->BO);
+
+                return;
+
+            } catch (IllegalArguementException $e) {
+                self::$logger->error($e->getMessage());
+                throw new ResourceNotFoundException($e->getMessage());
+            } catch (RecordNotFoundException $e) {
+                self::$logger->error($e->getMessage());
+                throw new ResourceNotFoundException($e->getMessage());
+            }
         }
 
         if ($this->mode == 'edit' && isset($params['oid'])) {
