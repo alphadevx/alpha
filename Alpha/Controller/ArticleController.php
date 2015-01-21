@@ -4,6 +4,7 @@ namespace Alpha\Controller;
 
 use Alpha\Util\InputFilter;
 use Alpha\Util\Logging\Logger;
+use Alpha\Util\Logging\KPI;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Helper\Validator;
@@ -127,7 +128,48 @@ class ArticleController extends Controller implements ControllerInterface
 
         $this->mode = (isset($params['mode']) && in_array($params['mode'], array('create','edit')) ? $params['mode'] : 'read');
 
-        if ($this->mode = 'read' && isset($params['file']) {
+        if ($this->mode == 'read' && isset($params['title']) {
+
+            $KDP = new KPI('viewarticle');
+
+            try {
+                // it may have already been loaded by a doPOST call
+                if ($this->BO->isTransient()) {
+                    $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
+
+                    $this->BO = new Article();
+                    $this->BO->set('title', $title);
+                    $this->BO->loadByAttribute('title', $title, false, array('OID', 'version_num', 'created_ts', 'updated_ts', 'author', 'published', 'content', 'headerContent'));
+                    if (!$this->BO->get('published'))
+                        throw new RecordNotFoundException('Attempted to load an article which is not published yet');
+                    $this->BO->set('tags', $this->BO->getOID());
+                }
+
+            } catch (IllegalArguementException $e) {
+                self::$logger->warn($e->getMessage());
+                throw new ResourceNotFoundException('The file that you have requested cannot be found!');
+            } catch (RecordNotFoundException $e) {
+                self::$logger->warn($e->getMessage());
+                throw new ResourceNotFoundException('The article that you have requested cannot be found!');
+            }
+
+            $this->setTitle($this->BO->get('title'));
+            $this->setDescription($this->BO->get('description'));
+
+            $BOView = View::getInstance($this->BO);
+
+            echo View::displayPageHead($this);
+
+            echo $BOView->markdownView();
+
+            echo View::displayPageFoot($this);
+
+            $KDP->log();
+
+            return;
+        }
+
+        if ($this->mode == 'read' && isset($params['file']) {
             try {
 
                 $this->BO = new Article();
@@ -159,7 +201,7 @@ class ArticleController extends Controller implements ControllerInterface
             return;
         }
 
-        if ($this->mode = 'read' && isset($params['title'] && isset($params['pdf']) {
+        if ($this->mode == 'read' && isset($params['title'] && isset($params['pdf']) {
             try {
                 $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
 
