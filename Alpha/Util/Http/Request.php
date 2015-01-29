@@ -2,6 +2,8 @@
 
 namespace Alpha\Util\Http;
 
+use Alpha\Exception\IllegalArguementException;
+
 /**
  * A class to encapsulate a HTTP request
  *
@@ -100,12 +102,20 @@ class Request
      * any overrides provided (useful for testing).
      *
      * @param array $overrides Hash array of PHP super globals to override
+     * @throws Alpha\Exception\IllegalArguementException
      * @since 2.0
      * @todo
      */
     public function __construct($overrides = array())
     {
+        if (isset($overrides['method']) && in_array($overrides['method'], $this->HTTPMethods))
+            $this->method = $overrides['method'];
 
+        if (isset($_SERVER['REQUEST_METHOD']) && in_array($_SERVER['REQUEST_METHOD'], $this->HTTPMethods))
+            $this->method = $_SERVER['REQUEST_METHOD'];
+
+        if ($this->method == '')
+            throw new IllegalArguementException('No valid HTTP method provided when creating new Request object');
     }
 
     /**
