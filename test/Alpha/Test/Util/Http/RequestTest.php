@@ -102,6 +102,20 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('application/json', $request->getHeader('Accept'), 'Testing that the HTTP headers can be set from overrides or super-globals during object construction');
     }
+
+    /**
+     * Testing that the Content-Type and Content-Length headers are accessible in the Request once available in globals
+     */
+    public function testGetContentHeaders()
+    {
+        $_SERVER['CONTENT_TYPE'] = 'application/json';
+        $_SERVER['CONTENT_LENGTH'] = 500;
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $request = new Request();
+
+        $this->assertEquals('application/json', $request->getHeader('Content-Type'), 'Testing that the Content-Type and Content-Length headers are accessible in the Request once available in globals');
+        $this->assertEquals(500, $request->getHeader('Content-Length'), 'Testing that the Content-Type and Content-Length headers are accessible in the Request once available in globals');
+    }
 }
 
 ?>
