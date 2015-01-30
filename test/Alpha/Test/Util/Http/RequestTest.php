@@ -55,10 +55,11 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetHTTPMethod()
     {
-        $request = new Request(array('method' => 'GET'));
+        $request = new Request(array('method' => 'GET', 'headers' => array('Accept' => 'application/json')));
 
         $this->assertEquals('GET', $request->getMethod(), 'Testing that the HTTP method can be set from overrides or super-globals during object construction');
 
+        $_SERVER['HTTP_ACCEPT'] = 'application/json';
         $_SERVER['REQUEST_METHOD'] = 'PUT';
         $request = new Request();
 
@@ -84,6 +85,22 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         } catch (IllegalArguementException $e) {
             $this->assertEquals('No valid HTTP method provided when creating new Request object', $e->getMessage());
         }
+    }
+
+    /**
+     * Testing that the HTTP headers can be set from overrides or super-globals during object construction
+     */
+    public function testSetHTTPHeaders()
+    {
+        $request = new Request(array('method' => 'GET', 'headers' => array('Accept' => 'application/json')));
+
+        $this->assertEquals('application/json', $request->getHeader('Accept'), 'Testing that the HTTP headers can be set from overrides or super-globals during object construction');
+
+        $_SERVER['HTTP_ACCEPT'] = 'application/json';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $request = new Request();
+
+        $this->assertEquals('application/json', $request->getHeader('Accept'), 'Testing that the HTTP headers can be set from overrides or super-globals during object construction');
     }
 }
 

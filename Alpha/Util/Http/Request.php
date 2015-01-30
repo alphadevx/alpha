@@ -108,14 +108,23 @@ class Request
      */
     public function __construct($overrides = array())
     {
+        // set HTTP method
         if (isset($overrides['method']) && in_array($overrides['method'], $this->HTTPMethods))
             $this->method = $overrides['method'];
-
-        if (isset($_SERVER['REQUEST_METHOD']) && in_array($_SERVER['REQUEST_METHOD'], $this->HTTPMethods))
+        elseif (isset($_SERVER['REQUEST_METHOD']) && in_array($_SERVER['REQUEST_METHOD'], $this->HTTPMethods))
             $this->method = $_SERVER['REQUEST_METHOD'];
 
         if ($this->method == '')
             throw new IllegalArguementException('No valid HTTP method provided when creating new Request object');
+
+        // set HTTP headers
+        if (isset($overrides['headers']) && is_array($overrides['headers']))
+            $this->headers = $overrides['headers'];
+        else
+            $this->headers = $this->getGlobalHeaders();
+
+        if (!is_array($this->headers))
+            throw new IllegalArguementException('No valid HTTP headers provided when creating new Request object');
     }
 
     /**
@@ -149,10 +158,31 @@ class Request
      */
     public function getHeader($key, $default = null)
     {
-        if (in_array($key, $this->headers))
-            return $this->headers[$keys];
+        if (array_key_exists($key, $this->headers))
+            return $this->headers[$key];
         else
             return $default;
+    }
+
+    /**
+     * Tries to get the current HTTP request headers from supoer globals
+     *
+     * @return array
+     * @since 2.0
+     */
+    private function getGlobalHeaders()
+    {
+        if (!function_exists('getallheaders')) {
+            $headers = '';
+            foreach ($_SERVER as $name => $value) {
+                if (substr($name, 0, 5) == 'HTTP_')
+                    $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+            }
+
+            return $headers;
+        } else {
+            return getallheaders();
+        }
     }
 
     /**

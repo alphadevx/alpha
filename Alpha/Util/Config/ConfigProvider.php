@@ -87,7 +87,7 @@ class ConfigProvider
 			self::$instance->setIncludePath();
 
 			// check to see if a child class with callbacks has been implemented
-			if(file_exists(self::$instance->get('rootPath').'config/ConfigCallbacks.inc')) {
+			if (file_exists(self::$instance->get('rootPath').'config/ConfigCallbacks.inc')) {
 				require_once self::$instance->get('rootPath').'config/ConfigCallbacks.inc';
 
 				self::$instance = new ConfigCallbacks();
@@ -106,12 +106,12 @@ class ConfigProvider
 	 *
 	 * @param $key string
 	 * @return string
-	 * @throws Alpha\Exception\IllegalArguementException;
+	 * @throws Alpha\Exception\IllegalArguementException
 	 * @since 1.0
 	 */
 	public function get($key)
 	{
-		if(array_key_exists($key, $this->configVars))
+		if (array_key_exists($key, $this->configVars))
 			return $this->configVars[$key];
 		else
 			throw new IllegalArguementException('The config property ['.$key.'] is not set in the .ini config file');
@@ -130,7 +130,7 @@ class ConfigProvider
 		 * If you need to alter a config option after it has been set in the .ini
 		 * files, you can override this class and implement this callback method
 		 */
-		if(method_exists($this, 'before_set_callback'))
+		if (method_exists($this, 'before_set_callback'))
 			$val = $this->before_set_callback($key, $val, $this->configVars);
 
 		$this->configVars[$key] = $val;
@@ -140,6 +140,7 @@ class ConfigProvider
 	 * Sets the root directory of the application
 	 *
 	 * @since 1.0
+	 * @todo refactor!
 	 */
 	private function setRootPath()
 	{
@@ -150,26 +151,26 @@ class ConfigProvider
 
 		$rootPath = '';
 
-		if(mb_strrpos($currentScript, 'alpha/view/widgets/') !== false) {
+		if (mb_strrpos($currentScript, 'Alpha/View/Widget/') !== false) {
 			// set path for widgets
-			$rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'alpha/view/widgets/'));
-		}elseif(mb_strrpos($currentScript, 'alpha/util/') !== false) {
+			$rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'Alpha/View/Widget/'));
+		} elseif (mb_strrpos($currentScript, 'Alpha/Util/') !== false) {
 			// set the path for util scripts
-			$rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'alpha/util/'));
-		}elseif(mb_strrpos($currentScript, 'alpha/') !== false) {
+			$rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'Alpha/Util/'));
+		} elseif (mb_strrpos($currentScript, 'Alpha/') !== false) {
 			// check to see if it is a controller under /alpha
-			$rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'alpha/'));
-		}elseif(!mb_strrpos($currentScript, 'alpha/') && mb_strrpos($currentScript, 'controller/') != false) {
+			$rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'Alpha/'));
+		} elseif (!mb_strrpos($currentScript, 'Alpha/') && mb_strrpos($currentScript, 'Controller/') != false) {
 			// handle custom controllers at a lower level
-			$rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'controller/'));
-		}elseif(mb_strrpos($currentScript, 'config/css/') !== false) {
+			$rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'Controller/'));
+		} elseif (mb_strrpos($currentScript, 'Config/css/') !== false) {
 			// set path for CSS files
 			$rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'config/css/'));
-		}elseif(mb_strrpos($currentScript, 'AlphaCronManager') !== false) {
-			// set the path for the AlphaCronManager being run from CLI
+		} elseif (mb_strrpos($currentScript, 'CronManager') !== false) {
+			// set the path for the CronManager being run from CLI
 			$rootPath = '../../';
-		}else{
-			$rootPath = '';
+		} else {
+			$rootPath = '.';
 		}
 
 		$this->set('rootPath', $rootPath);
