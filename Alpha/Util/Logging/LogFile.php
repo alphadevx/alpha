@@ -10,7 +10,6 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -124,13 +123,13 @@ class LogFile
  	 */
  	public function writeLine($line)
  	{
- 		global $config;
+ 		$config = ConfigProvider::getInstance();
 
  		$mergedLine = '';
 
  		$colCount = count($line);
 
- 		for($i = 0; $i < $colCount; $i++) {
+ 		for ($i = 0; $i < $colCount; $i++) {
  			/*
  			 * we need to ensure that the seperator is not in the value anywhere, as it
  			 * would cause problems later when reading the log
@@ -142,27 +141,26 @@ class LogFile
 				$mergedLine .= $value.$this->seperator;
  		}
 
- 		try{
+ 		try {
  			file_put_contents($this->path, $mergedLine, FILE_APPEND|LOCK_EX);
 
- 			if($this->checkFileSize() >= $this->MaxSize) {
+ 			if ($this->checkFileSize() >= $this->MaxSize)
 				$this->backupFile();
-			}
- 		}catch(Exception $e) {
+
+ 		} catch(\Exception $e) {
  			try {
 	 			$logsDir = $config->get('app.file.store.dir').'logs';
 
-				if(!file_exists($logsDir))
+				if (!file_exists($logsDir))
 					mkdir($logsDir, 0766);
 
 	 			file_put_contents($this->path, $mergedLine, FILE_APPEND|LOCK_EX);
 
-	 			if($this->checkFileSize() >= $this->MaxSize) {
+	 			if ($this->checkFileSize() >= $this->MaxSize)
 					$this->backupFile();
-				}
-			}catch(Exception $e) {
+			} catch(\Exception $e) {
 				// TODO log to PHP system log file instead
-	 			echo '<p class="error"><br>Unable to write to the log file ['.$this->path.'], error ['.$e->getMessage().']</p>';
+	 			echo 'Unable to write to the log file ['.$this->path.'], error ['.$e->getMessage().']';
 	 			exit;
 			}
  		}

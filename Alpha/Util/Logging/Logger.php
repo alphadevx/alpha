@@ -9,7 +9,6 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -106,7 +105,7 @@ class Logger
 	 */
 	public function debug($message)
 	{
-		if($this->level == 'DEBUG' || in_array($this->classname, $this->debugClasses)) {
+		if ($this->level == 'DEBUG' || in_array($this->classname, $this->debugClasses)) {
 			$dateTime = date("Y-m-d H:i:s");
 			$this->logfile->writeLine(array($dateTime, 'DEBUG', $this->classname, $message,
 				(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
@@ -121,7 +120,7 @@ class Logger
 	 */
 	public function info($message)
 	{
-		if($this->level == 'DEBUG' || $this->level == 'INFO' || in_array($this->classname, $this->debugClasses)) {
+		if ($this->level == 'DEBUG' || $this->level == 'INFO' || in_array($this->classname, $this->debugClasses)) {
 			$dateTime = date("Y-m-d H:i:s");
 			$this->logfile->writeLine(array($dateTime, 'INFO', $this->classname, $message,
 				(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
@@ -136,7 +135,7 @@ class Logger
 	 */
 	public function warn($message)
 	{
-		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || in_array($this->classname, $this->debugClasses)) {
+		if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || in_array($this->classname, $this->debugClasses)) {
 			$dateTime = date("Y-m-d H:i:s");
 			$this->logfile->writeLine(array($dateTime, 'WARN', $this->classname, $message,
 				(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
@@ -151,7 +150,7 @@ class Logger
 	 */
 	public function error($message)
 	{
-		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' ||
+		if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' ||
 			in_array($this->classname, $this->debugClasses)) {
 			$dateTime = date("Y-m-d H:i:s");
 			$line = array($dateTime, 'ERROR', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ?
@@ -170,7 +169,7 @@ class Logger
 	 */
 	public function fatal($message)
 	{
-		if($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' ||
+		if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' ||
 			$this->level == 'FATAL' || in_array($this->classname, $this->debugClasses)) {
 			$dateTime = date("Y-m-d H:i:s");
 			$line = array($dateTime, 'FATAL', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ?
@@ -189,7 +188,7 @@ class Logger
 	 */
 	public function sql($message)
 	{
-		if($this->level == 'SQL') {
+		if ($this->level == 'SQL') {
 			$dateTime = date("Y-m-d H:i:s");
 			$this->logfile->writeLine(array($dateTime, 'SQL', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ?
 				$_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
@@ -204,7 +203,7 @@ class Logger
 	 */
 	public function action($message)
 	{
-		if(isset($_SESSION['currentUser'])) {
+		if (isset($_SESSION['currentUser'])) {
 			$action = new ActionLogObject();
 			$action->set('client', (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''));
 			$action->set('IP', (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : ''));
@@ -224,7 +223,7 @@ class Logger
 		$config = ConfigProvider::getInstance();
 
 		// just making sure an email address has been set in the .ini file
-		if($config->get('app.log.error.mail.address') != '') {
+		if ($config->get('app.log.error.mail.address') != '') {
 			$body = "The following error has occured:\n\n";
 
 			$body .= "Class:-> ".$this->classname."\n\n";

@@ -111,10 +111,10 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 	{
 		$config = ConfigProvider::getInstance();
 
-		if(!isset(self::$connection)) {
+		if (!isset(self::$connection)) {
 			try {
 				self::$connection = new SQLite3($config->get('db.file.path'));
-			} catch(Exeception $e) {
+			} catch(\Exception $e) {
 				self::$logger->fatal('Could not open SQLite database: ['.$e->getMessage().']');
 			}
 		}
@@ -128,7 +128,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 	 */
 	public static function disconnect()
 	{
-		if(isset(self::$connection)) {
+		if (isset(self::$connection)) {
 			self::$connection->close();
 			self::$connection = null;
 		}
