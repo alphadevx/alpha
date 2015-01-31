@@ -55,11 +55,10 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetHTTPMethod()
     {
-        $request = new Request(array('method' => 'GET', 'headers' => array('Accept' => 'application/json')));
+        $request = new Request(array('method' => 'GET'));
 
         $this->assertEquals('GET', $request->getMethod(), 'Testing that the HTTP method can be set from overrides or super-globals during object construction');
 
-        $_SERVER['HTTP_ACCEPT'] = 'application/json';
         $_SERVER['REQUEST_METHOD'] = 'PUT';
         $request = new Request();
 
@@ -115,6 +114,22 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('application/json', $request->getHeader('Content-Type'), 'Testing that the Content-Type and Content-Length headers are accessible in the Request once available in globals');
         $this->assertEquals(500, $request->getHeader('Content-Length'), 'Testing that the Content-Type and Content-Length headers are accessible in the Request once available in globals');
+    }
+
+    /**
+     * Testing that the HTTP cookies can be set from overrides or super-globals during object construction
+     */
+    public function testSetHTTPCookies()
+    {
+        $request = new Request(array('method' => 'GET', 'cookies' => array('username' => 'bob')));
+
+        $this->assertEquals('bob', $request->getCookie('username'), 'Testing that the HTTP cookies can be set from overrides or super-globals during object construction');
+
+        $_COOKIE['username'] = 'bob';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $request = new Request();
+
+        $this->assertEquals('bob', $request->getCookie('username'), 'Testing that the HTTP cookies can be set from overrides or super-globals during object construction');
     }
 }
 

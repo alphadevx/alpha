@@ -123,8 +123,13 @@ class Request
         else
             $this->headers = $this->getGlobalHeaders();
 
-        if (!is_array($this->headers))
-            throw new IllegalArguementException('No valid HTTP headers provided when creating new Request object');
+        // set HTTP cookies
+        if (isset($overrides['cookies']) && is_array($overrides['cookies']))
+            $this->cookies = $overrides['cookies'];
+        elseif (isset($_COOKIE))
+            $this->cookies = $_COOKIE;
+        else
+            $this->cookies = array();
     }
 
     /**
@@ -210,7 +215,7 @@ class Request
      */
     public function getCookie($key, $default = null)
     {
-        if (in_array($key, $this->cookies))
+        if (array_key_exists($key, $this->cookies))
             return $this->cookies[$key];
         else
             return $default;
