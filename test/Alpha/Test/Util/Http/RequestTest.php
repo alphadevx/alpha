@@ -131,6 +131,28 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('bob', $request->getCookie('username'), 'Testing that the HTTP cookies can be set from overrides or super-globals during object construction');
     }
+
+    /**
+     * Testing that the HTTP params can be set from overrides or super-globals during object construction
+     */
+    public function testSetHTTPParams()
+    {
+        $request = new Request(array('method' => 'GET', 'params' => array('username' => 'bob')));
+
+        $this->assertEquals('bob', $request->getParam('username'), 'Testing that the HTTP params can be set from overrides or super-globals during object construction');
+
+        $_GET['username'] = 'bob';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $request = new Request();
+
+        $this->assertEquals('bob', $request->getParam('username'), 'Testing that the HTTP params can be set from overrides or super-globals during object construction');
+
+        $_POST['username'] = 'bob';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $request = new Request();
+
+        $this->assertEquals('bob', $request->getParam('username'), 'Testing that the HTTP params can be set from overrides or super-globals during object construction');
+    }
 }
 
 ?>

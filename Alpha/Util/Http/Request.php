@@ -130,6 +130,19 @@ class Request
             $this->cookies = $_COOKIE;
         else
             $this->cookies = array();
+
+        // set HTTP params
+        if (isset($overrides['params']) && is_array($overrides['params'])) {
+            $this->params = $overrides['params'];
+        } else {
+            $this->params = array();
+
+            if (isset($_GET))
+                $this->params = array_merge($this->params, $_GET);
+
+            if (isset($_POST))
+                $this->params = array_merge($this->params, $_POST);
+        }
     }
 
     /**
@@ -242,7 +255,7 @@ class Request
      */
     public function getParam($key, $default = null)
     {
-        if (in_array($key, $this->params))
+        if (array_key_exists($key, $this->params))
             return $this->params[$key];
         else
             return $default;
