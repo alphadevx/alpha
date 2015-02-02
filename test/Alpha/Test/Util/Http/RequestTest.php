@@ -153,6 +153,22 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('bob', $request->getParam('username'), 'Testing that the HTTP params can be set from overrides or super-globals during object construction');
     }
+
+    /**
+     * Testing that the HTTP body can be set from overrides or super-globals during object construction
+     */
+    public function testSetHTTPBody()
+    {
+        $request = new Request(array('method' => 'POST', 'body' => 'test post'));
+
+        $this->assertEquals('test post', $request->getBody(), 'Testing that the HTTP body can be set from overrides or super-globals during object construction');
+
+        $GLOBALS['HTTP_RAW_POST_DATA'] = 'test post';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $request = new Request();
+
+        $this->assertEquals('test post', $request->getBody(), 'Testing that the HTTP body can be set from overrides or super-globals during object construction');
+    }
 }
 
 ?>

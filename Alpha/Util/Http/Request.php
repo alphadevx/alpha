@@ -143,6 +143,12 @@ class Request
             if (isset($_POST))
                 $this->params = array_merge($this->params, $_POST);
         }
+
+        // set HTTP body
+        if (isset($overrides['body']))
+            $this->body = $overrides['body'];
+        else
+            $this->body = $this->getGlobalBody();
     }
 
     /**
@@ -270,6 +276,20 @@ class Request
     public function getBody()
     {
         return $this->body;
+    }
+
+    /**
+     * Attempts to get the raw body of the current request from super globals
+     *
+     * @return string
+     * @since 2.0
+     */
+    private function getGlobalBody()
+    {
+        if (isset($GLOBALS['HTTP_RAW_POST_DATA']))
+            return $GLOBALS['HTTP_RAW_POST_DATA'];
+        else
+            return file_get_contents('php://input');
     }
 
     /**
