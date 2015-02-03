@@ -201,6 +201,38 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('127.0.0.1', $request->getIP(), 'Testing that the client IP can be set from overrides or super-globals during object construction');
     }
+
+    /**
+     * Testing that the URI can be set from overrides or super-globals during object construction
+     */
+    public function testSetURI()
+    {
+        $request = new Request(array('method' => 'GET', 'URI' => '/controller/param'));
+
+        $this->assertEquals('/controller/param', $request->getURI(), 'Testing that the URI can be set from overrides or super-globals during object construction');
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI'] = '/controller/param';
+        $request = new Request();
+
+        $this->assertEquals('/controller/param', $request->getURI(), 'Testing that URI can be set from overrides or super-globals during object construction');
+    }
+
+    /**
+     * Testing that the URL can be set from overrides or super-globals during object construction
+     */
+    public function testSetURL()
+    {
+        $request = new Request(array('method' => 'GET', 'URI' => '/controller/param'));
+
+        $this->assertEquals('http://localhost/controller/param', $request->getURL(), 'Testing that the URL can be set from overrides or super-globals during object construction');
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI'] = '/controller/param';
+        $request = new Request();
+
+        $this->assertEquals('http://localhost/controller/param', $request->getURL(), 'Testing that URL can be set from overrides or super-globals during object construction');
+    }
 }
 
 ?>

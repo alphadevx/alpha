@@ -3,6 +3,7 @@
 namespace Alpha\Util\Http;
 
 use Alpha\Exception\IllegalArguementException;
+use Alpha\Util\Config\ConfigProvider;
 
 /**
  * A class to encapsulate a HTTP request
@@ -101,7 +102,7 @@ class Request
      * The host header provided on the request
      *
      * @var string
-     * @since  2.0
+     * @since 2.0
      */
     private $host;
 
@@ -109,9 +110,17 @@ class Request
      * The IP of the client making the request
      *
      * @var string
-     * @since  2.0
+     * @since 2.0
      */
     private $IP;
+
+    /**
+     * The URI requested
+     *
+     * @var string
+     * @since 2.0
+     */
+    private $URI;
 
     /**
      * Builds up the request based on available PHP super globals, in addition to
@@ -183,6 +192,12 @@ class Request
             $this->IP = $overrides['IP'];
         elseif (isset($_SERVER['REMOTE_ADDR']))
             $this->IP = $_SERVER['REMOTE_ADDR'];
+
+        // set requested URI
+        if (isset($overrides['URI']))
+            $this->URI = $overrides['URI'];
+        elseif (isset($_SERVER['REQUEST_URI']))
+            $this->URI = $_SERVER['REQUEST_URI'];
     }
 
     /**
@@ -360,15 +375,26 @@ class Request
     }
 
     /**
+     * Get the URI that was requested
+     *
+     * @return string
+     * @since 2.0
+     */
+    public function getURI()
+    {
+        return $this->URI;
+    }
+
+    /**
      * Get the URL that was requested
      *
      * @return string
      * @since 2.0
-     * @todo
      */
     public function getURL()
     {
-
+        $config = ConfigProvider::getInstance();
+        return substr($config->get('app.url'), 0, strlen($config->get('app.url')) - 1).$this->getURI();
     }
 
     /**
