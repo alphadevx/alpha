@@ -47,7 +47,6 @@ use Alpha\Util\Config\ConfigProvider;
  * </pre>
  *
  */
-
 class Request
 {
     /**
@@ -67,7 +66,7 @@ class Request
     private $method;
 
     /**
-     * An array of HTTP headers on this request
+     * An associative array of HTTP headers on this request
      *
      * @var array
      * @since 2.0
@@ -75,7 +74,7 @@ class Request
     private $headers;
 
     /**
-     * An array of HTTP cookies on this request
+     * An associative array of HTTP cookies on this request
      *
      * @var array
      * @since 2.0
@@ -129,7 +128,6 @@ class Request
      * @param array $overrides Hash array of PHP super globals to override
      * @throws Alpha\Exception\IllegalArguementException
      * @since 2.0
-     * @todo
      */
     public function __construct($overrides = array())
     {
