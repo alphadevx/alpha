@@ -98,6 +98,22 @@ class Request
     private $body;
 
     /**
+     * The host header provided on the request
+     *
+     * @var string
+     * @since  2.0
+     */
+    private $host;
+
+    /**
+     * The IP of the client making the request
+     *
+     * @var string
+     * @since  2.0
+     */
+    private $IP;
+
+    /**
      * Builds up the request based on available PHP super globals, in addition to
      * any overrides provided (useful for testing).
      *
@@ -155,6 +171,18 @@ class Request
             $this->host = $overrides['host'];
         elseif (isset($_SERVER['HTTP_HOST']))
             $this->host = $_SERVER['HTTP_HOST'];
+
+        // set HTTP host
+        if (isset($overrides['host']))
+            $this->host = $overrides['host'];
+        elseif (isset($_SERVER['HTTP_HOST']))
+            $this->host = $_SERVER['HTTP_HOST'];
+
+        // set IP of the client
+        if (isset($overrides['IP']))
+            $this->IP = $overrides['IP'];
+        elseif (isset($_SERVER['REMOTE_ADDR']))
+            $this->IP = $_SERVER['REMOTE_ADDR'];
     }
 
     /**
@@ -348,11 +376,10 @@ class Request
      *
      * @return string
      * @since 2.0
-     * @todo
      */
     public function getIP()
     {
-
+        return $this->IP;
     }
 
     /**

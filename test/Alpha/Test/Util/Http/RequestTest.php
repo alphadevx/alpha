@@ -185,6 +185,22 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('localhost', $request->getHost(), 'Testing that the HTTP host can be set from overrides or super-globals during object construction');
     }
+
+    /**
+     * Testing that the client IP can be set from overrides or super-globals during object construction
+     */
+    public function testSetIP()
+    {
+        $request = new Request(array('method' => 'GET', 'IP' => '127.0.0.1'));
+
+        $this->assertEquals('127.0.0.1', $request->getIP(), 'Testing that the client IP can be set from overrides or super-globals during object construction');
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        $request = new Request();
+
+        $this->assertEquals('127.0.0.1', $request->getIP(), 'Testing that the client IP can be set from overrides or super-globals during object construction');
+    }
 }
 
 ?>
