@@ -149,6 +149,12 @@ class Request
             $this->body = $overrides['body'];
         else
             $this->body = $this->getGlobalBody();
+
+        // set HTTP host
+        if (isset($overrides['host']))
+            $this->host = $overrides['host'];
+        elseif (isset($_SERVER['HTTP_HOST']))
+            $this->host = $_SERVER['HTTP_HOST'];
     }
 
     /**
@@ -319,11 +325,10 @@ class Request
      *
      * @return string
      * @since 2.0
-     * @todo
      */
     public function getHost()
     {
-
+        return $this->host;
     }
 
     /**

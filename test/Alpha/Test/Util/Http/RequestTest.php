@@ -169,6 +169,22 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('test post', $request->getBody(), 'Testing that the HTTP body can be set from overrides or super-globals during object construction');
     }
+
+    /**
+     * Testing that the HTTP host can be set from overrides or super-globals during object construction
+     */
+    public function testSetHTTPHost()
+    {
+        $request = new Request(array('method' => 'GET', 'host' => 'localhost'));
+
+        $this->assertEquals('localhost', $request->getHost(), 'Testing that the HTTP host can be set from overrides or super-globals during object construction');
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['HTTP_HOST'] = 'localhost';
+        $request = new Request();
+
+        $this->assertEquals('localhost', $request->getHost(), 'Testing that the HTTP host can be set from overrides or super-globals during object construction');
+    }
 }
 
 ?>
