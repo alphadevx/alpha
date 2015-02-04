@@ -148,15 +148,17 @@ class Response
     /**
      * Build the response
      *
-     * @param string $body The body of the response.
      * @param int $status The HTTP status code of the response.
+     * @param string $body The body of the response (optional).
      * @param array $headers The headers to set on the response (optional).
      * @throws Alpha\Exception\IllegalArguementException
      */
-    public function __construct($body, $status, $headers = array())
+    public function __construct($status, $body = null, $headers = array())
     {
-        $this->body = $body;
         $this->headers = $headers;
+
+        if (isset($body))
+            $this->body = $body;
 
         if (array_key_exists($status, $this->HTTPStatusCodes))
             $this->status = $status;
@@ -167,7 +169,7 @@ class Response
     /**
      * Get the response body
      *
-     * @return string
+     * @return string|null
      * @since 2.0
      */
     public function getBody()

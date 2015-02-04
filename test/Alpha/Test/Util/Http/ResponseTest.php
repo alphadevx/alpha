@@ -55,7 +55,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructGood()
     {
-        $response = new Response('the body', 200, array('Content-Type' => 'application/json'));
+        $response = new Response(200, 'the body', array('Content-Type' => 'application/json'));
 
         $this->assertEquals('the body', $response->getBody(), 'Testing that the constructor istantiates the object correctly');
         $this->assertEquals(200, $response->getStatus(), 'Testing that the constructor istantiates the object correctly');
@@ -68,7 +68,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     public function testConstructBad()
     {
         try {
-            $response = new Response('the body', 2000, array('Content-Type' => 'application/json'));
+            $response = new Response(2000);
             $this->fail('Testing the constructor with bad arguements');
         } catch (IllegalArguementException $e) {
             $this->assertEquals('The status code provided [2000] is invalid', $e->getMessage());
@@ -80,7 +80,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function testStatus()
     {
-        $response = new Response('', 200);
+        $response = new Response(200);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the getting and setting of the HTTP status and message');
         $this->assertEquals('OK', $response->getStatusMessage(), 'Testing the getting and setting of the HTTP status and message');
