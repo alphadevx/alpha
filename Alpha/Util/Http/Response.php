@@ -151,12 +151,17 @@ class Response
      * @param string $body The body of the response.
      * @param int $status The HTTP status code of the response.
      * @param array $headers The headers to set on the response (optional).
-     * @since 2.0
-     * @todo
+     * @throws Alpha\Exception\IllegalArguementException
      */
     public function __construct($body, $status, $headers = array())
     {
+        $this->body = $body;
+        $this->headers = $headers;
 
+        if (array_key_exists($status, $this->HTTPStatusCodes))
+            $this->status = $status;
+        else
+            throw new IllegalArguementException('The status code provided ['.$status.'] is invalid');
     }
 
     /**
@@ -164,11 +169,10 @@ class Response
      *
      * @return string
      * @since 2.0
-     * @todo
      */
     public function getBody()
     {
-
+        return $this->body;
     }
 
     /**
@@ -176,11 +180,10 @@ class Response
      *
      * @param string $body The response body.
      * @since 2.0
-     * @todo
      */
     public function setBody($body)
     {
-
+        $this->body = $body;
     }
 
     /**
@@ -188,11 +191,10 @@ class Response
      *
      * @return int
      * @since 2.0
-     * @todo
      */
     public function getStatus()
     {
-
+        return $this->status;
     }
 
     /**
@@ -242,6 +244,22 @@ class Response
     public function getHeaders()
     {
 
+    }
+
+    /**
+     * Get the header matching the key provided
+     *
+     * @param string $key The key to search for
+     * @param mixed $default If key is not found, return this instead
+     * @return mixed
+     * @since 2.0
+     */
+    public function getHeader($key, $default = null)
+    {
+        if (array_key_exists($key, $this->headers))
+            return $this->headers[$key];
+        else
+            return $default;
     }
 
     /**
