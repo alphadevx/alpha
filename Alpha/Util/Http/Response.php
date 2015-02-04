@@ -231,11 +231,10 @@ class Response
      * @param string $header The header key name.
      * @param string $value The header value.
      * @since 2.0
-     * @todo
      */
     public function setHeader($header, $value)
     {
-
+        $this->headers[$header] = $value;
     }
 
     /**
@@ -243,11 +242,10 @@ class Response
      *
      * @return array
      * @since 2.0
-     * @todo
      */
     public function getHeaders()
     {
-
+        return $this->headers;
     }
 
     /**

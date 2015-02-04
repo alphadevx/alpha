@@ -97,6 +97,22 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(404, $response->getStatus(), 'Testing the getting and setting of the HTTP status and message');
         $this->assertEquals('Not Found', $response->getStatusMessage(), 'Testing the getting and setting of the HTTP status and message');
     }
+
+    /**
+     * Testing the getting and setting of the HTTP headers
+     */
+    public function testHeaders()
+    {
+        $response = new Response(200, '', array('Content-Type' => 'application/json'));
+
+        $this->assertEquals('application/json', $response->getHeader('Content-Type'), 'Testing the getting and setting of the HTTP headers');
+        $this->assertTrue(in_array('application/json', $response->getHeaders()), 'Testing the getting and setting of the HTTP headers');
+
+        $response->setHeader('Content-Type', 'text/html');
+
+        $this->assertTrue(in_array('text/html', $response->getHeaders()), 'Testing the getting and setting of the HTTP headers');
+        $this->assertTrue(in_array('Content-Type', array_keys($response->getHeaders())), 'Testing the getting and setting of the HTTP headers');
+    }
 }
 
 ?>

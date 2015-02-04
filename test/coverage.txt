@@ -1,12 +1,12 @@
 
 
 Code Coverage Report:        
-  2015-02-04 13:49:28        
+  2015-02-04 20:11:43        
                              
  Summary:                    
   Classes: 22.95% (14/61)    
-  Methods: 45.81% (268/585)  
-  Lines:   58.56% (3405/5815)
+  Methods: 46.32% (271/585)  
+  Lines:   58.70% (3414/5816)
 
 \Alpha\Controller::Controller
   Methods:  51.11% (23/45)   Lines:  67.44% (321/476)
@@ -91,7 +91,7 @@ Code Coverage Report:
 \Alpha\Util\Http::Request
   Methods:  36.84% ( 7/19)   Lines:  85.00% ( 68/ 80)
 \Alpha\Util\Http::Response
-  Methods:  35.71% ( 5/14)   Lines:  61.54% ( 16/ 26)
+  Methods:  50.00% ( 7/14)   Lines:  70.37% ( 19/ 27)
 \Alpha\Util\Http\Filter::ClientBlacklistFilter
   Methods:  50.00% ( 1/ 2)   Lines:  84.62% ( 11/ 13)
 \Alpha\Util\Http\Filter::ClientTempBlacklistFilter
@@ -105,7 +105,7 @@ Code Coverage Report:
 \Alpha\Util\Http\Session::SessionProviderPHP
   Methods:  83.33% ( 5/ 6)   Lines:  75.00% ( 18/ 24)
 \Alpha\Util\Logging::LogFile
-  Methods:  42.86% ( 3/ 7)   Lines:  24.10% ( 20/ 83)
+  Methods:  57.14% ( 4/ 7)   Lines:  31.33% ( 26/ 83)
 \Alpha\Util\Logging::Logger
   Methods:  30.00% ( 3/10)   Lines:  32.39% ( 23/ 71)
 \Alpha\Util\Search::SearchProviderFactory
