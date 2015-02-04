@@ -74,6 +74,29 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals('The status code provided [2000] is invalid', $e->getMessage());
         }
     }
+
+    /**
+     * Testing the getting and setting of the HTTP status and message
+     */
+    public function testStatus()
+    {
+        $response = new Response('', 200);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the getting and setting of the HTTP status and message');
+        $this->assertEquals('OK', $response->getStatusMessage(), 'Testing the getting and setting of the HTTP status and message');
+
+        try {
+            $response->setStatus(2000);
+            $this->fail('Testing the getting and setting of the HTTP status and message');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('The status code provided [2000] is invalid', $e->getMessage());
+        }
+
+        $response->setStatus(404);
+
+        $this->assertEquals(404, $response->getStatus(), 'Testing the getting and setting of the HTTP status and message');
+        $this->assertEquals('Not Found', $response->getStatusMessage(), 'Testing the getting and setting of the HTTP status and message');
+    }
 }
 
 ?>

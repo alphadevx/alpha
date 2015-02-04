@@ -201,24 +201,26 @@ class Response
      * Get the status message of the response
      *
      * @return string
-     * @since 2.0
      * @todo
      */
     public function getStatusMessage()
     {
-
+        return $this->HTTPStatusCodes[$this->status];
     }
 
     /**
      * Set the status code of the response
      *
      * @param int $status The response code.
+     * @throws Alpha\Exception\IllegalArguementException
      * @since 2.0
-     * @todo
      */
     public function setStatus($status)
     {
-
+        if (array_key_exists($status, $this->HTTPStatusCodes))
+            $this->status = $status;
+        else
+            throw new IllegalArguementException('The status code provided ['.$status.'] is invalid');
     }
 
     /**
