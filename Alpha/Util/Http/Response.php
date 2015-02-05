@@ -307,11 +307,10 @@ class Response
      *
      * @return int
      * @since 2.0
-     * @todo
      */
     public function getContentLength()
     {
-
+        return strlen($this->body);
     }
 
     /**

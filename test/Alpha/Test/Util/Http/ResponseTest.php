@@ -127,6 +127,20 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(in_array('bob', $response->getCookies()), 'Testing the getting and setting of the HTTP cookies');
         $this->assertTrue(in_array('username', array_keys($response->getCookies())), 'Testing the getting and setting of the HTTP cookies');
     }
+
+    /**
+     * Testing the setting of content length
+     */
+    public function testGetContentLength()
+    {
+        $response = new Response(200, '12345');
+
+        $this->assertEquals(5, $response->getContentLength(), 'Testing the setting of content length');
+
+        $response->setBody('1234567890');
+
+        $this->assertEquals(10, $response->getContentLength(), 'Testing the setting of content length');
+    }
 }
 
 ?>

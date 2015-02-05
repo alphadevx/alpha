@@ -1,12 +1,12 @@
 
 
 Code Coverage Report:        
-  2015-02-05 13:22:33        
+  2015-02-05 13:28:49        
                              
  Summary:                    
   Classes: 22.95% (14/61)    
-  Methods: 46.42% (272/586)  
-  Lines:   58.64% (3413/5820)
+  Methods: 46.76% (274/586)  
+  Lines:   58.69% (3416/5820)
 
 \Alpha\Controller::Controller
   Methods:  51.11% (23/45)   Lines:  67.44% (321/476)
@@ -91,7 +91,7 @@ Code Coverage Report:
 \Alpha\Util\Http::Request
   Methods:  36.84% ( 7/19)   Lines:  85.00% ( 68/ 80)
 \Alpha\Util\Http::Response
-  Methods:  60.00% ( 9/15)   Lines:  77.42% ( 24/ 31)
+  Methods:  73.33% (11/15)   Lines:  87.10% ( 27/ 31)
 \Alpha\Util\Http\Filter::ClientBlacklistFilter
   Methods:  50.00% ( 1/ 2)   Lines:  84.62% ( 11/ 13)
 \Alpha\Util\Http\Filter::ClientTempBlacklistFilter
