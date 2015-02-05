@@ -113,6 +113,20 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(in_array('text/html', $response->getHeaders()), 'Testing the getting and setting of the HTTP headers');
         $this->assertTrue(in_array('Content-Type', array_keys($response->getHeaders())), 'Testing the getting and setting of the HTTP headers');
     }
+
+    /**
+     * Testing the getting and setting of the HTTP cookies
+     */
+    public function testCookies()
+    {
+        $response = new Response(200);
+
+        $response->setCookie('username', 'bob');
+
+        $this->assertEquals('bob', $response->getCookie('username'), 'Testing the getting and setting of the HTTP cookies');
+        $this->assertTrue(in_array('bob', $response->getCookies()), 'Testing the getting and setting of the HTTP cookies');
+        $this->assertTrue(in_array('username', array_keys($response->getCookies())), 'Testing the getting and setting of the HTTP cookies');
+    }
 }
 
 ?>

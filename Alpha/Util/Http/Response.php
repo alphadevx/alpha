@@ -203,7 +203,6 @@ class Response
      * Get the status message of the response
      *
      * @return string
-     * @todo
      */
     public function getStatusMessage()
     {
@@ -270,11 +269,10 @@ class Response
      * @param string $cookie The cookie key name.
      * @param string $value The cookie value.
      * @since 2.0
-     * @todo
      */
     public function setCookie($cookie, $value)
     {
-
+        $this->cookies[$cookie] = $value;
     }
 
     /**
@@ -282,11 +280,26 @@ class Response
      *
      * @return array
      * @since 2.0
-     * @todo
      */
     public function getCookies()
     {
+        return $this->cookies;
+    }
 
+    /**
+     * Get the cookie matching the key provided
+     *
+     * @param string $key The key to search for
+     * @param mixed $default If key is not found, return this instead
+     * @return mixed
+     * @since 2.0
+     */
+    public function getCookie($key, $default = null)
+    {
+        if (array_key_exists($key, $this->cookies))
+            return $this->cookies[$key];
+        else
+            return $default;
     }
 
     /**
