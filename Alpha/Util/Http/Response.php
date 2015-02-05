@@ -4,6 +4,7 @@ namespace Alpha\Util\Http;
 
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Helper\Validator;
 
 /**
  * A class to encapsulate a HTTP Response
@@ -314,16 +315,20 @@ class Response
     }
 
     /**
-     * Send a redirect response to the client
+     * Builds a redirect response
      *
      * @param string $URL The URL to redirect the client to.
-     * @param int $status The HTTP response code to use for the request (should be valid per HTTP spec).
+     * @throws Alpha\Exception\IllegalArguementException
      * @since 2.0
-     * @todo
      */
-    public function redirect($URL, $status)
+    public function redirect($URL)
     {
-
+        if (Validator::isURL($URL)) {
+            $this->headers = array();
+            $this->setHeader('Location', $URL);
+        } else {
+            throw new IllegalArguementException('Unable to redirect to URL ['.$URL.'] as it is invalid');
+        }
     }
 
     /**

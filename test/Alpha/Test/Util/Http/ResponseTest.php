@@ -141,6 +141,26 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(10, $response->getContentLength(), 'Testing the setting of content length');
     }
+
+    /**
+     * Testing the redirect method
+     */
+    public function testRedirect()
+    {
+        $response = new Response(301);
+
+        try {
+            $response->redirect('notreallythere');
+            $this->fail('Testing the redirect method');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Unable to redirect to URL [notreallythere] as it is invalid', $e->getMessage());
+        }
+
+        $response->redirect('http://alphaframework.org/');
+
+        $this->assertEquals('http://alphaframework.org/', $response->getHeader('Location'), 'Testing the redirect method');
+        $this->assertEquals(1, count($response->getHeaders()), 'Testing the redirect method');
+    }
 }
 
 ?>
