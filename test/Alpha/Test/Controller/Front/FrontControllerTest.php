@@ -5,6 +5,7 @@ namespace Alpha\Test\Controller\Front;
 use Alpha\Controller\Front\FrontController;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Filter\ClientBlacklistFilter;
+use Alpha\Util\Http\Response;
 use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Model\BadRequest;
@@ -302,6 +303,35 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
 
         $config->set('security.encryption.key', $oldKey);
         $config->set('app.use.mod.rewrite', $oldRewriteSetting);
+    }
+
+    /**
+     * Testing adding good and bad routes with callbacks
+     */
+    public function testAddRoute()
+    {
+        $_SERVER['REQUEST_URI'] = '/';
+        $front = new FrontController();
+        $front->addRoute('/hello', function() {
+            return new Response(200, 'hello');
+        });
+
+        $this->assertTrue(is_callable($front->getRouteCallback('/hello')), 'Testing adding good and bad routes with callbacks');
+        $this->assertEquals('hello', call_user_func($front->getRouteCallback('/hello'))->getBody(), 'Testing adding good and bad routes with callbacks');
+
+        try {
+            $front->addRoute('/hello', 'not_a_callable');
+            $this->fail('Testing adding good and bad routes with callbacks');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Callback provided for route [/hello] is not callable', $e->getMessage());
+        }
+
+        try {
+            $front->getRouteCallback('/not_there');
+            $this->fail('Testing adding good and bad routes with callbacks');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('No callback defined for URI [/not_there]', $e->getMessage());
+        }
     }
 }
 

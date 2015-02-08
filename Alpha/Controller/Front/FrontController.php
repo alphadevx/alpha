@@ -110,6 +110,14 @@ class FrontController
 	 */
 	private $currentAlias;
 
+    /**
+     * An associative array of URIs to callable methods to service matching requests
+     *
+     * @var array
+     * @since 2.0
+     */
+    private $routes;
+
 	/**
 	 * Trace logger
 	 *
@@ -124,6 +132,7 @@ class FrontController
 	 * @throws Alpha\Exception\ResourceNotFoundException
 	 * @throws Alpha\Exception\BadRequestException
 	 * @since 1.0
+     * @todo Remove all calls to super globals, only Request should do that now
 	 */
 	public function __construct()
 	{
@@ -659,6 +668,39 @@ class FrontController
 	{
 		return $this->filters;
 	}
+
+    /**
+     * Add a new route to map a URI to the callback that will service its requests,
+     * normally by invoking a controller class
+     *
+     * @param string $URI The URL to match, can include params within curly {} braces.
+     * @param callable $callback The method to service the matched requests (should return a Response!).
+     * @throws Alpha\Exception\IllegalArguementException
+     * @since 2.0
+     */
+    public function addRoute($URI, $callback)
+    {
+        if (is_callable($callback))
+            $this->routes[$URI] = $callback;
+        else
+            throw new IllegalArguementException('Callback provided for route ['.$URI.'] is not callable');
+    }
+
+    /**
+     * Get the defined callback in the routes array for the URI provided
+     *
+     * @param string $URI The URI to search for.
+     * @return callable
+     * @throws Alpha\Exception\IllegalArguementException
+     * @since 2.0
+     */
+    public function getRouteCallback($URI)
+    {
+        if (array_key_exists($URI, $this->routes))
+            return $this->routes[$URI];
+        else
+            throw new IllegalArguementException('No callback defined for URI ['.$URI.']');
+    }
 }
 
 ?>
