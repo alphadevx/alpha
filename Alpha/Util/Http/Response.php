@@ -332,14 +332,22 @@ class Response
     }
 
     /**
-     * Sends the current response to standard output
+     * Sends the current response to standard output before exiting the current process
      *
      * @since 2.0
-     * @todo
      */
     public function send()
     {
+        http_response_code($this->status);
 
+        foreach ($this->headers as $header => $value) {
+            header($header.': '.$value);
+        }
+
+        if (isset($this->body)) {
+            header('Content-Length: '.$this->getContentLength());
+            echo $this->body;
+        }
     }
 }
 
