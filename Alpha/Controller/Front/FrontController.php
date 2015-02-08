@@ -88,6 +88,7 @@ class FrontController
 	 *
 	 * @var array
 	 * @since 1.0
+     * @deprecated
 	 */
 	private $controllerAlias = array();
 
@@ -105,6 +106,7 @@ class FrontController
 	 *
 	 * @var string
 	 * @since 1.0
+     * @deprecated
 	 */
 	private $currentAlias;
 
@@ -192,6 +194,7 @@ class FrontController
 	 * query string
 	 *
 	 * @since 1.0
+     * @deprecated
 	 */
 	private function populateGetVars()
 	{
@@ -312,6 +315,7 @@ class FrontController
 	 * @param boolean $allowRedirects Defaults to true, set to false if you want to prevent the front controller from redirecting the request
 	 * @throws Alpha\Exception\ResourceNotFoundException
 	 * @since 1.0
+     * @deprecated
 	 */
 	public function loadController($allowRedirects = true)
 	{
@@ -416,6 +420,7 @@ class FrontController
 	 * @param string $alias The URL alias for the page controller
 	 * @param string $param The name of the GET parameter on the alias URL request
 	 * @since 1.0
+     * @deprecated
 	 */
 	public function registerAlias($controller, $alias, $param=null)
 	{
@@ -433,6 +438,7 @@ class FrontController
 	 * @param string $alias
 	 * @return boolean
 	 * @since 1.0
+     * @deprecated
 	 */
 	public function checkAlias($alias)
 	{
@@ -448,6 +454,7 @@ class FrontController
 	 * @param string $controller
 	 * @return boolean
 	 * @since 1.0
+     * @deprecated
 	 */
 	public function hasAlias($controller)
 	{
@@ -463,6 +470,7 @@ class FrontController
 	 * @param string $alias
 	 * @return string
 	 * @since 1.0
+     * @deprecated
 	 */
 	public function getAliasController($alias)
 	{
@@ -476,6 +484,7 @@ class FrontController
 	 * @param string $controller
 	 * @return string
 	 * @since 1.0
+     * @deprecated
 	 */
 	public function getControllerAlias($controller)
 	{
@@ -492,6 +501,7 @@ class FrontController
 	 * @param string $alias
 	 * @return string
 	 * @since 1.0
+     * @deprecated
 	 */
 	public function getAliasParam($alias)
 	{
@@ -507,6 +517,7 @@ class FrontController
 	 * @param string $controller
 	 * @return string
 	 * @since 1.0
+     * @deprecated
 	 */
 	public function getControllerParam($controller)
 	{
@@ -545,6 +556,7 @@ class FrontController
 	 * Handles all of the rules for mod_rewrite style URL parsing
 	 *
 	 * @since 1.0
+     * @deprecated
 	 */
 	private function handleModRewriteRequests()
 	{
