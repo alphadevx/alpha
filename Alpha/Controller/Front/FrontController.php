@@ -6,12 +6,15 @@ use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Http\Filter\FilterInterface;
+use Alpha\Util\Http\Response;
+use Alpha\Util\Http\Request;
 use Alpha\Exception\BadRequestException;
 use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\ResourceNotAllowedException;
 use Alpha\Exception\SecurityException;
 use Alpha\Exception\LibraryNotInstalledException;
 use Alpha\Exception\IllegalArguementException;
+use Alpha\Exception\AlphaException;
 use Alpha\Controller\Controller;
 
 /**
@@ -700,6 +703,34 @@ class FrontController
             return $this->routes[$URI];
         else
             throw new IllegalArguementException('No callback defined for URI ['.$URI.']');
+    }
+
+    /**
+     * Processes the supplied request by invoking the callable defined matching the request's URI.
+     *
+     * @param Alpha\Util\Http\Request $request The request to process
+     * @return Alpha\Util\Http\Response
+     * @throws Alpha\Exception\ResourceNotFoundException
+     * @throws Alpha\Exception\AlphaException
+     * @since 2.0
+     */
+    public function process($request)
+    {
+        try {
+            $callback = $this->getRouteCallback($request->getURI());
+        } catch (IllegalArguementException $e) {
+            self::$logger->warn($e->getMessage());
+            throw new ResourceNotFoundException('Resource not found');
+        }
+
+        $response = call_user_func($callback, $request);
+
+        if ($response instanceof Response) {
+            return $response;
+        } else {
+            self::$logger->error('The callable defined for route ['.$request->getURI().'] does not return a Response object');
+            throw new AlphaException('Unable to process request');
+        }
     }
 }
 

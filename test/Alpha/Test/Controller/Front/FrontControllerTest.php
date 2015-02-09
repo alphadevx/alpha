@@ -6,8 +6,10 @@ use Alpha\Controller\Front\FrontController;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Filter\ClientBlacklistFilter;
 use Alpha\Util\Http\Response;
+use Alpha\Util\Http\Request;
 use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\IllegalArguementException;
+use Alpha\Exception\AlphaException;
 use Alpha\Model\BadRequest;
 
 /**
@@ -331,6 +333,43 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
             $this->fail('Testing adding good and bad routes with callbacks');
         } catch (IllegalArguementException $e) {
             $this->assertEquals('No callback defined for URI [/not_there]', $e->getMessage());
+        }
+    }
+
+    /**
+     * Testing the process method
+     */
+    public function testProcess()
+    {
+        $_SERVER['REQUEST_URI'] = '/';
+        $front = new FrontController();
+        $front->addRoute('/hello', function($request) {
+            return new Response(200, 'hello '.$request->getParam('username'));
+        });
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/hello', 'params' => array('username' => 'bob')));
+
+        $response = $front->process($request);
+
+        $this->assertEquals('hello bob', $response->getBody(), 'Testing the process method');
+
+        try {
+            $request = new Request(array('method' => 'GET', 'URI' => '/not_there'));
+            $front->process($request);
+            $this->fail('Testing the process method');
+        } catch (ResourceNotFoundException $e) {
+            $this->assertEquals('Resource not found', $e->getMessage());
+        }
+
+        try {
+            $request = new Request(array('method' => 'GET', 'URI' => '/not_good'));
+            $front->addRoute('/not_good', function($request) {
+                return 'Should be a Response object not a string';
+            });
+            $front->process($request);
+            $this->fail('Testing the process method');
+        } catch (AlphaException $e) {
+            $this->assertEquals('Unable to process request', $e->getMessage());
         }
     }
 }
