@@ -8,12 +8,15 @@ use Alpha\Model\ActiveRecord;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
 use Alpha\Util\Logging\Logger;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\FailedUnitCommitException;
 use Alpha\Exception\FailedSaveException;
 use Alpha\Exception\LockingException;
 use Alpha\Exception\AlphaException;
+use Alpha\Exception\NotImplementedException;
 use Alpha\Controller\Front\FrontController;
 use Alpha\View\View;
 
@@ -1366,6 +1369,76 @@ abstract class Controller
 
     	return $clean;
 	}
+
+    /**
+     * {@inheritDoc}
+     * @since 2.0
+     * @throws Alpha\Exception\NotImplementedException
+     */
+    public function doHEAD($request)
+    {
+        throw new NotImplementedException('The HEAD method is not supported by this controller');
+    }
+
+    /**
+     * {@inheritDoc}
+     * @since 2.0
+     * @throws Alpha\Exception\NotImplementedException
+     */
+    public function doGET($request)
+    {
+        throw new NotImplementedException('The GET method is not supported by this controller');
+    }
+
+    /**
+     * {@inheritDoc}
+     * @since 2.0
+     * @throws Alpha\Exception\NotImplementedException
+     */
+    public function doPOST($request)
+    {
+        throw new NotImplementedException('The POST method is not supported by this controller');
+    }
+
+    /**
+     * {@inheritDoc}
+     * @since 2.0
+     * @throws Alpha\Exception\NotImplementedException
+     */
+    public function doPUT($request)
+    {
+        throw new NotImplementedException('The PUT method is not supported by this controller');
+    }
+
+    /**
+     * {@inheritDoc}
+     * @since 2.0
+     * @throws Alpha\Exception\NotImplementedException
+     */
+    public function doPATCH($request)
+    {
+        throw new NotImplementedException('The PATCH method is not supported by this controller');
+    }
+
+    /**
+     * {@inheritDoc}
+     * @since 2.0
+     * @throws Alpha\Exception\NotImplementedException
+     */
+    public function doDELETE($request)
+    {
+        throw new NotImplementedException('The DELETE method is not supported by this controller');
+    }
+
+    /**
+     * {@inheritDoc}
+     * @since 2.0
+     * @throws Alpha\Exception\NotImplementedException
+     */
+    public function doOPTIONS($request)
+    {
+        throw new NotImplementedException('The OPTIONS method is not supported by this controller');
+    }
 }
 
 ?>

@@ -2,6 +2,9 @@
 
 namespace Alpha\Controller;
 
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
+
 /**
  * The interface for all page controllers
  *
@@ -47,10 +50,20 @@ namespace Alpha\Controller;
  */
 interface ControllerInterface
 {
+    /**
+     * Handles HEAD HTTP requests
+     *
+     * @param Alpha\Util\Http\Request $request
+     * @since Alpha\Util\Http\Response
+     * @since 1.0
+     */
+    public function doHEAD($request);
+
 	/**
 	 * Handles GET HTTP requests
 	 *
-	 * @param array $params A hash array of the HTTP params passed to the controller
+	 * @param Alpha\Util\Http\Request $request
+     * @since Alpha\Util\Http\Response
 	 * @since 1.0
 	 */
 	public function doGET($params);
@@ -58,10 +71,47 @@ interface ControllerInterface
 	/**
 	 * Handles POST HTTP requests
 	 *
-	 * @param array $params A hash array of the HTTP params passed to the controller
+	 * @param Alpha\Util\Http\Request $request
+     * @since Alpha\Util\Http\Response
 	 * @since 1.0
 	 */
 	public function doPOST($params);
+
+    /**
+     * Handles PUT HTTP requests
+     *
+     * @param Alpha\Util\Http\Request $request
+     * @since Alpha\Util\Http\Response
+     * @since 1.0
+     */
+    public function doPUT($params);
+
+    /**
+     * Handles PATCH HTTP requests
+     *
+     * @param Alpha\Util\Http\Request $request
+     * @since Alpha\Util\Http\Response
+     * @since 1.0
+     */
+    public function doPATCH($params);
+
+    /**
+     * Handles DELETE HTTP requests
+     *
+     * @param Alpha\Util\Http\Request $request
+     * @since Alpha\Util\Http\Response
+     * @since 1.0
+     */
+    public function doDELETE($params);
+
+    /**
+     * Handles OPTIONS HTTP requests
+     *
+     * @param Alpha\Util\Http\Request $request
+     * @since Alpha\Util\Http\Response
+     * @since 1.0
+     */
+    public function doOPTIONS($params);
 }
 
 ?>
