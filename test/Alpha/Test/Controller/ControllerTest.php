@@ -4,6 +4,7 @@ namespace Alpha\Test\Controller;
 
 use Alpha\Controller\ImageController;
 use Alpha\Controller\Controller;
+use Alpha\Controller\Front\FrontController;
 use Alpha\Model\Article;
 use Alpha\Model\Person;
 use Alpha\Model\Rights;
@@ -13,6 +14,8 @@ use Alpha\Model\Type\DEnumItem;
 use Alpha\Model\ActiveRecord;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
 use Alpha\Exception\PHPException;
 use Alpha\Exception\FailedUnitCommitException;
 use Alpha\Exception\IllegalArguementException;
@@ -631,6 +634,25 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_URI'] = $config->get('app.url').'tk/8kqoeebEej0V-FN5-DOdA1HBDDieFcNWTib2yLSUNjq0B0FWzAupIA==';
 
         $this->assertTrue(Controller::checkIfAccessingFromSecureURL(), 'Testing that the true is returned when tk is part of the mod_rewrite style URL');
+    }
+
+    /**
+     * Testing the process method
+     */
+    public function testProcess()
+    {
+        $_SERVER['REQUEST_URI'] = '/';
+        $front = new FrontController();
+        $front->addRoute('/hello', function($request) {
+            $controller = new ImageController();
+            return $controller->process($request);
+        });
+
+        $request = new Request(array('method' => 'OPTIONS', 'URI' => '/hello'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals('GET,POST', $response->getHeader('Allow'), 'Testing the process method');
     }
 }
 
