@@ -179,12 +179,6 @@ class Request
         elseif (isset($_SERVER['HTTP_HOST']))
             $this->host = $_SERVER['HTTP_HOST'];
 
-        // set HTTP host
-        if (isset($overrides['host']))
-            $this->host = $overrides['host'];
-        elseif (isset($_SERVER['HTTP_HOST']))
-            $this->host = $_SERVER['HTTP_HOST'];
-
         // set IP of the client
         if (isset($overrides['IP']))
             $this->IP = $overrides['IP'];
@@ -426,6 +420,24 @@ class Request
     public function getUserAgent()
     {
         return $this->getHeader('User-Agent');
+    }
+
+    /**
+     * Parses the route provided to extract matching params of the route from this request's URI
+     *
+     * @param string $route The route with parameter names, e.g. /user/{username}
+     * @since 2.0
+     */
+    public function parseParamsFromRoute($route)
+    {
+        $paramNames = explode('/', $route);
+        $paramValues = explode('/', $this->URI);
+
+        for ($i = 0; $i < count($paramNames); $i++) {
+            $name = $paramNames[$i];
+            if (substr($name, 0, 1) == '{' && substr($name, strlen($name)-1, 1) == '}')
+                $this->params[trim($name, '{}')] = $paramValues[$i];
+        }
     }
 }
 

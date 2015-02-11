@@ -363,6 +363,44 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing that URL params are automatically added to the Request object passed to the callback
+     */
+    public function testAddParamsToRequest()
+    {
+        $_SERVER['REQUEST_URI'] = '/';
+        $front = new FrontController();
+        $front->addRoute('/one/{param}', function($request) {
+            return new Response(200, $request->getParam('param'));
+        });
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/one/paramvalue1'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals('paramvalue1', $response->getBody(), 'Testing that URL params are automatically added to the Request object passed to the callback');
+
+        $front->addRoute('/two/{param1}/{param2}', function($request) {
+            return new Response(200, $request->getParam('param1').' '.$request->getParam('param2'));
+        });
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/two/paramvalue1/paramvalue2'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals('paramvalue1 paramvalue2', $response->getBody(), 'Testing that URL params are automatically added to the Request object passed to the callback');
+
+        $front->addRoute('/three/{param1}/params/{param2}/{param3}', function($request) {
+            return new Response(200, $request->getParam('param1').' '.$request->getParam('param2').' '.$request->getParam('param3'));
+        });
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/three/paramvalue1/params/paramvalue2/paramvalue3'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals('paramvalue1 paramvalue2 paramvalue3', $response->getBody(), 'Testing that URL params are automatically added to the Request object passed to the callback');
+    }
+
+    /**
      * Testing the process method
      */
     public function testProcess()

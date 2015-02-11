@@ -121,6 +121,14 @@ class FrontController
      */
     private $routes;
 
+    /**
+     * The route for the current request
+     *
+     * @var string
+     * @since 2.0
+     */
+    private $currentRoute;
+
 	/**
 	 * Trace logger
 	 *
@@ -700,14 +708,17 @@ class FrontController
     public function getRouteCallback($URI)
     {
         if (array_key_exists($URI, $this->routes)) { // direct hit due to URL containing no params
+            $this->currentRoute = $URI;
             return $this->routes[$URI];
         } else { // we need to use a regex to match URIs with params
             foreach ($this->routes as $route => $callback) {
                 $pattern = '#^'.$route.'$#s';
                 $pattern = preg_replace('#\{\w+\}#', '\w+', $pattern);
 
-                if (preg_match($pattern, $URI))
+                if (preg_match($pattern, $URI)) {
+                    $this->currentRoute = $route;
                     return $callback;
+                }
             }
         }
 
@@ -732,6 +743,9 @@ class FrontController
             self::$logger->warn($e->getMessage());
             throw new ResourceNotFoundException('Resource not found');
         }
+
+        if ($request->getURI() != $this->currentRoute)
+            $request->parseParamsFromRoute($this->currentRoute);
 
         $response = call_user_func($callback, $request);
 
