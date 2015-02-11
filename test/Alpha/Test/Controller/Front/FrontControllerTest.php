@@ -337,6 +337,32 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing adding and matching routes with URI params
+     */
+    public function testAddRouteWithParams()
+    {
+        $_SERVER['REQUEST_URI'] = '/';
+        $front = new FrontController();
+        $front->addRoute('/one/{param}', function($request) {
+            return new Response(200);
+        });
+
+        $this->assertTrue(is_callable($front->getRouteCallback('/one/paramvalue1')), 'Testing adding and matching routes with URI params');
+
+        $front->addRoute('/two/{param1}/{param2}', function($request) {
+            return new Response(200);
+        });
+
+        $this->assertTrue(is_callable($front->getRouteCallback('/two/paramvalue1/paramvalue2')), 'Testing adding and matching routes with URI params');
+
+        $front->addRoute('/three/{param1}/params/{param2}/{params3}', function($request) {
+            return new Response(200);
+        });
+
+        $this->assertTrue(is_callable($front->getRouteCallback('/three/paramvalue1/params/paramvalue2/paramsvalue3')), 'Testing adding and matching routes with URI params');
+    }
+
+    /**
      * Testing the process method
      */
     public function testProcess()

@@ -699,10 +699,20 @@ class FrontController
      */
     public function getRouteCallback($URI)
     {
-        if (array_key_exists($URI, $this->routes))
+        if (array_key_exists($URI, $this->routes)) { // direct hit due to URL containing no params
             return $this->routes[$URI];
-        else
-            throw new IllegalArguementException('No callback defined for URI ['.$URI.']');
+        } else { // we need to use a regex to match URIs with params
+            foreach ($this->routes as $route => $callback) {
+                $pattern = '#^'.$route.'$#s';
+                $pattern = preg_replace('#\{\w+\}#', '\w+', $pattern);
+
+                if (preg_match($pattern, $URI))
+                    return $callback;
+            }
+        }
+
+        // if we made it this far then no match was found
+        throw new IllegalArguementException('No callback defined for URI ['.$URI.']');
     }
 
     /**
