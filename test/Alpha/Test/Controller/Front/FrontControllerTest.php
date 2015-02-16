@@ -310,6 +310,51 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals('Unable to process request', $e->getMessage());
         }
     }
+
+    /**
+     * Testing default param values are handled correctly
+     */
+    public function testDefaultParamValues()
+    {
+        $_SERVER['REQUEST_URI'] = '/';
+        $front = new FrontController();
+        $front->addRoute('/one/{param}', function($request) {
+            return new Response(200, $request->getParam('param'));
+        })->value('param', 'blah');
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/one'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals('blah', $response->getBody(), 'Testing default param values are handled correctly');
+
+        $front->addRoute('/two/{param1}/{param2}', function($request) {
+            return new Response(200, $request->getParam('param1').' '.$request->getParam('param2'));
+        })->value('param1', 'two')->value('param2', 'params');
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/two'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals('two params', $response->getBody(), 'Testing default param values are handled correctly');
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/two/two'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals('two params', $response->getBody(), 'Testing default param values are handled correctly');
+
+        $front->addRoute('/three/{param1}/params/{param2}/{param3}', function($request) {
+            return new Response(200, $request->getParam('param1').' '.$request->getParam('param2'));
+        })->value('param1', 'has')->value('param2', 'three')->value('param3', 'params');
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/three/has/params'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals('has three', $response->getBody(), 'Testing default param values are handled correctly');
+
+    }
 }
 
 ?>

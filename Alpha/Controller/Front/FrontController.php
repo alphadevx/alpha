@@ -111,6 +111,13 @@ class FrontController
      */
     private $currentRoute;
 
+    /**
+     * An optional hash array of default request parameter values to use when those params are left off the request
+     * @var array
+     * @since 2.0
+     */
+    private $defaultParamValues;
+
 	/**
 	 * Trace logger
 	 *
@@ -322,14 +329,31 @@ class FrontController
      * @param string $URI The URL to match, can include params within curly {} braces.
      * @param callable $callback The method to service the matched requests (should return a Response!).
      * @throws Alpha\Exception\IllegalArguementException
+     * @return Alpha\Controller\Front\FrontController
      * @since 2.0
      */
     public function addRoute($URI, $callback)
     {
-        if (is_callable($callback))
+        if (is_callable($callback)) {
             $this->routes[$URI] = $callback;
-        else
+            return $this;
+        } else {
             throw new IllegalArguementException('Callback provided for route ['.$URI.'] is not callable');
+        }
+    }
+
+    /**
+     * Method to allow the setting of default request param values to be used when they are left off the request URI.
+     *
+     * @param string $param The param name (as defined on the route between {} braces)
+     * @param mixed $defaultValue The value to use
+     * @return Alpha\Controller\Front\FrontController
+     * @since 2.0
+     */
+    public function value($param, $defaultValue)
+    {
+        $this->defaultParamValues[$param] = $defaultValue;
+        return $this;
     }
 
     /**
@@ -346,9 +370,22 @@ class FrontController
             $this->currentRoute = $URI;
             return $this->routes[$URI];
         } else { // we need to use a regex to match URIs with params
+
+            // route URIs with params provided to callback
             foreach ($this->routes as $route => $callback) {
                 $pattern = '#^'.$route.'$#s';
                 $pattern = preg_replace('#\{\w+\}#', '\w+', $pattern);
+
+                if (preg_match($pattern, $URI)) {
+                    $this->currentRoute = $route;
+                    return $callback;
+                }
+            }
+
+            // route URIs with params missing (will attempt to layer on defaults later on in Request class)
+            foreach ($this->routes as $route => $callback) {
+                $pattern = '#^'.$route.'$#s';
+                $pattern = preg_replace('#\/\{\w+\}#', '.*', $pattern);
 
                 if (preg_match($pattern, $URI)) {
                     $this->currentRoute = $route;
@@ -380,7 +417,7 @@ class FrontController
         }
 
         if ($request->getURI() != $this->currentRoute)
-            $request->parseParamsFromRoute($this->currentRoute);
+            $request->parseParamsFromRoute($this->currentRoute, $this->defaultParamValues);
 
         $response = call_user_func($callback, $request);
 

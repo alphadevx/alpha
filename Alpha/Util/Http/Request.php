@@ -426,17 +426,20 @@ class Request
      * Parses the route provided to extract matching params of the route from this request's URI
      *
      * @param string $route The route with parameter names, e.g. /user/{username}
+     * @param array $defaultParams Optional hash array of default request param values to use if they are missing from URI
      * @since 2.0
      */
-    public function parseParamsFromRoute($route)
+    public function parseParamsFromRoute($route, $defaultParams = array())
     {
         $paramNames = explode('/', $route);
         $paramValues = explode('/', $this->URI);
 
         for ($i = 0; $i < count($paramNames); $i++) {
             $name = $paramNames[$i];
-            if (substr($name, 0, 1) == '{' && substr($name, strlen($name)-1, 1) == '}')
+            if (isset($paramValues[$i]) && substr($name, 0, 1) == '{' && substr($name, strlen($name)-1, 1) == '}')
                 $this->params[trim($name, '{}')] = $paramValues[$i];
+            if (!isset($paramValues[$i]) && isset($defaultParams[trim($name, '{}')]))
+                $this->params[trim($name, '{}')] = $defaultParams[trim($name, '{}')];
         }
     }
 }
