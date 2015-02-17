@@ -7,6 +7,7 @@ use Alpha\Model\Type\String;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Helper\Validator;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 
 /**
  *
@@ -110,8 +111,10 @@ class KPI
      */
     public function __construct($name)
     {
+        $config = ConfigProvider::getInstance();
+
         $this->name = new String();
-        $this->name->setRule(Validator::REQUIRED_ALPHA_NUMBEIC);
+        $this->name->setRule(Validator::REQUIRED_ALPHA_NUMERIC);
         $this->name->setHelper('The KPI name can only contain letters and numbers');
 
         $this->name->setValue($name);
@@ -120,16 +123,16 @@ class KPI
 
         $this->startTime = microtime(true);
 
-        if (!isset($_SESSION))
-            session_start();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
 
         // a startTime value may have been passed from a previous request
-        if (isset($_SESSION[$name.'-startTime'])) {
-            $this->startTime = $_SESSION[$name.'-startTime'];
-            $_SESSION[$name.'-startTime'] = null;
+        if ($session->get($name.'-startTime') !== false) {
+            $this->startTime = $session->get($name.'-startTime');
+            $session->delete($name.'-startTime');
         }
 
-        $this->sessionID = session_id();
+        $this->sessionID = $session->getID();
     }
 
     /**
@@ -139,7 +142,11 @@ class KPI
      */
     public function storeStartTimeInSession()
     {
-        $_SESSION[$this->name->getValue().'-startTime'] = $this->startTime;
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        $session->set($this->name->getValue().'-startTime', $this->startTime);
     }
 
     /**

@@ -1,19 +1,21 @@
 
 
 Code Coverage Report:        
-  2015-02-16 13:49:13        
+  2015-02-17 20:17:08        
                              
  Summary:                    
-  Classes: 24.14% (14/58)    
-  Methods: 47.16% (274/581)  
-  Lines:   58.79% (3342/5685)
+  Classes: 22.58% (14/62)    
+  Methods: 48.84% (296/606)  
+  Lines:   57.41% (3590/6253)
 
+\Alpha\Controller::ArticleController
+  Methods:  22.22% ( 2/ 9)   Lines:  21.17% ( 87/411)
 \Alpha\Controller::Controller
-  Methods:  43.40% (23/53)   Lines:  66.02% (342/518)
+  Methods:  52.83% (28/53)   Lines:  69.88% (362/518)
 \Alpha\Controller::ImageController
   Methods:  33.33% ( 1/ 3)   Lines:  19.23% (  5/ 26)
 \Alpha\Controller\Front::FrontController
-  Methods:  73.33% (11/15)   Lines:  81.52% ( 75/ 92)
+  Methods:  75.00% (12/16)   Lines:  81.72% ( 76/ 93)
 \Alpha\Exception::AlphaException
   Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  4/  4)
 \Alpha\Model::ActiveRecord
@@ -23,7 +25,7 @@ Code Coverage Report:
 \Alpha\Model::ActiveRecordProviderSQLite
   Methods:  19.51% ( 8/41)   Lines:  67.91% (747/1100)
 \Alpha\Model::Article
-  Methods:  17.65% ( 3/17)   Lines:  51.72% ( 75/145)
+  Methods:  29.41% ( 5/17)   Lines:  55.17% ( 80/145)
 \Alpha\Model::ArticleComment
   Methods: 100.00% ( 1/ 1)   Lines: 100.00% ( 10/ 10)
 \Alpha\Model::BadRequest
@@ -74,6 +76,8 @@ Code Coverage Report:
   Methods:   0.00% ( 0/ 1)   Lines:  90.00% (  9/ 10)
 \Alpha\Util\Config::ConfigProvider
   Methods:  33.33% ( 2/ 6)   Lines:  12.00% (  9/ 75)
+\Alpha\Util\Extension::MarkdownFacade
+  Methods:  33.33% ( 2/ 6)   Lines:  31.17% ( 24/ 77)
 \Alpha\Util\Feed::Atom
   Methods:  75.00% ( 3/ 4)   Lines:  76.19% ( 16/ 21)
 \Alpha\Util\Feed::Feed
@@ -89,19 +93,21 @@ Code Coverage Report:
 \Alpha\Util\Http::PHPServerUtils
   Methods:  33.33% ( 1/ 3)   Lines:  55.00% ( 22/ 40)
 \Alpha\Util\Http::Request
-  Methods:  40.00% ( 8/20)   Lines:  86.05% ( 74/ 86)
+  Methods:  45.00% ( 9/20)   Lines:  87.21% ( 75/ 86)
 \Alpha\Util\Http::Response
   Methods:  80.00% (12/15)   Lines:  75.00% ( 33/ 44)
 \Alpha\Util\Http\Filter::ClientBlacklistFilter
   Methods:  50.00% ( 1/ 2)   Lines:  15.38% (  2/ 13)
 \Alpha\Util\Http\Session::SessionProviderArray
-  Methods: 100.00% ( 5/ 5)   Lines: 100.00% ( 15/ 15)
+  Methods: 100.00% ( 7/ 7)   Lines: 100.00% ( 18/ 18)
 \Alpha\Util\Http\Session::SessionProviderFactory
   Methods:   0.00% ( 0/ 1)   Lines:  90.91% ( 10/ 11)
 \Alpha\Util\Http\Session::SessionProviderPHP
-  Methods:  83.33% ( 5/ 6)   Lines:  75.00% ( 18/ 24)
+  Methods:  71.43% ( 5/ 7)   Lines:  72.00% ( 18/ 25)
+\Alpha\Util\Logging::KPI
+  Methods:  25.00% ( 1/ 4)   Lines:  55.56% ( 20/ 36)
 \Alpha\Util\Logging::LogFile
-  Methods:  42.86% ( 3/ 7)   Lines:  24.10% ( 20/ 83)
+  Methods:  57.14% ( 4/ 7)   Lines:  26.51% ( 22/ 83)
 \Alpha\Util\Logging::Logger
   Methods:  40.00% ( 4/10)   Lines:  49.30% ( 35/ 71)
 \Alpha\Util\Search::SearchProviderFactory
@@ -110,11 +116,15 @@ Code Coverage Report:
   Methods:  50.00% ( 4/ 8)   Lines:  63.50% ( 87/137)
 \Alpha\Util\Security::SecurityUtils
   Methods: 100.00% ( 2/ 2)   Lines: 100.00% ( 12/ 12)
+\Alpha\View::ArticleView
+  Methods:  20.00% ( 1/ 5)   Lines:   7.14% (  5/ 70)
 \Alpha\View::View
-  Methods:  10.71% ( 3/28)   Lines:  28.63% ( 73/255)
+  Methods:  17.86% ( 5/28)   Lines:  39.69% (104/262)
 \Alpha\View\Renderer::RendererProviderFactory
-  Methods:   0.00% ( 0/ 1)   Lines:  88.89% ( 16/ 18)
+  Methods:   0.00% ( 0/ 1)   Lines:  89.47% ( 17/ 19)
 \Alpha\View\Renderer\Html::RendererProviderHTML
-  Methods:   8.33% ( 2/24)   Lines:   1.11% (  6/542)
+  Methods:  12.50% ( 3/24)   Lines:   5.90% ( 32/542)
+\Alpha\View\Widget::Button
+  Methods:  50.00% ( 1/ 2)   Lines:  68.97% ( 20/ 29)
 \Alpha\View\Widget::Image
   Methods:  33.33% ( 3/ 9)   Lines:  20.00% ( 30/150)

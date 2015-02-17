@@ -197,7 +197,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 	/**
      * Creates an article object for Testing
      *
-     * @return Article
+     * @return Alpha\Model\Article
      * @since 1.0
      */
 	private function createArticleObject($name)

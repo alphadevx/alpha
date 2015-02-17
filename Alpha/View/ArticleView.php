@@ -3,7 +3,7 @@
 namespace Alpha\View;
 
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\MarkdownFacade;
+use Alpha\Util\Extension\MarkdownFacade;
 use Alpha\Util\Security\SecurityUtils;
 use Alpha\View\Widget\Button;
 use Alpha\Controller\Front\FrontController;

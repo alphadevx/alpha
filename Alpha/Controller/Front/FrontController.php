@@ -16,6 +16,7 @@ use Alpha\Exception\LibraryNotInstalledException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\AlphaException;
 use Alpha\Controller\Controller;
+use Alpha\Controller\ArticleController;
 
 /**
  *
@@ -146,6 +147,11 @@ class FrontController
 		ini_set('default_charset', 'utf-8');
 		if (!mb_check_encoding())
 			throw new BadRequestException('Request character encoding does not match expected UTF-8');
+
+        $this->addRoute('/a/{title}', function($request) {
+            $controller = new ArticleController();
+            return $controller->process($request);
+        });
 
 		self::$logger->debug('<<__construct');
 	}

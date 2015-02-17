@@ -7,7 +7,6 @@ namespace Alpha\Util\Helper;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -109,7 +108,7 @@ class Validator
 	 * @var string
 	 * @since 1.0
 	 */
-	const REQUIRED_ALPHA_NUMBEIC = '/^[a-zA-Z0-9]+$/';
+	const REQUIRED_ALPHA_NUMERIC = '/^[a-zA-Z0-9]+$/';
 
 	/**
 	 * Required HTTP URL value
@@ -230,7 +229,7 @@ class Validator
 	 */
 	public static function isAlphaNum($value)
 	{
-		if(preg_match(self::REQUIRED_ALPHA_NUMBEIC, $value))
+		if(preg_match(self::REQUIRED_ALPHA_NUMERIC, $value))
 			return true;
 		else
 			return false;

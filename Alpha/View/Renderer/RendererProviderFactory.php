@@ -71,7 +71,7 @@ class RendererProviderFactory
      * @return Alpha\View\Renderer\RendererProviderInterface
      * @since 1.2
      */
-    public static function getInstance($providerName, $BO) {
+    public static function getInstance($providerName, $BO = null) {
         if(self::$logger == null)
             self::$logger = new Logger('AlphaRendererProviderFactory');
 
@@ -93,7 +93,8 @@ class RendererProviderFactory
             throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
 
         $instance = new $providerName;
-        $instance->setBO($BO);
+        if (isset($BO))
+            $instance->setBO($BO);
 
         if (!$instance instanceof RendererProviderInterface)
             throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected AlphaRendererProviderInterface interface!');

@@ -10,6 +10,9 @@ use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Helper\Validator;
 use Alpha\Util\Extension\MarkdownFacade;
 use Alpha\Util\Extension\TCPDFFacade;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Model\Article;
 use Alpha\Model\ArticleVote;
 use Alpha\Model\ArticleComment;
@@ -23,7 +26,6 @@ use Alpha\Exception\LockingException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\ResourceNotAllowedException;
-use Alpha\Exception\RecordNotFoundException;
 use Alpha\Exception\FailedSaveException;
 use Alpha\Exception\FileNotFoundException;
 use Alpha\Model\ActiveRecord;
@@ -98,6 +100,8 @@ class ArticleController extends Controller implements ControllerInterface
      */
     private $mode = 'read';
 
+    private $request;
+
     /**
      * constructor to set up the object
      *
@@ -119,16 +123,25 @@ class ArticleController extends Controller implements ControllerInterface
     /**
      * Handle GET requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doGET($params)
+    public function doGET($request)
     {
-        self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
+
+        $config = ConfigProvider::getInstance();
+
+        $this->request = $request;
+
+        $params = $request->getParams();
 
         $this->mode = (isset($params['mode']) && in_array($params['mode'], array('create','edit')) ? $params['mode'] : 'read');
 
-        if ($this->mode == 'read' && isset($params['title']) {
+        $body = '';
+
+        if ($this->mode == 'read' && isset($params['title'])) {
 
             $KDP = new KPI('viewarticle');
 
@@ -158,18 +171,18 @@ class ArticleController extends Controller implements ControllerInterface
 
             $BOView = View::getInstance($this->BO);
 
-            echo View::displayPageHead($this);
+            $body .= View::displayPageHead($this);
 
-            echo $BOView->markdownView();
+            $body .= $BOView->markdownView();
 
-            echo View::displayPageFoot($this);
+            $body .= View::displayPageFoot($this);
 
             $KDP->log();
 
-            return;
+            return new Response(200, $body, array('Content-Type' => 'text/html'));
         }
 
-        if ($this->mode == 'read' && isset($params['file']) {
+        if ($this->mode == 'read' && isset($params['file'])) {
             try {
 
                 $this->BO = new Article();
@@ -192,16 +205,16 @@ class ArticleController extends Controller implements ControllerInterface
 
             $BOView = View::getInstance($this->BO);
 
-            echo View::displayPageHead($this, false);
+            $body .= View::displayPageHead($this, false);
 
-            echo $BOView->markdownView();
+            $body .= $BOView->markdownView();
 
-            echo View::displayPageFoot($this);
+            $body .= View::displayPageFoot($this);
 
-            return;
+            return new Response(200, $body, array('Content-Type' => 'text/html'));
         }
 
-        if ($this->mode == 'read' && isset($params['title'] && isset($params['pdf']) {
+        if ($this->mode == 'read' && isset($params['title']) && isset($params['pdf'])) {
             try {
                 $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
 
@@ -212,7 +225,7 @@ class ArticleController extends Controller implements ControllerInterface
 
                 $pdf = new TCPDFFacade($this->BO);
 
-                return;
+                return new Response(200, $pdf, array('Content-Type' => 'application/pdf'));
 
             } catch (IllegalArguementException $e) {
                 self::$logger->error($e->getMessage());
@@ -231,8 +244,8 @@ class ArticleController extends Controller implements ControllerInterface
                 $this->BO->load($params['oid']);
             } catch (RecordNotFoundException $e) {
                 self::$logger->warn($e->getMessage());
-                echo View::renderErrorPage(404, 'Failed to find the requested article!');
-                return;
+                $body .= View::renderErrorPage(404, 'Failed to find the requested article!');
+                return new Response(404, $body, array('Content-Type' => 'text/html'));
             }
 
             ActiveRecord::disconnect();
@@ -244,10 +257,10 @@ class ArticleController extends Controller implements ControllerInterface
             $this->setDescription('Page to edit '.$this->BO->get('title').'.');
             $this->setKeywords('edit,article');
 
-            echo View::displayPageHead($this);
+            $body .= View::displayPageHead($this);
 
-            echo $view->editView();
-            echo View::renderDeleteForm();
+            $body .= $view->editView();
+            $body .= View::renderDeleteForm();
         } elseif ($this->mode == 'create') {
             $view = View::getInstance($this->BO);
 
@@ -256,9 +269,9 @@ class ArticleController extends Controller implements ControllerInterface
             $this->setDescription('Page to create a new article.');
             $this->setKeywords('create,article');
 
-            echo View::displayPageHead($this);
+            $body .= View::displayPageHead($this);
 
-            echo $view->createView();
+            $body .= $view->createView();
         } else {
             try {
                 // check to see if we need to force a re-direct to the mod_rewrite alias URL for the article
@@ -283,9 +296,9 @@ class ArticleController extends Controller implements ControllerInterface
                     $this->setTitle($this->BO->get('title'));
                     $this->setDescription($this->BO->get('description'));
 
-                    echo View::displayPageHead($this);
+                    $body .= View::displayPageHead($this);
 
-                    echo $BOView->markdownView();
+                    $body .= $BOView->markdownView();
                 } else {
                     throw new IllegalArguementException('No article available to view!');
                 }
@@ -298,7 +311,9 @@ class ArticleController extends Controller implements ControllerInterface
             }
         }
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
+
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
 
         self::$logger->debug('<<doGET');
     }
@@ -306,15 +321,18 @@ class ArticleController extends Controller implements ControllerInterface
     /**
      * Method to handle POST requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request
+     * @return Alpha\Util\Http\Response
      * @throws Alpha\Exception\SecurityException
      * @since 1.0
      */
-    public function doPOST($params)
+    public function doPOST($request)
     {
         self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
 
         $config = ConfigProvider::getInstance();
+
+        $params = $request->getParams();
 
         $this->mode = (isset($params['mode']) && in_array($params['mode'], array('create','edit')) ? $params['mode'] : 'read');
 
@@ -488,14 +506,17 @@ class ArticleController extends Controller implements ControllerInterface
     /**
      * Method to handle PUT requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doPUT($params)
+    public function doPUT($request)
     {
         self::$logger->debug('>>doPUT(params=['.var_export($params, true).'])');
 
         $config = ConfigProvider::getInstance();
+
+        $params = $request->getParams();
 
         try {
             // check the hidden security fields before accepting the form POST data
@@ -712,6 +733,8 @@ class ArticleController extends Controller implements ControllerInterface
             return '';
 
         $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
 
         $html = '';
 
@@ -775,14 +798,14 @@ class ArticleController extends Controller implements ControllerInterface
         }
 
         // render edit button for admins only
-        if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
+        if ($session->get('currentUser') !== false && $session->get('currentUser')->inGroup('Admin')) {
             $html .= '&nbsp;&nbsp;';
             $button = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."'",'Edit','editBut');
             $html .= $button->render();
         }
 
         if ($config->get('cms.display.standard.footer')) {
-            $html .= '<p>Article URL: <a href="http://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"].'">http://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"].'</a><br>';
+            $html .= '<p>Article URL: <a href="'.$this->request->getURL().'">'.$this->request->getURL().'</a><br>';
             $html .= 'Title: '.$this->BO->get('title').'<br>';
             $html .= 'Author: '.$this->BO->get('author').'</p>';
         }

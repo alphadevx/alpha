@@ -558,7 +558,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $config = ConfigProvider::getInstance();
 
-        if (!Controller::checkControllerDefExists(get_class($controller)))
+        if (!class_exists(get_class($controller)))
             throw new IllegalArguementException('The controller provided ['.get_class($controller).'] is not defined anywhere!');
 
         $allowCSSOverrides = true;

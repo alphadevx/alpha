@@ -320,7 +320,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new Person());
+        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'));
         eval('$header = '.get_class($provider).'::displayPageHead($controller);');
 
         if(method_exists($controller, 'after_displayPageHead_callback'))
@@ -351,7 +351,7 @@ class View
         if(method_exists($controller, 'before_displayPageFoot_callback'))
             $footer .= $controller->before_displayPageFoot_callback();
 
-        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new Person());
+        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'));
         eval('$footer .= '.get_class($provider).'::displayPageFoot($controller);');
 
         if(method_exists($controller, 'after_displayPageFoot_callback'))
@@ -376,7 +376,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new Person());
+        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'));
         eval('$message = '.get_class($provider).'::displayUpdateMessage($message);');
 
         self::$logger->debug('<<displayUpdateMessage ['.$message.']');
@@ -398,7 +398,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new Person());
+        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'));
         eval('$message = '.get_class($provider).'::displayErrorMessage($message);');
 
         self::$logger->debug('<<displayErrorMessage ['.$message.']');
@@ -421,7 +421,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new Person());
+        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'));
         eval('$message = '.get_class($provider).'::renderErrorPage($code, $message);');
 
         self::$logger->debug('<<renderErrorPage ['.$message.']');
@@ -441,7 +441,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new Person());
+        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'));
         eval('$html = '.get_class($provider).'::renderDeleteForm();');
 
         self::$logger->debug('<<renderDeleteForm ['.$html.']');
@@ -464,7 +464,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), new Person());
+        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'));
         eval('$html = '.get_class($provider).'::renderSecurityFields();');
 
         self::$logger->debug('<<renderSecurityFields ['.$html.']');
@@ -687,6 +687,7 @@ class View
      * @param Alpha\Model\ActiveRecord $BO
      * @param string $mode
      * @param array $fields
+     * @return string
      * @since 1.0
      * @throws Alpha\Exception\IllegalArguementException
      */
@@ -700,14 +701,14 @@ class View
         $reflection = new ReflectionClass(get_class($BO));
         $properties = $reflection->getProperties();
 
-        foreach($properties as $propObj) {
+        foreach ($properties as $propObj) {
             $propName = $propObj->name;
 
-            if($propName != 'logger' && !$propObj->isPrivate()) {
+            if ($propName != 'logger' && !$propObj->isPrivate()) {
                 $prop = $BO->getPropObject($propName);
-                if($prop instanceof DEnum) {
+                if ($prop instanceof DEnum) {
                     ${$propName} = $BO->getPropObject($propName)->getDisplayValue();
-                }else{
+                } else {
                     ${$propName} = $BO->get($propName);
                 }
             }
@@ -718,24 +719,34 @@ class View
             ${$fieldName} = $fields[$fieldName];
 
         $filename = $mode.'.phtml';
-        $classTemplateDir = get_class($BO);
+        $class = new ReflectionClass($BO);
+        $className = $class->getShortname();
 
-        $customPath = $config->get('app.root').'View/Html/Templates/'.$classTemplateDir.'/'.$filename;
-        $defaultPath1 = $config->get('app.root').'Alpha/View/Renderers/Html/Templates/'.$classTemplateDir.'/'.$filename;
-        $defaultPath2 = $config->get('app.root').'Alpha/View/Renderers/Html/Templates/'.$filename;
+        $customPath = $config->get('app.root').'View/Html/Templates/'.$className.'/'.$filename;
+        $defaultPath1 = $config->get('app.root').'Alpha/View/Renderer/Html/Templates/'.$className.'/'.$filename;
+        $defaultPath2 = $config->get('app.root').'Alpha/View/Renderer/Html/Templates/'.$filename;
 
         // Check to see if a custom template exists for this BO, and if it does load that
         if (file_exists($customPath)) {
             self::$logger->debug('Loading template ['.$customPath.']');
+            ob_start();
             require $customPath;
+            $html = ob_get_clean();
+            return $html;
         } elseif (file_exists($defaultPath1)) {
             self::$logger->debug('Loading template ['.$defaultPath1.']');
+            ob_start();
             require $defaultPath1;
+            $html = ob_get_clean();
+            return $html;
         } elseif (file_exists($defaultPath2)) {
             self::$logger->debug('Loading template ['.$defaultPath2.']');
+            ob_start();
             require $defaultPath2;
+            $html = ob_get_clean();
+            return $html;
         } else{
-            throw new IllegalArguementException('No ['.$mode.'] HTML template found for class ['.get_class($BO).']');
+            throw new IllegalArguementException('No ['.$mode.'] HTML template found for class ['.$className.']');
         }
 
         self::$logger->debug('<<loadTemplate');

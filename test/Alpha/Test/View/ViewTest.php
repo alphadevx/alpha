@@ -179,7 +179,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
             $this->view->loadTemplate($this->view->getBO(), 'BadMode', array());
             $this->fail('testing that a bad mode param provided to the loadTemplate method will throw an exception');
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('No [BadMode] HTML template found for class [Alpha\Model\Article]', $e->getMessage(), 'testing that a bad mode param provided to the loadTemplate method will throw an exception');
+            $this->assertEquals('No [BadMode] HTML template found for class [Article]', $e->getMessage(), 'testing that a bad mode param provided to the loadTemplate method will throw an exception');
         }
     }
 
