@@ -87,6 +87,14 @@ interface SessionProviderInterface
 	 * @since 2.0
 	 */
 	public function delete($key);
+
+    /**
+     * Get the current session ID if available
+     *
+     * @return string
+     * @since 2.0
+     */
+    public function getID();
 }
 
 ?>

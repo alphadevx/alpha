@@ -66,6 +66,14 @@ class SessionProviderArray implements SessionProviderInterface
     public static $sessionArray = array();
 
     /**
+     * The current session ID
+     *
+     * @var string
+     * @since 2.0
+     */
+    private $ID;
+
+    /**
      * Constructor
      *
      * @since 2.0
@@ -78,7 +86,9 @@ class SessionProviderArray implements SessionProviderInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function init() {}
+	public function init() {
+        $this->ID = uniqid();
+    }
 
 	/**
 	 * {@inheritDoc}
@@ -122,6 +132,14 @@ class SessionProviderArray implements SessionProviderInterface
 
         unset(self::$sessionArray[$key]);
 	}
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getID()
+    {
+        return $this->ID;
+    }
 }
 
 ?>

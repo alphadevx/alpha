@@ -125,6 +125,14 @@ class SessionProviderPHP implements SessionProviderInterface
 
         unset($_SESSION[$key]);
 	}
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getID()
+    {
+        return session_id();
+    }
 }
 
 ?>
