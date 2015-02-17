@@ -3,6 +3,7 @@
 namespace Alpha\Util\Extension;
 
 use Alpha\Util\Config\ConfigProvider;
+use Michelf\MarkdownExtra;
 
 /**
  *
@@ -47,7 +48,7 @@ use Alpha\Util\Config\ConfigProvider;
  * </pre>
  *
  */
-class Markdown extends \MarkdownExtra_Parser
+class Markdown extends MarkdownExtra
 {
     /**
      * Custom version of the _doCodeBlocks_callback method which invokes a Gheshi
