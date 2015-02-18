@@ -125,6 +125,7 @@ class ArticleController extends Controller implements ControllerInterface
      *
      * @param Alpha\Util\Http\Request
      * @return Alpha\Util\Http\Response
+     * @throws Alpha\Exception\ResourceNotFoundException
      * @since 1.0
      */
     public function doGET($request)

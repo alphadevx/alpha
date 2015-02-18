@@ -148,10 +148,10 @@ class FrontController
 		if (!mb_check_encoding())
 			throw new BadRequestException('Request character encoding does not match expected UTF-8');
 
-        $this->addRoute('/a/{title}', function($request) {
+        $this->addRoute('/a/{title}/{mode}', function($request) {
             $controller = new ArticleController();
             return $controller->process($request);
-        });
+        })->value('mode', 'read');
 
 		self::$logger->debug('<<__construct');
 	}
@@ -425,7 +425,12 @@ class FrontController
         if ($request->getURI() != $this->currentRoute)
             $request->parseParamsFromRoute($this->currentRoute, $this->defaultParamValues);
 
-        $response = call_user_func($callback, $request);
+        try {
+            $response = call_user_func($callback, $request);
+        } catch (ResourceNotFoundException $rnfe) {
+            self::$logger->info('ResourceNotFoundException throw, source message ['.$rnfe->getMessage().']');
+            return new Response(404, $rnfe->getMessage());
+        }
 
         if ($response instanceof Response) {
             return $response;
