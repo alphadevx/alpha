@@ -10,6 +10,7 @@ use Alpha\Model\Type\Relation;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\Configprovider;
 use Alpha\Exception\ValidationException;
+use Alpha\Exception\FileNotFoundException;
 use Alpha\Controller\Front\FrontController;
 
 /**

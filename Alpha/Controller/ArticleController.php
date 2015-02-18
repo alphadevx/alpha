@@ -192,7 +192,7 @@ class ArticleController extends Controller implements ControllerInterface
                 if (mb_substr($params['file'], 0, 1) == '/')
                     $this->BO->loadContentFromFile($params['file']);
                 else
-                    $this->BO->loadContentFromFile($config->get('app.root').'alpha/docs/'.$params['file']);
+                    $this->BO->loadContentFromFile($config->get('app.root').'docs/'.$params['file']);
 
             } catch (IllegalArguementException $e) {
                 self::$logger->error($e->getMessage());

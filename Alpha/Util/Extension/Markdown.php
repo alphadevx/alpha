@@ -139,7 +139,7 @@ class Markdown extends MarkdownExtra
             $result .= '>'.$link_text.'<img src="'.$config->get('app.url').'alpha/images/icons/page_go.png'.'" class="externalLink"/></a>';
         }
 
-        return $this->hashSpan($result);
+        return $result;
     }
 
     /**

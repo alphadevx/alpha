@@ -118,6 +118,12 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $response = $front->process($request);
 
         $this->assertEquals(404, $response->getStatus(), 'Testing the doGET method');
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/a', 'params' => array('file' => 'Markdown_Help.text')));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
     }
 }
 
