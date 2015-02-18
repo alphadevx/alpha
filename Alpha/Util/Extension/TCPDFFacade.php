@@ -98,20 +98,25 @@ class TCPDFFacade
      *
      * @param Alpha\Model\ActiveRecord $BO the business object that stores the content will be rendered to Markdown
      * @since 1.0
+     * @todo the constructor should not be doing so much work
      */
     public function __construct($BO)
     {
-        $config = ConfigProvider::getIntance();
+        $config = ConfigProvider::getInstance();
         global $l; // TODO: need a better way to inject this
 
         $this->BO = $BO;
-        $this->PDFFilename = $config->get('app.file.store.dir').'cache/pdf/'.get_class($this->BO).'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.pdf';
-        $PDFDownloadName = str_replace(' ', '_', $this->BO->get('title').'.pdf');
-        $this->HTMLFilename = $config->get('app.file.store.dir').'cache/html/'.get_class($this->BO).'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.html';
 
-        // first check the PDF cache, and if its there then re-direct to the file
+        $reflect = new \ReflectionClass($this->BO);
+        $classname = $reflect->getShortName();
+
+        $this->PDFFilename = $config->get('app.file.store.dir').'cache/pdf/'.$classname.'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.pdf';
+        $PDFDownloadName = str_replace(' ', '_', $this->BO->get('title').'.pdf');
+        $this->HTMLFilename = $config->get('app.file.store.dir').'cache/html/'.$classname.'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.html';
+
+        // first check the PDF cache
         if ($this->checkPDFCache())
-            $this->serveCachedPDF($PDFDownloadName);
+            return;
 
         if (method_exists($this->BO, 'getAttachmentsURL'))
             $attachURL = $this->BO->getAttachmentsURL();
@@ -209,7 +214,6 @@ class TCPDFFacade
 
         // save this PDF to the cache
         $this->pdf->Output($this->PDFFilename, 'F');
-        $this->serveCachedPDF($PDFDownloadName);
     }
 
     /**
@@ -219,15 +223,16 @@ class TCPDFFacade
      */
      private function markdown($text, $attachURL='')
      {
-        $config = ConfigProvider::getIntance();
+        $config = ConfigProvider::getInstance();
 
         /*
          * Initialize the parser and return the result of its transform method.
          *
          */
         static $parser;
+
         if (!isset($parser)) {
-            $parser = new \Alpha\Util]Extension\Markdown();
+            $parser = new \Alpha\Util\Extension\Markdown();
         }
 
         /*
@@ -281,7 +286,7 @@ class TCPDFFacade
      */
     private function checkHTMLCache()
     {
-        $config = ConfigProvider::getIntance();
+        $config = ConfigProvider::getInstance();
 
         return file_exists($this->HTMLFilename);
     }
@@ -319,6 +324,7 @@ class TCPDFFacade
      * Used to serve the cached PDF file as a download
      *
      * @since 1.0
+     * @deprecated
      */
     private function serveCachedPDF($name)
     {
@@ -343,6 +349,23 @@ class TCPDFFacade
         // Send data
         echo $data;
         die();
+    }
+
+    /**
+     * Returns the raw PDF data stream
+     *
+     * @return string
+     * @since 2.0
+     */
+    public function getPDFData()
+    {
+        $PDFDownloadName = str_replace(' ', '-', $this->BO->get('title').'.pdf');
+        // first load the file
+        $handle = fopen ($this->PDFFilename, 'r');
+        $data = fread($handle, filesize($this->PDFFilename));
+        fclose($handle);
+
+        return $data;
     }
 }
 

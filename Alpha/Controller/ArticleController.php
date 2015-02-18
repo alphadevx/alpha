@@ -142,6 +142,40 @@ class ArticleController extends Controller implements ControllerInterface
 
         $body = '';
 
+        if ($this->mode == 'read' && isset($params['title']) && $request->getHeader('Accept') == 'application/pdf') {
+            try {
+                $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
+
+                $this->BO = new Article();
+                $this->BO->loadByAttribute('title', $title);
+
+                ActiveRecord::disconnect();
+
+                $pdf = new TCPDFFacade($this->BO);
+                $pdfData = $pdf->getPDFData();
+                $pdfDownloadName = str_replace(' ', '-', $this->BO->get('title').'.pdf');
+
+                $headers = array(
+                    'Pragma' => 'public',
+                    'Expires' => 0,
+                    'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+                    'Content-Transfer-Encoding' => 'binary',
+                    'Content-Type' => 'application/pdf',
+                    'Content-Length' => strlen($pdfData),
+                    'Content-Disposition' => 'attachment; filename="'.$pdfDownloadName.'";'
+                );
+
+                return new Response(200, $pdfData, $headers);
+
+            } catch (IllegalArguementException $e) {
+                self::$logger->error($e->getMessage());
+                throw new ResourceNotFoundException($e->getMessage());
+            } catch (RecordNotFoundException $e) {
+                self::$logger->error($e->getMessage());
+                throw new ResourceNotFoundException($e->getMessage());
+            }
+        }
+
         if ($this->mode == 'read' && isset($params['title'])) {
 
             $KDP = new KPI('viewarticle');
@@ -213,28 +247,6 @@ class ArticleController extends Controller implements ControllerInterface
             $body .= View::displayPageFoot($this);
 
             return new Response(200, $body, array('Content-Type' => 'text/html'));
-        }
-
-        if ($this->mode == 'read' && isset($params['title']) && isset($params['pdf'])) {
-            try {
-                $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
-
-                $this->BO = new $this->BOName;
-                $this->BO->loadByAttribute('title', $title);
-
-                ActiveRecord::disconnect();
-
-                $pdf = new TCPDFFacade($this->BO);
-
-                return new Response(200, $pdf, array('Content-Type' => 'application/pdf'));
-
-            } catch (IllegalArguementException $e) {
-                self::$logger->error($e->getMessage());
-                throw new ResourceNotFoundException($e->getMessage());
-            } catch (RecordNotFoundException $e) {
-                self::$logger->error($e->getMessage());
-                throw new ResourceNotFoundException($e->getMessage());
-            }
         }
 
         if ($this->mode == 'edit' && isset($params['oid'])) {
