@@ -142,6 +142,7 @@ class ArticleController extends Controller implements ControllerInterface
 
         $body = '';
 
+        // handle requests for PDFs
         if ($this->mode == 'read' && isset($params['title']) && $request->getHeader('Accept') == 'application/pdf') {
             try {
                 $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
@@ -176,6 +177,7 @@ class ArticleController extends Controller implements ControllerInterface
             }
         }
 
+        // handle requests for viewing articles
         if ($this->mode == 'read' && isset($params['title'])) {
 
             $KDP = new KPI('viewarticle');
@@ -185,11 +187,11 @@ class ArticleController extends Controller implements ControllerInterface
                 if ($this->BO->isTransient()) {
                     $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
 
-                    $this->BO = new Article();
-                    $this->BO->set('title', $title);
                     $this->BO->loadByAttribute('title', $title, false, array('OID', 'version_num', 'created_ts', 'updated_ts', 'author', 'published', 'content', 'headerContent'));
+
                     if (!$this->BO->get('published'))
                         throw new RecordNotFoundException('Attempted to load an article which is not published yet');
+
                     $this->BO->set('tags', $this->BO->getOID());
                 }
 
@@ -217,6 +219,7 @@ class ArticleController extends Controller implements ControllerInterface
             return new Response(200, $body, array('Content-Type' => 'text/html'));
         }
 
+        // handle requests to view an article stored in a file
         if ($this->mode == 'read' && isset($params['file'])) {
             try {
 
@@ -249,12 +252,12 @@ class ArticleController extends Controller implements ControllerInterface
             return new Response(200, $body, array('Content-Type' => 'text/html'));
         }
 
-        if ($this->mode == 'edit' && isset($params['oid'])) {
-            if (!Validator::isInteger($params['oid']))
-                throw new IllegalArguementException('Article ID provided ['.$params['oid'].'] is not valid!');
+        // view edit artile requests
+        if ($this->mode == 'edit' && isset($params['title'])) {
 
             try {
-                $this->BO->load($params['oid']);
+                $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
+                $this->BO->loadByAttribute('title', $title);
             } catch (RecordNotFoundException $e) {
                 self::$logger->warn($e->getMessage());
                 $body .= View::renderErrorPage(404, 'Failed to find the requested article!');
@@ -285,43 +288,6 @@ class ArticleController extends Controller implements ControllerInterface
             $body .= View::displayPageHead($this);
 
             $body .= $view->createView();
-        } else {
-            try {
-                // check to see if we need to force a re-direct to the mod_rewrite alias URL for the article
-                // TODO: do will still need to do this?
-                if($config->get('app.force.mod.rewrite.uls') && basename($_SERVER['PHP_SELF']) == 'ViewArticle.php') {
-                    // set the correct HTTP header for the response
-                    header('HTTP/1.1 301 Moved Permanently');
-
-                    header('Location: '.$this->BO->get('URL'));
-
-                    // we're done here
-                    exit;
-                }
-
-                // load the business object (BO) definition
-                if (isset($params['oid']) && Validator::isInteger($params['oid'])) {
-                    $this->BO->load($params['oid']);
-
-                    $BOView = View::getInstance($this->BO);
-
-                    // set up the title and meta details
-                    $this->setTitle($this->BO->get('title'));
-                    $this->setDescription($this->BO->get('description'));
-
-                    $body .= View::displayPageHead($this);
-
-                    $body .= $BOView->markdownView();
-                } else {
-                    throw new IllegalArguementException('No article available to view!');
-                }
-            } catch (IllegalArguementException $e) {
-                self::$logger->error($e->getMessage());
-                throw new ResourceNotFoundException($e->getMessage());
-            } catch(RecordNotFoundException $e) {
-                self::$logger->warn($e->getMessage());
-                throw new ResourceNotFoundException('The article that you have requested cannot be found!');
-            }
         }
 
         $body .= View::displayPageFoot($this);
