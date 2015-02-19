@@ -277,7 +277,10 @@ class ArticleController extends Controller implements ControllerInterface
 
             $body .= $view->editView();
             $body .= View::renderDeleteForm();
-        } elseif ($this->mode == 'create') {
+        }
+
+        // create a new article requests
+        if ($request->getParam('title') === '') {
             $view = View::getInstance($this->BO);
 
             // set up the title and meta details

@@ -151,7 +151,7 @@ class FrontController
         $this->addRoute('/a/{title}/{mode}', function($request) {
             $controller = new ArticleController();
             return $controller->process($request);
-        })->value('mode', 'read');
+        })->value('mode', 'read')->value('title', null);
 
 		self::$logger->debug('<<__construct');
 	}
