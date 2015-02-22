@@ -208,6 +208,14 @@ abstract class Controller
 	 */
 	protected $statusMessage;
 
+    /**
+     * The request that has been passed to this controller for processing
+     *
+     * @var Alpha\Util\Http\Request
+     * @since 2.0
+     */
+    protected $request;
+
 	/**
 	 * Trace logger
 	 *
@@ -1029,10 +1037,8 @@ abstract class Controller
 	 * @return boolean
 	 * @since 1.0
 	 */
-	public static function checkSecurityFields()
+	public function checkSecurityFields()
 	{
-		if(self::$logger == null)
-			self::$logger = new Logger('AlphaController');
 		self::$logger->debug('>>checkSecurityFields()');
 
         $host = (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost');
@@ -1043,13 +1049,13 @@ abstract class Controller
 		// the server's IP plus $var1
 		$var2 = base64_encode(SecurityUtils::encrypt($ip.$var1));
 
-		if (empty($_REQUEST['var1']) || empty($_REQUEST['var2'])) {
+		if ($this->request->getParam('var1') === null || $this->request->getParam('var2') === null) {
 			self::$logger->warn('The required var1/var2 params where not provided on the HTTP request');
 			self::$logger->debug('<<checkSecurityFields [false]');
 			return false;
 		}
 
-		if ($var1 == $_REQUEST['var1'] && $var2 == $_REQUEST['var2']) {
+		if ($var1 == $this->request->getParam('var1') && $var2 == $this->request->getParam('var2')) {
 			self::$logger->debug('<<checkSecurityFields [true]');
 			return true;
 		} else {
@@ -1064,11 +1070,11 @@ abstract class Controller
 			// the server's IP plus $var1
 			$var2 = base64_encode(SecurityUtils::encrypt($ip.$var1));
 
-			if ($var1 == $_REQUEST['var1'] && $var2 == $_REQUEST['var2']) {
+			if ($var1 == $this->request->getParam('var1') && $var2 == $this->request->getParam('var2')) {
 				self::$logger->debug('<<checkSecurityFields [true]');
 				return true;
 			} else{
-				self::$logger->warn('The var1/var2 params provided are invalid, values: var1=['.$_REQUEST['var1'].'] var2=['.$_REQUEST['var2'].']');
+				self::$logger->warn('The var1/var2 params provided are invalid, values: var1=['.$this->request->getParam('var1').'] var2=['.$this->request->getParam('var2').']');
 				self::$logger->debug('<<checkSecurityFields [false]');
 				return false;
 			}
@@ -1469,6 +1475,7 @@ abstract class Controller
             throw new IllegalArguementException('The request passed to process is not a valid Request object');
 
         $method = $request->getMethod();
+        $this->request = $request;
 
         switch ($method) {
             case 'HEAD':
@@ -1495,6 +1502,31 @@ abstract class Controller
         }
 
         return $response;
+    }
+
+    /**
+     * Get the request this controller is processing (if any)
+     *
+     * @return Alpha\Util\Http\Request
+     * @since 2.0
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * Set the request this controller is processing
+     *
+     * @param Alpha\Util\Http\Request $request
+     * @since 2.0
+     */
+    public function setRequest($request)
+    {
+        if ($request instanceof Request)
+            $this->request = $request;
+        else
+            throw new IllegalArguementException('Invalid request object ['.print_r($request, true).'] passed');
     }
 }
 
