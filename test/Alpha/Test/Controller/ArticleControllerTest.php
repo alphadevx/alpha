@@ -8,9 +8,13 @@ use Alpha\Model\Tag;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
 use Alpha\Model\Article;
+use Alpha\Model\ArticleVote;
+use Alpha\Model\Person;
+use Alpha\Model\Rights;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 
 /**
  *
@@ -77,6 +81,17 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
 
         $article = new Article();
         $article->rebuildTable();
+
+        $articleVote = new ArticleVote();
+        $articleVote->rebuildTable();
+
+        $person = new Person();
+        $person->rebuildTable();
+
+        $rights = new Rights();
+        $rights->rebuildTable();
+        $rights->set('name', 'Standard');
+        $rights->save();
     }
 
     /**
@@ -95,6 +110,23 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $article->set('published', true);
 
         return $article;
+    }
+
+    /**
+     * Creates a person object for Testing
+     *
+     * @return Alpha\Model\Person
+     * @since 1.0
+     */
+    private function createPersonObject($name)
+    {
+        $person = new Person();
+        $person->setDisplayname($name);
+        $person->set('email', $name.'@test.com');
+        $person->set('password', 'passwordTest');
+        $person->set('URL', 'http://unitTestUser/');
+
+        return $person;
     }
 
     /**
@@ -143,6 +175,31 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+    }
+
+    public function testDoPOST()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        $front = new FrontController();
+        $controller = new ArticleController();
+
+        $article = $this->createArticleObject('test article');
+        $article->save();
+
+        $person = $this->createPersonObject('test');
+        $person->save();
+        $session->set('currentUser', $person);
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/a/test-article', 'params' => array('voteBut' => true, 'userVote' => 4, 'var1' => $securityParams[0], 'var2' => $securityParams[1])));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
     }
 }
 

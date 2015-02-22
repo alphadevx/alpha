@@ -887,6 +887,7 @@ abstract class ActiveRecord
 	 *
 	 * @param boolean $filterAll Defaults to false, set to true if you want to strictly filter all POSTed user input using InputFilter::encode.
 	 * @since 1.0
+     * @deprecated
 	 */
 	public function populateFromPost($filterAll=false)
 	{

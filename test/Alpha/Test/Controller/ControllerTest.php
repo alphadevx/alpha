@@ -533,15 +533,17 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     {
     	$securityFields = Controller::generateSecurityFields();
 
-    	$_REQUEST['var1'] = $securityFields[0];
-    	$_REQUEST['var2'] = $securityFields[1];
+        $request = new Request(array('method' => 'GET', 'URI' => '/hello', 'params' => array('var1' => $securityFields[0], 'var2' => $securityFields[1])));
 
-    	$this->assertTrue(Controller::checkSecurityFields(), 'Testing the checkSecurityFields method with valid security params');
+        $controller = new ImageController();
+        $controller->setRequest($request);
 
-    	$_REQUEST['var1'] = null;
-    	$_REQUEST['var2'] = null;
+    	$this->assertTrue($controller->checkSecurityFields(), 'Testing the checkSecurityFields method with valid security params');
 
-    	$this->assertFalse(Controller::checkSecurityFields(), 'Testing the checkSecurityFields method with invalid security params');
+    	$request = new Request(array('method' => 'GET', 'URI' => '/hello'));
+        $controller->setRequest($request);
+
+    	$this->assertFalse($controller->checkSecurityFields(), 'Testing the checkSecurityFields method with invalid security params');
     }
 
     /**

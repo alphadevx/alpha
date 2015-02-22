@@ -100,8 +100,6 @@ class ArticleController extends Controller implements ControllerInterface
      */
     private $mode = 'read';
 
-    private $request;
-
     /**
      * constructor to set up the object
      *
@@ -134,10 +132,9 @@ class ArticleController extends Controller implements ControllerInterface
 
         $config = ConfigProvider::getInstance();
 
-        $this->request = $request;
-
         $params = $request->getParams();
 
+        // TODO: this will never be create, read is default, so we are only using edit.  Do we even need this?
         $this->mode = (isset($params['mode']) && in_array($params['mode'], array('create','edit')) ? $params['mode'] : 'read');
 
         $body = '';
@@ -310,11 +307,14 @@ class ArticleController extends Controller implements ControllerInterface
      */
     public function doPOST($request)
     {
-        self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
 
         $config = ConfigProvider::getInstance();
 
         $params = $request->getParams();
+
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
 
         $this->mode = (isset($params['mode']) && in_array($params['mode'], array('create','edit')) ? $params['mode'] : 'read');
 
@@ -324,7 +324,7 @@ class ArticleController extends Controller implements ControllerInterface
                 if (!$this->checkSecurityFields())
                     throw new SecurityException('This page cannot accept post data from remote servers!');
 
-
+                // save an article up-vote
                 if (isset($params['voteBut']) && !$this->BO->checkUserVoted()) {
                     $vote = new ArticleVote();
 
@@ -333,7 +333,7 @@ class ArticleController extends Controller implements ControllerInterface
                     } else {
                         // load article by title?
                         if (isset($params['title'])) {
-                            $title = str_replace('_', ' ', $params['title']);
+                            $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
                         } else {
                             throw new IllegalArguementException('Could not load the article as a title or OID was not supplied!');
                         }
@@ -343,7 +343,7 @@ class ArticleController extends Controller implements ControllerInterface
                         $vote->set('articleOID', $this->BO->getOID());
                     }
 
-                    $vote->set('personOID', $_SESSION['currentUser']->getID());
+                    $vote->set('personOID', $session->get('currentUser')->getID());
                     $vote->set('score', $params['userVote']);
 
                     try {
@@ -355,7 +355,7 @@ class ArticleController extends Controller implements ControllerInterface
 
                         $this->setStatusMessage(View::displayUpdateMessage('Thank you for rating this article!'));
 
-                        $this->doGET($params);
+                        return $this->doGET($request);
                     } catch (FailedSaveException $e) {
                         self::$logger->error($e->getMessage());
                     }

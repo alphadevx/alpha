@@ -4,6 +4,7 @@ namespace Alpha\Model;
 
 use Alpha\Model\Type\Integer;
 use Alpha\Model\Type\Relation;
+use Alpha\Util\Logging\Logger;
 
 /**
  *
@@ -112,13 +113,13 @@ class ArticleVote extends ActiveRecord
 		parent::__construct();
 
 		$this->articleOID = new Relation();
-		$this->articleOID->setRelatedClass('Article');
+		$this->articleOID->setRelatedClass('Alpha\Model\Article');
 		$this->articleOID->setRelatedClassField('OID');
 		$this->articleOID->setRelatedClassDisplayField('description');
 		$this->articleOID->setRelationType('MANY-TO-ONE');
 
 		$this->personOID = new Relation();
-		$this->personOID->setRelatedClass('Person');
+		$this->personOID->setRelatedClass('Alpha\Model\Person');
 		$this->personOID->setRelatedClassField('OID');
 		$this->personOID->setRelatedClassDisplayField('email');
 		$this->personOID->setRelationType('MANY-TO-ONE');

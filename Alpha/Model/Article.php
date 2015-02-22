@@ -9,6 +9,7 @@ use Alpha\Model\Type\Boolean;
 use Alpha\Model\Type\Relation;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\Configprovider;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Exception\ValidationException;
 use Alpha\Exception\FileNotFoundException;
 use Alpha\Controller\Front\FrontController;
@@ -477,11 +478,14 @@ class Article extends ActiveRecord
 	 */
 	public function checkUserVoted()
 	{
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
 		// just going to return true if nobody is logged in
-		if (!isset($_SESSION['currentUser']))
+		if ($session->get('currentUser') == null)
 			return true;
 
-		$userID = $_SESSION['currentUser']->getID();
+		$userID = $session->get('currentUser')->getID();
 
 		$vote = new ArticleVote();
 
