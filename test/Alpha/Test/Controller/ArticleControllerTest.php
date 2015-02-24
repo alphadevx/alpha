@@ -9,6 +9,7 @@ use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
 use Alpha\Model\Article;
 use Alpha\Model\ArticleVote;
+use Alpha\Model\ArticleComment;
 use Alpha\Model\Person;
 use Alpha\Model\Rights;
 use Alpha\Util\Config\ConfigProvider;
@@ -84,6 +85,9 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
 
         $articleVote = new ArticleVote();
         $articleVote->rebuildTable();
+
+        $articleComment = new ArticleComment();
+        $articleComment->rebuildTable();
 
         $person = new Person();
         $person->rebuildTable();
@@ -196,6 +200,18 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $securityParams = $controller->generateSecurityFields();
 
         $request = new Request(array('method' => 'POST', 'URI' => '/a/test-article', 'params' => array('voteBut' => true, 'userVote' => 4, 'var1' => $securityParams[0], 'var2' => $securityParams[1])));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
+
+        $comment = new ArticleComment();
+        $comment->set('articleOID', $article->getOID());
+        $comment->set('content', 'A test comment');
+        $params = array('createBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = array_merge($params, $comment->toArray());
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/a', 'params' => $params));
 
         $response = $front->process($request);
 

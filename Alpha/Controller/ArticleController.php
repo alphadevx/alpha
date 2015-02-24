@@ -361,11 +361,12 @@ class ArticleController extends Controller implements ControllerInterface
                     }
                 }
 
+                // save an article comment
                 if (isset($params['createBut'])) {
                     $comment = new ArticleComment();
 
                     // populate the transient object from post data
-                    $comment->populateFromPost();
+                    $comment->populateFromArray($params);
 
                     // filter the comment before saving
                     $comment->set('content', InputFilter::encode($comment->get('content')));
@@ -379,7 +380,7 @@ class ArticleController extends Controller implements ControllerInterface
 
                         $this->setStatusMessage(View::displayUpdateMessage('Thank you for your comment!'));
 
-                        $this->doGET($params);
+                        return $this->doGET($request);
                     } catch (FailedSaveException $e) {
                         self::$logger->error($e->getMessage());
                     }
