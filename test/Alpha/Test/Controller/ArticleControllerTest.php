@@ -216,6 +216,18 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
+
+        $comment->set('content', 'Updated comment');
+        $comment->set('version_num', 1);
+
+        $params = array('article_comment_id' => 1, 'saveBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = array_merge($params, $comment->toArray());
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/a', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
     }
 }
 

@@ -386,6 +386,7 @@ class ArticleController extends Controller implements ControllerInterface
                     }
                 }
 
+                // save an existing comment
                 if (isset($params['saveBut'])) {
                     $comment = new ArticleComment();
 
@@ -393,7 +394,7 @@ class ArticleController extends Controller implements ControllerInterface
                         $comment->load($params['article_comment_id']);
 
                         // re-populates the old object from post data
-                        $comment->populateFromPost();
+                        $comment->populateFromArray($params);
 
                         $success = $comment->save();
 
@@ -403,7 +404,7 @@ class ArticleController extends Controller implements ControllerInterface
 
                         $this->setStatusMessage(View::displayUpdateMessage('Your comment has been updated.'));
 
-                        $this->doGET($params);
+                        return $this->doGET($request);
                     } catch (AlphaException $e) {
                         self::$logger->error($e->getMessage());
                     }
