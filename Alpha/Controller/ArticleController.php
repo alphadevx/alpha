@@ -316,6 +316,7 @@ class ArticleController extends Controller implements ControllerInterface
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
 
+        // TODO: see comment in doGET, we should get rid of this
         $this->mode = (isset($params['mode']) && in_array($params['mode'], array('create','edit')) ? $params['mode'] : 'read');
 
         if ($this->mode == 'read') {
@@ -325,6 +326,7 @@ class ArticleController extends Controller implements ControllerInterface
                     throw new SecurityException('This page cannot accept post data from remote servers!');
 
                 // save an article up-vote
+                // TODO: move to dedicated controller, or use generic Create::doPOST().
                 if (isset($params['voteBut']) && !$this->BO->checkUserVoted()) {
                     $vote = new ArticleVote();
 
@@ -362,7 +364,8 @@ class ArticleController extends Controller implements ControllerInterface
                 }
 
                 // save an article comment
-                if (isset($params['createBut'])) {
+                // TODO: move to dedicated controller, or use generic Create::doPOST().
+                if (isset($params['createCommentBut'])) {
                     $comment = new ArticleComment();
 
                     // populate the transient object from post data
@@ -387,6 +390,7 @@ class ArticleController extends Controller implements ControllerInterface
                 }
 
                 // save an existing comment
+                // TODO: move to dedicated controller, or use generic Create::doPUT().
                 if (isset($params['saveBut'])) {
                     $comment = new ArticleComment();
 
@@ -415,73 +419,75 @@ class ArticleController extends Controller implements ControllerInterface
             }
         }
 
-        if ($this->mode == 'create') {
-            try {
-                // check the hidden security fields before accepting the form POST data
-                if (!$this->checkSecurityFields())
-                    throw new SecurityException('This page cannot accept post data from remote servers!');
+        try {
+            // check the hidden security fields before accepting the form POST data
+            if (!$this->checkSecurityFields())
+                throw new SecurityException('This page cannot accept post data from remote servers!');
 
-                $this->BO = new Article();
+            $this->BO = new Article();
 
-                if (isset($params['createBut'])) {
-                    // populate the transient object from post data
-                    $this->BO->populateFromPost();
+            // saving a new article
+            if (isset($params['createBut'])) {
+                // populate the transient object from post data
+                $this->BO->populateFromArray($params);
+                $this->BO->save();
 
-                    $this->BO->save();
+                self::$logger->action('Created new Article instance with OID '.$this->BO->getOID());
 
-                    self::$logger->action('Created new ArticleObject instance with OID '.$this->BO->getOID());
+                ActiveRecord::disconnect();
 
-                    ActiveRecord::disconnect();
-
-                    try {
-                        if ($this->getNextJob() != '')
-                            header('Location: '.$this->getNextJob());
-                        else
-                            header('Location: '.FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID()));
-                    } catch (AlphaException $e) {
-                            self::$logger->error($e->getTraceAsString());
-                            echo '<p class="error"><br>Error creating the new article, check the log!</p>';
-                    }
-                }
-
-                if (isset($params['cancelBut'])) {
-                    header('Location: '.FrontController::generateSecureURL('act=ListBusinessObjects'));
-                }
-
-                if(isset($params['data'])) { // previewing an article
-                    // allow the consumer to optionally indicate another BO than Article
-                    if (isset($params['bo']) && class_exists($params['bo']))
-                        $temp = new $params['bo'];
+                try {
+                    $response = new Response(301);
+                    if ($this->getNextJob() != '')
+                        $response->redirect($this->getNextJob());
                     else
-                        $temp = new Article();
+                        $response->redirect(FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID()));
 
-                    $temp->set('content', $params['data']);
+                    return $response;
 
-                    if (isset($params['oid']))
-                        $temp->set('OID', $params['oid']);
-
-                    $parser = new MarkdownFacade($temp, false);
-
-                    // render a simple HTML header
-                    echo '<html>';
-                    echo '<head>';
-                    echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/lib/jquery/ui/themes/'.$config->get('app.css.theme').'/jquery.ui.all.css">';
-                    echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/css/alpha.css">';
-                    echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'config/css/overrides.css">';
-                    echo '</head>';
-                    echo '<body>';
-
-                    // transform text using parser.
-                    echo $parser->getContent();
-
-                    echo '</body>';
-                    echo '</html>';
+                } catch (AlphaException $e) {
+                        self::$logger->error($e->getTraceAsString());
+                        $this->setStatusMessage(View::displayErrorMessage('Error creating the new article, check the log!'));
                 }
-            } catch (SecurityException $e) {
-                echo View::displayPageHead($this);
-                echo '<p class="error"><br>'.$e->getMessage().'</p>';
-                self::$logger->warn($e->getMessage());
             }
+
+            if (isset($params['cancelBut'])) {
+                header('Location: '.FrontController::generateSecureURL('act=ListBusinessObjects'));
+            }
+
+            if(isset($params['data'])) { // previewing an article
+                // allow the consumer to optionally indicate another BO than Article
+                if (isset($params['bo']) && class_exists($params['bo']))
+                    $temp = new $params['bo'];
+                else
+                    $temp = new Article();
+
+                $temp->set('content', $params['data']);
+
+                if (isset($params['oid']))
+                    $temp->set('OID', $params['oid']);
+
+                $parser = new MarkdownFacade($temp, false);
+
+                // render a simple HTML header
+                echo '<html>';
+                echo '<head>';
+                echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/lib/jquery/ui/themes/'.$config->get('app.css.theme').'/jquery.ui.all.css">';
+                echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/css/alpha.css">';
+                echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'config/css/overrides.css">';
+                echo '</head>';
+                echo '<body>';
+
+                // transform text using parser.
+                echo $parser->getContent();
+
+                echo '</body>';
+                echo '</html>';
+            }
+        } catch (SecurityException $e) {
+            echo View::displayPageHead($this);
+            echo '<p class="error"><br>'.$e->getMessage().'</p>';
+            self::$logger->warn($e->getMessage());
         }
 
         self::$logger->debug('<<doPOST');
