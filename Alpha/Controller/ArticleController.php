@@ -451,11 +451,8 @@ class ArticleController extends Controller implements ControllerInterface
                 }
             }
 
-            if (isset($params['cancelBut'])) {
-                header('Location: '.FrontController::generateSecureURL('act=ListBusinessObjects'));
-            }
-
-            if(isset($params['data'])) { // previewing an article
+            // previewing an article
+            if (isset($params['data'])) {
                 // allow the consumer to optionally indicate another BO than Article
                 if (isset($params['bo']) && class_exists($params['bo']))
                     $temp = new $params['bo'];
@@ -470,24 +467,26 @@ class ArticleController extends Controller implements ControllerInterface
                 $parser = new MarkdownFacade($temp, false);
 
                 // render a simple HTML header
-                echo '<html>';
-                echo '<head>';
-                echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/lib/jquery/ui/themes/'.$config->get('app.css.theme').'/jquery.ui.all.css">';
-                echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/css/alpha.css">';
-                echo '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'config/css/overrides.css">';
-                echo '</head>';
-                echo '<body>';
+                $body = '<html>';
+                $body .= '<head>';
+                $body .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/lib/jquery/ui/themes/'.$config->get('app.css.theme').'/jquery.ui.all.css">';
+                $body .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/css/alpha.css">';
+                $body .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'config/css/overrides.css">';
+                $body .= '</head>';
+                $body .= '<body>';
 
                 // transform text using parser.
-                echo $parser->getContent();
+                $body .= $parser->getContent();
 
-                echo '</body>';
-                echo '</html>';
+                $body .= '</body>';
+                $body .= '</html>';
+
+                $response = new Response(200, $body, array('Content-Type' => 'text/html'));
+                return $response;
             }
         } catch (SecurityException $e) {
-            echo View::displayPageHead($this);
-            echo '<p class="error"><br>'.$e->getMessage().'</p>';
             self::$logger->warn($e->getMessage());
+            throw new ResourceNotAllowedException($e->getMessage());
         }
 
         self::$logger->debug('<<doPOST');
