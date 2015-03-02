@@ -431,8 +431,19 @@ class Request
      */
     public function parseParamsFromRoute($route, $defaultParams = array())
     {
+        // if the URI has a query-string, we will ignore it for now
+        if (mb_strpos($this->URI, '?') !== false) {
+            $URI = mb_substr($this->URI, 0, mb_strpos($this->URI, '?'));
+
+            // let's take this opportunity to pass query string params to $this->params
+            $queryString = mb_substr($this->URI, (mb_strpos($this->URI, '?')+1));
+            parse_str($queryString, $this->params);
+        } else {
+            $URI = $this->URI;
+        }
+
         $paramNames = explode('/', $route);
-        $paramValues = explode('/', $this->URI);
+        $paramValues = explode('/', $URI);
 
         for ($i = 0; $i < count($paramNames); $i++) {
             $name = $paramNames[$i];
