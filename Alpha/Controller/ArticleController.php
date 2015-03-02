@@ -524,7 +524,9 @@ class ArticleController extends Controller implements ControllerInterface
 
             if (isset($params['title'])) {
 
-                $this->BO->loadByAttribute('title', $params['title']);
+                $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
+
+                $this->BO->loadByAttribute('title', $title);
 
                 $View = View::getInstance($this->BO);
 
@@ -539,7 +541,7 @@ class ArticleController extends Controller implements ControllerInterface
                 if (isset($params['saveBut'])) {
 
                     // populate the transient object from post data
-                    $this->BO->populateFromPost();
+                    $this->BO->populateFromArray($params);
 
                     try {
                         $success = $this->BO->save();
@@ -552,30 +554,6 @@ class ArticleController extends Controller implements ControllerInterface
 
                     ActiveRecord::disconnect();
                     $body .= $View->editView(array('URI' => $request->getURI()));
-                }
-
-                if (!empty($params['deleteOID'])) {
-
-                    $this->BO->load($params['deleteOID']);
-
-                    try {
-                        $this->BO->delete();
-                        self::$logger->action('Article '.$params['deleteOID'].' deleted.');
-                        ActiveRecord::disconnect();
-
-                        echo View::displayUpdateMessage('Article '.$params['deleteOID'].' deleted successfully.');
-
-                        echo '<center>';
-
-                        $temp = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'",
-                            'Back to List','cancelBut');
-                        echo $temp->render();
-
-                        echo '</center>';
-                    } catch (AlphaException $e) {
-                        self::$logger->error($e->getTraceAsString());
-                        echo View::displayErrorMessage('Error deleting the article, check the log!');
-                    }
                 }
 
                 if (isset($params['uploadBut'])) {
@@ -644,6 +622,52 @@ class ArticleController extends Controller implements ControllerInterface
         self::$logger->debug('<<doPUT');
 
         return $response;
+    }
+
+    /**
+     * Method to handle PUT requests
+     *
+     * @param Alpha\Util\Http\Request
+     * @return Alpha\Util\Http\Response
+     * @since 2.0
+     */
+    public function doDELETE($request)
+    {
+        self::$logger->info('>>doPUT($request=['.var_export($request, true).'])');
+
+        $config = ConfigProvider::getInstance();
+
+        $params = $request->getParams();
+
+        try {
+            // check the hidden security fields before accepting the form DELETE data
+            if (!$this->checkSecurityFields()) {
+                throw new SecurityException('This page cannot accept post data from remote servers!');
+                self::$logger->debug('<<doPUT');
+            }
+            if (isset($params['title'])) {
+
+                $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
+
+                $this->BO->loadbyAttribute('title', $title);
+
+                try {
+                    $this->BO->delete();
+                    self::$logger->action('Article '.$params['title'].' deleted.');
+
+                    $response = new Response(200);
+                    return $response;
+
+                } catch (AlphaException $e) {
+                    self::$logger->error($e->getTraceAsString());
+                    $response = new Response(500, json_encode(array('message' => 'Error deleting the article, check the log!')), array('Content-Type' => 'application/json'));
+                    return $response;
+                }
+            }
+        } catch (SecurityException $e) {
+            self::$logger->warn($e->getMessage());
+            throw new ResourceNotAllowedException($e->getMessage());
+        }
     }
 
     /**

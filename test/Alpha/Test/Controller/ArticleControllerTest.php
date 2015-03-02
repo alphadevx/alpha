@@ -276,7 +276,39 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doPUT method');
+    }
 
+    public function testDoDELETE()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        $front = new FrontController();
+        $controller = new ArticleController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $article = $this->createArticleObject('test article');
+        $article->save();
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/a/test-article'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doDELETE method');
+
+        $request = new Request(array('method' => 'DELETE', 'URI' => '/a/test-article?var1='.urlencode($securityParams[0]).'&var2='.urlencode($securityParams[1])));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doDELETE method');
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/a/not-there'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(404, $response->getStatus(), 'Testing the doDELETE method');
     }
 }
 
