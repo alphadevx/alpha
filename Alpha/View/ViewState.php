@@ -3,6 +3,8 @@
 namespace Alpha\View;
 
 use Alpha\Exception\IllegalArguementException;
+use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 use ReflectionProperty;
 
 /**
@@ -90,11 +92,14 @@ class ViewState
      */
     public static function getInstance()
     {
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
         // if we don't already have the object in memory...
         if (!isset(self::$instance)) {
             // load from the session, otherwise return a new object
-            if (isset($_SESSION['ViewState'])) {
-                return unserialize($_SESSION['ViewState']);
+            if ($session->get('ViewState') !== false) {
+                return unserialize($session->get('ViewState'));
             } else {
                 self::$instance = new ViewState();
                 return self::$instance;
@@ -116,7 +121,7 @@ class ViewState
     {
         $attribute = new ReflectionProperty(get_class($this), $key);
 
-        if($attribute != null)
+        if ($attribute != null)
             return $this->$key;
         else
             throw new IllegalArguementException('The property ['.$key.'] does not exist on the ['.get_class($this).'] class');
@@ -132,11 +137,13 @@ class ViewState
      */
     public function set($key, $value)
     {
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
         $attribute = new ReflectionProperty(get_class($this), $key);
 
         if($attribute != null) {
             $this->$key = $value;
-            $_SESSION[get_class($this)] = serialize($this);
+            $session->set(get_class($this), serialize($this));
         }else{
             throw new IllegalArguementException('The property ['.$key.'] does not exist on the ['.get_class($this).'] class');
         }
