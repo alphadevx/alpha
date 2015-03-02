@@ -90,6 +90,13 @@ class Request
     private $params;
 
     /**
+     * An associative 3D array of uploaded files
+     * @var array
+     * @since 2.0
+     */
+    private $files;
+
+    /**
      * The request body if one was provided
      *
      * @var string
@@ -190,6 +197,12 @@ class Request
             $this->URI = $overrides['URI'];
         elseif (isset($_SERVER['REQUEST_URI']))
             $this->URI = $_SERVER['REQUEST_URI'];
+
+        // set uploaded files (if any)
+        if (isset($overrides['files']))
+            $this->files = $overrides['files'];
+        elseif (isset($_FILES))
+            $this->files = $_FILES;
     }
 
     /**
@@ -304,6 +317,32 @@ class Request
     {
         if (array_key_exists($key, $this->params))
             return $this->params[$key];
+        else
+            return $default;
+    }
+
+    /**
+     * Return all files on this request
+     *
+     * @return array
+     * @since 2.0
+     */
+    public function getFiles() {
+        return $this->files;
+    }
+
+    /**
+     * Get the file matching the key provided
+     *
+     * @param string $key The key to search for
+     * @param mixed $default If key is not found, return this instead
+     * @return mixed
+     * @since 2.0
+     */
+    public function getFile($key, $default = null)
+    {
+        if (array_key_exists($key, $this->files))
+            return $this->files[$key];
         else
             return $default;
     }
