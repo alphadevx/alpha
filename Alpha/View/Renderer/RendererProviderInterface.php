@@ -151,10 +151,11 @@ interface RendererProviderInterface
     /**
      * Method to render a hidden HTML form for posting the OID of an object to be deleted.
      *
+     * @param string $URI The URI that the form will point to
      * @return string
      * @since 1.2
      */
-    public static function renderDeleteForm();
+    public static function renderDeleteForm($URI);
 
     /**
      * Method to render a HTML form with two hidden, hashed (MD5) form fields to be used as

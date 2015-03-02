@@ -431,10 +431,11 @@ class View
     /**
      * Method to render a hidden HTML form for posting the OID of an object to be deleted
      *
+     * @param string $URI The URI that the form will point to
      * @return string
      * @since 1.0
      */
-    public static function renderDeleteForm() {
+    public static function renderDeleteForm($URI) {
         if(self::$logger == null)
             self::$logger = new Logger('View');
         self::$logger->debug('>>renderDeleteForm()');
@@ -442,7 +443,7 @@ class View
         $config = ConfigProvider::getInstance();
 
         $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'));
-        eval('$html = '.get_class($provider).'::renderDeleteForm();');
+        eval('$html = '.get_class($provider).'::renderDeleteForm("'.$URI.'");');
 
         self::$logger->debug('<<renderDeleteForm ['.$html.']');
         return $html;
