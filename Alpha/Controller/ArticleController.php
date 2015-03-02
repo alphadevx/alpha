@@ -272,8 +272,8 @@ class ArticleController extends Controller implements ControllerInterface
 
             $body .= View::displayPageHead($this);
 
-            $body .= $view->editView();
-            $body .= View::renderDeleteForm();
+            $body .= $view->editView(array('URI' => $request->getURI()));
+            $body .= View::renderDeleteForm($request->getURI());
         }
 
         // create a new article requests
@@ -501,11 +501,14 @@ class ArticleController extends Controller implements ControllerInterface
      */
     public function doPUT($request)
     {
-        self::$logger->debug('>>doPUT(params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doPUT($request=['.var_export($request, true).'])');
 
         $config = ConfigProvider::getInstance();
 
         $params = $request->getParams();
+
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
 
         try {
             // check the hidden security fields before accepting the form POST data
@@ -519,11 +522,9 @@ class ArticleController extends Controller implements ControllerInterface
                 $viewState->set('markdownTextBoxRows', $params['markdownTextBoxRows']);
             }
 
-            if (isset($params['oid'])) {
-                if (!Validator::isInteger($params['oid']))
-                    throw new IllegalArguementException('Article ID provided ['.$params['oid'].'] is not valid!');
+            if (isset($params['title'])) {
 
-                $this->BO->load($params['oid']);
+                $this->BO->loadByAttribute('title', $params['title']);
 
                 $View = View::getInstance($this->BO);
 
@@ -532,8 +533,9 @@ class ArticleController extends Controller implements ControllerInterface
                 $this->setDescription('Page to edit '.$this->BO->get('title').'.');
                 $this->setKeywords('edit,article');
 
-                echo View::displayPageHead($this);
+                $body = View::displayPageHead($this);
 
+                // saving an article
                 if (isset($params['saveBut'])) {
 
                     // populate the transient object from post data
@@ -542,14 +544,14 @@ class ArticleController extends Controller implements ControllerInterface
                     try {
                         $success = $this->BO->save();
                         self::$logger->action('Article '.$this->BO->getID().' saved');
-                        echo View::displayUpdateMessage('Article '.$this->BO->getID().' saved successfully.');
+                        $body .= View::displayUpdateMessage('Article '.$this->BO->getID().' saved successfully.');
                     } catch (LockingException $e) {
                         $this->BO->reload();
-                        echo View::displayErrorMessage($e->getMessage());
+                        $body .= View::displayErrorMessage($e->getMessage());
                     }
 
                     ActiveRecord::disconnect();
-                    echo $View->editView();
+                    $body .= $View->editView(array('URI' => $request->getURI()));
                 }
 
                 if (!empty($params['deleteOID'])) {
@@ -597,7 +599,7 @@ class ArticleController extends Controller implements ControllerInterface
 
                     $view = View::getInstance($this->BO);
 
-                    echo $view->editView();
+                    echo $view->editView(array('URI' => $request->getURI()));
                 }
 
                 if (!empty($params['file_to_delete'])) {
@@ -614,7 +616,7 @@ class ArticleController extends Controller implements ControllerInterface
 
                     $view = View::getInstance($this->BO);
 
-                    echo $view->editView();
+                    echo $view->editView(array('URI' => $request->getURI()));
                 }
             } else {
                 throw new IllegalArguementException('No valid article ID provided!');
@@ -633,11 +635,15 @@ class ArticleController extends Controller implements ControllerInterface
             self::$logger->error($e->getMessage());
         }
 
-        echo View::renderDeleteForm();
+        $body .= View::renderDeleteForm($request->getURI());
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
 
-        self::$logger->debug('<<doPOST');
+        $response = new Response(200, $body, array('Content-Type' => 'text/html'));
+
+        self::$logger->debug('<<doPUT');
+
+        return $response;
     }
 
     /**

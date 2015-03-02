@@ -249,6 +249,35 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
     }
+
+    public function testDoPUT()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        $front = new FrontController();
+        $controller = new ArticleController();
+
+        $article = $this->createArticleObject('test article');
+        $article->save();
+
+        $person = $this->createPersonObject('test');
+        $person->save();
+        $session->set('currentUser', $person);
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $params = array('saveBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = array_merge($params, $article->toArray());
+
+        $request = new Request(array('method' => 'PUT', 'URI' => '/a/'.$article->get('title'), 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doPUT method');
+
+    }
 }
 
 ?>
