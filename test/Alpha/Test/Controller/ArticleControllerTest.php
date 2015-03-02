@@ -96,6 +96,10 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $rights->rebuildTable();
         $rights->set('name', 'Standard');
         $rights->save();
+
+        $rights = new Rights();
+        $rights->set('name', 'Admin');
+        $rights->save();
     }
 
     /**
@@ -272,6 +276,21 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $params = array_merge($params, $article->toArray());
 
         $request = new Request(array('method' => 'PUT', 'URI' => '/a/'.$article->get('title'), 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doPUT method');
+
+        $attachment = array(
+            'name' => 'logo.png',
+            'type' => 'image/png',
+            'tmp_name' => $config->get('app.root').'public/images/logo-small.png'
+        );
+
+        $params = array('uploadBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = array_merge($params, $article->toArray());
+
+        $request = new Request(array('method' => 'PUT', 'URI' => '/a/'.$article->get('title'), 'params' => $params, 'files' => array('userfile' => $attachment)));
 
         $response = $front->process($request);
 

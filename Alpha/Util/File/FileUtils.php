@@ -593,7 +593,7 @@ class FileUtils
     }
 
     /**
-     * Recursively copies the indicated folder, or single file, to the desintation location
+     * Recursively copies the indicated folder, or single file, to the destination location
      *
      * @param string $source The path to the source directory or file.
      * @param string $dest The destination source directory or file.

@@ -13,6 +13,7 @@ use Alpha\Util\Extension\TCPDFFacade;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\File\FileUtils;
 use Alpha\Model\Article;
 use Alpha\Model\ArticleVote;
 use Alpha\Model\ArticleComment;
@@ -446,8 +447,8 @@ class ArticleController extends Controller implements ControllerInterface
                     return $response;
 
                 } catch (AlphaException $e) {
-                        self::$logger->error($e->getTraceAsString());
-                        $this->setStatusMessage(View::displayErrorMessage('Error creating the new article, check the log!'));
+                    self::$logger->error($e->getTraceAsString());
+                    $this->setStatusMessage(View::displayErrorMessage('Error creating the new article, check the log!'));
                 }
             }
 
@@ -556,28 +557,32 @@ class ArticleController extends Controller implements ControllerInterface
                     $body .= $View->editView(array('URI' => $request->getURI()));
                 }
 
+                // uploading an article attachment
                 if (isset($params['uploadBut'])) {
 
-                    // upload the file to the attachments directory
-                    $success = move_uploaded_file($_FILES['userfile']['tmp_name'], $this->BO->getAttachmentsLocation().'/'.$_FILES['userfile']['name']);
+                    $source = $request->getFile('userfile')['tmp_name'];
+                    $dest = $this->BO->getAttachmentsLocation().'/'.$request->getFile('userfile')['name'];
 
-                    if (!$success)
-                        throw new AlphaException('Could not move the uploaded file ['.$_FILES['userfile']['name'].']');
+                    // upload the file to the attachments directory
+                    FileUtils::copy($source, $dest);
+
+                    if (!file_exists($dest))
+                        throw new AlphaException('Could not move the uploaded file ['.$request->getFile('userfile')['name'].']');
 
                     // set read/write permissions on the file
-                    $success = chmod($this->BO->getAttachmentsLocation().'/'.$_FILES['userfile']['name'], 0666);
+                    $success = chmod($dest, 0666);
 
                     if (!$success)
-                        throw new AlphaException('Unable to set read/write permissions on the uploaded file ['.$this->BO->getAttachmentsLocation().'/'.$_FILES['userfile']['name'].'].');
+                        throw new AlphaException('Unable to set read/write permissions on the uploaded file ['.$dest.'].');
 
                     if ($success) {
-                        echo View::displayUpdateMessage('File uploaded successfully.');
-                        self::$logger->action('File '.$_FILES['userfile']['name'].' uploaded to '.$this->BO->getAttachmentsLocation().'/'.$_FILES['userfile']['name']);
+                        $body .= View::displayUpdateMessage('File uploaded successfully.');
+                        self::$logger->action('File '.$source.' uploaded to '.$dest);
                     }
 
                     $view = View::getInstance($this->BO);
 
-                    echo $view->editView(array('URI' => $request->getURI()));
+                    $body .= $view->editView(array('URI' => $request->getURI()));
                 }
 
                 if (!empty($params['file_to_delete'])) {
@@ -600,16 +605,16 @@ class ArticleController extends Controller implements ControllerInterface
                 throw new IllegalArguementException('No valid article ID provided!');
             }
         } catch (SecurityException $e) {
-            echo View::displayErrorMessage($e->getMessage());
+            $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
             self::$logger->warn($e->getMessage());
         } catch (IllegalArguementException $e) {
-            echo View::displayErrorMessage($e->getMessage());
+            $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
             self::$logger->error($e->getMessage());
         } catch (RecordNotFoundException $e) {
             self::$logger->warn($e->getMessage());
-            echo View::displayErrorMessage('Failed to load the requested article from the database!');
+            $this->setStatusMessage(View::displayErrorMessage('Failed to load the requested article from the database!'));
         } catch (AlphaException $e) {
-            echo View::displayErrorMessage($e->getMessage());
+            $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
             self::$logger->error($e->getMessage());
         }
 
@@ -633,7 +638,7 @@ class ArticleController extends Controller implements ControllerInterface
      */
     public function doDELETE($request)
     {
-        self::$logger->info('>>doPUT($request=['.var_export($request, true).'])');
+        self::$logger->debug('>>doDELETE($request=['.var_export($request, true).'])');
 
         $config = ConfigProvider::getInstance();
 
@@ -656,11 +661,17 @@ class ArticleController extends Controller implements ControllerInterface
                     self::$logger->action('Article '.$params['title'].' deleted.');
 
                     $response = new Response(200);
+
+                    self::$logger->debug('<<doDELETE');
+
                     return $response;
 
                 } catch (AlphaException $e) {
                     self::$logger->error($e->getTraceAsString());
                     $response = new Response(500, json_encode(array('message' => 'Error deleting the article, check the log!')), array('Content-Type' => 'application/json'));
+
+                    self::$logger->debug('<<doDELETE');
+
                     return $response;
                 }
             }
@@ -668,6 +679,8 @@ class ArticleController extends Controller implements ControllerInterface
             self::$logger->warn($e->getMessage());
             throw new ResourceNotAllowedException($e->getMessage());
         }
+
+        self::$logger->debug('<<doDELETE');
     }
 
     /**
