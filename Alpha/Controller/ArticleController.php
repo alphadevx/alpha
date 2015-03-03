@@ -585,21 +585,21 @@ class ArticleController extends Controller implements ControllerInterface
                     $body .= $view->editView(array('URI' => $request->getURI()));
                 }
 
-                if (!empty($params['file_to_delete'])) {
+                if (isset($params['deletefile'])) {
 
-                    $success = unlink($this->BO->getAttachmentsLocation().'/'.$params['file_to_delete']);
+                    $success = unlink($this->BO->getAttachmentsLocation().'/'.$params['deletefile']);
 
                     if (!$success)
-                        throw new AlphaException('Could not delete the file ['.$params['file_to_delete'].']');
+                        throw new AlphaException('Could not delete the file ['.$params['deletefile'].']');
 
                     if ($success) {
-                        echo View::displayUpdateMessage($params['file_to_delete'].' deleted successfully.');
-                        self::$logger->action('File '.$this->BO->getAttachmentsLocation().'/'.$params['file_to_delete'].' deleted');
+                        $body .= View::displayUpdateMessage($params['deletefile'].' deleted successfully.');
+                        self::$logger->action('File '.$this->BO->getAttachmentsLocation().'/'.$params['deletefile'].' deleted');
                     }
 
                     $view = View::getInstance($this->BO);
 
-                    echo $view->editView(array('URI' => $request->getURI()));
+                    $body .= $view->editView(array('URI' => $request->getURI()));
                 }
             } else {
                 throw new IllegalArguementException('No valid article ID provided!');

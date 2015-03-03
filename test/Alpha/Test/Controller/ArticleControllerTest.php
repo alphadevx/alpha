@@ -295,6 +295,17 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doPUT method');
+        $this->assertTrue(file_exists($article->getAttachmentsLocation().'/logo.png'));
+
+        $params = array('deletefile' => 'logo.png', 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = array_merge($params, $article->toArray());
+
+        $request = new Request(array('method' => 'PUT', 'URI' => '/a/'.$article->get('title'), 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doPUT method');
+        $this->assertFalse(file_exists($article->getAttachmentsLocation().'/logo.png'));
     }
 
     public function testDoDELETE()
