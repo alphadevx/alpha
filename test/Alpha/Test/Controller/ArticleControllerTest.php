@@ -275,7 +275,7 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $params = array('saveBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
         $params = array_merge($params, $article->toArray());
 
-        $request = new Request(array('method' => 'PUT', 'URI' => '/a/'.$article->get('title'), 'params' => $params));
+        $request = new Request(array('method' => 'PUT', 'URI' => '/a/test-article', 'params' => $params));
 
         $response = $front->process($request);
 
@@ -290,7 +290,7 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $params = array('uploadBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
         $params = array_merge($params, $article->toArray());
 
-        $request = new Request(array('method' => 'PUT', 'URI' => '/a/'.$article->get('title'), 'params' => $params, 'files' => array('userfile' => $attachment)));
+        $request = new Request(array('method' => 'PUT', 'URI' => '/a/test-article', 'params' => $params, 'files' => array('userfile' => $attachment)));
 
         $response = $front->process($request);
 
@@ -300,7 +300,7 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $params = array('deletefile' => 'logo.png', 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
         $params = array_merge($params, $article->toArray());
 
-        $request = new Request(array('method' => 'PUT', 'URI' => '/a/'.$article->get('title'), 'params' => $params));
+        $request = new Request(array('method' => 'PUT', 'URI' => '/a/test-article', 'params' => $params));
 
         $response = $front->process($request);
 

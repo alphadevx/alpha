@@ -4,8 +4,13 @@ namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\File\FileUtils;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
+use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Helper\Validator;
 use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\IllegalArguementException;
+use Alpha\Model\Article;
 
 /**
  *
@@ -79,33 +84,40 @@ class AttachmentController extends Controller implements ControllerInterface
     /**
      * Handle GET requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
      * @since 1.0
      * @throws Alpha\Exception\ResourceNotFoundException
      */
-    public function doGET($params)
+    public function doGET($request)
     {
-        self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
         $config = ConfigProvider::getInstance();
 
+        $params = $request->getParams();
+
         try {
-            if (isset($params['dir']) && isset($params['filename'])) {
-                $filePath = $params['dir'].'/'.$params['filename'];
+            if (isset($params['articleOID']) && isset($params['filename'])) {
+                if (!Validator::isInteger($params['articleOID']))
+                    throw new IllegalArguementException('The articleOID ['.$params['articleOID'].'] provided is invalid');
+
+                $article = new Article();
+                $article->setOID($params['articleOID']);
+                $filePath = $article->getAttachmentsLocation().'/'.$params['filename'];
 
                 if (file_exists($filePath)) {
-                    self::$logger->info('Downloading the file ['.$params['filename'].'] from the folder ['.$params['dir'].']');
+                    self::$logger->info('Downloading the file ['.$params['filename'].'] from the folder ['.$article->getAttachmentsLocation().']');
 
                     $pathParts = pathinfo($filePath);
                     $mimeType = FileUtils::getMIMETypeByExtension($pathParts['extension']);
-                    header('Content-Type: '.$mimeType);
-                    header('Content-Disposition: attachment; filename="'.$pathParts['basename'].'"');
-                    header('Content-Length: '.filesize($filePath));
 
-                    readfile($filePath);
+                    $response = new Response(200, file_get_contents($filePath));
+                    $response->setHeader('Content-Type', $mimeType);
+                    $response->setHeader('Content-Disposition', 'attachment; filename="'.$pathParts['basename'].'"');
+                    $response->setHeader('Content-Length', filesize($filePath));
 
                     self::$logger->debug('<<doGET');
-                    exit;
+                    return $response;
                 } else {
                     self::$logger->error('Could not access article attachment file ['.$filePath.'] as it does not exist!');
                     throw new IllegalArguementException('File not found');
@@ -120,18 +132,6 @@ class AttachmentController extends Controller implements ControllerInterface
         }
 
         self::$logger->debug('<<doGET');
-    }
-
-    /**
-     * Handle POST requests
-     *
-     * @param array $params
-     */
-    public function doPOST($params)
-    {
-        self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
-
-        self::$logger->debug('<<doPOST');
     }
 }
 

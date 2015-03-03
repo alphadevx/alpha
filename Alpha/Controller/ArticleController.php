@@ -543,9 +543,11 @@ class ArticleController extends Controller implements ControllerInterface
 
                     // populate the transient object from post data
                     $this->BO->populateFromArray($params);
+                    $this->BO->set('title', $title);
 
                     try {
                         $success = $this->BO->save();
+
                         self::$logger->action('Article '.$this->BO->getID().' saved');
                         $body .= View::displayUpdateMessage('Article '.$this->BO->getID().' saved successfully.');
                     } catch (LockingException $e) {

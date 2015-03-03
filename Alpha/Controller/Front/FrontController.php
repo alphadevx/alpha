@@ -17,6 +17,7 @@ use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\AlphaException;
 use Alpha\Controller\Controller;
 use Alpha\Controller\ArticleController;
+use Alpha\Controller\AttachmentController;
 
 /**
  *
@@ -152,6 +153,11 @@ class FrontController
             $controller = new ArticleController();
             return $controller->process($request);
         })->value('mode', 'read')->value('title', null);
+
+        $this->addRoute('/attach/{articleOID}/{filename}', function($request) {
+            $controller = new AttachmentController();
+            return $controller->process($request);
+        });
 
 		self::$logger->debug('<<__construct');
 	}
@@ -380,7 +386,7 @@ class FrontController
             // route URIs with params provided to callback
             foreach ($this->routes as $route => $callback) {
                 $pattern = '#^'.$route.'$#s';
-                $pattern = preg_replace('#\{\w+\}#', '\w+', $pattern);
+                $pattern = preg_replace('#\{\S+\}#', '\S+', $pattern);
 
                 if (preg_match($pattern, $URI)) {
                     $this->currentRoute = $route;
@@ -388,10 +394,10 @@ class FrontController
                 }
             }
 
-            // route URIs with params missing (will attempt to layer on defaults later on in Request class)
+             // route URIs with params missing (will attempt to layer on defaults later on in Request class)
             foreach ($this->routes as $route => $callback) {
                 $pattern = '#^'.$route.'$#s';
-                $pattern = preg_replace('#\/\{\w+\}#', '.*', $pattern);
+                $pattern = preg_replace('#\/\{\S+\}#', '.*', $pattern);
 
                 if (preg_match($pattern, $URI)) {
                     $this->currentRoute = $route;
