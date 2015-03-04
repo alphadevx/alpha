@@ -18,6 +18,7 @@ use Alpha\Exception\AlphaException;
 use Alpha\Controller\Controller;
 use Alpha\Controller\ArticleController;
 use Alpha\Controller\AttachmentController;
+use Alpha\Controller\CacheController;
 
 /**
  *
@@ -156,6 +157,11 @@ class FrontController
 
         $this->addRoute('/attach/{articleOID}/{filename}', function($request) {
             $controller = new AttachmentController();
+            return $controller->process($request);
+        });
+
+        $this->addRoute('/cache', function($request) {
+            $controller = new CacheController();
             return $controller->process($request);
         });
 

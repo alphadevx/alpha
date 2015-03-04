@@ -6,6 +6,8 @@ use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\File\FileUtils;
 use Alpha\Util\Security\SecurityUtils;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\SecurityException;
 use Alpha\Exception\AlphaException;
@@ -97,34 +99,38 @@ class CacheController extends Controller implements ControllerInterface
     /**
      * Handle GET requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Response $request
      * @throws Alpha\Exception\IllegalArguementException
      * @since 1.0
      */
-    public function doGET($params)
+    public function doGET($request)
     {
-        self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
+
+        $params = $request->getParams();
 
         $config = ConfigProvider::getInstance();
 
         if (!is_array($params))
             throw new IllegalArguementException('Bad $params ['.var_export($params, true).'] passed to doGET method!');
 
-        echo View::displayPageHead($this);
+        $body = View::displayPageHead($this);
 
         $message = $this->getStatusMessage();
         if (!empty($message))
-            echo $message;
+            $body .= $message;
 
-        echo '<h3>Listing contents of cache directory: '.$this->dataDir.'</h3>';
+        $body .= '<h3>Listing contents of cache directory: '.$this->dataDir.'</h3>';
 
+        ob_start();
         $fileCount = FileUtils::listDirectoryContents($this->dataDir, 0, array('.htaccess'));
+        $body .= ob_get_clean();
 
-        echo '<h3>Total of '.$fileCount.' files in the cache.</h3>';
+        $body .= '<h3>Total of '.$fileCount.' files in the cache.</h3>';
 
-        echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" name="clearForm" id="clearForm">';
+        $body .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" name="clearForm" id="clearForm">';
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('clearCache')) : 'clearCache');
-        echo '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value="false"/>';
+        $body .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value="false"/>';
         $js = "if(window.jQuery) {
                     BootstrapDialog.show({
                         title: 'Confirmation',
@@ -152,14 +158,15 @@ class CacheController extends Controller implements ControllerInterface
                     });
                 }";
         $button = new Button($js, "Clear cache", "clearBut");
-        echo $button->render();
+        $body .= $button->render();
 
-        echo View::renderSecurityFields();
-        echo '</form>';
+        $body .= View::renderSecurityFields();
+        $body .= '</form>';
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
