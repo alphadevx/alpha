@@ -177,9 +177,10 @@ class View
     }
 
     /**
-     * Renders the default create view to standard output
+     * Renders the default create view
      *
      * @param array $fields Hash array of fields to pass to the template
+     * @return string
      * @since 1.0
      */
     public function createView($fields=array())
@@ -193,18 +194,19 @@ class View
 
         $body = $this->provider->createView($fields);
 
-        echo $body;
-
         if(method_exists($this, 'after_createView_callback'))
             $this->after_createView_callback();
 
         self::$logger->debug('<<createView');
+
+        return $body;
     }
 
     /**
-     * Renders a form to enable object editing to standard output
+     * Renders a form to enable object editing
      *
      * @param array $fields Hash array of fields to pass to the template
+     * @return string
      * @since 1.0
      */
     public function editView($fields=array())
@@ -218,18 +220,18 @@ class View
 
         $body = $this->provider->editView($fields);
 
-        echo $body;
-
         if(method_exists($this, 'after_editView_callback'))
             $this->after_editView_callback();
 
         self::$logger->debug('<<editView');
+        return $body;
     }
 
     /**
-     * Renders the list view to standard output
+     * Renders the list view
      *
      * @param array $fields Hash array of fields to pass to the template
+     * @return string
      * @since 1.0
      */
     public function listView($fields=array())
@@ -243,18 +245,18 @@ class View
 
         $body = $this->provider->listView($fields);
 
-        echo $body;
-
         if(method_exists($this, 'after_listView_callback'))
             $this->after_listView_callback();
 
         self::$logger->debug('<<listView');
+        return $body;
     }
 
     /**
-     * Displays a detailed view of the object (read-only) to standard output
+     * Renders a detailed view of the object (read-only)
      *
      * @param array $fields Hash array of fields to pass to the template
+     * @return string
      * @since 1.0
      */
     public function detailedView($fields=array())
@@ -268,18 +270,18 @@ class View
 
         $body = $this->provider->detailedView($fields);
 
-        echo $body;
-
         if(method_exists($this, 'after_detailedView_callback'))
             $this->after_detailedView_callback();
 
         self::$logger->debug('<<detailedView');
+        return $body;
     }
 
     /**
-     * Renders the admin view for the business object screen to standard output
+     * Renders the admin view for the business object screen
      *
      * @param array $fields Hash array of fields to pass to the template
+     * @return string
      * @since 1.0
      */
     public function adminView($fields=array())
@@ -293,12 +295,11 @@ class View
 
         $body = $this->provider->adminView($fields);
 
-        echo $body;
-
         if(method_exists($this, 'after_adminView_callback'))
             $this->after_adminView_callback();
 
         self::$logger->debug('<<adminView');
+        return $body;
     }
 
     /**
@@ -311,11 +312,11 @@ class View
      */
     public static function displayPageHead($controller)
     {
-        if(self::$logger == null)
+        if (self::$logger == null)
             self::$logger = new Logger('View');
         self::$logger->debug('>>displayPageHead(controller=['.var_export($controller, true).'])');
 
-        if(method_exists($controller, 'before_displayPageHead_callback'))
+        if (method_exists($controller, 'before_displayPageHead_callback'))
             $controller->before_displayPageHead_callback();
 
         $config = ConfigProvider::getInstance();
@@ -323,7 +324,7 @@ class View
         $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'));
         eval('$header = '.get_class($provider).'::displayPageHead($controller);');
 
-        if(method_exists($controller, 'after_displayPageHead_callback'))
+        if (method_exists($controller, 'after_displayPageHead_callback'))
             $header.= $controller->after_displayPageHead_callback();
 
         self::$logger->debug('<<displayPageHead ['.$header.']');
@@ -339,7 +340,7 @@ class View
      */
     public static function displayPageFoot($controller)
     {
-        if(self::$logger == null)
+        if (self::$logger == null)
             self::$logger = new Logger('View');
 
         self::$logger->debug('>>displayPageFoot(controller=['.get_class($controller).'])');
