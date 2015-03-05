@@ -72,6 +72,26 @@ class CacheControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
     }
+
+    /**
+     * Testing the doPOST method
+     */
+    public function testDoPOST()
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        $front = new FrontController();
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/cache', 'params' => array('clearCache' => true)));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+    }
 }
 
 ?>

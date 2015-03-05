@@ -172,14 +172,16 @@ class CacheController extends Controller implements ControllerInterface
     /**
      * Handle POST requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Response $request
      * @throws Alpha\Exception\SecurityException
      * @throws Alpha\Exception\IllegalArguementException
      * @since 1.0
      */
-    public function doPOST($params)
+    public function doPOST($request)
     {
-        self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
+
+        $params = $request->getParams();
 
         try {
             // check the hidden security fields before accepting the form POST data
@@ -212,14 +214,16 @@ class CacheController extends Controller implements ControllerInterface
             $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
         }
 
-        echo View::displayPageHead($this);
+        $body = View::displayPageHead($this);
 
         $message = $this->getStatusMessage();
         if (!empty($message))
-            echo $message;
+            $body .= $message;
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
         self::$logger->debug('<<doPOST');
+
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**

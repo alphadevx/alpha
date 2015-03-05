@@ -1,23 +1,25 @@
 
 
 Code Coverage Report:        
-  2015-03-03 16:08:36        
+  2015-03-05 13:17:18        
                              
  Summary:                    
-  Classes: 22.39% (15/67)    
-  Methods: 49.68% (314/632)  
-  Lines:   62.24% (4110/6603)
+  Classes: 22.06% (15/68)    
+  Methods: 50.16% (319/636)  
+  Lines:   62.88% (4194/6670)
 
 \Alpha\Controller::ArticleController
   Methods:  30.00% ( 3/10)   Lines:  69.34% (285/411)
 \Alpha\Controller::AttachmentController
   Methods:  50.00% ( 1/ 2)   Lines:  77.42% ( 24/ 31)
+\Alpha\Controller::CacheController
+  Methods:  75.00% ( 3/ 4)   Lines:  79.69% ( 51/ 64)
 \Alpha\Controller::Controller
   Methods:  50.91% (28/55)   Lines:  70.88% (370/522)
 \Alpha\Controller::ImageController
   Methods:  33.33% ( 1/ 3)   Lines:  19.23% (  5/ 26)
 \Alpha\Controller\Front::FrontController
-  Methods:  75.00% (12/16)   Lines:  82.83% ( 82/ 99)
+  Methods:  75.00% (12/16)   Lines:  83.33% ( 85/102)
 \Alpha\Exception::AlphaException
   Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  4/  4)
 \Alpha\Model::ActiveRecord
@@ -95,7 +97,7 @@ Code Coverage Report:
 \Alpha\Util\Feed::RSS2
   Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  3/  3)
 \Alpha\Util\File::FileUtils
-  Methods:  20.00% ( 1/ 5)   Lines:  10.00% (  8/ 80)
+  Methods:  20.00% ( 1/ 5)   Lines:  28.75% ( 23/ 80)
 \Alpha\Util\Helper::Validator
   Methods: 100.00% (10/10)   Lines: 100.00% ( 35/ 35)
 \Alpha\Util\Http::AgentUtils
@@ -129,11 +131,11 @@ Code Coverage Report:
 \Alpha\View::ArticleView
   Methods:  40.00% ( 2/ 5)   Lines:  91.43% ( 64/ 70)
 \Alpha\View::View
-  Methods:  32.14% ( 9/28)   Lines:  50.76% (133/262)
+  Methods:  35.71% (10/28)   Lines:  53.82% (141/262)
 \Alpha\View\Renderer::RendererProviderFactory
   Methods:   0.00% ( 0/ 1)   Lines:  89.47% ( 17/ 19)
 \Alpha\View\Renderer\Html::RendererProviderHTML
-  Methods:  25.00% ( 6/24)   Lines:  20.48% (111/542)
+  Methods:  29.17% ( 7/24)   Lines:  21.77% (118/542)
 \Alpha\View\Widget::Button
   Methods:  50.00% ( 1/ 2)   Lines:  75.86% ( 22/ 29)
 \Alpha\View\Widget::Image
