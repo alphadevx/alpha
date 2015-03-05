@@ -4,6 +4,8 @@ namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
 use Alpha\View\View;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\ResourceNotFoundException;
@@ -59,12 +61,12 @@ use Alpha\Controller\Front\FrontController;
 class CreateController extends Controller implements ControllerInterface
 {
     /**
-     * The name of the BO
+     * The name of the ActiveRecord type that we will be creating
      *
      * @var string
      * @since 1.0
      */
-    protected $BOname;
+    protected $activeRecordType;
 
     /**
      * The new BO to be created
@@ -85,7 +87,7 @@ class CreateController extends Controller implements ControllerInterface
     /**
      * Trace logger
      *
-     * @var Logger
+     * @var Alpha\Util\Logging\Logger
      * @since 1.0
      */
     private static $logger = null;
@@ -112,62 +114,73 @@ class CreateController extends Controller implements ControllerInterface
     /**
      * Handle GET requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
      * @throws Alpha\Exception\IllegalArguementException
      * @throws Alpha\Exception\ResourceNotFoundException
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doGET($params)
+    public function doGET($request)
     {
-        self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
+
+        $params = $request->getParams();
 
         try {
             // load the business object (BO) definition
-            if (isset($params['bo'])) {
-                $BOname = $params['bo'];
-                $this->BOname = $BOname;
+            if (isset($params['ActiveRecordType'])) {
+                $ActiveRecordType = $params['ActiveRecordType'];
+                $this->activeRecordType = $ActiveRecordType;
             } elseif (isset($this->BOname)) {
-                $BOname = $this->BOname;
+                $ActiveRecordType = $this->BOname;
             } else {
-                throw new IllegalArguementException('No BO available to create!');
+                throw new IllegalArguementException('No ActiveRecord available to create!');
             }
 
             /*
              *  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
+             *
+             * TODO: do we still want to do this?
              */
-            if ($this->getCustomControllerName($BOname, 'create') != null)
-                $this->loadCustomController($BOname, 'create');
+            if ($this->getCustomControllerName($ActiveRecordType, 'create') != null)
+                $this->loadCustomController($ActiveRecordType, 'create');
 
-            $this->BO = new $BOname();
+            $className = "Alpha\\Model\\$ActiveRecordType";
+            if (class_exists($className))
+                $this->BO = new $className();
+            else
+                throw new IllegalArguementException('No ActiveRecord available to create!');
 
             $this->BOView = View::getInstance($this->BO);
 
             // set up the title and meta details
             if (!isset($this->title))
-                $this->setTitle('Create a new '.$BOname);
+                $this->setTitle('Create a new '.$ActiveRecordType);
             if (!isset($this->description))
-                $this->setDescription('Page to create a new '.$BOname.'.');
+                $this->setDescription('Page to create a new '.$ActiveRecordType.'.');
             if (!isset($this->keywords))
-                $this->setKeywords('create,new,'.$BOname);
+                $this->setKeywords('create,new,'.$ActiveRecordType);
 
-            echo View::displayPageHead($this);
+            $body = View::displayPageHead($this);
 
-            echo $this->BOView->createView();
+            $body .= $this->BOView->createView();
         } catch (IllegalArguementException $e) {
             self::$logger->warn($e->getMessage());
             throw new ResourceNotFoundException('The file that you have requested cannot be found!');
         }
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
      * Method to handle POST requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
      * @throws Alpha\Exception\ResourceNotAllowedException
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      */
     public function doPOST($params)
@@ -183,15 +196,15 @@ class CreateController extends Controller implements ControllerInterface
 
             // load the business object (BO) definition
             if (isset($params['bo'])) {
-                $BOname = $params['bo'];
-                $this->BOname = $BOname;
+                $ActiveRecordType = $params['bo'];
+                $this->BOname = $ActiveRecordType;
             } elseif (isset($this->BOname)) {
-                $BOname = $this->BOname;
+                $ActiveRecordType = $this->BOname;
             } else {
                 throw new IllegalArguementException('No BO available to create!');
             }
 
-            $this->BO = new $BOname();
+            $this->BO = new $ActiveRecordType();
 
             if (isset($params['createBut'])) {
                 // populate the transient object from post data
@@ -199,7 +212,7 @@ class CreateController extends Controller implements ControllerInterface
 
                 $this->BO->save();
 
-                self::$logger->action('Created new '.$BOname.' instance with OID '.$this->BO->getOID());
+                self::$logger->action('Created new '.$ActiveRecordType.' instance with OID '.$this->BO->getOID());
 
                 ActiveRecord::disconnect();
 
@@ -211,7 +224,7 @@ class CreateController extends Controller implements ControllerInterface
                 } catch (AlphaException $e) {
                     echo View::displayPageHead($this);
                     self::$logger->error($e->getTraceAsString());
-                    echo View::displayErrorMessage('Error creating the new ['.$BOname.'], check the log!');
+                    echo View::displayErrorMessage('Error creating the new ['.$ActiveRecordType.'], check the log!');
                 }
             }
 

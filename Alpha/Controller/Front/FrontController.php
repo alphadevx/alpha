@@ -19,6 +19,7 @@ use Alpha\Controller\Controller;
 use Alpha\Controller\ArticleController;
 use Alpha\Controller\AttachmentController;
 use Alpha\Controller\CacheController;
+use Alpha\Controller\CreateController;
 
 /**
  *
@@ -162,6 +163,11 @@ class FrontController
 
         $this->addRoute('/cache', function($request) {
             $controller = new CacheController();
+            return $controller->process($request);
+        });
+
+        $this->addRoute('/create/{ActiveRecordType}', function($request) {
+            $controller = new CreateController();
             return $controller->process($request);
         });
 

@@ -101,6 +101,7 @@ class CacheController extends Controller implements ControllerInterface
      *
      * @param Alpha\Util\Http\Response $request
      * @throws Alpha\Exception\IllegalArguementException
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      */
     public function doGET($request)
@@ -175,6 +176,7 @@ class CacheController extends Controller implements ControllerInterface
      * @param Alpha\Util\Http\Response $request
      * @throws Alpha\Exception\SecurityException
      * @throws Alpha\Exception\IllegalArguementException
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      */
     public function doPOST($request)

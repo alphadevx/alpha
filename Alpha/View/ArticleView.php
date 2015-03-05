@@ -73,11 +73,12 @@ class ArticleView extends View
     /**
      * Adds a note to the create article screen
      *
+     * @return string
      * @since 1.0
      */
     protected function after_createView_callback()
     {
-        echo '<p><strong>Please note</strong> that you will only be able to attach files to the article once it has been created.</p><br>';
+        return '<p><strong>Please note</strong> that you will only be able to attach files to the article once it has been created.</p><br>';
     }
 
     /**
