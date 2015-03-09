@@ -127,12 +127,9 @@ class CreateController extends Controller implements ControllerInterface
         $params = $request->getParams();
 
         try {
-            // load the business object (BO) definition
             if (isset($params['ActiveRecordType'])) {
                 $ActiveRecordType = $params['ActiveRecordType'];
                 $this->activeRecordType = $ActiveRecordType;
-            } elseif (isset($this->BOname)) {
-                $ActiveRecordType = $this->BOname;
             } else {
                 throw new IllegalArguementException('No ActiveRecord available to create!');
             }
@@ -183,32 +180,37 @@ class CreateController extends Controller implements ControllerInterface
      * @return Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doPOST($params)
+    public function doPOST($request)
     {
-        self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
 
         $config = ConfigProvider::getInstance();
+
+        $params = $request->getParams();
 
         try {
             // check the hidden security fields before accepting the form POST data
             if (!$this->checkSecurityFields())
                 throw new SecurityException('This page cannot accept post data from remote servers!');
 
-            // load the business object (BO) definition
-            if (isset($params['bo'])) {
-                $ActiveRecordType = $params['bo'];
-                $this->BOname = $ActiveRecordType;
-            } elseif (isset($this->BOname)) {
-                $ActiveRecordType = $this->BOname;
+            if (isset($params['ActiveRecordType'])) {
+                $ActiveRecordType = $params['ActiveRecordType'];
+                $this->activeRecordType = $ActiveRecordType;
             } else {
-                throw new IllegalArguementException('No BO available to create!');
+                throw new IllegalArguementException('No ActiveRecord available to create!');
             }
 
-            $this->BO = new $ActiveRecordType();
+            $className = "Alpha\\Model\\$ActiveRecordType";
+            if (class_exists($className))
+                $this->BO = new $className();
+            else
+                throw new IllegalArguementException('No ActiveRecord available to create!');
+
+            $this->BO = new $className();
 
             if (isset($params['createBut'])) {
                 // populate the transient object from post data
-                $this->BO->populateFromPost();
+                $this->BO->populateFromArray($params);
 
                 $this->BO->save();
 
@@ -216,24 +218,17 @@ class CreateController extends Controller implements ControllerInterface
 
                 ActiveRecord::disconnect();
 
-                try {
-                    if ($this->getNextJob() != '')
-                        header('Location: '.$this->getNextJob());
-                    else
-                        header('Location: '.FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getOID()));
-                } catch (AlphaException $e) {
-                    echo View::displayPageHead($this);
-                    self::$logger->error($e->getTraceAsString());
-                    echo View::displayErrorMessage('Error creating the new ['.$ActiveRecordType.'], check the log!');
-                }
+                $response = new Response(301);
+                if ($this->getNextJob() != '')
+                    $response->redirect($this->getNextJob());
+                else
+                    $response->redirect(FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getOID()));
+
+                return $response;
             }
 
-            if (isset($params['cancelBut'])) {
-                header('Location: '.FrontController::generateSecureURL('act=ListBusinessObjects'));
-            }
         } catch (SecurityException $e) {
             self::$logger->warn($e->getMessage());
-            echo View::displayPageHead($this);
             throw new ResourceNotAllowedException($e->getMessage());
         } catch (IllegalArguementException $e) {
             self::$logger->warn($e->getMessage());
@@ -242,7 +237,7 @@ class CreateController extends Controller implements ControllerInterface
         } catch (ValidationException $e) {
             self::$logger->warn($e->getMessage().', query ['.$this->BO->getLastQuery().']');
             $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
-            $this->doGET($params);
+            return $this->doGET($params);
         }
 
         self::$logger->debug('<<doPOST');

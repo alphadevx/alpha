@@ -3,10 +3,13 @@
 namespace Alpha\Test\Controller;
 
 use Alpha\Controller\Front\FrontController;
+use Alpha\Controller\CreateController;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Model\Person;
+use Alpha\Model\Rights;
 
 /**
  *
@@ -54,12 +57,51 @@ use Alpha\Util\Http\Session\SessionProviderFactory;
 class CreateControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * Set up tests
+     *
+     * @since 2.0
+     */
+    protected function setUp()
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+
+        $person = new Person();
+        $person->rebuildTable();
+
+        $rights = new Rights();
+        $rights->rebuildTable();
+        $rights->set('name', 'Standard');
+        $rights->save();
+
+        $rights = new Rights();
+        $rights->set('name', 'Admin');
+        $rights->save();
+    }
+
+    /**
+     * Creates a person object for Testing
+     *
+     * @return Alpha\Model\Person
+     * @since 2.0
+     */
+    private function createPersonObject($name)
+    {
+        $person = new Person();
+        $person->setDisplayname($name);
+        $person->set('email', $name.'@test.com');
+        $person->set('password', 'passwordTest');
+        $person->set('URL', 'http://unitTestUser/');
+
+        return $person;
+    }
+
+    /**
      * Testing the doGET method
      */
     public function testDoGET()
     {
         $config = ConfigProvider::getInstance();
-        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
 
@@ -71,6 +113,33 @@ class CreateControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+    }
+
+    /**
+     * Testing the doPOST method
+     */
+    public function testDoPOST()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        $front = new FrontController();
+        $controller = new CreateController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $person = $this->createPersonObject('test');
+
+        $params = array('createBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = array_merge($params, $person->toArray());
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/create/Person', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(301, $response->getStatus(), 'Testing the doPOST method');
+
     }
 }
 

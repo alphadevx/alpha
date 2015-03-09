@@ -1,12 +1,12 @@
 
 
 Code Coverage Report:        
-  2015-03-05 19:48:40        
+  2015-03-09 13:44:47        
                              
  Summary:                    
   Classes: 21.74% (15/69)    
   Methods: 50.47% (323/640)  
-  Lines:   63.02% (4254/6750)
+  Lines:   63.42% (4277/6744)
 
 \Alpha\Controller::ArticleController
   Methods:  30.00% ( 3/10)   Lines:  69.34% (285/411)
@@ -17,7 +17,7 @@ Code Coverage Report:
 \Alpha\Controller::Controller
   Methods:  50.91% (28/55)   Lines:  70.88% (370/522)
 \Alpha\Controller::CreateController
-  Methods:  25.00% ( 1/ 4)   Lines:  39.76% ( 33/ 83)
+  Methods:  25.00% ( 1/ 4)   Lines:  72.73% ( 56/ 77)
 \Alpha\Controller::ImageController
   Methods:  33.33% ( 1/ 3)   Lines:  19.23% (  5/ 26)
 \Alpha\Controller\Front::FrontController
