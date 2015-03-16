@@ -6,6 +6,7 @@ use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\View\View;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\ResourceNotFoundException;
@@ -251,9 +252,13 @@ class CreateController extends Controller implements ControllerInterface
      */
     public function after_displayPageHead_callback()
     {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
         $menu = '';
 
-        if (isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+        if ($session->get('currentUser') !== false && ActiveRecord::isInstalled() && $session->get('currentUser')->inGroup('Admin') && mb_strpos($this->request->getURI()) !== false) {
             $menu .= View::loadTemplateFragment('html', 'adminmenu.phtml', array());
         }
 
