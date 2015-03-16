@@ -20,6 +20,7 @@ use Alpha\Controller\ArticleController;
 use Alpha\Controller\AttachmentController;
 use Alpha\Controller\CacheController;
 use Alpha\Controller\CreateController;
+use Alpha\Controller\DEnumController;
 
 /**
  *
@@ -170,6 +171,11 @@ class FrontController
             $controller = new CreateController();
             return $controller->process($request);
         });
+
+        $this->addRoute('/denum/{denumOID}', function($request) {
+            $controller = new DEnumController();
+            return $controller->process($request);
+        })->value('denumOID', null);
 
 		self::$logger->debug('<<__construct');
 	}

@@ -4,6 +4,9 @@ namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\View\View;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\SecurityException;
@@ -87,29 +90,34 @@ class DEnumController extends ListController implements ControllerInterface
     /**
      * Handle GET requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doGET($params)
+    public function doGET($request)
     {
-        self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
         $config = ConfigProvider::getInstance();
 
-        $message = $this->getStatusMessage();
-        if (!empty($message))
-            echo $message;
+        $params = $request->getParams();
+
+        $body = '';
 
         // load one DEnum
-        if (isset($params['oid'])) {
-            $BOoid = $params['oid'];
+        if (isset($params['denumOID'])) {
+            $BOoid = $params['denumOID'];
 
             // set up the title and meta details
             $this->setTitle('Editing a DEnum');
             $this->setDescription('Page to edit a DEnum.');
             $this->setKeywords('edit,DEnum');
 
-            echo View::displayPageHead($this);
+            $body .= View::displayPageHead($this);
+
+            $message = $this->getStatusMessage();
+            if (!empty($message))
+                $body .= $message;
 
             try {
                 $this->BO->load($BOoid);
@@ -120,11 +128,11 @@ class DEnumController extends ListController implements ControllerInterface
 
                 $this->BOView = View::getInstance($this->BO);
 
-                echo View::renderDeleteForm();
+                $body .= View::renderDeleteForm($request->getURI());
 
-                echo $this->BOView->editView();
+                $body .= $this->BOView->editView();
             } catch (RecordNotFoundException $e) {
-                self::$logger->error('Unable to load the DEnum of id ['.$params['oid'].'], error was ['.$e->getMessage().']');
+                self::$logger->error('Unable to load the DEnum of id ['.$params['denumOID'].'], error was ['.$e->getMessage().']');
             }
         } else { // load all DEnums
             // set up the title and meta details
@@ -132,12 +140,12 @@ class DEnumController extends ListController implements ControllerInterface
             $this->setDescription('Page to list all DEnums.');
             $this->setKeywords('list,all,DEnums');
 
-            echo View::displayPageHead($this);
+            $body .= View::displayPageHead($this);
 
             // make sure that the DEnum tables exist
             if(!$this->BO->checkTableExists()) {
-                echo View::displayErrorMessage('Warning! The DEnum tables do not exist, attempting to create them now...');
-                $this->createDEnumTables();
+                $body .= View::displayErrorMessage('Warning! The DEnum tables do not exist, attempting to create them now...');
+                $body .= $this->createDEnumTables();
             }
 
             // get all of the BOs and invoke the list view on each one
@@ -151,17 +159,18 @@ class DEnumController extends ListController implements ControllerInterface
 
             $this->BOCount = $this->BO->getCount();
 
-            echo View::renderDeleteForm();
+            $body .= View::renderDeleteForm($request->getURI());
 
             foreach ($objects as $object) {
                 $temp = View::getInstance($object);
-                echo $temp->listView();
+                $body .= $temp->listView();
             }
         }
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
@@ -259,34 +268,37 @@ class DEnumController extends ListController implements ControllerInterface
      * Method to create the DEnum tables if they don't exist
      *
      * @since 1.0
+     * @return string
      */
     private function createDEnumTables()
     {
         $tmpDEnum = new DEnum();
 
-        echo '<p>Attempting to build table '.DEnum::TABLE_NAME.' for class DEnum : </p>';
+        $body = '<p>Attempting to build table '.DEnum::TABLE_NAME.' for class DEnum : </p>';
 
         try {
             $tmpDEnum->makeTable();
-            echo View::displayUpdateMessage('Successfully re-created the database table '.DEnum::TABLE_NAME);
+            $body .= View::displayUpdateMessage('Successfully re-created the database table '.DEnum::TABLE_NAME);
             self::$logger->action('Re-created the table '.DEnum::TABLE_NAME);
         } catch (AlphaException $e) {
-            echo View::displayErrorMessage('Failed re-created the database table '.DEnum::TABLE_NAME.', check the log');
+            $body .= View::displayErrorMessage('Failed re-created the database table '.DEnum::TABLE_NAME.', check the log');
             self::$logger->error($e->getMessage());
         }
 
         $tmpDEnumItem = new DEnumItem();
 
-        echo '<p>Attempting to build table '.DEnumItem::TABLE_NAME.' for class DEnumItem : </p>';
+        $body .= '<p>Attempting to build table '.DEnumItem::TABLE_NAME.' for class DEnumItem : </p>';
 
         try {
             $tmpDEnumItem->makeTable();
-            echo View::displayUpdateMessage('Successfully re-created the database table '.DEnumItem::TABLE_NAME);
+            $body .= View::displayUpdateMessage('Successfully re-created the database table '.DEnumItem::TABLE_NAME);
             self::$logger->action('Re-created the table '.DEnumItem::TABLE_NAME);
         } catch (AlphaException $e) {
-            echo View::displayErrorMessage('Failed re-created the database table '.DEnumItem::TABLE_NAME.', check the log');
+            $body .= View::displayErrorMessage('Failed re-created the database table '.DEnumItem::TABLE_NAME.', check the log');
             self::$logger->error($e->getMessage());
         }
+
+        return $body;
     }
 
     /**
