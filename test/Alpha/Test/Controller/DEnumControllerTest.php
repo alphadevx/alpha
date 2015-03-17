@@ -8,6 +8,8 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Model\Type\DEnum;
+use Alpha\Model\Type\DEnumItem;
 
 /**
  *
@@ -55,6 +57,14 @@ use Alpha\Util\Http\Session\SessionProviderFactory;
 class DEnumControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * A DEnum for testing
+     *
+     * @var DEnum
+     * @since 2.0
+     */
+    private $denum;
+
+    /**
      * Set up tests
      *
      * @since 2.0
@@ -64,35 +74,17 @@ class DEnumControllerTest extends \PHPUnit_Framework_TestCase
         $config = ConfigProvider::getInstance();
         $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
 
-        /*$person = new Person();
-        $person->rebuildTable();
+        $denum = new DEnum();
+        $denum->rebuildTable();
 
-        $rights = new Rights();
-        $rights->rebuildTable();
-        $rights->set('name', 'Standard');
-        $rights->save();
+        $item = new DEnumItem();
+        $item->rebuildTable();
 
-        $rights = new Rights();
-        $rights->set('name', 'Admin');
-        $rights->save();*/
+        $this->denum = new DEnum('Article::section');
+        $item->set('DEnumID', $this->denum->getOID());
+        $item->set('value', 'Test');
+        $item->save();
     }
-
-    /**
-     * Creates a person object for Testing
-     *
-     * @return Alpha\Model\Person
-     * @since 2.0
-     */
-    /*private function createPersonObject($name)
-    {
-        $person = new Person();
-        $person->setDisplayname($name);
-        $person->set('email', $name.'@test.com');
-        $person->set('password', 'passwordTest');
-        $person->set('URL', 'http://unitTestUser/');
-
-        return $person;
-    }*/
 
     /**
      * Testing the doGET method
@@ -111,6 +103,35 @@ class DEnumControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+    }
+
+    /**
+     * Testing the doPOST method
+     */
+    public function testDoPOST()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        $front = new FrontController();
+        $controller = new DEnumController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $item = new DEnumItem();
+        $denumItems = $item->loadItems($this->denum->getOID());
+        $item = $denumItems[0];
+
+        $params = array('saveBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1], 'value_'.$item->getOID() => 'updated');
+        $params = array_merge($params, $item->toArray());
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/denum/'.$this->denum->getOID(), 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doPOST method');
     }
 }
 

@@ -176,13 +176,16 @@ class DEnumController extends ListController implements ControllerInterface
     /**
      * Handle POST requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
      * @throws Alpha\Exception\SecurityException
      * @since 1.0
      */
-    public function doPOST($params)
+    public function doPOST($request)
     {
-        self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
+
+        $params = $request->getParams();
 
         try {
             // check the hidden security fields before accepting the form POST data
@@ -192,17 +195,17 @@ class DEnumController extends ListController implements ControllerInterface
             }
 
             // ensure that a OID is provided
-            if (isset($params['oid'])) {
-                $BOoid = $params['oid'];
+            if (isset($params['denumOID'])) {
+                $BOoid = $params['denumOID'];
             } else {
-                throw new IllegalArguementException('Could not load the DEnum object as an oid was not supplied!');
+                throw new IllegalArguementException('Could not load the DEnum object as an denumOID was not supplied!');
             }
 
             if (isset($params['saveBut'])) {
                 try {
                     $this->BO->load($BOoid);
                     // update the object from post data
-                    $this->BO->populateFromPost();
+                    $this->BO->populateFromArray($params);
 
                     ActiveRecord::begin();
 
@@ -235,7 +238,7 @@ class DEnumController extends ListController implements ControllerInterface
 
                     $this->setStatusMessage(View::displayUpdateMessage(get_class($this->BO).' '.$this->BO->getID().' saved successfully.'));
 
-                    return $this->doGET($params);
+                    return $this->doGET($request);
                 } catch (FailedSaveException $e) {
                     self::$logger->error('Unable to save the DEnum of id ['.$params['oid'].'], error was ['.$e->getMessage().']');
                     ActiveRecord::rollback();
@@ -254,14 +257,15 @@ class DEnumController extends ListController implements ControllerInterface
             $this->setStatusMessage(View::displayErrorMessage('Failed to load the requested item from the database!'));
         }
 
-        echo View::displayPageHead($this);
+        $body = View::displayPageHead($this);
 
         $message = $this->getStatusMessage();
         if (!empty($message))
-            echo $message;
+            $body .= $message;
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
         self::$logger->debug('<<doPOST');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**

@@ -8,6 +8,7 @@ use Alpha\Controller\Front\FrontController;
 use Alpha\View\Widget\StringBox;
 use Alpha\View\Widget\Button;
 use Alpha\Model\Type\DEnumItem;
+use Alpha\Model\Type\String;
 
 /**
  *
