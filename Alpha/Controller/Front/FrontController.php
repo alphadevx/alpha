@@ -20,6 +20,7 @@ use Alpha\Controller\ArticleController;
 use Alpha\Controller\AttachmentController;
 use Alpha\Controller\CacheController;
 use Alpha\Controller\CreateController;
+use Alpha\Controller\EditController;
 use Alpha\Controller\DEnumController;
 
 /**
@@ -169,6 +170,11 @@ class FrontController
 
         $this->addRoute('/create/{ActiveRecordType}', function($request) {
             $controller = new CreateController();
+            return $controller->process($request);
+        });
+
+        $this->addRoute('/edit/{ActiveRecordType}/{ActiveRecordOID}', function($request) {
+            $controller = new EditController();
             return $controller->process($request);
         });
 

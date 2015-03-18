@@ -4,10 +4,14 @@ namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Model\ActiveRecord;
 use Alpha\View\View;
 use Alpha\View\Widget\Button;
 use Alpha\Exception\IllegalArguementException;
+use Alpha\Exception\RecordNotFoundException;
 use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\ResourceNotAllowedException;
 use Alpha\Exception\SecurityException;
@@ -68,12 +72,12 @@ class EditController extends Controller implements ControllerInterface
     protected $BO;
 
     /**
-     * The name of the BO
+     * The name of the ActiveRecord type that we will be creating
      *
      * @var string
-     * @since 1.0
+     * @since 2.0
      */
-    protected $BOName;
+    protected $activeRecordType;
 
     /**
      * The OID of the BO to be edited
@@ -120,60 +124,71 @@ class EditController extends Controller implements ControllerInterface
     /**
      * Handle GET requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @throws Alpha\Exception\IllegalArguementException
+     * @throws Alpha\Exception\ResourceNotFoundException
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doGET($params)
+    public function doGET($request)
     {
-        self::$logger->debug('>>doGET(params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGET(request=['.var_export($request, true).'])');
+
+        $params = $request->getParams();
+
+        $body = '';
 
         try{
             // load the business object (BO) definition
-            if (isset($params['bo']) && isset($params['oid'])) {
-                $BOName = $params['bo'];
-                ActiveRecord::loadClassDef($BOName);
+            if (isset($params['ActiveRecordType']) && isset($params['ActiveRecordOID'])) {
+                $ActiveRecordType = $params['ActiveRecordType'];
+                $this->activeRecordType = $ActiveRecordType;
 
                 /*
-                 *  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
+                 * check and see if a custom edit controller exists for this BO, and if it does use it otherwise continue
+                 *
+                 * TODO: do we still want to do this?
                  */
-                if ($this->getCustomControllerName($BOName, 'edit') != null)
-                    $this->loadCustomController($BOName, 'edit');
+                if ($this->getCustomControllerName($ActiveRecordType, 'edit') != null)
+                    $this->loadCustomController($ActiveRecordType, 'edit');
 
-                $this->BO = new $BOName();
-                $this->BO->load($params['oid']);
+                $className = "Alpha\\Model\\$ActiveRecordType";
+                if (class_exists($className))
+                    $this->BO = new $className();
+                else
+                    throw new IllegalArguementException('No ActiveRecord available to edit!');
+
+                $this->BO->load($params['ActiveRecordOID']);
 
                 ActiveRecord::disconnect();
-
-                $this->BOName = $BOName;
 
                 $this->BOView = View::getInstance($this->BO);
 
                 // set up the title and meta details
                 if ($this->title == '')
-                    $this->setTitle('Editing a '.$BOName);
+                    $this->setTitle('Editing a '.$ActiveRecordType);
                 if ($this->description == '')
-                    $this->setDescription('Page to edit a '.$BOName.'.');
+                    $this->setDescription('Page to edit a '.$ActiveRecordType.'.');
                 if ($this->keywords == '')
-                    $this->setKeywords('edit,'.$BOName);
+                    $this->setKeywords('edit,'.$ActiveRecordType);
 
-                echo View::displayPageHead($this);
-
-                echo View::renderDeleteForm();
-
-                echo $this->BOView->editView();
+                $body .= View::displayPageHead($this);
+                $body .= View::renderDeleteForm($request->getURI());
+                $body .= $this->BOView->editView();
             } else {
-                throw new IllegalArguementException('No BO available to edit!');
+                throw new IllegalArguementException('No ActiveRecord available to edit!');
             }
-        } catch (IllegalArguementException $e) {
-            self::$logger->error($e->getMessage());
-        } catch (BONotFoundException $e) {
+        } catch (RecordNotFoundException $e) {
             self::$logger->warn($e->getMessage());
-            echo '<p class="error"><br>Failed to load the requested item from the database!</p>';
+
+            $body .= View::displayPageHead($this);
+            $body .= '<p class="error"><br>Failed to load the requested record from the database!</p>';
         }
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**

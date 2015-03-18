@@ -65,7 +65,7 @@ class CreateController extends Controller implements ControllerInterface
      * The name of the ActiveRecord type that we will be creating
      *
      * @var string
-     * @since 1.0
+     * @since 2.0
      */
     protected $activeRecordType;
 
