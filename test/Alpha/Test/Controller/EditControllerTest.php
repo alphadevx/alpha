@@ -118,6 +118,34 @@ class EditControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
     }
 
+    /**
+     * Testing the doPOST method
+     */
+    public function testDoPOST()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        $front = new FrontController();
+        $controller = new EditController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $person = $this->createPersonObject('test');
+        $person->save();
+
+        $person->set('email', 'updated@test.com');
+
+        $params = array('saveBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = array_merge($params, $person->toArray());
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/edit/Person/'.$person->getOID(), 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
+    }
 }
 
 ?>

@@ -139,7 +139,6 @@ class CreateControllerTest extends \PHPUnit_Framework_TestCase
         $response = $front->process($request);
 
         $this->assertEquals(301, $response->getStatus(), 'Testing the doPOST method');
-
     }
 }
 

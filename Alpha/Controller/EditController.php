@@ -194,15 +194,20 @@ class EditController extends Controller implements ControllerInterface
     /**
      * Handle POST requests
      *
-     * @param array $params
-     * @param string $saveMessage Optional status message to display on successful save of the BO, otherwise default will be used
+     * @param Alpha\Util\Http\Request $request
+     * @throws Alpha\Exception\SecurityException
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doPOST($params, $saveMessage='')
+    public function doPOST($request)
     {
-        self::$logger->debug('>>doPOST(params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doPOST(request=['.var_export($request, true).'])');
 
         $config = ConfigProvider::getInstance();
+
+        $params = $request->getParams();
+
+        $body = '';
 
         try {
             // check the hidden security fields before accepting the form POST data
@@ -211,22 +216,26 @@ class EditController extends Controller implements ControllerInterface
                 self::$logger->debug('<<doPOST');
             }
 
-            // load the business object (BO) definition
-            if (isset($params['bo']) && isset($params['oid'])) {
-                $BOName = $params['bo'];
-                ActiveRecord::loadClassDef($BOName);
+            if (isset($params['ActiveRecordType']) && isset($params['ActiveRecordOID'])) {
+                $ActiveRecordType = $params['ActiveRecordType'];
+                $this->activeRecordType = $ActiveRecordType;
 
-                $this->BO = new $BOName();
-                $this->BO->load($params['oid']);
+                $className = "Alpha\\Model\\$ActiveRecordType";
+                if (class_exists($className))
+                    $this->BO = new $className();
+                else
+                    throw new IllegalArguementException('No ActiveRecord available to edit!');
+
+                $this->BO->load($params['ActiveRecordOID']);
 
                 $this->BOView = View::getInstance($this->BO);
 
                 // set up the title and meta details
-                $this->setTitle('Editing a '.$BOName);
-                $this->setDescription('Page to edit a '.$BOName.'.');
-                $this->setKeywords('edit,'.$BOName);
+                $this->setTitle('Editing a '.$ActiveRecordType);
+                $this->setDescription('Page to edit a '.$ActiveRecordType.'.');
+                $this->setKeywords('edit,'.$ActiveRecordType);
 
-                echo View::displayPageHead($this);
+                $body .= View::displayPageHead($this);
 
                 if (isset($params['saveBut'])) {
 
@@ -236,64 +245,63 @@ class EditController extends Controller implements ControllerInterface
                     try {
                         $this->BO->save();
 
-                        self::$logger->action('Saved '.$BOName.' instance with OID '.$this->BO->getOID());
+                        self::$logger->action('Saved '.$ActiveRecordType.' instance with OID '.$this->BO->getOID());
 
-                        if($saveMessage == '')
-                            echo View::displayUpdateMessage(get_class($this->BO).' '.$this->BO->getID().' saved successfully.');
-                        else
-                            echo View::displayUpdateMessage($saveMessage);
+                        $body .= View::displayUpdateMessage(get_class($this->BO).' '.$this->BO->getID().' saved successfully.');
+
                     } catch (LockingException $e) {
                         $this->BO->reload();
-                        echo View::displayErrorMessage($e->getMessage());
+                        $body .= View::displayErrorMessage($e->getMessage());
                     }
 
                     ActiveRecord::disconnect();
 
-                    echo $this->BOView->editView();
+                    $body .= $this->BOView->editView();
                 }
 
-                if (!empty($params['deleteOID'])) {
-                    $temp = new $BOName();
+                if (isset($params['deleteOID'])) {
+                    $temp = new $ActiveRecordType();
                     $temp->load($params['deleteOID']);
 
                     try {
                         $temp->delete();
 
-                        self::$logger->action('Deleted '.$BOName.' instance with OID '.$params['deleteOID']);
+                        self::$logger->action('Deleted '.$ActiveRecordType.' instance with OID '.$params['deleteOID']);
 
                         ActiveRecord::disconnect();
 
-                        echo View::displayUpdateMessage($this->BOName.' '.$params['deleteOID'].' deleted successfully.');
+                        $body .= View::displayUpdateMessage($this->activeRecordType.' '.$params['deleteOID'].' deleted successfully.');
 
-                        echo '<center>';
+                        $body .= '<center>';
 
                         $temp = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'",
                             'Back to List','cancelBut');
-                        echo $temp->render();
+                        $body .= $temp->render();
 
-                        echo '</center>';
+                        $body .= '</center>';
                     } catch (AlphaException $e) {
                         self::$logger->error($e->getMessage());
-                        echo View::displayErrorMessage('Error deleting the OID ['.$params['deleteOID'].'], check the log!');
+                        $body .= View::displayErrorMessage('Error deleting the OID ['.$params['deleteOID'].'], check the log!');
                     }
                 }
             } else {
-                throw new IllegalArguementException('No BO available to edit!');
+                throw new IllegalArguementException('No active record type available to edit!');
             }
         } catch (SecurityException $e) {
-            echo View::displayErrorMessage($e->getMessage());
+            $body .= View::displayErrorMessage($e->getMessage());
             self::$logger->warn($e->getMessage());
         } catch (IllegalArguementException $e) {
-            echo View::displayErrorMessage($e->getMessage());
+            $body .= View::displayErrorMessage($e->getMessage());
             self::$logger->error($e->getMessage());
-        } catch (BONotFoundException $e) {
+        } catch (RecordNotFoundException $e) {
+            $body .= View::displayErrorMessage('Failed to load the requested item from the database!');
             self::$logger->warn($e->getMessage());
-            echo View::displayErrorMessage('Failed to load the requested item from the database!');
         }
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doPOST');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
