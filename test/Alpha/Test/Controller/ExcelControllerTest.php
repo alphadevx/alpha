@@ -3,7 +3,7 @@
 namespace Alpha\Test\Controller;
 
 use Alpha\Controller\Front\FrontController;
-use Alpha\Controller\EditController;
+use Alpha\Controller\ExcelController;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
@@ -13,7 +13,7 @@ use Alpha\Model\Rights;
 
 /**
  *
- * Test cases for the EditController class
+ * Test cases for the ExcelController class
  *
  * @since 2.0
  * @author John Collins <dev@alphaframework.org>
@@ -54,7 +54,7 @@ use Alpha\Model\Rights;
  * </pre>
  *
  */
-class EditControllerTest extends \PHPUnit_Framework_TestCase
+class ExcelControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Set up tests
@@ -80,7 +80,7 @@ class EditControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Creates a person object for Testing
+     * Creates a person object for testing
      *
      * @return Alpha\Model\Person
      * @since 2.0
@@ -110,41 +110,13 @@ class EditControllerTest extends \PHPUnit_Framework_TestCase
         $person = $this->createPersonObject('test');
         $person->save();
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/edit/Person/'.$person->getOID()));
+        $request = new Request(array('method' => 'GET', 'URI' => '/excel/Person/'.$person->getOID()));
 
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
-        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
-    }
-
-    /**
-     * Testing the doPOST method
-     */
-    public function testDoPOST()
-    {
-        $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
-
-        $front = new FrontController();
-        $controller = new EditController();
-
-        $securityParams = $controller->generateSecurityFields();
-
-        $person = $this->createPersonObject('test');
-        $person->save();
-
-        $person->set('email', 'updated@test.com');
-
-        $params = array('saveBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
-        $params = array_merge($params, $person->toArray());
-
-        $request = new Request(array('method' => 'POST', 'URI' => '/edit/Person/'.$person->getOID(), 'params' => $params));
-
-        $response = $front->process($request);
-
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
+        $this->assertEquals('application/vnd.ms-excel', $response->getHeader('Content-Type'), 'Testing the doGET method');
+        $this->assertEquals('attachment; filename=Person-00000000001.xls', $response->getHeader('Content-Disposition'), 'Testing the doGET method');
     }
 }
 

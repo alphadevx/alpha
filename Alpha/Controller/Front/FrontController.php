@@ -22,6 +22,7 @@ use Alpha\Controller\CacheController;
 use Alpha\Controller\CreateController;
 use Alpha\Controller\EditController;
 use Alpha\Controller\DEnumController;
+use Alpha\Controller\ExcelController;
 
 /**
  *
@@ -182,6 +183,11 @@ class FrontController
             $controller = new DEnumController();
             return $controller->process($request);
         })->value('denumOID', null);
+
+        $this->addRoute('/excel/{ActiveRecordType}/{ActiveRecordOID}', function($request) {
+            $controller = new ExcelController();
+            return $controller->process($request);
+        })->value('ActiveRecordOID', null);
 
 		self::$logger->debug('<<__construct');
 	}

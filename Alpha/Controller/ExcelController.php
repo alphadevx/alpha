@@ -4,7 +4,8 @@ namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Convertor\ActiveRecord2Excel;
-use Alpha\Exception\ResourceNotFoundException;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\RecordNotFoundException;
 use Alpha\Exception\ResourceNotFoundException;
@@ -82,38 +83,50 @@ class ExcelController extends Controller implements ControllerInterface
     /**
      * Loads the BO indicated in the GET request and handles the conversion to Excel
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
      * @throws Alpha\Exception\ResourceNotFoundException
      * @since 1.0
      */
-    public function doGet($params)
+    public function doGet($request)
     {
-        self::$logger->debug('>>doGet(params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGet(request=['.var_export($request, true).'])');
+
+        $params = $request->getParams();
+
+        $body = '';
 
         try {
-            if (isset($params['bo'])) {
-                ActiveRecord::loadClassDef($params['bo']);
-                $BO = new $params['bo'];
+            if (isset($params['ActiveRecordType'])) {
+                $ActiveRecordType = $params['ActiveRecordType'];
+
+                $className = "Alpha\\Model\\$ActiveRecordType";
+                if (class_exists($className))
+                    $this->BO = new $className();
+                else
+                    throw new IllegalArguementException('No ActiveRecord available to render!');
 
                 // the name of the file download
-                if (isset($params['oid']))
-                    $fileName = $BO->getTableName().'-'.$params['oid'];
+                if (isset($params['ActiveRecordOID']))
+                    $fileName = $this->BO->getTableName().'-'.$params['ActiveRecordOID'];
                 else
-                    $fileName = $BO->getTableName();
+                    $fileName = $this->BO->getTableName();
 
-                //header info for browser
-                header('Content-Type: application/vnd.ms-excel');
-                header('Content-Disposition: attachment; filename='.$fileName.'.xls');
-                header('Pragma: no-cache');
-                header('Expires: 0');
+                $response = new Response(200);
+
+                // header info for browser
+                $response->setHeader('Content-Type', 'application/vnd.ms-excel');
+                $response->setHeader('Content-Disposition', 'attachment; filename='.$fileName.'.xls');
+                $response->setHeader('Pragma', 'no-cache');
+                $response->setHeader('Expires', '0');
 
                 // handle a single BO
-                if (isset($params['oid'])) {
-                    $BO->load($params['oid']);
+                if (isset($params['ActiveRecordOID'])) {
+                    $this->BO->load($params['ActiveRecordOID']);
                     ActiveRecord::disconnect();
 
-                    $convertor = new ActiveRecord2Excel($BO);
-                    $convertor->render();
+                    $convertor = new ActiveRecord2Excel($this->BO);
+                    $body .= $convertor->render();
                 } else {
                     // handle all BOs of this type
                     $BOs = $BO->loadAll();
@@ -124,15 +137,15 @@ class ExcelController extends Controller implements ControllerInterface
                     foreach ($BOs as $BO) {
                         $convertor = new ActiveRecord2Excel($BO);
                         if ($first) {
-                            $convertor->render(true);
+                            $body .= $convertor->render(true);
                             $first = false;
                         } else {
-                            $convertor->render(false);
+                            $body .= $convertor->render(false);
                         }
                     }
                 }
             } else {
-                throw new IllegalArguementException('No BO parameter available for ViewExcel controller!');
+                throw new IllegalArguementException('No ActiveRecordType parameter available for ViewExcel controller!');
             }
         } catch (RecordNotFoundException $e) {
             self::$logger->error($e->getMessage());
@@ -143,18 +156,8 @@ class ExcelController extends Controller implements ControllerInterface
         }
 
         self::$logger->debug('<<__doGet');
-    }
-
-    /**
-     * Handle POST requests
-     *
-     * @param array $params
-     * @since 1.0
-     */
-    public function doPOST($params) {
-        self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
-
-        self::$logger->debug('<<doPOST');
+        $response->setBody($body);
+        return $response;
     }
 }
 
