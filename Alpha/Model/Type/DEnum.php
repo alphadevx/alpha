@@ -269,7 +269,7 @@ class DEnum extends ActiveRecord implements TypeInterface
 		// confirm that the item ID provided is a valid key for the options array
 		if (in_array($item, array_keys($this->options))) {
 			$this->value = $item;
-		}else{
+		} else {
 			throw new IllegalArguementException($this->getHelper());
 		}
 	}

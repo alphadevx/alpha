@@ -23,6 +23,7 @@ use Alpha\Controller\CreateController;
 use Alpha\Controller\EditController;
 use Alpha\Controller\DEnumController;
 use Alpha\Controller\ExcelController;
+use Alpha\Controller\FeedController;
 
 /**
  *
@@ -188,6 +189,11 @@ class FrontController
             $controller = new ExcelController();
             return $controller->process($request);
         })->value('ActiveRecordOID', null);
+
+        $this->addRoute('/feed/{ActiveRecordType}/{type}', function($request) {
+            $controller = new FeedController();
+            return $controller->process($request);
+        })->value('type', 'Atom');
 
 		self::$logger->debug('<<__construct');
 	}

@@ -7,6 +7,9 @@ use Alpha\Util\Logging\LogFile;
 use Alpha\Util\Feed\RSS2;
 use Alpha\Util\Feed\RSS;
 use Alpha\Util\Feed\Atom;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
+use Alpha\Util\Config\ConfigProvider;
 use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Model\Article;
@@ -61,7 +64,7 @@ class FeedController extends Controller implements ControllerInterface
      * @var string
      * @since 1.0
      */
-    private $BOName;
+    private $ActiveRecordType;
 
     /**
      * The type of feed to render (RSS, RSS2 or Atom)
@@ -132,21 +135,26 @@ class FeedController extends Controller implements ControllerInterface
     /**
      * Handle GET requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      * @throws Alpha\Exception\ResourceNotFoundException
      */
-    public function doGET($params)
+    public function doGET($request)
     {
-        self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
         $config = ConfigProvider::getInstance();
 
+        $params = $request->getParams();
+
+        $response = new Response(200);
+
         try {
-            if (isset($params['bo'])) {
-                $BOName = $params['bo'];
+            if (isset($params['ActiveRecordType'])) {
+                $ActiveRecordType = $params['ActiveRecordType'];
             } else {
-                throw new IllegalArguementException('BO not specified to generate feed!');
+                throw new IllegalArguementException('ActiveRecordType not specified to generate feed!');
             }
 
             if (isset($params['type'])) {
@@ -155,55 +163,50 @@ class FeedController extends Controller implements ControllerInterface
                 throw new IllegalArguementException('No feed type specified to generate feed!');
             }
 
-            $this->BOName = $BOName;
+            $className = "Alpha\\Model\\$ActiveRecordType";
+            if (class_exists($className))
+                $this->ActiveRecordType = $className;
+            else
+                throw new IllegalArguementException('No ActiveRecord available to render!');
             $this->type = $type;
 
             $this->setup();
 
             switch ($type) {
                 case 'RSS2':
-                    $feed = new RSS2($BOName, $this->title, str_replace('&', '&amp;', $_SERVER['REQUEST_URI']), $this->description);
+                    $feed = new RSS2($className, $this->title, str_replace('&', '&amp;', $request->getURI()), $this->description);
                     $feed->setFieldMappings($this->fieldMappings[0], $this->fieldMappings[1], $this->fieldMappings[2], $this->fieldMappings[3]);
+                    $response->setHeader('Content-Type', 'application/rss+xml');
                 break;
                 case 'RSS':
-                    $feed = new RSS($BOName, $this->title, str_replace('&', '&amp;', $_SERVER['REQUEST_URI']), $this->description);
+                    $feed = new RSS($className, $this->title, str_replace('&', '&amp;', $request->getURI()), $this->description);
                     $feed->setFieldMappings($this->fieldMappings[0], $this->fieldMappings[1], $this->fieldMappings[2], $this->fieldMappings[3]);
+                    $response->setHeader('Content-Type', 'application/rss+xml');
                 break;
                 case 'Atom':
-                    $feed = new Atom($BOName, $this->title, str_replace('&', '&amp;', $_SERVER['REQUEST_URI']), $this->description);
+                    $feed = new Atom($className, $this->title, str_replace('&', '&amp;', $request->getURI()), $this->description);
                     $feed->setFieldMappings($this->fieldMappings[0], $this->fieldMappings[1], $this->fieldMappings[2], $this->fieldMappings[3],
                         $this->fieldMappings[4]);
-                    if($config->get('feeds.atom.author') != '')
+                    if ($config->get('feeds.atom.author') != '')
                         $feed->addAuthor($config->get('feeds.atom.author'));
+                    $response->setHeader('Content-Type', 'application/atom+xml');
                 break;
             }
 
             // now add the twenty last items (from newest to oldest) to the feed, and render
             $feed->loadBOs(20, $this->sortBy);
-            echo $feed->render();
+            $response->setBody($feed->render());
 
             // log the request for this news feed
             $feedLog = new LogFile($config->get('app.file.store.dir').'logs/feeds.log');
-            $feedLog->writeLine(array($this->BOName, $this->type, date("Y-m-d H:i:s"), $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
+            $feedLog->writeLine(array($this->ActiveRecordType, $this->type, date("Y-m-d H:i:s"), $request->getUserAgent(), $request->getIP()));
         } catch (IllegalArguementException $e) {
             self::$logger->error($e->getMessage());
             throw new ResourceNotFoundException($e->getMessage());
         }
 
         self::$logger->debug('<<doGet');
-    }
-
-    /**
-     * Method to handle POST requests
-     *
-     * @param array $params
-     * @since 1.0
-     */
-    public function doPOST($params)
-    {
-        self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
-
-        self::$logger->debug('<<doPOST');
+        return $response;
     }
 
     /**
@@ -215,7 +218,7 @@ class FeedController extends Controller implements ControllerInterface
 
         $config = ConfigProvider::getInstance();
 
-        $bo = new $this->BOName;
+        $bo = new $this->ActiveRecordType;
 
         if ($bo instanceof Article) {
             $this->title = 'Latest articles from '.$config->get('app.title');
