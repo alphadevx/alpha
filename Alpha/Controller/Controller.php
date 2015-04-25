@@ -1041,8 +1041,8 @@ abstract class Controller
 	{
 		self::$logger->debug('>>checkSecurityFields()');
 
-        $host = (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost');
-        $ip = (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1');
+        $host = $this->request->getHost();
+        $ip = $this->request->getIP();
 
 		// the server hostname + today's date
 		$var1 = base64_encode(SecurityUtils::encrypt($host.date("Ymd")));
@@ -1089,12 +1089,14 @@ abstract class Controller
 	 */
 	public static function generateSecurityFields()
     {
-		if(self::$logger == null)
+		if (self::$logger == null)
 			self::$logger = new Logger('Controller');
 		self::$logger->debug('>>generateSecurityFields()');
 
-        $host = (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost');
-        $ip = (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1');
+        $request = new Request(array('method' => 'GET'));
+
+        $host = $request->getHost();
+        $ip = $request->getIP();
 
 		// the server hostname + today's date
 		$var1 = base64_encode(SecurityUtils::encrypt($host.date("Ymd")));
@@ -1115,7 +1117,7 @@ abstract class Controller
 	 */
 	public static function getCustomControllerName($BOName, $mode)
     {
-		if(self::$logger == null)
+		if (self::$logger == null)
 			self::$logger = new Logger('Controller');
 		self::$logger->debug('>>getCustomControllerName(BOName=['.$BOName.'], mode=['.$mode.'])');
 
