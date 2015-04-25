@@ -24,6 +24,7 @@ use Alpha\Controller\EditController;
 use Alpha\Controller\DEnumController;
 use Alpha\Controller\ExcelController;
 use Alpha\Controller\FeedController;
+use Alpha\Controller\GenSecureQueryStringController;
 
 /**
  *
@@ -194,6 +195,11 @@ class FrontController
             $controller = new FeedController();
             return $controller->process($request);
         })->value('type', 'Atom');
+
+        $this->addRoute('/gensecure', function($request) {
+            $controller = new GenSecureQueryStringController();
+            return $controller->process($request);
+        });
 
 		self::$logger->debug('<<__construct');
 	}

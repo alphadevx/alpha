@@ -5,10 +5,13 @@ namespace Alpha\Controller;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
 use Alpha\View\View;
 use Alpha\View\Widget\StringBox;
 use Alpha\View\Widget\Button;
 use Alpha\Controller\Front\FrontController;
+use Alpha\Model\Type\String;
 
 /**
  *
@@ -86,48 +89,56 @@ class GenSecureQueryStringController extends Controller implements ControllerInt
     /**
      * Handle GET requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doGET($params)
+    public function doGET($request)
     {
-        self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
-        echo View::displayPageHead($this);
+        $body = View::displayPageHead($this);
 
-        echo $this->renderForm();
+        $body .= $this->renderForm();
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
+
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
      * Handle POST requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doPOST($params)
+    public function doPOST($request)
     {
-        self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
 
         $config = ConfigProvider::getInstance();
 
-        echo View::displayPageHead($this);
+        $params = $request->getParams();
 
-        echo '<p class="alert alert-success">';
+        $body = View::displayPageHead($this);
+
+        $body .= '<p class="alert alert-success">';
         if (isset($params['QS'])) {
-            echo FrontController::generateSecureURL($params['QS']);
+            $body .= FrontController::generateSecureURL($params['QS']);
             self::$logger->action('Generated the secure URL in admin: '.FrontController::generateSecureURL($params['QS']));
         }
-        echo '</p>';
+        $body .= '</p>';
 
-        echo $this->renderForm();
+        $body .= $this->renderForm();
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doPOST');
+
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
