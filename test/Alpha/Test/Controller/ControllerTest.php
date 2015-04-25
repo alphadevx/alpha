@@ -531,11 +531,11 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckSecurityFields()
     {
-    	$securityFields = Controller::generateSecurityFields();
+        $controller = new ImageController();
+    	$securityFields = $controller->generateSecurityFields();
 
         $request = new Request(array('method' => 'GET', 'URI' => '/hello', 'params' => array('var1' => $securityFields[0], 'var2' => $securityFields[1])));
 
-        $controller = new ImageController();
         $controller->setRequest($request);
 
     	$this->assertTrue($controller->checkSecurityFields(), 'Testing the checkSecurityFields method with valid security params');
@@ -654,7 +654,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
         $response = $front->process($request);
 
-        $this->assertEquals('GET,POST', $response->getHeader('Allow'), 'Testing the process method');
+        $this->assertEquals('GET', $response->getHeader('Allow'), 'Testing the process method');
     }
 }
 

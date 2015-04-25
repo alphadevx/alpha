@@ -190,6 +190,7 @@ class Image
      * @param $altText Set this value to render alternate text as part of the HTML link (defaults to no alternate text)
      * @return string
      * @since 1.0
+     * @todo revise generated links
      */
     public function renderHTMLLink($altText='')
     {
@@ -266,37 +267,8 @@ class Image
     {
         $config = ConfigProvider::getInstance();
 
-        /*
-         * Handle secure image validation (if enabled in config).
-         * Not required for the view_article_pdf.php controller.
-         */
-        if ($config->get('cms.images.widget.secure') && basename($_SERVER["PHP_SELF"]) != 'ViewArticlePDF.php') {
-            // will need to decode the secure vars on the query string first as they will be encoded in the link to this controller
-            $_REQUEST['var1'] = urldecode($_REQUEST['var1']);
-            $_REQUEST['var2'] = urldecode($_REQUEST['var2']);
-            $valid = AlphaController::checkSecurityFields();
-
-            // if not valid, just return a blank black image of the same dimensions
-            if (!$valid) {
-                $im  = imagecreatetruecolor($this->width->getValue(), $this->height->getValue());
-                $bgc = imagecolorallocate($im, 0, 0, 0);
-                imagefilledrectangle($im, 0, 0, $this->width->getValue(), $this->height->getValue(), $bgc);
-
-                if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
-                    header("Content-Type: image/png");
-                    imagepng($im);
-                } else {
-                    header("Content-Type: image/jpeg");
-                    imagejpeg($im);
-                }
-
-                imagedestroy($im);
-
-                self::$logger->warn('The client ['.$_SERVER['HTTP_USER_AGENT'].'] was blocked from accessing the file ['.$this->filename.'] due to bad security tokens being provided');
-            }
-        }
-
         // if scaled, we need to compute the target image size
+        // TODO: move cookie check to ImageController level
         if ($this->scale->getBooleanValue() && isset($_COOKIE['screenSize'])) {
             $originalScreenResolution = explode('x', $config->get('sysCMSImagesWidgetScreenResolution'));
             $originalScreenX = $originalScreenResolution[0];
@@ -342,10 +314,8 @@ class Image
 
                 imagestring($im, 1, 5, 5, "Error loading $this->source", $tc);
                 if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
-                    header("Content-Type: image/png");
                     imagepng($im);
                 } else {
-                    header("Content-Type: image/jpeg");
                     imagejpeg($im);
                 }
                 imagedestroy($im);
@@ -375,10 +345,8 @@ class Image
                 imagecopyresampled($new_image, $old_image, 0, 0, 0, 0, $this->width->getValue(), $this->height->getValue(), $oldWidth, $oldHeight); 
 
                 if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
-                    header("Content-Type: image/png");
                     imagepng($new_image);
                 } else {
-                    header("Content-Type: image/jpeg");
                     imagejpeg($new_image, null, 100*$this->quality->getValue());
                 }
 
@@ -425,7 +393,8 @@ class Image
     {
         $config = ConfigProvider::getInstance();
 
-        $modified = filemtime($this->source);
+        // TODO: move these HTTP headers to ImageController
+        /*$modified = filemtime($this->source);
 
         header("Last-Modified: ".date("D, d M Y H:i:s", $modified)." GMT");
         header("Cache-Control: max-age=1800");
@@ -436,15 +405,9 @@ class Image
                 header("HTTP/1.1 304 Not Modified");
                 exit;
             }
-        }
+        }*/
 
-        if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
-            header("Content-Type: image/png");
-            readfile($this->filename);
-        } else {
-            header("Content-Type: image/jpeg");
-            readfile($this->filename);
-        }
+        readfile($this->filename);
     }
 
     /**

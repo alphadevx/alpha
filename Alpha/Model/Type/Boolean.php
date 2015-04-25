@@ -84,15 +84,15 @@ class Boolean extends Type implements TypeInterface
 	 */
 	public function __construct($val=true)
 	{
-		if(!Validator::isBoolean($val))
+		if (!Validator::isBoolean($val))
 			throw new IllegalArguementException($this->helper);
 
 		$acceptableTrueValues = array(true, "true", 1, "1");
 
-		if(in_array($val, $acceptableTrueValues, true)) {
+		if (in_array($val, $acceptableTrueValues, true)) {
 			$this->value = 1;
 			$this->booleanValue = true;
-		}else {
+		} else {
 			$this->value = 0;
 			$this->booleanValue = false;
 		}
@@ -107,15 +107,15 @@ class Boolean extends Type implements TypeInterface
 	 */
 	public function setValue($val)
 	{
-		if(!Validator::isBoolean($val))
+		if (!Validator::isBoolean($val))
 			throw new IllegalArguementException($this->helper);
 
 		$acceptableTrueValues = array(true, "true", 1, "1");
 
-		if(in_array($val, $acceptableTrueValues, true)) {
+		if (in_array($val, $acceptableTrueValues, true)) {
 			$this->value = 1;
 			$this->booleanValue = true;
-		}else {
+		} else {
 			$this->value = 0;
 			$this->booleanValue = false;
 		}

@@ -185,12 +185,16 @@ class Request
             $this->host = $overrides['host'];
         elseif (isset($_SERVER['HTTP_HOST']))
             $this->host = $_SERVER['HTTP_HOST'];
+        else
+            $this->host = 'localhost';
 
         // set IP of the client
         if (isset($overrides['IP']))
             $this->IP = $overrides['IP'];
         elseif (isset($_SERVER['REMOTE_ADDR']))
             $this->IP = $_SERVER['REMOTE_ADDR'];
+        else
+            $this->IP = '127.0.0.1';
 
         // set requested URI
         if (isset($overrides['URI']))

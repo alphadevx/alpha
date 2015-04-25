@@ -3,9 +3,14 @@
 namespace Alpha\Controller;
 
 use Alpha\Exception\ResourceNotFoundException;
+use Alpha\Exception\ResourceNotAllowedException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\View\Widget\Image;
+use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
+use Alpha\Model\Type\Boolean;
 
 /**
  *
@@ -80,49 +85,83 @@ class ImageController extends Controller implements ControllerInterface
     /**
      * Handles get requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      * @throws Alpha\Exception\ResourceNotFoundException
+     * @throws Alpha\Exception\ResourceNotAllowedException
      */
-    public function doGet($params)
+    public function doGet($request)
     {
-        self::$logger->debug('>>doGet(params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGet(request=['.var_export($request, true).'])');
+
+        $config = ConfigProvider::getInstance();
+
+        $params = $request->getParams();
 
         try {
-            $imgSource = $params['s'];
-            $imgWidth = $params['w'];
-            $imgHeight = $params['h'];
-            $imgType = $params['t'];
-            $imgQuality = (double)$params['q'];
-            $imgScale = (boolean)$params['sc'];
-            $imgSecure = (boolean)$params['se'];
+            $imgSource = urldecode($params['source']);
+            $imgWidth = $params['width'];
+            $imgHeight = $params['height'];
+            $imgType = $params['type'];
+            $imgQuality = (double)$params['quality'];
+            $imgScale = new Boolean($params['scale']);
+            $imgSecure = new Boolean($params['secure']);
         } catch (\Exception $e) {
             self::$logger->error('Required param missing for ImageController controller['.$e->getMessage().']');
             throw new ResourceNotFoundException('File not found');
         }
 
+        // handle secure tokens
+        if ($imgSecure->getBooleanValue() && $config->get('cms.images.widget.secure')) {
+            $valid = $this->checkSecurityFields();
+
+            // if not valid, just return a blank black image of the same dimensions
+            if (!$valid) {
+                $im  = imagecreatetruecolor($imgWidth, $imgHeight);
+                $bgc = imagecolorallocate($im, 0, 0, 0);
+                imagefilledrectangle($im, 0, 0, $imgWidth, $imgHeight, $bgc);
+
+                if ($imgSource == 'png' && $config->get('cms.images.perserve.png')) {
+                    ob_start();
+                    imagepng($im);
+                    $body = ob_get_contents();
+                    $contentType = 'image/png';
+                    ob_end_clean();
+                } else {
+                    ob_start();
+                    imagejpeg($im);
+                    $body = ob_get_contents();
+                    $contentType = 'image/jpeg';
+                    ob_end_clean();
+                }
+
+                imagedestroy($im);
+
+                self::$logger->warn('The client ['.$request->getUserAgent().'] was blocked from accessing the file ['.$imgSource.'] due to bad security tokens being provided');
+
+                return new Response(200, $body, array('Content-Type' => $contentType));
+            }
+        }
+
         try {
-            $image = new Image($imgSource, $imgWidth, $imgHeight, $imgType, $imgQuality, $imgScale, $imgSecure);
+            $image = new Image($imgSource, $imgWidth, $imgHeight, $imgType, $imgQuality, $imgScale->getBooleanValue(), $imgSecure->getBooleanValue());
+            ob_start();
             $image->renderImage();
+            $body = ob_get_contents();
+            ob_end_clean();
         } catch (IllegalArguementException $e) {
             self::$logger->error($e->getMessage());
             throw new ResourceNotFoundException('File not found');
         }
 
         self::$logger->debug('<<__doGet');
-    }
 
-    /**
-     * Handle POST requests
-     *
-     * @param array $params
-     * @since 1.0
-     */
-    public function doPOST($params)
-    {
-        self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
-
-        self::$logger->debug('<<doPOST');
+        if ($imgSource == 'png' && $config->get('cms.images.perserve.png')) {
+            return new Response(200, $body, array('Content-Type' => 'image/png'));
+        } else {
+            return new Response(200, $body, array('Content-Type' => 'image/jpeg'));
+        }
     }
 }
 

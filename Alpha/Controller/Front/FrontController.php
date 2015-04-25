@@ -25,6 +25,7 @@ use Alpha\Controller\DEnumController;
 use Alpha\Controller\ExcelController;
 use Alpha\Controller\FeedController;
 use Alpha\Controller\GenSecureQueryStringController;
+use Alpha\Controller\ImageController;
 
 /**
  *
@@ -200,6 +201,11 @@ class FrontController
             $controller = new GenSecureQueryStringController();
             return $controller->process($request);
         });
+
+        $this->addRoute('/image/{source}/{width}/{height}/{type}/{quality}/{scale}/{secure}/{var1}/{var2}', function($request) {
+            $controller = new ImageController();
+            return $controller->process($request);
+        })->value('var1', null)->value('var2', null);
 
 		self::$logger->debug('<<__construct');
 	}
