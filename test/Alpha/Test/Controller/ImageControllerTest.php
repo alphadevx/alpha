@@ -4,6 +4,7 @@ namespace Alpha\Test\Controller;
 
 use Alpha\Controller\Front\FrontController;
 use Alpha\Controller\ImageController;
+use Alpha\Controller\Controller;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
@@ -63,6 +64,7 @@ class ImageControllerTest extends \PHPUnit_Framework_TestCase
     {
         $config = ConfigProvider::getInstance();
         $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+        $config->set('cms.images.widget.secure', true);
     }
 
     /**
@@ -82,6 +84,22 @@ class ImageControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('image/jpeg', $response->getHeader('Content-Type'), 'Testing the doGET method');
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/image/'.urlencode($config->get('app.root').'public/images/icons/accept.png').'/16/16/png/0.75/false/true'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+        $this->assertEquals('image/jpeg', $response->getHeader('Content-Type'), 'Testing the doGET method with secure image and no tokens');
+
+        $tokens = Controller::generateSecurityFields();
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/image/'.urlencode($config->get('app.root').'public/images/icons/accept.png').'/16/16/png/0.75/false/true/'.urlencode($tokens[0]).'/'.urlencode($tokens[1])));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+        $this->assertEquals('image/jpeg', $response->getHeader('Content-Type'), 'Testing the doGET method with secure image and valid tokens');
     }
 }
 
