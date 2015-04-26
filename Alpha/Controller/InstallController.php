@@ -4,6 +4,9 @@ namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Model\ActiveRecord;
 use Alpha\Model\Rights;
 use Alpha\Model\Person;
@@ -80,8 +83,11 @@ class InstallController extends Controller implements ControllerInterface
 
         parent::__construct('Public');
 
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
         // if there is nobody logged in, we will send them off to the Login controller to do so before coming back here
-        if (!isset($_SESSION['currentUser'])) {
+        if ($session->get('currentUser') === false) {
             self::$logger->info('Nobody logged in, invoking Login controller...');
 
             require_once $config->get('app.root').'alpha/controller/Login.php';
@@ -108,20 +114,218 @@ class InstallController extends Controller implements ControllerInterface
     /**
      * Handle GET requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doGET($params)
+    public function doGET($request)
     {
-        self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
+
+        $params = $request->getParams();
 
         $config = ConfigProvider::getInstance();
 
-        echo View::displayPageHead($this);
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
 
-        echo '<h1>Installing the '.$config->get('app.title').' application</h1>';
+        $body = View::displayPageHead($this);
 
-        $this->createAppDirectories();
+        $body .= '<h1>Installing the '.$config->get('app.title').' application</h1>';
+
+        // set the umask first before attempt mkdir
+        umask(0);
+
+        /*
+         * Create the logs directory, then instantiate a new logger
+         */
+        try {
+            $logsDir = $config->get('app.file.store.dir').'logs';
+
+            $body = '<p>Attempting to create the logs directory <em>'.$logsDir.'</em>...';
+
+            if (!file_exists($logsDir))
+                mkdir($logsDir, 0774);
+
+            $this->copyRestrictedAccessFileToDirectory($logsDir);
+
+            self::$logger = new Logger('Install');
+            self::$logger->info('Started installation process!');
+            self::$logger->info('Logs directory ['.$logsDir.'] successfully created');
+            $body .= View::displayUpdateMessage('Logs directory ['.$logsDir.'] successfully created');
+        } catch (\Exception $e) {
+            $body .= View::displayErrorMessage($e->getMessage());
+            $body .= View::displayErrorMessage('Aborting.');
+            return new Response(500, $body, array('Content-Type' => $contentType));
+        }
+
+        /*
+         * Create the cron tasks directory
+         */
+        try {
+            $tasksDir = $config->get('app.root').'tasks';
+
+            $body .= '<p>Attempting to create the tasks directory <em>'.$tasksDir.'</em>...';
+
+            if (!file_exists($tasksDir))
+                mkdir($tasksDir, 0774);
+
+            $this->copyRestrictedAccessFileToDirectory($logsDir);
+
+            self::$logger->info('Tasks directory ['.$tasksDir.'] successfully created');
+            $body .= View::displayUpdateMessage('Tasks directory ['.$tasksDir.'] successfully created');
+        } catch (\Exception $e) {
+            $body .= View::displayErrorMessage($e->getMessage());
+            $body .= View::displayErrorMessage('Aborting.');
+            return new Response(500, $body, array('Content-Type' => $contentType));
+        }
+
+        /*
+         * Create the controller directory
+         */
+        try {
+            $controllerDir = $config->get('app.root').'controller';
+
+            $body .= '<p>Attempting to create the controller directory <em>'.$controllerDir.'</em>...';
+
+            if (!file_exists($controllerDir))
+                mkdir($controllerDir, 0774);
+
+            self::$logger->info('Controller directory ['.$controllerDir.'] successfully created');
+            $body .= View::displayUpdateMessage('Controllers directory ['.$controllerDir.'] successfully created');
+        } catch (\Exception $e) {
+            $body .= View::displayErrorMessage($e->getMessage());
+            $body .= View::displayErrorMessage('Aborting.');
+            return new Response(500, $body, array('Content-Type' => $contentType));
+        }
+
+        /*
+         * Create the model directory
+         */
+        try {
+            $modelDir = $config->get('app.root').'model';
+
+            $body .= '<p>Attempting to create the model directory <em>'.$modelDir.'</em>...';
+
+            if (!file_exists($modelDir))
+                mkdir($modelDir, 0774);
+
+            $this->copyRestrictedAccessFileToDirectory($modelDir);
+
+            self::$logger->info('Model directory ['.$modelDir.'] successfully created');
+            $body .= View::displayUpdateMessage('Model directory ['.$modelDir.'] successfully created');
+        } catch (\Exception $e) {
+            $body .= View::displayErrorMessage($e->getMessage());
+            $body .= View::displayErrorMessage('Aborting.');
+            return new Response(500, $body, array('Content-Type' => $contentType));
+        }
+
+        /*
+         * Create the view directory
+         */
+        try {
+            $viewDir = $config->get('app.root').'view';
+
+            $body .= '<p>Attempting to create the view directory <em>'.$viewDir.'</em>...';
+
+            if (!file_exists($viewDir))
+                mkdir($viewDir, 0774);
+
+            $this->copyRestrictedAccessFileToDirectory($viewDir);
+
+            self::$logger->info('View directory ['.$viewDir.'] successfully created');
+            $body .= View::displayUpdateMessage('View directory ['.$viewDir.'] successfully created');
+        } catch (\Exception $e) {
+            $body .= View::displayErrorMessage($e->getMessage());
+            $body .= View::displayErrorMessage('Aborting.');
+            return new Response(500, $body, array('Content-Type' => $contentType));
+        }
+
+        /*
+         * Create the attachments directory
+         */
+        try {
+            $attachmentsDir = $config->get('app.file.store.dir').'attachments';
+
+            $body .= '<p>Attempting to create the attachments directory <em>'.$attachmentsDir.'</em>...';
+
+            if(!file_exists($attachmentsDir))
+                mkdir($attachmentsDir, 0774);
+
+            $this->copyRestrictedAccessFileToDirectory($attachmentsDir);
+
+            self::$logger->info('Attachments directory ['.$attachmentsDir.'] successfully created');
+            $body .= View::displayUpdateMessage('Attachments directory ['.$attachmentsDir.'] successfully created');
+        } catch (\Exception $e) {
+            $body .= View::displayErrorMessage($e->getMessage());
+            $body .= View::displayErrorMessage('Aborting.');
+            return new Response(500, $body, array('Content-Type' => $contentType));
+        }
+
+        /*
+         * Create the cache directory and sub-directories
+         */
+        try {
+            $cacheDir = $config->get('app.file.store.dir').'cache';
+            $htmlDir = $config->get('app.file.store.dir').'cache/html';
+            $imagesDir = $config->get('app.file.store.dir').'cache/images';
+            $pdfDir = $config->get('app.file.store.dir').'cache/pdf';
+            $xlsDir = $config->get('app.file.store.dir').'cache/xls';
+
+            // cache
+            $body .= '<p>Attempting to create the cache directory <em>'.$cacheDir.'</em>...';
+            if (!file_exists($cacheDir))
+                mkdir($cacheDir, 0774);
+
+            $this->copyRestrictedAccessFileToDirectory($cacheDir);
+
+            self::$logger->info('Cache directory ['.$cacheDir.'] successfully created');
+            $body .= View::displayUpdateMessage('Cache directory ['.$cacheDir.'] successfully created');
+
+            // cache/html
+            $body .= '<p>Attempting to create the HTML cache directory <em>'.$htmlDir.'</em>...';
+            if (!file_exists($htmlDir))
+                mkdir($htmlDir, 0774);
+
+            $this->copyRestrictedAccessFileToDirectory($htmlDir);
+
+            self::$logger->info('Cache directory ['.$htmlDir.'] successfully created');
+            $body .= View::displayUpdateMessage('Cache directory ['.$htmlDir.'] successfully created');
+
+            // cache/images
+            $body .= '<p>Attempting to create the cache directory <em>'.$imagesDir.'</em>...';
+            if (!file_exists($imagesDir))
+                mkdir($imagesDir, 0774);
+
+            $this->copyRestrictedAccessFileToDirectory($imagesDir);
+
+            self::$logger->info('Cache directory ['.$imagesDir.'] successfully created');
+            $body .= View::displayUpdateMessage('Cache directory ['.$imagesDir.'] successfully created');
+
+            // cache/pdf
+            $body .= '<p>Attempting to create the cache directory <em>'.$pdfDir.'</em>...';
+            if (!file_exists($pdfDir))
+                mkdir($pdfDir, 0774);
+
+            $this->copyRestrictedAccessFileToDirectory($pdfDir);
+
+            self::$logger->info('Cache directory ['.$pdfDir.'] successfully created');
+            $body .= View::displayUpdateMessage('Cache directory ['.$pdfDir.'] successfully created');
+
+            // cache/xls
+            $body .= '<p>Attempting to create the cache directory <em>'.$xlsDir.'</em>...';
+            if (!file_exists($xlsDir))
+                mkdir($xlsDir, 0774);
+
+            $this->copyRestrictedAccessFileToDirectory($xlsDir);
+
+            self::$logger->info('Cache directory ['.$xlsDir.'] successfully created');
+            $body .= View::displayUpdateMessage('Cache directory ['.$xlsDir.'] successfully created');
+        } catch (\Exception $e) {
+            $body .= View::displayErrorMessage($e->getMessage());
+            $body .= View::displayErrorMessage('Aborting.');
+            return new Response(500, $body, array('Content-Type' => $contentType));
+        }
 
         // start a new database transaction
         ActiveRecord::begin();
@@ -133,7 +337,7 @@ class InstallController extends Controller implements ControllerInterface
         $DEnumItem = new DEnumItem();
 
         try {
-            echo '<p>Attempting to create the DEnum tables...';
+            $body .= '<p>Attempting to create the DEnum tables...';
             if (!$DEnum->checkTableExists())
                 $DEnum->makeTable();
             self::$logger->info('Created the ['.$DEnum->getTableName().'] table successfully');
@@ -150,13 +354,13 @@ class InstallController extends Controller implements ControllerInterface
             $DEnumItem->set('DEnumID', $DEnum->getID());
             $DEnumItem->save();
 
-            echo View::displayUpdateMessage('DEnums set up successfully.');
+            $body .= View::displayUpdateMessage('DEnums set up successfully.');
         } catch (\Exception $e) {
-            echo View::displayErrorMessage($e->getMessage());
-            echo View::displayErrorMessage('Aborting.');
+            $body .= View::displayErrorMessage($e->getMessage());
+            $body .= View::displayErrorMessage('Aborting.');
             self::$logger->error($e->getMessage());
             ActiveRecord::rollback();
-            exit;
+            return new Response(500, $body, array('Content-Type' => $contentType));
         }
 
         /*
@@ -172,7 +376,7 @@ class InstallController extends Controller implements ControllerInterface
 
         foreach ($loadedClasses as $classname) {
             try {
-                echo '<p>Attempting to create the table for the class ['.$classname.']...';
+                $body .= '<p>Attempting to create the table for the class ['.$classname.']...';
 
                 try {
                     $BO = new $classname();
@@ -198,17 +402,17 @@ class InstallController extends Controller implements ControllerInterface
                 }
 
                 self::$logger->info('Created the ['.$BO->getTableName().'] table successfully');
-                echo View::displayUpdateMessage('Created the ['.$BO->getTableName().'] table successfully');
+                $body .= View::displayUpdateMessage('Created the ['.$BO->getTableName().'] table successfully');
             } catch (\Exception $e) {
-                echo View::displayErrorMessage($e->getMessage());
-                echo View::displayErrorMessage('Aborting.');
+                $body .= View::displayErrorMessage($e->getMessage());
+                $body .= View::displayErrorMessage('Aborting.');
                 self::$logger->error($e->getMessage());
                 ActiveRecord::rollback();
-                exit;
+                return new Response(500, $body, array('Content-Type' => $contentType));
             }
         }
 
-        echo View::displayUpdateMessage('All business object tables created successfully!');
+        $body .= View::displayUpdateMessage('All business object tables created successfully!');
 
         /*
          * Create the Admin and Standard groups
@@ -220,12 +424,12 @@ class InstallController extends Controller implements ControllerInterface
 
         try {
             try {
-                echo '<p>Attempting to create the Admin and Standard groups...';
+                $body .= '<p>Attempting to create the Admin and Standard groups...';
                 $adminGroup->save();
                 $standardGroup->save();
 
                 self::$logger->info('Created the Admin and Standard rights groups successfully');
-                echo View::displayUpdateMessage('Created the Admin and Standard rights groups successfully');
+                $body .= View::displayUpdateMessage('Created the Admin and Standard rights groups successfully');
             } catch (FailedIndexCreateException $eice) {
                 // this are safe to ignore for now as they will be auto-created later once all of the tables are in place
                 self::$logger->warn($eice->getMessage());
@@ -234,11 +438,11 @@ class InstallController extends Controller implements ControllerInterface
                 self::$logger->warn($elce->getMessage());
             }
         } catch (\Exception $e) {
-            echo View::displayErrorMessage($e->getMessage());
-            echo View::displayErrorMessage('Aborting.');
+            $body .= View::displayErrorMessage($e->getMessage());
+            $body .= View::displayErrorMessage('Aborting.');
             self::$logger->error($e->getMessage());
             ActiveRecord::rollback();
-            exit;
+            return new Response(500, $body, array('Content-Type' => $contentType));
         }
 
         /*
@@ -246,13 +450,13 @@ class InstallController extends Controller implements ControllerInterface
          */
         try {
             try {
-                echo '<p>Attempting to save the Admin account...';
+                $body .= '<p>Attempting to save the Admin account...';
                 $admin = new Person();
                 $admin->set('displayName', 'Admin');
-                $admin->set('email', $_SESSION['currentUser']->get('email'));
-                $admin->set('password', $_SESSION['currentUser']->get('password'));
+                $admin->set('email', $session->get('currentUser')->get('email'));
+                $admin->set('password', $session->get('currentUser')->get('password'));
                 $admin->save();
-                self::$logger->info('Created the admin user account ['.$_SESSION['currentUser']->get('email').'] successfully');
+                self::$logger->info('Created the admin user account ['.$session->get('currentUser')->get('email').'] successfully');
 
                 $adminGroup->loadByAttribute('name', 'Admin');
 
@@ -261,7 +465,7 @@ class InstallController extends Controller implements ControllerInterface
                 $lookup->save();
 
                 self::$logger->info('Added the admin account to the Admin group successfully');
-                echo View::displayUpdateMessage('Added the admin account to the Admin group successfully');
+                $body .= View::displayUpdateMessage('Added the admin account to the Admin group successfully');
             } catch (FailedIndexCreateException $eice) {
                 // this are safe to ignore for now as they will be auto-created later once all of the tables are in place
                 self::$logger->warn($eice->getMessage());
@@ -270,15 +474,15 @@ class InstallController extends Controller implements ControllerInterface
                 self::$logger->warn($elce->getMessage());
             }
         } catch (\Exception $e) {
-            echo View::displayErrorMessage($e->getMessage());
-            echo View::displayErrorMessage('Aborting.');
+            $body .= View::displayErrorMessage($e->getMessage());
+            $body .= View::displayErrorMessage('Aborting.');
             self::$logger->error($e->getMessage());
             ActiveRecord::rollback();
-            exit;
+            return new Response(500, $body, array('Content-Type' => $contentType));
         }
 
-        echo '<br><p align="center"><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Administration Home Page</a></p><br>';
-        echo View::displayPageFoot($this);
+        $body .= '<br><p align="center"><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Administration Home Page</a></p><br>';
+        $body .= View::displayPageFoot($this);
 
         // commit
         ActiveRecord::commit();
@@ -286,6 +490,7 @@ class InstallController extends Controller implements ControllerInterface
         self::$logger->info('Finished installation!');
         self::$logger->action('Installed the application');
         self::$logger->debug('<<doGET');
+        return new Response(200, $body, array('Content-Type' => $contentType));
     }
 
     /**
@@ -302,223 +507,6 @@ class InstallController extends Controller implements ControllerInterface
     }
 
     /**
-     * Creates the standard application directories
-     *
-     * @since 1.0
-     */
-    private function createAppDirectories()
-    {
-        $config = ConfigProvider::getInstance();
-
-        // set the umask first before attempt mkdir
-        umask(0);
-
-        /*
-         * Create the logs directory, then instantiate a new logger
-         */
-        try {
-            $logsDir = $config->get('app.file.store.dir').'logs';
-
-            echo '<p>Attempting to create the logs directory <em>'.$logsDir.'</em>...';
-
-            if (!file_exists($logsDir))
-                mkdir($logsDir, 0774);
-
-            $this->copyRestrictedAccessFileToDirectory($logsDir);
-
-            self::$logger = new Logger('Install');
-            self::$logger->info('Started installation process!');
-            self::$logger->info('Logs directory ['.$logsDir.'] successfully created');
-            echo View::displayUpdateMessage('Logs directory ['.$logsDir.'] successfully created');
-        } catch (\Exception $e) {
-            echo View::displayErrorMessage($e->getMessage());
-            echo View::displayErrorMessage('Aborting.');
-            exit;
-        }
-
-        /*
-         * Create the cron tasks directory
-         */
-        try {
-            $tasksDir = $config->get('app.root').'tasks';
-
-            echo '<p>Attempting to create the tasks directory <em>'.$tasksDir.'</em>...';
-
-            if (!file_exists($tasksDir))
-                mkdir($tasksDir, 0774);
-
-            $this->copyRestrictedAccessFileToDirectory($logsDir);
-
-            self::$logger->info('Tasks directory ['.$tasksDir.'] successfully created');
-            echo View::displayUpdateMessage('Tasks directory ['.$tasksDir.'] successfully created');
-        } catch (\Exception $e) {
-            echo View::displayErrorMessage($e->getMessage());
-            echo View::displayErrorMessage('Aborting.');
-            exit;
-        }
-
-        /*
-         * Create the controller directory
-         */
-        try {
-            $controllerDir = $config->get('app.root').'controller';
-
-            echo '<p>Attempting to create the controller directory <em>'.$controllerDir.'</em>...';
-
-            if (!file_exists($controllerDir))
-                mkdir($controllerDir, 0774);
-
-            self::$logger->info('Controller directory ['.$controllerDir.'] successfully created');
-            echo View::displayUpdateMessage('Controllers directory ['.$controllerDir.'] successfully created');
-        } catch (\Exception $e) {
-            echo View::displayErrorMessage($e->getMessage());
-            echo View::displayErrorMessage('Aborting.');
-            exit;
-        }
-
-        /*
-         * Create the model directory
-         */
-        try {
-            $modelDir = $config->get('app.root').'model';
-
-            echo '<p>Attempting to create the model directory <em>'.$modelDir.'</em>...';
-
-            if (!file_exists($modelDir))
-                mkdir($modelDir, 0774);
-
-            $this->copyRestrictedAccessFileToDirectory($modelDir);
-
-            self::$logger->info('Model directory ['.$modelDir.'] successfully created');
-            echo View::displayUpdateMessage('Model directory ['.$modelDir.'] successfully created');
-        } catch (\Exception $e) {
-            echo View::displayErrorMessage($e->getMessage());
-            echo View::displayErrorMessage('Aborting.');
-            exit;
-        }
-
-        /*
-         * Create the view directory
-         */
-        try {
-            $viewDir = $config->get('app.root').'view';
-
-            echo '<p>Attempting to create the view directory <em>'.$viewDir.'</em>...';
-
-            if (!file_exists($viewDir))
-                mkdir($viewDir, 0774);
-
-            $this->copyRestrictedAccessFileToDirectory($viewDir);
-
-            self::$logger->info('View directory ['.$viewDir.'] successfully created');
-            echo View::displayUpdateMessage('View directory ['.$viewDir.'] successfully created');
-        } catch (\Exception $e) {
-            echo View::displayErrorMessage($e->getMessage());
-            echo View::displayErrorMessage('Aborting.');
-            exit;
-        }
-
-        /*
-         * Create the attachments directory
-         */
-        try {
-            $attachmentsDir = $config->get('app.file.store.dir').'attachments';
-
-            echo '<p>Attempting to create the attachments directory <em>'.$attachmentsDir.'</em>...';
-
-            if(!file_exists($attachmentsDir))
-                mkdir($attachmentsDir, 0774);
-
-            $this->copyRestrictedAccessFileToDirectory($attachmentsDir);
-
-            self::$logger->info('Attachments directory ['.$attachmentsDir.'] successfully created');
-            echo View::displayUpdateMessage('Attachments directory ['.$attachmentsDir.'] successfully created');
-        } catch (\Exception $e) {
-            echo View::displayErrorMessage($e->getMessage());
-            echo View::displayErrorMessage('Aborting.');
-            exit;
-        }
-
-        /*
-         * Create the cache directory and sub-directories
-         */
-        try {
-            $cacheDir = $config->get('app.file.store.dir').'cache';
-            $htmlDir = $config->get('app.file.store.dir').'cache/html';
-            $imagesDir = $config->get('app.file.store.dir').'cache/images';
-            $pdfDir = $config->get('app.file.store.dir').'cache/pdf';
-            $xlsDir = $config->get('app.file.store.dir').'cache/xls';
-
-            // cache
-            echo '<p>Attempting to create the cache directory <em>'.$cacheDir.'</em>...';
-            if (!file_exists($cacheDir))
-                mkdir($cacheDir, 0774);
-
-            $this->copyRestrictedAccessFileToDirectory($cacheDir);
-
-            self::$logger->info('Cache directory ['.$cacheDir.'] successfully created');
-            echo View::displayUpdateMessage('Cache directory ['.$cacheDir.'] successfully created');
-
-            // cache/html
-            echo '<p>Attempting to create the HTML cache directory <em>'.$htmlDir.'</em>...';
-            if (!file_exists($htmlDir))
-                mkdir($htmlDir, 0774);
-
-            $this->copyRestrictedAccessFileToDirectory($htmlDir);
-
-            self::$logger->info('Cache directory ['.$htmlDir.'] successfully created');
-            echo View::displayUpdateMessage('Cache directory ['.$htmlDir.'] successfully created');
-
-            // cache/images
-            echo '<p>Attempting to create the cache directory <em>'.$imagesDir.'</em>...';
-            if (!file_exists($imagesDir))
-                mkdir($imagesDir, 0774);
-
-            $this->copyRestrictedAccessFileToDirectory($imagesDir);
-
-            self::$logger->info('Cache directory ['.$imagesDir.'] successfully created');
-            echo View::displayUpdateMessage('Cache directory ['.$imagesDir.'] successfully created');
-
-            // cache/pdf
-            echo '<p>Attempting to create the cache directory <em>'.$pdfDir.'</em>...';
-            if (!file_exists($pdfDir))
-                mkdir($pdfDir, 0774);
-
-            $this->copyRestrictedAccessFileToDirectory($pdfDir);
-
-            self::$logger->info('Cache directory ['.$pdfDir.'] successfully created');
-            echo View::displayUpdateMessage('Cache directory ['.$pdfDir.'] successfully created');
-
-            // cache/xls
-            echo '<p>Attempting to create the cache directory <em>'.$xlsDir.'</em>...';
-            if (!file_exists($xlsDir))
-                mkdir($xlsDir, 0774);
-
-            $this->copyRestrictedAccessFileToDirectory($xlsDir);
-
-            self::$logger->info('Cache directory ['.$xlsDir.'] successfully created');
-            echo View::displayUpdateMessage('Cache directory ['.$xlsDir.'] successfully created');
-        } catch (\Exception $e) {
-            echo View::displayErrorMessage($e->getMessage());
-            echo View::displayErrorMessage('Aborting.');
-            exit;
-        }
-    }
-
-    /**
-     * Handle POST requests
-     *
-     * @param array $params
-     * @since 1.0
-     */
-    public function doPOST($params)
-    {
-        self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
-
-        self::$logger->debug('<<doPOST');
-    }
-
-    /**
      * Custom version of the check rights method that only checks for a session for the config admin username/password,
      * when the system database is not set-up
      *
@@ -530,6 +518,8 @@ class InstallController extends Controller implements ControllerInterface
         self::$logger->debug('>>checkRights()');
 
         $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
 
         if ($this->getVisibility() == 'Public') {
             self::$logger->debug('<<checkRights [true]');
@@ -542,8 +532,8 @@ class InstallController extends Controller implements ControllerInterface
         }
 
         // the person is logged in?
-        if (isset($_SESSION['currentUser'])) {
-            if ($_SESSION['currentUser']->get('email') == $config->get('app.install.username')) {
+        if ($session->get('currentUser') !== false) {
+            if ($session->get('currentUser')->get('email') == $config->get('app.install.username')) {
                 self::$logger->debug('<<checkRights [true]');
                 return true;
             }
