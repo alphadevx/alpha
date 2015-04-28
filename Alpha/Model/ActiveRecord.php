@@ -1716,7 +1716,8 @@ abstract class ActiveRecord
 	    	if (preg_match("/.php/", $file)) {
 	    		$classname = mb_substr($file, 0, -4);
 
-	    		array_push($classNameArray, 'Alpha\\Model\\'.$classname);
+                if (substr($classname, 0, 12) != 'ActiveRecord')
+	    		    array_push($classNameArray, 'Alpha\\Model\\'.$classname);
 	    	}
 	    }
 
