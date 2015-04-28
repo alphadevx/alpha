@@ -26,6 +26,7 @@ use Alpha\Controller\ExcelController;
 use Alpha\Controller\FeedController;
 use Alpha\Controller\GenSecureQueryStringController;
 use Alpha\Controller\ImageController;
+use Alpha\Controller\ListActiveRecordsController;
 
 /**
  *
@@ -206,6 +207,11 @@ class FrontController
             $controller = new ImageController();
             return $controller->process($request);
         })->value('var1', null)->value('var2', null);
+
+        $this->addRoute('/listactiverecords', function($request) {
+            $controller = new ListActiveRecordsController();
+            return $controller->process($request);
+        });
 
 		self::$logger->debug('<<__construct');
 	}

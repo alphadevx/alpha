@@ -4,6 +4,8 @@ namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
 use Alpha\View\View;
 use Alpha\Exception\SecurityException;
 use Alpha\Exception\AlphaException;
@@ -88,20 +90,22 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
     /**
      * Handle GET requests
      *
-     * @param array $params
+     * @param alpha\Util\Http\Request $request
+     * @return alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doGET($params)
+    public function doGET($request)
     {
-        self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
-        echo View::displayPageHead($this);
+        $body = View::displayPageHead($this);
 
-        $this->displayBodyContent();
+        $body .= $this->displayBodyContent();
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
@@ -207,47 +211,45 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
     }
 
     /**
-     * Private method to display the main body HTML for this page
+     * Private method to generate the main body HTML for this page
      *
      * @since 1.0
+     * @return string
      */
     private function displayBodyContent()
     {
         $classNames = ActiveRecord::getBOClassNames();
-        $loadedClasses = array();
 
-        foreach ($classNames as $classname) {
-            ActiveRecord::loadClassDef($classname);
-            array_push($loadedClasses, $classname);
-        }
+        $body = '';
 
-        foreach($loadedClasses as $classname)
-        {
+        foreach($classNames as $className) {
             try {
-                $BO = new $classname();
-                $BO_View = View::getInstance($BO);
-                $BO_View->adminView();
+                $activeRecord = new $className();
+                $view = View::getInstance($activeRecord);
+                $body .= $view->adminView();
             } catch (AlphaException $e) {
                 self::$logger->error("[$classname]:".$e->getMessage());
                 // its possible that the exception occured due to the table schema being out of date
-                if ($BO->checkTableExists() && $BO->checkTableNeedsUpdate()) {
-                    $missingFields = $BO->findMissingFields();
+                if ($activeRecord->checkTableExists() && $activeRecord->checkTableNeedsUpdate()) {
+                    $missingFields = $activeRecord->findMissingFields();
 
                     $count = count($missingFields);
 
                     for($i = 0; $i < $count; $i++)
-                        $BO->addProperty($missingFields[$i]);
+                        $activeRecord->addProperty($missingFields[$i]);
 
                     // now try again...
-                    $BO = new $classname();
-                    $BO_View = View::getInstance($BO);
-                    $BO_View->adminView();
+                    $activeRecord = new $className();
+                    $view = View::getInstance($activeRecord);
+                    $body .= $view->adminView();
                 }
             } catch (\Exception $e) {
                 self::$logger->error($e->getMessage());
-                echo View::displayErrorMessage('Error accessing the class ['.$classname.'], check the log!');
+                $body .= View::displayErrorMessage('Error accessing the class ['.$classname.'], check the log!');
             }
         }
+
+        return $body;
     }
 
     /**
