@@ -3,6 +3,7 @@
 namespace Alpha\Model;
 
 use Alpha\Model\Type\String;
+use Alpha\Util\Logging\Logger;
 
 /**
  *
