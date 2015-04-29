@@ -111,16 +111,19 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
     /**
      * Handle POST requests
      *
-     * @param array $params
+     * @param alpha\Util\Http\Request $request
+     * @return alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doPOST($params)
+    public function doPOST($request)
     {
-        self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
+
+        $params = $request->getParams();
 
         $config = ConfigProvider::getInstance();
 
-        echo View::displayPageHead($this);
+        $body = View::displayPageHead($this);
 
         try {
             // check the hidden security fields before accepting the form POST data
@@ -137,10 +140,10 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
 
                     self::$logger->action('Created the table for class '.$classname);
 
-                    echo View::displayUpdateMessage('The table for the class '.$classname.' has been successfully created.');
+                    $body .= View::displayUpdateMessage('The table for the class '.$classname.' has been successfully created.');
                 } catch (AlphaException $e) {
                     self::$logger->error($e->getMessage());
-                    echo View::displayErrorMessage('Error creating the table for the class '.$classname.', check the log!');
+                    $body .= View::displayErrorMessage('Error creating the table for the class '.$classname.', check the log!');
                 }
             }
 
@@ -154,10 +157,10 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
 
                     self::$logger->action('Created the history table for class '.$classname);
 
-                    echo View::displayUpdateMessage('The history table for the class '.$classname.' has been successfully created.');
+                    $body .= View::displayUpdateMessage('The history table for the class '.$classname.' has been successfully created.');
                 } catch (AlphaException $e) {
                     self::$logger->error($e->getMessage());
-                    echo View::displayErrorMessage('Error creating the history table for the class '.$classname.', check the log!');
+                    $body .= View::displayErrorMessage('Error creating the history table for the class '.$classname.', check the log!');
                 }
             }
 
@@ -170,10 +173,10 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
 
                     self::$logger->action('Recreated the table for class '.$classname);
 
-                    echo View::displayUpdateMessage('The table for the class '.$classname.' has been successfully recreated.');
+                    $body .= View::displayUpdateMessage('The table for the class '.$classname.' has been successfully recreated.');
                 } catch (AlphaException $e) {
                     self::$logger->error($e->getMessage());
-                    echo View::displayErrorMessage('Error recreating the table for the class '.$classname.', check the log!');
+                    $body .= View::displayErrorMessage('Error recreating the table for the class '.$classname.', check the log!');
                 }
             }
 
@@ -192,22 +195,23 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
 
                     self::$logger->action('Updated the table for class '.$classname);
 
-                    echo View::displayUpdateMessage('The table for the class '.$classname.' has been successfully updated.');
+                    $body .= View::displayUpdateMessage('The table for the class '.$classname.' has been successfully updated.');
                 } catch (AlphaException $e) {
                     self::$logger->error($e->getMessage());
-                    echo View::displayErrorMessage('Error updating the table for the class '.$classname.', check the log!');
+                    $body .= View::displayErrorMessage('Error updating the table for the class '.$classname.', check the log!');
                 }
             }
         } catch (SecurityException $e) {
-            echo View::displayErrorMessage($e->getMessage());
+            $body .= View::displayErrorMessage($e->getMessage());
             self::$logger->warn($e->getMessage());
         }
 
-        $this->displayBodyContent();
+        $body .= $this->displayBodyContent();
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doPOST');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
