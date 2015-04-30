@@ -27,6 +27,7 @@ use Alpha\Controller\FeedController;
 use Alpha\Controller\GenSecureQueryStringController;
 use Alpha\Controller\ImageController;
 use Alpha\Controller\ListActiveRecordsController;
+use Alpha\Controller\ListController;
 
 /**
  *
@@ -212,6 +213,11 @@ class FrontController
             $controller = new ListActiveRecordsController();
             return $controller->process($request);
         });
+        
+        $this->addRoute('/listall/{ActiveRecordType}/{start}/{limit}', function($request) {
+            $controller = new ListController();
+            return $controller->process($request);
+        })->value('start', 0)->value('limit', $config->get('app.list.page.amount'));
 
 		self::$logger->debug('<<__construct');
 	}
