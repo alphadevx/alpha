@@ -7,11 +7,13 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Helper\Validator;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\View\View;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\SecurityException;
 use Alpha\Exception\AlphaException;
 use Alpha\Controller\Front\FrontController;
+use Alpha\Model\ActiveRecord;
 
 /**
  *
@@ -192,7 +194,7 @@ class ListController extends Controller implements ControllerInterface
             if ($this->getCustomControllerName($BOname, 'list') != null)
                 $this->loadCustomController($BOname, 'list');
 
-            $className = "Alpha\\Model\\$ActiveRecordType";
+            $className = 'Alpha\Model\\'.$this->BOname;
             if (class_exists($className))
                 $this->BO = new $className();
             else
@@ -416,7 +418,8 @@ class ListController extends Controller implements ControllerInterface
         $body = '';
 
         // get all of the BOs and invoke the listView on each one
-        $temp = new $this->BOname;
+        $className = 'Alpha\Model\\'.$this->BOname;
+        $temp = new $className;
 
         if (isset($this->filterField) && isset($this->filterValue)) {
             if (isset($this->sort) && isset($this->order)) {
@@ -438,7 +441,7 @@ class ListController extends Controller implements ControllerInterface
 
         ActiveRecord::disconnect();
 
-        $body .= View::renderDeleteForm();
+        $body .= View::renderDeleteForm($this->request->getURI());
 
         foreach ($objects as $object) {
             $temp = View::getInstance($object);

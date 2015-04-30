@@ -105,9 +105,9 @@ class ListControllerTest extends \PHPUnit_Framework_TestCase
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
 
-        $person1 = $this->createPersonObject('person one');
+        $person1 = $this->createPersonObject('person-one');
         $person1->save();
-        $person2 = $this->createPersonObject('person two');
+        $person2 = $this->createPersonObject('person-two');
         $person2->save();
 
         $front = new FrontController();

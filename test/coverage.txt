@@ -1,12 +1,12 @@
 
 
 Code Coverage Report:        
-  2015-04-28 21:57:43        
+  2015-04-30 22:48:01        
                              
  Summary:                    
   Classes: 22.22% (18/81)    
-  Methods: 51.68% (354/685)  
-  Lines:   64.39% (4935/7664)
+  Methods: 51.82% (355/685)  
+  Lines:   65.64% (5041/7680)
 
 \Alpha\Controller::ArticleController
   Methods:  30.00% ( 3/10)   Lines:  69.34% (285/411)
@@ -31,11 +31,11 @@ Code Coverage Report:
 \Alpha\Controller::ImageController
   Methods:  50.00% ( 1/ 2)   Lines:  76.92% ( 40/ 52)
 \Alpha\Controller::ListActiveRecordsController
-  Methods:  60.00% ( 3/ 5)   Lines:  26.53% ( 26/ 98)
+  Methods:  60.00% ( 3/ 5)   Lines:  26.26% ( 26/ 99)
 \Alpha\Controller::ListController
-  Methods:  37.50% ( 3/ 8)   Lines:  25.00% ( 39/156)
+  Methods:  37.50% ( 3/ 8)   Lines:  49.40% ( 83/168)
 \Alpha\Controller\Front::FrontController
-  Methods:  75.00% (12/16)   Lines:  86.51% (109/126)
+  Methods:  75.00% (12/16)   Lines:  86.82% (112/129)
 \Alpha\Exception::AlphaException
   Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  4/  4)
 \Alpha\Model::ActionLog
@@ -153,11 +153,11 @@ Code Coverage Report:
 \Alpha\View::DEnumView
   Methods:  50.00% ( 1/ 2)   Lines:  94.44% ( 68/ 72)
 \Alpha\View::View
-  Methods:  46.43% (13/28)   Lines:  67.32% (173/257)
+  Methods:  50.00% (14/28)   Lines:  70.82% (182/257)
 \Alpha\View\Renderer::RendererProviderFactory
   Methods:   0.00% ( 0/ 1)   Lines:  89.47% ( 17/ 19)
 \Alpha\View\Renderer\Html::RendererProviderHTML
-  Methods:  37.50% ( 9/24)   Lines:  34.50% (187/542)
+  Methods:  37.50% ( 9/24)   Lines:  43.73% (237/542)
 \Alpha\View\Widget::Button
   Methods:  50.00% ( 1/ 2)   Lines:  75.86% ( 22/ 29)
 \Alpha\View\Widget::Image
