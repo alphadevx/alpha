@@ -5,6 +5,8 @@ namespace Alpha\Controller;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Helper\Validator;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
 use Alpha\View\View;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\SecurityException;
@@ -13,7 +15,7 @@ use Alpha\Controller\Front\FrontController;
 
 /**
  *
- * Controller used to list a BO, which must be supplied in GET vars
+ * Controller used to list an active record, the classname for which must be supplied in GET vars
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
@@ -150,22 +152,26 @@ class ListController extends Controller implements ControllerInterface
     /**
      * Handle GET requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doGET($params)
+    public function doGET($request)
     {
-        self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
+
+        $params = $request->getParams();
+
+        $body = '';
 
         try{
-            // load the business object (BO) definition
-            if (isset($params['bo'])) {
-                $BOname = $params['bo'];
+            if (isset($params['ActiveRecordType'])) {
+                $BOname = $params['ActiveRecordType'];
                 $this->BOname = $BOname;
             } elseif (isset($this->BOname)) {
                 $BOname = $this->BOname;
             } else {
-                throw new IllegalArguementException('No BO available to list!');
+                throw new IllegalArguementException('No ActiveRecordType available to list!');
             }
 
             if (isset($params['order'])) {
@@ -178,38 +184,49 @@ class ListController extends Controller implements ControllerInterface
             if (isset($params['sort']))
                 $this->sort = $params['sort'];
 
-            ActiveRecord::loadClassDef($BOname);
-
             /*
-             *  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
+             * Check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
+             *
+             * TODO: do we still want to do this?
              */
             if ($this->getCustomControllerName($BOname, 'list') != null)
                 $this->loadCustomController($BOname, 'list');
 
-            $this->BO = new $BOname();
+            $className = "Alpha\\Model\\$ActiveRecordType";
+            if (class_exists($className))
+                $this->BO = new $className();
+            else
+                throw new IllegalArguementException('No ActiveRecord available to create!');
+
             $this->BOView = View::getInstance($this->BO);
 
-            echo View::displayPageHead($this);
+            $body .= View::displayPageHead($this);
         } catch (IllegalArguementException $e) {
             self::$logger->error($e->getMessage());
         }
 
-        $this->displayBodyContent();
+        $body .= $this->renderBodyContent();
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
      * Handle POST requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doPOST($params)
+    public function doPOST($request)
     {
-        self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
+
+        $params = $request->getParams();
+
+        $body = '';
 
         try{
             // check the hidden security fields before accepting the form POST data
@@ -218,14 +235,13 @@ class ListController extends Controller implements ControllerInterface
                 self::$logger->debug('<<doPOST');
             }
 
-            // load the business object (BO) definition
-            if (isset($params['bo'])) {
-                $BOname = $params['bo'];
+            if (isset($params['ActiveRecordType'])) {
+                $BOname = $params['ActiveRecordType'];
                 $this->BOname = $BOname;
             } elseif (isset($this->BOname)) {
                 $BOname = $this->BOname;
             } else {
-                throw new IllegalArguementException('No BO available to list!');
+                throw new IllegalArguementException('No ActiveRecordType available to list!');
             }
 
             if (isset($params['order'])) {
@@ -238,17 +254,19 @@ class ListController extends Controller implements ControllerInterface
             if (isset($params['sort']))
                 $this->sort = $params['sort'];
 
-            ActiveRecord::loadClassDef($BOname);
+            $className = "Alpha\\Model\\$ActiveRecordType";
+            if (class_exists($className))
+                $this->BO = new $className();
+            else
+                throw new IllegalArguementException('No ActiveRecord available to create!');
 
-            $this->BO = new $BOname();
-            $this->BOname = $BOname;
             $this->BOView = View::getInstance($this->BO);
 
-            echo View::displayPageHead($this);
+            $body .= View::displayPageHead($this);
 
             if (!empty($params['deleteOID'])) {
                 if( !Validator::isInteger($params['deleteOID']))
-                        throw new IllegalArguementException('Invalid deleteOID ['.$params['deleteOID'].'] provided on the request!');
+                    throw new IllegalArguementException('Invalid deleteOID ['.$params['deleteOID'].'] provided on the request!');
 
                 try {
                     $temp = new $BOname();
@@ -259,28 +277,29 @@ class ListController extends Controller implements ControllerInterface
                     self::$logger->action('Deleted an instance of '.$BOname.' with id '.$params['deleteOID']);
                     ActiveRecord::commit();
 
-                    echo View::displayUpdateMessage($BOname.' '.$params['deleteOID'].' deleted successfully.');
+                    $body .= View::displayUpdateMessage($BOname.' '.$params['deleteOID'].' deleted successfully.');
 
                     $this->displayBodyContent();
                 } catch (AlphaException $e) {
                     self::$logger->error($e->getMessage());
-                    echo View::displayErrorMessage('Error deleting the BO of OID ['.$params['deleteOID'].'], check the log!');
+                    $body .= View::displayErrorMessage('Error deleting the BO of OID ['.$params['deleteOID'].'], check the log!');
                     ActiveRecord::rollback();
                 }
 
                 ActiveRecord::disconnect();
             }
         } catch (SecurityException $e) {
-            echo View::displayErrorMessage($e->getMessage());
+            $body .= View::displayErrorMessage($e->getMessage());
             self::$logger->warn($e->getMessage());
         } catch (IllegalArguementException $e) {
-            echo View::displayErrorMessage($e->getMessage());
+            $body .= View::displayErrorMessage($e->getMessage());
             self::$logger->error($e->getMessage());
         }
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doPOST');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
@@ -321,6 +340,7 @@ class ListController extends Controller implements ControllerInterface
      *
      * @return string
      * @since 1.0
+     * @todo review how the links are generated
      */
     protected function renderPageLinks()
     {
@@ -343,10 +363,10 @@ class ListController extends Controller implements ControllerInterface
 
         if ($this->startPoint > 1) {
             // handle secure URLs
-            if (isset($_GET['tk']))
+            if ($this->request->getParam('tk', null) != null)
                 $html .= '<li><a href="'.FrontController::generateSecureURL('act=ListController&bo='.$this->BOname.'&start='.($this->startPoint-$config->get('app.list.page.amount'))).'">&lt;&lt;-Previous</a></li>';
             else
-                $html .= '<li><a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($this->startPoint-$config->get('app.list.page.amount')).'">&lt;&lt;-Previous</a></li>';
+                $html .= '<li><a href="/listall?bo='.$this->BOname."&start=".($this->startPoint-$config->get('app.list.page.amount')).'">&lt;&lt;-Previous</a></li>';
         } elseif ($this->BOCount > $config->get('app.list.page.amount')){
             $html .= '<li class="disabled"><a href="#">&lt;&lt;-Previous</a></li>';
         }
@@ -354,24 +374,25 @@ class ListController extends Controller implements ControllerInterface
         $page = 1;
 
         for ($i = 0; $i < $this->BOCount; $i+=$config->get('app.list.page.amount')) {
-            if($i != ($this->startPoint-1)) {
+            if ($i != ($this->startPoint-1)) {
                 // handle secure URLs
-                if(isset($_GET['tk']))
+                if ($this->request->getParam('tk', null) != null)
                     $html .= '<li><a href="'.FrontController::generateSecureURL('act=ListController&bo='.$this->BOname.'&start='.($i+1)).'">'.$page.'</a></li>';
                 else
-                    $html .= '<li><a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($i+1).'">'.$page.'</a></li>';
-            }elseif($this->BOCount > $config->get('app.list.page.amount')){
+                    $html .= '<li><a href="/listall?bo='.$this->BOname."&start=".($i+1).'">'.$page.'</a></li>';
+            } elseif ($this->BOCount > $config->get('app.list.page.amount')){
                 $html .= '<li class="active"><a href="#">'.$page.'</a></li>';
             }
+
             $page++;
         }
 
         if ($this->BOCount > $end) {
             // handle secure URLs
-            if(isset($_GET['tk']))
+            if ($this->request->getParam('tk', null) != null)
                 $html .= '<li><a href="'.FrontController::generateSecureURL('act=ListController&bo='.$this->BOname.'&start='.($this->startPoint+$config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a></li>';
             else
-                $html .= '<li><a href="'.$_SERVER["PHP_SELF"].'?bo='.$this->BOname."&start=".($this->startPoint+$config->get('app.list.page.amount')).
+                $html .= '<li><a href="/listall?bo='.$this->BOname."&start=".($this->startPoint+$config->get('app.list.page.amount')).
                     '">Next-&gt;&gt;</a></li>';
         } elseif ($this->BOCount > $config->get('app.list.page.amount')){
             $html .= '<li class="disabled"><a href="#">Next-&gt;&gt;</a></li>';
@@ -385,11 +406,14 @@ class ListController extends Controller implements ControllerInterface
     /**
      * Method to display the main body HTML for this page
      *
+     * @return string
      * @since 1.0
      */
-    protected function displayBodyContent()
+    protected function renderBodyContent()
     {
         $config = ConfigProvider::getInstance();
+
+        $body = '';
 
         // get all of the BOs and invoke the listView on each one
         $temp = new $this->BOname;
@@ -414,12 +438,14 @@ class ListController extends Controller implements ControllerInterface
 
         ActiveRecord::disconnect();
 
-        echo View::renderDeleteForm();
+        $body .= View::renderDeleteForm();
 
         foreach ($objects as $object) {
             $temp = View::getInstance($object);
-            $temp->listView();
+            $body .= $temp->listView();
         }
+
+        return $body;
     }
 
     /**
@@ -430,12 +456,13 @@ class ListController extends Controller implements ControllerInterface
      */
     public function after_displayPageHead_callback()
     {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
         $menu = '';
-
-        if (isset($_SESSION['currentUser']) && ActiveRecord::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+        if ($session->get('currentUser') !== false && ActiveRecord::isInstalled() && $session->get('currentUser')->inGroup('Admin') && mb_strpos($this->request->getURI()) !== false) {
             $menu .= View::loadTemplateFragment('html', 'adminmenu.phtml', array());
         }
-
         return $menu;
     }
 }
