@@ -256,22 +256,22 @@ class ListController extends Controller implements ControllerInterface
             if (isset($params['sort']))
                 $this->sort = $params['sort'];
 
-            $className = "Alpha\\Model\\$ActiveRecordType";
+            $className = "Alpha\\Model\\".$this->BOname;
             if (class_exists($className))
                 $this->BO = new $className();
             else
-                throw new IllegalArguementException('No ActiveRecord available to create!');
+                throw new IllegalArguementException('No ActiveRecord available to list!');
 
             $this->BOView = View::getInstance($this->BO);
 
             $body .= View::displayPageHead($this);
 
             if (!empty($params['deleteOID'])) {
-                if( !Validator::isInteger($params['deleteOID']))
+                if (!Validator::isInteger($params['deleteOID']))
                     throw new IllegalArguementException('Invalid deleteOID ['.$params['deleteOID'].'] provided on the request!');
 
                 try {
-                    $temp = new $BOname();
+                    $temp = new $className();
                     $temp->load($params['deleteOID']);
 
                     ActiveRecord::begin();
@@ -281,7 +281,7 @@ class ListController extends Controller implements ControllerInterface
 
                     $body .= View::displayUpdateMessage($BOname.' '.$params['deleteOID'].' deleted successfully.');
 
-                    $this->displayBodyContent();
+                    $body .= $this->renderBodyContent();
                 } catch (AlphaException $e) {
                     self::$logger->error($e->getMessage());
                     $body .= View::displayErrorMessage('Error deleting the BO of OID ['.$params['deleteOID'].'], check the log!');

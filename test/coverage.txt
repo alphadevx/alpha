@@ -1,12 +1,12 @@
 
 
 Code Coverage Report:        
-  2015-04-30 22:48:01        
+  2015-05-02 13:15:13        
                              
  Summary:                    
   Classes: 22.22% (18/81)    
   Methods: 51.82% (355/685)  
-  Lines:   65.64% (5041/7680)
+  Lines:   66.09% (5076/7680)
 
 \Alpha\Controller::ArticleController
   Methods:  30.00% ( 3/10)   Lines:  69.34% (285/411)
@@ -33,7 +33,7 @@ Code Coverage Report:
 \Alpha\Controller::ListActiveRecordsController
   Methods:  60.00% ( 3/ 5)   Lines:  26.26% ( 26/ 99)
 \Alpha\Controller::ListController
-  Methods:  37.50% ( 3/ 8)   Lines:  49.40% ( 83/168)
+  Methods:  37.50% ( 3/ 8)   Lines:  69.64% (117/168)
 \Alpha\Controller\Front::FrontController
   Methods:  75.00% (12/16)   Lines:  86.82% (112/129)
 \Alpha\Exception::AlphaException
@@ -45,7 +45,7 @@ Code Coverage Report:
 \Alpha\Model::ActiveRecordProviderFactory
   Methods: 100.00% ( 1/ 1)   Lines: 100.00% ( 12/ 12)
 \Alpha\Model::ActiveRecordProviderSQLite
-  Methods:  19.51% ( 8/41)   Lines:  68.45% (753/1100)
+  Methods:  19.51% ( 8/41)   Lines:  68.55% (754/1100)
 \Alpha\Model::Article
   Methods:  35.29% ( 6/17)   Lines:  67.57% (100/148)
 \Alpha\Model::ArticleComment

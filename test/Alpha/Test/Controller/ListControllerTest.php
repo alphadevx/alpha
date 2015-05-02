@@ -11,6 +11,7 @@ use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Model\Person;
 use Alpha\Model\Rights;
+use Alpha\Exception\RecordNotFoundException;
 
 /**
  *
@@ -123,6 +124,41 @@ class ListControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+    }
+
+    public function testDoPOST()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        $person = $this->createPersonObject('person-three');
+        $person->save();
+
+        $front = new FrontController();
+        $controller = new ListController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $person = $this->createPersonObject('test');
+        $person->save();
+
+        $params = array('deleteOID' => $person->getOID(), 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/listall/Person', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
+
+        $person2 = new Person();
+
+        try {
+            $person2->load($person->getOID());
+            $this->fail('Confirming that the Person record has been deleted');
+        } catch (RecordNotFoundException $e) {
+            $this->assertEquals('Failed to load object of OID [00000000002] not found in database.', $e->getMessage());
+        }
     }
 }
 
