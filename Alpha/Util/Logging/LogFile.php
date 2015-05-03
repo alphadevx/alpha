@@ -202,68 +202,71 @@ class LogFile
  	/**
  	 * Renders a log file as a HTML table
  	 *
- 	 * $param array $cols The headings to use when rendering the log file
+ 	 * @param array $cols The headings to use when rendering the log file
+     * @return string
  	 * @since 1.0
  	 */
  	public function renderLog($cols)
  	{
  		// render the start of the table
- 		echo '<table class="table">';
- 		echo '<tr>';
- 		foreach($cols as $heading)
- 			echo '<th>'.$heading.'</th>';
- 		echo '</tr>';
+ 		$body = '<table class="table">';
+ 		$body .= '<tr>';
+ 		foreach ($cols as $heading)
+ 			$body .= '<th>'.$heading.'</th>';
+ 		$body .= '</tr>';
 
  		// now read the file and render the data
  		$LogFile = file_get_contents($this->path);
  		$fields = explode($this->seperator, $LogFile);
 		$totalLines = (count($fields)-1)/count($cols);
 
- 		for($line = 0; $line < $totalLines; $line++) {
+ 		for ($line = 0; $line < $totalLines; $line++) {
  			$count = count($cols);
 
- 			echo '<tr>';
+ 			$body .= '<tr>';
 
-	 		for($col = 0; $col < $count; $col++) {
+	 		for ($col = 0; $col < $count; $col++) {
 	 			$index = ($line*count($cols))+$col;
 
 	 			// if it is an error log, render the error types field in different colours
-	 			if($col == 1 && $cols[1] == 'Level'){
-	 				switch($fields[$index]) {
+	 			if ($col == 1 && $cols[1] == 'Level'){
+	 				switch ($fields[$index]) {
 	 					case 'DEBUG':
-	 						echo '<td class="debug">'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
+	 						$body .= '<td class="debug">'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
 	 					break;
 	 					case 'INFO':
-	 						echo '<td class="info">'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
+	 						$body .= '<td class="info">'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
 	 					break;
 	 					case 'WARN':
-	 						echo '<td class="warn">'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
+	 						$body .= '<td class="warn">'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
 	 					break;
 	 					case 'ERROR':
-	 						echo '<td class="error">'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
+	 						$body .= '<td class="error">'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
 	 					break;
 	 					case 'FATAL':
-	 						echo '<td class="fatal">'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
+	 						$body .= '<td class="fatal">'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
 	 					break;
 	 					case 'SQL':
-	 						echo '<td class="sql">'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
+	 						$body .= '<td class="sql">'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
 	 					break;
 	 					default:
-	 						echo '<td>'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
+	 						$body .= '<td>'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
 	 					break;
 	 				}
-	 			}else{
-	 				if($cols[$col] == 'Message')
-	 					echo '<td><pre>'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</pre></td>';
+	 			} else {
+	 				if ($cols[$col] == 'Message')
+	 					$body .= '<td><pre>'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</pre></td>';
 	 				else
-	 					echo '<td>'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
+	 					$body .= '<td>'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
 	 			}
 	 		}
 
- 			echo '</tr>';
+ 			$body .= '</tr>';
  		}
 
- 		echo '</table>';
+ 		$body .= '</table>';
+
+        return $body;
  	}
 }
 
