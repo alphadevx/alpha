@@ -2,8 +2,12 @@
 
 namespace Alpha\Controller;
 
+use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Logging\LogFile;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\View\View;
 
@@ -89,74 +93,73 @@ class LogController extends Controller implements ControllerInterface
 	/**
 	 * Handle GET requests
 	 *
-	 * @param array $params
+	 * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
 	 * @throws Alpha\Exception\IllegalArguementException
 	 * @since 1.0
 	 */
-	public function doGET($params)
+	public function doGET($request)
 	{
-		self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
+		self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
-		try{
+        $params = $request->getParams();
 
+        $body = '';
+
+		try {
 			// load the business object (BO) definition
-			if (isset($params['logPath']) && file_exists($params['logPath'])) {
-				$logPath = $params['logPath'];
+			if (isset($params['logPath']) && file_exists(urldecode($params['logPath']))) {
+				$logPath = urldecode($params['logPath']);
 			} else {
 				throw new IllegalArguementException('No log file available to view!');
 			}
 
 			$this->logPath = $logPath;
 
-			echo View::displayPageHead($this);
+			$body .= View::displayPageHead($this);
 
 			$log = new LogFile($this->logPath);
 			if (preg_match("/alpha.*/", basename($this->logPath)))
-				$log->renderLog(array('Date/time','Level','Class','Message','Client','IP'));
+				$body .= $log->renderLog(array('Date/time','Level','Class','Message','Client','IP'));
 			if (preg_match("/search.*/", basename($this->logPath)))
-				$log->renderLog(array('Search query','Search date','Client Application','Client IP'));
+				$body .= $log->renderLog(array('Search query','Search date','Client Application','Client IP'));
 			if (preg_match("/feeds.*/", basename($this->logPath)))
-				$log->renderLog(array('Business object','Feed type','Request date','Client Application','Client IP'));
+				$body .= $log->renderLog(array('Business object','Feed type','Request date','Client Application','Client IP'));
 			if (preg_match("/tasks.*/", basename($this->logPath)))
-				$log->renderLog(array('Date/time','Level','Class','Message'));
+				$body .= $log->renderLog(array('Date/time','Level','Class','Message'));
 
-			echo View::displayPageFoot($this);
+			$body .= View::displayPageFoot($this);
 		} catch (IllegalArguementException $e) {
 			self::$logger->warn($e->getMessage());
 
-			echo View::displayPageHead($this);
+			$body .= View::displayPageHead($this);
 
-			echo View::displayErrorMessage($e->getMessage());
+			$body .= View::displayErrorMessage($e->getMessage());
 
-			echo View::displayPageFoot($this);
+			$body .= View::displayPageFoot($this);
 		}
 
 		self::$logger->debug('<<doGET');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
 	}
 
 	/**
-	 * Handle POST requests
-	 *
-	 * @param array $params
-	 * @since 1.0
-	 */
-	public function doPOST($params)
-	{
-		self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
-
-		self::$logger->debug('<<doPOST');
-	}
-
-	/**
-	 * Use this callback to inject in the admin menu template fragment
-	 *
-	 * @since 1.2
-	 */
-	public function after_displayPageHead_callback() {
-		$menu = View::loadTemplateFragment('html', 'adminmenu.phtml', array());
-
-		return $menu;
-	}
+     * Use this callback to inject in the admin menu template fragment for admin users of
+     * the backend only.
+     *
+     * @since 1.2
+     */
+    public function after_displayPageHead_callback()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $menu = '';
+        if ($session->get('currentUser') !== false && ActiveRecord::isInstalled() && $session->get('currentUser')->inGroup('Admin') && mb_strpos($this->request->getURI()) !== false) {
+            $menu .= View::loadTemplateFragment('html', 'adminmenu.phtml', array());
+        }
+        return $menu;
+    }
 }
 
 ?>
