@@ -4,6 +4,8 @@ namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
 use Alpha\View\View;
 use Alpha\View\PersonView;
 use Alpha\Model\Person;
@@ -111,27 +113,31 @@ class LoginController extends Controller implements ControllerInterface
     /**
      * Handle GET requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
      * @throws Alpha\Exception\IllegalArguementException
      * @since 1.0
      */
-    public function doGET($params)
+    public function doGET($request)
     {
-        self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
+
+        $params = $request->getParams();
 
         if (!is_array($params))
             throw new IllegalArguementException('Bad $params ['.var_export($params, true).'] passed to doGET method!');
 
-        echo View::displayPageHead($this);
+        $body = View::displayPageHead($this);
 
         if (isset($params['reset']))
-            echo $this->personView->displayResetForm();
+            $body .= $this->personView->displayResetForm();
         else
-            echo $this->personView->displayLoginForm();
+            $body .= $this->personView->displayLoginForm();
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**

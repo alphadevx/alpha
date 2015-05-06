@@ -29,6 +29,7 @@ use Alpha\Controller\ImageController;
 use Alpha\Controller\ListActiveRecordsController;
 use Alpha\Controller\ListController;
 use Alpha\Controller\LogController;
+use Alpha\Controller\LoginController;
 
 /**
  *
@@ -222,6 +223,11 @@ class FrontController
 
         $this->addRoute('/log/{logPath}', function($request) {
             $controller = new LogController();
+            return $controller->process($request);
+        });
+
+        $this->addRoute('/login', function($request) {
+            $controller = new LoginController();
             return $controller->process($request);
         });
 
