@@ -6,6 +6,7 @@ use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\View\View;
 use Alpha\View\PersonView;
 use Alpha\Model\Person;
@@ -143,27 +144,32 @@ class LoginController extends Controller implements ControllerInterface
     /**
      * Handle POST requests (adds $currentUser Person to the session)
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
      * @throws Alpha\Exception\IllegalArguementException
      * @since 1.0
      */
-    public function doPOST($params)
+    public function doPOST($request)
     {
-        self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
+
+        $params = $request->getParams();
 
         if (!is_array($params))
             throw new IllegalArguementException('Bad $params ['.var_export($params, true).'] passed to doPOST method!');
 
         $config = ConfigProvider::getInstance();
 
+        $body = '';
+
         try {
             // check the hidden security fields before accepting the form POST data
-            if(!$this->checkSecurityFields())
+            if (!$this->checkSecurityFields())
                 throw new SecurityException('This page cannot accept post data from remote servers!');
 
             if (isset($params['loginBut'])) {
                 // if the database has not been set up yet, accept a login from the config admin username/password
-                if (!ActiveRecord::isInstalled()) {
+                if (!ActiveRecord::$session = SessionProviderFactory::getInstance($sessionProvider);$session = SessionProviderFactory::getInstance($sessionProvider);isInstalled()) {
                     if ($params['email'] == $config->get('app.install.username') && crypt($params['password'], $config->get('app.install.password')) ==
                         crypt($config->get('app.install.password'), $config->get('app.install.password'))) {
 
@@ -173,18 +179,17 @@ class LoginController extends Controller implements ControllerInterface
                         $admin->set('email', $params['email']);
                         $admin->set('password', crypt($params['password'], $config->get('app.install.password')));
                         $admin->set('OID', '00000000001');
-                        $_SESSION['currentUser'] = $admin;
-                        if ($this->getNextJob() != '') {
-                            $url = FrontController::generateSecureURL('act='.$this->getNextJob());
-                            self::$logger->info('Redirecting to ['.$url.']');
-                            header('Location: '.$url);
-                            exit;
-                        } else {
-                            $url = FrontController::generateSecureURL('act=Install');
-                            self::$logger->info('Redirecting to ['.$url.']');
-                            header('Location: '.$url);
-                            exit;
-                        }
+
+                        $session = SessionProviderFactory::getInstance($sessionProvider);
+                        $session->set('currentUser', $admin);
+
+                        $response = new Response(301);
+                        if ($this->getNextJob() != '')
+                            $response->redirect($this->getNextJob());
+                        else
+                            $response->redirect(FrontController::generateSecureURL('act=Install'));
+
+                        return $response;
                     } else {
                         throw new ValidationException('Failed to login user '.$params['email'].', the password is incorrect!');
                     }
@@ -199,12 +204,12 @@ class LoginController extends Controller implements ControllerInterface
                         throw new SecurityException('Failed to login user '.$params['email'].', that account has been disabled!');
 
                     // check the password
-                    $this->doLoginAndRedirect($params['password']);
+                    return $this->doLoginAndRedirect($params['password']);
                 }
 
-                echo View::displayPageHead($this);
+                $body .= View::displayPageHead($this);
 
-                echo $this->personView->displayLoginForm();
+                $body .= $this->personView->displayLoginForm();
             }
 
             if (isset($params['resetBut'])) {
@@ -226,42 +231,44 @@ class LoginController extends Controller implements ControllerInterface
 
                 $this->personObject->sendMail($message, $subject);
 
-                echo View::displayUpdateMessage('The password for the user <strong>'.$params['email'].'</strong> has been reset, and the new password '.
+                $body .= View::displayUpdateMessage('The password for the user <strong>'.$params['email'].'</strong> has been reset, and the new password '.
                     'has been sent to that e-mail address.');
-                echo '<a href="'.$config->get('app.url').'">Home Page</a>';
+                $body .= '<a href="'.$config->get('app.url').'">Home Page</a>';
             }
         } catch (ValidationException $e) {
-            echo View::displayPageHead($this);
+            $body .= View::displayPageHead($this);
 
-            echo View::displayErrorMessage($e->getMessage());
+            $body .= View::displayErrorMessage($e->getMessage());
 
             if (isset($params['reset']))
-                echo $this->personView->displayResetForm();
+                $body .= $this->personView->displayResetForm();
             else
-                echo $this->personView->displayLoginForm();
+                $body .= $this->personView->displayLoginForm();
 
             self::$logger->warn($e->getMessage());
         } catch (SecurityException $e) {
-            echo View::displayPageHead($this);
+            $body .= View::displayPageHead($this);
 
-            echo View::displayErrorMessage($e->getMessage());
+            $body .= View::displayErrorMessage($e->getMessage());
 
             self::$logger->warn($e->getMessage());
         }catch(RecordNotFoundException $e) {
-            echo View::displayPageHead($this);
+            $body .= View::displayPageHead($this);
 
-            echo View::displayErrorMessage('Failed to find the user \''.$params['email'].'\'');
+            $body .= View::displayErrorMessage('Failed to find the user \''.$params['email'].'\'');
 
             if (isset($params['reset']))
-                echo $this->personView->displayResetForm();
+                $body .= $this->personView->displayResetForm();
             else
-                echo $this->personView->displayLoginForm();
+                $body .= $this->personView->displayLoginForm();
 
             self::$logger->warn($e->getMessage());
         }
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
+
         self::$logger->debug('<<doPOST');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
@@ -269,6 +276,7 @@ class LoginController extends Controller implements ControllerInterface
      *
      * @param string $password The password supplied by the user logging in
      * @throws Alpha\Exception\ValidationException
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      */
     protected function doLoginAndRedirect($password)
@@ -280,21 +288,19 @@ class LoginController extends Controller implements ControllerInterface
         if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Active') {
             if (crypt($password, $this->personObject->get('password')) == $this->personObject->get('password')) {
 
-                $_SESSION['currentUser'] = $this->personObject;
+                $session = SessionProviderFactory::getInstance($sessionProvider);
+                $session->set('currentUser', $this->personObject);
 
                 self::$logger->debug('Logging in ['.$this->personObject->get('email').'] at ['.date("Y-m-d H:i:s").']');
                 self::$logger->action('Login');
 
-                if ($this->getNextJob() != '') {
-                    self::$logger->debug('<<doLoginAndRedirect');
-                    $url = FrontController::generateSecureURL('act='.$this->getNextJob());
-                    header('Location: '.$url);
-                    exit;
-                }else{
-                    self::$logger->debug('<<doLoginAndRedirect');
-                    header('Location: '.$config->get('app.url'));
-                    exit;
-                }
+                $response = new Response(301);
+                if ($this->getNextJob() != '')
+                    $response->redirect($this->getNextJob());
+                else
+                    $response->redirect($config->get('app.url'));
+
+                return $response;
             } else {
                 throw new ValidationException('Failed to login user '.$this->personObject->get('email').', the password is incorrect!');
                 self::$logger->debug('<<doLoginAndRedirect');
