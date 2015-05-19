@@ -10,6 +10,7 @@ use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\View\View;
 use Alpha\View\PersonView;
 use Alpha\Model\Person;
+use Alpha\Model\ActiveRecord;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\SecurityException;
 use Alpha\Exception\ValidationException;
@@ -169,7 +170,7 @@ class LoginController extends Controller implements ControllerInterface
 
             if (isset($params['loginBut'])) {
                 // if the database has not been set up yet, accept a login from the config admin username/password
-                if (!ActiveRecord::$session = SessionProviderFactory::getInstance($sessionProvider);$session = SessionProviderFactory::getInstance($sessionProvider);isInstalled()) {
+                if (!ActiveRecord::isInstalled()) {
                     if ($params['email'] == $config->get('app.install.username') && crypt($params['password'], $config->get('app.install.password')) ==
                         crypt($config->get('app.install.password'), $config->get('app.install.password'))) {
 
@@ -180,6 +181,7 @@ class LoginController extends Controller implements ControllerInterface
                         $admin->set('password', crypt($params['password'], $config->get('app.install.password')));
                         $admin->set('OID', '00000000001');
 
+                        $sessionProvider = $config->get('session.provider.name');
                         $session = SessionProviderFactory::getInstance($sessionProvider);
                         $session->set('currentUser', $admin);
 
