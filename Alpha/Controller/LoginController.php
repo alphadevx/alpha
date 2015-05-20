@@ -290,6 +290,7 @@ class LoginController extends Controller implements ControllerInterface
         if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Active') {
             if (crypt($password, $this->personObject->get('password')) == $this->personObject->get('password')) {
 
+                $sessionProvider = $config->get('session.provider.name');
                 $session = SessionProviderFactory::getInstance($sessionProvider);
                 $session->set('currentUser', $this->personObject);
 

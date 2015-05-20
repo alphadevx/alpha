@@ -72,6 +72,25 @@ class LoginControllerTest extends \PHPUnit_Framework_TestCase
 
         $rights = new Rights();
         $rights->rebuildTable();
+        $rights->set('name', 'Standard');
+        $rights->save();
+    }
+
+    /**
+     * Creates a person object for Testing
+     *
+     * @return Alpha\Model\Person
+     * @since 2.0
+     */
+    private function createPersonObject($name)
+    {
+        $person = new Person();
+        $person->setDisplayname($name);
+        $person->set('email', $name.'@test.com');
+        $person->set('password', crypt('passwordTest', 'passwordTest'));
+        $person->set('URL', 'http://unitTestUser/');
+
+        return $person;
     }
 
     /**
@@ -122,6 +141,33 @@ class LoginControllerTest extends \PHPUnit_Framework_TestCase
         $response = $front->process($request);
 
         $this->assertEquals(301, $response->getStatus(), 'Testing the doPOST method during install');
+
+        $person->makeTable();
+
+        $person = $this->createPersonObject('logintest');
+        $person->save();
+
+        $params = array(
+            'loginBut' => true,
+            'var1' => $securityParams[0],
+            'var2' => $securityParams[1],
+            'email' => 'logintest@test.com',
+            'password' => 'passwordTest'
+        );
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/login', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(301, $response->getStatus(), 'Testing the doPOST with correct password');
+
+        $params['password'] = 'wrongPassword';
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/login', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST with incorrect password');
     }
 }
 
