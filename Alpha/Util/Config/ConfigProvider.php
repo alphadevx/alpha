@@ -66,6 +66,14 @@ class ConfigProvider
 	 */
 	private static $instance;
 
+    /**
+     * The config environment (dev, pro, test)
+     *
+     * @var string
+     * @since 2.0
+     */
+    private $environment;
+
 	/**
 	 * Private constructor means the class cannot be instantiated from elsewhere
 	 *
@@ -200,53 +208,65 @@ class ConfigProvider
 		$rootPath = $this->get('rootPath');
 
 		// first we need to see if we are in dev, pro or test environment
-		if(isset($_SERVER['SERVER_NAME'])) {
+		if (isset($_SERVER['SERVER_NAME'])) {
 			$server = $_SERVER['SERVER_NAME'];
-		}elseif(isset($_ENV['HOSTNAME'])){
+		} elseif (isset($_ENV['HOSTNAME'])){
 			// we may be running in CLI mode
 			$server = $_ENV['HOSTNAME'];
-		 }elseif(php_uname('n') != ''){
+		} elseif (php_uname('n') != ''){
             // CLI on Linux or Windows should have this
             $server = php_uname('n');
-		}else{
+		} else {
 			die('Unable to determine the server name');
 		}
 
 		// Load the servers to see which environment the current server is set as
 		$serverIni = $rootPath.'config/servers.ini';
 
-		if(file_exists($serverIni)) {
+		if (file_exists($serverIni)) {
             $envs = parse_ini_file($serverIni);
             $environment = '';
 
             foreach ($envs as $env => $serversList) {
             	$servers = explode(',', $serversList);
 
-            	if(in_array($server, $servers))
+            	if (in_array($server, $servers))
             		$environment = $env;
             }
 
-            if($environment == '')
+            if ($environment == '')
                 die('No environment configured for the server '.$server);
-        }else{
+        } else {
             die('Failed to load the config file ['.$serverIni.']');
         }
 
-		if(mb_substr($environment, -3) == 'CLI') // CLI mode
+        $this->environment = $environment;
+
+		if (mb_substr($environment, -3) == 'CLI') // CLI mode
 			$envIni = $rootPath.'config/'.mb_substr($environment, 0, 3).'.ini';
 		else
 			$envIni = $rootPath.'config/'.$environment.'.ini';
 
-		if(!file_exists($envIni)) {
+		if (!file_exists($envIni))
         	die('Failed to load the config file ['.$envIni.']');
-        }
 
 		$configArray = parse_ini_file($envIni);
 
-		foreach(array_keys($configArray) as $key) {
+		foreach (array_keys($configArray) as $key) {
 			$this->set($key, $configArray[$key]);
 		}
 	}
+
+    /**
+     * Get the configuration environment for this application
+     *
+     * @return string
+     * @since 2.0
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
 }
 
 ?>

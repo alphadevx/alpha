@@ -7,6 +7,7 @@ use Alpha\Model\Type\Enum;
 use Alpha\Model\Type\Relation;
 use Alpha\Util\Helper\Validator;
 use Alpha\Util\Logging\Logger;
+use Alpha\Util\Config\ConfigProvider;
 use Alpha\Exception\MailNotSentException;
 use Alpha\Exception\PHPException;
 use Alpha\Exception\RecordNotFoundException;
@@ -17,7 +18,6 @@ use Alpha\Exception\RecordNotFoundException;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -219,15 +219,15 @@ class Person extends ActiveRecord
 	 */
 	protected function after_save_callback()
 	{
-		if($this->getVersionNumber()->getValue() == 1) {
+		if ($this->getVersionNumber()->getValue() == 1) {
 			$standardGroup = new Rights();
 
 			$this->setupRels();
 
-			if(!$this->inGroup('Standard')) {
+			if (!$this->inGroup('Standard')) {
 				try {
 					$standardGroup->loadByAttribute('name', 'Standard');
-				}catch (BONotFoundException $e) {
+				} catch (BONotFoundException $e) {
 					$standardGroup->set('name', 'Standard');
 					$standardGroup->save();
 				}
@@ -243,6 +243,7 @@ class Person extends ActiveRecord
 	 * Encrypts any fields called 'password' posted for the Person
 	 *
 	 * @since 1.0
+     * @todo Remove super globals
 	 */
 	protected function before_populateFromPost_callback()
 	{
@@ -307,7 +308,7 @@ class Person extends ActiveRecord
 	 */
 	public function inGroup($groupName)
 	{
-		if(self::$logger == null)
+		if (self::$logger == null)
 			self::$logger = new Logger('Person');
 		self::$logger->debug('>>inGroup(groupName=['.$groupName.'])');
 
@@ -315,7 +316,7 @@ class Person extends ActiveRecord
 
 		try {
 			$group->loadByAttribute('name', $groupName);
-		}catch (RecordNotFoundException $e) {
+		} catch (RecordNotFoundException $e) {
 			self::$logger->error('Unable to load the group named ['.$groupName.']');
 			self::$logger->debug('<<inGroup [false]');
 			return false;
@@ -335,7 +336,7 @@ class Person extends ActiveRecord
 					return true;
 				}
 			}
-		}catch (RecordNotFoundException $e) {
+		} catch (RecordNotFoundException $e) {
 			self::$logger->debug('<<inGroup [false]');
 			return false;
 		}
@@ -354,23 +355,28 @@ class Person extends ActiveRecord
 	 */
 	public function sendMail($message, $subject)
 	{
-		global $config;
+		$config = ConfigProvider::getInstance();
 
-		$body = '<html><head></head><body><p>Dear '.$this->getDisplayName().',</p>';
+        $body = '<html><head></head><body><p>Dear '.$this->getDisplayName().',</p>';
 
-		$body .= $message;
+        $body .= $message;
 
-		$body .= '</body></html>';
+        $body .= '</body></html>';
 
-		$headers = 'MIME-Version: 1.0'."\n";
-		$headers .= 'Content-type: text/html; charset=iso-8859-1'."\n";
-		$headers .= "From: ".$config->get('email.reply.to')."\n";
+        $headers = 'MIME-Version: 1.0'."\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1'."\n";
+        $headers .= "From: ".$config->get('email.reply.to')."\n";
 
-		try {
-			mb_send_mail($this->get('email'), $subject, $body, $headers);
-		}catch (PHPException $e) {
-			throw new MailNotSentException('Error sending a mail to ['.$this->get('email').']');
-		}
+        if ($config->getEnvironment() != 'dev') {
+
+    		try {
+    			mb_send_mail($this->get('email'), $subject, $body, $headers);
+    		} catch (PHPException $e) {
+    			throw new MailNotSentException('Error sending a mail to ['.$this->get('email').']');
+    		}
+        } else {
+            self::$logger->info("Sending email:\n".$headers."\n".$body);
+        }
 	}
 
 	/**
@@ -399,8 +405,9 @@ class Person extends ActiveRecord
 	 * @return integer
 	 * @since 1.0
 	 */
-	public function getCommentCount() {
-		$temp = new ArticleCommentObject();
+	public function getCommentCount()
+    {
+		$temp = new ArticleComment();
 
 		$sqlQuery = "SELECT COUNT(OID) AS post_count FROM ".$temp->getTableName()." WHERE created_by='".$this->OID."';";
 
@@ -408,7 +415,7 @@ class Person extends ActiveRecord
 
 		$row = $result[0];
 
-		if(isset($row['post_count']))
+		if (isset($row['post_count']))
 			return $row['post_count'];
 		else
 			return 0;
