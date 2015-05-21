@@ -168,6 +168,23 @@ class LoginControllerTest extends \PHPUnit_Framework_TestCase
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST with incorrect password');
+
+        $params = array(
+            'resetBut' => true,
+            'var1' => $securityParams[0],
+            'var2' => $securityParams[1],
+            'email' => 'logintest@test.com'
+        );
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/login', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST during password reset');
+
+        $person->reload();
+
+        $this->assertNotEquals($person->get('password'), crypt('passwordTest', 'passwordTest'), 'Checking that the password has changed in the database');
     }
 }
 

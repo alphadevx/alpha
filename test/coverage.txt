@@ -1,12 +1,12 @@
 
 
 Code Coverage Report:        
-  2015-05-20 21:03:17        
+  2015-05-21 22:52:00        
                              
  Summary:                    
   Classes: 21.69% (18/83)    
-  Methods: 52.09% (361/693)  
-  Lines:   67.05% (5253/7834)
+  Methods: 52.31% (363/694)  
+  Lines:   67.42% (5285/7839)
 
 \Alpha\Controller::ArticleController
   Methods:  30.00% ( 3/10)   Lines:  69.34% (285/411)
@@ -37,7 +37,7 @@ Code Coverage Report:
 \Alpha\Controller::LogController
   Methods:  33.33% ( 1/ 3)   Lines:  82.50% ( 33/ 40)
 \Alpha\Controller::LoginController
-  Methods:  60.00% ( 3/ 5)   Lines:  75.93% ( 82/108)
+  Methods:  60.00% ( 3/ 5)   Lines:  88.89% ( 96/108)
 \Alpha\Controller\Front::FrontController
   Methods:  75.00% (12/16)   Lines:  87.41% (118/135)
 \Alpha\Exception::AlphaException
@@ -63,7 +63,7 @@ Code Coverage Report:
 \Alpha\Model::BlacklistedIP
   Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  5/  5)
 \Alpha\Model::Person
-  Methods:  58.33% ( 7/12)   Lines:  73.11% ( 87/119)
+  Methods:  66.67% ( 8/12)   Lines:  85.25% (104/122)
 \Alpha\Model::Rights
   Methods:  83.33% ( 5/ 6)   Lines:  90.91% ( 20/ 22)
 \Alpha\Model::Tag
@@ -105,7 +105,7 @@ Code Coverage Report:
 \Alpha\Util\Cache::CacheProviderFactory
   Methods:   0.00% ( 0/ 1)   Lines:  90.00% (  9/ 10)
 \Alpha\Util\Config::ConfigProvider
-  Methods:  33.33% ( 2/ 6)   Lines:  12.00% (  9/ 75)
+  Methods:  42.86% ( 3/ 7)   Lines:  12.99% ( 10/ 77)
 \Alpha\Util\Convertor::ActiveRecord2Excel
   Methods:  50.00% ( 1/ 2)   Lines:  97.14% ( 34/ 35)
 \Alpha\Util\Extension::MarkdownFacade

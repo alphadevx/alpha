@@ -221,13 +221,13 @@ class LoginController extends Controller implements ControllerInterface
                 ActiveRecord::disconnect();
 
                 // generate a new random password
-                $new_password = $this->personObject->generatePassword();
+                $newPassword = $this->personObject->generatePassword();
 
                 // now encrypt and save the new password, then e-mail the user
-                $this->personObject->set('password', crypt($new_password));
+                $this->personObject->set('password', crypt($newPassword, $newPassword));
                 $this->personObject->save();
 
-                $message = 'The password for your account has been reset to '.$new_password.' as you requested.  You can now login to the site using your '.
+                $message = 'The password for your account has been reset to '.$newPassword.' as you requested.  You can now login to the site using your '.
                     'e-mail address and this new password as before.';
                 $subject = 'Password change request';
 
