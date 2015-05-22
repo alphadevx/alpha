@@ -4,6 +4,9 @@ namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
 use Alpha\Exception\AlphaException;
 use Alpha\Model\Person;
 use Alpha\View\View;
@@ -73,8 +76,12 @@ class LogoutController extends Controller implements ControllerInterface
         // ensure that the super class constructor is called, indicating the rights group
         parent::__construct('Public');
 
-        if (isset($_SESSION['currentUser']))
-            $this->setBO($_SESSION['currentUser']);
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        if ($session->get('currentUser') !== false)
+            $this->setBO($session->get('currentUser'));
         else
             self::$logger->warn('Logout controller called when no user is logged in');
 
@@ -87,28 +94,17 @@ class LogoutController extends Controller implements ControllerInterface
     }
 
     /**
-     * Handle POST requests (adds $currentUser PersonObject to the session)
-     *
-     * @param array $params
-     * @since 1.0
-     */
-    public function doPOST($params)
-    {
-        self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
-
-        self::$logger->debug('<<doPOST');
-    }
-
-    /**
      * Handle GET requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
      * @since 1.0
-     * @throws Alpha\Exception\AlphaException
      */
-    public function doGET($params)
+    public function doGET($request)
     {
-        self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
+
+        $params = $request->getParams();
 
         $config = ConfigProvider::getInstance();
 
@@ -117,19 +113,20 @@ class LogoutController extends Controller implements ControllerInterface
             self::$logger->action('Logout');
         }
 
-        $_SESSION = array();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session->destroy();
 
-        session_destroy();
+        $body = View::displayPageHead($this);
 
-        echo View::displayPageHead($this);
+        $body .= View::displayUpdateMessage('You have successfully logged out of the system.');
 
-        echo View::displayUpdateMessage('You have successfully logged out of the system.');
+        $body .= '<div align="center"><a href="'.$config->get('app.url').'">Home Page</a></div>';
 
-        echo '<div align="center"><a href="'.$config->get('app.url').'">Home Page</a></div>';
-
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 }
 

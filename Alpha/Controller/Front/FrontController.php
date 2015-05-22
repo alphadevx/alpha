@@ -30,6 +30,7 @@ use Alpha\Controller\ListActiveRecordsController;
 use Alpha\Controller\ListController;
 use Alpha\Controller\LogController;
 use Alpha\Controller\LoginController;
+use Alpha\Controller\LogoutController;
 
 /**
  *
@@ -228,6 +229,11 @@ class FrontController
 
         $this->addRoute('/login', function($request) {
             $controller = new LoginController();
+            return $controller->process($request);
+        });
+
+        $this->addRoute('/logout', function($request) {
+            $controller = new LogoutController();
             return $controller->process($request);
         });
 
