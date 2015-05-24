@@ -31,6 +31,7 @@ use Alpha\Controller\ListController;
 use Alpha\Controller\LogController;
 use Alpha\Controller\LoginController;
 use Alpha\Controller\LogoutController;
+use Alpha\Controller\MetricController;
 
 /**
  *
@@ -234,6 +235,11 @@ class FrontController
 
         $this->addRoute('/logout', function($request) {
             $controller = new LogoutController();
+            return $controller->process($request);
+        });
+
+        $this->addRoute('/metric', function($request) {
+            $controller = new MetricController();
             return $controller->process($request);
         });
 

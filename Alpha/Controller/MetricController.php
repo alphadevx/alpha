@@ -4,6 +4,8 @@ namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Code\Metric\Inspector;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
 use Alpha\View\View;
 
 /**
@@ -80,39 +82,28 @@ class MetricController extends Controller implements ControllerInterface
     /**
      * Handle GET requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doGET($params)
+    public function doGET($request)
     {
-        self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
         $config = ConfigProvider::getInstance();
 
-        echo View::displayPageHead($this);
+        $body = View::displayPageHead($this);
 
         $dir = $config->get('app.root');
 
         $metrics = new Inspector($dir);
         $metrics->calculateLOC();
-        echo $metrics->resultsToHTML();
+        $body .= $metrics->resultsToHTML();
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
-    }
-
-    /**
-     * Handle POST requests
-     *
-     * @param array $params
-     * @since 1.0
-     */
-    public function doPOST($params)
-    {
-        self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
-
-        self::$logger->debug('<<doPOST');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
