@@ -2,6 +2,8 @@
 
 namespace Alpha\Util\Code\Metric;
 
+use File_Find;
+
 /**
  * Utility class for calcualting some software metrics related to a project
  *

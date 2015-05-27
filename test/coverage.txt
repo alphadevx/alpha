@@ -1,12 +1,12 @@
 
 
 Code Coverage Report:        
-  2015-05-22 23:32:28        
+  2015-05-28 00:18:25        
                              
  Summary:                    
-  Classes: 21.43% (18/84)    
-  Methods: 52.30% (364/696)  
-  Lines:   67.54% (5317/7872)
+  Classes: 30.53% (29/95)    
+  Methods: 52.77% (371/703)  
+  Lines:   67.87% (5398/7953)
 
 \Alpha\Controller::ArticleController
   Methods:  30.00% ( 3/10)   Lines:  69.34% (285/411)
@@ -40,8 +40,10 @@ Code Coverage Report:
   Methods:  60.00% ( 3/ 5)   Lines:  88.89% ( 96/108)
 \Alpha\Controller::LogoutController
   Methods:  50.00% ( 1/ 2)   Lines:  96.67% ( 29/ 30)
+\Alpha\Controller::MetricController
+  Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 18/ 18)
 \Alpha\Controller\Front::FrontController
-  Methods:  75.00% (12/16)   Lines:  87.68% (121/138)
+  Methods:  75.00% (12/16)   Lines:  87.94% (124/141)
 \Alpha\Exception::AlphaException
   Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  4/  4)
 \Alpha\Model::ActionLog
@@ -106,6 +108,8 @@ Code Coverage Report:
   Methods: 100.00% ( 4/ 4)   Lines: 100.00% ( 13/ 13)
 \Alpha\Util\Cache::CacheProviderFactory
   Methods:   0.00% ( 0/ 1)   Lines:  90.00% (  9/ 10)
+\Alpha\Util\Code\Metric::Inspector
+  Methods: 100.00% ( 4/ 4)   Lines: 100.00% ( 60/ 60)
 \Alpha\Util\Config::ConfigProvider
   Methods:  42.86% ( 3/ 7)   Lines:  12.99% ( 10/ 77)
 \Alpha\Util\Convertor::ActiveRecord2Excel
