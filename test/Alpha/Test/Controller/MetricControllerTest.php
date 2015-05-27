@@ -1,19 +1,20 @@
 <?php
 
-namespace Alpha\Controller;
+namespace Alpha\Test\Controller;
 
-use Alpha\Util\Logging\Logger;
-use Alpha\Util\Code\Metric\Inspector;
+use Alpha\Controller\Front\FrontController;
+use Alpha\Controller\MetricController;
+use Alpha\Controller\Controller;
+use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
-use Alpha\Util\Config\ConfigProvider;
-use Alpha\View\View;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 
 /**
  *
- * Controller used to display the software metrics for the application
+ * Test cases for the MetricController class
  *
- * @since 1.0
+ * @since 2.0
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -52,71 +53,35 @@ use Alpha\View\View;
  * </pre>
  *
  */
-class MetricController extends Controller implements ControllerInterface
+class MetricControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Trace logger
+     * Set up tests
      *
-     * @var Alpha\Util\Logging\Logger
-     * @since 1.0
+     * @since 2.0
      */
-    private static $logger = null;
-
-    /**
-     * The constructor
-     *
-     * @since 1.0
-     */
-    public function __construct()
+    protected function setUp()
     {
-        self::$logger = new Logger('MetricController');
-        self::$logger->debug('>>__construct()');
-
-        // ensure that the super class constructor is called, indicating the rights group
-        parent::__construct('Admin');
-
-        $this->setTitle('Application Metrics');
-
-        self::$logger->debug('<<__construct');
-    }
-
-    /**
-     * Handle GET requests
-     *
-     * @param Alpha\Util\Http\Request $request
-     * @return Alpha\Util\Http\Response
-     * @since 1.0
-     */
-    public function doGET($request)
-    {
-        self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
-
         $config = ConfigProvider::getInstance();
-
-        $body = View::displayPageHead($this);
-
-        $dir = $config->get('app.root');
-
-        $metrics = new Inspector($dir);
-        $metrics->calculateLOC();
-        $body .= $metrics->resultsToHTML();
-
-        $body .= View::displayPageFoot($this);
-
-        self::$logger->debug('<<doGET');
-        return new Response(200, $body, array('Content-Type' => 'text/html'));
+        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
     }
 
     /**
-     * Use this callback to inject in the admin menu template fragment
-     *
-     * @since 1.2
+     * Testing the doGET method
      */
-    public function after_displayPageHead_callback()
+    public function testDoGET()
     {
-        $menu = View::loadTemplateFragment('html', 'adminmenu.phtml', array());
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
 
-        return $menu;
+        $front = new FrontController();
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/metric'));
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
     }
 }
 
