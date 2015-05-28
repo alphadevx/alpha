@@ -368,17 +368,15 @@ class RecordSelector
      * Returns the HTML for the record selector that will appear in a pop-up window.
      *
      * @param array $lookupOIDs An optional array of related look-up OIDs, only required for rendering MANY-TO-MANY rels
+     * @param string $fieldname The hidden HTML form field in the parent to pass values back to.
      * @since 1.0
      * @return string
      */
-    public function renderSelector($lookupOIDs=array())
+    public function renderSelector($lookupOIDs=array(), $fieldname)
     {
-        self::$logger->debug('>>renderSelector(lookupOIDs=['.var_export($lookupOIDs, true).'])');
+        self::$logger->debug('>>renderSelector(lookupOIDs=['.var_export($lookupOIDs, true).'], fieldname=['.$fieldname.'])');
 
         $config = ConfigProvider::getInstance();
-
-        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt($_GET['field'])) : $_GET['field']);
-
 
         $html = '<script language="JavaScript">
             var selectedOIDs = new Object();
@@ -408,10 +406,10 @@ class RecordSelector
 
                 if(OIDs == null) {
                     document.getElementById(\''.$fieldname.'\').value = "00000000000";
-                    document.getElementById(\''.$_GET['field'].'_display\').value = "";
+                    document.getElementById(\''.$fieldname.'_display\').value = "";
                 }else{
                     document.getElementById(\''.$fieldname.'\').value = OIDs;
-                    document.getElementById(\''.$_GET['field'].'_display\').value = displayValues;
+                    document.getElementById(\''.$fieldname.'_display\').value = displayValues;
                 }
             }
 
@@ -424,7 +422,6 @@ class RecordSelector
             $classNameRight = $this->relationObject->getRelatedClass('right');
 
             if ($this->accessingClassName == $classNameLeft) {
-                ActiveRecord::loadClassDef($classNameRight);
                 $tmpObject = new $classNameRight;
                 $fieldName = $this->relationObject->getRelatedClassDisplayField('right');
                 $fieldLabel = $tmpObject->getDataLabel($fieldName);
@@ -434,7 +431,6 @@ class RecordSelector
 
                 self::$logger->debug('['.count($objects).'] related ['.$classNameLeft.'] objects loaded');
             } else {
-                ActiveRecord::loadClassDef($classNameLeft);
                 $tmpObject = new $classNameLeft;
                 $fieldName = $this->relationObject->getRelatedClassDisplayField('left');
                 $fieldLabel = $tmpObject->getDataLabel($fieldName);
@@ -503,7 +499,7 @@ class RecordSelector
                 if ($obj->getOID() == $this->relationObject->getValue()) {
                     $html .= '<img src="'.$config->get('app.url').'/alpha/images/icons/accept_ghost.png"/>';
                 } else {
-                    $tmp = new Button("document.getElementById('".$fieldname."').value = '".$obj->getOID()."'; document.getElementById('".$_GET['field']."_display').value = '".$obj->get($this->relationObject->getRelatedClassDisplayField())."'; $('[Id=".$_GET['field']."_display]').blur(); window.jQuery.dialog.close();", "", "selBut", $config->get('app.url')."/alpha/images/icons/accept.png");
+                    $tmp = new Button("document.getElementById('".$fieldname."').value = '".$obj->getOID()."'; document.getElementById('".$fieldname."_display').value = '".$obj->get($this->relationObject->getRelatedClassDisplayField())."'; $('[Id=".$fieldname."_display]').blur(); window.jQuery.dialog.close();", "", "selBut", $config->get('app.url')."/alpha/images/icons/accept.png");
                     $html .= $tmp->render();
                 }
                 $html .= '</td>';

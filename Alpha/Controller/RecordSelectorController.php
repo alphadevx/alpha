@@ -6,6 +6,9 @@ use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\View\Widget\RecordSelector;
 use Alpha\Util\Logging\Logger;
+use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
 use Alpha\Model\Type\Relation;
 
 /**
@@ -79,25 +82,30 @@ class RecordSelectorController extends Controller implements ControllerInterface
     /**
      * Handles get requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      * @throws Alpha\Exception\ResourceNotFoundException
      */
-    public function doGet($params)
+    public function doGet($request)
     {
-        self::$logger->debug('>>doGet(params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGet(request=['.var_export($request, true).'])');
+
+        $params = $request->getParams();
 
         $relationObject = new Relation();
 
+        $body = '';
+
         try {
             $relationType = $params['relationType'];
-            $value = $params['value'];
+            $ActiveRecordOID = $params['ActiveRecordOID'];
         } catch (\Exception $e) {
             self::$logger->error('Required param missing for ViewRecordSelector controller['.$e->getMessage().']');
             throw new ResourceNotFoundException('File not found');
         }
 
-        if ($_GET['relationType'] == 'MANY-TO-MANY') {
+        if ($relationType == 'MANY-TO-MANY') {
             try {
                 $relatedClassLeft = $params['relatedClassLeft'];
                 $relatedClassLeftDisplayField = $params['relatedClassLeftDisplayField'];
@@ -116,10 +124,10 @@ class RecordSelectorController extends Controller implements ControllerInterface
             $relationObject->setRelatedClass($relatedClassRight, 'right');
             $relationObject->setRelatedClassDisplayField($relatedClassRightDisplayField, 'right');
             $relationObject->setRelationType($relationType);
-            $relationObject->setValue($value);
+            $relationObject->setValue($ActiveRecordOID);
 
             $recSelector = new RecordSelector($relationObject, '', $field, $accessingClassName);
-            echo $recSelector->renderSelector(explode(',', $lookupOIDs));
+            $body .= $recSelector->renderSelector(explode(',', $lookupOIDs), $field);
         } else {
             try {
                 $relatedClass = $params['relatedClass'];
@@ -134,26 +142,14 @@ class RecordSelectorController extends Controller implements ControllerInterface
             $relationObject->setRelatedClassField($relatedClassField);
             $relationObject->setRelatedClassDisplayField($relatedClassDisplayField);
             $relationObject->setRelationType($relationType);
-            $relationObject->setValue($value);
+            $relationObject->setValue($ActiveRecordOID);
 
             $recSelector = new RecordSelector($relationObject);
-            echo $recSelector->renderSelector();
+            $body .= $recSelector->renderSelector();
         }
 
         self::$logger->debug('<<__doGet');
-    }
-
-    /**
-     * Handle POST requests
-     *
-     * @param array $params
-     * @since 1.0
-     */
-    public function doPOST($params)
-    {
-        self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
-
-        self::$logger->debug('<<doPOST');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 }
 

@@ -32,6 +32,7 @@ use Alpha\Controller\LogController;
 use Alpha\Controller\LoginController;
 use Alpha\Controller\LogoutController;
 use Alpha\Controller\MetricController;
+use Alpha\Controller\RecordSelectorController;
 
 /**
  *
@@ -240,6 +241,11 @@ class FrontController
 
         $this->addRoute('/metric', function($request) {
             $controller = new MetricController();
+            return $controller->process($request);
+        });
+
+        $this->addRoute('/recordselector/{ActiveRecordOID}/{relationType}', function($request) {
+            $controller = new RecordSelectorController();
             return $controller->process($request);
         });
 
