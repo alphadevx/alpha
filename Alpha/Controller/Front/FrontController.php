@@ -33,6 +33,7 @@ use Alpha\Controller\LoginController;
 use Alpha\Controller\LogoutController;
 use Alpha\Controller\MetricController;
 use Alpha\Controller\RecordSelectorController;
+use Alpha\Controller\SearchController;
 
 /**
  *
@@ -248,6 +249,11 @@ class FrontController
             $controller = new RecordSelectorController();
             return $controller->process($request);
         });
+
+        $this->addRoute('/search/{query}/{start}/{limit}', function($request) {
+            $controller = new SearchController();
+            return $controller->process($request);
+        })->value('start', 0)->value('limit', $config->get('app.list.page.amount'));
 
 		self::$logger->debug('<<__construct');
 	}

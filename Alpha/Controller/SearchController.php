@@ -6,6 +6,8 @@ use Alpha\Util\Logging\Logger;
 use Alpha\Util\Logging\KPI;
 use Alpha\Util\Logging\LogFile;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
 use Alpha\Util\Search\SearchProviderFactory;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\View\View;
@@ -15,7 +17,7 @@ use Alpha\Controller\Front\FrontController;
 
 /**
  *
- * Generic tag-based search engine controller
+ * Search engine controller
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
@@ -112,13 +114,16 @@ class SearchController extends Controller implements ControllerInterface
     /**
      * Handle GET requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      * @throws Alpha\Exception\IllegalArguementException
      */
-    public function doGET($params)
+    public function doGET($request)
     {
-        self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
+
+        $params = $request->getParams();
 
         if (isset($params['start']) ? $this->startPoint = $params['start']: $this->startPoint = 0);
 
@@ -126,47 +131,50 @@ class SearchController extends Controller implements ControllerInterface
 
         $KPI = new KPI('search');
 
-        if (isset($params['q'])) {
+        $body = '';
 
-            $this->query = $params['q'];
+        if (isset($params['query'])) {
+
+            $this->query = $params['query'];
 
             // replace any %20 on the URL with spaces
-            $params['q'] = str_replace('%20', ' ', $params['q']);
+            $params['query'] = str_replace('%20', ' ', $params['query']);
 
-            $this->setTitle('Search results - '.$params['q']);
-            echo View::displayPageHead($this);
+            $this->setTitle('Search results - '.$params['query']);
+            $body .= View::displayPageHead($this);
 
             // log the user's search query in a log file
             $log = new LogFile($config->get('app.file.store.dir').'logs/search.log');
-            $log->writeLine(array($params['q'], date('Y-m-d H:i:s'), $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR']));
+            $log->writeLine(array($params['query'], date('Y-m-d H:i:s'), $request->getUserAgent(), $request->getIP()));
 
             $KPI->logStep('log search query');
 
             $provider = SearchProviderFactory::getInstance('SearchProviderTags');
 
             // if a BO name is provided, only search tags on that class, otherwise search all BOs
-            if (isset($params['bo']))
-                $results = $provider->search($params['q'], $params['bo'], $this->startPoint);
+            if (isset($params['ActiveRecordType']))
+                $results = $provider->search($params['query'], $params['bo'], $this->startPoint);
             else
-                $results = $provider->search($params['q'], 'all', $this->startPoint);
+                $results = $provider->search($params['query'], 'all', $this->startPoint);
 
             $this->resultCount = $provider->getNumberFound();
 
             $KPI->logStep('search completed using SearchProviderTags provider');
 
-            $this->renderResultList($results, $params['q']);
+            $body .= $this->renderResultList($results, $params['query']);
 
         } else {
             $this->setTitle('Search results');
-            echo View::displayPageHead($this);
+            $body .= View::displayPageHead($this);
             self::$logger->debug('No search query provided!');
         }
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
 
         $KPI->log();
 
         self::$logger->debug('<<doGET');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
@@ -176,6 +184,7 @@ class SearchController extends Controller implements ControllerInterface
      * @param string $query
      * @param bool $showTags
      * @since 1.0
+     * @return string
      */
     protected function renderResultList($results, $query='', $showTags=true)
     {
@@ -184,48 +193,38 @@ class SearchController extends Controller implements ControllerInterface
         // used to track when our pagination range ends
         $end = ($this->startPoint+$config->get('app.list.page.amount'));
 
+        $body = '';
+
         if (!empty($query))
-            echo '<h2>Displaying results for &quot;'.$query.'&quot;</h2>';
+            $body .= '<h2>Displaying results for &quot;'.$query.'&quot;</h2>';
 
         foreach ($results as $bo) {
 
-            if ($bo instanceof Article && $bo->get('published') == false){
+            if ($bo instanceof \Alpha\Model\Article && $bo->get('published') == false){
                 $this->resultCount--;
             } else {
                 $view = View::getInstance($bo);
-                echo $view->listView();
+                $body .= $view->listView();
 
                 if ($showTags) {
                     $tags = $bo->getPropObject('tags')->getRelatedObjects();
 
                     if (count($tags) > 0) {
-                        echo '<p>Tags: ';
+                        $body .= '<p>Tags: ';
 
                         $queryTerms = explode(' ', mb_strtolower($query));
 
                         foreach ($tags as $tag) {
-                            echo (in_array($tag->get('content'), $queryTerms) ? '<strong>'.$tag->get('content').' </strong>' : $tag->get('content').' ');
+                            $body .= (in_array($tag->get('content'), $queryTerms) ? '<strong>'.$tag->get('content').' </strong>' : $tag->get('content').' ');
                         }
 
-                        echo '</p>';
+                        $body .= '</p>';
                     }
                 }
             }
-
         }
-    }
 
-    /**
-     * Handle POST requests
-     *
-     * @param array $params
-     * @since 1.0
-     */
-    public function doPOST($params)
-    {
-        self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
-
-        self::$logger->debug('<<doPOST');
+        return $body;
     }
 
     /**
@@ -238,13 +237,13 @@ class SearchController extends Controller implements ControllerInterface
     {
         $config = ConfigProvider::getInstance();
 
-        $html = '<div align="center"><form method="GET" id="search_form" onsubmit="document.location = \''.$config->get('app.url').'search/q/\'+document.getElementById(\'q\').value; return false;">';
-        $html .= 'Search for: <input type="text" size="80" name="q" id="q"/>&nbsp;';
-        $button = new Button('document.location = \''.$config->get('app.url').'search/q/\'+document.getElementById(\'q\').value', 'Search', 'searchButton');
-        $html .= $button->render();
-        $html .= '</form></div>';
+        $body = '<div align="center"><form method="GET" id="search_form" onsubmit="document.location = \''.$config->get('app.url').'search/\'+document.getElementById(\'q\').value; return false;">';
+        $body .= 'Search for: <input type="text" size="80" name="q" id="q"/>&nbsp;';
+        $button = new Button('document.location = \''.$config->get('app.url').'search/\'+document.getElementById(\'q\').value', 'Search', 'searchButton');
+        $body .= $button->render();
+        $body .= '</form></div>';
 
-        return $html;
+        return $body;
     }
 
     /**
@@ -255,11 +254,11 @@ class SearchController extends Controller implements ControllerInterface
      */
     public function before_displayPageFoot_callback()
     {
-        $html = $this->renderPageLinks();
+        $body = $this->renderPageLinks();
 
-        $html .= '<br>';
+        $body .= '<br>';
 
-        return $html;
+        return $body;
     }
 
     /**
@@ -272,7 +271,9 @@ class SearchController extends Controller implements ControllerInterface
     {
         $config = ConfigProvider::getInstance();
 
-        $html = '';
+        $params = $this->request->getParams();
+
+        $body = '';
 
         $end = ($this->startPoint+$config->get('app.list.page.amount'));
 
@@ -280,34 +281,35 @@ class SearchController extends Controller implements ControllerInterface
             $end = $this->resultCount;
 
         if ($this->resultCount > 0) {
-            $html .= '<p align="center">Displaying '.($this->startPoint+1).' to '.$end.' of <strong>'.$this->resultCount.'</strong>.&nbsp;&nbsp;';
+            $body .= '<p align="center">Displaying '.($this->startPoint+1).' to '.$end.' of <strong>'.$this->resultCount.'</strong>.&nbsp;&nbsp;';
         } else {
             if (!empty($this->query))
-                $html .= View::displayUpdateMessage('There were no search results for your query.');
+                $body .= View::displayUpdateMessage('There were no search results for your query.');
         }
 
-        $html .= '<ul class="pagination">';
+        $body .= '<ul class="pagination">';
 
         if ($this->startPoint > 0) {
             // handle secure URLs
-            if (isset($_GET['tk']))
-                $html .= '<li><a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint-$config->get('app.list.page.amount'))).'">&laquo;</a></li>';
+            if (isset($params['tk']))
+                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint-$config->get('app.list.page.amount'))).'">&laquo;</a></li>';
             else
-                $html .= '<li><a href="'.$config->get('app.url').'search/q/'.$this->query.'/start/'.($this->startPoint-$config->get('app.list.page.amount')).'">&laquo;</a></li>';
+                $body .= '<li><a href="'.$config->get('app.url').'search/q/'.$this->query.'/start/'.($this->startPoint-$config->get('app.list.page.amount')).'">&laquo;</a></li>';
         } elseif ($this->resultCount > $config->get('app.list.page.amount')){
-            $html .= '<li class="disabled"><a href="#">&laquo;</a></li>';
+            $body .= '<li class="disabled"><a href="#">&laquo;</a></li>';
         }
 
         $page = 1;
+
         for ($i = 0; $i < $this->resultCount; $i+=$config->get('app.list.page.amount')) {
             if ($i != $this->startPoint) {
                 // handle secure URLs
-                if (isset($_GET['tk']))
-                    $html .= '<li><a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.$i).'">'.$page.'</a></li>';
+                if (isset($params['tk']))
+                    $body .= '<li><a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.$i).'">'.$page.'</a></li>';
                 else
-                    $html .= '<li><a href="'.$config->get('app.url').'search/q/'.$this->query.'/start/'.$i.'">'.$page.'</a></li>';
+                    $body .= '<li><a href="'.$config->get('app.url').'search/q/'.$this->query.'/start/'.$i.'">'.$page.'</a></li>';
             } elseif ($this->resultCount > $config->get('app.list.page.amount')){
-                $html .= '<li class="active"><a href="#">'.$page.'</a></li>';
+                $body .= '<li class="active"><a href="#">'.$page.'</a></li>';
             }
 
             $page++;
@@ -315,18 +317,18 @@ class SearchController extends Controller implements ControllerInterface
 
         if ($this->resultCount > $end) {
             // handle secure URLs
-            if (isset($_GET['tk']))
-                $html .= '<li><a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint+$config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a></li>';
+            if (isset($params['tk']))
+                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint+$config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a></li>';
             else
-                $html .= '<li><a href="'.$config->get('app.url').'search/q/'.$this->query.'/start/'.($this->startPoint+$config->get('app.list.page.amount')).'">&raquo;</a></li>';
+                $body .= '<li><a href="'.$config->get('app.url').'search/q/'.$this->query.'/start/'.($this->startPoint+$config->get('app.list.page.amount')).'">&raquo;</a></li>';
         } elseif ($this->resultCount > $config->get('app.list.page.amount')){
-            $html .= '<li class="disabled"><a href="#">&raquo;</a></li>';
+            $body .= '<li class="disabled"><a href="#">&raquo;</a></li>';
         }
 
-        $html .= '</ul>';
-        $html .= '</p>';
+        $body .= '</ul>';
+        $body .= '</p>';
 
-        return $html;
+        return $body;
     }
 
     /**
