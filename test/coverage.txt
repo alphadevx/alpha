@@ -1,12 +1,12 @@
 
 
 Code Coverage Report:        
-  2015-05-28 21:40:35        
+  2015-05-31 13:08:25        
                              
  Summary:                    
   Classes: 30.93% (30/97)    
   Methods: 52.97% (375/708)  
-  Lines:   66.93% (5498/8214)
+  Lines:   67.44% (5538/8212)
 
 \Alpha\Controller::ArticleController
   Methods:  30.00% ( 3/10)   Lines:  69.34% (285/411)
@@ -43,7 +43,7 @@ Code Coverage Report:
 \Alpha\Controller::MetricController
   Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 18/ 18)
 \Alpha\Controller::RecordSelectorController
-  Methods:  50.00% ( 1/ 2)   Lines:  66.00% ( 33/ 50)
+  Methods:  50.00% ( 1/ 2)   Lines:  89.80% ( 44/ 49)
 \Alpha\Controller\Front::FrontController
   Methods:  75.00% (12/16)   Lines:  88.19% (127/144)
 \Alpha\Exception::AlphaException
@@ -55,7 +55,7 @@ Code Coverage Report:
 \Alpha\Model::ActiveRecordProviderFactory
   Methods: 100.00% ( 1/ 1)   Lines: 100.00% ( 12/ 12)
 \Alpha\Model::ActiveRecordProviderSQLite
-  Methods:  19.51% ( 8/41)   Lines:  68.45% (753/1100)
+  Methods:  19.51% ( 8/41)   Lines:  68.55% (754/1100)
 \Alpha\Model::Article
   Methods:  35.29% ( 6/17)   Lines:  67.57% (100/148)
 \Alpha\Model::ArticleComment
@@ -89,7 +89,7 @@ Code Coverage Report:
 \Alpha\Model\Type::Integer
   Methods:  71.43% ( 5/ 7)   Lines:  92.00% ( 23/ 25)
 \Alpha\Model\Type::Relation
-  Methods:  45.45% (10/22)   Lines:  73.68% (126/171)
+  Methods:  45.45% (10/22)   Lines:  74.27% (127/171)
 \Alpha\Model\Type::RelationLookup
   Methods:  36.36% ( 4/11)   Lines:  69.12% ( 47/ 68)
 \Alpha\Model\Type::Sequence
@@ -177,6 +177,6 @@ Code Coverage Report:
 \Alpha\View\Widget::Image
   Methods:  55.56% ( 5/ 9)   Lines:  34.78% ( 40/115)
 \Alpha\View\Widget::RecordSelector
-  Methods:  33.33% ( 1/ 3)   Lines:  27.40% ( 57/208)
+  Methods:  33.33% ( 1/ 3)   Lines:  40.58% ( 84/207)
 \Alpha\View\Widget::StringBox
   Methods:  25.00% ( 1/ 4)   Lines:  75.00% ( 18/ 24)

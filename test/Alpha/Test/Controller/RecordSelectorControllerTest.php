@@ -11,6 +11,8 @@ use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Model\Rights;
 use Alpha\Model\Person;
+use Alpha\Model\Article;
+use Alpha\Model\ArticleComment;
 
 /**
  *
@@ -78,6 +80,20 @@ class RecordSelectorControllerTest extends \PHPUnit_Framework_TestCase
         $person->set('password', 'password');
         $person->rebuildTable();
         $person->save();
+
+        $article = new Article();
+        $article->set('title', 'unit test');
+        $article->set('description', 'unit test');
+        $article->set('content', 'unit test');
+        $article->set('author', 'unit test');
+        $article->rebuildTable();
+        $article->save();
+
+        $comment = new ArticleComment();
+        $comment->set('content', 'unit test');
+        $comment->getPropObject('articleOID')->setValue($article->getOID());
+        $comment->rebuildTable();
+        $comment->save();
     }
 
     /**
@@ -97,6 +113,14 @@ class RecordSelectorControllerTest extends \PHPUnit_Framework_TestCase
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method for MANY-TO-MANY relation');
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+
+        $uri = '/recordselector/1/ONE-TO-MANY?relatedClass='.urlencode('Alpha\Model\ArticleComment').'&relatedClassField=articleOID&relatedClassDisplayField=content&field=hiddenformfield';
+
+        $request = new Request(array('method' => 'GET', 'URI' => $uri));
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method for ONE-TO-MANY relation');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
     }
 }

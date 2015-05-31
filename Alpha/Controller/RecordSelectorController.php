@@ -105,13 +105,14 @@ class RecordSelectorController extends Controller implements ControllerInterface
             throw new ResourceNotFoundException('File not found');
         }
 
+        $field = $params['field'];
+
         if ($relationType == 'MANY-TO-MANY') {
             try {
                 $relatedClassLeft = $params['relatedClassLeft'];
                 $relatedClassLeftDisplayField = $params['relatedClassLeftDisplayField'];
                 $relatedClassRight = $params['relatedClassRight'];
                 $relatedClassRightDisplayField = $params['relatedClassRightDisplayField'];
-                $field = $params['field'];
                 $accessingClassName = $params['accessingClassName'];
                 $lookupOIDs = $params['lookupOIDs'];
             } catch (\Exception $e) {
@@ -127,7 +128,7 @@ class RecordSelectorController extends Controller implements ControllerInterface
             $relationObject->setValue($ActiveRecordOID);
 
             $recSelector = new RecordSelector($relationObject, '', $field, $accessingClassName);
-            $body .= $recSelector->renderSelector(explode(',', $lookupOIDs), $field);
+            $body .= $recSelector->renderSelector($field, explode(',', $lookupOIDs));
         } else {
             try {
                 $relatedClass = $params['relatedClass'];
@@ -145,7 +146,7 @@ class RecordSelectorController extends Controller implements ControllerInterface
             $relationObject->setValue($ActiveRecordOID);
 
             $recSelector = new RecordSelector($relationObject);
-            $body .= $recSelector->renderSelector();
+            $body .= $recSelector->renderSelector($field);
         }
 
         self::$logger->debug('<<__doGet');

@@ -367,14 +367,14 @@ class RecordSelector
     /**
      * Returns the HTML for the record selector that will appear in a pop-up window.
      *
-     * @param array $lookupOIDs An optional array of related look-up OIDs, only required for rendering MANY-TO-MANY rels
      * @param string $fieldname The hidden HTML form field in the parent to pass values back to.
+     * @param array $lookupOIDs An optional array of related look-up OIDs, only required for rendering MANY-TO-MANY rels
      * @since 1.0
      * @return string
      */
-    public function renderSelector($lookupOIDs=array(), $fieldname)
+    public function renderSelector($fieldname, $lookupOIDs=array())
     {
-        self::$logger->debug('>>renderSelector(lookupOIDs=['.var_export($lookupOIDs, true).'], fieldname=['.$fieldname.'])');
+        self::$logger->debug('>>renderSelector(fieldname=['.$fieldname.'], lookupOIDs=['.var_export($lookupOIDs, true).'])');
 
         $config = ConfigProvider::getInstance();
 
@@ -471,8 +471,6 @@ class RecordSelector
 
         } else {
             $className = $this->relationObject->getRelatedClass();
-
-            ActiveRecord::loadClassDef($className);
 
             $tmpObject = new $className;
             $label = $tmpObject->getDataLabel($this->relationObject->getRelatedClassDisplayField());
