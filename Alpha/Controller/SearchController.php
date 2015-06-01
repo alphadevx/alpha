@@ -149,7 +149,7 @@ class SearchController extends Controller implements ControllerInterface
 
             $KPI->logStep('log search query');
 
-            $provider = SearchProviderFactory::getInstance('SearchProviderTags');
+            $provider = SearchProviderFactory::getInstance('Alpha\Util\Search\SearchProviderTags');
 
             // if a BO name is provided, only search tags on that class, otherwise search all BOs
             if (isset($params['ActiveRecordType']))
