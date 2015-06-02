@@ -34,6 +34,7 @@ use Alpha\Controller\LogoutController;
 use Alpha\Controller\MetricController;
 use Alpha\Controller\RecordSelectorController;
 use Alpha\Controller\SearchController;
+use Alpha\Controller\SequenceController;
 
 /**
  *
@@ -252,6 +253,11 @@ class FrontController
 
         $this->addRoute('/search/{query}/{start}/{limit}', function($request) {
             $controller = new SearchController();
+            return $controller->process($request);
+        })->value('start', 0)->value('limit', $config->get('app.list.page.amount'));
+
+        $this->addRoute('/sequence/{start}/{limit}', function($request) {
+            $controller = new SequenceController();
             return $controller->process($request);
         })->value('start', 0)->value('limit', $config->get('app.list.page.amount'));
 

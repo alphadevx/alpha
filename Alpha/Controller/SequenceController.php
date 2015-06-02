@@ -4,6 +4,8 @@ namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
 use Alpha\Model\Type\Sequence;
 use Alpha\View\View;
 
@@ -73,14 +75,6 @@ class SequenceController extends ListController implements ControllerInterface
         // ensure that the super class constructor is called, indicating the rights group
         parent::__construct('Admin');
 
-        $BO = new Sequence();
-
-        // make sure that the Sequence tables exist
-        if(!$BO->checkTableExists()) {
-            echo View::displayErrorMessage('Warning! The Sequence table do not exist, attempting to create it now...');
-            $BO->makeTable();
-        }
-
         // set up the title and meta details
         $this->setTitle('Listing all Sequences');
         $this->setDescription('Page to list all Sequences.');
@@ -92,50 +86,45 @@ class SequenceController extends ListController implements ControllerInterface
     /**
      * Handle GET requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doGET($params)
+    public function doGET($request)
     {
-        self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
-        echo View::displayPageHead($this);
+        $params = $request->getParams();
 
-        // get all of the BOs and invoke the list_view on each one
-        $temp = new Sequence();
+        $body = View::displayPageHead($this);
+
+        $sequence = new Sequence();
+
+        // make sure that the Sequence tables exist
+        if (!$sequence->checkTableExists()) {
+            $body .= View::displayErrorMessage('Warning! The Sequence table do not exist, attempting to create it now...');
+            $sequence->makeTable();
+        }
+
         // set the start point for the list pagination
         if (isset($params['start']) ? $this->startPoint = $params['start']: $this->startPoint = 1);
 
-        $objects = $temp->loadAll($this->startPoint);
+        $records = $sequence->loadAll($this->startPoint);
 
         ActiveRecord::disconnect();
 
-        $BO = new Sequence();
-        $this->BOCount = $BO->getCount();
+        $this->BOCount = $sequence->getCount();
 
-        echo View::renderDeleteForm();
+        $body .= View::renderDeleteForm();
 
-        foreach ($objects as $object) {
-            $temp = View::getInstance($object);
-            echo $temp->listView();
+        foreach ($records as $record) {
+            $view = View::getInstance($record);
+            $body .= $view->listView();
         }
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
-    }
-
-    /**
-     * Handle POST requests
-     *
-     * @param array $params
-     * @since 1.0
-     */
-    public function doPOST($params)
-    {
-        self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
-
-        self::$logger->debug('<<doPOST');
     }
 
     /**
