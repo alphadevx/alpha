@@ -1,12 +1,12 @@
 
 
 Code Coverage Report:        
-  2015-06-01 12:57:47        
+  2015-06-03 19:49:08        
                              
  Summary:                    
-  Classes: 30.61% (30/98)    
-  Methods: 52.79% (379/718)  
-  Lines:   67.43% (5617/8330)
+  Classes: 30.30% (30/99)    
+  Methods: 52.84% (381/721)  
+  Lines:   67.50% (5645/8363)
 
 \Alpha\Controller::ArticleController
   Methods:  30.00% ( 3/10)   Lines:  69.34% (285/411)
@@ -46,8 +46,10 @@ Code Coverage Report:
   Methods:  50.00% ( 1/ 2)   Lines:  89.80% ( 44/ 49)
 \Alpha\Controller::SearchController
   Methods:  30.00% ( 3/10)   Lines:  60.00% ( 69/115)
+\Alpha\Controller::SequenceController
+  Methods:  66.67% ( 2/ 3)   Lines:  83.33% ( 25/ 30)
 \Alpha\Controller\Front::FrontController
-  Methods:  75.00% (12/16)   Lines:  88.44% (130/147)
+  Methods:  75.00% (12/16)   Lines:  88.67% (133/150)
 \Alpha\Exception::AlphaException
   Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  4/  4)
 \Alpha\Model::ActionLog

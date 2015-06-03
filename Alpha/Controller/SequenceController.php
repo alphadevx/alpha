@@ -7,6 +7,7 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\Model\Type\Sequence;
+use Alpha\Model\ActiveRecord;
 use Alpha\View\View;
 
 /**
@@ -115,7 +116,7 @@ class SequenceController extends ListController implements ControllerInterface
 
         $this->BOCount = $sequence->getCount();
 
-        $body .= View::renderDeleteForm();
+        $body .= View::renderDeleteForm($this->request->getURI());
 
         foreach ($records as $record) {
             $view = View::getInstance($record);
@@ -125,6 +126,7 @@ class SequenceController extends ListController implements ControllerInterface
         $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
