@@ -5,6 +5,8 @@ namespace Alpha\Controller;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
 use Alpha\View\View;
 use Alpha\View\Widget\StringBox;
 use Alpha\View\Widget\Button;
@@ -21,8 +23,8 @@ use Alpha\Exception\AlphaException;
 
 /**
  *
- * Controller used to edit Tags related to the BO indicated in the supplied
- * GET vars (bo and oid).
+ * Controller used to edit Tags related to the ActiveRecord indicated in the supplied
+ * GET vars (ActiveRecordType and ActiveRecordOID).
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
@@ -99,52 +101,54 @@ class TagController extends EditController implements ControllerInterface
     /**
      * Handle GET requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
      * @throws Alpha\Exception\IllegalArguementException
      * @throws Alpha\Exception\FileNotFoundException
      * @since 1.0
      */
-    public function doGET($params)
+    public function doGET($request)
     {
-        self::$logger->debug('>>doGET($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
+
+        $params = $request->getParams();
 
         $config = ConfigProvider::getInstance();
 
-        echo View::displayPageHead($this);
+        $body = View::displayPageHead($this);
 
         $message = $this->getStatusMessage();
         if (!empty($message))
-            echo $message;
+            $body .= $message;
 
-        // ensure that a bo is provided
-        if (isset($params['bo']))
-            $BOName = $params['bo'];
+        // ensure that an ActiveRecordType is provided
+        if (isset($params['ActiveRecordType']))
+            $ActiveRecordType = $params['ActiveRecordType'];
         else
-            throw new IllegalArguementException('Could not load the tag objects as a bo was not supplied!');
+            throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordType was not supplied!');
 
         // ensure that a OID is provided
-        if (isset($params['oid']))
-            $BOoid = $params['oid'];
+        if (isset($params['ActiveRecordOID']))
+            $ActiveRecordOID = $params['ActiveRecordOID'];
         else
-            throw new IllegalArguementException('Could not load the tag objects as an oid was not supplied!');
+            throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordOID was not supplied!');
 
         try {
-            ActiveRecord::loadClassDef($BOName);
-            $this->BO = new $BOName;
-            $this->BO->load($BOoid);
+            $this->BO = new $ActiveRecordType;
+            $this->BO->load($ActiveRecordOID);
 
             $tags = $this->BO->getPropObject('tags')->getRelatedObjects();
 
             ActiveRecord::disconnect();
 
-            echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" accept-charset="UTF-8">';
-            echo '<h3>The following tags were found:</h3>';
+            $body .= '<form action="'.$request->getURI().'" method="POST" accept-charset="UTF-8">';
+            $body .= '<h3>The following tags were found:</h3>';
 
             foreach ($tags as $tag) {
                 $labels = $tag->getDataLabels();
 
                 $temp = new StringBox($tag->getPropObject('content'), $labels['content'], 'content_'.$tag->getID(), '');
-                echo $temp->render(false);
+                $body .= $temp->render(false);
 
                 $js = "if(window.jQuery) {
                     BootstrapDialog.show({
@@ -173,71 +177,74 @@ class TagController extends EditController implements ControllerInterface
                     });
                 }";
                 $button = new Button($js, "Delete", "delete".$tag->getID()."But");
-                echo $button->render();
+                $body .= $button->render();
             }
 
-            echo '<h3>Add a new tag:</h3>';
+            $body .= '<h3>Add a new tag:</h3>';
 
-            $temp = new StringBox(new String(), 'New tag', 'new_value', '');
-            echo $temp->render(false);
+            $temp = new StringBox(new String(), 'New tag', 'NewTagValue', '');
+            $body .= $temp->render(false);
 
             $temp = new Button('submit', 'Save', 'saveBut');
-            echo $temp->render();
-            echo '&nbsp;&nbsp;';
-            $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.$params['bo'].'&oid='.$params['oid'])."'", 'Back to Object', 'cancelBut');
-            echo $temp->render();
+            $body .= $temp->render();
+            $body .= '&nbsp;&nbsp;';
+            $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.$params['ActiveRecordType'].'&oid='.$params['ActiveRecordOID'])."'", 'Back to Object', 'cancelBut');
+            $body .= $temp->render();
 
-            echo View::renderSecurityFields();
+            $body .= View::renderSecurityFields();
 
-            echo '</form>';
+            $body .= '</form>';
 
-            echo View::renderDeleteForm();
+            $body .= View::renderDeleteForm();
 
         } catch (RecordNotFoundException $e) {
-            $msg = 'Unable to load the BO of id ['.$params['oid'].'], error was ['.$e->getMessage().']';
+            $msg = 'Unable to load the ActiveRecord of id ['.$params['ActiveRecordOID'].'], error was ['.$e->getMessage().']';
             self::$logger->error($msg);
             throw new FileNotFoundException($msg);
         }
 
-        echo View::displayPageFoot($this);
+        $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
      * Handle POST requests
      *
-     * @param array $params
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
      * @throws Alpha\Exception\SecurityException
      * @throws Alpha\Exception\IllegalArguementException
      * @since 1.0
      */
-    public function doPOST($params)
+    public function doPOST($request)
     {
-        self::$logger->debug('>>doPOST($params=['.var_export($params, true).'])');
+        self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
+
+        $params = $request->getParams();
 
         try {
             // check the hidden security fields before accepting the form POST data
-            if(!$this->checkSecurityFields())
+            if (!$this->checkSecurityFields())
                 throw new SecurityException('This page cannot accept post data from remote servers!');
 
             // ensure that a bo is provided
-            if (isset($params['bo']))
-                $BOName = $params['bo'];
+            if (isset($params['ActiveRecordType']))
+                $ActiveRecordType = $params['ActiveRecordType'];
             else
-                throw new IllegalArguementException('Could not load the tag objects as a bo was not supplied!');
+                throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordType was not supplied!');
 
             // ensure that a OID is provided
-            if (isset($params['oid']))
-                $BOoid = $params['oid'];
+            if (isset($params['ActiveRecordOID']))
+                $ActiveRecordOID = $params['ActiveRecordOID'];
             else
-                throw new IllegalArguementException('Could not load the tag objects as a bo was not supplied!');
+                throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordOID was not supplied!');
 
             if (isset($params['saveBut'])) {
                 try {
-                    ActiveRecord::loadClassDef($BOName);
-                    $this->BO = new $BOName;
-                    $this->BO->load($BOoid);
+                    $this->BO = new $ActiveRecordType;
+                    $this->BO->load($ActiveRecordOID);
 
                     $tags = $this->BO->getPropObject('tags')->getRelatedObjects();
 
@@ -246,24 +253,24 @@ class TagController extends EditController implements ControllerInterface
                     foreach ($tags as $tag) {
                         $tag->set('content', Tag::cleanTagContent($params['content_'.$tag->getID()]));
                         $tag->save();
-                        self::$logger->action('Saved tag '.$tag->get('content').' on '.$BOName.' instance with OID '.$BOoid);
+                        self::$logger->action('Saved tag '.$tag->get('content').' on '.$ActiveRecordType.' instance with OID '.$ActiveRecordOID);
                     }
 
                     // handle new tag if posted
-                    if (isset($params['new_value']) && trim($params['new_value']) != '') {
+                    if (isset($params['NewTagValue']) && trim($params['NewTagValue']) != '') {
                         $newTag = new Tag();
-                        $newTag->set('content', Tag::cleanTagContent($params['new_value']));
-                        $newTag->set('taggedOID', $BOoid);
-                        $newTag->set('taggedClass', $BOName);
+                        $newTag->set('content', Tag::cleanTagContent($params['NewTagValue']));
+                        $newTag->set('taggedOID', $ActiveRecordOID);
+                        $newTag->set('taggedClass', $ActiveRecordType);
                         $newTag->save();
-                        self::$logger->action('Created a new tag '.$newTag->get('content').' on '.$BOName.' instance with OID '.$BOoid);
+                        self::$logger->action('Created a new tag '.$newTag->get('content').' on '.$ActiveRecordType.' instance with OID '.$ActiveRecordOID);
                     }
 
                     ActiveRecord::commit();
 
                     $this->setStatusMessage(View::displayUpdateMessage('Tags on '.get_class($this->BO).' '.$this->BO->getID().' saved successfully.'));
 
-                    $this->doGET($params);
+                    return $this->doGET($params);
                 } catch (ValidationException $e) {
                     /*
                      * The unique key has most-likely been violated because this BO is already tagged with this
@@ -273,14 +280,14 @@ class TagController extends EditController implements ControllerInterface
 
                     $this->setStatusMessage(View::displayErrorMessage('Tags on '.get_class($this->BO).' '.$this->BO->getID().' not saved due to duplicate tag values, please try again.'));
 
-                    $this->doGET($params);
+                    return $this->doGET($params);
                 } catch (FailedSaveException $e) {
-                    self::$logger->error('Unable to save the tags of id ['.$params['oid'].'], error was ['.$e->getMessage().']');
+                    self::$logger->error('Unable to save the tags of id ['.$params['ActiveRecordOID'].'], error was ['.$e->getMessage().']');
                     ActiveRecord::rollback();
 
                     $this->setStatusMessage(View::displayErrorMessage('Tags on '.get_class($this->BO).' '.$this->BO->getID().' not saved, please check the application logs.'));
 
-                    $this->doGET($params);
+                    return $this->doGET($params);
                 }
 
                 ActiveRecord::disconnect();
@@ -288,9 +295,8 @@ class TagController extends EditController implements ControllerInterface
 
             if (!empty($params['deleteOID'])) {
                 try {
-                    ActiveRecord::loadClassDef($BOName);
-                    $this->BO = new $BOName;
-                    $this->BO->load($BOoid);
+                    $this->BO = new $ActiveRecordType;
+                    $this->BO->load($ActiveRecordOID);
 
                     $tag = new Tag();
                     $tag->load($params['deleteOID']);
@@ -300,20 +306,20 @@ class TagController extends EditController implements ControllerInterface
 
                     $tag->delete();
 
-                    self::$logger->action('Deleted tag '.$content.' on '.$BOName.' instance with OID '.$BOoid);
+                    self::$logger->action('Deleted tag '.$content.' on '.$ActiveRecordType.' instance with OID '.$ActiveRecordOID);
 
                     ActiveRecord::commit();
 
                     $this->setStatusMessage(View::displayUpdateMessage('Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' deleted successfully.'));
 
-                    $this->doGET($params);
+                    return $this->doGET($params);
                 } catch (AlphaException $e) {
                     self::$logger->error('Unable to delete the tag of id ['.$params['deleteOID'].'], error was ['.$e->getMessage().']');
                     ActiveRecord::rollback();
 
                     $this->setStatusMessage(View::displayErrorMessage('Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' not deleted, please check the application logs.'));
 
-                    $this->doGET($params);
+                    return $this->doGET($params);
                 }
 
                 ActiveRecord::disconnect();

@@ -35,6 +35,7 @@ use Alpha\Controller\MetricController;
 use Alpha\Controller\RecordSelectorController;
 use Alpha\Controller\SearchController;
 use Alpha\Controller\SequenceController;
+use Alpha\Controller\TagController;
 
 /**
  *
@@ -260,6 +261,11 @@ class FrontController
             $controller = new SequenceController();
             return $controller->process($request);
         })->value('start', 0)->value('limit', $config->get('app.list.page.amount'));
+
+        $this->addRoute('/tag/{ActiveRecordType}/{ActiveRecordOID}', function($request) {
+            $controller = new TagController();
+            return $controller->process($request);
+        });
 
 		self::$logger->debug('<<__construct');
 	}
