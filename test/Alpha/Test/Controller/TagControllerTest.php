@@ -3,8 +3,7 @@
 namespace Alpha\Test\Controller;
 
 use Alpha\Controller\Front\FrontController;
-use Alpha\Controller\SearchController;
-use Alpha\Controller\Controller;
+use Alpha\Controller\TagController;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
@@ -16,7 +15,7 @@ use Alpha\Model\Type\DEnumItem;
 
 /**
  *
- * Test cases for the SearchController class
+ * Test cases for the TagController class
  *
  * @since 2.0
  * @author John Collins <dev@alphaframework.org>
@@ -57,7 +56,7 @@ use Alpha\Model\Type\DEnumItem;
  * </pre>
  *
  */
-class SearchControllerTest extends \PHPUnit_Framework_TestCase
+class TagControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Set up tests
@@ -101,7 +100,7 @@ class SearchControllerTest extends \PHPUnit_Framework_TestCase
     {
         $article = new Article();
         $article->set('title', $name);
-        $article->set('description', 'A test article called unitTestArticle with some stop words and the unitTestArticle title twice');
+        $article->set('description', 'A test article called unitTestArticle');
         $article->set('author', 'blah');
         $article->set('content', 'blah');
         $article->set('section', $this->DEnumID);
@@ -121,16 +120,10 @@ class SearchControllerTest extends \PHPUnit_Framework_TestCase
         $article = $this->createArticle('testing');
         $article->save();
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/search/blah'));
+        $request = new Request(array('method' => 'GET', 'URI' => '/tag/Article/'.$article->getOID()));
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
-        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
-
-        $request = new Request(array('method' => 'GET', 'URI' => '/search/blah/0/1'));
-        $response = $front->process($request);
-
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method with pagination params');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
     }
 }

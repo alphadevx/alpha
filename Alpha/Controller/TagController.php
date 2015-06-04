@@ -12,6 +12,7 @@ use Alpha\View\Widget\StringBox;
 use Alpha\View\Widget\Button;
 use Alpha\Model\Tag;
 use Alpha\Model\ActiveRecord;
+use Alpha\Model\Type\String;
 use Alpha\Controller\Front\FrontController;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\SecurityException;
@@ -133,8 +134,13 @@ class TagController extends EditController implements ControllerInterface
         else
             throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordOID was not supplied!');
 
+        $className = "Alpha\\Model\\$ActiveRecordType";
+        if (class_exists($className))
+            $this->BO = new $className();
+        else
+            throw new IllegalArguementException('No ActiveRecord available to display tags for!');
+
         try {
-            $this->BO = new $ActiveRecordType;
             $this->BO->load($ActiveRecordOID);
 
             $tags = $this->BO->getPropObject('tags')->getRelatedObjects();
@@ -195,7 +201,7 @@ class TagController extends EditController implements ControllerInterface
 
             $body .= '</form>';
 
-            $body .= View::renderDeleteForm();
+            $body .= View::renderDeleteForm($request->getURI());
 
         } catch (RecordNotFoundException $e) {
             $msg = 'Unable to load the ActiveRecord of id ['.$params['ActiveRecordOID'].'], error was ['.$e->getMessage().']';
@@ -241,9 +247,14 @@ class TagController extends EditController implements ControllerInterface
             else
                 throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordOID was not supplied!');
 
+            $className = "Alpha\\Model\\$ActiveRecordType";
+            if (class_exists($className))
+                $this->BO = new $className();
+            else
+                throw new IllegalArguementException('No ActiveRecord available to display tags for!');
+
             if (isset($params['saveBut'])) {
                 try {
-                    $this->BO = new $ActiveRecordType;
                     $this->BO->load($ActiveRecordOID);
 
                     $tags = $this->BO->getPropObject('tags')->getRelatedObjects();
