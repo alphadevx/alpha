@@ -12,6 +12,7 @@ use Alpha\Util\Config\Configprovider;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Exception\ValidationException;
 use Alpha\Exception\FileNotFoundException;
+use Alpha\Exception\AlphaException;
 use Alpha\Controller\Front\FrontController;
 
 /**
