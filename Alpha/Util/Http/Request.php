@@ -129,6 +129,14 @@ class Request
     private $URI;
 
     /**
+     * The query string provided on the request (if any)
+     *
+     * @var string
+     * @since 2.0
+     */
+    private $queryString;
+
+    /**
      * Builds up the request based on available PHP super globals, in addition to
      * any overrides provided (useful for testing).
      *
@@ -466,6 +474,17 @@ class Request
     }
 
     /**
+     * Get the query string provided on the request
+     *
+     * @return string
+     * @since 2.0
+     */
+    public function getQueryString()
+    {
+        return $this->queryString;
+    }
+
+    /**
      * Parses the route provided to extract matching params of the route from this request's URI
      *
      * @param string $route The route with parameter names, e.g. /user/{username}
@@ -480,6 +499,7 @@ class Request
 
             // let's take this opportunity to pass query string params to $this->params
             $queryString = mb_substr($this->URI, (mb_strpos($this->URI, '?')+1));
+            $this->queryString = $queryString;
             parse_str($queryString, $this->params);
         } else {
             $URI = $this->URI;
