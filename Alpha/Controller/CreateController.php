@@ -141,7 +141,7 @@ class CreateController extends Controller implements ControllerInterface
              * TODO: do we still want to do this?
              */
             if ($this->getCustomControllerName($ActiveRecordType, 'create') != null)
-                $this->loadCustomController($ActiveRecordType, 'create');
+                return $this->loadCustomController($ActiveRecordType, 'create');
 
             $className = "Alpha\\Model\\$ActiveRecordType";
             if (class_exists($className))

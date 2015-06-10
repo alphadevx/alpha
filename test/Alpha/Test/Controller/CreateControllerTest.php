@@ -111,6 +111,12 @@ class CreateControllerTest extends \PHPUnit_Framework_TestCase
 
         $response = $front->process($request);
 
+        $this->assertEquals(301, $response->getStatus(), 'Testing the doGET method');
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/create/ActionLog'));
+
+        $response = $front->process($request);
+
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
     }
