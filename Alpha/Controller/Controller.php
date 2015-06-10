@@ -250,6 +250,7 @@ abstract class Controller
 	 	}
 
 	 	// if configured to do so, force redirect to the front controller
+	 	// TODO: refactor
 	 	if ($config->get('app.force.front.controller') && basename($_SERVER['PHP_SELF']) != 'index.php') {
 	 		// set the correct HTTP header for the response
 	    	header('HTTP/1.1 301 Moved Permanently');
@@ -1123,8 +1124,6 @@ abstract class Controller
 
 		$config = ConfigProvider::getInstance();
 
-		// strip the Object part from the class name
-		$BOName = mb_substr($BOName, 0, mb_strpos($BOName, 'Object'));
 		// uppercase the first letter of each word, e.g. create cart becomes Create Cart
 		$controllerName = ucwords($mode.' '.$BOName);
 		// remove spaces
@@ -1149,6 +1148,7 @@ abstract class Controller
 	 *
 	 * @param string $BOName The classname of the business object
 	 * @param string $mode The mode of the controller (create, view, edit)
+	 * @return Alpha\Util\Http\Response
 	 * @throws Alpha\Exception\FileNotFoundException
 	 * @since 1.0
 	 */
@@ -1167,38 +1167,42 @@ abstract class Controller
 
 		self::$logger->debug('Custom controller name is ['.$controllerName.']');
 
+		$params = $this->request->getParams();
+
 		// just making sure that we are not already using the custom controller
 		if (get_class($this) != $controllerName) {
 			if (file_exists($config->get('app.root').'controller/'.$controllerName.'.php')) {
 				self::$logger->debug('Custom controller found, redirecting...');
 				// handle secure URLs
-				if (isset($_GET['tk'])) {
-					$params = FrontController::decodeQueryParams($_GET['tk']);
+				if (isset($params['tk'])) {
+					$params = FrontController::decodeQueryParams($params['tk']);
 					$params = preg_replace('/act=.*\&/', 'act='.$controllerName.'&', $params);
 					self::$logger->debug('Params are ['.$params.']');
 
 					$url = FrontController::generateSecureURL($params);
 					self::$logger->debug('Redirecting to ['.$url.']');
-					header('Location: '.$url);
+					$response = new Response(301);
+					$response->redirect($url);
 					self::$logger->debug('<<loadCustomController');
-					exit;
+					return $response;
 				} else {
-					$url = $config->get('app.url').'controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING'];
+					$url = $config->get('app.url').'controller/'.$controllerName.'.php?'.$this->request->getQueryString();
 					self::$logger->debug('Redirecting to ['.$url.']');
-					header('Location: '.$url);
+					$response = new Response(301);
+					$response->redirect($url);
 					self::$logger->debug('<<loadCustomController');
-					exit;
+					return $response;
 				}
 			} elseif (file_exists($config->get('app.root').'alpha/controller/'.$controllerName.'.php')) {
 				self::$logger->debug('Custom controller found, redirecting...');
 				// handle secure URLs
 				if (self::checkIfAccessingFromSecureURL()) {
-					if (isset($_GET['tk'])) {
+					if (isset($params['tk'])) {
 						$params = FrontController::decodeQueryParams($_GET['tk']);
 					} else {
-						$start = mb_strpos($_SERVER['REQUEST_URI'], '/tk/')+3;
-						$end = mb_strlen($_SERVER['REQUEST_URI']);
-						$tk = mb_substr($_SERVER['REQUEST_URI'], $start+1, $end-($start+1));
+						$start = mb_strpos($this->request->getURI(), '/tk/')+3;
+						$end = mb_strlen($this->request->getURI());
+						$tk = mb_substr($this->request->getURI(), $start+1, $end-($start+1));
 						$params = FrontController::decodeQueryParams($tk);
 					}
 
@@ -1207,15 +1211,17 @@ abstract class Controller
 
 					$url = FrontController::generateSecureURL($params);
 					self::$logger->debug('Redirecting to ['.$url.']');
-					header('Location: '.$url);
+					$response = new Response(301);
+					$response->redirect($url);
 					self::$logger->debug('<<loadCustomController');
-					exit;
+					return $response;
 				} else {
-					$url = $config->get('app.url').'alpha/controller/'.$controllerName.'.php?'.$_SERVER['QUERY_STRING'];
+					$url = $config->get('app.url').'alpha/controller/'.$controllerName.'.php?'.$this->request->getQueryString();
 					self::$logger->debug('Redirecting to ['.$url.']');
-					header('Location: '.$url);
+					$response = new Response(301);
+					$response->redirect($url);
 					self::$logger->debug('<<loadCustomController');
-					exit;
+					return $response;
 				}
 			} else {
 				// throw an exception if we have gotten this far and no custom controller was found
