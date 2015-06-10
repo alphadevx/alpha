@@ -1,12 +1,12 @@
 
 
 Code Coverage Report:        
-  2015-06-10 19:20:32        
+  2015-06-10 21:57:01        
                              
  Summary:                    
   Classes: 30.00% (30/100)   
-  Methods: 52.69% (382/725)  
-  Lines:   67.36% (5726/8501)
+  Methods: 52.55% (381/725)  
+  Lines:   67.13% (5707/8502)
 
 \Alpha\Controller::ArticleController
   Methods:  30.00% ( 3/10)   Lines:  69.34% (285/411)
@@ -15,9 +15,9 @@ Code Coverage Report:
 \Alpha\Controller::CacheController
   Methods:  75.00% ( 3/ 4)   Lines:  79.69% ( 51/ 64)
 \Alpha\Controller::Controller
-  Methods:  50.91% (28/55)   Lines:  75.00% (396/528)
+  Methods:  50.91% (28/55)   Lines:  71.40% (377/528)
 \Alpha\Controller::CreateController
-  Methods:  25.00% ( 1/ 4)   Lines:  73.75% ( 59/ 80)
+  Methods:  25.00% ( 1/ 4)   Lines:  74.07% ( 60/ 81)
 \Alpha\Controller::DEnumController
   Methods:  40.00% ( 2/ 5)   Lines:  58.33% ( 70/120)
 \Alpha\Controller::EditController
@@ -143,7 +143,7 @@ Code Coverage Report:
 \Alpha\Util\Http::PHPServerUtils
   Methods:  33.33% ( 1/ 3)   Lines:  55.00% ( 22/ 40)
 \Alpha\Util\Http::Request
-  Methods:  56.52% (13/23)   Lines:  90.38% ( 94/104)
+  Methods:  52.17% (12/23)   Lines:  89.42% ( 93/104)
 \Alpha\Util\Http::Response
   Methods:  80.00% (12/15)   Lines:  75.00% ( 33/ 44)
 \Alpha\Util\Http\Filter::ClientBlacklistFilter
