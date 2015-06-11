@@ -306,7 +306,7 @@ class TagController extends EditController implements ControllerInterface
 
             if (!empty($params['deleteOID'])) {
                 try {
-                    $this->BO = new $ActiveRecordType;
+                    $this->BO = new $className;
                     $this->BO->load($ActiveRecordOID);
 
                     $tag = new Tag();
@@ -317,7 +317,7 @@ class TagController extends EditController implements ControllerInterface
 
                     $tag->delete();
 
-                    self::$logger->action('Deleted tag '.$content.' on '.$ActiveRecordType.' instance with OID '.$ActiveRecordOID);
+                    self::$logger->action('Deleted tag '.$content.' on '.$className.' instance with OID '.$ActiveRecordOID);
 
                     ActiveRecord::commit();
 

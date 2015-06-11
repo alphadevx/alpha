@@ -163,14 +163,38 @@ class TagControllerTest extends \PHPUnit_Framework_TestCase
         $tags = $article->getPropObject('tags')->getRelatedObjects();
 
         $found = false;
+        $tagOID = '';
 
         foreach ($tags as $tag) {
             if ($tag->get('content') == 'somenewtag') {
                 $found = true;
+                $tagOID = $tag->getOID();
+                break;
             }
         }
 
         $this->assertTrue($found, 'Checking that the new tag added was actually saved');
+
+        $params = array('deleteOID' => $tagOID, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/tag/Article/'.$article->getOID(), 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
+
+        $tags = $article->getPropObject('tags')->getRelatedObjects();
+
+        $notFound = true;
+
+        foreach ($tags as $tag) {
+            if ($tag->get('content') == 'somenewtag') {
+                $notFound = false;
+                break;
+            }
+        }
+
+        $this->assertTrue($notFound, 'Checking that a deleted tag was actually removed');
     }
 }
 
