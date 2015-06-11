@@ -1115,6 +1115,7 @@ abstract class Controller
 	 * @param string $mode The mode of the controller (create, view, edit)
 	 * @return string
 	 * @since 1.0
+	 * @todo Remove $mode param and refactor
 	 */
 	public static function getCustomControllerName($BOName, $mode)
     {

@@ -272,16 +272,16 @@ class TagController extends EditController implements ControllerInterface
                         $newTag = new Tag();
                         $newTag->set('content', Tag::cleanTagContent($params['NewTagValue']));
                         $newTag->set('taggedOID', $ActiveRecordOID);
-                        $newTag->set('taggedClass', $ActiveRecordType);
+                        $newTag->set('taggedClass', $className);
                         $newTag->save();
-                        self::$logger->action('Created a new tag '.$newTag->get('content').' on '.$ActiveRecordType.' instance with OID '.$ActiveRecordOID);
+                        self::$logger->action('Created a new tag '.$newTag->get('content').' on '.$className.' instance with OID '.$ActiveRecordOID);
                     }
 
                     ActiveRecord::commit();
 
                     $this->setStatusMessage(View::displayUpdateMessage('Tags on '.get_class($this->BO).' '.$this->BO->getID().' saved successfully.'));
 
-                    return $this->doGET($params);
+                    return $this->doGET($request);
                 } catch (ValidationException $e) {
                     /*
                      * The unique key has most-likely been violated because this BO is already tagged with this
@@ -291,14 +291,14 @@ class TagController extends EditController implements ControllerInterface
 
                     $this->setStatusMessage(View::displayErrorMessage('Tags on '.get_class($this->BO).' '.$this->BO->getID().' not saved due to duplicate tag values, please try again.'));
 
-                    return $this->doGET($params);
+                    return $this->doGET($request);
                 } catch (FailedSaveException $e) {
                     self::$logger->error('Unable to save the tags of id ['.$params['ActiveRecordOID'].'], error was ['.$e->getMessage().']');
                     ActiveRecord::rollback();
 
                     $this->setStatusMessage(View::displayErrorMessage('Tags on '.get_class($this->BO).' '.$this->BO->getID().' not saved, please check the application logs.'));
 
-                    return $this->doGET($params);
+                    return $this->doGET($request);
                 }
 
                 ActiveRecord::disconnect();
@@ -323,14 +323,14 @@ class TagController extends EditController implements ControllerInterface
 
                     $this->setStatusMessage(View::displayUpdateMessage('Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' deleted successfully.'));
 
-                    return $this->doGET($params);
+                    return $this->doGET($request);
                 } catch (AlphaException $e) {
                     self::$logger->error('Unable to delete the tag of id ['.$params['deleteOID'].'], error was ['.$e->getMessage().']');
                     ActiveRecord::rollback();
 
                     $this->setStatusMessage(View::displayErrorMessage('Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' not deleted, please check the application logs.'));
 
-                    return $this->doGET($params);
+                    return $this->doGET($request);
                 }
 
                 ActiveRecord::disconnect();

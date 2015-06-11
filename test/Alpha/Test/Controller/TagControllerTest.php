@@ -126,6 +126,52 @@ class TagControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
     }
+
+    /**
+     * Testing the doPOST method
+     */
+    public function testDoPOST()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        $front = new FrontController();
+        $controller = new TagController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $article = $this->createArticle('testing');
+        $article->save();
+
+        $tags = $article->getPropObject('tags')->getRelatedObjects();
+        $existingTags = array();
+
+        foreach ($tags as $tag) {
+            $existingTags['content_'.$tag->getOID()] = $tag->get('content');
+        }
+
+        $params = array('saveBut' => true, 'NewTagValue' => 'somenewtag', 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = array_merge($params, $existingTags);
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/tag/Article/'.$article->getOID(), 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
+
+        $tags = $article->getPropObject('tags')->getRelatedObjects();
+
+        $found = false;
+
+        foreach ($tags as $tag) {
+            if ($tag->get('content') == 'somenewtag') {
+                $found = true;
+            }
+        }
+
+        $this->assertTrue($found, 'Checking that the new tag added was actually saved');
+    }
 }
 
 ?>
