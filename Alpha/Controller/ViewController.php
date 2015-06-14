@@ -4,6 +4,9 @@ namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
 use Alpha\Util\Helper\Validator;
 use Alpha\View\View;
 use Alpha\View\Widget\Button;
@@ -129,7 +132,7 @@ class ViewController extends Controller implements ControllerInterface
         try {
             // load the business object (BO) definition
             if (isset($params['ActiveRecordType']) && isset($params['ActiveRecordOID'])) {
-                if (!AlphaValidator::isInteger($params['ActiveRecordOID']))
+                if (!Validator::isInteger($params['ActiveRecordOID']))
                     throw new IllegalArguementException('Invalid oid ['.$params['ActiveRecordOID'].'] provided on the request!');
 
                 $ActiveRecordType = $params['ActiveRecordType'];
@@ -137,10 +140,15 @@ class ViewController extends Controller implements ControllerInterface
                 /*
                 *  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
                 */
-                if ($this->getCustomControllerName($activeRecordType, 'view') != null)
-                    $this->loadCustomController($activeRecordType, 'view');
+                if ($this->getCustomControllerName($ActiveRecordType, 'view') != null)
+                    $this->loadCustomController($ActiveRecordType, 'view');
 
-                $this->BO = new $ActiveRecordType();
+                $className = "Alpha\\Model\\$ActiveRecordType";
+                if (class_exists($className))
+                    $this->BO = new $className();
+                else
+                    throw new IllegalArguementException('No ActiveRecord available to view!');
+
                 $this->BO->load($params['ActiveRecordOID']);
                 ActiveRecord::disconnect();
 
@@ -148,7 +156,7 @@ class ViewController extends Controller implements ControllerInterface
                 $this->BOView = View::getInstance($this->BO);
 
                 $body .= View::displayPageHead($this);
-                $body .= View::renderDeleteForm();
+                $body .= View::renderDeleteForm($request->getURI());
                 $body .= $this->BOView->detailedView();
             } else {
                 throw new IllegalArguementException('No ActiveRecord available to display!');
@@ -192,9 +200,14 @@ class ViewController extends Controller implements ControllerInterface
 
             // load the business object (BO) definition
             if (isset($params['ActiveRecordType'])) {
-                $activeRecordType = $params['ActiveRecordType'];
+                $ActiveRecordType = $params['ActiveRecordType'];
 
-                $this->BO = new $ActiveRecordType();
+                $className = "Alpha\\Model\\$ActiveRecordType";
+                if (class_exists($className))
+                    $this->BO = new $className();
+                else
+                    throw new IllegalArguementException('No ActiveRecord available to view!');
+
                 $this->activeRecordType = $ActiveRecordType;
                 $this->BOView = View::getInstance($this->BO);
 
