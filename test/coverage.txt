@@ -1,12 +1,12 @@
 
 
 Code Coverage Report:        
-  2015-06-14 20:35:09        
+  2015-06-15 13:23:43        
                              
  Summary:                    
   Classes: 29.70% (30/101)   
   Methods: 52.88% (386/730)  
-  Lines:   67.63% (5820/8606)
+  Lines:   68.05% (5856/8606)
 
 \Alpha\Controller::ArticleController
   Methods:  30.00% ( 3/10)   Lines:  69.34% (285/411)
@@ -51,7 +51,7 @@ Code Coverage Report:
 \Alpha\Controller::TagController
   Methods:  33.33% ( 1/ 3)   Lines:  74.22% ( 95/128)
 \Alpha\Controller::ViewController
-  Methods:  40.00% ( 2/ 5)   Lines:  42.57% ( 43/101)
+  Methods:  40.00% ( 2/ 5)   Lines:  78.22% ( 79/101)
 \Alpha\Controller\Front::FrontController
   Methods:  75.00% (12/16)   Lines:  89.10% (139/156)
 \Alpha\Exception::AlphaException

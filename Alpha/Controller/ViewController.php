@@ -2,6 +2,7 @@
 
 namespace Alpha\Controller;
 
+use Alpha\Controller\Front\FrontController;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Session\SessionProviderFactory;
@@ -215,7 +216,7 @@ class ViewController extends Controller implements ControllerInterface
                     if (!Validator::isInteger($params['deleteOID']))
                         throw new IllegalArguementException('Invalid deleteOID ['.$params['deleteOID'].'] provided on the request!');
 
-                    $temp = new $ActiveRecordType();
+                    $temp = new $className();
                     $temp->load($params['deleteOID']);
 
                     try {
