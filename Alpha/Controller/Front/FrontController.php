@@ -37,6 +37,7 @@ use Alpha\Controller\SearchController;
 use Alpha\Controller\SequenceController;
 use Alpha\Controller\TagController;
 use Alpha\Controller\ViewController;
+use Alpha\Controller\IndexController;
 
 /**
  *
@@ -167,6 +168,11 @@ class FrontController
 		ini_set('default_charset', 'utf-8');
 		if (!mb_check_encoding())
 			throw new BadRequestException('Request character encoding does not match expected UTF-8');
+
+		$this->addRoute('/', function($request) {
+            $controller = new IndexController();
+            return $controller->process($request);
+        });
 
         $this->addRoute('/a/{title}/{mode}', function($request) {
             $controller = new ArticleController();
