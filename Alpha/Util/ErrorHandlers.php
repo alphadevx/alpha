@@ -3,6 +3,7 @@
 namespace Alpha\Util;
 
 use Alpha\Exception\PHPException;
+use Alpha\Util\Logging\Logger;
 
 /**
  *
@@ -10,7 +11,6 @@ use Alpha\Exception\PHPException;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id: AlphaErrorHandlers.inc 1558 2012-08-01 21:32:49Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
