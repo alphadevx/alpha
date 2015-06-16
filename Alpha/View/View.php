@@ -693,7 +693,7 @@ class View
      * @since 1.0
      * @throws Alpha\Exception\IllegalArguementException
      */
-    public static function loadTemplate($BO, $mode, $fields)
+    public static function loadTemplate($BO, $mode, $fields = array())
     {
         self::$logger->debug('>>loadTemplate(BO=['.var_export($BO, true).'], mode=['.$mode.'], fields=['.var_export($fields, true).'])');
 
@@ -764,7 +764,7 @@ class View
      * @since 1.2
      * @throws Alpha\Exception\IllegalArguementException
      */
-    public static function loadTemplateFragment($type, $fileName, $fields)
+    public static function loadTemplateFragment($type, $fileName, $fields = array())
     {
         if(self::$logger == null)
             self::$logger = new Logger('View');
