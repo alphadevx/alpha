@@ -9,6 +9,7 @@ use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\View\View;
+use Alpha\Model\ActiveRecord;
 
 /**
  * Standard index controller for the application.  Override the index.phtml template to build your
@@ -74,8 +75,6 @@ class IndexController extends Controller implements ControllerInterface
         self::$logger = new Logger('IndexController');
         self::$logger->debug('>>__construct()');
 
-        $config = ConfigProvider::getInstance();
-
         // ensure that the super class constructor is called, indicating the rights group
         parent::__construct($visibility);
 
@@ -92,6 +91,17 @@ class IndexController extends Controller implements ControllerInterface
     public function doGET($request)
     {
         self::$logger->debug('>>doGET(request=['.var_export($request, true).'])');
+
+        $config = ConfigProvider::getInstance();
+
+        if ($config->get('app.check.installed') && !ActiveRecord::isInstalled()) {
+            $response = new Response(301);
+            $response->redirect($config->get('app.url').'install');
+
+            self::$logger->warn('App not installed so re-directing to the install controller');
+            self::$logger->debug('<<doGET');
+            return $response;
+        }
 
         $params = $request->getParams();
 

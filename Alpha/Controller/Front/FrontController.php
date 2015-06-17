@@ -38,6 +38,7 @@ use Alpha\Controller\SequenceController;
 use Alpha\Controller\TagController;
 use Alpha\Controller\ViewController;
 use Alpha\Controller\IndexController;
+use Alpha\Controller\InstallController;
 
 /**
  *
@@ -276,6 +277,11 @@ class FrontController
 
         $this->addRoute('/view/{ActiveRecordType}/{ActiveRecordOID}', function($request) {
             $controller = new ViewController();
+            return $controller->process($request);
+        });
+
+        $this->addRoute('/install', function($request) {
+            $controller = new InstallController();
             return $controller->process($request);
         });
 
