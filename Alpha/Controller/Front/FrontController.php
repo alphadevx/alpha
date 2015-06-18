@@ -285,6 +285,22 @@ class FrontController
             return $controller->process($request);
         });
 
+        $this->addRoute('/tk/{token}', function($request) {
+        	$params = self::getDecodeQueryParams($request->getParam('token'));
+        	
+        	if (isset($params['act'])) {
+        		$className = 'Alpha\Controller\\'.$params['act'];
+
+        		if (class_exists($className)) {
+        			$controller = new $className;
+        			return $controller->process($request);
+        		}
+        	}
+        	
+        	self::$logger->warn('Bad params ['.print_r($params, true).'] provided on a /tk/ request');
+        	return new Response(404, 'Resource not found');
+        });
+
 		self::$logger->debug('<<__construct');
 	}
 
@@ -339,16 +355,19 @@ class FrontController
 	 *
 	 * @throws Alpha\Exception\SecurityException
 	 * @since 1.0
+	 * @deprecated
 	 */
 	private function decodeQuery()
 	{
 		$config = ConfigProvider::getInstance();
 
-		if (!isset($_GET['tk'])) {
+		$params = $this->request->getParams();
+
+		if (!isset($params['token'])) {
 			throw new SecurityException('No token provided for the front controller!');
-		}else{
+		} else {
 			// replace any troublesome characters from the URL with the original values
-			$token = strtr($_GET['tk'], '-_', '+/');
+			$token = strtr($params['token'], '-_', '+/');
 			$token = base64_decode($token);
 			$this->queryString = trim(SecurityUtils::decrypt($token));
 		}
