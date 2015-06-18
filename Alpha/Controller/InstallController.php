@@ -83,32 +83,10 @@ class InstallController extends Controller implements ControllerInterface
 
         parent::__construct('Public');
 
-        $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        // set up the title and meta details
+        $this->setTitle('Installing '.$config->get('app.title'));
 
-        // if there is nobody logged in, we will send them off to the Login controller to do so before coming back here
-        if ($session->get('currentUser') === false) {
-            self::$logger->info('Nobody logged in, invoking Login controller...');
-
-            require_once $config->get('app.root').'alpha/controller/Login.php';
-
-            $controller = new LoginController();
-            $controller->setName('Login');
-            $controller->setUnitOfWork(array('LoginController', 'InstallController'));
-            $controller->doGET(array());
-
-            self::$logger->debug('<<__construct');
-            exit;
-        } else {
-
-            // ensure that the super class constructor is called, indicating the rights group
-            parent::__construct('Admin');
-
-            // set up the title and meta details
-            $this->setTitle('Installing '.$config->get('app.title'));
-
-            self::$logger->debug('<<__construct');
-        }
+        self::$logger->debug('<<__construct');
     }
 
     /**
@@ -122,9 +100,24 @@ class InstallController extends Controller implements ControllerInterface
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
-        $params = $request->getParams();
-
         $config = ConfigProvider::getInstance();
+
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        // if there is nobody logged in, we will send them off to the Login controller to do so before coming back here
+        if ($session->get('currentUser') === false) {
+            self::$logger->info('Nobody logged in, invoking Login controller...');
+
+            $controller = new LoginController();
+            $controller->setName('Login');
+            $controller->setUnitOfWork(array('LoginController', 'InstallController'));
+
+            self::$logger->debug('<<__construct');
+            return $controller->doGET($request);
+        }
+
+        $params = $request->getParams();
 
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
