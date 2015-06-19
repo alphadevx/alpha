@@ -16,6 +16,7 @@ use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\InputFilter;
 use Alpha\Model\Type\String;
+use Alpha\Model\ActiveRecord;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\AlphaException;
 use ReflectionClass;
@@ -563,7 +564,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $allowCSSOverrides = true;
 
-        if (isset($_SESSION['currentUser']) && AlphaDAO::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+        if (isset($_SESSION['currentUser']) && ActiveRecord::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
             $allowCSSOverrides = false;
         }
 

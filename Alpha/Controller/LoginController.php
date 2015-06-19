@@ -92,7 +92,7 @@ class LoginController extends Controller implements ControllerInterface
      */
     public function __construct()
     {
-        self::$logger = new Logger('Login');
+        self::$logger = new Logger('LoginController');
         self::$logger->debug('>>__construct()');
 
         $config = ConfigProvider::getInstance();
@@ -189,7 +189,7 @@ class LoginController extends Controller implements ControllerInterface
                         if ($this->getNextJob() != '')
                             $response->redirect($this->getNextJob());
                         else
-                            $response->redirect(FrontController::generateSecureURL('act=Install'));
+                            $response->redirect(FrontController::generateSecureURL('act=InstallController'));
 
                         return $response;
                     } else {

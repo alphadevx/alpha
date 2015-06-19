@@ -15,6 +15,7 @@ use Alpha\Model\Type\DEnumItem;
 use Alpha\Exception\FailedIndexCreateException;
 use Alpha\Exception\FailedLookupCreateException;
 use Alpha\Controller\Front\FrontController;
+use Alpha\View\View;
 
 /**
  *
@@ -110,7 +111,7 @@ class InstallController extends Controller implements ControllerInterface
             self::$logger->info('Nobody logged in, invoking Login controller...');
 
             $controller = new LoginController();
-            $controller->setName('Login');
+            $controller->setName('LoginController');
             $controller->setUnitOfWork(array('LoginController', 'InstallController'));
 
             self::$logger->debug('<<__construct');
@@ -135,21 +136,19 @@ class InstallController extends Controller implements ControllerInterface
         try {
             $logsDir = $config->get('app.file.store.dir').'logs';
 
-            $body = '<p>Attempting to create the logs directory <em>'.$logsDir.'</em>...';
+            $body .= '<p>Attempting to create the logs directory <em>'.$logsDir.'</em>...';
 
             if (!file_exists($logsDir))
                 mkdir($logsDir, 0774);
 
-            $this->copyRestrictedAccessFileToDirectory($logsDir);
-
-            self::$logger = new Logger('Install');
+            self::$logger = new Logger('InstallController');
             self::$logger->info('Started installation process!');
             self::$logger->info('Logs directory ['.$logsDir.'] successfully created');
             $body .= View::displayUpdateMessage('Logs directory ['.$logsDir.'] successfully created');
         } catch (\Exception $e) {
             $body .= View::displayErrorMessage($e->getMessage());
             $body .= View::displayErrorMessage('Aborting.');
-            return new Response(500, $body, array('Content-Type' => $contentType));
+            return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
         /*
@@ -163,14 +162,12 @@ class InstallController extends Controller implements ControllerInterface
             if (!file_exists($tasksDir))
                 mkdir($tasksDir, 0774);
 
-            $this->copyRestrictedAccessFileToDirectory($logsDir);
-
             self::$logger->info('Tasks directory ['.$tasksDir.'] successfully created');
             $body .= View::displayUpdateMessage('Tasks directory ['.$tasksDir.'] successfully created');
         } catch (\Exception $e) {
             $body .= View::displayErrorMessage($e->getMessage());
             $body .= View::displayErrorMessage('Aborting.');
-            return new Response(500, $body, array('Content-Type' => $contentType));
+            return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
         /*
@@ -189,7 +186,7 @@ class InstallController extends Controller implements ControllerInterface
         } catch (\Exception $e) {
             $body .= View::displayErrorMessage($e->getMessage());
             $body .= View::displayErrorMessage('Aborting.');
-            return new Response(500, $body, array('Content-Type' => $contentType));
+            return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
         /*
@@ -203,14 +200,12 @@ class InstallController extends Controller implements ControllerInterface
             if (!file_exists($modelDir))
                 mkdir($modelDir, 0774);
 
-            $this->copyRestrictedAccessFileToDirectory($modelDir);
-
             self::$logger->info('Model directory ['.$modelDir.'] successfully created');
             $body .= View::displayUpdateMessage('Model directory ['.$modelDir.'] successfully created');
         } catch (\Exception $e) {
             $body .= View::displayErrorMessage($e->getMessage());
             $body .= View::displayErrorMessage('Aborting.');
-            return new Response(500, $body, array('Content-Type' => $contentType));
+            return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
         /*
@@ -224,14 +219,12 @@ class InstallController extends Controller implements ControllerInterface
             if (!file_exists($viewDir))
                 mkdir($viewDir, 0774);
 
-            $this->copyRestrictedAccessFileToDirectory($viewDir);
-
             self::$logger->info('View directory ['.$viewDir.'] successfully created');
             $body .= View::displayUpdateMessage('View directory ['.$viewDir.'] successfully created');
         } catch (\Exception $e) {
             $body .= View::displayErrorMessage($e->getMessage());
             $body .= View::displayErrorMessage('Aborting.');
-            return new Response(500, $body, array('Content-Type' => $contentType));
+            return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
         /*
@@ -245,14 +238,12 @@ class InstallController extends Controller implements ControllerInterface
             if(!file_exists($attachmentsDir))
                 mkdir($attachmentsDir, 0774);
 
-            $this->copyRestrictedAccessFileToDirectory($attachmentsDir);
-
             self::$logger->info('Attachments directory ['.$attachmentsDir.'] successfully created');
             $body .= View::displayUpdateMessage('Attachments directory ['.$attachmentsDir.'] successfully created');
         } catch (\Exception $e) {
             $body .= View::displayErrorMessage($e->getMessage());
             $body .= View::displayErrorMessage('Aborting.');
-            return new Response(500, $body, array('Content-Type' => $contentType));
+            return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
         /*
@@ -270,8 +261,6 @@ class InstallController extends Controller implements ControllerInterface
             if (!file_exists($cacheDir))
                 mkdir($cacheDir, 0774);
 
-            $this->copyRestrictedAccessFileToDirectory($cacheDir);
-
             self::$logger->info('Cache directory ['.$cacheDir.'] successfully created');
             $body .= View::displayUpdateMessage('Cache directory ['.$cacheDir.'] successfully created');
 
@@ -279,8 +268,6 @@ class InstallController extends Controller implements ControllerInterface
             $body .= '<p>Attempting to create the HTML cache directory <em>'.$htmlDir.'</em>...';
             if (!file_exists($htmlDir))
                 mkdir($htmlDir, 0774);
-
-            $this->copyRestrictedAccessFileToDirectory($htmlDir);
 
             self::$logger->info('Cache directory ['.$htmlDir.'] successfully created');
             $body .= View::displayUpdateMessage('Cache directory ['.$htmlDir.'] successfully created');
@@ -290,8 +277,6 @@ class InstallController extends Controller implements ControllerInterface
             if (!file_exists($imagesDir))
                 mkdir($imagesDir, 0774);
 
-            $this->copyRestrictedAccessFileToDirectory($imagesDir);
-
             self::$logger->info('Cache directory ['.$imagesDir.'] successfully created');
             $body .= View::displayUpdateMessage('Cache directory ['.$imagesDir.'] successfully created');
 
@@ -299,8 +284,6 @@ class InstallController extends Controller implements ControllerInterface
             $body .= '<p>Attempting to create the cache directory <em>'.$pdfDir.'</em>...';
             if (!file_exists($pdfDir))
                 mkdir($pdfDir, 0774);
-
-            $this->copyRestrictedAccessFileToDirectory($pdfDir);
 
             self::$logger->info('Cache directory ['.$pdfDir.'] successfully created');
             $body .= View::displayUpdateMessage('Cache directory ['.$pdfDir.'] successfully created');
@@ -310,14 +293,12 @@ class InstallController extends Controller implements ControllerInterface
             if (!file_exists($xlsDir))
                 mkdir($xlsDir, 0774);
 
-            $this->copyRestrictedAccessFileToDirectory($xlsDir);
-
             self::$logger->info('Cache directory ['.$xlsDir.'] successfully created');
             $body .= View::displayUpdateMessage('Cache directory ['.$xlsDir.'] successfully created');
         } catch (\Exception $e) {
             $body .= View::displayErrorMessage($e->getMessage());
             $body .= View::displayErrorMessage('Aborting.');
-            return new Response(500, $body, array('Content-Type' => $contentType));
+            return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
         // start a new database transaction
@@ -353,7 +334,7 @@ class InstallController extends Controller implements ControllerInterface
             $body .= View::displayErrorMessage('Aborting.');
             self::$logger->error($e->getMessage());
             ActiveRecord::rollback();
-            return new Response(500, $body, array('Content-Type' => $contentType));
+            return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
         /*
@@ -363,7 +344,6 @@ class InstallController extends Controller implements ControllerInterface
         $loadedClasses = array();
 
         foreach ($classNames as $classname) {
-            ActiveRecord::loadClassDef($classname);
             array_push($loadedClasses, $classname);
         }
 
@@ -401,7 +381,7 @@ class InstallController extends Controller implements ControllerInterface
                 $body .= View::displayErrorMessage('Aborting.');
                 self::$logger->error($e->getMessage());
                 ActiveRecord::rollback();
-                return new Response(500, $body, array('Content-Type' => $contentType));
+                return new Response(500, $body, array('Content-Type' => 'text/html'));
             }
         }
 
@@ -435,7 +415,7 @@ class InstallController extends Controller implements ControllerInterface
             $body .= View::displayErrorMessage('Aborting.');
             self::$logger->error($e->getMessage());
             ActiveRecord::rollback();
-            return new Response(500, $body, array('Content-Type' => $contentType));
+            return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
         /*
@@ -471,10 +451,10 @@ class InstallController extends Controller implements ControllerInterface
             $body .= View::displayErrorMessage('Aborting.');
             self::$logger->error($e->getMessage());
             ActiveRecord::rollback();
-            return new Response(500, $body, array('Content-Type' => $contentType));
+            return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
-        $body .= '<br><p align="center"><a href="'.FrontController::generateSecureURL('act=ListBusinessObjects').'">Administration Home Page</a></p><br>';
+        $body .= '<br><p align="center"><a href="'.FrontController::generateSecureURL('act=ListActiveRecordsController').'">Administration Home Page</a></p><br>';
         $body .= View::displayPageFoot($this);
 
         // commit
@@ -483,20 +463,7 @@ class InstallController extends Controller implements ControllerInterface
         self::$logger->info('Finished installation!');
         self::$logger->action('Installed the application');
         self::$logger->debug('<<doGET');
-        return new Response(200, $body, array('Content-Type' => $contentType));
-    }
-
-    /**
-     * Copies a .htaccess file that restricts public access to the target directory
-     *
-     * @param string $dir
-     * @since 1.0
-     */
-    private function copyRestrictedAccessFileToDirectory($dir)
-    {
-        $config = ConfigProvider::getInstance();
-
-        copy($config->get('app.root').'alpha/.htaccess', $dir.'/.htaccess');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**

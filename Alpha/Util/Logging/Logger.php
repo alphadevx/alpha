@@ -3,6 +3,7 @@
 namespace Alpha\Util\Logging;
 
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Model\ActionLog;
 
 /**
  * Log class used for debug and exception logging
@@ -204,7 +205,7 @@ class Logger
 	public function action($message)
 	{
 		if (isset($_SESSION['currentUser'])) {
-			$action = new ActionLogObject();
+			$action = new ActionLog();
 			$action->set('client', (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''));
 			$action->set('IP', (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : ''));
 			$action->set('message', $message);
