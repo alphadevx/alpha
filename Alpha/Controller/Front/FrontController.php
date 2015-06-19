@@ -301,6 +301,12 @@ class FrontController
         	return new Response(404, 'Resource not found');
         });
 
+        $this->addRoute('/alpha/service', function($request) {
+        	$controller = new LoginController();
+        	$controller->setUnitOfWork(array('LoginController', 'ListActiveRecordsController'));
+        	return $controller->process($request);
+        });
+
 		self::$logger->debug('<<__construct');
 	}
 

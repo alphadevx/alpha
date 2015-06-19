@@ -19,6 +19,7 @@ use Alpha\Exception\AlphaException;
 use Alpha\Exception\NotImplementedException;
 use Alpha\Controller\Front\FrontController;
 use Alpha\View\View;
+use ReflectionClass;
 
 /**
  *
@@ -26,7 +27,6 @@ use Alpha\View\View;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id: AlphaController.inc 1796 2014-07-20 20:21:24Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -275,8 +275,10 @@ abstract class Controller
 	 	$this->unitMAXDuration = new Integer();
 
 	 	// uses controller class name as the job name
-		if ($this->name == '')
-	 		$this->setName(get_class($this));
+		if ($this->name == '') {
+			$reflectClass = new ReflectionClass($this);
+	 		$this->setName($reflectClass->getShortname());
+		}
 
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
@@ -481,15 +483,15 @@ abstract class Controller
 
 	 	$numOfJobs = count($jobs);
 
-	 	for ($i=0; $i<$numOfJobs; $i++) {
+	 	for ($i = 0; $i < $numOfJobs; $i++) {
 	 		// the first job in the sequence
-	 		if ($i==0) {
+	 		if ($i == 0) {
 	 			$this->firstJob = $jobs[$i];
 	 			self::$logger->debug('First job ['.$this->firstJob.']');
 	 		}
 	 		// found the current job
 	 		if ($this->name == $jobs[$i]) {
-	 			if(isset($jobs[$i-1])) {
+	 			if (isset($jobs[$i-1])) {
 	 				// set the previous job if it exists
 	 				$this->previousJob = $jobs[$i-1];
 	 				self::$logger->debug('Previous job ['.$this->previousJob.']');
@@ -501,7 +503,7 @@ abstract class Controller
 	 			}
 	 		}
 	 		// the last job in the sequence
-	 		if ($i==($numOfJobs-1)) {
+	 		if ($i == ($numOfJobs-1)) {
 	 			$this->lastJob = $jobs[$i];
 	 		}
 	 	}

@@ -187,7 +187,7 @@ class LoginController extends Controller implements ControllerInterface
 
                         $response = new Response(301);
                         if ($this->getNextJob() != '')
-                            $response->redirect($this->getNextJob());
+                            $response->redirect(FrontController::generateSecureURL('act='.$this->getNextJob()));
                         else
                             $response->redirect(FrontController::generateSecureURL('act=InstallController'));
 
@@ -299,7 +299,7 @@ class LoginController extends Controller implements ControllerInterface
 
                 $response = new Response(301);
                 if ($this->getNextJob() != '')
-                    $response->redirect($this->getNextJob());
+                    $response->redirect(FrontController::generateSecureURL('act='.$this->getNextJob()));
                 else
                     $response->redirect($config->get('app.url'));
 
