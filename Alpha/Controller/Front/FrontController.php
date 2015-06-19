@@ -289,7 +289,7 @@ class FrontController
         	$params = self::getDecodeQueryParams($request->getParam('token'));
         	
         	if (isset($params['act'])) {
-        		$className = 'Alpha\Controller\\'.$params['act'];
+        		$className = $params['act'];
 
         		if (class_exists($className)) {
         			$controller = new $className;
@@ -303,7 +303,7 @@ class FrontController
 
         $this->addRoute('/alpha/service', function($request) {
         	$controller = new LoginController();
-        	$controller->setUnitOfWork(array('LoginController', 'ListActiveRecordsController'));
+        	$controller->setUnitOfWork(array('Alpha\Controller\LoginController', 'Alpha\Controller\ListActiveRecordsController'));
         	return $controller->process($request);
         });
 

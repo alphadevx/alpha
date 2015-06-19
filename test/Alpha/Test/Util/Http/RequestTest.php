@@ -4,6 +4,7 @@ namespace Alpha\Test\Util\Http;
 
 use Alpha\Util\Http\Request;
 use Alpha\Exception\IllegalArguementException;
+use Alpha\Util\Config\ConfigProvider;
 
 /**
  *
@@ -225,13 +226,15 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $request = new Request(array('method' => 'GET', 'URI' => '/controller/param'));
 
-        $this->assertEquals('http://localhost/controller/param', $request->getURL(), 'Testing that the URL can be set from overrides or super-globals during object construction');
+        $config = ConfigProvider::getInstance();
+
+        $this->assertEquals($config->get('app.url').'controller/param', $request->getURL(), 'Testing that the URL can be set from overrides or super-globals during object construction');
 
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI'] = '/controller/param';
         $request = new Request();
 
-        $this->assertEquals('http://localhost/controller/param', $request->getURL(), 'Testing that URL can be set from overrides or super-globals during object construction');
+        $this->assertEquals($config->get('app.url').'controller/param', $request->getURL(), 'Testing that URL can be set from overrides or super-globals during object construction');
     }
 }
 

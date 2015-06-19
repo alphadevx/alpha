@@ -67,7 +67,7 @@ class PersonView extends View
 
         $html = '<div class="bordered padded">';
         $html .= "<h1>Login</h1>";
-        $html .= '<form action="'.FrontController::generateSecureURL('act=LoginController').'" method="POST" id="loginForm" accept-charset="UTF-8">';
+        $html .= '<form action="'.FrontController::generateSecureURL('act=Alpha\Controller\LoginController').'" method="POST" id="loginForm" accept-charset="UTF-8">';
 
         $email = new String(isset($_POST['email']) ? $_POST['email'] : '');
         $email->setRule(Validator::REQUIRED_EMAIL);
@@ -89,7 +89,7 @@ class PersonView extends View
 
         $html .= '</form>';
 
-        $html .= '<p><a href="'.FrontController::generateSecureURL('act=LoginController&reset=true').'">Forgotten your password?</a></p>';
+        $html .= '<p><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\LoginController&reset=true').'">Forgotten your password?</a></p>';
         $html .= '</div>';
 
         return $html;
@@ -108,7 +108,7 @@ class PersonView extends View
         $html = '<div class="bordered padded">';
         $html .= '<h1>Password reset</h1>';
         $html .= '<p>If you have forgotten your password, you can use this form to have a new password automatically generated and sent to your e-mail address.</p>';
-        $html .= '<form action="'.FrontController::generateSecureURL('act=LoginController&reset=true').'" method="POST" id="resetForm" accept-charset="UTF-8">';
+        $html .= '<form action="'.FrontController::generateSecureURL('act=Alpha\Controller\LoginController&reset=true').'" method="POST" id="resetForm" accept-charset="UTF-8">';
 
         $email = new String(isset($_POST['email']) ? $_POST['email'] : '');
         $email->setRule(Validator::REQUIRED_EMAIL);

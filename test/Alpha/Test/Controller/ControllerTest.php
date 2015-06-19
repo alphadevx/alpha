@@ -346,7 +346,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     public function testSetUnitOfWorkBadControllerName()
     {
     	try {
-    		$this->controller->setUnitOfWork(array('ImageController','LogController','BadControllerName'));
+    		$this->controller->setUnitOfWork(array('Alpha\Controller\ImageController','Alpha\Controller\LogController','Alpha\Controller\BadControllerName'));
     		$this->fail('Passed a bad controller name BadControllerName to setUnitOfWork() and did not get the expected exception!');
     	} catch (IllegalArguementException $e) {
     		$this->assertEquals('', $this->controller->getFirstJob(), 'Testing the setUnitOfWork method with a bad controller name');
@@ -360,10 +360,10 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetUnitOfWorkNext()
     {
-    	$this->controller->setName('ImageController');
-    	$this->controller->setUnitOfWork(array('ImageController','LogController'));
+    	$this->controller->setName('Alpha\Controller\ImageController');
+    	$this->controller->setUnitOfWork(array('Alpha\Controller\ImageController','Alpha\Controller\LogController'));
 
-    	$this->assertEquals('LogController', $this->controller->getNextJob(), 'Testing the setUnitOfWork method and getNextJob');
+    	$this->assertEquals('Alpha\Controller\LogController', $this->controller->getNextJob(), 'Testing the setUnitOfWork method and getNextJob');
     }
 
 	/**
@@ -373,10 +373,10 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetUnitOfWorkFirst()
     {
-    	$this->controller->setName('ImageController');
-    	$this->controller->setUnitOfWork(array('ImageController','LogController'));
+    	$this->controller->setName('Alpha\Controller\ImageController');
+    	$this->controller->setUnitOfWork(array('Alpha\Controller\ImageController','Alpha\Controller\LogController'));
 
-    	$this->assertEquals('ImageController', $this->controller->getFirstJob(), 'Testing the setUnitOfWork method and getFirstJob');
+    	$this->assertEquals('Alpha\Controller\ImageController', $this->controller->getFirstJob(), 'Testing the setUnitOfWork method and getFirstJob');
     }
 
 	/**
@@ -386,10 +386,10 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetUnitOfWorkPrevious()
     {
-    	$this->controller->setName('LogController');
-    	$this->controller->setUnitOfWork(array('ImageController','LogController'));
+    	$this->controller->setName('Alpha\Controller\LogController');
+    	$this->controller->setUnitOfWork(array('Alpha\Controller\ImageController','Alpha\Controller\LogController'));
 
-    	$this->assertEquals('ImageController', $this->controller->getPreviousJob(), 'Testing the setUnitOfWork method and getPreviousJob');
+    	$this->assertEquals('Alpha\Controller\ImageController', $this->controller->getPreviousJob(), 'Testing the setUnitOfWork method and getPreviousJob');
     }
 
 	/**
@@ -399,10 +399,10 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetUnitOfWorkLast()
     {
-    	$this->controller->setName('ImageController');
-    	$this->controller->setUnitOfWork(array('ImageController','LogController'));
+    	$this->controller->setName('Alpha\Controller\ImageController');
+    	$this->controller->setUnitOfWork(array('Alpha\Controller\ImageController','Alpha\Controller\LogController'));
 
-    	$this->assertEquals('LogController', $this->controller->getLastJob(), 'Testing the setUnitOfWork method and getLastJob');
+    	$this->assertEquals('Alpha\Controller\LogController', $this->controller->getLastJob(), 'Testing the setUnitOfWork method and getLastJob');
     }
 
 	/**

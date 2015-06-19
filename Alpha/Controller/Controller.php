@@ -19,7 +19,6 @@ use Alpha\Exception\AlphaException;
 use Alpha\Exception\NotImplementedException;
 use Alpha\Controller\Front\FrontController;
 use Alpha\View\View;
-use ReflectionClass;
 
 /**
  *
@@ -276,8 +275,7 @@ abstract class Controller
 
 	 	// uses controller class name as the job name
 		if ($this->name == '') {
-			$reflectClass = new ReflectionClass($this);
-	 		$this->setName($reflectClass->getShortname());
+	 		$this->setName(get_class($this));
 		}
 
         $sessionProvider = $config->get('session.provider.name');
@@ -469,7 +467,7 @@ abstract class Controller
 
 		// validate that each controller name in the array actually exists
 		foreach ($jobs as $job) {
-			if (!Controller::checkControllerDefExists($job))
+			if (!class_exists($job))
 				throw new IllegalArguementException('The controller name ['.$job.'] provided in the jobs array is not defined anywhere!');
 		}
 
@@ -1276,6 +1274,7 @@ abstract class Controller
 	 * @param string $controllerName
 	 * @return boolean
 	 * @since 1.0
+	 * @deprecated
 	 */
 	public static function checkControllerDefExists($controllerName)
     {
