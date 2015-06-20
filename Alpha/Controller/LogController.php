@@ -10,6 +10,7 @@ use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\View\View;
+use Alpha\Model\ActiveRecord;
 
 /**
  *
@@ -143,21 +144,15 @@ class LogController extends Controller implements ControllerInterface
         return new Response(200, $body, array('Content-Type' => 'text/html'));
 	}
 
-	/**
-     * Use this callback to inject in the admin menu template fragment for admin users of
-     * the backend only.
+    /**
+     * Use this callback to inject in the admin menu template fragment
      *
      * @since 1.2
      */
     public function after_displayPageHead_callback()
     {
-        $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
-        $menu = '';
-        if ($session->get('currentUser') !== false && ActiveRecord::isInstalled() && $session->get('currentUser')->inGroup('Admin') && mb_strpos($this->request->getURI()) !== false) {
-            $menu .= View::loadTemplateFragment('html', 'adminmenu.phtml', array());
-        }
+        $menu = View::loadTemplateFragment('html', 'adminmenu.phtml', array());
+
         return $menu;
     }
 }

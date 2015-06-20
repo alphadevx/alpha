@@ -1,22 +1,21 @@
 <nav class="navbar navbar-default" role="navigation">
 	<ul id="adminmenu" class="nav navbar-nav">
 		<li><a href="<?= $config->get('app.url') ?>">Home</a></li>
-		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=ListBusinessObjects') ?>">Admin Home</a></li>
+		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\ListActiveRecordsController') ?>">Admin Home</a></li>
 		<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Logs<b class="caret"></b></a>
 			<ul class="dropdown-menu">
-				<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.file.store.dir').'logs/'.$config->get('app.log.file')) ?>">System Log</a></li>
-				<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.root').'logs/search.log') ?>">Search Log</a></li>
-				<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.root').'logs/feeds.log') ?>">Feed Log</a></li>
-				<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=ViewLog&logPath='.$config->get('app.root').'logs/tasks.log') ?>">Cron Tasks Log</a></li>
+				<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\LogController&logPath='.$config->get('app.file.store.dir').'logs/'.$config->get('app.log.file')) ?>">System Log</a></li>
+				<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\LogController&logPath='.$config->get('app.file.store.dir').'logs/search.log') ?>">Search Log</a></li>
+				<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\LogController&logPath='.$config->get('app.file.store.dir').'logs/feeds.log') ?>">Feed Log</a></li>
+				<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\LogController&logPath='.$config->get('app.file.store.dir').'logs/tasks.log') ?>">Cron Tasks Log</a></li>
 			</ul>
 		</li>
-		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=GenSecureQueryStrings') ?>">Generate Secure URL</a></li>
-		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=ViewMetrics') ?>">Code Metrics</a></li>
-		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=CacheManager') ?>">Cache</a></li>
-		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=TagManager') ?>">Tags</a></li>
-		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=ListDEnums') ?>">DEnums</a></li>
-		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=ListSequences') ?>">Sequences</a></li>
-		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=ViewTestResults') ?>">Unit Tests</a></li>
-		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Logout') ?>">Logout</a></li>
+		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\GenSecureQueryStringController') ?>">Generate Secure URL</a></li>
+		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\MetricController') ?>">Code Metrics</a></li>
+		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\CacheController') ?>">Cache</a></li>
+		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\TagController') ?>">Tags</a></li>
+		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\DEnumController') ?>">DEnums</a></li>
+		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\SequenceController') ?>">Sequences</a></li>
+		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\LogoutController') ?>">Logout</a></li>
 	</ul>
 </nav>
