@@ -410,7 +410,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $fields['formAction'] = $_SERVER['REQUEST_URI'];
 
         // the class name of the BO
-        $fields['className'] = get_class($this->BO);
+        $fields['className'] = stripslashes(get_class($this->BO));
 
         // the table name in the DB for the BO
         $fields['tableName'] = $this->BO->getTableName();
@@ -429,7 +429,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
         // create button
         if ($this->BO->checkTableExists()) {
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Create&bo='.get_class($this->BO))."'", "Create New", "create".get_class($this->BO)."But");
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Create&bo='.get_class($this->BO))."'", "Create New", "create".stripslashes(get_class($this->BO))."But");
             $fields['createButton'] = $button->render();
         } else {
             $fields['createButton'] = '';
@@ -437,7 +437,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
         // list all button
         if ($this->BO->checkTableExists()) {
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "List All", "list".get_class($this->BO)."But");
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "List All", "list".stripslashes(get_class($this->BO))."But");
             $fields['listButton'] = $button->render();
         } else {
             $fields['listButton'] = '';
@@ -487,8 +487,8 @@ class RendererProviderHTML implements RendererProviderInterface
                                 label: 'Okay',
                                 cssClass: 'btn btn-default btn-xs',
                                 action: function(dialogItself) {
-                                    $('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.get_class($this->BO).'_button_pressed')) : 'admin_'.get_class($this->BO).'_button_pressed')."\"]').attr('value', 'recreateTableBut');
-                                    $('#admin_".get_class($this->BO)."').submit();
+                                    $('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.get_class($this->BO).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->BO)).'_button_pressed')."\"]').attr('value', 'recreateTableBut');
+                                    $('#admin_".stripslashes(get_class($this->BO))."').submit();
                                     dialogItself.close();
                                 }
                             }
@@ -520,7 +520,7 @@ class RendererProviderHTML implements RendererProviderInterface
                                 label: 'Okay',
                                 cssClass: 'btn btn-default btn-xs',
                                 action: function(dialogItself) {
-                                    $('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.get_class($this->BO).'_button_pressed')) : 'admin_'.get_class($this->BO).'_button_pressed')."\"]').attr('value', 'updateTableBut');
+                                    $('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.get_class($this->BO).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->BO)).'_button_pressed')."\"]').attr('value', 'updateTableBut');
                                     $('#admin_".get_class($this->BO)."').submit();
                                     dialogItself.close();
                                 }
@@ -535,7 +535,7 @@ class RendererProviderHTML implements RendererProviderInterface
             $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('updateTableClass')) : 'updateTableClass');
             $html .= '<input type="hidden" name="'.$fieldname.'" value="'.get_class($this->BO).'"/>';
             // hidden field to tell us which button was pressed
-            $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.get_class($this->BO).'_button_pressed')) : 'admin_'.get_class($this->BO).'_button_pressed');
+            $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.get_class($this->BO).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->BO)).'_button_pressed');
             $html .= '<input type="hidden" id="'.$fieldname.'" name="'.$fieldname.'" value=""/>';
         }
         $fields['recreateOrUpdateButtons'] = $html;
