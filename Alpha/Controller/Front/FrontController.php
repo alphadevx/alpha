@@ -293,6 +293,7 @@ class FrontController
 
         		if (class_exists($className)) {
         			$controller = new $className;
+        			$request->addParams($params);
         			return $controller->process($request);
         		}
         	}

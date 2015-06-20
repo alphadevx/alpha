@@ -334,6 +334,18 @@ class Request
     }
 
     /**
+     * Append the hash array provided to the params for this request
+     *
+     * @param array A hash array of values to add to the request params
+     * @since 2.0
+     */
+    public function addParams($params)
+    {
+        if (is_array($params))
+            $this->params = array_merge($this->params, $params);
+    }
+
+    /**
      * Return all files on this request
      *
      * @return array
