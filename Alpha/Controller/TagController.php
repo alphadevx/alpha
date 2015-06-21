@@ -25,7 +25,8 @@ use Alpha\Exception\AlphaException;
 /**
  *
  * Controller used to edit Tags related to the ActiveRecord indicated in the supplied
- * GET vars (ActiveRecordType and ActiveRecordOID).
+ * GET vars (ActiveRecordType and ActiveRecordOID).  If no ActiveRecord Type or OID are
+ * indicated, then a screen to manage all tags at a summary level is presented.
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
@@ -122,91 +123,133 @@ class TagController extends EditController implements ControllerInterface
         if (!empty($message))
             $body .= $message;
 
-        // ensure that an ActiveRecordType is provided
-        if (isset($params['ActiveRecordType']))
-            $ActiveRecordType = $params['ActiveRecordType'];
-        else
-            throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordType was not supplied!');
+        // render the tag manager screen
+        if (!isset($params['ActiveRecordType']) && !isset($params['ActiveRecordOID'])) {
+            $body .= '<h3>Listing active record which are tagged</h3>';
+            $ActiveRecordTypes = ActiveRecord::getBOClassNames();
 
-        // ensure that a OID is provided
-        if (isset($params['ActiveRecordOID']))
-            $ActiveRecordOID = $params['ActiveRecordOID'];
-        else
-            throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordOID was not supplied!');
+            foreach ($ActiveRecordTypes as $ActiveRecordType) {
+                $record = new $ActiveRecordType;
 
-        $className = "Alpha\\Model\\$ActiveRecordType";
-        if (class_exists($className))
-            $this->BO = new $className();
-        else
-            throw new IllegalArguementException('No ActiveRecord available to display tags for!');
-
-        try {
-            $this->BO->load($ActiveRecordOID);
-
-            $tags = $this->BO->getPropObject('tags')->getRelatedObjects();
-
+                if($record->isTagged()) {
+                    $tag = new Tag();
+                    $count = count($tag->loadAllByAttribute('taggedClass', $ActiveRecordType));
+                    $body .= '<h4>'.$record->getFriendlyClassName().' record type is tagged ('.$count.' tags found)</h4>';
+                    $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('clearTaggedClass')) : 'clearTaggedClass');
+                    $js = "if(window.jQuery) {
+                        BootstrapDialog.show({
+                            title: 'Confirmation',
+                            message: 'Are you sure you want to delete all tags attached to the ".$record->getFriendlyClassName()." class, and have them re-created?',
+                            buttons: [
+                                {
+                                    icon: 'glyphicon glyphicon-remove',
+                                    label: 'Cancel',
+                                    cssClass: 'btn btn-default btn-xs',
+                                    action: function(dialogItself){
+                                        dialogItself.close();
+                                    }
+                                },
+                                {
+                                    icon: 'glyphicon glyphicon-ok',
+                                    label: 'Okay',
+                                    cssClass: 'btn btn-default btn-xs',
+                                    action: function(dialogItself) {
+                                        $('[id=\"".$fieldname."\"]').attr('value', '".$ActiveRecordType."');
+                                        $('#clearForm').submit();
+                                        dialogItself.close();
+                                    }
+                                }
+                            ]
+                        });
+                    }";
+                    $button = new Button($js, "Re-create tags", "clearBut".stripslashes($ActiveRecordType));
+                    $body .= $button->render();
+                }
+            }
             ActiveRecord::disconnect();
+            $body .= '<form action="'.$request->getURI().'" method="POST" id="clearForm">';
+            $body .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'"/>';
+            $body .= View::renderSecurityFields();
+            $body .= '</form>';
+        } else { // render screen for managing individual tags on a given active record
 
-            $body .= '<form action="'.$request->getURI().'" method="POST" accept-charset="UTF-8">';
-            $body .= '<h3>The following tags were found:</h3>';
+            $ActiveRecordType = $params['ActiveRecordType'];
+            $ActiveRecordOID = $params['ActiveRecordOID'];
 
-            foreach ($tags as $tag) {
-                $labels = $tag->getDataLabels();
+            $className = "Alpha\\Model\\$ActiveRecordType";
+            if (class_exists($className))
+                $this->BO = new $className();
+            else
+                throw new IllegalArguementException('No ActiveRecord available to display tags for!');
 
-                $temp = new StringBox($tag->getPropObject('content'), $labels['content'], 'content_'.$tag->getID(), '');
+            try {
+                $this->BO->load($ActiveRecordOID);
+
+                $tags = $this->BO->getPropObject('tags')->getRelatedObjects();
+
+                ActiveRecord::disconnect();
+
+                $body .= '<form action="'.$request->getURI().'" method="POST" accept-charset="UTF-8">';
+                $body .= '<h3>The following tags were found:</h3>';
+
+                foreach ($tags as $tag) {
+                    $labels = $tag->getDataLabels();
+
+                    $temp = new StringBox($tag->getPropObject('content'), $labels['content'], 'content_'.$tag->getID(), '');
+                    $body .= $temp->render(false);
+
+                    $js = "if(window.jQuery) {
+                        BootstrapDialog.show({
+                            title: 'Confirmation',
+                            message: 'Are you sure you wish to delete this tag?',
+                            buttons: [
+                                {
+                                    icon: 'glyphicon glyphicon-remove',
+                                    label: 'Cancel',
+                                    cssClass: 'btn btn-default btn-xs',
+                                    action: function(dialogItself){
+                                        dialogItself.close();
+                                    }
+                                },
+                                {
+                                    icon: 'glyphicon glyphicon-ok',
+                                    label: 'Okay',
+                                    cssClass: 'btn btn-default btn-xs',
+                                    action: function(dialogItself) {
+                                        $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$tag->getID()."');
+                                        $('#deleteForm').submit();
+                                        dialogItself.close();
+                                    }
+                                }
+                            ]
+                        });
+                    }";
+                    $button = new Button($js, "Delete", "delete".$tag->getID()."But");
+                    $body .= $button->render();
+                }
+
+                $body .= '<h3>Add a new tag:</h3>';
+
+                $temp = new StringBox(new String(), 'New tag', 'NewTagValue', '');
                 $body .= $temp->render(false);
 
-                $js = "if(window.jQuery) {
-                    BootstrapDialog.show({
-                        title: 'Confirmation',
-                        message: 'Are you sure you wish to delete this tag?',
-                        buttons: [
-                            {
-                                icon: 'glyphicon glyphicon-remove',
-                                label: 'Cancel',
-                                cssClass: 'btn btn-default btn-xs',
-                                action: function(dialogItself){
-                                    dialogItself.close();
-                                }
-                            },
-                            {
-                                icon: 'glyphicon glyphicon-ok',
-                                label: 'Okay',
-                                cssClass: 'btn btn-default btn-xs',
-                                action: function(dialogItself) {
-                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$tag->getID()."');
-                                    $('#deleteForm').submit();
-                                    dialogItself.close();
-                                }
-                            }
-                        ]
-                    });
-                }";
-                $button = new Button($js, "Delete", "delete".$tag->getID()."But");
-                $body .= $button->render();
+                $temp = new Button('submit', 'Save', 'saveBut');
+                $body .= $temp->render();
+                $body .= '&nbsp;&nbsp;';
+                $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.$params['ActiveRecordType'].'&oid='.$params['ActiveRecordOID'])."'", 'Back to Object', 'cancelBut');
+                $body .= $temp->render();
+
+                $body .= View::renderSecurityFields();
+
+                $body .= '</form>';
+
+                $body .= View::renderDeleteForm($request->getURI());
+
+            } catch (RecordNotFoundException $e) {
+                $msg = 'Unable to load the ActiveRecord of id ['.$params['ActiveRecordOID'].'], error was ['.$e->getMessage().']';
+                self::$logger->error($msg);
+                throw new FileNotFoundException($msg);
             }
-
-            $body .= '<h3>Add a new tag:</h3>';
-
-            $temp = new StringBox(new String(), 'New tag', 'NewTagValue', '');
-            $body .= $temp->render(false);
-
-            $temp = new Button('submit', 'Save', 'saveBut');
-            $body .= $temp->render();
-            $body .= '&nbsp;&nbsp;';
-            $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.$params['ActiveRecordType'].'&oid='.$params['ActiveRecordOID'])."'", 'Back to Object', 'cancelBut');
-            $body .= $temp->render();
-
-            $body .= View::renderSecurityFields();
-
-            $body .= '</form>';
-
-            $body .= View::renderDeleteForm($request->getURI());
-
-        } catch (RecordNotFoundException $e) {
-            $msg = 'Unable to load the ActiveRecord of id ['.$params['ActiveRecordOID'].'], error was ['.$e->getMessage().']';
-            self::$logger->error($msg);
-            throw new FileNotFoundException($msg);
         }
 
         $body .= View::displayPageFoot($this);
