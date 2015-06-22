@@ -154,7 +154,7 @@ class TagController extends EditController implements ControllerInterface
                                     label: 'Okay',
                                     cssClass: 'btn btn-default btn-xs',
                                     action: function(dialogItself) {
-                                        $('[id=\"".$fieldname."\"]').attr('value', '".$ActiveRecordType."');
+                                        $('[id=\"".$fieldname."\"]').attr('value', '".addslashes($ActiveRecordType)."');
                                         $('#clearForm').submit();
                                         dialogItself.close();
                                     }
@@ -278,105 +278,132 @@ class TagController extends EditController implements ControllerInterface
             if (!$this->checkSecurityFields())
                 throw new SecurityException('This page cannot accept post data from remote servers!');
 
-            // ensure that a bo is provided
-            if (isset($params['ActiveRecordType']))
-                $ActiveRecordType = $params['ActiveRecordType'];
-            else
-                throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordType was not supplied!');
-
-            // ensure that a OID is provided
-            if (isset($params['ActiveRecordOID']))
-                $ActiveRecordOID = $params['ActiveRecordOID'];
-            else
-                throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordOID was not supplied!');
-
-            $className = "Alpha\\Model\\$ActiveRecordType";
-            if (class_exists($className))
-                $this->BO = new $className();
-            else
-                throw new IllegalArguementException('No ActiveRecord available to display tags for!');
-
-            if (isset($params['saveBut'])) {
+            if (isset($params['clearTaggedClass']) && $params['clearTaggedClass'] != '') {
                 try {
-                    $this->BO->load($ActiveRecordOID);
-
-                    $tags = $this->BO->getPropObject('tags')->getRelatedObjects();
-
+                    self::$logger->info('About to start rebuilding the tags for the class ['.$params['clearTaggedClass'].']');
+                    $startTime = microtime(true);
+                    $record = new $params['clearTaggedClass'];
+                    $records = $record->loadAll();
+                    self::$logger->info('Loaded all of the active records (elapsed time ['.round(microtime(true)-$startTime, 5).'] seconds)');
                     ActiveRecord::begin();
-
-                    foreach ($tags as $tag) {
-                        $tag->set('content', Tag::cleanTagContent($params['content_'.$tag->getID()]));
-                        $tag->save();
-                        self::$logger->action('Saved tag '.$tag->get('content').' on '.$ActiveRecordType.' instance with OID '.$ActiveRecordOID);
-                    }
-
-                    // handle new tag if posted
-                    if (isset($params['NewTagValue']) && trim($params['NewTagValue']) != '') {
-                        $newTag = new Tag();
-                        $newTag->set('content', Tag::cleanTagContent($params['NewTagValue']));
-                        $newTag->set('taggedOID', $ActiveRecordOID);
-                        $newTag->set('taggedClass', $className);
-                        $newTag->save();
-                        self::$logger->action('Created a new tag '.$newTag->get('content').' on '.$className.' instance with OID '.$ActiveRecordOID);
-                    }
-
-                    ActiveRecord::commit();
-
-                    $this->setStatusMessage(View::displayUpdateMessage('Tags on '.get_class($this->BO).' '.$this->BO->getID().' saved successfully.'));
-
-                    return $this->doGET($request);
-                } catch (ValidationException $e) {
-                    /*
-                     * The unique key has most-likely been violated because this BO is already tagged with this
-                     * value.
-                     */
-                    ActiveRecord::rollback();
-
-                    $this->setStatusMessage(View::displayErrorMessage('Tags on '.get_class($this->BO).' '.$this->BO->getID().' not saved due to duplicate tag values, please try again.'));
-
-                    return $this->doGET($request);
-                } catch (FailedSaveException $e) {
-                    self::$logger->error('Unable to save the tags of id ['.$params['ActiveRecordOID'].'], error was ['.$e->getMessage().']');
-                    ActiveRecord::rollback();
-
-                    $this->setStatusMessage(View::displayErrorMessage('Tags on '.get_class($this->BO).' '.$this->BO->getID().' not saved, please check the application logs.'));
-
-                    return $this->doGET($request);
-                }
-
-                ActiveRecord::disconnect();
-            }
-
-            if (!empty($params['deleteOID'])) {
-                try {
-                    $this->BO = new $className;
-                    $this->BO->load($ActiveRecordOID);
-
                     $tag = new Tag();
-                    $tag->load($params['deleteOID']);
-                    $content = $tag->get('content');
-
-                    ActiveRecord::begin();
-
-                    $tag->delete();
-
-                    self::$logger->action('Deleted tag '.$content.' on '.$className.' instance with OID '.$ActiveRecordOID);
-
+                    $tag->deleteAllByAttribute('taggedClass', $params['clearTaggedClass']);
+                    self::$logger->info('Deleted all of the old tags (elapsed time ['.round(microtime(true)-$startTime, 5).'] seconds)');
+                    $this->regenerateTagsOnRecords($records);
+                    self::$logger->info('Saved all of the new tags (elapsed time ['.round(microtime(true)-$startTime, 5).'] seconds)');
+                    self::$logger->action('Tags recreated on the ['.$params['clearTaggedClass'].'] class');
                     ActiveRecord::commit();
-
-                    $this->setStatusMessage(View::displayUpdateMessage('Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' deleted successfully.'));
-
-                    return $this->doGET($request);
+                    $this->setStatusMessage(View::displayUpdateMessage('Tags recreated on the '.$record->getFriendlyClassName().' class.'));
+                    self::$logger->info('Tags recreated on the ['.$params['clearTaggedClass'].'] class (time taken ['.round(microtime(true)-$startTime, 5).'] seconds).');
                 } catch (AlphaException $e) {
-                    self::$logger->error('Unable to delete the tag of id ['.$params['deleteOID'].'], error was ['.$e->getMessage().']');
+                    self::$logger->error($e->getMessage());
                     ActiveRecord::rollback();
+                }
+                ActiveRecord::disconnect();
 
-                    $this->setStatusMessage(View::displayErrorMessage('Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' not deleted, please check the application logs.'));
+                return $this->doGET($request);
+            } else {
 
-                    return $this->doGET($request);
+                // ensure that a bo is provided
+                if (isset($params['ActiveRecordType']))
+                    $ActiveRecordType = $params['ActiveRecordType'];
+                else
+                    throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordType was not supplied!');
+
+                // ensure that a OID is provided
+                if (isset($params['ActiveRecordOID']))
+                    $ActiveRecordOID = $params['ActiveRecordOID'];
+                else
+                    throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordOID was not supplied!');
+
+                $className = "Alpha\\Model\\$ActiveRecordType";
+                if (class_exists($className))
+                    $this->BO = new $className();
+                else
+                    throw new IllegalArguementException('No ActiveRecord available to display tags for!');
+
+                if (isset($params['saveBut'])) {
+                    try {
+                        $this->BO->load($ActiveRecordOID);
+
+                        $tags = $this->BO->getPropObject('tags')->getRelatedObjects();
+
+                        ActiveRecord::begin();
+
+                        foreach ($tags as $tag) {
+                            $tag->set('content', Tag::cleanTagContent($params['content_'.$tag->getID()]));
+                            $tag->save();
+                            self::$logger->action('Saved tag '.$tag->get('content').' on '.$ActiveRecordType.' instance with OID '.$ActiveRecordOID);
+                        }
+
+                        // handle new tag if posted
+                        if (isset($params['NewTagValue']) && trim($params['NewTagValue']) != '') {
+                            $newTag = new Tag();
+                            $newTag->set('content', Tag::cleanTagContent($params['NewTagValue']));
+                            $newTag->set('taggedOID', $ActiveRecordOID);
+                            $newTag->set('taggedClass', $className);
+                            $newTag->save();
+                            self::$logger->action('Created a new tag '.$newTag->get('content').' on '.$className.' instance with OID '.$ActiveRecordOID);
+                        }
+
+                        ActiveRecord::commit();
+
+                        $this->setStatusMessage(View::displayUpdateMessage('Tags on '.get_class($this->BO).' '.$this->BO->getID().' saved successfully.'));
+
+                        return $this->doGET($request);
+                    } catch (ValidationException $e) {
+                        /*
+                         * The unique key has most-likely been violated because this BO is already tagged with this
+                         * value.
+                         */
+                        ActiveRecord::rollback();
+
+                        $this->setStatusMessage(View::displayErrorMessage('Tags on '.get_class($this->BO).' '.$this->BO->getID().' not saved due to duplicate tag values, please try again.'));
+
+                        return $this->doGET($request);
+                    } catch (FailedSaveException $e) {
+                        self::$logger->error('Unable to save the tags of id ['.$params['ActiveRecordOID'].'], error was ['.$e->getMessage().']');
+                        ActiveRecord::rollback();
+
+                        $this->setStatusMessage(View::displayErrorMessage('Tags on '.get_class($this->BO).' '.$this->BO->getID().' not saved, please check the application logs.'));
+
+                        return $this->doGET($request);
+                    }
+
+                    ActiveRecord::disconnect();
                 }
 
-                ActiveRecord::disconnect();
+                if (!empty($params['deleteOID'])) {
+                    try {
+                        $this->BO = new $className;
+                        $this->BO->load($ActiveRecordOID);
+
+                        $tag = new Tag();
+                        $tag->load($params['deleteOID']);
+                        $content = $tag->get('content');
+
+                        ActiveRecord::begin();
+
+                        $tag->delete();
+
+                        self::$logger->action('Deleted tag '.$content.' on '.$className.' instance with OID '.$ActiveRecordOID);
+
+                        ActiveRecord::commit();
+
+                        $this->setStatusMessage(View::displayUpdateMessage('Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' deleted successfully.'));
+
+                        return $this->doGET($request);
+                    } catch (AlphaException $e) {
+                        self::$logger->error('Unable to delete the tag of id ['.$params['deleteOID'].'], error was ['.$e->getMessage().']');
+                        ActiveRecord::rollback();
+
+                        $this->setStatusMessage(View::displayErrorMessage('Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' not deleted, please check the application logs.'));
+
+                        return $this->doGET($request);
+                    }
+
+                    ActiveRecord::disconnect();
+                }
             }
         } catch (SecurityException $e) {
 
@@ -392,6 +419,30 @@ class TagController extends EditController implements ControllerInterface
         }
 
         self::$logger->debug('<<doPOST');
+    }
+
+    /**
+     * Regenerates the tags on the supplied list of active records
+     *
+     * @param array $records
+     * @since 1.0
+     */
+    private function regenerateTagsOnRecords($records) {
+        foreach ($records as $record) {
+            foreach($record->get('taggedAttributes') as $tagged) {
+                $tags = Tag::tokenize($BO->get($tagged), get_class($record), $record->getOID());
+                foreach($tags as $tag) {
+                    try {
+                        $tag->save();
+                    } catch (ValidationException $e){
+                        /*
+                         * The unique key has most-likely been violated because this record is already tagged with this
+                         * value, so we can ignore in this case.
+                         */
+                    }
+                }
+            }
+        }
     }
 }
 
