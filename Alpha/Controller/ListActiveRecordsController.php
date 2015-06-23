@@ -226,11 +226,13 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
 
         $body = '';
 
+        $fields = array('formAction' => $this->request->getURI());
+
         foreach($classNames as $className) {
             try {
                 $activeRecord = new $className();
                 $view = View::getInstance($activeRecord);
-                $body .= $view->adminView();
+                $body .= $view->adminView($fields);
             } catch (AlphaException $e) {
                 self::$logger->error("[$classname]:".$e->getMessage());
                 // its possible that the exception occured due to the table schema being out of date
@@ -245,7 +247,7 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
                     // now try again...
                     $activeRecord = new $className();
                     $view = View::getInstance($activeRecord);
-                    $body .= $view->adminView();
+                    $body .= $view->adminView($fields);
                 }
             } catch (\Exception $e) {
                 self::$logger->error($e->getMessage());
