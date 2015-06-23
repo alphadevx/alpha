@@ -129,7 +129,7 @@ class CreateController extends Controller implements ControllerInterface
 
         try {
             if (isset($params['ActiveRecordType'])) {
-                $ActiveRecordType = $params['ActiveRecordType'];
+                $ActiveRecordType = urldecode($params['ActiveRecordType']);
                 $this->activeRecordType = $ActiveRecordType;
             } else {
                 throw new IllegalArguementException('No ActiveRecord available to create!');
@@ -142,10 +142,9 @@ class CreateController extends Controller implements ControllerInterface
              */
             if ($this->getCustomControllerName($ActiveRecordType, 'create') != null)
                 return $this->loadCustomController($ActiveRecordType, 'create');
-echo $this->getCustomControllerName($ActiveRecordType, 'create')."\n";
-            $className = "Alpha\\Model\\$ActiveRecordType";
-            if (class_exists($className))
-                $this->BO = new $className();
+
+            if (class_exists($ActiveRecordType))
+                $this->BO = new $ActiveRecordType();
             else
                 throw new IllegalArguementException('No ActiveRecord available to create!');
 
@@ -195,19 +194,18 @@ echo $this->getCustomControllerName($ActiveRecordType, 'create')."\n";
                 throw new SecurityException('This page cannot accept post data from remote servers!');
 
             if (isset($params['ActiveRecordType'])) {
-                $ActiveRecordType = $params['ActiveRecordType'];
+                $ActiveRecordType = urldecode($params['ActiveRecordType']);
                 $this->activeRecordType = $ActiveRecordType;
             } else {
                 throw new IllegalArguementException('No ActiveRecord available to create!');
             }
 
-            $className = "Alpha\\Model\\$ActiveRecordType";
-            if (class_exists($className))
-                $this->BO = new $className();
+            if (class_exists($ActiveRecordType))
+                $this->BO = new $ActiveRecordType();
             else
-                throw new IllegalArguementException('No ActiveRecord available to create!');
+                throw new IllegalArguementException('No ActiveRecord ['.$ActiveRecordType.'] available to create!');
 
-            $this->BO = new $className();
+            $this->BO = new $ActiveRecordType();
 
             if (isset($params['createBut'])) {
                 // populate the transient object from post data
@@ -223,7 +221,7 @@ echo $this->getCustomControllerName($ActiveRecordType, 'create')."\n";
                 if ($this->getNextJob() != '')
                     $response->redirect($this->getNextJob());
                 else
-                    $response->redirect(FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getOID()));
+                    $response->redirect(FrontController::generateSecureURL('act=ViewControleer&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID()));
 
                 return $response;
             }
@@ -233,7 +231,6 @@ echo $this->getCustomControllerName($ActiveRecordType, 'create')."\n";
             throw new ResourceNotAllowedException($e->getMessage());
         } catch (IllegalArguementException $e) {
             self::$logger->warn($e->getMessage());
-            echo View::displayPageHead($this);
             throw new ResourceNotFoundException('The file that you have requested cannot be found!');
         } catch (ValidationException $e) {
             self::$logger->warn($e->getMessage().', query ['.$this->BO->getLastQuery().']');
@@ -245,22 +242,13 @@ echo $this->getCustomControllerName($ActiveRecordType, 'create')."\n";
     }
 
     /**
-     * Use this callback to inject in the admin menu template fragment for admin users of
-     * the backend only.
+     * Use this callback to inject in the admin menu template fragment
      *
      * @since 1.2
      */
     public function after_displayPageHead_callback()
     {
-        $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
-
-        $menu = '';
-
-        if ($session->get('currentUser') !== false && ActiveRecord::isInstalled() && $session->get('currentUser')->inGroup('Admin') && mb_strpos($this->request->getURI()) !== false) {
-            $menu .= View::loadTemplateFragment('html', 'adminmenu.phtml', array());
-        }
+        $menu = View::loadTemplateFragment('html', 'adminmenu.phtml', array());
 
         return $menu;
     }

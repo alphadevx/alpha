@@ -107,7 +107,7 @@ class CreateControllerTest extends \PHPUnit_Framework_TestCase
 
         $front = new FrontController();
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/create/ActionLog'));
+        $request = new Request(array('method' => 'GET', 'URI' => '/create/'.urlencode('Alpha\Model\ActionLog')));
 
         $response = $front->process($request);
 
@@ -134,7 +134,7 @@ class CreateControllerTest extends \PHPUnit_Framework_TestCase
         $params = array('createBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
         $params = array_merge($params, $person->toArray());
 
-        $request = new Request(array('method' => 'POST', 'URI' => '/create/Person', 'params' => $params));
+        $request = new Request(array('method' => 'POST', 'URI' => '/create/'.urlencode('Alpha\Model\Person'), 'params' => $params));
 
         $response = $front->process($request);
 

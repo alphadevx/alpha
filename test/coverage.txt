@@ -1,12 +1,12 @@
 
 
 Code Coverage Report:        
-  2015-06-19 21:44:28        
+  2015-06-23 08:02:08        
                              
  Summary:                    
   Classes: 29.70% (30/101)   
-  Methods: 52.60% (384/730)  
-  Lines:   67.93% (5861/8628)
+  Methods: 52.73% (386/732)  
+  Lines:   67.51% (5850/8666)
 
 \Alpha\Controller::ArticleController
   Methods:  30.00% ( 3/10)   Lines:  69.34% (285/411)
@@ -17,7 +17,7 @@ Code Coverage Report:
 \Alpha\Controller::Controller
   Methods:  50.91% (28/55)   Lines:  71.46% (378/529)
 \Alpha\Controller::CreateController
-  Methods:  25.00% ( 1/ 4)   Lines:  74.07% ( 60/ 81)
+  Methods:  50.00% ( 2/ 4)   Lines:  74.65% ( 53/ 71)
 \Alpha\Controller::DEnumController
   Methods:  40.00% ( 2/ 5)   Lines:  58.33% ( 70/120)
 \Alpha\Controller::EditController
@@ -31,11 +31,11 @@ Code Coverage Report:
 \Alpha\Controller::ImageController
   Methods:  50.00% ( 1/ 2)   Lines:  76.92% ( 40/ 52)
 \Alpha\Controller::ListActiveRecordsController
-  Methods:  60.00% ( 3/ 5)   Lines:  26.26% ( 26/ 99)
+  Methods:  60.00% ( 3/ 5)   Lines:  27.00% ( 27/100)
 \Alpha\Controller::ListController
   Methods:  37.50% ( 3/ 8)   Lines:  69.64% (117/168)
 \Alpha\Controller::LogController
-  Methods:  33.33% ( 1/ 3)   Lines:  82.50% ( 33/ 40)
+  Methods:  66.67% ( 2/ 3)   Lines:  85.29% ( 29/ 34)
 \Alpha\Controller::LoginController
   Methods:  60.00% ( 3/ 5)   Lines:  88.89% ( 96/108)
 \Alpha\Controller::LogoutController
@@ -49,11 +49,11 @@ Code Coverage Report:
 \Alpha\Controller::SequenceController
   Methods:  66.67% ( 2/ 3)   Lines:  93.33% ( 28/ 30)
 \Alpha\Controller::TagController
-  Methods:  33.33% ( 1/ 3)   Lines:  74.22% ( 95/128)
+  Methods:  25.00% ( 1/ 4)   Lines:  53.37% ( 95/178)
 \Alpha\Controller::ViewController
   Methods:  40.00% ( 2/ 5)   Lines:  78.22% ( 79/101)
 \Alpha\Controller\Front::FrontController
-  Methods:  62.50% (10/16)   Lines:  80.79% (143/177)
+  Methods:  62.50% (10/16)   Lines:  80.34% (143/178)
 \Alpha\Exception::AlphaException
   Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  4/  4)
 \Alpha\Model::ActionLog
@@ -145,7 +145,7 @@ Code Coverage Report:
 \Alpha\Util\Http::PHPServerUtils
   Methods:  33.33% ( 1/ 3)   Lines:  55.00% ( 22/ 40)
 \Alpha\Util\Http::Request
-  Methods:  52.17% (12/23)   Lines:  89.42% ( 93/104)
+  Methods:  50.00% (12/24)   Lines:  86.92% ( 93/107)
 \Alpha\Util\Http::Response
   Methods:  80.00% (12/15)   Lines:  75.00% ( 33/ 44)
 \Alpha\Util\Http\Filter::ClientBlacklistFilter
@@ -179,7 +179,7 @@ Code Coverage Report:
 \Alpha\View\Renderer::RendererProviderFactory
   Methods:   0.00% ( 0/ 1)   Lines:  89.47% ( 17/ 19)
 \Alpha\View\Renderer\Html::RendererProviderHTML
-  Methods:  41.67% (10/24)   Lines:  46.31% (251/542)
+  Methods:  41.67% (10/24)   Lines:  46.21% (250/541)
 \Alpha\View\Widget::Button
   Methods:  50.00% ( 1/ 2)   Lines:  75.86% ( 22/ 29)
 \Alpha\View\Widget::Image
