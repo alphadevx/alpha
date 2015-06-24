@@ -10,6 +10,7 @@ use Alpha\Util\Logging\Logger;
 use Alpha\Exception\AlphaException;
 use Alpha\Exception\FailedSaveException;
 use Alpha\Exception\FailedDeleteException;
+use Alpha\Exception\FailedIndexCreateException;
 use Alpha\Exception\LockingException;
 use Alpha\Exception\ValidationException;
 use Alpha\Exception\CustomQueryException;
@@ -26,7 +27,6 @@ use ReflectionClass;
  *
  * @since 1.2
  * @author John Collins <dev@alphaframework.org>
- * @version $Id: ActiveRecordProviderSQLite.inc 1809 2014-07-27 21:19:07Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -246,8 +246,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
 				$count = count($missingFields);
 
-				for($i = 0; $i < $count; $i++)
+				for($i = 0; $i < $count; $i++) {
 					$this->BO->addProperty($missingFields[$i]);
+				}
 
 				throw new RecordFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->BO->getTableName().'] was out of sync with the database so had to be updated!');
 				self::$logger->debug('<<load');
@@ -361,8 +362,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
 				$count = count($missingFields);
 
-				for($i = 0; $i < $count; $i++)
+				for($i = 0; $i < $count; $i++) {
 					$this->BO->addProperty($missingFields[$i]);
+				}
 
 				throw new RecordNotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table ['.$this->BO->getTableName().'] was out of sync with the database so had to be updated!');
 				self::$logger->debug('<<loadByAttribute');
@@ -1376,7 +1378,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 			$sqlQuery .= 'classname TEXT(100)';
 		}else{
 			if(!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
-				$propClass = get_class($this->BO->getPropObject($propName));
+				$reflection = new ReflectionClass($this->BO->getPropObject($propName));
+				$propClass = $reflection->getShortName();
 
 				switch (mb_strtoupper($propClass)) {
 					case "INTEGER":
