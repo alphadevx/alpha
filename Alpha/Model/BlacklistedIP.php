@@ -11,7 +11,6 @@ use Alpha\Util\Logging\Logger;
  *
  * @since 1.2
  * @author John Collins <dev@alphaframework.org>
- * @version $Id: BlacklistedIPObject.inc 1574 2012-10-23 14:06:12Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.

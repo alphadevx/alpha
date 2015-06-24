@@ -1,6 +1,6 @@
 <?php
 
-namespaces Alpha\Util\Image;
+namespace Alpha\Util\Image;
 
 use Alpha\Exception\IllegalArguementException;
 

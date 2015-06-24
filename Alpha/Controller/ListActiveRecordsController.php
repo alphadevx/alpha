@@ -133,7 +133,6 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
             if (isset($params['createTableBut'])) {
                 try {
                     $classname = $params['createTableClass'];
-                    ActiveRecord::loadClassDef($classname);
 
                     $BO = new $classname();
                     $BO->makeTable();
@@ -150,7 +149,6 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
             if (isset($params['createHistoryTableBut'])) {
                 try {
                     $classname = $params['createTableClass'];
-                    ActiveRecord::loadClassDef($classname);
 
                     $BO = new $classname();
                     $BO->makeHistoryTable();
@@ -167,7 +165,6 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
             if (isset($params['recreateTableClass']) && $params['admin_'.$params['recreateTableClass'].'_button_pressed'] == 'recreateTableBut') {
                 try {
                     $classname = $params['recreateTableClass'];
-                    ActiveRecord::loadClassDef($classname);
                     $BO = new $classname();
                     $BO->rebuildTable();
 
@@ -183,7 +180,6 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
             if (isset($params['updateTableClass']) && $params['admin_'.$params['updateTableClass'].'_button_pressed'] == 'updateTableBut') {
                 try {
                     $classname = $params['updateTableClass'];
-                    ActiveRecord::loadClassDef($classname);
 
                     $BO = new $classname();
                     $missingFields = $BO->findMissingFields();
