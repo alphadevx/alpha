@@ -162,7 +162,7 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
                 }
             }
 
-            if (isset($params['recreateTableClass']) && $params['admin_'.$params['recreateTableClass'].'_button_pressed'] == 'recreateTableBut') {
+            if (isset($params['recreateTableClass']) && $params['admin_'.stripslashes($params['recreateTableClass']).'_button_pressed'] == 'recreateTableBut') {
                 try {
                     $classname = $params['recreateTableClass'];
                     $BO = new $classname();
@@ -177,7 +177,7 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
                 }
             }
 
-            if (isset($params['updateTableClass']) && $params['admin_'.$params['updateTableClass'].'_button_pressed'] == 'updateTableBut') {
+            if (isset($params['updateTableClass']) && $params['admin_'.stripslashes($params['updateTableClass']).'_button_pressed'] == 'updateTableBut') {
                 try {
                     $classname = $params['updateTableClass'];
 
@@ -186,8 +186,9 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
 
                     $count = count($missingFields);
 
-                    for($i = 0; $i < $count; $i++)
+                    for($i = 0; $i < $count; $i++) {
                         $BO->addProperty($missingFields[$i]);
+                    }
 
                     self::$logger->action('Updated the table for class '.$classname);
 
