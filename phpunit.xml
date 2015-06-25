@@ -9,17 +9,22 @@
          processIsolation="false"
          stopOnError="false"
          stopOnFailure="false"
-         verbose="true"
+         verbose="false"
 >
     <php>
         <env name="HOSTNAME" value="unittests"/>
     </php>
+
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+    </logging>
 
     <testsuites>
         <testsuite name="Alpha Framework Test Suite">
             <directory suffix="Test.php">./test</directory>
         </testsuite>
     </testsuites>
+
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./Alpha</directory>

@@ -10,6 +10,6 @@ install:
 before_script:
   - mkdir -p build/logs
 
-script: vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+script: vendor/bin/phpunit
 
 after_success: vendor/bin/coveralls
