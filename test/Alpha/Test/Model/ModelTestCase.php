@@ -11,7 +11,6 @@ use Alpha\Model\ActiveRecord;
  *
  * @since 2.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id: DEnumTest.php 1845 2014-11-18 22:18:55Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.

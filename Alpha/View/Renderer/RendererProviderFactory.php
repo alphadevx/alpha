@@ -77,8 +77,6 @@ class RendererProviderFactory
 
         self::$logger->debug('>>getInstance(providerName=['.$providerName.'])');
 
-        $config = ConfigProvider::getInstance();
-
         if ($providerName == 'auto') {
             if (isset($_SERVER['HTTP_ACCEPT']) && $_SERVER['HTTP_ACCEPT'] == 'application/json') {
                 // use the JSON renderer

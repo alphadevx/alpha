@@ -52,6 +52,16 @@ use Alpha\Util\Config\ConfigProvider;
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * Sets up the unit tests
+     *
+     * @since 2.0
+     */
+    protected function setup()
+    {
+        $_SERVER = array();
+    }
+
+    /**
      * Testing that the HTTP method can be set from overrides or super-globals during object construction
      */
     public function testSetHTTPMethod()

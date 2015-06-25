@@ -17,7 +17,7 @@
 
     <testsuites>
         <testsuite name="Alpha Framework Test Suite">
-            <directory suffix=".php">./test</directory>
+            <directory suffix="Test.php">./test</directory>
         </testsuite>
     </testsuites>
     <filter>
