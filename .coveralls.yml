@@ -1,2 +1,2 @@
 src_dir: Alpha
-coverage_clover: build/logs/clover.xml
+coverage_clover: clover.xml
