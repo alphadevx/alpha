@@ -6,4 +6,4 @@ php:
 
 before_script: composer install
 
-script: php vendor/bin/phpunit test/  --coverage-text
+script: php vendor/bin/phpunit ./test  --coverage-text
