@@ -51,6 +51,8 @@ use Alpha\Util\Config\ConfigProvider;
  */
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
+    private $serverGlobalCopy;
+
     /**
      * Sets up the unit tests
      *
@@ -58,7 +60,14 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function setup()
     {
+        if (!isset($this->serverGlobalCopy))
+            $this->serverGlobalCopy = $_SERVER;
         $_SERVER = array();
+    }
+
+    protected function teardown()
+    {
+        $_SERVER = $this->serverGlobalCopy;
     }
 
     /**

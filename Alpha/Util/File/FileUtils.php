@@ -615,17 +615,19 @@ class FileUtils
         }
 
         $dir = dir($source);
-        while (false !== $entry = $dir->read()) {
-            if ($entry == '.' || $entry == '..') {
-                continue;
+        if ($dir !== false) {
+            while (false !== $entry = $dir->read()) {
+                if ($entry == '.' || $entry == '..') {
+                    continue;
+                }
+
+                if ($dest !== "$source/$entry") {
+                    self::copy("$source/$entry", "$dest/$entry");
+                }
             }
 
-            if ($dest !== "$source/$entry") {
-                self::copy("$source/$entry", "$dest/$entry");
-            }
+            $dir->close();
         }
-
-        $dir->close();
     }
 
     /**

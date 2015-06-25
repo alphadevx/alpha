@@ -80,6 +80,7 @@ class CronManager
         self::$logger->info('Found ['.count($taskList).'] tasks in the directory ['.$config->get('app.root').'tasks]');
 
         foreach ($taskList as $taskClass) {
+            $taskClass = 'Alpha\Task\\'.$taskClass;
             self::$logger->info('Loading task ['.$taskClass.']');
             $task = new $taskClass;
 
@@ -119,25 +120,30 @@ class CronManager
 
         $classNameArray = array();
 
-        $handle = opendir($config->get('app.root').'Task');
+        if (file_exists($config->get('app.root').'Task')) {
 
-        // loop over the custom task directory
-        while (false !== ($file = readdir($handle))) {
-            if (preg_match("/Task.php/", $file)) {
-                $classname = mb_substr($file, 0, -4);
+            $handle = opendir($config->get('app.root').'Task');
 
-                array_push($classNameArray, $classname);
+            // loop over the custom task directory
+            while (false !== ($file = readdir($handle))) {
+                if (preg_match("/Task.php/", $file)) {
+                    $classname = mb_substr($file, 0, -4);
+
+                    array_push($classNameArray, $classname);
+                }
             }
         }
 
-        $handle = opendir($config->get('app.root').'Alpha/Task');
+        if (file_exists($config->get('app.root').'Alpha/Task')) {
+            $handle = opendir($config->get('app.root').'Alpha/Task');
 
-        // loop over the custom task directory
-        while (false !== ($file = readdir($handle))) {
-            if (preg_match("/Task.php/", $file)) {
-                $classname = mb_substr($file, 0, -4);
+            // loop over the custom task directory
+            while (false !== ($file = readdir($handle))) {
+                if (preg_match("/Task.php/", $file)) {
+                    $classname = mb_substr($file, 0, -4);
 
-                array_push($classNameArray, $classname);
+                    array_push($classNameArray, $classname);
+                }
             }
         }
 

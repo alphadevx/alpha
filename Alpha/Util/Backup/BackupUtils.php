@@ -3,6 +3,7 @@
 namespace Alpha\Util\Backup;
 
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\File\FileUtils;
 
 /**
  * A utility class for carrying out various backup tasks
