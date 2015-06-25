@@ -1,2 +1,2 @@
-src_dir: Alpha
-coverage_clover: clover.xml
+src_dir: ./Alpha
+coverage_clover: ./clover.xml
