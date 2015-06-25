@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/alphadevx/alpha.svg?branch=2.0.0)](https://travis-ci.org/alphadevx/alpha)
+
 Alpha Framework (2.0 alpha)
 ===========================
 
