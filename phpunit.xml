@@ -11,6 +11,10 @@
          stopOnFailure="false"
          verbose="true"
 >
+    <php>
+        <env name="HOSTNAME" value="unittests"/>
+    </php>
+
     <testsuites>
         <testsuite name="Alpha Framework Test Suite">
             <directory suffix=".php">./test</directory>
