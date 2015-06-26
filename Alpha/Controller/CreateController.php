@@ -160,7 +160,8 @@ class CreateController extends Controller implements ControllerInterface
 
             $body = View::displayPageHead($this);
 
-            $body .= $this->BOView->createView();
+            $fields = array('formAction' => $this->request->getURI());
+            $body .= $this->BOView->createView($fields);
         } catch (IllegalArguementException $e) {
             self::$logger->warn($e->getMessage());
             throw new ResourceNotFoundException('The file that you have requested cannot be found!');

@@ -114,9 +114,6 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $config = ConfigProvider::getInstance();
 
-        // the form action
-        $fields['formAction'] = $_SERVER['REQUEST_URI'];
-
         // the form ID
         $fields['formID'] = get_class($this->BO).'_'.$this->BO->getOID();
 
@@ -127,7 +124,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $button = new Button('submit', 'Create', 'createBut');
         $fields['createButton'] = $button->render();
 
-        $button = new Button("document.location.replace('".FrontController::generateSecureURL('act=ListBusinessObjects')."')", 'Cancel', 'cancelBut');
+        $button = new Button("document.location.replace('".FrontController::generateSecureURL('act=Alpha\\Controller\\ListActiveRecordsController')."')", 'Cancel', 'cancelBut');
         $fields['cancelButton'] = $button->render();
 
         // buffer security fields to $formSecurityFields variable
@@ -1089,7 +1086,8 @@ class RendererProviderHTML implements RendererProviderInterface
                 if (!is_object($this->BO->getPropObject($propName)))
                     continue;
 
-                $propClass = get_class($this->BO->getPropObject($propName));
+                $reflection = new ReflectionClass($this->BO->getPropObject($propName));
+                $propClass = $reflection->getShortName();
 
                 // exclude non-Relation transient attributes from create and edit screens
                 if ($propClass != 'Relation' && ($mode == 'edit' || $mode == 'create') && in_array($propName, $this->BO->getTransientAttributes()))
