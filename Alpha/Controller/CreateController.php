@@ -222,7 +222,7 @@ class CreateController extends Controller implements ControllerInterface
                 if ($this->getNextJob() != '')
                     $response->redirect($this->getNextJob());
                 else
-                    $response->redirect(FrontController::generateSecureURL('act=ViewControleer&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID()));
+                    $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ViewController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID()));
 
                 return $response;
             }

@@ -100,7 +100,7 @@ class ViewController extends Controller implements ControllerInterface
      * @param string $visibility The name of the rights group that can access this controller.
      * @since 1.0
      */
-    public function __construct($visibility='Standard')
+    public function __construct($visibility='Admin')
     {
         self::$logger = new Logger('ViewController');
         self::$logger->debug('>>__construct()');
@@ -144,9 +144,8 @@ class ViewController extends Controller implements ControllerInterface
                 if ($this->getCustomControllerName($ActiveRecordType, 'view') != null)
                     $this->loadCustomController($ActiveRecordType, 'view');
 
-                $className = "Alpha\\Model\\$ActiveRecordType";
-                if (class_exists($className))
-                    $this->BO = new $className();
+                if (class_exists($ActiveRecordType))
+                    $this->BO = new $ActiveRecordType();
                 else
                     throw new IllegalArguementException('No ActiveRecord available to view!');
 
@@ -277,22 +276,13 @@ class ViewController extends Controller implements ControllerInterface
     }
 
     /**
-     * Use this callback to inject in the admin menu template fragment for admin users of
-     * the backend only.
+     * Use this callback to inject in the admin menu template fragment
      *
      * @since 1.2
      */
     public function after_displayPageHead_callback()
     {
-        $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
-
-        $menu = '';
-
-        if ($session->get('currentUser') !== false && ActiveRecord::isInstalled() && $session->get('currentUser')->inGroup('Admin') && mb_strpos($this->request->getURI()) !== false) {
-            $menu .= View::loadTemplateFragment('html', 'adminmenu.phtml', array());
-        }
+        $menu = View::loadTemplateFragment('html', 'adminmenu.phtml', array());
 
         return $menu;
     }
