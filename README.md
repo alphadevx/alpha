@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/alphadevx/alpha.svg?branch=2.0.0)](https://travis-ci.org/alphadevx/alpha)
+[![Coverage Status](https://coveralls.io/repos/alphadevx/alpha/badge.svg?branch=2.0.0)](https://coveralls.io/r/alphadevx/alpha?branch=2.0.0)
 
 Alpha Framework (2.0 alpha)
 ===========================
