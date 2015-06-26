@@ -110,7 +110,7 @@ class ViewControllerTest extends \PHPUnit_Framework_TestCase
         $person = $this->createPersonObject('test');
         $person->save();
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/view/Person/'.$person->getOID()));
+        $request = new Request(array('method' => 'GET', 'URI' => '/view/'.urlencode('Alpha\Model\Person').'/'.$person->getOID()));
 
         $response = $front->process($request);
 
@@ -137,7 +137,7 @@ class ViewControllerTest extends \PHPUnit_Framework_TestCase
 
         $params = array('deleteOID' => $person->getOID(), 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
 
-        $request = new Request(array('method' => 'POST', 'URI' => '/view/Person/'.$person->getOID(), 'params' => $params));
+        $request = new Request(array('method' => 'POST', 'URI' => '/view/'.urlencode('Alpha\Model\Person').'/'.$person->getOID(), 'params' => $params));
 
         $response = $front->process($request);
 

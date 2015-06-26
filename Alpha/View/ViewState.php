@@ -92,6 +92,7 @@ class ViewState
      */
     public static function getInstance()
     {
+        $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
 

@@ -136,7 +136,7 @@ class ViewController extends Controller implements ControllerInterface
                 if (!Validator::isInteger($params['ActiveRecordOID']))
                     throw new IllegalArguementException('Invalid oid ['.$params['ActiveRecordOID'].'] provided on the request!');
 
-                $ActiveRecordType = $params['ActiveRecordType'];
+                $ActiveRecordType = urldecode($params['ActiveRecordType']);
 
                 /*
                 *  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
@@ -200,11 +200,10 @@ class ViewController extends Controller implements ControllerInterface
 
             // load the business object (BO) definition
             if (isset($params['ActiveRecordType'])) {
-                $ActiveRecordType = $params['ActiveRecordType'];
+                $ActiveRecordType = urldecode($params['ActiveRecordType']);
 
-                $className = "Alpha\\Model\\$ActiveRecordType";
-                if (class_exists($className))
-                    $this->BO = new $className();
+                if (class_exists($ActiveRecordType))
+                    $this->BO = new $ActiveRecordType();
                 else
                     throw new IllegalArguementException('No ActiveRecord available to view!');
 
@@ -215,7 +214,7 @@ class ViewController extends Controller implements ControllerInterface
                     if (!Validator::isInteger($params['deleteOID']))
                         throw new IllegalArguementException('Invalid deleteOID ['.$params['deleteOID'].'] provided on the request!');
 
-                    $temp = new $className();
+                    $temp = new $ActiveRecordType();
                     $temp->load($params['deleteOID']);
 
                     try {

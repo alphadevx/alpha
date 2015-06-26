@@ -10,6 +10,7 @@ use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Model\Person;
 use Alpha\Model\Rights;
+use Alpha\Model\ActionLog;
 
 /**
  *
@@ -77,6 +78,9 @@ class EditControllerTest extends \PHPUnit_Framework_TestCase
         $rights = new Rights();
         $rights->set('name', 'Admin');
         $rights->save();
+
+        $actionLog = new ActionLog();
+        $actionLog->rebuildTable();
     }
 
     /**

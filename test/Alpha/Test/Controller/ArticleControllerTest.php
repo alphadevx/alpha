@@ -266,6 +266,10 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $article = $this->createArticleObject('test article');
         $article->save();
 
+        if (!file_exists($article->getAttachmentsLocation())) {
+            mkdir($article->getAttachmentsLocation(), 0774);
+        }
+
         $person = $this->createPersonObject('test');
         $person->save();
         $session->set('currentUser', $person);
