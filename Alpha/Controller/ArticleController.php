@@ -135,7 +135,6 @@ class ArticleController extends Controller implements ControllerInterface
 
         $params = $request->getParams();
 
-        // TODO: this will never be create, read is default, so we are only using edit.  Do we even need this?
         $this->mode = (isset($params['mode']) && in_array($params['mode'], array('create','edit')) ? $params['mode'] : 'read');
 
         $body = '';
@@ -278,7 +277,7 @@ class ArticleController extends Controller implements ControllerInterface
         }
 
         // create a new article requests
-        if ($request->getParam('title') === '') {
+        if ($request->getParam('title') === null) {
             $view = View::getInstance($this->BO);
 
             // set up the title and meta details
@@ -286,9 +285,12 @@ class ArticleController extends Controller implements ControllerInterface
             $this->setDescription('Page to create a new article.');
             $this->setKeywords('create,article');
 
+            $this->mode = 'create';
+
             $body .= View::displayPageHead($this);
 
-            $body .= $view->createView();
+            $fields = array('formAction' => $this->request->getURI());
+            $body .= $view->createView($fields);
         }
 
         $body .= View::displayPageFoot($this);
@@ -739,6 +741,9 @@ class ArticleController extends Controller implements ControllerInterface
     public function insert_CMSDisplayStandardHeader_callback()
     {
         $config = ConfigProvider::getInstance();
+
+        if ($this->mode != 'read')
+            return '';
 
         $html = '';
 

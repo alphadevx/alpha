@@ -17,8 +17,11 @@ use Alpha\Exception\FailedSaveException;
 use Alpha\Exception\LockingException;
 use Alpha\Exception\AlphaException;
 use Alpha\Exception\NotImplementedException;
+use Alpha\Exception\FileNotFoundException;
 use Alpha\Controller\Front\FrontController;
 use Alpha\View\View;
+use ReflectionClass;
+use Exception;
 
 /**
  *
@@ -1125,18 +1128,23 @@ abstract class Controller
 
 		$config = ConfigProvider::getInstance();
 
-		// uppercase the first letter of each word, e.g. create cart becomes Create Cart
-		$controllerName = ucwords($mode.' '.$BOName);
-		// remove spaces
-		$controllerName = str_replace(' ', '', $controllerName);
+		try {
+			$class = new ReflectionClass($BOName);
+	        $controllerName = $class->getShortname().'Controller';
+	    } catch (Exception $e) {
+	    	self::$logger->warn('Bad active record name ['.$BOName.'] passed to getCustomControllerName()');
+	    	return null;
+	    }
 
 		self::$logger->debug('Custom controller name is ['.$controllerName.']');
 
-		if (file_exists($config->get('app.root').'controller/'.$controllerName.'.php')) {
-			self::$logger->debug('<<getCustomControllerName');
+		if (file_exists($config->get('app.root').'Controller/'.$controllerName.'.php')) {
+			$controllerName = 'Controller\\'.$controllerName;
+			self::$logger->debug('<<getCustomControllerName ['.$controllerName.']');
 			return $controllerName;
-		} elseif (file_exists($config->get('app.root').'alpha/controller/'.$controllerName.'.php')) {
-			self::$logger->debug('<<getCustomControllerName');
+		} elseif (file_exists($config->get('app.root').'Alpha/Controller/'.$controllerName.'.php')) {
+			$controllerName = 'Alpha\Controller\\'.$controllerName;
+			self::$logger->debug('<<getCustomControllerName ['.$controllerName.']');
 			return $controllerName;
 		} else{
 			self::$logger->debug('<<getCustomControllerName');
@@ -1152,6 +1160,7 @@ abstract class Controller
 	 * @return Alpha\Util\Http\Response
 	 * @throws Alpha\Exception\FileNotFoundException
 	 * @since 1.0
+	 * @deprecated If a custom controller exists, autoload and invoke directly instead of HTTP re-direct as its cheaper
 	 */
 	protected function loadCustomController($BOName, $mode)
     {

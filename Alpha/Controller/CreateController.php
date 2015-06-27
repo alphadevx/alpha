@@ -136,12 +136,14 @@ class CreateController extends Controller implements ControllerInterface
             }
 
             /*
-             *  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
-             *
-             * TODO: do we still want to do this?
+             *  check and see if a custom create controller exists for this record, and if it does use it otherwise continue
              */
-            if ($this->getCustomControllerName($ActiveRecordType, 'create') != null)
-                return $this->loadCustomController($ActiveRecordType, 'create');
+            // TODO: consider moving this to FrontController::process()
+            $customController = $this->getCustomControllerName($ActiveRecordType, 'create');
+            if ($customController != null) {
+                $controller = new $customController();
+                return $controller->process($request);
+            }
 
             if (class_exists($ActiveRecordType))
                 $this->BO = new $ActiveRecordType();

@@ -565,17 +565,17 @@ class RendererProviderHTML implements RendererProviderInterface
         $html = View::loadTemplateFragment('html', 'head.phtml', array('title' => $controller->getTitle(), 'description' => $controller->getDescription(), 'allowCSSOverrides' => $allowCSSOverrides));
 
         if (method_exists($controller, 'during_displayPageHead_callback'))
-            $html.= $controller->during_displayPageHead_callback();
+            $html .= $controller->during_displayPageHead_callback();
 
-        $html.= '</head>';
+        $html .= '</head>';
 
         try {
             if ($controller->getBO() != null)
-                $html.= '<body'.($controller->getBO()->get('bodyOnload') != '' ? ' onload="'.$controller->getBO()->get('bodyOnload').'"' : '').'>';
+                $html .= '<body'.($controller->getBO()->get('bodyOnload') != '' ? ' onload="'.$controller->getBO()->get('bodyOnload').'"' : '').'>';
             else
-                $html.= '<body>';
+                $html .= '<body>';
         } catch (AlphaException $e) {
-            $html.= '<body>';
+            $html .= '<body>';
         }
 
         $html .= '<div class="container">';
