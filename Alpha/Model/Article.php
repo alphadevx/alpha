@@ -308,36 +308,11 @@ class Article extends ActiveRecord
 	protected function after_load_callback()
 	{
 		$config = ConfigProvider::getInstance();
-		// TODO remove global call!
-		global $front;
+		
 
-		// check the config to see if we are using mod_rewrite
-		if ($config->get('app.use.mod.rewrite')) {
-			// check to see if an alias is registered for the view_article_title controller, otherwise use the long URL version
-			if (isset($front) && $front->hasAlias('ViewArticleTitle')) {
-				$alias = $front->getControllerAlias('ViewArticleTitle');
+		$this->URL = $config->get('app.url').'a/'. str_replace(' ', $config->get('cms.url.title.separator'), $this->title->getValue());
 
-				$this->URL = $config->get('app.url').$alias.'/'.str_replace(' ', '-', $this->title->getValue());
-			} else {
-				$this->URL = $config->get('app.url').'ViewArticleTitle/title/'.str_replace(' ', $config->get('cms.url.title.separator'), $this->title->getValue());
-			}
-		} else {
-			$this->URL = $config->get('app.url').'alpha/controller/ViewArticle.php?oid='.$this->getID();
-		}
-
-		// now set up the print version URL
-		if ($config->get('app.use.mod.rewrite')) {
-			// check to see if an alias is registered for the view_article_title controller, otherwise use the long URL version
-			if (isset($front) && $front->hasAlias('ViewArticlePrint')) {
-				$alias = $front->getControllerAlias('ViewArticlePrint');
-
-				$this->printURL = $config->get('app.url').$alias.'/'.str_replace(' ', '-', $this->title->getValue());
-			} else {
-				$this->printURL = $config->get('app.url').'ViewArticlePrint/title/'.str_replace(' ', $config->get('cms.url.title.separator'), $this->title->getValue());
-			}
-		} else {
-			$this->printURL = $config->get('app.url').'alpha/controller/ViewArticlePrint.php?title='.$this->title->getValue();
-		}
+		$this->printURL = $config->get('app.url').'a/'. str_replace(' ', $config->get('cms.url.title.separator'), $this->title->getValue());
 
 		$this->setupRels();
 	}
