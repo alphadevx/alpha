@@ -29,6 +29,7 @@ use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\ResourceNotAllowedException;
 use Alpha\Exception\FailedSaveException;
 use Alpha\Exception\FileNotFoundException;
+use Alpha\Exception\ValidationException;
 use Alpha\Model\ActiveRecord;
 use Alpha\Controller\Front\FrontController;
 
@@ -135,7 +136,8 @@ class ArticleController extends Controller implements ControllerInterface
 
         $params = $request->getParams();
 
-        $this->mode = (isset($params['mode']) && in_array($params['mode'], array('create','edit')) ? $params['mode'] : 'read');
+        if (!isset($this->mode))
+            $this->mode = (isset($params['mode']) && in_array($params['mode'], array('create','edit')) ? $params['mode'] : 'read');
 
         $body = '';
 
@@ -277,7 +279,10 @@ class ArticleController extends Controller implements ControllerInterface
         }
 
         // create a new article requests
-        if ($request->getParam('title') === null) {
+        if ($this->mode == 'create' || $request->getParam('title') === null) {
+
+            $this->mode = 'create';
+
             $view = View::getInstance($this->BO);
 
             // set up the title and meta details
@@ -285,9 +290,11 @@ class ArticleController extends Controller implements ControllerInterface
             $this->setDescription('Page to create a new article.');
             $this->setKeywords('create,article');
 
-            $this->mode = 'create';
-
             $body .= View::displayPageHead($this);
+
+            $message = $this->getStatusMessage();
+            if (!empty($message))
+                $body .= $message;
 
             $fields = array('formAction' => $this->request->getURI());
             $body .= $view->createView($fields);
@@ -431,9 +438,15 @@ class ArticleController extends Controller implements ControllerInterface
 
             // saving a new article
             if (isset($params['createBut'])) {
-                // populate the transient object from post data
-                $this->BO->populateFromArray($params);
-                $this->BO->save();
+                try {
+                    $this->BO->populateFromArray($params);
+                    $this->BO->save();
+                } catch (AlphaException $e) {
+                    $this->setStatusMessage(View::displayErrorMessage('Error creating the new article, title already in use!'));
+                    self::$logger->warn($e->getMessage());
+                    $this->mode = 'create';
+                    return $this->doGET($request);
+                }
 
                 self::$logger->action('Created new Article instance with OID '.$this->BO->getOID());
 
@@ -444,48 +457,14 @@ class ArticleController extends Controller implements ControllerInterface
                     if ($this->getNextJob() != '')
                         $response->redirect($this->getNextJob());
                     else
-                        $response->redirect(FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getID()));
+                        $response->redirect(FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&title='.$this->BO->get('title')));
 
                     return $response;
 
-                } catch (AlphaException $e) {
+                } catch (\Exception $e) {
                     self::$logger->error($e->getTraceAsString());
                     $this->setStatusMessage(View::displayErrorMessage('Error creating the new article, check the log!'));
                 }
-            }
-
-            // previewing an article
-            if (isset($params['data'])) {
-                // allow the consumer to optionally indicate another BO than Article
-                if (isset($params['bo']) && class_exists($params['bo']))
-                    $temp = new $params['bo'];
-                else
-                    $temp = new Article();
-
-                $temp->set('content', $params['data']);
-
-                if (isset($params['oid']))
-                    $temp->set('OID', $params['oid']);
-
-                $parser = new MarkdownFacade($temp, false);
-
-                // render a simple HTML header
-                $body = '<html>';
-                $body .= '<head>';
-                $body .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/lib/jquery/ui/themes/'.$config->get('app.css.theme').'/jquery.ui.all.css">';
-                $body .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/css/alpha.css">';
-                $body .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'config/css/overrides.css">';
-                $body .= '</head>';
-                $body .= '<body>';
-
-                // transform text using parser.
-                $body .= $parser->getContent();
-
-                $body .= '</body>';
-                $body .= '</html>';
-
-                $response = new Response(200, $body, array('Content-Type' => 'text/html'));
-                return $response;
             }
         } catch (SecurityException $e) {
             self::$logger->warn($e->getMessage());

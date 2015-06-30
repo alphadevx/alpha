@@ -139,7 +139,7 @@ class CreateController extends Controller implements ControllerInterface
              *  check and see if a custom create controller exists for this record, and if it does use it otherwise continue
              */
             // TODO: consider moving this to FrontController::process()
-            $customController = $this->getCustomControllerName($ActiveRecordType, 'create');
+            $customController = $this->getCustomControllerName($ActiveRecordType);
             if ($customController != null) {
                 $controller = new $customController();
                 return $controller->process($request);
@@ -192,9 +192,6 @@ class CreateController extends Controller implements ControllerInterface
         $params = $request->getParams();
 
         try {
-            // check the hidden security fields before accepting the form POST data
-            if (!$this->checkSecurityFields())
-                throw new SecurityException('This page cannot accept post data from remote servers!');
 
             if (isset($params['ActiveRecordType'])) {
                 $ActiveRecordType = urldecode($params['ActiveRecordType']);
@@ -202,6 +199,20 @@ class CreateController extends Controller implements ControllerInterface
             } else {
                 throw new IllegalArguementException('No ActiveRecord available to create!');
             }
+
+            /*
+             *  check and see if a custom create controller exists for this record, and if it does use it otherwise continue
+             */
+            // TODO: consider moving this to FrontController::process()
+            $customController = $this->getCustomControllerName($ActiveRecordType);
+            if ($customController != null) {
+                $controller = new $customController();
+                return $controller->process($request);
+            }
+
+            // check the hidden security fields before accepting the form POST data
+            if (!$this->checkSecurityFields())
+                throw new SecurityException('This page cannot accept post data from remote servers!');
 
             if (class_exists($ActiveRecordType))
                 $this->BO = new $ActiveRecordType();

@@ -58,6 +58,7 @@ class ArticleView extends View
      *
      * @param array $fields Hash array of HTML fields to pass to the template.
      * @since 1.0
+     * @return string
      */
     public function markdownView($fields=array())
     {
@@ -67,7 +68,7 @@ class ArticleView extends View
 
         $fields['markdownContent'] = $markdown->getContent();
 
-        $this->loadTemplate($this->BO, 'markdown', $fields);
+        return $this->loadTemplate($this->BO, 'markdown', $fields);
     }
 
     /**
@@ -86,11 +87,12 @@ class ArticleView extends View
      *
      * @param array $fields hash array of HTML fields to pass to the template
      * @since 1.0
+     * @return string
      */
     public function listView($fields=array())
     {
         $fields['dateAdded'] = $this->BO->getCreateTS()->getDate();
-        parent::listView($fields);
+        return parent::listView($fields);
     }
 
     /**
@@ -98,6 +100,7 @@ class ArticleView extends View
      *
      * @param array $fields hash array of HTML fields to pass to the template
      * @since 1.0
+     * @return string
      */
     public function editView($fields=array())
     {
@@ -171,10 +174,10 @@ class ArticleView extends View
         // file attachments section
         $fields['fileAttachments'] = $this->renderFileUploadSection();
 
-        $this->loadTemplate($this->BO, 'edit', $fields);
-
         if(method_exists($this, 'after_editView_callback'))
             $this->after_editView_callback();
+
+        return $this->loadTemplate($this->BO, 'edit', $fields);
     }
 
     /**

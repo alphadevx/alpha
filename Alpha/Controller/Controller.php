@@ -1114,25 +1114,23 @@ abstract class Controller
 	/**
 	 * Returns the name of a custom controller if one is found, otherwise returns null.
 	 *
-	 * @param string $BOName The classname of the business object
-	 * @param string $mode The mode of the controller (create, view, edit)
+	 * @param string $ActiveRecordType The classname of the active record
 	 * @return string
 	 * @since 1.0
-	 * @todo Remove $mode param and refactor
 	 */
-	public static function getCustomControllerName($BOName, $mode)
+	public static function getCustomControllerName($ActiveRecordType)
     {
 		if (self::$logger == null)
 			self::$logger = new Logger('Controller');
-		self::$logger->debug('>>getCustomControllerName(BOName=['.$BOName.'], mode=['.$mode.'])');
+		self::$logger->debug('>>getCustomControllerName(ActiveRecordType=['.$ActiveRecordType.']');
 
 		$config = ConfigProvider::getInstance();
 
 		try {
-			$class = new ReflectionClass($BOName);
+			$class = new ReflectionClass($ActiveRecordType);
 	        $controllerName = $class->getShortname().'Controller';
 	    } catch (Exception $e) {
-	    	self::$logger->warn('Bad active record name ['.$BOName.'] passed to getCustomControllerName()');
+	    	self::$logger->warn('Bad active record name ['.$ActiveRecordType.'] passed to getCustomControllerName()');
 	    	return null;
 	    }
 
