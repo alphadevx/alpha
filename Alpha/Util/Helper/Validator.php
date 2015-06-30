@@ -197,7 +197,7 @@ class Validator
 	 */
 	public static function isBoolean($value)
 	{
-		$acceptable = array(true, false, "true", "false", 1, 0, "1", "0");
+		$acceptable = array(true, false, 'true', 'false', 1, 0, '1', '0', 'on', 'off');
 
 		if(!in_array($value, $acceptable, true))
 			return false;

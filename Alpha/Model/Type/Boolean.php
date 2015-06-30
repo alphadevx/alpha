@@ -87,7 +87,7 @@ class Boolean extends Type implements TypeInterface
 		if (!Validator::isBoolean($val))
 			throw new IllegalArguementException($this->helper);
 
-		$acceptableTrueValues = array(true, "true", 1, "1");
+		$acceptableTrueValues = array(true, 'true', 1, '1', 'on');
 
 		if (in_array($val, $acceptableTrueValues, true)) {
 			$this->value = 1;
@@ -110,7 +110,7 @@ class Boolean extends Type implements TypeInterface
 		if (!Validator::isBoolean($val))
 			throw new IllegalArguementException($this->helper);
 
-		$acceptableTrueValues = array(true, "true", 1, "1");
+		$acceptableTrueValues = array(true, 'true', 1, '1', 'on');
 
 		if (in_array($val, $acceptableTrueValues, true)) {
 			$this->value = 1;
