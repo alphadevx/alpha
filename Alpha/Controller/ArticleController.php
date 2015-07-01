@@ -721,7 +721,7 @@ class ArticleController extends Controller implements ControllerInterface
     {
         $config = ConfigProvider::getInstance();
 
-        if ($this->mode != 'read')
+        if ($this->request->getParam('token') != null)
             return '';
 
         $html = '';
@@ -747,9 +747,6 @@ class ArticleController extends Controller implements ControllerInterface
      */
     public function before_displayPageFoot_callback()
     {
-        if ($this->mode != 'read')
-            return '';
-
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
