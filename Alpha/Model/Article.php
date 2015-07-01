@@ -308,7 +308,6 @@ class Article extends ActiveRecord
 	protected function after_load_callback()
 	{
 		$config = ConfigProvider::getInstance();
-		
 
 		$this->URL = $config->get('app.url').'a/'. str_replace(' ', $config->get('cms.url.title.separator'), $this->title->getValue());
 

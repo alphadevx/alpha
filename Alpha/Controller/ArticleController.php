@@ -186,7 +186,7 @@ class ArticleController extends Controller implements ControllerInterface
                 if ($this->BO->isTransient()) {
                     $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
 
-                    $this->BO->loadByAttribute('title', $title, false, array('OID', 'version_num', 'created_ts', 'updated_ts', 'author', 'published', 'content', 'headerContent'));
+                    $this->BO->loadByAttribute('title', $title, false, array('OID', 'version_num', 'created_ts', 'updated_ts', 'title', 'author', 'published', 'content', 'headerContent'));
 
                     if (!$this->BO->get('published'))
                         throw new RecordNotFoundException('Attempted to load an article which is not published yet');
@@ -820,7 +820,7 @@ class ArticleController extends Controller implements ControllerInterface
         }
 
         if ($config->get('cms.display.standard.footer')) {
-            $html .= '<p>Article URL: <a href="'.$this->request->getURL().'">'.$this->request->getURL().'</a><br>';
+            $html .= '<p>Article URL: <a href="'.$this->BO->get('URL').'">'.$this->BO->get('URL').'</a><br>';
             $html .= 'Title: '.$this->BO->get('title').'<br>';
             $html .= 'Author: '.$this->BO->get('author').'</p>';
         }
