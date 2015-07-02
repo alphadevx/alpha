@@ -135,16 +135,6 @@ class CreateController extends Controller implements ControllerInterface
                 throw new IllegalArguementException('No ActiveRecord available to create!');
             }
 
-            /*
-             *  check and see if a custom create controller exists for this record, and if it does use it otherwise continue
-             */
-            // TODO: consider moving this to FrontController::process()
-            $customController = $this->getCustomControllerName($ActiveRecordType);
-            if ($customController != null) {
-                $controller = new $customController();
-                return $controller->process($request);
-            }
-
             if (class_exists($ActiveRecordType))
                 $this->BO = new $ActiveRecordType();
             else
@@ -198,16 +188,6 @@ class CreateController extends Controller implements ControllerInterface
                 $this->activeRecordType = $ActiveRecordType;
             } else {
                 throw new IllegalArguementException('No ActiveRecord available to create!');
-            }
-
-            /*
-             *  check and see if a custom create controller exists for this record, and if it does use it otherwise continue
-             */
-            // TODO: consider moving this to FrontController::process()
-            $customController = $this->getCustomControllerName($ActiveRecordType);
-            if ($customController != null) {
-                $controller = new $customController();
-                return $controller->process($request);
             }
 
             // check the hidden security fields before accepting the form POST data

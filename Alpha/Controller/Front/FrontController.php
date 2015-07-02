@@ -293,6 +293,14 @@ class FrontController
 
         		if (class_exists($className)) {
         			$controller = new $className;
+
+        			if (isset($params['ActiveRecordType'])) {
+	        			$customController = $controller->getCustomControllerName($params['ActiveRecordType']);
+			            if ($customController != null) {
+			                $controller = new $customController();
+			            }
+			        }
+
         			$request->addParams($params);
         			return $controller->process($request);
         		}

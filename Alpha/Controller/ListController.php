@@ -61,12 +61,12 @@ use Alpha\Model\ActiveRecord;
 class ListController extends Controller implements ControllerInterface
 {
     /**
-     * The name of the BO
+     * The name of the ActiveRecord type that we will be creating
      *
      * @var string
-     * @since 1.0
+     * @since 2.0
      */
-    protected $BOname;
+    protected $activeRecordType;
 
     /**
      * The new default View object used for rendering the onjects to list
@@ -166,15 +166,20 @@ class ListController extends Controller implements ControllerInterface
 
         $body = '';
 
-        try{
+        try {
             if (isset($params['ActiveRecordType'])) {
-                $BOname = $params['ActiveRecordType'];
-                $this->BOname = $BOname;
-            } elseif (isset($this->BOname)) {
-                $BOname = $this->BOname;
+                $ActiveRecordType = urldecode($params['ActiveRecordType']);
+                $this->activeRecordType = $ActiveRecordType;
             } else {
-                throw new IllegalArguementException('No ActiveRecordType available to list!');
+                throw new IllegalArguementException('No ActiveRecord available to create!');
             }
+
+            if (class_exists($ActiveRecordType))
+                $this->BO = new $ActiveRecordType();
+            else
+                throw new IllegalArguementException('No ActiveRecord available to create!');
+
+            $this->BOView = View::getInstance($this->BO);
 
             if (isset($params['order'])) {
                 if($params['order'] == 'ASC' || $params['order'] == 'DESC')
@@ -185,20 +190,6 @@ class ListController extends Controller implements ControllerInterface
 
             if (isset($params['sort']))
                 $this->sort = $params['sort'];
-
-            /*
-             * Check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
-             *
-             * TODO: do we still want to do this?
-             */
-            if ($this->getCustomControllerName($BOname, 'list') != null)
-                $this->loadCustomController($BOname, 'list');
-
-            $className = 'Alpha\Model\\'.$this->BOname;
-            if (class_exists($className))
-                $this->BO = new $className();
-            else
-                throw new IllegalArguementException('No ActiveRecord available to create!');
 
             $this->BOView = View::getInstance($this->BO);
 
@@ -238,12 +229,10 @@ class ListController extends Controller implements ControllerInterface
             }
 
             if (isset($params['ActiveRecordType'])) {
-                $BOname = $params['ActiveRecordType'];
-                $this->BOname = $BOname;
-            } elseif (isset($this->BOname)) {
-                $BOname = $this->BOname;
+                $ActiveRecordType = urldecode($params['ActiveRecordType']);
+                $this->activeRecordType = $ActiveRecordType;
             } else {
-                throw new IllegalArguementException('No ActiveRecordType available to list!');
+                throw new IllegalArguementException('No ActiveRecord available to create!');
             }
 
             if (isset($params['order'])) {
@@ -256,16 +245,6 @@ class ListController extends Controller implements ControllerInterface
             if (isset($params['sort']))
                 $this->sort = $params['sort'];
 
-            $className = "Alpha\\Model\\".$this->BOname;
-            if (class_exists($className))
-                $this->BO = new $className();
-            else
-                throw new IllegalArguementException('No ActiveRecord available to list!');
-
-            $this->BOView = View::getInstance($this->BO);
-
-            $body .= View::displayPageHead($this);
-
             if (!empty($params['deleteOID'])) {
                 if (!Validator::isInteger($params['deleteOID']))
                     throw new IllegalArguementException('Invalid deleteOID ['.$params['deleteOID'].'] provided on the request!');
@@ -276,10 +255,10 @@ class ListController extends Controller implements ControllerInterface
 
                     ActiveRecord::begin();
                     $temp->delete();
-                    self::$logger->action('Deleted an instance of '.$BOname.' with id '.$params['deleteOID']);
+                    self::$logger->action('Deleted an instance of '.$this->activeRecordType.' with id '.$params['deleteOID']);
                     ActiveRecord::commit();
 
-                    $body .= View::displayUpdateMessage($BOname.' '.$params['deleteOID'].' deleted successfully.');
+                    $body .= View::displayUpdateMessage($this->activeRecordType.' '.$params['deleteOID'].' deleted successfully.');
 
                     $body .= $this->renderBodyContent();
                 } catch (AlphaException $e) {
@@ -313,11 +292,11 @@ class ListController extends Controller implements ControllerInterface
     {
         // set up the title and meta details
         if (!isset($this->title))
-            $this->setTitle('Listing all '.$this->BOname);
+            $this->setTitle('Listing all '.$this->activeRecordType);
         if (!isset($this->description))
-            $this->setDescription('Page listing all '.$this->BOname.'.');
+            $this->setDescription('Page listing all '.$this->activeRecordType.'.');
         if (!isset($this->keywords))
-            $this->setKeywords('list,all,'.$this->BOname);
+            $this->setKeywords('list,all,'.$this->activeRecordType);
         // set the start point for the list pagination
         if (isset($_GET['start']) ? $this->startPoint = $_GET['start']: $this->startPoint = 1);
     }
@@ -366,9 +345,9 @@ class ListController extends Controller implements ControllerInterface
         if ($this->startPoint > 1) {
             // handle secure URLs
             if ($this->request->getParam('tk', null) != null)
-                $html .= '<li><a href="'.FrontController::generateSecureURL('act=ListController&bo='.$this->BOname.'&start='.($this->startPoint-$config->get('app.list.page.amount'))).'">&lt;&lt;-Previous</a></li>';
+                $html .= '<li><a href="'.FrontController::generateSecureURL('act=ListController&bo='.$this->activeRecordType.'&start='.($this->startPoint-$config->get('app.list.page.amount'))).'">&lt;&lt;-Previous</a></li>';
             else
-                $html .= '<li><a href="/listall?bo='.$this->BOname."&start=".($this->startPoint-$config->get('app.list.page.amount')).'">&lt;&lt;-Previous</a></li>';
+                $html .= '<li><a href="/listall?bo='.$this->activeRecordType."&start=".($this->startPoint-$config->get('app.list.page.amount')).'">&lt;&lt;-Previous</a></li>';
         } elseif ($this->BOCount > $config->get('app.list.page.amount')){
             $html .= '<li class="disabled"><a href="#">&lt;&lt;-Previous</a></li>';
         }
@@ -379,9 +358,9 @@ class ListController extends Controller implements ControllerInterface
             if ($i != ($this->startPoint-1)) {
                 // handle secure URLs
                 if ($this->request->getParam('tk', null) != null)
-                    $html .= '<li><a href="'.FrontController::generateSecureURL('act=ListController&bo='.$this->BOname.'&start='.($i+1)).'">'.$page.'</a></li>';
+                    $html .= '<li><a href="'.FrontController::generateSecureURL('act=ListController&bo='.$this->activeRecordType.'&start='.($i+1)).'">'.$page.'</a></li>';
                 else
-                    $html .= '<li><a href="/listall?bo='.$this->BOname."&start=".($i+1).'">'.$page.'</a></li>';
+                    $html .= '<li><a href="/listall?bo='.$this->activeRecordType."&start=".($i+1).'">'.$page.'</a></li>';
             } elseif ($this->BOCount > $config->get('app.list.page.amount')){
                 $html .= '<li class="active"><a href="#">'.$page.'</a></li>';
             }
@@ -392,9 +371,9 @@ class ListController extends Controller implements ControllerInterface
         if ($this->BOCount > $end) {
             // handle secure URLs
             if ($this->request->getParam('tk', null) != null)
-                $html .= '<li><a href="'.FrontController::generateSecureURL('act=ListController&bo='.$this->BOname.'&start='.($this->startPoint+$config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a></li>';
+                $html .= '<li><a href="'.FrontController::generateSecureURL('act=ListController&bo='.$this->activeRecordType.'&start='.($this->startPoint+$config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a></li>';
             else
-                $html .= '<li><a href="/listall?bo='.$this->BOname."&start=".($this->startPoint+$config->get('app.list.page.amount')).
+                $html .= '<li><a href="/listall?bo='.$this->activeRecordType."&start=".($this->startPoint+$config->get('app.list.page.amount')).
                     '">Next-&gt;&gt;</a></li>';
         } elseif ($this->BOCount > $config->get('app.list.page.amount')){
             $html .= '<li class="disabled"><a href="#">Next-&gt;&gt;</a></li>';
@@ -418,7 +397,7 @@ class ListController extends Controller implements ControllerInterface
         $body = '';
 
         // get all of the BOs and invoke the listView on each one
-        $className = 'Alpha\Model\\'.$this->BOname;
+        $className = $this->activeRecordType;
         $temp = new $className;
 
         if (isset($this->filterField) && isset($this->filterValue)) {
@@ -452,20 +431,14 @@ class ListController extends Controller implements ControllerInterface
     }
 
     /**
-     * Use this callback to inject in the admin menu template fragment for admin users of
-     * the backend only.
+     * Use this callback to inject in the admin menu template fragment
      *
      * @since 1.2
      */
     public function after_displayPageHead_callback()
     {
-        $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
-        $menu = '';
-        if ($session->get('currentUser') !== false && ActiveRecord::isInstalled() && $session->get('currentUser')->inGroup('Admin') && mb_strpos($this->request->getURI()) !== false) {
-            $menu .= View::loadTemplateFragment('html', 'adminmenu.phtml', array());
-        }
+        $menu = View::loadTemplateFragment('html', 'adminmenu.phtml', array());
+
         return $menu;
     }
 }

@@ -100,7 +100,7 @@ class ArticleController extends Controller implements ControllerInterface
      * @var string
      * @since 2.0
      */
-    private $mode = 'read';
+    private $mode;
 
     /**
      * constructor to set up the object
@@ -136,8 +136,7 @@ class ArticleController extends Controller implements ControllerInterface
 
         $params = $request->getParams();
 
-        if (!isset($this->mode))
-            $this->mode = (isset($params['mode']) && in_array($params['mode'], array('create','edit')) ? $params['mode'] : 'read');
+        $this->setMode();
 
         $body = '';
 
@@ -251,6 +250,12 @@ class ArticleController extends Controller implements ControllerInterface
             return new Response(200, $body, array('Content-Type' => 'text/html'));
         }
 
+        // handle requests to view a list of articles
+        if ($this->mode == 'read') {
+            $listController = new ListController();
+            return $listController->process($request);
+        }
+
         // view edit artile requests
         if ($this->mode == 'edit' && isset($params['title'])) {
 
@@ -279,7 +284,7 @@ class ArticleController extends Controller implements ControllerInterface
         }
 
         // create a new article requests
-        if ($this->mode == 'create' || $request->getParam('title') === null) {
+        if ($this->mode == 'create') {
 
             $this->mode = 'create';
 
@@ -326,8 +331,7 @@ class ArticleController extends Controller implements ControllerInterface
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
 
-        // TODO: see comment in doGET, we should get rid of this
-        $this->mode = (isset($params['mode']) && in_array($params['mode'], array('create','edit')) ? $params['mode'] : 'read');
+        $this->setMode();
 
         if ($this->mode == 'read') {
             try {
@@ -719,10 +723,10 @@ class ArticleController extends Controller implements ControllerInterface
      */
     public function insert_CMSDisplayStandardHeader_callback()
     {
-        $config = ConfigProvider::getInstance();
-
         if ($this->request->getParam('token') != null)
             return '';
+
+        $config = ConfigProvider::getInstance();
 
         $html = '';
 
@@ -747,6 +751,9 @@ class ArticleController extends Controller implements ControllerInterface
      */
     public function before_displayPageFoot_callback()
     {
+        if ($this->mode != 'read')
+            return '';
+
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
@@ -867,6 +874,25 @@ class ArticleController extends Controller implements ControllerInterface
         }
 
         return $html;
+    }
+
+    /**
+     * Tries to determine the correct render mode for this request
+     *
+     * @since 2.0
+     */
+    private function setMode()
+    {
+        if (!isset($this->mode)) {
+
+            if ($this->request->getParam('act') == 'Alpha\Controller\ListController') {
+                $this->mode = 'read';
+            } elseif ($this->request->getParam('act') == 'Alpha\Controller\CreateController') {
+                $this->mode = 'create';
+            } else {
+                $this->mode = (in_array($this->request->getParam('mode'), array('create','edit', 'read')) ? $this->request->getParam('mode') : 'read');
+            }
+        }
     }
 }
 
