@@ -250,7 +250,7 @@ class ListController extends Controller implements ControllerInterface
                     throw new IllegalArguementException('Invalid deleteOID ['.$params['deleteOID'].'] provided on the request!');
 
                 try {
-                    $temp = new $className();
+                    $temp = new $ActiveRecordType();
                     $temp->load($params['deleteOID']);
 
                     ActiveRecord::begin();

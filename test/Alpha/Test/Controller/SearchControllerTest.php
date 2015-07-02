@@ -81,7 +81,7 @@ class SearchControllerTest extends \PHPUnit_Framework_TestCase
         $article = new Article();
         $article->rebuildTable();
 
-        $denum = new DEnum('Article::section');
+        $denum = new DEnum('Alpha\Model\Article::section');
         $item->set('DEnumID', $denum->getOID());
         $item->set('value', 'Test');
         $item->save();

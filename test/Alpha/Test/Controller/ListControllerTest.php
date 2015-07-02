@@ -113,13 +113,13 @@ class ListControllerTest extends \PHPUnit_Framework_TestCase
 
         $front = new FrontController();
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/listall/Person'));
+        $request = new Request(array('method' => 'GET', 'URI' => '/listall/'.urlencode('Alpha\Model\Person')));
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/listall/Person/0/1'));
+        $request = new Request(array('method' => 'GET', 'URI' => '/listall/'.urlencode('Alpha\Model\Person').'/0/1'));
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
@@ -145,7 +145,7 @@ class ListControllerTest extends \PHPUnit_Framework_TestCase
 
         $params = array('deleteOID' => $person->getOID(), 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
 
-        $request = new Request(array('method' => 'POST', 'URI' => '/listall/Person', 'params' => $params));
+        $request = new Request(array('method' => 'POST', 'URI' => '/listall/'.urlencode('Alpha\Model\Person'), 'params' => $params));
 
         $response = $front->process($request);
 

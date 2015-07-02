@@ -17,7 +17,6 @@ use Alpha\Util\Logging\Logger;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id$
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -131,17 +130,17 @@ class DEnum extends ActiveRecord implements TypeInterface
 
 		$this->name = new String($name);
 
-		if(isset($name) && $this->checkTableExists()) {
+		if (isset($name) && $this->checkTableExists()) {
 			try {
 				$this->loadByAttribute('name',$name);
-			}catch(RecordNotFoundException $e) {
+			} catch(RecordNotFoundException $e) {
 				// DEnum does not exist so create it
 				$this->save();
 			}
 
-			try{
+			try {
 				$this->getOptions();
-			}catch(AlphaException $e) {
+			} catch(AlphaException $e) {
 				self::$logger->warn($e->getMessage());
 			}
 		}
@@ -171,7 +170,7 @@ class DEnum extends ActiveRecord implements TypeInterface
 		try {
 			$options = new DEnum();
 			$options->loadByAttribute('name', $this->name->getValue());
-		}catch (RecordNotFoundException $e) {
+		} catch (RecordNotFoundException $e) {
 			throw new AlphaException('Failed to load DEnum '.$this->name->getValue().', not found in database.');
 		}
 
@@ -181,12 +180,12 @@ class DEnum extends ActiveRecord implements TypeInterface
 
 		$tmp = new DEnumItem();
 
-		foreach($tmp->loadItems($options->getOID()) as $DEnumItem) {
+		foreach ($tmp->loadItems($options->getOID()) as $DEnumItem) {
 			$this->options[$DEnumItem->getID()] = $DEnumItem->getValue();
 			$count++;
 		}
 
-		if($alphaSort)
+		if ($alphaSort)
 			asort($this->options, SORT_STRING);
 		return $this->options;
 	}
@@ -263,7 +262,7 @@ class DEnum extends ActiveRecord implements TypeInterface
 	public function setValue($item)
 	{
 		// check to see if the options have already been loaded from the DB
-		if(empty($this->options))
+		if (empty($this->options))
 			$this->getOptions();
 
 		// confirm that the item ID provided is a valid key for the options array

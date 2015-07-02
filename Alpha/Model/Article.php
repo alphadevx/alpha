@@ -221,7 +221,7 @@ class Article extends ActiveRecord
 		$this->title->setSize(100);
 		$this->title->setRule("/\w+/");
 
-		$this->section = new DEnum('Article::section');
+		$this->section = new DEnum('Alpha\Model\Article::section');
 
 		$this->description = new String();
 		$this->description->setHelper('Please provide a brief description of the article.');
@@ -329,7 +329,7 @@ class Article extends ActiveRecord
 	public function loadRecentWithLimit($limit, $excludeID = '')
 	{
 		if ($excludeID != '') {
-            $denum = new DEnum('Article::section');
+            $denum = new DEnum('Alpha\Model\Article::section');
             $excludeID = $denum->getOptionID($excludeID);
         }
 

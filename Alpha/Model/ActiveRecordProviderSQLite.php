@@ -268,17 +268,17 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 		self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'], ignoreClassType=['.$ignoreClassType.'], 
 			loadAttributes=['.var_export($loadAttributes, true).'])');
 
-		if(count($loadAttributes) == 0)
+		if (count($loadAttributes) == 0)
 			$attributes = $this->BO->getPersistentAttributes();
 		else
 			$attributes = $loadAttributes;
 
 		$fields = '';
-		foreach($attributes as $att)
+		foreach ($attributes as $att)
 			$fields .= $att.',';
 		$fields = mb_substr($fields, 0, -1);
 
-		if(!$ignoreClassType && $this->BO->isTableOverloaded())
+		if (!$ignoreClassType && $this->BO->isTableOverloaded())
 			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE '.$attribute.' = :attribute AND classname = :classname LIMIT 1;';
 		else
 			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE '.$attribute.' = :attribute LIMIT 1;';
@@ -290,19 +290,19 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
 		$row = array();
 
-		if($stmt instanceof SQLite3Stmt) {
-			if($this->BO->getPropObject($attribute) instanceof Integer) {
-				if(!$ignoreClassType && $this->BO->isTableOverloaded()) {
+		if ($stmt instanceof SQLite3Stmt) {
+			if ($this->BO->getPropObject($attribute) instanceof Integer) {
+				if (!$ignoreClassType && $this->BO->isTableOverloaded()) {
 					$stmt->bindValue(':attribute', $value, SQLITE3_INTEGER);
 					$stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
-				}else{
+				} else {
 					$stmt->bindValue(':attribute', $value, SQLITE3_INTEGER);
 				}
-			}else{
-				if(!$ignoreClassType && $this->BO->isTableOverloaded()) {
+			} else {
+				if (!$ignoreClassType && $this->BO->isTableOverloaded()) {
 					$stmt->bindValue(':attribute', $value, SQLITE3_TEXT);
                     $stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
-				}else{
+				} else {
 					$stmt->bindValue(':attribute', $value, SQLITE3_TEXT);
 				}
 			}
@@ -313,9 +313,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             $row = $result->fetchArray(SQLITE3_ASSOC);
 
 			$stmt->close();
-		}else{
+		} else {
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
-			if(!$this->BO->checkTableExists()) {
+			if (!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
 
 				throw new RecordNotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table did not exist so had to create!');
@@ -323,7 +323,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 			return;
 		}
 
-		if(!isset($row['OID']) || $row['OID'] < 1) {
+		if (!isset($row['OID']) || $row['OID'] < 1) {
 			throw new RecordNotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], not found in database.');
 			self::$logger->debug('<<loadByAttribute');
 			return;
@@ -339,30 +339,30 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 			foreach($properties as $propObj) {
 				$propName = $propObj->name;
 
-				if(isset($row[$propName])) {
+				if (isset($row[$propName])) {
 					// filter transient attributes
-					if(!in_array($propName, $this->BO->getTransientAttributes())) {
+					if (!in_array($propName, $this->BO->getTransientAttributes())) {
 						$this->BO->set($propName, $row[$propName]);
-					}elseif(!$propObj->isPrivate() && $this->BO->get($propName) != '' && $this->BO->getPropObject($propName) instanceof Relation) {
+					} elseif (!$propObj->isPrivate() && $this->BO->get($propName) != '' && $this->BO->getPropObject($propName) instanceof Relation) {
 						$prop = $this->BO->getPropObject($propName);
 
 						// handle the setting of ONE-TO-MANY relation values
-						if($prop->getRelationType() == 'ONE-TO-MANY') {
+						if ($prop->getRelationType() == 'ONE-TO-MANY') {
 							$this->BO->set($propObj->name, $this->BO->getOID());
 						}
 					}
 				}
 			}
-		}catch (IllegalArguementException $e) {
+		} catch (IllegalArguementException $e) {
 			self::$logger->warn('Bad data stored in the table ['.$this->BO->getTableName().'], field ['.$propObj->name.'] bad value['.$row[$propObj->name].'], exception ['.$e->getMessage().']');
-		}catch (PHPException $e) {
+		} catch (PHPException $e) {
 			// it is possible that the load failed due to the table not being up-to-date
-			if($this->BO->checkTableNeedsUpdate()) {
+			if ($this->BO->checkTableNeedsUpdate()) {
 				$missingFields = $this->BO->findMissingFields();
 
 				$count = count($missingFields);
 
-				for($i = 0; $i < $count; $i++) {
+				for ($i = 0; $i < $count; $i++) {
 					$this->BO->addProperty($missingFields[$i]);
 				}
 

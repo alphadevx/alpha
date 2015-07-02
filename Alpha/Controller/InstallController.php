@@ -322,7 +322,7 @@ class InstallController extends Controller implements ControllerInterface
 
 
             // create a default article DEnum category
-            $DEnum = new DEnum('ArticleObject::section');
+            $DEnum = new DEnum('Alpha\Model\Article::section');
             $DEnumItem = new DEnumItem();
             $DEnumItem->set('value', 'Main');
             $DEnumItem->set('DEnumID', $DEnum->getID());

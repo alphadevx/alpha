@@ -80,13 +80,14 @@ class FeedControllerTest extends \PHPUnit_Framework_TestCase
         $item = new DEnumItem();
         $item->rebuildTable();
 
+        // create a default article DEnum category
+        $denum = new DEnum('Alpha\Model\Article::section');
+        $item->set('value', 'Main');
+        $item->set('DEnumID', $denum->getID());
+        $item->save();
+
         $article = new Article();
         $article->rebuildTable();
-
-        $denum = new DEnum('Article::section');
-        $item->set('DEnumID', $denum->getOID());
-        $item->set('value', 'Test');
-        $item->save();
 
         $articleVote = new ArticleVote();
         $articleVote->rebuildTable();

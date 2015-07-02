@@ -253,6 +253,7 @@ class ArticleController extends Controller implements ControllerInterface
         // handle requests to view a list of articles
         if ($this->mode == 'read') {
             $listController = new ListController();
+            $request->addParams(array('ActiveRecordType' => 'Alpha\Model\Article'));
             return $listController->process($request);
         }
 
