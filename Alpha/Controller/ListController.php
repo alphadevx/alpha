@@ -82,7 +82,7 @@ class ListController extends Controller implements ControllerInterface
      * @var integer
      * @since 1.0
      */
-    protected $startPoint;
+    protected $startPoint = 1;
 
     /**
      * The count of the BOs of this type in the database
@@ -181,6 +181,7 @@ class ListController extends Controller implements ControllerInterface
 
             $this->BOView = View::getInstance($this->BO);
 
+            // TODO: order and sort not defined in the route in FrontController
             if (isset($params['order'])) {
                 if($params['order'] == 'ASC' || $params['order'] == 'DESC')
                     $this->order = $params['order'];
@@ -298,7 +299,8 @@ class ListController extends Controller implements ControllerInterface
         if (!isset($this->keywords))
             $this->setKeywords('list,all,'.$this->activeRecordType);
         // set the start point for the list pagination
-        if (isset($_GET['start']) ? $this->startPoint = $_GET['start']: $this->startPoint = 1);
+        if ($this->request->getParam('start') != null)
+            $this->startPoint = $this->request->getParam('start');
     }
 
     /**
@@ -344,10 +346,10 @@ class ListController extends Controller implements ControllerInterface
 
         if ($this->startPoint > 1) {
             // handle secure URLs
-            if ($this->request->getParam('tk', null) != null)
-                $html .= '<li><a href="'.FrontController::generateSecureURL('act=ListController&bo='.$this->activeRecordType.'&start='.($this->startPoint-$config->get('app.list.page.amount'))).'">&lt;&lt;-Previous</a></li>';
+            if ($this->request->getParam('token', null) != null)
+                $html .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ListController&ActiveRecordType='.$this->activeRecordType.'&start='.($this->startPoint-$config->get('app.list.page.amount'))).'">&lt;&lt;-Previous</a></li>';
             else
-                $html .= '<li><a href="/listall?bo='.$this->activeRecordType."&start=".($this->startPoint-$config->get('app.list.page.amount')).'">&lt;&lt;-Previous</a></li>';
+                $html .= '<li><a href="/listall/'.urlencode($this->activeRecordType)."/".($this->startPoint-$config->get('app.list.page.amount')).'">&lt;&lt;-Previous</a></li>';
         } elseif ($this->BOCount > $config->get('app.list.page.amount')){
             $html .= '<li class="disabled"><a href="#">&lt;&lt;-Previous</a></li>';
         }
@@ -357,11 +359,11 @@ class ListController extends Controller implements ControllerInterface
         for ($i = 0; $i < $this->BOCount; $i+=$config->get('app.list.page.amount')) {
             if ($i != ($this->startPoint-1)) {
                 // handle secure URLs
-                if ($this->request->getParam('tk', null) != null)
-                    $html .= '<li><a href="'.FrontController::generateSecureURL('act=ListController&bo='.$this->activeRecordType.'&start='.($i+1)).'">'.$page.'</a></li>';
+                if ($this->request->getParam('token', null) != null)
+                    $html .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ListController&ActiveRecordType='.$this->activeRecordType.'&start='.($i+1)).'">'.$page.'</a></li>';
                 else
-                    $html .= '<li><a href="/listall?bo='.$this->activeRecordType."&start=".($i+1).'">'.$page.'</a></li>';
-            } elseif ($this->BOCount > $config->get('app.list.page.amount')){
+                    $html .= '<li><a href="/listall/'.urlencode($this->activeRecordType)."/".($i+1).'">'.$page.'</a></li>';
+            } elseif ($this->BOCount > $config->get('app.list.page.amount')) {
                 $html .= '<li class="active"><a href="#">'.$page.'</a></li>';
             }
 
@@ -370,12 +372,12 @@ class ListController extends Controller implements ControllerInterface
 
         if ($this->BOCount > $end) {
             // handle secure URLs
-            if ($this->request->getParam('tk', null) != null)
-                $html .= '<li><a href="'.FrontController::generateSecureURL('act=ListController&bo='.$this->activeRecordType.'&start='.($this->startPoint+$config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a></li>';
+            if ($this->request->getParam('token', null) != null)
+                $html .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ListController&ActiveRecordType='.$this->activeRecordType.'&start='.($this->startPoint+$config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a></li>';
             else
-                $html .= '<li><a href="/listall?bo='.$this->activeRecordType."&start=".($this->startPoint+$config->get('app.list.page.amount')).
+                $html .= '<li><a href="/listall/'.urlencode($this->activeRecordType)."/".($this->startPoint+$config->get('app.list.page.amount')).
                     '">Next-&gt;&gt;</a></li>';
-        } elseif ($this->BOCount > $config->get('app.list.page.amount')){
+        } elseif ($this->BOCount > $config->get('app.list.page.amount')) {
             $html .= '<li class="disabled"><a href="#">Next-&gt;&gt;</a></li>';
         }
 

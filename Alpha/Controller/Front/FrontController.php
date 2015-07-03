@@ -233,7 +233,7 @@ class FrontController
         $this->addRoute('/listall/{ActiveRecordType}/{start}/{limit}', function($request) {
             $controller = new ListController();
             return $controller->process($request);
-        })->value('start', 0)->value('limit', $config->get('app.list.page.amount'));
+        })->value('start', 1)->value('limit', $config->get('app.list.page.amount'));
 
         $this->addRoute('/log/{logPath}', function($request) {
             $controller = new LogController();
