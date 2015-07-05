@@ -273,13 +273,13 @@ class RendererProviderHTML implements RendererProviderInterface
 
         // View button
         if (mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."';", 'View', 'view'.$this->BO->getOID().'But');
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ViewController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID())."';", 'View', 'view'.$this->BO->getOID().'But');
             $fields['viewButton'] = $button->render();
         } else {
             if ($this->BO->hasAttribute('URL'))
                 $button = new Button("document.location = '".$this->BO->get('URL')."';", 'View', 'view'.$this->BO->getOID().'But');
             else
-                $button = new Button("document.location = '".$config->get('app.url')."Detail/bo/".get_class($this->BO)."/oid/".$this->BO->getOID()."';", 'View', 'view'.$this->BO->getOID().'But');
+                $button = new Button("document.location = '".$config->get('app.url')."view/".urlencode(get_class($this->BO))."/".$this->BO->getOID()."';", 'View', 'view'.$this->BO->getOID().'But');
 
             $fields['viewButton'] = $button->render();
         }
@@ -288,7 +288,7 @@ class RendererProviderHTML implements RendererProviderInterface
         // render edit and delete buttons for admins only
         if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
             $html .= '&nbsp;&nbsp;';
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "edit".$this->BO->getOID()."But");
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\EditController&ActiveRecordType='.get_class($this->BO)."&ActiveRecordOID=".$this->BO->getOID())."'", "Edit", "edit".$this->BO->getOID()."But");
             $html .= $button->render();
             $html .= '&nbsp;&nbsp;';
 
