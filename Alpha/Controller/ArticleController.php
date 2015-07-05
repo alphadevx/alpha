@@ -176,16 +176,20 @@ class ArticleController extends Controller implements ControllerInterface
         }
 
         // handle requests for viewing articles
-        if ($this->mode == 'read' && isset($params['title'])) {
+        if ($this->mode == 'read' && (isset($params['title']) || isset($params['ActiveRecordOID']))) {
 
             $KDP = new KPI('viewarticle');
 
             try {
                 // it may have already been loaded by a doPOST call
                 if ($this->BO->isTransient()) {
-                    $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
+                    if (isset($params['title'])) {
+                        $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
 
-                    $this->BO->loadByAttribute('title', $title, false, array('OID', 'version_num', 'created_ts', 'updated_ts', 'title', 'author', 'published', 'content', 'headerContent'));
+                        $this->BO->loadByAttribute('title', $title, false, array('OID', 'version_num', 'created_ts', 'updated_ts', 'title', 'author', 'published', 'content', 'headerContent'));
+                    } else {
+                        $this->BO->load($params['ActiveRecordOID']);
+                    }
 
                     if (!$this->BO->get('published'))
                         throw new RecordNotFoundException('Attempted to load an article which is not published yet');
@@ -258,11 +262,15 @@ class ArticleController extends Controller implements ControllerInterface
         }
 
         // view edit artile requests
-        if ($this->mode == 'edit' && isset($params['title'])) {
+        if ($this->mode == 'edit' && (isset($params['title']) || isset($params['ActiveRecordOID']))) {
 
             try {
-                $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
-                $this->BO->loadByAttribute('title', $title);
+                if (isset($params['title'])) {
+                    $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
+                    $this->BO->loadByAttribute('title', $title);
+                } else {
+                    $this->BO->load($params['ActiveRecordOID']);
+                }
             } catch (RecordNotFoundException $e) {
                 self::$logger->warn($e->getMessage());
                 $body .= View::renderErrorPage(404, 'Failed to find the requested article!');
@@ -890,6 +898,8 @@ class ArticleController extends Controller implements ControllerInterface
                 $this->mode = 'read';
             } elseif ($this->request->getParam('act') == 'Alpha\Controller\CreateController') {
                 $this->mode = 'create';
+            } elseif ($this->request->getParam('act') == 'Alpha\Controller\EditController') {
+                $this->mode = 'edit';
             } else {
                 $this->mode = (in_array($this->request->getParam('mode'), array('create','edit', 'read')) ? $this->request->getParam('mode') : 'read');
             }
