@@ -114,7 +114,7 @@ class EditControllerTest extends \PHPUnit_Framework_TestCase
         $person = $this->createPersonObject('test');
         $person->save();
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/edit/Person/'.$person->getOID()));
+        $request = new Request(array('method' => 'GET', 'URI' => '/edit/'.urlencode('Alpha\Model\Person').'/'.$person->getOID()));
 
         $response = $front->process($request);
 
@@ -144,7 +144,7 @@ class EditControllerTest extends \PHPUnit_Framework_TestCase
         $params = array('saveBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
         $params = array_merge($params, $person->toArray());
 
-        $request = new Request(array('method' => 'POST', 'URI' => '/edit/Person/'.$person->getOID(), 'params' => $params));
+        $request = new Request(array('method' => 'POST', 'URI' => '/edit/'.urlencode('Alpha\Model\Person').'/'.$person->getOID(), 'params' => $params));
 
         $response = $front->process($request);
 

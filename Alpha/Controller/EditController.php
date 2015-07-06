@@ -138,19 +138,11 @@ class EditController extends Controller implements ControllerInterface
 
         $body = '';
 
-        try{
+        try {
             // load the business object (BO) definition
             if (isset($params['ActiveRecordType']) && isset($params['ActiveRecordOID'])) {
-                $ActiveRecordType = $params['ActiveRecordType'];
+                $ActiveRecordType = urldecode($params['ActiveRecordType']);
                 $this->activeRecordType = $ActiveRecordType;
-
-                /*
-                 * check and see if a custom edit controller exists for this BO, and if it does use it otherwise continue
-                 *
-                 * TODO: do we still want to do this?
-                 */
-                if ($this->getCustomControllerName($ActiveRecordType, 'edit') != null)
-                    $this->loadCustomController($ActiveRecordType, 'edit');
 
                 if (class_exists($ActiveRecordType))
                     $this->BO = new $ActiveRecordType();
@@ -217,7 +209,7 @@ class EditController extends Controller implements ControllerInterface
             }
 
             if (isset($params['ActiveRecordType']) && isset($params['ActiveRecordOID'])) {
-                $ActiveRecordType = $params['ActiveRecordType'];
+                $ActiveRecordType = urldecode($params['ActiveRecordType']);
                 $this->activeRecordType = $ActiveRecordType;
 
                 if (class_exists($ActiveRecordType))
