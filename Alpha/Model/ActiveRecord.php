@@ -9,6 +9,7 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Cache\CacheProviderFactory;
 use Alpha\Util\ErrorHandlers;
+use Alpha\Util\InputFilter;
 use Alpha\Exception\AlphaException;
 use Alpha\Exception\FailedSaveException;
 use Alpha\Exception\FailedDeleteException;

@@ -152,9 +152,8 @@ class EditController extends Controller implements ControllerInterface
                 if ($this->getCustomControllerName($ActiveRecordType, 'edit') != null)
                     $this->loadCustomController($ActiveRecordType, 'edit');
 
-                $className = "Alpha\\Model\\$ActiveRecordType";
-                if (class_exists($className))
-                    $this->BO = new $className();
+                if (class_exists($ActiveRecordType))
+                    $this->BO = new $ActiveRecordType();
                 else
                     throw new IllegalArguementException('No ActiveRecord available to edit!');
 
@@ -174,7 +173,8 @@ class EditController extends Controller implements ControllerInterface
 
                 $body .= View::displayPageHead($this);
                 $body .= View::renderDeleteForm($request->getURI());
-                $body .= $this->BOView->editView();
+                $fields = array('formAction' => $request->getURI());
+                $body .= $this->BOView->editView($fields);
             } else {
                 throw new IllegalArguementException('No ActiveRecord available to edit!');
             }
@@ -220,9 +220,8 @@ class EditController extends Controller implements ControllerInterface
                 $ActiveRecordType = $params['ActiveRecordType'];
                 $this->activeRecordType = $ActiveRecordType;
 
-                $className = "Alpha\\Model\\$ActiveRecordType";
-                if (class_exists($className))
-                    $this->BO = new $className();
+                if (class_exists($ActiveRecordType))
+                    $this->BO = new $ActiveRecordType();
                 else
                     throw new IllegalArguementException('No ActiveRecord available to edit!');
 
@@ -256,7 +255,8 @@ class EditController extends Controller implements ControllerInterface
 
                     ActiveRecord::disconnect();
 
-                    $body .= $this->BOView->editView();
+                    $fields = array('formAction' => $request->getURI());
+                    $body .= $this->BOView->editView($fields);
                 }
 
                 if (isset($params['deleteOID'])) {

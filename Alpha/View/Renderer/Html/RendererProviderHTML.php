@@ -143,9 +143,6 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $config = ConfigProvider::getInstance();
 
-        // the form action
-        $fields['formAction'] = $_SERVER['REQUEST_URI'];
-
         // the form ID
         $fields['formID'] = get_class($this->BO).'_'.$this->BO->getOID();
 
@@ -185,7 +182,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $button = new Button($js, "Delete", "deleteBut");
         $fields['deleteButton'] = $button->render();
 
-        $button = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
+        $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ListController&ActiveRecordType='.get_class($this->BO))."'", "Back to List", "cancelBut");
         $fields['cancelButton'] = $button->render();
 
         // buffer security fields to $formSecurityFields variable
