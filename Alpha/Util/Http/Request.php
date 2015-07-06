@@ -146,20 +146,28 @@ class Request
      */
     public function __construct($overrides = array())
     {
+        // set HTTP headers
+        if (isset($overrides['headers']) && is_array($overrides['headers']))
+            $this->headers = $overrides['headers'];
+        else
+            $this->headers = $this->getGlobalHeaders();
+
         // set HTTP method
         if (isset($overrides['method']) && in_array($overrides['method'], $this->HTTPMethods))
             $this->method = $overrides['method'];
         elseif (isset($_SERVER['REQUEST_METHOD']) && in_array($_SERVER['REQUEST_METHOD'], $this->HTTPMethods))
             $this->method = $_SERVER['REQUEST_METHOD'];
 
+        // allow the POST param _METHOD to override the HTTP method
+        if (isset($_POST['_METHOD']) && in_array($_POST['_METHOD'], $this->HTTPMethods))
+            $this->method = $_POST['_METHOD'];
+
+        // allow the POST param X-HTTP-Method-Override to override the HTTP method
+        if (isset($this->headers['X-HTTP-Method-Override']) && in_array($this->headers['X-HTTP-Method-Override'], $this->HTTPMethods))
+            $this->method = $this->headers['X-HTTP-Method-Override'];
+
         if ($this->method == '')
             throw new IllegalArguementException('No valid HTTP method provided when creating new Request object');
-
-        // set HTTP headers
-        if (isset($overrides['headers']) && is_array($overrides['headers']))
-            $this->headers = $overrides['headers'];
-        else
-            $this->headers = $this->getGlobalHeaders();
 
         // set HTTP cookies
         if (isset($overrides['cookies']) && is_array($overrides['cookies']))

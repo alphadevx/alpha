@@ -236,29 +236,6 @@ class EditController extends Controller implements ControllerInterface
 
                 $body .= View::displayPageHead($this);
 
-                if (isset($params['saveBut'])) {
-
-                    // populate the transient object from post data
-                    $this->BO->populateFromPost();
-
-                    try {
-                        $this->BO->save();
-
-                        self::$logger->action('Saved '.$ActiveRecordType.' instance with OID '.$this->BO->getOID());
-
-                        $body .= View::displayUpdateMessage(get_class($this->BO).' '.$this->BO->getID().' saved successfully.');
-
-                    } catch (LockingException $e) {
-                        $this->BO->reload();
-                        $body .= View::displayErrorMessage($e->getMessage());
-                    }
-
-                    ActiveRecord::disconnect();
-
-                    $fields = array('formAction' => $request->getURI());
-                    $body .= $this->BOView->editView($fields);
-                }
-
                 if (isset($params['deleteOID'])) {
                     $temp = new $ActiveRecordType();
                     $temp->load($params['deleteOID']);
@@ -301,6 +278,93 @@ class EditController extends Controller implements ControllerInterface
         $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doPOST');
+        return new Response(200, $body, array('Content-Type' => 'text/html'));
+    }
+
+    /**
+     * Handle PUT requests
+     *
+     * @param Alpha\Util\Http\Request $request
+     * @throws Alpha\Exception\SecurityException
+     * @return Alpha\Util\Http\Response
+     * @since 1.0
+     */
+    public function doPUT($request)
+    {
+        self::$logger->debug('>>doPUT(request=['.var_export($request, true).'])');
+
+        $config = ConfigProvider::getInstance();
+
+        $params = $request->getParams();
+
+        $body = '';
+
+        try {
+            // check the hidden security fields before accepting the form data
+            if (!$this->checkSecurityFields()) {
+                throw new SecurityException('This page cannot accept put data from remote servers!');
+                self::$logger->debug('<<doPUT');
+            }
+
+            if (isset($params['ActiveRecordType']) && isset($params['ActiveRecordOID'])) {
+                $ActiveRecordType = $params['ActiveRecordType'];
+                $this->activeRecordType = $ActiveRecordType;
+
+                if (class_exists($ActiveRecordType))
+                    $this->BO = new $ActiveRecordType();
+                else
+                    throw new IllegalArguementException('No ActiveRecord available to edit!');
+
+                $this->BO->load($params['ActiveRecordOID']);
+
+                $this->BOView = View::getInstance($this->BO);
+
+                // set up the title and meta details
+                $this->setTitle('Editing a '.$ActiveRecordType);
+                $this->setDescription('Page to edit a '.$ActiveRecordType.'.');
+                $this->setKeywords('edit,'.$ActiveRecordType);
+
+                $body .= View::displayPageHead($this);
+
+                if (isset($params['saveBut'])) {
+
+                    // populate the transient object from post data
+                    $this->BO->populateFromPost();
+
+                    try {
+                        $this->BO->save();
+
+                        self::$logger->action('Saved '.$ActiveRecordType.' instance with OID '.$this->BO->getOID());
+
+                        $body .= View::displayUpdateMessage(get_class($this->BO).' '.$this->BO->getID().' saved successfully.');
+
+                    } catch (LockingException $e) {
+                        $this->BO->reload();
+                        $body .= View::displayErrorMessage($e->getMessage());
+                    }
+
+                    ActiveRecord::disconnect();
+
+                    $fields = array('formAction' => $request->getURI());
+                    $body .= $this->BOView->editView($fields);
+                }
+            } else {
+                throw new IllegalArguementException('No active record type available to edit!');
+            }
+        } catch (SecurityException $e) {
+            $body .= View::displayErrorMessage($e->getMessage());
+            self::$logger->warn($e->getMessage());
+        } catch (IllegalArguementException $e) {
+            $body .= View::displayErrorMessage($e->getMessage());
+            self::$logger->error($e->getMessage());
+        } catch (RecordNotFoundException $e) {
+            $body .= View::displayErrorMessage('Failed to load the requested item from the database!');
+            self::$logger->warn($e->getMessage());
+        }
+
+        $body .= View::displayPageFoot($this);
+
+        self::$logger->debug('<<doPUT');
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
