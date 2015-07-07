@@ -662,6 +662,8 @@ class RendererProviderHTML implements RendererProviderInterface
         $html = '<form action="'.$URI.'" method="POST" id="deleteForm" accept-charset="UTF-8">';
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('deleteOID')) : 'deleteOID');
         $html .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value=""/>';
+        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('_METHOD')) : '_METHOD');
+        $html .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value="DELETE"/>';
         $html .= self::renderSecurityFields();
         $html .= '</form>';
 

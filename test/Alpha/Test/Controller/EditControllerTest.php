@@ -123,9 +123,9 @@ class EditControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the doPOST method
+     * Testing the doPUT method
      */
-    public function testDoPOST()
+    public function testDoPUT()
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -144,11 +144,11 @@ class EditControllerTest extends \PHPUnit_Framework_TestCase
         $params = array('saveBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
         $params = array_merge($params, $person->toArray());
 
-        $request = new Request(array('method' => 'POST', 'URI' => '/edit/'.urlencode('Alpha\Model\Person').'/'.$person->getOID(), 'params' => $params));
+        $request = new Request(array('method' => 'PUT', 'URI' => '/edit/'.urlencode('Alpha\Model\Person').'/'.$person->getOID(), 'params' => $params));
 
         $response = $front->process($request);
 
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doPUT method');
     }
 }
 

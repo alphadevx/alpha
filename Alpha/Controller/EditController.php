@@ -17,6 +17,7 @@ use Alpha\Exception\ResourceNotAllowedException;
 use Alpha\Exception\SecurityException;
 use Alpha\Exception\AlphaException;
 use Alpha\Exception\LockingException;
+use Alpha\Controller\Front\FrontController;
 
 /**
  *
@@ -184,16 +185,16 @@ class EditController extends Controller implements ControllerInterface
     }
 
     /**
-     * Handle POST requests
+     * Handle DELETE requests
      *
      * @param Alpha\Util\Http\Request $request
      * @throws Alpha\Exception\SecurityException
      * @return Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doPOST($request)
+    public function doDELETE($request)
     {
-        self::$logger->debug('>>doPOST(request=['.var_export($request, true).'])');
+        self::$logger->debug('>>doDELETE(request=['.var_export($request, true).'])');
 
         $config = ConfigProvider::getInstance();
 
@@ -202,10 +203,10 @@ class EditController extends Controller implements ControllerInterface
         $body = '';
 
         try {
-            // check the hidden security fields before accepting the form POST data
+            // check the hidden security fields before accepting the form data
             if (!$this->checkSecurityFields()) {
-                throw new SecurityException('This page cannot accept post data from remote servers!');
-                self::$logger->debug('<<doPOST');
+                throw new SecurityException('This page cannot accept data from remote servers!');
+                self::$logger->debug('<<doDELETE');
             }
 
             if (isset($params['ActiveRecordType']) && isset($params['ActiveRecordOID'])) {
@@ -243,7 +244,7 @@ class EditController extends Controller implements ControllerInterface
 
                         $body .= '<center>';
 
-                        $temp = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'",
+                        $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ListController&ActiveRecordType='.get_class($this->BO))."'",
                             'Back to List','cancelBut');
                         $body .= $temp->render();
 
@@ -269,7 +270,7 @@ class EditController extends Controller implements ControllerInterface
 
         $body .= View::displayPageFoot($this);
 
-        self::$logger->debug('<<doPOST');
+        self::$logger->debug('<<doDELETE');
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
@@ -320,8 +321,8 @@ class EditController extends Controller implements ControllerInterface
 
                 if (isset($params['saveBut'])) {
 
-                    // populate the transient object from post data
-                    $this->BO->populateFromPost();
+                    // populate the transient object from the request
+                    $this->BO->populateFromArray($params);
 
                     try {
                         $this->BO->save();
