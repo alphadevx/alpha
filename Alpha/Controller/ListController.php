@@ -192,12 +192,17 @@ class ListController extends Controller implements ControllerInterface
             if (isset($params['sort']))
                 $this->sort = $params['sort'];
 
-            $this->BOView = View::getInstance($this->BO);
-
-            $body .= View::displayPageHead($this);
         } catch (IllegalArguementException $e) {
             self::$logger->error($e->getMessage());
         }
+
+        $this->BOView = View::getInstance($this->BO);
+
+        $body .= View::displayPageHead($this);
+
+        $message = $this->getStatusMessage();
+        if (!empty($message))
+            $body .= $message;
 
         $body .= $this->renderBodyContent();
 
@@ -208,25 +213,25 @@ class ListController extends Controller implements ControllerInterface
     }
 
     /**
-     * Handle POST requests
+     * Handle DELETE requests
      *
      * @param Alpha\Util\Http\Request $request
      * @return Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doPOST($request)
+    public function doDELETE($request)
     {
-        self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
+        self::$logger->debug('>>doDELETE($request=['.var_export($request, true).'])');
 
         $params = $request->getParams();
 
         $body = '';
 
-        try{
-            // check the hidden security fields before accepting the form POST data
+        try {
+            // check the hidden security fields before accepting the form data
             if (!$this->checkSecurityFields()) {
                 throw new SecurityException('This page cannot accept post data from remote servers!');
-                self::$logger->debug('<<doPOST');
+                self::$logger->debug('<<doDELETE');
             }
 
             if (isset($params['ActiveRecordType'])) {
@@ -259,6 +264,8 @@ class ListController extends Controller implements ControllerInterface
                     self::$logger->action('Deleted an instance of '.$this->activeRecordType.' with id '.$params['deleteOID']);
                     ActiveRecord::commit();
 
+                    $body .= View::displayPageHead($this);
+
                     $body .= View::displayUpdateMessage($this->activeRecordType.' '.$params['deleteOID'].' deleted successfully.');
 
                     $body .= $this->renderBodyContent();
@@ -280,7 +287,7 @@ class ListController extends Controller implements ControllerInterface
 
         $body .= View::displayPageFoot($this);
 
-        self::$logger->debug('<<doPOST');
+        self::$logger->debug('<<doDELETE');
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 

@@ -257,11 +257,12 @@ class ArticleController extends Controller implements ControllerInterface
         // handle requests to view a list of articles
         if ($this->mode == 'read') {
             $listController = new ListController();
-            $request->addParams(array('ActiveRecordType' => 'Alpha\Model\Article'));
-            return $listController->process($request);
+            $request->addParams(array('ActiveRecordType' => 'Alpha\Model\Article'));#
+            $listController->setRequest($request);
+            return $listController->doGET($request);
         }
 
-        // view edit artile requests
+        // view edit article requests
         if ($this->mode == 'edit' && (isset($params['title']) || isset($params['ActiveRecordOID']))) {
 
             try {
@@ -646,21 +647,45 @@ class ArticleController extends Controller implements ControllerInterface
                 throw new SecurityException('This page cannot accept post data from remote servers!');
                 self::$logger->debug('<<doPUT');
             }
-            if (isset($params['title'])) {
 
-                $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
+            if (isset($params['title']) || isset($params['deleteOID'])) {
 
-                $this->BO->loadbyAttribute('title', $title);
+                if (isset($params['deleteOID'])) {
+                    $this->BO->load($params['deleteOID']);
+                } else {
+                    $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
+
+                    $this->BO->loadbyAttribute('title', $title);
+                }
 
                 try {
+                    $title = $this->BO->get('title');
                     $this->BO->delete();
-                    self::$logger->action('Article '.$params['title'].' deleted.');
+                    $this->BO = null;
+                    self::$logger->action('Article '.$title.' deleted.');
 
-                    $response = new Response(200);
+                    // if we are deleting a record from a single request request, just render a message
+                    if (isset($params['title'])) {
+                        $body = View::displayPageHead($this);
+                        $body .= View::displayUpdateMessage('Article '.$title.' deleted.');
 
+                        $body .= '<center>';
+
+                        $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ListController&ActiveRecordType='.get_class($this->BO))."'",
+                            'Back to List','cancelBut');
+                        $body .= $temp->render();
+
+                        $body .= '</center>';
+
+                        $body .= View::displayPageFoot($this);
+
+                        self::$logger->debug('<<doDELETE');
+                        return new Response(200, $body, array('Content-Type' => 'text/html'));
+                    }
+
+                    $this->setStatusMessage(View::displayUpdateMessage('Article '.$title.' deleted.'));
                     self::$logger->debug('<<doDELETE');
-
-                    return $response;
+                    return $this->doGET($request);
 
                 } catch (AlphaException $e) {
                     self::$logger->error($e->getTraceAsString());
@@ -670,6 +695,9 @@ class ArticleController extends Controller implements ControllerInterface
 
                     return $response;
                 }
+            } else {
+                $body .= View::renderErrorPage(404, 'Failed to find the requested article!');
+                return new Response(404, $body, array('Content-Type' => 'text/html'));
             }
         } catch (SecurityException $e) {
             self::$logger->warn($e->getMessage());
@@ -735,6 +763,9 @@ class ArticleController extends Controller implements ControllerInterface
         if ($this->request->getParam('token') != null)
             return '';
 
+        if (!$this->BO instanceof Alpha\Model\Article)
+            return '';
+
         $config = ConfigProvider::getInstance();
 
         $html = '';
@@ -761,6 +792,9 @@ class ArticleController extends Controller implements ControllerInterface
     public function before_displayPageFoot_callback()
     {
         if ($this->mode != 'read')
+            return '';
+
+        if (!isset($this->BO))
             return '';
 
         $config = ConfigProvider::getInstance();

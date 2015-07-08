@@ -126,7 +126,7 @@ class ListControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
     }
 
-    public function testDoPOST()
+    public function testDoDELETE()
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -145,11 +145,11 @@ class ListControllerTest extends \PHPUnit_Framework_TestCase
 
         $params = array('deleteOID' => $person->getOID(), 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
 
-        $request = new Request(array('method' => 'POST', 'URI' => '/listall/'.urlencode('Alpha\Model\Person'), 'params' => $params));
+        $request = new Request(array('method' => 'DELETE', 'URI' => '/listall/'.urlencode('Alpha\Model\Person'), 'params' => $params));
 
         $response = $front->process($request);
 
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doDELETE method');
 
         $person2 = new Person();
 
