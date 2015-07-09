@@ -825,7 +825,7 @@ class ArticleController extends Controller implements ControllerInterface
         }
 
         if (!$this->BO->checkUserVoted() && $config->get('cms.voting.allowed')) {
-            $html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" accept-charset="UTF-8">';
+            $html .= '<form action="'.$this->request->getURI().'" method="post" accept-charset="UTF-8">';
             $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('userVote')) : 'userVote');
             $html .= '<p>Please rate this article from 1-10 (10 being the best):' .
                     '<select name="'.$fieldname.'">' .
@@ -865,7 +865,7 @@ class ArticleController extends Controller implements ControllerInterface
         // render edit button for admins only
         if ($session->get('currentUser') !== false && $session->get('currentUser')->inGroup('Admin')) {
             $html .= '&nbsp;&nbsp;';
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO).'&oid='.$this->BO->getID())."'",'Edit','editBut');
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&mode=edit&ActiveRecordOID='.$this->BO->getID())."'",'Edit','editBut');
             $html .= $button->render();
         }
 
