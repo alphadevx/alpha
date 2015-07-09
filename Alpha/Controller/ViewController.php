@@ -5,7 +5,6 @@ namespace Alpha\Controller;
 use Alpha\Controller\Front\FrontController;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\Util\Helper\Validator;
@@ -175,7 +174,7 @@ class ViewController extends Controller implements ControllerInterface
     }
 
     /**
-     * Method to handle POST requests
+     * Method to handle DELETE requests
      *
      * @param Alpha\Util\Http\Request $request
      * @throws Alpha\Exception\IllegalArguementException
@@ -183,9 +182,9 @@ class ViewController extends Controller implements ControllerInterface
      * @return Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doPOST($request)
+    public function doDELETE($request)
     {
-        self::$logger->debug('>>doPOST(request=['.var_export($request, true).'])');
+        self::$logger->debug('>>doDELETE(request=['.var_export($request, true).'])');
 
         $params = $request->getParams();
 
@@ -194,9 +193,9 @@ class ViewController extends Controller implements ControllerInterface
         $body = View::displayPageHead($this);
 
         try {
-            // check the hidden security fields before accepting the form POST data
+            // check the hidden security fields before accepting the form data
             if (!$this->checkSecurityFields())
-                throw new SecurityException('This page cannot accept post data from remote servers!');
+                throw new SecurityException('This page cannot accept data from remote servers!');
 
             // load the business object (BO) definition
             if (isset($params['ActiveRecordType'])) {
@@ -205,7 +204,7 @@ class ViewController extends Controller implements ControllerInterface
                 if (class_exists($ActiveRecordType))
                     $this->BO = new $ActiveRecordType();
                 else
-                    throw new IllegalArguementException('No ActiveRecord available to view!');
+                    throw new IllegalArguementException('No ActiveRecord available to delete!');
 
                 $this->activeRecordType = $ActiveRecordType;
                 $this->BOView = View::getInstance($this->BO);
@@ -227,7 +226,7 @@ class ViewController extends Controller implements ControllerInterface
 
                         $body .= '<center>';
 
-                        $temp = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'",
+                        $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ListController&ActiveRecordType='.get_class($this->BO))."'",
                             'Back to List','cancelBut');
                         $body .= $temp->render();
 
@@ -255,7 +254,7 @@ class ViewController extends Controller implements ControllerInterface
         }
 
         $body .= View::displayPageFoot($this);
-        self::$logger->debug('<<doPOST');
+        self::$logger->debug('<<doDELETE');
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 

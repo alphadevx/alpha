@@ -433,7 +433,8 @@ class ListController extends Controller implements ControllerInterface
 
         foreach ($objects as $object) {
             $temp = View::getInstance($object);
-            $body .= $temp->listView();
+            $fields = array('formAction' => $this->request->getURI());
+            $body .= $temp->listView($fields);
         }
 
         return $body;

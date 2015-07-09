@@ -119,9 +119,9 @@ class ViewControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the doPOST method
+     * Testing the doDELETE method
      */
-    public function testDoPOST()
+    public function testDoDELETE()
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -137,11 +137,11 @@ class ViewControllerTest extends \PHPUnit_Framework_TestCase
 
         $params = array('deleteOID' => $person->getOID(), 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
 
-        $request = new Request(array('method' => 'POST', 'URI' => '/view/'.urlencode('Alpha\Model\Person').'/'.$person->getOID(), 'params' => $params));
+        $request = new Request(array('method' => 'DELETE', 'URI' => '/view/'.urlencode('Alpha\Model\Person').'/'.$person->getOID(), 'params' => $params));
 
         $response = $front->process($request);
 
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doDELETE method');
     }
 }
 

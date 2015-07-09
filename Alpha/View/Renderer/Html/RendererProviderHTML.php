@@ -15,6 +15,7 @@ use Alpha\Util\Logging\Logger;
 use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\InputFilter;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Model\Type\String;
 use Alpha\Model\ActiveRecord;
 use Alpha\Exception\IllegalArguementException;
@@ -204,9 +205,6 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $config = ConfigProvider::getInstance();
 
-        // the form action
-        $fields['formAction'] = $_SERVER['REQUEST_URI'];
-
         // work out how many columns will be in the table
         $reflection = new ReflectionClass(get_class($this->BO));
         $properties = array_keys($reflection->getDefaultProperties());
@@ -337,6 +335,9 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $config = ConfigProvider::getInstance();
 
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
         // we may want to display the OID regardless of class
         $fields['OIDLabel'] = $this->BO->getDataLabel('OID');
         $fields['OID'] = $this->BO->getOID();
@@ -350,9 +351,9 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $html = '';
         // render edit and delete buttons for admins only
-        if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
+        if ($session->get('currentUser') !== false && $session->get('currentUser')->inGroup('Admin')) {
 
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Edit&bo='.get_class($this->BO)."&oid=".$this->BO->getOID())."'", "Edit", "editBut");
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\EditController&ActiveRecordType='.get_class($this->BO)."&ActiveRecordOID=".$this->BO->getOID())."'", "Edit", "editBut");
             $html .= $button->render();
 
             $js = "if(window.jQuery) {
