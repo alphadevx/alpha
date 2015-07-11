@@ -94,6 +94,14 @@ class TCPDFFacade
     private $HTMLFilename;
 
     /**
+     * Trace logger
+     *
+     * @var Alpha\Util\Logging\Logger
+     * @since 1.0
+     */
+    private static $logger = null;
+
+    /**
      * The constructor
      *
      * @param Alpha\Model\ActiveRecord $BO the business object that stores the content will be rendered to Markdown
@@ -102,8 +110,10 @@ class TCPDFFacade
      */
     public function __construct($BO)
     {
+        self::$logger = new Logger('TCPDFFacade');
+        self::$logger->warn('>>__construct()');
+
         $config = ConfigProvider::getInstance();
-        global $l; // TODO: need a better way to inject this
 
         $this->BO = $BO;
 
@@ -194,9 +204,6 @@ class TCPDFFacade
         //set image scale factor
         $this->pdf->setImageScale(2.5);
 
-        //set some language-dependent strings
-        $this->pdf->setLanguageArray($l);
-
         // add a page
         $this->pdf->AddPage();
 
@@ -206,14 +213,19 @@ class TCPDFFacade
         $footer = '<br><p>Article URL: <a href="'.$this->BO->get('URL').'">'.$this->BO->get('URL').'</a><br>Title: '.$this->BO->get('title').'<br>Author: '.$this->BO->get('author').'</p>';
 
         // write the title
-        $this->pdf->writeHTML($title, true, 0, true, 0);
+        self::$logger->warn('Writing the title ['.$title.'] to the PDF');
+        $this->pdf->writeHTML(utf8_encode($title), true, false, true, false, '');
         // output the HTML content
-        $this->pdf->writeHTML($this->content, true, 0, true, 0);
+        self::$logger->warn('Writing the content ['.$this->content.'] to the PDF');
+        $this->pdf->writeHTML(utf8_encode($this->content), true, false, true, false, '');
         // write the article footer
-        $this->pdf->writeHTML($footer, true, 0, true, 0);
+        $this->pdf->writeHTML(utf8_encode($footer), true, false, true, false, '');
+        self::$logger->warn('Writing the footer ['.$footer.'] to the PDF');
 
         // save this PDF to the cache
         $this->pdf->Output($this->PDFFilename, 'F');
+
+        self::$logger->warn('<<__construct()');
     }
 
     /**

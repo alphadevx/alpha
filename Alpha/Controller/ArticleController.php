@@ -137,11 +137,12 @@ class ArticleController extends Controller implements ControllerInterface
         $params = $request->getParams();
 
         $this->setMode();
+        self::$logger->warn('The view mode for this article request is ['.$this->mode.']');
 
         $body = '';
 
         // handle requests for PDFs
-        if ($this->mode == 'read' && isset($params['title']) && $request->getHeader('Accept') == 'application/pdf') {
+        if (isset($params['title']) && ($this->mode == 'pdf' || $request->getHeader('Accept') == 'application/pdf')) {
             try {
                 $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
 
@@ -858,7 +859,7 @@ class ArticleController extends Controller implements ControllerInterface
         $html .= '&nbsp;&nbsp;';
         if ($config->get('cms.allow.pdf.versions')) {
             $html .= '&nbsp;&nbsp;';
-            $temp = new Button("document.location = '".FrontController::generateSecureURL("act=ViewArticlePDF&title=".$this->BO->get("title"))."';",'Open PDF Version','pdfBut');
+            $temp = new Button("document.location = '".FrontController::generateSecureURL("act=Alpha\Controller\ArticleController&mode=pdf&title=".$this->BO->get("title"))."';",'Open PDF Version','pdfBut');
             $html .= $temp->render();
         }
 
@@ -935,7 +936,7 @@ class ArticleController extends Controller implements ControllerInterface
             } elseif ($this->request->getParam('act') == 'Alpha\Controller\EditController') {
                 $this->mode = 'edit';
             } else {
-                $this->mode = (in_array($this->request->getParam('mode'), array('create','edit', 'read')) ? $this->request->getParam('mode') : 'read');
+                $this->mode = (in_array($this->request->getParam('mode'), array('create','edit', 'read', 'pdf')) ? $this->request->getParam('mode') : 'read');
             }
         }
     }

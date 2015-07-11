@@ -30,7 +30,7 @@
         "ext-mbstring": "*",
         "ext-sqlite3": "*",
         "ext-gd": "*",
-        "tecnick.com/tcpdf": "6.0.097",
+        "tecnick.com/tcpdf": "6.2.9",
         "michelf/php-markdown": "1.4.0",
         "themattharris/tmhoauth": "0.8.4",
         "geshi/geshi": "dev-master",
