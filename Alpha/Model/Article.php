@@ -309,9 +309,9 @@ class Article extends ActiveRecord
 	{
 		$config = ConfigProvider::getInstance();
 
-		$this->URL = $config->get('app.url').'a/'. str_replace(' ', $config->get('cms.url.title.separator'), $this->title->getValue());
+		$this->URL = $config->get('app.url').'a/'.str_replace(' ', $config->get('cms.url.title.separator'), $this->title->getValue());
 
-		$this->printURL = $config->get('app.url').'a/'. str_replace(' ', $config->get('cms.url.title.separator'), $this->title->getValue());
+		$this->printURL = $config->get('app.url').'a/'.str_replace(' ', $config->get('cms.url.title.separator'), $this->title->getValue()).'/print';
 
 		$this->setupRels();
 	}

@@ -177,7 +177,7 @@ class ArticleController extends Controller implements ControllerInterface
         }
 
         // handle requests for viewing articles
-        if ($this->mode == 'read' && (isset($params['title']) || isset($params['ActiveRecordOID']))) {
+        if (($this->mode == 'read' || $this->mode == 'print') && (isset($params['title']) || isset($params['ActiveRecordOID']))) {
 
             $KDP = new KPI('viewarticle');
 
@@ -716,8 +716,12 @@ class ArticleController extends Controller implements ControllerInterface
      */
     public function during_displayPageHead_callback()
     {
+        $config = ConfigProvider::getInstance();
+
         if ($this->mode == 'read') {
             return $this->BO->get('headerContent');
+        } elseif ($this->mode == 'print') {
+            return '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'css/print.css">';
         } else {
             $config = ConfigProvider::getInstance();
 
@@ -746,7 +750,11 @@ class ArticleController extends Controller implements ControllerInterface
     {
         $menu = '';
 
-        if (isset($_SESSION['currentUser']) && ActiveRecord::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        if ($session->get('currentUser') != null && ActiveRecord::isInstalled() && $session->get('currentUser')->inGroup('Admin') && mb_strpos($this->request->getURI(), '/tk/') !== false) {
             $menu .= View::loadTemplateFragment('html', 'adminmenu.phtml', array());
         }
 
@@ -792,7 +800,7 @@ class ArticleController extends Controller implements ControllerInterface
      */
     public function before_displayPageFoot_callback()
     {
-        if ($this->mode != 'read')
+        if (!in_array($this->mode, array('read', 'print')))
             return '';
 
         if (!isset($this->BO))
@@ -804,70 +812,73 @@ class ArticleController extends Controller implements ControllerInterface
 
         $html = '';
 
-        if ($config->get('cms.display.comments'))
-            $html .= $this->renderComments();
+        if ($this->mode == 'read') {
 
-        if ($config->get('cms.display.tags')) {
-            $tags = $this->BO->getPropObject('tags')->getRelatedObjects();
+            if ($config->get('cms.display.comments'))
+                $html .= $this->renderComments();
 
-            if (count($tags) > 0) {
-                $html .= '<p>Tags:';
+            if ($config->get('cms.display.tags')) {
+                $tags = $this->BO->getPropObject('tags')->getRelatedObjects();
 
-                foreach($tags as $tag)
-                    $html .= ' <a href="'.$config->get('app.url').'search/q/'.$tag->get('content').'">'.$tag->get('content').'</a>';
-                $html .= '</p>';
+                if (count($tags) > 0) {
+                    $html .= '<p>Tags:';
+
+                    foreach($tags as $tag)
+                        $html .= ' <a href="'.$config->get('app.url').'search/q/'.$tag->get('content').'">'.$tag->get('content').'</a>';
+                    $html .= '</p>';
+                }
             }
-        }
 
-        if ($config->get('cms.display.votes')) {
-            $rating = $this->BO->getArticleScore();
-            $votes = $this->BO->getArticleVotes();
-            $html .= '<p>Average Article User Rating: <strong>'.$rating.'</strong> out of 10 (based on <strong>'.count($votes).'</strong> votes)</p>';
-        }
+            if ($config->get('cms.display.votes')) {
+                $rating = $this->BO->getArticleScore();
+                $votes = $this->BO->getArticleVotes();
+                $html .= '<p>Average Article User Rating: <strong>'.$rating.'</strong> out of 10 (based on <strong>'.count($votes).'</strong> votes)</p>';
+            }
 
-        if (!$this->BO->checkUserVoted() && $config->get('cms.voting.allowed')) {
-            $html .= '<form action="'.$this->request->getURI().'" method="post" accept-charset="UTF-8">';
-            $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('userVote')) : 'userVote');
-            $html .= '<p>Please rate this article from 1-10 (10 being the best):' .
-                    '<select name="'.$fieldname.'">' .
-                    '<option value="1">1' .
-                    '<option value="2">2' .
-                    '<option value="3">3' .
-                    '<option value="4">4' .
-                    '<option value="5">5' .
-                    '<option value="6">6' .
-                    '<option value="7">7' .
-                    '<option value="8">8' .
-                    '<option value="9">9' .
-                    '<option value="10">10' .
-                    '</select></p>&nbsp;&nbsp;';
-            $temp = new Button('submit','Vote!','voteBut');
-            $html .= $temp->render();
+            if (!$this->BO->checkUserVoted() && $config->get('cms.voting.allowed')) {
+                $html .= '<form action="'.$this->request->getURI().'" method="post" accept-charset="UTF-8">';
+                $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('userVote')) : 'userVote');
+                $html .= '<p>Please rate this article from 1-10 (10 being the best):' .
+                        '<select name="'.$fieldname.'">' .
+                        '<option value="1">1' .
+                        '<option value="2">2' .
+                        '<option value="3">3' .
+                        '<option value="4">4' .
+                        '<option value="5">5' .
+                        '<option value="6">6' .
+                        '<option value="7">7' .
+                        '<option value="8">8' .
+                        '<option value="9">9' .
+                        '<option value="10">10' .
+                        '</select></p>&nbsp;&nbsp;';
+                $temp = new Button('submit','Vote!','voteBut');
+                $html .= $temp->render();
 
-            $html .= View::renderSecurityFields();
-            $html .= '<form>';
-        }
+                $html .= View::renderSecurityFields();
+                $html .= '<form>';
+            }
 
-        ActiveRecord::disconnect();
+            ActiveRecord::disconnect();
 
-        if ($config->get('cms.allow.print.versions')) {
+            if ($config->get('cms.allow.print.versions')) {
+                $html .= '&nbsp;&nbsp;';
+                $temp = new Button("window.open('".$this->BO->get('printURL')."')",'Open Printer Version','printBut');
+                $html .= $temp->render();
+            }
+
             $html .= '&nbsp;&nbsp;';
-            $temp = new Button("window.open('".$this->BO->get('printURL')."')",'Open Printer Version','printBut');
-            $html .= $temp->render();
-        }
+            if ($config->get('cms.allow.pdf.versions')) {
+                $html .= '&nbsp;&nbsp;';
+                $temp = new Button("document.location = '".FrontController::generateSecureURL("act=Alpha\Controller\ArticleController&mode=pdf&title=".$this->BO->get("title"))."';",'Open PDF Version','pdfBut');
+                $html .= $temp->render();
+            }
 
-        $html .= '&nbsp;&nbsp;';
-        if ($config->get('cms.allow.pdf.versions')) {
-            $html .= '&nbsp;&nbsp;';
-            $temp = new Button("document.location = '".FrontController::generateSecureURL("act=Alpha\Controller\ArticleController&mode=pdf&title=".$this->BO->get("title"))."';",'Open PDF Version','pdfBut');
-            $html .= $temp->render();
-        }
-
-        // render edit button for admins only
-        if ($session->get('currentUser') !== false && $session->get('currentUser')->inGroup('Admin')) {
-            $html .= '&nbsp;&nbsp;';
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&mode=edit&ActiveRecordOID='.$this->BO->getID())."'",'Edit','editBut');
-            $html .= $button->render();
+            // render edit button for admins only
+            if ($session->get('currentUser') !== false && $session->get('currentUser')->inGroup('Admin')) {
+                $html .= '&nbsp;&nbsp;';
+                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&mode=edit&ActiveRecordOID='.$this->BO->getID())."'",'Edit','editBut');
+                $html .= $button->render();
+            }
         }
 
         if ($config->get('cms.display.standard.footer')) {
@@ -936,7 +947,7 @@ class ArticleController extends Controller implements ControllerInterface
             } elseif ($this->request->getParam('act') == 'Alpha\Controller\EditController') {
                 $this->mode = 'edit';
             } else {
-                $this->mode = (in_array($this->request->getParam('mode'), array('create','edit', 'read', 'pdf')) ? $this->request->getParam('mode') : 'read');
+                $this->mode = (in_array($this->request->getParam('mode'), array('create','edit', 'read', 'pdf', 'print')) ? $this->request->getParam('mode') : 'read');
             }
         }
     }
