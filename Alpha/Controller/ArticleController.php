@@ -137,7 +137,7 @@ class ArticleController extends Controller implements ControllerInterface
         $params = $request->getParams();
 
         $this->setMode();
-        self::$logger->warn('The view mode for this article request is ['.$this->mode.']');
+        self::$logger->debug('The view mode for this article request is ['.$this->mode.']');
 
         $body = '';
 
@@ -212,6 +212,10 @@ class ArticleController extends Controller implements ControllerInterface
             $BOView = View::getInstance($this->BO);
 
             $body .= View::displayPageHead($this);
+
+            $message = $this->getStatusMessage();
+            if (!empty($message))
+                $body .= $message;
 
             $body .= $BOView->markdownView();
 
@@ -392,7 +396,7 @@ class ArticleController extends Controller implements ControllerInterface
                 // TODO: move to dedicated controller, or use generic Create::doPOST().
                 if (isset($params['createCommentBut'])) {
                     $comment = new ArticleComment();
-
+print_r($params);
                     // populate the transient object from post data
                     $comment->populateFromArray($params);
 
@@ -922,10 +926,9 @@ class ArticleController extends Controller implements ControllerInterface
             $comment = new ArticleComment();
             $comment->set('articleOID', $this->BO->getID());
 
-            ob_start();
             $view = View::getInstance($comment);
-            $view->createView();
-            $html.= ob_get_clean();
+            $fields = array('formAction' => $this->request->getURI());
+            $html .= $view->createView($fields);
         }
 
         return $html;
