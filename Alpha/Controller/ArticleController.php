@@ -396,7 +396,7 @@ class ArticleController extends Controller implements ControllerInterface
                 // TODO: move to dedicated controller, or use generic Create::doPOST().
                 if (isset($params['createCommentBut'])) {
                     $comment = new ArticleComment();
-print_r($params);
+
                     // populate the transient object from post data
                     $comment->populateFromArray($params);
 
@@ -905,29 +905,30 @@ print_r($params);
     private function renderComments()
     {
         $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
 
         $html = '';
 
         $comments = $this->BO->getArticleComments();
         $comment_count = count($comments);
 
+        $fields = array('formAction' => $this->request->getURI());
+
         if ($config->get('cms.display.comments') && $comment_count > 0) {
             $html .= '<h2>There are ['.$comment_count.'] user comments for this article</h2>';
 
-            ob_start();
-            for($i = 0; $i < $comment_count; $i++) {
+            for ($i = 0; $i < $comment_count; $i++) {
                 $view = View::getInstance($comments[$i]);
-                $view->markdownView();
+                $html .= $view->markdownView($fields);
             }
-            $html.= ob_get_clean();
         }
 
-        if (isset($_SESSION['currentUser']) && $config->get('cms.comments.allowed')) {
+        if ($session->get('currentUser') != null && $config->get('cms.comments.allowed')) {
             $comment = new ArticleComment();
             $comment->set('articleOID', $this->BO->getID());
 
             $view = View::getInstance($comment);
-            $fields = array('formAction' => $this->request->getURI());
             $html .= $view->createView($fields);
         }
 
