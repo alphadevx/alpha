@@ -228,7 +228,7 @@ class RecordSelector
                     foreach ($objects as $obj) {
 
                         // check to see if we are in the admin back-end
-                        if (mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+                        if (isset($_SERVER['REQUEST_URI']) && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
                             $viewURL = FrontController::generateSecureURL('act=Detail&bo='.get_class($obj).'&oid='.$obj->getOID());
                             $editURL = FrontController::generateSecureURL('act=Edit&bo='.get_class($obj).'&oid='.$obj->getOID());
                         } else {

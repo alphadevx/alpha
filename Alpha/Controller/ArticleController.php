@@ -113,7 +113,7 @@ class ArticleController extends Controller implements ControllerInterface
         self::$logger->debug('>>__construct()');
 
         // ensure that the super class constructor is called, indicating the rights group
-        parent::__construct('Standard');
+        parent::__construct('Public');
 
         $this->BO = new Article();
 
@@ -418,30 +418,6 @@ class ArticleController extends Controller implements ControllerInterface
                     }
                 }
 
-                // save an existing comment
-                // TODO: move to dedicated controller, or use generic Create::doPUT().
-                if (isset($params['saveBut'])) {
-                    $comment = new ArticleComment();
-
-                    try {
-                        $comment->load($params['article_comment_id']);
-
-                        // re-populates the old object from post data
-                        $comment->populateFromArray($params);
-
-                        $success = $comment->save();
-
-                        self::$logger->action('Updated the comment ['.$params['article_comment_id'].'] on the article ['.$this->BO->getOID().']');
-
-                        ActiveRecord::disconnect();
-
-                        $this->setStatusMessage(View::displayUpdateMessage('Your comment has been updated.'));
-
-                        return $this->doGET($request);
-                    } catch (AlphaException $e) {
-                        self::$logger->error($e->getMessage());
-                    }
-                }
             } catch (SecurityException $e) {
                 self::$logger->warn($e->getMessage());
                 throw new ResourceNotAllowedException($e->getMessage());
@@ -521,6 +497,31 @@ class ArticleController extends Controller implements ControllerInterface
             if (isset($params['markdownTextBoxRows']) && $params['markdownTextBoxRows'] != '') {
                 $viewState = ViewState::getInstance();
                 $viewState->set('markdownTextBoxRows', $params['markdownTextBoxRows']);
+            }
+
+            // save an existing comment
+            // TODO: move to dedicated controller, or use generic Create::doPUT().
+            if (isset($params['article_comment_id'])) {
+                $comment = new ArticleComment();
+
+                try {
+                    $comment->load($params['article_comment_id']);
+
+                    // re-populates the old object from post data
+                    $comment->populateFromArray($params);
+
+                    $success = $comment->save();
+
+                    self::$logger->action('Updated the comment ['.$params['article_comment_id'].'] on the article ['.$this->BO->getOID().']');
+
+                    ActiveRecord::disconnect();
+
+                    $this->setStatusMessage(View::displayUpdateMessage('Your comment has been updated.'));
+
+                    return $this->doGET($request);
+                } catch (AlphaException $e) {
+                    self::$logger->error($e->getMessage());
+                }
             }
 
             if (isset($params['title'])) {

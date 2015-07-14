@@ -107,6 +107,8 @@ class ArticleCommentView extends View
      */
     public function createView($fields=array())
     {
+        $config = ConfigProvider::getInstance();
+
         $html = '<h2>Post a new comment:</h2>';
 
         $html .= '<table cols="2" class="create_view">';
@@ -115,6 +117,7 @@ class ArticleCommentView extends View
         $textBox = new TextBox($this->BO->getPropObject('content'), $this->BO->getDataLabel('content'), 'content', '', 10);
         $html .= $textBox->render();
 
+        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('articleOID')) : 'articleOID');
         $html .= '<input type="hidden" name="articleOID" value="'.$this->BO->get('articleOID').'"/>';
         $html .= '<tr><td colspan="2">';
 
@@ -141,6 +144,8 @@ class ArticleCommentView extends View
     public function editView($fields=array())
     {
         $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
 
         $html = '<table cols="2" class="edit_view" style="width:100%; margin:0px">';
         $html .= '<form action="'.$fields['formAction'].'" method="POST" accept-charset="UTF-8">';
@@ -154,7 +159,7 @@ class ArticleCommentView extends View
         $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->BO->getID().'"/>';
 
         // render special buttons for admins only
-        if ($_SESSION['currentUser']->inGroup('Admin') && strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+        if ($session->get('currentUser')->inGroup('Admin') && strpos($fields['formAction'], '/tk/') !== false) {
             $html .= '<tr><td colspan="2">';
 
             $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('saveBut')) : 'saveBut');
@@ -178,11 +183,14 @@ class ArticleCommentView extends View
             $temp = new Button($js, "Delete", "deleteBut");
             $html .= $temp->render();
             $html .= '&nbsp;&nbsp;';
-            $temp = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'",'Back to List','cancelBut');
+            $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ListController&ActiveRecordType='.get_class($this->BO))."'",'Back to List','cancelBut');
             $html .= $temp->render();
             $html .= '</td></tr>';
 
             $html .= View::renderSecurityFields();
+
+            $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('_METHOD')) : '_METHOD');
+            $html .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value="PUT"/>';
 
             $html .= '</form></table>';
         } else {
@@ -194,6 +202,9 @@ class ArticleCommentView extends View
             $html .= '</div>';
 
             $html .= View::renderSecurityFields();
+
+            $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('_METHOD')) : '_METHOD');
+            $html .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value="PUT"/>';
 
             $html .= '</form>';
         }
