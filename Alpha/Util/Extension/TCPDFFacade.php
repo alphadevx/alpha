@@ -111,7 +111,7 @@ class TCPDFFacade
     public function __construct($BO)
     {
         self::$logger = new Logger('TCPDFFacade');
-        self::$logger->warn('>>__construct()');
+        self::$logger->debug('>>__construct()');
 
         $config = ConfigProvider::getInstance();
 
@@ -213,19 +213,19 @@ class TCPDFFacade
         $footer = '<br><p>Article URL: <a href="'.$this->BO->get('URL').'">'.$this->BO->get('URL').'</a><br>Title: '.$this->BO->get('title').'<br>Author: '.$this->BO->get('author').'</p>';
 
         // write the title
-        self::$logger->warn('Writing the title ['.$title.'] to the PDF');
+        self::$logger->debug('Writing the title ['.$title.'] to the PDF');
         $this->pdf->writeHTML(utf8_encode($title), true, false, true, false, '');
         // output the HTML content
-        self::$logger->warn('Writing the content ['.$this->content.'] to the PDF');
+        self::$logger->debug('Writing the content ['.$this->content.'] to the PDF');
         $this->pdf->writeHTML(utf8_encode($this->content), true, false, true, false, '');
         // write the article footer
         $this->pdf->writeHTML(utf8_encode($footer), true, false, true, false, '');
-        self::$logger->warn('Writing the footer ['.$footer.'] to the PDF');
+        self::$logger->debug('Writing the footer ['.$footer.'] to the PDF');
 
         // save this PDF to the cache
         $this->pdf->Output($this->PDFFilename, 'F');
 
-        self::$logger->warn('<<__construct()');
+        self::$logger->debug('<<__construct()');
     }
 
     /**

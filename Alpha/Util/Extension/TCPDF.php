@@ -4,6 +4,9 @@ namespace Alpha\Util\Extension;
 
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
+use Alpha\Util\Helper\Validator;
+use Alpha\Controller\Front\FrontController;
+use Alpha\View\Widget\Image;
 
 /**
  * Custom version of the TCPDF library class, allowing for any required overrides.
@@ -92,10 +95,10 @@ class TCPDF extends \TCPDF {
                 $tk = mb_substr($file, $start+1, $end-($start+1));
                 $decoded = FrontController::getDecodeQueryParams($tk);
 
-                parent::Image($decoded['s'], $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border);
+                parent::Image($decoded['source'], $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border);
             } else {
                 // it has no query string, so threat as a regular image URL
-                if(AlphaValidator::isURL($file))
+                if (Validator::isURL($file))
                     parent::Image($config->get('app.root').'/'.Image::convertImageURLToPath($file), $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border);
                 else
                     parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border);
