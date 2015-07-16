@@ -5,6 +5,7 @@ namespace Alpha\View\Widget;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Security\SecurityUtils;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Model\Type\Relation;
 use Alpha\Model\ActiveRecord;
 use Alpha\Exception\IllegalArguementException;
@@ -143,6 +144,8 @@ class RecordSelector
         self::$logger->debug('>>render(expanded=['.$expanded.'], buttons=['.$buttons.'])');
 
         $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
 
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt($this->name)) : $this->name);
 
@@ -229,9 +232,10 @@ class RecordSelector
 
                         // check to see if we are in the admin back-end
                         if (isset($_SERVER['REQUEST_URI']) && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
-                            $viewURL = FrontController::generateSecureURL('act=Detail&bo='.get_class($obj).'&oid='.$obj->getOID());
-                            $editURL = FrontController::generateSecureURL('act=Edit&bo='.get_class($obj).'&oid='.$obj->getOID());
+                            $viewURL = FrontController::generateSecureURL('act=Alpha\Controller\ViewController&ActiveRecordType='.get_class($obj).'&ActiveRecordOID='.$obj->getOID());
+                            $editURL = FrontController::generateSecureURL('act=Alpha\Controller\EditController&ActiveRecordType='.get_class($obj).'&ActiveRecordOID='.$obj->getOID());
                         } else {
+                            // TOOD: revisit all of these links once the generic CRUD controller is done
                             if (isset($customViewControllerName)) {
                                 if ($config->get('app.use.mod.rewrite'))
                                     $viewURL = $config->get('app.url').$customViewControllerName.'/oid/'.$obj->getOID();
@@ -286,7 +290,7 @@ class RecordSelector
                         $html .= '<div class="centered">';
                         $html .= '<a href="'.$viewURL.'">View</a>';
                         // if the current user owns it, they get the edit link
-                        if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->getOID() == $obj->getCreatorId())
+                        if ($session->get('currentUser') != null && $session->get('currentUser')->getOID() == $obj->getCreatorId())
                             $html .= '&nbsp;&nbsp;&nbsp;&nbsp;<a href="'.$editURL.'">Edit</a>';
                         $html .= '</div>';
                     }
