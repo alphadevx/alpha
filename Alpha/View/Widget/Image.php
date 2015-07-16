@@ -198,9 +198,9 @@ class Image
 
         if ($this->secure->getBooleanValue()) {
             $params = Controller::generateSecurityFields();
-            return '<img src="'.FrontController::generateSecureURL('act=ViewImage&s='.$this->source.'&w='.$this->width->getValue().'&h='.$this->height->getValue().'&t='.$this->sourceType->getValue().'&q='.$this->quality->getValue().'&sc='.$this->scale->getValue().'&se='.$this->secure->getValue().'&var1='.urlencode($params[0]).'&var2='.urlencode($params[1])).'"'.(empty($altText) ? '' : ' alt="'.$altText.'"').'/>';
+            return '<img src="'.FrontController::generateSecureURL('act=Alpha\Controller\ImageController&source='.$this->source.'&width='.$this->width->getValue().'&height='.$this->height->getValue().'&type='.$this->sourceType->getValue().'&quality='.$this->quality->getValue().'&scale='.$this->scale->getValue().'&secure='.$this->secure->getValue().'&var1='.$params[0].'&var2='.$params[1]).'"'.(empty($altText) ? '' : ' alt="'.$altText.'"').'/>';
         } else {
-            return '<img src="'.FrontController::generateSecureURL('act=ViewImage&s='.$this->source.'&w='.$this->width->getValue().'&h='.$this->height->getValue().'&t='.$this->sourceType->getValue().'&q='.$this->quality->getValue().'&sc='.$this->scale->getValue().'&se='.$this->secure->getValue()).'"'.(empty($altText) ? '' : ' alt="'.$altText.'"').'/>';
+            return '<img src="'.FrontController::generateSecureURL('act=Alpha\Controller\ImageController&source='.$this->source.'&width='.$this->width->getValue().'&height='.$this->height->getValue().'&type='.$this->sourceType->getValue().'&quality='.$this->quality->getValue().'&scale='.$this->scale->getValue().'&secure='.$this->secure->getValue()).'"'.(empty($altText) ? '' : ' alt="'.$altText.'"').'/>';
         }
     }
 
