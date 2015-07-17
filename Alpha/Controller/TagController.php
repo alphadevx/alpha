@@ -176,9 +176,8 @@ class TagController extends EditController implements ControllerInterface
             $ActiveRecordType = $params['ActiveRecordType'];
             $ActiveRecordOID = $params['ActiveRecordOID'];
 
-            $className = "Alpha\\Model\\$ActiveRecordType";
-            if (class_exists($className))
-                $this->BO = new $className();
+            if (class_exists($ActiveRecordType))
+                $this->BO = new $ActiveRecordType();
             else
                 throw new IllegalArguementException('No ActiveRecord available to display tags for!');
 

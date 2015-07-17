@@ -161,7 +161,7 @@ class ArticleView extends View
             $tags = $this->BO->getPropObject('tags')->getRelatedObjects();
 
         if (count($tags) > 0) {
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=EditTags&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."'", "Edit Tags", "tagsBut");
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\TagController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID())."'", "Edit Tags", "tagsBut");
             $fields['tagsButton'] = $button->render();
         }
 

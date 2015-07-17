@@ -290,11 +290,16 @@ class FrontController
         	
         	if (isset($params['act'])) {
         		$className = $params['act'];
+        		$crudControllers = array(
+        			'Alpha\Controller\CreateController',
+        			'Alpha\Controller\ViewController',
+        			'Alpha\Controller\EditController'
+        		);
 
         		if (class_exists($className)) {
         			$controller = new $className;
 
-        			if (isset($params['ActiveRecordType'])) {
+        			if (isset($params['ActiveRecordType']) && in_array($params['act'], $crudControllers)) {
 	        			$customController = $controller->getCustomControllerName($params['ActiveRecordType']);
 			            if ($customController != null) {
 			                $controller = new $customController();
