@@ -120,7 +120,7 @@ class TagControllerTest extends \PHPUnit_Framework_TestCase
         $article = $this->createArticle('testing');
         $article->save();
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/tag/Article/'.$article->getOID()));
+        $request = new Request(array('method' => 'GET', 'URI' => '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getOID()));
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
@@ -154,7 +154,7 @@ class TagControllerTest extends \PHPUnit_Framework_TestCase
         $params = array('saveBut' => true, 'NewTagValue' => 'somenewtag', 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
         $params = array_merge($params, $existingTags);
 
-        $request = new Request(array('method' => 'POST', 'URI' => '/tag/Article/'.$article->getOID(), 'params' => $params));
+        $request = new Request(array('method' => 'POST', 'URI' => '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getOID(), 'params' => $params));
 
         $response = $front->process($request);
 
@@ -177,7 +177,7 @@ class TagControllerTest extends \PHPUnit_Framework_TestCase
 
         $params = array('deleteOID' => $tagOID, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
 
-        $request = new Request(array('method' => 'POST', 'URI' => '/tag/Article/'.$article->getOID(), 'params' => $params));
+        $request = new Request(array('method' => 'POST', 'URI' => '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getOID(), 'params' => $params));
 
         $response = $front->process($request);
 

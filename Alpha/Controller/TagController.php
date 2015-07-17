@@ -173,7 +173,7 @@ class TagController extends EditController implements ControllerInterface
             $body .= '</form>';
         } else { // render screen for managing individual tags on a given active record
 
-            $ActiveRecordType = $params['ActiveRecordType'];
+            $ActiveRecordType = urldecode($params['ActiveRecordType']);
             $ActiveRecordOID = $params['ActiveRecordOID'];
 
             if (class_exists($ActiveRecordType))
@@ -305,7 +305,7 @@ class TagController extends EditController implements ControllerInterface
 
                 // ensure that a bo is provided
                 if (isset($params['ActiveRecordType']))
-                    $ActiveRecordType = $params['ActiveRecordType'];
+                    $ActiveRecordType = urldecode($params['ActiveRecordType']);
                 else
                     throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordType was not supplied!');
 
@@ -315,9 +315,8 @@ class TagController extends EditController implements ControllerInterface
                 else
                     throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordOID was not supplied!');
 
-                $className = "Alpha\\Model\\$ActiveRecordType";
-                if (class_exists($className))
-                    $this->BO = new $className();
+                if (class_exists($ActiveRecordType))
+                    $this->BO = new $ActiveRecordType();
                 else
                     throw new IllegalArguementException('No ActiveRecord available to display tags for!');
 
@@ -340,9 +339,9 @@ class TagController extends EditController implements ControllerInterface
                             $newTag = new Tag();
                             $newTag->set('content', Tag::cleanTagContent($params['NewTagValue']));
                             $newTag->set('taggedOID', $ActiveRecordOID);
-                            $newTag->set('taggedClass', $className);
+                            $newTag->set('taggedClass', $ActiveRecordType);
                             $newTag->save();
-                            self::$logger->action('Created a new tag '.$newTag->get('content').' on '.$className.' instance with OID '.$ActiveRecordOID);
+                            self::$logger->action('Created a new tag '.$newTag->get('content').' on '.$ActiveRecordType.' instance with OID '.$ActiveRecordOID);
                         }
 
                         ActiveRecord::commit();
@@ -374,7 +373,7 @@ class TagController extends EditController implements ControllerInterface
 
                 if (!empty($params['deleteOID'])) {
                     try {
-                        $this->BO = new $className;
+                        $this->BO = new $ActiveRecordType;
                         $this->BO->load($ActiveRecordOID);
 
                         $tag = new Tag();
@@ -385,7 +384,7 @@ class TagController extends EditController implements ControllerInterface
 
                         $tag->delete();
 
-                        self::$logger->action('Deleted tag '.$content.' on '.$className.' instance with OID '.$ActiveRecordOID);
+                        self::$logger->action('Deleted tag '.$content.' on '.$ActiveRecordType.' instance with OID '.$ActiveRecordOID);
 
                         ActiveRecord::commit();
 
