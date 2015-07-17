@@ -152,7 +152,7 @@ class ArticleView extends View
         $button = new Button($js, "Delete", "deleteBut");
         $fields['deleteButton'] = $button->render();
 
-        $button = new Button("document.location = '".FrontController::generateSecureURL('act=ListAll&bo='.get_class($this->BO))."'", "Back to List", "cancelBut");
+        $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ListController&ActiveRecordType='.get_class($this->BO))."'", "Back to List", "cancelBut");
         $fields['cancelButton'] = $button->render();
 
         $tags = array();
