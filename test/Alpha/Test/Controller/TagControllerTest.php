@@ -174,14 +174,61 @@ class TagControllerTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertTrue($found, 'Checking that the new tag added was actually saved');
+    }
 
-        $params = array('deleteOID' => $tagOID, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+    /**
+     * Testing the doDELETE method
+     */
+    public function testDoDELETE()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        $front = new FrontController();
+        $controller = new TagController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $article = $this->createArticle('testing');
+        $article->save();
+
+        $tags = $article->getPropObject('tags')->getRelatedObjects();
+        $existingTags = array();
+
+        foreach ($tags as $tag) {
+            $existingTags['content_'.$tag->getOID()] = $tag->get('content');
+        }
+
+        $params = array('saveBut' => true, 'NewTagValue' => 'somenewtag', 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = array_merge($params, $existingTags);
 
         $request = new Request(array('method' => 'POST', 'URI' => '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getOID(), 'params' => $params));
 
         $response = $front->process($request);
 
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
+        $tags = $article->getPropObject('tags')->getRelatedObjects();
+
+        $found = false;
+        $tagOID = '';
+
+        foreach ($tags as $tag) {
+            if ($tag->get('content') == 'somenewtag') {
+                $found = true;
+                $tagOID = $tag->getOID();
+                break;
+            }
+        }
+
+        $this->assertTrue($found, 'Checking that the new tag added was actually saved');
+
+        $params = array('deleteOID' => $tagOID, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+
+        $request = new Request(array('method' => 'DELETE', 'URI' => '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getOID(), 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doDELETE method');
 
         $tags = $article->getPropObject('tags')->getRelatedObjects();
 

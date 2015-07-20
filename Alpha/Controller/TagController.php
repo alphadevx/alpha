@@ -370,38 +370,6 @@ class TagController extends EditController implements ControllerInterface
 
                     ActiveRecord::disconnect();
                 }
-
-                if (!empty($params['deleteOID'])) {
-                    try {
-                        $this->BO = new $ActiveRecordType;
-                        $this->BO->load($ActiveRecordOID);
-
-                        $tag = new Tag();
-                        $tag->load($params['deleteOID']);
-                        $content = $tag->get('content');
-
-                        ActiveRecord::begin();
-
-                        $tag->delete();
-
-                        self::$logger->action('Deleted tag '.$content.' on '.$ActiveRecordType.' instance with OID '.$ActiveRecordOID);
-
-                        ActiveRecord::commit();
-
-                        $this->setStatusMessage(View::displayUpdateMessage('Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' deleted successfully.'));
-
-                        return $this->doGET($request);
-                    } catch (AlphaException $e) {
-                        self::$logger->error('Unable to delete the tag of id ['.$params['deleteOID'].'], error was ['.$e->getMessage().']');
-                        ActiveRecord::rollback();
-
-                        $this->setStatusMessage(View::displayErrorMessage('Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' not deleted, please check the application logs.'));
-
-                        return $this->doGET($request);
-                    }
-
-                    ActiveRecord::disconnect();
-                }
             }
         } catch (SecurityException $e) {
 
@@ -417,6 +385,90 @@ class TagController extends EditController implements ControllerInterface
         }
 
         self::$logger->debug('<<doPOST');
+    }
+
+    /**
+     * Handle DELETE requests
+     *
+     * @param Alpha\Util\Http\Request $request
+     * @return Alpha\Util\Http\Response
+     * @throws Alpha\Exception\SecurityException
+     * @throws Alpha\Exception\IllegalArguementException
+     * @since 2.0
+     */
+    public function doDELETE($request)
+    {
+        self::$logger->debug('>>doDELETE($request=['.var_export($request, true).'])');
+
+        $params = $request->getParams();
+
+        try {
+            // check the hidden security fields before accepting the form POST data
+            if (!$this->checkSecurityFields())
+                throw new SecurityException('This page cannot accept post data from remote servers!');
+
+            // ensure that a bo is provided
+            if (isset($params['ActiveRecordType']))
+                $ActiveRecordType = urldecode($params['ActiveRecordType']);
+            else
+                throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordType was not supplied!');
+
+            // ensure that a OID is provided
+            if (isset($params['ActiveRecordOID']))
+                $ActiveRecordOID = $params['ActiveRecordOID'];
+            else
+                throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordOID was not supplied!');
+
+            if (class_exists($ActiveRecordType))
+                $this->BO = new $ActiveRecordType();
+            else
+                throw new IllegalArguementException('No ActiveRecord available to display tags for!');
+
+            if (!empty($params['deleteOID'])) {
+                try {
+                    $this->BO = new $ActiveRecordType;
+                    $this->BO->load($ActiveRecordOID);
+
+                    $tag = new Tag();
+                    $tag->load($params['deleteOID']);
+                    $content = $tag->get('content');
+
+                    ActiveRecord::begin();
+
+                    $tag->delete();
+
+                    self::$logger->action('Deleted tag '.$content.' on '.$ActiveRecordType.' instance with OID '.$ActiveRecordOID);
+
+                    ActiveRecord::commit();
+
+                    $this->setStatusMessage(View::displayUpdateMessage('Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' deleted successfully.'));
+
+                    return $this->doGET($request);
+                } catch (AlphaException $e) {
+                    self::$logger->error('Unable to delete the tag of id ['.$params['deleteOID'].'], error was ['.$e->getMessage().']');
+                    ActiveRecord::rollback();
+
+                    $this->setStatusMessage(View::displayErrorMessage('Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' not deleted, please check the application logs.'));
+
+                    return $this->doGET($request);
+                }
+
+                ActiveRecord::disconnect();
+            }
+        } catch (SecurityException $e) {
+
+            $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
+
+            self::$logger->warn($e->getMessage());
+        } catch (IllegalArguementException $e) {
+            self::$logger->error($e->getMessage());
+        } catch (RecordNotFoundException $e) {
+            self::$logger->warn($e->getMessage());
+
+            $this->setStatusMessage(View::displayErrorMessage('Failed to load the requested item from the database!'));
+        }
+
+        self::$logger->debug('<<doDELETE');
     }
 
     /**
