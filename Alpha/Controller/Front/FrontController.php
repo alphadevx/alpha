@@ -255,7 +255,7 @@ class FrontController
             return $controller->process($request);
         });
 
-        $this->addRoute('/recordselector/{ActiveRecordOID}/{relationType}', function($request) {
+        $this->addRoute('/recordselector/{ActiveRecordOID}/{field}/{relatedClass}/{relatedClassField}/{relatedClassDisplayField}/{relationType}', function($request) {
             $controller = new RecordSelectorController();
             return $controller->process($request);
         });

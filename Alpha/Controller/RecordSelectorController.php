@@ -101,7 +101,7 @@ class RecordSelectorController extends Controller implements ControllerInterface
             $relationType = $params['relationType'];
             $ActiveRecordOID = $params['ActiveRecordOID'];
         } catch (\Exception $e) {
-            self::$logger->error('Required param missing for ViewRecordSelector controller['.$e->getMessage().']');
+            self::$logger->error('Required param missing for RecordSelectorController controller['.$e->getMessage().']');
             throw new ResourceNotFoundException('File not found');
         }
 
@@ -109,14 +109,14 @@ class RecordSelectorController extends Controller implements ControllerInterface
 
         if ($relationType == 'MANY-TO-MANY') {
             try {
-                $relatedClassLeft = $params['relatedClassLeft'];
+                $relatedClassLeft = urldecode($params['relatedClassLeft']);
                 $relatedClassLeftDisplayField = $params['relatedClassLeftDisplayField'];
-                $relatedClassRight = $params['relatedClassRight'];
+                $relatedClassRight = urldecode($params['relatedClassRight']);
                 $relatedClassRightDisplayField = $params['relatedClassRightDisplayField'];
-                $accessingClassName = $params['accessingClassName'];
+                $accessingClassName = urldecode($params['accessingClassName']);
                 $lookupOIDs = $params['lookupOIDs'];
             } catch (\Exception $e) {
-                self::$logger->error('Required param missing for ViewRecordSelector controller['.$e->getMessage().']');
+                self::$logger->error('Required param missing for RecordSelectorController controller['.$e->getMessage().']');
                 throw new ResourceNotFoundException('File not found');
             }
 
@@ -131,11 +131,11 @@ class RecordSelectorController extends Controller implements ControllerInterface
             $body .= $recSelector->renderSelector($field, explode(',', $lookupOIDs));
         } else {
             try {
-                $relatedClass = $params['relatedClass'];
+                $relatedClass = urldecode($params['relatedClass']);
                 $relatedClassField = $params['relatedClassField'];
                 $relatedClassDisplayField = $params['relatedClassDisplayField'];
             } catch (\Exception $e) {
-                self::$logger->error('Required param missing for ViewRecordSelector controller['.$e->getMessage().']');
+                self::$logger->error('Required param missing for RecordSelectorController controller['.$e->getMessage().']');
                 throw new ResourceNotFoundException('File not found');
             }
 

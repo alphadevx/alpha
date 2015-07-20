@@ -166,7 +166,7 @@ class RecordSelector
                             title: 'Please select',
                             message: 'Loading...',
                             onshow: function(dialogRef){
-                                dialogRef.getModalBody().load('".$config->get('app.url')."ViewRecordSelector/value/'+document.getElementById('".$fieldname."').value+'/field/".$this->name."/relatedClass/".$this->relationObject->getRelatedClass()."/relatedClassField/".$this->relationObject->getRelatedClassField()."/relatedClassDisplayField/".$this->relationObject->getRelatedClassDisplayField()."/relationType/".$this->relationObject->getRelationType()."');
+                                dialogRef.getModalBody().load('".$config->get('app.url')."recordselector/'+document.getElementById('".$fieldname."').value+'/".$this->name."/".urlencode($this->relationObject->getRelatedClass())."/".$this->relationObject->getRelatedClassField()."/".$this->relationObject->getRelatedClassDisplayField()."/".$this->relationObject->getRelationType()."');
                             },
                             buttons: [
                             {
@@ -322,7 +322,7 @@ class RecordSelector
                             title: 'Please select',
                             message: 'Loading...',
                             onshow: function(dialogRef){
-                                dialogRef.getModalBody().load('".$config->get('app.url')."ViewRecordSelector/lookupOIDs/'+document.getElementById('".$fieldname1."').value+'/value/'+document.getElementById('".$fieldname2."').value+'/field/".$this->name."/relatedClassLeft/".$this->relationObject->getRelatedClass('left')."/relatedClassLeftDisplayField/".$this->relationObject->getRelatedClassDisplayField('left')."/relatedClassRight/".$this->relationObject->getRelatedClass('right')."/relatedClassRightDisplayField/".$this->relationObject->getRelatedClassDisplayField('right')."/accessingClassName/".$this->accessingClassName."/relationType/".$this->relationObject->getRelationType()."');
+                                dialogRef.getModalBody().load('".$config->get('app.url')."recordselector/lookupOIDs/'+document.getElementById('".$fieldname1."').value+'/value/'+document.getElementById('".$fieldname2."').value+'/field/".$this->name."/relatedClassLeft/".urlencode($this->relationObject->getRelatedClass('left'))."/relatedClassLeftDisplayField/".$this->relationObject->getRelatedClassDisplayField('left')."/relatedClassRight/".urlencode($this->relationObject->getRelatedClass('right'))."/relatedClassRightDisplayField/".$this->relationObject->getRelatedClassDisplayField('right')."/accessingClassName/".urlencode($this->accessingClassName)."/relationType/".$this->relationObject->getRelationType()."');
                             },
                             buttons: [
                             {
@@ -499,9 +499,9 @@ class RecordSelector
                 $html .= '</td>';
                 $html .= '<td width="20%">';
                 if ($obj->getOID() == $this->relationObject->getValue()) {
-                    $html .= '<img src="'.$config->get('app.url').'/alpha/images/icons/accept_ghost.png"/>';
+                    $html .= '<img src="'.$config->get('app.url').'/images/icons/accept_ghost.png"/>';
                 } else {
-                    $tmp = new Button("document.getElementById('".$fieldname."').value = '".$obj->getOID()."'; document.getElementById('".$fieldname."_display').value = '".$obj->get($this->relationObject->getRelatedClassDisplayField())."'; $('[Id=".$fieldname."_display]').blur(); window.jQuery.dialog.close();", "", "selBut", $config->get('app.url')."/alpha/images/icons/accept.png");
+                    $tmp = new Button("document.getElementById('".$fieldname."').value = '".$obj->getOID()."'; document.getElementById('".$fieldname."_display').value = '".$obj->get($this->relationObject->getRelatedClassDisplayField())."'; $('[Id=".$fieldname."_display]').blur(); window.jQuery.dialog.close();", "", "selBut", $config->get('app.url')."/images/icons/accept.png");
                     $html .= $tmp->render();
                 }
                 $html .= '</td>';

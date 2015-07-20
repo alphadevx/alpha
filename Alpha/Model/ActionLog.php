@@ -3,6 +3,7 @@
 namespace Alpha\Model;
 
 use Alpha\Model\Type\String;
+use Alpha\Model\Type\Relation;
 use Alpha\Util\Logging\Logger;
 
 /**
@@ -77,12 +78,20 @@ class ActionLog extends ActiveRecord
 	protected $message;
 
 	/**
+	 * The person who carried out the action
+	 *
+	 * @var Alpha\Model\Person
+	 * @since 2.0
+	 */
+	protected $personOID;
+
+	/**
 	 * An array of data display labels for the class properties
 	 *
 	 * @var array
 	 * @since 1.2.2
 	 */
-	protected $dataLabels = array("OID"=>"Action Log ID#","client"=>"Client string","IP"=>"IP address","message"=>"Message");
+	protected $dataLabels = array("OID"=>"Action Log ID#","client"=>"Client string","IP"=>"IP address","message"=>"Message","personOID"=>"Owner");
 
 	/**
 	 * The name of the database table for the class
@@ -115,6 +124,14 @@ class ActionLog extends ActiveRecord
 		$this->client = new String();
 		$this->IP = new String();
 		$this->message = new String();
+
+		$this->personOID = new Relation();
+		$this->personOID->setRelatedClass('Alpha\Model\Person');
+		$this->personOID->setRelatedClassField('OID');
+		$this->personOID->setRelatedClassDisplayField('displayName');
+		$this->personOID->setRelationType('MANY-TO-ONE');
+		$this->personOID->setValue($this->created_by->getValue());
+		$this->markTransient('personOID');
 	}
 }
 

@@ -417,15 +417,15 @@ class Relation extends Type implements TypeInterface
 	 */
 	public function setValue($val)
 	{
-		if(empty($val)) {
+		if (empty($val)) {
 			$this->value = NULL;
-		}else{
+		} else {
 			if(!Validator::isInteger($val))
 				throw new IllegalArguementException("[$val]".$this->helper);
 
 			if (mb_strlen($val) <= $this->size) {
 				$this->value = str_pad($val, 11, '0', STR_PAD_LEFT);
-			}else{
+			} else {
 				throw new IllegalArguementException("[$val]".$this->helper);
 			}
 		}
