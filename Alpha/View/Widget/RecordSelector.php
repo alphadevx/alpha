@@ -166,7 +166,7 @@ class RecordSelector
                             title: 'Please select',
                             message: 'Loading...',
                             onshow: function(dialogRef){
-                                dialogRef.getModalBody().load('".$config->get('app.url')."recordselector/'+document.getElementById('".$fieldname."').value+'/".$this->name."/".urlencode($this->relationObject->getRelatedClass())."/".$this->relationObject->getRelatedClassField()."/".$this->relationObject->getRelatedClassDisplayField()."/".$this->relationObject->getRelationType()."');
+                                dialogRef.getModalBody().load('".$config->get('app.url')."recordselector/12m/'+document.getElementById('".$fieldname."').value+'/".$this->name."/".urlencode($this->relationObject->getRelatedClass())."/".$this->relationObject->getRelatedClassField()."/".$this->relationObject->getRelatedClassDisplayField()."');
                             },
                             buttons: [
                             {
@@ -322,7 +322,7 @@ class RecordSelector
                             title: 'Please select',
                             message: 'Loading...',
                             onshow: function(dialogRef){
-                                dialogRef.getModalBody().load('".$config->get('app.url')."recordselector/lookupOIDs/'+document.getElementById('".$fieldname1."').value+'/value/'+document.getElementById('".$fieldname2."').value+'/field/".$this->name."/relatedClassLeft/".urlencode($this->relationObject->getRelatedClass('left'))."/relatedClassLeftDisplayField/".$this->relationObject->getRelatedClassDisplayField('left')."/relatedClassRight/".urlencode($this->relationObject->getRelatedClass('right'))."/relatedClassRightDisplayField/".$this->relationObject->getRelatedClassDisplayField('right')."/accessingClassName/".urlencode($this->accessingClassName)."/relationType/".$this->relationObject->getRelationType()."');
+                                dialogRef.getModalBody().load('".$config->get('app.url')."recordselector/m2m/'+document.getElementById('".$fieldname2."').value+'/".$this->name."/".urlencode($this->relationObject->getRelatedClass('left'))."/".$this->relationObject->getRelatedClassDisplayField('left')."/".urlencode($this->relationObject->getRelatedClass('right'))."/".$this->relationObject->getRelatedClassDisplayField('right')."/".urlencode($this->accessingClassName)."/'+document.getElementById('".$fieldname1."').value);
                             },
                             buttons: [
                             {

@@ -100,12 +100,11 @@ class RecordSelectorController extends Controller implements ControllerInterface
         try {
             $relationType = $params['relationType'];
             $ActiveRecordOID = $params['ActiveRecordOID'];
+            $field = $params['field'];
         } catch (\Exception $e) {
             self::$logger->error('Required param missing for RecordSelectorController controller['.$e->getMessage().']');
             throw new ResourceNotFoundException('File not found');
         }
-
-        $field = $params['field'];
 
         if ($relationType == 'MANY-TO-MANY') {
             try {

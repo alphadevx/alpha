@@ -135,7 +135,7 @@ class FrontController
     private $currentRoute;
 
     /**
-     * An optional hash array of default request parameter values to use when those params are left off the request
+     * An optional 2D hash array of default request parameter values to use when those params are left off the request
      * @var array
      * @since 2.0
      */
@@ -255,10 +255,15 @@ class FrontController
             return $controller->process($request);
         });
 
-        $this->addRoute('/recordselector/{ActiveRecordOID}/{field}/{relatedClass}/{relatedClassField}/{relatedClassDisplayField}/{relationType}', function($request) {
+        $this->addRoute('/recordselector/12m/{ActiveRecordOID}/{field}/{relatedClass}/{relatedClassField}/{relatedClassDisplayField}/{relationType}', function($request) {
             $controller = new RecordSelectorController();
             return $controller->process($request);
-        });
+        })->value('relationType', 'ONE-TO-MANY');
+
+        $this->addRoute('/recordselector/m2m/{ActiveRecordOID}/{field}/{relatedClassLeft}/{relatedClassLeftDisplayField}/{relatedClassRight}/{relatedClassRightDisplayField}/{accessingClassName}/{lookupOIDs}/{relationType}', function($request) {
+            $controller = new RecordSelectorController();
+            return $controller->process($request);
+        })->value('relationType', 'MANY-TO-MANY');
 
         $this->addRoute('/search/{query}/{start}/{limit}', function($request) {
             $controller = new SearchController();
@@ -513,6 +518,7 @@ class FrontController
     {
         if (is_callable($callback)) {
             $this->routes[$URI] = $callback;
+            $this->currentRoute = $URI;
             return $this;
         } else {
             throw new IllegalArguementException('Callback provided for route ['.$URI.'] is not callable');
@@ -529,7 +535,7 @@ class FrontController
      */
     public function value($param, $defaultValue)
     {
-        $this->defaultParamValues[$param] = $defaultValue;
+        $this->defaultParamValues[$this->currentRoute][$param] = $defaultValue;
         return $this;
     }
 
@@ -593,8 +599,13 @@ class FrontController
             throw new ResourceNotFoundException('Resource not found');
         }
 
-        if ($request->getURI() != $this->currentRoute)
-            $request->parseParamsFromRoute($this->currentRoute, $this->defaultParamValues);
+        if ($request->getURI() != $this->currentRoute) {
+        	if (isset($this->defaultParamValues[$this->currentRoute])) {
+            	$request->parseParamsFromRoute($this->currentRoute, $this->defaultParamValues[$this->currentRoute]);
+            } else {
+            	$request->parseParamsFromRoute($this->currentRoute);
+            }
+        }
 
         try {
             $response = call_user_func($callback, $request);
