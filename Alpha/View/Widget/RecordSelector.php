@@ -207,7 +207,7 @@ class RecordSelector
                     $html .= '<p><strong>'.$this->label.':</strong>';
 
                     foreach ($objects as $tag) {
-                        $html .= ' <a href="'.$config->get('app.url').'search/q/'.$tag->get('content').'">'.$tag->get('content').'</a>';
+                        $html .= ' <a href="'.$config->get('app.url').'search/'.$tag->get('content').'">'.$tag->get('content').'</a>';
                     }
 
                     $html .= '</p>';

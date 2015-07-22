@@ -204,7 +204,8 @@ class SearchController extends Controller implements ControllerInterface
                 $this->resultCount--;
             } else {
                 $view = View::getInstance($bo);
-                $body .= $view->listView();
+                $URI = $this->request->getURI();
+                $body .= $view->listView(array('formAction' => $URI));
 
                 if ($showTags) {
                     $tags = $bo->getPropObject('tags')->getRelatedObjects();
@@ -237,11 +238,11 @@ class SearchController extends Controller implements ControllerInterface
     {
         $config = ConfigProvider::getInstance();
 
-        $body = '<div align="center"><form method="GET" id="search_form" onsubmit="document.location = \''.$config->get('app.url').'search/\'+document.getElementById(\'q\').value; return false;">';
-        $body .= 'Search for: <input type="text" size="80" name="q" id="q"/>&nbsp;';
+        $body = '<div align="center" class="form-group"><form class="form-inline" method="GET" id="search_form" onsubmit="document.location = \''.$config->get('app.url').'search/\'+document.getElementById(\'q\').value; return false;">';
+        $body .= '<label for="q">Search for</label><input type="text" name="q" id="q" class="form-control" style="width:50%; margin:10px;"/>';
         $button = new Button('document.location = \''.$config->get('app.url').'search/\'+document.getElementById(\'q\').value', 'Search', 'searchButton');
         $body .= $button->render();
-        $body .= '</form></div>';
+        $body .= '</p></form></div>';
 
         return $body;
     }
@@ -294,7 +295,7 @@ class SearchController extends Controller implements ControllerInterface
             if (isset($params['tk']))
                 $body .= '<li><a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint-$config->get('app.list.page.amount'))).'">&laquo;</a></li>';
             else
-                $body .= '<li><a href="'.$config->get('app.url').'search/q/'.$this->query.'/start/'.($this->startPoint-$config->get('app.list.page.amount')).'">&laquo;</a></li>';
+                $body .= '<li><a href="'.$config->get('app.url').'search/'.$this->query.'/start/'.($this->startPoint-$config->get('app.list.page.amount')).'">&laquo;</a></li>';
         } elseif ($this->resultCount > $config->get('app.list.page.amount')){
             $body .= '<li class="disabled"><a href="#">&laquo;</a></li>';
         }
@@ -307,7 +308,7 @@ class SearchController extends Controller implements ControllerInterface
                 if (isset($params['tk']))
                     $body .= '<li><a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.$i).'">'.$page.'</a></li>';
                 else
-                    $body .= '<li><a href="'.$config->get('app.url').'search/q/'.$this->query.'/start/'.$i.'">'.$page.'</a></li>';
+                    $body .= '<li><a href="'.$config->get('app.url').'search/'.$this->query.'/start/'.$i.'">'.$page.'</a></li>';
             } elseif ($this->resultCount > $config->get('app.list.page.amount')){
                 $body .= '<li class="active"><a href="#">'.$page.'</a></li>';
             }
@@ -320,7 +321,7 @@ class SearchController extends Controller implements ControllerInterface
             if (isset($params['tk']))
                 $body .= '<li><a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint+$config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a></li>';
             else
-                $body .= '<li><a href="'.$config->get('app.url').'search/q/'.$this->query.'/start/'.($this->startPoint+$config->get('app.list.page.amount')).'">&raquo;</a></li>';
+                $body .= '<li><a href="'.$config->get('app.url').'search/'.$this->query.'/start/'.($this->startPoint+$config->get('app.list.page.amount')).'">&raquo;</a></li>';
         } elseif ($this->resultCount > $config->get('app.list.page.amount')){
             $body .= '<li class="disabled"><a href="#">&raquo;</a></li>';
         }

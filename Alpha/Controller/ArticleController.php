@@ -829,7 +829,7 @@ class ArticleController extends Controller implements ControllerInterface
                     $html .= '<p>Tags:';
 
                     foreach($tags as $tag)
-                        $html .= ' <a href="'.$config->get('app.url').'search/q/'.$tag->get('content').'">'.$tag->get('content').'</a>';
+                        $html .= ' <a href="'.$config->get('app.url').'search/'.$tag->get('content').'">'.$tag->get('content').'</a>';
                     $html .= '</p>';
                 }
             }
