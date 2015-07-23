@@ -296,9 +296,6 @@ abstract class Controller
 	 	if ($session->get('statusMessage') !== false)
 	 		$this->setStatusMessage($session->get('statusMessage'));
 
-	 	if ($config->get('security.encrypt.http.fieldnames') && !empty($_POST))
-			$this->decryptFieldNames();
-
 	 	self::$logger->debug('<<__construct');
 	}
 
@@ -1345,24 +1342,22 @@ abstract class Controller
 	}
 
 	/**
-	 * Descrypts the POST fieldnames in the global $_REQUEST and $_POST variables
+	 * Descrypts the HTTP param fieldnames in the array provided and returns the plain version
 	 *
+	 * @param $params array
+	 * 
 	 * @since 1.2.2
 	 */
-	private function decryptFieldNames()
+	private function decryptFieldNames($params)
     {
-		foreach(array_keys($_POST) as $fieldname) {
+    	$decrypted = array();
+
+		foreach(array_keys($params) as $fieldname) {
 
 			// set request params where fieldnames provided are based64 encoded and encrypted
 			if (Validator::isBase64($fieldname)) {
-				$_REQUEST[trim(AlphaSecurityUtils::decrypt(base64_decode($fieldname)))] = $_POST[$fieldname];
-				$_POST[trim(AlphaSecurityUtils::decrypt(base64_decode($fieldname)))] = $_POST[$fieldname];
+				$decrypted[trim(AlphaSecurityUtils::decrypt(base64_decode($fieldname)))] = $params[$fieldname];
 			}
-
-			// clear non-encrypted fields (we won't accept these when security.encrypt.http.fieldnames = true), and encrypted fieldnames already decrypted above.
-			unset($_POST[$fieldname]);
-			unset($_REQUEST[$fieldname]);
-
 		}
 	}
 
@@ -1492,7 +1487,17 @@ abstract class Controller
         if (!$request instanceof Request)
             throw new IllegalArguementException('The request passed to process is not a valid Request object');
 
+        $config = ConfigProvider::getInstance();
+
         $method = $request->getMethod();
+
+        if (in_array($method, array('POST','PUT','PATCH'))) {
+        	if ($config->get('security.encrypt.http.fieldnames')) {
+				$decryptedParams = $this->decryptFieldNames($request->getParams());
+				$request->setParams($decryptedParams);
+            }
+        }
+
         $this->request = $request;
 
         switch ($method) {

@@ -354,6 +354,18 @@ class Request
     }
 
     /**
+     * Set the params array
+     *
+     * @param array A hash array of values to set as the request params
+     * @since 2.0
+     */
+    public function setParams($params)
+    {
+        if (is_array($params))
+            $this->params = $params;
+    }
+
+    /**
      * Return all files on this request
      *
      * @return array
