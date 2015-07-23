@@ -623,19 +623,27 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     {
         $config = ConfigProvider::getInstance();
 
+        $controller = new ImageController();
+
         $_GET['tk'] = null;
         $_SERVER['REQUEST_URI'] = '/search';
+        $request = new Request(array('method' => 'GET'));
+        $controller->setRequest($request);
 
-        $this->assertFalse(Controller::checkIfAccessingFromSecureURL(), 'Testing that the false is returned when tk is unavailable');
+        $this->assertFalse($controller->checkIfAccessingFromSecureURL(), 'Testing that the false is returned when tk is unavailable');
 
         $_GET['tk'] = '8kqoeebEej0V-FN5-DOdA1HBDDieFcNWTib2yLSUNjq0B0FWzAupIA==';
+        $request = new Request(array('method' => 'GET'));
+        $controller->setRequest($request);
 
-        $this->assertTrue(Controller::checkIfAccessingFromSecureURL(), 'Testing that the true is returned when tk is set in global _GET array');
+        $this->assertTrue($controller->checkIfAccessingFromSecureURL(), 'Testing that the true is returned when tk is set in global _GET array');
 
         $_GET['tk'] = null;
         $_SERVER['REQUEST_URI'] = $config->get('app.url').'tk/8kqoeebEej0V-FN5-DOdA1HBDDieFcNWTib2yLSUNjq0B0FWzAupIA==';
+        $request = new Request(array('method' => 'GET'));
+        $controller->setRequest($request);
 
-        $this->assertTrue(Controller::checkIfAccessingFromSecureURL(), 'Testing that the true is returned when tk is part of the mod_rewrite style URL');
+        $this->assertTrue($controller->checkIfAccessingFromSecureURL(), 'Testing that the true is returned when tk is part of the mod_rewrite style URL');
     }
 
     /**

@@ -1204,9 +1204,9 @@ abstract class Controller
 			} elseif (file_exists($config->get('app.root').'alpha/controller/'.$controllerName.'.php')) {
 				self::$logger->debug('Custom controller found, redirecting...');
 				// handle secure URLs
-				if (self::checkIfAccessingFromSecureURL()) {
+				if ($this->checkIfAccessingFromSecureURL()) {
 					if (isset($params['tk'])) {
-						$params = FrontController::decodeQueryParams($_GET['tk']);
+						$params = FrontController::decodeQueryParams($params['tk']);
 					} else {
 						$start = mb_strpos($this->request->getURI(), '/tk/')+3;
 						$end = mb_strlen($this->request->getURI());
@@ -1330,17 +1330,18 @@ abstract class Controller
 	}
 
 	/**
-	 * Static function for determining if the current request URL is a secure one (has a tk string or not)
+	 * Method for determining if the current request URL is a secure one (has a tk string or not)
 	 *
 	 * @return boolean True if the current URL contains a tk value, false otherwise
 	 * @since 1.0
 	 */
-	public static function checkIfAccessingFromSecureURL()
+	public function checkIfAccessingFromSecureURL()
     {
-		if (isset($_GET['tk']) || mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false)
+		if ($this->request->getParam('tk') != null || mb_strpos($this->request->getURI(), '/tk/') !== false) {
 			return true;
-		else
+		} else {
 			return false;
+		}
 	}
 
 	/**
