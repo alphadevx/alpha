@@ -244,11 +244,12 @@ class Person extends ActiveRecord
 	 *
 	 * @since 1.0
      * @todo Remove super globals
+     * @deprecated
 	 */
 	protected function before_populateFromPost_callback()
 	{
 		if(isset($_POST['password']) && preg_match(Validator::REQUIRED_STRING, $_POST['password']))
-			$_POST['password'] = crypt($_POST['password']);
+			$_POST['password'] = crypt($_POST['password']); // TODO: use bcrypt for password!
 	}
 
 	/**
