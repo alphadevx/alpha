@@ -5,6 +5,8 @@ namespace Alpha\Model;
 use Alpha\Model\Type\Integer;
 use Alpha\Model\Type\Timestamp;
 use Alpha\Model\Type\DEnum;
+use Alpha\Model\Type\Relation;
+use Alpha\Model\Type\RelationLookup;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Helper\Validator;
@@ -847,7 +849,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 						$prop = $this->BO->getPropObject($propName);
 
 						// handle the saving of MANY-TO-MANY relation values
-						if ($prop->getRelationType() == 'MANY-TO-MANY' && isset($_POST[$propName]) && $_POST[$propName] != '00000000000') {
+						if ($prop->getRelationType() == 'MANY-TO-MANY' && count($prop->getRelatedOIDs()) > 0) {
 							try {
 								try {
 									// check to see if the rel is on this class
@@ -868,7 +870,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 									throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
 								}
 
-								$OIDs = explode(',', $_POST[$propName]);
+								$OIDs = $prop->getRelatedOIDs();
 
 								if (isset($OIDs) && !empty($OIDs[0])) {
 									// now for each posted OID, create a new RelationLookup record and save

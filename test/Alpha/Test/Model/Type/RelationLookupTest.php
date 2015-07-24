@@ -17,7 +17,6 @@ use Alpha\Exception\FailedLookupCreateException;
  *
  * @since 1.2.1
  * @author John Collins <dev@alphaframework.org>
- * @version $Id: RelationLookupTest.php 1846 2014-11-18 22:20:56Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.

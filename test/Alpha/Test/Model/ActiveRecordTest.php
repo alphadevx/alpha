@@ -10,6 +10,7 @@ use Alpha\Model\BadRequest;
 use Alpha\Model\Article;
 use Alpha\Model\ArticleComment;
 use Alpha\Model\BlacklistedIP;
+use Alpha\Model\Type\RelationLookup;
 use Alpha\Exception\LockingException;
 use Alpha\Exception\ValidationException;
 use Alpha\Exception\RecordNotFoundException;
@@ -23,7 +24,6 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id: AlphaDAO_Test.php 1759 2014-04-10 20:10:30Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -81,7 +81,6 @@ class ActiveRecordTest extends ModelTestCase
     protected function setUp()
     {
         parent::setUp();
-    	ActiveRecord::begin(); // TODO required?
 
     	$rights = new Rights();
     	$rights->rebuildTable();
@@ -95,6 +94,8 @@ class ActiveRecordTest extends ModelTestCase
 
     	$this->person = $this->createPersonObject('unitTestUser');
     	$this->person->rebuildTable();
+
+        $lookup = new RelationLookup('Alpha\Model\Person','Alpha\Model\Rights');
 
         // just making sure no previous test user is in the DB
         $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/');
@@ -756,9 +757,9 @@ class ActiveRecordTest extends ModelTestCase
     	$reflection = new \ReflectionClass(get_class($this->person));
     	$properties = $reflection->getProperties();
 
-		foreach($properties as $propObj) {
+		foreach ($properties as $propObj) {
 			$propName = $propObj->name;
-			if(!in_array($propName, $this->person->getDefaultAttributes()) && !in_array($propName, $this->person->getTransientAttributes())) {
+			if (!in_array($propName, $this->person->getDefaultAttributes()) && !in_array($propName, $this->person->getTransientAttributes())) {
 				$this->assertNotNull($this->person->get($propName), 'Testing the clear method for unsetting the attributes of an object');
 			}
 		}

@@ -5,6 +5,7 @@ namespace Alpha\Model;
 use Alpha\Model\Type\Integer;
 use Alpha\Model\Type\Timestamp;
 use Alpha\Model\Type\Enum;
+use Alpha\Model\Type\Relation;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Cache\CacheProviderFactory;
@@ -900,20 +901,33 @@ abstract class ActiveRecord
 		foreach($properties as $propObj) {
 			$propName = $propObj->name;
 
-			if(!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
-				$propClass = get_class($this->getPropObject($propName));
+			if (isset($hashArray[$propName])) {
 
-				if(isset($hashArray[$propName])) {
+				if (!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
+					$propClass = get_class($this->getPropObject($propName));
 
-					if (mb_strtoupper($propClass) != 'DATE' && mb_strtoupper($propClass) != 'TIMESTAMP')
-						$this->getPropObject($propName)->setValue($hashArray[$propName]);
-					else
-						$this->getPropObject($propName)->populateFromString($hashArray[$propName]);
-				}
-            }
+					if (isset($hashArray[$propName])) {
 
-            if ($propName == 'version_num' && isset($hashArray['version_num']))
-                $this->version_num->setValue($hashArray['version_num']);
+						if (mb_strtoupper($propClass) != 'DATE' && mb_strtoupper($propClass) != 'TIMESTAMP') // TODO: not sure those class names are not namepaced
+							$this->getPropObject($propName)->setValue($hashArray[$propName]);
+						else
+							$this->getPropObject($propName)->populateFromString($hashArray[$propName]);
+					}
+	            }
+
+	            if ($propName == 'version_num' && isset($hashArray['version_num']))
+	                $this->version_num->setValue($hashArray['version_num']);
+
+	            if ($this->getPropObject($propName) instanceof Relation) {
+	            	$rel = $this->getPropObject($propName);
+
+	            	if ($rel->getRelationType() == 'MANY-TO-MANY') {
+	            		$OIDs = explode(',', $hashArray[$propName]);
+	            		$rel->setRelatedOIDs($OIDs);
+						$this->$propName = $rel;
+	            	}
+	            }
+	        }
 		}
 
 		self::$logger->debug('<<populateFromArray');

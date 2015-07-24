@@ -136,6 +136,14 @@ class Relation extends Type implements TypeInterface
 	private $lookup;
 
 	/**
+	 * In the case of MANY-TO-MANY relationship, this transient array can be used to hold the OIDs of related records
+	 *
+	 * @var array
+	 * @since 2.0
+	 */
+	private $OIDs = array();
+
+	/**
 	 * When building a relation with the TagObject BO, set this to the name of the tagged class
 	 *
 	 * @var string
@@ -213,9 +221,9 @@ class Relation extends Type implements TypeInterface
 	 */
 	public function setRelatedClass($RC, $side='')
 	{
-		if(in_array($RC, ActiveRecord::getBOClassNames())) {
+		if (in_array($RC, ActiveRecord::getBOClassNames())) {
 
-			switch($side) {
+			switch ($side) {
 				case '':
 					$this->relatedClass = $RC;
 				break;
@@ -228,7 +236,7 @@ class Relation extends Type implements TypeInterface
 				default:
 					throw new IllegalArguementException('The side paramter ['.$RC.'] is not valid!');
 			}
-		}else{
+		} else {
 			throw new IllegalArguementException('The class ['.$RC.'] is not defined anywhere!');
 		}
 	}
@@ -432,6 +440,33 @@ class Relation extends Type implements TypeInterface
 	}
 
 	/**
+	 * Getter for the array of OIDs used by MANY-TO-MANY instances
+	 *
+	 * @return array
+	 * @since 2.0
+	 */
+	public function getRelatedOIDs()
+	{
+		return $this->OIDs;
+	}
+
+	/**
+	 * Setter for the array of OIDs used by MANY-TO-MANY instances
+	 *
+	 * @param array $OIDs
+	 * @since 2.0
+	 * @throws Alpha\Exception\IllegalArguementException
+	 */
+	public function setRelatedOIDs($OIDs)
+	{
+		if (is_array($OIDs)) {
+			$this->OIDs = $OIDs;
+		} else {
+			throw new IllegalArguementException('An array must be provided to setRelatedOIDs()!');
+		}
+	}
+
+	/**
 	 * Getter for the Relation value
 	 *
 	 * @return mixed
@@ -473,24 +508,25 @@ class Relation extends Type implements TypeInterface
 	 * @since 1.0
 	 * @throws Alpha\Exception\IllegalArguementException
 	 */
-	public function getRelatedClassDisplayFieldValue($accessingClassName='') {
-		global $config;
+	public function getRelatedClassDisplayFieldValue($accessingClassName='') 
+	{
+		global $config; // TODO: remove!
 
-		if($this->relationType == 'MANY-TO-MANY') {
+		if ($this->relationType == 'MANY-TO-MANY') {
 			/*
 			 * 1. Use RelationLookup to get OIDs of related objects
 			 * 2. Load related objects
 			 * 3. Access the value of the field on the object to build the
 			 * comma-seperated list.
 			 */
-			if(empty($this->lookup))
+			if (empty($this->lookup))
 				throw new IllegalArguementException('Tried to load related MANY-TO-MANY fields but no RelationLookup set on the Relation object!');
 
-			if(empty($accessingClassName))
+			if (empty($accessingClassName))
 				throw new IllegalArguementException('Tried to load related MANY-TO-MANY fields but no accessingClassName parameter set on the call to getRelatedClassDisplayFieldValue!');
 
 			// load objects on the right from accessing on the left
-			if($accessingClassName == $this->relatedClassLeft) {
+			if ($accessingClassName == $this->relatedClassLeft) {
 
 				$obj = new $this->relatedClassRight;
 
@@ -506,14 +542,14 @@ class Relation extends Type implements TypeInterface
 				return implode(',', $values);
 			}
 			// load objects on the left from accessing on the right
-			if($accessingClassName == $this->relatedClassRight) {
+			if ($accessingClassName == $this->relatedClassRight) {
 
 				$obj = new $this->relatedClassLeft;
 
 				$lookupObjects = $this->lookup->loadAllByAttribute('rightID', $this->value);
 
 				$values = array();
-				foreach($lookupObjects as $lookupObject) {
+				foreach ($lookupObjects as $lookupObject) {
 					$obj->load($lookupObject->get('leftID'));
 					array_push($values, $obj->get($this->relatedClassLeftDisplayField));
 				}
@@ -521,12 +557,12 @@ class Relation extends Type implements TypeInterface
 				asort($values);
 				return implode(',', $values);
 			}
-		}else{
+		} else {
 			$obj = new $this->relatedClass;
 			// making sure we have an object to load
-			if(empty($this->value) || $this->value == '00000000000') {
+			if (empty($this->value) || $this->value == '00000000000') {
 				return '';
-			}else{
+			} else {
 				$obj->load($this->value);
 				return $obj->get($this->relatedClassDisplayField);
 			}

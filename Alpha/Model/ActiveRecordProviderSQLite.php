@@ -5,6 +5,8 @@ namespace Alpha\Model;
 use Alpha\Model\Type\Integer;
 use Alpha\Model\Type\Timestamp;
 use Alpha\Model\Type\DEnum;
+use Alpha\Model\Type\Relation;
+use Alpha\Model\Type\RelationLookup;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
 use Alpha\Exception\AlphaException;
@@ -888,12 +890,12 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 						$prop = $this->BO->getPropObject($propName);
 
 						// handle the saving of MANY-TO-MANY relation values
-						if($prop->getRelationType() == 'MANY-TO-MANY' && isset($_POST[$propName]) && $_POST[$propName] != '00000000000') {
+						if($prop->getRelationType() == 'MANY-TO-MANY' && count($prop->getRelatedOIDs()) > 0) {
 							try {
-								try{
+								try {
 									// check to see if the rel is on this class
 									$side = $prop->getSide(get_class($this->BO));
-								}catch (IllegalArguementException $iae) {
+								} catch (IllegalArguementException $iae) {
 									$side = $prop->getSide(ucfirst($this->BO->getTableName()).'Object');
 								}
 
@@ -901,49 +903,49 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
 								// first delete all of the old RelationLookup objects for this rel
 								try {
-									if($side == 'left')
+									if ($side == 'left')
 										$lookUp->deleteAllByAttribute('leftID', $this->BO->getOID());
 									else
 										$lookUp->deleteAllByAttribute('rightID', $this->BO->getOID());
-								}catch (Exception $e) {
+								} catch (Exception $e) {
 									throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
 								}
 
-								$OIDs = explode(',', $_POST[$propName]);
+								$OIDs = $prop->getRelatedOIDs();
 
-								if(isset($OIDs) && !empty($OIDs[0])) {
+								if (isset($OIDs) && !empty($OIDs[0])) {
 									// now for each posted OID, create a new RelationLookup record and save
 									foreach ($OIDs as $oid) {
 										$newLookUp = new RelationLookup($lookUp->get('leftClassName'), $lookUp->get('rightClassName'));
-										if($side == 'left') {
+										if ($side == 'left') {
 											$newLookUp->set('leftID', $this->BO->getOID());
 											$newLookUp->set('rightID', $oid);
-										}else{
+										} else {
 											$newLookUp->set('rightID', $this->BO->getOID());
 											$newLookUp->set('leftID', $oid);
 										}
 										$newLookUp->save();
 									}
 								}
-							}catch (Exception $e) {
+							} catch (Exception $e) {
 								throw new FailedSaveException('Failed to update a MANY-TO-MANY relation on the object, error is ['.$e->getMessage().']');
 								return;
 							}
 						}
 
 						// handle the saving of ONE-TO-MANY relation values
-						if($prop->getRelationType() == 'ONE-TO-MANY') {
+						if ($prop->getRelationType() == 'ONE-TO-MANY') {
 							$prop->setValue($this->BO->getOID());
 						}
 					}
 				}
-			}catch (Exception $e) {
+			} catch (Exception $e) {
 				throw new FailedSaveException('Failed to save object, error is ['.$e->getMessage().']');
 				return;
 			}
 
 			$stmt->close();
-		}else{
+		} else {
 			// there has been an error, so decrement the version number back
 			$temp = $this->BO->getVersionNumber()->getValue();
 			$this->BO->set('version_num', $temp-1);
@@ -951,7 +953,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 			throw new FailedSaveException('Failed to save object, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
 		}
 
-		if($this->BO->getMaintainHistory())
+		if ($this->BO->getMaintainHistory())
         	$this->BO->saveHistory();
 	}
 
