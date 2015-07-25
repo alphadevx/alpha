@@ -4,6 +4,7 @@ namespace Alpha\View\Widget;
 
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
+use Alpha\Util\Http\Request;
 use Alpha\Model\Type\String;
 use Alpha\Exception\IllegalArguementException;
 
@@ -121,9 +122,11 @@ class StringBox
      */
     public function render($readOnly=false)
     {
+        $request = new Request();
+
         $html = '<div class="form-group">';
         $html .= '  <label for="'.$this->name.'">'.$this->label.'</label>';
-        $html .= '  <input '.($this->stringObject->checkIsPassword()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.String::MAX_SIZE.'" name="'.$this->name.'" id="'.$this->name.'" value="'.((isset($_POST[$this->name]) && $this->stringObject->getValue() == "" && !$this->stringObject->checkIsPassword())? $_POST[$this->name] : $this->stringObject->getValue()).'" class="form-control"'.($readOnly ? ' disabled="disabled"' : '').'/>';
+        $html .= '  <input '.($this->stringObject->checkIsPassword()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.String::MAX_SIZE.'" name="'.$this->name.'" id="'.$this->name.'" value="'.(($request->getParam($this->name, false) && $this->stringObject->getValue() == "" && !$this->stringObject->checkIsPassword())? $request->getParam($this->name) : $this->stringObject->getValue()).'" class="form-control"'.($readOnly ? ' disabled="disabled"' : '').'/>';
 
         if($this->stringObject->getRule() != '') {
             $html .= '  <input type="hidden" id="'.$this->name.'_msg" value="'.$this->stringObject->getHelper().'"/>';

@@ -16,6 +16,7 @@ use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\InputFilter;
 use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Http\Request;
 use Alpha\Model\Type\String;
 use Alpha\Model\ActiveRecord;
 use Alpha\Exception\IllegalArguementException;
@@ -723,8 +724,10 @@ class RendererProviderHTML implements RendererProviderInterface
         $html = '<div class="form-group">';
         $html .= '  <label for="'.$fieldname.'">'.$label.'</label>';
 
+        $request = new Request();
+
         if ($mode == 'create') {
-            $html .= '<input type="text" style="width:100%;" name="'.$fieldname.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/>';
+            $html .= '<input type="text" style="width:100%;" name="'.$fieldname.'" value="'.$request->getParam($name, '').'"/>';
         }
 
         if ($mode == 'edit') {
@@ -754,8 +757,10 @@ class RendererProviderHTML implements RendererProviderInterface
         $html = '<div class="form-group">';
         $html .= '  <label for="'.$fieldname.'">'.$label.'</label>';
 
+        $request = new Request();
+
         if ($mode == 'create') {
-            $html .= '<input type="text" size="13" name="'.$fieldname.'" value="'. (isset ($_POST[$name]) ? $_POST[$name] : '').'"/>';
+            $html .= '<input type="text" size="13" name="'.$fieldname.'" value="'.$request->getParam($name, '').'"/>';
         }
 
         if ($mode == 'edit') {
@@ -905,8 +910,10 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $html = '';
 
+        $request = new Request();
+
         if ($mode == 'create') {
-            $html .= '<textarea cols="100" rows="3" name="'.$fieldname.'">'. (isset ($_POST[$name]) ? $_POST[$name] : '').'</textarea>';
+            $html .= '<textarea cols="100" rows="3" name="'.$fieldname.'">'.$request->getParam($name, '').'</textarea>';
         }
 
         if ($mode == 'edit') {

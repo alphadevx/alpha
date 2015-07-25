@@ -5,6 +5,7 @@ namespace Alpha\View;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Helper\Validator;
 use Alpha\Util\Security\SecurityUtils;
+use Alpha\Util\Http\Request;
 use Alpha\Controller\Front\FrontController;
 use Alpha\Model\Type\String;
 use Alpha\View\Widget\StringBox;
@@ -69,7 +70,8 @@ class PersonView extends View
         $html .= "<h1>Login</h1>";
         $html .= '<form action="'.FrontController::generateSecureURL('act=Alpha\Controller\LoginController').'" method="POST" id="loginForm" accept-charset="UTF-8">';
 
-        $email = new String(isset($_POST['email']) ? $_POST['email'] : '');
+        $request = new Request();
+        $email = new String($request->getParam('email', ''));
         $email->setRule(Validator::REQUIRED_EMAIL);
         $email->setSize(70);
         $email->setHelper('Please provide a valid e-mail address!');
@@ -110,7 +112,8 @@ class PersonView extends View
         $html .= '<p>If you have forgotten your password, you can use this form to have a new password automatically generated and sent to your e-mail address.</p>';
         $html .= '<form action="'.FrontController::generateSecureURL('act=Alpha\Controller\LoginController&reset=true').'" method="POST" id="resetForm" accept-charset="UTF-8">';
 
-        $email = new String(isset($_POST['email']) ? $_POST['email'] : '');
+        $request = new Request();
+        $email = new String($request->getParam('email', ''));
         $email->setRule(Validator::REQUIRED_EMAIL);
         $email->setSize(70);
         $email->setHelper('Please provide a valid e-mail address!');
@@ -145,6 +148,8 @@ class PersonView extends View
     {
         $config = ConfigProvider::getInstance();
 
+        $request = new Request();
+
         $html = '<p>In order to access this site, you will need to create a user account.  In order to do so, please provide a valid email address below and a password will be sent to your inbox shortly (you can change your password once you log in).</p>';
         $html .= '<table cols="2">';
         $html .= '<form action="'.$_SERVER["PHP_SELF"].'?reset=true" method="POST" accept-charset="UTF-8">';
@@ -153,14 +158,14 @@ class PersonView extends View
             $fieldname = base64_encode(SecurityUtils::encrypt('displayname'));
         else
             $fieldname = 'displayname';
-        $html .= '  <td>Forum name</td> <td><input type="text" name="'.$fieldname.'" size="50" value="'.(isset($_POST[$fieldname])? $_POST[$fieldname] : '').'"/></td>';
+        $html .= '  <td>Forum name</td> <td><input type="text" name="'.$fieldname.'" size="50" value="'.$request->getParam($fieldname, '').'"/></td>';
         $html .= '</tr>';
         $html .= '<tr>';
         if ($config->get('security.encrypt.http.fieldnames'))
             $fieldname = base64_encode(SecurityUtils::encrypt('email'));
         else
             $fieldname = 'email';
-        $html .= '  <td>E-mail Address</td> <td><input type="text" name="'.$fieldname.'" size="50" value="'.(isset($_POST[$fieldname])? $_POST[$fieldname] : '').'"/></td>';
+        $html .= '  <td>E-mail Address</td> <td><input type="text" name="'.$fieldname.'" size="50" value="'.$request->getParam($fieldname, '').'"/></td>';
         $html .= '</tr>';
         $html .= '<tr><td colspan="2">';
         $temp = new Button("submit","Register","registerBut");

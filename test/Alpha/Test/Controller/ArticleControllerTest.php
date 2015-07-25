@@ -152,6 +152,8 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $article = $this->createArticleObject('test article');
         $article->save();
 
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+
         $front = new FrontController();
 
         $request = new Request(array('method' => 'GET', 'URI' => '/a/test-article'));
