@@ -171,8 +171,7 @@ class LoginController extends Controller implements ControllerInterface
             if (isset($params['loginBut'])) {
                 // if the database has not been set up yet, accept a login from the config admin username/password
                 if (!ActiveRecord::isInstalled()) {
-                    if ($params['email'] == $config->get('app.install.username') && crypt($params['password'], $config->get('app.install.password')) ==
-                        crypt($config->get('app.install.password'), $config->get('app.install.password'))) {
+                    if ($params['email'] == $config->get('app.install.username') && password_verify($params['password'], password_hash($config->get('app.install.password'), PASSWORD_DEFAULT, ['cost' => 12]))) {
 
                         self::$logger->info('Logging in ['.$params['email'].'] at ['.date("Y-m-d H:i:s").']');
                         $admin = new Person();
@@ -288,7 +287,7 @@ class LoginController extends Controller implements ControllerInterface
         $config = ConfigProvider::getInstance();
 
         if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Active') {
-            if (crypt($password, $this->personObject->get('password')) == $this->personObject->get('password')) {
+            if (password_verify($password, $this->personObject->get('password'))) {
 
                 $sessionProvider = $config->get('session.provider.name');
                 $session = SessionProviderFactory::getInstance($sessionProvider);

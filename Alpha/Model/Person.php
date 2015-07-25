@@ -240,16 +240,15 @@ class Person extends ActiveRecord
 	}
 
 	/**
-	 * Encrypts any fields called 'password' posted for the Person
+	 * Encrypts password value if it is plaintext before saving
 	 *
-	 * @since 1.0
-     * @todo Remove super globals
-     * @deprecated
+	 * @since 2.0
 	 */
-	protected function before_populateFromPost_callback()
+	protected function before_save_callback()
 	{
-		if(isset($_POST['password']) && preg_match(Validator::REQUIRED_STRING, $_POST['password']))
-			$_POST['password'] = crypt($_POST['password']); // TODO: use bcrypt for password!
+		if (password_needs_rehash($this->get('password'), PASSWORD_DEFAULT, ['cost' => 12])) {
+    		$this->set('password', password_hash($this->get('password'), PASSWORD_DEFAULT, ['cost' => 12]));
+		}
 	}
 
 	/**

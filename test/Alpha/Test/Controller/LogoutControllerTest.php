@@ -88,7 +88,7 @@ class LogoutControllerTest extends \PHPUnit_Framework_TestCase
         $person = new Person();
         $person->setDisplayname($name);
         $person->set('email', $name.'@test.com');
-        $person->set('password', crypt('passwordTest', 'passwordTest'));
+        $person->set('password', 'passwordTest');
         $person->set('URL', 'http://unitTestUser/');
 
         return $person;
