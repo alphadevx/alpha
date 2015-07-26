@@ -4,6 +4,7 @@ namespace Alpha\View;
 
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Controller\Front\FrontController;
 use Alpha\View\Widget\StringBox;
 use Alpha\View\Widget\Button;
@@ -64,6 +65,8 @@ class DEnumView extends View
     public function listView()
     {
         $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
 
         $reflection = new \ReflectionClass(get_class($this->BO));
         $properties = $reflection->getProperties();
@@ -108,7 +111,7 @@ class DEnumView extends View
 
         $html .= '<tr><td colspan="'.($colCount+1).'" style="text-align:center;">';
         // render edit buttons for admins only
-        if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
+        if ($session->get('currentUser') != null && $session->get('currentUser')->inGroup('Admin')) {
             $html .= '&nbsp;&nbsp;';
             $button = new Button("document.location = '".FrontController::generateSecureURL('act=EditDEnum&oid='.$this->BO->getOID())."'", "Edit", "edit".$this->BO->getOID()."But");
             $html .= $button->render();

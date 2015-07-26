@@ -10,6 +10,7 @@ use Alpha\Model\Type\RelationLookup;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Helper\Validator;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Exception\AlphaException;
 use Alpha\Exception\FailedSaveException;
 use Alpha\Exception\FailedDeleteException;
@@ -29,7 +30,6 @@ use Mysqli;
  *
  * @since 1.1
  * @author John Collins <dev@alphaframework.org>
- * @version $Id: ActiveRecordProviderMySQL.inc 1810 2014-07-27 21:19:32Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -236,7 +236,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 					}
 
 					// handle the setting of MANY-TO-ONE relation values
-					if ($prop->getRelationType() == 'MANY-TO-ONE') {
+					if ($prop->getRelationType() == 'MANY-TO-ONE' && isset($row[$propName])) {
 						$this->BO->set($propObj->name, $row[$propName]);
 					}
 				}
@@ -733,6 +733,10 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 	{
 		self::$logger->debug('>>save()');
 
+		$config = ConfigProvider::getInstance();
+		$sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
 		// get the class attributes
 		$reflection = new ReflectionClass(get_class($this->BO));
 		$properties = $reflection->getProperties();
@@ -745,8 +749,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 		}
 
 		// set the "updated by" fields, we can only set the user id if someone is logged in
-		if (isset($_SESSION['currentUser']))
-			$this->BO->set('updated_by', $_SESSION['currentUser']->getOID());
+		if ($session->get('currentUser') != null)
+			$this->BO->set('updated_by', $session->get('currentUser')->getOID());
 
 		$this->BO->set('updated_ts', new Timestamp(date("Y-m-d H:i:s")));
 

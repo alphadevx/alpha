@@ -10,6 +10,7 @@ use Alpha\Model\Type\DEnumItem;
 use Alpha\Model\Article;
 use Alpha\Model\ArticleVote;
 use Alpha\Model\ArticleComment;
+use Alpha\Model\ActionLog;
 use Alpha\Model\Person;
 use Alpha\Model\Rights;
 use Alpha\Util\Config\ConfigProvider;
@@ -71,6 +72,10 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
     {
         $config = ConfigProvider::getInstance();
         $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+
+        $action = new ActionLog();
+        $action->rebuildTable();
+
         $tag = new Tag();
         $tag->rebuildTable();
 

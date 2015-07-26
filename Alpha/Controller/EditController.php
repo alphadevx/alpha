@@ -369,11 +369,7 @@ class EditController extends Controller implements ControllerInterface
      */
     public function after_displayPageHead_callback()
     {
-        $menu = '';
-
-        if (isset($_SESSION['currentUser']) && ActiveRecord::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
-            $menu .= View::loadTemplateFragment('html', 'adminmenu.phtml', array());
-        }
+        $menu = View::loadTemplateFragment('html', 'adminmenu.phtml', array());
 
         return $menu;
     }

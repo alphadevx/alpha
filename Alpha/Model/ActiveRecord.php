@@ -11,6 +11,7 @@ use Alpha\Util\Logging\Logger;
 use Alpha\Util\Cache\CacheProviderFactory;
 use Alpha\Util\ErrorHandlers;
 use Alpha\Util\InputFilter;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Exception\AlphaException;
 use Alpha\Exception\FailedSaveException;
 use Alpha\Exception\FailedDeleteException;
@@ -182,13 +183,15 @@ abstract class ActiveRecord
 		self::$logger->debug('>>__construct()');
 
 		$config = ConfigProvider::getInstance();
+		$sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
 
 		set_exception_handler('Alpha\Util\ErrorHandlers::catchException');
 		set_error_handler('Alpha\Util\ErrorHandlers::catchError', $config->get('php.error.log.level'));
 
 		$this->version_num = new Integer(0);
 		$this->created_ts = new Timestamp(date("Y-m-d H:i:s"));
-		$person_ID = (isset($_SESSION['currentUser'])? $_SESSION['currentUser']->getOID(): 0);
+		$person_ID = ($session->get('currentUser') != null ? $session->get('currentUser')->getOID(): 0);
 		$this->created_by = new Integer($person_ID);
 		$this->updated_ts = new Timestamp(date("Y-m-d H:i:s"));
 		$this->updated_by = new Integer($person_ID);

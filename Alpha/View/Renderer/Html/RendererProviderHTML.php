@@ -205,6 +205,8 @@ class RendererProviderHTML implements RendererProviderInterface
         self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
 
         $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
 
         // work out how many columns will be in the table
         $reflection = new ReflectionClass(get_class($this->BO));
@@ -282,7 +284,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $html = '';
         // render edit and delete buttons for admins only
-        if (isset($_SESSION['currentUser']) && $_SESSION['currentUser']->inGroup('Admin')) {
+        if ($session->get('currentUser') && $session->get('currentUser')->inGroup('Admin')) {
             $html .= '&nbsp;&nbsp;';
             $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\EditController&ActiveRecordType='.get_class($this->BO)."&ActiveRecordOID=".$this->BO->getOID())."'", "Edit", "edit".$this->BO->getOID()."But");
             $html .= $button->render();
@@ -551,13 +553,15 @@ class RendererProviderHTML implements RendererProviderInterface
         self::$logger->debug('>>displayPageHead(controller=['.var_export($controller, true).'])');
 
         $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
 
         if (!class_exists(get_class($controller)))
             throw new IllegalArguementException('The controller provided ['.get_class($controller).'] is not defined anywhere!');
 
         $allowCSSOverrides = true;
 
-        if (isset($_SESSION['currentUser']) && ActiveRecord::isInstalled() && $_SESSION['currentUser']->inGroup('Admin') && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+        if ($session->get('currentUser') != null && ActiveRecord::isInstalled() && $session->get('currentUser')->inGroup('Admin') && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
             $allowCSSOverrides = false;
         }
 

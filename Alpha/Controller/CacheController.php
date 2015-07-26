@@ -8,6 +8,7 @@ use Alpha\Util\File\FileUtils;
 use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\SecurityException;
 use Alpha\Exception\AlphaException;
@@ -199,7 +200,11 @@ class CacheController extends Controller implements ControllerInterface
 
                     $this->setStatusMessage(View::displayUpdateMessage('Cache contents deleted successfully.'));
 
-                    self::$logger->info('Cache contents deleted successfully by user ['.$_SESSION['currentUser']->get('displayName').'].');
+                    $config = ConfigProvider::getInstance();
+                    $sessionProvider = $config->get('session.provider.name');
+                    $session = SessionProviderFactory::getInstance($sessionProvider);
+
+                    self::$logger->info('Cache contents deleted successfully by user ['.$session->get('currentUser')->get('displayName').'].');
                 } catch (AlphaException $e) {
                     self::$logger->error($e->getMessage());
                     $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
