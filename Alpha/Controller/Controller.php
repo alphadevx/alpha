@@ -251,27 +251,6 @@ abstract class Controller
 	 		return;
 	 	}
 
-	 	// if configured to do so, force redirect to the front controller
-	 	// TODO: refactor
-	 	if ($config->get('app.force.front.controller') && basename($_SERVER['PHP_SELF']) != 'index.php') {
-	 		// set the correct HTTP header for the response
-	    	header('HTTP/1.1 301 Moved Permanently');
-
-    		if (empty($_SERVER['QUERY_STRING'])) {
-    			header('Location: '.$config->get('app.url').'?act='.get_class($this));
-    			self::$logger->debug('<<__construct');
-				exit;
-    		} else {
-    			header('Location: '.$config->get('app.url').'?act='.get_class($this).'&'.$_SERVER['QUERY_STRING']);
-    			self::$logger->debug('<<__construct');
-				exit;
-    		}
-
-			// we're done here
-			self::$logger->debug('<<__construct');
-    		return;
-	 	}
-
 	 	$this->unitStartTime = new Timestamp(date("Y-m-d H:i:s"));
 	 	$this->unitEndTime = new Timestamp();
 	 	$this->unitMAXDuration = new Integer();
