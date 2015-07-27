@@ -130,7 +130,6 @@ class ActionLog extends ActiveRecord
 		$this->personOID->setRelatedClassDisplayField('displayName');
 		$this->personOID->setRelationType('MANY-TO-ONE');
 		$this->personOID->setValue($this->created_by->getValue());
-		$this->markTransient('personOID');
 	}
 }
 
