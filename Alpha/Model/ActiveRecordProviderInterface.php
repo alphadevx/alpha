@@ -8,7 +8,6 @@ namespace Alpha\Model;
  *
  * @since 1.1
  * @author John Collins <dev@alphaframework.org>
- * @version $Id: AlphaDAOProviderInterface.inc 1808 2014-07-27 14:11:52Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -355,7 +354,7 @@ interface ActiveRecordProviderInterface
 	 * Creates a foreign key constraint (index) in the database on the given attribute.
 	 *
 	 * @param string $attributeName The name of the attribute to apply the index on.
-	 * @param string $relatedClass The name of the related class in the format "NameObject".
+	 * @param string $relatedClass The fully-qualified name of the related class.
 	 * @param string $relatedClassAttribute The name of the field to relate to on the related class.
 	 * @param bool $allowNullValues For foreign key indexes that don't allow null values, set this to false (default is true).
 	 * @since 1.1

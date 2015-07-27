@@ -992,7 +992,7 @@ abstract class Controller
 					self::$logger->debug('<<checkRights [true]');
 					return true;
 				// the person is editing their own profile which is allowed
-				} elseif (get_class($this->BO) == 'Person' && $session->get('currentUser')->getDisplayName() == $this->BO->getDisplayName()) {
+				} elseif (get_class($this->BO) == 'Alpha\Model\Person' && $session->get('currentUser')->getDisplayName() == $this->BO->getDisplayName()) {
 					if (method_exists($this, 'after_checkRights_callback'))
 						$this->after_checkRights_callback();
 

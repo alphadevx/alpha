@@ -1845,7 +1845,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 				if ($prop->getRelationType() == 'MANY-TO-ONE') {
 					$indexExists = false;
 					foreach ($indexNames as $index) {
-						if ($propName.'_fk_idx' == $index) {
+						if ($this->BO->getTableName().'_'.$propName.'_fk_idx' == $index) {
 					    	$indexExists = true;
 						}
 					}
@@ -1865,7 +1865,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 							// handle index check/creation on left side of Relation
 							$indexExists = false;
 							foreach ($lookupIndexNames as $index) {
-								if ('leftID_fk_idx' == $index) {
+								if ($lookup->getTableName().'_leftID_fk_idx' == $index) {
 							    	$indexExists = true;
 								}
 							}
@@ -1877,7 +1877,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 							// handle index check/creation on right side of Relation
 							$indexExists = false;
 							foreach ($lookupIndexNames as $index) {
-								if ('rightID_fk_idx' == $index) {
+								if ($lookup->getTableName().'_rightID_fk_idx' == $index) {
 							    	$indexExists = true;
 								}
 							}
@@ -1910,13 +1910,13 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
 		$result = false;
 
-		if (self::checkBOTableExists(ucfirst($tableName))) {
+		if (self::checkBOTableExists($relatedClass)) {
 			$sqlQuery = '';
 
 			if ($attributeName == 'leftID')
-				$sqlQuery = 'ALTER TABLE '.$this->BO->getTableName().' ADD INDEX leftID_fk_idx (leftID);';
+				$sqlQuery = 'ALTER TABLE '.$this->BO->getTableName().' ADD INDEX '.$this->BO->getTableName().'_leftID_fk_idx (leftID);';
 			if ($attributeName == 'rightID')
-				$sqlQuery = 'ALTER TABLE '.$this->BO->getTableName().' ADD INDEX rightID_fk_idx (rightID);';
+				$sqlQuery = 'ALTER TABLE '.$this->BO->getTableName().' ADD INDEX '.$this->BO->getTableName().'_rightID_fk_idx (rightID);';
 
 			if (!empty($sqlQuery)) {
 				$this->BO->setLastQuery($sqlQuery);
@@ -1928,16 +1928,16 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 				}
 			}
 
-			$sqlQuery = 'ALTER TABLE '.$this->BO->getTableName().' ADD FOREIGN KEY '.$attributeName.'_fk_idx ('.$attributeName.') REFERENCES '.$tableName.' ('.$relatedClassAttribute.') ON DELETE SET NULL;';
+			$sqlQuery = 'ALTER TABLE '.$this->BO->getTableName().' ADD FOREIGN KEY '.$this->BO->getTableName().'_'.$attributeName.'_fk_idx ('.$attributeName.') REFERENCES '.$tableName.' ('.$relatedClassAttribute.') ON DELETE SET NULL;';
 
 			$this->BO->setLastQuery($sqlQuery);
 			$result = self::getConnection()->query($sqlQuery);
 		}
 
 		if ($result) {
-			self::$logger->debug('Successfully created the foreign key index ['.$attributeName.'_fk_idx]');
+			self::$logger->debug('Successfully created the foreign key index ['.$this->BO->getTableName().'_'.$attributeName.'_fk_idx]');
 		} else {
-			throw new FailedIndexCreateException('Failed to create the index ['.$attributeName.'_fk_idx] on ['.$this->BO->getTableName().'], error is ['.self::getConnection()->error.'], query ['.$this->BO->getLastQuery().']');
+			throw new FailedIndexCreateException('Failed to create the index ['.$this->BO->getTableName().'_'.$attributeName.'_fk_idx] on ['.$this->BO->getTableName().'], error is ['.self::getConnection()->error.'], query ['.$this->BO->getLastQuery().']');
 		}
 
 		self::$logger->debug('<<createForeignIndex');
