@@ -130,7 +130,7 @@ class CacheController extends Controller implements ControllerInterface
 
         $body .= '<h3>Total of '.$fileCount.' files in the cache.</h3>';
 
-        $body .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" name="clearForm" id="clearForm">';
+        $body .= '<form action="'.$request->getURI().'" method="post" name="clearForm" id="clearForm">';
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('clearCache')) : 'clearCache');
         $body .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value="false"/>';
         $js = "if(window.jQuery) {
