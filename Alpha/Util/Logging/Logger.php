@@ -4,6 +4,7 @@ namespace Alpha\Util\Logging;
 
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Http\Request;
 use Alpha\Model\ActionLog;
 
 /**
@@ -83,6 +84,14 @@ class Logger
 	private $debugClasses = array();
 
 	/**
+	 * A request object that will give us the IP, user-agent etc. of the client we are logging for
+	 *
+	 * @var Alpha\Util\Http\Request
+	 * @since 2.0
+	 */
+	private $request;
+
+	/**
 	 * The constructor
 	 *
 	 * @param string $classname
@@ -97,6 +106,8 @@ class Logger
 		$this->debugClasses = explode(',', $config->get('app.log.trace.debug.classes'));
 		$this->logfile = new LogFile($config->get('app.file.store.dir').'logs/'.$config->get('app.log.file'));
 		$this->logfile->setMaxSize($config->get('app.log.file.max.size'));
+
+		$this->request = new Request(array('method' => 'GET')); // hard-coding to GET here is fine as we don't log HTTP method (yet).
 	}
 
 	/**
@@ -110,7 +121,7 @@ class Logger
 		if ($this->level == 'DEBUG' || in_array($this->classname, $this->debugClasses)) {
 			$dateTime = date("Y-m-d H:i:s");
 			$this->logfile->writeLine(array($dateTime, 'DEBUG', $this->classname, $message,
-				(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
+				$this->request->getUserAgent(), $this->request->getIP()));
 		}
 	}
 
@@ -125,7 +136,7 @@ class Logger
 		if ($this->level == 'DEBUG' || $this->level == 'INFO' || in_array($this->classname, $this->debugClasses)) {
 			$dateTime = date("Y-m-d H:i:s");
 			$this->logfile->writeLine(array($dateTime, 'INFO', $this->classname, $message,
-				(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
+				$this->request->getUserAgent(), $this->request->getIP()));
 		}
 	}
 
@@ -140,7 +151,7 @@ class Logger
 		if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || in_array($this->classname, $this->debugClasses)) {
 			$dateTime = date("Y-m-d H:i:s");
 			$this->logfile->writeLine(array($dateTime, 'WARN', $this->classname, $message,
-				(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
+				$this->request->getUserAgent(), $this->request->getIP()));
 		}
 	}
 
@@ -155,8 +166,7 @@ class Logger
 		if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' ||
 			in_array($this->classname, $this->debugClasses)) {
 			$dateTime = date("Y-m-d H:i:s");
-			$line = array($dateTime, 'ERROR', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ?
-				$_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : ''));
+			$line = array($dateTime, 'ERROR', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP());
 			$this->logfile->writeLine($line);
 
 			$this->notifyAdmin(print_r($line, true));
@@ -174,8 +184,7 @@ class Logger
 		if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' ||
 			$this->level == 'FATAL' || in_array($this->classname, $this->debugClasses)) {
 			$dateTime = date("Y-m-d H:i:s");
-			$line = array($dateTime, 'FATAL', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ?
-				$_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : ''));
+			$line = array($dateTime, 'FATAL', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP());
 			$this->logfile->writeLine($line);
 
 			$this->notifyAdmin(print_r($line, true));
@@ -192,8 +201,8 @@ class Logger
 	{
 		if ($this->level == 'SQL') {
 			$dateTime = date("Y-m-d H:i:s");
-			$this->logfile->writeLine(array($dateTime, 'SQL', $this->classname, $message, (isset($_SERVER['HTTP_USER_AGENT']) ?
-				$_SERVER['HTTP_USER_AGENT'] : ''), (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')));
+			$line = array($dateTime, 'SQL', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP());
+			$this->logfile->writeLine($line);
 		}
 	}
 
@@ -211,8 +220,8 @@ class Logger
 
 		if ($session->get('currentUser') != null) {
 			$action = new ActionLog();
-			$action->set('client', (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''));
-			$action->set('IP', (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : ''));
+			$action->set('client', $this->request->getUserAgent());
+			$action->set('IP', $this->request->getIP());
 			$action->set('message', $message);
 			$action->save();
 		}
