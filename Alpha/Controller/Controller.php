@@ -918,13 +918,14 @@ abstract class Controller
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
 
-        if (!isset($_SERVER['REQUEST_URI']))
-            $_SERVER['REQUEST_URI'] = '/';
+        if (!isset($this->request)) {
+        	$this->request = new Request();
+        }
 
 		if($session->get('currentUser') !== false)
-			self::$logger->warn('The user ['.$session->get('currentUser')->get('email').'] attempted to access the resource ['.$_SERVER['REQUEST_URI'].'] but was denied due to insufficient rights');
+			self::$logger->warn('The user ['.$session->get('currentUser')->get('email').'] attempted to access the resource ['.$this->request->getURI().'] but was denied due to insufficient rights');
 		else
-			self::$logger->warn('An unknown user attempted to access the resource ['.$_SERVER['REQUEST_URI'].'] but was denied due to insufficient rights');
+			self::$logger->warn('An unknown user attempted to access the resource ['.$this->request->getURI().'] but was denied due to insufficient rights');
 
         if (!headers_sent()) {
 		  header('HTTP/1.1 403 Forbidden');

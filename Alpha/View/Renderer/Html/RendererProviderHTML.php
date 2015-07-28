@@ -269,8 +269,10 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $fields['formFields'] = $html;
 
+        $request = new Request();
+
         // View button
-        if (mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+        if (mb_strpos($request->getURI(), '/tk/') !== false) {
             $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ViewController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID())."';", 'View', 'view'.$this->BO->getOID().'But');
             $fields['viewButton'] = $button->render();
         } else {
@@ -561,7 +563,9 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $allowCSSOverrides = true;
 
-        if ($session->get('currentUser') != null && ActiveRecord::isInstalled() && $session->get('currentUser')->inGroup('Admin') && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+        $request = new Request();
+
+        if ($session->get('currentUser') != null && ActiveRecord::isInstalled() && $session->get('currentUser')->inGroup('Admin') && mb_strpos($request->getURI(), '/tk/') !== false) {
             $allowCSSOverrides = false;
         }
 
