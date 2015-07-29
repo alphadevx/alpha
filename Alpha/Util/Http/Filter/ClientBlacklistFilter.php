@@ -72,13 +72,13 @@ class ClientBlacklistFilter implements FilterInterface
     /**
      * {@inheritDoc}
      */
-    public function process()
+    public function process($request)
     {
-        // if no user agent string is provided, we can't filter by it anyway to might as well skip
-        if(!isset($_SERVER['HTTP_USER_AGENT']))
-            return;
+        $client = $request->getUserAgent();
 
-        $client = $_SERVER['HTTP_USER_AGENT'];
+        // if no user agent string is provided, we can't filter by it anyway to might as well skip
+        if($client == null)
+            return;
 
         if (!empty($client)) {
             $badClient = new BlacklistedClient();
@@ -89,7 +89,7 @@ class ClientBlacklistFilter implements FilterInterface
                 return;
             }
             // if we got this far then the client is bad
-            self::$logger->warn('The client ['.$client.'] was blocked from accessing the resource ['.$_SERVER['REQUEST_URI'].']');
+            self::$logger->warn('The client ['.$client.'] was blocked from accessing the resource ['.$request->getURI().']');
             throw new ResourceNotAllowedException('Not allowed!');
         }
     }

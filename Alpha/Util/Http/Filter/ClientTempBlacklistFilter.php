@@ -73,26 +73,26 @@ class ClientTempBlacklistFilter implements FilterInterface
     /**
      * {@inheritDoc}
      */
-    public function process()
+    public function process($request)
     {
         $config = ConfigProvider::getInstance();
 
+        $client = $request->getUserAgent();
+        $IP = $request->getIP();
+
         // if no user agent string or IP are provided, we can't filter by these anyway to might as well skip
-        if(!isset($_SERVER['HTTP_USER_AGENT']) || !isset($_SERVER['REMOTE_ADDR']))
+        if($client == null || $IP == null)
             return;
 
-        $client = $_SERVER['HTTP_USER_AGENT'];
-        $IP = $_SERVER['REMOTE_ADDR'];
-
         if (!empty($client) && !empty($IP)) {
-            $request = new BadRequest();
-            $request->set('client', $client);
-            $request->set('IP', $IP);
-            $badRequestCount = $request->getBadRequestCount();
+            $badRequest = new BadRequest();
+            $badRequest->set('client', $client);
+            $badRequest->set('IP', $IP);
+            $badRequestCount = $badRequest->getBadRequestCount();
 
             if ($badRequestCount >= $config->get('security.client.temp.blacklist.filter.limit')) {
                 // if we got this far then the client is bad
-                self::$logger->warn('The client ['.$client.'] was blocked from accessing the resource ['.$_SERVER['REQUEST_URI'].'] on a temporary basis');
+                self::$logger->warn('The client ['.$client.'] was blocked from accessing the resource ['.$request->getURI().'] on a temporary basis');
                 throw new ResourceNotAllowedException('Not allowed!');
             }
         }

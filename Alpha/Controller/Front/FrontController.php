@@ -587,11 +587,16 @@ class FrontController
      * @param Alpha\Util\Http\Request $request The request to process
      * @return Alpha\Util\Http\Response
      * @throws Alpha\Exception\ResourceNotFoundException
+     * @throws Alpha\Exception\ResourceNotAllowedException
      * @throws Alpha\Exception\AlphaException
      * @since 2.0
      */
     public function process($request)
     {
+    	foreach ($this->filters as $filter) {
+    		$filter->process($request);
+    	}
+
         try {
             $callback = $this->getRouteCallback($request->getURI());
         } catch (IllegalArguementException $e) {

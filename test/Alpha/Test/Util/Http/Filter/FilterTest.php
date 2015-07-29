@@ -9,9 +9,11 @@ use Alpha\Controller\Front\FrontController;
 use Alpha\Exception\ResourceNotAllowedException;
 use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Util\Http\Filter\ClientTempBlacklistFilter;
 use Alpha\Util\Http\Filter\ClientBlacklistFilter;
 use Alpha\Util\Http\Filter\IPBlacklistFilter;
+use Alpha\Util\Http\Request;
 
 /**
  * Test cases for implementations of the FilterInterface
@@ -138,6 +140,9 @@ class FilterTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        $config = ConfigProvider::getInstance();
+        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+
         $this->blacklistedClient = new BlacklistedClient();
         $this->blacklistedClient->rebuildTable();
         $this->blacklistedClient->set('client', $this->badAgent);
@@ -175,7 +180,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
      *
      * @since 1.0
      */
-    protected function tearDown()
+    /*protected function tearDown()
     {
         $this->blacklistedClient->dropTable();
         unset($this->blacklistedClient);
@@ -186,41 +191,36 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         unset($this->badRequest2);
 
         unset($this->badRequest3);
-    }
-
-    public function testHolder()
-    {
-        $this->assertTrue(true);
-    }
+    }*/
 
     /**
      * Testing that a blacklisted user agent string cannot pass the ClientBlacklistFilter filter
      *
      * @since 1.0
-     * @todo Re-enable test once loadController has been replaced with something else to link filters to routed requests
      */
-    /*public function testClientBlacklistFilter()
+    public function testClientBlacklistFilter()
     {
         $_SERVER['HTTP_USER_AGENT'] = $this->badAgent;
-        $_SERVER['REQUEST_URI'] = 'ViewImage';
+        $_SERVER['REQUEST_URI'] = '/';
+
+        $request = new Request(array('method' => 'GET'));
 
         try {
             $front = new FrontController();
             $front->registerFilter(new ClientBlacklistFilter());
-            $front->loadController(false);
+            $front->process($request);
             $this->fail('Testing that a blacklisted user agent string cannot pass the ClientBlacklistFilter filter');
         } catch (ResourceNotAllowedException $e) {
             $this->assertEquals('Not allowed!', $e->getMessage(), 'Testing that a blacklisted user agent string cannot pass the ClientBlacklistFilter filter');
         }
-    }*/
+    }
 
     /**
      * Testing that a user agent string/IP compbo cannot pass the ClientTempBlacklistFilter filter beyond the config limit
      *
      * @since 1.0
-     * @todo Re-enable test once loadController has been replaced with something else to link filters to routed requests
      */
-    /*public function testClientTempBlacklistFilter()
+    public function testClientTempBlacklistFilter()
     {
         $config = ConfigProvider::getInstance();
         $config->set('security.client.temp.blacklist.filter.limit', 3);
@@ -229,36 +229,39 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $_SERVER['REMOTE_ADDR'] = $this->badIP;
         $_SERVER['REQUEST_URI'] = 'DoesNotExist';
 
+        $request = new Request(array('method' => 'GET'));
+
         try {
             $front = new FrontController();
             $front->registerFilter(new ClientTempBlacklistFilter());
-            $front->loadController(false);
+            $front->process($request);
             $this->fail('Testing that a user agent string/IP compbo cannot pass the ClientTempBlacklistFilter filter beyond the config limit');
         } catch (ResourceNotAllowedException $e) {
             $this->assertEquals('Not allowed!', $e->getMessage(), 'Testing that a user agent string/IP compbo cannot pass the ClientTempBlacklistFilter filter beyond the config limit');
         }
-    }*/
+    }
 
     /**
      * Testing that a blacklisted IP cannot pass the IPBlacklistFilter filter
      *
      * @since 1.2.3
-     * @todo Re-enable test once loadController has been replaced with something else to link filters to routed requests
      */
-    /*public function testIPBlacklistFilter()
+    public function testIPBlacklistFilter()
     {
         $_SERVER['REMOTE_ADDR'] = $this->badIP;
-        $_SERVER['REQUEST_URI'] = 'ViewImage';
+        $_SERVER['REQUEST_URI'] = '/';
+
+        $request = new Request(array('method' => 'GET'));
 
         try {
             $front = new FrontController();
             $front->registerFilter(new IPBlacklistFilter());
-            $front->loadController(false);
+            $front->process($request);
             $this->fail('Testing that a blacklisted IP cannot pass the IPBlacklistFilter filter');
         } catch (ResourceNotAllowedException $e) {
             $this->assertEquals('Not allowed!', $e->getMessage(), 'Testing that a blacklisted IP cannot pass the IPBlacklistFilter filter');
         }
-    }*/
+    }
 }
 
 ?>

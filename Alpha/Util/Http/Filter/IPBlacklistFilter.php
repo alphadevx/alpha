@@ -72,9 +72,9 @@ class IPBlacklistFilter implements FilterInterface
     /**
      * {@inheritDoc}
      */
-    public function process()
+    public function process($request)
     {
-        $ip = $_SERVER['REMOTE_ADDR'];
+        $ip = $request->getIP();
 
         if (!empty($ip)) {
             $badIP = new BlacklistedIP();
@@ -87,7 +87,7 @@ class IPBlacklistFilter implements FilterInterface
             }
 
             // if we got this far then the IP is bad
-            self::$logger->warn('The IP ['.$ip.'] was blocked from accessing the resource ['.$_SERVER['REQUEST_URI'].']');
+            self::$logger->warn('The IP ['.$ip.'] was blocked from accessing the resource ['.$request->getURI().']');
             throw new ResourceNotAllowedException('Not allowed!');
         }
     }
