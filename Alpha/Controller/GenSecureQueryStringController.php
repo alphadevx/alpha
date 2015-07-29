@@ -157,7 +157,7 @@ class GenSecureQueryStringController extends Controller implements ControllerInt
         $html .= '<p>Example 2: to generate a secure URL for viewing an Atom news feed of the articles, enter'.
             ' <em>act=ViewFeed&amp;bo=ArticleObject&amp;type=Atom</em></p>';
 
-        $html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" accept-charset="UTF-8"><div class="form-group">';
+        $html .= '<form action="'.$this->request->getURI().'" method="post" accept-charset="UTF-8"><div class="form-group">';
         $string = new StringBox(new String(''), 'Parameters', 'QS');
         $html .= $string->render();
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('saveBut')) : 'saveBut');
