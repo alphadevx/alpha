@@ -120,7 +120,7 @@ class SequenceController extends ListController implements ControllerInterface
 
         foreach ($records as $record) {
             $view = View::getInstance($record);
-            $body .= $view->listView();
+            $body .= $view->listView(array('URI' => $request->getURI()));
         }
 
         $body .= View::displayPageFoot($this);

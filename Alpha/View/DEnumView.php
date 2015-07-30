@@ -62,7 +62,7 @@ class DEnumView extends View
      * @return string
      * @since 1.0
      */
-    public function listView()
+    public function listView($fields=array())
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -73,7 +73,7 @@ class DEnumView extends View
         $labels = $this->BO->getDataLabels();
         $colCount = 1;
 
-        $html = '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
+        $html = '<form action="'.$fields['URI'].'" method="POST">';
         $html .= '<table class="table">';
         // first render all of the table headers
         $html .= '<tr>';
@@ -131,14 +131,14 @@ class DEnumView extends View
      * @return string
      * @since 1.0
      */
-    public function editView()
+    public function editView($fields = array())
     {
         $config = ConfigProvider::getInstance();
 
         $labels = $this->BO->getDataLabels();
         $obj_type = '';
 
-        $html = '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" accept-charset="UTF-8">';
+        $html = '<form action="'.$fields['URI'].'" method="POST" accept-charset="UTF-8">';
 
         $temp = new StringBox($this->BO->getPropObject('name'), $labels['name'], 'name', '', 0, true, true);
         $html .= $temp->render();

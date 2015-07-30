@@ -130,7 +130,7 @@ class DEnumController extends ListController implements ControllerInterface
 
                 $body .= View::renderDeleteForm($request->getURI());
 
-                $body .= $this->BOView->editView();
+                $body .= $this->BOView->editView(array('URI' => $request->getURI()));
             } catch (RecordNotFoundException $e) {
                 self::$logger->error('Unable to load the DEnum of id ['.$params['denumOID'].'], error was ['.$e->getMessage().']');
             }
@@ -163,7 +163,7 @@ class DEnumController extends ListController implements ControllerInterface
 
             foreach ($objects as $object) {
                 $temp = View::getInstance($object);
-                $body .= $temp->listView();
+                $body .= $temp->listView(array('URI' => $request->getURI()));
             }
         }
 

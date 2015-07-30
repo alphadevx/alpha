@@ -94,7 +94,7 @@ class SequenceView extends View
         $config = ConfigProvider::getInstance();
 
         // the form action
-        $fields['formAction'] = $_SERVER['REQUEST_URI'];
+        $fields['formAction'] = $fields['URI'];
 
         // work out how many columns will be in the table
         $reflection = new \ReflectionClass(get_class($this->BO));
@@ -158,7 +158,7 @@ class SequenceView extends View
         $fields['formFields'] = $html;
 
         // View button
-        if (strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+        if (strpos($fields['URI'], '/tk/') !== false) {
             $button = new Button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."';", 'View', 'viewBut');
             $fields['viewButton'] = $button->render();
         } else {

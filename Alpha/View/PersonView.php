@@ -152,7 +152,7 @@ class PersonView extends View
 
         $html = '<p>In order to access this site, you will need to create a user account.  In order to do so, please provide a valid email address below and a password will be sent to your inbox shortly (you can change your password once you log in).</p>';
         $html .= '<table cols="2">';
-        $html .= '<form action="'.$_SERVER["PHP_SELF"].'?reset=true" method="POST" accept-charset="UTF-8">';
+        $html .= '<form action="'.$request->getURI().'?reset=true" method="POST" accept-charset="UTF-8">';
         $html .= '<tr>';
         if ($config->get('security.encrypt.http.fieldnames'))
             $fieldname = base64_encode(SecurityUtils::encrypt('displayname'));
