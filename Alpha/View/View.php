@@ -130,18 +130,27 @@ class View
 
         // Check to see if a custom view exists for this BO, and if it does return that view instead
         if (!$returnParent) {
-            if (class_exists('\Alpha\View\\'.$childView)) {
-                self::$logger->debug('<<getInstance [new '.'\Alpha\View\\'.$childView.'('.get_class($BO).')]');
-                eval('$instance = new \Alpha\View\\'.$childView.'($BO);');
+
+            $className = '\Alpha\View\\'.$childView;
+
+            if (class_exists($className)) {
+                self::$logger->debug('<<getInstance [new '.$className.'('.get_class($BO).')]');
+                
+                $instance = new $className($BO);
                 return $instance;
-            } elseif (class_exists('\View\\'.$childView)) {
-                self::$logger->debug('<<getInstance [new '.'\View\\'.$childView.'('.get_class($BO).')]');
-                eval('$instance = new \View\\'.$childView.'($BO);');
-                return $instance;
-            } else {
-                self::$logger->debug('<<getInstance [new View('.get_class($BO).', true)]');
-                return new View($BO, true);
             }
+
+            $className = '\View\\'.$childView;
+
+            if (class_exists('\View\\'.$childView)) {
+                self::$logger->debug('<<getInstance [new '.$className.'('.get_class($BO).')]');
+                
+                $instance = new $className($BO);
+                return $instance;
+            }
+
+            self::$logger->debug('<<getInstance [new View('.get_class($BO).', true)]');
+            return new View($BO, true);
         } else {
             self::$logger->debug('<<getInstance [new View('.get_class($BO).', true)]');
             return new View($BO, true);
@@ -326,7 +335,9 @@ class View
         if (!self::$provider instanceof RendererProviderInterface) {
             self::setProvider($config->get('app.renderer.provider.name'));
         }
-        eval('$header = '.get_class(self::$provider).'::displayPageHead($controller);');
+        
+        $provider = self::$provider;
+        $header = $provider::displayPageHead($controller);
 
         if (method_exists($controller, 'after_displayPageHead_callback'))
             $header.= $controller->after_displayPageHead_callback();
@@ -359,7 +370,9 @@ class View
         if (!self::$provider instanceof RendererProviderInterface) {
             self::setProvider($config->get('app.renderer.provider.name'));
         }
-        eval('$footer .= '.get_class(self::$provider).'::displayPageFoot($controller);');
+
+        $provider = self::$provider;
+        $footer .= $provider::displayPageFoot($controller);
 
         if(method_exists($controller, 'after_displayPageFoot_callback'))
             $footer .= $controller->after_displayPageFoot_callback();
@@ -386,7 +399,9 @@ class View
         if (!self::$provider instanceof RendererProviderInterface) {
             self::setProvider($config->get('app.renderer.provider.name'));
         }
-        eval('$message = '.get_class(self::$provider).'::displayUpdateMessage($message);');
+
+        $provider = self::$provider;
+        $message = $provider::displayUpdateMessage($message);
 
         self::$logger->debug('<<displayUpdateMessage ['.$message.']');
         return $message;
@@ -410,7 +425,9 @@ class View
         if (!self::$provider instanceof RendererProviderInterface) {
             self::setProvider($config->get('app.renderer.provider.name'));
         }
-        eval('$message = '.get_class(self::$provider).'::displayErrorMessage($message);');
+        
+        $provider = self::$provider;
+        $message = $provider::displayErrorMessage($message);
 
         self::$logger->debug('<<displayErrorMessage ['.$message.']');
         return $message;
@@ -435,7 +452,9 @@ class View
         if (!self::$provider instanceof RendererProviderInterface) {
             self::setProvider($config->get('app.renderer.provider.name'));
         }
-        eval('$message = '.get_class(self::$provider).'::renderErrorPage($code, $message);');
+        
+        $provider = self::$provider;
+        $message = $provider::renderErrorPage($code, $message);
 
         self::$logger->debug('<<renderErrorPage ['.$message.']');
         return $message;
@@ -458,7 +477,9 @@ class View
         if (!self::$provider instanceof RendererProviderInterface) {
             self::setProvider($config->get('app.renderer.provider.name'));
         }
-        eval('$html = '.get_class(self::$provider).'::renderDeleteForm("'.$URI.'");');
+
+        $provider = self::$provider;
+        $html = $provider::renderDeleteForm($URI);
 
         self::$logger->debug('<<renderDeleteForm ['.$html.']');
         return $html;
@@ -483,7 +504,9 @@ class View
         if (!self::$provider instanceof RendererProviderInterface) {
             self::setProvider($config->get('app.renderer.provider.name'));
         }
-        eval('$html = '.get_class(self::$provider).'::renderSecurityFields();');
+
+        $provider = self::$provider;
+        $html = $provider::renderSecurityFields();
 
         self::$logger->debug('<<renderSecurityFields ['.$html.']');
         return $html;
