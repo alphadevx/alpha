@@ -7,6 +7,7 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Model\ActiveRecord;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\View\Renderer\RendererProviderFactory;
+use Alpha\View\Renderer\RendererProviderInterface;
 use ReflectionClass;
 
 /**
@@ -57,18 +58,18 @@ class View
     /**
      * The business object that will be rendered
      *
-     * @var AlphaDAO
+     * @var Alpha\Model\ActiveRecord
      * @since 1.0
      */
     protected $BO;
 
     /**
-     * The rendering provider that will be used to render the business object
+     * The rendering provider that will be used to render the active record
      *
-     * @var AlphaRendererProviderInterface
+     * @var Alpha\View\Renderer\RendererProviderInterface
      * @since 1.2
      */
-    protected $provider;
+    private static $provider;
 
     /**
      * Trace logger
@@ -100,7 +101,8 @@ class View
         else
             throw new IllegalArguementException('The BO provided ['.get_class($BO).'] is not defined anywhere!');
 
-        $this->provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'), $this->BO);
+        self::setProvider($config->get('app.renderer.provider.name'));
+        self::$provider->setBO($this->BO);
 
         self::$logger->debug('<<__construct');
     }
@@ -192,7 +194,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $body = $this->provider->createView($fields);
+        $body = self::$provider->createView($fields);
 
         if(method_exists($this, 'after_createView_callback'))
             $this->after_createView_callback();
@@ -218,7 +220,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $body = $this->provider->editView($fields);
+        $body = self::$provider->editView($fields);
 
         if(method_exists($this, 'after_editView_callback'))
             $this->after_editView_callback();
@@ -243,7 +245,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $body = $this->provider->listView($fields);
+        $body = self::$provider->listView($fields);
 
         if(method_exists($this, 'after_listView_callback'))
             $this->after_listView_callback();
@@ -268,7 +270,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $body = $this->provider->detailedView($fields);
+        $body = self::$provider->detailedView($fields);
 
         if(method_exists($this, 'after_detailedView_callback'))
             $this->after_detailedView_callback();
@@ -293,7 +295,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $body = $this->provider->adminView($fields);
+        $body = self::$provider->adminView($fields);
 
         if(method_exists($this, 'after_adminView_callback'))
             $this->after_adminView_callback();
@@ -321,8 +323,10 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'));
-        eval('$header = '.get_class($provider).'::displayPageHead($controller);');
+        if (!self::$provider instanceof RendererProviderInterface) {
+            self::setProvider($config->get('app.renderer.provider.name'));
+        }
+        eval('$header = '.get_class(self::$provider).'::displayPageHead($controller);');
 
         if (method_exists($controller, 'after_displayPageHead_callback'))
             $header.= $controller->after_displayPageHead_callback();
@@ -352,8 +356,10 @@ class View
         if(method_exists($controller, 'before_displayPageFoot_callback'))
             $footer .= $controller->before_displayPageFoot_callback();
 
-        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'));
-        eval('$footer .= '.get_class($provider).'::displayPageFoot($controller);');
+        if (!self::$provider instanceof RendererProviderInterface) {
+            self::setProvider($config->get('app.renderer.provider.name'));
+        }
+        eval('$footer .= '.get_class(self::$provider).'::displayPageFoot($controller);');
 
         if(method_exists($controller, 'after_displayPageFoot_callback'))
             $footer .= $controller->after_displayPageFoot_callback();
@@ -377,8 +383,10 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'));
-        eval('$message = '.get_class($provider).'::displayUpdateMessage($message);');
+        if (!self::$provider instanceof RendererProviderInterface) {
+            self::setProvider($config->get('app.renderer.provider.name'));
+        }
+        eval('$message = '.get_class(self::$provider).'::displayUpdateMessage($message);');
 
         self::$logger->debug('<<displayUpdateMessage ['.$message.']');
         return $message;
@@ -399,8 +407,10 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'));
-        eval('$message = '.get_class($provider).'::displayErrorMessage($message);');
+        if (!self::$provider instanceof RendererProviderInterface) {
+            self::setProvider($config->get('app.renderer.provider.name'));
+        }
+        eval('$message = '.get_class(self::$provider).'::displayErrorMessage($message);');
 
         self::$logger->debug('<<displayErrorMessage ['.$message.']');
         return $message;
@@ -422,8 +432,10 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'));
-        eval('$message = '.get_class($provider).'::renderErrorPage($code, $message);');
+        if (!self::$provider instanceof RendererProviderInterface) {
+            self::setProvider($config->get('app.renderer.provider.name'));
+        }
+        eval('$message = '.get_class(self::$provider).'::renderErrorPage($code, $message);');
 
         self::$logger->debug('<<renderErrorPage ['.$message.']');
         return $message;
@@ -443,8 +455,10 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'));
-        eval('$html = '.get_class($provider).'::renderDeleteForm("'.$URI.'");');
+        if (!self::$provider instanceof RendererProviderInterface) {
+            self::setProvider($config->get('app.renderer.provider.name'));
+        }
+        eval('$html = '.get_class(self::$provider).'::renderDeleteForm("'.$URI.'");');
 
         self::$logger->debug('<<renderDeleteForm ['.$html.']');
         return $html;
@@ -466,8 +480,10 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'));
-        eval('$html = '.get_class($provider).'::renderSecurityFields();');
+        if (!self::$provider instanceof RendererProviderInterface) {
+            self::setProvider($config->get('app.renderer.provider.name'));
+        }
+        eval('$html = '.get_class(self::$provider).'::renderSecurityFields();');
 
         self::$logger->debug('<<renderSecurityFields ['.$html.']');
         return $html;
@@ -490,7 +506,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $html = $this->provider->renderIntegerField($name, $label, $mode, $value, $tableTags);
+        $html = self::$provider->renderIntegerField($name, $label, $mode, $value, $tableTags);
 
         self::$logger->debug('<<renderIntegerField ['.$html.']');
         return $html;
@@ -513,7 +529,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $html = $this->provider->renderDoubleField($name, $label, $mode, $value, $tableTags);
+        $html = self::$provider->renderDoubleField($name, $label, $mode, $value, $tableTags);
 
         self::$logger->debug('<<renderDoubleField ['.$html.']');
         return $html;
@@ -536,7 +552,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $html = $this->provider->renderBooleanField($name, $label, $mode, $value, $tableTags);
+        $html = self::$provider->renderBooleanField($name, $label, $mode, $value, $tableTags);
 
         self::$logger->debug('<<renderBooleanField ['.$html.']');
         return $html;
@@ -560,7 +576,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $html = $this->provider->renderEnumField($name, $label, $mode, $options, $value, $tableTags);
+        $html = self::$provider->renderEnumField($name, $label, $mode, $options, $value, $tableTags);
 
         self::$logger->debug('<<renderEnumField ['.$html.']');
         return $html;
@@ -584,7 +600,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $html = $this->provider->renderDEnumField($name, $label, $mode, $options, $value, $tableTags);
+        $html = self::$provider->renderDEnumField($name, $label, $mode, $options, $value, $tableTags);
 
         self::$logger->debug('<<renderDEnumField ['.$html.']');
         return $html;
@@ -607,7 +623,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $html = $this->provider->renderDefaultField($name, $label, $mode, $value, $tableTags);
+        $html = self::$provider->renderDefaultField($name, $label, $mode, $value, $tableTags);
 
         self::$logger->debug('<<renderDefaultField ['.$html.']');
         return $html;
@@ -630,7 +646,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $html = $this->provider->renderTextField($name, $label, $mode, $value, $tableTags);
+        $html = self::$provider->renderTextField($name, $label, $mode, $value, $tableTags);
 
         self::$logger->debug('<<renderTextField ['.$html.']');
         return $html;
@@ -655,7 +671,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $html = $this->provider->renderRelationField($name, $label, $mode, $value, $tableTags, $expanded, $buttons);
+        $html = self::$provider->renderRelationField($name, $label, $mode, $value, $tableTags, $expanded, $buttons);
 
         self::$logger->debug('<<renderRelationField ['.$html.']');
         return $html;
@@ -676,7 +692,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $html = $this->provider->renderAllFields($mode, $filterFields, $readOnlyFields);
+        $html = self::$provider->renderAllFields($mode, $filterFields, $readOnlyFields);
 
         self::$logger->debug('<<renderAllFields ['.$html.']');
         return $html;
@@ -800,17 +816,44 @@ class View
     }
 
     /**
-     * Enables you to set an explicit type of RendererProviderInterface implementation to use for rendering the business
-     * object attached to this view.  Note that this has no affect on static methods of the View class, which always instantiate
-     * a new RendererProviderInterface provider each time they're called.
+     * Enables you to set an explicit type of RendererProviderInterface implementation to use for rendering the records
+     * attached to this view.
      *
-     * @param string $ProviderClassName The name of the AlphaRendererProviderInterface implementation to use in this view object
+     * @param string $ProviderClassName The name of the RendererProviderInterface implementation to use in this view object
      * @since 1.2
      * @throws Alpha\Exception\IllegalArguementException
      */
-    public function setProvider($ProviderClassName)
+    public static function setProvider($ProviderClassName, $acceptHeader = null)
     {
-        $this->provider = RendererProviderFactory::getInstance($ProviderClassName, $this->BO);
+        if ($ProviderClassName == 'auto' && $acceptHeader != null) {
+            if ($acceptHeader == 'application/json') {
+                // use the JSON renderer
+                $ProviderClassName = 'Alpha\View\Renderer\Json\RendererProviderJSON';
+            } else {
+                // use the HTML renderer
+                $ProviderClassName = 'Alpha\View\Renderer\Html\RendererProviderHTML';
+            }
+        } else {
+            $ProviderClassName = 'Alpha\View\Renderer\Html\RendererProviderHTML';
+        }
+
+        self::$provider = RendererProviderFactory::getInstance($ProviderClassName);
+    }
+
+    /**
+     * Get the current view renderer provider.
+     *
+     * @return Alpha\View\Renderer\RendererProviderInterface
+     * @since 2.0
+     */
+    public static function getProvider()
+    {
+        if (self::$provider instanceof RendererProviderInterface) {
+            return self::$provider;
+        } else {
+            self::$provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'));
+            return self::$provider;
+        }
     }
 }
 

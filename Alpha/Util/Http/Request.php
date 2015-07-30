@@ -417,6 +417,17 @@ class Request
     }
 
     /**
+     * Get the Accept header of the request
+     *
+     * @return string
+     * @since 2.0
+     */
+    public function getAccept()
+    {
+        return $this->getHeader('Accept');
+    }
+
+    /**
      * Get the Content-Type header of the request
      *
      * @return string

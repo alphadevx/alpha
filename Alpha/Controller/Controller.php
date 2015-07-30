@@ -1478,6 +1478,12 @@ abstract class Controller
             }
         }
 
+        $ProviderClassName = $config->get('app.renderer.provider.name');
+
+        if ($ProviderClassName == 'auto' && $request->getAccept() != null) {
+        	View::setProvider('auto', $request->getAccept());
+        }
+
         $this->request = $request;
 
         switch ($method) {

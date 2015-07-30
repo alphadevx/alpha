@@ -71,31 +71,25 @@ class RendererProviderFactory
      * @return Alpha\View\Renderer\RendererProviderInterface
      * @since 1.2
      */
-    public static function getInstance($providerName, $BO = null) {
+    public static function getInstance($providerName, $BO = null)
+    {
         if(self::$logger == null)
-            self::$logger = new Logger('AlphaRendererProviderFactory');
+            self::$logger = new Logger('RendererProviderFactory');
 
         self::$logger->debug('>>getInstance(providerName=['.$providerName.'])');
 
-        if ($providerName == 'auto') {
-            if (isset($_SERVER['HTTP_ACCEPT']) && $_SERVER['HTTP_ACCEPT'] == 'application/json') {
-                // use the JSON renderer
-                $providerName = 'Alpha\View\Renderer\Json\RendererProviderJSON';
-            } else {
-                // use the HTML renderer
-                $providerName = 'Alpha\View\Renderer\Html\RendererProviderHTML';
-            }
+        if (!class_exists($providerName)) {
+            throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
         }
 
-        if (!class_exists($providerName))
-            throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
-
         $instance = new $providerName;
-        if (isset($BO))
+        if (isset($BO)) {
             $instance->setBO($BO);
+        }
 
-        if (!$instance instanceof RendererProviderInterface)
+        if (!$instance instanceof RendererProviderInterface) {
             throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected AlphaRendererProviderInterface interface!');
+        }
 
         self::$logger->debug('<<getInstance: [Object '.$providerName.']');
         return $instance;
