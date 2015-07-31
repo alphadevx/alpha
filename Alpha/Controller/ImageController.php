@@ -112,6 +112,20 @@ class ImageController extends Controller implements ControllerInterface
             throw new ResourceNotFoundException('File not found');
         }
 
+        $modified = filemtime($imgSource);
+
+        $responseHeaders = array();
+
+        $responseHeaders['Last-Modified'] = date("D, d M Y H:i:s", $modified).' GMT';
+        $responseHeaders['Cache-Control'] = 'max-age=1800';
+
+        // exit if not modified
+        if ($request->getHeader('If-Modified-Since') != null) {
+            if (strtotime($request->getHeader('If-Modified-Since')) == $modified) {
+                return new Response(304, '', $responseHeaders);
+            }
+        }
+
         // handle secure tokens
         if ($imgSecure->getBooleanValue() && $config->get('cms.images.widget.secure')) {
             $valid = $this->checkSecurityFields();
@@ -140,7 +154,8 @@ class ImageController extends Controller implements ControllerInterface
 
                 self::$logger->warn('The client ['.$request->getUserAgent().'] was blocked from accessing the file ['.$imgSource.'] due to bad security tokens being provided');
 
-                return new Response(200, $body, array('Content-Type' => $contentType));
+                $responseHeaders['Content-Type'] = $contentType;
+                return new Response(200, $body, $responseHeaders);
             }
         }
 
@@ -158,10 +173,12 @@ class ImageController extends Controller implements ControllerInterface
         self::$logger->debug('<<__doGet');
 
         if ($imgSource == 'png' && $config->get('cms.images.perserve.png')) {
-            return new Response(200, $body, array('Content-Type' => 'image/png'));
+            $responseHeaders['Content-Type'] = 'image/png';
         } else {
-            return new Response(200, $body, array('Content-Type' => 'image/jpeg'));
+            $responseHeaders['Content-Type'] = 'image/jpeg';
         }
+
+        return new Response(200, $body, $responseHeaders);
     }
 }
 

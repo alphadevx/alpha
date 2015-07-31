@@ -391,22 +391,6 @@ class Image
      */
     private function loadCache()
     {
-        $config = ConfigProvider::getInstance();
-
-        // TODO: move these HTTP headers to ImageController
-        /*$modified = filemtime($this->source);
-
-        header("Last-Modified: ".date("D, d M Y H:i:s", $modified)." GMT");
-        header("Cache-Control: max-age=1800");
-
-        // exit if not modified
-        if (array_key_exists('HTTP_IF_MODIFIED_SINCE', $_SERVER)) {
-            if (strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $modified) {
-                header("HTTP/1.1 304 Not Modified");
-                exit;
-            }
-        }*/
-
         readfile($this->filename);
     }
 
