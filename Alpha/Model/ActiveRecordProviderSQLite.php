@@ -1600,13 +1600,19 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 			self::$logger = new Logger('ActiveRecordProviderSQLite');
 		self::$logger->debug('>>checkBOTableExists(BOClassName=['.$BOClassName.'], checkHistoryTable=['.$checkHistoryTable.'])');
 
-		eval('$tableName = '.$BOClassName.'::TABLE_NAME;');
+		if (!class_exists($BOClassName)) {
+			throw new IllegalArguementException('The classname provided ['.$checkHistoryTable.'] is not defined!');
+		}
 
-		if(empty($tableName))
+		$tableName = $BOClassName::TABLE_NAME;
+
+		if (empty($tableName)) {
 			$tableName = mb_substr($BOClassName, 0, mb_strpos($BOClassName, '_'));
+		}
 
-		if($checkHistoryTable)
+		if ($checkHistoryTable) {
         	$tableName .= '_history';
+		}
 
 		$tableExists = false;
 
@@ -1615,14 +1621,15 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 		$result = self::getConnection()->query($sqlQuery);
 
 		while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-    			if ($row['name'] == $tableName)
-    				$tableExists = true;
+    		if ($row['name'] == $tableName){
+    			$tableExists = true;
+    		}
 		}
 
 		if ($result) {
 			self::$logger->debug('<<checkBOTableExists ['.($tableExists ? 'true' : 'false').']');
 			return $tableExists;
-		}else{
+		} else {
 			throw new AlphaException('Failed to access the system database correctly, error is ['.self::getLastDatabaseError().']');
 			self::$logger->debug('<<checkBOTableExists [false]');
 			return false;

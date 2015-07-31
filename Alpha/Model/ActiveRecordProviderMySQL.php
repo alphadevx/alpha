@@ -1590,13 +1590,19 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 			self::$logger = new Logger('ActiveRecordProviderMySQL');
 		self::$logger->debug('>>checkBOTableExists(BOClassName=['.$BOClassName.'], checkHistoryTable=['.$checkHistoryTable.'])');
 
-		eval('$tableName = '.$BOClassName.'::TABLE_NAME;');
+		if (!class_exists($BOClassName)) {
+			throw new IllegalArguementException('The classname provided ['.$checkHistoryTable.'] is not defined!');
+		}
 
-		if (empty($tableName))
+		$tableName = $BOClassName::TABLE_NAME;
+
+		if (empty($tableName)) {
 			$tableName = mb_substr($BOClassName, 0, mb_strpos($BOClassName, '_'));
+		}
 
-		if ($checkHistoryTable)
+		if ($checkHistoryTable) {
             $tableName .= '_history';
+		}
 
 		$tableExists = false;
 

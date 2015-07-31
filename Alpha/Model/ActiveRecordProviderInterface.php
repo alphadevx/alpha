@@ -318,6 +318,7 @@ interface ActiveRecordProviderInterface
 	 * @return boolean
 	 * @since 1.1
 	 * @throws Alpha\Exception\AlphaException
+	 * @throws Alpha\Exception\IllegalArguementException
 	 */
 	public static function checkBOTableExists($BOClassName, $checkHistoryTable = false);
 
