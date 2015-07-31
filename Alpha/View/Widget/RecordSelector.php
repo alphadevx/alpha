@@ -6,6 +6,7 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Http\Request;
 use Alpha\Model\Type\Relation;
 use Alpha\Model\ActiveRecord;
 use Alpha\Exception\IllegalArguementException;
@@ -228,10 +229,13 @@ class RecordSelector
                     $customViewControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'view');
                     $customEditControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'edit');
 
+                    $request = new Request(array('method' => 'GET'));
+                    $URI = $request->getURI();
+
                     foreach ($objects as $obj) {
 
                         // check to see if we are in the admin back-end
-                        if (isset($_SERVER['REQUEST_URI']) && mb_strpos($_SERVER['REQUEST_URI'], '/tk/') !== false) {
+                        if (mb_strpos($URI, '/tk/') !== false) {
                             $viewURL = FrontController::generateSecureURL('act=Alpha\Controller\ViewController&ActiveRecordType='.get_class($obj).'&ActiveRecordOID='.$obj->getOID());
                             $editURL = FrontController::generateSecureURL('act=Alpha\Controller\EditController&ActiveRecordType='.get_class($obj).'&ActiveRecordOID='.$obj->getOID());
                         } else {
