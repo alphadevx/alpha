@@ -1107,36 +1107,44 @@ abstract class ActiveRecord
 	 */
 	public function get($prop, $noChildMethods = false)
 	{
-		if (self::$logger == null)
+		if (self::$logger == null) {
 			self::$logger = new Logger('ActiveRecord');
+		}
 
 		self::$logger->debug('>>get(prop=['.$prop.'], noChildMethods=['.$noChildMethods.'])');
 
-		if (method_exists($this, 'before_get_callback'))
+		if (method_exists($this, 'before_get_callback')) {
 			$this->before_get_callback();
+		}
 
-		if (empty($prop))
+		if (empty($prop)) {
 			throw new IllegalArguementException('Cannot call get with empty $prop arguement!');
+		}
 
 		// handle attributes with a get.ucfirst($prop) method
 		if (!$noChildMethods && method_exists($this, 'get'.ucfirst($prop))) {
-			if(method_exists($this, 'after_get_callback'))
+			if (method_exists($this, 'after_get_callback')) {
 				$this->after_get_callback();
+			}
 
-			self::$logger->debug('<<get ['.eval('return print_r($this->get'.ucfirst($prop).'(), true);').'])');
-			return eval('return $this->get'.ucfirst($prop).'();');
+			$methodName = 'get'.ucfirst($prop);
+
+			self::$logger->debug('<<get ['.eval('return print_r($this->'.$methodName.'(), true);').'])');
+			return $this->$methodName();
 		} else {
 			// handle attributes with no dedicated child get.ucfirst($prop) method
 			if (isset($this->$prop) && is_object($this->$prop) && method_exists($this->$prop, 'getValue')) {
-				if (method_exists($this, 'after_get_callback'))
+				if (method_exists($this, 'after_get_callback')) {
 					$this->after_get_callback();
+				}
 
 				// complex types will have a getValue() method, return the value of that
 				self::$logger->debug('<<get ['.$this->$prop->getValue().'])');
 				return $this->$prop->getValue();
 			} elseif (isset($this->$prop)) {
-				if (method_exists($this, 'after_get_callback'))
+				if (method_exists($this, 'after_get_callback')) {
 					$this->after_get_callback();
+				}
 
 				// simple types returned as-is
 				self::$logger->debug('<<get ['.print_r($this->$prop, true).'])');
@@ -1164,34 +1172,39 @@ abstract class ActiveRecord
 	{
 		self::$logger->debug('>>set(prop=['.$prop.'], $value=['.print_r($value, true).'], noChildMethods=['.$noChildMethods.'])');
 
-		if(method_exists($this, 'before_set_callback'))
+		if (method_exists($this, 'before_set_callback')) {
 			$this->before_set_callback();
+		}
 
 		// handle attributes with a set.ucfirst($prop) method
-		if(!$noChildMethods && method_exists($this, 'set'.ucfirst($prop))) {
-			if(method_exists($this, 'after_set_callback'))
+		if (!$noChildMethods && method_exists($this, 'set'.ucfirst($prop))) {
+			if(method_exists($this, 'after_set_callback')) {
 				$this->after_set_callback();
+			}
 
-			eval('$this->set'.ucfirst($prop).'($value);');
-		}else{
+			$methodName = 'set'.ucfirst($prop);
+
+			$this->$methodName($value);
+		} else {
 			// handle attributes with no dedicated child set.ucfirst($prop) method
-			if(isset($this->$prop)) {
-				if(method_exists($this, 'after_set_callback'))
+			if (isset($this->$prop)) {
+				if (method_exists($this, 'after_set_callback')) {
 					$this->after_set_callback();
+				}
 
 				// complex types will have a setValue() method to call
 				if (is_object($this->$prop) && get_class($this->$prop) != false) {
 					if (mb_strtoupper(get_class($this->$prop)) != 'DATE' && mb_strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
 						$this->$prop->setValue($value);
-					}else{
+					} else {
 						// Date and Timestamp objects have a special setter accepting a string
 						$this->$prop->populateFromString($value);
 					}
-				}else{
+				} else {
 					// simple types set directly
 					$this->$prop = $value;
 				}
-			}else{
+			} else {
 				throw new AlphaException('Could not set the property ['.$prop.'] on the object of the class ['.get_class($this).'].  Property may not exist, or else does not have a setValue() method and is private or protected.');
 			}
 		}
