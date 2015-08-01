@@ -1129,7 +1129,7 @@ abstract class ActiveRecord
 
 			$methodName = 'get'.ucfirst($prop);
 
-			self::$logger->debug('<<get ['.eval('return print_r($this->'.$methodName.'(), true);').'])');
+			self::$logger->debug('<<get ['.print_r($this->$methodName(), true).'])');
 			return $this->$methodName();
 		} else {
 			// handle attributes with no dedicated child get.ucfirst($prop) method
@@ -1303,7 +1303,9 @@ abstract class ActiveRecord
 
 		$config = ConfigProvider::getInstance();
 
-		eval('$tableExists = '.$config->get('db.provider.name').'::checkBOTableExists($BOClassName, $checkHistoryTable);');
+		$provider = $config->get('db.provider.name');
+
+		$tableExists = $provider::checkBOTableExists($BOClassName, $checkHistoryTable);
 
 		self::$logger->debug('<<checkBOTableExists ['.($tableExists ? 'true' : 'false').']');
 		return $tableExists;
@@ -1382,15 +1384,15 @@ abstract class ActiveRecord
 	{
 		self::$logger->debug('>>getTableName()');
 
-		eval('$TABLE_NAME = '.get_class($this).'::TABLE_NAME;');
+		$className = get_class($this);
 
-		if (!empty($TABLE_NAME)) {
-			self::$logger->debug('<<getTableName ['.$TABLE_NAME.']');
-    		return $TABLE_NAME;
+		$tableName = $className::TABLE_NAME;
+
+		if (!empty($tableName)) {
+			self::$logger->debug('<<getTableName ['.$tableName.']');
+    		return $tableName;
     	} else {
     		throw new AlphaException('Error: no TABLE_NAME constant set for the class '.get_class($this));
-    		self::$logger->debug('<<getTableName []');
-    		return '';
     	}
 	}
 
