@@ -177,7 +177,7 @@ class LoginController extends Controller implements ControllerInterface
                         $admin = new Person();
                         $admin->set('displayName', 'Admin');
                         $admin->set('email', $params['email']);
-                        $admin->set('password', crypt($params['password'], $config->get('app.install.password')));
+                        $admin->set('password', password_hash($params['password'], PASSWORD_DEFAULT, ['cost' => 12]));
                         $admin->set('OID', '00000000001');
 
                         $sessionProvider = $config->get('session.provider.name');
@@ -223,7 +223,7 @@ class LoginController extends Controller implements ControllerInterface
                 $newPassword = $this->personObject->generatePassword();
 
                 // now encrypt and save the new password, then e-mail the user
-                $this->personObject->set('password', crypt($newPassword, $newPassword));
+                $this->personObject->set('password', password_hash($newPassword, PASSWORD_DEFAULT, ['cost' => 12]));
                 $this->personObject->save();
 
                 $message = 'The password for your account has been reset to '.$newPassword.' as you requested.  You can now login to the site using your '.

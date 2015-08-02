@@ -184,7 +184,7 @@ class LoginControllerTest extends \PHPUnit_Framework_TestCase
 
         $person->reload();
 
-        $this->assertNotEquals($person->get('password'), crypt('passwordTest', 'passwordTest'), 'Checking that the password has changed in the database');
+        $this->assertNotEquals($person->get('password'), password_hash('passwordTest', PASSWORD_DEFAULT, ['cost' => 12]), 'Checking that the password has changed in the database');
     }
 }
 
