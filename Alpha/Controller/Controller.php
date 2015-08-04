@@ -244,13 +244,6 @@ abstract class Controller
 	 	// set the access rights to the group name indicated
 	 	$this->visibility = $visibility;
 
-	 	// check the current user's rights on access to the page controller
-	 	if (!$this->checkRights()) {
-	 		$this->accessError();
-	 		// no more execution should take place
-	 		return;
-	 	}
-
 	 	$this->unitStartTime = new Timestamp(date("Y-m-d H:i:s"));
 	 	$this->unitEndTime = new Timestamp();
 	 	$this->unitMAXDuration = new Integer();
@@ -902,8 +895,9 @@ abstract class Controller
 	}
 
 	/**
-	 * Method to display an access error for trespassing users.  HTTP response header code will be 403.
+	 * Method to return an access error for trespassing users.  HTTP response header code will be 403.
      *
+     * @return Alpha\Util\Http\Response
 	 * @since 1.0
 	 */
 	public function accessError()
@@ -918,25 +912,21 @@ abstract class Controller
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
 
-        if (!isset($this->request)) {
-        	$this->request = new Request();
-        }
-
-		if($session->get('currentUser') !== false)
+		if ($session->get('currentUser') !== false) {
 			self::$logger->warn('The user ['.$session->get('currentUser')->get('email').'] attempted to access the resource ['.$this->request->getURI().'] but was denied due to insufficient rights');
-		else
+		} else {
 			self::$logger->warn('An unknown user attempted to access the resource ['.$this->request->getURI().'] but was denied due to insufficient rights');
+		}
 
-        if (!headers_sent()) {
-		  header('HTTP/1.1 403 Forbidden');
-		  $front = new FrontController();
-		  echo View::renderErrorPage(403, 'You do not have the correct access rights to view this page.  If you have not logged in yet, try going back to the home page and logging in from there.');
-        }
+        $response = new Response(403);
+		$response->setBody(View::renderErrorPage(403, 'You do not have the correct access rights to view this page.  If you have not logged in yet, try going back to the home page and logging in from there.'));
 
 		if (method_exists($this, 'after_accessError_callback'))
 			$this->after_accessError_callback();
 
 		self::$logger->debug('<<accessError');
+
+		return $response;
 	}
 
 	/**
@@ -1485,6 +1475,11 @@ abstract class Controller
         }
 
         $this->request = $request;
+
+        // check the current user's rights on access to the page controller
+	 	if (!$this->checkRights()) {
+	 		return $this->accessError();
+	 	}
 
         switch ($method) {
             case 'HEAD':
