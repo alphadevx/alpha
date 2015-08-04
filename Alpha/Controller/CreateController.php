@@ -229,7 +229,7 @@ class CreateController extends Controller implements ControllerInterface
         } catch (ValidationException $e) {
             self::$logger->warn($e->getMessage().', query ['.$this->BO->getLastQuery().']');
             $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
-            return $this->doGET($params);
+            return $this->doGET($request);
         }
 
         self::$logger->debug('<<doPOST');

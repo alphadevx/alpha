@@ -56,56 +56,13 @@ use Alpha\Exception\RecordNotFoundException;
  * </pre>
  *
  */
-class ListControllerTest extends \PHPUnit_Framework_TestCase
+class ListControllerTest extends ControllerTestCase
 {
-    /**
-     * Set up tests
-     *
-     * @since 2.0
-     */
-    protected function setUp()
-    {
-        $config = ConfigProvider::getInstance();
-        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
-
-        $person = new Person();
-        $person->rebuildTable();
-
-        $rights = new Rights();
-        $rights->rebuildTable();
-        $rights->set('name', 'Standard');
-        $rights->save();
-
-        $rights = new Rights();
-        $rights->set('name', 'Admin');
-        $rights->save();
-    }
-
-    /**
-     * Creates a person object for Testing
-     *
-     * @return Alpha\Model\Person
-     * @since 2.0
-     */
-    private function createPersonObject($name)
-    {
-        $person = new Person();
-        $person->setDisplayname($name);
-        $person->set('email', $name.'@test.com');
-        $person->set('password', 'passwordTest');
-        $person->set('URL', 'http://unitTestUser/');
-        return $person;
-    }
-
     /**
      * Testing the doGET method
      */
     public function testDoGET()
     {
-        $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
-
         $person1 = $this->createPersonObject('person-one');
         $person1->save();
         $person2 = $this->createPersonObject('person-two');
@@ -128,10 +85,6 @@ class ListControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testDoDELETE()
     {
-        $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
-
         $person = $this->createPersonObject('person-three');
         $person->save();
 
@@ -154,10 +107,10 @@ class ListControllerTest extends \PHPUnit_Framework_TestCase
         $person2 = new Person();
 
         try {
-            $person2->load($person->getOID());
+            $person2->load($person->getOID());echo "11\n";
             $this->fail('Confirming that the Person record has been deleted');
         } catch (RecordNotFoundException $e) {
-            $this->assertEquals('Failed to load object of OID [00000000002] not found in database.', $e->getMessage());
+            $this->assertEquals('Failed to load object of OID [00000000003] not found in database.', $e->getMessage());
         }
     }
 }

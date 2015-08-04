@@ -122,7 +122,7 @@ class StringBox
      */
     public function render($readOnly=false)
     {
-        $request = new Request();
+        $request = new Request(array('method' => 'GET'));
 
         $html = '<div class="form-group">';
         $html .= '  <label for="'.$this->name.'">'.$this->label.'</label>';

@@ -255,6 +255,22 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($config->get('app.url').'controller/param', $request->getURL(), 'Testing that URL can be set from overrides or super-globals during object construction');
     }
+
+    /**
+     * Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD
+     */
+    public function testHTTPMethodOverride()
+    {
+        $_POST['_METHOD'] = 'HEAD';
+        $request = new Request();
+
+        $this->assertEquals('HEAD', $request->getMethod(), 'Testing that we can override the HTTP method via _METHOD');
+
+        $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] = 'HEAD';
+        $request = new Request();
+
+        $this->assertEquals('HEAD', $request->getMethod(), 'Testing that we can override the HTTP method via X-HTTP-Method-Override');
+    }
 }
 
 ?>

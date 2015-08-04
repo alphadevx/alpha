@@ -2,11 +2,7 @@
 
 namespace Alpha\Test\Controller;
 
-use Alpha\Controller\Front\FrontController;
-use Alpha\Controller\EditController;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Http\Request;
-use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Model\Person;
 use Alpha\Model\Rights;
@@ -14,7 +10,7 @@ use Alpha\Model\ActionLog;
 
 /**
  *
- * Test cases for the EditController class
+ * Test class used by tests that need to have a logged in admin user.
  *
  * @since 2.0
  * @author John Collins <dev@alphaframework.org>
@@ -55,57 +51,91 @@ use Alpha\Model\ActionLog;
  * </pre>
  *
  */
-class EditControllerTest extends ControllerTestCase
+class ControllerTestCase extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Testing the doGET method
+	/**
+     * Creates the user and rights group tables, adds a user into both as
+     * admin, then adds that user to the session.
+     *
+     * @since 2.0
      */
-    public function testDoGET()
+    protected function setUp()
     {
+        $_SERVER = array();
+        $_POST = array();
+        $_GET = array();
+        $_COOKIE = array();
+        
         $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
 
-        $front = new FrontController();
+        $action = new ActionLog();
+        $action->rebuildTable();
 
-        $person = $this->createPersonObject('test');
+        $person = new Person();
+        $person->rebuildTable();
+
+        $rights = new Rights();
+        $rights->rebuildTable();
+        $rights->set('name', 'Standard');
+        $rights->save();
+
+        $rights = new Rights();
+        $rights->set('name', 'Admin');
+        $rights->save();
+
+        $person = $this->createPersonObject('loggedin');
         $person->save();
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/edit/'.urlencode('Alpha\Model\Person').'/'.$person->getOID()));
+        if (!$person->inGroup('Admin')) {
+            $adminGroup = new Rights();
+            $adminGroup->loadByAttribute('name', 'Admin');
 
-        $response = $front->process($request);
+            $lookup = $adminGroup->getMembers()->getLookup();
+            $lookup->setValue(array($person->getID(), $adminGroup->getID()));
+            $lookup->save();
+        }
 
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
-        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session->set('currentUser', $person);
     }
 
     /**
-     * Testing the doPUT method
+     * Drop the user tables and session between tests
+     *
+     * @since 2.0
      */
-    public function testDoPUT()
+    protected function tearDown()
     {
-        $config = ConfigProvider::getInstance();
+    	$config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session->set('currentUser', null);
 
-        $front = new FrontController();
-        $controller = new EditController();
+        $person = new Person();
+        $person->dropTable();
 
-        $securityParams = $controller->generateSecurityFields();
+        $rights = new Rights();
+        $rights->dropTable();
+        $rights->dropTable('Person2Rights');
+    }
 
-        $person = $this->createPersonObject('test');
-        $person->save();
+    /**
+     * Creates a person object for Testing
+     *
+     * @return Alpha\Model\Person
+     * @since 2.0
+     */
+    protected function createPersonObject($name)
+    {
+        $person = new Person();
+        $person->setDisplayname($name);
+        $person->set('email', $name.'@test.com');
+        $person->set('password', 'passwordTest');
+        $person->set('URL', 'http://unitTestUser/');
 
-        $person->set('email', 'updated@test.com');
-
-        $params = array('saveBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
-        $params = array_merge($params, $person->toArray());
-
-        $request = new Request(array('method' => 'PUT', 'URI' => '/edit/'.urlencode('Alpha\Model\Person').'/'.$person->getOID(), 'params' => $params));
-
-        $response = $front->process($request);
-
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doPUT method');
+        return $person;
     }
 }
 

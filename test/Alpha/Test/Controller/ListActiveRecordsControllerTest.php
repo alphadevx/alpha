@@ -53,41 +53,23 @@ use Alpha\Util\Http\Session\SessionProviderFactory;
  * </pre>
  *
  */
-class ListActiveRecordsControllerTest extends \PHPUnit_Framework_TestCase
+class ListActiveRecordsControllerTest extends ControllerTestCase
 {
-    /**
-     * Set up tests
-     *
-     * @since 2.0
-     */
-    protected function setUp()
-    {
-        $config = ConfigProvider::getInstance();
-        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
-        $config->set('cms.images.widget.secure', true);
-    }
-
     /**
      * Testing the doGET method
      */
     public function testDoGET()
     {
-        $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
-
         $front = new FrontController();
-
-        $request = new Request(array('method' => 'GET', 'URI' => '/image/'.urlencode($config->get('app.root').'public/images/icons/accept.png').'/16/16/png/0.75/false/false'));
-
-        $response = $front->process($request);
-
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
-        $this->assertEquals('image/jpeg', $response->getHeader('Content-Type'), 'Testing the doGET method');
 
         $request = new Request(array('method' => 'GET', 'URI' => '/listactiverecords'));
 
         $response = $front->process($request);
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
     }
 }
 

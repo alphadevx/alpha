@@ -54,48 +54,8 @@ use Alpha\Model\Rights;
  * </pre>
  *
  */
-class ViewControllerTest extends \PHPUnit_Framework_TestCase
+class ViewControllerTest extends ControllerTestCase
 {
-    /**
-     * Set up tests
-     *
-     * @since 2.0
-     */
-    protected function setUp()
-    {
-        $config = ConfigProvider::getInstance();
-        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
-
-        $person = new Person();
-        $person->rebuildTable();
-
-        $rights = new Rights();
-        $rights->rebuildTable();
-        $rights->set('name', 'Standard');
-        $rights->save();
-
-        $rights = new Rights();
-        $rights->set('name', 'Admin');
-        $rights->save();
-    }
-
-    /**
-     * Creates a person object for Testing
-     *
-     * @return Alpha\Model\Person
-     * @since 2.0
-     */
-    private function createPersonObject($name)
-    {
-        $person = new Person();
-        $person->setDisplayname($name);
-        $person->set('email', $name.'@test.com');
-        $person->set('password', 'passwordTest');
-        $person->set('URL', 'http://unitTestUser/');
-
-        return $person;
-    }
-
     /**
      * Testing the doGET method
      */

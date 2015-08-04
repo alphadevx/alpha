@@ -514,6 +514,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     {
         $config = ConfigProvider::getInstance();
         $_SERVER['REQUEST_URI'] = 'ImageController';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
     	$controller = new ImageController('Admin');
     	$sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
@@ -663,6 +664,37 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $response = $front->process($request);
 
         $this->assertEquals('GET', $response->getHeader('Allow'), 'Testing the process method');
+    }
+
+    /**
+     * Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD
+     */
+    public function testHTTPMethodOverride()
+    {
+        $front = new FrontController();
+        $front->addRoute('/image', function($request) {
+            $controller = new ImageController();
+            return $controller->process($request);
+        });
+
+        $request = new Request(array('method' => 'DELETE', 'URI' => '/image'));
+
+        try {
+            $response = $front->process($request);
+            $this->fail('Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD');
+        } catch (\Exception $e) {
+            $this->assertEquals('The DELETE method is not supported by this controller', $e->getMessage(), 'Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD');
+        }
+
+        $_POST['_METHOD'] = 'OPTIONS';
+        $request = new Request(array('method' => 'DELETE', 'URI' => '/image'));
+        $response = $front->process($request);
+        $this->assertEquals(200, $response->getStatus(), 'Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD');
+
+        $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] = 'OPTIONS';
+        $request = new Request(array('method' => 'DELETE', 'URI' => '/image'));
+        $response = $front->process($request);
+        $this->assertEquals(200, $response->getStatus(), 'Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD');
     }
 }
 

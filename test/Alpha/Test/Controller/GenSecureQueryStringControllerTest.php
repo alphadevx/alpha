@@ -52,19 +52,8 @@ use Alpha\Util\Http\Session\SessionProviderFactory;
  * </pre>
  *
  */
-class GenSecureQueryStringControllerTest extends \PHPUnit_Framework_TestCase
+class GenSecureQueryStringControllerTest extends ControllerTestCase
 {
-    /**
-     * Set up tests
-     *
-     * @since 2.0
-     */
-    protected function setUp()
-    {
-        $config = ConfigProvider::getInstance();
-        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
-    }
-
     /**
      * Testing the doGET method
      */

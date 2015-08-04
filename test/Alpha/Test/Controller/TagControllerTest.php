@@ -56,7 +56,7 @@ use Alpha\Model\Type\DEnumItem;
  * </pre>
  *
  */
-class TagControllerTest extends \PHPUnit_Framework_TestCase
+class TagControllerTest extends ControllerTestCase
 {
     /**
      * Set up tests
@@ -65,8 +65,7 @@ class TagControllerTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $config = ConfigProvider::getInstance();
-        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+        parent::setUp();
 
         $tag = new Tag();
         $tag->rebuildTable();

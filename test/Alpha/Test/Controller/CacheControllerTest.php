@@ -51,18 +51,13 @@ use Alpha\Util\Http\Session\SessionProviderFactory;
  * </pre>
  *
  */
-class CacheControllerTest extends \PHPUnit_Framework_TestCase
+class CacheControllerTest extends ControllerTestCase
 {
     /**
      * Testing the doGET method
      */
     public function testDoGET()
     {
-        $config = ConfigProvider::getInstance();
-        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
-        $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
-
         $front = new FrontController();
 
         $request = new Request(array('method' => 'GET', 'URI' => '/cache'));
@@ -78,11 +73,6 @@ class CacheControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testDoPOST()
     {
-        $config = ConfigProvider::getInstance();
-        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
-        $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
-
         $front = new FrontController();
 
         $request = new Request(array('method' => 'POST', 'URI' => '/cache', 'params' => array('clearCache' => true)));

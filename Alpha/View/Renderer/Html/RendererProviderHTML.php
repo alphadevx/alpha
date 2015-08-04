@@ -269,7 +269,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $fields['formFields'] = $html;
 
-        $request = new Request();
+        $request = new Request(array('method' => 'GET'));
 
         // View button
         if (mb_strpos($request->getURI(), '/tk/') !== false) {
@@ -563,7 +563,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $allowCSSOverrides = true;
 
-        $request = new Request();
+        $request = new Request(array('method' => 'GET'));
 
         if ($session->get('currentUser') != null && ActiveRecord::isInstalled() && $session->get('currentUser')->inGroup('Admin') && mb_strpos($request->getURI(), '/tk/') !== false) {
             $allowCSSOverrides = false;
@@ -732,7 +732,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $html = '<div class="form-group">';
         $html .= '  <label for="'.$fieldname.'">'.$label.'</label>';
 
-        $request = new Request();
+        $request = new Request(array('method' => 'GET'));
 
         if ($mode == 'create') {
             $html .= '<input type="text" style="width:100%;" name="'.$fieldname.'" value="'.$request->getParam($name, '').'"/>';
@@ -765,7 +765,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $html = '<div class="form-group">';
         $html .= '  <label for="'.$fieldname.'">'.$label.'</label>';
 
-        $request = new Request();
+        $request = new Request(array('method' => 'GET'));
 
         if ($mode == 'create') {
             $html .= '<input type="text" size="13" name="'.$fieldname.'" value="'.$request->getParam($name, '').'"/>';
@@ -918,7 +918,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $html = '';
 
-        $request = new Request();
+        $request = new Request(array('method' => 'GET'));
 
         if ($mode == 'create') {
             $html .= '<textarea cols="100" rows="3" name="'.$fieldname.'">'.$request->getParam($name, '').'</textarea>';

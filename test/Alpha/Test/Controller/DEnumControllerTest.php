@@ -54,7 +54,7 @@ use Alpha\Model\Type\DEnumItem;
  * </pre>
  *
  */
-class DEnumControllerTest extends \PHPUnit_Framework_TestCase
+class DEnumControllerTest extends ControllerTestCase
 {
     /**
      * A DEnum for testing
@@ -71,8 +71,7 @@ class DEnumControllerTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $config = ConfigProvider::getInstance();
-        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+        parent::setUp();
 
         $denum = new DEnum();
         $denum->rebuildTable();

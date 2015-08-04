@@ -70,7 +70,7 @@ class PersonView extends View
         $html .= "<h1>Login</h1>";
         $html .= '<form action="'.FrontController::generateSecureURL('act=Alpha\Controller\LoginController').'" method="POST" id="loginForm" accept-charset="UTF-8">';
 
-        $request = new Request();
+        $request = new Request(array('method' => 'GET'));
         $email = new String($request->getParam('email', ''));
         $email->setRule(Validator::REQUIRED_EMAIL);
         $email->setSize(70);
@@ -112,7 +112,7 @@ class PersonView extends View
         $html .= '<p>If you have forgotten your password, you can use this form to have a new password automatically generated and sent to your e-mail address.</p>';
         $html .= '<form action="'.FrontController::generateSecureURL('act=Alpha\Controller\LoginController&reset=true').'" method="POST" id="resetForm" accept-charset="UTF-8">';
 
-        $request = new Request();
+        $request = new Request(array('method' => 'GET'));
         $email = new String($request->getParam('email', ''));
         $email->setRule(Validator::REQUIRED_EMAIL);
         $email->setSize(70);
@@ -148,7 +148,7 @@ class PersonView extends View
     {
         $config = ConfigProvider::getInstance();
 
-        $request = new Request();
+        $request = new Request(array('method' => 'GET'));
 
         $html = '<p>In order to access this site, you will need to create a user account.  In order to do so, please provide a valid email address below and a password will be sent to your inbox shortly (you can change your password once you log in).</p>';
         $html .= '<table cols="2">';
