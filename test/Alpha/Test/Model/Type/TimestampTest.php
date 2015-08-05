@@ -200,6 +200,24 @@ class TimestampTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(1355830200, $timestamp->getUnixValue(), 'testing the getUnixValue() method');
     }
+
+    /**
+     * Testing the getTimeAway() method
+     *
+     * @since 2.0
+     */
+    public function testGetTimeAway()
+    {
+        $timestamp = new Timestamp();
+        $timestamp->setDate($timestamp->getYear()+1, $timestamp->getMonth(), $timestamp->getDay());
+
+        $this->assertEquals('1 year from now', $timestamp->getTimeAway(), 'testing the getTimeAway() method');
+
+        $timestamp = new Timestamp();
+        $timestamp->setDate($timestamp->getYear()-2, $timestamp->getMonth(), $timestamp->getDay());
+
+        $this->assertEquals('2 years ago', $timestamp->getTimeAway(), 'testing the getTimeAway() method');
+    }
 }
 
 ?>

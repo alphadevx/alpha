@@ -390,7 +390,7 @@ class Timestamp extends Type implements TypeInterface
  	 * @since 1.0
  	 * @throws Alpha\Exception\IllegalArguementException
  	 */
- 	function setTime($hour, $minute, $second)
+ 	public function setTime($hour, $minute, $second)
  	{
  		$valid = null;
 
