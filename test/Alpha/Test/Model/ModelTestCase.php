@@ -58,6 +58,7 @@ class ModelTestCase extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $config = ConfigProvider::getInstance();
+        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
         // flip the standard database settings with the test ones
 		$config->set('db.name', $config->get('db.test.name'));
 		$config->set('db.username', $config->get('db.test.username'));

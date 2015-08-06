@@ -965,6 +965,25 @@ class ActiveRecordTest extends ModelTestCase
         $this->assertTrue($copy->hasAttribute('IP'), 'testing the cast() method');
         $this->assertEquals($original->get('IP'), $copy->get('IP'), 'testing the cast() method');
     }
+
+    /**
+     * Testing the toArray() method
+     *
+     * @since 2.0
+     */
+    public function testToArray()
+    {
+        $record = new BadRequest();
+        $record->set('IP', '127.0.0.1');
+
+        $this->assertTrue($record instanceof BadRequest, 'Testing the toArray() method');
+        $this->assertEquals('127.0.0.1', $record->get('IP'), 'Testing the toArray() method');
+
+        $hashArray = $record->toArray();
+
+        $this->assertTrue(is_array($hashArray), 'Testing the toArray() method');
+        $this->assertEquals('127.0.0.1', $hashArray['IP'], 'Testing the toArray() method');
+    }
 }
 
 ?>
