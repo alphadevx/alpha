@@ -138,6 +138,7 @@ class ViewState
      */
     public function set($key, $value)
     {
+        $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
         $attribute = new ReflectionProperty(get_class($this), $key);
