@@ -28,6 +28,7 @@
         <exclude>
             <directory>./vendor</directory>
             <directory>./test</directory>
+            <directory>./build</directory>
         </exclude>
     </filter>
 </phpunit>
