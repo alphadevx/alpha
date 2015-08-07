@@ -61,7 +61,6 @@ class ControllerTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $_SERVER = array();
         $_POST = array();
         $_GET = array();
         $_COOKIE = array();
