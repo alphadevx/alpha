@@ -7,6 +7,8 @@ use Alpha\Model\Article;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
 use Alpha\Exception\IllegalArguementException;
+use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Http\Session\SessionProviderFactory;
 
 /**
  *
@@ -68,6 +70,9 @@ class ViewTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        $config = ConfigProvider::getInstance();
+        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+
         $denum = new DEnum();
         $denum->rebuildTable();
 
@@ -210,6 +215,41 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $pos = strpos($generatedHTML, '<footer>');
 
         $this->assertTrue(strpos($generatedHTML, '<footer>') > 0, 'Testing that a generated HTML fragment can load from a file');
+    }
+
+    /**
+     * Testing the get/setProvider methods
+     *
+     * @since 2.0
+     */
+    public function testSetGetProvider()
+    {
+        $view = View::getInstance(new Article());
+        $view->setProvider('auto', 'application/json');
+
+        $this->assertTrue($view->getProvider() instanceof \Alpha\View\Renderer\Json\RendererProviderJSON, 'Testing the get/setProvider methods');
+
+        $view->setProvider('auto');
+
+        $this->assertTrue($view->getProvider() instanceof \Alpha\View\Renderer\Html\RendererProviderHTML, 'Testing the get/setProvider methods');
+
+        $view->setProvider('Alpha\View\Renderer\Html\RendererProviderHTML');
+
+        $this->assertTrue($view->getProvider() instanceof \Alpha\View\Renderer\Html\RendererProviderHTML, 'Testing the get/setProvider methods');
+
+        try {
+            $view->setProvider('Alpha\Controller\ArticleController');
+            $this->fail('Testing the get/setProvider methods');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('The provider class [Alpha\Controller\ArticleController] does not implement the RendererProviderInterface interface!', $e->getMessage(), 'Testing the get/setProvider methods');
+        }
+
+        try {
+            $view->setProvider('Alpha\Not\There');
+            $this->fail('Testing the get/setProvider methods');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('The provider class [Alpha\Not\There] does not exist!', $e->getMessage(), 'Testing the get/setProvider methods');
+        }
     }
 }
 

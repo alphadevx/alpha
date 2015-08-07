@@ -848,19 +848,27 @@ class View
      */
     public static function setProvider($ProviderClassName, $acceptHeader = null)
     {
-        if ($ProviderClassName == 'auto' && $acceptHeader != null) {
-            if ($acceptHeader == 'application/json') {
-                // use the JSON renderer
-                $ProviderClassName = 'Alpha\View\Renderer\Json\RendererProviderJSON';
-            } else {
-                // use the HTML renderer
-                $ProviderClassName = 'Alpha\View\Renderer\Html\RendererProviderHTML';
-            }
-        } else {
+        if ($ProviderClassName == 'auto') {
             $ProviderClassName = 'Alpha\View\Renderer\Html\RendererProviderHTML';
-        }
 
-        self::$provider = RendererProviderFactory::getInstance($ProviderClassName);
+            if ($acceptHeader == 'application/json') {
+                $ProviderClassName = 'Alpha\View\Renderer\Json\RendererProviderJSON';
+            }
+
+            self::$provider = RendererProviderFactory::getInstance($ProviderClassName);
+        } else {
+            if (class_exists($ProviderClassName)) {
+                $provider = new $ProviderClassName;
+
+                if ($provider instanceof RendererProviderInterface) {
+                    self::$provider = RendererProviderFactory::getInstance($ProviderClassName);
+                } else {
+                    throw new IllegalArguementException('The provider class ['.$ProviderClassName.'] does not implement the RendererProviderInterface interface!');
+                }
+            } else {
+                throw new IllegalArguementException('The provider class ['.$ProviderClassName.'] does not exist!');
+            }
+        }
     }
 
     /**
