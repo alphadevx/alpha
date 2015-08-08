@@ -251,6 +251,21 @@ class ViewTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals('The provider class [Alpha\Not\There] does not exist!', $e->getMessage(), 'Testing the get/setProvider methods');
         }
     }
+
+    /**
+     * Testing the renderAllFields() method
+     *
+     * @since 2.0
+     */
+    public function testRenderAllFields()
+    {
+        $article = new Article();
+        $article->set('title', 'Test Article');
+        $this->view = View::getInstance($article);
+
+        $this->assertNotEmpty($this->view->renderAllFields('view'), 'Testing the renderAllFields() method');
+        $this->assertTrue(strpos($this->view->renderAllFields('view'),'Test Article') !== false, 'Testing the renderAllFields() method');
+    }
 }
 
 ?>
