@@ -99,7 +99,7 @@ class ImageUtils
 
         imagecopyresampled($newImage, $originalImage, 0, 0, $originalX, 0, $dimensions, $dimensions, $sourceWidth, $sourceHeight);
 
-        return AlphaImageUtils::saveImage($newImage, $type, $thumbnail);
+        return ImageUtils::saveImage($newImage, $type, $thumbnail);
     }
 
 
