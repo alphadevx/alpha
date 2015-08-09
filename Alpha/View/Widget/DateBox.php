@@ -58,7 +58,7 @@ class DateBox
      * @var Alpha\Model\Type\Date or Alpha\Model\Type\Timestamp
      * @since 1.0
      */
-    var $dateObject = null;
+    private $dateObject = null;
 
     /**
      * The data label for the object
@@ -66,7 +66,7 @@ class DateBox
      * @var string
      * @since 1.0
      */
-    var $label;
+    private $label;
 
     /**
      * The name of the HTML input box
@@ -74,7 +74,7 @@ class DateBox
      * @var string
      * @since 1.0
      */
-    var $name;
+    private $name;
 
     /**
      * The constructor
