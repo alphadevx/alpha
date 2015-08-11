@@ -60,6 +60,18 @@ class FileUtilsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('image/png', FileUtils::getMIMETypeByExtension('png'), 'Testing the getMIMETypeByExtension() method');
         $this->assertEquals('application/zip', FileUtils::getMIMETypeByExtension('zip'), 'Testing the getMIMETypeByExtension() method');
     }
+
+    /**
+     * Testing the listDirectoryContents() method
+     *
+     * @since 2.0
+     */
+    public function testListDirectoryContents()
+    {
+        $fileList = '';
+        $this->assertTrue(FileUtils::listDirectoryContents('.', $fileList, 0, array()) > 0, 'Testing the listDirectoryContents() method');
+        $this->assertTrue(strpos($fileList,'</em><br>') !== false, 'Testing the listDirectoryContents() method');
+    }
 }
 
 ?>

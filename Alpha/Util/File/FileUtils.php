@@ -531,13 +531,14 @@ class FileUtils
      * Renders the contents of the directory as a HTML list.
      *
      * @param string $sourceDir The path to the source directory.
+     * @param string $fileList The HTML list of files generated (pass by reference).
      * @param integer $fileCount The current file count (used in recursive calls).
      * @param array $excludeFiles An array of file names to exclude from the list rendered.
      * @return integer The current filecount for the directory.
      * @throws Alpha\Exception\AlphaException
      * @since 1.0
      */
-    public static function listDirectoryContents($sourceDir, $fileCount=0, $excludeFiles = array()) {
+    public static function listDirectoryContents($sourceDir, &$fileList, $fileCount=0, $excludeFiles = array()) {
         try
         {
             $dir = new DirectoryIterator($sourceDir);
@@ -546,12 +547,12 @@ class FileUtils
             foreach ($dir as $file) {
                 if( !in_array($file->getFilename(), $excludeFiles)) {
                     if( $file->isDir() && !$file->isDot()) {
-                        echo '<em>'.$file->getPathname().'</em><br>';
-                        $fileCount += FileUtils::listDirectoryContents($file->getPathname(), $fileCount, $excludeFiles);
-                    } elseif (!$file->isDot()){
+                        $fileList .= '<em>'.$file->getPathname().'</em><br>';
+                        $fileCount += FileUtils::listDirectoryContents($file->getPathname(), $fileList, $fileCount, $excludeFiles);
+                    } elseif (!$file->isDot()) {
                         $fileName = $file->getFilename();
                         $fileCount++;
-                        echo '&nbsp;&nbsp;&nbsp;&nbsp;'.$fileName.'<br>';
+                        $fileList .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$fileName.'<br>';
                     }
                 }
             }
