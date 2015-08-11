@@ -125,7 +125,7 @@ class CacheController extends Controller implements ControllerInterface
         $body .= '<h3>Listing contents of cache directory: '.$this->dataDir.'</h3>';
 
         $fileList = '';
-        $fileCount = FileUtils::listDirectoryContents($this->dataDir, 0, array('.htaccess'), $fileList);
+        $fileCount = FileUtils::listDirectoryContents($this->dataDir, $fileList, 0, array('.htaccess'));
         $body .= $fileList;
 
         $body .= '<h3>Total of '.$fileCount.' files in the cache.</h3>';
