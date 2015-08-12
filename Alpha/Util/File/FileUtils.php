@@ -564,7 +564,7 @@ class FileUtils
     }
 
     /**
-     * Recursively deletes the contents of the directory indicated.
+     * Recursively deletes the contents of the directory indicated (the directory itself is not deleted).
      *
      * @param string $sourceDir The path to the source directory.
      * @param array $excludeFiles An array of file names to exclude from the deletion.
@@ -573,7 +573,8 @@ class FileUtils
      */
     public static function deleteDirectoryContents($sourceDir, $excludeFiles = array())
     {
-        try {
+        try
+        {
             $dir = new DirectoryIterator($sourceDir);
 
             foreach ($dir as $file) {

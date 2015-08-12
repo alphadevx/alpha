@@ -72,6 +72,25 @@ class FileUtilsTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(FileUtils::listDirectoryContents('.', $fileList, 0, array()) > 0, 'Testing the listDirectoryContents() method');
         $this->assertTrue(strpos($fileList,'</em><br>') !== false, 'Testing the listDirectoryContents() method');
     }
+
+    /**
+     * Testing the deleteDirectoryContents() method
+     *
+     * @since 2.0
+     */
+    public function testDeleteDirectoryContents()
+    {
+        if (!file_exists('/tmp/alphatestdir')) {
+            mkdir('/tmp/alphatestdir');
+        }
+        mkdir('/tmp/alphatestdir/subdir');
+
+        $this->assertTrue(file_exists('/tmp/alphatestdir/subdir'), 'Testing the deleteDirectoryContents() method');
+
+        FileUtils::deleteDirectoryContents('/tmp/alphatestdir');
+
+        $this->assertFalse(file_exists('/tmp/alphatestdir/subdir'), 'Testing the deleteDirectoryContents() method');
+    }
 }
 
 ?>
