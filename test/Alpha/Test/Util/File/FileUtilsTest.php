@@ -91,6 +91,18 @@ class FileUtilsTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse(file_exists('/tmp/alphatestdir/subdir'), 'Testing the deleteDirectoryContents() method');
     }
+
+    /**
+     * Testing the copy() method
+     *
+     * @since 2.0
+     */
+    public function testGenerateSquareThumbnail()
+    {
+        FileUtils::copy('./public/images/logo-small.png', '/tmp/logo-small.png');
+
+        $this->assertTrue(file_exists('/tmp/logo-small.png'), 'Testing the copy() method');
+    }
 }
 
 ?>
