@@ -95,6 +95,21 @@ class SequenceViewTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEmpty($view->listView(array('URI' => '/')), 'Testing the listView() method');
         $this->assertTrue(strpos($view->listView(array('URI' => '/')),'TEST') !== false, 'Testing the listView() method');
     }
+
+    /**
+     * Testing the detailedView() method
+     *
+     * @since 2.0
+     */
+    public function testDetailedView()
+    {
+        $sequence = new Sequence();
+        $sequence->load(1);
+        $view = View::getInstance($sequence);
+
+        $this->assertNotEmpty($view->detailedView(), 'Testing the detailedView() method');
+        $this->assertTrue(strpos($view->detailedView(),'TEST') !== false, 'Testing the detailedView() method');
+    }
 }
 
 ?>

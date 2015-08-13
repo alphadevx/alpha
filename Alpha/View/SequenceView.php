@@ -204,12 +204,13 @@ class SequenceView extends View
 
         $fields['adminButtons'] = '';
 
-        $this->loadTemplate($this->BO, 'detail', $fields);
+        $html = $this->loadTemplate($this->BO, 'detail', $fields);
 
         if (method_exists($this, 'after_detailedView_callback'))
             $this->after_detailedView_callback();
 
         self::$logger->debug('<<detailedView');
+        return $html;
     }
 }
 
