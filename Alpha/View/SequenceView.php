@@ -4,6 +4,7 @@ namespace Alpha\View;
 
 use Alpha\Controller\Front\FrontController;
 use Alpha\Util\Logging\Logger;
+use Alpha\Util\Config\ConfigProvider;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Model\Type\String;
 use Alpha\View\Widget\Button;
@@ -157,14 +158,8 @@ class SequenceView extends View
 
         $fields['formFields'] = $html;
 
-        // View button
-        if (strpos($fields['URI'], '/tk/') !== false) {
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."';", 'View', 'viewBut');
-            $fields['viewButton'] = $button->render();
-        } else {
-            $button = new Button("document.location = '".$this->BO->get('URL')."';", 'View', 'viewBut');
-            $fields['viewButton'] = $button->render();
-        }
+        $button = new Button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."';", 'View', 'viewBut');
+        $fields['viewButton'] = $button->render();
 
         // supressing the edit/delete buttons for Sequences
         $fields['adminButtons'] = '';
@@ -172,12 +167,13 @@ class SequenceView extends View
         // buffer security fields to $formSecurityFields variable
         $fields['formSecurityFields'] = $this->renderSecurityFields();
 
-        $this->loadTemplate($this->BO, 'list', $fields);
+        $html = $this->loadTemplate($this->BO, 'list', $fields);
 
         if (method_exists($this, 'after_listView_callback'))
             $this->after_listView_callback();
 
         self::$logger->debug('<<listView');
+        return $html;
     }
 
     /**
