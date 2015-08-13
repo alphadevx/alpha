@@ -5,6 +5,7 @@ namespace Alpha\Util\File;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\AlphaException;
 use DirectoryIterator;
+use ZipArchive;
 
 /**
  * A utility class for carrying out various file system tasks
@@ -647,7 +648,7 @@ class FileUtils
             if (file_exists($source) === true) {
                 $zip = new ZipArchive();
 
-                if ($zip->open($dest, ZIPARCHIVE::CREATE) === true) {
+                if ($zip->open($dest, ZipArchive::CREATE) === true) {
                     $source = realpath($source);
 
                     if (is_dir($source) === true) {

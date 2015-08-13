@@ -97,11 +97,23 @@ class FileUtilsTest extends \PHPUnit_Framework_TestCase
      *
      * @since 2.0
      */
-    public function testGenerateSquareThumbnail()
+    public function testCopy()
     {
         FileUtils::copy('./public/images/logo-small.png', '/tmp/logo-small.png');
 
         $this->assertTrue(file_exists('/tmp/logo-small.png'), 'Testing the copy() method');
+    }
+
+    /**
+     * Testing the zip() method
+     *
+     * @since 2.0
+     */
+    public function testZip()
+    {
+        FileUtils::zip('./public/images/logo-small.png', '/tmp/logo-small.zip');
+
+        $this->assertTrue(file_exists('/tmp/logo-small.zip'), 'Testing the zip() method');
     }
 }
 
