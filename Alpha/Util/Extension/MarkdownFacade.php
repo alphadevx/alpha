@@ -87,9 +87,12 @@ class MarkdownFacade
         $config = ConfigProvider::getInstance();
 
         $this->BO = $BO;
-        if ($this->BO instanceof \Alpha\Model\Article && $this->BO->isLoadedFromFile()) {
-            $underscoreTimeStamp = str_replace(array('-',' ',':'), '_', $this->BO->getContentFileDate());
-            $this->filename = $config->get('app.file.store.dir').'cache/html/'.get_class($this->BO).'_'.$this->BO->get('title').'_'.$underscoreTimeStamp.'.html';
+
+        if ($this->BO instanceof \Alpha\Model\Article) {
+            if ($this->BO->isLoadedFromFile()) {
+                $underscoreTimeStamp = str_replace(array('-',' ',':'), '_', $this->BO->getContentFileDate());
+                $this->filename = $config->get('app.file.store.dir').'cache/html/'.get_class($this->BO).'_'.$this->BO->get('title').'_'.$underscoreTimeStamp.'.html';
+            }
         } else {
             $this->filename = $config->get('app.file.store.dir').'cache/html/'.get_class($this->BO).'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.html';
         }
@@ -204,7 +207,7 @@ class MarkdownFacade
     private function cache()
     {
         // check to ensure that the article is not transient before caching it
-        if ($this->BO->getID() != '00000000000' || $this->BO->isLoadedFromFile()) {
+        if (!$this->BO->isTransient() && $this->filename != '') {
             $fp = fopen($this->filename,"w");
             if (!$fp) {
                 throw new AlphaException('Failed to open the cache file for writing, directory permissions my not be set correctly!');
