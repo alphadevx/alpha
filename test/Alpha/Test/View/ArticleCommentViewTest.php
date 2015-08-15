@@ -103,6 +103,20 @@ class ArticleCommentViewTest extends ControllerTestCase
         $this->assertNotEmpty($view->markdownView(), 'Testing the markdownView() method');
         $this->assertTrue(strpos($view->markdownView(),'test comment') !== false, 'Testing the markdownView() method');
     }
+
+    /**
+     * Testing the createView() method
+     *
+     * @since 2.0
+     */
+    public function testCreateView()
+    {
+        $articleComment = new ArticleComment();
+        $view = View::getInstance($articleComment);
+
+        $this->assertNotEmpty($view->createView(array('formAction' => '/')), 'Testing the createView() method');
+        $this->assertTrue(strpos($view->createView(array('formAction' => '/')),'Post Comment') !== false, 'Testing the createView() method');
+    }
 }
 
 ?>
