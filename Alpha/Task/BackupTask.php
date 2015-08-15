@@ -91,7 +91,7 @@ class BackupTask implements TaskInterface
         }
 
         if ($config->get('backup.compress')) {
-            FileUtils::zip($targetDir, $targetDir.date("Y-m-d").'.zip');
+            FileUtils::zip($targetDir, $config->get('backup.dir').date("Y-m-d").'.zip');
 
             // we can safely remove the uncompressed files now to save space...
             FileUtils::deleteDirectoryContents($targetDir.'logs');

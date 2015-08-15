@@ -6,6 +6,8 @@ use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\AlphaException;
 use DirectoryIterator;
 use ZipArchive;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
 
 /**
  * A utility class for carrying out various file system tasks
