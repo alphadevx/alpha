@@ -2116,6 +2116,43 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 	{
 		$this->BO = $BO;
 	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see Alpha\Model\ActiveRecordProviderInterface::checkDatabaseExists()
+	 */
+   	public static function checkDatabaseExists()
+   	{
+   		$config = ConfigProvider::getInstance();
+
+		return file_exists($config->get('db.file.path'));
+   	}
+
+   	/**
+	 * (non-PHPdoc)
+	 * @see Alpha\Model\ActiveRecordProviderInterface::createDatabase()
+	 */
+   	public static function createDatabase()
+   	{
+   		$config = ConfigProvider::getInstance();
+
+		if (!self::checkDatabaseExists()) {
+			fopen($config->get('db.file.path'), 'x+');
+		}
+   	}
+
+   	/**
+	 * (non-PHPdoc)
+	 * @see Alpha\Model\ActiveRecordProviderInterface::dropDatabase()
+	 */
+   	public static function dropDatabase()
+   	{
+   		$config = ConfigProvider::getInstance();
+
+		if (self::checkDatabaseExists()) {
+			unlink($config->get('db.file.path'));
+		}
+   	}
 }
 
 ?>

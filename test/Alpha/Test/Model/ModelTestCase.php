@@ -68,7 +68,8 @@ class ModelTestCase extends \PHPUnit_Framework_TestCase
 		$config->set('db.file.path', $config->get('db.file.test.path'));
 		// force a disconnect to break any existing connections to the main database
 		ActiveRecord::disconnect();
-		// TODO create the test database
+		// create the test database
+        ActiveRecord::createDatabase();
     }
 
     /**
@@ -78,7 +79,7 @@ class ModelTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-    	// TODO drop the test database between tests
+    	ActiveRecord::dropDatabase();
     }
 }
 

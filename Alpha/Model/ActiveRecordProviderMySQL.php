@@ -2314,6 +2314,33 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 		self::$logger->debug('<<findOffendingValue ['.$value.'])');
 		return $value;
 	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see Alpha\Model\ActiveRecordProviderInterface::checkDatabaseExists()
+	 */
+   	public static function checkDatabaseExists()
+   	{
+   		// TODO: implement
+   	}
+
+   	/**
+	 * (non-PHPdoc)
+	 * @see Alpha\Model\ActiveRecordProviderInterface::createDatabase()
+	 */
+   	public static function createDatabase()
+   	{
+   		// TODO: implement
+   	}
+
+   	/**
+	 * (non-PHPdoc)
+	 * @see Alpha\Model\ActiveRecordProviderInterface::dropDatabase()
+	 */
+   	public static function dropDatabase()
+   	{
+   		// TODO: implement
+   	}
 }
 
 ?>

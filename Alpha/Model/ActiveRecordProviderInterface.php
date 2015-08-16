@@ -445,6 +445,30 @@ interface ActiveRecordProviderInterface
    	 * @since 1.1
    	 */
    	public function query($sqlQuery);
+
+   	/**
+   	 * Check to see if the configured database exists
+   	 *
+   	 * @return bool
+   	 * @since 2.0
+   	 */
+   	public static function checkDatabaseExists();
+
+	/**
+   	 * Creates the configured database
+   	 *
+   	 * @throws Alpha\Exception\AlphaException
+   	 * @since 2.0
+   	 */
+   	public static function createDatabase();
+
+   	/**
+   	 * Drops the configured database
+   	 *
+   	 * @throws Alpha\Exception\AlphaException
+   	 * @since 2.0
+   	 */
+   	public static function dropDatabase();
 }
 
 ?>

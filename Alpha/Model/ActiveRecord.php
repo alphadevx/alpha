@@ -2349,6 +2349,48 @@ abstract class ActiveRecord
 
 		return $propArray;
     }
+
+    /**
+   	 * Check to see if the configured database exists
+   	 *
+   	 * @return bool
+   	 * @since 2.0
+   	 */
+   	public static function checkDatabaseExists()
+   	{
+   		$config = ConfigProvider::getInstance();
+
+		$provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), new Person());
+		return $provider->checkDatabaseExists();
+   	}
+
+   	/**
+   	 * Creates the configured database
+   	 *
+   	 * @throws Alpha\Exception\AlphaException
+   	 * @since 2.0
+   	 */
+   	public static function createDatabase()
+   	{
+   		$config = ConfigProvider::getInstance();
+
+		$provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), new Person());
+		$provider->createDatabase();
+   	}
+
+   	/**
+   	 * Drops the configured database
+   	 *
+   	 * @throws Alpha\Exception\AlphaException
+   	 * @since 2.0
+   	 */
+   	public static function dropDatabase()
+   	{
+   		$config = ConfigProvider::getInstance();
+
+		$provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), new Person());
+		$provider->createDatabase();
+   	}
 }
 
 ?>
