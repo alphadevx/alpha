@@ -115,7 +115,16 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 		$config = ConfigProvider::getInstance();
 
 		if (!isset(self::$connection)) {
-			self::$connection = new Mysqli($config->get('db.hostname'), $config->get('db.username'), $config->get('db.password'), $config->get('db.name'));
+			try {
+				self::$connection = new Mysqli($config->get('db.hostname'), $config->get('db.username'), $config->get('db.password'), $config->get('db.name'));
+			} catch (\Exception $e) {
+				// if we failed to connect because the database does not exist, create it and try again
+				if (strpos($e->getMessage(),'HY000/1049') !== false) {
+					self::createDatabase();
+					self::$connection = new Mysqli($config->get('db.hostname'), $config->get('db.username'), $config->get('db.password'), $config->get('db.name'));
+				}
+			}
+
 			self::$connection->set_charset('utf8');
 
 			if (mysqli_connect_error())
@@ -1629,7 +1638,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 	 * (non-PHPdoc)
 	 * @see Alpha\Model\ActiveRecordProviderInterface::checkTableNeedsUpdate()
 	 */
-	public function checkTableNeedsUpdate() {
+	public function checkTableNeedsUpdate()
+	{
 		self::$logger->debug('>>checkTableNeedsUpdate()');
 
 		$updateRequired = false;
@@ -2321,7 +2331,17 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 	 */
    	public static function checkDatabaseExists()
    	{
-   		// TODO: implement
+   		$config = ConfigProvider::getInstance();
+
+   		$connection = new Mysqli($config->get('db.hostname'), $config->get('db.username'), $config->get('db.password'));
+
+   		$result = $connection->query('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = \''.$config->get('db.name').'\'');
+
+   		if (count($result) > 0) {
+   			return true;
+   		} else {
+   			return false;
+   		}
    	}
 
    	/**
@@ -2330,7 +2350,11 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 	 */
    	public static function createDatabase()
    	{
-   		// TODO: implement
+   		$config = ConfigProvider::getInstance();
+
+   		$connection = new Mysqli($config->get('db.hostname'), $config->get('db.username'), $config->get('db.password'));
+
+   		$result = $connection->query('CREATE DATABASE '.$config->get('db.name'));
    	}
 
    	/**
@@ -2339,7 +2363,11 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 	 */
    	public static function dropDatabase()
    	{
-   		// TODO: implement
+   		$config = ConfigProvider::getInstance();
+
+   		$connection = new Mysqli($config->get('db.hostname'), $config->get('db.username'), $config->get('db.password'));
+
+   		$result = $connection->query('DROP DATABASE '.$config->get('db.name'));
    	}
 }
 
