@@ -208,7 +208,7 @@ abstract class ActiveRecord
 	{
 		$config = ConfigProvider::getInstance();
 
-		$provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), new Person());
+		$provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'));
 		$provider->disconnect();
 	}
 
@@ -2389,7 +2389,7 @@ abstract class ActiveRecord
    		$config = ConfigProvider::getInstance();
 
 		$provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), new Person());
-		$provider->createDatabase();
+		$provider->dropDatabase();
    	}
 }
 

@@ -66,32 +66,36 @@ class ActiveRecordProviderFactory
 	 * based on the name of the provider class supplied.
 	 *
 	 * @param $providerName The fully-qualified class name of the provider class.
-	 * @param $BO The active record instance to pass to the persistance provider for mapping.
+	 * @param $BO The (optional) active record instance to pass to the persistance provider for mapping.
 	 * @throws Alpha\Exception\IllegalArguementException
 	 * @return Alpha\Model\ActiveRecordProviderInterface
 	 * @since 1.1
 	 */
-	public static function getInstance($providerName, $BO)
+	public static function getInstance($providerName, $BO = null)
 	{
-		if(self::$logger == null)
+		if(self::$logger == null) {
 			self::$logger = new Logger('ActiveRecordProviderFactory');
+		}
 
 		self::$logger->debug('>>getInstance(providerName=['.$providerName.'], BO=['.print_r($BO, true).'])');
 
 		$config = ConfigProvider::getInstance();
 
-		if(class_exists($providerName)) {
+		if (class_exists($providerName)) {
 
 			$instance = new $providerName;
 
-			if(!$instance instanceof ActiveRecordProviderInterface)
+			if (!$instance instanceof ActiveRecordProviderInterface) {
 				throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected ActiveRecordProviderInterface interface!');
+			}
 
-			$instance->setBO($BO);
+			if ($BO instanceof ActiveRecord) {
+				$instance->setBO($BO);
+			}
 
 			self::$logger->debug('<<getInstance: [Object '.$providerName.']');
 			return $instance;
-		}else{
+		} else {
 			throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
 		}
 

@@ -6,7 +6,9 @@ use Alpha\Model\Article;
 use Alpha\Model\Tag;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
+use Alpha\Model\ActiveRecord;
 use Alpha\Util\Search\SearchProviderFactory;
+use Alpha\Util\Config\ConfigProvider;
 
 /**
  *
@@ -75,17 +77,23 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        $config = ConfigProvider::getInstance();
+        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+        $config->set('db.provider.name', 'Alpha\Model\ActiveRecordProviderSQLite');
+
+        ActiveRecord::createDatabase();
+
         $tag = new Tag();
-        $tag->rebuildTable();
+        $tag->makeTable();
 
         $denum = new DEnum();
-        $denum->rebuildTable();
+        $denum->makeTable();
 
         $item = new DEnumItem();
-        $item->rebuildTable();
+        $item->makeTable();
 
         $article = new Article();
-        $article->rebuildTable();
+        $article->makeTable();
 
         $denum = new DEnum('Alpha\Model\Article::section');
         $item->set('DEnumID', $denum->getOID());
@@ -104,19 +112,10 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        $article = new Article();
-        $article->dropTable();
-
-        $tag = new Tag();
-        $tag->dropTable();
-
-        $denum = new DEnum();
-        $denum->dropTable();
-
-        $item = new DEnumItem();
-        $item->dropTable();
-
         unset($this->article);
+
+        ActiveRecord::dropDatabase();
+        ActiveRecord::disconnect();
     }
 
     /**

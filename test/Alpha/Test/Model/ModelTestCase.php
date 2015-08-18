@@ -59,17 +59,11 @@ class ModelTestCase extends \PHPUnit_Framework_TestCase
     {
         $config = ConfigProvider::getInstance();
         $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
-        // flip the standard database settings with the test ones
-		$config->set('db.name', $config->get('db.test.name'));
-		$config->set('db.username', $config->get('db.test.username'));
-		$config->set('db.password', $config->get('db.test.password'));
-		$config->set('db.hostname', $config->get('db.test.hostname'));
-		// do the same for the SQLite3 provider
-		$config->set('db.file.path', $config->get('db.file.test.path'));
-		// force a disconnect to break any existing connections to the main database
-		ActiveRecord::disconnect();
-		// create the test database
-        ActiveRecord::createDatabase();
+        
+        foreach ($this->getActiveRecordProviders() as $provider) {
+            $config->set('db.provider.name', $provider[0]);
+            ActiveRecord::createDatabase();
+        }
     }
 
     /**
@@ -79,7 +73,26 @@ class ModelTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-    	ActiveRecord::dropDatabase();
+        $config = ConfigProvider::getInstance();
+        foreach ($this->getActiveRecordProviders() as $provider) {
+            $config->set('db.provider.name', $provider[0]);
+            ActiveRecord::dropDatabase();
+            ActiveRecord::disconnect();
+        }
+    }
+
+    /**
+     * Returns an array of Active Record providers
+     *
+     * @return array
+     * @since 2.0
+     */
+    public function getActiveRecordProviders()
+    {
+        return array(
+            array('Alpha\Model\ActiveRecordProviderSQLite'),
+            array('Alpha\Model\ActiveRecordProviderMySQL')
+        );
     }
 }
 
