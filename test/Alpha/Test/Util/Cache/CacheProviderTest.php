@@ -59,7 +59,8 @@ class CacheProviderTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array('Alpha\Util\Cache\CacheProviderArray'),
-            array('Alpha\Util\Cache\CacheProviderMemcache')
+            array('Alpha\Util\Cache\CacheProviderMemcache'),
+            array('Alpha\Util\Cache\CacheProviderRedis')
         );
     }
 
