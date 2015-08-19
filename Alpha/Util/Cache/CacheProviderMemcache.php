@@ -4,6 +4,7 @@ namespace Alpha\Util\Cache;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
+use Memcache;
 
 /**
  *
