@@ -12,7 +12,7 @@ before_script:
  - wget http://getcomposer.org/composer.phar
  - php composer.phar install --dev --no-interaction
  - phpenv config-add php.ini
- - pecl install apcu
+ - pecl install -f apcu
 
 script:
  - vendor/bin/phpunit
