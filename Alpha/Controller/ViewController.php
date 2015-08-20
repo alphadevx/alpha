@@ -137,12 +137,6 @@ class ViewController extends Controller implements ControllerInterface
 
                 $ActiveRecordType = urldecode($params['ActiveRecordType']);
 
-                /*
-                *  check and see if a custom create controller exists for this BO, and if it does use it otherwise continue
-                */
-                if ($this->getCustomControllerName($ActiveRecordType, 'view') != null)
-                    $this->loadCustomController($ActiveRecordType, 'view');
-
                 if (class_exists($ActiveRecordType))
                     $this->BO = new $ActiveRecordType();
                 else
