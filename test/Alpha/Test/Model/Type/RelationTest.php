@@ -17,7 +17,6 @@ use Alpha\Exception\AlphaException;
  *
  * @since 1.0
  * @author John Collins <dev@alphaframework.org>
- * @version $Id: RelationTest.php 1844 2014-11-17 21:51:12Z alphadevx $
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -320,20 +319,18 @@ class RelationTest extends ModelTestCase
         $person1->set('email', 'user1@test.com');
         $person1->set('password', 'password');
         $person1->save();
-        $lookup = $person1->getPropObject('rights')->getLookup();
-        $lookup->setValue(array($person1->getOID(), $group->getOID()));
-        $lookup->save();
+        $person1->addToGroup('unittestgroup');
 
         $person2 = new Person();
         $person2->set('displayName', 'user2');
         $person2->set('email', 'user2@test.com');
         $person2->set('password', 'password');
         $person2->save();
-        $lookup = $person2->getPropObject('rights')->getLookup();
-        $lookup->setValue(array($person2->getOID(), $group->getOID()));
-        $lookup->save();
+        $person2->addToGroup('unittestgroup');
 
         $person2->getPropObject('rights')->setValue($group->getOID());
+
+        $this->assertEquals(2, count($group->getPropObject('members')->getRelatedObjects('Alpha\Model\Rights')), 'testing the getRelatedClassDisplayFieldValue() method on MANY-TO-MANY relation');
 
         try {
             $this->assertEquals('user1@test.com,user2@test.com', $person2->getPropObject('rights')->getRelatedClassDisplayFieldValue(), 'testing the getRelatedClassDisplayFieldValue() method on MANY-TO-MANY relation');

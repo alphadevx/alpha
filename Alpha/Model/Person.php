@@ -346,6 +346,29 @@ class Person extends ActiveRecord
 	}
 
 	/**
+	 * Adds this person to the rights group specified
+	 *
+	 * @param string $groupName
+	 * @throws Alpha\Exception\RecordNotFoundException
+	 * @since 2.0
+	 */
+	public function addToGroup($groupName)
+	{
+		if (self::$logger == null)
+			self::$logger = new Logger('Person');
+		self::$logger->debug('>>addToGroup(groupName=['.$groupName.'])');
+
+		$group = new Rights();
+		$group->loadByAttribute('name', $groupName);
+
+		$lookup = $this->getPropObject('rights')->getLookup();
+        $lookup->setValue(array($this->getOID(), $group->getOID()));
+        $lookup->save();
+
+		self::$logger->debug('<<addToGroup');
+	}
+
+	/**
 	 * A generic method for mailing a person
 	 *
 	 * @param string $message
