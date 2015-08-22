@@ -199,7 +199,24 @@ class Validator
 	{
 		$acceptable = array(true, false, 'true', 'false', 1, 0, '1', '0', 'on', 'off');
 
-		if(!in_array($value, $acceptable, true))
+		if (!in_array($value, $acceptable, true))
+			return false;
+		else
+			return true;
+	}
+
+	/**
+	 * Validate that the provided value is a valid boolean true or not (true, 'true', 1, '1', 'on')
+	 *
+	 * @param $value
+	 * @return boolean
+	 * @since 2.0
+	 */
+	public static function isBooleanTrue($value)
+	{
+		$acceptableTrue = array(true, 'true', 1, '1', 'on');
+
+		if (!in_array($value, $acceptableTrue, true))
 			return false;
 		else
 			return true;
@@ -214,7 +231,7 @@ class Validator
 	 */
 	public static function isAlpha($value)
 	{
-		if(preg_match(self::REQUIRED_ALPHA, $value))
+		if (preg_match(self::REQUIRED_ALPHA, $value))
 			return true;
 		else
 			return false;
@@ -229,7 +246,7 @@ class Validator
 	 */
 	public static function isAlphaNum($value)
 	{
-		if(preg_match(self::REQUIRED_ALPHA_NUMERIC, $value))
+		if (preg_match(self::REQUIRED_ALPHA_NUMERIC, $value))
 			return true;
 		else
 			return false;
@@ -244,7 +261,7 @@ class Validator
 	 */
 	public static function isSequence($value)
 	{
-		if(preg_match(self::REQUIRED_SEQUENCE, $value))
+		if (preg_match(self::REQUIRED_SEQUENCE, $value))
 			return true;
 		else
 			return false;
@@ -259,12 +276,12 @@ class Validator
 	 */
 	public static function isURL($url)
 	{
-		if(preg_match(self::REQUIRED_HTTP_URL, $url)) {
-			if(!filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED))
+		if (preg_match(self::REQUIRED_HTTP_URL, $url)) {
+			if (!filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED))
 				return false;
 			else
 				return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -278,12 +295,12 @@ class Validator
 	 */
 	public static function isIP($ip)
 	{
-		if(preg_match(self::REQUIRED_IP, $ip)) {
-			if(!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
+		if (preg_match(self::REQUIRED_IP, $ip)) {
+			if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
 				return false;
 			else
 				return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -297,12 +314,12 @@ class Validator
 	 */
 	public static function isEmail($email)
 	{
-		if(preg_match(self::REQUIRED_EMAIL, $email)) {
-			if(!filter_var($email, FILTER_VALIDATE_EMAIL))
+		if (preg_match(self::REQUIRED_EMAIL, $email)) {
+			if (!filter_var($email, FILTER_VALIDATE_EMAIL))
 				return false;
 			else
 				return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
