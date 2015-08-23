@@ -121,7 +121,7 @@ class LogController extends Controller implements ControllerInterface
 
 			$log = new LogFile($this->logPath);
 			if (preg_match("/alpha.*/", basename($this->logPath)))
-				$body .= $log->renderLog(array('Date/time','Level','Class','Message','Client','IP'));
+				$body .= $log->renderLog(array('Date/time','Level','Class','Message','Client','IP','Server hostname'));
 			if (preg_match("/search.*/", basename($this->logPath)))
 				$body .= $log->renderLog(array('Search query','Search date','Client Application','Client IP'));
 			if (preg_match("/feeds.*/", basename($this->logPath)))
