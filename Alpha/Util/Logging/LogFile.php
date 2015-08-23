@@ -58,22 +58,6 @@ class LogFile
  	private $path;
 
  	/**
- 	 * An array of column headers use when rendering the log file
- 	 *
- 	 * @var array
- 	 * @since 1.0
- 	 */
- 	private $columnHeadings;
-
- 	/**
- 	 * The value seperator to use in the file (default is a pipe)
- 	 *
- 	 * @var string
- 	 * @since 1.0
- 	 */
- 	private $seperator = '|';
-
- 	/**
  	 * The maximum size of the log file in megabytes before a backup is created and a
  	 * new file is created, default is 5
  	 *
@@ -105,17 +89,6 @@ class LogFile
  	}
 
  	/**
- 	 * Set the value seperator
- 	 *
- 	 * @param string $seperator
- 	 * @since 1.0
- 	 */
- 	public function setSeperator($seperator)
- 	{
- 		$this->seperator = $seperator;
- 	}
-
- 	/**
  	 * Writes a line of data to the log file
  	 *
  	 * $param array $line
@@ -125,24 +98,9 @@ class LogFile
  	{
  		$config = ConfigProvider::getInstance();
 
- 		$mergedLine = '';
-
- 		$colCount = count($line);
-
- 		for ($i = 0; $i < $colCount; $i++) {
- 			/*
- 			 * we need to ensure that the seperator is not in the value anywhere, as it
- 			 * would cause problems later when reading the log
- 			 */
- 			$value = str_replace($this->seperator, '', $line[$i]);
-			if ($i == ($colCount-1))
-				$mergedLine .= $value.$this->seperator."\n";
-			else
-				$mergedLine .= $value.$this->seperator;
- 		}
-
  		try {
- 			file_put_contents($this->path, $mergedLine, FILE_APPEND|LOCK_EX);
+ 			$fp = fopen($this->path, 'a+');
+ 			fputcsv($fp, $line, ',', '"', '\\');
 
  			if ($this->checkFileSize() >= $this->MaxSize)
 				$this->backupFile();
@@ -154,7 +112,8 @@ class LogFile
 				if (!file_exists($logsDir))
 					mkdir($logsDir, 0766);
 
-	 			file_put_contents($this->path, $mergedLine, FILE_APPEND|LOCK_EX);
+	 			$fp = fopen($this->path, 'a+');
+ 				fputcsv($fp, $line, ',', '"', '\\');
 
 	 			if ($this->checkFileSize() >= $this->MaxSize)
 					$this->backupFile();
@@ -215,54 +174,49 @@ class LogFile
  			$body .= '<th>'.$heading.'</th>';
  		$body .= '</tr>';
 
- 		// now read the file and render the data
- 		$LogFile = file_get_contents($this->path);
- 		$fields = explode($this->seperator, $LogFile);
-		$totalLines = (count($fields)-1)/count($cols);
+	 	$fp = fopen($this->path, 'r');
 
- 		for ($line = 0; $line < $totalLines; $line++) {
- 			$count = count($cols);
+	 	while (($line = fgetcsv($fp)) !== FALSE) {
 
- 			$body .= '<tr>';
+	 		$body .= '<tr>';
 
-	 		for ($col = 0; $col < $count; $col++) {
-	 			$index = ($line*count($cols))+$col;
+	 		for ($col = 0; $col < count($line); $col++) {
 
 	 			// if it is an error log, render the error types field in different colours
 	 			if ($col == 1 && $cols[1] == 'Level'){
-	 				switch ($fields[$index]) {
+	 				switch ($line[$col]) {
 	 					case 'DEBUG':
-	 						$body .= '<td class="debug">'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
+	 						$body .= '<td class="debug">'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
 	 					break;
 	 					case 'INFO':
-	 						$body .= '<td class="info">'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
+	 						$body .= '<td class="info">'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
 	 					break;
 	 					case 'WARN':
-	 						$body .= '<td class="warn">'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
+	 						$body .= '<td class="warn">'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
 	 					break;
 	 					case 'ERROR':
-	 						$body .= '<td class="error">'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
+	 						$body .= '<td class="error">'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
 	 					break;
 	 					case 'FATAL':
-	 						$body .= '<td class="fatal">'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
+	 						$body .= '<td class="fatal">'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
 	 					break;
 	 					case 'SQL':
-	 						$body .= '<td class="sql">'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
+	 						$body .= '<td class="sql">'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
 	 					break;
 	 					default:
-	 						$body .= '<td>'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
+	 						$body .= '<td>'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
 	 					break;
 	 				}
 	 			} else {
 	 				if ($cols[$col] == 'Message')
-	 					$body .= '<td><pre>'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</pre></td>';
+	 					$body .= '<td><pre>'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</pre></td>';
 	 				else
-	 					$body .= '<td>'.htmlentities($fields[$index], ENT_COMPAT, 'utf-8').'</td>';
+	 					$body .= '<td>'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
 	 			}
 	 		}
 
- 			$body .= '</tr>';
- 		}
+	 		$body .= '</tr>';
+	 	}
 
  		$body .= '</table>';
 

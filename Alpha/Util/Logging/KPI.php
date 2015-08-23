@@ -166,7 +166,6 @@ class KPI
         $logfile = new LogFile($config->get('app.file.store.dir').'logs/kpi-'.$this->name->getValue().'.csv');
 
         $logfile->setMaxSize($config->get('app.log.file.max.size'));
-        $logfile->setSeperator(',');
 
         $logfile->writeLine(array($this->timeStamp, $this->name->getValue(), $this->sessionID, $this->startTime, $this->endTime, $this->duration));
     }
@@ -188,7 +187,6 @@ class KPI
         $logfile = new LogFile($config->get('app.file.store.dir').'logs/kpi-'.$this->name->getValue().'.csv');
 
         $logfile->setMaxSize($config->get('app.log.file.max.size'));
-        $logfile->setSeperator(',');
 
         $logfile->writeLine(array($this->timeStamp, $this->name->getValue().' ['.$stepName.']', $this->sessionID, $this->startTime, $this->endTime, $this->duration));
     }
