@@ -181,9 +181,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 	 * (non-PHPdoc)
 	 * @see Alpha\Model\ActiveRecordProviderInterface::load()
 	 */
-	public function load($OID)
+	public function load($OID, $version=0)
 	{
-		self::$logger->debug('>>load(OID=['.print_r($OID, true).'])');
+		self::$logger->debug('>>load(OID=['.$OID.'], version=['.$version.'])');
 
         $config = ConfigProvider::getInstance();
 
@@ -193,7 +193,11 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 			$fields .= $att.',';
 		$fields = mb_substr($fields, 0, -1);
 
-		$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE OID = ? LIMIT 1;';
+		if ($version > 0) {
+			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().'_history WHERE OID = ? AND version_num = ? LIMIT 1;';
+		} else {
+			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE OID = ? LIMIT 1;';
+		}
 		$this->BO->setLastQuery($sqlQuery);
 		$stmt = self::getConnection()->stmt_init();
 
@@ -201,6 +205,11 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
 		if ($stmt->prepare($sqlQuery)) {
 			$stmt->bind_param('i', $OID);
+
+			if ($version > 0) {
+				$stmt->bind_param('i', $version);
+			}
+
 			$stmt->execute();
 
 			$result = $this->bindResult($stmt);
@@ -270,6 +279,50 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 		}
 
 		self::$logger->debug('<<load ['.$OID.']');
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see Alpha\Model\ActiveRecordProviderInterface::loadAllOldVersions()
+	 */
+	public function loadAllOldVersions($OID)
+	{
+		self::$logger->debug('>>loadAllOldVersions(OID=['.$OID.'])');
+
+		$config = ConfigProvider::getInstance();
+
+		if (!$this->BO->getMaintainHistory()) {
+			throw new RecordFoundException('loadAllOldVersions method called on an active record where no history is maintained!');
+		}
+
+		$sqlQuery = 'SELECT version_num FROM '.$this->BO->getTableName().'_history WHERE OID = \''.$OID.'\' ORDER BY version_num;';
+
+		$this->BO->setLastQuery($sqlQuery);
+
+		if (!$result = self::getConnection()->query($sqlQuery)) {
+			throw new RecordNotFoundException('Failed to load object versions, MySQL error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
+			self::$logger->debug('<<loadAllOldVersions [0]');
+			return array();
+		}
+
+		// now build an array of objects to be returned
+		$objects = array();
+		$count = 0;
+		$RecordClass = get_class($this->BO);
+
+		while ($row = $result->fetchArray()) {
+			try {
+				$obj = new $RecordClass();
+				$obj->load($OID, $row['version_num']);
+				$objects[$count] = $obj;
+				$count++;
+			} catch (ResourceNotAllowedException $e) {
+				// the resource not allowed will be absent from the list
+			}
+		}
+
+		self::$logger->debug('<<loadAllOldVersions ['.count($objects).']');
+		return $objects;
 	}
 
 	/**

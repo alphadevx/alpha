@@ -172,25 +172,34 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 	 * (non-PHPdoc)
 	 * @see Alpha\Model\ActiveRecordProviderInterface::load()
 	 */
-	public function load($OID)
+	public function load($OID, $version=0)
 	{
-		self::$logger->debug('>>load(OID=['.$OID.'])');
+		self::$logger->debug('>>load(OID=['.$OID.'], version=['.$version.'])');
 
 		$config = ConfigProvider::getInstance();
 
 		$attributes = $this->BO->getPersistentAttributes();
 		$fields = '';
-		foreach($attributes as $att)
+		foreach ($attributes as $att) {
 			$fields .= $att.',';
+		}
 		$fields = mb_substr($fields, 0, -1);
 
-		$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE OID = :OID LIMIT 1;';
+		if ($version > 0) {
+			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().'_history WHERE OID = :OID AND version_num = :version LIMIT 1;';
+		} else {
+			$sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE OID = :OID LIMIT 1;';
+		}
 		$this->BO->setLastQuery($sqlQuery);
 		$stmt = self::getConnection()->prepare($sqlQuery);
 
 		$row = array();
 
-		if($stmt instanceof SQLite3Stmt) {
+		if ($stmt instanceof SQLite3Stmt) {
+			if ($version > 0) {
+				$stmt->bindValue(':version', $version, SQLITE3_INTEGER);
+			}
+
 			$stmt->bindValue(':OID', $OID, SQLITE3_INTEGER);
 
 			$result = $stmt->execute();
@@ -199,9 +208,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 			$row = $result->fetchArray(SQLITE3_ASSOC);
 
 			$stmt->close();
-		}else{
+		} else {
 			self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
-			if(!$this->BO->checkTableExists()) {
+			if (!$this->BO->checkTableExists()) {
 				$this->BO->makeTable();
 
 				throw new RecordNotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->BO->getTableName().'] did not exist so had to create!');
@@ -209,7 +218,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 			return;
 		}
 
-		if(!isset($row['OID']) || $row['OID'] < 1) {
+		if (!isset($row['OID']) || $row['OID'] < 1) {
 			throw new RecordNotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');
 			self::$logger->debug('<<load');
 			return;
@@ -220,36 +229,36 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 		$properties = $reflection->getProperties();
 
 		try {
-			foreach($properties as $propObj) {
+			foreach ($properties as $propObj) {
 				$propName = $propObj->name;
 
 				// filter transient attributes
-				if(!in_array($propName, $this->BO->getTransientAttributes())) {
+				if (!in_array($propName, $this->BO->getTransientAttributes())) {
 					$this->BO->set($propName, $row[$propName]);
-				}elseif(!$propObj->isPrivate() && $this->BO->getPropObject($propName) instanceof Relation) {
+				} elseif (!$propObj->isPrivate() && $this->BO->getPropObject($propName) instanceof Relation) {
 					$prop = $this->BO->getPropObject($propName);
 
 					// handle the setting of ONE-TO-MANY relation values
-					if($prop->getRelationType() == 'ONE-TO-MANY') {
+					if ($prop->getRelationType() == 'ONE-TO-MANY') {
 						$this->BO->set($propObj->name, $this->BO->getOID());
 					}
 
 					// handle the setting of MANY-TO-ONE relation values
-					if($prop->getRelationType() == 'MANY-TO-ONE' && isset($row[$propName])) {
+					if ($prop->getRelationType() == 'MANY-TO-ONE' && isset($row[$propName])) {
 						$this->BO->set($propObj->name, $row[$propName]);
 					}
 				}
 			}
-		}catch (IllegalArguementException $e) {
+		} catch (IllegalArguementException $e) {
 			self::$logger->warn('Bad data stored in the table ['.$this->BO->getTableName().'], field ['.$propObj->name.'] bad value['.$row[$propObj->name].'], exception ['.$e->getMessage().']');
-		}catch (PHPException $e) {
+		} catch (PHPException $e) {
 			// it is possible that the load failed due to the table not being up-to-date
-			if($this->BO->checkTableNeedsUpdate()) {
+			if ($this->BO->checkTableNeedsUpdate()) {
 				$missingFields = $this->BO->findMissingFields();
 
 				$count = count($missingFields);
 
-				for($i = 0; $i < $count; $i++) {
+				for ($i = 0; $i < $count; $i++) {
 					$this->BO->addProperty($missingFields[$i]);
 				}
 
@@ -260,6 +269,50 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 		}
 
 		self::$logger->debug('<<load');
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see Alpha\Model\ActiveRecordProviderInterface::loadAllOldVersions()
+	 */
+	public function loadAllOldVersions($OID)
+	{
+		self::$logger->debug('>>loadAllOldVersions(OID=['.$OID.'])');
+
+		$config = ConfigProvider::getInstance();
+
+		if (!$this->BO->getMaintainHistory()) {
+			throw new RecordFoundException('loadAllOldVersions method called on an active record where no history is maintained!');
+		}
+
+		$sqlQuery = 'SELECT version_num FROM '.$this->BO->getTableName().'_history WHERE OID = \''.$OID.'\' ORDER BY version_num;';
+
+		$this->BO->setLastQuery($sqlQuery);
+
+		if (!$result = self::getConnection()->query($sqlQuery)) {
+			throw new RecordNotFoundException('Failed to load object versions, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
+			self::$logger->debug('<<loadAllOldVersions [0]');
+			return array();
+		}
+
+		// now build an array of objects to be returned
+		$objects = array();
+		$count = 0;
+		$RecordClass = get_class($this->BO);
+
+		while ($row = $result->fetchArray()) {
+			try {
+				$obj = new $RecordClass();
+				$obj->load($OID, $row['version_num']);
+				$objects[$count] = $obj;
+				$count++;
+			} catch (ResourceNotAllowedException $e) {
+				// the resource not allowed will be absent from the list
+			}
+		}
+
+		self::$logger->debug('<<loadAllOldVersions ['.count($objects).']');
+		return $objects;
 	}
 
 	/**
@@ -1523,8 +1576,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 	{
 		self::$logger->debug('>>getHistoryCount()');
 
-		if(!$this->BO->getMaintainHistory())
+		if (!$this->BO->getMaintainHistory()) {
 			throw new AlphaException('getHistoryCount method called on a DAO where no history is maintained!');
+		}
 
 		$sqlQuery = 'SELECT COUNT(OID) AS object_count FROM '.$this->BO->getTableName().'_history WHERE OID='.$this->BO->getOID();
 
@@ -1536,12 +1590,12 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
             self::$logger->debug('<<getHistoryCount [0]');
             return 0;
-        }else{
+        } else {
 			$row = $result->fetchArray(SQLITE3_ASSOC);
 
             self::$logger->debug('<<getHistoryCount ['.$row['object_count'].']');
             return $row['object_count'];
-        }exit;
+        }
 	}
 
 	/**
