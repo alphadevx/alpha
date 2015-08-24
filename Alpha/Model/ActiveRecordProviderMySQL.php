@@ -204,10 +204,10 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 		$row = array();
 
 		if ($stmt->prepare($sqlQuery)) {
-			$stmt->bind_param('i', $OID);
-
 			if ($version > 0) {
-				$stmt->bind_param('i', $version);
+				$stmt->bind_param('ii', $OID, $version);
+			} else {
+				$stmt->bind_param('i', $OID);
 			}
 
 			$stmt->execute();
@@ -310,7 +310,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 		$count = 0;
 		$RecordClass = get_class($this->BO);
 
-		while ($row = $result->fetchArray()) {
+		while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
 			try {
 				$obj = new $RecordClass();
 				$obj->load($OID, $row['version_num']);

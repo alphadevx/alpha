@@ -237,25 +237,26 @@ abstract class ActiveRecord
 	 * Populates the child object with the properties retrived from the database for the object $OID.
 	 *
 	 * @param integer $OID The object ID of the business object to load.
+	 * @param integer $version Optionaly, provide the version to load that version from the [tablename]_history table.
 	 * @since 1.0
 	 * @throws Alpha\Exception\RecordNotFoundException
 	 */
-	public function load($OID)
+	public function load($OID, $version=0)
 	{
-		self::$logger->debug('>>load(OID=['.$OID.'])');
+		self::$logger->debug('>>load(OID=['.$OID.'], version=['.$version.'])');
 
-		if(method_exists($this, 'before_load_callback'))
+		if (method_exists($this, 'before_load_callback'))
 			$this->before_load_callback();
 
         $config = ConfigProvider::getInstance();
 
 		$this->OID = $OID;
 
-		if($config->get('cache.provider.name') != '' && $this->loadFromCache()) {
+		if ($config->get('cache.provider.name') != '' && $this->loadFromCache()) {
             // BO was found in cache
-		}else{
+		} else {
 			$provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
-			$provider->load($OID);
+			$provider->load($OID, $version);
 
 			if($config->get('cache.provider.name') != '')
 				$this->addToCache();
@@ -263,10 +264,31 @@ abstract class ActiveRecord
 
 		$this->setEnumOptions();
 
-		if(method_exists($this, 'after_load_callback'))
+		if (method_exists($this, 'after_load_callback'))
 			$this->after_load_callback();
 
 		self::$logger->debug('<<load');
+	}
+
+	/**
+	 * Load all old versions (if any) of this record from the [tablename]_history table.
+	 *
+	 * @param integer $OID The object ID of the record to load.
+	 * @return array An array containing objects of this type of record object, order by version.
+	 * @since 2.0
+	 * @throws Alpha\Exception\RecordFoundException
+	 */
+	public function loadAllOldVersions($OID)
+	{
+		self::$logger->debug('>>loadAllOldVersions(OID=['.$OID.'])');
+
+        $config = ConfigProvider::getInstance();
+
+		$provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+		$objects = $provider->loadAllOldVersions($OID);
+
+		self::$logger->debug('<<loadAllOldVersions['.count($objects).']');
+		return $objects;
 	}
 
 	/**

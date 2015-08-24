@@ -223,6 +223,35 @@ class ActiveRecordTest extends ModelTestCase
     }
 
     /**
+     * Testing loadAllOldVersions method
+     *
+     * @since 2.0
+     * @dataProvider getActiveRecordProviders
+     */
+    public function testLoadAllOldVersions($provider)
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
+        $this->person->setMaintainHistory(true);
+        $this->person->rebuildTable();
+
+        $this->person->set('displayName', 'unitTestUser1');
+        $this->person->save();
+
+        $this->assertEquals(1, $this->person->getHistoryCount(), 'Testing loadAllOldVersions method');
+        $this->assertEquals('unitTestUser1', $this->person->loadAllOldVersions($this->person->getOID())[0]->getDisplayName()->getValue());
+        
+        $this->person->saveAttribute('displayName', 'unitTestUser2');
+
+        $this->assertEquals(2, $this->person->getHistoryCount(), 'Testing loadAllOldVersions method');
+        $this->assertEquals('unitTestUser1', $this->person->loadAllOldVersions($this->person->getOID())[0]->getDisplayName()->getValue());
+        $this->assertEquals('unitTestUser2', $this->person->loadAllOldVersions($this->person->getOID())[1]->getDisplayName()->getValue());
+
+        $this->person->dropTable('Person_history');
+    }
+
+    /**
      * Testing loadAll method
      *
      * @since 1.0
@@ -977,7 +1006,6 @@ class ActiveRecordTest extends ModelTestCase
         $this->person->save();
 
         $this->assertEquals(1, $this->person->getHistoryCount(), 'Testing that a normal save is propegated to the history table for this class');
-        //$this->person->setMaintainHistory(true);
         $this->person->saveAttribute('password', 'passwordhist2');
 
         $this->assertEquals(2, $this->person->getHistoryCount(), 'Testing that an attribute save is propegated to the history table for this class');

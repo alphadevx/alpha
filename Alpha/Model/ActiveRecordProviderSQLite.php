@@ -174,7 +174,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 	 */
 	public function load($OID, $version=0)
 	{
-		self::$logger->debug('>>load(OID=['.$OID.'], version=['.$version.'])');
+		self::$logger->warn('>>load(OID=['.$OID.'], version=['.$version.'])');
 
 		$config = ConfigProvider::getInstance();
 
@@ -311,7 +311,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 			}
 		}
 
-		self::$logger->debug('<<loadAllOldVersions ['.count($objects).']');
+		self::$logger->warn('<<loadAllOldVersions ['.count($objects).']');
 		return $objects;
 	}
 
