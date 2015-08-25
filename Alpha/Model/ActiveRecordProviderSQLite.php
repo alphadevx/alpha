@@ -1434,10 +1434,10 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
 		$sqlQuery = 'ALTER TABLE '.$this->BO->getTableName().' ADD ';
 
-		if($this->isTableOverloaded() && $propName == 'classname') {
+		if ($this->isTableOverloaded() && $propName == 'classname') {
 			$sqlQuery .= 'classname TEXT(100)';
-		}else{
-			if(!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
+		} else {
+			if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
 				$reflection = new ReflectionClass($this->BO->getPropObject($propName));
 				$propClass = $reflection->getShortName();
 
@@ -1486,11 +1486,22 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
 		$this->BO->setLastQuery($sqlQuery);
 
-		if(!$result = self::getConnection()->query($sqlQuery)) {
+		if (!$result = self::getConnection()->query($sqlQuery)) {
 			throw new AlphaException('Failed to add the new attribute ['.$propName.'] to the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
 			self::$logger->debug('<<addProperty');
-		}else{
+		} else {
 			self::$logger->info('Successfully added the ['.$propName.'] column onto the ['.$this->BO->getTableName().'] table for the class ['.get_class($this->BO).']');
+		}
+
+		if ($this->BO->getMaintainHistory()) {
+			$sqlQuery = str_replace($this->BO->getTableName(), $this->BO->getTableName().'_history', $sqlQuery);
+
+			if (!$result = self::getConnection()->query($sqlQuery)) {
+				throw new AlphaException('Failed to add the new attribute ['.$propName.'] to the table ['.$this->BO->getTableName().'_history], query is ['.$this->BO->getLastQuery().']');
+				self::$logger->debug('<<addProperty');
+			} else {
+				self::$logger->info('Successfully added the ['.$propName.'] column onto the ['.$this->BO->getTableName().'_history] table for the class ['.get_class($this->BO).']');
+			}
 		}
 
 		self::$logger->debug('<<addProperty');

@@ -11,6 +11,7 @@ use Alpha\Model\Article;
 use Alpha\Model\ArticleComment;
 use Alpha\Model\BlacklistedIP;
 use Alpha\Model\Type\RelationLookup;
+use Alpha\Model\Type\String;
 use Alpha\Exception\LockingException;
 use Alpha\Exception\ValidationException;
 use Alpha\Exception\RecordNotFoundException;
@@ -1154,6 +1155,40 @@ class ActiveRecordTest extends ModelTestCase
 
         $this->assertTrue(is_array($hashArray), 'Testing the toArray() method');
         $this->assertEquals('127.0.0.1', $hashArray['IP'], 'Testing the toArray() method');
+    }
+
+    /**
+     * Testing the addProperty() method
+     *
+     * @since 2.0
+     */
+    public function testAddProperty()
+    {
+        $record = new BadRequest();
+        $record->newStringField = new String();
+
+        $record->addProperty('newStringField');
+
+        $record->set('newStringField', 'test value');
+        $record->save();
+
+        $record->reload();
+
+        $this->assertEquals('test value', $record->get('newStringField'), 'Testing that we can save and retrieve from a newly-added column');
+
+        $record = new BadRequest();
+        $record->setMaintainHistory(true);
+        $record->rebuildTable();
+        $record->anotherNewStringField = new String();
+
+        $record->addProperty('anotherNewStringField');
+
+        $record->set('anotherNewStringField', 'test value');
+        $record->save();
+
+        $record->load($record->getOID(), 1);
+
+        $this->assertEquals('test value', $record->get('anotherNewStringField'), 'Testing that the new column was added to the _history table');
     }
 }
 

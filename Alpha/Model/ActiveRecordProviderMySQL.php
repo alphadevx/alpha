@@ -1454,6 +1454,17 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 			self::$logger->info('Successfully added the ['.$propName.'] column onto the ['.$this->BO->getTableName().'] table for the class ['.get_class($this->BO).']');
 		}
 
+		if ($this->BO->getMaintainHistory()) {
+			$sqlQuery = str_replace($this->BO->getTableName(), $this->BO->getTableName().'_history', $sqlQuery);
+
+			if (!$result = self::getConnection()->query($sqlQuery)) {
+				throw new AlphaException('Failed to add the new attribute ['.$propName.'] to the table ['.$this->BO->getTableName().'_history], query is ['.$this->BO->getLastQuery().']');
+				self::$logger->debug('<<addProperty');
+			} else {
+				self::$logger->info('Successfully added the ['.$propName.'] column onto the ['.$this->BO->getTableName().'_history] table for the class ['.get_class($this->BO).']');
+			}
+		}
+
 		self::$logger->debug('<<addProperty');
 	}
 

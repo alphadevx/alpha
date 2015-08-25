@@ -1250,11 +1250,11 @@ abstract class ActiveRecord
 			$this->before_getPropObject_callback();
 
 		// get the class attributes
-		$reflection = new ReflectionClass(get_class($this));
+		$reflection = new \ReflectionObject($this);
 		$properties = $reflection->getProperties();
 
 		// firstly, check for private
-		$attribute = new ReflectionProperty(get_class($this), $prop);
+		$attribute = new ReflectionProperty($this, $prop);
 
 		if($attribute->isPrivate()) {
 			if(method_exists($this, 'after_getPropObject_callback'))
