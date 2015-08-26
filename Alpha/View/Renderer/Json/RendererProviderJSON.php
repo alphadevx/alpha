@@ -3,12 +3,12 @@
 namespace Alpha\View\Renderer\Json;
 
 use Alpha\View\Renderer\RendererProviderInterface;
+use Alpha\Util\Logging\Logger;
 
 /**
  * JSON renderer.
  *
  * @since 2.0
- * @todo implement!
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -50,266 +50,177 @@ use Alpha\View\Renderer\RendererProviderInterface;
 class RendererProviderJSON implements RendererProviderInterface
 {
     /**
-     * Provide the BO that we are going render.
+     * Trace logger
      *
-     * @param Alpha\Model\ActiveRecord $BO
-     * @since 1.2
+     * @var Alpha\Util\Logging\Logger;
+     * @since 2.0
      */
-    public function setBO($BO)
-    {}
+    private static $logger = null;
 
     /**
-     * Renders the create view for the BO using the selected renderer.
+     * The active record that we are renderering
      *
-     * @param array $fields Hash array of fields to pass to the template.
-     * @return string
-     * @since 1.2
+     * @var Alpha\Model\ActiveRecord
+     * @since 2.0
+     */
+    private $BO;
+
+    /**
+     * The constructor
+     *
+     * @since 2.0
+     */
+    public function __construct()
+    {
+        self::$logger = new Logger('RendererProviderJSON');
+        self::$logger->debug('>>__construct()');
+
+        self::$logger->debug('<<__construct');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setBO($BO)
+    {
+        $this->BO = $BO;
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public function createView($fields=array())
     {}
 
     /**
-     * Renders the edit view for the BO using the selected renderer.
-     *
-     * @param array $fields Hash array of fields to pass to the template.
-     * @return string
-     * @since 1.2
+     * {@inheritDoc}
      */
     public function editView($fields=array())
     {}
 
     /**
-     * Renders the list view for the BO using the selected renderer.
-     *
-     * @param array $fields Hash array of fields to pass to the template.
-     * @return string
-     * @since 1.2
+     * {@inheritDoc}
      */
     public function listView($fields=array())
     {}
 
     /**
-     * Renders the detailed read-only view for the BO using the selected renderer.
-     *
-     * @param array $fields Hash array of fields to pass to the template.
-     * @return string
-     * @since 1.2
+     * {@inheritDoc}
      */
     public function detailedView($fields=array())
-    {}
+    {
+        self::$logger->debug('>>detailedView(fields=['.var_export($fields, true).'])');
+
+        $json = json_encode($this->BO->toArray());
+
+        self::$logger->debug('<<detailedView [JSON]');
+        return $json;
+    }
 
     /**
-     * Renders the admin view for the BO using the selected renderer.
-     *
-     * @param array $fields Hash array of fields to pass to the template.
-     * @return string
-     * @since 1.2
+     * {@inheritDoc}
      */
     public function adminView($fields=array())
     {}
 
     /**
-     * Renders the header content using the given renderer.
-     *
-     * @param Alpha\Controller\Controller $controller
-     * @return string
-     * @throws Alpha\Exception\IllegalArguementException
-     * @since 1.2
+     * {@inheritDoc}
      */
     public static function displayPageHead($controller)
     {}
 
     /**
-     * Renders the footer content using the given renderer.
-     *
-     * @param Alpha\Controller\Controller $controller
-     * @return string
-     * @since 1.2
+     * {@inheritDoc}
      */
     public static function displayPageFoot($controller)
     {}
 
     /**
-     * Renders an update (e.g. successful save) message.
-     *
-     * @param string $message
-     * @return string
-     * @since 1.2
+     * {@inheritDoc}
      */
     public static function displayUpdateMessage($message)
     {}
 
     /**
-     * Renders an error (e.g. save failed) message.
-     *
-     * @param string $message
-     * @return string
-     * @since 1.2
+     * {@inheritDoc}
      */
     public static function displayErrorMessage($message)
     {}
 
     /**
-     * Renders an error page with the supplied HTTP error code and a message.
-     *
-     * @param string $code
-     * @param string $message
-     * @return string
-     * @since 1.2
+     * {@inheritDoc}
      */
     public static function renderErrorPage($code, $message)
     {}
 
     /**
-     * Method to render a hidden HTML form for posting the OID of an object to be deleted.
-     *
-     * @param string $URI The URI that the form will point to
-     * @return string
-     * @since 1.2
+     * {@inheritDoc}
      */
     public static function renderDeleteForm($URI)
     {}
 
     /**
-     * Method to render a HTML form with two hidden, hashed (MD5) form fields to be used as
-     * a check to ensure that a post to the controller is being sent from the same server
-     * as hosting it.
-     *
-     * @return string
-     * @since 1.2
+     * {@inheritDoc}
      */
     public static function renderSecurityFields()
     {}
 
     /**
-     * Renders an Integer field value.
-     *
-     * @param string $name The field name
-     * @param string $label The label to apply to the field
-     * @param string $mode The field mode (create/edit/view)
-     * @param string $value The field value (optional)
-     * @return string
-     * @since 1.2
+     * {@inheritDoc}
      */
     public function renderIntegerField($name, $label, $mode, $value='')
     {}
 
     /**
-     * Renders an Double field value.
-     *
-     * @param string $name The field name
-     * @param string $label The label to apply to the field
-     * @param string $mode The field mode (create/edit/view)
-     * @param string $value The field value (optional)
-     * @return string
-     * @since 1.2
+     * {@inheritDoc}
      */
     public function renderDoubleField($name, $label, $mode, $value='')
     {}
 
     /**
-     * Renders an Boolean field value.
-     *
-     * @param string $name The field name
-     * @param string $label The label to apply to the field
-     * @param string $mode The field mode (create/edit/view)
-     * @param string $value The field value (optional)
-     * @return string
-     * @since 1.2
+     * {@inheritDoc}
      */
     public function renderBooleanField($name, $label, $mode, $value='')
     {}
 
     /**
-     * Renders an Enum field value.
-     *
-     * @param string $name The field name
-     * @param string $label The label to apply to the field
-     * @param string $mode The field mode (create/edit/view)
-     * @param array $options The Enum options
-     * @param string $value The field value (optional)
-     * @return string
-     * @since 1.0
+     * {@inheritDoc}
      */
     public function renderEnumField($name, $label, $mode, $options, $value='')
     {}
 
     /**
-     * Renders an DEnum field value.
-     *
-     * @param string $name The field name
-     * @param string $label The label to apply to the field
-     * @param string $mode The field mode (create/edit/view)
-     * @param array $options The DEnum options
-     * @param string $value The field value (optional)
-     * @return string
-     * @since 1.2
+     * {@inheritDoc}
      */
     public function renderDEnumField($name, $label, $mode, $options, $value='')
     {}
 
     /**
-     * Method to render a field when type is not known.
-     *
-     * @param string $name The field name
-     * @param string $label The label to apply to the field
-     * @param string $mode The field mode (create/edit/view)
-     * @param string $value The field value (optional)
-     * @return string
-     * @since 1.2
+     * {@inheritDoc}
      */
     public function renderDefaultField($name, $label, $mode, $value='')
     {}
 
     /**
-     * Renders a Text field value.
-     *
-     * @param string $name The field name
-     * @param string $label The label to apply to the field
-     * @param string $mode The field mode (create/edit/view)
-     * @param string $value The field value (optional)
-     * @return string
-     * @since 1.0
+     * {@inheritDoc}
      */
     public function renderTextField($name, $label, $mode, $value='')
     {}
 
     /**
-     * Renders a String field value.
-     *
-     * @param string $name The field name
-     * @param string $label The label to apply to the field
-     * @param string $mode The field mode (create/edit/view)
-     * @param string $value The field value (optional)
-     * @return string
-     * @since 1.2.2
+     * {@inheritDoc}
      */
     public function renderStringField($name, $label, $mode, $value='')
     {}
 
     /**
-     * Renders a Relation field value.
-     *
-     * @param string $name The field name
-     * @param string $label The label to apply to the field
-     * @param string $mode The field mode (create/edit/view)
-     * @param string $value The field value (optional)
-     * @param bool $expanded Render the related fields in expanded format or not (optional)
-     * @param bool $buttons Render buttons for expanding/contacting the related fields (optional)
-     * @return string
-     * @since 1.2
+     * {@inheritDoc}
      */
     public function renderRelationField($name, $label, $mode, $value='', $expanded=false, $buttons=true)
     {}
 
     /**
-     * Convenience method that renders all fields for the current BO in edit/create/view mode.
-     *
-     * @param string $mode (view|edit|create)
-     * @param array $filterFields Optional list of field names to exclude from rendering.
-     * @param array $readOnlyFields Optional list of fields to render in a readonly fashion when rendering in create or edit mode.
-     * @return string
-     * @since 1.2
+     * {@inheritDoc}
      */
     public function renderAllFields($mode, $filterFields=array(), $readOnlyFields=array())
     {}
