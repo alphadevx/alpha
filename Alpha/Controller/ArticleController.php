@@ -879,7 +879,7 @@ class ArticleController extends Controller implements ControllerInterface
             }
 
             // render edit button for admins only
-            if ($session->get('currentUser') !== false && $session->get('currentUser')->inGroup('Admin')) {
+            if ($session->get('currentUser') instanceof Alpha\Model\Person && $session->get('currentUser')->inGroup('Admin')) {
                 $html .= '&nbsp;&nbsp;';
                 $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&mode=edit&ActiveRecordOID='.$this->BO->getID())."'",'Edit','editBut');
                 $html .= $button->render();

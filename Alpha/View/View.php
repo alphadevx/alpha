@@ -82,14 +82,15 @@ class View
     /**
      * Constructor for the View.  As this is protected, use the View::getInstance method from a public scope.
      *
-     * @param Alpha\Model\ActiveRecord $BO
+     * @param ActiveRecord $BO The main business object that this view is going to render
+     * @param string $acceptHeader Optionally pass the HTTP Accept header to select the correct renderer provider.
      * @throws Alpha\Exception\IllegalArguementException
      * @since 1.0
      */
-    protected function __construct($BO)
+    protected function __construct($BO, $acceptHeader = null)
     {
         self::$logger = new Logger('View');
-        self::$logger->debug('>>__construct(BO=['.var_export($BO, true).'])');
+        self::$logger->debug('>>__construct(BO=['.var_export($BO, true).'], acceptHeader=['.$acceptHeader.'])');
 
         $config = ConfigProvider::getInstance();
 
@@ -101,7 +102,7 @@ class View
         else
             throw new IllegalArguementException('The BO provided ['.get_class($BO).'] is not defined anywhere!');
 
-        self::setProvider($config->get('app.renderer.provider.name'));
+        self::setProvider($config->get('app.renderer.provider.name'), $acceptHeader);
         self::$provider->setBO($this->BO);
 
         self::$logger->debug('<<__construct');
@@ -113,14 +114,15 @@ class View
      *
      * @param ActiveRecord $BO The main business object that this view is going to render
      * @param boolean $returnParent Flag to enforce the return of this object instead of a child (defaults to false)
+     * @param string $acceptHeader Optionally pass the HTTP Accept header to select the correct renderer provider.
      * @return View Returns a View object, or a child view object if one exists for this BO
      * @since 1.0
      */
-    public static function getInstance($BO, $returnParent=false)
+    public static function getInstance($BO, $returnParent = false, $acceptHeader = null)
     {
         if(self::$logger == null)
             self::$logger = new Logger('View');
-        self::$logger->debug('>>getInstance(BO=['.var_export($BO, true).'], returnParent=['.$returnParent.'])');
+        self::$logger->debug('>>getInstance(BO=['.var_export($BO, true).'], returnParent=['.$returnParent.'], acceptHeader=['.$acceptHeader.'])');
 
         $config = ConfigProvider::getInstance();
 
@@ -136,7 +138,7 @@ class View
             if (class_exists($className)) {
                 self::$logger->debug('<<getInstance [new '.$className.'('.get_class($BO).')]');
                 
-                $instance = new $className($BO);
+                $instance = new $className($BO, $acceptHeader);
                 return $instance;
             }
 
@@ -145,15 +147,15 @@ class View
             if (class_exists('\View\\'.$childView)) {
                 self::$logger->debug('<<getInstance [new '.$className.'('.get_class($BO).')]');
                 
-                $instance = new $className($BO);
+                $instance = new $className($BO, $acceptHeader);
                 return $instance;
             }
 
-            self::$logger->debug('<<getInstance [new View('.get_class($BO).', true)]');
-            return new View($BO, true);
+            self::$logger->debug('<<getInstance [new View('.get_class($BO).', '.$acceptHeader.')]');
+            return new View($BO, $acceptHeader);
         } else {
-            self::$logger->debug('<<getInstance [new View('.get_class($BO).', true)]');
-            return new View($BO, true);
+            self::$logger->debug('<<getInstance [new View('.get_class($BO).', '.$acceptHeader.')]');
+            return new View($BO, $acceptHeader);
         }
     }
 
@@ -843,6 +845,7 @@ class View
      * attached to this view.
      *
      * @param string $ProviderClassName The name of the RendererProviderInterface implementation to use in this view object
+     * @param string $acceptHeader Optional pass the HTTP Accept header to select the correct renderer provider.
      * @since 1.2
      * @throws Alpha\Exception\IllegalArguementException
      */

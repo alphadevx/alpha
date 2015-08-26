@@ -39,6 +39,7 @@ use Alpha\Controller\TagController;
 use Alpha\Controller\ViewController;
 use Alpha\Controller\IndexController;
 use Alpha\Controller\InstallController;
+use Alpha\Controller\ActiveRecordController;
 
 /**
  *
@@ -289,6 +290,11 @@ class FrontController
             $controller = new InstallController();
             return $controller->process($request);
         });
+
+        $this->addRoute('/record/{ActiveRecordType}/{ActiveRecordOID}', function($request) {
+            $controller = new ActiveRecordController();
+            return $controller->process($request);
+        })->value('ActiveRecordOID', null);
 
         $this->addRoute('/tk/{token}', function($request) {
         	$params = self::getDecodeQueryParams($request->getParam('token'));
