@@ -102,7 +102,14 @@ class RendererProviderJSON implements RendererProviderInterface
      * {@inheritDoc}
      */
     public function listView($fields=array())
-    {}
+    {
+        self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
+
+        $json = json_encode($this->BO->toArray()).',';
+
+        self::$logger->debug('<<listView [JSON]');
+        return $json;
+    }
 
     /**
      * {@inheritDoc}
