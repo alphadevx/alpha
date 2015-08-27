@@ -296,6 +296,11 @@ class FrontController
             return $controller->process($request);
         })->value('ActiveRecordOID', null);
 
+        $this->addRoute('/records/{ActiveRecordType}/{start}/{limit}', function($request) {
+            $controller = new ActiveRecordController();
+            return $controller->process($request);
+        })->value('start', 0)->value('limit', $config->get('app.list.page.amount'));
+
         $this->addRoute('/tk/{token}', function($request) {
         	$params = self::getDecodeQueryParams($request->getParam('token'));
         	

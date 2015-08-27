@@ -91,6 +91,33 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $this->assertEquals('application/json', $response->getHeader('Content-Type'), 'Testing the doGET method');
         $this->assertEquals('test', json_decode($response->getBody())->displayName, 'Testing the doGET method');
 
+        // GET a list this time...
+        $person = $this->createPersonObject('test2');
+        $person->save();
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/records/'.urlencode('Alpha\Model\Person').'/0/2'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+
+        $request = new Request(
+            array(
+                'method' => 'GET',
+                'URI' => '/records/'.urlencode('Alpha\Model\Person').'/1/2',
+                'headers' => array('Accept' => 'application/json')
+            )
+        );
+
+        $response = $front->process($request);
+        $records = json_decode($response->getBody());
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+        $this->assertEquals(2, count($records), 'Testing the doGET method');
+        $this->assertEquals('application/json', $response->getHeader('Content-Type'), 'Testing the doGET method');
+        $this->assertEquals('test', $records[0]->displayName, 'Testing the doGET method');
+        $this->assertEquals('test2', $records[1]->displayName, 'Testing the doGET method');
     }
 }
 

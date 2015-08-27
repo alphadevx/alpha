@@ -61,6 +61,54 @@ use Alpha\Model\ActiveRecord;
 class ActiveRecordController extends Controller implements ControllerInterface
 {
     /**
+     * The start number for list pageination
+     *
+     * @var integer
+     * @since 2.0
+     */
+    protected $startPoint = 1;
+
+    /**
+     * The count of the records of this type in the database (used during pagination)
+     *
+     * @var integer
+     * @since 2.0
+     */
+    protected $recordCount = 0;
+
+    /**
+     * The field name to sort the list by (optional, default is OID)
+     *
+     * @var string
+     * @since 2.0
+     */
+    protected $sort;
+
+    /**
+     * The order to sort the list by (optional, should be ASC or DESC, default is ASC)
+     *
+     * @var string
+     * @since 2.0
+     */
+    protected $order;
+
+    /**
+     * The name of the BO field to filter the list by (optional)
+     *
+     * @var string
+     * @since 2.0
+     */
+    protected $filterField;
+
+    /**
+     * The value of the filterField to filter by (optional)
+     *
+     * @var string
+     * @since 2.0
+     */
+    protected $filterValue;
+
+    /**
      * Trace logger
      *
      * @var Alpha\Util\Logging\Logger
@@ -131,7 +179,48 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 $body .= View::renderDeleteForm($request->getURI());
                 $body .= $view->detailedView();
             } elseif (isset($params['ActiveRecordType'])) {
-                // TODO list all records of this type
+                // list all records of this type
+                $ActiveRecordType = urldecode($params['ActiveRecordType']);
+
+                if (class_exists($ActiveRecordType)) {
+                    $record = new $ActiveRecordType();
+                } else {
+                    throw new IllegalArguementException('No ActiveRecord available to view!');
+                }
+
+                if (isset($this->filterField) && isset($this->filterValue)) {
+                    if (isset($this->sort) && isset($this->order)) {
+                        $records = $record->loadAllByAttribute($this->filterField, $this->filterValue, $params['start'], $params['limit'],
+                            $this->sort, $this->order);
+                    } else {
+                        $records = $record->loadAllByAttribute($this->filterField, $this->filterValue, $params['start'], $params['limit']);
+                    }
+
+                    $this->BOCount = $record->getCount(array($this->filterField), array($this->filterValue));
+                } else {
+                    if (isset($this->sort) && isset($this->order)) {
+                        $records = $record->loadAll($params['start'], $params['limit'], $this->sort, $this->order);
+                    } else {
+                        $records = $record->loadAll($params['start'], $params['limit']);
+                    }
+
+                    $this->BOCount = $record->getCount();
+                }
+
+                ActiveRecord::disconnect();
+
+                $body .= View::displayPageHead($this);
+                $body .= View::renderDeleteForm($this->request->getURI());
+
+                foreach ($records as $record) {
+                    $view = View::getInstance($record, false, $accept);
+                    $fields = array('formAction' => $this->request->getURI());
+                    $body .= $view->listView($fields);
+                }
+
+                if ($accept == 'application/json') {
+                    $body = rtrim($body, ',');
+                }
             } else {
                 throw new IllegalArguementException('No ActiveRecord available to display!');
             }
@@ -219,6 +308,119 @@ class ActiveRecordController extends Controller implements ControllerInterface
 
         self::$logger->debug('<<doDELETE');
         return new Response(200, $body, array('Content-Type' => 'application/json'));
+    }
+
+    /**
+     * Sets up the pagination start point
+     *
+     * @since 2.0
+     */
+    public function after_displayPageHead_callback()
+    {
+        // set the start point for the list pagination
+        if ($this->request->getParam('start') != null) {
+            $this->startPoint = $this->request->getParam('start');
+
+            $accept = $this->request->getAccept();
+
+            if ($accept == 'application/json') {
+                return '[';
+            }
+        }
+    }
+
+    /**
+     * Method to display the page footer with pageination links
+     *
+     * @return string
+     * @since 2.0
+     */
+    public function before_displayPageFoot_callback()
+    {
+        $body = '';
+
+        if ($this->request->getParam('start') != null) {
+
+            $accept = $this->request->getAccept();
+
+            if ($accept == 'application/json') {
+                $body .= ']';
+            } else {
+                $body .= $this->renderPageLinks();
+                $body .= '<br>';
+            }
+        }
+
+        return $body;
+    }
+
+    /**
+     * Method for rendering the pagination links
+     *
+     * @return string
+     * @since 2.0
+     * @todo review how the links are generated
+     */
+    protected function renderPageLinks()
+    {
+        $config = ConfigProvider::getInstance();
+
+        $body = '';
+
+        $end = (($this->startPoint-1)+$config->get('app.list.page.amount'));
+
+        if ($end > $this->recordCount) {
+            $end = $this->recordCount;
+        }
+
+        if ($this->recordCount > 0) {
+            $body .= '<ul class="pagination">';
+        } else {
+            $body .= '<p align="center">The list is empty.&nbsp;&nbsp;</p>';
+
+            return $body;
+        }
+
+        if ($this->startPoint > 1) {
+            // handle secure URLs
+            if ($this->request->getParam('token', null) != null)
+                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ListController&ActiveRecordType='.$this->activeRecordType.'&start='.($this->startPoint-$config->get('app.list.page.amount'))).'">&lt;&lt;-Previous</a></li>';
+            else
+                $body .= '<li><a href="/listall/'.urlencode($this->activeRecordType)."/".($this->startPoint-$config->get('app.list.page.amount')).'">&lt;&lt;-Previous</a></li>';
+        } elseif ($this->recordCount > $config->get('app.list.page.amount')){
+            $body .= '<li class="disabled"><a href="#">&lt;&lt;-Previous</a></li>';
+        }
+
+        $page = 1;
+
+        for ($i = 0; $i < $this->recordCount; $i+=$config->get('app.list.page.amount')) {
+            if ($i != ($this->startPoint-1)) {
+                // handle secure URLs
+                if ($this->request->getParam('token', null) != null)
+                    $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ListController&ActiveRecordType='.$this->activeRecordType.'&start='.($i+1)).'">'.$page.'</a></li>';
+                else
+                    $body .= '<li><a href="/listall/'.urlencode($this->activeRecordType)."/".($i+1).'">'.$page.'</a></li>';
+            } elseif ($this->recordCount > $config->get('app.list.page.amount')) {
+                $body .= '<li class="active"><a href="#">'.$page.'</a></li>';
+            }
+
+            $page++;
+        }
+
+        if ($this->recordCount > $end) {
+            // handle secure URLs
+            if ($this->request->getParam('token', null) != null)
+                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ListController&ActiveRecordType='.$this->activeRecordType.'&start='.($this->startPoint+$config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a></li>';
+            else
+                $body .= '<li><a href="/listall/'.urlencode($this->activeRecordType)."/".($this->startPoint+$config->get('app.list.page.amount')).
+                    '">Next-&gt;&gt;</a></li>';
+        } elseif ($this->recordCount > $config->get('app.list.page.amount')) {
+            $body .= '<li class="disabled"><a href="#">Next-&gt;&gt;</a></li>';
+        }
+
+        $body .= '</ul>';
+
+        return $body;
     }
 }
 
