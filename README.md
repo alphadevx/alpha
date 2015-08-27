@@ -10,20 +10,21 @@ Introduction
 
 The Alpha Framework is a full-stack MVC framework for PHP.  It provides the following features:
 
- * A set of complex data types that have built-in validation checks, mappings to database field types, and UI widets.
+ * A set of complex data types that have built-in validation checks, mappings to database field types, and UI widgets.
  * An active record interface with support for MySQL and SQLite.
  * A rendering interface with support for HTML and JSON (for developing APIs).
- * A caching inteface with support for APCu, Redis, and Memcache.
- * A CRUD controller to take care of most of your data managment needs.
+ * A caching interface with support for APCu, Redis, and Memcache.
+ * A CRUD controller to take care of most of your data management needs.
  * A front controller, abstract controller, and elegant request routing interface.
  * Request/response classes.
  * A full admin UI and installation UI.
  * RSS and Atom feed generation.
  * A built-in Markdown-based CMS with article voting and commenting.
- * A built-in search engine with tagging support (including tag clouds, free-text search, find similiar...).
+ * A built-in search engine with tagging support (including tag clouds, free-text search, find similar...).
  * Strong security features (short-live form encryption tokens to prevent cross-site requests, encryption tokens on images to prevent cross-site embedding, HTTP request filters to block agents or IPs...).
  * Complete logging solution, including optional user audit trail.
  * Build-in application back-up task along with support for other, custom tasks.
+
 
 Status
 ------
