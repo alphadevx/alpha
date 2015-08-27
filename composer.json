@@ -1,6 +1,6 @@
 {
     "name": "alphadevx/alpha",
-    "type": "framework",
+    "type": "library",
     "description": "Alpha Framework is a full-stack MVC framework for PHP",
     "keywords": ["mvc","rest","http","framework","fullstack"],
     "homepage": "http://www.alphaframework.org/",
@@ -14,9 +14,9 @@
     ],
     "support": {
         "email": "dev@alphaframework.org",
-        "issues": "https://www.assembla.com/spaces/alpha-framework/tickets",
+        "issues": "https://github.com/alphadevx/alpha/issues",
         "wiki": "http://www.alphaframework.org/article/Documentation",
-        "source": "https://www.assembla.com/code/alpha-framework/subversion/nodes"
+        "source": "https://github.com/alphadevx/alpha"
     },
     "repositories": [
         {
