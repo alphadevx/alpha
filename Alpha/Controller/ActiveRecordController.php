@@ -170,6 +170,17 @@ class ActiveRecordController extends Controller implements ControllerInterface
                     throw new IllegalArguementException('No ActiveRecord available to view!');
                 }
 
+                // set up the title and meta details
+                if (!isset($this->title)) {
+                    $this->setTitle('Viewing a '.$record->getFriendlyClassName());
+                }
+                if (!isset($this->description)) {
+                    $this->setDescription('Page to view a '.$record->getFriendlyClassName().'.');
+                }
+                if (!isset($this->keywords)) {
+                    $this->setKeywords('view,'.$record->getFriendlyClassName());
+                }
+
                 $record->load($params['ActiveRecordOID']);
                 ActiveRecord::disconnect();
 
@@ -178,7 +189,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 $body .= View::displayPageHead($this);
                 $body .= View::renderDeleteForm($request->getURI());
                 $body .= $view->detailedView();
-            } elseif (isset($params['ActiveRecordType'])) {
+            } elseif (isset($params['ActiveRecordType']) && isset($params['start'])) {
                 // list all records of this type
                 $ActiveRecordType = urldecode($params['ActiveRecordType']);
 
@@ -186,6 +197,17 @@ class ActiveRecordController extends Controller implements ControllerInterface
                     $record = new $ActiveRecordType();
                 } else {
                     throw new IllegalArguementException('No ActiveRecord available to view!');
+                }
+
+                // set up the title and meta details
+                if (!isset($this->title)) {
+                    $this->setTitle('Listing all '.$record->getFriendlyClassName());
+                }
+                if (!isset($this->description)) {
+                    $this->setDescription('Listing all '.$record->getFriendlyClassName());
+                }
+                if (!isset($this->keywords)) {
+                    $this->setKeywords('list,all,'.$record->getFriendlyClassName());
                 }
 
                 if (isset($this->filterField) && isset($this->filterValue)) {
@@ -209,6 +231,8 @@ class ActiveRecordController extends Controller implements ControllerInterface
 
                 ActiveRecord::disconnect();
 
+                $view = View::getInstance($record, false, $accept);
+
                 $body .= View::displayPageHead($this);
                 $body .= View::renderDeleteForm($this->request->getURI());
 
@@ -221,6 +245,32 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 if ($accept == 'application/json') {
                     $body = rtrim($body, ',');
                 }
+            } elseif (isset($params['ActiveRecordType'])) {
+                // create a new record of this type
+                $ActiveRecordType = urldecode($params['ActiveRecordType']);
+
+                if (class_exists($ActiveRecordType)) {
+                    $record = new $ActiveRecordType();
+                } else {
+                    throw new IllegalArguementException('No ActiveRecord available to create!');
+                }
+
+                // set up the title and meta details
+                if (!isset($this->title)) {
+                    $this->setTitle('Create a new '.$record->getFriendlyClassName());
+                }
+                if (!isset($this->description)) {
+                    $this->setDescription('Create a new '.$record->getFriendlyClassName().'.');
+                }
+                if (!isset($this->keywords)) {
+                    $this->setKeywords('create,new,'.$record->getFriendlyClassName());
+                }
+
+                $view = View::getInstance($record, false, $accept);
+
+                $body .= View::displayPageHead($this);
+                $fields = array('formAction' => $this->request->getURI());
+                $body .= $view->createView($fields);
             } else {
                 throw new IllegalArguementException('No ActiveRecord available to display!');
             }
@@ -326,6 +376,8 @@ class ActiveRecordController extends Controller implements ControllerInterface
             if ($accept == 'application/json') {
                 return '[';
             }
+
+            return '';
         }
     }
 

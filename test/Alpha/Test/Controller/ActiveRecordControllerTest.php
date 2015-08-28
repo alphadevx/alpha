@@ -67,6 +67,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
 
         $front = new FrontController();
 
+        // get a single record
         $person = $this->createPersonObject('test');
         $person->save();
 
@@ -76,6 +77,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+        $this->assertTrue(strpos($response->getBody(),'Viewing a Person') !== false, 'Testing the doGET method');
 
         $request = new Request(
             array(
@@ -101,6 +103,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+        $this->assertTrue(strpos($response->getBody(),'Listing all Person') !== false, 'Testing the doGET method');
 
         $request = new Request(
             array(
@@ -118,6 +121,15 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $this->assertEquals('application/json', $response->getHeader('Content-Type'), 'Testing the doGET method');
         $this->assertEquals('test', $records[0]->displayName, 'Testing the doGET method');
         $this->assertEquals('test2', $records[1]->displayName, 'Testing the doGET method');
+
+        // get the record creation screen
+        $request = new Request(array('method' => 'GET', 'URI' => '/record/'.urlencode('Alpha\Model\Person')));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+        $this->assertTrue(strpos($response->getBody(),'Create a new Person') !== false, 'Testing the doGET method');
     }
 }
 

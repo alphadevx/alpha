@@ -90,7 +90,9 @@ class RendererProviderJSON implements RendererProviderInterface
      * {@inheritDoc}
      */
     public function createView($fields=array())
-    {}
+    {
+        return '';
+    }
 
     /**
      * {@inheritDoc}
