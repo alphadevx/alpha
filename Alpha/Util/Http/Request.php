@@ -559,6 +559,21 @@ class Request
                 $this->params[trim($name, '{}')] = $defaultParams[trim($name, '{}')];
         }
     }
+
+    /**
+     * Checks to see if the request contains a secure/encrypted token
+     *
+     * @return bool
+     * @since 2.0
+     */
+    public function isSecureURI()
+    {
+        if (isset($this->params['act']) && mb_strpos($this->URI, '/tk/') !== false) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
 ?>

@@ -305,11 +305,68 @@ class ActiveRecordController extends Controller implements ControllerInterface
         $config = ConfigProvider::getInstance();
 
         $params = $request->getParams();
+        $accept = $request->getAccept();
 
-        $body = '';
+        try {
+
+            if (isset($params['ActiveRecordType'])) {
+                $ActiveRecordType = urldecode($params['ActiveRecordType']);
+            } else {
+                throw new IllegalArguementException('No ActiveRecord available to create!');
+            }
+
+            if (class_exists($ActiveRecordType)) {
+                $record = new $ActiveRecordType();
+            } else {
+                throw new IllegalArguementException('No ActiveRecord ['.$ActiveRecordType.'] available to create!');
+            }
+
+            // check the hidden security fields before accepting the form POST data
+            if (!$this->checkSecurityFields()) {
+                throw new SecurityException('This page cannot accept post data from remote servers!');
+            }
+
+            $record->populateFromArray($params);
+            $record->save();
+
+            self::$logger->action('Created new '.$ActiveRecordType.' instance with OID '.$record->getOID());
+
+            ActiveRecord::disconnect();
+
+        } catch (SecurityException $e) {
+            self::$logger->warn($e->getMessage());
+            throw new ResourceNotAllowedException($e->getMessage());
+        } catch (IllegalArguementException $e) {
+            self::$logger->warn($e->getMessage());
+            throw new ResourceNotFoundException('The file that you have requested cannot be found!');
+        } catch (ValidationException $e) {
+            self::$logger->warn($e->getMessage().', query ['.$record->getLastQuery().']');
+            $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
+        }
+
+        if ($accept == 'application/json') {
+            $view = View::getInstance($record, false, $accept);
+            $body = $view->detailedView();
+            $response = new Response(201);
+            $response->setHeader('Content-Type', 'application/json');
+            $response->setHeader('Location', $config->get('app.url').'record/'.$params['ActiveRecordType'].'/'.$record->getOID());
+            $response->setBody($body);
+        } else {
+            $response = new Response(301);
+
+            if ($this->getNextJob() != '') {
+                $response->redirect($this->getNextJob());
+            } else {
+                if ($this->request->isSecureURI()) {
+                    $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.$ActiveRecordType.'&ActiveRecordOID='.$record->getOID()));
+                } else {
+                    $response->redirect($config->get('app.url').'record/'.$params['ActiveRecordType'].'/'.$record->getOID());
+                }
+            }
+        }
 
         self::$logger->debug('<<doPOST');
-        return new Response(201, $body, array('Content-Type' => 'application/json'));
+        return $response;
     }
 
     /**
