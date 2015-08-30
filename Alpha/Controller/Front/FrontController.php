@@ -291,10 +291,10 @@ class FrontController
             return $controller->process($request);
         });
 
-        $this->addRoute('/record/{ActiveRecordType}/{ActiveRecordOID}', function($request) {
+        $this->addRoute('/record/{ActiveRecordType}/{ActiveRecordOID}/{view}', function($request) {
             $controller = new ActiveRecordController();
             return $controller->process($request);
-        })->value('ActiveRecordOID', null);
+        })->value('ActiveRecordOID', null)->value('view', 'detailed');
 
         $this->addRoute('/records/{ActiveRecordType}/{start}/{limit}', function($request) {
             $controller = new ActiveRecordController();

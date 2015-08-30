@@ -171,14 +171,26 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 }
 
                 // set up the title and meta details
-                if (!isset($this->title)) {
-                    $this->setTitle('Viewing a '.$record->getFriendlyClassName());
-                }
-                if (!isset($this->description)) {
-                    $this->setDescription('Page to view a '.$record->getFriendlyClassName().'.');
-                }
-                if (!isset($this->keywords)) {
-                    $this->setKeywords('view,'.$record->getFriendlyClassName());
+                if ($params['view'] == 'edit') {
+                    if (!isset($this->title)) {
+                        $this->setTitle('Editing a '.$record->getFriendlyClassName());
+                    }
+                    if (!isset($this->description)) {
+                        $this->setDescription('Page to edit a '.$record->getFriendlyClassName().'.');
+                    }
+                    if (!isset($this->keywords)) {
+                        $this->setKeywords('edit,'.$record->getFriendlyClassName());
+                    }
+                } else {
+                    if (!isset($this->title)) {
+                        $this->setTitle('Viewing a '.$record->getFriendlyClassName());
+                    }
+                    if (!isset($this->description)) {
+                        $this->setDescription('Page to view a '.$record->getFriendlyClassName().'.');
+                    }
+                    if (!isset($this->keywords)) {
+                        $this->setKeywords('view,'.$record->getFriendlyClassName());
+                    }
                 }
 
                 $record->load($params['ActiveRecordOID']);
@@ -188,7 +200,13 @@ class ActiveRecordController extends Controller implements ControllerInterface
 
                 $body .= View::displayPageHead($this);
                 $body .= View::renderDeleteForm($request->getURI());
-                $body .= $view->detailedView();
+
+                if ($params['view'] == 'edit') {
+                    $fields = array('formAction' => $this->request->getURI());
+                    $body .= $view->editView();
+                } else {
+                    $body .= $view->detailedView();
+                }
             } elseif (isset($params['ActiveRecordType']) && isset($params['start'])) {
                 // list all records of this type
                 $ActiveRecordType = urldecode($params['ActiveRecordType']);
@@ -276,10 +294,10 @@ class ActiveRecordController extends Controller implements ControllerInterface
             }
         } catch (IllegalArguementException $e) {
             self::$logger->warn($e->getMessage());
-            throw new ResourceNotFoundException('The file that you have requested cannot be found!');
-        } catch (BONotFoundException $e) {
+            throw new ResourceNotFoundException('The record that you have requested cannot be found!');
+        } catch (RecordNotFoundException $e) {
             self::$logger->warn($e->getMessage());
-            throw new ResourceNotFoundException('The item that you have requested cannot be found!');
+            throw new ResourceNotFoundException('The record that you have requested cannot be found!');
         }
 
         $body .= View::displayPageFoot($this);
@@ -338,7 +356,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
             throw new ResourceNotAllowedException($e->getMessage());
         } catch (IllegalArguementException $e) {
             self::$logger->warn($e->getMessage());
-            throw new ResourceNotFoundException('The file that you have requested cannot be found!');
+            throw new ResourceNotFoundException('The record that you have requested cannot be found!');
         } catch (ValidationException $e) {
             self::$logger->warn($e->getMessage().', query ['.$record->getLastQuery().']');
             $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
@@ -386,11 +404,72 @@ class ActiveRecordController extends Controller implements ControllerInterface
         $config = ConfigProvider::getInstance();
 
         $params = $request->getParams();
+        $accept = $request->getAccept();
 
-        $body = '';
+        try {
+
+            if (isset($params['ActiveRecordType'])) {
+                $ActiveRecordType = urldecode($params['ActiveRecordType']);
+            } else {
+                throw new IllegalArguementException('No ActiveRecord available to edit!');
+            }
+
+            if (class_exists($ActiveRecordType)) {
+                $record = new $ActiveRecordType();
+            } else {
+                throw new IllegalArguementException('No ActiveRecord ['.$ActiveRecordType.'] available to edit!');
+            }
+
+            // check the hidden security fields before accepting the form POST data
+            if (!$this->checkSecurityFields()) {
+                throw new SecurityException('This page cannot accept post data from remote servers!');
+            }
+
+            $record->load($params['ActiveRecordOID']);
+            $record->populateFromArray($params);
+            $record->save();
+
+            self::$logger->action('Saved '.$ActiveRecordType.' instance with OID '.$record->getOID());
+
+            ActiveRecord::disconnect();
+
+        } catch (SecurityException $e) {
+            self::$logger->warn($e->getMessage());
+            throw new ResourceNotAllowedException($e->getMessage());
+        } catch (IllegalArguementException $e) {
+            self::$logger->warn($e->getMessage());
+            throw new ResourceNotFoundException('The record that you have requested cannot be found!');
+        } catch (RecordNotFoundException $e) {
+            self::$logger->warn($e->getMessage());
+            throw new ResourceNotFoundException('The record that you have requested cannot be found!');
+        } catch (ValidationException $e) {
+            self::$logger->warn($e->getMessage().', query ['.$record->getLastQuery().']');
+            $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
+        }
+
+        if ($accept == 'application/json') {
+            $view = View::getInstance($record, false, $accept);
+            $body = $view->detailedView();
+            $response = new Response(200);
+            $response->setHeader('Content-Type', 'application/json');
+            $response->setHeader('Location', $config->get('app.url').'record/'.$params['ActiveRecordType'].'/'.$record->getOID());
+            $response->setBody($body);
+        } else {
+            $response = new Response(301);
+
+            if ($this->getNextJob() != '') {
+                $response->redirect($this->getNextJob());
+            } else {
+                if ($this->request->isSecureURI()) {
+                    $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.$ActiveRecordType.'&ActiveRecordOID='.$record->getOID().'&view=edit'));
+                } else {
+                    $response->redirect($config->get('app.url').'record/'.$params['ActiveRecordType'].'/'.$record->getOID().'/edit');
+                }
+            }
+        }
 
         self::$logger->debug('<<doPUT');
-        return new Response(200, $body, array('Content-Type' => 'application/json'));
+        return $response;
     }
 
     /**
