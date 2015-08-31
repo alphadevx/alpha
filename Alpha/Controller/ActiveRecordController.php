@@ -489,11 +489,73 @@ class ActiveRecordController extends Controller implements ControllerInterface
         $config = ConfigProvider::getInstance();
 
         $params = $request->getParams();
+        $accept = $request->getAccept();
 
-        $body = '';
+        try {
+            // check the hidden security fields before accepting the form data
+            if (!$this->checkSecurityFields()) {
+                throw new SecurityException('This page cannot accept data from remote servers!');
+            }
+
+            if (isset($params['ActiveRecordType'])) {
+                $ActiveRecordType = urldecode($params['ActiveRecordType']);
+            } else {
+                throw new IllegalArguementException('No ActiveRecord available to edit!');
+            }
+
+            if (class_exists($ActiveRecordType)) {
+                $record = new $ActiveRecordType();
+            } else {
+                throw new IllegalArguementException('No ActiveRecord ['.$ActiveRecordType.'] available to edit!');
+            }
+
+            // check the hidden security fields before accepting the form POST data
+            if (!$this->checkSecurityFields()) {
+                throw new SecurityException('This page cannot accept post data from remote servers!');
+            }
+
+            $record->load($params['ActiveRecordOID']);
+
+            ActiveRecord::begin();
+            $record->delete();
+            ActiveRecord::commit();
+            ActiveRecord::disconnect();
+
+            self::$logger->action('Deleted '.$ActiveRecordType.' instance with OID '.$params['ActiveRecordOID']);
+
+            if ($accept == 'application/json') {
+                $response = new Response(200);
+                $response->setHeader('Content-Type', 'application/json');
+                $response->setBody(json_encode(array('message' => 'deleted')));
+            } else {
+                $response = new Response(301);
+
+                $this->setStatusMessage(View::displayUpdateMessage('Deleted '.$ActiveRecordType.' instance with OID '.$params['ActiveRecordOID']));
+
+                if ($this->getNextJob() != '') {
+                    $response->redirect($this->getNextJob());
+                } else {
+                    if ($this->request->isSecureURI()) {
+                        $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.$ActiveRecordType.'&ActiveRecordOID'));
+                    } else {
+                        $response->redirect($config->get('app.url').'records/'.$params['ActiveRecordType']);
+                    }
+                }
+            }
+        } catch (SecurityException $e) {
+            self::$logger->warn($e->getMessage());
+            throw new ResourceNotAllowedException($e->getMessage());
+        } catch (RecordNotFoundException $e) {
+            self::$logger->warn($e->getMessage());
+            throw new ResourceNotFoundException('The item that you have requested cannot be found!');
+        } catch (AlphaException $e) {
+            self::$logger->error($e->getMessage());
+            $body .= View::displayErrorMessage('Error deleting the BO of OID ['.$params['ActiveRecordOID'].'], check the log!');
+            ActiveRecord::rollback();
+        }
 
         self::$logger->debug('<<doDELETE');
-        return new Response(200, $body, array('Content-Type' => 'application/json'));
+        return $response;
     }
 
     /**
