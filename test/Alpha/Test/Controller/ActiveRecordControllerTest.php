@@ -148,7 +148,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
 
         $person = $this->createPersonObject('test');
 
-        $params = array('createBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = array('var1' => $securityParams[0], 'var2' => $securityParams[1]);
         $params = array_merge($params, $person->toArray());
 
         $request = new Request(array('method' => 'POST', 'URI' => '/record/'.urlencode('Alpha\Model\Person'), 'params' => $params));
@@ -160,7 +160,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
 
         $person = $this->createPersonObject('test2');
 
-        $params = array('createBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = array('var1' => $securityParams[0], 'var2' => $securityParams[1]);
         $params = array_merge($params, $person->toArray());
 
         $request = new Request(array('method' => 'POST', 'URI' => '/tk/'.FrontController::encodeQuery('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType=Alpha\Model\Person'), 'params' => $params));
@@ -190,6 +190,67 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $this->assertEquals('application/json', $response->getHeader('Content-Type'), 'Testing the doPOST method');
         $this->assertTrue(strpos($response->getHeader('Location'), '/record/'.urlencode('Alpha\Model\Person')) !== false, 'Testing the doPOST method');
         $this->assertEquals('test3', json_decode($response->getBody())->displayName, 'Testing the doPOST method');
+    }
+
+    /**
+     * Testing the doPOST method
+     */
+    public function testDoPUT()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        $front = new FrontController();
+        $controller = new ActiveRecordController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $person = $this->createPersonObject('test');
+        $person->save();
+
+        $params = array('var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = array_merge($params, $person->toArray());
+
+        $request = new Request(array('method' => 'PUT', 'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getOID(), 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(301, $response->getStatus(), 'Testing the doPUT method');
+        $this->assertTrue(strpos($response->getHeader('Location'), '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getOID().'/edit') !== false, 'Testing the doGET method');
+
+        $person->reload();
+        $person->set('email', 'updated1@test.com');
+        $params = array('var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = array_merge($params, $person->toArray());
+
+        $request = new Request(array('method' => 'PUT', 'URI' => '/tk/'.FrontController::encodeQuery('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType=Alpha\Model\Person&ActiveRecordOID='.$person->getOID()), 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(301, $response->getStatus(), 'Testing the doPUT method');
+        $this->assertTrue(strpos($response->getHeader('Location'), '/tk/') !== false, 'Testing the doPUT method');
+
+        $person->reload();
+        $person->set('email', 'updated2@test.com');
+        $params = array('var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = array_merge($params, $person->toArray());
+
+        $request = new Request(
+            array(
+                'method' => 'PUT',
+                'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getOID(),
+                'params' => $params,
+                'headers' => array('Accept' => 'application/json')
+            )
+        );
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doPUT method');
+        $this->assertEquals('application/json', $response->getHeader('Content-Type'), 'Testing the doPUT method');
+        $this->assertTrue(strpos($response->getHeader('Location'), '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getOID()) !== false, 'Testing the doPUT method');
+        $this->assertEquals('updated2@test.com', json_decode($response->getBody())->email, 'Testing the doPUT method');
     }
 }
 
