@@ -252,6 +252,63 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $this->assertTrue(strpos($response->getHeader('Location'), '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getOID()) !== false, 'Testing the doPUT method');
         $this->assertEquals('updated2@test.com', json_decode($response->getBody())->email, 'Testing the doPUT method');
     }
+
+    /**
+     * Testing the doDELETE method
+     */
+    public function testDoDELETE()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        $front = new FrontController();
+        $controller = new ActiveRecordController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $person = $this->createPersonObject('test');
+        $person->save();
+
+        $params = array('var1' => $securityParams[0], 'var2' => $securityParams[1]);
+
+        $request = new Request(array('method' => 'DELETE', 'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getOID(), 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(301, $response->getStatus(), 'Testing the doDELETE method');
+        $this->assertTrue(strpos($response->getHeader('Location'), '/records/'.urlencode('Alpha\Model\Person')) !== false, 'Testing the doDELETE method');
+    
+        $person = $this->createPersonObject('test');
+        $person->save();
+
+        $params = array('var1' => $securityParams[0], 'var2' => $securityParams[1]);
+
+        $request = new Request(array('method' => 'DELETE', 'URI' => '/tk/'.FrontController::encodeQuery('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType=Alpha\Model\Person&ActiveRecordOID='.$person->getOID()), 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(301, $response->getStatus(), 'Testing the doDELETE method');
+        $this->assertTrue(strpos($response->getHeader('Location'), '/tk/') !== false, 'Testing the doDELETE method');
+
+        $person = $this->createPersonObject('test');
+        $person->save();
+
+        $request = new Request(
+            array(
+                'method' => 'DELETE',
+                'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getOID(),
+                'params' => $params,
+                'headers' => array('Accept' => 'application/json')
+            )
+        );
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doDELETE method');
+        $this->assertEquals('application/json', $response->getHeader('Content-Type'), 'Testing the doDELETE method');
+        $this->assertEquals('deleted', json_decode($response->getBody())->message, 'Testing the doDELETE method');
+    }
 }
 
 ?>
