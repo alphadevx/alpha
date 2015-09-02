@@ -9,6 +9,7 @@ use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\Util\Helper\Validator;
 use Alpha\View\View;
+use Alpha\View\ViewState;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\ResourceNotAllowedException;
@@ -171,7 +172,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 }
 
                 // set up the title and meta details
-                if ($params['view'] == 'edit') {
+                if (isset($params['view']) && $params['view'] == 'edit') {
                     if (!isset($this->title)) {
                         $this->setTitle('Editing a '.$record->getFriendlyClassName());
                     }
@@ -201,7 +202,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 $body .= View::displayPageHead($this);
                 $body .= View::renderDeleteForm($request->getURI());
 
-                if ($params['view'] == 'edit') {
+                if (isset($params['view']) && $params['view'] == 'edit') {
                     $fields = array('formAction' => $this->request->getURI());
                     $body .= $view->editView();
                 } else {
@@ -565,6 +566,8 @@ class ActiveRecordController extends Controller implements ControllerInterface
      */
     public function after_displayPageHead_callback()
     {
+        $body = parent::after_displayPageHead_callback();
+
         // set the start point for the list pagination
         if ($this->request->getParam('start') != null) {
             $this->startPoint = $this->request->getParam('start');
@@ -572,11 +575,13 @@ class ActiveRecordController extends Controller implements ControllerInterface
             $accept = $this->request->getAccept();
 
             if ($accept == 'application/json') {
-                return '[';
+                $body .= '[';
             }
 
-            return '';
+            $body .= '';
         }
+
+        return $body;
     }
 
     /**

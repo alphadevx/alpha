@@ -746,27 +746,6 @@ class ArticleController extends Controller implements ControllerInterface
     }
 
     /**
-     * Use this callback to inject in the admin menu template fragment for admin users of
-     * the backend only.
-     *
-     * @since 1.2
-     */
-    public function after_displayPageHead_callback()
-    {
-        $menu = '';
-
-        $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
-
-        if ($session->get('currentUser') != null && ActiveRecord::isInstalled() && $session->get('currentUser')->inGroup('Admin') && mb_strpos($this->request->getURI(), '/tk/') !== false) {
-            $menu .= View::loadTemplateFragment('html', 'adminmenu.phtml', array());
-        }
-
-        return $menu;
-    }
-
-    /**
      * Callback that inserts the CMS level header
      *
      * @return string
@@ -947,8 +926,6 @@ class ArticleController extends Controller implements ControllerInterface
 
             if ($this->request->getParam('act') == 'Alpha\Controller\ListController') {
                 $this->mode = 'read';
-            } elseif ($this->request->getParam('act') == 'Alpha\Controller\CreateController') {
-                $this->mode = 'create';
             } elseif ($this->request->getParam('act') == 'Alpha\Controller\EditController') {
                 $this->mode = 'edit';
             } else {

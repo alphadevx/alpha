@@ -7,6 +7,7 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\View\View;
+use Alpha\View\ViewState;
 use Alpha\Exception\SecurityException;
 use Alpha\Exception\AlphaException;
 use Alpha\Model\ActiveRecord;
@@ -83,6 +84,9 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
         $this->setTitle('Listing all active records in the system');
         $this->setDescription('Page to list all active records.');
         $this->setKeywords('list,all,active,records');
+
+        $viewState = ViewState::getInstance();
+        $viewState->set('renderAdminMenu', true);
 
         self::$logger->debug('<<__construct');
     }
@@ -253,18 +257,6 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
         }
 
         return $body;
-    }
-
-    /**
-     * Use this callback to inject in the admin menu template fragment
-     *
-     * @since 1.2
-     */
-    public function after_displayPageHead_callback()
-    {
-        $menu = View::loadTemplateFragment('html', 'adminmenu.phtml', array());
-
-        return $menu;
     }
 }
 

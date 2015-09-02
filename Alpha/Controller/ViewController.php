@@ -266,18 +266,6 @@ class ViewController extends Controller implements ControllerInterface
         if ($this->keywords == '')
             $this->setKeywords('display,details,'.$this->activeRecordType);
     }
-
-    /**
-     * Use this callback to inject in the admin menu template fragment
-     *
-     * @since 1.2
-     */
-    public function after_displayPageHead_callback()
-    {
-        $menu = View::loadTemplateFragment('html', 'adminmenu.phtml', array());
-
-        return $menu;
-    }
 }
 
 ?>

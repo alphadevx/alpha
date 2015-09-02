@@ -426,7 +426,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
         // create button
         if ($this->BO->checkTableExists()) {
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\\Controller\\CreateController&ActiveRecordType='.get_class($this->BO))."'", "Create New", "create".stripslashes(get_class($this->BO))."But");
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.get_class($this->BO))."'", "Create New", "create".stripslashes(get_class($this->BO))."But");
             $fields['createButton'] = $button->render();
         } else {
             $fields['createButton'] = '';

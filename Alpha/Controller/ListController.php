@@ -439,18 +439,6 @@ class ListController extends Controller implements ControllerInterface
 
         return $body;
     }
-
-    /**
-     * Use this callback to inject in the admin menu template fragment
-     *
-     * @since 1.2
-     */
-    public function after_displayPageHead_callback()
-    {
-        $menu = View::loadTemplateFragment('html', 'adminmenu.phtml', array());
-
-        return $menu;
-    }
 }
 
 ?>

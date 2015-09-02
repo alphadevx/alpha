@@ -20,6 +20,7 @@ use Alpha\Exception\NotImplementedException;
 use Alpha\Exception\FileNotFoundException;
 use Alpha\Controller\Front\FrontController;
 use Alpha\View\View;
+use Alpha\View\ViewState;
 use ReflectionClass;
 use Exception;
 
@@ -1437,10 +1438,33 @@ abstract class Controller
      */
     public function setRequest($request)
     {
-        if ($request instanceof Request)
+        if ($request instanceof Request) {
             $this->request = $request;
-        else
+        } else {
             throw new IllegalArguementException('Invalid request object ['.print_r($request, true).'] passed');
+        }
+    }
+
+    /**
+     * Use this callback to inject in the admin menu template fragment
+     *
+     * @return string
+     * @since 1.2
+     */
+    public function after_displayPageHead_callback()
+    {
+        $accept = $this->request->getAccept();
+
+        if ($accept != 'application/json') {
+            $viewState = ViewState::getInstance();
+            if ($viewState->get('renderAdminMenu') === true) {
+                $menu = View::loadTemplateFragment('html', 'adminmenu.phtml', array());
+
+                return $menu;
+            }
+        } else {
+            return '';
+        }
     }
 }
 

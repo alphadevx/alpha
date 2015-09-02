@@ -19,7 +19,6 @@ use Alpha\Controller\Controller;
 use Alpha\Controller\ArticleController;
 use Alpha\Controller\AttachmentController;
 use Alpha\Controller\CacheController;
-use Alpha\Controller\CreateController;
 use Alpha\Controller\EditController;
 use Alpha\Controller\DEnumController;
 use Alpha\Controller\ExcelController;
@@ -191,11 +190,6 @@ class FrontController
             return $controller->process($request);
         });
 
-        $this->addRoute('/create/{ActiveRecordType}', function($request) {
-            $controller = new CreateController();
-            return $controller->process($request);
-        });
-
         $this->addRoute('/edit/{ActiveRecordType}/{ActiveRecordOID}', function($request) {
             $controller = new EditController();
             return $controller->process($request);
@@ -307,7 +301,6 @@ class FrontController
         	if (isset($params['act'])) {
         		$className = $params['act'];
         		$crudControllers = array(
-        			'Alpha\Controller\CreateController',
         			'Alpha\Controller\ViewController',
         			'Alpha\Controller\EditController'
         		);

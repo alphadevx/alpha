@@ -232,18 +232,6 @@ class CacheController extends Controller implements ControllerInterface
 
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
-
-    /**
-     * Use this callback to inject in the admin menu template fragment
-     *
-     * @since 1.2
-     */
-    public function after_displayPageHead_callback()
-    {
-        $menu = View::loadTemplateFragment('html', 'adminmenu.phtml', array());
-
-        return $menu;
-    }
 }
 
 ?>

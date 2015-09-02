@@ -69,6 +69,14 @@ class ViewState
     protected $markdownTextBoxRows;
 
     /**
+     * If the backend admin menu should be displayed or not
+     *
+     * @var bool
+     * @since 2.0
+     */
+    protected $renderAdminMenu = false;
+
+    /**
      * The view state object singleton
      *
      * @var Alpha\View\ViewState
@@ -143,10 +151,10 @@ class ViewState
         $session = SessionProviderFactory::getInstance($sessionProvider);
         $attribute = new ReflectionProperty(get_class($this), $key);
 
-        if($attribute != null) {
+        if ($attribute != null) {
             $this->$key = $value;
-            $session->set(get_class($this), serialize($this));
-        }else{
+            $session->set('ViewState', serialize($this));
+        } else {
             throw new IllegalArguementException('The property ['.$key.'] does not exist on the ['.get_class($this).'] class');
         }
     }
