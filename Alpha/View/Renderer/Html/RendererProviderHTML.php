@@ -288,7 +288,7 @@ class RendererProviderHTML implements RendererProviderInterface
         // render edit and delete buttons for admins only
         if ($session->get('currentUser') && $session->get('currentUser')->inGroup('Admin')) {
             $html .= '&nbsp;&nbsp;';
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\EditController&ActiveRecordType='.get_class($this->BO)."&ActiveRecordOID=".$this->BO->getOID())."'", "Edit", "edit".$this->BO->getOID()."But");
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO)."&ActiveRecordOID=".$this->BO->getOID().'&view=edit')."'", "Edit", "edit".$this->BO->getOID()."But");
             $html .= $button->render();
             $html .= '&nbsp;&nbsp;';
 
@@ -358,7 +358,7 @@ class RendererProviderHTML implements RendererProviderInterface
         // render edit and delete buttons for admins only
         if ($session->get('currentUser') !== false && $session->get('currentUser')->inGroup('Admin')) {
 
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\EditController&ActiveRecordType='.get_class($this->BO)."&ActiveRecordOID=".$this->BO->getOID())."'", "Edit", "editBut");
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO)."&ActiveRecordOID=".$this->BO->getOID().'&view=edit')."'", "Edit", "editBut");
             $html .= $button->render();
 
             $js = "if(window.jQuery) {

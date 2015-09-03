@@ -13,7 +13,7 @@ use Alpha\Model\Rights;
 
 /**
  *
- * Test cases for the EditController class
+ * Test cases for the ViewController class
  *
  * @since 2.0
  * @author John Collins <dev@alphaframework.org>

@@ -200,11 +200,17 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 $view = View::getInstance($record, false, $accept);
 
                 $body .= View::displayPageHead($this);
+
+                $message = $this->getStatusMessage();
+                if (!empty($message)) {
+                    $body .= $message;
+                }
+
                 $body .= View::renderDeleteForm($request->getURI());
 
                 if (isset($params['view']) && $params['view'] == 'edit') {
                     $fields = array('formAction' => $this->request->getURI());
-                    $body .= $view->editView();
+                    $body .= $view->editView($fields);
                 } else {
                     $body .= $view->detailedView();
                 }
@@ -431,6 +437,8 @@ class ActiveRecordController extends Controller implements ControllerInterface
             $record->save();
 
             self::$logger->action('Saved '.$ActiveRecordType.' instance with OID '.$record->getOID());
+
+            $this->setStatusMessage(View::displayUpdateMessage('Saved '.$ActiveRecordType.' instance with OID '.$record->getOID()));
 
             ActiveRecord::disconnect();
 

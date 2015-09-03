@@ -67,7 +67,7 @@ use Alpha\Exception\AlphaException;
  * </pre>
  *
  */
-class TagController extends EditController implements ControllerInterface
+class TagController extends ActiveRecordController implements ControllerInterface
 {
     /**
      * Trace logger

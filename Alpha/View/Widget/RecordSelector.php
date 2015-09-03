@@ -226,6 +226,7 @@ class RecordSelector
 
                     $html .= '<div id="relation_field_'.$this->name.'" style="display:'.($expanded ? '' : 'none').';">';
 
+                    // TDOD: remove these checks
                     $customViewControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'view');
                     $customEditControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'edit');
 

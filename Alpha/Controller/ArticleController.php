@@ -919,6 +919,7 @@ class ArticleController extends Controller implements ControllerInterface
      * Tries to determine the correct render mode for this request
      *
      * @since 2.0
+     * @todo refactor/remove
      */
     private function setMode()
     {
@@ -926,8 +927,6 @@ class ArticleController extends Controller implements ControllerInterface
 
             if ($this->request->getParam('act') == 'Alpha\Controller\ListController') {
                 $this->mode = 'read';
-            } elseif ($this->request->getParam('act') == 'Alpha\Controller\EditController') {
-                $this->mode = 'edit';
             } else {
                 $this->mode = (in_array($this->request->getParam('mode'), array('create','edit', 'read', 'pdf', 'print')) ? $this->request->getParam('mode') : 'read');
             }

@@ -19,7 +19,6 @@ use Alpha\Controller\Controller;
 use Alpha\Controller\ArticleController;
 use Alpha\Controller\AttachmentController;
 use Alpha\Controller\CacheController;
-use Alpha\Controller\EditController;
 use Alpha\Controller\DEnumController;
 use Alpha\Controller\ExcelController;
 use Alpha\Controller\FeedController;
@@ -190,11 +189,6 @@ class FrontController
             return $controller->process($request);
         });
 
-        $this->addRoute('/edit/{ActiveRecordType}/{ActiveRecordOID}', function($request) {
-            $controller = new EditController();
-            return $controller->process($request);
-        });
-
         $this->addRoute('/denum/{denumOID}', function($request) {
             $controller = new DEnumController();
             return $controller->process($request);
@@ -300,15 +294,11 @@ class FrontController
         	
         	if (isset($params['act'])) {
         		$className = $params['act'];
-        		$crudControllers = array(
-        			'Alpha\Controller\ViewController',
-        			'Alpha\Controller\EditController'
-        		);
 
         		if (class_exists($className)) {
         			$controller = new $className;
 
-        			if (isset($params['ActiveRecordType']) && in_array($params['act'], $crudControllers)) {
+        			if (isset($params['ActiveRecordType']) && $params['act'] == 'Alpha\Controller\ActiveRecordController') {
 	        			$customController = $controller->getCustomControllerName($params['ActiveRecordType']);
 			            if ($customController != null) {
 			                $controller = new $customController();
