@@ -34,7 +34,6 @@ use Alpha\Controller\RecordSelectorController;
 use Alpha\Controller\SearchController;
 use Alpha\Controller\SequenceController;
 use Alpha\Controller\TagController;
-use Alpha\Controller\ViewController;
 use Alpha\Controller\IndexController;
 use Alpha\Controller\InstallController;
 use Alpha\Controller\ActiveRecordController;
@@ -266,11 +265,6 @@ class FrontController
 
         $this->addRoute('/tag/{ActiveRecordType}/{ActiveRecordOID}', function($request) {
             $controller = new TagController();
-            return $controller->process($request);
-        });
-
-        $this->addRoute('/view/{ActiveRecordType}/{ActiveRecordOID}', function($request) {
-            $controller = new ViewController();
             return $controller->process($request);
         });
 

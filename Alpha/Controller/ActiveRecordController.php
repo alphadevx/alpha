@@ -545,7 +545,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
                     $response->redirect($this->getNextJob());
                 } else {
                     if ($this->request->isSecureURI()) {
-                        $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.$ActiveRecordType.'&ActiveRecordOID'));
+                        $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.$ActiveRecordType.'&start=0&limit='.$config->get('app.list.page.amount')));
                     } else {
                         $response->redirect($config->get('app.url').'records/'.$params['ActiveRecordType']);
                     }

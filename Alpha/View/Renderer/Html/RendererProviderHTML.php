@@ -273,13 +273,14 @@ class RendererProviderHTML implements RendererProviderInterface
 
         // View button
         if (mb_strpos($request->getURI(), '/tk/') !== false) {
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ViewController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID())."';", 'View', 'view'.$this->BO->getOID().'But');
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID())."';", 'View', 'view'.$this->BO->getOID().'But');
             $fields['viewButton'] = $button->render();
         } else {
-            if ($this->BO->hasAttribute('URL'))
+            if ($this->BO->hasAttribute('URL')) {
                 $button = new Button("document.location = '".$this->BO->get('URL')."';", 'View', 'view'.$this->BO->getOID().'But');
-            else
-                $button = new Button("document.location = '".$config->get('app.url')."view/".urlencode(get_class($this->BO))."/".$this->BO->getOID()."';", 'View', 'view'.$this->BO->getOID().'But');
+            } else {
+                $button = new Button("document.location = '".$config->get('app.url')."record/".urlencode(get_class($this->BO))."/".$this->BO->getOID()."';", 'View', 'view'.$this->BO->getOID().'But');
+            }
 
             $fields['viewButton'] = $button->render();
         }

@@ -237,8 +237,8 @@ class RecordSelector
 
                         // check to see if we are in the admin back-end
                         if (mb_strpos($URI, '/tk/') !== false) {
-                            $viewURL = FrontController::generateSecureURL('act=Alpha\Controller\ViewController&ActiveRecordType='.get_class($obj).'&ActiveRecordOID='.$obj->getOID());
-                            $editURL = FrontController::generateSecureURL('act=Alpha\Controller\EditController&ActiveRecordType='.get_class($obj).'&ActiveRecordOID='.$obj->getOID());
+                            $viewURL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($obj).'&ActiveRecordOID='.$obj->getOID());
+                            $editURL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($obj).'&ActiveRecordOID='.$obj->getOID().'/edit');
                         } else {
                             // TOOD: revisit all of these links once the generic CRUD controller is done
                             if (isset($customViewControllerName)) {
