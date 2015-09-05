@@ -7,11 +7,11 @@ use Alpha\Util\Config\ConfigProvider;
 use Redis;
 
 /**
- *
  * An implementation of the CacheProviderInterface interface that uses Redis as the
  * target store.
  *
  * @since 1.2.4
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -48,28 +48,29 @@ use Redis;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class CacheProviderRedis implements CacheProviderInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.2.4
      */
     private static $logger = null;
 
     /**
-     * Connection to the cache server
+     * Connection to the cache server.
      *
      * @var Redis
+     *
      * @since 1.2.4
      */
     private $connection;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @since 1.2.4
      */
@@ -84,13 +85,13 @@ class CacheProviderRedis implements CacheProviderInterface
             $this->connection->connect($config->get('cache.redis.host'), $config->get('cache.redis.port'));
             $this->connection->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
             $this->connection->select($config->get('cache.redis.db'));
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             self::$logger->error('Error while attempting to connect to Redis cache: ['.$e->getMessage().']');
         }
     }
 
-   /**
-     * {@inheritDoc}
+    /**
+     * {@inheritdoc}
      */
     public function get($key)
     {
@@ -100,41 +101,41 @@ class CacheProviderRedis implements CacheProviderInterface
             $value = $this->connection->get($key);
 
             self::$logger->debug('<<get: ['.print_r($value, true).'])');
+
             return $value;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             self::$logger->error('Error while attempting to load a business object from Redis instance: ['.$e->getMessage().']');
             self::$logger->debug('<<get: [false])');
+
             return false;
         }
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function set($key, $value, $expiry=0)
+    public function set($key, $value, $expiry = 0)
     {
         try {
-            if($expiry > 0)
+            if ($expiry > 0) {
                 $this->connection->setex($key, $expiry, $value);
-            else
+            } else {
                 $this->connection->set($key, $value);
-
-          } catch(\Exception $e) {
-              self::$logger->error('Error while attempting to store a value to Redis instance: ['.$e->getMessage().']');
-          }
+            }
+        } catch (\Exception $e) {
+            self::$logger->error('Error while attempting to store a value to Redis instance: ['.$e->getMessage().']');
+        }
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function delete($key)
     {
         try {
             $this->connection->delete($key);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             self::$logger->error('Error while attempting to remove a value from Redis instance: ['.$e->getMessage().']');
         }
     }
 }
-
-?>

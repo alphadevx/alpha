@@ -4,13 +4,12 @@ namespace Alpha\Test\View;
 
 use Alpha\View\ViewState;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Http\Session\SessionProviderFactory;
 
 /**
- *
  * Test cases for the ViewState class.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -47,12 +46,11 @@ use Alpha\Util\Http\Session\SessionProviderFactory;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ViewStateTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @since 2.0
      */
@@ -63,7 +61,7 @@ class ViewStateTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the getInstance method
+     * Testing the getInstance method.
      *
      * @since 2.0
      */
@@ -75,7 +73,7 @@ class ViewStateTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the get/set methods
+     * Testing the get/set methods.
      *
      * @since 2.0
      */
@@ -91,5 +89,3 @@ class ViewStateTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('test', $viewState2->get('selectedTab'), 'Testing the get/set methods');
     }
 }
-
-?>

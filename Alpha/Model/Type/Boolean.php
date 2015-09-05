@@ -6,9 +6,10 @@ use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- * The Boolean complex data type
+ * The Boolean complex data type.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -45,109 +46,117 @@ use Alpha\Exception\IllegalArguementException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class Boolean extends Type implements TypeInterface
 {
-	/**
-	 * The value of the Boolean
-	 *
-	 * @var boolean
-	 * @since 1.0
-	 *
-	 */
-	private $booleanValue;
+    /**
+     * The value of the Boolean.
+     *
+     * @var bool
+     *
+     * @since 1.0
+     */
+    private $booleanValue;
 
-	/**
-	 * The binary (1/0) value of the Boolean.  This is the value stored in the database.
-	 *
-	 * @var integer
-	 * @since 1.0
-	 */
-	private $value;
+    /**
+     * The binary (1/0) value of the Boolean.  This is the value stored in the database.
+     *
+     * @var int
+     *
+     * @since 1.0
+     */
+    private $value;
 
-	/**
-	 * The error message returned for invalid values
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	protected $helper = 'Not a valid Boolean value!';
+    /**
+     * The error message returned for invalid values.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    protected $helper = 'Not a valid Boolean value!';
 
-	/**
-	 * Constructor
-	 *
-	 * @param boolean $val
-	 * @since 1.0
-	 * @throws Alpha\Exception\IllegalArguementException
-	 */
-	public function __construct($val=true)
-	{
-		if (!Validator::isBoolean($val))
-			throw new IllegalArguementException($this->helper);
+    /**
+     * Constructor.
+     *
+     * @param bool $val
+     *
+     * @since 1.0
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     */
+    public function __construct($val = true)
+    {
+        if (!Validator::isBoolean($val)) {
+            throw new IllegalArguementException($this->helper);
+        }
 
-		if (Validator::isBooleanTrue($val)) {
-			$this->value = 1;
-			$this->booleanValue = true;
-		} else {
-			$this->value = 0;
-			$this->booleanValue = false;
-		}
-	}
+        if (Validator::isBooleanTrue($val)) {
+            $this->value = 1;
+            $this->booleanValue = true;
+        } else {
+            $this->value = 0;
+            $this->booleanValue = false;
+        }
+    }
 
-	/**
-	 * Used to set the Boolean value.
-	 *
-	 * @param mixed $val Will accept a boolean true/false or integer 1/0.
-	 * @since 1.0
-	 * @throws Alpha\Exception\IllegalArguementException
-	 */
-	public function setValue($val)
-	{
-		if (!Validator::isBoolean($val))
-			throw new IllegalArguementException($this->helper);
+    /**
+     * Used to set the Boolean value.
+     *
+     * @param mixed $val Will accept a boolean true/false or integer 1/0.
+     *
+     * @since 1.0
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     */
+    public function setValue($val)
+    {
+        if (!Validator::isBoolean($val)) {
+            throw new IllegalArguementException($this->helper);
+        }
 
-		if (Validator::isBooleanTrue($val)) {
-			$this->value = 1;
-			$this->booleanValue = true;
-		} else {
-			$this->value = 0;
-			$this->booleanValue = false;
-		}
-	}
+        if (Validator::isBooleanTrue($val)) {
+            $this->value = 1;
+            $this->booleanValue = true;
+        } else {
+            $this->value = 0;
+            $this->booleanValue = false;
+        }
+    }
 
-	/**
-	 * Used to get the binary (1/0) value of the Boolean.  This is the value stored in the database.
-	 *
-	 * @return integer
-	 * @since 1.0
-	 */
-	public function getValue()
-	{
-		return $this->value;
-	}
+    /**
+     * Used to get the binary (1/0) value of the Boolean.  This is the value stored in the database.
+     *
+     * @return int
+     *
+     * @since 1.0
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
 
-	/**
-	 * Used to get the boolean value of the Boolean
-	 *
-	 * @return boolean
-	 * @since 1.0
-	 */
-	public function getBooleanValue()
-	{
-		return $this->booleanValue;
-	}
+    /**
+     * Used to get the boolean value of the Boolean.
+     *
+     * @return bool
+     *
+     * @since 1.0
+     */
+    public function getBooleanValue()
+    {
+        return $this->booleanValue;
+    }
 
-	/**
-	 * Used to convert the object to a printable string
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function __toString()
-	{
-		return ($this->value ? 'true' : 'false');
-	}
+    /**
+     * Used to convert the object to a printable string.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function __toString()
+    {
+        return ($this->value ? 'true' : 'false');
+    }
 }
-
-?>

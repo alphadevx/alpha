@@ -3,13 +3,13 @@
 namespace Alpha\Util\Http;
 
 use Alpha\Exception\IllegalArguementException;
-use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Helper\Validator;
 
 /**
- * A class to encapsulate a HTTP Response
+ * A class to encapsulate a HTTP Response.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -46,30 +46,32 @@ use Alpha\Util\Helper\Validator;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class Response
 {
     /**
-     * The body of the response
+     * The body of the response.
      *
      * @var string
+     *
      * @since 2.0
      */
     private $body;
 
     /**
-     * The status code of the response
+     * The status code of the response.
      *
      * @var int
+     *
      * @since 2.0
      */
     private $status;
 
     /**
-     * Array of supported HTTP response codes
+     * Array of supported HTTP response codes.
      *
      * @var array
+     *
      * @since 2.0
      */
     private $HTTPStatusCodes = array(
@@ -127,50 +129,56 @@ class Response
         506 => 'Variant Also Negotiates',
         507 => 'Insufficient Storage',
         509 => 'Bandwidth Limit Exceeded',
-        510 => 'Not Extended'
+        510 => 'Not Extended',
     );
 
     /**
-     * An associative array of headers for the response
+     * An associative array of headers for the response.
      *
      * @var array
+     *
      * @since 2.0
      */
     private $headers;
 
     /**
-     * An associative array of HTTP cookies on this response
+     * An associative array of HTTP cookies on this response.
      *
      * @var array
+     *
      * @since 2.0
      */
     private $cookies;
 
     /**
-     * Build the response
+     * Build the response.
      *
-     * @param int $status The HTTP status code of the response.
-     * @param string $body The body of the response (optional).
-     * @param array $headers The headers to set on the response (optional).
+     * @param int    $status  The HTTP status code of the response.
+     * @param string $body    The body of the response (optional).
+     * @param array  $headers The headers to set on the response (optional).
+     *
      * @throws Alpha\Exception\IllegalArguementException
      */
     public function __construct($status, $body = null, $headers = array())
     {
         $this->headers = $headers;
 
-        if (isset($body))
+        if (isset($body)) {
             $this->body = $body;
+        }
 
-        if (array_key_exists($status, $this->HTTPStatusCodes))
+        if (array_key_exists($status, $this->HTTPStatusCodes)) {
             $this->status = $status;
-        else
+        } else {
             throw new IllegalArguementException('The status code provided ['.$status.'] is invalid');
+        }
     }
 
     /**
-     * Get the response body
+     * Get the response body.
      *
      * @return string|null
+     *
      * @since 2.0
      */
     public function getBody()
@@ -179,9 +187,10 @@ class Response
     }
 
     /**
-     * Set the response body
+     * Set the response body.
      *
      * @param string $body The response body.
+     *
      * @since 2.0
      */
     public function setBody($body)
@@ -190,9 +199,10 @@ class Response
     }
 
     /**
-     * Get the status code of the response
+     * Get the status code of the response.
      *
      * @return int
+     *
      * @since 2.0
      */
     public function getStatus()
@@ -201,7 +211,7 @@ class Response
     }
 
     /**
-     * Get the status message of the response
+     * Get the status message of the response.
      *
      * @return string
      */
@@ -211,25 +221,29 @@ class Response
     }
 
     /**
-     * Set the status code of the response
+     * Set the status code of the response.
      *
      * @param int $status The response code.
+     *
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @since 2.0
      */
     public function setStatus($status)
     {
-        if (array_key_exists($status, $this->HTTPStatusCodes))
+        if (array_key_exists($status, $this->HTTPStatusCodes)) {
             $this->status = $status;
-        else
+        } else {
             throw new IllegalArguementException('The status code provided ['.$status.'] is invalid');
+        }
     }
 
     /**
-     * Set a header key/value tuple for the response
+     * Set a header key/value tuple for the response.
      *
      * @param string $header The header key name.
-     * @param string $value The header value.
+     * @param string $value  The header value.
+     *
      * @since 2.0
      */
     public function setHeader($header, $value)
@@ -238,9 +252,10 @@ class Response
     }
 
     /**
-     * Get all of the headers for the response
+     * Get all of the headers for the response.
      *
      * @return array
+     *
      * @since 2.0
      */
     public function getHeaders()
@@ -249,26 +264,30 @@ class Response
     }
 
     /**
-     * Get the header matching the key provided
+     * Get the header matching the key provided.
      *
-     * @param string $key The key to search for
-     * @param mixed $default If key is not found, return this instead
+     * @param string $key     The key to search for
+     * @param mixed  $default If key is not found, return this instead
+     *
      * @return mixed
+     *
      * @since 2.0
      */
     public function getHeader($key, $default = null)
     {
-        if (array_key_exists($key, $this->headers))
+        if (array_key_exists($key, $this->headers)) {
             return $this->headers[$key];
-        else
+        } else {
             return $default;
+        }
     }
 
     /**
-     * Set a cookie key/value tuple for the response
+     * Set a cookie key/value tuple for the response.
      *
      * @param string $cookie The cookie key name.
-     * @param string $value The cookie value.
+     * @param string $value  The cookie value.
+     *
      * @since 2.0
      */
     public function setCookie($cookie, $value)
@@ -277,9 +296,10 @@ class Response
     }
 
     /**
-     * Get all of the cookies for the response
+     * Get all of the cookies for the response.
      *
      * @return array
+     *
      * @since 2.0
      */
     public function getCookies()
@@ -288,25 +308,29 @@ class Response
     }
 
     /**
-     * Get the cookie matching the key provided
+     * Get the cookie matching the key provided.
      *
-     * @param string $key The key to search for
-     * @param mixed $default If key is not found, return this instead
+     * @param string $key     The key to search for
+     * @param mixed  $default If key is not found, return this instead
+     *
      * @return mixed
+     *
      * @since 2.0
      */
     public function getCookie($key, $default = null)
     {
-        if (array_key_exists($key, $this->cookies))
+        if (array_key_exists($key, $this->cookies)) {
             return $this->cookies[$key];
-        else
+        } else {
             return $default;
+        }
     }
 
     /**
-     * Get the content length of the response
+     * Get the content length of the response.
      *
      * @return int
+     *
      * @since 2.0
      */
     public function getContentLength()
@@ -315,10 +339,12 @@ class Response
     }
 
     /**
-     * Builds a redirect response
+     * Builds a redirect response.
      *
      * @param string $URL The URL to redirect the client to.
+     *
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @since 2.0
      */
     public function redirect($URL)
@@ -332,7 +358,7 @@ class Response
     }
 
     /**
-     * Sends the current response to standard output before exiting the current process
+     * Sends the current response to standard output before exiting the current process.
      *
      * @since 2.0
      */
@@ -350,5 +376,3 @@ class Response
         }
     }
 }
-
-?>

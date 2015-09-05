@@ -6,10 +6,10 @@ use Alpha\Util\Config\ConfigProvider;
 use Michelf\MarkdownExtra;
 
 /**
- *
- * A custom version of the Markdown class which uses the geshi library for rendering code
+ * A custom version of the Markdown class which uses the geshi library for rendering code.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -46,7 +46,6 @@ use Michelf\MarkdownExtra;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class Markdown extends MarkdownExtra
 {
@@ -75,7 +74,7 @@ class Markdown extends MarkdownExtra
         if (isset($codeTypeTag[0])) {
             $start = mb_strpos($codeTypeTag[0], '[');
             $end = mb_strpos($codeTypeTag[0], ']');
-            $language = mb_substr($codeTypeTag[0], $start+1, $end-($start+1));
+            $language = mb_substr($codeTypeTag[0], $start + 1, $end - ($start + 1));
         } else {
             // will use php as a defualt language type when none is provided
             $language = 'php';
@@ -86,7 +85,7 @@ class Markdown extends MarkdownExtra
             $codeblock = $highlighter->highlight($codeblock, $language);
         }
 
-        $result = "\n\n".$this->hashBlock("<pre><code>" . $codeblock . "\n</code></pre>")."\n\n";
+        $result = "\n\n".$this->hashBlock('<pre><code>'.$codeblock."\n</code></pre>")."\n\n";
 
         return $result;
     }
@@ -101,10 +100,10 @@ class Markdown extends MarkdownExtra
     {
         $config = ConfigProvider::getInstance();
 
-        $whole_match    =  $matches[1];
-        $link_text      =  $this->runSpanGamut($matches[2]);
-        $url            =  $matches[3];
-        $title          =& $matches[6];
+        $whole_match = $matches[1];
+        $link_text = $this->runSpanGamut($matches[2]);
+        $url = $matches[3];
+        $title = &$matches[6];
 
         $external = false;
 
@@ -117,8 +116,9 @@ class Markdown extends MarkdownExtra
          * 2. $url has a host part
          * 3. $url does not contain $config->get('app.url'), i.e. points to a local resource.
          */
-        if (is_array($parts) && isset($parts['host']) && mb_strpos($url, $config->get('app.url')) === false)
+        if (is_array($parts) && isset($parts['host']) && mb_strpos($url, $config->get('app.url')) === false) {
             $external = true;
+        }
 
         $url = $this->encodeAmpsAndAngles($url);
 
@@ -143,13 +143,13 @@ class Markdown extends MarkdownExtra
     }
 
     /**
-     * Custom version of the _doTable_callback(...) method which sets the table border and CSS style
+     * Custom version of the _doTable_callback(...) method which sets the table border and CSS style.
      *
      * @since 1.0
      */
     public function _doTable_callback($matches)
     {
-        $head  = $matches[1];
+        $head = $matches[1];
         $underline = $matches[2];
         $content = $matches[3];
 
@@ -161,28 +161,30 @@ class Markdown extends MarkdownExtra
         # Reading alignement from header underline.
         $separators = preg_split('/ *[|] */', $underline);
         foreach ($separators as $n => $s) {
-            if (preg_match('/^ *-+: *$/', $s))
+            if (preg_match('/^ *-+: *$/', $s)) {
                 $attr[$n] = ' align="right"';
-            elseif (preg_match('/^ *:-+: *$/', $s))
+            } elseif (preg_match('/^ *:-+: *$/', $s)) {
                 $attr[$n] = ' align="center"';
-            elseif (preg_match('/^ *:-+ *$/', $s))
+            } elseif (preg_match('/^ *:-+ *$/', $s)) {
                 $attr[$n] = ' align="left"';
-            else
+            } else {
                 $attr[$n] = '';
+            }
         }
 
         # Creating code spans before splitting the row is an easy way to
         # handle a code span containg pipes.
         $head = $this->doCodeSpans($head);
-        $headers  = preg_split('/ *[|] */', $head);
+        $headers = preg_split('/ *[|] */', $head);
         $col_count = count($headers);
 
         # Write column headers.
         $text = "<table class=\"table table-bordered\">\n";
         $text .= "<thead>\n";
         $text .= "<tr>\n";
-        foreach ($headers as $n => $header)
+        foreach ($headers as $n => $header) {
             $text .= "  <th$attr[$n]>".$this->runSpanGamut(trim($header))."</th>\n";
+        }
         $text .= "</tr>\n";
         $text .= "</thead>\n";
 
@@ -200,15 +202,14 @@ class Markdown extends MarkdownExtra
             $row_cells = array_pad($row_cells, $col_count, '');
 
             $text .= "<tr>\n";
-            foreach ($row_cells as $n => $cell)
+            foreach ($row_cells as $n => $cell) {
                 $text .= "  <td$attr[$n]>".$this->runSpanGamut(trim($cell))."</td>\n";
+            }
             $text .= "</tr>\n";
         }
         $text .= "</tbody>\n";
-        $text .= "</table>";
+        $text .= '</table>';
 
-        return $this->hashBlock($text) . "\n";
+        return $this->hashBlock($text)."\n";
     }
 }
-
-?>

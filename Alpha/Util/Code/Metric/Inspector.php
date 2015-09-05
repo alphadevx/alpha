@@ -5,9 +5,10 @@ namespace Alpha\Util\Code\Metric;
 use File_Find;
 
 /**
- * Utility class for calcualting some software metrics related to a project
+ * Utility class for calcualting some software metrics related to a project.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -44,95 +45,105 @@ use File_Find;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class Inspector
 {
     /**
-     * The directory to begin the calculations from
+     * The directory to begin the calculations from.
      *
      * @var string
+     *
      * @since 1.0
      */
     private $rootDir;
 
     /**
-     * The file extensions of the file types to include in the calculations
+     * The file extensions of the file types to include in the calculations.
      *
      * @var array
+     *
      * @since 1.0
      */
     private $includeFileTypes = array('.php', '.html', '.phtml', '.inc', '.js', '.css', '.xml');
 
     /**
-     * Any sub-directories which you might want to exclude from the calculations
+     * Any sub-directories which you might want to exclude from the calculations.
      *
      * @var array
+     *
      * @since 1.0
      */
     private $excludeSubDirectories = array('cache','lib','docs','attachments','dist');
 
     /**
-     * The Total Lines of Code (TLOC) for the project
+     * The Total Lines of Code (TLOC) for the project.
      *
-     * @var integer
+     * @var int
+     *
      * @since 1.0
      */
     private $TLOC = 0;
 
     /**
-     * The Total Lines of Code (TLOC) for the project, less comments defined in $comments
+     * The Total Lines of Code (TLOC) for the project, less comments defined in $comments.
      *
-     * @var integer
+     * @var int
+     *
      * @since 1.0
      */
     private $TLOCLessComments = 0;
 
     /**
-     * The count of the source code files in the project
+     * The count of the source code files in the project.
      *
-     * @var integer
+     * @var int
+     *
      * @since 1.0
      */
     private $fileCount = 0;
 
     /**
-     * An array of fileName => lines of code to be populated by this class
+     * An array of fileName => lines of code to be populated by this class.
      *
      * @var array
+     *
      * @since 1.0
      */
     private $filesLOCResult = array();
 
     /**
      * An array of fileName => lines of code to be populated by this class,
-     * excluding comment lines defined in the $comments array
+     * excluding comment lines defined in the $comments array.
      *
      * @var array
+     *
      * @since 1.0
      */
     private $filesLOCNoCommentsResult = array();
 
     /**
-     * An array of the source code file names in the project
+     * An array of the source code file names in the project.
      *
      * @var array
+     *
      * @since 1.0
      */
     private $files = array();
 
     /**
-     * An array of the directories in the project
+     * An array of the directories in the project.
      *
      * @var array
+     *
      * @since 1.0
      */
     private $directories = array();
 
     /**
-     * An array of the first characters of a comment line in source code
+     * An array of the first characters of a comment line in source code.
      *
      * @var array
+     *
      * @since 1.0
      */
     private $comments = array('/','*','#');
@@ -141,6 +152,7 @@ class Inspector
      * Constructor, default $rootDir is .
      *
      * @param string $rootDir
+     *
      * @since 1.0
      */
     public function __construct($rootDir = '.')
@@ -151,7 +163,7 @@ class Inspector
     }
 
     /**
-     * Calculates the Lines of Code (LOC)
+     * Calculates the Lines of Code (LOC).
      *
      * @since 1.0
      */
@@ -162,7 +174,7 @@ class Inspector
             if (in_array($file_type, $this->includeFileTypes)) {
                 $exclude = false;
                 foreach ($this->excludeSubDirectories as $dir) {
-                    if (preg_match("/".$dir."/i", $file)) {
+                    if (preg_match('/'.$dir.'/i', $file)) {
                         $exclude = true;
                     }
                 }
@@ -177,16 +189,17 @@ class Inspector
 
                     $this->TLOC += $LOC;
                     $this->TLOCLessComments += $LOC_less_comments;
-                    $this->fileCount++;
+                    ++$this->fileCount;
                 }
             }
         }
     }
 
     /**
-     * Generates a HTML table containing the metrics results
+     * Generates a HTML table containing the metrics results.
      *
      * @return string
+     *
      * @since 1.0
      */
     public function resultsToHTML()
@@ -200,24 +213,26 @@ class Inspector
         $html .= '<th style="width:20%;">Lines of Code (less comments):</th>';
         $html .= '</tr>';
         foreach (array_keys($this->filesLOCResult) as $result) {
-            $html .= "<tr><td>$count</td><td>$result</td><td>".$this->filesLOCResult[$result]."</td><td>".$this->filesLOCNoCommentsResult[$result]."</td></tr>";
-            $count++;
+            $html .= "<tr><td>$count</td><td>$result</td><td>".$this->filesLOCResult[$result].'</td><td>'.$this->filesLOCNoCommentsResult[$result].'</td></tr>';
+            ++$count;
         }
         $html .= '</table>';
 
-        $html .= "<p>Total files: ".number_format(count($this->files))."</p>";
-        $html .= "<p>Total source code files: ".number_format($this->fileCount)."</p>";
-        $html .= "<p>Total Lines of Code (TLOC): ".number_format($this->TLOC)."</p>";
-        $html .= "<p>Total Lines of Code (TLOC), less comments: ".number_format($this->TLOCLessComments)."</p>";
+        $html .= '<p>Total files: '.number_format(count($this->files)).'</p>';
+        $html .= '<p>Total source code files: '.number_format($this->fileCount).'</p>';
+        $html .= '<p>Total Lines of Code (TLOC): '.number_format($this->TLOC).'</p>';
+        $html .= '<p>Total Lines of Code (TLOC), less comments: '.number_format($this->TLOCLessComments).'</p>';
 
         return $html;
     }
 
     /**
-     * Filters comments from LOC metric
+     * Filters comments from LOC metric.
      *
      * @param string $sourceFile
-     * @return integer
+     *
+     * @return int
+     *
      * @since 1.0
      */
     private function disregardCommentsLOC($sourceFile)
@@ -241,12 +256,10 @@ class Inspector
             }
 
             if (!$exclude) {
-                $LOC++;
+                ++$LOC;
             }
         }
 
         return $LOC;
     }
 }
-
-?>

@@ -9,9 +9,10 @@ use DOMDocument;
 use DOMElement;
 
 /**
- * Base feed class for generating syndication feeds
+ * Base feed class for generating syndication feeds.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -48,108 +49,119 @@ use DOMElement;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 abstract class Feed
 {
     /**
-     * The DOMDocument object used to create the feed
+     * The DOMDocument object used to create the feed.
      *
      * @var DOMDocument
+     *
      * @since 1.0
      */
     protected $rssDoc;
 
     /**
-     * The DOMElement object used to hold the item or entry elements
+     * The DOMElement object used to hold the item or entry elements.
      *
      * @var DOMElement
+     *
      * @since 1.0
      */
     protected $docElement;
 
     /**
-     * Holds the DOMElement to which metadata is added for the feed
+     * Holds the DOMElement to which metadata is added for the feed.
      *
      * @var DOMElement
+     *
      * @since 1.0
      */
     protected $root;
 
     /**
-     * The actual root tag used in each feed type
+     * The actual root tag used in each feed type.
      *
      * @var string
+     *
      * @since 1.0
      */
     protected $rootTag;
 
     /**
-     * An array of feed items
+     * An array of feed items.
      *
      * @var array
+     *
      * @since 1.0
      */
     protected $items;
 
     /**
-     * If the feed format has a channel or not
+     * If the feed format has a channel or not.
      *
-     * @var boolean
+     * @var bool
+     *
      * @since 1.0
      */
     protected $hasChannel = true;
 
     /**
-     * Maps the tags to the feed-specific tags
+     * Maps the tags to the feed-specific tags.
      *
      * @var array
+     *
      * @since 1.0
      */
-    protected $tagMap = array('item'=>'item','feeddesc'=>'description','itemdesc'=>'description');
+    protected $tagMap = array('item' => 'item','feeddesc' => 'description','itemdesc' => 'description');
 
     /**
-     * The BO which we will serve up in this feed
+     * The BO which we will serve up in this feed.
      *
      * @var Alpha\Model\ActiveRecord
+     *
      * @since 1.0
      */
     private $BO;
 
     /**
-     * An array containing BO field names -> RSS field name mappings
+     * An array containing BO field names -> RSS field name mappings.
      *
      * @var array
+     *
      * @since 1.0
      */
     protected $fieldNameMappings;
 
     /**
-     * The XML namespace to use in the generated feed
+     * The XML namespace to use in the generated feed.
      *
      * @var string
      */
     protected $nameSpace;
 
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Loggin\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * The constructor
+     * The constructor.
      *
-     * @param string $BOName The fully-qualifified classname of the BO to render a feed for.
-     * @param string $title The title of the feed.
-     * @param string $url The base URL for the feed.
+     * @param string $BOName      The fully-qualifified classname of the BO to render a feed for.
+     * @param string $title       The title of the feed.
+     * @param string $url         The base URL for the feed.
      * @param string $description The description of the feed.
-     * @param string $pubDate The publish date, only used in Atom feeds.
-     * @param integer $id The feed id, only used in Atom feeds.
-     * @param integer $limit The amount of items to render in the feed.
+     * @param string $pubDate     The publish date, only used in Atom feeds.
+     * @param int    $id          The feed id, only used in Atom feeds.
+     * @param int    $limit       The amount of items to render in the feed.
+     *
      * @throws IllegalArguementException
+     *
      * @since 1.0
      */
     public function __construct($BOName, $title, $url, $description, $pubDate = null, $id = null, $limit = 10)
@@ -165,7 +177,7 @@ abstract class Feed
             throw new IllegalArguementException('Unable to load the class definition for the class ['.$BOName.'] while trying to generate a feed!');
         }
 
-        $this->BO = new $BOName;
+        $this->BO = new $BOName();
 
         if ($this->hasChannel) {
             $root = $this->createFeedElement('channel');
@@ -181,10 +193,11 @@ abstract class Feed
 
     /**
      * Method to load all of the BO items to the feed from the database, from the newest to the
-     * $limit provided
+     * $limit provided.
      *
-     * @param integer $limit The amount of items to render in the feed.
+     * @param int    $limit  The amount of items to render in the feed.
      * @param string $sortBy The name of the field to sort the feed by.
+     *
      * @since 1.0
      */
     public function loadBOs($limit, $sortBy)
@@ -193,13 +206,13 @@ abstract class Feed
 
         ActiveRecord::disconnect();
 
-        foreach($BOs as $BO) {
+        foreach ($BOs as $BO) {
             $this->addBO($BO);
         }
     }
 
     /**
-     * Method for adding a BO to the current feed
+     * Method for adding a BO to the current feed.
      *
      * @param Alpha\Model\ActiveRecord $BO
      */
@@ -221,50 +234,57 @@ abstract class Feed
             $pubDate = '';
         }
 
-        if (isset($this->fieldNameMappings['id']))
+        if (isset($this->fieldNameMappings['id'])) {
             $id = $BO->get($this->fieldNameMappings['id']);
-        else
+        } else {
             $id = '';
+        }
 
         $this->addItem($title, $url, $description, $pubDate, $id);
     }
 
     /**
-     * Method for mapping BO fieldnames to feed field names
+     * Method for mapping BO fieldnames to feed field names.
      *
-     * @param string $title The title of the feed.
-     * @param string $url The base URL for the feed.
+     * @param string $title       The title of the feed.
+     * @param string $url         The base URL for the feed.
      * @param string $description The description of the feed.
-     * @param string $pubDate The publish date, only used in Atom feeds.
-     * @param integer $id The feed id, only used in Atom feeds.
+     * @param string $pubDate     The publish date, only used in Atom feeds.
+     * @param int    $id          The feed id, only used in Atom feeds.
+     *
      * @since 1.0
      */
-    public function setFieldMappings($title, $url, $description=null, $pubDate=null, $id=null)
+    public function setFieldMappings($title, $url, $description = null, $pubDate = null, $id = null)
     {
         $this->fieldNameMappings = array(
             'title' => $title,
-            'url' => $url
+            'url' => $url,
         );
 
-        if (isset($description))
+        if (isset($description)) {
             $this->fieldNameMappings['description'] = $description;
+        }
 
-        if (isset($pubDate))
+        if (isset($pubDate)) {
             $this->fieldNameMappings['pubDate'] = $pubDate;
+        }
 
-        if (isset($id))
+        if (isset($id)) {
             $this->fieldNameMappings['id'] = $id;
+        }
     }
 
     /**
-     * Method for creating a new feed element
+     * Method for creating a new feed element.
      *
-     * @param string $name The name of the element.
+     * @param string $name  The name of the element.
      * @param string $value The value of the element.
+     *
      * @return DOMElement
+     *
      * @since 1.0
      */
-    protected function createFeedElement($name, $value=null)
+    protected function createFeedElement($name, $value = null)
     {
         $value = htmlspecialchars($value);
 
@@ -276,10 +296,11 @@ abstract class Feed
     }
 
     /**
-     * Method for creating link elements (note that Atom has a different format)
+     * Method for creating link elements (note that Atom has a different format).
      *
      * @param DOMElement $parent The parent element.
-     * @param string $url The URL for the link.
+     * @param string     $url    The URL for the link.
+     *
      * @since 1.0
      */
     protected function createLink($parent, $url)
@@ -289,19 +310,21 @@ abstract class Feed
     }
 
     /**
-     * Method for creating an RSS node with a title, url and description
+     * Method for creating an RSS node with a title, url and description.
      *
-     * @param integer $type Can be either (item|feed) to indicate the type of node we are creating.
-     * @param DOMElement $parent The parent element.
-     * @param string $title The title of the feed.
-     * @param string $url The base URL for the feed.
-     * @param string $description The description of the feed.
-     * @param string $pubDate The publish date, only used in Atom feeds.
-     * @param integer $id The feed id, only used in Atom feeds.
+     * @param int        $type        Can be either (item|feed) to indicate the type of node we are creating.
+     * @param DOMElement $parent      The parent element.
+     * @param string     $title       The title of the feed.
+     * @param string     $url         The base URL for the feed.
+     * @param string     $description The description of the feed.
+     * @param string     $pubDate     The publish date, only used in Atom feeds.
+     * @param int        $id          The feed id, only used in Atom feeds.
+     *
      * @since 1.0
+     *
      * @throws Alpha\Exception\IllegalArguementException
      */
-    protected function createRSSNode($type, $parent, $title, $url, $description, $pubDate=null, $id = null)
+    protected function createRSSNode($type, $parent, $title, $url, $description, $pubDate = null, $id = null)
     {
         $this->createLink($parent, $url);
         $title = $this->createFeedElement('title', $title);
@@ -309,7 +332,7 @@ abstract class Feed
 
         if ($type == 'item') {
             $titletag = $this->tagMap['itemdesc'];
-        } else if ($type == 'feed') {
+        } elseif ($type == 'feed') {
             $titletag = $this->tagMap['feeddesc'];
         } else {
             throw new IllegalArguementException('The type paramater ['.$type.'] provided is invalid!');
@@ -331,16 +354,17 @@ abstract class Feed
     }
 
     /**
-     * Method for adding an item to a feed
+     * Method for adding an item to a feed.
      *
-     * @param string $title The title of the feed.
-     * @param string $url The base URL for the feed.
+     * @param string $title       The title of the feed.
+     * @param string $url         The base URL for the feed.
      * @param string $description The description of the feed.
-     * @param string $pubDate The publish date, only used in Atom feeds.
-     * @param integer $id The feed id, only used in Atom feeds.
+     * @param string $pubDate     The publish date, only used in Atom feeds.
+     * @param int    $id          The feed id, only used in Atom feeds.
+     *
      * @since 1.0
      */
-    protected function addItem($title, $url, $description=null, $pubDate=null, $id=null)
+    protected function addItem($title, $url, $description = null, $pubDate = null, $id = null)
     {
         $item = $this->createFeedElement($this->tagMap['item']);
 
@@ -350,20 +374,20 @@ abstract class Feed
     }
 
     /**
-     * Returns the formatted XML for the feed as a string
+     * Returns the formatted XML for the feed as a string.
      *
      * @return string
+     *
      * @since 1.0
      */
     public function render()
     {
         if ($this->rssDoc) {
             $this->rssDoc->formatOutput = true;
+
             return $this->rssDoc->saveXML();
         } else {
             return '';
         }
     }
 }
-
-?>

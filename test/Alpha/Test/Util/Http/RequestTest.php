@@ -7,10 +7,10 @@ use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Config\ConfigProvider;
 
 /**
- *
- * Test cases for the Request class
+ * Test cases for the Request class.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -47,21 +47,21 @@ use Alpha\Util\Config\ConfigProvider;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
     private $serverGlobalCopy;
 
     /**
-     * Sets up the unit tests
+     * Sets up the unit tests.
      *
      * @since 2.0
      */
     protected function setup()
     {
-        if (!isset($this->serverGlobalCopy))
+        if (!isset($this->serverGlobalCopy)) {
             $this->serverGlobalCopy = $_SERVER;
+        }
         $_SERVER = array();
     }
 
@@ -71,7 +71,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that the HTTP method can be set from overrides or super-globals during object construction
+     * Testing that the HTTP method can be set from overrides or super-globals during object construction.
      */
     public function testSetHTTPMethod()
     {
@@ -86,7 +86,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing providing a bad HTTP method value will cause an exception during object construction
+     * Testing providing a bad HTTP method value will cause an exception during object construction.
      */
     public function testSetHTTPMethodBad()
     {
@@ -107,7 +107,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that the HTTP headers can be set from overrides or super-globals during object construction
+     * Testing that the HTTP headers can be set from overrides or super-globals during object construction.
      */
     public function testSetHTTPHeaders()
     {
@@ -123,7 +123,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that the Content-Type and Content-Length headers are accessible in the Request once available in globals
+     * Testing that the Content-Type and Content-Length headers are accessible in the Request once available in globals.
      */
     public function testGetContentHeaders()
     {
@@ -137,7 +137,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that the HTTP cookies can be set from overrides or super-globals during object construction
+     * Testing that the HTTP cookies can be set from overrides or super-globals during object construction.
      */
     public function testSetHTTPCookies()
     {
@@ -153,7 +153,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that the HTTP params can be set from overrides or super-globals during object construction
+     * Testing that the HTTP params can be set from overrides or super-globals during object construction.
      */
     public function testSetHTTPParams()
     {
@@ -175,7 +175,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that the HTTP body can be set from overrides or super-globals during object construction
+     * Testing that the HTTP body can be set from overrides or super-globals during object construction.
      */
     public function testSetHTTPBody()
     {
@@ -191,7 +191,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that the HTTP host can be set from overrides or super-globals during object construction
+     * Testing that the HTTP host can be set from overrides or super-globals during object construction.
      */
     public function testSetHTTPHost()
     {
@@ -207,7 +207,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that the client IP can be set from overrides or super-globals during object construction
+     * Testing that the client IP can be set from overrides or super-globals during object construction.
      */
     public function testSetIP()
     {
@@ -223,7 +223,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that the URI can be set from overrides or super-globals during object construction
+     * Testing that the URI can be set from overrides or super-globals during object construction.
      */
     public function testSetURI()
     {
@@ -239,7 +239,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that the URL can be set from overrides or super-globals during object construction
+     * Testing that the URL can be set from overrides or super-globals during object construction.
      */
     public function testSetURL()
     {
@@ -257,7 +257,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD
+     * Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD.
      */
     public function testHTTPMethodOverride()
     {
@@ -272,5 +272,3 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('HEAD', $request->getMethod(), 'Testing that we can override the HTTP method via X-HTTP-Method-Override');
     }
 }
-
-?>

@@ -11,12 +11,12 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
 use ReflectionClass;
 
-
 /**
  * The RelationLookup complex data type.  Used to store object2object lookup tables for
- * MANY-TO-MANY relationships between record objects
+ * MANY-TO-MANY relationships between record objects.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -53,276 +53,303 @@ use ReflectionClass;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class RelationLookup extends ActiveRecord implements TypeInterface
 {
-	/**
-	 * The OID of the left business object in the relation
-	 *
-	 * @var Alpha\Model\Type\Integer
-	 * @since 1.0
-	 */
-	protected $leftID;
+    /**
+     * The OID of the left business object in the relation.
+     *
+     * @var Alpha\Model\Type\Integer
+     *
+     * @since 1.0
+     */
+    protected $leftID;
 
-	/**
-	 * The OID of the right business object in the relation
-	 *
-	 * @var Alpha\Model\Type\Integer
-	 * @since 1.0
-	 */
-	protected $rightID;
+    /**
+     * The OID of the right business object in the relation.
+     *
+     * @var Alpha\Model\Type\Integer
+     *
+     * @since 1.0
+     */
+    protected $rightID;
 
-	/**
-	 * The name of the left business object class in the relation
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	private $leftClassName;
+    /**
+     * The name of the left business object class in the relation.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    private $leftClassName;
 
-	/**
-	 * The name of the right business object class in the relation
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	private $rightClassName;
+    /**
+     * The name of the right business object class in the relation.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    private $rightClassName;
 
-	/**
-	 * Trace logger
-	 *
-	 * @var Alpha\Util\Logging\Logger
-	 * @since 1.0
-	 */
-	private static $logger = null;
+    /**
+     * Trace logger.
+     *
+     * @var Alpha\Util\Logging\Logger
+     *
+     * @since 1.0
+     */
+    private static $logger = null;
 
-	/**
-	 * an array of data display labels for the class properties
-	 *
-	 * @var array
-	 * @since 1.0
-	 */
-	protected $dataLabels = array("OID"=>"RelationLookup ID#","leftID"=>"Left BO ID#","rightID"=>"Right BO ID#");
+    /**
+     * an array of data display labels for the class properties.
+     *
+     * @var array
+     *
+     * @since 1.0
+     */
+    protected $dataLabels = array('OID' => 'RelationLookup ID#','leftID' => 'Left BO ID#','rightID' => 'Right BO ID#');
 
-	/**
-	 * The message to display to the user when validation fails
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	protected $helper = 'Not a valid RelationLookup value!';
+    /**
+     * The message to display to the user when validation fails.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    protected $helper = 'Not a valid RelationLookup value!';
 
-	/**
-	 * The constructor
-	 *
-	 * @throws Alpha\Exception\FailedLookupCreateException
-	 * @throws Alpha\Exception\IllegalArguementException
-	 * @since 1.0
-	 */
-	public function __construct($leftClassName, $rightClassName)
-	{
-		self::$logger = new Logger('RelationLookup');
-		self::$logger->debug('>>__construct(leftClassName=['.$leftClassName.'], rightClassName=['. $rightClassName.'])');
+    /**
+     * The constructor.
+     *
+     * @throws Alpha\Exception\FailedLookupCreateException
+     * @throws Alpha\Exception\IllegalArguementException
+     *
+     * @since 1.0
+     */
+    public function __construct($leftClassName, $rightClassName)
+    {
+        self::$logger = new Logger('RelationLookup');
+        self::$logger->debug('>>__construct(leftClassName=['.$leftClassName.'], rightClassName=['.$rightClassName.'])');
 
-		// ensure to call the parent constructor
-		parent::__construct();
+        // ensure to call the parent constructor
+        parent::__construct();
 
-		if(empty($leftClassName) || empty($rightClassName)) {
-			throw new IllegalArguementException('Cannot create RelationLookup object without providing the left and right class names!');
-		}
+        if (empty($leftClassName) || empty($rightClassName)) {
+            throw new IllegalArguementException('Cannot create RelationLookup object without providing the left and right class names!');
+        }
 
-		$this->leftClassName = $leftClassName;
-		$this->rightClassName = $rightClassName;
+        $this->leftClassName = $leftClassName;
+        $this->rightClassName = $rightClassName;
 
-		$this->leftID = new Integer();
-		$this->rightID = new Integer();
+        $this->leftID = new Integer();
+        $this->rightID = new Integer();
 
-		$this->markTransient('leftClassName');
-		$this->markTransient('rightClassName');
-		$this->markTransient('helper');
-		$this->markTransient('TABLE_NAME');
+        $this->markTransient('leftClassName');
+        $this->markTransient('rightClassName');
+        $this->markTransient('helper');
+        $this->markTransient('TABLE_NAME');
 
-		// add a unique composite key to these fields
-		$this->markUnique('leftID','rightID');
+        // add a unique composite key to these fields
+        $this->markUnique('leftID', 'rightID');
 
-		// make sure the lookup table exists
-		if(!$this->checkTableExists() && ActiveRecord::isInstalled()) {
-			// first make sure that the two BO tables exist before relating them with a lookup table
-			if(ActiveRecord::checkBOTableExists($leftClassName) && ActiveRecord::checkBOTableExists($rightClassName)) {
-				$this->makeTable();
-			}else{
-				throw new FailedLookupCreateException('Error trying to create a lookup table ['.$this->getTableName().'], as tables for BOs ['.$leftClassName.'] or ['.$rightClassName.'] don\'t exist!');
-			}
-		}
+        // make sure the lookup table exists
+        if (!$this->checkTableExists() && ActiveRecord::isInstalled()) {
+            // first make sure that the two BO tables exist before relating them with a lookup table
+            if (ActiveRecord::checkBOTableExists($leftClassName) && ActiveRecord::checkBOTableExists($rightClassName)) {
+                $this->makeTable();
+            } else {
+                throw new FailedLookupCreateException('Error trying to create a lookup table ['.$this->getTableName().'], as tables for BOs ['.$leftClassName.'] or ['.$rightClassName.'] don\'t exist!');
+            }
+        }
 
-		self::$logger->debug('<<__construct');
-	}
+        self::$logger->debug('<<__construct');
+    }
 
-	/**
-	 * Get the leftClassName value
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function getLeftClassName()
-	{
-		return $this->leftClassName;
-	}
+    /**
+     * Get the leftClassName value.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function getLeftClassName()
+    {
+        return $this->leftClassName;
+    }
 
-	/**
-	 * Get the rightClassName value
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function getRightClassName()
-	{
-		return $this->rightClassName;
-	}
+    /**
+     * Get the rightClassName value.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function getRightClassName()
+    {
+        return $this->rightClassName;
+    }
 
-	/**
-	 * Custom getter for the TABLE_NAME, which can't be static in this class due to
-	 * the lookup tablenames being different each time.
-	 *
-	 * @return string
-	 * @since 1.0
-	 * @throws Alpha\Exception\AlphaException
-	 */
-	public function getTableName()
-	{
-		if(isset($this->leftClassName) && isset($this->rightClassName)) {
-			$leftClass = new ReflectionClass($this->leftClassName);
-			$left = $leftClass->getShortname();
-			$rightClass = new ReflectionClass($this->rightClassName);
-			$right = $rightClass->getShortname();
-			self::$logger->debug('Setting table name to ['.$left.'2'.$right.']');
-    		return $left.'2'.$right;
-    	}else{
-    		throw new AlphaException('No table name set for the class ['.get_class($this).'], left or right class name(s) missing');
-    	}
-	}
+    /**
+     * Custom getter for the TABLE_NAME, which can't be static in this class due to
+     * the lookup tablenames being different each time.
+     *
+     * @return string
+     *
+     * @since 1.0
+     *
+     * @throws Alpha\Exception\AlphaException
+     */
+    public function getTableName()
+    {
+        if (isset($this->leftClassName) && isset($this->rightClassName)) {
+            $leftClass = new ReflectionClass($this->leftClassName);
+            $left = $leftClass->getShortname();
+            $rightClass = new ReflectionClass($this->rightClassName);
+            $right = $rightClass->getShortname();
+            self::$logger->debug('Setting table name to ['.$left.'2'.$right.']');
 
-	/**
-	 * This custom version provides the left/right class names to the business object constructor, required
-	 * for RelationLookup objects.
-	 *
-	 * (non-PHPdoc)
-	 * @see Alpha\Model\ActiveRecord::loadAllByAttribute()
-	 */
-	public function loadAllByAttribute($attribute, $value, $start=0, $limit=0, $orderBy="OID", $order="ASC", $ignoreClassType=false, $constructorArgs=array())
-	{
-		if(!isset(self::$logger))
-			self::$logger = new Logger('RelationLookup');
+            return $left.'2'.$right;
+        } else {
+            throw new AlphaException('No table name set for the class ['.get_class($this).'], left or right class name(s) missing');
+        }
+    }
 
-		self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
+    /**
+     * This custom version provides the left/right class names to the business object constructor, required
+     * for RelationLookup objects.
+     *
+     * (non-PHPdoc)
+     *
+     * @see Alpha\Model\ActiveRecord::loadAllByAttribute()
+     */
+    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
+    {
+        if (!isset(self::$logger)) {
+            self::$logger = new Logger('RelationLookup');
+        }
 
-		if(method_exists($this, 'before_loadAllByAttribute_callback'))
-			$this->before_loadAllByAttribute_callback();
+        self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
 
-		$config = ConfigProvider::getInstance();
+        if (method_exists($this, 'before_loadAllByAttribute_callback')) {
+            $this->before_loadAllByAttribute_callback();
+        }
 
-		$provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
-		$objects = $provider->loadAllByAttribute($attribute, $value, $start, $limit, $orderBy, $order, $ignoreClassType, array($this->leftClassName, $this->rightClassName));
+        $config = ConfigProvider::getInstance();
 
-		if(method_exists($this, 'after_loadAllByAttribute_callback'))
-			$this->after_loadAllByAttribute_callback();
+        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $objects = $provider->loadAllByAttribute($attribute, $value, $start, $limit, $orderBy, $order, $ignoreClassType, array($this->leftClassName, $this->rightClassName));
 
-		self::$logger->debug('<<loadAllByAttribute ['.count($objects).']');
-		return $objects;
-	}
+        if (method_exists($this, 'after_loadAllByAttribute_callback')) {
+            $this->after_loadAllByAttribute_callback();
+        }
 
-	/**
-	 * This custom version provides the left/right class names to the business object constructor, required
-	 * for RelationLookup objects.
-	 *
-	 * (non-PHPdoc)
-	 * @see Alpha\Model\ActiveRecord::loadAllByAttributes()
-	 */
-	public function loadAllByAttributes($attributes=array(), $values=array(), $start=0, $limit=0, $orderBy='OID', $order='ASC', $ignoreClassType=false)
-	{
-		self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.
-			$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
+        self::$logger->debug('<<loadAllByAttribute ['.count($objects).']');
 
-		if(method_exists($this, 'before_loadAllByAttributes_callback'))
-			$this->before_loadAllByAttributes_callback();
+        return $objects;
+    }
 
-		$config = ConfigProvider::getInstance();
+    /**
+     * This custom version provides the left/right class names to the business object constructor, required
+     * for RelationLookup objects.
+     *
+     * (non-PHPdoc)
+     *
+     * @see Alpha\Model\ActiveRecord::loadAllByAttributes()
+     */
+    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false)
+    {
+        self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.
+            $start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
-		if(!is_array($attributes) || !is_array($values)) {
-			throw new IllegalArguementException('Illegal arrays attributes=['.var_export($attributes, true).'] and values=['.var_export($values, true).
-				'] provided to loadAllByAttributes');
-		}
+        if (method_exists($this, 'before_loadAllByAttributes_callback')) {
+            $this->before_loadAllByAttributes_callback();
+        }
 
-		$provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
-		$objects = $provider->loadAllByAttributes($attributes, $values, $start, $limit, $orderBy, $order, $ignoreClassType, array($this->leftClassName, $this->rightClassName));
+        $config = ConfigProvider::getInstance();
 
-		if(method_exists($this, 'after_loadAllByAttributes_callback'))
-			$this->after_loadAllByAttributes_callback();
+        if (!is_array($attributes) || !is_array($values)) {
+            throw new IllegalArguementException('Illegal arrays attributes=['.var_export($attributes, true).'] and values=['.var_export($values, true).
+                '] provided to loadAllByAttributes');
+        }
 
-		self::$logger->debug('<<loadAllByAttributes ['.count($objects).']');
-		return $objects;
-	}
+        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $objects = $provider->loadAllByAttributes($attributes, $values, $start, $limit, $orderBy, $order, $ignoreClassType, array($this->leftClassName, $this->rightClassName));
 
-	/**
-	 * Getter for the validation helper string
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function getHelper()
-	{
-		return $this->helper;
-	}
+        if (method_exists($this, 'after_loadAllByAttributes_callback')) {
+            $this->after_loadAllByAttributes_callback();
+        }
 
-	/**
-	 * Set the validation helper text
-	 *
-	 * @param string $helper
-	 * @since 1.0
-	 */
-	public function setHelper($helper)
-	{
-		$this->helper = $helper;
-	}
+        self::$logger->debug('<<loadAllByAttributes ['.count($objects).']');
 
-	/**
-	 * Returns an array of the OIDs of the related objects
-	 *
-	 * @return array
-	 * @since 1.0
-	 */
-	public function getValue()
-	{
-		return array($this->leftID->getValue(), $this->rightID->getValue());
-	}
+        return $objects;
+    }
 
-	/**
-	 * Used to set the OIDs of the related objects.  Pass a two-item array of OIDs, the first
-	 * one being the left object OID, the second being the right.
-	 *
-	 * @param array $OIDs
-	 * @since 1.0
-	 * @throws Alpha\Exception\IllegalArguementException
-	 */
-	public function setValue($OIDs)
-	{
-		try{
-			$this->leftID->setValue($OIDs[0]);
-			$this->rightID->setValue($OIDs[1]);
-		}catch(\Exception $e) {
-			throw new IllegalArguementException('Array value passed to setValue is not valid ['.var_export($OIDs, true).'], array should contain two OIDs');
-		}
-	}
+    /**
+     * Getter for the validation helper string.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function getHelper()
+    {
+        return $this->helper;
+    }
 
-	/**
-	 * Used to convert the object to a printable string
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function __toString()
-	{
-		return strval($this->getTableName());
-	}
+    /**
+     * Set the validation helper text.
+     *
+     * @param string $helper
+     *
+     * @since 1.0
+     */
+    public function setHelper($helper)
+    {
+        $this->helper = $helper;
+    }
+
+    /**
+     * Returns an array of the OIDs of the related objects.
+     *
+     * @return array
+     *
+     * @since 1.0
+     */
+    public function getValue()
+    {
+        return array($this->leftID->getValue(), $this->rightID->getValue());
+    }
+
+    /**
+     * Used to set the OIDs of the related objects.  Pass a two-item array of OIDs, the first
+     * one being the left object OID, the second being the right.
+     *
+     * @param array $OIDs
+     *
+     * @since 1.0
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     */
+    public function setValue($OIDs)
+    {
+        try {
+            $this->leftID->setValue($OIDs[0]);
+            $this->rightID->setValue($OIDs[1]);
+        } catch (\Exception $e) {
+            throw new IllegalArguementException('Array value passed to setValue is not valid ['.var_export($OIDs, true).'], array should contain two OIDs');
+        }
+    }
+
+    /**
+     * Used to convert the object to a printable string.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function __toString()
+    {
+        return strval($this->getTableName());
+    }
 }

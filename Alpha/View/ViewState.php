@@ -8,10 +8,10 @@ use Alpha\Util\Http\Session\SessionProviderFactory;
 use ReflectionProperty;
 
 /**
- *
- * A singleton class that maintains the view state in the session
+ * A singleton class that maintains the view state in the session.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -48,54 +48,60 @@ use ReflectionProperty;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ViewState
 {
     /**
-     * The name of the last selected tab by the user
+     * The name of the last selected tab by the user.
      *
      * @var string
+     *
      * @since 1.0
      */
     protected $selectedTab;
 
     /**
-     * The amount of rows to expand the Markdown edit TextBox by
+     * The amount of rows to expand the Markdown edit TextBox by.
      *
      * @var string
+     *
      * @since 1.0
      */
     protected $markdownTextBoxRows;
 
     /**
-     * If the backend admin menu should be displayed or not
+     * If the backend admin menu should be displayed or not.
      *
      * @var bool
+     *
      * @since 2.0
      */
     protected $renderAdminMenu = false;
 
     /**
-     * The view state object singleton
+     * The view state object singleton.
      *
      * @var Alpha\View\ViewState
+     *
      * @since 1.0
      */
     protected static $instance;
 
     /**
-     * Private constructor means the class cannot be instantiated from elsewhere
+     * Private constructor means the class cannot be instantiated from elsewhere.
      *
      * @since 1.0
      */
-    private function __construct () {}
+    private function __construct()
+    {
+    }
 
     /**
      * Get the ViewState instance.  Loads from $_SESSION if its not already in memory, otherwise
      * a new instance will be returned with empty properties.
      *
      * @return Alpha\View\ViewState
+     *
      * @since 1.0
      */
     public static function getInstance()
@@ -110,7 +116,8 @@ class ViewState
             if ($session->get('ViewState') !== false) {
                 return unserialize($session->get('ViewState'));
             } else {
-                self::$instance = new ViewState();
+                self::$instance = new self();
+
                 return self::$instance;
             }
         } else {
@@ -119,21 +126,25 @@ class ViewState
     }
 
     /**
-     * Get the attribute value indicated by the key
+     * Get the attribute value indicated by the key.
      *
      * @param string $key
+     *
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @return string
+     *
      * @since 1.0
      */
     public function get($key)
     {
         $attribute = new ReflectionProperty(get_class($this), $key);
 
-        if ($attribute != null)
+        if ($attribute != null) {
             return $this->$key;
-        else
+        } else {
             throw new IllegalArguementException('The property ['.$key.'] does not exist on the ['.get_class($this).'] class');
+        }
     }
 
     /**
@@ -141,7 +152,9 @@ class ViewState
      *
      * @param string $key
      * @param string $value
+     *
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @since 1.0
      */
     public function set($key, $value)
@@ -159,5 +172,3 @@ class ViewState
         }
     }
 }
-
-?>

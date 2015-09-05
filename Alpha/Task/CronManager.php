@@ -6,11 +6,11 @@ use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 
 /**
- *
  * The main class responsible for running custom cron tasks found under the [webapp]/Task
  * directory.  This class should be executed from Linux cron via the CLI.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -47,20 +47,20 @@ use Alpha\Util\Config\ConfigProvider;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class CronManager
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @since 1.0
      */
@@ -82,10 +82,10 @@ class CronManager
         foreach ($taskList as $taskClass) {
             $taskClass = 'Alpha\Task\\'.$taskClass;
             self::$logger->info('Loading task ['.$taskClass.']');
-            $task = new $taskClass;
+            $task = new $taskClass();
 
             $startTime = microtime(true);
-            $maxAllowedTime = $startTime+$task->getMaxRunTime();
+            $maxAllowedTime = $startTime + $task->getMaxRunTime();
 
             self::$logger->info('Start time is ['.$startTime.'], maximum task run time is ['.$task->getMaxRunTime().']');
 
@@ -93,7 +93,7 @@ class CronManager
             set_time_limit($task->getMaxRunTime());
             $task->doTask();
 
-            self::$logger->info('Done in ['.round(microtime(true)-$startTime, 5).'] seconds');
+            self::$logger->info('Done in ['.round(microtime(true) - $startTime, 5).'] seconds');
         }
 
         self::$logger->info('Finished processing all cron tasks');
@@ -106,6 +106,7 @@ class CronManager
      * class names in the system.
      *
      * @return array
+     *
      * @since 1.0
      */
     public static function getTaskClassNames()
@@ -121,12 +122,11 @@ class CronManager
         $classNameArray = array();
 
         if (file_exists($config->get('app.root').'Task')) {
-
             $handle = opendir($config->get('app.root').'Task');
 
             // loop over the custom task directory
             while (false !== ($file = readdir($handle))) {
-                if (preg_match("/Task.php/", $file)) {
+                if (preg_match('/Task.php/', $file)) {
                     $classname = mb_substr($file, 0, -4);
 
                     array_push($classNameArray, $classname);
@@ -139,7 +139,7 @@ class CronManager
 
             // loop over the custom task directory
             while (false !== ($file = readdir($handle))) {
-                if (preg_match("/Task.php/", $file)) {
+                if (preg_match('/Task.php/', $file)) {
                     $classname = mb_substr($file, 0, -4);
 
                     array_push($classNameArray, $classname);
@@ -148,11 +148,10 @@ class CronManager
         }
 
         self::$logger->debug('<<getTaskClassNames ['.var_export($classNameArray, true).']');
+
         return $classNameArray;
     }
 }
 
 // invoke a cron manager object
 $processor = new CronManager();
-
-?>

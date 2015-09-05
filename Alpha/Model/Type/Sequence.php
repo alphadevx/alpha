@@ -12,6 +12,7 @@ use Alpha\Model\ActiveRecord;
  * and an integer sequence, which is stored in a database.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -48,207 +49,223 @@ use Alpha\Model\ActiveRecord;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class Sequence extends ActiveRecord implements TypeInterface
 {
-	/**
-	 * The string prefix (must be capital alphabet characters only)
-	 *
-	 * @var Alpha\Model\String
-	 * @since 1.0
-	 */
-	protected $prefix;
+    /**
+     * The string prefix (must be capital alphabet characters only).
+     *
+     * @var Alpha\Model\String
+     *
+     * @since 1.0
+     */
+    protected $prefix;
 
-	/**
-	 * The integer sequence number incremented for each Sequence value with this prefix
-	 *
-	 * @var Alpha\Model\Integer
-	 * @since 1.0
-	 */
-	protected $sequence;
+    /**
+     * The integer sequence number incremented for each Sequence value with this prefix.
+     *
+     * @var Alpha\Model\Integer
+     *
+     * @since 1.0
+     */
+    protected $sequence;
 
-	/**
-	 * The name of the database table for the class
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	const TABLE_NAME = 'Sequence';
+    /**
+     * The name of the database table for the class.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    const TABLE_NAME = 'Sequence';
 
-	/**
-	 * An array of data display labels for the class properties
-	 *
-	 * @var array
-	 * @since 1.0
-	 */
-	protected $dataLabels = array("OID"=>"Sequence ID#","prefix"=>"Sequence prefix","sequence"=>"Sequence number");
+    /**
+     * An array of data display labels for the class properties.
+     *
+     * @var array
+     *
+     * @since 1.0
+     */
+    protected $dataLabels = array('OID' => 'Sequence ID#','prefix' => 'Sequence prefix','sequence' => 'Sequence number');
 
-	/**
-	 * The message to display to the user when validation fails
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	protected $helper = 'Not a valid sequence value!';
+    /**
+     * The message to display to the user when validation fails.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    protected $helper = 'Not a valid sequence value!';
 
-	/**
-	 * The size of the value for the this Sequence
-	 *
-	 * @var integer
-	 * @since 1.0
-	 */
-	protected $size = 255;
+    /**
+     * The size of the value for the this Sequence.
+     *
+     * @var int
+     *
+     * @since 1.0
+     */
+    protected $size = 255;
 
-	/**
-	 * The validation rule for the Sequence type
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	protected $validationRule;
+    /**
+     * The validation rule for the Sequence type.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    protected $validationRule;
 
-	/**
-	 * The absolute maximum size of the value for the this Sequence
-	 *
-	 * @var integer
-	 * @since 1.0
-	 */
-	const MAX_SIZE = 255;
+    /**
+     * The absolute maximum size of the value for the this Sequence.
+     *
+     * @var int
+     *
+     * @since 1.0
+     */
+    const MAX_SIZE = 255;
 
-	/**
-	 * The constructor
-	 *
-	 * @since 1.0
-	 */
-	public function __construct()
-	{
-		// ensure to call the parent constructor
-		parent::__construct();
+    /**
+     * The constructor.
+     *
+     * @since 1.0
+     */
+    public function __construct()
+    {
+        // ensure to call the parent constructor
+        parent::__construct();
 
-		$this->validationRule = Validator::ALLOW_ALL;
+        $this->validationRule = Validator::ALLOW_ALL;
 
-		$this->sequence = new Integer();
+        $this->sequence = new Integer();
 
-		$this->prefix = new String();
-		$this->prefix->setRule(Validator::REQUIRED_ALPHA_UPPER);
-		$this->prefix->setHelper('Sequence prefix must be uppercase string!');
-		$this->markUnique('prefix');
+        $this->prefix = new String();
+        $this->prefix->setRule(Validator::REQUIRED_ALPHA_UPPER);
+        $this->prefix->setHelper('Sequence prefix must be uppercase string!');
+        $this->markUnique('prefix');
 
-		$this->markTransient('helper');
-		$this->markTransient('validationRule');
-		$this->markTransient('size');
-	}
+        $this->markTransient('helper');
+        $this->markTransient('validationRule');
+        $this->markTransient('size');
+    }
 
-	/**
- 	 * Get the validation rule
- 	 *
- 	 * @return string
- 	 * @since 1.0
- 	 */
- 	public function getRule()
- 	{
-		return $this->validationRule;
-	}
+    /**
+     * Get the validation rule.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function getRule()
+    {
+        return $this->validationRule;
+    }
 
-	/**
-	 * Sets the sequence number to be the maximum value matching the prefix in the database
-	 * plus one.  Note that calling this method increments the maximum value in the database.
-	 *
-	 * @since 1.0
-	 */
-	public function setSequenceToNext()
-	{
-		try {
-			$this->loadByAttribute('prefix', $this->prefix->getValue());
-		}catch (RecordNotFoundException $e) {
-			$this->set('sequence', 0);
-		}
+    /**
+     * Sets the sequence number to be the maximum value matching the prefix in the database
+     * plus one.  Note that calling this method increments the maximum value in the database.
+     *
+     * @since 1.0
+     */
+    public function setSequenceToNext()
+    {
+        try {
+            $this->loadByAttribute('prefix', $this->prefix->getValue());
+        } catch (RecordNotFoundException $e) {
+            $this->set('sequence', 0);
+        }
 
-		$this->set('sequence', $this->get('sequence')+1);
-		$this->save();
-	}
+        $this->set('sequence', $this->get('sequence') + 1);
+        $this->save();
+    }
 
-	/**
-	 * Getter for the validation helper string
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function getHelper()
-	{
-		return $this->helper;
-	}
+    /**
+     * Getter for the validation helper string.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function getHelper()
+    {
+        return $this->helper;
+    }
 
-	/**
-	 * Set the validation helper text
-	 *
-	 * @param string $helper
-	 * @since 1.0
-	 */
-	public function setHelper($helper)
-	{
-		$this->helper = $helper;
-	}
+    /**
+     * Set the validation helper text.
+     *
+     * @param string $helper
+     *
+     * @since 1.0
+     */
+    public function setHelper($helper)
+    {
+        $this->helper = $helper;
+    }
 
-	/**
-	 * Used to get the Sequence value as a string
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function getValue()
-	{
-		if($this->prefix->getValue() != '' && $this->sequence->getValue() != 0)
-			return $this->prefix->getValue().'-'.$this->sequence->getValue();
-		else
-			return '';
-	}
+    /**
+     * Used to get the Sequence value as a string.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function getValue()
+    {
+        if ($this->prefix->getValue() != '' && $this->sequence->getValue() != 0) {
+            return $this->prefix->getValue().'-'.$this->sequence->getValue();
+        } else {
+            return '';
+        }
+    }
 
-	/**
-	 * Accepts a string to set the Sequence prefix/sequence values to, in the
-	 * format PREFIX-00000000000
-	 *
-	 * @param string $val
-	 * @since 1.0
-	 * @throws Alpha\Exception\IllegalArguementException
-	 */
-	public function setValue($val) {
-		if (mb_strlen($val) <= $this->size) {
-			if(!empty($val)) {
-				if(!Validator::isSequence($val))
-					throw new IllegalArguementException($this->helper);
+    /**
+     * Accepts a string to set the Sequence prefix/sequence values to, in the
+     * format PREFIX-00000000000.
+     *
+     * @param string $val
+     *
+     * @since 1.0
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     */
+    public function setValue($val)
+    {
+        if (mb_strlen($val) <= $this->size) {
+            if (!empty($val)) {
+                if (!Validator::isSequence($val)) {
+                    throw new IllegalArguementException($this->helper);
+                }
 
-				$parts = explode('-', $val);
-				$this->prefix->setValue($parts[0]);
-				$this->sequence->setValue($parts[1]);
-			}
-		}else{
-			throw new IllegalArguementException($this->helper);
-		}
-	}
+                $parts = explode('-', $val);
+                $this->prefix->setValue($parts[0]);
+                $this->sequence->setValue($parts[1]);
+            }
+        } else {
+            throw new IllegalArguementException($this->helper);
+        }
+    }
 
-	/**
-	 * Get the allowable size of the Sequence in the database field
-	 *
-	 * @return integer
-	 * @since 1.0
-	 */
-	public function getSize()
-	{
-		return $this->size;
-	}
+    /**
+     * Get the allowable size of the Sequence in the database field.
+     *
+     * @return int
+     *
+     * @since 1.0
+     */
+    public function getSize()
+    {
+        return $this->size;
+    }
 
-	/**
-	 * Used to convert the object to a printable string
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function __toString()
-	{
-		return $this->prefix->getValue().'-'.$this->sequence->getValue();
-	}
+    /**
+     * Used to convert the object to a printable string.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function __toString()
+    {
+        return $this->prefix->getValue().'-'.$this->sequence->getValue();
+    }
 }
-
-?>

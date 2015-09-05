@@ -6,7 +6,6 @@ use Alpha\Controller\Front\FrontController;
 use Alpha\Controller\FeedController;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
-use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Model\Tag;
 use Alpha\Model\Type\DEnum;
@@ -18,10 +17,10 @@ use Alpha\Model\Person;
 use Alpha\Model\Rights;
 
 /**
- *
- * Test cases for the FeedController class
+ * Test cases for the FeedController class.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -58,12 +57,11 @@ use Alpha\Model\Rights;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class FeedControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Set up tests
+     * Set up tests.
      *
      * @since 2.0
      */
@@ -109,9 +107,10 @@ class FeedControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Creates an article object for Testing
+     * Creates an article object for Testing.
      *
      * @return Alpha\Model\Article
+     *
      * @since 2.0
      */
     private function createArticleObject($name)
@@ -128,9 +127,10 @@ class FeedControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Creates a person object for testing
+     * Creates a person object for testing.
      *
      * @return Alpha\Model\Person
+     *
      * @since 2.0
      */
     private function createPersonObject($name)
@@ -145,7 +145,7 @@ class FeedControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the doGET method
+     * Testing the doGET method.
      */
     public function testDoGET()
     {
@@ -180,5 +180,3 @@ class FeedControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('application/rss+xml', $response->getHeader('Content-Type'), 'Testing the doGET method');
     }
 }
-
-?>

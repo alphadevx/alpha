@@ -5,9 +5,10 @@ namespace Alpha\Util\Convertor;
 use Alpha\Util\Logging\Logger;
 
 /**
- * Class for converting a an active record to an Excel spreadsheet
+ * Class for converting a an active record to an Excel spreadsheet.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -44,30 +45,32 @@ use Alpha\Util\Logging\Logger;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ActiveRecord2Excel
 {
     /**
-     * The record we will convert to an Excel sheet
+     * The record we will convert to an Excel sheet.
      *
      * @var Alpha\Model\ActiveRecord
+     *
      * @since 1.0
      */
     private $BO;
 
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param Alpha\Model\ActiveRecord $BO
+     *
      * @since 1.0
      */
     public function __construct($BO)
@@ -81,13 +84,15 @@ class ActiveRecord2Excel
     }
 
     /**
-     * Returns the output as an Excel spreadsheet
+     * Returns the output as an Excel spreadsheet.
      *
      * @param bool $renderHeaders Set to false to supress headers in the spreadsheet (defaults to true).
+     *
      * @return string
+     *
      * @since 1.0
      */
-    public function render($renderHeaders=true)
+    public function render($renderHeaders = true)
     {
         self::$logger->debug('>>render()');
 
@@ -119,20 +124,20 @@ class ActiveRecord2Excel
             $propName = $propObj->name;
             $prop = $this->BO->getPropObject($propName);
             if (!in_array($propName, $this->BO->getTransientAttributes()) && !in_array($propName, $this->BO->getDefaultAttributes())) {
-                if (get_class($prop) == 'DEnum')
+                if (get_class($prop) == 'DEnum') {
                     $output .= $prop->getDisplayValue().$sep;
-                elseif (get_class($prop) == 'Relation')
+                } elseif (get_class($prop) == 'Relation') {
                     $output .= $prop->getRelatedClassDisplayFieldValue().$sep;
-                else
-                    $output .= preg_replace("/[\n\r]/", "", $prop->getValue()).$sep;
+                } else {
+                    $output .= preg_replace("/[\n\r]/", '', $prop->getValue()).$sep;
+                }
             }
         }
 
         $output .= "\n";
 
         self::$logger->debug('<<render');
+
         return $output;
     }
 }
-
-?>

@@ -5,11 +5,11 @@ namespace Alpha\Util\Code\Highlight;
 use GeSHi;
 
 /**
- *
  * Wraps Geshi in the standard API defined in HighlightProviderInterface,
  * for use in the Alpha CMS module.
  *
  * @since 1.2
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -46,12 +46,11 @@ use GeSHi;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class HighlightProviderGeshi implements HighlightProviderInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function highlight($source, $language)
     {
@@ -61,5 +60,3 @@ class HighlightProviderGeshi implements HighlightProviderInterface
         return $codeblock;
     }
 }
-
-?>

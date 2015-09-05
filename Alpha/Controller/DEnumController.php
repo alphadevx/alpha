@@ -4,9 +4,7 @@ namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
-use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\View\View;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\SecurityException;
@@ -17,10 +15,10 @@ use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
 
 /**
- *
- * Controller used to edit DEnums and associated DEnumItems
+ * Controller used to edit DEnums and associated DEnumItems.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -57,20 +55,20 @@ use Alpha\Model\Type\DEnumItem;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class DEnumController extends ActiveRecordController implements ControllerInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * constructor to set up the object
+     * constructor to set up the object.
      *
      * @since 1.0
      */
@@ -88,10 +86,12 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
     }
 
     /**
-     * Handle GET requests
+     * Handle GET requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @since 1.0
      */
     public function doGET($request)
@@ -116,8 +116,9 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
             $body .= View::displayPageHead($this);
 
             $message = $this->getStatusMessage();
-            if (!empty($message))
+            if (!empty($message)) {
                 $body .= $message;
+            }
 
             try {
                 $this->BO->load($BOoid);
@@ -143,7 +144,7 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
             $body .= View::displayPageHead($this);
 
             // make sure that the DEnum tables exist
-            if(!$this->BO->checkTableExists()) {
+            if (!$this->BO->checkTableExists()) {
                 $body .= View::displayErrorMessage('Warning! The DEnum tables do not exist, attempting to create them now...');
                 $body .= $this->createDEnumTables();
             }
@@ -151,7 +152,7 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
             // get all of the BOs and invoke the list view on each one
 
             // set the start point for the list pagination
-            if (isset($params['start']) ? $this->startPoint = $params['start']: $this->startPoint = 1);
+            if (isset($params['start']) ? $this->startPoint = $params['start'] : $this->startPoint = 1);
 
             $objects = $this->BO->loadAll($this->startPoint);
 
@@ -170,15 +171,19 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
         $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
+
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
-     * Handle POST requests
+     * Handle POST requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @throws Alpha\Exception\SecurityException
+     *
      * @since 1.0
      */
     public function doPOST($request)
@@ -225,7 +230,7 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
                     }
 
                     // handle new DEnumItem if posted
-                    if(isset($params['new_value']) && trim($params['new_value']) != '') {
+                    if (isset($params['new_value']) && trim($params['new_value']) != '') {
                         $newItem = new DEnumItem();
                         $newItem->set('value', $params['new_value']);
                         $newItem->set('DEnumID', $this->BO->getID());
@@ -260,18 +265,21 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
         $body = View::displayPageHead($this);
 
         $message = $this->getStatusMessage();
-        if (!empty($message))
+        if (!empty($message)) {
             $body .= $message;
+        }
 
         $body .= View::displayPageFoot($this);
         self::$logger->debug('<<doPOST');
+
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
-     * Method to create the DEnum tables if they don't exist
+     * Method to create the DEnum tables if they don't exist.
      *
      * @since 1.0
+     *
      * @return string
      */
     private function createDEnumTables()
@@ -305,5 +313,3 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
         return $body;
     }
 }
-
-?>

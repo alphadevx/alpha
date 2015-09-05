@@ -3,10 +3,10 @@
 namespace Alpha\Util;
 
 /**
- *
- * A filter class for filtering user input from text fields
+ * A filter class for filtering user input from text fields.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -43,54 +43,58 @@ namespace Alpha\Util;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class InputFilter
 {
     /**
-     * The encoding method which applies the filters
+     * The encoding method which applies the filters.
      *
      * @param string $text
-     * @param boolean $allowHTML
+     * @param bool   $allowHTML
+     *
      * @return string
+     *
      * @since 1.0
      */
     public static function encode($text, $allowHTML = false)
     {
         if (!get_magic_quotes_gpc()) {
-            if ($allowHTML)
+            if ($allowHTML) {
                 return $text;
-            else
+            } else {
                 return htmlentities($text, ENT_COMPAT, 'utf-8');
+            }
         } else {
-            if ($allowHTML)
+            if ($allowHTML) {
                 return $text;
-            else
+            } else {
                 return htmlentities($text, ENT_COMPAT, 'utf-8');
+            }
         }
     }
 
     /**
-     * The decoding method which reverses the filters
+     * The decoding method which reverses the filters.
      *
      * @param string $text
-     * @param boolean $allowHTML
+     * @param bool   $allowHTML
+     *
      * @return string
+     *
      * @since 1.0
      */
-    public static function decode($text, $allowHTML=false)
+    public static function decode($text, $allowHTML = false)
     {
-        if (!get_magic_quotes_gpc())
-            if ($allowHTML)
+        if (!get_magic_quotes_gpc()) {
+            if ($allowHTML) {
                 return $text;
-            else
+            } else {
                 return html_entity_decode($text);
-        else
-            if ($allowHTML)
-                return $text;
-            else
-                return html_entity_decode($text);
+            }
+        } elseif ($allowHTML) {
+            return $text;
+        } else {
+            return html_entity_decode($text);
+        }
     }
 }
-
-?>

@@ -4,7 +4,6 @@ namespace Alpha\Model\Type;
 
 use Alpha\Model\ActiveRecord;
 use Alpha\Model\ActiveRecordProviderFactory;
-use Alpha\Model\Type\TypeInterface;
 use Alpha\Util\Helper\Validator;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Exception\AlphaException;
@@ -15,6 +14,7 @@ use Alpha\Exception\CustomQueryException;
  * relationship with the DEnum type.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -51,158 +51,171 @@ use Alpha\Exception\CustomQueryException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class DEnumItem extends ActiveRecord implements TypeInterface
 {
-	/**
-	 * The value that will appear in the drop-down.
-	 *
-	 * @var Alpha\Model\Type\String
-	 * @since 1.0
-	 */
-	protected $value;
+    /**
+     * The value that will appear in the drop-down.
+     *
+     * @var Alpha\Model\Type\String
+     *
+     * @since 1.0
+     */
+    protected $value;
 
-	/**
-	 * The ID of the parent DEnum object.
-	 *
-	 * @var Alpha\Model\Type\Integer
-	 * @since 1.0
-	 */
-	protected $DEnumID;
+    /**
+     * The ID of the parent DEnum object.
+     *
+     * @var Alpha\Model\Type\Integer
+     *
+     * @since 1.0
+     */
+    protected $DEnumID;
 
-	/**
-	 * The name of the database table for the class
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	const TABLE_NAME = 'DEnumItem';
+    /**
+     * The name of the database table for the class.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    const TABLE_NAME = 'DEnumItem';
 
-	/**
-	 * an array of data display labels for the class properties
-	 *
-	 * @var array
-	 * @since 1.0
-	 */
-	protected $dataLabels = array("OID"=>"DEnumItem ID#","value"=>"Dropdown value");
+    /**
+     * an array of data display labels for the class properties.
+     *
+     * @var array
+     *
+     * @since 1.0
+     */
+    protected $dataLabels = array('OID' => 'DEnumItem ID#','value' => 'Dropdown value');
 
-	/**
-	 * The message to display to the user when validation fails
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	protected $helper = 'Not a valid DEnumItem value!';
+    /**
+     * The message to display to the user when validation fails.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    protected $helper = 'Not a valid DEnumItem value!';
 
-	/**
-	 * The constructor
-	 *
-	 * @since 1.0
-	 */
-	public function __construct()
-	{
-		// ensure to call the parent constructor
-		parent::__construct();
+    /**
+     * The constructor.
+     *
+     * @since 1.0
+     */
+    public function __construct()
+    {
+        // ensure to call the parent constructor
+        parent::__construct();
 
-		$this->value = new String();
-		$this->value->setRule(Validator::REQUIRED_STRING);
-		$this->value->setHelper("A blank dropdown value is not allowed!");
-		$this->DEnumID = new Integer();
-		$this->markTransient('helper');
-	}
+        $this->value = new String();
+        $this->value->setRule(Validator::REQUIRED_STRING);
+        $this->value->setHelper('A blank dropdown value is not allowed!');
+        $this->DEnumID = new Integer();
+        $this->markTransient('helper');
+    }
 
-	/**
-	 * Loads all of the items for the given parent DEnum ID.
-	 *
-	 * @param integer $EnumID The ID of the parent DEnum object.
-	 * @return array
-	 * @since 1.0
-	 * @throws Alpha\Exception\AlphaException
-	 */
-	public function loadItems($EnumID)
-	{
-		$config = ConfigProvider::getInstance();
+    /**
+     * Loads all of the items for the given parent DEnum ID.
+     *
+     * @param int $EnumID The ID of the parent DEnum object.
+     *
+     * @return array
+     *
+     * @since 1.0
+     *
+     * @throws Alpha\Exception\AlphaException
+     */
+    public function loadItems($EnumID)
+    {
+        $config = ConfigProvider::getInstance();
 
-		$this->DEnumID->setValue($EnumID);
+        $this->DEnumID->setValue($EnumID);
 
-		$sqlQuery = 'SELECT OID FROM '.self::TABLE_NAME.' WHERE DEnumID = \''.$EnumID.'\';';
+        $sqlQuery = 'SELECT OID FROM '.self::TABLE_NAME.' WHERE DEnumID = \''.$EnumID.'\';';
 
-		$provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
 
-		try {
-			$result = $provider->query($sqlQuery);
-		} catch (CustomQueryException $e) {
-			throw new AlphaException('Failed to load objects, error is ['.$e->getMessage().']');
-			return array();
-		}
+        try {
+            $result = $provider->query($sqlQuery);
+        } catch (CustomQueryException $e) {
+            throw new AlphaException('Failed to load objects, error is ['.$e->getMessage().']');
 
-		// now build an array of objects to be returned
-		$objects = array();
-		$count = 0;
+            return array();
+        }
 
-		foreach ($result as $row) {
-			$obj = new DEnumItem();
-			$obj->load($row['OID']);
-			$objects[$count] = $obj;
-			$count++;
-		}
+        // now build an array of objects to be returned
+        $objects = array();
+        $count = 0;
 
-		return $objects;
-	}
+        foreach ($result as $row) {
+            $obj = new self();
+            $obj->load($row['OID']);
+            $objects[$count] = $obj;
+            ++$count;
+        }
 
-	/**
-	 * used to get the current DEnum item
-	 *
-	 * @return Alpha\Model\Type\String
-	 * @since 1.0
-	 */
-	public function getValue()
-	{
-		return $this->value;
-	}
+        return $objects;
+    }
 
-	/**
-	 * used to set the current DEnum item
-	 *
-	 * @param string $item
-	 * @since 1.0
-	 */
-	public function setValue($item)
-	{
-		$this->value->setValue($item);
-	}
+    /**
+     * used to get the current DEnum item.
+     *
+     * @return Alpha\Model\Type\String
+     *
+     * @since 1.0
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
 
-	/**
-	 * Getter for the validation helper string
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function getHelper()
-	{
-		return $this->helper;
-	}
+    /**
+     * used to set the current DEnum item.
+     *
+     * @param string $item
+     *
+     * @since 1.0
+     */
+    public function setValue($item)
+    {
+        $this->value->setValue($item);
+    }
 
-	/**
-	 * Set the validation helper text
-	 *
-	 * @param string $helper
-	 * @since 1.0
-	 */
-	public function setHelper($helper)
-	{
-		$this->helper = $helper;
-	}
+    /**
+     * Getter for the validation helper string.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function getHelper()
+    {
+        return $this->helper;
+    }
 
-	/**
-	 * Used to convert the object to a printable string
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function __toString()
-	{
-		return strval($this->value);
-	}
+    /**
+     * Set the validation helper text.
+     *
+     * @param string $helper
+     *
+     * @since 1.0
+     */
+    public function setHelper($helper)
+    {
+        $this->helper = $helper;
+    }
+
+    /**
+     * Used to convert the object to a printable string.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function __toString()
+    {
+        return strval($this->value);
+    }
 }

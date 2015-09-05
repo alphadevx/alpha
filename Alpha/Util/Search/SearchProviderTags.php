@@ -2,7 +2,6 @@
 
 namespace Alpha\Util\Search;
 
-use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\RecordNotFoundException;
 use Alpha\Exception\ValidationException;
 use Alpha\Util\Logging\Logger;
@@ -11,11 +10,11 @@ use Alpha\Util\Cache\CacheProviderFactory;
 use Alpha\Model\Tag;
 
 /**
- *
  * Uses the Tag business oject to store searchable tags in the main
  * application database.
  *
  * @since 1.2.3
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -52,15 +51,14 @@ use Alpha\Model\Tag;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class SearchProviderTags implements SearchProviderInterface
 {
-
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.2.3
      */
     private static $logger;
@@ -68,13 +66,14 @@ class SearchProviderTags implements SearchProviderInterface
     /**
      * The number of matches found for the current search.
      *
-     * @var integer
+     * @var int
+     *
      * @since 1.2.3
      */
     private $numberFound = 0;
 
     /**
-     * constructor to set up the object
+     * constructor to set up the object.
      *
      * @since 1.2.3
      */
@@ -84,7 +83,7 @@ class SearchProviderTags implements SearchProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function search($query, $returnType = 'all', $start = 0, $limit = 10)
     {
@@ -118,7 +117,6 @@ class SearchProviderTags implements SearchProviderInterface
              */
             foreach ($matchingTags as $tag) {
                 if ($returnType == 'all' || $tag->get('taggedClass') == $returnType) {
-
                     $key = $tag->get('taggedClass').'-'.$tag->get('taggedOID');
 
                     if (isset($matches[$key])) {
@@ -143,21 +141,19 @@ class SearchProviderTags implements SearchProviderInterface
         $this->numberFound = count($matches);
 
         // now paginate
-        $matches = array_slice($matches, $start, $limit+5); // the +5 is just some padding in case of orphans
+        $matches = array_slice($matches, $start, $limit + 5); // the +5 is just some padding in case of orphans
 
         // now load each object
         foreach ($matches as $key => $weight) {
-            if(count($results) < $limit) {
+            if (count($results) < $limit) {
                 $parts = explode('-', $key);
 
                 try {
-
-                    $BO = new $parts[0];
+                    $BO = new $parts[0]();
                     $BO->load($parts[1]);
 
                     $results[] = $BO;
-
-                } catch(RecordNotFoundException $e) {
+                } catch (RecordNotFoundException $e) {
                     self::$logger->warn('Orpaned Tag detected pointing to a non-existant BO of OID ['.$parts[1].'] and type ['.$parts[0].'].');
                 }
             }
@@ -167,7 +163,7 @@ class SearchProviderTags implements SearchProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRelated($sourceObject, $returnType = 'all', $start = 0, $limit = 10, $distinct = '')
     {
@@ -193,32 +189,31 @@ class SearchProviderTags implements SearchProviderInterface
                 $Tag = new Tag();
 
                 if ($distinct == '') {
-                    $matchingTags = $Tag->query("SELECT * FROM ".$Tag->getTableName()." WHERE 
+                    $matchingTags = $Tag->query('SELECT * FROM '.$Tag->getTableName()." WHERE 
                         content='".$tag->get('content')."' AND NOT 
                         (taggedOID = '".$sourceObject->getOID()."' AND taggedClass = '".get_class($sourceObject)."');");
                 } else {
                     // filter out results where the source object field is identical to distinct param
-                    $matchingTags = $Tag->query("SELECT * FROM ".$Tag->getTableName()." WHERE 
+                    $matchingTags = $Tag->query('SELECT * FROM '.$Tag->getTableName()." WHERE 
                         content='".$tag->get('content')."' AND NOT 
                         (taggedOID = '".$sourceObject->getOID()."' AND taggedClass = '".get_class($sourceObject)."')
-                        AND taggedOID IN (SELECT OID FROM ".$sourceObject->getTableName()." WHERE ".$distinct." != '".addslashes($sourceObject->get($distinct))."');");
+                        AND taggedOID IN (SELECT OID FROM ".$sourceObject->getTableName().' WHERE '.$distinct." != '".addslashes($sourceObject->get($distinct))."');");
                 }
 
                 foreach ($matchingTags as $matchingTag) {
                     if ($returnType == 'all' || $tag->get('taggedClass') == $returnType) {
-
                         $key = $matchingTag['taggedClass'].'-'.$matchingTag['taggedOID'];
 
                         // matches on the distinct if defined need to be skipped
                         if ($distinct != '') {
                             try {
-
-                                $BO = new $matchingTag['taggedClass'];
+                                $BO = new $matchingTag['taggedClass']();
                                 $BO->load($matchingTag['taggedOID']);
 
                                 // skip where the source object field is identical
-                                if ($sourceObject->get($distinct) == $BO->get($distinct))
+                                if ($sourceObject->get($distinct) == $BO->get($distinct)) {
                                     continue;
+                                }
 
                                 if (!in_array($BO->get($distinct), $distinctValues)) {
                                     $distinctValues[] = $BO->get($distinct);
@@ -259,7 +254,7 @@ class SearchProviderTags implements SearchProviderInterface
         foreach ($matches as $key => $weight) {
             $parts = explode('-', $key);
 
-            $BO = new $parts[0];
+            $BO = new $parts[0]();
             $BO->load($parts[1]);
 
             $results[] = $BO;
@@ -269,7 +264,7 @@ class SearchProviderTags implements SearchProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function index($sourceObject)
     {
@@ -281,7 +276,7 @@ class SearchProviderTags implements SearchProviderInterface
             foreach ($tags as $tag) {
                 try {
                     $tag->save();
-                } catch(ValidationException $e){
+                } catch (ValidationException $e) {
                     /*
                      * The unique key has most-likely been violated because this BO is already tagged with this
                      * value, so we can ignore in this case.
@@ -292,18 +287,19 @@ class SearchProviderTags implements SearchProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function delete($sourceObject)
     {
         $tags = $sourceObject->getPropObject('tags')->getRelatedObjects();
 
-        foreach ($tags as $tag)
+        foreach ($tags as $tag) {
             $tag->delete();
+        }
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getNumberFound()
     {
@@ -311,7 +307,7 @@ class SearchProviderTags implements SearchProviderInterface
     }
 
     /**
-     * Load the tag search matches from the cache
+     * Load the tag search matches from the cache.
      *
      * @since 1.2.4
      */
@@ -325,12 +321,14 @@ class SearchProviderTags implements SearchProviderInterface
 
             if (!$matches) {
                 self::$logger->debug('Cache miss on key ['.$key.']');
+
                 return array();
             } else {
                 self::$logger->debug('Cache hit on key ['.$key.']');
+
                 return $matches;
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             self::$logger->error('Error while attempting to load a search result from ['.$config->get('cache.provider.name').'] 
              instance: ['.$e->getMessage().']');
 
@@ -339,7 +337,7 @@ class SearchProviderTags implements SearchProviderInterface
     }
 
     /**
-     * Add the tag search matches to the cache
+     * Add the tag search matches to the cache.
      *
      * @since 1.2.4
      */
@@ -350,12 +348,9 @@ class SearchProviderTags implements SearchProviderInterface
         try {
             $cache = CacheProviderFactory::getInstance($config->get('cache.provider.name'));
             $cache->set($key, $matches, 86400); // cache search matches for a day
-
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             self::$logger->error('Error while attempting to store a search matches array to the ['.$config->get('cache.provider.name').'] 
                 instance: ['.$e->getMessage().']');
         }
     }
 }
-
-?>

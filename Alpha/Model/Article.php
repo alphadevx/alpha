@@ -16,10 +16,10 @@ use Alpha\Exception\AlphaException;
 use Alpha\Controller\Front\FrontController;
 
 /**
- *
- * An article class for the CMS
+ * An article class for the CMS.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -56,519 +56,556 @@ use Alpha\Controller\Front\FrontController;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class Article extends ActiveRecord
 {
-	/**
-	 * The article title
-	 *
-	 * @var Alpha\Model\Type\String
-	 * @since 1.0
-	 */
-	protected $title;
+    /**
+     * The article title.
+     *
+     * @var Alpha\Model\Type\String
+     *
+     * @since 1.0
+     */
+    protected $title;
 
-	/**
-	 * The article site section
-	 *
-	 * @var Alpha\Model\Type\DEnum
-	 * @since 1.0
-	 */
-	protected $section;
+    /**
+     * The article site section.
+     *
+     * @var Alpha\Model\Type\DEnum
+     *
+     * @since 1.0
+     */
+    protected $section;
 
-	/**
-	 * The description of the article
-	 *
-	 * @var Alpha\Model\Type\String
-	 * @since 1.0
-	 */
-	protected $description;
+    /**
+     * The description of the article.
+     *
+     * @var Alpha\Model\Type\String
+     *
+     * @since 1.0
+     */
+    protected $description;
 
-	/**
-	 * Optional custom body onload Javascript
-	 *
-	 * @var Alpha\Model\Type\String
-	 * @since 1.0
-	 */
-	protected $bodyOnload;
+    /**
+     * Optional custom body onload Javascript.
+     *
+     * @var Alpha\Model\Type\String
+     *
+     * @since 1.0
+     */
+    protected $bodyOnload;
 
-	/**
-	 * Any custom HTML header content (e.g. Javascript) for the article
-	 *
-	 * @var Alpha\Model\Type\Text
-	 * @since 1.0
-	 */
-	protected $headerContent;
+    /**
+     * Any custom HTML header content (e.g. Javascript) for the article.
+     *
+     * @var Alpha\Model\Type\Text
+     *
+     * @since 1.0
+     */
+    protected $headerContent;
 
-	/**
-	 * The article content
-	 *
-	 * @var Alpha\Model\Type\Text
-	 * @since 1.0
-	 */
-	protected $content;
+    /**
+     * The article content.
+     *
+     * @var Alpha\Model\Type\Text
+     *
+     * @since 1.0
+     */
+    protected $content;
 
-	/**
-	 * The author of the article
-	 *
-	 * @var Alpha\Model\Type\String
-	 * @since 1.0
-	 */
-	protected $author;
+    /**
+     * The author of the article.
+     *
+     * @var Alpha\Model\Type\String
+     *
+     * @since 1.0
+     */
+    protected $author;
 
-	/**
-	 * A boolean to control whether the artcile is publically accessible or not
-	 *
-	 * @var Alpha\Model\Type\Boolean
-	 * @since 1.0
-	 */
-	protected $published;
+    /**
+     * A boolean to control whether the artcile is publically accessible or not.
+     *
+     * @var Alpha\Model\Type\Boolean
+     *
+     * @since 1.0
+     */
+    protected $published;
 
-	/**
-	 * A Relation containing all of the comments on this article
-	 *
-	 * @var Alpha\Model\Type\Relation
-	 * @since 1.0
-	 */
-	protected $comments;
+    /**
+     * A Relation containing all of the comments on this article.
+     *
+     * @var Alpha\Model\Type\Relation
+     *
+     * @since 1.0
+     */
+    protected $comments;
 
-	/**
-	 * A Relation containing all of the votes on this article
-	 *
-	 * @var Alpha\Model\Type\Relation
-	 * @since 1.0
-	 */
-	protected $votes;
+    /**
+     * A Relation containing all of the votes on this article.
+     *
+     * @var Alpha\Model\Type\Relation
+     *
+     * @since 1.0
+     */
+    protected $votes;
 
-	/**
-	 * A Relation containing all of the tags on this article
-	 *
-	 * @var Alpha\Model\Type\Relation
-	 * @since 1.0
-	 */
-	protected $tags;
+    /**
+     * A Relation containing all of the tags on this article.
+     *
+     * @var Alpha\Model\Type\Relation
+     *
+     * @since 1.0
+     */
+    protected $tags;
 
-	/**
-	 * An array of all of the attributes on this BO which are tagged
-	 *
-	 * @var array
-	 * @since 1.0
-	 */
-	protected $taggedAttributes = array('title', 'description', 'content');
+    /**
+     * An array of all of the attributes on this BO which are tagged.
+     *
+     * @var array
+     *
+     * @since 1.0
+     */
+    protected $taggedAttributes = array('title', 'description', 'content');
 
-	/**
-	 * Path to a .text file where the content of this article is stored (optional)
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	private $filePath;
+    /**
+     * Path to a .text file where the content of this article is stored (optional).
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    private $filePath;
 
-	/**
-	 * An array of data display labels for the class properties
-	 *
-	 * @var array
-	 * @since 1.0
-	 */
-	protected $dataLabels = array("OID"=>"Article ID#","title"=>"Title","section"=>"Site Section","description"=>"Description","bodyOnload"=>"Body onload Javascript","content"=>"Content","headerContent"=>"HTML Header Content","author"=>"Author","created_ts"=>"Date Added","updated_ts"=>"Date of last Update","published"=>"Published","URL"=>"URL","printURL"=>"Printer version URL","comments"=>"Comments","votes"=>"Votes","tags"=>"Tags");
+    /**
+     * An array of data display labels for the class properties.
+     *
+     * @var array
+     *
+     * @since 1.0
+     */
+    protected $dataLabels = array('OID' => 'Article ID#','title' => 'Title','section' => 'Site Section','description' => 'Description','bodyOnload' => 'Body onload Javascript','content' => 'Content','headerContent' => 'HTML Header Content','author' => 'Author','created_ts' => 'Date Added','updated_ts' => 'Date of last Update','published' => 'Published','URL' => 'URL','printURL' => 'Printer version URL','comments' => 'Comments','votes' => 'Votes','tags' => 'Tags');
 
-	/**
-	 * The name of the database table for the class
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	const TABLE_NAME = 'Article';
+    /**
+     * The name of the database table for the class.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    const TABLE_NAME = 'Article';
 
-	/**
-	 * The URL for this article (transient)
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	protected $URL;
+    /**
+     * The URL for this article (transient).
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    protected $URL;
 
-	/**
-	 * The print URL for this article (transient)
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	protected $printURL;
+    /**
+     * The print URL for this article (transient).
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    protected $printURL;
 
-	/**
-	 * Trace logger
-	 *
-	 * @var Alpha\Util\Logging\Logger
-	 * @since 1.0
-	 */
-	private static $logger = null;
+    /**
+     * Trace logger.
+     *
+     * @var Alpha\Util\Logging\Logger
+     *
+     * @since 1.0
+     */
+    private static $logger = null;
 
-	/**
-	 * The constructor which sets up some housekeeping attributes
-	 *
-	 * @since 1.0
-	 */
-	public function __construct()
-	{
-		self::$logger = new Logger('Article');
+    /**
+     * The constructor which sets up some housekeeping attributes.
+     *
+     * @since 1.0
+     */
+    public function __construct()
+    {
+        self::$logger = new Logger('Article');
 
-		// ensure to call the parent constructor
-		parent::__construct();
+        // ensure to call the parent constructor
+        parent::__construct();
 
-		$this->title = new String();
-		$this->title->setHelper('Please provide a title for the article.');
-		$this->title->setSize(100);
-		$this->title->setRule("/\w+/");
+        $this->title = new String();
+        $this->title->setHelper('Please provide a title for the article.');
+        $this->title->setSize(100);
+        $this->title->setRule("/\w+/");
 
-		$this->section = new DEnum('Alpha\Model\Article::section');
+        $this->section = new DEnum('Alpha\Model\Article::section');
 
-		$this->description = new String();
-		$this->description->setHelper('Please provide a brief description of the article.');
-		$this->description->setSize(200);
-		$this->description->setRule("/\w+/");
-		$this->bodyOnload = new String();
-		$this->content = new Text();
-		$this->headerContent = new Text();
-		$this->author = new String();
-		$this->author->setHelper('Please state the name of the author of this article');
-		$this->author->setSize(70);
-		$this->author->setRule("/\w+/");
-		$this->published = new Boolean(0);
+        $this->description = new String();
+        $this->description->setHelper('Please provide a brief description of the article.');
+        $this->description->setSize(200);
+        $this->description->setRule("/\w+/");
+        $this->bodyOnload = new String();
+        $this->content = new Text();
+        $this->headerContent = new Text();
+        $this->author = new String();
+        $this->author->setHelper('Please state the name of the author of this article');
+        $this->author->setSize(70);
+        $this->author->setRule("/\w+/");
+        $this->published = new Boolean(0);
 
-		$this->comments = new Relation();
-		$this->markTransient('comments');
+        $this->comments = new Relation();
+        $this->markTransient('comments');
 
-		$this->votes = new Relation();
-		$this->markTransient('votes');
+        $this->votes = new Relation();
+        $this->markTransient('votes');
 
-		$this->tags = new Relation();
-		$this->markTransient('tags');
+        $this->tags = new Relation();
+        $this->markTransient('tags');
 
-		$this->URL = '';
-		$this->printURL = '';
-		// mark the URL attributes as transient
-		$this->markTransient('URL');
-		$this->markTransient('printURL');
+        $this->URL = '';
+        $this->printURL = '';
+        // mark the URL attributes as transient
+        $this->markTransient('URL');
+        $this->markTransient('printURL');
 
-		// mark title as unique
-		$this->markUnique('title');
+        // mark title as unique
+        $this->markUnique('title');
 
-		$this->markTransient('filePath');
-		$this->markTransient('taggedAttributes');
-
-		$this->setupRels();
-	}
-
-	/**
-	 * After creating a new Article, tokenize the description field to form a set
-	 * of automated tags and save them.
-	 *
-	 * @since 1.0
-	 */
-	protected function after_save_callback()
-	{
-		if ($this->getVersion() == 1 && $this->tags instanceof \Alpha\Model\Type\Relation) {
-			// update the empty tags values to reference this OID
-			$this->tags->setValue($this->OID);
-
-			foreach ($this->taggedAttributes as $tagged) {
-				$tags = Tag::tokenize($this->get($tagged), 'Alpha\Model\Article', $this->getOID());
-				foreach ($tags as $tag) {
-					try {
-						$tag->save();
-					} catch(ValidationException $e){
-						/*
-						 * The unique key has most-likely been violated because this BO is already tagged with this
-						 * value, so we can ignore in this case.
-						 */
-					}
-				}
-			}
-		}
+        $this->markTransient('filePath');
+        $this->markTransient('taggedAttributes');
 
         $this->setupRels();
-	}
+    }
 
-	/**
-	 * Set up the transient URL attributes for the artcile after it has loaded
-	 *
-	 * @since 1.0
-	 */
-	protected function after_loadByAttribute_callback()
-	{
-		$this->after_load_callback();
-	}
-
-	/**
-	 * Set up the transient URL attributes for the article after it has loaded
-	 *
-	 * @since 1.0
-	 */
-	protected function after_load_callback()
-	{
-		$config = ConfigProvider::getInstance();
-
-		$this->URL = $config->get('app.url').'a/'.str_replace(' ', $config->get('cms.url.title.separator'), $this->title->getValue());
-
-		$this->printURL = $config->get('app.url').'a/'.str_replace(' ', $config->get('cms.url.title.separator'), $this->title->getValue()).'/print';
-
-		$this->setupRels();
-	}
-
-	/**
-     * Gets an array of the OIDs of the most recent articles added to the system (by date), from the newest
-     * article to the amount specified by the $limit
+    /**
+     * After creating a new Article, tokenize the description field to form a set
+     * of automated tags and save them.
      *
-     * @param integer $limit
-     * @param string $excludeID
-     * @return array
      * @since 1.0
+     */
+    protected function after_save_callback()
+    {
+        if ($this->getVersion() == 1 && $this->tags instanceof \Alpha\Model\Type\Relation) {
+            // update the empty tags values to reference this OID
+            $this->tags->setValue($this->OID);
+
+            foreach ($this->taggedAttributes as $tagged) {
+                $tags = Tag::tokenize($this->get($tagged), 'Alpha\Model\Article', $this->getOID());
+                foreach ($tags as $tag) {
+                    try {
+                        $tag->save();
+                    } catch (ValidationException $e) {
+                        /*
+                         * The unique key has most-likely been violated because this BO is already tagged with this
+                         * value, so we can ignore in this case.
+                         */
+                    }
+                }
+            }
+        }
+
+        $this->setupRels();
+    }
+
+    /**
+     * Set up the transient URL attributes for the artcile after it has loaded.
+     *
+     * @since 1.0
+     */
+    protected function after_loadByAttribute_callback()
+    {
+        $this->after_load_callback();
+    }
+
+    /**
+     * Set up the transient URL attributes for the article after it has loaded.
+     *
+     * @since 1.0
+     */
+    protected function after_load_callback()
+    {
+        $config = ConfigProvider::getInstance();
+
+        $this->URL = $config->get('app.url').'a/'.str_replace(' ', $config->get('cms.url.title.separator'), $this->title->getValue());
+
+        $this->printURL = $config->get('app.url').'a/'.str_replace(' ', $config->get('cms.url.title.separator'), $this->title->getValue()).'/print';
+
+        $this->setupRels();
+    }
+
+    /**
+     * Gets an array of the OIDs of the most recent articles added to the system (by date), from the newest
+     * article to the amount specified by the $limit.
+     *
+     * @param int    $limit
+     * @param string $excludeID
+     *
+     * @return array
+     *
+     * @since 1.0
+     *
      * @throws Alpha\Exception\AlphaException
      */
-	public function loadRecentWithLimit($limit, $excludeID = '')
-	{
-		if ($excludeID != '') {
+    public function loadRecentWithLimit($limit, $excludeID = '')
+    {
+        if ($excludeID != '') {
             $denum = new DEnum('Alpha\Model\Article::section');
             $excludeID = $denum->getOptionID($excludeID);
         }
 
-		$sqlQuery = "SELECT OID FROM ".$this->getTableName()." WHERE published='1' AND section!='$excludeID' ORDER BY created_ts DESC LIMIT 0, $limit;";
+        $sqlQuery = 'SELECT OID FROM '.$this->getTableName()." WHERE published='1' AND section!='$excludeID' ORDER BY created_ts DESC LIMIT 0, $limit;";
 
-		$result = $this->query($sqlQuery);
+        $result = $this->query($sqlQuery);
 
-		$OIDs = array();
+        $OIDs = array();
 
-		foreach ($result as $row)
-			array_push($OIDs, $row['OID']);
+        foreach ($result as $row) {
+            array_push($OIDs, $row['OID']);
+        }
 
-		return $OIDs;
-	}
+        return $OIDs;
+    }
 
-	/**
-	 * Generates the location of the attachments folder for this article
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function getAttachmentsLocation()
-	{
-		$config = ConfigProvider::getInstance();
+    /**
+     * Generates the location of the attachments folder for this article.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function getAttachmentsLocation()
+    {
+        $config = ConfigProvider::getInstance();
 
-		return $config->get('app.file.store.dir').'attachments/article_'.$this->getID();
-	}
+        return $config->get('app.file.store.dir').'attachments/article_'.$this->getID();
+    }
 
-	/**
-	 * Generates the URL of the attachments folder for this article
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function getAttachmentsURL()
-	{
-		$config = ConfigProvider::getInstance();
+    /**
+     * Generates the URL of the attachments folder for this article.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function getAttachmentsURL()
+    {
+        $config = ConfigProvider::getInstance();
 
-		return $config->get('app.url').'attachments/article_'.$this->getID();
-	}
+        return $config->get('app.url').'attachments/article_'.$this->getID();
+    }
 
-	/**
-	 * Generates a secure URL for downloading an attachment file via the ViewAttachment controller
-	 *
-	 * @param string $filename
-	 * @since 1.0
-	 */
-	public function getAttachmentSecureURL($filename)
-	{
-		$config = ConfigProvider::getInstance();
+    /**
+     * Generates a secure URL for downloading an attachment file via the ViewAttachment controller.
+     *
+     * @param string $filename
+     *
+     * @since 1.0
+     */
+    public function getAttachmentSecureURL($filename)
+    {
+        $config = ConfigProvider::getInstance();
 
-		return FrontController::generateSecureURL('act=ViewAttachment&dir='.$this->getAttachmentsLocation().'&filename='.$filename);
-	}
+        return FrontController::generateSecureURL('act=ViewAttachment&dir='.$this->getAttachmentsLocation().'&filename='.$filename);
+    }
 
-	/**
-	 * Creates the attachment folder for the article on the server.
-	 *
-	 * @since 1.0
-	 * @throws Alpha\Exception\AlphaException
-	 */
-	public function createAttachmentsFolder()
-	{
-		// create the attachment directory for the article
-		try {
-			mkdir($this->getAttachmentsLocation());
-		} catch (\Exception $e) {
-			throw new AlphaException('Unable to create the folder ['.$this->getAttachmentsLocation().'] for the article.');
-		}
+    /**
+     * Creates the attachment folder for the article on the server.
+     *
+     * @since 1.0
+     *
+     * @throws Alpha\Exception\AlphaException
+     */
+    public function createAttachmentsFolder()
+    {
+        // create the attachment directory for the article
+        try {
+            mkdir($this->getAttachmentsLocation());
+        } catch (\Exception $e) {
+            throw new AlphaException('Unable to create the folder ['.$this->getAttachmentsLocation().'] for the article.');
+        }
 
-		// ...and set write permissions on the folder
-		try {
-			chmod($this->getAttachmentsLocation(), 0777);
-		} catch (\Exception $e) {
-			throw new AlphaException('Unable to set write permissions on the folder ['.$this->getAttachmentsLocation().'].');
-		}
-	}
+        // ...and set write permissions on the folder
+        try {
+            chmod($this->getAttachmentsLocation(), 0777);
+        } catch (\Exception $e) {
+            throw new AlphaException('Unable to set write permissions on the folder ['.$this->getAttachmentsLocation().'].');
+        }
+    }
 
-	/**
-	 * Method for returning the calculated score for this article
-	 *
-	 * @return double
-	 * @since 1.0
-	 */
-	public function getArticleScore()
-	{
-		$votes = $this->getArticleVotes();
+    /**
+     * Method for returning the calculated score for this article.
+     *
+     * @return float
+     *
+     * @since 1.0
+     */
+    public function getArticleScore()
+    {
+        $votes = $this->getArticleVotes();
 
-		$score = 0;
-		$total_score = 0;
-		$vote_count = count($votes);
+        $score = 0;
+        $total_score = 0;
+        $vote_count = count($votes);
 
-		for ($i = 0; $i < $vote_count; $i++){
-			$total_score += $votes[$i]->get('score');
-		}
+        for ($i = 0; $i < $vote_count; ++$i) {
+            $total_score += $votes[$i]->get('score');
+        }
 
-		if ($vote_count > 0)
-            $score = $total_score/$vote_count;
+        if ($vote_count > 0) {
+            $score = $total_score / $vote_count;
+        }
 
-		return sprintf("%01.2f", $score);
-	}
+        return sprintf('%01.2f', $score);
+    }
 
-	/**
-	 * Method for fetching all of the votes for this article
-	 *
-	 * @return array An array of ArticleVote objects
-	 * @since 1.0
-	 */
-	public function getArticleVotes()
-	{
-		$votes = $this->votes->getRelatedObjects();
+    /**
+     * Method for fetching all of the votes for this article.
+     *
+     * @return array An array of ArticleVote objects
+     *
+     * @since 1.0
+     */
+    public function getArticleVotes()
+    {
+        $votes = $this->votes->getRelatedObjects();
 
-		return $votes;
-	}
+        return $votes;
+    }
 
-	/**
-	 * Method to determine if the logged-in user has already voted for this article
-	 *
-	 * @return boolean True if they have voted already, false otherwise
-	 * @since 1.0
-	 * @throws Alpha\Exception\AlphaException
-	 */
-	public function checkUserVoted()
-	{
+    /**
+     * Method to determine if the logged-in user has already voted for this article.
+     *
+     * @return bool True if they have voted already, false otherwise
+     *
+     * @since 1.0
+     *
+     * @throws Alpha\Exception\AlphaException
+     */
+    public function checkUserVoted()
+    {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
-		// just going to return true if nobody is logged in
-		if ($session->get('currentUser') == null)
-			return true;
+        // just going to return true if nobody is logged in
+        if ($session->get('currentUser') == null) {
+            return true;
+        }
 
-		$userID = $session->get('currentUser')->getID();
+        $userID = $session->get('currentUser')->getID();
 
-		$vote = new ArticleVote();
+        $vote = new ArticleVote();
 
-		$sqlQuery = "SELECT COUNT(*) AS usersVote FROM ".$vote->getTableName()." WHERE articleOID='".$this->OID."' AND personOID='".$userID."';";
+        $sqlQuery = 'SELECT COUNT(*) AS usersVote FROM '.$vote->getTableName()." WHERE articleOID='".$this->OID."' AND personOID='".$userID."';";
 
-		$result = $this->query($sqlQuery);
+        $result = $this->query($sqlQuery);
 
-		if (!isset($result[0])) {
-			throw new AlphaException('Failed to check if the current user voted for the article ['.$this->OID.'], query ['.$sqlQuery.']');
-			return false;
-		}
+        if (!isset($result[0])) {
+            throw new AlphaException('Failed to check if the current user voted for the article ['.$this->OID.'], query ['.$sqlQuery.']');
 
-		$row = $result[0];
+            return false;
+        }
 
-		if ($row['usersVote'] == "0")
-			return false;
-		else
-			return true;
-	}
+        $row = $result[0];
 
-	/**
-	 * Method for fetching all of the comments for this article
-	 *
-	 * @return array An array of ArticleComment objects
-	 * @since 1.0
-	 */
-	public function getArticleComments()
-	{
-		$comments = $this->comments->getRelatedObjects();
+        if ($row['usersVote'] == '0') {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
-		return $comments;
-	}
+    /**
+     * Method for fetching all of the comments for this article.
+     *
+     * @return array An array of ArticleComment objects
+     *
+     * @since 1.0
+     */
+    public function getArticleComments()
+    {
+        $comments = $this->comments->getRelatedObjects();
 
-	/**
-	 * Loads the content of the ArticleObject from the specified file path
-	 *
-	 * @param $filePath
-	 * @since 1.0
-	 * @throws Alpha\Exception\FileNotFoundException
-	 */
-	public function loadContentFromFile($filePath)
-	{
-		try {
-			$this->content->setValue(file_get_contents($filePath));
-			$this->filePath = $filePath;
-		} catch (\Exception $e) {
-			throw new FileNotFoundException($e->getMessage());
-		}
-	}
+        return $comments;
+    }
 
-	/**
-	 * Returns true if the article content was loaded from a .text file, false otherwise.
-	 *
-	 * @return boolean
-	 * @since 1.0
-	 */
-	public function isLoadedFromFile()
-	{
-		return ($this->filePath == '' ? false: true);
-	}
+    /**
+     * Loads the content of the ArticleObject from the specified file path.
+     *
+     * @param $filePath
+     *
+     * @since 1.0
+     *
+     * @throws Alpha\Exception\FileNotFoundException
+     */
+    public function loadContentFromFile($filePath)
+    {
+        try {
+            $this->content->setValue(file_get_contents($filePath));
+            $this->filePath = $filePath;
+        } catch (\Exception $e) {
+            throw new FileNotFoundException($e->getMessage());
+        }
+    }
 
-	/**
-	 * Returns the timestamp of when the content .text file for this article was last
-	 * modified.
-	 *
-	 * @return string
-	 * @since 1.0
-	 * @throws Alpha\Exception\FileNotFoundException
-	 */
-	public function getContentFileDate()
-	{
-		if ($this->filePath != '') {
-			try {
-				return date("Y-m-d H:i:s", filemtime($this->filePath));
-			} catch (\Exception $e) {
-				throw new FileNotFoundException($e->getMessage());
-			}
-		} else {
-			throw new FileNotFoundException('Error trying to access an article content file when none is set!');
-		}
-	}
+    /**
+     * Returns true if the article content was loaded from a .text file, false otherwise.
+     *
+     * @return bool
+     *
+     * @since 1.0
+     */
+    public function isLoadedFromFile()
+    {
+        return ($this->filePath == '' ? false : true);
+    }
 
-	/**
-	 * Sets up the Relation definitions on this record object
-	 *
-	 * @since 2.0
-	 */
-	protected function setupRels()
-	{
-		$this->comments->setValue($this->OID);
-		$this->comments->setRelatedClass('Alpha\Model\ArticleComment');
-		$this->comments->setRelatedClassField('articleOID');
-		$this->comments->setRelatedClassDisplayField('content');
-		$this->comments->setRelationType('ONE-TO-MANY');
+    /**
+     * Returns the timestamp of when the content .text file for this article was last
+     * modified.
+     *
+     * @return string
+     *
+     * @since 1.0
+     *
+     * @throws Alpha\Exception\FileNotFoundException
+     */
+    public function getContentFileDate()
+    {
+        if ($this->filePath != '') {
+            try {
+                return date('Y-m-d H:i:s', filemtime($this->filePath));
+            } catch (\Exception $e) {
+                throw new FileNotFoundException($e->getMessage());
+            }
+        } else {
+            throw new FileNotFoundException('Error trying to access an article content file when none is set!');
+        }
+    }
 
-		$this->votes->setValue($this->OID);
-		$this->votes->setRelatedClass('Alpha\Model\ArticleVote');
-		$this->votes->setRelatedClassField('articleOID');
-		$this->votes->setRelatedClassDisplayField('score');
-		$this->votes->setRelationType('ONE-TO-MANY');
+    /**
+     * Sets up the Relation definitions on this record object.
+     *
+     * @since 2.0
+     */
+    protected function setupRels()
+    {
+        $this->comments->setValue($this->OID);
+        $this->comments->setRelatedClass('Alpha\Model\ArticleComment');
+        $this->comments->setRelatedClassField('articleOID');
+        $this->comments->setRelatedClassDisplayField('content');
+        $this->comments->setRelationType('ONE-TO-MANY');
 
-		$this->tags->setRelatedClass('Alpha\Model\Tag');
-		$this->tags->setRelatedClassField('taggedOID');
-		$this->tags->setRelatedClassDisplayField('content');
-		$this->tags->setRelationType('ONE-TO-MANY');
-		$this->tags->setTaggedClass(get_class($this));
-		$this->tags->setValue($this->OID);
-	}
+        $this->votes->setValue($this->OID);
+        $this->votes->setRelatedClass('Alpha\Model\ArticleVote');
+        $this->votes->setRelatedClassField('articleOID');
+        $this->votes->setRelatedClassDisplayField('score');
+        $this->votes->setRelationType('ONE-TO-MANY');
+
+        $this->tags->setRelatedClass('Alpha\Model\Tag');
+        $this->tags->setRelatedClassField('taggedOID');
+        $this->tags->setRelatedClassDisplayField('content');
+        $this->tags->setRelationType('ONE-TO-MANY');
+        $this->tags->setTaggedClass(get_class($this));
+        $this->tags->setValue($this->OID);
+    }
 }
-
-?>

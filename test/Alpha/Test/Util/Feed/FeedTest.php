@@ -13,9 +13,10 @@ use XMLReader;
 use SimpleXMLElement;
 
 /**
- * Test cases for the Feed class and its children
+ * Test cases for the Feed class and its children.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -52,12 +53,11 @@ use SimpleXMLElement;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class FeedTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test object to inject into a feed
+     * Test object to inject into a feed.
      *
      * @var Alpha\Model\Article
      */
@@ -66,7 +66,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
     /**
      * Called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+     * here.
      *
      * @since 1.0
      */
@@ -87,7 +87,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
     /**
      * Called after the test functions are executed
      * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+     * here.
      *
      * @since 1.0
      */
@@ -118,13 +118,13 @@ class FeedTest extends \PHPUnit_Framework_TestCase
         $simpleXML->registerXPathNamespace('rss', 'http://purl.org/rss/1.0/');
 
         $channels = $simpleXML->xpath('//rss:channel');
-        $this->assertEquals('Test Feed Title', (string)$channels[0]->title, 'Testing that the feed title is present');
-        $this->assertEquals('http://www.alphaframework.org/', (string)$channels[0]->link, 'Testing that the feed URL is present');
+        $this->assertEquals('Test Feed Title', (string) $channels[0]->title, 'Testing that the feed title is present');
+        $this->assertEquals('http://www.alphaframework.org/', (string) $channels[0]->link, 'Testing that the feed URL is present');
 
         $items = $simpleXML->xpath('//rss:item');
-        $this->assertEquals('Test Article Title', (string)$items[0]->title, 'Testing that the feed item title is present');
-        $this->assertEquals('Test Article Description', (string)$items[0]->description, 'Testing that the feed item description is present');
-        $this->assertEquals('2011-01-01T00:00:00+00:00', (string)$items[0]->updated, 'Testing that the feed item publish time is present');
+        $this->assertEquals('Test Article Title', (string) $items[0]->title, 'Testing that the feed item title is present');
+        $this->assertEquals('Test Article Description', (string) $items[0]->description, 'Testing that the feed item description is present');
+        $this->assertEquals('2011-01-01T00:00:00+00:00', (string) $items[0]->updated, 'Testing that the feed item publish time is present');
     }
 
     public function testAddItemToRSS2andParse()
@@ -142,13 +142,13 @@ class FeedTest extends \PHPUnit_Framework_TestCase
         $simpleXML = new SimpleXMLElement($xml);
 
         $channels = $simpleXML->xpath('channel');
-        $this->assertEquals('Test Feed Title', (string)$channels[0]->title, 'Testing that the feed title is present');
-        $this->assertEquals('http://www.alphaframework.org/', (string)$channels[0]->link, 'Testing that the feed URL is present');
+        $this->assertEquals('Test Feed Title', (string) $channels[0]->title, 'Testing that the feed title is present');
+        $this->assertEquals('http://www.alphaframework.org/', (string) $channels[0]->link, 'Testing that the feed URL is present');
 
         $items = $simpleXML->xpath('channel/item');
-        $this->assertEquals('Test Article Title', (string)$items[0]->title, 'Testing that the feed item title is present');
-        $this->assertEquals('Test Article Description', (string)$items[0]->description, 'Testing that the feed item description is present');
-        $this->assertEquals('2011-01-01T00:00:00+00:00', (string)$items[0]->updated, 'Testing that the feed item publish time is present');
+        $this->assertEquals('Test Article Title', (string) $items[0]->title, 'Testing that the feed item title is present');
+        $this->assertEquals('Test Article Description', (string) $items[0]->description, 'Testing that the feed item description is present');
+        $this->assertEquals('2011-01-01T00:00:00+00:00', (string) $items[0]->updated, 'Testing that the feed item publish time is present');
     }
 
     public function testAddItemToAtomandParse()
@@ -167,14 +167,12 @@ class FeedTest extends \PHPUnit_Framework_TestCase
         $simpleXML->registerXPathNamespace('atom', 'http://www.w3.org/2005/Atom');
 
         $feeds = $simpleXML->xpath('//atom:feed');
-        $this->assertEquals('Test Feed Title', (string)$feeds[0]->title, 'Testing that the feed title is present');
-        $this->assertEquals('http://www.alphaframework.org/', (string)$feeds[0]->link->attributes()->href, 'Testing that the feed URL is present');
+        $this->assertEquals('Test Feed Title', (string) $feeds[0]->title, 'Testing that the feed title is present');
+        $this->assertEquals('http://www.alphaframework.org/', (string) $feeds[0]->link->attributes()->href, 'Testing that the feed URL is present');
 
         $items = $simpleXML->xpath('//atom:entry');
-        $this->assertEquals('Test Article Title', (string)$items[0]->title, 'Testing that the feed item title is present');
-        $this->assertEquals('Test Article Description', (string)$items[0]->summary, 'Testing that the feed item description is present');
-        $this->assertEquals('2011-01-01T00:00:00+00:00', (string)$items[0]->updated, 'Testing that the feed item publish time is present');
+        $this->assertEquals('Test Article Title', (string) $items[0]->title, 'Testing that the feed item title is present');
+        $this->assertEquals('Test Article Description', (string) $items[0]->summary, 'Testing that the feed item description is present');
+        $this->assertEquals('2011-01-01T00:00:00+00:00', (string) $items[0]->updated, 'Testing that the feed item publish time is present');
     }
 }
-
-?>

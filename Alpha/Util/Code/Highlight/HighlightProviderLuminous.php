@@ -3,11 +3,11 @@
 namespace Alpha\Util\Code\Highlight;
 
 /**
- *
  * Wraps Luminous in the standard API defined in HighlightProviderInterface,
  * for use in the Alpha CMS module.
  *
  * @since 1.2
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -44,12 +44,11 @@ namespace Alpha\Util\Code\Highlight;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class HighlightProviderLuminous implements HighlightProviderInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function highlight($source, $language)
     {
@@ -58,4 +57,3 @@ class HighlightProviderLuminous implements HighlightProviderInterface
         return $codeblock;
     }
 }
-?>

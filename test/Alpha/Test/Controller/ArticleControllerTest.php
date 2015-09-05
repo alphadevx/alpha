@@ -15,14 +15,13 @@ use Alpha\Model\Person;
 use Alpha\Model\Rights;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
-use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 
 /**
- *
  * Test cases for the ArticleController class.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -59,12 +58,11 @@ use Alpha\Util\Http\Session\SessionProviderFactory;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ArticleControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Set up tests
+     * Set up tests.
      *
      * @since 2.0
      */
@@ -114,9 +112,10 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Creates an article object for Testing
+     * Creates an article object for Testing.
      *
      * @return Alpha\Model\Article
+     *
      * @since 2.0
      */
     private function createArticleObject($name)
@@ -133,9 +132,10 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Creates a person object for Testing
+     * Creates a person object for Testing.
      *
      * @return Alpha\Model\Person
+     *
      * @since 1.0
      */
     private function createPersonObject($name)
@@ -150,7 +150,7 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the doGET method
+     * Testing the doGET method.
      */
     public function testDoGET()
     {
@@ -293,7 +293,7 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $attachment = array(
             'name' => 'logo.png',
             'type' => 'image/png',
-            'tmp_name' => $config->get('app.root').'public/images/logo-small.png'
+            'tmp_name' => $config->get('app.root').'public/images/logo-small.png',
         );
 
         $params = array('uploadBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
@@ -350,5 +350,3 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(404, $response->getStatus(), 'Testing the doDELETE method');
     }
 }
-
-?>

@@ -2,13 +2,11 @@
 
 namespace Alpha\Util\Feed;
 
-use Alpha\Exception\IllegalArguementException;
-
 /**
- *
- * RSS 2.0 class for syndication
+ * RSS 2.0 class for syndication.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -45,20 +43,20 @@ use Alpha\Exception\IllegalArguementException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class RSS2 extends Feed
 {
     /**
-     * The actual root tag used in each feed type
+     * The actual root tag used in each feed type.
      *
      * @var string
+     *
      * @since 1.0
      */
     protected $rootTag = '<rss version="2.0" />';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function __construct($BOName, $title, $url, $description, $pubDate = null, $id = null, $limit = 10)
     {
@@ -66,5 +64,3 @@ class RSS2 extends Feed
         $this->docElement = $this->root;
     }
 }
-
-?>

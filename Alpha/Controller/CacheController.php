@@ -6,7 +6,6 @@ use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\File\FileUtils;
 use Alpha\Util\Security\SecurityUtils;
-use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Exception\IllegalArguementException;
@@ -16,10 +15,10 @@ use Alpha\View\View;
 use Alpha\View\Widget\Button;
 
 /**
- *
- * Controller used to clear out the CMS cache when required
+ * Controller used to clear out the CMS cache when required.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -56,28 +55,29 @@ use Alpha\View\Widget\Button;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class CacheController extends Controller implements ControllerInterface
 {
     /**
-     * The root of the cache directory
+     * The root of the cache directory.
      *
      * @var string
+     *
      * @since 1.0
      */
     private $dataDir;
 
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * constructor to set up the object
+     * constructor to set up the object.
      *
      * @since 1.0
      */
@@ -92,17 +92,20 @@ class CacheController extends Controller implements ControllerInterface
         parent::__construct('Admin');
 
         $this->setTitle('Cache Manager');
-        $this->dataDir  = $config->get('app.file.store.dir').'cache/';
+        $this->dataDir = $config->get('app.file.store.dir').'cache/';
 
         self::$logger->debug('<<__construct');
     }
 
     /**
-     * Handle GET requests
+     * Handle GET requests.
      *
      * @param Alpha\Util\Http\Response $request
+     *
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @since 1.0
      */
     public function doGET($request)
@@ -113,14 +116,16 @@ class CacheController extends Controller implements ControllerInterface
 
         $config = ConfigProvider::getInstance();
 
-        if (!is_array($params))
+        if (!is_array($params)) {
             throw new IllegalArguementException('Bad $params ['.var_export($params, true).'] passed to doGET method!');
+        }
 
         $body = View::displayPageHead($this);
 
         $message = $this->getStatusMessage();
-        if (!empty($message))
+        if (!empty($message)) {
             $body .= $message;
+        }
 
         $body .= '<h3>Listing contents of cache directory: '.$this->dataDir.'</h3>';
 
@@ -159,7 +164,7 @@ class CacheController extends Controller implements ControllerInterface
                         ]
                     });
                 }";
-        $button = new Button($js, "Clear cache", "clearBut");
+        $button = new Button($js, 'Clear cache', 'clearBut');
         $body .= $button->render();
 
         $body .= View::renderSecurityFields();
@@ -168,16 +173,20 @@ class CacheController extends Controller implements ControllerInterface
         $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
+
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
-     * Handle POST requests
+     * Handle POST requests.
      *
      * @param Alpha\Util\Http\Response $request
+     *
      * @throws Alpha\Exception\SecurityException
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @since 1.0
      */
     public function doPOST($request)
@@ -188,11 +197,13 @@ class CacheController extends Controller implements ControllerInterface
 
         try {
             // check the hidden security fields before accepting the form POST data
-            if (!$this->checkSecurityFields())
+            if (!$this->checkSecurityFields()) {
                 throw new SecurityException('This page cannot accept post data from remote servers!');
+            }
 
-            if (!is_array($params))
+            if (!is_array($params)) {
                 throw new IllegalArguementException('Bad $params ['.var_export($params, true).'] passed to doPOST method!');
+            }
 
             if (isset($params['clearCache']) && $params['clearCache'] == 'true') {
                 try {
@@ -224,8 +235,9 @@ class CacheController extends Controller implements ControllerInterface
         $body = View::displayPageHead($this);
 
         $message = $this->getStatusMessage();
-        if (!empty($message))
+        if (!empty($message)) {
             $body .= $message;
+        }
 
         $body .= View::displayPageFoot($this);
         self::$logger->debug('<<doPOST');
@@ -233,5 +245,3 @@ class CacheController extends Controller implements ControllerInterface
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 }
-
-?>

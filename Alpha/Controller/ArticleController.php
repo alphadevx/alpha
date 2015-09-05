@@ -7,8 +7,6 @@ use Alpha\Util\Logging\Logger;
 use Alpha\Util\Logging\KPI;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
-use Alpha\Util\Helper\Validator;
-use Alpha\Util\Extension\MarkdownFacade;
 use Alpha\Util\Extension\TCPDFFacade;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
@@ -29,15 +27,14 @@ use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\ResourceNotAllowedException;
 use Alpha\Exception\FailedSaveException;
 use Alpha\Exception\FileNotFoundException;
-use Alpha\Exception\ValidationException;
 use Alpha\Model\ActiveRecord;
 use Alpha\Controller\Front\FrontController;
 
 /**
- *
- * Controller used handle Article objects
+ * Controller used handle Article objects.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -74,22 +71,23 @@ use Alpha\Controller\Front\FrontController;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ArticleController extends Controller implements ControllerInterface
 {
     /**
-     * The current article object
+     * The current article object.
      *
      * @var Alpha\Model\Article
+     *
      * @since 1.0
      */
     protected $BO;
 
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
@@ -98,12 +96,13 @@ class ArticleController extends Controller implements ControllerInterface
      * Used to track the mode param passed on the request (can be /create or /edit, if not provided then default to read-only).
      *
      * @var string
+     *
      * @since 2.0
      */
     private $mode;
 
     /**
-     * constructor to set up the object
+     * constructor to set up the object.
      *
      * @since 1.0
      */
@@ -121,11 +120,14 @@ class ArticleController extends Controller implements ControllerInterface
     }
 
     /**
-     * Handle GET requests
+     * Handle GET requests.
      *
      * @param Alpha\Util\Http\Request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @throws Alpha\Exception\ResourceNotFoundException
+     *
      * @since 1.0
      */
     public function doGET($request)
@@ -162,11 +164,10 @@ class ArticleController extends Controller implements ControllerInterface
                     'Content-Transfer-Encoding' => 'binary',
                     'Content-Type' => 'application/pdf',
                     'Content-Length' => strlen($pdfData),
-                    'Content-Disposition' => 'attachment; filename="'.$pdfDownloadName.'";'
+                    'Content-Disposition' => 'attachment; filename="'.$pdfDownloadName.'";',
                 );
 
                 return new Response(200, $pdfData, $headers);
-
             } catch (IllegalArguementException $e) {
                 self::$logger->error($e->getMessage());
                 throw new ResourceNotFoundException($e->getMessage());
@@ -178,7 +179,6 @@ class ArticleController extends Controller implements ControllerInterface
 
         // handle requests for viewing articles
         if (($this->mode == 'read' || $this->mode == 'print') && (isset($params['title']) || isset($params['ActiveRecordOID']))) {
-
             $KDP = new KPI('viewarticle');
 
             try {
@@ -192,12 +192,12 @@ class ArticleController extends Controller implements ControllerInterface
                         $this->BO->load($params['ActiveRecordOID']);
                     }
 
-                    if (!$this->BO->get('published'))
+                    if (!$this->BO->get('published')) {
                         throw new RecordNotFoundException('Attempted to load an article which is not published yet');
+                    }
 
                     $this->BO->set('tags', $this->BO->getOID());
                 }
-
             } catch (IllegalArguementException $e) {
                 self::$logger->warn($e->getMessage());
                 throw new ResourceNotFoundException('The file that you have requested cannot be found!');
@@ -214,8 +214,9 @@ class ArticleController extends Controller implements ControllerInterface
             $body .= View::displayPageHead($this);
 
             $message = $this->getStatusMessage();
-            if (!empty($message))
+            if (!empty($message)) {
                 $body .= $message;
+            }
 
             $body .= $BOView->markdownView();
 
@@ -229,15 +230,14 @@ class ArticleController extends Controller implements ControllerInterface
         // handle requests to view an article stored in a file
         if ($this->mode == 'read' && isset($params['file'])) {
             try {
-
                 $this->BO = new Article();
 
                 // just checking to see if the file path is absolute or not
-                if (mb_substr($params['file'], 0, 1) == '/')
+                if (mb_substr($params['file'], 0, 1) == '/') {
                     $this->BO->loadContentFromFile($params['file']);
-                else
+                } else {
                     $this->BO->loadContentFromFile($config->get('app.root').'docs/'.$params['file']);
-
+                }
             } catch (IllegalArguementException $e) {
                 self::$logger->error($e->getMessage());
                 throw new ResourceNotFoundException($e->getMessage());
@@ -264,12 +264,12 @@ class ArticleController extends Controller implements ControllerInterface
             $listController = new ActiveRecordController();
             $request->addParams(array('ActiveRecordType' => 'Alpha\Model\Article'));#
             $listController->setRequest($request);
+
             return $listController->doGET($request);
         }
 
         // view edit article requests
         if ($this->mode == 'edit' && (isset($params['title']) || isset($params['ActiveRecordOID']))) {
-
             try {
                 if (isset($params['title'])) {
                     $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
@@ -280,6 +280,7 @@ class ArticleController extends Controller implements ControllerInterface
             } catch (RecordNotFoundException $e) {
                 self::$logger->warn($e->getMessage());
                 $body .= View::renderErrorPage(404, 'Failed to find the requested article!');
+
                 return new Response(404, $body, array('Content-Type' => 'text/html'));
             }
 
@@ -300,7 +301,6 @@ class ArticleController extends Controller implements ControllerInterface
 
         // create a new article requests
         if ($this->mode == 'create') {
-
             $this->mode = 'create';
 
             $view = View::getInstance($this->BO);
@@ -313,8 +313,9 @@ class ArticleController extends Controller implements ControllerInterface
             $body .= View::displayPageHead($this);
 
             $message = $this->getStatusMessage();
-            if (!empty($message))
+            if (!empty($message)) {
                 $body .= $message;
+            }
 
             $fields = array('formAction' => $this->request->getURI());
             $body .= $view->createView($fields);
@@ -328,11 +329,14 @@ class ArticleController extends Controller implements ControllerInterface
     }
 
     /**
-     * Method to handle POST requests
+     * Method to handle POST requests.
      *
      * @param Alpha\Util\Http\Request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @throws Alpha\Exception\SecurityException
+     *
      * @since 1.0
      */
     public function doPOST($request)
@@ -351,8 +355,9 @@ class ArticleController extends Controller implements ControllerInterface
         if ($this->mode == 'read') {
             try {
                 // check the hidden security fields before accepting the form POST data
-                if (!$this->checkSecurityFields())
+                if (!$this->checkSecurityFields()) {
                     throw new SecurityException('This page cannot accept post data from remote servers!');
+                }
 
                 // save an article up-vote
                 // TODO: move to dedicated controller, or use generic Create::doPOST().
@@ -417,7 +422,6 @@ class ArticleController extends Controller implements ControllerInterface
                         self::$logger->error($e->getMessage());
                     }
                 }
-
             } catch (SecurityException $e) {
                 self::$logger->warn($e->getMessage());
                 throw new ResourceNotAllowedException($e->getMessage());
@@ -426,8 +430,9 @@ class ArticleController extends Controller implements ControllerInterface
 
         try {
             // check the hidden security fields before accepting the form POST data
-            if (!$this->checkSecurityFields())
+            if (!$this->checkSecurityFields()) {
                 throw new SecurityException('This page cannot accept post data from remote servers!');
+            }
 
             $this->BO = new Article();
 
@@ -440,6 +445,7 @@ class ArticleController extends Controller implements ControllerInterface
                     $this->setStatusMessage(View::displayErrorMessage('Error creating the new article, title already in use!'));
                     self::$logger->warn($e->getMessage());
                     $this->mode = 'create';
+
                     return $this->doGET($request);
                 }
 
@@ -449,13 +455,13 @@ class ArticleController extends Controller implements ControllerInterface
 
                 try {
                     $response = new Response(301);
-                    if ($this->getNextJob() != '')
+                    if ($this->getNextJob() != '') {
                         $response->redirect($this->getNextJob());
-                    else
+                    } else {
                         $response->redirect(FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&title='.$this->BO->get('title')));
+                    }
 
                     return $response;
-
                 } catch (\Exception $e) {
                     self::$logger->error($e->getTraceAsString());
                     $this->setStatusMessage(View::displayErrorMessage('Error creating the new article, check the log!'));
@@ -470,10 +476,12 @@ class ArticleController extends Controller implements ControllerInterface
     }
 
     /**
-     * Method to handle PUT requests
+     * Method to handle PUT requests.
      *
      * @param Alpha\Util\Http\Request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @since 1.0
      */
     public function doPUT($request)
@@ -525,7 +533,6 @@ class ArticleController extends Controller implements ControllerInterface
             }
 
             if (isset($params['title'])) {
-
                 $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
 
                 $this->BO->loadByAttribute('title', $title);
@@ -562,21 +569,22 @@ class ArticleController extends Controller implements ControllerInterface
 
                 // uploading an article attachment
                 if (isset($params['uploadBut'])) {
-
                     $source = $request->getFile('userfile')['tmp_name'];
                     $dest = $this->BO->getAttachmentsLocation().'/'.$request->getFile('userfile')['name'];
 
                     // upload the file to the attachments directory
                     FileUtils::copy($source, $dest);
 
-                    if (!file_exists($dest))
+                    if (!file_exists($dest)) {
                         throw new AlphaException('Could not move the uploaded file ['.$request->getFile('userfile')['name'].']');
+                    }
 
                     // set read/write permissions on the file
                     $success = chmod($dest, 0666);
 
-                    if (!$success)
+                    if (!$success) {
                         throw new AlphaException('Unable to set read/write permissions on the uploaded file ['.$dest.'].');
+                    }
 
                     if ($success) {
                         $body .= View::displayUpdateMessage('File uploaded successfully.');
@@ -589,11 +597,11 @@ class ArticleController extends Controller implements ControllerInterface
                 }
 
                 if (isset($params['deletefile'])) {
-
                     $success = unlink($this->BO->getAttachmentsLocation().'/'.$params['deletefile']);
 
-                    if (!$success)
+                    if (!$success) {
                         throw new AlphaException('Could not delete the file ['.$params['deletefile'].']');
+                    }
 
                     if ($success) {
                         $body .= View::displayUpdateMessage($params['deletefile'].' deleted successfully.');
@@ -633,10 +641,12 @@ class ArticleController extends Controller implements ControllerInterface
     }
 
     /**
-     * Method to handle PUT requests
+     * Method to handle PUT requests.
      *
      * @param Alpha\Util\Http\Request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @since 2.0
      */
     public function doDELETE($request)
@@ -655,7 +665,6 @@ class ArticleController extends Controller implements ControllerInterface
             }
 
             if (isset($params['title']) || isset($params['deleteOID'])) {
-
                 if (isset($params['deleteOID'])) {
                     $this->BO->load($params['deleteOID']);
                 } else {
@@ -678,7 +687,7 @@ class ArticleController extends Controller implements ControllerInterface
                         $body .= '<center>';
 
                         $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO))."'",
-                            'Back to List','cancelBut');
+                            'Back to List', 'cancelBut');
                         $body .= $temp->render();
 
                         $body .= '</center>';
@@ -686,13 +695,14 @@ class ArticleController extends Controller implements ControllerInterface
                         $body .= View::displayPageFoot($this);
 
                         self::$logger->debug('<<doDELETE');
+
                         return new Response(200, $body, array('Content-Type' => 'text/html'));
                     }
 
                     $this->setStatusMessage(View::displayUpdateMessage('Article '.$title.' deleted.'));
                     self::$logger->debug('<<doDELETE');
-                    return $this->doGET($request);
 
+                    return $this->doGET($request);
                 } catch (AlphaException $e) {
                     self::$logger->error($e->getTraceAsString());
                     $response = new Response(500, json_encode(array('message' => 'Error deleting the article, check the log!')), array('Content-Type' => 'application/json'));
@@ -703,6 +713,7 @@ class ArticleController extends Controller implements ControllerInterface
                 }
             } else {
                 $body .= View::renderErrorPage(404, 'Failed to find the requested article!');
+
                 return new Response(404, $body, array('Content-Type' => 'text/html'));
             }
         } catch (SecurityException $e) {
@@ -714,9 +725,10 @@ class ArticleController extends Controller implements ControllerInterface
     }
 
     /**
-     * Renders custom HTML header content
+     * Renders custom HTML header content.
      *
      * @return string
+     *
      * @since 1.0
      */
     public function during_displayPageHead_callback()
@@ -746,31 +758,34 @@ class ArticleController extends Controller implements ControllerInterface
     }
 
     /**
-     * Callback that inserts the CMS level header
+     * Callback that inserts the CMS level header.
      *
      * @return string
+     *
      * @since 1.0
      */
     public function insert_CMSDisplayStandardHeader_callback()
     {
-        if ($this->request->getParam('token') != null)
+        if ($this->request->getParam('token') != null) {
             return '';
+        }
 
-        if (!$this->BO instanceof Alpha\Model\Article)
+        if (!$this->BO instanceof Alpha\Model\Article) {
             return '';
+        }
 
         $config = ConfigProvider::getInstance();
 
         $html = '';
 
         if ($config->get('cms.display.standard.header')) {
-            $html.= '<p><a href="'.$config->get('app.url').'">'.$config->get('app.title').'</a> &nbsp; &nbsp;';
-            $html.= 'Date Added: <em>'.$this->BO->getCreateTS()->getDate().'</em> &nbsp; &nbsp;';
-            $html.= 'Last Updated: <em>'.$this->BO->getUpdateTS()->getDate().'</em> &nbsp; &nbsp;';
-            $html.= 'Revision: <em>'.$this->BO->getVersion().'</em></p>';
+            $html .= '<p><a href="'.$config->get('app.url').'">'.$config->get('app.title').'</a> &nbsp; &nbsp;';
+            $html .= 'Date Added: <em>'.$this->BO->getCreateTS()->getDate().'</em> &nbsp; &nbsp;';
+            $html .= 'Last Updated: <em>'.$this->BO->getUpdateTS()->getDate().'</em> &nbsp; &nbsp;';
+            $html .= 'Revision: <em>'.$this->BO->getVersion().'</em></p>';
         }
 
-        $html.= $config->get('cms.header');
+        $html .= $config->get('cms.header');
 
         return $html;
     }
@@ -780,15 +795,18 @@ class ArticleController extends Controller implements ControllerInterface
      * enabled to do so.
      *
      * @return string
+     *
      * @since 1.0
      */
     public function before_displayPageFoot_callback()
     {
-        if (!in_array($this->mode, array('read', 'print')))
+        if (!in_array($this->mode, array('read', 'print'))) {
             return '';
+        }
 
-        if (!isset($this->BO))
+        if (!isset($this->BO)) {
             return '';
+        }
 
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -797,9 +815,9 @@ class ArticleController extends Controller implements ControllerInterface
         $html = '';
 
         if ($this->mode == 'read') {
-
-            if ($config->get('cms.display.comments'))
+            if ($config->get('cms.display.comments')) {
                 $html .= $this->renderComments();
+            }
 
             if ($config->get('cms.display.tags')) {
                 $tags = $this->BO->getPropObject('tags')->getRelatedObjects();
@@ -807,8 +825,9 @@ class ArticleController extends Controller implements ControllerInterface
                 if (count($tags) > 0) {
                     $html .= '<p>Tags:';
 
-                    foreach($tags as $tag)
+                    foreach ($tags as $tag) {
                         $html .= ' <a href="'.$config->get('app.url').'search/'.$tag->get('content').'">'.$tag->get('content').'</a>';
+                    }
                     $html .= '</p>';
                 }
             }
@@ -822,20 +841,20 @@ class ArticleController extends Controller implements ControllerInterface
             if (!$this->BO->checkUserVoted() && $config->get('cms.voting.allowed')) {
                 $html .= '<form action="'.$this->request->getURI().'" method="post" accept-charset="UTF-8">';
                 $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('userVote')) : 'userVote');
-                $html .= '<p>Please rate this article from 1-10 (10 being the best):' .
-                        '<select name="'.$fieldname.'">' .
-                        '<option value="1">1' .
-                        '<option value="2">2' .
-                        '<option value="3">3' .
-                        '<option value="4">4' .
-                        '<option value="5">5' .
-                        '<option value="6">6' .
-                        '<option value="7">7' .
-                        '<option value="8">8' .
-                        '<option value="9">9' .
-                        '<option value="10">10' .
+                $html .= '<p>Please rate this article from 1-10 (10 being the best):'.
+                        '<select name="'.$fieldname.'">'.
+                        '<option value="1">1'.
+                        '<option value="2">2'.
+                        '<option value="3">3'.
+                        '<option value="4">4'.
+                        '<option value="5">5'.
+                        '<option value="6">6'.
+                        '<option value="7">7'.
+                        '<option value="8">8'.
+                        '<option value="9">9'.
+                        '<option value="10">10'.
                         '</select></p>&nbsp;&nbsp;';
-                $temp = new Button('submit','Vote!','voteBut');
+                $temp = new Button('submit', 'Vote!', 'voteBut');
                 $html .= $temp->render();
 
                 $html .= View::renderSecurityFields();
@@ -846,21 +865,21 @@ class ArticleController extends Controller implements ControllerInterface
 
             if ($config->get('cms.allow.print.versions')) {
                 $html .= '&nbsp;&nbsp;';
-                $temp = new Button("window.open('".$this->BO->get('printURL')."')",'Open Printer Version','printBut');
+                $temp = new Button("window.open('".$this->BO->get('printURL')."')", 'Open Printer Version', 'printBut');
                 $html .= $temp->render();
             }
 
             $html .= '&nbsp;&nbsp;';
             if ($config->get('cms.allow.pdf.versions')) {
                 $html .= '&nbsp;&nbsp;';
-                $temp = new Button("document.location = '".FrontController::generateSecureURL("act=Alpha\Controller\ArticleController&mode=pdf&title=".$this->BO->get("title"))."';",'Open PDF Version','pdfBut');
+                $temp = new Button("document.location = '".FrontController::generateSecureURL("act=Alpha\Controller\ArticleController&mode=pdf&title=".$this->BO->get('title'))."';", 'Open PDF Version', 'pdfBut');
                 $html .= $temp->render();
             }
 
             // render edit button for admins only
             if ($session->get('currentUser') instanceof Alpha\Model\Person && $session->get('currentUser')->inGroup('Admin')) {
                 $html .= '&nbsp;&nbsp;';
-                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&mode=edit&ActiveRecordOID='.$this->BO->getID())."'",'Edit','editBut');
+                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&mode=edit&ActiveRecordOID='.$this->BO->getID())."'", 'Edit', 'editBut');
                 $html .= $button->render();
             }
         }
@@ -880,6 +899,7 @@ class ArticleController extends Controller implements ControllerInterface
      * Method for displaying the user comments for the article.
      *
      * @return string
+     *
      * @since 1.0
      */
     private function renderComments()
@@ -898,7 +918,7 @@ class ArticleController extends Controller implements ControllerInterface
         if ($config->get('cms.display.comments') && $comment_count > 0) {
             $html .= '<h2>There are ['.$comment_count.'] user comments for this article</h2>';
 
-            for ($i = 0; $i < $comment_count; $i++) {
+            for ($i = 0; $i < $comment_count; ++$i) {
                 $view = View::getInstance($comments[$i]);
                 $html .= $view->markdownView($fields);
             }
@@ -916,22 +936,20 @@ class ArticleController extends Controller implements ControllerInterface
     }
 
     /**
-     * Tries to determine the correct render mode for this request
+     * Tries to determine the correct render mode for this request.
      *
      * @since 2.0
+     *
      * @todo refactor/remove
      */
     private function setMode()
     {
         if (!isset($this->mode)) {
-
             if ($this->request->getParam('act') == 'Alpha\Controller\ListController') {
                 $this->mode = 'read';
             } else {
-                $this->mode = (in_array($this->request->getParam('mode'), array('create','edit', 'read', 'pdf', 'print')) ? $this->request->getParam('mode') : 'read');
+                $this->mode = (in_array($this->request->getParam('mode'), array('create', 'edit', 'read', 'pdf', 'print')) ? $this->request->getParam('mode') : 'read');
             }
         }
     }
 }
-
-?>

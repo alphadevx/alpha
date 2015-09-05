@@ -7,10 +7,10 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- *
- * Test case for the Image generation widget
+ * Test case for the Image generation widget.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -47,20 +47,20 @@ use Alpha\Exception\IllegalArguementException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ImageTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * An Image for testing
+     * An Image for testing.
      *
      * @var Alpha\View\Widget\Image
+     *
      * @since 1.0
      */
     private $img;
 
     /**
-     * Set up tests
+     * Set up tests.
      *
      * @since 1.0
      */
@@ -72,7 +72,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tear down tests
+     * Tear down tests.
      *
      * @since 1.0
      */
@@ -82,7 +82,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing for an expected exception when a bad source file path is provided
+     * Testing for an expected exception when a bad source file path is provided.
      *
      * @since 1.0
      */
@@ -97,7 +97,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing for an expected exception when a bad source type is provided
+     * Testing for an expected exception when a bad source type is provided.
      *
      * @since 1.0
      */
@@ -114,7 +114,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing for an expected exception when a quality value is provided
+     * Testing for an expected exception when a quality value is provided.
      *
      * @since 1.0
      */
@@ -131,7 +131,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that the constructor will call setFilename internally to get up a filename  to store the generated image automatically
+     * Testing that the constructor will call setFilename internally to get up a filename  to store the generated image automatically.
      *
      * @since 1.0
      */
@@ -143,7 +143,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the convertImageURLToPath method
+     * Testing the convertImageURLToPath method.
      *
      * @since 1.0
      */
@@ -154,5 +154,3 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('images/testimage.png', Image::convertImageURLToPath($config->get('app.url').'images/testimage.png'), 'testing the convertImageURLToPath method');
     }
 }
-
-?>

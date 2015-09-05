@@ -7,11 +7,11 @@ use Alpha\Model\Type\Relation;
 use Alpha\Util\Logging\Logger;
 
 /**
- *
  * An action carried out be a person using the system can be logged using this class.  Best
  * to call via Logger::action() method rather than directly here.
  *
  * @since 1.2.2
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -48,89 +48,93 @@ use Alpha\Util\Logging\Logger;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ActionLog extends ActiveRecord
 {
-	/**
-	 * The HTTP user-agent client string
-	 *
-	 * @var Alpha\Model\Type\String
-	 * @since 1.2.2
-	 */
-	protected $client;
+    /**
+     * The HTTP user-agent client string.
+     *
+     * @var Alpha\Model\Type\String
+     *
+     * @since 1.2.2
+     */
+    protected $client;
 
-	/**
-	 * The IP of the client
-	 *
-	 * @var Alpha\Model\Type\String
-	 * @since 1.2.2
-	 */
-	protected $IP;
+    /**
+     * The IP of the client.
+     *
+     * @var Alpha\Model\Type\String
+     *
+     * @since 1.2.2
+     */
+    protected $IP;
 
-	/**
-	 * The action carried out by the person should be described here
-	 *
-	 * @var Alpha\Model\Type\String
-	 * @since 1.2.2
-	 */
-	protected $message;
+    /**
+     * The action carried out by the person should be described here.
+     *
+     * @var Alpha\Model\Type\String
+     *
+     * @since 1.2.2
+     */
+    protected $message;
 
-	/**
-	 * The person who carried out the action
-	 *
-	 * @var Alpha\Model\Person
-	 * @since 2.0
-	 */
-	protected $personOID;
+    /**
+     * The person who carried out the action.
+     *
+     * @var Alpha\Model\Person
+     *
+     * @since 2.0
+     */
+    protected $personOID;
 
-	/**
-	 * An array of data display labels for the class properties
-	 *
-	 * @var array
-	 * @since 1.2.2
-	 */
-	protected $dataLabels = array("OID"=>"Action Log ID#","client"=>"Client string","IP"=>"IP address","message"=>"Message","personOID"=>"Owner");
+    /**
+     * An array of data display labels for the class properties.
+     *
+     * @var array
+     *
+     * @since 1.2.2
+     */
+    protected $dataLabels = array('OID' => 'Action Log ID#','client' => 'Client string','IP' => 'IP address','message' => 'Message','personOID' => 'Owner');
 
-	/**
-	 * The name of the database table for the class
-	 *
-	 * @var string
-	 * @since 1.2.2
-	 */
-	const TABLE_NAME = 'ActionLog';
+    /**
+     * The name of the database table for the class.
+     *
+     * @var string
+     *
+     * @since 1.2.2
+     */
+    const TABLE_NAME = 'ActionLog';
 
-	/**
-	 * Trace logger
-	 *
-	 * @var Alpha\Util\Logging\Logger
-	 * @since 1.2.2
-	 */
-	private static $logger = null;
+    /**
+     * Trace logger.
+     *
+     * @var Alpha\Util\Logging\Logger
+     *
+     * @since 1.2.2
+     */
+    private static $logger = null;
 
-	/**
-	 * Constructor
-	 *
-	 * @since 1.0
-	 */
-	public function __construct()
-	{
-		self::$logger = new Logger('ActionLog');
+    /**
+     * Constructor.
+     *
+     * @since 1.0
+     */
+    public function __construct()
+    {
+        self::$logger = new Logger('ActionLog');
 
-		// ensure to call the parent constructor
-		parent::__construct();
+        // ensure to call the parent constructor
+        parent::__construct();
 
-		$this->client = new String();
-		$this->IP = new String();
-		$this->message = new String();
+        $this->client = new String();
+        $this->IP = new String();
+        $this->message = new String();
 
-		$this->personOID = new Relation();
-		$this->personOID->setRelatedClass('Alpha\Model\Person');
-		$this->personOID->setRelatedClassField('OID');
-		$this->personOID->setRelatedClassDisplayField('displayName');
-		$this->personOID->setRelationType('MANY-TO-ONE');
-		$this->personOID->setValue($this->created_by->getValue());
-	}
+        $this->personOID = new Relation();
+        $this->personOID->setRelatedClass('Alpha\Model\Person');
+        $this->personOID->setRelatedClassField('OID');
+        $this->personOID->setRelatedClassDisplayField('displayName');
+        $this->personOID->setRelationType('MANY-TO-ONE');
+        $this->personOID->setValue($this->created_by->getValue());
+    }
 }
-
-?>

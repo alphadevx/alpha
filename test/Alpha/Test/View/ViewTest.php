@@ -8,13 +8,12 @@ use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Http\Session\SessionProviderFactory;
 
 /**
- *
  * Test cases for the View class.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -51,20 +50,20 @@ use Alpha\Util\Http\Session\SessionProviderFactory;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ViewTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * View class for testing
+     * View class for testing.
      *
      * @var View
+     *
      * @since 1.0
      */
     private $view;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @since 1.0
      */
@@ -83,7 +82,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @since 1.0
      */
@@ -99,14 +98,14 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that passing a bad object to the getInstance method will throw an IllegalArguementException
+     * Testing that passing a bad object to the getInstance method will throw an IllegalArguementException.
      *
      * @since 1.0
      */
     public function testGetInstanceBad()
     {
         try {
-            $bad = View::getInstance(new ViewTest());
+            $bad = View::getInstance(new self());
             $this->fail('testing that passing a bad object to the getInstance method will throw an IllegalArguementException');
         } catch (IllegalArguementException $e) {
             $this->assertEquals('The BO provided [Alpha\Test\View\ViewTest] is not defined anywhere!', $e->getMessage(), 'testing that passing a bad object to the getInstance method will throw an IllegalArguementException');
@@ -114,7 +113,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that passing a good object to the getInstance method will return the child view object
+     * Testing that passing a good object to the getInstance method will return the child view object.
      *
      * @since 1.0
      */
@@ -129,7 +128,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that we can force the return of an View object even when a child definition for the provided BO exists
+     * Testing that we can force the return of an View object even when a child definition for the provided BO exists.
      *
      * @since 1.0
      */
@@ -144,7 +143,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that we can attach a good BO to an existing view object
+     * Testing that we can attach a good BO to an existing view object.
      *
      * @since 1.0
      */
@@ -159,14 +158,14 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that attempting to attach a bad BO object to an existing view object will cause an exception
+     * Testing that attempting to attach a bad BO object to an existing view object will cause an exception.
      *
      * @since 1.0
      */
     public function testSetBOBad()
     {
         try {
-            $this->view->setBO(new ViewTest());
+            $this->view->setBO(new self());
             $this->fail('testing that attempting to attach a bad BO object to an existing view object will cause an exception');
         } catch (IllegalArguementException $e) {
             $this->assertTrue(true);
@@ -174,7 +173,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that a bad mode param provided to the loadTemplate method will throw an exception
+     * Testing that a bad mode param provided to the loadTemplate method will throw an exception.
      *
      * @since 1.0
      */
@@ -189,7 +188,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing accessing the attached BO via getBO()
+     * Testing accessing the attached BO via getBO().
      *
      * @since 1.0
      */
@@ -203,13 +202,12 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that a generated HTML fragment can load from a file
+     * Testing that a generated HTML fragment can load from a file.
      *
      * @since 1.2.3
      */
     public function testLoadTemplateFragment()
     {
-
         $generatedHTML = View::loadTemplateFragment('html', 'footer.phtml', array());
 
         $pos = strpos($generatedHTML, '<footer>');
@@ -218,7 +216,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the get/setProvider methods
+     * Testing the get/setProvider methods.
      *
      * @since 2.0
      */
@@ -253,7 +251,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the renderAllFields() method
+     * Testing the renderAllFields() method.
      *
      * @since 2.0
      */
@@ -264,8 +262,6 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $this->view = View::getInstance($article);
 
         $this->assertNotEmpty($this->view->renderAllFields('view'), 'Testing the renderAllFields() method');
-        $this->assertTrue(strpos($this->view->renderAllFields('view'),'Test Article') !== false, 'Testing the renderAllFields() method');
+        $this->assertTrue(strpos($this->view->renderAllFields('view'), 'Test Article') !== false, 'Testing the renderAllFields() method');
     }
 }
-
-?>

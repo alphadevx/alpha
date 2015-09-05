@@ -3,9 +3,10 @@
 namespace Alpha\Model\Type;
 
 /**
- * The interface for all complex data types
+ * The interface for all complex data types.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -42,49 +43,51 @@ namespace Alpha\Model\Type;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 interface TypeInterface
 {
-	/**
-	 * Set the value of the type
-	 *
-	 * @param $val mixed
-	 * @since 1.0
-	 */
-	public function setValue($val);
+    /**
+     * Set the value of the type.
+     *
+     * @param $val mixed
+     *
+     * @since 1.0
+     */
+    public function setValue($val);
 
-	/**
-	 * Get the value
-	 *
-	 * @return mixed
-	 * @since 1.0
-	 */
-	public function getValue();
+    /**
+     * Get the value.
+     *
+     * @return mixed
+     *
+     * @since 1.0
+     */
+    public function getValue();
 
-	/**
-	 * Set the validation helper text
-	 *
-	 * @param string $helper
-	 * @since 1.0
-	 */
-	public function setHelper($helper);
+    /**
+     * Set the validation helper text.
+     *
+     * @param string $helper
+     *
+     * @since 1.0
+     */
+    public function setHelper($helper);
 
-	/**
-	 * Get the validation helper text
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function getHelper();
+    /**
+     * Get the validation helper text.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function getHelper();
 
-	/**
-	 * Convert the valud of the complex type to a string
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function __toString();
+    /**
+     * Convert the valud of the complex type to a string.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function __toString();
 }
-
-?>

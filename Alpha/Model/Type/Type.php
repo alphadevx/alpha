@@ -3,9 +3,10 @@
 namespace Alpha\Model\Type;
 
 /**
- * The base (abstract) complex data type
+ * The base (abstract) complex data type.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -42,42 +43,42 @@ namespace Alpha\Model\Type;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 abstract class Type
 {
-	/**
-	 * Used to get the validation helper message string
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function getHelper()
-	{
-		return $this->helper;
-	}
+    /**
+     * Used to get the validation helper message string.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function getHelper()
+    {
+        return $this->helper;
+    }
 
-	/**
-	 * Set the validation helper text
-	 *
-	 * @param string $helper
-	 * @since 1.0
-	 */
-	public function setHelper($helper)
-	{
-		$this->helper = $helper;
-	}
+    /**
+     * Set the validation helper text.
+     *
+     * @param string $helper
+     *
+     * @since 1.0
+     */
+    public function setHelper($helper)
+    {
+        $this->helper = $helper;
+    }
 
-	/**
-	 * Used to convert the object to a printable string
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function __toString()
-	{
-		return strval($this->getValue());
-	}
+    /**
+     * Used to convert the object to a printable string.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function __toString()
+    {
+        return strval($this->getValue());
+    }
 }
-
-?>

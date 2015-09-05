@@ -5,9 +5,10 @@ namespace Alpha\Util\Security;
 use Alpha\Util\Config\ConfigProvider;
 
 /**
- * A utility class for carrying out various security tasks
+ * A utility class for carrying out various security tasks.
  *
  * @since 1.2.2
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -44,36 +45,39 @@ use Alpha\Util\Config\ConfigProvider;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class SecurityUtils
 {
     /**
-     * Encrypt provided data using mcrypt() with the TripleDES algorithm and the security.encryption.key
+     * Encrypt provided data using mcrypt() with the TripleDES algorithm and the security.encryption.key.
      *
      * @param string $data
+     *
      * @return string
+     *
      * @since 1.2.2
      */
     public static function encrypt($data)
     {
         $config = ConfigProvider::getInstance();
 
-        $td = mcrypt_module_open ('tripledes', '', 'ecb', '');
-        $iv = mcrypt_create_iv (mcrypt_enc_get_iv_size ($td), MCRYPT_RAND);
-        mcrypt_generic_init ($td, $config->get('security.encryption.key'), $iv);
-        $encryptedData = mcrypt_generic ($td, $data);
-        mcrypt_generic_deinit ($td);
-        mcrypt_module_close ($td);
+        $td = mcrypt_module_open('tripledes', '', 'ecb', '');
+        $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
+        mcrypt_generic_init($td, $config->get('security.encryption.key'), $iv);
+        $encryptedData = mcrypt_generic($td, $data);
+        mcrypt_generic_deinit($td);
+        mcrypt_module_close($td);
 
         return $encryptedData;
     }
 
     /**
-     * Decrypt provided data using mcrypt() with the TripleDES algorithm and the security.encryption.key
+     * Decrypt provided data using mcrypt() with the TripleDES algorithm and the security.encryption.key.
      *
      * @param string $data
+     *
      * @return string
+     *
      * @since 1.2.2
      */
     public static function decrypt($data)
@@ -81,9 +85,8 @@ class SecurityUtils
         $config = ConfigProvider::getInstance();
 
         $td = mcrypt_module_open('tripledes', '', 'ecb', '');
-        $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size ($td), MCRYPT_RAND);
+        $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
+
         return mcrypt_decrypt('tripledes', $config->get('security.encryption.key'), $data, 'ecb', $iv);
     }
 }
-
-?>

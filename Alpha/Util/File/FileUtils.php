@@ -10,9 +10,10 @@ use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 
 /**
- * A utility class for carrying out various file system tasks
+ * A utility class for carrying out various file system tasks.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -49,7 +50,6 @@ use RecursiveDirectoryIterator;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class FileUtils
 {
@@ -57,9 +57,10 @@ class FileUtils
      * A hash array for mapping file extensions to MIME types.
      *
      * @var array
+     *
      * @since 1.0
      */
-    private static $extensionToMIMEMappings = array (
+    private static $extensionToMIMEMappings = array(
         '3dm' => 'x-world/x-3dmf',
         '3dmf' => 'x-world/x-3dmf',
         'a' => 'application/octet-stream',
@@ -517,44 +518,51 @@ class FileUtils
      * Method that allows you to determine a MIME type for a file which you provide the extension for.
      *
      * @param string $ext The file extension.
+     *
      * @return string
+     *
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @since 1.0
      */
     public static function getMIMETypeByExtension($ext)
     {
         $ext = mb_strtolower($ext);
-        if (!isset(FileUtils::$extensionToMIMEMappings[$ext]))
+        if (!isset(self::$extensionToMIMEMappings[$ext])) {
             throw new IllegalArguementException('Unable to determine the MIME type for the extension ['.$ext.']');
+        }
 
-        return FileUtils::$extensionToMIMEMappings[$ext];
+        return self::$extensionToMIMEMappings[$ext];
     }
 
     /**
      * Renders the contents of the directory as a HTML list.
      *
-     * @param string $sourceDir The path to the source directory.
-     * @param string $fileList The HTML list of files generated (pass by reference).
-     * @param integer $fileCount The current file count (used in recursive calls).
-     * @param array $excludeFiles An array of file names to exclude from the list rendered.
-     * @return integer The current filecount for the directory.
+     * @param string $sourceDir    The path to the source directory.
+     * @param string $fileList     The HTML list of files generated (pass by reference).
+     * @param int    $fileCount    The current file count (used in recursive calls).
+     * @param array  $excludeFiles An array of file names to exclude from the list rendered.
+     *
+     * @return int The current filecount for the directory.
+     *
      * @throws Alpha\Exception\AlphaException
+     *
      * @since 1.0
      */
-    public static function listDirectoryContents($sourceDir, &$fileList, $fileCount=0, $excludeFiles = array()) {
-        try
-        {
+    public static function listDirectoryContents($sourceDir, &$fileList, $fileCount = 0, $excludeFiles = array())
+    {
+        try {
             $dir = new DirectoryIterator($sourceDir);
             $fileCount = 0;
 
             foreach ($dir as $file) {
-                if( !in_array($file->getFilename(), $excludeFiles)) {
-                    if( $file->isDir() && !$file->isDot()) {
+                if (!in_array($file->getFilename(), $excludeFiles)) {
+                    if ($file->isDir() && !$file->isDot()) {
                         $fileList .= '<em>'.$file->getPathname().'</em><br>';
-                        $fileCount += FileUtils::listDirectoryContents($file->getPathname(), $fileList, $fileCount, $excludeFiles);
+                        $fileCount += self::listDirectoryContents($file->getPathname(), $fileList, $fileCount, $excludeFiles);
                     } elseif (!$file->isDot()) {
                         $fileName = $file->getFilename();
-                        $fileCount++;
+                        ++$fileCount;
                         $fileList .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$fileName.'<br>';
                     }
                 }
@@ -569,25 +577,27 @@ class FileUtils
     /**
      * Recursively deletes the contents of the directory indicated (the directory itself is not deleted).
      *
-     * @param string $sourceDir The path to the source directory.
-     * @param array $excludeFiles An array of file names to exclude from the deletion.
+     * @param string $sourceDir    The path to the source directory.
+     * @param array  $excludeFiles An array of file names to exclude from the deletion.
+     *
      * @throws Alpha\Exception\AlphaException
+     *
      * @since 1.0
      */
     public static function deleteDirectoryContents($sourceDir, $excludeFiles = array())
     {
-        try
-        {
+        try {
             $dir = new DirectoryIterator($sourceDir);
 
             foreach ($dir as $file) {
                 if (!in_array($file->getFilename(), $excludeFiles)) {
                     if ($file->isDir() && !$file->isDot()) {
-                        if (count(scandir($file->getPathname())) == 2) // remove an empty directory
+                        if (count(scandir($file->getPathname())) == 2) { // remove an empty directory
                             rmdir($file->getPathname());
-                        else
-                            FileUtils::deleteDirectoryContents($file->getPathname(), $excludeFiles);
-                    } elseif (!$file->isDot()){
+                        } else {
+                            self::deleteDirectoryContents($file->getPathname(), $excludeFiles);
+                        }
+                    } elseif (!$file->isDot()) {
                         unlink($file->getPathname());
                     }
                 }
@@ -598,25 +608,30 @@ class FileUtils
     }
 
     /**
-     * Recursively copies the indicated folder, or single file, to the destination location
+     * Recursively copies the indicated folder, or single file, to the destination location.
      *
      * @param string $source The path to the source directory or file.
-     * @param string $dest The destination source directory or file.
+     * @param string $dest   The destination source directory or file.
+     *
      * @throws Alpha\Exception\AlphaException
+     *
      * @since 1.1
      */
     public static function copy($source, $dest)
     {
         if (is_file($source)) {
-            if (!copy($source, $dest))
+            if (!copy($source, $dest)) {
                 throw new AlphaException("Error copying the file [$source] to [$dest].");
+            }
+
             return;
         }
 
         // Make destination directory if it does not already exist
         if (!file_exists($dest) && !is_dir($dest)) {
-            if (!mkdir($dest))
+            if (!mkdir($dest)) {
                 throw new AlphaException("Error creating the destination directory [$dest].");
+            }
         }
 
         $dir = dir($source);
@@ -636,17 +651,18 @@ class FileUtils
     }
 
     /**
-     * Recursively compresses the contens of the source directory indicated to the desintation zip archive
+     * Recursively compresses the contens of the source directory indicated to the desintation zip archive.
      *
      * @param string $source The path to the source directory or file.
-     * @param string $dest The destination zip file file.
+     * @param string $dest   The destination zip file file.
+     *
      * @throws Alpha\Exception\AlphaException
+     *
      * @since 1.1
      */
     public static function zip($source, $dest)
     {
         if (extension_loaded('zip') === true) {
-
             if (file_exists($source) === true) {
                 $zip = new ZipArchive();
 
@@ -660,11 +676,11 @@ class FileUtils
                             $file = realpath($file);
 
                             if (is_dir($file) === true) {
-                                $zip->addEmptyDir(str_replace($source . '/', '', $file . '/'));
+                                $zip->addEmptyDir(str_replace($source.'/', '', $file.'/'));
                             }
 
                             if (is_file($file) === true) {
-                                $zip->addFromString(str_replace($source . '/', '', $file), file_get_contents($file));
+                                $zip->addFromString(str_replace($source.'/', '', $file), file_get_contents($file));
                             }
                         }
                     }
@@ -677,9 +693,7 @@ class FileUtils
                 $zip->close();
             }
         } else {
-                throw new AlphaException('Unable to create the zip file ['.$dest.'] as the zip extension is unavailable!');
+            throw new AlphaException('Unable to create the zip file ['.$dest.'] as the zip extension is unavailable!');
         }
     }
 }
-
-?>

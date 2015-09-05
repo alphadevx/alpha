@@ -2,17 +2,18 @@
 
 namespace Alpha\Test\Util;
 
-use Alpha\Util\ErrorHandlers;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Exception\PHPException;
 
 /**
- *
- * Test case for the exception handling functionality
+ * Test case for the exception handling functionality.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
+ *
  * @version $Id: Exceptions_Test.php 1496 2012-02-12 20:32:21Z alphadev $
+ *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -48,7 +49,6 @@ use Alpha\Exception\PHPException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ErrorHandlersTest extends \PHPUnit_Framework_TestCase
 {
@@ -61,38 +61,36 @@ class ErrorHandlersTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that a division by 0 exception is caught by the general exception handler
+     * Testing that a division by 0 exception is caught by the general exception handler.
      *
      * @since 1.0
      */
     public function testDivideByZeroCaught()
     {
-    	$exceptionCaught = false;
-    	try {
-    		2/0;
-    	}catch (PHPException $e) {
-    		$exceptionCaught = true;
-    	}
+        $exceptionCaught = false;
+        try {
+            2 / 0;
+        } catch (PHPException $e) {
+            $exceptionCaught = true;
+        }
 
-    	$this->assertTrue($exceptionCaught, "Testing that a division by 0 exception is caught by the general exception handler");
+        $this->assertTrue($exceptionCaught, 'Testing that a division by 0 exception is caught by the general exception handler');
     }
 
-	/**
-     * Testing that calling a property on a non-object will throw an exception
+    /**
+     * Testing that calling a property on a non-object will throw an exception.
      *
      * @since 1.0
      */
     public function testPropertyNonObjectCaught()
     {
-    	$exceptionCaught = false;
-    	try {
-    		$e = $empty->test;
-    	}catch (PHPException $e) {
-    		$exceptionCaught = true;
-    	}
+        $exceptionCaught = false;
+        try {
+            $e = $empty->test;
+        } catch (PHPException $e) {
+            $exceptionCaught = true;
+        }
 
-    	$this->assertTrue($exceptionCaught, "Testing that calling a property on a non-object will throw an exception");
+        $this->assertTrue($exceptionCaught, 'Testing that calling a property on a non-object will throw an exception');
     }
 }
-
-?>

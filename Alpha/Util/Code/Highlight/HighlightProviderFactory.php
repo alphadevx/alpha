@@ -6,11 +6,11 @@ use Alpha\Util\Logging\Logger;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- *
  * A factory for generating instances of the AlphaCodeHighlighterInterface,
  * based on the cms.highlight.provider.name setting.
  *
  * @since 1.2
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -47,14 +47,14 @@ use Alpha\Exception\IllegalArguementException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class HighlightProviderFactory
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.2
      */
     private static $logger = null;
@@ -64,24 +64,30 @@ class HighlightProviderFactory
      * based on the name of the provider class supplied.
      *
      * @param $providerName The fully-qualified class name of the provider class, should implement Alpha\Util\Code\Highlight\HighlightProviderInterface
+     *
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @return Alpha\Util\Code\Highlight\HighlightProviderInterface
+     *
      * @since 1.2
      */
     public static function getInstance($providerName)
     {
-        if(self::$logger == null)
+        if (self::$logger == null) {
             self::$logger = new Logger('HighlightProviderFactory');
+        }
 
         self::$logger->debug('>>getInstance(providerName=['.$providerName.'])');
 
         if (class_exists($providerName)) {
-            $instance = new $providerName;
+            $instance = new $providerName();
 
-            if(!$instance instanceof HighlightProviderInterface)
+            if (!$instance instanceof HighlightProviderInterface) {
                 throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected HighlightProviderInterface interface!');
+            }
 
             self::$logger->debug('<<getInstance: [Object '.$providerName.']');
+
             return $instance;
         } else {
             throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
@@ -90,5 +96,3 @@ class HighlightProviderFactory
         self::$logger->debug('<<getInstance');
     }
 }
-
-?>

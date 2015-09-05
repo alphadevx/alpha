@@ -4,7 +4,6 @@ namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Model\ActiveRecord;
@@ -18,10 +17,10 @@ use Alpha\Controller\Front\FrontController;
 use Alpha\View\View;
 
 /**
- *
- * Controller used install the database
+ * Controller used install the database.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -58,20 +57,20 @@ use Alpha\View\View;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class InstallController extends Controller implements ControllerInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * the constructor
+     * the constructor.
      *
      * @since 1.0
      */
@@ -91,10 +90,12 @@ class InstallController extends Controller implements ControllerInterface
     }
 
     /**
-     * Handle GET requests
+     * Handle GET requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @since 1.0
      */
     public function doGET($request)
@@ -115,6 +116,7 @@ class InstallController extends Controller implements ControllerInterface
             $controller->setUnitOfWork(array('LoginController', 'InstallController'));
 
             self::$logger->debug('<<__construct');
+
             return $controller->doGET($request);
         }
 
@@ -138,8 +140,9 @@ class InstallController extends Controller implements ControllerInterface
 
             $body .= '<p>Attempting to create the logs directory <em>'.$logsDir.'</em>...';
 
-            if (!file_exists($logsDir))
+            if (!file_exists($logsDir)) {
                 mkdir($logsDir, 0774);
+            }
 
             self::$logger = new Logger('InstallController');
             self::$logger->info('Started installation process!');
@@ -148,6 +151,7 @@ class InstallController extends Controller implements ControllerInterface
         } catch (\Exception $e) {
             $body .= View::displayErrorMessage($e->getMessage());
             $body .= View::displayErrorMessage('Aborting.');
+
             return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
@@ -159,14 +163,16 @@ class InstallController extends Controller implements ControllerInterface
 
             $body .= '<p>Attempting to create the tasks directory <em>'.$tasksDir.'</em>...';
 
-            if (!file_exists($tasksDir))
+            if (!file_exists($tasksDir)) {
                 mkdir($tasksDir, 0774);
+            }
 
             self::$logger->info('Tasks directory ['.$tasksDir.'] successfully created');
             $body .= View::displayUpdateMessage('Tasks directory ['.$tasksDir.'] successfully created');
         } catch (\Exception $e) {
             $body .= View::displayErrorMessage($e->getMessage());
             $body .= View::displayErrorMessage('Aborting.');
+
             return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
@@ -178,14 +184,16 @@ class InstallController extends Controller implements ControllerInterface
 
             $body .= '<p>Attempting to create the controller directory <em>'.$controllerDir.'</em>...';
 
-            if (!file_exists($controllerDir))
+            if (!file_exists($controllerDir)) {
                 mkdir($controllerDir, 0774);
+            }
 
             self::$logger->info('Controller directory ['.$controllerDir.'] successfully created');
             $body .= View::displayUpdateMessage('Controllers directory ['.$controllerDir.'] successfully created');
         } catch (\Exception $e) {
             $body .= View::displayErrorMessage($e->getMessage());
             $body .= View::displayErrorMessage('Aborting.');
+
             return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
@@ -197,14 +205,16 @@ class InstallController extends Controller implements ControllerInterface
 
             $body .= '<p>Attempting to create the model directory <em>'.$modelDir.'</em>...';
 
-            if (!file_exists($modelDir))
+            if (!file_exists($modelDir)) {
                 mkdir($modelDir, 0774);
+            }
 
             self::$logger->info('Model directory ['.$modelDir.'] successfully created');
             $body .= View::displayUpdateMessage('Model directory ['.$modelDir.'] successfully created');
         } catch (\Exception $e) {
             $body .= View::displayErrorMessage($e->getMessage());
             $body .= View::displayErrorMessage('Aborting.');
+
             return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
@@ -216,14 +226,16 @@ class InstallController extends Controller implements ControllerInterface
 
             $body .= '<p>Attempting to create the view directory <em>'.$viewDir.'</em>...';
 
-            if (!file_exists($viewDir))
+            if (!file_exists($viewDir)) {
                 mkdir($viewDir, 0774);
+            }
 
             self::$logger->info('View directory ['.$viewDir.'] successfully created');
             $body .= View::displayUpdateMessage('View directory ['.$viewDir.'] successfully created');
         } catch (\Exception $e) {
             $body .= View::displayErrorMessage($e->getMessage());
             $body .= View::displayErrorMessage('Aborting.');
+
             return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
@@ -235,14 +247,16 @@ class InstallController extends Controller implements ControllerInterface
 
             $body .= '<p>Attempting to create the attachments directory <em>'.$attachmentsDir.'</em>...';
 
-            if(!file_exists($attachmentsDir))
+            if (!file_exists($attachmentsDir)) {
                 mkdir($attachmentsDir, 0774);
+            }
 
             self::$logger->info('Attachments directory ['.$attachmentsDir.'] successfully created');
             $body .= View::displayUpdateMessage('Attachments directory ['.$attachmentsDir.'] successfully created');
         } catch (\Exception $e) {
             $body .= View::displayErrorMessage($e->getMessage());
             $body .= View::displayErrorMessage('Aborting.');
+
             return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
@@ -258,46 +272,52 @@ class InstallController extends Controller implements ControllerInterface
 
             // cache
             $body .= '<p>Attempting to create the cache directory <em>'.$cacheDir.'</em>...';
-            if (!file_exists($cacheDir))
+            if (!file_exists($cacheDir)) {
                 mkdir($cacheDir, 0774);
+            }
 
             self::$logger->info('Cache directory ['.$cacheDir.'] successfully created');
             $body .= View::displayUpdateMessage('Cache directory ['.$cacheDir.'] successfully created');
 
             // cache/html
             $body .= '<p>Attempting to create the HTML cache directory <em>'.$htmlDir.'</em>...';
-            if (!file_exists($htmlDir))
+            if (!file_exists($htmlDir)) {
                 mkdir($htmlDir, 0774);
+            }
 
             self::$logger->info('Cache directory ['.$htmlDir.'] successfully created');
             $body .= View::displayUpdateMessage('Cache directory ['.$htmlDir.'] successfully created');
 
             // cache/images
             $body .= '<p>Attempting to create the cache directory <em>'.$imagesDir.'</em>...';
-            if (!file_exists($imagesDir))
+            if (!file_exists($imagesDir)) {
                 mkdir($imagesDir, 0774);
+            }
 
             self::$logger->info('Cache directory ['.$imagesDir.'] successfully created');
             $body .= View::displayUpdateMessage('Cache directory ['.$imagesDir.'] successfully created');
 
             // cache/pdf
             $body .= '<p>Attempting to create the cache directory <em>'.$pdfDir.'</em>...';
-            if (!file_exists($pdfDir))
+            if (!file_exists($pdfDir)) {
                 mkdir($pdfDir, 0774);
+            }
 
             self::$logger->info('Cache directory ['.$pdfDir.'] successfully created');
             $body .= View::displayUpdateMessage('Cache directory ['.$pdfDir.'] successfully created');
 
             // cache/xls
             $body .= '<p>Attempting to create the cache directory <em>'.$xlsDir.'</em>...';
-            if (!file_exists($xlsDir))
+            if (!file_exists($xlsDir)) {
                 mkdir($xlsDir, 0774);
+            }
 
             self::$logger->info('Cache directory ['.$xlsDir.'] successfully created');
             $body .= View::displayUpdateMessage('Cache directory ['.$xlsDir.'] successfully created');
         } catch (\Exception $e) {
             $body .= View::displayErrorMessage($e->getMessage());
             $body .= View::displayErrorMessage('Aborting.');
+
             return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
@@ -312,14 +332,15 @@ class InstallController extends Controller implements ControllerInterface
 
         try {
             $body .= '<p>Attempting to create the DEnum tables...';
-            if (!$DEnum->checkTableExists())
+            if (!$DEnum->checkTableExists()) {
                 $DEnum->makeTable();
+            }
             self::$logger->info('Created the ['.$DEnum->getTableName().'] table successfully');
 
-            if (!$DEnumItem->checkTableExists())
+            if (!$DEnumItem->checkTableExists()) {
                 $DEnumItem->makeTable();
+            }
             self::$logger->info('Created the ['.$DEnumItem->getTableName().'] table successfully');
-
 
             // create a default article DEnum category
             $DEnum = new DEnum('Alpha\Model\Article::section');
@@ -334,6 +355,7 @@ class InstallController extends Controller implements ControllerInterface
             $body .= View::displayErrorMessage('Aborting.');
             self::$logger->error($e->getMessage());
             ActiveRecord::rollback();
+
             return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
@@ -362,8 +384,9 @@ class InstallController extends Controller implements ControllerInterface
 
                             $count = count($missingFields);
 
-                            for ($i = 0; $i < $count; $i++)
+                            for ($i = 0; $i < $count; ++$i) {
                                 $BO->addProperty($missingFields[$i]);
+                            }
                         }
                     }
                 } catch (FailedIndexCreateException $eice) {
@@ -381,6 +404,7 @@ class InstallController extends Controller implements ControllerInterface
                 $body .= View::displayErrorMessage('Aborting.');
                 self::$logger->error($e->getMessage());
                 ActiveRecord::rollback();
+
                 return new Response(500, $body, array('Content-Type' => 'text/html'));
             }
         }
@@ -415,6 +439,7 @@ class InstallController extends Controller implements ControllerInterface
             $body .= View::displayErrorMessage('Aborting.');
             self::$logger->error($e->getMessage());
             ActiveRecord::rollback();
+
             return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
@@ -451,6 +476,7 @@ class InstallController extends Controller implements ControllerInterface
             $body .= View::displayErrorMessage('Aborting.');
             self::$logger->error($e->getMessage());
             ActiveRecord::rollback();
+
             return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
@@ -463,14 +489,16 @@ class InstallController extends Controller implements ControllerInterface
         self::$logger->info('Finished installation!');
         self::$logger->action('Installed the application');
         self::$logger->debug('<<doGET');
+
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
      * Custom version of the check rights method that only checks for a session for the config admin username/password,
-     * when the system database is not set-up
+     * when the system database is not set-up.
      *
-     * @return boolean
+     * @return bool
+     *
      * @since 1.0
      */
     public function checkRights()
@@ -483,11 +511,13 @@ class InstallController extends Controller implements ControllerInterface
 
         if ($this->getVisibility() == 'Public') {
             self::$logger->debug('<<checkRights [true]');
+
             return true;
         }
 
         if (ActiveRecord::isInstalled()) {
             self::$logger->debug('<<checkRights [false]');
+
             return false;
         }
 
@@ -495,10 +525,9 @@ class InstallController extends Controller implements ControllerInterface
         if ($session->get('currentUser') !== false) {
             if ($session->get('currentUser')->get('email') == $config->get('app.install.username')) {
                 self::$logger->debug('<<checkRights [true]');
+
                 return true;
             }
         }
     }
 }
-
-?>

@@ -3,7 +3,6 @@
 namespace Alpha\Controller;
 
 use Alpha\Exception\ResourceNotFoundException;
-use Alpha\Exception\ResourceNotAllowedException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\View\Widget\Image;
 use Alpha\Util\Config\ConfigProvider;
@@ -13,10 +12,10 @@ use Alpha\Util\Http\Response;
 use Alpha\Model\Type\Boolean;
 
 /**
- *
  * Controller for viewing an image rendered with the Image widget.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -53,25 +52,26 @@ use Alpha\Model\Type\Boolean;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ImageController extends Controller implements ControllerInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string $visibility The name of the rights group that can access this controller.
+     *
      * @since 1.0
      */
-    public function __construct($visibility='Public')
+    public function __construct($visibility = 'Public')
     {
         self::$logger = new Logger('ImageController');
         self::$logger->debug('>>__construct()');
@@ -83,11 +83,14 @@ class ImageController extends Controller implements ControllerInterface
     }
 
     /**
-     * Handles get requests
+     * Handles get requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @since 1.0
+     *
      * @throws Alpha\Exception\ResourceNotFoundException
      * @throws Alpha\Exception\ResourceNotAllowedException
      */
@@ -104,7 +107,7 @@ class ImageController extends Controller implements ControllerInterface
             $imgWidth = $params['width'];
             $imgHeight = $params['height'];
             $imgType = $params['type'];
-            $imgQuality = (double)$params['quality'];
+            $imgQuality = (double) $params['quality'];
             $imgScale = new Boolean($params['scale']);
             $imgSecure = new Boolean($params['secure']);
         } catch (\Exception $e) {
@@ -116,7 +119,7 @@ class ImageController extends Controller implements ControllerInterface
 
         $responseHeaders = array();
 
-        $responseHeaders['Last-Modified'] = date("D, d M Y H:i:s", $modified).' GMT';
+        $responseHeaders['Last-Modified'] = date('D, d M Y H:i:s', $modified).' GMT';
         $responseHeaders['Cache-Control'] = 'max-age=1800';
 
         // exit if not modified
@@ -132,7 +135,7 @@ class ImageController extends Controller implements ControllerInterface
 
             // if not valid, just return a blank black image of the same dimensions
             if (!$valid) {
-                $im  = imagecreatetruecolor($imgWidth, $imgHeight);
+                $im = imagecreatetruecolor($imgWidth, $imgHeight);
                 $bgc = imagecolorallocate($im, 0, 0, 0);
                 imagefilledrectangle($im, 0, 0, $imgWidth, $imgHeight, $bgc);
 
@@ -155,6 +158,7 @@ class ImageController extends Controller implements ControllerInterface
                 self::$logger->warn('The client ['.$request->getUserAgent().'] was blocked from accessing the file ['.$imgSource.'] due to bad security tokens being provided');
 
                 $responseHeaders['Content-Type'] = $contentType;
+
                 return new Response(200, $body, $responseHeaders);
             }
         }
@@ -181,5 +185,3 @@ class ImageController extends Controller implements ControllerInterface
         return new Response(200, $body, $responseHeaders);
     }
 }
-
-?>

@@ -6,10 +6,10 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Model\ActiveRecord;
 
 /**
- *
  * Test class used by tests that need to write to the unit test database.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -46,12 +46,11 @@ use Alpha\Model\ActiveRecord;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ModelTestCase extends \PHPUnit_Framework_TestCase
 {
-	/**
-     * Switches to using the test database
+    /**
+     * Switches to using the test database.
      *
      * @since 2.0
      */
@@ -59,7 +58,7 @@ class ModelTestCase extends \PHPUnit_Framework_TestCase
     {
         $config = ConfigProvider::getInstance();
         $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
-        
+
         foreach ($this->getActiveRecordProviders() as $provider) {
             $config->set('db.provider.name', $provider[0]);
             ActiveRecord::createDatabase();
@@ -67,7 +66,7 @@ class ModelTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Drop the test database between tests
+     * Drop the test database between tests.
      *
      * @since 2.0
      */
@@ -82,18 +81,17 @@ class ModelTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Returns an array of Active Record providers
+     * Returns an array of Active Record providers.
      *
      * @return array
+     *
      * @since 2.0
      */
     public function getActiveRecordProviders()
     {
         return array(
             array('Alpha\Model\ActiveRecordProviderSQLite'),
-            array('Alpha\Model\ActiveRecordProviderMySQL')
+            array('Alpha\Model\ActiveRecordProviderMySQL'),
         );
     }
 }
-
-?>

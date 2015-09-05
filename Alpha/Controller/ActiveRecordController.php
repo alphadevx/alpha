@@ -9,7 +9,6 @@ use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\Util\Helper\Validator;
 use Alpha\View\View;
-use Alpha\View\ViewState;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\ResourceNotAllowedException;
@@ -21,6 +20,7 @@ use Alpha\Model\ActiveRecord;
  * The main active record CRUD controller for the framework.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -57,73 +57,80 @@ use Alpha\Model\ActiveRecord;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ActiveRecordController extends Controller implements ControllerInterface
 {
     /**
-     * The start number for list pageination
+     * The start number for list pageination.
      *
-     * @var integer
+     * @var int
+     *
      * @since 2.0
      */
     protected $startPoint = 1;
 
     /**
-     * The count of the records of this type in the database (used during pagination)
+     * The count of the records of this type in the database (used during pagination).
      *
-     * @var integer
+     * @var int
+     *
      * @since 2.0
      */
     protected $recordCount = 0;
 
     /**
-     * The field name to sort the list by (optional, default is OID)
+     * The field name to sort the list by (optional, default is OID).
      *
      * @var string
+     *
      * @since 2.0
      */
     protected $sort;
 
     /**
-     * The order to sort the list by (optional, should be ASC or DESC, default is ASC)
+     * The order to sort the list by (optional, should be ASC or DESC, default is ASC).
      *
      * @var string
+     *
      * @since 2.0
      */
     protected $order;
 
     /**
-     * The name of the BO field to filter the list by (optional)
+     * The name of the BO field to filter the list by (optional).
      *
      * @var string
+     *
      * @since 2.0
      */
     protected $filterField;
 
     /**
-     * The value of the filterField to filter by (optional)
+     * The value of the filterField to filter by (optional).
      *
      * @var string
+     *
      * @since 2.0
      */
     protected $filterValue;
 
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 2.0
      */
     private static $logger = null;
 
     /**
-     * Constructor to set up the object
+     * Constructor to set up the object.
      *
      * @param string $visibility The name of the rights group that can access this controller.
+     *
      * @since 1.0
      */
-    public function __construct($visibility='Admin')
+    public function __construct($visibility = 'Admin')
     {
         self::$logger = new Logger('ActiveRecordController');
         self::$logger->debug('>>__construct()');
@@ -137,12 +144,15 @@ class ActiveRecordController extends Controller implements ControllerInterface
     }
 
     /**
-     * Handle GET requests
+     * Handle GET requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @throws Alpha\Exception\ResourceNotFoundException
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @since 2.0
      */
     public function doGET($request)
@@ -310,17 +320,22 @@ class ActiveRecordController extends Controller implements ControllerInterface
         $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
+
         return new Response(200, $body, array('Content-Type' => ($accept == 'application/json' ? 'application/json' : 'text/html')));
     }
 
     /**
-     * Method to handle POST requests
+     * Method to handle POST requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @throws Alpha\Exception\IllegalArguementException
      * @throws Alpha\Exception\SecurityException
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @since 2.0
+     *
      * @todo implement
      */
     public function doPOST($request)
@@ -333,7 +348,6 @@ class ActiveRecordController extends Controller implements ControllerInterface
         $accept = $request->getAccept();
 
         try {
-
             if (isset($params['ActiveRecordType'])) {
                 $ActiveRecordType = urldecode($params['ActiveRecordType']);
             } else {
@@ -357,7 +371,6 @@ class ActiveRecordController extends Controller implements ControllerInterface
             self::$logger->action('Created new '.$ActiveRecordType.' instance with OID '.$record->getOID());
 
             ActiveRecord::disconnect();
-
         } catch (SecurityException $e) {
             self::$logger->warn($e->getMessage());
             throw new ResourceNotAllowedException($e->getMessage());
@@ -391,17 +404,22 @@ class ActiveRecordController extends Controller implements ControllerInterface
         }
 
         self::$logger->debug('<<doPOST');
+
         return $response;
     }
 
     /**
-     * Method to handle PUT requests
+     * Method to handle PUT requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @throws Alpha\Exception\IllegalArguementException
      * @throws Alpha\Exception\SecurityException
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @since 2.0
+     *
      * @todo implement
      */
     public function doPUT($request)
@@ -414,7 +432,6 @@ class ActiveRecordController extends Controller implements ControllerInterface
         $accept = $request->getAccept();
 
         try {
-
             if (isset($params['ActiveRecordType'])) {
                 $ActiveRecordType = urldecode($params['ActiveRecordType']);
             } else {
@@ -441,7 +458,6 @@ class ActiveRecordController extends Controller implements ControllerInterface
             $this->setStatusMessage(View::displayUpdateMessage('Saved '.$ActiveRecordType.' instance with OID '.$record->getOID()));
 
             ActiveRecord::disconnect();
-
         } catch (SecurityException $e) {
             self::$logger->warn($e->getMessage());
             throw new ResourceNotAllowedException($e->getMessage());
@@ -478,17 +494,22 @@ class ActiveRecordController extends Controller implements ControllerInterface
         }
 
         self::$logger->debug('<<doPUT');
+
         return $response;
     }
 
     /**
-     * Method to handle DELETE requests
+     * Method to handle DELETE requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @throws Alpha\Exception\IllegalArguementException
      * @throws Alpha\Exception\SecurityException
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @since 2.0
+     *
      * @todo implement
      */
     public function doDELETE($request)
@@ -564,11 +585,12 @@ class ActiveRecordController extends Controller implements ControllerInterface
         }
 
         self::$logger->debug('<<doDELETE');
+
         return $response;
     }
 
     /**
-     * Sets up the pagination start point
+     * Sets up the pagination start point.
      *
      * @since 2.0
      */
@@ -593,9 +615,10 @@ class ActiveRecordController extends Controller implements ControllerInterface
     }
 
     /**
-     * Method to display the page footer with pageination links
+     * Method to display the page footer with pageination links.
      *
      * @return string
+     *
      * @since 2.0
      */
     public function before_displayPageFoot_callback()
@@ -603,7 +626,6 @@ class ActiveRecordController extends Controller implements ControllerInterface
         $body = '';
 
         if ($this->request->getParam('start') != null) {
-
             $accept = $this->request->getAccept();
 
             if ($accept == 'application/json') {
@@ -618,10 +640,12 @@ class ActiveRecordController extends Controller implements ControllerInterface
     }
 
     /**
-     * Method for rendering the pagination links
+     * Method for rendering the pagination links.
      *
      * @return string
+     *
      * @since 2.0
+     *
      * @todo review how the links are generated
      */
     protected function renderPageLinks()
@@ -630,7 +654,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
 
         $body = '';
 
-        $end = (($this->startPoint-1)+$config->get('app.list.page.amount'));
+        $end = (($this->startPoint - 1) + $config->get('app.list.page.amount'));
 
         if ($end > $this->recordCount) {
             $end = $this->recordCount;
@@ -646,37 +670,40 @@ class ActiveRecordController extends Controller implements ControllerInterface
 
         if ($this->startPoint > 1) {
             // handle secure URLs
-            if ($this->request->getParam('token', null) != null)
-                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\AcitveRecordController&ActiveRecordType='.$this->activeRecordType.'&start='.($this->startPoint-$config->get('app.list.page.amount'))).'">&lt;&lt;-Previous</a></li>';
-            else
-                $body .= '<li><a href="/records/'.urlencode($this->activeRecordType)."/".($this->startPoint-$config->get('app.list.page.amount')).'">&lt;&lt;-Previous</a></li>';
-        } elseif ($this->recordCount > $config->get('app.list.page.amount')){
+            if ($this->request->getParam('token', null) != null) {
+                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\AcitveRecordController&ActiveRecordType='.$this->activeRecordType.'&start='.($this->startPoint - $config->get('app.list.page.amount'))).'">&lt;&lt;-Previous</a></li>';
+            } else {
+                $body .= '<li><a href="/records/'.urlencode($this->activeRecordType).'/'.($this->startPoint - $config->get('app.list.page.amount')).'">&lt;&lt;-Previous</a></li>';
+            }
+        } elseif ($this->recordCount > $config->get('app.list.page.amount')) {
             $body .= '<li class="disabled"><a href="#">&lt;&lt;-Previous</a></li>';
         }
 
         $page = 1;
 
-        for ($i = 0; $i < $this->recordCount; $i+=$config->get('app.list.page.amount')) {
-            if ($i != ($this->startPoint-1)) {
+        for ($i = 0; $i < $this->recordCount; $i += $config->get('app.list.page.amount')) {
+            if ($i != ($this->startPoint - 1)) {
                 // handle secure URLs
-                if ($this->request->getParam('token', null) != null)
-                    $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->activeRecordType.'&start='.($i+1)).'">'.$page.'</a></li>';
-                else
-                    $body .= '<li><a href="/records/'.urlencode($this->activeRecordType)."/".($i+1).'">'.$page.'</a></li>';
+                if ($this->request->getParam('token', null) != null) {
+                    $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->activeRecordType.'&start='.($i + 1)).'">'.$page.'</a></li>';
+                } else {
+                    $body .= '<li><a href="/records/'.urlencode($this->activeRecordType).'/'.($i + 1).'">'.$page.'</a></li>';
+                }
             } elseif ($this->recordCount > $config->get('app.list.page.amount')) {
                 $body .= '<li class="active"><a href="#">'.$page.'</a></li>';
             }
 
-            $page++;
+            ++$page;
         }
 
         if ($this->recordCount > $end) {
             // handle secure URLs
-            if ($this->request->getParam('token', null) != null)
-                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->activeRecordType.'&start='.($this->startPoint+$config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a></li>';
-            else
-                $body .= '<li><a href="/records/'.urlencode($this->activeRecordType)."/".($this->startPoint+$config->get('app.list.page.amount')).
+            if ($this->request->getParam('token', null) != null) {
+                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->activeRecordType.'&start='.($this->startPoint + $config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a></li>';
+            } else {
+                $body .= '<li><a href="/records/'.urlencode($this->activeRecordType).'/'.($this->startPoint + $config->get('app.list.page.amount')).
                     '">Next-&gt;&gt;</a></li>';
+            }
         } elseif ($this->recordCount > $config->get('app.list.page.amount')) {
             $body .= '<li class="disabled"><a href="#">Next-&gt;&gt;</a></li>';
         }
@@ -686,5 +713,3 @@ class ActiveRecordController extends Controller implements ControllerInterface
         return $body;
     }
 }
-
-?>

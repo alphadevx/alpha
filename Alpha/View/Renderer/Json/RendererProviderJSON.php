@@ -9,6 +9,7 @@ use Alpha\Util\Logging\Logger;
  * JSON renderer.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -45,28 +46,29 @@ use Alpha\Util\Logging\Logger;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class RendererProviderJSON implements RendererProviderInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger;
+     *
      * @since 2.0
      */
     private static $logger = null;
 
     /**
-     * The active record that we are renderering
+     * The active record that we are renderering.
      *
      * @var Alpha\Model\ActiveRecord
+     *
      * @since 2.0
      */
     private $BO;
 
     /**
-     * The constructor
+     * The constructor.
      *
      * @since 2.0
      */
@@ -79,7 +81,7 @@ class RendererProviderJSON implements RendererProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setBO($BO)
     {
@@ -87,152 +89,171 @@ class RendererProviderJSON implements RendererProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function createView($fields=array())
+    public function createView($fields = array())
     {
         return '';
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function editView($fields=array())
-    {}
+    public function editView($fields = array())
+    {
+    }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function listView($fields=array())
+    public function listView($fields = array())
     {
         self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
 
         $json = json_encode($this->BO->toArray()).',';
 
         self::$logger->debug('<<listView [JSON]');
+
         return $json;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function detailedView($fields=array())
+    public function detailedView($fields = array())
     {
         self::$logger->debug('>>detailedView(fields=['.var_export($fields, true).'])');
 
         $json = json_encode($this->BO->toArray());
 
         self::$logger->debug('<<detailedView [JSON]');
+
         return $json;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function adminView($fields=array())
-    {}
+    public function adminView($fields = array())
+    {
+    }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function displayPageHead($controller)
-    {}
+    {
+    }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function displayPageFoot($controller)
-    {}
+    {
+    }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function displayUpdateMessage($message)
-    {}
+    {
+    }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function displayErrorMessage($message)
-    {}
+    {
+    }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function renderErrorPage($code, $message)
-    {}
+    {
+    }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function renderDeleteForm($URI)
-    {}
+    {
+    }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function renderSecurityFields()
-    {}
+    {
+    }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function renderIntegerField($name, $label, $mode, $value='')
-    {}
+    public function renderIntegerField($name, $label, $mode, $value = '')
+    {
+    }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function renderDoubleField($name, $label, $mode, $value='')
-    {}
+    public function renderDoubleField($name, $label, $mode, $value = '')
+    {
+    }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function renderBooleanField($name, $label, $mode, $value='')
-    {}
+    public function renderBooleanField($name, $label, $mode, $value = '')
+    {
+    }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function renderEnumField($name, $label, $mode, $options, $value='')
-    {}
+    public function renderEnumField($name, $label, $mode, $options, $value = '')
+    {
+    }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function renderDEnumField($name, $label, $mode, $options, $value='')
-    {}
+    public function renderDEnumField($name, $label, $mode, $options, $value = '')
+    {
+    }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function renderDefaultField($name, $label, $mode, $value='')
-    {}
+    public function renderDefaultField($name, $label, $mode, $value = '')
+    {
+    }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function renderTextField($name, $label, $mode, $value='')
-    {}
+    public function renderTextField($name, $label, $mode, $value = '')
+    {
+    }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function renderStringField($name, $label, $mode, $value='')
-    {}
+    public function renderStringField($name, $label, $mode, $value = '')
+    {
+    }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function renderRelationField($name, $label, $mode, $value='', $expanded=false, $buttons=true)
-    {}
+    public function renderRelationField($name, $label, $mode, $value = '', $expanded = false, $buttons = true)
+    {
+    }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function renderAllFields($mode, $filterFields=array(), $readOnlyFields=array())
-    {}
+    public function renderAllFields($mode, $filterFields = array(), $readOnlyFields = array())
+    {
+    }
 }
-
-?>

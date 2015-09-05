@@ -3,9 +3,10 @@
 namespace Alpha\Exception;
 
 /**
- * The parent exception class for Alpha
+ * The parent exception class for Alpha.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -42,31 +43,30 @@ namespace Alpha\Exception;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class AlphaException extends \Exception
 {
-	/**
-	 * Set the message for the exception
-	 *
-	 * @param string $message
-	 * @since 1.0
-	 */
-	public function setMessage($message)
-	{
-		$this->message = $message;
-	}
+    /**
+     * Set the message for the exception.
+     *
+     * @param string $message
+     *
+     * @since 1.0
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
+    }
 
-	/**
-	 * Set the filename for the exception
-	 *
-	 * @param string $file
-	 * @since 1.0
-	 */
-	public function setFile($file)
-	{
-		$this->file = $file;
-	}
+    /**
+     * Set the filename for the exception.
+     *
+     * @param string $file
+     *
+     * @since 1.0
+     */
+    public function setFile($file)
+    {
+        $this->file = $file;
+    }
 }
-
-?>

@@ -13,10 +13,10 @@ use Alpha\Exception\AlphaException;
 use Alpha\Model\ActiveRecord;
 
 /**
- *
- * Controller used to list all of the active record types in the system
+ * Controller used to list all of the active record types in the system.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -53,20 +53,20 @@ use Alpha\Model\ActiveRecord;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ListActiveRecordsController extends Controller implements ControllerInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * the constructor
+     * the constructor.
      *
      * @since 1.0
      */
@@ -92,10 +92,12 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
     }
 
     /**
-     * Handle GET requests
+     * Handle GET requests.
      *
      * @param alpha\Util\Http\Request $request
+     *
      * @return alpha\Util\Http\Response
+     *
      * @since 1.0
      */
     public function doGET($request)
@@ -109,14 +111,17 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
         $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
+
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
-     * Handle POST requests
+     * Handle POST requests.
      *
      * @param alpha\Util\Http\Request $request
+     *
      * @return alpha\Util\Http\Response
+     *
      * @since 1.0
      */
     public function doPOST($request)
@@ -131,8 +136,9 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
 
         try {
             // check the hidden security fields before accepting the form POST data
-            if (!$this->checkSecurityFields())
+            if (!$this->checkSecurityFields()) {
                 throw new SecurityException('This page cannot accept post data from remote servers!');
+            }
 
             if (isset($params['createTableBut'])) {
                 try {
@@ -190,7 +196,7 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
 
                     $count = count($missingFields);
 
-                    for($i = 0; $i < $count; $i++) {
+                    for ($i = 0; $i < $count; ++$i) {
                         $BO->addProperty($missingFields[$i]);
                     }
 
@@ -212,13 +218,15 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
         $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doPOST');
+
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
-     * Private method to generate the main body HTML for this page
+     * Private method to generate the main body HTML for this page.
      *
      * @since 1.0
+     *
      * @return string
      */
     private function displayBodyContent()
@@ -229,7 +237,7 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
 
         $fields = array('formAction' => $this->request->getURI());
 
-        foreach($classNames as $className) {
+        foreach ($classNames as $className) {
             try {
                 $activeRecord = new $className();
                 $view = View::getInstance($activeRecord);
@@ -242,8 +250,9 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
 
                     $count = count($missingFields);
 
-                    for($i = 0; $i < $count; $i++)
+                    for ($i = 0; $i < $count; ++$i) {
                         $activeRecord->addProperty($missingFields[$i]);
+                    }
 
                     // now try again...
                     $activeRecord = new $className();
@@ -259,5 +268,3 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
         return $body;
     }
 }
-
-?>

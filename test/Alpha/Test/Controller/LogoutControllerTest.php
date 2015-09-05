@@ -3,21 +3,18 @@
 namespace Alpha\Test\Controller;
 
 use Alpha\Controller\Front\FrontController;
-use Alpha\Controller\LoginController;
 use Alpha\Controller\LogoutController;
-use Alpha\Controller\Controller;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
-use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Model\Person;
 use Alpha\Model\Rights;
 
 /**
- *
- * Test cases for the LogoutController class
+ * Test cases for the LogoutController class.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -54,12 +51,11 @@ use Alpha\Model\Rights;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class LogoutControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Set up tests
+     * Set up tests.
      *
      * @since 2.0
      */
@@ -78,9 +74,10 @@ class LogoutControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Creates a person object for Testing
+     * Creates a person object for Testing.
      *
      * @return Alpha\Model\Person
+     *
      * @since 2.0
      */
     private function createPersonObject($name)
@@ -95,7 +92,7 @@ class LogoutControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the doGET method
+     * Testing the doGET method.
      */
     public function testDoGET()
     {
@@ -116,7 +113,7 @@ class LogoutControllerTest extends \PHPUnit_Framework_TestCase
             'var1' => $securityParams[0],
             'var2' => $securityParams[1],
             'email' => 'logintest@test.com',
-            'password' => 'passwordTest'
+            'password' => 'passwordTest',
         );
 
         $request = new Request(array('method' => 'POST', 'URI' => '/login', 'params' => $params));
@@ -136,5 +133,3 @@ class LogoutControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($session->get('currentUser'), 'Testing that the user is no longer logged in');
     }
 }
-
-?>

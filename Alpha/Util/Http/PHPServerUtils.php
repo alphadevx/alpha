@@ -5,9 +5,10 @@ namespace Alpha\Util\Http;
 use Alpha\Exception\AlphaException;
 
 /**
- * A utility class controlling the build-in HTTP server in PHP
+ * A utility class controlling the build-in HTTP server in PHP.
  *
  * @since 1.2.2
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -44,7 +45,6 @@ use Alpha\Exception\AlphaException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class PHPServerUtils
 {
@@ -52,10 +52,12 @@ class PHPServerUtils
      * Starts a new HTTP server at the hostname and port provided, and returns the process ID (PID) of
      * the service if it was started successfully.
      *
-     * @param string $host The hostname or IP address
-     * @param int $port The port number to use
+     * @param string $host    The hostname or IP address
+     * @param int    $port    The port number to use
      * @param string $docRoot The file path to directory containing the documents we want to serve
+     *
      * @return int The PID of the new server
+     *
      * @throws AlphaException
      */
     public static function start($host, $port, $docRoot)
@@ -70,17 +72,17 @@ class PHPServerUtils
                 $docRoot
             );
 
-            $descriptorspec = array (
-                0 => array("pipe", "r"),
-                1 => array("pipe", "w"),
+            $descriptorspec = array(
+                0 => array('pipe', 'r'),
+                1 => array('pipe', 'w'),
             );
 
             // Execute the command and store the process ID of the parent
-            $prog = proc_open($command, $descriptorspec, $pipes, '.', NULL);
+            $prog = proc_open($command, $descriptorspec, $pipes, '.', null);
             $ppid = proc_get_status($prog)['pid'];
 
             // this gets us the process ID of the child (i.e. the server we just started)
-            $output = array_filter(explode(" ", shell_exec("wmic process get parentprocessid,processid | find \"$ppid\"")));
+            $output = array_filter(explode(' ', shell_exec("wmic process get parentprocessid,processid | find \"$ppid\"")));
             array_pop($output);
             $pid = end($output);
         } else { // we are on Linux
@@ -98,11 +100,11 @@ class PHPServerUtils
             $pid = (int) $output[0];
         }
 
-        if (!isset($pid))
+        if (!isset($pid)) {
             throw new AlphaException("Could not start the build-in PHP server [$host:$port] using the doc root [$docRoot]");
-        else
+        } else {
             return $pid;
-
+        }
     }
 
     /**
@@ -113,16 +115,18 @@ class PHPServerUtils
     public static function stop($PID)
     {
         // we are on Windows
-        if (mb_strtoupper(mb_substr(PHP_OS, 0, 3)) === 'WIN')
+        if (mb_strtoupper(mb_substr(PHP_OS, 0, 3)) === 'WIN') {
             exec("taskkill /F /pid $PID");
-        else // we are on Linux
+        } else { // we are on Linux
             exec("kill -9 $PID");
+        }
     }
 
     /**
      * Checks to see if there is a server running locally under the process ID (PID) provided.
      *
      * @param int $PID The PID of the running server we want to check
+     *
      * @return bool True if there is a server process running under the PID, false otherwise
      */
     public static function status($PID)
@@ -132,20 +136,19 @@ class PHPServerUtils
         if (mb_strtoupper(mb_substr(PHP_OS, 0, 3)) === 'WIN') {
             exec("tasklist /fi \"PID eq $PID\"", $output);
 
-            if (isset($output[0]) && $output[0] == 'INFO: No tasks are running which match the specified criteria.')
+            if (isset($output[0]) && $output[0] == 'INFO: No tasks are running which match the specified criteria.') {
                 return false;
-            else
+            } else {
                 return true;
+            }
         } else { // we are on Linux
             exec("ps -ef | grep $PID | grep -v grep", $output);
 
-            if(count($output) == 0)
+            if (count($output) == 0) {
                 return false;
-            else
+            } else {
                 return true;
+            }
         }
     }
-
 }
-
-?>

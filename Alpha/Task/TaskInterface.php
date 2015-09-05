@@ -3,9 +3,10 @@
 namespace Alpha\Task;
 
 /**
- * The interface for background tasks that Alpha can run
+ * The interface for background tasks that Alpha can run.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -42,23 +43,22 @@ namespace Alpha\Task;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
-interface TaskInterface {
+interface TaskInterface
+{
     /**
-     * Runs the functional code that makes up the task
+     * Runs the functional code that makes up the task.
      *
      * @since 1.0
      */
     public function doTask();
 
     /**
-     * Gets the maximum allowed runtime for this cron (in seconds)
+     * Gets the maximum allowed runtime for this cron (in seconds).
      *
-     * @return integer
+     * @return int
+     *
      * @since 1.0
      */
     public function getMaxRunTime();
 }
-
-?>

@@ -6,9 +6,10 @@ use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- * The Text complex data type
+ * The Text complex data type.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -45,182 +46,197 @@ use Alpha\Exception\IllegalArguementException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class Text extends Type implements TypeInterface
 {
-	/**
-	 * The value of the Text object
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	private $value;
+    /**
+     * The value of the Text object.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    private $value;
 
-	/**
-	 * The validation rule for the Text type
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	private $validationRule;
+    /**
+     * The validation rule for the Text type.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    private $validationRule;
 
-	/**
-	 * Used to determine if the Text object can support HTML content or not.  Defaults to true, if set to false
-	 * then HTML content should be filtered.
-	 *
-	 * @var boolean
-	 * @since 1.0
-	 */
-	private $allowHTML = true;
+    /**
+     * Used to determine if the Text object can support HTML content or not.  Defaults to true, if set to false
+     * then HTML content should be filtered.
+     *
+     * @var bool
+     *
+     * @since 1.0
+     */
+    private $allowHTML = true;
 
-	/**
-	 * The error message for the string type when validation fails
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	protected $helper = 'Not a valid text value!';
+    /**
+     * The error message for the string type when validation fails.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    protected $helper = 'Not a valid text value!';
 
-	/**
-	 * The size of the value for the this Text
-	 *
-	 * @var integer
-	 * @since 1.0
-	 */
-	private $size = 65535;
+    /**
+     * The size of the value for the this Text.
+     *
+     * @var int
+     *
+     * @since 1.0
+     */
+    private $size = 65535;
 
-	/**
-	 * The absolute maximum size of the value for the this Text
-	 *
-	 * @var integer
-	 * @since 1.0
-	 */
-	const MAX_SIZE = 65535;
+    /**
+     * The absolute maximum size of the value for the this Text.
+     *
+     * @var int
+     *
+     * @since 1.0
+     */
+    const MAX_SIZE = 65535;
 
-	/**
-	 * Constructor
-	 *
-	 * @param string $val
-	 * @since 1.0
-	 * @throws Alpha\Exception\IllegalArguementException
-	 */
-	public function __construct($val='')
-	{
-		$this->validationRule = Validator::ALLOW_ALL;
+    /**
+     * Constructor.
+     *
+     * @param string $val
+     *
+     * @since 1.0
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     */
+    public function __construct($val = '')
+    {
+        $this->validationRule = Validator::ALLOW_ALL;
 
-		if (mb_strlen($val) <= $this->size) {
-			if (preg_match($this->validationRule, $val)) {
-				$this->value = $val;
-			}else{
-				throw new IllegalArguementException($this->helper);
-			}
-		}else{
-			throw new IllegalArguementException($this->helper);
-		}
-	}
+        if (mb_strlen($val) <= $this->size) {
+            if (preg_match($this->validationRule, $val)) {
+                $this->value = $val;
+            } else {
+                throw new IllegalArguementException($this->helper);
+            }
+        } else {
+            throw new IllegalArguementException($this->helper);
+        }
+    }
 
-	/**
-	 * Setter for the value
-	 *
-	 * @param string $val
-	 * @since 1.0
-	 * @throws Alpha\Exception\IllegalArguementException
-	 */
-	public function setValue($val)
-	{
-		if (mb_strlen($val) <= $this->size) {
-			if (preg_match($this->validationRule, $val)) {
-				$this->value = $val;
-			}else{
-				throw new IllegalArguementException($this->helper);
-			}
-		}else{
-			throw new IllegalArguementException($this->helper);
-		}
-	}
+    /**
+     * Setter for the value.
+     *
+     * @param string $val
+     *
+     * @since 1.0
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     */
+    public function setValue($val)
+    {
+        if (mb_strlen($val) <= $this->size) {
+            if (preg_match($this->validationRule, $val)) {
+                $this->value = $val;
+            } else {
+                throw new IllegalArguementException($this->helper);
+            }
+        } else {
+            throw new IllegalArguementException($this->helper);
+        }
+    }
 
-	/**
-	 * Getter for the value
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function getValue()
-	{
-		return $this->value;
-	}
+    /**
+     * Getter for the value.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
 
-	/**
-	 * Setter to override the default validation rule
-	 *
-	 * @param string $rule
-	 * @since 1.0
-	 */
-	public function setRule($rule)
-	{
-		$this->validationRule = $rule;
-	}
+    /**
+     * Setter to override the default validation rule.
+     *
+     * @param string $rule
+     *
+     * @since 1.0
+     */
+    public function setRule($rule)
+    {
+        $this->validationRule = $rule;
+    }
 
-	/**
- 	 * Get the validation rule
- 	 *
- 	 * @return string
- 	 * @since 1.0
- 	 */
- 	public function getRule()
- 	{
-		return $this->validationRule;
-	}
+    /**
+     * Get the validation rule.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function getRule()
+    {
+        return $this->validationRule;
+    }
 
-	/**
-	 * Used to set the allowable size of the Text in the database field
-	 *
-	 * @param integer $size
-	 * @since 1.0
-	 * @throws Alpha\Exception\IllegalArguementException
-	 */
-	public function setSize($size)
-	{
-		if ($size <= self::MAX_SIZE) {
-			$this->size = $size;
-		}else{
-			throw new IllegalArguementException('The value '.$size.' provided by setSize is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
-		}
-	}
+    /**
+     * Used to set the allowable size of the Text in the database field.
+     *
+     * @param int $size
+     *
+     * @since 1.0
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     */
+    public function setSize($size)
+    {
+        if ($size <= self::MAX_SIZE) {
+            $this->size = $size;
+        } else {
+            throw new IllegalArguementException('The value '.$size.' provided by setSize is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
+        }
+    }
 
-	/**
-	 * Get the allowable size of the Double in the database field
-	 *
-	 * @return integer
-	 * @since 1.0
-	 */
-	public function getSize()
-	{
-		return $this->size;
-	}
+    /**
+     * Get the allowable size of the Double in the database field.
+     *
+     * @return int
+     *
+     * @since 1.0
+     */
+    public function getSize()
+    {
+        return $this->size;
+    }
 
-	/**
-	 * Set the $allowHTML value
-	 *
-	 * @param boolean $allowHTML
-	 * @since 1.0
-	 */
-	public function setAllowHTML($allowHTML)
-	{
-		$this->allowHTML = $allowHTML;
-	}
+    /**
+     * Set the $allowHTML value.
+     *
+     * @param bool $allowHTML
+     *
+     * @since 1.0
+     */
+    public function setAllowHTML($allowHTML)
+    {
+        $this->allowHTML = $allowHTML;
+    }
 
-	/**
-	 * Get the $allowHTML value
-	 *
-	 * @return boolean
-	 * @since 1.0
-	 */
-	public function getAllowHTML()
-	{
-		return $this->allowHTML;
-	}
+    /**
+     * Get the $allowHTML value.
+     *
+     * @return bool
+     *
+     * @since 1.0
+     */
+    public function getAllowHTML()
+    {
+        return $this->allowHTML;
+    }
 }
-
-?>

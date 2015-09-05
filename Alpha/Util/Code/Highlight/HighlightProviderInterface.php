@@ -3,11 +3,11 @@
 namespace Alpha\Util\Code\Highlight;
 
 /**
- *
  * An interface that contains the methods for a code highlight implementation
  * that is used in the CMS to colour highlight source code for publication.
  *
  * @since 1.2
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -44,7 +44,6 @@ namespace Alpha\Util\Code\Highlight;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 interface HighlightProviderInterface
 {
@@ -52,12 +51,12 @@ interface HighlightProviderInterface
      * Highlights the text provided using colours to make the source code within the
      * text more readable for humans.
      *
-     * @param string $source The source code string.
+     * @param string $source   The source code string.
      * @param string $language The language identifier that will be passed as-is to the implementing class.
+     *
      * @return string The colour-highlighted code.
+     *
      * @since 1.2
      */
     public function highlight($source, $language);
 }
-
-?>

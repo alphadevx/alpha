@@ -6,10 +6,10 @@ use Alpha\Model\Type\String;
 use Alpha\Util\Logging\Logger;
 
 /**
- *
- * An IP address that is blacklisted from accessing this application
+ * An IP address that is blacklisted from accessing this application.
  *
  * @since 1.2
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -46,57 +46,58 @@ use Alpha\Util\Logging\Logger;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class BlacklistedIP extends ActiveRecord
 {
-	/**
-	 * The (unique) IP address that is blocked
-	 *
-	 * @var Alpha\Model\Type\String
-	 * @since 1.2
-	 */
-	protected $IP;
+    /**
+     * The (unique) IP address that is blocked.
+     *
+     * @var Alpha\Model\Type\String
+     *
+     * @since 1.2
+     */
+    protected $IP;
 
-	/**
-	 * An array of data display labels for the class properties
-	 *
-	 * @var array
-	 * @since 1.2
-	 */
-	protected $dataLabels = array('OID'=>'Blacklisted IP ID#','IP'=>'IP Address');
+    /**
+     * An array of data display labels for the class properties.
+     *
+     * @var array
+     *
+     * @since 1.2
+     */
+    protected $dataLabels = array('OID' => 'Blacklisted IP ID#','IP' => 'IP Address');
 
-	/**
-	 * The name of the database table for the class
-	 *
-	 * @var string
-	 * @since 1.2
-	 */
-	const TABLE_NAME = 'BlacklistedIP';
+    /**
+     * The name of the database table for the class.
+     *
+     * @var string
+     *
+     * @since 1.2
+     */
+    const TABLE_NAME = 'BlacklistedIP';
 
-	/**
-	 * Trace logger
-	 *
-	 * @var Alpha\Util\Logging\Logger
-	 * @since 1.2
-	 */
-	private static $logger = null;
+    /**
+     * Trace logger.
+     *
+     * @var Alpha\Util\Logging\Logger
+     *
+     * @since 1.2
+     */
+    private static $logger = null;
 
-	/**
-	 * Constructor for the class
-	 *
-	 * @since 1.2
-	 */
-	public function __construct()
-	{
-		self::$logger = new Logger('BlacklistedIP');
+    /**
+     * Constructor for the class.
+     *
+     * @since 1.2
+     */
+    public function __construct()
+    {
+        self::$logger = new Logger('BlacklistedIP');
 
-		// ensure to call the parent constructor
-		parent::__construct();
+        // ensure to call the parent constructor
+        parent::__construct();
 
-		$this->IP = new String();
-		$this->markUnique('IP');
-	}
+        $this->IP = new String();
+        $this->markUnique('IP');
+    }
 }
-
-?>

@@ -8,7 +8,6 @@ use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Util\Http\Request;
 use Alpha\Model\Type\Relation;
-use Alpha\Model\ActiveRecord;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Controller\Controller;
 use Alpha\Controller\Front\FrontController;
@@ -17,6 +16,7 @@ use Alpha\Controller\Front\FrontController;
  * Record selection HTML widget.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -53,7 +53,6 @@ use Alpha\Controller\Front\FrontController;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class RecordSelector
 {
@@ -61,6 +60,7 @@ class RecordSelector
      * The relation object that we are going to render a view for.
      *
      * @var Alpha\Model\Type\Relation
+     *
      * @since 1.0
      */
     private $relationObject = null;
@@ -69,6 +69,7 @@ class RecordSelector
      * The label text to use where required.
      *
      * @var string
+     *
      * @since 1.0
      */
     private $label;
@@ -78,6 +79,7 @@ class RecordSelector
      * (leave blank for other relation types).
      *
      * @var string
+     *
      * @since 1.0
      */
     private $accessingClassName;
@@ -86,6 +88,7 @@ class RecordSelector
      * Javascript to run when the widget opens in a new window.
      *
      * @var string
+     *
      * @since 1.0
      */
     private $onloadJS = '';
@@ -94,14 +97,16 @@ class RecordSelector
      * The name of the HTML input box for storing the hidden and display values.
      *
      * @var string
+     *
      * @since 1.0
      */
     private $name;
 
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
@@ -110,19 +115,22 @@ class RecordSelector
      * The constructor.
      *
      * @param Alpha\Model\Type\Relation $relation
-     * @param string $label
-     * @param string $name
-     * @param string $accessingClassName
+     * @param string                    $label
+     * @param string                    $name
+     * @param string                    $accessingClassName
+     *
      * @since 1.0
+     *
      * @throws Alpha\Exception\IllegalArguementException
      */
-    public function __construct($relation, $label='', $name='', $accessingClassName='')
+    public function __construct($relation, $label = '', $name = '', $accessingClassName = '')
     {
         self::$logger = new Logger('RecordSelector');
         self::$logger->debug('>>__construct(relation=['.$relation.'], label=['.$label.'], name=['.$name.'], accessingClassName=['.$accessingClassName.'])');
 
-        if (!$relation instanceof Relation)
+        if (!$relation instanceof Relation) {
             throw new IllegalArguementException('Invalid Relation object provided to the RecordSelector constructor!');
+        }
 
         $this->relationObject = $relation;
         $this->label = $label;
@@ -136,11 +144,13 @@ class RecordSelector
      * Renders the text boxes and buttons for the widget, that will appear in user forms.
      *
      * @param bool $expanded Render the related fields in expanded format or not (optional)
-     * @param bool $buttons Render buttons for expanding/contacting the related fields (optional)
+     * @param bool $buttons  Render buttons for expanding/contacting the related fields (optional)
+     *
      * @return string
+     *
      * @since 1.0
      */
-    public function render($expanded=false, $buttons=true)
+    public function render($expanded = false, $buttons = true)
     {
         self::$logger->debug('>>render(expanded=['.$expanded.'], buttons=['.$buttons.'])');
 
@@ -167,7 +177,7 @@ class RecordSelector
                             title: 'Please select',
                             message: 'Loading...',
                             onshow: function(dialogRef){
-                                dialogRef.getModalBody().load('".$config->get('app.url')."recordselector/12m/'+document.getElementById('".$fieldname."').value+'/".$this->name."/".urlencode($this->relationObject->getRelatedClass())."/".$this->relationObject->getRelatedClassField()."/".$this->relationObject->getRelatedClassDisplayField()."');
+                                dialogRef.getModalBody().load('".$config->get('app.url')."recordselector/12m/'+document.getElementById('".$fieldname."').value+'/".$this->name.'/'.urlencode($this->relationObject->getRelatedClass()).'/'.$this->relationObject->getRelatedClassField().'/'.$this->relationObject->getRelatedClassDisplayField()."');
                             },
                             buttons: [
                             {
@@ -183,8 +193,7 @@ class RecordSelector
                         window.jQuery.dialog.open();
                     }";
 
-
-            $tmp = new Button($js, "Select", "relBut", '', 'glyphicon-check');
+            $tmp = new Button($js, 'Select', 'relBut', '', 'glyphicon-check');
             $html .= '<div class="centered lower">'.$tmp->render().'</div>';
 
             // hidden field to store the actual value of the relation
@@ -216,9 +225,9 @@ class RecordSelector
                     $html .= '<div><strong>'.$this->label.':</strong>';
                     if ($buttons) {
                         $html .= '<div class="spread">';
-                        $tmp = new Button("document.getElementById('relation_field_".$this->name."').style.display = '';", "Show", $this->name."DisBut", '', 'glyphicon-list');
+                        $tmp = new Button("document.getElementById('relation_field_".$this->name."').style.display = '';", 'Show', $this->name.'DisBut', '', 'glyphicon-list');
                         $html .= $tmp->render();
-                        $tmp = new Button("document.getElementById('relation_field_".$this->name."').style.display = 'none';", "Hide", $this->name."HidBut", '', 'glyphicon-minus');
+                        $tmp = new Button("document.getElementById('relation_field_".$this->name."').style.display = 'none';", 'Hide', $this->name.'HidBut', '', 'glyphicon-minus');
                         $html .= $tmp->render();
                         $html .= '</div>';
                     }
@@ -242,18 +251,20 @@ class RecordSelector
                         } else {
                             // TOOD: revisit all of these links once the generic CRUD controller is done
                             if (isset($customViewControllerName)) {
-                                if ($config->get('app.use.mod.rewrite'))
+                                if ($config->get('app.use.mod.rewrite')) {
                                     $viewURL = $config->get('app.url').$customViewControllerName.'/oid/'.$obj->getOID();
-                                else
+                                } else {
                                     $viewURL = $config->get('app.url').'controller/'.$customViewControllerName.'.php?oid='.$obj->getOID();
+                                }
                             } else {
                                 $viewURL = $config->get('app.url').'alpha/controller/Detail.php?bo='.get_class($obj).'&oid='.$obj->getOID();
                             }
                             if (isset($customEditControllerName)) {
-                                if ($config->get('app.use.mod.rewrite'))
+                                if ($config->get('app.use.mod.rewrite')) {
                                     $editURL = $config->get('app.url').$customEditControllerName.'/oid/'.$obj->getOID();
-                                else
+                                } else {
                                     $editURL = $config->get('app.url').'controller/'.$customEditControllerName.'.php?oid='.$obj->getOID();
+                                }
                             } else {
                                 $editURL = $config->get('app.url').'alpha/controller/Edit.php?bo='.get_class($obj).'&oid='.$obj->getOID();
                             }
@@ -281,7 +292,7 @@ class RecordSelector
                             if ($obj->getCreateTS() != $obj->getUpdateTS()) {
                                 try {
                                     $html .= '<em>'.$obj->getDataLabel('updated_ts').': </em>'.$obj->get('updated_ts');
-                                } catch(IllegalArguementException $e) {
+                                } catch (IllegalArguementException $e) {
                                     $html .= '<em>Updated: </em>'.$obj->get('updated_ts');
                                 }
                             }
@@ -295,8 +306,9 @@ class RecordSelector
                         $html .= '<div class="centered">';
                         $html .= '<a href="'.$viewURL.'">View</a>';
                         // if the current user owns it, they get the edit link
-                        if ($session->get('currentUser') != null && $session->get('currentUser')->getOID() == $obj->getCreatorId())
+                        if ($session->get('currentUser') != null && $session->get('currentUser')->getOID() == $obj->getCreatorId()) {
                             $html .= '&nbsp;&nbsp;&nbsp;&nbsp;<a href="'.$editURL.'">Edit</a>';
+                        }
                         $html .= '</div>';
                     }
                     $html .= '</div>';
@@ -309,7 +321,7 @@ class RecordSelector
             // value to appear in the text-box
             $inputBoxValue = $this->relationObject->getRelatedClassDisplayFieldValue($this->accessingClassName);
             // replace commas with line returns
-            $inputBoxValue = str_replace(",", "\n", $inputBoxValue);
+            $inputBoxValue = str_replace(',', "\n", $inputBoxValue);
 
             $html .= '<div class="form-group">';
             $html .= '<label for="'.$this->name.'_display">'.$this->label.'</label>';
@@ -321,13 +333,12 @@ class RecordSelector
             $fieldname1 = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt($this->name)) : $this->name);
             $fieldname2 = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt($this->name.'_OID')) : $this->name.'_OID');
 
-
             $js = "if(window.jQuery) {
                         BootstrapDialog.show({
                             title: 'Please select',
                             message: 'Loading...',
                             onshow: function(dialogRef){
-                                dialogRef.getModalBody().load('".$config->get('app.url')."recordselector/m2m/'+document.getElementById('".$fieldname2."').value+'/".$this->name."/".urlencode($this->relationObject->getRelatedClass('left'))."/".$this->relationObject->getRelatedClassDisplayField('left')."/".urlencode($this->relationObject->getRelatedClass('right'))."/".$this->relationObject->getRelatedClassDisplayField('right')."/".urlencode($this->accessingClassName)."/'+document.getElementById('".$fieldname1."').value);
+                                dialogRef.getModalBody().load('".$config->get('app.url')."recordselector/m2m/'+document.getElementById('".$fieldname2."').value+'/".$this->name.'/'.urlencode($this->relationObject->getRelatedClass('left')).'/'.$this->relationObject->getRelatedClassDisplayField('left').'/'.urlencode($this->relationObject->getRelatedClass('right')).'/'.$this->relationObject->getRelatedClassDisplayField('right').'/'.urlencode($this->accessingClassName)."/'+document.getElementById('".$fieldname1."').value);
                             },
                             buttons: [
                             {
@@ -352,7 +363,7 @@ class RecordSelector
                         });
                     }";
 
-            $tmp = new Button($js, "Select", "relBut", '', 'glyphicon-check');
+            $tmp = new Button($js, 'Select', 'relBut', '', 'glyphicon-check');
             $html .= '<div class="centered lower">'.$tmp->render().'</div>';
 
             $html .= '</div>';
@@ -361,27 +372,31 @@ class RecordSelector
             $html .= '<input type="hidden" name="'.$fieldname2.'" id="'.$fieldname2.'" value="'.$this->relationObject->getValue().'"/>';
 
             // hidden field to store the OIDs of the related BOs on the other side of the rel (this is what we check for when saving)
-            if ($this->relationObject->getSide($this->accessingClassName) == 'left')
+            if ($this->relationObject->getSide($this->accessingClassName) == 'left') {
                 $lookupOIDs = $this->relationObject->getLookup()->loadAllFieldValuesByAttribute('leftID', $this->relationObject->getValue(), 'rightID', 'DESC');
-            else
+            } else {
                 $lookupOIDs = $this->relationObject->getLookup()->loadAllFieldValuesByAttribute('rightID', $this->relationObject->getValue(), 'leftID', 'DESC');
+            }
 
             $html .= '<input type="hidden" name="'.$fieldname1.'" id="'.$fieldname1.'" value="'.implode(',', $lookupOIDs).'"/>';
         }
 
         self::$logger->debug('<<__render [html]');
+
         return $html;
     }
 
     /**
      * Returns the HTML for the record selector that will appear in a pop-up window.
      *
-     * @param string $fieldname The hidden HTML form field in the parent to pass values back to.
-     * @param array $lookupOIDs An optional array of related look-up OIDs, only required for rendering MANY-TO-MANY rels
+     * @param string $fieldname  The hidden HTML form field in the parent to pass values back to.
+     * @param array  $lookupOIDs An optional array of related look-up OIDs, only required for rendering MANY-TO-MANY rels
+     *
      * @since 1.0
+     *
      * @return string
      */
-    public function renderSelector($fieldname, $lookupOIDs=array())
+    public function renderSelector($fieldname, $lookupOIDs = array())
     {
         self::$logger->debug('>>renderSelector(fieldname=['.$fieldname.'], lookupOIDs=['.var_export($lookupOIDs, true).'])');
 
@@ -424,14 +439,12 @@ class RecordSelector
 
             </script>';
 
-
         if ($this->relationObject->getRelationType() == 'MANY-TO-MANY') {
-
             $classNameLeft = $this->relationObject->getRelatedClass('left');
             $classNameRight = $this->relationObject->getRelatedClass('right');
 
             if ($this->accessingClassName == $classNameLeft) {
-                $tmpObject = new $classNameRight;
+                $tmpObject = new $classNameRight();
                 $fieldName = $this->relationObject->getRelatedClassDisplayField('right');
                 $fieldLabel = $tmpObject->getDataLabel($fieldName);
                 $oidLabel = $tmpObject->getDataLabel('OID');
@@ -440,7 +453,7 @@ class RecordSelector
 
                 self::$logger->debug('['.count($objects).'] related ['.$classNameLeft.'] objects loaded');
             } else {
-                $tmpObject = new $classNameLeft;
+                $tmpObject = new $classNameLeft();
                 $fieldName = $this->relationObject->getRelatedClassDisplayField('left');
                 $fieldLabel = $tmpObject->getDataLabel($fieldName);
                 $oidLabel = $tmpObject->getDataLabel('OID');
@@ -457,7 +470,7 @@ class RecordSelector
             $html .= '<th>Connect?</th>';
             $html .= '</tr>';
 
-            foreach ($objects as $obj){
+            foreach ($objects as $obj) {
                 $html .= '<tr>';
                 $html .= '<td width="20%">';
                 $html .= $obj->getOID();
@@ -477,11 +490,10 @@ class RecordSelector
                 $html .= '</tr>';
             }
             $html .= '</table>';
-
         } else {
             $className = $this->relationObject->getRelatedClass();
 
-            $tmpObject = new $className;
+            $tmpObject = new $className();
             $label = $tmpObject->getDataLabel($this->relationObject->getRelatedClassDisplayField());
             $oidLabel = $tmpObject->getDataLabel('OID');
 
@@ -494,7 +506,7 @@ class RecordSelector
             $html .= '<th>Connect?</th>';
             $html .= '</tr>';
 
-            foreach ($objects as $obj){
+            foreach ($objects as $obj) {
                 $html .= '<tr>';
                 $html .= '<td width="20%">';
                 $html .= $obj->getOID();
@@ -506,7 +518,7 @@ class RecordSelector
                 if ($obj->getOID() == $this->relationObject->getValue()) {
                     $html .= '<img src="'.$config->get('app.url').'/images/icons/accept_ghost.png"/>';
                 } else {
-                    $tmp = new Button("document.getElementById('".$fieldname."').value = '".$obj->getOID()."'; document.getElementById('".$fieldname."_display').value = '".$obj->get($this->relationObject->getRelatedClassDisplayField())."'; $('[Id=".$fieldname."_display]').blur(); window.jQuery.dialog.close();", "", "selBut", $config->get('app.url')."/images/icons/accept.png");
+                    $tmp = new Button("document.getElementById('".$fieldname."').value = '".$obj->getOID()."'; document.getElementById('".$fieldname."_display').value = '".$obj->get($this->relationObject->getRelatedClassDisplayField())."'; $('[Id=".$fieldname."_display]').blur(); window.jQuery.dialog.close();", '', 'selBut', $config->get('app.url').'/images/icons/accept.png');
                     $html .= $tmp->render();
                 }
                 $html .= '</td>';
@@ -523,8 +535,7 @@ class RecordSelector
         $html .= '});</script>';
 
         self::$logger->debug('<<renderSelector[html]');
+
         return $html;
     }
 }
-
-?>

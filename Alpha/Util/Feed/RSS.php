@@ -3,9 +3,10 @@
 namespace Alpha\Util\Feed;
 
 /**
- * RSS 1.0 class for synication
+ * RSS 1.0 class for synication.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -42,38 +43,41 @@ namespace Alpha\Util\Feed;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class RSS extends Feed
 {
     /**
-     * The XML namespace
+     * The XML namespace.
      *
      * @var string
+     *
      * @since 1.0
      */
     protected $nameSpace = 'http://purl.org/rss/1.0/';
 
     /**
-     * The RDF namespace
+     * The RDF namespace.
      *
      * @var string
+     *
      * @since 1.0
      */
     private $rdfns = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
 
     /**
-     * The actual root tag used in each feed type
+     * The actual root tag used in each feed type.
      *
      * @var string
+     *
      * @since 1.0
      */
     protected $rootTag = '<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/" />';
 
     /**
-     * Add a URL to feed item
+     * Add a URL to feed item.
      *
      * @param $url
+     *
      * @since 1.0
      */
     private function addToItems($url)
@@ -91,7 +95,7 @@ class RSS extends Feed
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function addItem($title, $link, $description = null, $pubDate = null, $id = null)
     {
@@ -100,7 +104,7 @@ class RSS extends Feed
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function createRSSNode($type, $parent, $title, $url, $description, $pubDate = null)
     {
@@ -108,5 +112,3 @@ class RSS extends Feed
         parent::createRSSNode($type, $parent, $title, $url, $description, $pubDate);
     }
 }
-
-?>

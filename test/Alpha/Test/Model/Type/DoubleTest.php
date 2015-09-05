@@ -6,12 +6,14 @@ use Alpha\Model\Type\Double;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- *
- * Test case for the Double data type
+ * Test case for the Double data type.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
+ *
  * @version $Id: DoubleTest.php 1835 2014-11-10 15:59:23Z alphadevx $
+ *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -47,29 +49,31 @@ use Alpha\Exception\IllegalArguementException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
-class DoubleTest extends \PHPUnit_Framework_TestCase {
-	/**
-	 * An Double for testing
-	 *
-	 * @var Double
-	 * @since 1.0
-	 */
-	private $dbl1;
+class DoubleTest extends \PHPUnit_Framework_TestCase
+{
+    /**
+     * An Double for testing.
+     *
+     * @var Double
+     *
+     * @since 1.0
+     */
+    private $dbl1;
 
-	/**
-	 * An Double for testing
-	 *
-	 * @var Double
-	 * @since 1.0
-	 */
-	private $dbl2;
+    /**
+     * An Double for testing.
+     *
+     * @var Double
+     *
+     * @since 1.0
+     */
+    private $dbl2;
 
-	/**
+    /**
      * Called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+     * here.
      *
      * @since 1.0
      */
@@ -82,7 +86,7 @@ class DoubleTest extends \PHPUnit_Framework_TestCase {
     /**
      * Called after the test functions are executed
      * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+     * here.
      *
      * @since 1.0
      */
@@ -93,90 +97,84 @@ class DoubleTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * Testing the Double constructor for acceptance of correct data
+     * Testing the Double constructor for acceptance of correct data.
      *
      * @since 1.0
      */
     public function testConstructorPass()
     {
-    	$this->dbl1 = new Double(5.77);
+        $this->dbl1 = new Double(5.77);
 
-    	$this->assertEquals(5.77, $this->dbl1->getValue(), "testing the Double constructor for pass");
+        $this->assertEquals(5.77, $this->dbl1->getValue(), 'testing the Double constructor for pass');
     }
 
     /**
-     * Testing passing invalid data to setValue
+     * Testing passing invalid data to setValue.
      *
      * @since 1.0
      */
     public function testSetValueInvalid()
     {
-    	try {
-    		$this->dbl1->setValue("blah");
-    		$this->fail('testing passing invalid data to setValue');
-    	}catch (IllegalArguementException $e) {
-    		$this->assertEquals('Not a valid double value!'
-    			, $e->getMessage()
-    			, 'testing passing invalid data to setValue');
-    	}
+        try {
+            $this->dbl1->setValue('blah');
+            $this->fail('testing passing invalid data to setValue');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Not a valid double value!', $e->getMessage(), 'testing passing invalid data to setValue');
+        }
     }
 
-	/**
-     * Testing passing valid data to setValue
+    /**
+     * Testing passing valid data to setValue.
      *
      * @since 1.0
      */
     public function testSetValueValid()
     {
-    	$this->dbl1->setValue(0.25);
+        $this->dbl1->setValue(0.25);
 
-    	$this->assertEquals(0.25, $this->dbl1->getValue(), 'testing passing valid data to setValue');
+        $this->assertEquals(0.25, $this->dbl1->getValue(), 'testing passing valid data to setValue');
     }
 
     /**
-     * Testing the setSize method to see if validation fails
+     * Testing the setSize method to see if validation fails.
      *
      * @since 1.0
      */
     public function testSetSizeInvalid()
     {
-    	$this->dbl1 = new Double();
-    	$this->dbl1->setSize(2);
+        $this->dbl1 = new Double();
+        $this->dbl1->setSize(2);
 
-    	try {
-    		$this->dbl1->setValue(200);
-    		$this->fail('testing passing invalid data to setValue');
-    	}catch (IllegalArguementException $e) {
-    		$this->assertEquals('Not a valid double value!'
-    			, $e->getMessage()
-    			, 'testing passing invalid data to setValue');
-    	}
+        try {
+            $this->dbl1->setValue(200);
+            $this->fail('testing passing invalid data to setValue');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Not a valid double value!', $e->getMessage(), 'testing passing invalid data to setValue');
+        }
     }
 
     /**
-     * Testing addition of two Double values
+     * Testing addition of two Double values.
      *
      * @since 1.0
      */
     public function testAddDoubles()
     {
-    	$this->dbl1 = new Double(1.25);
-    	$this->dbl2 = new Double(3.50);
+        $this->dbl1 = new Double(1.25);
+        $this->dbl2 = new Double(3.50);
 
-    	$this->assertEquals(4.75, ($this->dbl1->getValue()+$this->dbl2->getValue()), 'testing addition of two Double values');
+        $this->assertEquals(4.75, ($this->dbl1->getValue() + $this->dbl2->getValue()), 'testing addition of two Double values');
     }
 
-	/**
-     * Testing the __toString method
+    /**
+     * Testing the __toString method.
      *
      * @since 1.0
      */
     public function testToString()
     {
-    	$this->dbl1 = new Double(5.5);
+        $this->dbl1 = new Double(5.5);
 
-    	$this->assertEquals('The price is $5.50', 'The price is $'.$this->dbl1, 'testing the __toString method');
+        $this->assertEquals('The price is $5.50', 'The price is $'.$this->dbl1, 'testing the __toString method');
     }
 }
-
-?>

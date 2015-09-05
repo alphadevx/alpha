@@ -7,18 +7,17 @@ use Alpha\Model\BlacklistedIP;
 use Alpha\Model\BadRequest;
 use Alpha\Controller\Front\FrontController;
 use Alpha\Exception\ResourceNotAllowedException;
-use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Util\Http\Filter\ClientTempBlacklistFilter;
 use Alpha\Util\Http\Filter\ClientBlacklistFilter;
 use Alpha\Util\Http\Filter\IPBlacklistFilter;
 use Alpha\Util\Http\Request;
 
 /**
- * Test cases for implementations of the FilterInterface
+ * Test cases for implementations of the FilterInterface.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -55,78 +54,86 @@ use Alpha\Util\Http\Request;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class FilterTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Blacklisted client string
+     * Blacklisted client string.
      *
      * @var Alpha\Model\BlacklistedClient
+     *
      * @since 1.0
      */
     private $blacklistedClient;
 
     /**
-     * Blacklisted IP
+     * Blacklisted IP.
      *
      * @var Alpha\Model\BlacklistedIP
+     *
      * @since 1.2.3
      */
     private $blacklistedIP;
 
     /**
-     * A "bad" (banned) user agent string for us to test with
+     * A "bad" (banned) user agent string for us to test with.
      *
      * @var string
+     *
      * @since 1.0
      */
     private $badAgent = 'curl/7.16.2 (i686-redhat-linux-gnu) libcurl/7.16.2 OpenSSL/0.9.8b zlib/1.2.3 libidn/0.6.8';
 
     /**
-     * Used to keep track of the real user-agent of the user running the tests
+     * Used to keep track of the real user-agent of the user running the tests.
      *
      * @var string
+     *
      * @since 1.0
      */
     private $oldAgent;
 
     /**
-     * Used to keep track of the real IP of the user running the tests
+     * Used to keep track of the real IP of the user running the tests.
      *
      * @var string
+     *
      * @since 1.0
      */
     private $oldIP;
 
     /**
-     * A test BadRequest
+     * A test BadRequest.
      *
      * @var Alpha\Model\BadRequest
+     *
      * @since 1.0
      */
     private $badRequest1;
 
     /**
-     * A test BadRequestObject
+     * A test BadRequestObject.
      *
      * @var Alpha\Model\BadRequest
+     *
      * @since 1.0
      */
     private $badRequest2;
 
     /**
-     * A test BadRequestObject
+     * A test BadRequestObject.
      *
      * @var Alpha\Model\BadRequest
+     *
      * @since 1.0
      */
     private $badRequest3;
 
     /**
-     * A bad IP address
+     * A bad IP address.
      *
      * @var string
+     *
      * @since 1.0
      */
     private $badIP = '127.0.0.1';
@@ -134,7 +141,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     /**
      * Called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+     * here.
      *
      * @since 1.0
      */
@@ -176,7 +183,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     /**
      * Called after the test functions are executed
      * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+     * here.
      *
      * @since 1.0
      */
@@ -194,7 +201,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }*/
 
     /**
-     * Testing that a blacklisted user agent string cannot pass the ClientBlacklistFilter filter
+     * Testing that a blacklisted user agent string cannot pass the ClientBlacklistFilter filter.
      *
      * @since 1.0
      */
@@ -216,7 +223,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that a user agent string/IP compbo cannot pass the ClientTempBlacklistFilter filter beyond the config limit
+     * Testing that a user agent string/IP compbo cannot pass the ClientTempBlacklistFilter filter beyond the config limit.
      *
      * @since 1.0
      */
@@ -242,7 +249,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that a blacklisted IP cannot pass the IPBlacklistFilter filter
+     * Testing that a blacklisted IP cannot pass the IPBlacklistFilter filter.
      *
      * @since 1.2.3
      */
@@ -263,5 +270,3 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         }
     }
 }
-
-?>

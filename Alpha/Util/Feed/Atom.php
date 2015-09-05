@@ -3,9 +3,10 @@
 namespace Alpha\Util\Feed;
 
 /**
- * Atom class for syndication
+ * Atom class for syndication.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -42,48 +43,51 @@ namespace Alpha\Util\Feed;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class Atom extends Feed
 {
     /**
-     * The XML namespace
+     * The XML namespace.
      *
      * @var string
+     *
      * @since 1.0
      */
     protected $nameSpace = 'http://www.w3.org/2005/Atom';
 
     /**
-     * The actual root tag used in each feed type
+     * The actual root tag used in each feed type.
      *
      * @var string
+     *
      * @since 1.0
      */
     protected $rootTag = '<feed xmlns="http://www.w3.org/2005/Atom" />';
 
     /**
-     * If the feed format has a channel or not
+     * If the feed format has a channel or not.
      *
-     * @var boolean
+     * @var bool
+     *
      * @since 1.0
      */
     protected $hasChannel = false;
 
     /**
-     * Maps the tags to the feed-specific tags
+     * Maps the tags to the feed-specific tags.
      *
      * @var array
+     *
      * @since 1.0
      */
     protected $tagMap = array(
-        'item'=>'entry',
-        'feeddesc'=>'subtitle',
-        'itemdesc'=>'summary'
+        'item' => 'entry',
+        'feeddesc' => 'subtitle',
+        'itemdesc' => 'summary',
     );
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function createLink($parent, $url)
     {
@@ -93,28 +97,32 @@ class Atom extends Feed
     }
 
     /**
-     * Constructor to create a new Atom feed
+     * Constructor to create a new Atom feed.
      *
      * @param string $title
      * @param string $url
      * @param string $description
      * @param string $pubDate
-     * @param integer $id
+     * @param int    $id
+     *
      * @since 1.0
      */
     public function __construct($title, $url, $description, $pubDate = null, $id = null)
     {
-        if (empty($id))
+        if (empty($id)) {
             $id = $url;
-        if (empty($pubDate))
+        }
+        if (empty($pubDate)) {
             $pubDate = date('Y-m-d');
+        }
         parent::__construct($title, $url, $description, $pubDate, $id);
     }
 
     /**
-     * Adds an auther to a feed
+     * Adds an auther to a feed.
      *
      * @param string $name The name of the author.
+     *
      * @since 1.0
      */
     public function addAuthor($name)
@@ -127,17 +135,17 @@ class Atom extends Feed
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    protected function addItem($title, $link, $description=null, $pubDate = null, $id = null)
+    protected function addItem($title, $link, $description = null, $pubDate = null, $id = null)
     {
-        if (empty($id))
+        if (empty($id)) {
             $id = $link;
-        if (empty($pubDate))
+        }
+        if (empty($pubDate)) {
             $pubDate = date('Y-m-d');
+        }
 
         parent::addItem($title, $link, $description, $pubDate, $id);
     }
 }
-
-?>

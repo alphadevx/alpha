@@ -3,11 +3,11 @@
 namespace Alpha\Util\Cache;
 
 /**
- *
  * An interface that contains the methods for a cache implementation for storing business
  * objects and other less complex values.
  *
  * @since 1.1
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -44,37 +44,38 @@ namespace Alpha\Util\Cache;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 interface CacheProviderInterface
 {
-	/**
-	 * Attempt to get the value from the cache for the given $key.
-	 *
-	 * @param $key
-	 * @since 1.1
-	 * @return mixed The expected value from the cache, boolean false otherwise
-	 */
-	public function get($key);
+    /**
+     * Attempt to get the value from the cache for the given $key.
+     *
+     * @param $key
+     *
+     * @since 1.1
+     *
+     * @return mixed The expected value from the cache, boolean false otherwise
+     */
+    public function get($key);
 
-	/**
-	 * Attempt to set the value in the cache for the given $key.  Old values on the same
-	 * key will be overwritten.
-	 *
-	 * @param $key
-	 * @param $value
-	 * @param $expiry Optional, some cache implementations will support an expiry value in seconds.
-	 * @since 1.1
-	 */
-	public function set($key, $value, $expiry=0);
+    /**
+     * Attempt to set the value in the cache for the given $key.  Old values on the same
+     * key will be overwritten.
+     *
+     * @param $key
+     * @param $value
+     * @param $expiry Optional, some cache implementations will support an expiry value in seconds.
+     *
+     * @since 1.1
+     */
+    public function set($key, $value, $expiry = 0);
 
-	/**
-	 * Attempt to delete the value from the cache for the given $key.
-	 *
-	 * @param $key
-	 * @since 1.1
-	 */
-	public function delete($key);
+    /**
+     * Attempt to delete the value from the cache for the given $key.
+     *
+     * @param $key
+     *
+     * @since 1.1
+     */
+    public function delete($key);
 }
-
-?>

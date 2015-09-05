@@ -3,10 +3,8 @@
 namespace Alpha\Controller;
 
 use Alpha\Exception\ResourceNotFoundException;
-use Alpha\Exception\IllegalArguementException;
 use Alpha\View\Widget\RecordSelector;
 use Alpha\Util\Logging\Logger;
-use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\Model\Type\Relation;
@@ -15,6 +13,7 @@ use Alpha\Model\Type\Relation;
  * Controller for viewing a RecordSelector widget.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -51,20 +50,20 @@ use Alpha\Model\Type\Relation;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class RecordSelectorController extends Controller implements ControllerInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @since 1.0
      */
@@ -80,11 +79,14 @@ class RecordSelectorController extends Controller implements ControllerInterface
     }
 
     /**
-     * Handles get requests
+     * Handles get requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @since 1.0
+     *
      * @throws Alpha\Exception\ResourceNotFoundException
      */
     public function doGet($request)
@@ -149,8 +151,7 @@ class RecordSelectorController extends Controller implements ControllerInterface
         }
 
         self::$logger->debug('<<__doGet');
+
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 }
-
-?>

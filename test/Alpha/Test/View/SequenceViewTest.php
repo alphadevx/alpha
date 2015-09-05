@@ -6,13 +6,12 @@ use Alpha\View\SequenceView;
 use Alpha\View\View;
 use Alpha\Model\Type\Sequence;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Http\Session\SessionProviderFactory;
 
 /**
- *
  * Test cases for the SequenceView class.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -49,12 +48,11 @@ use Alpha\Util\Http\Session\SessionProviderFactory;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class SequenceViewTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @since 2.0
      */
@@ -71,7 +69,7 @@ class SequenceViewTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @since 2.0
      */
@@ -82,7 +80,7 @@ class SequenceViewTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the listView() method
+     * Testing the listView() method.
      *
      * @since 2.0
      */
@@ -93,11 +91,11 @@ class SequenceViewTest extends \PHPUnit_Framework_TestCase
         $view = View::getInstance($sequence);
 
         $this->assertNotEmpty($view->listView(array('URI' => '/')), 'Testing the listView() method');
-        $this->assertTrue(strpos($view->listView(array('URI' => '/')),'TEST') !== false, 'Testing the listView() method');
+        $this->assertTrue(strpos($view->listView(array('URI' => '/')), 'TEST') !== false, 'Testing the listView() method');
     }
 
     /**
-     * Testing the detailedView() method
+     * Testing the detailedView() method.
      *
      * @since 2.0
      */
@@ -108,8 +106,6 @@ class SequenceViewTest extends \PHPUnit_Framework_TestCase
         $view = View::getInstance($sequence);
 
         $this->assertNotEmpty($view->detailedView(), 'Testing the detailedView() method');
-        $this->assertTrue(strpos($view->detailedView(),'TEST') !== false, 'Testing the detailedView() method');
+        $this->assertTrue(strpos($view->detailedView(), 'TEST') !== false, 'Testing the detailedView() method');
     }
 }
-
-?>

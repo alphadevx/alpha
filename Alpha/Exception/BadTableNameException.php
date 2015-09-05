@@ -3,9 +3,10 @@
 namespace Alpha\Exception;
 
 /**
- * The exception class for invalid active record table name exceptions
+ * The exception class for invalid active record table name exceptions.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -42,8 +43,7 @@ namespace Alpha\Exception;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
-class BadTableNameException extends AlphaException {}
-
-?>
+class BadTableNameException extends AlphaException
+{
+}

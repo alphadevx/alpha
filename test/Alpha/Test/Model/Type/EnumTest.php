@@ -4,16 +4,17 @@ namespace Alpha\Test\Model\Type;
 
 use Alpha\Test\Model\ModelTestCase;
 use Alpha\Model\Type\Enum;
-use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- *
- * Test case for the Enum data type
+ * Test case for the Enum data type.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
+ *
  * @version $Id: EnumTest.php 1839 2014-11-10 18:01:20Z alphadevx $
+ *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -49,32 +50,34 @@ use Alpha\Exception\IllegalArguementException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class EnumTest extends ModelTestCase
 {
-	/**
-	 * An Enum for testing
-	 *
-	 * @var Enum
-	 * @since 1.0
-	 */
-	private $enum1;
-
-	/**
-	 * A person for testing
-	 *
-	 * @var PersonObject
-	 * @since 1.0
-	 */
-	private $person;
-
-	/**
-     * Called before the test functions will be executed
-     * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+    /**
+     * An Enum for testing.
+     *
+     * @var Enum
      *
      * @since 1.0
+     */
+    private $enum1;
+
+    /**
+     * A person for testing.
+     *
+     * @var PersonObject
+     *
+     * @since 1.0
+     */
+    private $person;
+
+    /**
+     * Called before the test functions will be executed
+     * this function is defined in PHPUnit_TestCase and overwritten
+     * here.
+     *
+     * @since 1.0
+     *
      * @todo Re-enable test once DAO functionality is migrated to namespaces
      */
     /*protected function setUp()
@@ -96,9 +99,10 @@ class EnumTest extends ModelTestCase
     /**
      * Called after the test functions are executed
      * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+     * here.
      *
      * @since 1.0
+     *
      * @todo Re-enable test once DAO functionality is migrated to namespaces
      */
     /*protected function tearDown()
@@ -113,9 +117,10 @@ class EnumTest extends ModelTestCase
     }*/
 
     /**
-     * Testing that enum options are loaded correctly from the database
+     * Testing that enum options are loaded correctly from the database.
      *
      * @since 1.0
+     *
      * @todo Re-enable test once DAO functionality is migrated to namespaces
      */
     /*public function testLoadEnumOptions()
@@ -126,107 +131,101 @@ class EnumTest extends ModelTestCase
     }*/
 
     /**
-     * Testing the set/get enum option methods
+     * Testing the set/get enum option methods.
      *
      * @since 1.0
      */
     public function testSetEnumOptions()
     {
         $enum = new Enum();
-    	$enum->setOptions(array('a','b','c'));
+        $enum->setOptions(array('a', 'b', 'c'));
 
-    	$this->assertEquals($enum->getOptions(), array('a','b','c'), "testing the set/get enum option methods");
+        $this->assertEquals($enum->getOptions(), array('a', 'b', 'c'), 'testing the set/get enum option methods');
     }
 
-	/**
-     * Testing the setValue method with good and bad values
+    /**
+     * Testing the setValue method with good and bad values.
      *
      * @since 1.0
      */
     public function testSetValue()
     {
         $enum = new Enum();
-    	$enum->setOptions(array('a','b','c'));
+        $enum->setOptions(array('a', 'b', 'c'));
 
-    	try {
-    		$enum->setValue('b');
-    	}catch (IllegalArguementException $e) {
-    		$this->fail('testing the setValue method with a good value');
-    	}
+        try {
+            $enum->setValue('b');
+        } catch (IllegalArguementException $e) {
+            $this->fail('testing the setValue method with a good value');
+        }
 
-    	try {
-    		$enum->setValue('z');
-    		$this->fail('testing the setValue method with a good value');
-    	}catch (IllegalArguementException $e) {
-    		$this->assertEquals('Not a valid enum option!'
-    			, $e->getMessage()
-    			, 'testing the setValue method with a bad value');
-    	}
+        try {
+            $enum->setValue('z');
+            $this->fail('testing the setValue method with a good value');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Not a valid enum option!', $e->getMessage(), 'testing the setValue method with a bad value');
+        }
     }
 
-	/**
-     * Testing the getValue method
+    /**
+     * Testing the getValue method.
      *
      * @since 1.0
      */
     public function testGetValue()
     {
         $enum = new Enum();
-    	$enum->setOptions(array('a','b','c'));
+        $enum->setOptions(array('a', 'b', 'c'));
 
-    	try {
-    		$enum->setValue('b');
-    	}catch (IllegalArguementException $e) {
-    		$this->fail('testing the getValue method');
-    	}
+        try {
+            $enum->setValue('b');
+        } catch (IllegalArguementException $e) {
+            $this->fail('testing the getValue method');
+        }
 
-    	$this->assertEquals('b', $enum->getValue(), 'testing the getValue method');
+        $this->assertEquals('b', $enum->getValue(), 'testing the getValue method');
     }
 
     /**
-     * Test the constructor failing when a bad array is provided
+     * Test the constructor failing when a bad array is provided.
      *
      * @since 1.0
      */
     public function testConstructorFail()
     {
-    	try {
-    		$enum = new Enum('blah');
-    		$this->fail('test the constructor failing when a bad array is provided');
-    	}catch (IllegalArguementException $e) {
-    		$this->assertEquals('Not a valid enum option array!'
-    			, $e->getMessage()
-    			, 'test the constructor failing when a bad array is provided');
-    	}
+        try {
+            $enum = new Enum('blah');
+            $this->fail('test the constructor failing when a bad array is provided');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Not a valid enum option array!', $e->getMessage(), 'test the constructor failing when a bad array is provided');
+        }
     }
 
     /**
-     * Testing the default (non-alphabetical) sort order on the enum
+     * Testing the default (non-alphabetical) sort order on the enum.
      *
      * @since 1.0
      */
     public function testDefaultSortOrder()
     {
-    	$enum = new Enum(array("alpha","gamma","beta"));
+        $enum = new Enum(array('alpha', 'gamma', 'beta'));
 
-    	$options = $enum->getOptions();
+        $options = $enum->getOptions();
 
-    	$this->assertEquals($options[1], 'gamma', 'testing the default (non-alphabetical) sort order on the enum');
+        $this->assertEquals($options[1], 'gamma', 'testing the default (non-alphabetical) sort order on the enum');
     }
 
-	/**
-     * Testing the alphabetical sort order on the enum
+    /**
+     * Testing the alphabetical sort order on the enum.
      *
      * @since 1.0
      */
     public function testAlphaSortOrder()
     {
-    	$enum = new Enum(array("alpha","gamma","beta"));
+        $enum = new Enum(array('alpha', 'gamma', 'beta'));
 
-    	$options = $enum->getOptions(true);
+        $options = $enum->getOptions(true);
 
-    	$this->assertEquals($options[1], 'beta', 'testing the alphabetical sort order on the enum');
+        $this->assertEquals($options[1], 'beta', 'testing the alphabetical sort order on the enum');
     }
 }
-
-?>

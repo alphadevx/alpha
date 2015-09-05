@@ -9,9 +9,10 @@ use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Config\ConfigProvider;
 
 /**
- * A HTML widget for rendering a text box with calendar icon for Date/Timestamp types
+ * A HTML widget for rendering a text box with calendar icon for Date/Timestamp types.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -48,7 +49,6 @@ use Alpha\Util\Config\ConfigProvider;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class DateBox
 {
@@ -56,57 +56,65 @@ class DateBox
      * The date or timestamp object for the widget.
      *
      * @var Alpha\Model\Type\Date or Alpha\Model\Type\Timestamp
+     *
      * @since 1.0
      */
     private $dateObject = null;
 
     /**
-     * The data label for the object
+     * The data label for the object.
      *
      * @var string
+     *
      * @since 1.0
      */
     private $label;
 
     /**
-     * The name of the HTML input box
+     * The name of the HTML input box.
      *
      * @var string
+     *
      * @since 1.0
      */
     private $name;
 
     /**
-     * The constructor
+     * The constructor.
      *
      * @param Alpha\Model\Type\Date or Alpha\Model\Type\Timestamp $object The date or timestamp object that will be edited by this widget.
-     * @param string $label The data label for the object.
-     * @param string $name The name of the HTML input box.
+     * @param string                                              $label  The data label for the object.
+     * @param string                                              $name   The name of the HTML input box.
+     *
      * @since 1.0
+     *
      * @throws Alpha\Exception\IllegalArguementException
      */
-    public function __construct($object, $label="", $name="")
+    public function __construct($object, $label = '', $name = '')
     {
         $config = ConfigProvider::getInstance();
 
         // check the type of the object passed
-        if ($object instanceof Date || $object instanceof Timestamp)
+        if ($object instanceof Date || $object instanceof Timestamp) {
             $this->dateObject = $object;
-        else
+        } else {
             throw new IllegalArguementException('DateBox widget can only accept a Date or Timestamp object!');
+        }
 
         $this->label = $label;
 
-        if ($config->get('security.encrypt.http.fieldnames'))
+        if ($config->get('security.encrypt.http.fieldnames')) {
             $this->name = base64_encode(SecurityUtils::encrypt($name));
-        else
+        } else {
             $this->name = $name;
+        }
     }
 
     /**
-     * Renders the text box and icon to open the calendar pop-up
+     * Renders the text box and icon to open the calendar pop-up.
      *
      * @return string
+     *
      * @since 1.0
      */
     public function render()
@@ -119,7 +127,7 @@ class DateBox
          * decide on the size of the text box and the height of the widget pop-up,
          * depending on the dateObject type
          */
-        if (mb_strtoupper(get_class($this->dateObject)) == "TIMESTAMP") {
+        if (mb_strtoupper(get_class($this->dateObject)) == 'TIMESTAMP') {
             $size = 18;
             $cal_height = 230;
         } else {
@@ -129,8 +137,9 @@ class DateBox
 
         $value = $this->dateObject->getValue();
 
-        if($value == '0000-00-00')
+        if ($value == '0000-00-00') {
             $value = '';
+        }
 
         $html .= '<div class="input-group date">';
         $html .= '<input type="text" class="form-control" name="'.$this->name.'" id="'.$this->name.'" value="'.$value.'"/>';
@@ -150,5 +159,3 @@ class DateBox
         return $html;
     }
 }
-
-?>

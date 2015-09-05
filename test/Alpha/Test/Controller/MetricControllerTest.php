@@ -4,17 +4,15 @@ namespace Alpha\Test\Controller;
 
 use Alpha\Controller\Front\FrontController;
 use Alpha\Controller\MetricController;
-use Alpha\Controller\Controller;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
-use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 
 /**
- *
- * Test cases for the MetricController class
+ * Test cases for the MetricController class.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -51,12 +49,11 @@ use Alpha\Util\Http\Session\SessionProviderFactory;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class MetricControllerTest extends ControllerTestCase
 {
     /**
-     * Testing the doGET method
+     * Testing the doGET method.
      */
     public function testDoGET()
     {
@@ -73,5 +70,3 @@ class MetricControllerTest extends ControllerTestCase
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
     }
 }
-
-?>

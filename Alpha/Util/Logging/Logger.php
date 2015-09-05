@@ -8,9 +8,10 @@ use Alpha\Util\Http\Request;
 use Alpha\Model\ActionLog;
 
 /**
- * Log class used for debug and exception logging
+ * Log class used for debug and exception logging.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -47,224 +48,236 @@ use Alpha\Model\ActionLog;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class Logger
 {
-	/**
-	 * The log file the log entries will be saved to
-	 *
-	 * @var Alpha\Util\Logging\LogFile
-	 * @since 1.0
-	 */
-	private $logfile;
+    /**
+     * The log file the log entries will be saved to.
+     *
+     * @var Alpha\Util\Logging\LogFile
+     *
+     * @since 1.0
+     */
+    private $logfile;
 
-	/**
-	 * The logging level applied accross the system.  Valid options are DEBUG, INFO, WARN, ERROR, FATAL, and SQL
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	private $level;
+    /**
+     * The logging level applied accross the system.  Valid options are DEBUG, INFO, WARN, ERROR, FATAL, and SQL.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    private $level;
 
-	/**
-	 * The name of the class that this Logger is logging for
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	private $classname;
+    /**
+     * The name of the class that this Logger is logging for.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    private $classname;
 
-	/**
-	 * An array of class names that will be logged at debug level, regardless of the global Logger::level setting
-	 *
-	 * @var array
-	 * @since 1.0
-	 */
-	private $debugClasses = array();
+    /**
+     * An array of class names that will be logged at debug level, regardless of the global Logger::level setting.
+     *
+     * @var array
+     *
+     * @since 1.0
+     */
+    private $debugClasses = array();
 
-	/**
-	 * A request object that will give us the IP, user-agent etc. of the client we are logging for
-	 *
-	 * @var Alpha\Util\Http\Request
-	 * @since 2.0
-	 */
-	private $request;
+    /**
+     * A request object that will give us the IP, user-agent etc. of the client we are logging for.
+     *
+     * @var Alpha\Util\Http\Request
+     *
+     * @since 2.0
+     */
+    private $request;
 
-	/**
-	 * The constructor
-	 *
-	 * @param string $classname
-	 * @since 1.0
-	 */
-	public function __construct($classname)
-	{
-		$config = ConfigProvider::getInstance();
+    /**
+     * The constructor.
+     *
+     * @param string $classname
+     *
+     * @since 1.0
+     */
+    public function __construct($classname)
+    {
+        $config = ConfigProvider::getInstance();
 
-		$this->classname = $classname;
-		$this->level = $config->get('app.log.trace.level');
-		$this->debugClasses = explode(',', $config->get('app.log.trace.debug.classes'));
-		$this->logfile = new LogFile($config->get('app.file.store.dir').'logs/'.$config->get('app.log.file'));
-		$this->logfile->setMaxSize($config->get('app.log.file.max.size'));
+        $this->classname = $classname;
+        $this->level = $config->get('app.log.trace.level');
+        $this->debugClasses = explode(',', $config->get('app.log.trace.debug.classes'));
+        $this->logfile = new LogFile($config->get('app.file.store.dir').'logs/'.$config->get('app.log.file'));
+        $this->logfile->setMaxSize($config->get('app.log.file.max.size'));
 
-		$this->request = new Request(array('method' => 'GET')); // hard-coding to GET here is fine as we don't log HTTP method (yet).
-	}
+        $this->request = new Request(array('method' => 'GET')); // hard-coding to GET here is fine as we don't log HTTP method (yet).
+    }
 
-	/**
-	 * Log a DEBUG message
-	 *
-	 * @param string $message
-	 * @since 1.0
-	 */
-	public function debug($message)
-	{
-		if ($this->level == 'DEBUG' || in_array($this->classname, $this->debugClasses)) {
-			$dateTime = date("Y-m-d H:i:s");
-			$this->logfile->writeLine(array($dateTime, 'DEBUG', $this->classname, $message,
-				$this->request->getUserAgent(), $this->request->getIP(), gethostname()));
-		}
-	}
+    /**
+     * Log a DEBUG message.
+     *
+     * @param string $message
+     *
+     * @since 1.0
+     */
+    public function debug($message)
+    {
+        if ($this->level == 'DEBUG' || in_array($this->classname, $this->debugClasses)) {
+            $dateTime = date('Y-m-d H:i:s');
+            $this->logfile->writeLine(array($dateTime, 'DEBUG', $this->classname, $message,
+                $this->request->getUserAgent(), $this->request->getIP(), gethostname(), ));
+        }
+    }
 
-	/**
-	 * Log an INFO message
-	 *
-	 * @param string $message
-	 * @since 1.0
-	 */
-	public function info($message)
-	{
-		if ($this->level == 'DEBUG' || $this->level == 'INFO' || in_array($this->classname, $this->debugClasses)) {
-			$dateTime = date("Y-m-d H:i:s");
-			$this->logfile->writeLine(array($dateTime, 'INFO', $this->classname, $message,
-				$this->request->getUserAgent(), $this->request->getIP(), gethostname()));
-		}
-	}
+    /**
+     * Log an INFO message.
+     *
+     * @param string $message
+     *
+     * @since 1.0
+     */
+    public function info($message)
+    {
+        if ($this->level == 'DEBUG' || $this->level == 'INFO' || in_array($this->classname, $this->debugClasses)) {
+            $dateTime = date('Y-m-d H:i:s');
+            $this->logfile->writeLine(array($dateTime, 'INFO', $this->classname, $message,
+                $this->request->getUserAgent(), $this->request->getIP(), gethostname(), ));
+        }
+    }
 
-	/**
-	 * Log a WARN message
-	 *
-	 * @param string $message
-	 * @since 1.0
-	 */
-	public function warn($message)
-	{
-		if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || in_array($this->classname, $this->debugClasses)) {
-			$dateTime = date("Y-m-d H:i:s");
-			$this->logfile->writeLine(array($dateTime, 'WARN', $this->classname, $message,
-				$this->request->getUserAgent(), $this->request->getIP(), gethostname()));
-		}
-	}
+    /**
+     * Log a WARN message.
+     *
+     * @param string $message
+     *
+     * @since 1.0
+     */
+    public function warn($message)
+    {
+        if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || in_array($this->classname, $this->debugClasses)) {
+            $dateTime = date('Y-m-d H:i:s');
+            $this->logfile->writeLine(array($dateTime, 'WARN', $this->classname, $message,
+                $this->request->getUserAgent(), $this->request->getIP(), gethostname(), ));
+        }
+    }
 
-	/**
-	 * Log an ERROR message
-	 *
-	 * @param string $message
-	 * @since 1.0
-	 */
-	public function error($message)
-	{
-		if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' ||
-			in_array($this->classname, $this->debugClasses)) {
-			$dateTime = date("Y-m-d H:i:s");
-			$line = array($dateTime, 'ERROR', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP(), gethostname());
-			$this->logfile->writeLine($line);
+    /**
+     * Log an ERROR message.
+     *
+     * @param string $message
+     *
+     * @since 1.0
+     */
+    public function error($message)
+    {
+        if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' ||
+            in_array($this->classname, $this->debugClasses)) {
+            $dateTime = date('Y-m-d H:i:s');
+            $line = array($dateTime, 'ERROR', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP(), gethostname());
+            $this->logfile->writeLine($line);
 
-			$this->notifyAdmin(print_r($line, true));
-		}
-	}
+            $this->notifyAdmin(print_r($line, true));
+        }
+    }
 
-	/**
-	 * Log a FATAL message
-	 *
-	 * @param string $message
-	 * @since 1.0
-	 */
-	public function fatal($message)
-	{
-		if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' ||
-			$this->level == 'FATAL' || in_array($this->classname, $this->debugClasses)) {
-			$dateTime = date("Y-m-d H:i:s");
-			$line = array($dateTime, 'FATAL', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP(), gethostname());
-			$this->logfile->writeLine($line);
+    /**
+     * Log a FATAL message.
+     *
+     * @param string $message
+     *
+     * @since 1.0
+     */
+    public function fatal($message)
+    {
+        if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' ||
+            $this->level == 'FATAL' || in_array($this->classname, $this->debugClasses)) {
+            $dateTime = date('Y-m-d H:i:s');
+            $line = array($dateTime, 'FATAL', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP(), gethostname());
+            $this->logfile->writeLine($line);
 
-			$this->notifyAdmin(print_r($line, true));
-		}
-	}
+            $this->notifyAdmin(print_r($line, true));
+        }
+    }
 
-	/**
-	 * Log a SQL queries
-	 *
-	 * @param string $message
-	 * @since 1.1
-	 */
-	public function sql($message)
-	{
-		if ($this->level == 'SQL') {
-			$dateTime = date("Y-m-d H:i:s");
-			$line = array($dateTime, 'SQL', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP(), gethostname());
-			$this->logfile->writeLine($line);
-		}
-	}
+    /**
+     * Log a SQL queries.
+     *
+     * @param string $message
+     *
+     * @since 1.1
+     */
+    public function sql($message)
+    {
+        if ($this->level == 'SQL') {
+            $dateTime = date('Y-m-d H:i:s');
+            $line = array($dateTime, 'SQL', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP(), gethostname());
+            $this->logfile->writeLine($line);
+        }
+    }
 
-	/**
-	 * Log an action carried out by a person to the ActionLog table
-	 *
-	 * @param string $message
-	 * @since 1.1
-	 */
-	public function action($message)
-	{
-		$config = ConfigProvider::getInstance();
-		$sessionProvider = $config->get('session.provider.name');
+    /**
+     * Log an action carried out by a person to the ActionLog table.
+     *
+     * @param string $message
+     *
+     * @since 1.1
+     */
+    public function action($message)
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
 
-		if ($session->get('currentUser') != null) {
-			$action = new ActionLog();
-			$action->set('client', $this->request->getUserAgent());
-			$action->set('IP', $this->request->getIP());
-			$action->set('message', $message);
-			$action->save();
-		}
-	}
+        if ($session->get('currentUser') != null) {
+            $action = new ActionLog();
+            $action->set('client', $this->request->getUserAgent());
+            $action->set('IP', $this->request->getIP());
+            $action->set('message', $message);
+            $action->save();
+        }
+    }
 
-	/**
-	 * Notify the sys admin via email when a serious error occurs
-	 *
-	 * @param string $message
-	 * @since 1.0
-	 */
-	public function notifyAdmin($message)
-	{
-		$config = ConfigProvider::getInstance();
+    /**
+     * Notify the sys admin via email when a serious error occurs.
+     *
+     * @param string $message
+     *
+     * @since 1.0
+     */
+    public function notifyAdmin($message)
+    {
+        $config = ConfigProvider::getInstance();
 
-		// just making sure an email address has been set in the .ini file
-		if ($config->get('app.log.error.mail.address') != '') {
-			$body = "The following error has occured:\n\n";
+        // just making sure an email address has been set in the .ini file
+        if ($config->get('app.log.error.mail.address') != '') {
+            $body = "The following error has occured:\n\n";
 
-			$body .= "Class:-> ".$this->classname."\n\n";
-			$body .= "Message:-> ".$message."\n\n";
-			$body .= "Server:-> ".gethostname()."\n\n";
+            $body .= 'Class:-> '.$this->classname."\n\n";
+            $body .= 'Message:-> '.$message."\n\n";
+            $body .= 'Server:-> '.gethostname()."\n\n";
 
-			$body .= "\n\nKind regards,\n\nAdministrator\n--\n".$config->get('app.url');
+            $body .= "\n\nKind regards,\n\nAdministrator\n--\n".$config->get('app.url');
 
-			mb_send_mail($config->get('app.log.error.mail.address'), "Error in class ".$this->classname." on site ".$config->get('app.title'), $body,
-				"From: ".$config->get('email.reply.to')."\r\nReply-To: ".$config->get('email.reply.to')."\r\nX-Mailer: PHP/" . phpversion());
-		}
-	}
+            mb_send_mail($config->get('app.log.error.mail.address'), 'Error in class '.$this->classname.' on site '.$config->get('app.title'), $body,
+                'From: '.$config->get('email.reply.to')."\r\nReply-To: ".$config->get('email.reply.to')."\r\nX-Mailer: PHP/".phpversion());
+        }
+    }
 
-	/**
-	 * Allows you to set the log file path to one other than the main application log.
-	 *
-	 * @param string $filepath
-	 * @since 1.0
-	 */
-	public function setLogFile($filepath)
-	{
-		$config = ConfigProvider::getInstance();
+    /**
+     * Allows you to set the log file path to one other than the main application log.
+     *
+     * @param string $filepath
+     *
+     * @since 1.0
+     */
+    public function setLogFile($filepath)
+    {
+        $config = ConfigProvider::getInstance();
 
-		$this->logfile = new LogFile($filepath);
-		$this->logfile->setMaxSize($config->get('app.log.file.max.size'));
-	}
+        $this->logfile = new LogFile($filepath);
+        $this->logfile->setMaxSize($config->get('app.log.file.max.size'));
+    }
 }
-
-?>

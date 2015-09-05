@@ -12,6 +12,7 @@ use Alpha\Model\Tag;
  * database.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -48,31 +49,33 @@ use Alpha\Model\Tag;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class TagCloud
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * A hash array of popular tags
+     * A hash array of popular tags.
      *
      * @var array
+     *
      * @since 1.0
      */
     private $popTags = array();
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param $limit The maximum amount of tags to include in the cloud.
      * @param $cacheKey Set this optional value to attempt to store the tag cloud array in the available cache for 24hrs (cache.provider.name).
+     *
      * @since 1.0
      */
     public function __construct($limit, $cacheKey = '')
@@ -107,25 +110,27 @@ class TagCloud
      * @param $minLinkSize The minimum font size for any tag link, in points.
      * @param $maxLinkSize The maximum font size for any tag link, in points.
      * @param $target The target attribute for the links
+     *
      * @return string
+     *
      * @since 1.0
      */
-    public function render($minLinkSize=8, $maxLinkSize=20, $target='')
+    public function render($minLinkSize = 8, $maxLinkSize = 20, $target = '')
     {
         $config = ConfigProvider::getInstance();
         $html = '<p>';
 
         foreach (array_keys($this->popTags) as $key) {
             $linkSize = $this->popTags[$key];
-            if ($linkSize < $minLinkSize)
+            if ($linkSize < $minLinkSize) {
                 $linkSize = $minLinkSize;
-            if ($linkSize > $maxLinkSize)
+            }
+            if ($linkSize > $maxLinkSize) {
                 $linkSize = $maxLinkSize;
+            }
             $html .= '<a href="'.$config->get('app.url').'search/'.$key.'" style="font-size:'.$linkSize.'pt;"'.(empty($target) ? '' : ' target="'.$target.'"').' rel="tag">'.$key.'</a> ';
         }
 
         return $html.'</p>';
     }
 }
-
-?>

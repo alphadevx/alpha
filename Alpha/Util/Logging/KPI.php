@@ -4,16 +4,15 @@ namespace Alpha\Util\Logging;
 
 use Alpha\Model\Type\Timestamp;
 use Alpha\Model\Type\String;
-use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Helper\Validator;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 
 /**
- *
- * A Key Performance Indicator (KPI) logging class
+ * A Key Performance Indicator (KPI) logging class.
  *
  * @since 1.1
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -50,63 +49,70 @@ use Alpha\Util\Http\Session\SessionProviderFactory;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class KPI
 {
     /**
-     * The date/time of the KPI event
+     * The date/time of the KPI event.
      *
      * @var Alpha\Model\Type\Timestamp
+     *
      * @since 1.1
      */
     private $timeStamp;
 
     /**
-     * The name of the KPI
+     * The name of the KPI.
      *
      * @var Alpha\Model\Type\String
+     *
      * @since 1.1
      */
     private $name;
 
     /**
-     * The session ID of the current HTTP session
+     * The session ID of the current HTTP session.
      *
      * @var string
+     *
      * @since 1.1
      */
     private $sessionID;
 
     /**
-     * The start time of the KPI event (UNIX timestamp in seconds)
+     * The start time of the KPI event (UNIX timestamp in seconds).
      *
      * @var float
+     *
      * @since 1.1
      */
     private $startTime;
 
     /**
-     * The end time of the KPI event (UNIX timestamp in seconds)
+     * The end time of the KPI event (UNIX timestamp in seconds).
      *
      * @var float
+     *
      * @since 1.1
      */
     private $endTime;
 
     /**
-     * The duration in seconds
+     * The duration in seconds.
      *
      * @var float
+     *
      * @since 1.1
      */
     private $duration;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string $name The name of the KPI which is used in the log files, must only be letters and/or numbers.
+     *
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @since 1.1
      */
     public function __construct($name)
@@ -191,5 +197,3 @@ class KPI
         $logfile->writeLine(array($this->timeStamp, $this->name->getValue().' ['.$stepName.']', $this->sessionID, $this->startTime, $this->endTime, $this->duration));
     }
 }
-
-?>

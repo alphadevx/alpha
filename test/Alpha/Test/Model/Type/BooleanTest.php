@@ -3,16 +3,17 @@
 namespace Alpha\Test\Model\Type;
 
 use Alpha\Model\Type\Boolean;
-use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- *
- * Test case for the Boolean data type
+ * Test case for the Boolean data type.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
+ *
  * @version $Id: BooleanTest.php 1835 2014-11-10 15:59:23Z alphadevx $
+ *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -48,22 +49,22 @@ use Alpha\Exception\IllegalArguementException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class BooleanTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * An Boolean for testing
-	 *
-	 * @var Boolean
-	 * @since 1.0
-	 */
-	private $boolean;
+    /**
+     * An Boolean for testing.
+     *
+     * @var Boolean
+     *
+     * @since 1.0
+     */
+    private $boolean;
 
-	/**
+    /**
      * Called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+     * here.
      *
      * @since 1.0
      */
@@ -75,7 +76,7 @@ class BooleanTest extends \PHPUnit_Framework_TestCase
     /**
      * Called after the test functions are executed
      * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+     * here.
      *
      * @since 1.0
      */
@@ -85,82 +86,80 @@ class BooleanTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the constructor has set the Boolean to true by default
+     * Testing the constructor has set the Boolean to true by default.
      *
      * @since 1.0
      */
     public function testDefaultBooleanValue()
     {
-    	$this->assertTrue($this->boolean->getBooleanValue(), "testing the constructor has set the Boolean to true by default");
-    	$this->assertEquals($this->boolean->getValue(), 1, "testing the constructor has set the Boolean to true by default");
+        $this->assertTrue($this->boolean->getBooleanValue(), 'testing the constructor has set the Boolean to true by default');
+        $this->assertEquals($this->boolean->getValue(), 1, 'testing the constructor has set the Boolean to true by default');
     }
 
     /**
-     * Testing the constructor default can be overridden
+     * Testing the constructor default can be overridden.
      *
      * @since 1.0
      */
     public function testOverrideDefaultBooleanValue()
     {
-    	$this->boolean = new Boolean(false);
+        $this->boolean = new Boolean(false);
 
-    	$this->assertFalse($this->boolean->getBooleanValue(), "testing the constructor default can be overridden");
-    	$this->assertEquals($this->boolean->getValue(), 0, "testing the constructor default can be overridden");
+        $this->assertFalse($this->boolean->getBooleanValue(), 'testing the constructor default can be overridden');
+        $this->assertEquals($this->boolean->getValue(), 0, 'testing the constructor default can be overridden');
     }
 
-	/**
-     * Testing passing invalid data to the constructor
+    /**
+     * Testing passing invalid data to the constructor.
      *
      * @since 1.0
      */
     public function testConstructorInvalid()
     {
-    	try {
-    		$this->boolean = new Boolean(7);
-    		$this->boolean = new Boolean('abc');
-    		$this->fail("testing passing invalid data to the constructor");
-    	}catch (IllegalArguementException $e) {
-    		$this->assertTrue(true, "testing passing invalid data to the constructor");
-    	}
+        try {
+            $this->boolean = new Boolean(7);
+            $this->boolean = new Boolean('abc');
+            $this->fail('testing passing invalid data to the constructor');
+        } catch (IllegalArguementException $e) {
+            $this->assertTrue(true, 'testing passing invalid data to the constructor');
+        }
     }
 
     /**
-     * Testing passing valid data to setValue
+     * Testing passing valid data to setValue.
      *
      * @since 1.0
      */
     public function testSetValueValid()
     {
-    	$this->boolean->setValue(true);
+        $this->boolean->setValue(true);
 
-    	$this->assertTrue($this->boolean->getBooleanValue(), "testing passing valid data to setValue");
-    	$this->assertEquals($this->boolean->getValue(), 1, "testing passing valid data to setValue");
+        $this->assertTrue($this->boolean->getBooleanValue(), 'testing passing valid data to setValue');
+        $this->assertEquals($this->boolean->getValue(), 1, 'testing passing valid data to setValue');
     }
 
     /**
-     * Testing passing invalid data to setValue
+     * Testing passing invalid data to setValue.
      *
      * @since 1.0
      */
     public function testSetValueInvalid()
     {
-    	try {
-    		$this->boolean->setValue(3);
-    		$this->fail("testing passing invalid data to setValue");
-    	}catch (IllegalArguementException $e) {
-    		$this->assertTrue(true, "testing passing invalid data to setValue");
-    	}
+        try {
+            $this->boolean->setValue(3);
+            $this->fail('testing passing invalid data to setValue');
+        } catch (IllegalArguementException $e) {
+            $this->assertTrue(true, 'testing passing invalid data to setValue');
+        }
     }
 
     /**
-     * Testing the toString method
+     * Testing the toString method.
      *
      * @since 1.0
      */
     public function testToString()
     {
-    	$this->assertEquals('true', $this->boolean->__toString(), 'Testing the toString method');
+        $this->assertEquals('true', $this->boolean->__toString(), 'Testing the toString method');
     }
 }
-
-?>

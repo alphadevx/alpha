@@ -3,7 +3,6 @@
 namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
-use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\Model\Type\Sequence;
@@ -11,10 +10,10 @@ use Alpha\Model\ActiveRecord;
 use Alpha\View\View;
 
 /**
- *
- * Controller used to list all Sequences
+ * Controller used to list all Sequences.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -51,20 +50,20 @@ use Alpha\View\View;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class SequenceController extends ActiveRecordController implements ControllerInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * constructor to set up the object
+     * constructor to set up the object.
      *
      * @since 1.0
      */
@@ -85,10 +84,12 @@ class SequenceController extends ActiveRecordController implements ControllerInt
     }
 
     /**
-     * Handle GET requests
+     * Handle GET requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @since 1.0
      */
     public function doGET($request)
@@ -108,7 +109,7 @@ class SequenceController extends ActiveRecordController implements ControllerInt
         }
 
         // set the start point for the list pagination
-        if (isset($params['start']) ? $this->startPoint = $params['start']: $this->startPoint = 1);
+        if (isset($params['start']) ? $this->startPoint = $params['start'] : $this->startPoint = 1);
 
         $records = $sequence->loadAll($this->startPoint);
 
@@ -126,8 +127,7 @@ class SequenceController extends ActiveRecordController implements ControllerInt
         $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
+
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 }
-
-?>

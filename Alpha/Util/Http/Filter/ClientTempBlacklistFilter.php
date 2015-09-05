@@ -4,14 +4,14 @@ namespace Alpha\Util\Http\Filter;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Model\BadRequest;
-use Alpha\Exception\BONotFoundException;
 use Alpha\Exception\ResourceNotAllowedException;
 use Alpha\Util\Config\ConfigProvider;
 
 /**
- * Class for filtering requests from temporariy blacklisted HTTP clients
+ * Class for filtering requests from temporariy blacklisted HTTP clients.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -48,20 +48,20 @@ use Alpha\Util\Config\ConfigProvider;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ClientTempBlacklistFilter implements FilterInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @since 1.0
      */
@@ -71,7 +71,7 @@ class ClientTempBlacklistFilter implements FilterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function process($request)
     {
@@ -81,8 +81,9 @@ class ClientTempBlacklistFilter implements FilterInterface
         $IP = $request->getIP();
 
         // if no user agent string or IP are provided, we can't filter by these anyway to might as well skip
-        if($client == null || $IP == null)
+        if ($client == null || $IP == null) {
             return;
+        }
 
         if (!empty($client) && !empty($IP)) {
             $badRequest = new BadRequest();
@@ -98,5 +99,3 @@ class ClientTempBlacklistFilter implements FilterInterface
         }
     }
 }
-
-?>

@@ -5,10 +5,10 @@ namespace Alpha\Util\Config;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- *
- * A singleton config class
+ * A singleton config class.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -45,221 +45,239 @@ use Alpha\Exception\IllegalArguementException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ConfigProvider
 {
-	/**
-	 * Array to store the config variables
-	 *
-	 * @var array
-	 * @since 1.0
-	 */
-	private $configVars = array();
-
-	/**
-	 * The config object singleton
-	 *
-	 * @var Alpha\Util\Config\ConfigProvider
-	 * @since 1.0
-	 */
-	private static $instance;
+    /**
+     * Array to store the config variables.
+     *
+     * @var array
+     *
+     * @since 1.0
+     */
+    private $configVars = array();
 
     /**
-     * The config environment (dev, pro, test)
+     * The config object singleton.
+     *
+     * @var Alpha\Util\Config\ConfigProvider
+     *
+     * @since 1.0
+     */
+    private static $instance;
+
+    /**
+     * The config environment (dev, pro, test).
      *
      * @var string
+     *
      * @since 2.0
      */
     private $environment;
 
-	/**
-	 * Private constructor means the class cannot be instantiated from elsewhere
-	 *
-	 * @since 1.0
-	 */
-	private function __construct() {}
+    /**
+     * Private constructor means the class cannot be instantiated from elsewhere.
+     *
+     * @since 1.0
+     */
+    private function __construct()
+    {
+    }
 
-	/**
-	 * Get the config object instance
-	 *
-	 * @return Alpha\Util\Config\ConfigProvider
-	 * @since 1.0
-	 */
-	public static function getInstance()
-	{
-		if (!isset(self::$instance)) {
-			self::$instance = new ConfigProvider();
-			self::$instance->setRootPath();
-			self::$instance->setIncludePath();
+    /**
+     * Get the config object instance.
+     *
+     * @return Alpha\Util\Config\ConfigProvider
+     *
+     * @since 1.0
+     */
+    public static function getInstance()
+    {
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
+            self::$instance->setRootPath();
+            self::$instance->setIncludePath();
 
-			// check to see if a child class with callbacks has been implemented
-			if (file_exists(self::$instance->get('rootPath').'config/ConfigCallbacks.inc')) {
-				require_once self::$instance->get('rootPath').'config/ConfigCallbacks.inc';
+            // check to see if a child class with callbacks has been implemented
+            if (file_exists(self::$instance->get('rootPath').'config/ConfigCallbacks.inc')) {
+                require_once self::$instance->get('rootPath').'config/ConfigCallbacks.inc';
 
-				self::$instance = new ConfigCallbacks();
-				self::$instance->setRootPath();
-				self::$instance->setIncludePath();
-			}
+                self::$instance = new ConfigCallbacks();
+                self::$instance->setRootPath();
+                self::$instance->setIncludePath();
+            }
 
-			// populate the config from the ini file
-			self::$instance->loadConfig();
-		}
-		return self::$instance;
-	}
+            // populate the config from the ini file
+            self::$instance->loadConfig();
+        }
 
-	/**
-	 * Get config value
-	 *
-	 * @param $key string
-	 * @return string
-	 * @throws Alpha\Exception\IllegalArguementException
-	 * @since 1.0
-	 */
-	public function get($key)
-	{
-		if (array_key_exists($key, $this->configVars))
-			return $this->configVars[$key];
-		else
-			throw new IllegalArguementException('The config property ['.$key.'] is not set in the .ini config file');
-	}
+        return self::$instance;
+    }
 
-	/**
-  	 * Set config value
-	 *
-	 * @param $key string
-	 * @param $val string
-	 * @since 1.0
-	 */
-	public function set($key, $val)
-	{
-		/*
-		 * If you need to alter a config option after it has been set in the .ini
-		 * files, you can override this class and implement this callback method
-		 */
-		if (method_exists($this, 'before_set_callback'))
-			$val = $this->before_set_callback($key, $val, $this->configVars);
+    /**
+     * Get config value.
+     *
+     * @param $key string
+     *
+     * @return string
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     *
+     * @since 1.0
+     */
+    public function get($key)
+    {
+        if (array_key_exists($key, $this->configVars)) {
+            return $this->configVars[$key];
+        } else {
+            throw new IllegalArguementException('The config property ['.$key.'] is not set in the .ini config file');
+        }
+    }
 
-		$this->configVars[$key] = $val;
-	}
+    /**
+     * Set config value.
+     *
+     * @param $key string
+     * @param $val string
+     *
+     * @since 1.0
+     */
+    public function set($key, $val)
+    {
+        /*
+         * If you need to alter a config option after it has been set in the .ini
+         * files, you can override this class and implement this callback method
+         */
+        if (method_exists($this, 'before_set_callback')) {
+            $val = $this->before_set_callback($key, $val, $this->configVars);
+        }
 
-	/**
-	 * Sets the root directory of the application
-	 *
-	 * @since 1.0
-	 * @todo refactor!
-	 */
-	private function setRootPath()
-	{
-		$currentScript = __FILE__;
+        $this->configVars[$key] = $val;
+    }
 
-		// reverse the slashes in case we are running on Windows
-		$currentScript = str_replace('\\', '/', $currentScript);
+    /**
+     * Sets the root directory of the application.
+     *
+     * @since 1.0
+     *
+     * @todo refactor!
+     */
+    private function setRootPath()
+    {
+        $currentScript = __FILE__;
 
-		$rootPath = '';
+        // reverse the slashes in case we are running on Windows
+        $currentScript = str_replace('\\', '/', $currentScript);
 
-		if (mb_strrpos($currentScript, 'Alpha/View/Widget/') !== false) {
-			// set path for widgets
-			$rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'Alpha/View/Widget/'));
-		} elseif (mb_strrpos($currentScript, 'Alpha/Util/') !== false) {
-			// set the path for util scripts
-			$rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'Alpha/Util/'));
-		} elseif (mb_strrpos($currentScript, 'Alpha/') !== false) {
-			// check to see if it is a controller under /alpha
-			$rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'Alpha/'));
-		} elseif (!mb_strrpos($currentScript, 'Alpha/') && mb_strrpos($currentScript, 'Controller/') != false) {
-			// handle custom controllers at a lower level
-			$rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'Controller/'));
-		} elseif (mb_strrpos($currentScript, 'Config/css/') !== false) {
-			// set path for CSS files
-			$rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'config/css/'));
-		} elseif (mb_strrpos($currentScript, 'CronManager') !== false) {
-			// set the path for the CronManager being run from CLI
-			$rootPath = '../../';
-		} else {
-			$rootPath = '.';
-		}
+        $rootPath = '';
 
-		$this->set('rootPath', $rootPath);
-	}
+        if (mb_strrpos($currentScript, 'Alpha/View/Widget/') !== false) {
+            // set path for widgets
+            $rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'Alpha/View/Widget/'));
+        } elseif (mb_strrpos($currentScript, 'Alpha/Util/') !== false) {
+            // set the path for util scripts
+            $rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'Alpha/Util/'));
+        } elseif (mb_strrpos($currentScript, 'Alpha/') !== false) {
+            // check to see if it is a controller under /alpha
+            $rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'Alpha/'));
+        } elseif (!mb_strrpos($currentScript, 'Alpha/') && mb_strrpos($currentScript, 'Controller/') != false) {
+            // handle custom controllers at a lower level
+            $rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'Controller/'));
+        } elseif (mb_strrpos($currentScript, 'Config/css/') !== false) {
+            // set path for CSS files
+            $rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'config/css/'));
+        } elseif (mb_strrpos($currentScript, 'CronManager') !== false) {
+            // set the path for the CronManager being run from CLI
+            $rootPath = '../../';
+        } else {
+            $rootPath = '.';
+        }
 
-	/**
-	 * Attempt to set the include_path to include the alpha/lib directory
-	 *
-	 * @since 1.0
-	 */
-	private function setIncludePath()
-	{
-		$config = self::getInstance();
-		$rootPath = $config->get('rootPath');
+        $this->set('rootPath', $rootPath);
+    }
 
-		ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.$rootPath.'alpha/lib/');
-	}
+    /**
+     * Attempt to set the include_path to include the alpha/lib directory.
+     *
+     * @since 1.0
+     */
+    private function setIncludePath()
+    {
+        $config = self::getInstance();
+        $rootPath = $config->get('rootPath');
 
-	/**
-	 * Loads the config from the relevent .ini file, dependant upon the current
-	 * environment (hostname).  Note that this method will die() on failure!
-	 *
-	 * @since 1.0
-	 */
-	private function loadConfig()
-	{
-		$rootPath = $this->get('rootPath');
+        ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.$rootPath.'alpha/lib/');
+    }
 
-		// first we need to see if we are in dev, pro or test environment
-		if (isset($_SERVER['SERVER_NAME'])) {
-			$server = $_SERVER['SERVER_NAME'];
-		} elseif (isset($_ENV['HOSTNAME'])){
-			// we may be running in CLI mode
-			$server = $_ENV['HOSTNAME'];
-		} elseif (php_uname('n') != ''){
+    /**
+     * Loads the config from the relevent .ini file, dependant upon the current
+     * environment (hostname).  Note that this method will die() on failure!
+     *
+     * @since 1.0
+     */
+    private function loadConfig()
+    {
+        $rootPath = $this->get('rootPath');
+
+        // first we need to see if we are in dev, pro or test environment
+        if (isset($_SERVER['SERVER_NAME'])) {
+            $server = $_SERVER['SERVER_NAME'];
+        } elseif (isset($_ENV['HOSTNAME'])) {
+            // we may be running in CLI mode
+            $server = $_ENV['HOSTNAME'];
+        } elseif (php_uname('n') != '') {
             // CLI on Linux or Windows should have this
             $server = php_uname('n');
-		} else {
-			die('Unable to determine the server name');
-		}
+        } else {
+            die('Unable to determine the server name');
+        }
 
-		// Load the servers to see which environment the current server is set as
-		$serverIni = $rootPath.'config/servers.ini';
+        // Load the servers to see which environment the current server is set as
+        $serverIni = $rootPath.'config/servers.ini';
 
-		if (file_exists($serverIni)) {
+        if (file_exists($serverIni)) {
             $envs = parse_ini_file($serverIni);
             $environment = '';
 
             foreach ($envs as $env => $serversList) {
-            	$servers = explode(',', $serversList);
+                $servers = explode(',', $serversList);
 
-            	if (in_array($server, $servers))
-            		$environment = $env;
+                if (in_array($server, $servers)) {
+                    $environment = $env;
+                }
             }
 
-            if ($environment == '')
+            if ($environment == '') {
                 die('No environment configured for the server '.$server);
+            }
         } else {
             die('Failed to load the config file ['.$serverIni.']');
         }
 
         $this->environment = $environment;
 
-		if (mb_substr($environment, -3) == 'CLI') // CLI mode
-			$envIni = $rootPath.'config/'.mb_substr($environment, 0, 3).'.ini';
-		else
-			$envIni = $rootPath.'config/'.$environment.'.ini';
+        if (mb_substr($environment, -3) == 'CLI') { // CLI mode
+            $envIni = $rootPath.'config/'.mb_substr($environment, 0, 3).'.ini';
+        } else {
+            $envIni = $rootPath.'config/'.$environment.'.ini';
+        }
 
-		if (!file_exists($envIni))
-        	die('Failed to load the config file ['.$envIni.']');
+        if (!file_exists($envIni)) {
+            die('Failed to load the config file ['.$envIni.']');
+        }
 
-		$configArray = parse_ini_file($envIni);
+        $configArray = parse_ini_file($envIni);
 
-		foreach (array_keys($configArray) as $key) {
-			$this->set($key, $configArray[$key]);
-		}
-	}
+        foreach (array_keys($configArray) as $key) {
+            $this->set($key, $configArray[$key]);
+        }
+    }
 
     /**
-     * Get the configuration environment for this application
+     * Get the configuration environment for this application.
      *
      * @return string
+     *
      * @since 2.0
      */
     public function getEnvironment()
@@ -267,5 +285,3 @@ class ConfigProvider
         return $this->environment;
     }
 }
-
-?>

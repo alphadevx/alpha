@@ -6,12 +6,14 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- *
- * Test cases for the AlphaConfig class
+ * Test cases for the AlphaConfig class.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
+ *
  * @version $Id$
+ *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -47,72 +49,69 @@ use Alpha\Exception\IllegalArguementException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ConfigProviderTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * A copy of the global config singleton that we will use for testing
-	 *
-	 * @var Alpha\Util\Config\ConfigProvider
-	 */
-	private $configCopy;
+    /**
+     * A copy of the global config singleton that we will use for testing.
+     *
+     * @var Alpha\Util\Config\ConfigProvider
+     */
+    private $configCopy;
 
-	/**
+    /**
      * Called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+     * here.
      *
      * @since 1.0
      */
     protected function setUp()
     {
-    	$config = ConfigProvider::getInstance();
+        $config = ConfigProvider::getInstance();
 
-    	$this->configCopy = clone $config;
+        $this->configCopy = clone $config;
     }
 
     /**
      * Called after the test functions are executed
      * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+     * here.
      *
      * @since 1.0
      */
     protected function tearDown()
     {
-    	unset($this->configCopy);
+        unset($this->configCopy);
     }
 
     /**
-     * Testing that the ConfigProvider getInstance method is returning the same instance object each time
+     * Testing that the ConfigProvider getInstance method is returning the same instance object each time.
      *
      * @since 1.0
      */
     public function testGetInstance()
     {
-    	$config1 = ConfigProvider::getInstance();
-    	$config2 = ConfigProvider::getInstance();
+        $config1 = ConfigProvider::getInstance();
+        $config2 = ConfigProvider::getInstance();
 
-    	$config1->set('testkey', 'somevalue');
+        $config1->set('testkey', 'somevalue');
 
-    	$this->assertEquals('somevalue', $config2->get('testkey'), 'testing that the ConfigProvider getInstance method is returning the same instance object each time');
+        $this->assertEquals('somevalue', $config2->get('testkey'), 'testing that the ConfigProvider getInstance method is returning the same instance object each time');
     }
 
     /**
-     * Testing that attempting to access a config value that is not set will cause an exception
+     * Testing that attempting to access a config value that is not set will cause an exception.
      *
      * @since 1.0
      */
     public function testGetBad()
     {
-    	try {
-    		$this->configCopy->get('keyDoesNotExist');
-    		$this->fail('Testing that attempting to access a config value that is not set will cause an exception');
-    	}catch (IllegalArguementException $e) {
-    		$this->assertEquals('The config property [keyDoesNotExist] is not set in the .ini config file', $e->getMessage(), 'Testing that attempting to access a config value that is not set will cause an exception');
-    	}
+        try {
+            $this->configCopy->get('keyDoesNotExist');
+            $this->fail('Testing that attempting to access a config value that is not set will cause an exception');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('The config property [keyDoesNotExist] is not set in the .ini config file', $e->getMessage(), 'Testing that attempting to access a config value that is not set will cause an exception');
+        }
     }
 }
-
-?>

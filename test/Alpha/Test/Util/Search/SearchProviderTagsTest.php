@@ -11,10 +11,10 @@ use Alpha\Util\Search\SearchProviderFactory;
 use Alpha\Util\Config\ConfigProvider;
 
 /**
- *
- * Test case for the SearchProviderTags class
+ * Test case for the SearchProviderTags class.
  *
  * @since 1.2.3
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -51,27 +51,27 @@ use Alpha\Util\Config\ConfigProvider;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * An Article for testing
+     * An Article for testing.
      *
      * @var Alpha\Model\Article
+     *
      * @since 1.2.3
      */
     private $article;
 
     /**
-     * ID of the artice section DEnum item to use during testing
+     * ID of the artice section DEnum item to use during testing.
      *
      * @var int
      */
     private $DEnumID;
 
     /**
-     * Set up tests
+     * Set up tests.
      *
      * @since 1.2.3
      */
@@ -106,7 +106,7 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tear down tests
+     * Tear down tests.
      *
      * @since 1.2.3
      */
@@ -119,9 +119,10 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Creates an article object for testing
+     * Creates an article object for testing.
      *
      * @return Alpha\Model\Article
+     *
      * @since 1.2.3
      */
     private function createArticle($name)
@@ -137,7 +138,7 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that the index method is generating tags as expected
+     * Testing that the index method is generating tags as expected.
      *
      * @since 1.2.3
      */
@@ -165,7 +166,7 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that tags have been deleted once a record has been deleted from the search index
+     * Testing that tags have been deleted once a record has been deleted from the search index.
      *
      * @since 1.2.3
      */
@@ -185,7 +186,7 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the search method for expected results
+     * Testing the search method for expected results.
      *
      * @since 1.2.3
      */
@@ -205,7 +206,7 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the method for getting the expected number of results
+     * Testing the method for getting the expected number of results.
      *
      * @since 1.2.3
      */
@@ -230,7 +231,7 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the method for getting related objects
+     * Testing the method for getting related objects.
      *
      * @since 1.2.3
      */
@@ -258,5 +259,3 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(count($results) == 0, 'Testing the get related objects method honours returnType filtering');
     }
 }
-
-?>

@@ -5,9 +5,10 @@ namespace Alpha\Test\Util\Http;
 use Alpha\Util\Http\PHPServerUtils;
 
 /**
- * Test cases for implementations of the AlphaFilterInterface
+ * Test cases for implementations of the AlphaFilterInterface.
  *
  * @since 1.2.2
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -44,18 +45,17 @@ use Alpha\Util\Http\PHPServerUtils;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class PHPServerUtilsTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Testing that we can start the server and hit it with a curl request
+     * Testing that we can start the server and hit it with a curl request.
      *
      * @since 1.2.2
      */
     public function testStart()
     {
-        $pid = PHPServerUtils::start('localhost','8771','.');
+        $pid = PHPServerUtils::start('localhost', '8771', '.');
         sleep(1); // wait a second to give the server time to start...
 
         $this->assertTrue($pid > 0, 'Testing that a PID was returned after starting the server');
@@ -68,18 +68,19 @@ class PHPServerUtilsTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(404, curl_getinfo($ch, CURLINFO_HTTP_CODE), 'Testing that the server returns a 404 not found');
 
-        if(!empty($pid))
+        if (!empty($pid)) {
             PHPServerUtils::stop($pid);
+        }
     }
 
     /**
-     * Testing that we can stop the server and hit it with a curl request
+     * Testing that we can stop the server and hit it with a curl request.
      *
      * @since 1.2.2
      */
     public function testStop()
     {
-        $pid = PHPServerUtils::start('localhost','8771','.');
+        $pid = PHPServerUtils::start('localhost', '8771', '.');
         sleep(1); // wait a second to give the server time to start...
 
         $this->assertTrue($pid > 0, 'Testing that a PID was returned after starting the server');
@@ -93,7 +94,7 @@ class PHPServerUtilsTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(404, curl_getinfo($ch, CURLINFO_HTTP_CODE), 'Testing that the server returns a 404 not found');
 
-        if(!empty($pid)) {
+        if (!empty($pid)) {
             PHPServerUtils::stop($pid);
             sleep(1); // wait a second to give the server time to stop...
         }
@@ -104,21 +105,20 @@ class PHPServerUtilsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that we can check the status of the server when stopped or running
+     * Testing that we can check the status of the server when stopped or running.
      *
      * @since 1.2.2
      */
     public function testStatus()
     {
-        $pid = PHPServerUtils::start('localhost','8771','.');
+        $pid = PHPServerUtils::start('localhost', '8771', '.');
 
         $this->assertTrue(PHPServerUtils::status($pid), 'Testing that the status of the server is true when it is running');
 
-        if(!empty($pid))
+        if (!empty($pid)) {
             PHPServerUtils::stop($pid);
+        }
 
         $this->assertFalse(PHPServerUtils::status($pid), 'Testing that the status of the server is false when it is stopped');
     }
 }
-
-?>

@@ -8,9 +8,10 @@ use Alpha\Exception\BONotFoundException;
 use Alpha\Exception\ResourceNotAllowedException;
 
 /**
- * Class for blocking requests from blacklisted IP addresses
+ * Class for blocking requests from blacklisted IP addresses.
  *
  * @since 1.2
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -47,20 +48,20 @@ use Alpha\Exception\ResourceNotAllowedException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class IPBlacklistFilter implements FilterInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger;
+     *
      * @since 1.2
      */
     private static $logger = null;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @since 1.2
      */
@@ -70,7 +71,7 @@ class IPBlacklistFilter implements FilterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function process($request)
     {
@@ -92,5 +93,3 @@ class IPBlacklistFilter implements FilterInterface
         }
     }
 }
-
-?>

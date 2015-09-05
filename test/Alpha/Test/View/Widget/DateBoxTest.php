@@ -4,14 +4,13 @@ namespace Alpha\Test\View\Widget;
 
 use Alpha\View\Widget\DateBox;
 use Alpha\Model\Type\Date;
-use Alpha\Util\Config\ConfigProvider;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- *
- * Test case for the DateBox widget
+ * Test case for the DateBox widget.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -48,19 +47,18 @@ use Alpha\Exception\IllegalArguementException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class DateBoxTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Testing for an expected exception when a bad object provided
+     * Testing for an expected exception when a bad object provided.
      *
      * @since 2.0
      */
     public function testConstructorBadSource()
     {
         try {
-            $dateBox = new DateBox(new DateBoxTest());
+            $dateBox = new DateBox(new self());
             $this->fail('Testing for an expected exception when a bad object provided');
         } catch (IllegalArguementException $e) {
             $this->assertEquals('DateBox widget can only accept a Date or Timestamp object!', $e->getMessage(), 'Testing for an expected exception when a bad object provided');
@@ -68,7 +66,7 @@ class DateBoxTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the render() method
+     * Testing the render() method.
      *
      * @since 2.0
      */
@@ -76,8 +74,6 @@ class DateBoxTest extends \PHPUnit_Framework_TestCase
     {
         $dateBox = new DateBox(new Date(), 'Test label', 'testName');
         $html = $dateBox->render();
-        $this->assertTrue(strpos($html,'testName') !== false, 'Testing the render() method');
+        $this->assertTrue(strpos($html, 'testName') !== false, 'Testing the render() method');
     }
 }
-
-?>

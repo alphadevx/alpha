@@ -7,6 +7,7 @@ namespace Alpha\Exception;
  * has not been implemented by the provider throwing this exception.
  *
  * @since 1.2
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -43,8 +44,7 @@ namespace Alpha\Exception;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
-class NotImplementedException extends AlphaException {}
-
-?>
+class NotImplementedException extends AlphaException
+{
+}

@@ -6,10 +6,10 @@ use Alpha\Util\Http\Response;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- *
- * Test cases for the Response class
+ * Test cases for the Response class.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -46,12 +46,11 @@ use Alpha\Exception\IllegalArguementException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ResponseTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Testing that the constructor istantiates the object correctly
+     * Testing that the constructor istantiates the object correctly.
      */
     public function testConstructGood()
     {
@@ -63,7 +62,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the constructor with bad arguements
+     * Testing the constructor with bad arguements.
      */
     public function testConstructBad()
     {
@@ -76,7 +75,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the getting and setting of the HTTP status and message
+     * Testing the getting and setting of the HTTP status and message.
      */
     public function testStatus()
     {
@@ -99,7 +98,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the getting and setting of the HTTP headers
+     * Testing the getting and setting of the HTTP headers.
      */
     public function testHeaders()
     {
@@ -115,7 +114,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the getting and setting of the HTTP cookies
+     * Testing the getting and setting of the HTTP cookies.
      */
     public function testCookies()
     {
@@ -129,7 +128,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the setting of content length
+     * Testing the setting of content length.
      */
     public function testGetContentLength()
     {
@@ -143,7 +142,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the redirect method
+     * Testing the redirect method.
      */
     public function testRedirect()
     {
@@ -162,5 +161,3 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($response->getHeaders()), 'Testing the redirect method');
     }
 }
-
-?>

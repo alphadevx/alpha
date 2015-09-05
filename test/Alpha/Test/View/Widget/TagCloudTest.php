@@ -4,15 +4,14 @@ namespace Alpha\Test\View\Widget;
 
 use Alpha\View\Widget\TagCloud;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Exception\IllegalArguementException;
 use Alpha\Model\Tag;
 use Alpha\Model\Article;
 
 /**
- *
- * Test case for the TagCloud widget
+ * Test case for the TagCloud widget.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -49,12 +48,11 @@ use Alpha\Model\Article;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class TagCloudTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Set up tests
+     * Set up tests.
      *
      * @since 2.0
      */
@@ -73,9 +71,10 @@ class TagCloudTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Creates an article object for testing
+     * Creates an article object for testing.
      *
      * @return Alpha\Model\Article
+     *
      * @since 1.2.3
      */
     private function createArticle($name)
@@ -89,7 +88,7 @@ class TagCloudTest extends \PHPUnit_Framework_TestCase
         return $article;
     }
     /**
-     * Testing the render() method
+     * Testing the render() method.
      *
      * @since 2.0
      */
@@ -100,8 +99,6 @@ class TagCloudTest extends \PHPUnit_Framework_TestCase
 
         $cloud = new TagCloud(10);
         $html = $cloud->render();
-        $this->assertTrue(strpos($html,'blah') !== false, 'Testing the render() method');
+        $this->assertTrue(strpos($html, 'blah') !== false, 'Testing the render() method');
     }
 }
-
-?>

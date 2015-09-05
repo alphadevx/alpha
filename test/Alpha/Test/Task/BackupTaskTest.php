@@ -6,10 +6,10 @@ use Alpha\Task\BackupTask;
 use Alpha\Util\Config\ConfigProvider;
 
 /**
- *
  * Test cases for the BackupTask class.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -46,12 +46,11 @@ use Alpha\Util\Config\ConfigProvider;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class BackupTaskTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Set up tests
+     * Set up tests.
      *
      * @since 2.0
      */
@@ -62,7 +61,7 @@ class BackupTaskTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the doTask() method
+     * Testing the doTask() method.
      *
      * @since 2.0
      */
@@ -73,8 +72,6 @@ class BackupTaskTest extends \PHPUnit_Framework_TestCase
         $task = new BackupTask();
         $task->doTask();
 
-        $this->assertTrue(file_exists($config->get('backup.dir').'/'.date("Y-m-d").'.zip'), 'Testing the doTask() method');
+        $this->assertTrue(file_exists($config->get('backup.dir').'/'.date('Y-m-d').'.zip'), 'Testing the doTask() method');
     }
 }
-
-?>

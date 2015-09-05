@@ -7,13 +7,15 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- *
  * A factory for creating active record provider implementations that implement the
  * ActiveRecordProviderInterface interface.
  *
  * @since 1.1
+ *
  * @author John Collins <dev@alphaframework.org>
+ *
  * @version $Id: ActiveRecordProviderFactory.php 1842 2014-11-12 22:27:01Z alphadevx $
+ *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -49,58 +51,59 @@ use Alpha\Exception\IllegalArguementException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ActiveRecordProviderFactory
 {
-	/**
-	 * Trace logger
-	 *
-	 * @var Alpha\Util\Logging\Logger
-	 * @since 1.1
-	 */
-	private static $logger = null;
+    /**
+     * Trace logger.
+     *
+     * @var Alpha\Util\Logging\Logger
+     *
+     * @since 1.1
+     */
+    private static $logger = null;
 
-	/**
-	 * A static method that attempts to return a ActiveRecordProviderInterface instance
-	 * based on the name of the provider class supplied.
-	 *
-	 * @param $providerName The fully-qualified class name of the provider class.
-	 * @param $BO The (optional) active record instance to pass to the persistance provider for mapping.
-	 * @throws Alpha\Exception\IllegalArguementException
-	 * @return Alpha\Model\ActiveRecordProviderInterface
-	 * @since 1.1
-	 */
-	public static function getInstance($providerName, $BO = null)
-	{
-		if(self::$logger == null) {
-			self::$logger = new Logger('ActiveRecordProviderFactory');
-		}
+    /**
+     * A static method that attempts to return a ActiveRecordProviderInterface instance
+     * based on the name of the provider class supplied.
+     *
+     * @param $providerName The fully-qualified class name of the provider class.
+     * @param $BO The (optional) active record instance to pass to the persistance provider for mapping.
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     *
+     * @return Alpha\Model\ActiveRecordProviderInterface
+     *
+     * @since 1.1
+     */
+    public static function getInstance($providerName, $BO = null)
+    {
+        if (self::$logger == null) {
+            self::$logger = new Logger('ActiveRecordProviderFactory');
+        }
 
-		self::$logger->debug('>>getInstance(providerName=['.$providerName.'], BO=['.print_r($BO, true).'])');
+        self::$logger->debug('>>getInstance(providerName=['.$providerName.'], BO=['.print_r($BO, true).'])');
 
-		$config = ConfigProvider::getInstance();
+        $config = ConfigProvider::getInstance();
 
-		if (class_exists($providerName)) {
+        if (class_exists($providerName)) {
+            $instance = new $providerName();
 
-			$instance = new $providerName;
+            if (!$instance instanceof ActiveRecordProviderInterface) {
+                throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected ActiveRecordProviderInterface interface!');
+            }
 
-			if (!$instance instanceof ActiveRecordProviderInterface) {
-				throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected ActiveRecordProviderInterface interface!');
-			}
+            if ($BO instanceof ActiveRecord) {
+                $instance->setBO($BO);
+            }
 
-			if ($BO instanceof ActiveRecord) {
-				$instance->setBO($BO);
-			}
+            self::$logger->debug('<<getInstance: [Object '.$providerName.']');
 
-			self::$logger->debug('<<getInstance: [Object '.$providerName.']');
-			return $instance;
-		} else {
-			throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
-		}
+            return $instance;
+        } else {
+            throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
+        }
 
-		self::$logger->debug('<<getInstance');
-	}
+        self::$logger->debug('<<getInstance');
+    }
 }
-
-?>

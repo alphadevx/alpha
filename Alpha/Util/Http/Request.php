@@ -6,9 +6,10 @@ use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Config\ConfigProvider;
 
 /**
- * A class to encapsulate a HTTP request
+ * A class to encapsulate a HTTP request.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -45,93 +46,104 @@ use Alpha\Util\Config\ConfigProvider;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class Request
 {
     /**
-     * Array of supported HTTP methods
+     * Array of supported HTTP methods.
      *
      * @var array
+     *
      * @since 2.0
      */
     private $HTTPMethods = array('HEAD','GET','POST','PUT','PATCH','DELETE','OPTIONS');
 
     /**
-     * The HTTP method of this request (must be in HTTPMethods array)
+     * The HTTP method of this request (must be in HTTPMethods array).
      *
      * @var string
+     *
      * @since 2.0
      */
     private $method;
 
     /**
-     * An associative array of HTTP headers on this request
+     * An associative array of HTTP headers on this request.
      *
      * @var array
+     *
      * @since 2.0
      */
     private $headers;
 
     /**
-     * An associative array of HTTP cookies on this request
+     * An associative array of HTTP cookies on this request.
      *
      * @var array
+     *
      * @since 2.0
      */
     private $cookies;
 
     /**
-     * The HTTP params (form data and query string) on this request
+     * The HTTP params (form data and query string) on this request.
      *
      * @var array
+     *
      * @since 2.0
      */
     private $params;
 
     /**
-     * An associative 3D array of uploaded files
+     * An associative 3D array of uploaded files.
+     *
      * @var array
+     *
      * @since 2.0
      */
     private $files;
 
     /**
-     * The request body if one was provided
+     * The request body if one was provided.
      *
      * @var string
+     *
      * @since 2.0
      */
     private $body;
 
     /**
-     * The host header provided on the request
+     * The host header provided on the request.
      *
      * @var string
+     *
      * @since 2.0
      */
     private $host;
 
     /**
-     * The IP of the client making the request
+     * The IP of the client making the request.
      *
      * @var string
+     *
      * @since 2.0
      */
     private $IP;
 
     /**
-     * The URI requested
+     * The URI requested.
      *
      * @var string
+     *
      * @since 2.0
      */
     private $URI;
 
     /**
-     * The query string provided on the request (if any)
+     * The query string provided on the request (if any).
      *
      * @var string
+     *
      * @since 2.0
      */
     private $queryString;
@@ -141,41 +153,49 @@ class Request
      * any overrides provided (useful for testing).
      *
      * @param array $overrides Hash array of PHP super globals to override
+     *
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @since 2.0
      */
     public function __construct($overrides = array())
     {
         // set HTTP headers
-        if (isset($overrides['headers']) && is_array($overrides['headers']))
+        if (isset($overrides['headers']) && is_array($overrides['headers'])) {
             $this->headers = $overrides['headers'];
-        else
+        } else {
             $this->headers = $this->getGlobalHeaders();
+        }
 
         // set HTTP method
-        if (isset($overrides['method']) && in_array($overrides['method'], $this->HTTPMethods))
+        if (isset($overrides['method']) && in_array($overrides['method'], $this->HTTPMethods)) {
             $this->method = $overrides['method'];
-        elseif (isset($_SERVER['REQUEST_METHOD']) && in_array($_SERVER['REQUEST_METHOD'], $this->HTTPMethods))
+        } elseif (isset($_SERVER['REQUEST_METHOD']) && in_array($_SERVER['REQUEST_METHOD'], $this->HTTPMethods)) {
             $this->method = $_SERVER['REQUEST_METHOD'];
+        }
 
         // allow the POST param _METHOD to override the HTTP method
-        if (isset($_POST['_METHOD']) && in_array($_POST['_METHOD'], $this->HTTPMethods))
+        if (isset($_POST['_METHOD']) && in_array($_POST['_METHOD'], $this->HTTPMethods)) {
             $this->method = $_POST['_METHOD'];
+        }
 
         // allow the POST param X-HTTP-Method-Override to override the HTTP method
-        if (isset($this->headers['X-HTTP-Method-Override']) && in_array($this->headers['X-HTTP-Method-Override'], $this->HTTPMethods))
+        if (isset($this->headers['X-HTTP-Method-Override']) && in_array($this->headers['X-HTTP-Method-Override'], $this->HTTPMethods)) {
             $this->method = $this->headers['X-HTTP-Method-Override'];
+        }
 
-        if ($this->method == '')
+        if ($this->method == '') {
             throw new IllegalArguementException('No valid HTTP method provided when creating new Request object');
+        }
 
         // set HTTP cookies
-        if (isset($overrides['cookies']) && is_array($overrides['cookies']))
+        if (isset($overrides['cookies']) && is_array($overrides['cookies'])) {
             $this->cookies = $overrides['cookies'];
-        elseif (isset($_COOKIE))
+        } elseif (isset($_COOKIE)) {
             $this->cookies = $_COOKIE;
-        else
+        } else {
             $this->cookies = array();
+        }
 
         // set HTTP params
         if (isset($overrides['params']) && is_array($overrides['params'])) {
@@ -183,52 +203,60 @@ class Request
         } else {
             $this->params = array();
 
-            if (isset($_GET))
+            if (isset($_GET)) {
                 $this->params = array_merge($this->params, $_GET);
+            }
 
-            if (isset($_POST))
+            if (isset($_POST)) {
                 $this->params = array_merge($this->params, $_POST);
+            }
         }
 
         // set HTTP body
-        if (isset($overrides['body']))
+        if (isset($overrides['body'])) {
             $this->body = $overrides['body'];
-        else
+        } else {
             $this->body = $this->getGlobalBody();
+        }
 
         // set HTTP host
-        if (isset($overrides['host']))
+        if (isset($overrides['host'])) {
             $this->host = $overrides['host'];
-        elseif (isset($_SERVER['HTTP_HOST']))
+        } elseif (isset($_SERVER['HTTP_HOST'])) {
             $this->host = $_SERVER['HTTP_HOST'];
-        else
+        } else {
             $this->host = 'localhost';
+        }
 
         // set IP of the client
-        if (isset($overrides['IP']))
+        if (isset($overrides['IP'])) {
             $this->IP = $overrides['IP'];
-        elseif (isset($_SERVER['REMOTE_ADDR']))
+        } elseif (isset($_SERVER['REMOTE_ADDR'])) {
             $this->IP = $_SERVER['REMOTE_ADDR'];
-        else
+        } else {
             $this->IP = '127.0.0.1';
+        }
 
         // set requested URI
-        if (isset($overrides['URI']))
+        if (isset($overrides['URI'])) {
             $this->URI = $overrides['URI'];
-        elseif (isset($_SERVER['REQUEST_URI']))
+        } elseif (isset($_SERVER['REQUEST_URI'])) {
             $this->URI = $_SERVER['REQUEST_URI'];
+        }
 
         // set uploaded files (if any)
-        if (isset($overrides['files']))
+        if (isset($overrides['files'])) {
             $this->files = $overrides['files'];
-        elseif (isset($_FILES))
+        } elseif (isset($_FILES)) {
             $this->files = $_FILES;
+        }
     }
 
     /**
-     * Get the HTTP method of this request
+     * Get the HTTP method of this request.
      *
      * @return string
+     *
      * @since 2.0
      */
     public function getMethod()
@@ -237,35 +265,41 @@ class Request
     }
 
     /**
-     * Return all headers on this request
+     * Return all headers on this request.
      *
      * @return array
+     *
      * @since 2.0
      */
-    public function getHeaders() {
+    public function getHeaders()
+    {
         return $this->headers;
     }
 
     /**
-     * Get the header matching the key provided
+     * Get the header matching the key provided.
      *
-     * @param string $key The key to search for
-     * @param mixed $default If key is not found, return this instead
+     * @param string $key     The key to search for
+     * @param mixed  $default If key is not found, return this instead
+     *
      * @return mixed
+     *
      * @since 2.0
      */
     public function getHeader($key, $default = null)
     {
-        if (array_key_exists($key, $this->headers))
+        if (array_key_exists($key, $this->headers)) {
             return $this->headers[$key];
-        else
+        } else {
             return $default;
+        }
     }
 
     /**
-     * Tries to get the current HTTP request headers from supoer globals
+     * Tries to get the current HTTP request headers from supoer globals.
      *
      * @return array
+     *
      * @since 2.0
      */
     private function getGlobalHeaders()
@@ -273,12 +307,15 @@ class Request
         if (!function_exists('getallheaders')) {
             $headers = array();
             foreach ($_SERVER as $name => $value) {
-                if (substr($name, 0, 5) == 'HTTP_')
+                if (substr($name, 0, 5) == 'HTTP_') {
                     $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
-                if ($name == 'CONTENT_TYPE')
+                }
+                if ($name == 'CONTENT_TYPE') {
                     $headers['Content-Type'] = $value;
-                if ($name == 'CONTENT_LENGTH')
+                }
+                if ($name == 'CONTENT_LENGTH') {
                     $headers['Content-Length'] = $value;
+                }
             }
 
             return $headers;
@@ -288,9 +325,10 @@ class Request
     }
 
     /**
-     * Return all cookies on this request
+     * Return all cookies on this request.
      *
      * @return array
+     *
      * @since 2.0
      */
     public function getCookies()
@@ -299,25 +337,29 @@ class Request
     }
 
     /**
-     * Get the cookie matching the key provided
+     * Get the cookie matching the key provided.
      *
-     * @param string $key The key to search for
-     * @param mixed $default If key is not found, return this instead
+     * @param string $key     The key to search for
+     * @param mixed  $default If key is not found, return this instead
+     *
      * @return mixed
+     *
      * @since 2.0
      */
     public function getCookie($key, $default = null)
     {
-        if (array_key_exists($key, $this->cookies))
+        if (array_key_exists($key, $this->cookies)) {
             return $this->cookies[$key];
-        else
+        } else {
             return $default;
+        }
     }
 
     /**
-     * Return all params on this request
+     * Return all params on this request.
      *
      * @return array
+     *
      * @since 2.0
      */
     public function getParams()
@@ -326,75 +368,88 @@ class Request
     }
 
     /**
-     * Get the param matching the key provided
+     * Get the param matching the key provided.
      *
-     * @param string $key The key to search for
-     * @param mixed $default If key is not found, return this instead
+     * @param string $key     The key to search for
+     * @param mixed  $default If key is not found, return this instead
+     *
      * @return mixed
+     *
      * @since 2.0
      */
     public function getParam($key, $default = null)
     {
-        if (array_key_exists($key, $this->params))
+        if (array_key_exists($key, $this->params)) {
             return $this->params[$key];
-        else
+        } else {
             return $default;
+        }
     }
 
     /**
-     * Append the hash array provided to the params for this request
+     * Append the hash array provided to the params for this request.
      *
      * @param array A hash array of values to add to the request params
+     *
      * @since 2.0
      */
     public function addParams($params)
     {
-        if (is_array($params))
+        if (is_array($params)) {
             $this->params = array_merge($this->params, $params);
+        }
     }
 
     /**
-     * Set the params array
+     * Set the params array.
      *
      * @param array A hash array of values to set as the request params
+     *
      * @since 2.0
      */
     public function setParams($params)
     {
-        if (is_array($params))
+        if (is_array($params)) {
             $this->params = $params;
+        }
     }
 
     /**
-     * Return all files on this request
+     * Return all files on this request.
      *
      * @return array
+     *
      * @since 2.0
      */
-    public function getFiles() {
+    public function getFiles()
+    {
         return $this->files;
     }
 
     /**
-     * Get the file matching the key provided
+     * Get the file matching the key provided.
      *
-     * @param string $key The key to search for
-     * @param mixed $default If key is not found, return this instead
+     * @param string $key     The key to search for
+     * @param mixed  $default If key is not found, return this instead
+     *
      * @return mixed
+     *
      * @since 2.0
      */
     public function getFile($key, $default = null)
     {
-        if (array_key_exists($key, $this->files))
+        if (array_key_exists($key, $this->files)) {
             return $this->files[$key];
-        else
+        } else {
             return $default;
+        }
     }
 
     /**
-     * Get the request body if one was provided
+     * Get the request body if one was provided.
      *
      * @return string
+     *
      * @since 2.0
      */
     public function getBody()
@@ -403,23 +458,26 @@ class Request
     }
 
     /**
-     * Attempts to get the raw body of the current request from super globals
+     * Attempts to get the raw body of the current request from super globals.
      *
      * @return string
+     *
      * @since 2.0
      */
     private function getGlobalBody()
     {
-        if (isset($GLOBALS['HTTP_RAW_POST_DATA']))
+        if (isset($GLOBALS['HTTP_RAW_POST_DATA'])) {
             return $GLOBALS['HTTP_RAW_POST_DATA'];
-        else
+        } else {
             return file_get_contents('php://input');
+        }
     }
 
     /**
-     * Get the Accept header of the request
+     * Get the Accept header of the request.
      *
      * @return string
+     *
      * @since 2.0
      */
     public function getAccept()
@@ -428,9 +486,10 @@ class Request
     }
 
     /**
-     * Get the Content-Type header of the request
+     * Get the Content-Type header of the request.
      *
      * @return string
+     *
      * @since 2.0
      */
     public function getContentType()
@@ -439,9 +498,10 @@ class Request
     }
 
     /**
-     * Get the Content-Length header of the request
+     * Get the Content-Length header of the request.
      *
      * @return string
+     *
      * @since 2.0
      */
     public function getContentLength()
@@ -450,9 +510,10 @@ class Request
     }
 
     /**
-     * Get the host name of the client that sent the request
+     * Get the host name of the client that sent the request.
      *
      * @return string
+     *
      * @since 2.0
      */
     public function getHost()
@@ -461,9 +522,10 @@ class Request
     }
 
     /**
-     * Get the URI that was requested
+     * Get the URI that was requested.
      *
      * @return string
+     *
      * @since 2.0
      */
     public function getURI()
@@ -472,21 +534,24 @@ class Request
     }
 
     /**
-     * Get the URL that was requested
+     * Get the URL that was requested.
      *
      * @return string
+     *
      * @since 2.0
      */
     public function getURL()
     {
         $config = ConfigProvider::getInstance();
+
         return substr($config->get('app.url'), 0, strlen($config->get('app.url')) - 1).$this->getURI();
     }
 
     /**
-     * Get the IP address of the client that sent the request
+     * Get the IP address of the client that sent the request.
      *
      * @return string
+     *
      * @since 2.0
      */
     public function getIP()
@@ -495,9 +560,10 @@ class Request
     }
 
     /**
-     * Get the Referrer header of the request
+     * Get the Referrer header of the request.
      *
      * @return string
+     *
      * @since 2.0
      */
     public function getReferrer()
@@ -506,9 +572,10 @@ class Request
     }
 
     /**
-     * Get the User-Agent header of the request
+     * Get the User-Agent header of the request.
      *
      * @return string
+     *
      * @since 2.0
      */
     public function getUserAgent()
@@ -517,9 +584,10 @@ class Request
     }
 
     /**
-     * Get the query string provided on the request
+     * Get the query string provided on the request.
      *
      * @return string
+     *
      * @since 2.0
      */
     public function getQueryString()
@@ -528,10 +596,11 @@ class Request
     }
 
     /**
-     * Parses the route provided to extract matching params of the route from this request's URI
+     * Parses the route provided to extract matching params of the route from this request's URI.
      *
-     * @param string $route The route with parameter names, e.g. /user/{username}
-     * @param array $defaultParams Optional hash array of default request param values to use if they are missing from URI
+     * @param string $route         The route with parameter names, e.g. /user/{username}
+     * @param array  $defaultParams Optional hash array of default request param values to use if they are missing from URI
+     *
      * @since 2.0
      */
     public function parseParamsFromRoute($route, $defaultParams = array())
@@ -541,7 +610,7 @@ class Request
             $URI = mb_substr($this->URI, 0, mb_strpos($this->URI, '?'));
 
             // let's take this opportunity to pass query string params to $this->params
-            $queryString = mb_substr($this->URI, (mb_strpos($this->URI, '?')+1));
+            $queryString = mb_substr($this->URI, (mb_strpos($this->URI, '?') + 1));
             $this->queryString = $queryString;
             parse_str($queryString, $this->params);
         } else {
@@ -551,19 +620,22 @@ class Request
         $paramNames = explode('/', $route);
         $paramValues = explode('/', $URI);
 
-        for ($i = 0; $i < count($paramNames); $i++) {
+        for ($i = 0; $i < count($paramNames); ++$i) {
             $name = $paramNames[$i];
-            if (isset($paramValues[$i]) && substr($name, 0, 1) == '{' && substr($name, strlen($name)-1, 1) == '}')
+            if (isset($paramValues[$i]) && substr($name, 0, 1) == '{' && substr($name, strlen($name) - 1, 1) == '}') {
                 $this->params[trim($name, '{}')] = $paramValues[$i];
-            if (!isset($paramValues[$i]) && isset($defaultParams[trim($name, '{}')]))
+            }
+            if (!isset($paramValues[$i]) && isset($defaultParams[trim($name, '{}')])) {
                 $this->params[trim($name, '{}')] = $defaultParams[trim($name, '{}')];
+            }
         }
     }
 
     /**
-     * Checks to see if the request contains a secure/encrypted token
+     * Checks to see if the request contains a secure/encrypted token.
      *
      * @return bool
+     *
      * @since 2.0
      */
     public function isSecureURI()
@@ -575,5 +647,3 @@ class Request
         }
     }
 }
-
-?>

@@ -6,10 +6,10 @@ use Alpha\Model\Type\String;
 use Alpha\Util\Logging\Logger;
 
 /**
- *
- * A HTTP client that is blacklisted from accessing this application
+ * A HTTP client that is blacklisted from accessing this application.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -46,44 +46,47 @@ use Alpha\Util\Logging\Logger;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class BlacklistedClient extends ActiveRecord
 {
     /**
-     * The (unique) client string this is blocked
+     * The (unique) client string this is blocked.
      *
      * @var Alpha\Model\Type\String
+     *
      * @since 1.0
      */
     protected $client;
 
     /**
-     * An array of data display labels for the class properties
+     * An array of data display labels for the class properties.
      *
      * @var array
+     *
      * @since 1.0
      */
-    protected $dataLabels = array('OID'=>'Blacklisted Client ID#','client'=>'Client string');
+    protected $dataLabels = array('OID' => 'Blacklisted Client ID#','client' => 'Client string');
 
     /**
-     * The name of the database table for the class
+     * The name of the database table for the class.
      *
      * @var string
+     *
      * @since 1.0
      */
     const TABLE_NAME = 'BlacklistedClient';
 
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.1
      */
     private static $logger = null;
 
     /**
-     * Constructor for the class
+     * Constructor for the class.
      *
      * @since 1.0
      */
@@ -98,5 +101,3 @@ class BlacklistedClient extends ActiveRecord
         $this->markUnique('client');
     }
 }
-
-?>

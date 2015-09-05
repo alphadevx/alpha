@@ -5,16 +5,15 @@ namespace Alpha\Controller;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Session\SessionProviderFactory;
-use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
-use Alpha\Exception\AlphaException;
 use Alpha\Model\Person;
 use Alpha\View\View;
 
 /**
- * Logout controller that removes the current user object from the session
+ * Logout controller that removes the current user object from the session.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -51,20 +50,20 @@ use Alpha\View\View;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class LogoutController extends Controller implements ControllerInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * constructor to set up the object
+     * constructor to set up the object.
      *
      * @since 1.0
      */
@@ -80,10 +79,11 @@ class LogoutController extends Controller implements ControllerInterface
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
 
-        if ($session->get('currentUser') !== false)
+        if ($session->get('currentUser') !== false) {
             $this->setBO($session->get('currentUser'));
-        else
+        } else {
             self::$logger->warn('Logout controller called when no user is logged in');
+        }
 
         // set up the title and meta details
         $this->setTitle('Logged out successfully.');
@@ -94,10 +94,12 @@ class LogoutController extends Controller implements ControllerInterface
     }
 
     /**
-     * Handle GET requests
+     * Handle GET requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @since 1.0
      */
     public function doGET($request)
@@ -109,7 +111,7 @@ class LogoutController extends Controller implements ControllerInterface
         $config = ConfigProvider::getInstance();
 
         if ($this->BO instanceof Person) {
-            self::$logger->debug('Logging out ['.$this->BO->get('email').'] at ['.date("Y-m-d H:i:s").']');
+            self::$logger->debug('Logging out ['.$this->BO->get('email').'] at ['.date('Y-m-d H:i:s').']');
             self::$logger->action('Logout');
         }
 
@@ -126,8 +128,7 @@ class LogoutController extends Controller implements ControllerInterface
         $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
+
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 }
-
-?>

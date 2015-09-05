@@ -6,9 +6,10 @@ use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- * The Double complex data type
+ * The Double complex data type.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -45,153 +46,169 @@ use Alpha\Exception\IllegalArguementException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class Double extends Type implements TypeInterface
 {
-	/**
-	 * The value of the Double
-	 *
-	 * @var double
-	 * @since 1.0
-	 */
- 	private $value;
+    /**
+     * The value of the Double.
+     *
+     * @var float
+     *
+     * @since 1.0
+     */
+    private $value;
 
-	/**
-	 * The validation rule (reg-ex) applied to Double values
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
- 	private $validationRule;
+    /**
+     * The validation rule (reg-ex) applied to Double values.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    private $validationRule;
 
-	/**
-	 * The error message for the Double type when validation fails
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	protected $helper = 'Not a valid double value!';
+    /**
+     * The error message for the Double type when validation fails.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    protected $helper = 'Not a valid double value!';
 
-	/**
-	 * The size of the value for the Double
-	 *
-	 * @var integer
-	 * @since 1.0
-	 */
-	private $size = 13;
+    /**
+     * The size of the value for the Double.
+     *
+     * @var int
+     *
+     * @since 1.0
+     */
+    private $size = 13;
 
-	/**
-	 * The absolute maximum size of the value for the this double
-	 *
-	 * @var integer
-	 * @since 1.0
-	 */
-	const MAX_SIZE = 13;
+    /**
+     * The absolute maximum size of the value for the this double.
+     *
+     * @var int
+     *
+     * @since 1.0
+     */
+    const MAX_SIZE = 13;
 
-	/**
-	 * Constructor
-	 *
-	 * @param double $val
-	 * @since 1.0
-	 * @throws Alpha\Exception\IllegalArguementException
-	 */
-	public function __construct($val=0.0)
-	{
-		$this->validationRule = Validator::REQUIRED_DOUBLE;
+    /**
+     * Constructor.
+     *
+     * @param float $val
+     *
+     * @since 1.0
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     */
+    public function __construct($val = 0.0)
+    {
+        $this->validationRule = Validator::REQUIRED_DOUBLE;
 
-		if(!Validator::isDouble($val))
-			throw new IllegalArguementException($this->helper);
+        if (!Validator::isDouble($val)) {
+            throw new IllegalArguementException($this->helper);
+        }
 
-		if (mb_strlen($val) <= $this->size) {
-			$this->value = $val;
-		}else{
-			throw new IllegalArguementException($this->helper);
-		}
-	}
+        if (mb_strlen($val) <= $this->size) {
+            $this->value = $val;
+        } else {
+            throw new IllegalArguementException($this->helper);
+        }
+    }
 
-	/**
-	 * Setter for the Double value
-	 *
-	 * @param double $val
-	 * @since 1.0
-	 * @throws Alpha\Exception\IllegalArguementException
-	 */
-	public function setValue($val)
-	{
-		if(!Validator::isDouble($val))
-			throw new IllegalArguementException($this->helper);
+    /**
+     * Setter for the Double value.
+     *
+     * @param float $val
+     *
+     * @since 1.0
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     */
+    public function setValue($val)
+    {
+        if (!Validator::isDouble($val)) {
+            throw new IllegalArguementException($this->helper);
+        }
 
-		if (mb_strlen($val) <= $this->size) {
-			$this->value = $val;
-		}else{
-			throw new IllegalArguementException($this->helper);
-		}
-	}
+        if (mb_strlen($val) <= $this->size) {
+            $this->value = $val;
+        } else {
+            throw new IllegalArguementException($this->helper);
+        }
+    }
 
-	/**
-	 * Getter for the Double value
-	 *
-	 * @return double
-	 * @since 1.0
-	 */
-	public function getValue()
-	{
-		return $this->value;
-	}
+    /**
+     * Getter for the Double value.
+     *
+     * @return float
+     *
+     * @since 1.0
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
 
-	/**
- 	 * Get the validation rule
- 	 *
- 	 * @return string
- 	 * @since 1.0
- 	 */
- 	public function getRule()
- 	{
-		return $this->validationRule;
-	}
+    /**
+     * Get the validation rule.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function getRule()
+    {
+        return $this->validationRule;
+    }
 
-	/**
-	 * Used to set the allowable size of the Double in the database field
-	 *
-	 * @param integer $size
-	 * @since 1.0
-	 * @throws Alpha\Exception\IllegalArguementException
-	 */
-	public function setSize($size)
-	{
-		if ($size <= self::MAX_SIZE) {
-			$this->size = $size;
-		}else{
-			throw new IllegalArguementException('The value '.$size.' provided by setSize is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
-		}
-	}
+    /**
+     * Used to set the allowable size of the Double in the database field.
+     *
+     * @param int $size
+     *
+     * @since 1.0
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     */
+    public function setSize($size)
+    {
+        if ($size <= self::MAX_SIZE) {
+            $this->size = $size;
+        } else {
+            throw new IllegalArguementException('The value '.$size.' provided by setSize is greater than the MAX_SIZE '.self::MAX_SIZE.' of this data type.');
+        }
+    }
 
-	/**
-	 * Get the allowable size of the Double in the database field
-	 *
-	 * @param boolean $databaseDimension
-	 * @return mixed
-	 * @since 1.0
-	 */
-	public function getSize($databaseDimension=false)
-	{
-		if($databaseDimension)
-			return $this->size.',2';
-		else
-			return $this->size;
-	}
+    /**
+     * Get the allowable size of the Double in the database field.
+     *
+     * @param bool $databaseDimension
+     *
+     * @return mixed
+     *
+     * @since 1.0
+     */
+    public function getSize($databaseDimension = false)
+    {
+        if ($databaseDimension) {
+            return $this->size.',2';
+        } else {
+            return $this->size;
+        }
+    }
 
-	/**
-	 * Used to convert the object to a printable string
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function __toString()
-	{
-		return strval(sprintf("%01.2f", $this->value));
-	}
+    /**
+     * Used to convert the object to a printable string.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function __toString()
+    {
+        return strval(sprintf('%01.2f', $this->value));
+    }
 }
-
-?>

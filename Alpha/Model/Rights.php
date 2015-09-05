@@ -7,10 +7,10 @@ use Alpha\Model\Type\Relation;
 use Alpha\Util\Logging\Logger;
 
 /**
- *
- * The group level rights object for the application permissions
+ * The group level rights object for the application permissions.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -47,127 +47,130 @@ use Alpha\Util\Logging\Logger;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class Rights extends ActiveRecord
 {
-	/**
-	 * The name of the rights
-	 *
-	 * @var Alpha\Model\Type\String
-	 * @since 1.0
-	 */
-	protected $name;
+    /**
+     * The name of the rights.
+     *
+     * @var Alpha\Model\Type\String
+     *
+     * @since 1.0
+     */
+    protected $name;
 
-	/**
-	 * A Relation containing all of the Person objects that have these rights
-	 *
-	 * @var Alpha\Model\Type\Relation
-	 * @since 1.0
-	 */
-	protected $members;
+    /**
+     * A Relation containing all of the Person objects that have these rights.
+     *
+     * @var Alpha\Model\Type\Relation
+     *
+     * @since 1.0
+     */
+    protected $members;
 
-	/**
-	 * An array of data display labels for the class properties
-	 *
-	 * @var array
-	 * @since 1.0
-	 */
-	protected $dataLabels = array("OID"=>"Rights Group ID#","name"=>"Rights Group Name","members"=>"Rights Group Members");
+    /**
+     * An array of data display labels for the class properties.
+     *
+     * @var array
+     *
+     * @since 1.0
+     */
+    protected $dataLabels = array('OID' => 'Rights Group ID#','name' => 'Rights Group Name','members' => 'Rights Group Members');
 
-	/**
-	 * The name of the database table for the class
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	const TABLE_NAME = 'Rights';
+    /**
+     * The name of the database table for the class.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    const TABLE_NAME = 'Rights';
 
-	/**
-	 * Trace logger
-	 *
-	 * @var Alpha\Util\Logging\Logger
-	 * @since 1.1
-	 */
-	private static $logger = null;
+    /**
+     * Trace logger.
+     *
+     * @var Alpha\Util\Logging\Logger
+     *
+     * @since 1.1
+     */
+    private static $logger = null;
 
-	/**
-	 * Constructor
-	 *
-	 * @since 1.0
-	 */
-	public function __construct()
-	{
-		self::$logger = new Logger('Rights');
+    /**
+     * Constructor.
+     *
+     * @since 1.0
+     */
+    public function __construct()
+    {
+        self::$logger = new Logger('Rights');
 
-		// ensure to call the parent constructor
-		parent::__construct();
-		$this->name = new String();
+        // ensure to call the parent constructor
+        parent::__construct();
+        $this->name = new String();
 
-		// add unique key to name field
-		$this->markUnique('name');
+        // add unique key to name field
+        $this->markUnique('name');
 
-		$this->members = new Relation();
-		$this->markTransient('members');
-		$this->setupRels();
-	}
+        $this->members = new Relation();
+        $this->markTransient('members');
+        $this->setupRels();
+    }
 
-	/**
-	 * Get the group members Relation
-	 *
-	 * @return Alpha\Model\Type\Relation
-	 * @since 1.0
-	 */
-	public function getMembers()
-	{
-		return $this->members;
-	}
+    /**
+     * Get the group members Relation.
+     *
+     * @return Alpha\Model\Type\Relation
+     *
+     * @since 1.0
+     */
+    public function getMembers()
+    {
+        return $this->members;
+    }
 
-	/**
-	 * Set up the transient attributes for the rights group after it has loaded
-	 *
-	 * @since 1.0
-	 */
-	protected function after_load_callback()
-	{
-		$this->setupRels();
-	}
+    /**
+     * Set up the transient attributes for the rights group after it has loaded.
+     *
+     * @since 1.0
+     */
+    protected function after_load_callback()
+    {
+        $this->setupRels();
+    }
 
-	/**
-	 * Set up the transient attributes for the rights group after it has been created
-	 *
-	 * @since 1.2.1
-	 */
-	protected function after_save_callback()
-	{
-		$this->setupRels();
-	}
+    /**
+     * Set up the transient attributes for the rights group after it has been created.
+     *
+     * @since 1.2.1
+     */
+    protected function after_save_callback()
+    {
+        $this->setupRels();
+    }
 
-	/**
-	 * Set up the transient attributes for the rights group after it has loaded
-	 *
-	 * @since 1.0
-	 */
-	protected function after_loadByAttribute_callback()
-	{
-		$this->setupRels();
-	}
+    /**
+     * Set up the transient attributes for the rights group after it has loaded.
+     *
+     * @since 1.0
+     */
+    protected function after_loadByAttribute_callback()
+    {
+        $this->setupRels();
+    }
 
-	/**
-	 * Sets up the Relation definitions on this BO
-	 *
-	 * @since 1.0
-	 */
-	private function setupRels()
-	{
-		// set up MANY-TO-MANY relation person2rights
-		$this->members->setRelatedClass('Alpha\Model\Person', 'left');
-		$this->members->setRelatedClassDisplayField('email', 'left');
-		$this->members->setRelatedClass('Alpha\Model\Rights', 'right');
-		$this->members->setRelatedClassDisplayField('name', 'right');
-		$this->members->setRelationType('MANY-TO-MANY');
-		$this->members->setValue($this->getOID());
-	}
+    /**
+     * Sets up the Relation definitions on this BO.
+     *
+     * @since 1.0
+     */
+    private function setupRels()
+    {
+        // set up MANY-TO-MANY relation person2rights
+        $this->members->setRelatedClass('Alpha\Model\Person', 'left');
+        $this->members->setRelatedClassDisplayField('email', 'left');
+        $this->members->setRelatedClass('Alpha\Model\Rights', 'right');
+        $this->members->setRelatedClassDisplayField('name', 'right');
+        $this->members->setRelationType('MANY-TO-MANY');
+        $this->members->setValue($this->getOID());
+    }
 }
-
-?>

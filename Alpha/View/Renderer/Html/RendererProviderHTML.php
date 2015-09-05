@@ -30,6 +30,7 @@ use ReflectionClass;
  * the application when required (consider the default ones to be scaffolding).
  *
  * @since 1.2
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -66,28 +67,29 @@ use ReflectionClass;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class RendererProviderHTML implements RendererProviderInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger;
+     *
      * @since 1.2
      */
     private static $logger = null;
 
     /**
-     * The business object that we are renderering
+     * The business object that we are renderering.
      *
      * @var Alpha\Model\ActiveRecord
+     *
      * @since 1.2
      */
     private $BO;
 
     /**
-     * The constructor
+     * The constructor.
      *
      * @since 1.2
      */
@@ -100,7 +102,7 @@ class RendererProviderHTML implements RendererProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setBO($BO)
     {
@@ -108,9 +110,9 @@ class RendererProviderHTML implements RendererProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function createView($fields=array())
+    public function createView($fields = array())
     {
         self::$logger->debug('>>createView(fields=['.var_export($fields, true).'])');
 
@@ -133,13 +135,14 @@ class RendererProviderHTML implements RendererProviderInterface
         $fields['formSecurityFields'] = self::renderSecurityFields();
 
         self::$logger->debug('<<createView [HTML]');
+
         return View::loadTemplate($this->BO, 'create', $fields);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function editView($fields=array())
+    public function editView($fields = array())
     {
         self::$logger->debug('>>editView(fields=['.var_export($fields, true).'])');
 
@@ -181,10 +184,10 @@ class RendererProviderHTML implements RendererProviderInterface
                         ]
                     });
                 }";
-        $button = new Button($js, "Delete", "deleteBut");
+        $button = new Button($js, 'Delete', 'deleteBut');
         $fields['deleteButton'] = $button->render();
 
-        $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO))."'", "Back to List", "cancelBut");
+        $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO))."'", 'Back to List', 'cancelBut');
         $fields['cancelButton'] = $button->render();
 
         // buffer security fields to $formSecurityFields variable
@@ -194,13 +197,14 @@ class RendererProviderHTML implements RendererProviderInterface
         $fields['version_num'] = $this->BO->getVersionNumber();
 
         self::$logger->debug('<<editView [HTML]');
+
         return View::loadTemplate($this->BO, 'edit', $fields);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function listView($fields=array())
+    public function listView($fields = array())
     {
         self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
 
@@ -211,7 +215,7 @@ class RendererProviderHTML implements RendererProviderInterface
         // work out how many columns will be in the table
         $reflection = new ReflectionClass(get_class($this->BO));
         $properties = array_keys($reflection->getDefaultProperties());
-        $fields['colCount'] = 1+count(array_diff($properties, $this->BO->getDefaultAttributes(), $this->BO->getTransientAttributes()));
+        $fields['colCount'] = 1 + count(array_diff($properties, $this->BO->getDefaultAttributes(), $this->BO->getTransientAttributes()));
 
         // get the class attributes
         $properties = $reflection->getProperties();
@@ -228,10 +232,11 @@ class RendererProviderHTML implements RendererProviderInterface
                 if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
                     $html .= '  <th>'.$this->BO->getDataLabel($propName).'</th>';
                 }
-                if ($propName == 'OID')
+                if ($propName == 'OID') {
                     $html .= '  <th>'.$this->BO->getDataLabel($propName).'</th>';
+                }
             } else {
-                $fields['colCount'] = $fields['colCount']-1;
+                $fields['colCount'] = $fields['colCount'] - 1;
             }
         }
         $html .= '</tr><tr>';
@@ -251,18 +256,20 @@ class RendererProviderHTML implements RendererProviderInterface
 
                     if ($propClass == 'Text') {
                         $text = htmlentities($this->BO->get($propName), ENT_COMPAT, 'utf-8');
-                        if (mb_strlen($text) > 70)
+                        if (mb_strlen($text) > 70) {
                             $html .= '  <td>&nbsp;'.mb_substr($text, 0, 70).'...</td>';
-                        else
+                        } else {
                             $html .= '  <td>&nbsp;'.$text.'</td>';
+                        }
                     } elseif ($propClass == 'DEnum') {
                         $html .= '  <td>&nbsp;'.$this->BO->getPropObject($propName)->getDisplayValue().'</td>';
                     } else {
                         $html .= '  <td>&nbsp;'.$this->BO->get($propName).'</td>';
                     }
                 }
-                if ($propName == 'OID')
+                if ($propName == 'OID') {
                     $html .= '  <td>&nbsp;'.$this->BO->getOID().'</td>';
+                }
             }
         }
         $html .= '</tr>';
@@ -279,7 +286,7 @@ class RendererProviderHTML implements RendererProviderInterface
             if ($this->BO->hasAttribute('URL')) {
                 $button = new Button("document.location = '".$this->BO->get('URL')."';", 'View', 'view'.$this->BO->getOID().'But');
             } else {
-                $button = new Button("document.location = '".$config->get('app.url')."record/".urlencode(get_class($this->BO))."/".$this->BO->getOID()."';", 'View', 'view'.$this->BO->getOID().'But');
+                $button = new Button("document.location = '".$config->get('app.url').'record/'.urlencode(get_class($this->BO)).'/'.$this->BO->getOID()."';", 'View', 'view'.$this->BO->getOID().'But');
             }
 
             $fields['viewButton'] = $button->render();
@@ -289,7 +296,7 @@ class RendererProviderHTML implements RendererProviderInterface
         // render edit and delete buttons for admins only
         if ($session->get('currentUser') && $session->get('currentUser')->inGroup('Admin')) {
             $html .= '&nbsp;&nbsp;';
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO)."&ActiveRecordOID=".$this->BO->getOID().'&view=edit')."'", "Edit", "edit".$this->BO->getOID()."But");
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID().'&view=edit')."'", 'Edit', 'edit'.$this->BO->getOID().'But');
             $html .= $button->render();
             $html .= '&nbsp;&nbsp;';
 
@@ -320,7 +327,7 @@ class RendererProviderHTML implements RendererProviderInterface
                     });
                 }";
 
-            $button = new Button($js, "Delete", "delete".$this->BO->getOID()."But");
+            $button = new Button($js, 'Delete', 'delete'.$this->BO->getOID().'But');
             $html .= $button->render();
         }
         $fields['adminButtons'] = $html;
@@ -329,13 +336,14 @@ class RendererProviderHTML implements RendererProviderInterface
         $fields['formSecurityFields'] = self::renderSecurityFields();
 
         self::$logger->debug('<<listView [HTML]');
+
         return View::loadTemplate($this->BO, 'list', $fields);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function detailedView($fields=array())
+    public function detailedView($fields = array())
     {
         self::$logger->debug('>>detailedView(fields=['.var_export($fields, true).'])');
 
@@ -358,8 +366,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $html = '';
         // render edit and delete buttons for admins only
         if ($session->get('currentUser') !== false && $session->get('currentUser')->inGroup('Admin')) {
-
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO)."&ActiveRecordOID=".$this->BO->getOID().'&view=edit')."'", "Edit", "editBut");
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID().'&view=edit')."'", 'Edit', 'editBut');
             $html .= $button->render();
 
             $js = "if(window.jQuery) {
@@ -389,19 +396,20 @@ class RendererProviderHTML implements RendererProviderInterface
                     });
                 }";
 
-            $button = new Button($js, "Delete", "deleteBut");
+            $button = new Button($js, 'Delete', 'deleteBut');
             $html .= $button->render();
         }
         $fields['adminButtons'] = $html;
 
         self::$logger->debug('<<detailedView [HTML]');
+
         return View::loadTemplate($this->BO, 'detail', $fields);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function adminView($fields=array())
+    public function adminView($fields = array())
     {
         self::$logger->debug('>>adminView(fields=['.var_export($fields, true).'])');
 
@@ -419,15 +427,16 @@ class RendererProviderHTML implements RendererProviderInterface
         // table exists in the DB?
         $fields['tableExists'] = ($this->BO->checkTableExists() ? '<span class="success">Yes</span>' : '<span class="warning">No</span>');
 
-        if ($this->BO->getMaintainHistory())
+        if ($this->BO->getMaintainHistory()) {
             $fields['tableExists'] = ($this->BO->checkTableExists(true) ? '<span class="success">Yes</span>' : '<span class="warning">No history table</span>');
+        }
 
         // table schema needs to be updated in the DB?
         $fields['tableNeedsUpdate'] = ($this->BO->checkTableNeedsUpdate() ? '<span class="warning">Yes</span>' : '<span class="success">No</span>');
 
         // create button
         if ($this->BO->checkTableExists()) {
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.get_class($this->BO))."'", "Create New", "create".stripslashes(get_class($this->BO))."But");
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.get_class($this->BO))."'", 'Create New', 'create'.stripslashes(get_class($this->BO)).'But');
             $fields['createButton'] = $button->render();
         } else {
             $fields['createButton'] = '';
@@ -435,7 +444,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
         // list all button
         if ($this->BO->checkTableExists()) {
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.get_class($this->BO))."'", "List All", "list".stripslashes(get_class($this->BO))."But");
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.get_class($this->BO))."'", 'List All', 'list'.stripslashes(get_class($this->BO)).'But');
             $fields['listButton'] = $button->render();
         } else {
             $fields['listButton'] = '';
@@ -466,7 +475,6 @@ class RendererProviderHTML implements RendererProviderInterface
         // recreate and update table buttons (if required)
         $html = '';
         if ($this->BO->checkTableNeedsUpdate() && $this->BO->checkTableExists()) {
-
             $js = "if(window.jQuery) {
                     BootstrapDialog.show({
                         title: 'Confirmation',
@@ -494,7 +502,7 @@ class RendererProviderHTML implements RendererProviderInterface
                     });
                 }";
 
-            $button = new Button($js , "Recreate Table", "recreateTableBut");
+            $button = new Button($js, 'Recreate Table', 'recreateTableBut');
             $html .= $button->render();
             // hidden field so that we know which class to recreate the table for
             $html .= '<input type="hidden" name="recreateTableClass" value="'.get_class($this->BO).'"/>';
@@ -527,7 +535,7 @@ class RendererProviderHTML implements RendererProviderInterface
                     });
                 }";
 
-            $button = new Button($js , "Update Table", "updateTableBut");
+            $button = new Button($js, 'Update Table', 'updateTableBut');
             $html .= $button->render();
             // hidden field so that we know which class to update the table for
             $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('updateTableClass')) : 'updateTableClass');
@@ -542,16 +550,18 @@ class RendererProviderHTML implements RendererProviderInterface
         $fields['formSecurityFields'] = self::renderSecurityFields();
 
         self::$logger->debug('<<adminView [HTML]');
+
         return View::loadTemplate($this->BO, 'admin', $fields);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function displayPageHead($controller)
     {
-        if (self::$logger == null)
+        if (self::$logger == null) {
             self::$logger = new Logger('RendererProviderHTML');
+        }
 
         self::$logger->debug('>>displayPageHead(controller=['.var_export($controller, true).'])');
 
@@ -559,8 +569,9 @@ class RendererProviderHTML implements RendererProviderInterface
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
 
-        if (!class_exists(get_class($controller)))
+        if (!class_exists(get_class($controller))) {
             throw new IllegalArguementException('The controller provided ['.get_class($controller).'] is not defined anywhere!');
+        }
 
         $allowCSSOverrides = true;
 
@@ -572,77 +583,87 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $html = View::loadTemplateFragment('html', 'head.phtml', array('title' => $controller->getTitle(), 'description' => $controller->getDescription(), 'allowCSSOverrides' => $allowCSSOverrides));
 
-        if (method_exists($controller, 'during_displayPageHead_callback'))
+        if (method_exists($controller, 'during_displayPageHead_callback')) {
             $html .= $controller->during_displayPageHead_callback();
+        }
 
         $html .= '</head>';
 
         try {
-            if ($controller->getBO() != null)
+            if ($controller->getBO() != null) {
                 $html .= '<body'.($controller->getBO()->get('bodyOnload') != '' ? ' onload="'.$controller->getBO()->get('bodyOnload').'"' : '').'>';
-            else
+            } else {
                 $html .= '<body>';
+            }
         } catch (AlphaException $e) {
             $html .= '<body>';
         }
 
         $html .= '<div class="container">';
 
-        if (method_exists($controller, 'insert_CMSDisplayStandardHeader_callback'))
-            $html.= $controller->insert_CMSDisplayStandardHeader_callback();
+        if (method_exists($controller, 'insert_CMSDisplayStandardHeader_callback')) {
+            $html .= $controller->insert_CMSDisplayStandardHeader_callback();
+        }
 
         self::$logger->debug('<<displayPageHead [HTML]');
+
         return $html;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function displayPageFoot($controller)
     {
-        if (self::$logger == null)
+        if (self::$logger == null) {
             self::$logger = new Logger('RendererProviderHTML');
+        }
 
         self::$logger->debug('>>displayPageFoot(controller=['.get_class($controller).'])');
 
         $html = View::loadTemplateFragment('html', 'footer.phtml', array());
 
         self::$logger->debug('<<displayPageFoot ['.$html.']');
+
         return $html;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function displayUpdateMessage($message)
     {
-        if (self::$logger == null)
+        if (self::$logger == null) {
             self::$logger = new Logger('RendererProviderHTML');
+        }
         self::$logger->debug('>>displayUpdateMessage(message=['.$message.'])');
 
         $html = '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'.$message.'</div>';
 
         self::$logger->debug('<<displayUpdateMessage ['.$html.']');
+
         return $html;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function displayErrorMessage($message)
     {
-        if (self::$logger == null)
+        if (self::$logger == null) {
             self::$logger = new Logger('RendererProviderHTML');
+        }
         self::$logger->debug('>>displayErrorMessage(message=['.$message.'])');
 
         $html = '<div class="alert alert-danger">'.$message.'</div>';
 
         self::$logger->debug('<<displayErrorMessage ['.$html.']');
+
         return $html;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function renderErrorPage($code, $message)
     {
@@ -660,12 +681,13 @@ class RendererProviderHTML implements RendererProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function renderDeleteForm($URI)
     {
-        if(self::$logger == null)
+        if (self::$logger == null) {
             self::$logger = new Logger('RendererProviderHTML');
+        }
         self::$logger->debug('>>renderDeleteForm()');
 
         $config = ConfigProvider::getInstance();
@@ -679,16 +701,18 @@ class RendererProviderHTML implements RendererProviderInterface
         $html .= '</form>';
 
         self::$logger->debug('<<renderDeleteForm ['.$html.']');
+
         return $html;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function renderSecurityFields()
     {
-        if (self::$logger == null)
+        if (self::$logger == null) {
             self::$logger = new Logger('RendererProviderHTML');
+        }
 
         self::$logger->debug('>>renderSecurityFields()');
 
@@ -698,37 +722,41 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $fields = Controller::generateSecurityFields();
 
-        if ($config->get('security.encrypt.http.fieldnames'))
+        if ($config->get('security.encrypt.http.fieldnames')) {
             $fieldname = base64_encode(SecurityUtils::encrypt('var1'));
-        else
+        } else {
             $fieldname = 'var1';
+        }
 
         $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$fields[0].'"/>';
 
-        if ($config->get('security.encrypt.http.fieldnames'))
+        if ($config->get('security.encrypt.http.fieldnames')) {
             $fieldname = base64_encode(SecurityUtils::encrypt('var2'));
-        else
+        } else {
             $fieldname = 'var2';
+        }
 
         $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$fields[1].'"/>';
 
         self::$logger->debug('<<renderSecurityFields ['.$html.']');
+
         return $html;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function renderIntegerField($name, $label, $mode, $value='')
+    public function renderIntegerField($name, $label, $mode, $value = '')
     {
         self::$logger->debug('>>renderIntegerField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
         $config = ConfigProvider::getInstance();
 
-        if($config->get('security.encrypt.http.fieldnames'))
+        if ($config->get('security.encrypt.http.fieldnames')) {
             $fieldname = base64_encode(SecurityUtils::encrypt($name));
-        else
+        } else {
             $fieldname = $name;
+        }
 
         $html = '<div class="form-group">';
         $html .= '  <label for="'.$fieldname.'">'.$label.'</label>';
@@ -746,22 +774,24 @@ class RendererProviderHTML implements RendererProviderInterface
         $html .= '</div>';
 
         self::$logger->debug('<<renderIntegerField ['.$html.']');
+
         return $html;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function renderDoubleField($name, $label, $mode, $value='')
+    public function renderDoubleField($name, $label, $mode, $value = '')
     {
         self::$logger->debug('>>renderDoubleField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
         $config = ConfigProvider::getInstance();
 
-        if ($config->get('security.encrypt.http.fieldnames'))
+        if ($config->get('security.encrypt.http.fieldnames')) {
             $fieldname = base64_encode(SecurityUtils::encrypt($name));
-        else
+        } else {
             $fieldname = $name;
+        }
 
         $html = '<div class="form-group">';
         $html .= '  <label for="'.$fieldname.'">'.$label.'</label>';
@@ -779,22 +809,24 @@ class RendererProviderHTML implements RendererProviderInterface
         $html .= '</div>';
 
         self::$logger->debug('<<renderDoubleField ['.$html.']');
+
         return $html;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function renderBooleanField($name, $label, $mode, $value='')
+    public function renderBooleanField($name, $label, $mode, $value = '')
     {
         self::$logger->debug('>>renderBooleanField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
         $config = ConfigProvider::getInstance();
 
-        if ($config->get('security.encrypt.http.fieldnames'))
+        if ($config->get('security.encrypt.http.fieldnames')) {
             $fieldname = base64_encode(SecurityUtils::encrypt($name));
-        else
+        } else {
             $fieldname = $name;
+        }
 
         $html = '<div class="checkbox">';
         $html .= '  <label>';
@@ -803,12 +835,11 @@ class RendererProviderHTML implements RendererProviderInterface
             $html .= '      <input type="hidden" name="'.$fieldname.'" value="0">';
             $html .= '      <input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'">';
             $html .= '          '.$label;
-
         }
 
         if ($mode == 'edit') {
             $html .= '      <input type="hidden" name="'.$fieldname.'" value="0">';
-            $html .= '      <input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'"'.($value == '1'? ' checked':'').' />';
+            $html .= '      <input type="checkbox" name="'.$fieldname.'" id="'.$fieldname.'"'.($value == '1' ? ' checked' : '').' />';
             $html .= '          '.$label;
         }
 
@@ -816,22 +847,24 @@ class RendererProviderHTML implements RendererProviderInterface
         $html .= '</div>';
 
         self::$logger->debug('<<renderBooleanField ['.$html.']');
+
         return $html;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function renderEnumField($name, $label, $mode, $options, $value='')
+    public function renderEnumField($name, $label, $mode, $options, $value = '')
     {
         self::$logger->debug('>>renderEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
         $config = ConfigProvider::getInstance();
 
-        if ($config->get('security.encrypt.http.fieldnames'))
+        if ($config->get('security.encrypt.http.fieldnames')) {
             $fieldname = base64_encode(SecurityUtils::encrypt($name));
-        else
+        } else {
             $fieldname = $name;
+        }
 
         $html = '<div class="form-group">';
         $html .= '  <label for="'.$fieldname.'">'.$label.'</label>';
@@ -847,10 +880,11 @@ class RendererProviderHTML implements RendererProviderInterface
         if ($mode == 'edit') {
             $html .= '  <select name="'.$fieldname.'" id="'.$fieldname.'" class="form-control"/>';
             foreach ($options as $val) {
-                if ($value == $val)
+                if ($value == $val) {
                     $html .= '      <option value="'.$val.'" selected>'.$val.'</option>';
-                else
+                } else {
                     $html .= '      <option value="'.$val.'">'.$val.'</option>';
+                }
             }
             $html .= '  </select>';
         }
@@ -858,22 +892,24 @@ class RendererProviderHTML implements RendererProviderInterface
         $html .= '</div>';
 
         self::$logger->debug('<<renderEnumField ['.$html.']');
+
         return $html;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function renderDEnumField($name, $label, $mode, $options, $value='')
+    public function renderDEnumField($name, $label, $mode, $options, $value = '')
     {
         self::$logger->debug('>>renderDEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
         $config = ConfigProvider::getInstance();
 
-        if ($config->get('security.encrypt.http.fieldnames'))
+        if ($config->get('security.encrypt.http.fieldnames')) {
             $fieldname = base64_encode(SecurityUtils::encrypt($name));
-        else
+        } else {
             $fieldname = $name;
+        }
 
         $html = '<div class="form-group">';
         $html .= '  <label for="'.$fieldname.'">'.$label.'</label>';
@@ -889,10 +925,11 @@ class RendererProviderHTML implements RendererProviderInterface
         if ($mode == 'edit') {
             $html .= '  <select name="'.$fieldname.'" id="'.$fieldname.'" class="form-control"/>';
             foreach (array_keys($options) as $index) {
-                if ($value == $index)
+                if ($value == $index) {
                     $html .= '<option value="'.$index.'" selected>'.$options[$index].'</option>';
-                else
+                } else {
                     $html .= '<option value="'.$index.'">'.$options[$index].'</option>';
+                }
             }
             $html .= '  </select>';
         }
@@ -900,22 +937,24 @@ class RendererProviderHTML implements RendererProviderInterface
         $html .= '</div>';
 
         self::$logger->debug('<<renderDEnumField ['.$html.']');
+
         return $html;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function renderDefaultField($name, $label, $mode, $value='')
+    public function renderDefaultField($name, $label, $mode, $value = '')
     {
         self::$logger->debug('>>renderDefaultField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
         $config = ConfigProvider::getInstance();
 
-        if ($config->get('security.encrypt.http.fieldnames'))
+        if ($config->get('security.encrypt.http.fieldnames')) {
             $fieldname = base64_encode(SecurityUtils::encrypt($name));
-        else
+        } else {
             $fieldname = $name;
+        }
 
         $html = '';
 
@@ -934,13 +973,14 @@ class RendererProviderHTML implements RendererProviderInterface
         }
 
         self::$logger->debug('<<renderDefaultField ['.$html.']');
+
         return $html;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function renderTextField($name, $label, $mode, $value='')
+    public function renderTextField($name, $label, $mode, $value = '')
     {
         self::$logger->debug('>>renderTextField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -950,10 +990,11 @@ class RendererProviderHTML implements RendererProviderInterface
 
         if ($mode == 'create') {
             // give 10 rows for content fields (other 5 by default)
-            if ($name == 'content')
+            if ($name == 'content') {
                 $text = new TextBox($this->BO->getPropObject($name), $label, $name, 10);
-            else
+            } else {
                 $text = new TextBox($this->BO->getPropObject($name), $label, $name);
+            }
             $html .= $text->render();
         }
 
@@ -962,10 +1003,11 @@ class RendererProviderHTML implements RendererProviderInterface
             if ($name == 'content') {
                 $viewState = ViewState::getInstance();
 
-                if ($viewState->get('markdownTextBoxRows') == '')
+                if ($viewState->get('markdownTextBoxRows') == '') {
                     $text = new TextBox($this->BO->getPropObject($name), $label, $name, 10);
-                else
-                    $text = new TextBox($this->BO->getPropObject($name), $label, $name, (integer)$viewState->get('markdownTextBoxRows'));
+                } else {
+                    $text = new TextBox($this->BO->getPropObject($name), $label, $name, (integer) $viewState->get('markdownTextBoxRows'));
+                }
 
                 $html .= $text->render();
             } else {
@@ -995,13 +1037,14 @@ class RendererProviderHTML implements RendererProviderInterface
         }
 
         self::$logger->debug('<<renderTextField ['.$html.']');
+
         return $html;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function renderStringField($name, $label, $mode, $value='')
+    public function renderStringField($name, $label, $mode, $value = '')
     {
         self::$logger->debug('>>renderStringField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -1019,11 +1062,12 @@ class RendererProviderHTML implements RendererProviderInterface
         }
 
         self::$logger->debug('<<renderStringField ['.$html.']');
+
         return $html;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function renderRelationField($name, $label, $mode, $value = '', $expanded = false, $buttons = true)
     {
@@ -1074,13 +1118,14 @@ class RendererProviderHTML implements RendererProviderInterface
         }
 
         self::$logger->debug('<<renderRelationField ['.$html.']');
+
         return $html;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function renderAllFields($mode, $filterFields=array(), $readOnlyFields=array())
+    public function renderAllFields($mode, $filterFields = array(), $readOnlyFields = array())
     {
         self::$logger->debug('>>renderAllFields(mode=['.$mode.'], filterFields=['.var_export($filterFields, true).'], readOnlyFields=['.var_export($readOnlyFields, true).'])');
 
@@ -1094,20 +1139,23 @@ class RendererProviderHTML implements RendererProviderInterface
         foreach ($properties as $propName) {
             if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $filterFields)) {
                 // render readonly fields in the supplied array
-                if (in_array($propName, $readOnlyFields))
+                if (in_array($propName, $readOnlyFields)) {
                     $mode = 'view';
-                else
+                } else {
                     $mode = $orignalMode;
+                }
 
-                if (!is_object($this->BO->getPropObject($propName)))
+                if (!is_object($this->BO->getPropObject($propName))) {
                     continue;
+                }
 
                 $reflection = new ReflectionClass($this->BO->getPropObject($propName));
                 $propClass = $reflection->getShortName();
 
                 // exclude non-Relation transient attributes from create and edit screens
-                if ($propClass != 'Relation' && ($mode == 'edit' || $mode == 'create') && in_array($propName, $this->BO->getTransientAttributes()))
+                if ($propClass != 'Relation' && ($mode == 'edit' || $mode == 'create') && in_array($propName, $this->BO->getTransientAttributes())) {
                     continue;
+                }
 
                 switch (mb_strtoupper($propClass)) {
                     case 'INTEGER' :
@@ -1127,8 +1175,9 @@ class RendererProviderHTML implements RendererProviderInterface
                     case 'DATE' :
                         if ($mode == 'view') {
                             $value = $this->BO->get($propName);
-                            if ($value == '0000-00-00')
+                            if ($value == '0000-00-00') {
                                 $value = '';
+                            }
                             $html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $value);
                         } else {
                             $date = new DateBox($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
@@ -1138,8 +1187,9 @@ class RendererProviderHTML implements RendererProviderInterface
                     case 'TIMESTAMP' :
                         if ($mode == 'view') {
                             $value = $this->BO->get($propName);
-                            if ($value == '0000-00-00 00:00:00')
+                            if ($value == '0000-00-00 00:00:00') {
                                 $value = '';
+                            }
                             $html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $value);
                         } else {
                             $timestamp = new DateBox($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
@@ -1186,8 +1236,7 @@ class RendererProviderHTML implements RendererProviderInterface
         }
 
         self::$logger->debug('<<renderAllFields ['.$html.']');
+
         return $html;
     }
 }
-
-?>

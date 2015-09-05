@@ -12,10 +12,10 @@ use Alpha\View\Widget\StringBox;
 use Alpha\View\Widget\Button;
 
 /**
- *
- * The rendering class for the Person class
+ * The rendering class for the Person class.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -52,14 +52,14 @@ use Alpha\View\Widget\Button;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class PersonView extends View
 {
     /**
-     * Method to render the login HTML form
+     * Method to render the login HTML form.
      *
      * @return string
+     *
      * @since 1.0
      */
     public function displayLoginForm()
@@ -67,7 +67,7 @@ class PersonView extends View
         $config = ConfigProvider::getInstance();
 
         $html = '<div class="bordered padded">';
-        $html .= "<h1>Login</h1>";
+        $html .= '<h1>Login</h1>';
         $html .= '<form action="'.FrontController::generateSecureURL('act=Alpha\Controller\LoginController').'" method="POST" id="loginForm" accept-charset="UTF-8">';
 
         $request = new Request(array('method' => 'GET'));
@@ -98,9 +98,10 @@ class PersonView extends View
     }
 
     /**
-     * Method to render the reset password HTML form
+     * Method to render the reset password HTML form.
      *
      * @return string
+     *
      * @since 1.0
      */
     public function displayResetForm()
@@ -139,9 +140,10 @@ class PersonView extends View
     }
 
     /**
-     * Method to render the user registration form
+     * Method to render the user registration form.
      *
      * @return string
+     *
      * @since 1.0
      */
     public function displayRegisterForm()
@@ -154,24 +156,26 @@ class PersonView extends View
         $html .= '<table cols="2">';
         $html .= '<form action="'.$request->getURI().'?reset=true" method="POST" accept-charset="UTF-8">';
         $html .= '<tr>';
-        if ($config->get('security.encrypt.http.fieldnames'))
+        if ($config->get('security.encrypt.http.fieldnames')) {
             $fieldname = base64_encode(SecurityUtils::encrypt('displayname'));
-        else
+        } else {
             $fieldname = 'displayname';
+        }
         $html .= '  <td>Forum name</td> <td><input type="text" name="'.$fieldname.'" size="50" value="'.$request->getParam($fieldname, '').'"/></td>';
         $html .= '</tr>';
         $html .= '<tr>';
-        if ($config->get('security.encrypt.http.fieldnames'))
+        if ($config->get('security.encrypt.http.fieldnames')) {
             $fieldname = base64_encode(SecurityUtils::encrypt('email'));
-        else
+        } else {
             $fieldname = 'email';
+        }
         $html .= '  <td>E-mail Address</td> <td><input type="text" name="'.$fieldname.'" size="50" value="'.$request->getParam($fieldname, '').'"/></td>';
         $html .= '</tr>';
         $html .= '<tr><td colspan="2">';
-        $temp = new Button("submit","Register","registerBut");
+        $temp = new Button('submit', 'Register', 'registerBut');
         $html .= $temp->render();
         $html .= '&nbsp;&nbsp;';
-        $temp = new Button("document.location.replace('".$config->get('app.url')."')","Cancel","cancelBut");
+        $temp = new Button("document.location.replace('".$config->get('app.url')."')", 'Cancel', 'cancelBut');
         $html .= $temp->render();
         $html .= '</td></tr>';
 
@@ -183,5 +187,3 @@ class PersonView extends View
         return $html;
     }
 }
-
-?>

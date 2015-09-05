@@ -3,9 +3,10 @@
 namespace Alpha\Util\Http\Filter;
 
 /**
- * Interface for HTTP filters applied to front controller requests
+ * Interface for HTTP filters applied to front controller requests.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -42,18 +43,17 @@ namespace Alpha\Util\Http\Filter;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 interface FilterInterface
 {
     /**
-     * The method for doing the work of the filter
+     * The method for doing the work of the filter.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @throws Alpha\Exception\ResourceNotAllowedException
+     *
      * @since 1.0
      */
     public function process($request);
 }
-
-?>

@@ -2,15 +2,15 @@
 
 namespace Alpha\Controller;
 
-use Alpha\Util\Http\Request;
-use Alpha\Util\Http\Response;
-
 /**
- * The interface for all page controllers
+ * The interface for all page controllers.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
+ *
  * @version $Id: AlphaControllerInterface.inc 1624 2012-12-21 12:17:55Z alphadevx $
+ *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -46,72 +46,76 @@ use Alpha\Util\Http\Response;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 interface ControllerInterface
 {
     /**
-     * Handles HEAD HTTP requests
+     * Handles HEAD HTTP requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @since Alpha\Util\Http\Response
      * @since 1.0
      */
     public function doHEAD($request);
 
-	/**
-	 * Handles GET HTTP requests
-	 *
-	 * @param Alpha\Util\Http\Request $request
-     * @since Alpha\Util\Http\Response
-	 * @since 1.0
-	 */
-	public function doGET($params);
-
-	/**
-	 * Handles POST HTTP requests
-	 *
-	 * @param Alpha\Util\Http\Request $request
-     * @since Alpha\Util\Http\Response
-	 * @since 1.0
-	 */
-	public function doPOST($params);
-
     /**
-     * Handles PUT HTTP requests
+     * Handles GET HTTP requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
+     * @since Alpha\Util\Http\Response
+     * @since 1.0
+     */
+    public function doGET($params);
+
+    /**
+     * Handles POST HTTP requests.
+     *
+     * @param Alpha\Util\Http\Request $request
+     *
+     * @since Alpha\Util\Http\Response
+     * @since 1.0
+     */
+    public function doPOST($params);
+
+    /**
+     * Handles PUT HTTP requests.
+     *
+     * @param Alpha\Util\Http\Request $request
+     *
      * @since Alpha\Util\Http\Response
      * @since 1.0
      */
     public function doPUT($params);
 
     /**
-     * Handles PATCH HTTP requests
+     * Handles PATCH HTTP requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @since Alpha\Util\Http\Response
      * @since 1.0
      */
     public function doPATCH($params);
 
     /**
-     * Handles DELETE HTTP requests
+     * Handles DELETE HTTP requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @since Alpha\Util\Http\Response
      * @since 1.0
      */
     public function doDELETE($params);
 
     /**
-     * Handles OPTIONS HTTP requests
+     * Handles OPTIONS HTTP requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @since Alpha\Util\Http\Response
      * @since 1.0
      */
     public function doOPTIONS($params);
 }
-
-?>

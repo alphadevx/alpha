@@ -8,14 +8,14 @@ use Alpha\Model\Rights;
 use Alpha\Model\Article;
 use Alpha\Model\ArticleComment;
 use Alpha\Model\Type\Relation;
-use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\AlphaException;
 
 /**
- * Test case for the Relation data type
+ * Test case for the Relation data type.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -52,30 +52,31 @@ use Alpha\Exception\AlphaException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class RelationTest extends ModelTestCase
 {
-	/**
-	 * A Relation for testing
-	 *
-	 * @var Alpha\Model\Type\Relation
-	 * @since 1.0
-	 */
-	private $rel1;
+    /**
+     * A Relation for testing.
+     *
+     * @var Alpha\Model\Type\Relation
+     *
+     * @since 1.0
+     */
+    private $rel1;
 
     /**
-     * A Person for testing
+     * A Person for testing.
      *
      * @var Alpha\Model\Person
+     *
      * @since 1.2.1
      */
     private $person;
 
-	/**
+    /**
      * Called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+     * here.
      *
      * @since 1.0
      */
@@ -108,7 +109,7 @@ class RelationTest extends ModelTestCase
     /**
      * Called after the test functions are executed
      * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+     * here.
      *
      * @since 1.0
      */
@@ -131,171 +132,161 @@ class RelationTest extends ModelTestCase
     }
 
     /**
-     * Testing passing a valid BO name to setRelatedClass
+     * Testing passing a valid BO name to setRelatedClass.
      *
      * @since 1.0
      */
     public function testSetRelatedClassPass()
     {
-    	try {
-    		$this->rel1->setRelatedClass('Alpha\Model\Article');
-    	}catch (AlphaException $e) {
-    		$this->fail('Testing passing a valid BO name to setRelatedClass');
-    	}
+        try {
+            $this->rel1->setRelatedClass('Alpha\Model\Article');
+        } catch (AlphaException $e) {
+            $this->fail('Testing passing a valid BO name to setRelatedClass');
+        }
     }
 
-	/**
-     * Testing passing an invalid BO name to setRelatedClass
+    /**
+     * Testing passing an invalid BO name to setRelatedClass.
      *
      * @since 1.0
      */
     public function testSetRelatedClassFail()
     {
-    	try {
-    		$this->rel1->setRelatedClass('XyzObject');
-    		$this->fail('Testing passing an invalid BO name to setRelatedClass');
-    	}catch (AlphaException $e) {
-    		$this->assertEquals('The class [XyzObject] is not defined anywhere!'
-    			, $e->getMessage()
-    			, 'Testing passing an invalid BO name to setRelatedClass');
-    	}
+        try {
+            $this->rel1->setRelatedClass('XyzObject');
+            $this->fail('Testing passing an invalid BO name to setRelatedClass');
+        } catch (AlphaException $e) {
+            $this->assertEquals('The class [XyzObject] is not defined anywhere!', $e->getMessage(), 'Testing passing an invalid BO name to setRelatedClass');
+        }
     }
 
-	/**
-     * Testing passing a valid field name to setRelatedClassField
+    /**
+     * Testing passing a valid field name to setRelatedClassField.
      *
      * @since 1.0
      */
     public function testSetRelatedClassFieldPass()
     {
-    	try {
-    		$this->rel1->setRelatedClass('Alpha\Model\Person');
-    		$this->rel1->setRelatedClassField('email');
-    	}catch (AlphaException $e) {
-    		$this->fail('Testing passing a valid field name to setRelatedClassField');
-    	}
+        try {
+            $this->rel1->setRelatedClass('Alpha\Model\Person');
+            $this->rel1->setRelatedClassField('email');
+        } catch (AlphaException $e) {
+            $this->fail('Testing passing a valid field name to setRelatedClassField');
+        }
     }
 
-	/**
-     * Testing passing an invalid field name to setRelatedClassField
+    /**
+     * Testing passing an invalid field name to setRelatedClassField.
      *
      * @since 1.0
      */
     public function testSetRelatedClassFieldFail()
     {
-    	try {
-    		$this->rel1->setRelatedClass('Alpha\Model\Person');
-    		$this->rel1->setRelatedClassField('doesNotExist');
-    		$this->fail('Testing passing an invalid field name to setRelatedClassField');
-    	}catch (AlphaException $e) {
-    		$this->assertEquals('The field [doesNotExist] was not found in the class [Alpha\Model\Person]'
-    			, $e->getMessage()
-    			, 'Testing passing an invalid field name to setRelatedClassField');
-    	}
+        try {
+            $this->rel1->setRelatedClass('Alpha\Model\Person');
+            $this->rel1->setRelatedClassField('doesNotExist');
+            $this->fail('Testing passing an invalid field name to setRelatedClassField');
+        } catch (AlphaException $e) {
+            $this->assertEquals('The field [doesNotExist] was not found in the class [Alpha\Model\Person]', $e->getMessage(), 'Testing passing an invalid field name to setRelatedClassField');
+        }
     }
 
     /**
-     * Testing passing a valid type name to setRelationType
+     * Testing passing a valid type name to setRelationType.
      *
      * @since 1.0
      */
     public function testSetRelationTypePass()
     {
-    	try {
-    		$this->rel1->setRelationType('MANY-TO-ONE');
-    	}catch (AlphaException $e) {
-    		$this->fail('Testing passing a valid type name to setRelationType');
-    	}
+        try {
+            $this->rel1->setRelationType('MANY-TO-ONE');
+        } catch (AlphaException $e) {
+            $this->fail('Testing passing a valid type name to setRelationType');
+        }
     }
 
-	/**
-     * Testing passing an invalid type name to setRelationType
+    /**
+     * Testing passing an invalid type name to setRelationType.
      *
      * @since 1.0
      */
     public function testSetRelationTypeFail()
     {
-    	try {
-    		$this->rel1->setRelationType('blah');
-    		$this->fail('Testing passing an invalid type name to setRelationType');
-    	}catch (AlphaException $e) {
-    		$this->assertEquals('Relation type of [blah] is invalid!'
-    			, $e->getMessage()
-    			, 'Testing passing an invalid type name to setRelationType');
-    	}
+        try {
+            $this->rel1->setRelationType('blah');
+            $this->fail('Testing passing an invalid type name to setRelationType');
+        } catch (AlphaException $e) {
+            $this->assertEquals('Relation type of [blah] is invalid!', $e->getMessage(), 'Testing passing an invalid type name to setRelationType');
+        }
     }
 
-	/**
-     * Testing setValue method with a valid value
+    /**
+     * Testing setValue method with a valid value.
      *
      * @since 1.0
      */
     public function testSetValuePass()
     {
-    	try {
-    		$this->rel1->setValue(100);
-    		$this->rel1->setValue('2777');
-    	}catch (AlphaException $e) {
-    		$this->fail('Testing setValue method with a valid value');
-    	}
+        try {
+            $this->rel1->setValue(100);
+            $this->rel1->setValue('2777');
+        } catch (AlphaException $e) {
+            $this->fail('Testing setValue method with a valid value');
+        }
     }
 
-	/**
-     * Testing setValue method with an invalid value
+    /**
+     * Testing setValue method with an invalid value.
      *
      * @since 1.0
      */
     public function testSetValueFail()
     {
-    	try {
-    		$this->rel1->setValue('xyz');
-    		$this->fail('Testing setValue method with an invalid value');
-    	}catch (AlphaException $e) {
-    		$this->assertEquals('[xyz] not a valid Relation value!  A maximum of 11 characters is allowed.'
-    			, $e->getMessage()
-    			, 'Testing setValue method with an invalid value');
-    	}
+        try {
+            $this->rel1->setValue('xyz');
+            $this->fail('Testing setValue method with an invalid value');
+        } catch (AlphaException $e) {
+            $this->assertEquals('[xyz] not a valid Relation value!  A maximum of 11 characters is allowed.', $e->getMessage(), 'Testing setValue method with an invalid value');
+        }
     }
 
     /**
-     * Testing that the display field value of the related class is accessed correctly
+     * Testing that the display field value of the related class is accessed correctly.
      *
      * @since 1.0
      */
     public function testSetRelatedClassDisplayFieldPass()
     {
-    	try {
-    		$this->rel1->setRelatedClass('Alpha\Model\Person');
-    		// assuming here that user #1 is the default Administrator account
-    		$this->rel1->setValue(1);
-    		$this->rel1->setRelatedClassDisplayField('state');
-    		$this->assertEquals('Active', $this->rel1->getRelatedClassDisplayFieldValue(), 'Testing that the display field value of the related class is accessed correctly');    		
-    	}catch (AlphaException $e) {
-    		$this->fail('Testing that the display field value of the related class is accessed correctly');
-    	}
+        try {
+            $this->rel1->setRelatedClass('Alpha\Model\Person');
+            // assuming here that user #1 is the default Administrator account
+            $this->rel1->setValue(1);
+            $this->rel1->setRelatedClassDisplayField('state');
+            $this->assertEquals('Active', $this->rel1->getRelatedClassDisplayFieldValue(), 'Testing that the display field value of the related class is accessed correctly');
+        } catch (AlphaException $e) {
+            $this->fail('Testing that the display field value of the related class is accessed correctly');
+        }
     }
 
-	/**
-     * Testing that getRelatedClassDisplayFieldValue() will fail to load an invalid class definition
+    /**
+     * Testing that getRelatedClassDisplayFieldValue() will fail to load an invalid class definition.
      *
      * @since 1.0
      */
     public function testGetRelatedClassDisplayFieldValueFail()
     {
-    	try {
+        try {
             $this->rel1->setRelatedClass('NotThere');
-    		$this->rel1->setRelatedClassDisplayField('someField');
-    		$value = $this->rel1->getRelatedClassDisplayFieldValue();
-    		$this->fail('Testing that getRelatedClassDisplayFieldValue() will fail to load an invalid class definition');
-    	}catch (\Exception $e) {
-    		$this->assertEquals('The class [NotThere] is not defined anywhere!'
-    			, $e->getMessage()
-    			, 'Testing that getRelatedClassDisplayFieldValue() will fail to load an invalid class definition');
-    	}
+            $this->rel1->setRelatedClassDisplayField('someField');
+            $value = $this->rel1->getRelatedClassDisplayFieldValue();
+            $this->fail('Testing that getRelatedClassDisplayFieldValue() will fail to load an invalid class definition');
+        } catch (\Exception $e) {
+            $this->assertEquals('The class [NotThere] is not defined anywhere!', $e->getMessage(), 'Testing that getRelatedClassDisplayFieldValue() will fail to load an invalid class definition');
+        }
     }
 
     /**
-     * Testing the getRelatedClassDisplayFieldValue() method on ONE-TO-MANY and MANY-TO-MANY relations
+     * Testing the getRelatedClassDisplayFieldValue() method on ONE-TO-MANY and MANY-TO-MANY relations.
      *
      * @since 1.2.1
      */
@@ -335,7 +326,7 @@ class RelationTest extends ModelTestCase
         try {
             $this->assertEquals('user1@test.com,user2@test.com', $person2->getPropObject('rights')->getRelatedClassDisplayFieldValue(), 'testing the getRelatedClassDisplayFieldValue() method on MANY-TO-MANY relation');
             $this->fail('testing the getRelatedClassDisplayFieldValue() method on MANY-TO-MANY relation');
-        }catch (IllegalArguementException $e) {
+        } catch (IllegalArguementException $e) {
             $this->assertEquals($e->getMessage(), 'Tried to load related MANY-TO-MANY fields but no accessingClassName parameter set on the call to getRelatedClassDisplayFieldValue!', 'testing the getRelatedClassDisplayFieldValue() method on MANY-TO-MANY relation');
         }
 
@@ -377,7 +368,7 @@ class RelationTest extends ModelTestCase
     }
 
     /**
-     * Testing the getSide() method on a MANY-TO-MANY relation
+     * Testing the getSide() method on a MANY-TO-MANY relation.
      *
      * @since 1.2.1
      */
@@ -395,7 +386,7 @@ class RelationTest extends ModelTestCase
     }
 
     /**
-     * Testing the getSide() method on a ONE-TO-MANY relation
+     * Testing the getSide() method on a ONE-TO-MANY relation.
      *
      * @since 1.2.1
      */
@@ -407,16 +398,16 @@ class RelationTest extends ModelTestCase
         $oneToManyRel->setRelatedClassDisplayField('content');
         $oneToManyRel->setRelationType('ONE-TO-MANY');
 
-        try{
+        try {
             $oneToManyRel->getSide('Alpha\Model\ArticleComment');
             $this->fail('testing the getSide() method on a ONE-TO-MANY relation');
-        }catch (IllegalArguementException $e) {
+        } catch (IllegalArguementException $e) {
             $this->assertEquals('Error trying to determine the MANY-TO-MANY relationship side for the classname [Alpha\Model\ArticleComment]', $e->getMessage(), 'testing the getSide() method on a ONE-TO-MANY relation');
         }
     }
 
     /**
-     * Testing the getRelatedObject method
+     * Testing the getRelatedObject method.
      *
      * @since 1.2.1
      */
@@ -433,7 +424,7 @@ class RelationTest extends ModelTestCase
     }
 
     /**
-     * Testing the getRelatedObjects method with a ONE-TO-MANY and MANY-TO-MANY relation
+     * Testing the getRelatedObjects method with a ONE-TO-MANY and MANY-TO-MANY relation.
      *
      * @since 1.2.1
      */
@@ -487,5 +478,3 @@ class RelationTest extends ModelTestCase
         $this->assertTrue($article->getPropObject('comments')->getRelatedObjects()[0] instanceof ArticleComment, 'testing the getRelatedObjects method with a ONE-TO-MANY relation');
     }
 }
-
-?>

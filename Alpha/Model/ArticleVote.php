@@ -7,10 +7,10 @@ use Alpha\Model\Type\Relation;
 use Alpha\Util\Logging\Logger;
 
 /**
- *
- * An article vote class for user ratings
+ * An article vote class for user ratings.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -47,84 +47,87 @@ use Alpha\Util\Logging\Logger;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ArticleVote extends ActiveRecord
 {
-	/**
-	 * The article this comment belongs to
-	 *
-	 * @var Alpha\Model\Type\Relation
-	 * @since 1.0
-	 */
-	protected $articleOID;
+    /**
+     * The article this comment belongs to.
+     *
+     * @var Alpha\Model\Type\Relation
+     *
+     * @since 1.0
+     */
+    protected $articleOID;
 
-	/**
-	 * The person who cast the vote
-	 *
-	 * @var Alpha\Model\Type\Relation
-	 * @since 1.0
-	 */
-	protected $personOID;
+    /**
+     * The person who cast the vote.
+     *
+     * @var Alpha\Model\Type\Relation
+     *
+     * @since 1.0
+     */
+    protected $personOID;
 
-	/**
-	 * The actual vote score (default 1-10)
-	 *
-	 * @var Alpha\Model\Type\Integer
-	 * @since 1.0
-	 */
-	protected $score;
+    /**
+     * The actual vote score (default 1-10).
+     *
+     * @var Alpha\Model\Type\Integer
+     *
+     * @since 1.0
+     */
+    protected $score;
 
-	/**
-	 * An array of data display labels for the class properties
-	 *
-	 * @var array
-	 * @since 1.0
-	 */
-	protected $dataLabels = array("OID"=>"Article Vote ID#","articleOID"=>"Article","personOID"=>"Voter","score"=>"Article Score");
+    /**
+     * An array of data display labels for the class properties.
+     *
+     * @var array
+     *
+     * @since 1.0
+     */
+    protected $dataLabels = array('OID' => 'Article Vote ID#','articleOID' => 'Article','personOID' => 'Voter','score' => 'Article Score');
 
-	/**
-	 * The name of the database table for the class
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	const TABLE_NAME = 'ArticleVote';
+    /**
+     * The name of the database table for the class.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    const TABLE_NAME = 'ArticleVote';
 
-	/**
-	 * Trace logger
-	 *
-	 * @var Alpha\Util\Logging\Logger
-	 * @since 1.1
-	 */
-	private static $logger = null;
+    /**
+     * Trace logger.
+     *
+     * @var Alpha\Util\Logging\Logger
+     *
+     * @since 1.1
+     */
+    private static $logger = null;
 
-	/**
-	 * Constructor for the class
-	 *
-	 * @since 1.0
-	 */
-	public function __construct()
-	{
-		self::$logger = new Logger('ArticleVote');
+    /**
+     * Constructor for the class.
+     *
+     * @since 1.0
+     */
+    public function __construct()
+    {
+        self::$logger = new Logger('ArticleVote');
 
-		// ensure to call the parent constructor
-		parent::__construct();
+        // ensure to call the parent constructor
+        parent::__construct();
 
-		$this->articleOID = new Relation();
-		$this->articleOID->setRelatedClass('Alpha\Model\Article');
-		$this->articleOID->setRelatedClassField('OID');
-		$this->articleOID->setRelatedClassDisplayField('description');
-		$this->articleOID->setRelationType('MANY-TO-ONE');
+        $this->articleOID = new Relation();
+        $this->articleOID->setRelatedClass('Alpha\Model\Article');
+        $this->articleOID->setRelatedClassField('OID');
+        $this->articleOID->setRelatedClassDisplayField('description');
+        $this->articleOID->setRelationType('MANY-TO-ONE');
 
-		$this->personOID = new Relation();
-		$this->personOID->setRelatedClass('Alpha\Model\Person');
-		$this->personOID->setRelatedClassField('OID');
-		$this->personOID->setRelatedClassDisplayField('email');
-		$this->personOID->setRelationType('MANY-TO-ONE');
+        $this->personOID = new Relation();
+        $this->personOID->setRelatedClass('Alpha\Model\Person');
+        $this->personOID->setRelatedClassField('OID');
+        $this->personOID->setRelatedClassDisplayField('email');
+        $this->personOID->setRelationType('MANY-TO-ONE');
 
-		$this->score = new Integer();
-	}
+        $this->score = new Integer();
+    }
 }
-
-?>

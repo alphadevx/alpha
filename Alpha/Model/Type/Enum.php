@@ -2,13 +2,13 @@
 
 namespace Alpha\Model\Type;
 
-use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- * The Enum complex data type
+ * The Enum complex data type.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -45,104 +45,117 @@ use Alpha\Exception\IllegalArguementException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class Enum extends Type implements TypeInterface
 {
-	/**
-	 * An array of valid enum options
-	 *
-	 * @var array
-	 * @since 1.0
-	 */
-	private $options;
+    /**
+     * An array of valid enum options.
+     *
+     * @var array
+     *
+     * @since 1.0
+     */
+    private $options;
 
-	/**
-	 * The currently selected enum option
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	private $value = '';
+    /**
+     * The currently selected enum option.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    private $value = '';
 
-	/**
-	 * The message to display to the user when validation fails
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	protected $helper = 'Not a valid enum option!';
+    /**
+     * The message to display to the user when validation fails.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    protected $helper = 'Not a valid enum option!';
 
-	/**
-	 * Constructor that sets up the enum options
-	 *
-	 * @param array $opts
-	 * @since 1.0
-	 * @throws Alpha\Exception\IllegalArguementException
-	 */
-	public function __construct($opts=array(''))
-	{
-		if(is_array($opts))
-			$this->options = $opts;
-		else
-			throw new IllegalArguementException('Not a valid enum option array!');
-	}
+    /**
+     * Constructor that sets up the enum options.
+     *
+     * @param array $opts
+     *
+     * @since 1.0
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     */
+    public function __construct($opts = array(''))
+    {
+        if (is_array($opts)) {
+            $this->options = $opts;
+        } else {
+            throw new IllegalArguementException('Not a valid enum option array!');
+        }
+    }
 
-	/**
-	 * Setter for the enum options
-	 *
-	 * @param array $opts
-	 * @since 1.0
-	 * @throws Alpha\Exception\IllegalArguementException
-	 */
-	public function setOptions($opts)
-	{
-		if(is_array($opts))
-			$this->options = $opts;
-		else
-			throw new IllegalArguementException('Not a valid enum option array!');
-	}
+    /**
+     * Setter for the enum options.
+     *
+     * @param array $opts
+     *
+     * @since 1.0
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     */
+    public function setOptions($opts)
+    {
+        if (is_array($opts)) {
+            $this->options = $opts;
+        } else {
+            throw new IllegalArguementException('Not a valid enum option array!');
+        }
+    }
 
-	/**
-	 * Get the array of enum options
-	 *
-	 * @param boolean $alphaSort Set to true if you want the Enum options in alphabetical order (default false)
-	 * @return array
-	 * @since 1.0
-	 */
-	public function getOptions($alphaSort = false)
-	{
-		if($alphaSort)
-			sort($this->options, SORT_STRING);
-		return $this->options;
-	}
+    /**
+     * Get the array of enum options.
+     *
+     * @param bool $alphaSort Set to true if you want the Enum options in alphabetical order (default false)
+     *
+     * @return array
+     *
+     * @since 1.0
+     */
+    public function getOptions($alphaSort = false)
+    {
+        if ($alphaSort) {
+            sort($this->options, SORT_STRING);
+        }
 
-	/**
-	 * Used to get the current enum item
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function getValue()
-	{
-		return $this->value;
-	}
+        return $this->options;
+    }
 
-	/**
-	 * Used to select the current enum item
-	 *
-	 * @param string $item The item to set as selected in the Enum
-	 * @since 1.0
-	 * @throws Alpha\Exception\IllegalArguementException
-	 */
-	public function setValue($item)
-	{
-		if (in_array($item, $this->options)) {
-			$this->value = $item;
-		}else{
-			throw new IllegalArguementException($this->getHelper());
-		}
-	}
+    /**
+     * Used to get the current enum item.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * Used to select the current enum item.
+     *
+     * @param string $item The item to set as selected in the Enum
+     *
+     * @since 1.0
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     */
+    public function setValue($item)
+    {
+        if (in_array($item, $this->options)) {
+            $this->value = $item;
+        } else {
+            throw new IllegalArguementException($this->getHelper());
+        }
+    }
 }
-
-?>

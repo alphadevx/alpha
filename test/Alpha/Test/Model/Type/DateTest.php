@@ -7,12 +7,14 @@ use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Config\ConfigProvider;
 
 /**
- *
- * Test case for the Date data type
+ * Test case for the Date data type.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
+ *
  * @version $Id: DateTest.php 1835 2014-11-10 15:59:23Z alphadevx $
+ *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -48,32 +50,31 @@ use Alpha\Util\Config\ConfigProvider;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class DateTest extends \PHPUnit_Framework_TestCase
 {
-
-	/**
-	 * An Date for testing
-	 *
-	 * @var Alpha\Model\Type\Date
-	 * @since 1.0
-	 */
-	private $date1;
+    /**
+     * An Date for testing.
+     *
+     * @var Alpha\Model\Type\Date
+     *
+     * @since 1.0
+     */
+    private $date1;
 
     /**
      * Called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+     * here.
      *
      * @since 1.0
      */
     protected function setUp()
     {
-    	$config = ConfigProvider::getInstance();
+        $config = ConfigProvider::getInstance();
 
-    	// override setting to ensure dates default to now
-    	$config->set('app.default.datetime', 'now');
+        // override setting to ensure dates default to now
+        $config->set('app.default.datetime', 'now');
 
         $this->date1 = new Date();
     }
@@ -81,7 +82,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
     /**
      * Called after the test functions are executed
      * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+     * here.
      *
      * @since 1.0
      */
@@ -91,137 +92,127 @@ class DateTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the constructor has set the Date to today by default
+     * Testing the constructor has set the Date to today by default.
      *
      * @since 1.0
      */
     public function testDefaultDateValue()
     {
-    	$this->assertEquals(date("Y-m-d"), $this->date1->getValue(), "testing the constructor has set the Date to today by default");
+        $this->assertEquals(date('Y-m-d'), $this->date1->getValue(), 'testing the constructor has set the Date to today by default');
     }
 
     /**
-     * Testing the setValue method
+     * Testing the setValue method.
      *
      * @since 1.0
      */
     public function testSetValuePass()
     {
-    	$this->date1->setDateValue(2000, 1, 1);
+        $this->date1->setDateValue(2000, 1, 1);
 
-    	$this->assertEquals("2000-01-01", $this->date1->getValue(), "testing the setValue method");
+        $this->assertEquals('2000-01-01', $this->date1->getValue(), 'testing the setValue method');
     }
 
     /**
-     * Testing the setValue method with a bad month
+     * Testing the setValue method with a bad month.
      *
      * @since 1.0
      */
     public function testSetValueInvalidMonth()
     {
-    	try {
-    		$this->date1->setDateValue(2000, 'blah', 1);
-    		$this->fail("testing the setValue method with a bad month");
-    	}catch (IllegalArguementException $e) {
-    		$this->assertEquals('Error: the month value blah provided is invalid!'
-    			, $e->getMessage()
-    			, "testing the setValue method with a bad month");
-    	}
+        try {
+            $this->date1->setDateValue(2000, 'blah', 1);
+            $this->fail('testing the setValue method with a bad month');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Error: the month value blah provided is invalid!', $e->getMessage(), 'testing the setValue method with a bad month');
+        }
     }
 
-	/**
-     * Testing the setValue method with a bad date value (out of range)
+    /**
+     * Testing the setValue method with a bad date value (out of range).
      *
      * @since 1.0
      */
     public function testSetValueInvalidValue()
     {
-    	try {
-    		$this->date1->setDateValue(2000, 13, 1);
-    		$this->fail("testing the setValue method with a bad date value (out of range)");
-    	}catch (IllegalArguementException $e) {
-    		$this->assertEquals('Error: the day value 2000-13-1 provided is invalid!'
-    			, $e->getMessage()
-    			, "testing the setValue method with a bad date value (out of range)");
-    	}
+        try {
+            $this->date1->setDateValue(2000, 13, 1);
+            $this->fail('testing the setValue method with a bad date value (out of range)');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Error: the day value 2000-13-1 provided is invalid!', $e->getMessage(), 'testing the setValue method with a bad date value (out of range)');
+        }
     }
 
     /**
-     * Testing the populateFromString method
+     * Testing the populateFromString method.
      *
      * @since 1.0
      */
     public function testPopulateFromString()
     {
-    	$this->date1->populateFromString("2007-08-13");
+        $this->date1->populateFromString('2007-08-13');
 
-    	$this->assertEquals("2007-08-13", $this->date1->getValue(), "testing the populateFromString method");
+        $this->assertEquals('2007-08-13', $this->date1->getValue(), 'testing the populateFromString method');
 
         try {
-            $this->date1->populateFromString("2007-08-40");
-            $this->fail("testing the populateFromString method with a bad date value");
-        }catch (IllegalArguementException $e) {
-            $this->assertEquals('Error: the date value 2007-08-40 provided is invalid!'
-                , $e->getMessage()
-                , "testing the populateFromString method with a bad date value");
+            $this->date1->populateFromString('2007-08-40');
+            $this->fail('testing the populateFromString method with a bad date value');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Error: the date value 2007-08-40 provided is invalid!', $e->getMessage(), 'testing the populateFromString method with a bad date value');
         }
 
         try {
-            $this->date1->populateFromString("2007-08-aa");
-            $this->fail("testing the populateFromString method with a bad date value");
-        }catch (IllegalArguementException $e) {
-            $this->assertEquals('Error: the day value aa provided is invalid!'
-                , $e->getMessage()
-                , "testing the populateFromString method with a bad date value");
+            $this->date1->populateFromString('2007-08-aa');
+            $this->fail('testing the populateFromString method with a bad date value');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Error: the day value aa provided is invalid!', $e->getMessage(), 'testing the populateFromString method with a bad date value');
         }
 
         try {
-            $this->date1->populateFromString("bad");
-            $this->fail("testing the populateFromString method with a bad date value");
-        }catch (IllegalArguementException $e) {
-            $this->assertEquals('Invalid Date value [bad] provided!'
-                , $e->getMessage()
-                , "testing the populateFromString method with a bad date value");
+            $this->date1->populateFromString('bad');
+            $this->fail('testing the populateFromString method with a bad date value');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Invalid Date value [bad] provided!', $e->getMessage(), 'testing the populateFromString method with a bad date value');
         }
     }
 
     /**
-     * Testing that the validation will cause an invalid date to fail on the constructor
+     * Testing that the validation will cause an invalid date to fail on the constructor.
      *
      * @since 1.0
      */
     public function testValidationOnConstructor()
     {
-    	try {
-    		$date = new Date("blah");
-    		$this->fail("testing that the validation will cause an invalid date to fail on the constructor");
-    	}catch (IllegalArguementException $e) {
-    		$this->assertTrue(true, "testing that the validation will cause an invalid date to fail on the constructor");
-    	}
+        try {
+            $date = new Date('blah');
+            $this->fail('testing that the validation will cause an invalid date to fail on the constructor');
+        } catch (IllegalArguementException $e) {
+            $this->assertTrue(true, 'testing that the validation will cause an invalid date to fail on the constructor');
+        }
     }
 
     /**
-     * Testing the getEuroValue method for converting to European date format
+     * Testing the getEuroValue method for converting to European date format.
      *
      * @since 1.0
      */
     public function testGetEuroValue()
     {
-    	$this->assertEquals(date("d/m/y"), $this->date1->getEuroValue(), "testing the getEuroValue method for converting to European date format");
+        $this->assertEquals(date('d/m/y'), $this->date1->getEuroValue(), 'testing the getEuroValue method for converting to European date format');
     }
 
     /**
-     * Testing the getWeekday() method when the default constructor is used
+     * Testing the getWeekday() method when the default constructor is used.
      *
      * @since 1.0
      */
     public function testGetWeekday()
     {
-    	$this->assertEquals(date('l'), $this->date1->getWeekday(), "testing the getWeekday() method when the default constructor is used");
+        $this->assertEquals(date('l'), $this->date1->getWeekday(), 'testing the getWeekday() method when the default constructor is used');
     }
 
     /**
-     * Testing the getUnixValue() method
+     * Testing the getUnixValue() method.
      *
      * @since 1.2.1
      */
@@ -233,14 +224,12 @@ class DateTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the getUSValue method for converting to European date format
+     * Testing the getUSValue method for converting to European date format.
      *
      * @since 1.2.1
      */
     public function testGetUSValue()
     {
-        $this->assertEquals(date("m/d/y"), $this->date1->getUSValue(), "testing the getUSValue method for converting to US date format");
+        $this->assertEquals(date('m/d/y'), $this->date1->getUSValue(), 'testing the getUSValue method for converting to US date format');
     }
 }
-
-?>

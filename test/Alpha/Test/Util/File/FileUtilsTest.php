@@ -5,10 +5,10 @@ namespace Alpha\Test\Util\File;
 use Alpha\Util\File\FileUtils;
 
 /**
- *
- * Test cases for the FileUtils class
+ * Test cases for the FileUtils class.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -45,12 +45,11 @@ use Alpha\Util\File\FileUtils;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class FileUtilsTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Testing the getMIMETypeByExtension() method
+     * Testing the getMIMETypeByExtension() method.
      *
      * @since 2.0
      */
@@ -62,7 +61,7 @@ class FileUtilsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the listDirectoryContents() method
+     * Testing the listDirectoryContents() method.
      *
      * @since 2.0
      */
@@ -70,11 +69,11 @@ class FileUtilsTest extends \PHPUnit_Framework_TestCase
     {
         $fileList = '';
         $this->assertTrue(FileUtils::listDirectoryContents('.', $fileList, 0, array()) > 0, 'Testing the listDirectoryContents() method');
-        $this->assertTrue(strpos($fileList,'</em><br>') !== false, 'Testing the listDirectoryContents() method');
+        $this->assertTrue(strpos($fileList, '</em><br>') !== false, 'Testing the listDirectoryContents() method');
     }
 
     /**
-     * Testing the deleteDirectoryContents() method
+     * Testing the deleteDirectoryContents() method.
      *
      * @since 2.0
      */
@@ -93,7 +92,7 @@ class FileUtilsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the copy() method
+     * Testing the copy() method.
      *
      * @since 2.0
      */
@@ -105,7 +104,7 @@ class FileUtilsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the zip() method
+     * Testing the zip() method.
      *
      * @since 2.0
      */
@@ -116,5 +115,3 @@ class FileUtilsTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(file_exists('/tmp/logo-small.zip'), 'Testing the zip() method');
     }
 }
-
-?>

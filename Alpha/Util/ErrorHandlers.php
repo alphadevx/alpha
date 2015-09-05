@@ -6,10 +6,10 @@ use Alpha\Exception\PHPException;
 use Alpha\Util\Logging\Logger;
 
 /**
- *
- * A pair of static methods for capturing normal PHP errors and unhandled Alpha exceptions
+ * A pair of static methods for capturing normal PHP errors and unhandled Alpha exceptions.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -46,37 +46,36 @@ use Alpha\Util\Logging\Logger;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ErrorHandlers
 {
-	/**
-	 * Handle an uncaught exception
-	 *
-	 * @param Exception $e
-	 */
-	public static function catchException($e)
-	{
-		$logger = new Logger(get_class($e));
-		$logger->error($e->getMessage()."\n [stacktrace]: \n".$e->getTraceAsString());
-	}
+    /**
+     * Handle an uncaught exception.
+     *
+     * @param Exception $e
+     */
+    public static function catchException($e)
+    {
+        $logger = new Logger(get_class($e));
+        $logger->error($e->getMessage()."\n [stacktrace]: \n".$e->getTraceAsString());
+    }
 
-	/**
-	 * Catch an unhandled error and convert it to a PHPException
-	 * @param $error_no
-	 * @param $msg
-	 * @param $file
-	 * @param $line
-	 * @throws PHPException
-	 */
-	public static function catchError($error_no, $msg, $file, $line)
-	{
-		$e = new PHPException();
-		$e->setMessage('[PHP error '.$error_no.'] on line ['.$line.'] of file ['.$file.']: '.$msg);
-		$e->setFile($file);
+    /**
+     * Catch an unhandled error and convert it to a PHPException.
+     *
+     * @param $error_no
+     * @param $msg
+     * @param $file
+     * @param $line
+     *
+     * @throws PHPException
+     */
+    public static function catchError($error_no, $msg, $file, $line)
+    {
+        $e = new PHPException();
+        $e->setMessage('[PHP error '.$error_no.'] on line ['.$line.'] of file ['.$file.']: '.$msg);
+        $e->setFile($file);
 
-		throw $e;
-	}
+        throw $e;
+    }
 }
-
-?>

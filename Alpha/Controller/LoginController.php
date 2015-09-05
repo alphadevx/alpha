@@ -18,9 +18,10 @@ use Alpha\Exception\RecordNotFoundException;
 use Alpha\Controller\Front\FrontController;
 
 /**
- * Login controller that adds the current user object to the session
+ * Login controller that adds the current user object to the session.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -57,36 +58,38 @@ use Alpha\Controller\Front\FrontController;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class LoginController extends Controller implements ControllerInterface
 {
     /**
-     * The person to be logged in
+     * The person to be logged in.
      *
      * @var Alpha\Model\Person
+     *
      * @since 1.0
      */
     protected $personObject;
 
     /**
-     * The person view object
+     * The person view object.
      *
      * @var Alpha\View\PersonView
+     *
      * @since 1.0
      */
     private $personView;
 
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * constructor to set up the object
+     * constructor to set up the object.
      *
      * @since 1.0
      */
@@ -113,11 +116,14 @@ class LoginController extends Controller implements ControllerInterface
     }
 
     /**
-     * Handle GET requests
+     * Handle GET requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @since 1.0
      */
     public function doGET($request)
@@ -126,28 +132,34 @@ class LoginController extends Controller implements ControllerInterface
 
         $params = $request->getParams();
 
-        if (!is_array($params))
+        if (!is_array($params)) {
             throw new IllegalArguementException('Bad $params ['.var_export($params, true).'] passed to doGET method!');
+        }
 
         $body = View::displayPageHead($this);
 
-        if (isset($params['reset']))
+        if (isset($params['reset'])) {
             $body .= $this->personView->displayResetForm();
-        else
+        } else {
             $body .= $this->personView->displayLoginForm();
+        }
 
         $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
+
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
-     * Handle POST requests (adds $currentUser Person to the session)
+     * Handle POST requests (adds $currentUser Person to the session).
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @since 1.0
      */
     public function doPOST($request)
@@ -156,8 +168,9 @@ class LoginController extends Controller implements ControllerInterface
 
         $params = $request->getParams();
 
-        if (!is_array($params))
+        if (!is_array($params)) {
             throw new IllegalArguementException('Bad $params ['.var_export($params, true).'] passed to doPOST method!');
+        }
 
         $config = ConfigProvider::getInstance();
 
@@ -165,15 +178,15 @@ class LoginController extends Controller implements ControllerInterface
 
         try {
             // check the hidden security fields before accepting the form POST data
-            if (!$this->checkSecurityFields())
+            if (!$this->checkSecurityFields()) {
                 throw new SecurityException('This page cannot accept post data from remote servers!');
+            }
 
             if (isset($params['loginBut'])) {
                 // if the database has not been set up yet, accept a login from the config admin username/password
                 if (!ActiveRecord::isInstalled()) {
                     if ($params['email'] == $config->get('app.install.username') && password_verify($params['password'], password_hash($config->get('app.install.password'), PASSWORD_DEFAULT, ['cost' => 12]))) {
-
-                        self::$logger->info('Logging in ['.$params['email'].'] at ['.date("Y-m-d H:i:s").']');
+                        self::$logger->info('Logging in ['.$params['email'].'] at ['.date('Y-m-d H:i:s').']');
                         $admin = new Person();
                         $admin->set('displayName', 'Admin');
                         $admin->set('email', $params['email']);
@@ -185,10 +198,11 @@ class LoginController extends Controller implements ControllerInterface
                         $session->set('currentUser', $admin);
 
                         $response = new Response(301);
-                        if ($this->getNextJob() != '')
+                        if ($this->getNextJob() != '') {
                             $response->redirect(FrontController::generateSecureURL('act='.$this->getNextJob()));
-                        else
+                        } else {
                             $response->redirect(FrontController::generateSecureURL('act=InstallController'));
+                        }
 
                         return $response;
                     } else {
@@ -201,8 +215,9 @@ class LoginController extends Controller implements ControllerInterface
                     ActiveRecord::disconnect();
 
                     // checking to see if the account has been disabled
-                    if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Disabled')
+                    if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Disabled') {
                         throw new SecurityException('Failed to login user '.$params['email'].', that account has been disabled!');
+                    }
 
                     // check the password
                     return $this->doLoginAndRedirect($params['password']);
@@ -241,10 +256,11 @@ class LoginController extends Controller implements ControllerInterface
 
             $body .= View::displayErrorMessage($e->getMessage());
 
-            if (isset($params['reset']))
+            if (isset($params['reset'])) {
                 $body .= $this->personView->displayResetForm();
-            else
+            } else {
                 $body .= $this->personView->displayLoginForm();
+            }
 
             self::$logger->warn($e->getMessage());
         } catch (SecurityException $e) {
@@ -253,15 +269,16 @@ class LoginController extends Controller implements ControllerInterface
             $body .= View::displayErrorMessage($e->getMessage());
 
             self::$logger->warn($e->getMessage());
-        }catch(RecordNotFoundException $e) {
+        } catch (RecordNotFoundException $e) {
             $body .= View::displayPageHead($this);
 
             $body .= View::displayErrorMessage('Failed to find the user \''.$params['email'].'\'');
 
-            if (isset($params['reset']))
+            if (isset($params['reset'])) {
                 $body .= $this->personView->displayResetForm();
-            else
+            } else {
                 $body .= $this->personView->displayLoginForm();
+            }
 
             self::$logger->warn($e->getMessage());
         }
@@ -269,15 +286,19 @@ class LoginController extends Controller implements ControllerInterface
         $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doPOST');
+
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
-     * Login the user and re-direct to the defined destination
+     * Login the user and re-direct to the defined destination.
      *
      * @param string $password The password supplied by the user logging in
+     *
      * @throws Alpha\Exception\ValidationException
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @since 1.0
      */
     protected function doLoginAndRedirect($password)
@@ -288,19 +309,19 @@ class LoginController extends Controller implements ControllerInterface
 
         if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Active') {
             if (password_verify($password, $this->personObject->get('password'))) {
-
                 $sessionProvider = $config->get('session.provider.name');
                 $session = SessionProviderFactory::getInstance($sessionProvider);
                 $session->set('currentUser', $this->personObject);
 
-                self::$logger->debug('Logging in ['.$this->personObject->get('email').'] at ['.date("Y-m-d H:i:s").']');
+                self::$logger->debug('Logging in ['.$this->personObject->get('email').'] at ['.date('Y-m-d H:i:s').']');
                 self::$logger->action('Login');
 
                 $response = new Response(301);
-                if ($this->getNextJob() != '')
+                if ($this->getNextJob() != '') {
                     $response->redirect(FrontController::generateSecureURL('act='.$this->getNextJob()));
-                else
+                } else {
                     $response->redirect($config->get('app.url'));
+                }
 
                 return $response;
             } else {
@@ -314,6 +335,7 @@ class LoginController extends Controller implements ControllerInterface
      * Displays the application version number on the login screen.
      *
      * @return string
+     *
      * @since 1.0
      */
     public function before_displayPageFoot_callback()
@@ -323,5 +345,3 @@ class LoginController extends Controller implements ControllerInterface
         return '<p><em>Version '.$config->get('app.version').'</em></p>';
     }
 }
-
-?>

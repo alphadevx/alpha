@@ -12,10 +12,10 @@ use Alpha\Model\Type\DEnumItem;
 use Alpha\Model\Type\String;
 
 /**
- *
- * The rendering class for the DEnum class
+ * The rendering class for the DEnum class.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -52,17 +52,17 @@ use Alpha\Model\Type\String;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class DEnumView extends View
 {
     /**
-     * Custom list view
+     * Custom list view.
      *
      * @return string
+     *
      * @since 1.0
      */
-    public function listView($fields=array())
+    public function listView($fields = array())
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -81,12 +81,13 @@ class DEnumView extends View
             $prop = $propObj->name;
             if (!in_array($prop, $this->BO->getDefaultAttributes()) && !in_array($prop, $this->BO->getTransientAttributes())) {
                 if (get_class($this->BO->getPropObject($prop)) != 'Alpha\Model\Type\Text') {
-                    $colCount ++;
+                    ++$colCount;
                     $html .= '  <th>'.$labels[$prop].'</th>';
                 }
             }
-            if ($prop == 'OID')
+            if ($prop == 'OID') {
                 $html .= '  <th>'.$labels[$prop].'</th>';
+            }
         }
         // render the count
         $html .= '  <th>Item count</th>';
@@ -101,19 +102,20 @@ class DEnumView extends View
                     $html .= '  <td>&nbsp;'.$this->BO->get($prop).'</td>';
                 }
             }
-            if ($prop == 'OID')
+            if ($prop == 'OID') {
                 $html .= '  <td>&nbsp;'.$this->BO->getID().'</td>';
+            }
         }
         // render the count
         $html .= '  <td>&nbsp;'.$this->BO->getItemCount().'</td>';
 
         $html .= '</tr>';
 
-        $html .= '<tr><td colspan="'.($colCount+1).'" style="text-align:center;">';
+        $html .= '<tr><td colspan="'.($colCount + 1).'" style="text-align:center;">';
         // render edit buttons for admins only
         if ($session->get('currentUser') != null && $session->get('currentUser')->inGroup('Admin')) {
             $html .= '&nbsp;&nbsp;';
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=EditDEnum&oid='.$this->BO->getOID())."'", "Edit", "edit".$this->BO->getOID()."But");
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=EditDEnum&oid='.$this->BO->getOID())."'", 'Edit', 'edit'.$this->BO->getOID().'But');
             $html .= $button->render();
         }
         $html .= '</td></tr>';
@@ -126,9 +128,10 @@ class DEnumView extends View
     }
 
     /**
-     * Custom edit view
+     * Custom edit view.
      *
      * @return string
+     *
      * @since 1.0
      */
     public function editView($fields = array())
@@ -179,5 +182,3 @@ class DEnumView extends View
         return $html;
     }
 }
-
-?>

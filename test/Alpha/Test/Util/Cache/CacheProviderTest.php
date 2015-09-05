@@ -5,10 +5,10 @@ namespace Alpha\Test\Util\Cache;
 use Alpha\Util\Cache\CacheProviderFactory;
 
 /**
- *
- * Test cases for the CacheProviderInterface implementations
+ * Test cases for the CacheProviderInterface implementations.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -45,14 +45,14 @@ use Alpha\Util\Cache\CacheProviderFactory;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class CacheProviderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Returns an array of cache providers
+     * Returns an array of cache providers.
      *
      * @return array
+     *
      * @since 2.0
      */
     public function getCacheProviders()
@@ -61,12 +61,12 @@ class CacheProviderTest extends \PHPUnit_Framework_TestCase
             array('Alpha\Util\Cache\CacheProviderArray'),
             array('Alpha\Util\Cache\CacheProviderMemcache'),
             array('Alpha\Util\Cache\CacheProviderRedis'),
-            array('Alpha\Util\Cache\CacheProviderAPC')
+            array('Alpha\Util\Cache\CacheProviderAPC'),
         );
     }
 
     /**
-     * Testing the set()/get()/delete() methods
+     * Testing the set()/get()/delete() methods.
      *
      * @since 2.0
      * @dataProvider getCacheProviders
@@ -92,5 +92,3 @@ class CacheProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($cache->get('cached'), 'Testing the delete method');
     }
 }
-
-?>

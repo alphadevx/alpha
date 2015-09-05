@@ -12,10 +12,10 @@ use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Model\ActiveRecord;
 
 /**
- *
- * Controller for viewing an active record as Excel spreadsheets
+ * Controller for viewing an active record as Excel spreadsheets.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -52,20 +52,20 @@ use Alpha\Model\ActiveRecord;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ExcelController extends Controller implements ControllerInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @since 1.0
      */
@@ -81,11 +81,14 @@ class ExcelController extends Controller implements ControllerInterface
     }
 
     /**
-     * Loads the BO indicated in the GET request and handles the conversion to Excel
+     * Loads the BO indicated in the GET request and handles the conversion to Excel.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @throws Alpha\Exception\ResourceNotFoundException
+     *
      * @since 1.0
      */
     public function doGet($request)
@@ -101,16 +104,18 @@ class ExcelController extends Controller implements ControllerInterface
                 $ActiveRecordType = $params['ActiveRecordType'];
 
                 $className = "Alpha\\Model\\$ActiveRecordType";
-                if (class_exists($className))
+                if (class_exists($className)) {
                     $this->BO = new $className();
-                else
+                } else {
                     throw new IllegalArguementException('No ActiveRecord available to render!');
+                }
 
                 // the name of the file download
-                if (isset($params['ActiveRecordOID']))
+                if (isset($params['ActiveRecordOID'])) {
                     $fileName = $this->BO->getTableName().'-'.$params['ActiveRecordOID'];
-                else
+                } else {
                     $fileName = $this->BO->getTableName();
+                }
 
                 $response = new Response(200);
 
@@ -157,8 +162,7 @@ class ExcelController extends Controller implements ControllerInterface
 
         self::$logger->debug('<<__doGet');
         $response->setBody($body);
+
         return $response;
     }
 }
-
-?>

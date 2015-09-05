@@ -6,11 +6,11 @@ use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Logging\Logger;
 
 /**
- *
  * A factory for creating cache provider implementations that implement the
  * CacheProviderInterface interface.
  *
  * @since 1.1
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -47,49 +47,52 @@ use Alpha\Util\Logging\Logger;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class CacheProviderFactory
 {
-	/**
-	 * Trace logger
-	 *
-	 * @var Alpha\Util\Logging\Logger
-	 * @since 1.1
-	 */
-	private static $logger = null;
+    /**
+     * Trace logger.
+     *
+     * @var Alpha\Util\Logging\Logger
+     *
+     * @since 1.1
+     */
+    private static $logger = null;
 
-	/**
-	 * A static method that attempts to return a CacheProviderInterface instance
-	 * based on the name of the provider class supplied.
-	 *
-	 * @param $providerName The class name of the provider class (fully qualified).
-	 * @throws Alpha\Exception\IllegalArguementException
-	 * @return Alpha\Util\Cache\CacheProviderInterface
-	 * @since 1.1
-	 */
-	public static function getInstance($providerName)
-	{
-		if(self::$logger == null)
-			self::$logger = new Logger('CacheProviderFactory');
+    /**
+     * A static method that attempts to return a CacheProviderInterface instance
+     * based on the name of the provider class supplied.
+     *
+     * @param $providerName The class name of the provider class (fully qualified).
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     *
+     * @return Alpha\Util\Cache\CacheProviderInterface
+     *
+     * @since 1.1
+     */
+    public static function getInstance($providerName)
+    {
+        if (self::$logger == null) {
+            self::$logger = new Logger('CacheProviderFactory');
+        }
 
-		self::$logger->debug('>>getInstance(providerName=['.$providerName.'])');
+        self::$logger->debug('>>getInstance(providerName=['.$providerName.'])');
 
-		if (class_exists($providerName)) {
+        if (class_exists($providerName)) {
+            $instance = new $providerName();
 
-			$instance = new $providerName;
+            if (!$instance instanceof CacheProviderInterface) {
+                throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected CacheProviderInterface intwerface!');
+            }
 
-			if(!$instance instanceof CacheProviderInterface)
-				throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected CacheProviderInterface intwerface!');
+            self::$logger->debug('<<getInstance: [Object '.$providerName.']');
 
-			self::$logger->debug('<<getInstance: [Object '.$providerName.']');
-			return $instance;
-		} else {
-			throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
-		}
+            return $instance;
+        } else {
+            throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
+        }
 
-		self::$logger->debug('<<getInstance');
-	}
+        self::$logger->debug('<<getInstance');
+    }
 }
-
-?>

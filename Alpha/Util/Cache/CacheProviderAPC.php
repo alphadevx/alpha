@@ -5,11 +5,11 @@ namespace Alpha\Util\Cache;
 use Alpha\Util\Logging\Logger;
 
 /**
- *
  * An implementation of the CacheProviderInterface interface that uses APC/APCu as the
  * target store.
  *
  * @since 1.2.4
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -46,21 +46,20 @@ use Alpha\Util\Logging\Logger;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class CacheProviderAPC implements CacheProviderInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.2.4
      */
     private static $logger = null;
 
-
     /**
-     * Constructor
+     * Constructor.
      *
      * @since 1.2.4
      */
@@ -70,7 +69,7 @@ class CacheProviderAPC implements CacheProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function get($key)
     {
@@ -82,40 +81,39 @@ class CacheProviderAPC implements CacheProviderInterface
             self::$logger->debug('<<get: ['.print_r($value, true).'])');
 
             return $value;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             self::$logger->error('Error while attempting to load a business object from APC cache: ['.$e->getMessage().']');
             self::$logger->debug('<<get: [false])');
+
             return false;
         }
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function set($key, $value, $expiry=0)
+    public function set($key, $value, $expiry = 0)
     {
         try {
-            if($expiry > 0)
+            if ($expiry > 0) {
                 apc_store($key, $value, $expiry);
-            else
+            } else {
                 apc_store($key, $value);
-
-          } catch(\Exception $e) {
-              self::$logger->error('Error while attempting to store a value to APC cache: ['.$e->getMessage().']');
-          }
+            }
+        } catch (\Exception $e) {
+            self::$logger->error('Error while attempting to store a value to APC cache: ['.$e->getMessage().']');
+        }
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function delete($key)
     {
         try {
             apc_delete($key);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             self::$logger->error('Error while attempting to remove a value from APC cache: ['.$e->getMessage().']');
         }
     }
 }
-
-?>

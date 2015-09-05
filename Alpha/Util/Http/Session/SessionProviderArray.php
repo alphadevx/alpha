@@ -5,10 +5,10 @@ namespace Alpha\Util\Http\Session;
 use Alpha\Util\Logging\Logger;
 
 /**
- *
  * Provides a session handle that stores session data in an array, useful for testing only.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -45,14 +45,14 @@ use Alpha\Util\Logging\Logger;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class SessionProviderArray implements SessionProviderInterface
 {
-	/**
-     * Trace logger
+    /**
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 2.0
      */
     private static $logger = null;
@@ -61,20 +61,22 @@ class SessionProviderArray implements SessionProviderInterface
      * The hash array containing the session items.
      *
      * @var array
+     *
      * @since 2.0
      */
     public static $sessionArray = array();
 
     /**
-     * The current session ID
+     * The current session ID.
      *
      * @var string
+     *
      * @since 2.0
      */
     private $ID;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @since 2.0
      */
@@ -83,63 +85,63 @@ class SessionProviderArray implements SessionProviderInterface
         self::$logger = new Logger('SessionProviderArray');
     }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function init() {
+    /**
+     * {@inheritdoc}
+     */
+    public function init()
+    {
         $this->ID = uniqid();
     }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function destroy()
-	{
-		self::$sessionArray = array();
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function destroy()
+    {
+        self::$sessionArray = array();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function get($key)
-	{
-		self::$logger->debug('>>get(key=['.$key.'])');
+    /**
+     * {@inheritdoc}
+     */
+    public function get($key)
+    {
+        self::$logger->debug('>>get(key=['.$key.'])');
 
         self::$logger->debug('Getting value for key ['.$key.']');
 
-        if (array_key_exists($key, self::$sessionArray))
+        if (array_key_exists($key, self::$sessionArray)) {
             return self::$sessionArray[$key];
-        else
+        } else {
             return false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function set($key, $value)
-	{
-		self::$logger->debug('Setting value for key ['.$key.']');
-
-        self::$sessionArray[$key] = $value;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function delete($key)
-	{
-		self::$logger->debug('Removing value for key ['.$key.']');
-
-        unset(self::$sessionArray[$key]);
-	}
+        }
+    }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     */
+    public function set($key, $value)
+    {
+        self::$logger->debug('Setting value for key ['.$key.']');
+
+        self::$sessionArray[$key] = $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function delete($key)
+    {
+        self::$logger->debug('Removing value for key ['.$key.']');
+
+        unset(self::$sessionArray[$key]);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getID()
     {
         return $this->ID;
     }
 }
-
-?>

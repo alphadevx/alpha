@@ -9,10 +9,10 @@ use Alpha\Model\Rights;
 use Alpha\Model\ActionLog;
 
 /**
- *
  * Test class used by tests that need to have a logged in admin user.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -49,11 +49,10 @@ use Alpha\Model\ActionLog;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ControllerTestCase extends \PHPUnit_Framework_TestCase
 {
-	/**
+    /**
      * Creates the user and rights group tables, adds a user into both as
      * admin, then adds that user to the session.
      *
@@ -64,7 +63,7 @@ class ControllerTestCase extends \PHPUnit_Framework_TestCase
         $_POST = array();
         $_GET = array();
         $_COOKIE = array();
-        
+
         $config = ConfigProvider::getInstance();
         $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
 
@@ -101,13 +100,13 @@ class ControllerTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Drop the user tables and session between tests
+     * Drop the user tables and session between tests.
      *
      * @since 2.0
      */
     protected function tearDown()
     {
-    	$config = ConfigProvider::getInstance();
+        $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
         $session->set('currentUser', null);
@@ -121,9 +120,10 @@ class ControllerTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Creates a person object for Testing
+     * Creates a person object for Testing.
      *
      * @return Alpha\Model\Person
+     *
      * @since 2.0
      */
     protected function createPersonObject($name)
@@ -137,5 +137,3 @@ class ControllerTestCase extends \PHPUnit_Framework_TestCase
         return $person;
     }
 }
-
-?>

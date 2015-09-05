@@ -9,9 +9,10 @@ use Alpha\Model\Type\String;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- * String HTML input box custom widget
+ * String HTML input box custom widget.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -48,87 +49,95 @@ use Alpha\Exception\IllegalArguementException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class StringBox
 {
     /**
-     * The string object that will be edited by this string box
+     * The string object that will be edited by this string box.
      *
      * @var Alpha\Model\Type\String
+     *
      * @since 1.0
      */
     public $stringObject;
 
     /**
-     * The data label for the string object
+     * The data label for the string object.
      *
      * @var string
+     *
      * @since 1.0
      */
     public $label;
 
     /**
-     * The name of the HTML input box
+     * The name of the HTML input box.
      *
      * @var string
+     *
      * @since 1.0
      */
     public $name;
 
     /**
-     * The display size of the input box
+     * The display size of the input box.
      *
-     * @var integer
+     * @var int
+     *
      * @since 1.0
-     *
      */
     public $size;
 
     /**
-     * The constructor
+     * The constructor.
      *
      * @param Alpha\Model\Type\String $string The string object that will be edited by this text box.
-     * @param string $label The data label for the string object.
-     * @param string $name The name of the HTML input box.
-     * @param integer $size The display size (characters).
+     * @param string                  $label  The data label for the string object.
+     * @param string                  $name   The name of the HTML input box.
+     * @param int                     $size   The display size (characters).
+     *
      * @since 1.0
+     *
      * @throws Alpha\Exception\IllegalArguementException
      */
-    public function __construct($string, $label, $name, $size=0)
+    public function __construct($string, $label, $name, $size = 0)
     {
         $config = ConfigProvider::getInstance();
 
-        if ($string instanceof String)
+        if ($string instanceof String) {
             $this->stringObject = $string;
-        else
+        } else {
             throw new IllegalArguementException('String object passed ['.var_export($string, true).'] is not a valid String object!');
+        }
 
         $this->label = $label;
         $this->size = $size;
 
-        if ($config->get('security.encrypt.http.fieldnames'))
+        if ($config->get('security.encrypt.http.fieldnames')) {
             $this->name = base64_encode(SecurityUtils::encrypt($name));
-        else
+        } else {
             $this->name = $name;
+        }
     }
 
     /**
-     * Renders the HTML and javascript for the string box
+     * Renders the HTML and javascript for the string box.
      *
      * @param bool $readOnly set to true to make the text box readonly (defaults to false)
+     *
      * @return string
+     *
      * @since 1.0
      */
-    public function render($readOnly=false)
+    public function render($readOnly = false)
     {
         $request = new Request(array('method' => 'GET'));
 
         $html = '<div class="form-group">';
         $html .= '  <label for="'.$this->name.'">'.$this->label.'</label>';
-        $html .= '  <input '.($this->stringObject->checkIsPassword()? 'type="password"':'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.String::MAX_SIZE.'" name="'.$this->name.'" id="'.$this->name.'" value="'.(($request->getParam($this->name, false) && $this->stringObject->getValue() == "" && !$this->stringObject->checkIsPassword())? $request->getParam($this->name) : $this->stringObject->getValue()).'" class="form-control"'.($readOnly ? ' disabled="disabled"' : '').'/>';
+        $html .= '  <input '.($this->stringObject->checkIsPassword() ? 'type="password"' : 'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.String::MAX_SIZE.'" name="'.$this->name.'" id="'.$this->name.'" value="'.(($request->getParam($this->name, false) && $this->stringObject->getValue() == '' && !$this->stringObject->checkIsPassword()) ? $request->getParam($this->name) : $this->stringObject->getValue()).'" class="form-control"'.($readOnly ? ' disabled="disabled"' : '').'/>';
 
-        if($this->stringObject->getRule() != '') {
+        if ($this->stringObject->getRule() != '') {
             $html .= '  <input type="hidden" id="'.$this->name.'_msg" value="'.$this->stringObject->getHelper().'"/>';
             $html .= '  <input type="hidden" id="'.$this->name.'_rule" value="'.$this->stringObject->getRule().'"/>';
         }
@@ -138,23 +147,28 @@ class StringBox
     }
 
     /**
-     * Setter for string object
+     * Setter for string object.
      *
      * @param Alpha\Model\Type\String $string
+     *
      * @since 1.0
+     *
      * @throws Alpha\Exception\IllegalArguementException
      */
-    public function setStringObject($string) {
-        if ($string instanceof String)
+    public function setStringObject($string)
+    {
+        if ($string instanceof String) {
             $this->stringObject = $string;
-        else
+        } else {
             throw new IllegalArguementException('String object passed ['.var_export($string, true).'] is not a valid String object!');
+        }
     }
 
     /**
-     * Getter for string object
+     * Getter for string object.
      *
      * @return Alpha\Model\Type\String
+     *
      * @since 1.0
      */
     public function getStringObject()
@@ -162,5 +176,3 @@ class StringBox
         return $this->stringObject;
     }
 }
-
-?>

@@ -6,11 +6,11 @@ use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Logging\Logger;
 
 /**
- *
  * A factory for creating search provider implementations that implement the
  * SearchProviderInterface interface.
  *
  * @since 1.2.3
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -47,14 +47,14 @@ use Alpha\Util\Logging\Logger;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class SearchProviderFactory
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger;
+     *
      * @since 1.2.3
      */
     private static $logger = null;
@@ -64,27 +64,32 @@ class SearchProviderFactory
      * based on the name of the provider class supplied.
      *
      * @param $providerName The class name of the provider class, should be fully-qualified.
+     *
      * @throws Alpha\Exception\IllegalArguementException;
+     *
      * @return Alpha\Util\Search\SearchProviderInterface
+     *
      * @since 1.2.3
      */
     public static function getInstance($providerName)
     {
-        if(self::$logger == null)
+        if (self::$logger == null) {
             self::$logger = new Logger('SearchProviderFactory');
+        }
 
         self::$logger->debug('>>getInstance(providerName=['.$providerName.'])');
 
         global $config;
 
         if (class_exists($providerName)) {
+            $instance = new $providerName();
 
-            $instance = new $providerName;
-
-            if (!$instance instanceof SearchProviderInterface)
+            if (!$instance instanceof SearchProviderInterface) {
                 throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected SearchProviderInterface interface!');
+            }
 
             self::$logger->debug('<<getInstance: [Object '.$providerName.']');
+
             return $instance;
         } else {
             throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
@@ -93,5 +98,3 @@ class SearchProviderFactory
         self::$logger->debug('<<getInstance');
     }
 }
-
-?>

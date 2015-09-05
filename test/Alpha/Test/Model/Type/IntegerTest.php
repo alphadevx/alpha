@@ -6,12 +6,14 @@ use Alpha\Model\Type\Integer;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- *
- * Test case for the Integer data type
+ * Test case for the Integer data type.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
+ *
  * @version $Id: IntegerTest.php 1836 2014-11-10 16:13:36Z alphadevx $
+ *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -47,30 +49,31 @@ use Alpha\Exception\IllegalArguementException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class IntegerTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * An Integer for testing
-	 *
-	 * @var Integer
-	 * @since 1.0
-	 */
-	private $int1;
+    /**
+     * An Integer for testing.
+     *
+     * @var Integer
+     *
+     * @since 1.0
+     */
+    private $int1;
 
-	/**
-	 * An Integer for testing
-	 *
-	 * @var Integer
-	 * @since 1.0
-	 */
-	private $int2;
+    /**
+     * An Integer for testing.
+     *
+     * @var Integer
+     *
+     * @since 1.0
+     */
+    private $int2;
 
-	/**
+    /**
      * Called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+     * here.
      *
      * @since 1.0
      */
@@ -83,7 +86,7 @@ class IntegerTest extends \PHPUnit_Framework_TestCase
     /**
      * Called after the test functions are executed
      * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+     * here.
      *
      * @since 1.0
      */
@@ -94,92 +97,88 @@ class IntegerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the int constructor for acceptance of correct data
+     * Testing the int constructor for acceptance of correct data.
      *
      * @since 1.0
      */
     public function testConstructorPass()
     {
-    	$this->int1 = new Integer(25);
+        $this->int1 = new Integer(25);
 
-    	$this->assertEquals(25, $this->int1->getValue(), "testing the Integer constructor for pass");
+        $this->assertEquals(25, $this->int1->getValue(), 'testing the Integer constructor for pass');
     }
 
     /**
-     * Testing passing invalid data to setValue
+     * Testing passing invalid data to setValue.
      *
      * @since 1.0
      */
     public function testSetValueInvalid()
     {
-    	try {
-    		$this->int1->setValue("blah");
-    		$this->fail('testing passing invalid data to setValue');
-    	}catch (IllegalArguementException $e) {
-    		$this->assertEquals('Not a valid integer value!'
-    			, $e->getMessage()
-    			, 'testing passing invalid data to setValue');
-    	}
+        try {
+            $this->int1->setValue('blah');
+            $this->fail('testing passing invalid data to setValue');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Not a valid integer value!', $e->getMessage(), 'testing passing invalid data to setValue');
+        }
     }
 
-	/**
-     * Testing passing valid data to setValue
+    /**
+     * Testing passing valid data to setValue.
      *
      * @since 1.0
      */
     public function testSetValueValid()
     {
-    	$this->int1->setValue(7);
+        $this->int1->setValue(7);
 
-    	$this->assertEquals(7, $this->int1->getValue(), 'testing passing valid data to setValue');
+        $this->assertEquals(7, $this->int1->getValue(), 'testing passing valid data to setValue');
     }
 
     /**
-     * Testing the setSize method to see if validation fails
+     * Testing the setSize method to see if validation fails.
      *
      * @since 1.0
      */
     public function testSetSizeInvalid()
     {
-    	$this->int1 = new Integer();
-    	$this->int1->setSize(2);
+        $this->int1 = new Integer();
+        $this->int1->setSize(2);
 
-    	try {
-    		$this->int1->setValue(200);
-    	}catch (IllegalArguementException $e) {
-    		$this->assertEquals('Not a valid integer value!  A maximum of 2 characters is allowed'
-    			, $e->getMessage()
-    			, 'testing the setSize method to see if validation fails');
-    	}
+        try {
+            $this->int1->setValue(200);
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Not a valid integer value!  A maximum of 2 characters is allowed', $e->getMessage(), 'testing the setSize method to see if validation fails');
+        }
     }
 
-	/**
-     * Testing addition of two Integer values
+    /**
+     * Testing addition of two Integer values.
      *
      * @since 1.0
      */
     public function testAddIntegers()
     {
-    	$this->int1 = new Integer(1500);
-    	$this->int2 = new Integer(3577);
+        $this->int1 = new Integer(1500);
+        $this->int2 = new Integer(3577);
 
-    	$this->assertEquals(5077, ($this->int1->getValue()+$this->int2->getValue()), 'testing addition of two Integer values');
+        $this->assertEquals(5077, ($this->int1->getValue() + $this->int2->getValue()), 'testing addition of two Integer values');
     }
 
     /**
-     * Testing the __toString method
+     * Testing the __toString method.
      *
      * @since 1.0
      */
     public function testToString()
     {
-    	$this->int1 = new Integer(2008);
+        $this->int1 = new Integer(2008);
 
-    	$this->assertEquals('The year is 2008', 'The year is '.$this->int1, 'testing the __toString method');
+        $this->assertEquals('The year is 2008', 'The year is '.$this->int1, 'testing the __toString method');
     }
 
     /**
-     * Testing the zeroPad method
+     * Testing the zeroPad method.
      *
      * @since 1.2.1
      */
@@ -190,5 +189,3 @@ class IntegerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('00000000025', $val, 'Testing the zeroPad method');
     }
 }
-
-?>

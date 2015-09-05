@@ -10,13 +10,12 @@ use Alpha\Util\Http\Request;
 use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\AlphaException;
-use Alpha\Model\BadRequest;
 
 /**
- *
  * Test cases for the FrontController class.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -53,12 +52,11 @@ use Alpha\Model\BadRequest;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class FrontControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Testing the encodeQuery method with a known encrypted result for a test key
+     * Testing the encodeQuery method with a known encrypted result for a test key.
      *
      * @since 1.0
      */
@@ -76,7 +74,7 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the decodeQueryParams method with a known encrypted result for a test key
+     * Testing the decodeQueryParams method with a known encrypted result for a test key.
      *
      * @since 1.0
      */
@@ -94,7 +92,7 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that the getDecodeQueryParams method will return the known params with a known encrypted result for a test key
+     * Testing that the getDecodeQueryParams method will return the known params with a known encrypted result for a test key.
      *
      * @since 1.0
      */
@@ -115,7 +113,7 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the registerFilter method with a valid filter object
+     * Testing the registerFilter method with a valid filter object.
      *
      * @since 1.0
      */
@@ -129,8 +127,9 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
             $found = false;
 
             foreach ($front->getFilters() as $filter) {
-                if ($filter instanceof ClientBlacklistFilter)
+                if ($filter instanceof ClientBlacklistFilter) {
                     $found = true;
+                }
             }
             $this->assertTrue($found, 'testing the registerFilter method with a valid filter object');
         } catch (IllegalArguementException $e) {
@@ -139,7 +138,7 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the registerFilter method with a bad filter object
+     * Testing the registerFilter method with a bad filter object.
      *
      * @since 1.0
      */
@@ -151,13 +150,13 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
             $front->registerFilter(new FrontController());
 
             $this->fail('testing the registerFilter method with a bad filter object');
-        }   catch (IllegalArguementException $e) {
+        } catch (IllegalArguementException $e) {
             $this->assertEquals('Supplied filter object is not a valid FilterInterface instance!', $e->getMessage(), 'testing the registerFilter method with a bad filter object');
         }
     }
 
     /**
-     * Testing the generateSecureURL method
+     * Testing the generateSecureURL method.
      *
      * @since 1.2.1
      */
@@ -182,13 +181,13 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing adding good and bad routes with callbacks
+     * Testing adding good and bad routes with callbacks.
      */
     public function testAddRoute()
     {
         $_SERVER['REQUEST_URI'] = '/';
         $front = new FrontController();
-        $front->addRoute('/hello', function() {
+        $front->addRoute('/hello', function () {
             return new Response(200, 'hello');
         });
 
@@ -211,25 +210,25 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing adding and matching routes with URI params
+     * Testing adding and matching routes with URI params.
      */
     public function testAddRouteWithParams()
     {
         $_SERVER['REQUEST_URI'] = '/';
         $front = new FrontController();
-        $front->addRoute('/one/{param}', function($request) {
+        $front->addRoute('/one/{param}', function ($request) {
             return new Response(200);
         });
 
         $this->assertTrue(is_callable($front->getRouteCallback('/one/paramvalue1')), 'Testing adding and matching routes with URI params');
 
-        $front->addRoute('/two/{param1}/{param2}', function($request) {
+        $front->addRoute('/two/{param1}/{param2}', function ($request) {
             return new Response(200);
         });
 
         $this->assertTrue(is_callable($front->getRouteCallback('/two/paramvalue1/paramvalue2')), 'Testing adding and matching routes with URI params');
 
-        $front->addRoute('/three/{param1}/params/{param2}/{params3}', function($request) {
+        $front->addRoute('/three/{param1}/params/{param2}/{params3}', function ($request) {
             return new Response(200);
         });
 
@@ -237,13 +236,13 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that URL params are automatically added to the Request object passed to the callback
+     * Testing that URL params are automatically added to the Request object passed to the callback.
      */
     public function testAddParamsToRequest()
     {
         $_SERVER['REQUEST_URI'] = '/';
         $front = new FrontController();
-        $front->addRoute('/one/{param}', function($request) {
+        $front->addRoute('/one/{param}', function ($request) {
             return new Response(200, $request->getParam('param'));
         });
 
@@ -253,7 +252,7 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('paramvalue1', $response->getBody(), 'Testing that URL params are automatically added to the Request object passed to the callback');
 
-        $front->addRoute('/two/{param1}/{param2}', function($request) {
+        $front->addRoute('/two/{param1}/{param2}', function ($request) {
             return new Response(200, $request->getParam('param1').' '.$request->getParam('param2'));
         });
 
@@ -263,7 +262,7 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('paramvalue1 paramvalue2', $response->getBody(), 'Testing that URL params are automatically added to the Request object passed to the callback');
 
-        $front->addRoute('/three/{param1}/params/{param2}/{param3}', function($request) {
+        $front->addRoute('/three/{param1}/params/{param2}/{param3}', function ($request) {
             return new Response(200, $request->getParam('param1').' '.$request->getParam('param2').' '.$request->getParam('param3'));
         });
 
@@ -275,13 +274,13 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the process method
+     * Testing the process method.
      */
     public function testProcess()
     {
         $_SERVER['REQUEST_URI'] = '/';
         $front = new FrontController();
-        $front->addRoute('/hello', function($request) {
+        $front->addRoute('/hello', function ($request) {
             return new Response(200, 'hello '.$request->getParam('username'));
         });
 
@@ -301,7 +300,7 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
 
         try {
             $request = new Request(array('method' => 'GET', 'URI' => '/not_good'));
-            $front->addRoute('/not_good', function($request) {
+            $front->addRoute('/not_good', function ($request) {
                 return 'Should be a Response object not a string';
             });
             $front->process($request);
@@ -312,13 +311,13 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing default param values are handled correctly
+     * Testing default param values are handled correctly.
      */
     public function testDefaultParamValues()
     {
         $_SERVER['REQUEST_URI'] = '/';
         $front = new FrontController();
-        $front->addRoute('/one/{param}', function($request) {
+        $front->addRoute('/one/{param}', function ($request) {
             return new Response(200, $request->getParam('param'));
         })->value('param', 'blah');
 
@@ -328,7 +327,7 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('blah', $response->getBody(), 'Testing default param values are handled correctly');
 
-        $front->addRoute('/two/{param1}/{param2}', function($request) {
+        $front->addRoute('/two/{param1}/{param2}', function ($request) {
             return new Response(200, $request->getParam('param1').' '.$request->getParam('param2'));
         })->value('param1', 'two')->value('param2', 'params');
 
@@ -344,7 +343,7 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('two params', $response->getBody(), 'Testing default param values are handled correctly');
 
-        $front->addRoute('/three/{param1}/params/{param2}/{param3}', function($request) {
+        $front->addRoute('/three/{param1}/params/{param2}/{param3}', function ($request) {
             return new Response(200, $request->getParam('param1').' '.$request->getParam('param2'));
         })->value('param1', 'has')->value('param2', 'three')->value('param3', 'params');
 
@@ -353,8 +352,5 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
         $response = $front->process($request);
 
         $this->assertEquals('has three', $response->getBody(), 'Testing default param values are handled correctly');
-
     }
 }
-
-?>

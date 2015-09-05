@@ -9,10 +9,10 @@ use Alpha\View\Widget\Button;
 use Alpha\Controller\Front\FrontController;
 
 /**
- *
- * The rendering class for the Article class
+ * The rendering class for the Article class.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -49,18 +49,19 @@ use Alpha\Controller\Front\FrontController;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ArticleView extends View
 {
     /**
-     * Method to generate the markdown HTML render of the article content
+     * Method to generate the markdown HTML render of the article content.
      *
      * @param array $fields Hash array of HTML fields to pass to the template.
+     *
      * @since 1.0
+     *
      * @return string
      */
-    public function markdownView($fields=array())
+    public function markdownView($fields = array())
     {
         $config = ConfigProvider::getInstance();
 
@@ -72,9 +73,10 @@ class ArticleView extends View
     }
 
     /**
-     * Adds a note to the create article screen
+     * Adds a note to the create article screen.
      *
      * @return string
+     *
      * @since 1.0
      */
     protected function after_createView_callback()
@@ -83,29 +85,35 @@ class ArticleView extends View
     }
 
     /**
-     * Renders the list view (adds the dateAdded field for the list template)
+     * Renders the list view (adds the dateAdded field for the list template).
      *
      * @param array $fields hash array of HTML fields to pass to the template
+     *
      * @since 1.0
+     *
      * @return string
      */
-    public function listView($fields=array())
+    public function listView($fields = array())
     {
         $fields['dateAdded'] = $this->BO->getCreateTS()->getDate();
+
         return parent::listView($fields);
     }
 
     /**
-     * Renders a form to enable article editing with attachments options
+     * Renders a form to enable article editing with attachments options.
      *
      * @param array $fields hash array of HTML fields to pass to the template
+     *
      * @since 1.0
+     *
      * @return string
      */
-    public function editView($fields=array())
+    public function editView($fields = array())
     {
-        if(method_exists($this, 'before_editView_callback'))
+        if (method_exists($this, 'before_editView_callback')) {
             $this->before_editView_callback();
+        }
 
         $config = ConfigProvider::getInstance();
 
@@ -149,19 +157,20 @@ class ArticleView extends View
                     });
                 }";
 
-        $button = new Button($js, "Delete", "deleteBut");
+        $button = new Button($js, 'Delete', 'deleteBut');
         $fields['deleteButton'] = $button->render();
 
-        $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO))."'", "Back to List", "cancelBut");
+        $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO))."'", 'Back to List', 'cancelBut');
         $fields['cancelButton'] = $button->render();
 
         $tags = array();
 
-        if (is_object($this->BO->getPropObject('tags')))
+        if (is_object($this->BO->getPropObject('tags'))) {
             $tags = $this->BO->getPropObject('tags')->getRelatedObjects();
+        }
 
         if (count($tags) > 0) {
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\TagController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID())."'", "Edit Tags", "tagsBut");
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\TagController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID())."'", 'Edit Tags', 'tagsBut');
             $fields['tagsButton'] = $button->render();
         }
 
@@ -174,16 +183,18 @@ class ArticleView extends View
         // file attachments section
         $fields['fileAttachments'] = $this->renderFileUploadSection();
 
-        if(method_exists($this, 'after_editView_callback'))
+        if (method_exists($this, 'after_editView_callback')) {
             $this->after_editView_callback();
+        }
 
         return $this->loadTemplate($this->BO, 'edit', $fields);
     }
 
     /**
-     * Renders the HTML for the file upload section
+     * Renders the HTML for the file upload section.
      *
      * @return string
+     *
      * @since 1.0
      */
     protected function renderFileUploadSection()
@@ -203,11 +214,11 @@ class ArticleView extends View
             // loop over the attachments directory
             while (false !== ($file = readdir($handle))) {
                 if ($file != '.' && $file != '..') {
-                    $fileCount++;
+                    ++$fileCount;
 
                     $html .= '<tr>';
 
-                    $html .= '<td>'.$file.' <em>('.number_format(filesize($this->BO->getAttachmentsLocation().'/'.$file)/1024).' KB)</em></td>';
+                    $html .= '<td>'.$file.' <em>('.number_format(filesize($this->BO->getAttachmentsLocation().'/'.$file) / 1024).' KB)</em></td>';
 
                     $js = "if(window.jQuery) {
                             BootstrapDialog.show({
@@ -235,14 +246,13 @@ class ArticleView extends View
                                 ]
                             });
                         }";
-                    $button = new Button($js, "Delete", "delete".$fileCount."But");
+                    $button = new Button($js, 'Delete', 'delete'.$fileCount.'But');
                     $html .= '<td>'.$button->render().'</td>';
                     $html .= '</tr>';
                 }
             }
 
             $html .= '</table>';
-
         } else {
             // we will take this opportunity to create the attachments folder is it does
             // not already exist.
@@ -264,5 +274,3 @@ class ArticleView extends View
         return $html;
     }
 }
-
-?>

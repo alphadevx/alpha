@@ -7,10 +7,10 @@ use Alpha\Model\Type\Text;
 use Alpha\Util\Logging\Logger;
 
 /**
- *
- * An article comment class for user comments
+ * An article comment class for user comments.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -47,71 +47,73 @@ use Alpha\Util\Logging\Logger;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ArticleComment extends ActiveRecord
 {
-	/**
-	 * The article this comment belongs to
-	 *
-	 * @var Alpha\Model\Type\Relation
-	 * @since 1.0
-	 */
-	protected $articleOID;
+    /**
+     * The article this comment belongs to.
+     *
+     * @var Alpha\Model\Type\Relation
+     *
+     * @since 1.0
+     */
+    protected $articleOID;
 
-	/**
-	 * The content of the comment posted by the user
-	 *
-	 * @var Alpha\Model\Type\Text
-	 * @since 1.0
-	 */
-	protected $content;
+    /**
+     * The content of the comment posted by the user.
+     *
+     * @var Alpha\Model\Type\Text
+     *
+     * @since 1.0
+     */
+    protected $content;
 
-	/**
-	 * An array of data display labels for the class properties
-	 *
-	 * @var array
-	 * @since 1.0
-	 */
-	protected $dataLabels = array("OID"=>"Article Comment ID#","articleOID"=>"Article","content"=>"Comment");
+    /**
+     * An array of data display labels for the class properties.
+     *
+     * @var array
+     *
+     * @since 1.0
+     */
+    protected $dataLabels = array('OID' => 'Article Comment ID#','articleOID' => 'Article','content' => 'Comment');
 
-	/**
-	 * The name of the database table for the class
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	const TABLE_NAME = 'ArticleComment';
+    /**
+     * The name of the database table for the class.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    const TABLE_NAME = 'ArticleComment';
 
-	/**
-	 * Trace logger
-	 *
-	 * @var Alpha\Util\Logging\Logger
-	 * @since 1.1
-	 */
-	private static $logger = null;
+    /**
+     * Trace logger.
+     *
+     * @var Alpha\Util\Logging\Logger
+     *
+     * @since 1.1
+     */
+    private static $logger = null;
 
-	/**
-	 * constructor for the class
-	 *
-	 * @since 1.0
-	 */
-	public function __construct()
-	{
-		self::$logger = new Logger('ArticleComment');
+    /**
+     * constructor for the class.
+     *
+     * @since 1.0
+     */
+    public function __construct()
+    {
+        self::$logger = new Logger('ArticleComment');
 
-		// ensure to call the parent constructor
-		parent::__construct();
+        // ensure to call the parent constructor
+        parent::__construct();
 
-		$this->articleOID = new Relation();
-		$this->articleOID->setRelatedClass('Alpha\Model\Article');
-		$this->articleOID->setRelatedClassField('OID');
-		$this->articleOID->setRelatedClassDisplayField('description');
-		$this->articleOID->setRelationType('MANY-TO-ONE');
+        $this->articleOID = new Relation();
+        $this->articleOID->setRelatedClass('Alpha\Model\Article');
+        $this->articleOID->setRelatedClassField('OID');
+        $this->articleOID->setRelatedClassDisplayField('description');
+        $this->articleOID->setRelationType('MANY-TO-ONE');
 
-		$this->content = new Text();
-		$this->content->setAllowHTML(false);
-	}
+        $this->content = new Text();
+        $this->content->setAllowHTML(false);
+    }
 }
-
-?>

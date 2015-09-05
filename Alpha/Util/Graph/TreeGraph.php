@@ -2,14 +2,13 @@
 
 namespace Alpha\Util\Graph;
 
-use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Logging\Logger;
 
 /**
- *
- * Maintains the geometry for a tree graph
+ * Maintains the geometry for a tree graph.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -46,107 +45,118 @@ use Alpha\Util\Logging\Logger;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class TreeGraph
 {
     /**
-     * An array of nodes on the previous level
+     * An array of nodes on the previous level.
      *
      * @var array
+     *
      * @since 1.0
      */
     private $previousLevelNodes = array();
 
     /**
-     * An array of nodes in this graph
+     * An array of nodes in this graph.
      *
      * @var array
+     *
      * @since 1.0
      */
     private $nodes = array();
 
     /**
-     * The root node of the graph
+     * The root node of the graph.
      *
      * @var Alpha\Util\Graph\GraphNode
+     *
      * @since 1.0
      */
     private $root;
 
     /**
-     * The amount of space between graph rows
+     * The amount of space between graph rows.
      *
-     * @var integer
+     * @var int
+     *
      * @since 1.0
      */
     private $rowSpace;
 
     /**
-     * The amount of space between graph columns
+     * The amount of space between graph columns.
      *
-     * @var integer
+     * @var int
+     *
      * @since 1.0
      */
     private $colSpace;
 
     /**
-     * The amount of space between graph branches
+     * The amount of space between graph branches.
      *
-     * @var integer
+     * @var int
+     *
      * @since 1.0
      */
     private $branchSpace;
 
     /**
-     * Flag to track whether the chart is rendered or not
+     * Flag to track whether the chart is rendered or not.
      *
-     * @var boolean
+     * @var bool
+     *
      * @since 1.0
      */
     private $isRendered = false;
 
     /**
-     * The index of the current node in the graph we are inspecting
+     * The index of the current node in the graph we are inspecting.
      *
-     * @var integer
+     * @var int
+     *
      * @since 1.0
      */
     private $position = 0;
 
     /**
-     * The height of the graph
+     * The height of the graph.
      *
-     * @var integer
+     * @var int
+     *
      * @since 1.0
      */
     private $height = 0;
 
     /**
-     * The width of the graph
+     * The width of the graph.
      *
-     * @var integer
+     * @var int
+     *
      * @since 1.0
      */
     private $width = 0;
 
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param integer $rowSpace
-     * @param integer $colSpace
-     * @param integer $branchSpace
+     * @param int $rowSpace
+     * @param int $colSpace
+     * @param int $branchSpace
+     *
      * @since 1.0
      */
-    public function __construct($rowSpace = 40 , $colSpace = 40, $branchSpace = 80)
+    public function __construct($rowSpace = 40, $colSpace = 40, $branchSpace = 80)
     {
         self::$logger = new Logger('TreeGraph');
 
@@ -156,17 +166,17 @@ class TreeGraph
         $this->branchSpace = $branchSpace;
     }
 
-
     /**
-     * Add a new node to the graph
+     * Add a new node to the graph.
      *
-     * @param integer $id
-     * @param integer $pid
+     * @param int    $id
+     * @param int    $pid
      * @param string $message
-     * @param integer $w
-     * @param integer $h
+     * @param int    $w
+     * @param int    $h
      * @param string $nodeColour
      * @param string $URL
+     *
      * @since 1.0
      */
     public function add($id, $pid, $message = '', $w = 0, $h = 0, $nodeColour, $URL)
@@ -187,10 +197,11 @@ class TreeGraph
     }
 
     /**
-     * The first pass of the graph
+     * The first pass of the graph.
      *
      * @param Alpha\Util\Graph\GraphNode $node
-     * @param integer $level
+     * @param int                        $level
+     *
      * @since 1.0
      */
     private function firstPass($node, $level)
@@ -208,12 +219,12 @@ class TreeGraph
         } else {
             $childCount = $node->childCount();
 
-            for ($i = 0; $i < $childCount; $i++) {
+            for ($i = 0; $i < $childCount; ++$i) {
                 $this->firstPass($node->getChildAt($i), $level + 1);
             }
 
             $midPoint = $node->getChildrenCenter();
-            $midPoint -= $node->getWidth()/2;
+            $midPoint -= $node->getWidth() / 2;
             $leftSibling = $node->getLeftSibling();
 
             if (isset($leftSibling)) {
@@ -226,28 +237,29 @@ class TreeGraph
             }
         }
 
-        self::$logger->debug('Memory usage at first scan ['.((memory_get_usage(true)/1024)/1024).' MB]');
+        self::$logger->debug('Memory usage at first scan ['.((memory_get_usage(true) / 1024) / 1024).' MB]');
     }
 
     /**
-     * The second pass of the graph
+     * The second pass of the graph.
      *
      * @param Alpha\Util\Graph\GraphNode $node
-     * @param integer $level
-     * @param integer $x
-     * @param integer $y
+     * @param int                        $level
+     * @param int                        $x
+     * @param int                        $y
+     *
      * @since 1.0
      */
     private function secondPass($node, $level, $x = 0, $y = 0)
     {
-        $nodeX = $node->getOffset()+$x;
+        $nodeX = $node->getOffset() + $x;
         $nodeY = $y;
 
         $node->setX($nodeX);
         $node->setY($nodeY);
 
         $this->height = ($this->height > $node->getY() + $node->getWidth()) ? $this->height : $node->getY() + $node->getWidth();
-        $this->width = ($this->width > $nodeX + $node->getWidth()) ? $this->width : $nodeX + $node->getWidth()+10;
+        $this->width = ($this->width > $nodeX + $node->getWidth()) ? $this->width : $nodeX + $node->getWidth() + 10;
 
         if ($node->childCount() > 0) {
             $this->secondPass($node->getChildAt(0), $level + 1, $x + $node->getModifier(), $y + $node->getHeight() + $this->rowSpace);
@@ -259,14 +271,15 @@ class TreeGraph
             $this->secondPass($rightSibling, $level, $x, $y);
         }
 
-        self::$logger->debug('Memory usage at second scan ['.((memory_get_usage(true)/1024)/1024).' MB]');
+        self::$logger->debug('Memory usage at second scan ['.((memory_get_usage(true) / 1024) / 1024).' MB]');
     }
 
     /**
-     * Handles the laying out of multi-branch trees
+     * Handles the laying out of multi-branch trees.
      *
      * @param Alpha\Util\Graph\GraphNode $node
-     * @param integer $level
+     * @param int                        $level
+     *
      * @since 1.0
      */
     private function layout($node, $level)
@@ -274,13 +287,13 @@ class TreeGraph
         $firstChild = $node->getChildAt(0);
         $firstChildLeftNeighbour = $firstChild->getLeftSibling();
 
-        for ($j = 1; $j <= $level; $j++) {
+        for ($j = 1; $j <= $level; ++$j) {
             $modifierSumRight = 0;
             $modifierSumLeft = 0;
             $rightAncestor = $firstChild;
             $leftAncestor = $firstChildLeftNeighbour;
 
-            for ($l = 0; $l < $j; $l++) {
+            for ($l = 0; $l < $j; ++$l) {
                 $rightAncestor = $rightAncestor->getParentNode();
                 $leftAncestor = $leftAncestor->getParentNode();
                 $modifierSumRight += $rightAncestor->getModifier();
@@ -295,13 +308,13 @@ class TreeGraph
 
                 while (isset($subTree) && $subTree !== $leftAncestor) {
                     $subTree = $subTree->getLeftSibling();
-                    $subTreesCount++;
+                    ++$subTreesCount;
                 }
 
                 $subTreeMove = $node;
                 $singleGap = $totalGap / $subTreesCount;
 
-                while (isset($subTreeMove) && $subTreeMove !== $leftAncestor){
+                while (isset($subTreeMove) && $subTreeMove !== $leftAncestor) {
                     $subTreeMove = $subTreeMove->getLeftSibling();
 
                     if (isset($subTreeMove)) {
@@ -325,15 +338,18 @@ class TreeGraph
     }
 
     /**
-     * Setup neighbour nodes
+     * Setup neighbour nodes.
      *
      * @param Alpha\Util\Graph\GraphNode $node
-     * @param integer $level
+     * @param int                        $level
+     *
      * @since 1.0
      */
-    private function setNeighbours($node, $level) {
-        if (isset($this->previousLevelNodes[$level]))
+    private function setNeighbours($node, $level)
+    {
+        if (isset($this->previousLevelNodes[$level])) {
             $node->setLeftSibling($this->previousLevelNodes[$level]);
+        }
 
         if ($node->getLeftSibling()) {
             $node->getLeftSibling()->setRightSibling($node);
@@ -342,12 +358,14 @@ class TreeGraph
     }
 
     /**
-     * Get left most node in the branch
+     * Get left most node in the branch.
      *
      * @param Alpha\Util\Graph\GraphNode $node
-     * @param integer $level
-     * @param integer $maxlevel
+     * @param int                        $level
+     * @param int                        $maxlevel
+     *
      * @return Alpha\Util\Graph\GraphNode
+     *
      * @since 1.0
      */
     private function getLeftmost($node, $level, $maxlevel)
@@ -359,10 +377,10 @@ class TreeGraph
         $childCount = $node->childCount();
 
         if ($childCount == 0) {
-            return null;
+            return;
         }
 
-        for ($i = 0; $i < $childCount; $i++) {
+        for ($i = 0; $i < $childCount; ++$i) {
             $child = $node->getChildAt($i);
 
             $leftmostDescendant = $this->getLeftmost($child, $level + 1, $maxlevel);
@@ -372,11 +390,11 @@ class TreeGraph
             }
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Render the chart in memory
+     * Render the chart in memory.
      *
      * @since 1.0
      */
@@ -393,7 +411,7 @@ class TreeGraph
     }
 
     /**
-     * Get the width of the graph, will invoke render() if not already rendered
+     * Get the width of the graph, will invoke render() if not already rendered.
      *
      * @since 1.0
      */
@@ -402,26 +420,29 @@ class TreeGraph
         if (!$this->isRendered) {
             $this->render();
         }
+
         return $this->width;
     }
 
     /**
-     * Get the heith of the graph, will invoke render() if not already rendered
+     * Get the heith of the graph, will invoke render() if not already rendered.
      *
      * @since 1.0
      */
     public function getHeight()
     {
-        if (!$this->isRendered)
+        if (!$this->isRendered) {
             $this->render();
+        }
 
         return $this->height;
     }
 
     /**
-     * Get the next GraphNode instance in the graph, will invoke render() if not already rendered
+     * Get the next GraphNode instance in the graph, will invoke render() if not already rendered.
      *
      * @return Alpha\Util\Graph\GraphNode
+     *
      * @since 1.0
      */
     public function next()
@@ -430,27 +451,28 @@ class TreeGraph
             $this->render();
         }
 
-        if (isset($this->nodes[$this->position+1])) {
-            $this->position++;
+        if (isset($this->nodes[$this->position + 1])) {
+            ++$this->position;
+
             return $this->nodes[$this->position];
         } else {
-            return null;
+            return;
         }
     }
 
     /**
-     * Check to see if another GraphNode instance in the graph is available
+     * Check to see if another GraphNode instance in the graph is available.
      *
-     * @return boolean
+     * @return bool
+     *
      * @since 1.0
      */
     public function hasNext()
     {
-        if (isset($this->nodes[$this->position+1]))
+        if (isset($this->nodes[$this->position + 1])) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 }
-
-?>

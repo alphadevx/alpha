@@ -5,10 +5,10 @@ namespace Alpha\Test\Util\Http;
 use Alpha\Util\Http\AgentUtils;
 
 /**
- *
- * Test cases for the AgentUtils class
+ * Test cases for the AgentUtils class.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -45,27 +45,24 @@ use Alpha\Util\Http\AgentUtils;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class AgentUtilsTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Testing various browser agent strings to ensure that they are not mistakenly threated as bots
+     * Testing various browser agent strings to ensure that they are not mistakenly threated as bots.
      */
     public function testIsBotFalse()
     {
-    	$this->assertFalse(AgentUtils::isBot('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)'), 'testing that IE 6 is not a bot');
-    	$this->assertFalse(AgentUtils::isBot('Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.2) Gecko/20100115 Firefox/3.6'), 'testing that FF 3.6 is not a bot');
+        $this->assertFalse(AgentUtils::isBot('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)'), 'testing that IE 6 is not a bot');
+        $this->assertFalse(AgentUtils::isBot('Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.2) Gecko/20100115 Firefox/3.6'), 'testing that FF 3.6 is not a bot');
     }
 
-	/**
-     * Testing various spider bot agent strings to ensure that they are correctly threated as bots
+    /**
+     * Testing various spider bot agent strings to ensure that they are correctly threated as bots.
      */
     public function testIsBotTrue()
     {
-    	$this->assertTrue(AgentUtils::isBot('Googlebot/2.1 (+http://www.googlebot.com/bot.html)'), 'testing that Google is a bot');
-    	$this->assertTrue(AgentUtils::isBot('Gigabot/1.0'), 'testing that Gigabot is a bot');
+        $this->assertTrue(AgentUtils::isBot('Googlebot/2.1 (+http://www.googlebot.com/bot.html)'), 'testing that Google is a bot');
+        $this->assertTrue(AgentUtils::isBot('Gigabot/1.0'), 'testing that Gigabot is a bot');
     }
 }
-
-?>

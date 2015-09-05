@@ -4,15 +4,17 @@ namespace Alpha\Test\Model\Type;
 
 use Alpha\Test\Model\ModelTestCase;
 use Alpha\Model\Type\Sequence;
-use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- * Test cases for the Sequence data type
+ * Test cases for the Sequence data type.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
+ *
  * @version $Id: SequenceTest.php 1843 2014-11-13 22:41:33Z alphadevx $
+ *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -48,22 +50,22 @@ use Alpha\Exception\IllegalArguementException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class SequenceTest extends ModelTestCase
 {
-	/**
-	 * a Sequence for testing
-	 *
-	 * @var Alpha\Model\Type\Sequence
-	 * @since 1.0
-	 */
-	private $sequence;
+    /**
+     * a Sequence for testing.
+     *
+     * @var Alpha\Model\Type\Sequence
+     *
+     * @since 1.0
+     */
+    private $sequence;
 
-	/**
+    /**
      * Called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+     * here.
      *
      * @since 1.0
      */
@@ -80,80 +82,81 @@ class SequenceTest extends ModelTestCase
     /**
      * Called after the test functions are executed
      * this function is defined in PHPUnit_TestCase and overwritten
-     * here
+     * here.
      *
      * @since 1.0
      */
     protected function tearDown()
     {
         parent::tearDown();
-    	$this->sequence->dropTable();
+        $this->sequence->dropTable();
         unset($this->sequence);
     }
 
     /**
-     * Testing to ensure that a bad parameter will cause an IllegalArguementException
+     * Testing to ensure that a bad parameter will cause an IllegalArguementException.
      *
      * @since 1.0
      */
     public function testSetValueBad()
     {
-    	try {
-    		$this->sequence->setValue('invalid');
-    		$this->fail('Testing to ensure that a bad parameter will cause an IllegalArguementException');
-    	}catch (IllegalArguementException $e) {
-    		$this->assertEquals($this->sequence->getHelper(), $e->getMessage(), 'Testing to ensure that a bad parameter will cause an IllegalArguementException');
-    	}
+        try {
+            $this->sequence->setValue('invalid');
+            $this->fail('Testing to ensure that a bad parameter will cause an IllegalArguementException');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals($this->sequence->getHelper(), $e->getMessage(), 'Testing to ensure that a bad parameter will cause an IllegalArguementException');
+        }
     }
 
     /**
-     * Testing to ensure that a good parameter will not cause an IllegalArguementException
+     * Testing to ensure that a good parameter will not cause an IllegalArguementException.
      *
      * @since 1.0
      */
     public function testSetValueGood()
     {
-    	try {
-    		$this->sequence->setValue('VALID-1');
-    		$this->assertEquals('VALID', $this->sequence->get('prefix'), 'Testing to ensure that a good parameter will not cause an IllegalArguementException');
-    		$this->assertEquals(1, $this->sequence->get('sequence'), 'Testing to ensure that a good parameter will not cause an IllegalArguementException');
-    	}catch (IllegalArguementException $e) {
-    		$this->fail('Testing to ensure that a good parameter will not cause an IllegalArguementException');
-    	}
+        try {
+            $this->sequence->setValue('VALID-1');
+            $this->assertEquals('VALID', $this->sequence->get('prefix'), 'Testing to ensure that a good parameter will not cause an IllegalArguementException');
+            $this->assertEquals(1, $this->sequence->get('sequence'), 'Testing to ensure that a good parameter will not cause an IllegalArguementException');
+        } catch (IllegalArguementException $e) {
+            $this->fail('Testing to ensure that a good parameter will not cause an IllegalArguementException');
+        }
     }
 
     /**
-     * Testing that sequence prefixes are uppercase
+     * Testing that sequence prefixes are uppercase.
      *
      * @since 1.0
      */
-    public function testPrefixValidation() {
-    	try {
-    		$this->sequence->set('prefix', 'bad');
-    	}catch (IllegalArguementException $e) {
-    		$this->assertEquals($this->sequence->getPropObject('prefix')->getHelper(), $e->getMessage(), 'Testing that sequence prefixes are uppercase');
-    	}
+    public function testPrefixValidation()
+    {
+        try {
+            $this->sequence->set('prefix', 'bad');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals($this->sequence->getPropObject('prefix')->getHelper(), $e->getMessage(), 'Testing that sequence prefixes are uppercase');
+        }
     }
 
     /**
-     * Testing the setSequenceToNext methid increments the sequence number
+     * Testing the setSequenceToNext methid increments the sequence number.
      *
      * @since 1.0
      */
-    public function testSetSequenceToNext() {
-    	$this->sequence->setSequenceToNext();
+    public function testSetSequenceToNext()
+    {
+        $this->sequence->setSequenceToNext();
 
-    	$this->assertEquals('TEST-2', $this->sequence->getValue(), 'Testing the setSequenceToNext methid increments the sequence number');
+        $this->assertEquals('TEST-2', $this->sequence->getValue(), 'Testing the setSequenceToNext methid increments the sequence number');
     }
 
     /**
-     * Testing the toString method
+     * Testing the toString method.
      *
      * @since 1.0
      */
-    public function testToString() {
-    	$this->assertEquals('TEST-1', $this->sequence->__toString(), 'Testing the toString method');
+    public function testToString()
+    {
+        $this->assertEquals('TEST-1', $this->sequence->__toString(), 'Testing the toString method');
     }
 }
-
-?>

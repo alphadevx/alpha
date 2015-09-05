@@ -10,8 +10,11 @@ use Alpha\Exception\IllegalArguementException;
  * Test cases for the ActiveRecordProviderFactory class.
  *
  * @since 1.2.1
+ *
  * @author John Collins <dev@alphaframework.org>
+ *
  * @version $Id: ActiveRecordProviderFactoryTest.php 1842 2014-11-12 22:27:01Z alphadevx $
+ *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -47,12 +50,11 @@ use Alpha\Exception\IllegalArguementException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ActiveRecordProviderFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Testing the getInstance() method with good parameters
+     * Testing the getInstance() method with good parameters.
      *
      * @since 1.2.1
      */
@@ -65,7 +67,7 @@ class ActiveRecordProviderFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the getInstance() method with bad parameters
+     * Testing the getInstance() method with bad parameters.
      *
      * @since 1.2.1
      */
@@ -74,17 +76,15 @@ class ActiveRecordProviderFactoryTest extends \PHPUnit_Framework_TestCase
         try {
             $provider = ActiveRecordProviderFactory::getInstance('Alpha\Model\ActiveRecordProviderDoesNotExist', new Person());
             $this->fail('testing the getInstance() method with bad parameters');
-        }catch (IllegalArguementException $e) {
+        } catch (IllegalArguementException $e) {
             $this->assertEquals('The class [Alpha\Model\ActiveRecordProviderDoesNotExist] is not defined anywhere!', $e->getMessage(), 'testing the getInstance() method with bad parameters');
         }
 
         try {
             $provider = ActiveRecordProviderFactory::getInstance('Alpha\Model\ActiveRecordProviderFactory', new Person());
             $this->fail('testing the getInstance() method with bad parameters');
-        }catch (IllegalArguementException $e) {
+        } catch (IllegalArguementException $e) {
             $this->assertEquals('The class [Alpha\Model\ActiveRecordProviderFactory] does not implement the expected ActiveRecordProviderInterface interface!', $e->getMessage(), 'testing the getInstance() method with bad parameters');
         }
     }
 }
-
-?>

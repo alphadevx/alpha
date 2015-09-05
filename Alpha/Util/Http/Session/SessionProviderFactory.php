@@ -6,11 +6,11 @@ use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Logging\Logger;
 
 /**
- *
  * A factory for creating session provider implementations that implement the
  * SessionProviderInterface interface.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -47,50 +47,53 @@ use Alpha\Util\Logging\Logger;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class SessionProviderFactory
 {
-	/**
-	 * Trace logger
-	 *
-	 * @var Alpha\Util\Logging\Logger
-	 * @since 2.0
-	 */
-	private static $logger = null;
+    /**
+     * Trace logger.
+     *
+     * @var Alpha\Util\Logging\Logger
+     *
+     * @since 2.0
+     */
+    private static $logger = null;
 
-	/**
-	 * A static method that attempts to return a SessionProviderInterface instance
-	 * based on the name of the provider class supplied.
-	 *
-	 * @param $providerName The class name of the provider class (fully qualified).
-	 * @throws Alpha\Exception\IllegalArguementException
-	 * @return Alpha\Util\Http\Session\SessionProviderInterface
-	 * @since 2.0
-	 */
-	public static function getInstance($providerName)
-	{
-		if(self::$logger == null)
-			self::$logger = new Logger('SessionProviderFactory');
+    /**
+     * A static method that attempts to return a SessionProviderInterface instance
+     * based on the name of the provider class supplied.
+     *
+     * @param $providerName The class name of the provider class (fully qualified).
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     *
+     * @return Alpha\Util\Http\Session\SessionProviderInterface
+     *
+     * @since 2.0
+     */
+    public static function getInstance($providerName)
+    {
+        if (self::$logger == null) {
+            self::$logger = new Logger('SessionProviderFactory');
+        }
 
-		self::$logger->debug('>>getInstance(providerName=['.$providerName.'])');
+        self::$logger->debug('>>getInstance(providerName=['.$providerName.'])');
 
-		if (class_exists($providerName)) {
-
-			$instance = new $providerName;
+        if (class_exists($providerName)) {
+            $instance = new $providerName();
             $instance->init();
 
-			if(!$instance instanceof SessionProviderInterface)
-				throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected SessionProviderInterface intwerface!');
+            if (!$instance instanceof SessionProviderInterface) {
+                throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected SessionProviderInterface intwerface!');
+            }
 
-			self::$logger->debug('<<getInstance: [Object '.$providerName.']');
-			return $instance;
-		} else {
-			throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
-		}
+            self::$logger->debug('<<getInstance: [Object '.$providerName.']');
 
-		self::$logger->debug('<<getInstance');
-	}
+            return $instance;
+        } else {
+            throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
+        }
+
+        self::$logger->debug('<<getInstance');
+    }
 }
-
-?>

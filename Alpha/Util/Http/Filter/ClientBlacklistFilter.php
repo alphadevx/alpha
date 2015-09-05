@@ -8,9 +8,10 @@ use Alpha\Exception\BONotFoundException;
 use Alpha\Exception\ResourceNotAllowedException;
 
 /**
- * Class for filtering requests from blacklisted HTTP clients
+ * Class for filtering requests from blacklisted HTTP clients.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -47,20 +48,20 @@ use Alpha\Exception\ResourceNotAllowedException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ClientBlacklistFilter implements FilterInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @since 1.0
      */
@@ -70,15 +71,16 @@ class ClientBlacklistFilter implements FilterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function process($request)
     {
         $client = $request->getUserAgent();
 
         // if no user agent string is provided, we can't filter by it anyway to might as well skip
-        if($client == null)
+        if ($client == null) {
             return;
+        }
 
         if (!empty($client)) {
             $badClient = new BlacklistedClient();
@@ -94,5 +96,3 @@ class ClientBlacklistFilter implements FilterInterface
         }
     }
 }
-
-?>

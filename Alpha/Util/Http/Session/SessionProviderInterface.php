@@ -3,10 +3,10 @@
 namespace Alpha\Util\Http\Session;
 
 /**
- *
  * An interface that describes the use of sessions.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -43,58 +43,60 @@ namespace Alpha\Util\Http\Session;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 interface SessionProviderInterface
 {
-	/**
-	 * Starts a new session, or resumes an existing session if there is already a session ID available.
-	 *
-	 * @since 2.0
-	 */
-	public function init();
-
-	/**
-	 * Destroys the current session.
-	 *
-	 * @since 2.0
-	 */
-	public function destroy();
-
-	/**
-	 * Get the key value from the session.  Returns false if nothing is found.
-	 *
-	 * @param $key
-	 * @since 2.0
-	 * @return mixed
-	 */
-	public function get($key);
-
-	/**
-	 * Stores the value provided at that key in the session.
-	 *
-	 * @param string $key
-	 * @param mixed $value
-	 * @since 2.0
-	 */
-	public function set($key, $value);
-
-	/**
-	 * Deletes the value provided at that key in the session.
-	 *
-	 * @param string $key
-	 * @param mixed $value
-	 * @since 2.0
-	 */
-	public function delete($key);
+    /**
+     * Starts a new session, or resumes an existing session if there is already a session ID available.
+     *
+     * @since 2.0
+     */
+    public function init();
 
     /**
-     * Get the current session ID if available
+     * Destroys the current session.
+     *
+     * @since 2.0
+     */
+    public function destroy();
+
+    /**
+     * Get the key value from the session.  Returns false if nothing is found.
+     *
+     * @param $key
+     *
+     * @since 2.0
+     *
+     * @return mixed
+     */
+    public function get($key);
+
+    /**
+     * Stores the value provided at that key in the session.
+     *
+     * @param string $key
+     * @param mixed  $value
+     *
+     * @since 2.0
+     */
+    public function set($key, $value);
+
+    /**
+     * Deletes the value provided at that key in the session.
+     *
+     * @param string $key
+     * @param mixed  $value
+     *
+     * @since 2.0
+     */
+    public function delete($key);
+
+    /**
+     * Get the current session ID if available.
      *
      * @return string
+     *
      * @since 2.0
      */
     public function getID();
 }
-
-?>

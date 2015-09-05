@@ -18,6 +18,7 @@ use Alpha\Controller\Front\FrontController;
  * default, a jpg file will be returned (the source file can be jpg, png, or gif).
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -54,7 +55,6 @@ use Alpha\Controller\Front\FrontController;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class Image
 {
@@ -62,6 +62,7 @@ class Image
      * The title of the image for alt text (optional).
      *
      * @var string
+     *
      * @since 1.0
      */
     private $title;
@@ -70,6 +71,7 @@ class Image
      * The absolute path to the source image.
      *
      * @var string
+     *
      * @since 1.0
      */
     private $source;
@@ -78,6 +80,7 @@ class Image
      * The width of the image (can differ from the source file when scale=true).
      *
      * @var Alpha\Model\Type\Integer
+     *
      * @since 1.0
      */
     private $width;
@@ -86,14 +89,16 @@ class Image
      * The height of the image (can differ from the source file when scale=true).
      *
      * @var Alpha\Model\Type\Integer
+     *
      * @since 1.0
      */
     private $height;
 
     /**
-     * The file type of the source image (gif, jpg, or png supported)
+     * The file type of the source image (gif, jpg, or png supported).
      *
      * @var Alpha\Model\Type\Enum
+     *
      * @since 1.0
      */
     private $sourceType;
@@ -102,6 +107,7 @@ class Image
      * The quality of the jpg image generated (0.00 to 1.00, 0.75 by default).
      *
      * @var Alpha\Model\Type\Double
+     *
      * @since 1.0
      */
     private $quality;
@@ -111,6 +117,7 @@ class Image
      * by default).
      *
      * @var Alpha\Model\Type\Boolean
+     *
      * @since 1.0
      */
     private $scale;
@@ -120,6 +127,7 @@ class Image
      * to the image difficult (false by default).
      *
      * @var Alpha\Model\Type\Boolean
+     *
      * @since 1.0
      */
     private $secure;
@@ -128,14 +136,16 @@ class Image
      * The auto-generated name of the cache file for the image.
      *
      * @var string
+     *
      * @since 1.0
      */
     private $filename;
 
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
@@ -149,7 +159,9 @@ class Image
      * @param $sourceType
      * @param $quality
      * @param $scale
+     *
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @since 1.0
      */
     public function __construct($source, $width, $height, $sourceType, $quality = 0.75, $scale = false, $secure = false)
@@ -159,17 +171,19 @@ class Image
 
         $config = ConfigProvider::getInstance();
 
-        if (file_exists($source))
+        if (file_exists($source)) {
             $this->source = $source;
-        else
+        } else {
             throw new IllegalArguementException('The source file for the Image widget ['.$source.'] cannot be found!');
+        }
 
         $this->sourceType = new Enum();
-        $this->sourceType->setOptions(array('jpg','png','gif'));
+        $this->sourceType->setOptions(array('jpg', 'png', 'gif'));
         $this->sourceType->setValue($sourceType);
 
-        if ($quality < 0.0 || $quality > 1.0)
+        if ($quality < 0.0 || $quality > 1.0) {
             throw new IllegalArguementException('The quality setting of ['.$quality.'] is outside of the allowable range of 0.0 to 1.0');
+        }
 
         $this->quality = new Double($quality);
         $this->scale = new Boolean($scale);
@@ -188,16 +202,20 @@ class Image
      * image in the desired resolution.
      *
      * @param $altText Set this value to render alternate text as part of the HTML link (defaults to no alternate text)
+     *
      * @return string
+     *
      * @since 1.0
+     *
      * @todo revise generated links
      */
-    public function renderHTMLLink($altText='')
+    public function renderHTMLLink($altText = '')
     {
         $config = ConfigProvider::getInstance();
 
         if ($this->secure->getBooleanValue()) {
             $params = Controller::generateSecurityFields();
+
             return '<img src="'.FrontController::generateSecureURL('act=Alpha\Controller\ImageController&source='.$this->source.'&width='.$this->width->getValue().'&height='.$this->height->getValue().'&type='.$this->sourceType->getValue().'&quality='.$this->quality->getValue().'&scale='.$this->scale->getValue().'&secure='.$this->secure->getValue().'&var1='.$params[0].'&var2='.$params[1]).'"'.(empty($altText) ? '' : ' alt="'.$altText.'"').'/>';
         } else {
             return '<img src="'.FrontController::generateSecureURL('act=Alpha\Controller\ImageController&source='.$this->source.'&width='.$this->width->getValue().'&height='.$this->height->getValue().'&type='.$this->sourceType->getValue().'&quality='.$this->quality->getValue().'&scale='.$this->scale->getValue().'&secure='.$this->secure->getValue()).'"'.(empty($altText) ? '' : ' alt="'.$altText.'"').'/>';
@@ -205,9 +223,10 @@ class Image
     }
 
     /**
-     * Setter for the filename, which also creates a sub-directory under /cache for images when required
+     * Setter for the filename, which also creates a sub-directory under /cache for images when required.
      *
      * @since 1.0
+     *
      * @throws Alpha\Exception\AlphaException
      */
     private function setFilename()
@@ -216,13 +235,14 @@ class Image
 
         if (!strpos($this->source, 'attachments/article_')) {
             // checking to see if we will write a jpg or png to the cache
-            if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png'))
-                $this->filename = $config->get('app.file.store.dir').'cache/images/'.basename($this->source, ".".$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.png';
-            else
-                $this->filename = $config->get('app.file.store.dir').'cache/images/'.basename($this->source, ".".$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.jpg';
+            if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
+                $this->filename = $config->get('app.file.store.dir').'cache/images/'.basename($this->source, '.'.$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.png';
+            } else {
+                $this->filename = $config->get('app.file.store.dir').'cache/images/'.basename($this->source, '.'.$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.jpg';
+            }
         } else {
             // make a cache dir for the article
-            $cacheDir = $config->get('app.file.store.dir').'cache/images/article_'.mb_substr($this->source, mb_strpos($this->source, 'attachments/article_')+20, 11);
+            $cacheDir = $config->get('app.file.store.dir').'cache/images/article_'.mb_substr($this->source, mb_strpos($this->source, 'attachments/article_') + 20, 11);
             if (!file_exists($cacheDir)) {
                 $success = mkdir($cacheDir);
 
@@ -239,17 +259,18 @@ class Image
             }
 
             // now set the filename to include the new cache directory
-            if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png'))
-                $this->filename = $cacheDir.'/'.basename($this->source, ".".$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.png';
-            else
-                $this->filename = $cacheDir.'/'.basename($this->source, ".".$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.jpg';
+            if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
+                $this->filename = $cacheDir.'/'.basename($this->source, '.'.$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.png';
+            } else {
+                $this->filename = $cacheDir.'/'.basename($this->source, '.'.$this->sourceType->getValue()).'_'.$this->width->getValue().'x'.$this->height->getValue().'.jpg';
+            }
         }
 
         self::$logger->debug('Image filename is ['.$this->filename.']');
     }
 
     /**
-     * Gets the auto-generated filename for the image in the /cache directory
+     * Gets the auto-generated filename for the image in the /cache directory.
      *
      * @since 1.0
      */
@@ -279,11 +300,11 @@ class Image
             $targetScreenY = $targetScreenResolution[1];
 
             // calculate the new units we will scale by
-            $xu = $targetScreenX/$originalScreenX;
-            $yu = $targetScreenY/$originalScreenY;
+            $xu = $targetScreenX / $originalScreenX;
+            $yu = $targetScreenY / $originalScreenY;
 
-            $this->width = new Integer(intval($this->width->getValue()*$xu));
-            $this->height = new Integer(intval($this->height->getValue()*$yu));
+            $this->width = new Integer(intval($this->width->getValue() * $xu));
+            $this->height = new Integer(intval($this->height->getValue() * $yu));
 
             // need to update the cache filename as the dimensions have changed
             $this->setFilename();
@@ -295,21 +316,21 @@ class Image
         } else {
             // now get the old image
             switch ($this->sourceType->getValue()) {
-                case "gif":
+                case 'gif':
                     $old_image = imagecreatefromgif($this->source);
                 break;
-                case "jpg":
+                case 'jpg':
                     $old_image = imagecreatefromjpeg($this->source);
                 break;
-                case "png":
+                case 'png':
                     $old_image = imagecreatefrompng($this->source);
                 break;
             }
 
             if (!$old_image) {
-                $im  = imagecreatetruecolor($this->width->getValue(), $this->height->getValue());
+                $im = imagecreatetruecolor($this->width->getValue(), $this->height->getValue());
                 $bgc = imagecolorallocate($im, 255, 255, 255);
-                $tc  = imagecolorallocate($im, 0, 0, 0);
+                $tc = imagecolorallocate($im, 0, 0, 0);
                 imagefilledrectangle($im, 0, 0, $this->width->getValue(), $this->height->getValue(), $bgc);
 
                 imagestring($im, 1, 5, 5, "Error loading $this->source", $tc);
@@ -342,12 +363,12 @@ class Image
                     imagesavealpha($new_image, true);
                 }
                 // copy the old image to the new image (in memory, not the file!)
-                imagecopyresampled($new_image, $old_image, 0, 0, 0, 0, $this->width->getValue(), $this->height->getValue(), $oldWidth, $oldHeight); 
+                imagecopyresampled($new_image, $old_image, 0, 0, 0, 0, $this->width->getValue(), $this->height->getValue(), $oldWidth, $oldHeight);
 
                 if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
                     imagepng($new_image);
                 } else {
-                    imagejpeg($new_image, null, 100*$this->quality->getValue());
+                    imagejpeg($new_image, null, 100 * $this->quality->getValue());
                 }
 
                 $this->cache($new_image);
@@ -358,25 +379,28 @@ class Image
     }
 
     /**
-     * Caches the image to the cache directory
+     * Caches the image to the cache directory.
      *
      * @param image $image the binary GD image stream to save
+     *
      * @since 1.0
      */
     private function cache($image)
     {
         $config = ConfigProvider::getInstance();
 
-        if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png'))
+        if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
             imagepng($image, $this->filename);
-        else
-            imagejpeg($image, $this->filename, 100*$this->quality->getValue());
+        } else {
+            imagejpeg($image, $this->filename, 100 * $this->quality->getValue());
+        }
     }
 
     /**
      * Used to check the image cache for the image jpeg cache file.
      *
      * @return bool
+     *
      * @since 1.0
      */
     private function checkCache()
@@ -385,7 +409,7 @@ class Image
     }
 
     /**
-     * Method to load the content of the image cache file to the standard output stream (the browser)
+     * Method to load the content of the image cache file to the standard output stream (the browser).
      *
      * @since 1.0
      */
@@ -399,7 +423,9 @@ class Image
      * hosted on the same server as the application.
      *
      * @param string $imgURL
+     *
      * @return string the path of the image
+     *
      * @since 1.0
      */
     public static function convertImageURLToPath($imgURL)
@@ -411,5 +437,3 @@ class Image
         return $imgPath;
     }
 }
-
-?>

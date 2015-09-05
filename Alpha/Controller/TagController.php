@@ -5,7 +5,6 @@ namespace Alpha\Controller;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
-use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\View\View;
 use Alpha\View\Widget\StringBox;
@@ -23,12 +22,12 @@ use Alpha\Exception\FailedSaveException;
 use Alpha\Exception\AlphaException;
 
 /**
- *
  * Controller used to edit Tags related to the ActiveRecord indicated in the supplied
  * GET vars (ActiveRecordType and ActiveRecordOID).  If no ActiveRecord Type or OID are
  * indicated, then a screen to manage all tags at a summary level is presented.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -65,20 +64,20 @@ use Alpha\Exception\AlphaException;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class TagController extends ActiveRecordController implements ControllerInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * constructor to set up the object
+     * constructor to set up the object.
      *
      * @since 1.0
      */
@@ -101,12 +100,15 @@ class TagController extends ActiveRecordController implements ControllerInterfac
     }
 
     /**
-     * Handle GET requests
+     * Handle GET requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @throws Alpha\Exception\IllegalArguementException
      * @throws Alpha\Exception\FileNotFoundException
+     *
      * @since 1.0
      */
     public function doGET($request)
@@ -120,8 +122,9 @@ class TagController extends ActiveRecordController implements ControllerInterfac
         $body = View::displayPageHead($this);
 
         $message = $this->getStatusMessage();
-        if (!empty($message))
+        if (!empty($message)) {
             $body .= $message;
+        }
 
         // render the tag manager screen
         if (!isset($params['ActiveRecordType']) && !isset($params['ActiveRecordOID'])) {
@@ -129,9 +132,9 @@ class TagController extends ActiveRecordController implements ControllerInterfac
             $ActiveRecordTypes = ActiveRecord::getBOClassNames();
 
             foreach ($ActiveRecordTypes as $ActiveRecordType) {
-                $record = new $ActiveRecordType;
+                $record = new $ActiveRecordType();
 
-                if($record->isTagged()) {
+                if ($record->isTagged()) {
                     $tag = new Tag();
                     $count = count($tag->loadAllByAttribute('taggedClass', $ActiveRecordType));
                     $body .= '<h4>'.$record->getFriendlyClassName().' record type is tagged ('.$count.' tags found)</h4>';
@@ -162,7 +165,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                             ]
                         });
                     }";
-                    $button = new Button($js, "Re-create tags", "clearBut".stripslashes($ActiveRecordType));
+                    $button = new Button($js, 'Re-create tags', 'clearBut'.stripslashes($ActiveRecordType));
                     $body .= $button->render();
                 }
             }
@@ -176,10 +179,11 @@ class TagController extends ActiveRecordController implements ControllerInterfac
             $ActiveRecordType = urldecode($params['ActiveRecordType']);
             $ActiveRecordOID = $params['ActiveRecordOID'];
 
-            if (class_exists($ActiveRecordType))
+            if (class_exists($ActiveRecordType)) {
                 $this->BO = new $ActiveRecordType();
-            else
+            } else {
                 throw new IllegalArguementException('No ActiveRecord available to display tags for!');
+            }
 
             try {
                 $this->BO->load($ActiveRecordOID);
@@ -223,7 +227,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                             ]
                         });
                     }";
-                    $button = new Button($js, "Delete", "delete".$tag->getID()."But");
+                    $button = new Button($js, 'Delete', 'delete'.$tag->getID().'But');
                     $body .= $button->render();
                 }
 
@@ -243,7 +247,6 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                 $body .= '</form>';
 
                 $body .= View::renderDeleteForm($request->getURI());
-
             } catch (RecordNotFoundException $e) {
                 $msg = 'Unable to load the ActiveRecord of id ['.$params['ActiveRecordOID'].'], error was ['.$e->getMessage().']';
                 self::$logger->error($msg);
@@ -254,16 +257,20 @@ class TagController extends ActiveRecordController implements ControllerInterfac
         $body .= View::displayPageFoot($this);
 
         self::$logger->debug('<<doGET');
+
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
     /**
-     * Handle POST requests
+     * Handle POST requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @throws Alpha\Exception\SecurityException
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @since 1.0
      */
     public function doPOST($request)
@@ -274,26 +281,27 @@ class TagController extends ActiveRecordController implements ControllerInterfac
 
         try {
             // check the hidden security fields before accepting the form POST data
-            if (!$this->checkSecurityFields())
+            if (!$this->checkSecurityFields()) {
                 throw new SecurityException('This page cannot accept post data from remote servers!');
+            }
 
             if (isset($params['clearTaggedClass']) && $params['clearTaggedClass'] != '') {
                 try {
                     self::$logger->info('About to start rebuilding the tags for the class ['.$params['clearTaggedClass'].']');
                     $startTime = microtime(true);
-                    $record = new $params['clearTaggedClass'];
+                    $record = new $params['clearTaggedClass']();
                     $records = $record->loadAll();
-                    self::$logger->info('Loaded all of the active records (elapsed time ['.round(microtime(true)-$startTime, 5).'] seconds)');
+                    self::$logger->info('Loaded all of the active records (elapsed time ['.round(microtime(true) - $startTime, 5).'] seconds)');
                     ActiveRecord::begin();
                     $tag = new Tag();
                     $tag->deleteAllByAttribute('taggedClass', $params['clearTaggedClass']);
-                    self::$logger->info('Deleted all of the old tags (elapsed time ['.round(microtime(true)-$startTime, 5).'] seconds)');
+                    self::$logger->info('Deleted all of the old tags (elapsed time ['.round(microtime(true) - $startTime, 5).'] seconds)');
                     $this->regenerateTagsOnRecords($records);
-                    self::$logger->info('Saved all of the new tags (elapsed time ['.round(microtime(true)-$startTime, 5).'] seconds)');
+                    self::$logger->info('Saved all of the new tags (elapsed time ['.round(microtime(true) - $startTime, 5).'] seconds)');
                     self::$logger->action('Tags recreated on the ['.$params['clearTaggedClass'].'] class');
                     ActiveRecord::commit();
                     $this->setStatusMessage(View::displayUpdateMessage('Tags recreated on the '.$record->getFriendlyClassName().' class.'));
-                    self::$logger->info('Tags recreated on the ['.$params['clearTaggedClass'].'] class (time taken ['.round(microtime(true)-$startTime, 5).'] seconds).');
+                    self::$logger->info('Tags recreated on the ['.$params['clearTaggedClass'].'] class (time taken ['.round(microtime(true) - $startTime, 5).'] seconds).');
                 } catch (AlphaException $e) {
                     self::$logger->error($e->getMessage());
                     ActiveRecord::rollback();
@@ -304,21 +312,24 @@ class TagController extends ActiveRecordController implements ControllerInterfac
             } else {
 
                 // ensure that a bo is provided
-                if (isset($params['ActiveRecordType']))
+                if (isset($params['ActiveRecordType'])) {
                     $ActiveRecordType = urldecode($params['ActiveRecordType']);
-                else
+                } else {
                     throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordType was not supplied!');
+                }
 
                 // ensure that a OID is provided
-                if (isset($params['ActiveRecordOID']))
+                if (isset($params['ActiveRecordOID'])) {
                     $ActiveRecordOID = $params['ActiveRecordOID'];
-                else
+                } else {
                     throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordOID was not supplied!');
+                }
 
-                if (class_exists($ActiveRecordType))
+                if (class_exists($ActiveRecordType)) {
                     $this->BO = new $ActiveRecordType();
-                else
+                } else {
                     throw new IllegalArguementException('No ActiveRecord available to display tags for!');
+                }
 
                 if (isset($params['saveBut'])) {
                     try {
@@ -372,7 +383,6 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                 }
             }
         } catch (SecurityException $e) {
-
             $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
 
             self::$logger->warn($e->getMessage());
@@ -388,12 +398,15 @@ class TagController extends ActiveRecordController implements ControllerInterfac
     }
 
     /**
-     * Handle DELETE requests
+     * Handle DELETE requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @throws Alpha\Exception\SecurityException
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @since 2.0
      */
     public function doDELETE($request)
@@ -404,29 +417,33 @@ class TagController extends ActiveRecordController implements ControllerInterfac
 
         try {
             // check the hidden security fields before accepting the form POST data
-            if (!$this->checkSecurityFields())
+            if (!$this->checkSecurityFields()) {
                 throw new SecurityException('This page cannot accept post data from remote servers!');
+            }
 
             // ensure that a bo is provided
-            if (isset($params['ActiveRecordType']))
+            if (isset($params['ActiveRecordType'])) {
                 $ActiveRecordType = urldecode($params['ActiveRecordType']);
-            else
+            } else {
                 throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordType was not supplied!');
+            }
 
             // ensure that a OID is provided
-            if (isset($params['ActiveRecordOID']))
+            if (isset($params['ActiveRecordOID'])) {
                 $ActiveRecordOID = $params['ActiveRecordOID'];
-            else
+            } else {
                 throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordOID was not supplied!');
+            }
 
-            if (class_exists($ActiveRecordType))
+            if (class_exists($ActiveRecordType)) {
                 $this->BO = new $ActiveRecordType();
-            else
+            } else {
                 throw new IllegalArguementException('No ActiveRecord available to display tags for!');
+            }
 
             if (!empty($params['deleteOID'])) {
                 try {
-                    $this->BO = new $ActiveRecordType;
+                    $this->BO = new $ActiveRecordType();
                     $this->BO->load($ActiveRecordOID);
 
                     $tag = new Tag();
@@ -456,7 +473,6 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                 ActiveRecord::disconnect();
             }
         } catch (SecurityException $e) {
-
             $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
 
             self::$logger->warn($e->getMessage());
@@ -472,19 +488,21 @@ class TagController extends ActiveRecordController implements ControllerInterfac
     }
 
     /**
-     * Regenerates the tags on the supplied list of active records
+     * Regenerates the tags on the supplied list of active records.
      *
      * @param array $records
+     *
      * @since 1.0
      */
-    private function regenerateTagsOnRecords($records) {
+    private function regenerateTagsOnRecords($records)
+    {
         foreach ($records as $record) {
-            foreach($record->get('taggedAttributes') as $tagged) {
+            foreach ($record->get('taggedAttributes') as $tagged) {
                 $tags = Tag::tokenize($BO->get($tagged), get_class($record), $record->getOID());
-                foreach($tags as $tag) {
+                foreach ($tags as $tag) {
                     try {
                         $tag->save();
-                    } catch (ValidationException $e){
+                    } catch (ValidationException $e) {
                         /*
                          * The unique key has most-likely been violated because this record is already tagged with this
                          * value, so we can ignore in this case.
@@ -495,5 +513,3 @@ class TagController extends ActiveRecordController implements ControllerInterfac
         }
     }
 }
-
-?>

@@ -6,16 +6,15 @@ use Alpha\Controller\Front\FrontController;
 use Alpha\Controller\ActiveRecordController;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
-use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Model\Person;
 use Alpha\Model\Rights;
 
 /**
- *
- * Test cases for the ActiveRecordController class
+ * Test cases for the ActiveRecordController class.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -52,12 +51,11 @@ use Alpha\Model\Rights;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ActiveRecordControllerTest extends ControllerTestCase
 {
     /**
-     * Testing the doGET method
+     * Testing the doGET method.
      */
     public function testDoGET()
     {
@@ -77,13 +75,13 @@ class ActiveRecordControllerTest extends ControllerTestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
-        $this->assertTrue(strpos($response->getBody(),'Viewing a Person') !== false, 'Testing the doGET method');
+        $this->assertTrue(strpos($response->getBody(), 'Viewing a Person') !== false, 'Testing the doGET method');
 
         $request = new Request(
             array(
                 'method' => 'GET',
                 'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getOID(),
-                'headers' => array('Accept' => 'application/json')
+                'headers' => array('Accept' => 'application/json'),
             )
         );
 
@@ -103,13 +101,13 @@ class ActiveRecordControllerTest extends ControllerTestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
-        $this->assertTrue(strpos($response->getBody(),'Listing all Person') !== false, 'Testing the doGET method');
+        $this->assertTrue(strpos($response->getBody(), 'Listing all Person') !== false, 'Testing the doGET method');
 
         $request = new Request(
             array(
                 'method' => 'GET',
                 'URI' => '/records/'.urlencode('Alpha\Model\Person').'/1/2',
-                'headers' => array('Accept' => 'application/json')
+                'headers' => array('Accept' => 'application/json'),
             )
         );
 
@@ -129,11 +127,11 @@ class ActiveRecordControllerTest extends ControllerTestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
-        $this->assertTrue(strpos($response->getBody(),'Create a new Person') !== false, 'Testing the doGET method');
+        $this->assertTrue(strpos($response->getBody(), 'Create a new Person') !== false, 'Testing the doGET method');
     }
 
     /**
-     * Testing the doPOST method
+     * Testing the doPOST method.
      */
     public function testDoPOST()
     {
@@ -180,7 +178,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
                 'method' => 'POST',
                 'URI' => '/record/'.urlencode('Alpha\Model\Person'),
                 'params' => $params,
-                'headers' => array('Accept' => 'application/json')
+                'headers' => array('Accept' => 'application/json'),
             )
         );
 
@@ -193,7 +191,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
     }
 
     /**
-     * Testing the doPOST method
+     * Testing the doPOST method.
      */
     public function testDoPUT()
     {
@@ -241,7 +239,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
                 'method' => 'PUT',
                 'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getOID(),
                 'params' => $params,
-                'headers' => array('Accept' => 'application/json')
+                'headers' => array('Accept' => 'application/json'),
             )
         );
 
@@ -254,7 +252,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
     }
 
     /**
-     * Testing the doDELETE method
+     * Testing the doDELETE method.
      */
     public function testDoDELETE()
     {
@@ -278,7 +276,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
 
         $this->assertEquals(301, $response->getStatus(), 'Testing the doDELETE method');
         $this->assertTrue(strpos($response->getHeader('Location'), '/records/'.urlencode('Alpha\Model\Person')) !== false, 'Testing the doDELETE method');
-    
+
         $person = $this->createPersonObject('test');
         $person->save();
 
@@ -299,7 +297,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
                 'method' => 'DELETE',
                 'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getOID(),
                 'params' => $params,
-                'headers' => array('Accept' => 'application/json')
+                'headers' => array('Accept' => 'application/json'),
             )
         );
 
@@ -310,5 +308,3 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $this->assertEquals('deleted', json_decode($response->getBody())->message, 'Testing the doDELETE method');
     }
 }
-
-?>

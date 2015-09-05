@@ -2,20 +2,16 @@
 
 namespace Alpha\Test\View;
 
-use Alpha\View\ArticleCommnetView;
 use Alpha\View\View;
 use Alpha\Model\Article;
 use Alpha\Model\ArticleComment;
-use Alpha\Model\Person;
-use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Test\Controller\ControllerTestCase;
 
 /**
- *
  * Test cases for the ArticleCommentView class.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -52,12 +48,11 @@ use Alpha\Test\Controller\ControllerTestCase;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ArticleCommentViewTest extends ControllerTestCase
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @since 2.0
      */
@@ -73,7 +68,7 @@ class ArticleCommentViewTest extends ControllerTestCase
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @since 2.0
      */
@@ -89,7 +84,7 @@ class ArticleCommentViewTest extends ControllerTestCase
     }
 
     /**
-     * Testing the markdownView() method
+     * Testing the markdownView() method.
      *
      * @since 2.0
      */
@@ -101,11 +96,11 @@ class ArticleCommentViewTest extends ControllerTestCase
         $view = View::getInstance($articleComment);
 
         $this->assertNotEmpty($view->markdownView(), 'Testing the markdownView() method');
-        $this->assertTrue(strpos($view->markdownView(),'test comment') !== false, 'Testing the markdownView() method');
+        $this->assertTrue(strpos($view->markdownView(), 'test comment') !== false, 'Testing the markdownView() method');
     }
 
     /**
-     * Testing the createView() method
+     * Testing the createView() method.
      *
      * @since 2.0
      */
@@ -115,11 +110,11 @@ class ArticleCommentViewTest extends ControllerTestCase
         $view = View::getInstance($articleComment);
 
         $this->assertNotEmpty($view->createView(array('formAction' => '/')), 'Testing the createView() method');
-        $this->assertTrue(strpos($view->createView(array('formAction' => '/')),'Post Comment') !== false, 'Testing the createView() method');
+        $this->assertTrue(strpos($view->createView(array('formAction' => '/')), 'Post Comment') !== false, 'Testing the createView() method');
     }
 
     /**
-     * Testing the editView() method
+     * Testing the editView() method.
      *
      * @since 2.0
      */
@@ -131,8 +126,6 @@ class ArticleCommentViewTest extends ControllerTestCase
         $view = View::getInstance($articleComment);
 
         $this->assertNotEmpty($view->editView(array('formAction' => '/')), 'Testing the editView() method');
-        $this->assertTrue(strpos($view->editView(array('formAction' => '/')),'Update Your Comment') !== false, 'Testing the editView() method');
+        $this->assertTrue(strpos($view->editView(array('formAction' => '/')), 'Update Your Comment') !== false, 'Testing the editView() method');
     }
 }
-
-?>

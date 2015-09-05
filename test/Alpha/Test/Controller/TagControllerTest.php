@@ -6,7 +6,6 @@ use Alpha\Controller\Front\FrontController;
 use Alpha\Controller\TagController;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
-use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Model\Article;
 use Alpha\Model\Tag;
@@ -14,10 +13,10 @@ use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
 
 /**
- *
- * Test cases for the TagController class
+ * Test cases for the TagController class.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -54,12 +53,11 @@ use Alpha\Model\Type\DEnumItem;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class TagControllerTest extends ControllerTestCase
 {
     /**
-     * Set up tests
+     * Set up tests.
      *
      * @since 2.0
      */
@@ -90,9 +88,10 @@ class TagControllerTest extends ControllerTestCase
     }
 
     /**
-     * Creates an article object for testing
+     * Creates an article object for testing.
      *
      * @return Alpha\Model\Article
+     *
      * @since 1.2.3
      */
     private function createArticle($name)
@@ -108,7 +107,7 @@ class TagControllerTest extends ControllerTestCase
     }
 
     /**
-     * Testing the doGET method
+     * Testing the doGET method.
      */
     public function testDoGET()
     {
@@ -127,7 +126,7 @@ class TagControllerTest extends ControllerTestCase
     }
 
     /**
-     * Testing the doPOST method
+     * Testing the doPOST method.
      */
     public function testDoPOST()
     {
@@ -176,7 +175,7 @@ class TagControllerTest extends ControllerTestCase
     }
 
     /**
-     * Testing the doDELETE method
+     * Testing the doDELETE method.
      */
     public function testDoDELETE()
     {
@@ -243,5 +242,3 @@ class TagControllerTest extends ControllerTestCase
         $this->assertTrue($notFound, 'Checking that a deleted tag was actually removed');
     }
 }
-
-?>

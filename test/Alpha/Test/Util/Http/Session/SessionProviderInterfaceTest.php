@@ -3,13 +3,12 @@
 namespace Alpha\Test\Util\Http\Session;
 
 use Alpha\Util\Http\Session\SessionProviderFactory;
-use Alpha\Util\Config\ConfigProvider;
 
 /**
- *
- * Test case for the session providers
+ * Test case for the session providers.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -46,7 +45,6 @@ use Alpha\Util\Config\ConfigProvider;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class SessionProviderInterfaceTest extends \PHPUnit_Framework_TestCase
 {
@@ -112,9 +110,7 @@ class SessionProviderInterfaceTest extends \PHPUnit_Framework_TestCase
 
         return array(
             array($arrayProvider),
-            array($PHPSessionProvider)
+            array($PHPSessionProvider),
         );
     }
 }
-
-?>

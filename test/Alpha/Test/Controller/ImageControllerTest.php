@@ -7,14 +7,13 @@ use Alpha\Controller\ImageController;
 use Alpha\Controller\Controller;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
-use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 
 /**
- *
- * Test cases for the ImageController class
+ * Test cases for the ImageController class.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -51,12 +50,11 @@ use Alpha\Util\Http\Session\SessionProviderFactory;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ImageControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Set up tests
+     * Set up tests.
      *
      * @since 2.0
      */
@@ -68,7 +66,7 @@ class ImageControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing the doGET method
+     * Testing the doGET method.
      */
     public function testDoGET()
     {
@@ -102,5 +100,3 @@ class ImageControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('image/jpeg', $response->getHeader('Content-Type'), 'Testing the doGET method with secure image and valid tokens');
     }
 }
-
-?>

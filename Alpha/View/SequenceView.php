@@ -5,15 +5,14 @@ namespace Alpha\View;
 use Alpha\Controller\Front\FrontController;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Exception\IllegalArguementException;
 use Alpha\Model\Type\String;
 use Alpha\View\Widget\Button;
 
 /**
- *
- * The rendering class for the Sequence class
+ * The rendering class for the Sequence class.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -50,23 +49,25 @@ use Alpha\View\Widget\Button;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class SequenceView extends View
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param Alpha\Model\ActiveRecord $BO
+     *
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @since 1.0
      */
     protected function __construct($BO)
@@ -80,17 +81,19 @@ class SequenceView extends View
     }
 
     /**
-     * Custom list view
+     * Custom list view.
      *
      * @param array $fields Hash array of HTML fields to pass to the template.
+     *
      * @since 1.0
      */
-    public function listView($fields=array())
+    public function listView($fields = array())
     {
         self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
 
-        if (method_exists($this, 'before_listView_callback'))
+        if (method_exists($this, 'before_listView_callback')) {
             $this->before_listView_callback();
+        }
 
         $config = ConfigProvider::getInstance();
 
@@ -100,7 +103,7 @@ class SequenceView extends View
         // work out how many columns will be in the table
         $reflection = new \ReflectionClass(get_class($this->BO));
         $properties = array_keys($reflection->getDefaultProperties());
-        $fields['colCount'] = 1+count(array_diff($properties, $this->BO->getDefaultAttributes(), $this->BO->getTransientAttributes()));
+        $fields['colCount'] = 1 + count(array_diff($properties, $this->BO->getDefaultAttributes(), $this->BO->getTransientAttributes()));
 
         // get the class attributes
         $properties = $reflection->getProperties();
@@ -117,10 +120,11 @@ class SequenceView extends View
                 if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
                     $html .= '  <th>'.$this->BO->getDataLabel($propName).'</th>';
                 }
-                if ($propName == 'OID')
+                if ($propName == 'OID') {
                     $html .= '  <th>'.$this->BO->getDataLabel($propName).'</th>';
+                }
             } else {
-                $fields['colCount'] = $fields['colCount']-1;
+                $fields['colCount'] = $fields['colCount'] - 1;
             }
         }
         $html .= '</tr><tr>';
@@ -140,18 +144,20 @@ class SequenceView extends View
 
                     if ($propClass == 'Alpha\Model\Type\Text') {
                         $text = htmlentities($this->BO->get($propName), ENT_COMPAT, 'utf-8');
-                        if(mb_strlen($text) > 70)
+                        if (mb_strlen($text) > 70) {
                             $html .= '  <td>&nbsp;'.mb_substr($text, 0, 70).'...</td>';
-                        else
+                        } else {
                             $html .= '  <td>&nbsp;'.$text.'</td>';
-                    }elseif($propClass == 'Alpha\Model\Type\DEnum') {
+                        }
+                    } elseif ($propClass == 'Alpha\Model\Type\DEnum') {
                         $html .= '  <td>&nbsp;'.$this->BO->getPropObject($propName)->getDisplayValue().'</td>';
-                    }else{
+                    } else {
                         $html .= '  <td>&nbsp;'.$this->BO->get($propName).'</td>';
                     }
                 }
-                if ($propName == 'OID')
+                if ($propName == 'OID') {
                     $html .= '  <td>&nbsp;'.$this->BO->getOID().'</td>';
+                }
             }
         }
         $html .= '</tr>';
@@ -169,25 +175,29 @@ class SequenceView extends View
 
         $html = $this->loadTemplate($this->BO, 'list', $fields);
 
-        if (method_exists($this, 'after_listView_callback'))
+        if (method_exists($this, 'after_listView_callback')) {
             $this->after_listView_callback();
+        }
 
         self::$logger->debug('<<listView');
+
         return $html;
     }
 
     /**
-     * Custom display view
+     * Custom display view.
      *
      * @param array $fields Hash array of HTML fields to pass to the template.
+     *
      * @since 1.0
      */
-    public function detailedView($fields=array())
+    public function detailedView($fields = array())
     {
         self::$logger->debug('>>detailedView(fields=['.var_export($fields, true).'])');
 
-        if (method_exists($this, 'before_detailedView_callback'))
+        if (method_exists($this, 'before_detailedView_callback')) {
             $this->before_detailedView_callback();
+        }
 
         $config = ConfigProvider::getInstance();
 
@@ -206,12 +216,12 @@ class SequenceView extends View
 
         $html = $this->loadTemplate($this->BO, 'detail', $fields);
 
-        if (method_exists($this, 'after_detailedView_callback'))
+        if (method_exists($this, 'after_detailedView_callback')) {
             $this->after_detailedView_callback();
+        }
 
         self::$logger->debug('<<detailedView');
+
         return $html;
     }
 }
-
-?>

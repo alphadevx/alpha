@@ -14,10 +14,10 @@ use Alpha\Controller\Front\FrontController;
 use Alpha\Model\Type\String;
 
 /**
- *
- * Controller used to generate secure URLs from the query strings provided
+ * Controller used to generate secure URLs from the query strings provided.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -54,20 +54,20 @@ use Alpha\Model\Type\String;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class GenSecureQueryStringController extends Controller implements ControllerInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @since 1.0
      */
@@ -87,10 +87,12 @@ class GenSecureQueryStringController extends Controller implements ControllerInt
     }
 
     /**
-     * Handle GET requests
+     * Handle GET requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @since 1.0
      */
     public function doGET($request)
@@ -109,10 +111,12 @@ class GenSecureQueryStringController extends Controller implements ControllerInt
     }
 
     /**
-     * Handle POST requests
+     * Handle POST requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @since 1.0
      */
     public function doPOST($request)
@@ -142,9 +146,10 @@ class GenSecureQueryStringController extends Controller implements ControllerInt
     }
 
     /**
-     * Renders the HTML form for generating secure URLs
+     * Renders the HTML form for generating secure URLs.
      *
      * @return string
+     *
      * @since 1.0
      */
     private function renderForm()
@@ -168,5 +173,3 @@ class GenSecureQueryStringController extends Controller implements ControllerInt
         return $html;
     }
 }
-
-?>

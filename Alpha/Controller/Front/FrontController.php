@@ -10,9 +10,7 @@ use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Request;
 use Alpha\Exception\BadRequestException;
 use Alpha\Exception\ResourceNotFoundException;
-use Alpha\Exception\ResourceNotAllowedException;
 use Alpha\Exception\SecurityException;
-use Alpha\Exception\LibraryNotInstalledException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\AlphaException;
 use Alpha\Controller\Controller;
@@ -38,10 +36,10 @@ use Alpha\Controller\InstallController;
 use Alpha\Controller\ActiveRecordController;
 
 /**
- *
- * The front controller designed to optionally handle all requests
+ * The front controller designed to optionally handle all requests.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -78,422 +76,477 @@ use Alpha\Controller\ActiveRecordController;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class FrontController
 {
-	/**
-	 * The GET query string
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	private $queryString;
-
-	/**
-	 * The name of the page controller we want to invoke
-	 *
-	 * @var string
-	 * @since 1.0
-	 */
-	private $pageController;
-
-	/**
-	 * Boolean to flag if the GET query string is encrypted or not
-	 *
-	 * @var boolean
-	 * @since 1.0
-	 */
-	private $encryptedQuery = false;
-
-	/**
-	 * An array of HTTP filters applied to each request to the front controller.  Each
-	 * member must implement FilterInterface!
-	 *
-	 * @var array
-	 * @since 1.0
-	 */
-	private $filters = array();
+    /**
+     * The GET query string.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    private $queryString;
 
     /**
-     * An associative array of URIs to callable methods to service matching requests
+     * The name of the page controller we want to invoke.
+     *
+     * @var string
+     *
+     * @since 1.0
+     */
+    private $pageController;
+
+    /**
+     * Boolean to flag if the GET query string is encrypted or not.
+     *
+     * @var bool
+     *
+     * @since 1.0
+     */
+    private $encryptedQuery = false;
+
+    /**
+     * An array of HTTP filters applied to each request to the front controller.  Each
+     * member must implement FilterInterface!
      *
      * @var array
+     *
+     * @since 1.0
+     */
+    private $filters = array();
+
+    /**
+     * An associative array of URIs to callable methods to service matching requests.
+     *
+     * @var array
+     *
      * @since 2.0
      */
     private $routes;
 
     /**
-     * The route for the current request
+     * The route for the current request.
      *
      * @var string
+     *
      * @since 2.0
      */
     private $currentRoute;
 
     /**
-     * An optional 2D hash array of default request parameter values to use when those params are left off the request
+     * An optional 2D hash array of default request parameter values to use when those params are left off the request.
+     *
      * @var array
+     *
      * @since 2.0
      */
     private $defaultParamValues;
 
-	/**
-	 * Trace logger
-	 *
-	 * @var Alpha\Util\Logging\Logger
-	 * @since 1.0
-	 */
-	private static $logger = null;
+    /**
+     * Trace logger.
+     *
+     * @var Alpha\Util\Logging\Logger
+     *
+     * @since 1.0
+     */
+    private static $logger = null;
 
-	/**
-	 * The constructor method
-	 *
-	 * @throws Alpha\Exception\BadRequestException
-	 * @since 1.0
-	 */
-	public function __construct()
-	{
-		self::$logger = new Logger('FrontController');
+    /**
+     * The constructor method.
+     *
+     * @throws Alpha\Exception\BadRequestException
+     *
+     * @since 1.0
+     */
+    public function __construct()
+    {
+        self::$logger = new Logger('FrontController');
 
-		self::$logger->debug('>>__construct()');
+        self::$logger->debug('>>__construct()');
 
-		$config = ConfigProvider::getInstance();
+        $config = ConfigProvider::getInstance();
 
-		mb_internal_encoding('UTF-8');
-		mb_http_output('UTF-8');
-		mb_http_input('UTF-8');
-		ini_set('default_charset', 'utf-8');
-		if (!mb_check_encoding())
-			throw new BadRequestException('Request character encoding does not match expected UTF-8');
+        mb_internal_encoding('UTF-8');
+        mb_http_output('UTF-8');
+        mb_http_input('UTF-8');
+        ini_set('default_charset', 'utf-8');
+        if (!mb_check_encoding()) {
+            throw new BadRequestException('Request character encoding does not match expected UTF-8');
+        }
 
-		$this->addRoute('/', function($request) {
+        $this->addRoute('/', function ($request) {
             $controller = new IndexController();
+
             return $controller->process($request);
         });
 
-        $this->addRoute('/a/{title}/{mode}', function($request) {
+        $this->addRoute('/a/{title}/{mode}', function ($request) {
             $controller = new ArticleController();
+
             return $controller->process($request);
         })->value('mode', 'read')->value('title', null);
 
-        $this->addRoute('/attach/{articleOID}/{filename}', function($request) {
+        $this->addRoute('/attach/{articleOID}/{filename}', function ($request) {
             $controller = new AttachmentController();
+
             return $controller->process($request);
         });
 
-        $this->addRoute('/cache', function($request) {
+        $this->addRoute('/cache', function ($request) {
             $controller = new CacheController();
+
             return $controller->process($request);
         });
 
-        $this->addRoute('/denum/{denumOID}', function($request) {
+        $this->addRoute('/denum/{denumOID}', function ($request) {
             $controller = new DEnumController();
+
             return $controller->process($request);
         })->value('denumOID', null);
 
-        $this->addRoute('/excel/{ActiveRecordType}/{ActiveRecordOID}', function($request) {
+        $this->addRoute('/excel/{ActiveRecordType}/{ActiveRecordOID}', function ($request) {
             $controller = new ExcelController();
+
             return $controller->process($request);
         })->value('ActiveRecordOID', null);
 
-        $this->addRoute('/feed/{ActiveRecordType}/{type}', function($request) {
+        $this->addRoute('/feed/{ActiveRecordType}/{type}', function ($request) {
             $controller = new FeedController();
+
             return $controller->process($request);
         })->value('type', 'Atom');
 
-        $this->addRoute('/gensecure', function($request) {
+        $this->addRoute('/gensecure', function ($request) {
             $controller = new GenSecureQueryStringController();
+
             return $controller->process($request);
         });
 
-        $this->addRoute('/image/{source}/{width}/{height}/{type}/{quality}/{scale}/{secure}/{var1}/{var2}', function($request) {
+        $this->addRoute('/image/{source}/{width}/{height}/{type}/{quality}/{scale}/{secure}/{var1}/{var2}', function ($request) {
             $controller = new ImageController();
+
             return $controller->process($request);
         })->value('var1', null)->value('var2', null);
 
-        $this->addRoute('/listactiverecords', function($request) {
+        $this->addRoute('/listactiverecords', function ($request) {
             $controller = new ListActiveRecordsController();
+
             return $controller->process($request);
         });
 
-        $this->addRoute('/log/{logPath}', function($request) {
+        $this->addRoute('/log/{logPath}', function ($request) {
             $controller = new LogController();
+
             return $controller->process($request);
         });
 
-        $this->addRoute('/login', function($request) {
+        $this->addRoute('/login', function ($request) {
             $controller = new LoginController();
+
             return $controller->process($request);
         });
 
-        $this->addRoute('/logout', function($request) {
+        $this->addRoute('/logout', function ($request) {
             $controller = new LogoutController();
+
             return $controller->process($request);
         });
 
-        $this->addRoute('/metric', function($request) {
+        $this->addRoute('/metric', function ($request) {
             $controller = new MetricController();
+
             return $controller->process($request);
         });
 
-        $this->addRoute('/recordselector/12m/{ActiveRecordOID}/{field}/{relatedClass}/{relatedClassField}/{relatedClassDisplayField}/{relationType}', function($request) {
+        $this->addRoute('/recordselector/12m/{ActiveRecordOID}/{field}/{relatedClass}/{relatedClassField}/{relatedClassDisplayField}/{relationType}', function ($request) {
             $controller = new RecordSelectorController();
+
             return $controller->process($request);
         })->value('relationType', 'ONE-TO-MANY');
 
-        $this->addRoute('/recordselector/m2m/{ActiveRecordOID}/{field}/{relatedClassLeft}/{relatedClassLeftDisplayField}/{relatedClassRight}/{relatedClassRightDisplayField}/{accessingClassName}/{lookupOIDs}/{relationType}', function($request) {
+        $this->addRoute('/recordselector/m2m/{ActiveRecordOID}/{field}/{relatedClassLeft}/{relatedClassLeftDisplayField}/{relatedClassRight}/{relatedClassRightDisplayField}/{accessingClassName}/{lookupOIDs}/{relationType}', function ($request) {
             $controller = new RecordSelectorController();
+
             return $controller->process($request);
         })->value('relationType', 'MANY-TO-MANY');
 
-        $this->addRoute('/search/{query}/{start}/{limit}', function($request) {
+        $this->addRoute('/search/{query}/{start}/{limit}', function ($request) {
             $controller = new SearchController();
+
             return $controller->process($request);
         })->value('start', 0)->value('limit', $config->get('app.list.page.amount'));
 
-        $this->addRoute('/sequence/{start}/{limit}', function($request) {
+        $this->addRoute('/sequence/{start}/{limit}', function ($request) {
             $controller = new SequenceController();
+
             return $controller->process($request);
         })->value('start', 0)->value('limit', $config->get('app.list.page.amount'));
 
-        $this->addRoute('/tag/{ActiveRecordType}/{ActiveRecordOID}', function($request) {
+        $this->addRoute('/tag/{ActiveRecordType}/{ActiveRecordOID}', function ($request) {
             $controller = new TagController();
+
             return $controller->process($request);
         });
 
-        $this->addRoute('/install', function($request) {
+        $this->addRoute('/install', function ($request) {
             $controller = new InstallController();
+
             return $controller->process($request);
         });
 
-        $this->addRoute('/record/{ActiveRecordType}/{ActiveRecordOID}/{view}', function($request) {
+        $this->addRoute('/record/{ActiveRecordType}/{ActiveRecordOID}/{view}', function ($request) {
             $controller = new ActiveRecordController();
+
             return $controller->process($request);
         })->value('ActiveRecordOID', null)->value('view', 'detailed');
 
-        $this->addRoute('/records/{ActiveRecordType}/{start}/{limit}', function($request) {
+        $this->addRoute('/records/{ActiveRecordType}/{start}/{limit}', function ($request) {
             $controller = new ActiveRecordController();
+
             return $controller->process($request);
         })->value('start', 0)->value('limit', $config->get('app.list.page.amount'));
 
-        $this->addRoute('/tk/{token}', function($request) {
-        	$params = self::getDecodeQueryParams($request->getParam('token'));
-        	
-        	if (isset($params['act'])) {
-        		$className = $params['act'];
+        $this->addRoute('/tk/{token}', function ($request) {
+            $params = self::getDecodeQueryParams($request->getParam('token'));
 
-        		if (class_exists($className)) {
-        			$controller = new $className;
+            if (isset($params['act'])) {
+                $className = $params['act'];
 
-        			if (isset($params['ActiveRecordType']) && $params['act'] == 'Alpha\Controller\ActiveRecordController') {
-	        			$customController = $controller->getCustomControllerName($params['ActiveRecordType']);
-			            if ($customController != null) {
-			                $controller = new $customController();
-			            }
-			        }
+                if (class_exists($className)) {
+                    $controller = new $className();
 
-        			$request->addParams($params);
-        			return $controller->process($request);
-        		}
-        	}
-        	
-        	self::$logger->warn('Bad params ['.print_r($params, true).'] provided on a /tk/ request');
-        	return new Response(404, 'Resource not found');
+                    if (isset($params['ActiveRecordType']) && $params['act'] == 'Alpha\Controller\ActiveRecordController') {
+                        $customController = $controller->getCustomControllerName($params['ActiveRecordType']);
+                        if ($customController != null) {
+                            $controller = new $customController();
+                        }
+                    }
+
+                    $request->addParams($params);
+
+                    return $controller->process($request);
+                }
+            }
+
+            self::$logger->warn('Bad params ['.print_r($params, true).'] provided on a /tk/ request');
+
+            return new Response(404, 'Resource not found');
         });
 
-        $this->addRoute('/alpha/service', function($request) {
-        	$controller = new LoginController();
-        	$controller->setUnitOfWork(array('Alpha\Controller\LoginController', 'Alpha\Controller\ListActiveRecordsController'));
-        	return $controller->process($request);
+        $this->addRoute('/alpha/service', function ($request) {
+            $controller = new LoginController();
+            $controller->setUnitOfWork(array('Alpha\Controller\LoginController', 'Alpha\Controller\ListActiveRecordsController'));
+
+            return $controller->process($request);
         });
 
-		self::$logger->debug('<<__construct');
-	}
+        self::$logger->debug('<<__construct');
+    }
 
-	/**
-	 * Sets the encryption flag
-	 *
-	 * @param boolean $encryptedQuery
-	 * @since 1.0
-	 */
-	public function setEncrypt($encryptedQuery)
-	{
-		$this->encryptedQuery = $encryptedQuery;
-	}
+    /**
+     * Sets the encryption flag.
+     *
+     * @param bool $encryptedQuery
+     *
+     * @since 1.0
+     */
+    public function setEncrypt($encryptedQuery)
+    {
+        $this->encryptedQuery = $encryptedQuery;
+    }
 
-	/**
-	 * Static method for generating an absolute, secure URL for a page controller
-	 *
-	 * @param string $params
-	 * @return string
-	 * @since 1.0
-	 */
-	public static function generateSecureURL($params)
-	{
-		$config = ConfigProvider::getInstance();
+    /**
+     * Static method for generating an absolute, secure URL for a page controller.
+     *
+     * @param string $params
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public static function generateSecureURL($params)
+    {
+        $config = ConfigProvider::getInstance();
 
-		if($config->get('app.use.mod.rewrite'))
-			return $config->get('app.url').'tk/'.FrontController::encodeQuery($params);
-		else
-			return $config->get('app.url').'?tk='.FrontController::encodeQuery($params);
-	}
+        if ($config->get('app.use.mod.rewrite')) {
+            return $config->get('app.url').'tk/'.self::encodeQuery($params);
+        } else {
+            return $config->get('app.url').'?tk='.self::encodeQuery($params);
+        }
+    }
 
-	/**
-	 * Static method for encoding a query string
-	 *
-	 * @param string $queryString
-	 * @return string
-	 * @since 1.0
-	 */
-	public static function encodeQuery($queryString)
-	{
-		$config = ConfigProvider::getInstance();
+    /**
+     * Static method for encoding a query string.
+     *
+     * @param string $queryString
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public static function encodeQuery($queryString)
+    {
+        $config = ConfigProvider::getInstance();
 
-		$return = base64_encode(SecurityUtils::encrypt($queryString));
-		// remove any characters that are likely to cause trouble on a URL
-		$return = strtr($return, '+/', '-_');
+        $return = base64_encode(SecurityUtils::encrypt($queryString));
+        // remove any characters that are likely to cause trouble on a URL
+        $return = strtr($return, '+/', '-_');
 
-		return $return;
-	}
+        return $return;
+    }
 
-	/**
-	 * Method to decode the current query string
-	 *
-	 * @throws Alpha\Exception\SecurityException
-	 * @since 1.0
-	 * @deprecated
-	 */
-	private function decodeQuery()
-	{
-		$config = ConfigProvider::getInstance();
+    /**
+     * Method to decode the current query string.
+     *
+     * @throws Alpha\Exception\SecurityException
+     *
+     * @since 1.0
+     * @deprecated
+     */
+    private function decodeQuery()
+    {
+        $config = ConfigProvider::getInstance();
 
-		$params = $this->request->getParams();
+        $params = $this->request->getParams();
 
-		if (!isset($params['token'])) {
-			throw new SecurityException('No token provided for the front controller!');
-		} else {
-			// replace any troublesome characters from the URL with the original values
-			$token = strtr($params['token'], '-_', '+/');
-			$token = base64_decode($token);
-			$this->queryString = trim(SecurityUtils::decrypt($token));
-		}
-	}
+        if (!isset($params['token'])) {
+            throw new SecurityException('No token provided for the front controller!');
+        } else {
+            // replace any troublesome characters from the URL with the original values
+            $token = strtr($params['token'], '-_', '+/');
+            $token = base64_decode($token);
+            $this->queryString = trim(SecurityUtils::decrypt($token));
+        }
+    }
 
-	/**
-	 * Static method to return the decoded GET paramters from an encrytpted tk value
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public static function decodeQueryParams($tk)
-	{
-		$config = ConfigProvider::getInstance();
+    /**
+     * Static method to return the decoded GET paramters from an encrytpted tk value.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public static function decodeQueryParams($tk)
+    {
+        $config = ConfigProvider::getInstance();
 
-		// replace any troublesome characters from the URL with the original values
-		$token = strtr($tk, '-_', '+/');
-		$token = base64_decode($token);
-		$params = trim(SecurityUtils::decrypt($token));
+        // replace any troublesome characters from the URL with the original values
+        $token = strtr($tk, '-_', '+/');
+        $token = base64_decode($token);
+        $params = trim(SecurityUtils::decrypt($token));
 
-		return $params;
-	}
+        return $params;
+    }
 
-	/**
-	 * Static method to return the decoded GET paramters from an encrytpted tk value as an array of key/value pairs.
-	 *
-	 * @return array
-	 * @since 1.0
-	 */
-	public static function getDecodeQueryParams($tk)
-	{
-		$config = ConfigProvider::getInstance();
+    /**
+     * Static method to return the decoded GET paramters from an encrytpted tk value as an array of key/value pairs.
+     *
+     * @return array
+     *
+     * @since 1.0
+     */
+    public static function getDecodeQueryParams($tk)
+    {
+        $config = ConfigProvider::getInstance();
 
-		// replace any troublesome characters from the URL with the original values
-		$token = strtr($tk, '-_', '+/');
-		$token = base64_decode($token);
-		$params = trim(SecurityUtils::decrypt($token));
+        // replace any troublesome characters from the URL with the original values
+        $token = strtr($tk, '-_', '+/');
+        $token = base64_decode($token);
+        $params = trim(SecurityUtils::decrypt($token));
 
-		$pairs = explode('&', $params);
+        $pairs = explode('&', $params);
 
-		$parameters = array();
+        $parameters = array();
 
-		foreach ($pairs as $pair) {
-			$split = explode('=', $pair);
-			$parameters[$split[0]] = $split[1];
-		}
+        foreach ($pairs as $pair) {
+            $split = explode('=', $pair);
+            $parameters[$split[0]] = $split[1];
+        }
 
-		return $parameters;
-	}
+        return $parameters;
+    }
 
-	/**
-	 * Explodes the provided string into an array based on the array of delimiters provided
-	 *
-	 * @param string $string The string to explode.
-	 * @param array $delimiters An array of delimiters.
-	 * @todo move to string utils class
-	 * @return array
-	 * @since 1.2
-	 */
-	private static function multipleExplode($string, $delimiters = array())
-	{
-		$mainDelim=$delimiters[count($delimiters)-1];
+    /**
+     * Explodes the provided string into an array based on the array of delimiters provided.
+     *
+     * @param string $string     The string to explode.
+     * @param array  $delimiters An array of delimiters.
+     *
+     * @todo move to string utils class
+     *
+     * @return array
+     *
+     * @since 1.2
+     */
+    private static function multipleExplode($string, $delimiters = array())
+    {
+        $mainDelim = $delimiters[count($delimiters) - 1];
 
-		array_pop($delimiters);
+        array_pop($delimiters);
 
-		foreach ($delimiters as $delimiter) {
-			$string = str_replace($delimiter, $mainDelim, $string);
-		}
+        foreach ($delimiters as $delimiter) {
+            $string = str_replace($delimiter, $mainDelim, $string);
+        }
 
-		$result = explode($mainDelim, $string);
+        $result = explode($mainDelim, $string);
 
-		return $result;
-	}
+        return $result;
+    }
 
-	/**
-	 * Getter for the page controller
-	 *
-	 * @return string
-	 * @since 1.0
-	 */
-	public function getPageController()
-	{
-		return $this->pageController;
-	}
+    /**
+     * Getter for the page controller.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function getPageController()
+    {
+        return $this->pageController;
+    }
 
-	/**
-	 * Add the supplied filter object to the list of filters ran on each request to the front controller
-	 *
-	 * @param Alpha\Util\Http\Filter\FilterInterface $filterObject
-	 * @throws Alpha\Exception\IllegalArguementException
-	 * @since 1.0
-	 */
-	public function registerFilter($filterObject)
-	{
-		if ($filterObject instanceof FilterInterface)
-			array_push($this->filters, $filterObject);
-		else
-			throw new IllegalArguementException('Supplied filter object is not a valid FilterInterface instance!');
-	}
+    /**
+     * Add the supplied filter object to the list of filters ran on each request to the front controller.
+     *
+     * @param Alpha\Util\Http\Filter\FilterInterface $filterObject
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     *
+     * @since 1.0
+     */
+    public function registerFilter($filterObject)
+    {
+        if ($filterObject instanceof FilterInterface) {
+            array_push($this->filters, $filterObject);
+        } else {
+            throw new IllegalArguementException('Supplied filter object is not a valid FilterInterface instance!');
+        }
+    }
 
-	/**
-	 * Returns the array of filters currently attached to this FrontController
-	 *
-	 * @return array
-	 * @since 1.0
-	 */
-	public function getFilters()
-	{
-		return $this->filters;
-	}
+    /**
+     * Returns the array of filters currently attached to this FrontController.
+     *
+     * @return array
+     *
+     * @since 1.0
+     */
+    public function getFilters()
+    {
+        return $this->filters;
+    }
 
     /**
      * Add a new route to map a URI to the callback that will service its requests,
-     * normally by invoking a controller class
+     * normally by invoking a controller class.
      *
-     * @param string $URI The URL to match, can include params within curly {} braces.
+     * @param string   $URI      The URL to match, can include params within curly {} braces.
      * @param callable $callback The method to service the matched requests (should return a Response!).
+     *
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @return Alpha\Controller\Front\FrontController
+     *
      * @since 2.0
      */
     public function addRoute($URI, $callback)
@@ -501,6 +554,7 @@ class FrontController
         if (is_callable($callback)) {
             $this->routes[$URI] = $callback;
             $this->currentRoute = $URI;
+
             return $this;
         } else {
             throw new IllegalArguementException('Callback provided for route ['.$URI.'] is not callable');
@@ -510,29 +564,36 @@ class FrontController
     /**
      * Method to allow the setting of default request param values to be used when they are left off the request URI.
      *
-     * @param string $param The param name (as defined on the route between {} braces)
-     * @param mixed $defaultValue The value to use
+     * @param string $param        The param name (as defined on the route between {} braces)
+     * @param mixed  $defaultValue The value to use
+     *
      * @return Alpha\Controller\Front\FrontController
+     *
      * @since 2.0
      */
     public function value($param, $defaultValue)
     {
         $this->defaultParamValues[$this->currentRoute][$param] = $defaultValue;
+
         return $this;
     }
 
     /**
-     * Get the defined callback in the routes array for the URI provided
+     * Get the defined callback in the routes array for the URI provided.
      *
      * @param string $URI The URI to search for.
+     *
      * @return callable
+     *
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @since 2.0
      */
     public function getRouteCallback($URI)
     {
         if (array_key_exists($URI, $this->routes)) { // direct hit due to URL containing no params
             $this->currentRoute = $URI;
+
             return $this->routes[$URI];
         } else { // we need to use a regex to match URIs with params
 
@@ -543,6 +604,7 @@ class FrontController
 
                 if (preg_match($pattern, $URI)) {
                     $this->currentRoute = $route;
+
                     return $callback;
                 }
             }
@@ -554,6 +616,7 @@ class FrontController
 
                 if (preg_match($pattern, $URI)) {
                     $this->currentRoute = $route;
+
                     return $callback;
                 }
             }
@@ -567,17 +630,20 @@ class FrontController
      * Processes the supplied request by invoking the callable defined matching the request's URI.
      *
      * @param Alpha\Util\Http\Request $request The request to process
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @throws Alpha\Exception\ResourceNotFoundException
      * @throws Alpha\Exception\ResourceNotAllowedException
      * @throws Alpha\Exception\AlphaException
+     *
      * @since 2.0
      */
     public function process($request)
     {
-    	foreach ($this->filters as $filter) {
-    		$filter->process($request);
-    	}
+        foreach ($this->filters as $filter) {
+            $filter->process($request);
+        }
 
         try {
             $callback = $this->getRouteCallback($request->getURI());
@@ -587,10 +653,10 @@ class FrontController
         }
 
         if ($request->getURI() != $this->currentRoute) {
-        	if (isset($this->defaultParamValues[$this->currentRoute])) {
-            	$request->parseParamsFromRoute($this->currentRoute, $this->defaultParamValues[$this->currentRoute]);
+            if (isset($this->defaultParamValues[$this->currentRoute])) {
+                $request->parseParamsFromRoute($this->currentRoute, $this->defaultParamValues[$this->currentRoute]);
             } else {
-            	$request->parseParamsFromRoute($this->currentRoute);
+                $request->parseParamsFromRoute($this->currentRoute);
             }
         }
 
@@ -598,6 +664,7 @@ class FrontController
             $response = call_user_func($callback, $request);
         } catch (ResourceNotFoundException $rnfe) {
             self::$logger->info('ResourceNotFoundException throw, source message ['.$rnfe->getMessage().']');
+
             return new Response(404, $rnfe->getMessage());
         }
 
@@ -609,5 +676,3 @@ class FrontController
         }
     }
 }
-
-?>

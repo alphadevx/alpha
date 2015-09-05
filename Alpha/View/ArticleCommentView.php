@@ -12,10 +12,10 @@ use Alpha\View\Widget\Button;
 use Alpha\Controller\Front\FrontController;
 
 /**
- *
- * The rendering class for the ArticleComment class
+ * The rendering class for the ArticleComment class.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -52,18 +52,19 @@ use Alpha\Controller\Front\FrontController;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class ArticleCommentView extends View
 {
     /**
-     * Method to generate the markdown HTML render of the ArticleComment content
+     * Method to generate the markdown HTML render of the ArticleComment content.
      *
      * @param array $fields hash array of HTML fields to pass to the template
+     *
      * @since 1.0
+     *
      * @return string
      */
-    public function markdownView($fields=array())
+    public function markdownView($fields = array())
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -79,19 +80,20 @@ class ArticleCommentView extends View
         $createTS = $this->BO->getCreateTS();
         $updateTS = $this->BO->getUpdateTS();
 
-        $html .= '<p>Posted by '.($author->get('URL') == ''? $author->get('displayname') : '<a href="'.$author->get('URL').'" target="new window">'.$author->get('displayname').'</a>').' at '.$createTS->getValue().'.';
+        $html .= '<p>Posted by '.($author->get('URL') == '' ? $author->get('displayname') : '<a href="'.$author->get('URL').'" target="new window">'.$author->get('displayname').'</a>').' at '.$createTS->getValue().'.';
         $html .= '&nbsp;'.$author->get('displayname').' has posted ['.$author->getCommentCount().'] comments on articles since joining.';
         $html .= '</p>';
-        if ($config->get('cms.comments.allowed') && $session->get('currentUser') != null && $session->get('currentUser')->getID() == $author->getID())
+        if ($config->get('cms.comments.allowed') && $session->get('currentUser') != null && $session->get('currentUser')->getID() == $author->getID()) {
             $html .= $this->editView($fields);
-        else
+        } else {
             $html .= $markdown->getContent();
+        }
 
         if ($createTS->getValue() != $updateTS->getValue()) {
             $updator = new Person();
             $id = $this->BO->getCreatorID();
             $updator->load($id->getValue());
-            $html .= '<p>Updated by '.($updator->get('URL') == ''? $updator->get('displayname') : '<a href="'.$updator->get('URL').'" target="new window">'.$updator->get('displayname').'</a>').' at '.$updateTS->getValue().'.</p>';
+            $html .= '<p>Updated by '.($updator->get('URL') == '' ? $updator->get('displayname') : '<a href="'.$updator->get('URL').'" target="new window">'.$updator->get('displayname').'</a>').' at '.$updateTS->getValue().'.</p>';
         }
         $html .= '</blockquote>';
 
@@ -99,13 +101,15 @@ class ArticleCommentView extends View
     }
 
     /**
-     * Renders the custom create view
+     * Renders the custom create view.
      *
      * @param array $fields hash array of HTML fields to pass to the template
+     *
      * @since 1.0
+     *
      * @return string
      */
-    public function createView($fields=array())
+    public function createView($fields = array())
     {
         $config = ConfigProvider::getInstance();
 
@@ -135,13 +139,15 @@ class ArticleCommentView extends View
     }
 
     /**
-     * Custom edit view
+     * Custom edit view.
      *
      * @param array $fields Hash array of HTML fields to pass to the template.
+     *
      * @since 1.0
+     *
      * @return string
      */
-    public function editView($fields=array())
+    public function editView($fields = array())
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -180,10 +186,10 @@ class ArticleCommentView extends View
             })
             $('#dialogDiv').dialog('open');
             return false;";
-            $temp = new Button($js, "Delete", "deleteBut");
+            $temp = new Button($js, 'Delete', 'deleteBut');
             $html .= $temp->render();
             $html .= '&nbsp;&nbsp;';
-            $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO))."'",'Back to List','cancelBut');
+            $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO))."'", 'Back to List', 'cancelBut');
             $html .= $temp->render();
             $html .= '</td></tr>';
 
@@ -212,5 +218,3 @@ class ArticleCommentView extends View
         return $html;
     }
 }
-
-?>

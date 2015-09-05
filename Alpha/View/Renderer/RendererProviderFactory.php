@@ -3,16 +3,14 @@
 namespace Alpha\View\Renderer;
 
 use Alpha\Util\Logging\Logger;
-use Alpha\Util\Config\ConfigProvider;
 use Alpha\Exception\IllegalArguementException;
-use Alpha\View\Renderer\RendererProviderInterface;
 
 /**
- *
  * A factory for creating rendering provider implementations that implement the
  * RendererProviderInterface interface.
  *
  * @since 1.2
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -49,14 +47,14 @@ use Alpha\View\Renderer\RendererProviderInterface;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class RendererProviderFactory
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.2
      */
     private static $logger = null;
@@ -67,14 +65,18 @@ class RendererProviderFactory
      *
      * @param $providerName The fully-qualified class name of the provider class, must implement Alpha\View\Renderer\RendererProviderInterface.
      * @param $BO The Alpha\Model\ActiveRecord instance to pass to the renderer provider for passing data.
+     *
      * @throws Alpha\Exception\IllegalArguementException
+     *
      * @return Alpha\View\Renderer\RendererProviderInterface
+     *
      * @since 1.2
      */
     public static function getInstance($providerName, $BO = null)
     {
-        if(self::$logger == null)
+        if (self::$logger == null) {
             self::$logger = new Logger('RendererProviderFactory');
+        }
 
         self::$logger->debug('>>getInstance(providerName=['.$providerName.'])');
 
@@ -82,7 +84,7 @@ class RendererProviderFactory
             throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
         }
 
-        $instance = new $providerName;
+        $instance = new $providerName();
         if (isset($BO)) {
             $instance->setBO($BO);
         }
@@ -92,8 +94,7 @@ class RendererProviderFactory
         }
 
         self::$logger->debug('<<getInstance: [Object '.$providerName.']');
+
         return $instance;
     }
 }
-
-?>

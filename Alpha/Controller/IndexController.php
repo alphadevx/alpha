@@ -2,10 +2,8 @@
 
 namespace Alpha\Controller;
 
-use Alpha\Controller\Front\FrontController;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\View\View;
@@ -16,6 +14,7 @@ use Alpha\Model\ActiveRecord;
  * own home page for your application.
  *
  * @since 2.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -52,25 +51,26 @@ use Alpha\Model\ActiveRecord;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class IndexController extends Controller implements ControllerInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * constructor to set up the object
+     * constructor to set up the object.
      *
      * @param string $visibility The name of the rights group that can access this controller.
+     *
      * @since 1.0
      */
-    public function __construct($visibility='Public')
+    public function __construct($visibility = 'Public')
     {
         self::$logger = new Logger('IndexController');
         self::$logger->debug('>>__construct()');
@@ -82,10 +82,12 @@ class IndexController extends Controller implements ControllerInterface
     }
 
     /**
-     * Handle GET requests
+     * Handle GET requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @since 1.0
      */
     public function doGET($request)
@@ -100,6 +102,7 @@ class IndexController extends Controller implements ControllerInterface
 
             self::$logger->warn('App not installed so re-directing to the install controller');
             self::$logger->debug('<<doGET');
+
             return $response;
         }
 
@@ -108,10 +111,9 @@ class IndexController extends Controller implements ControllerInterface
         $body = View::loadTemplateFragment('html', 'head.phtml', array('title' => 'Alpha Framework', 'description' => 'Powered by the Alpha Framework'));
         $body .= View::loadTemplateFragment('html', 'index.phtml');
         $body .= View::loadTemplateFragment('html', 'footer.phtml');
-        
+
         self::$logger->debug('<<doGET');
+
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 }
-
-?>

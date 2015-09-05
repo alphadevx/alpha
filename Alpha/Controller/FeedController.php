@@ -15,9 +15,10 @@ use Alpha\Exception\IllegalArguementException;
 use Alpha\Model\Article;
 
 /**
- * Controller for viewing news feeds
+ * Controller for viewing news feeds.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -54,68 +55,74 @@ use Alpha\Model\Article;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class FeedController extends Controller implements ControllerInterface
 {
     /**
-     * The name of the BO to render as a feed
+     * The name of the BO to render as a feed.
      *
      * @var string
+     *
      * @since 1.0
      */
     private $ActiveRecordType;
 
     /**
-     * The type of feed to render (RSS, RSS2 or Atom)
+     * The type of feed to render (RSS, RSS2 or Atom).
      *
      * @var string
+     *
      * @since 1.0
      */
     private $type;
 
     /**
-     * The title of the feed
+     * The title of the feed.
      *
      * @var string
+     *
      * @since 1.0
      */
     protected $title;
 
     /**
-     * The description of the feed
+     * The description of the feed.
      *
      * @var string
+     *
      * @since 1.0
      */
     protected $description;
 
     /**
-     * The BO to feed field mappings
+     * The BO to feed field mappings.
      *
      * @var array
+     *
      * @since 1.0
      */
     protected $fieldMappings;
 
     /**
-     * The BO field name to sort the feed by (descending), default is OID
+     * The BO field name to sort the feed by (descending), default is OID.
      *
      * @var string
+     *
      * @since 1.0
      */
     private $sortBy = 'OID';
 
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * constructor to set up the object
+     * constructor to set up the object.
      *
      * @since 1.0
      */
@@ -133,11 +140,14 @@ class FeedController extends Controller implements ControllerInterface
     }
 
     /**
-     * Handle GET requests
+     * Handle GET requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @return Alpha\Util\Http\Response
+     *
      * @since 1.0
+     *
      * @throws Alpha\Exception\ResourceNotFoundException
      */
     public function doGET($request)
@@ -164,10 +174,11 @@ class FeedController extends Controller implements ControllerInterface
             }
 
             $className = "Alpha\\Model\\$ActiveRecordType";
-            if (class_exists($className))
+            if (class_exists($className)) {
                 $this->ActiveRecordType = $className;
-            else
+            } else {
                 throw new IllegalArguementException('No ActiveRecord available to render!');
+            }
             $this->type = $type;
 
             $this->setup();
@@ -187,8 +198,9 @@ class FeedController extends Controller implements ControllerInterface
                     $feed = new Atom($className, $this->title, str_replace('&', '&amp;', $request->getURI()), $this->description);
                     $feed->setFieldMappings($this->fieldMappings[0], $this->fieldMappings[1], $this->fieldMappings[2], $this->fieldMappings[3],
                         $this->fieldMappings[4]);
-                    if ($config->get('feeds.atom.author') != '')
+                    if ($config->get('feeds.atom.author') != '') {
                         $feed->addAuthor($config->get('feeds.atom.author'));
+                    }
                     $response->setHeader('Content-Type', 'application/atom+xml');
                 break;
             }
@@ -199,18 +211,19 @@ class FeedController extends Controller implements ControllerInterface
 
             // log the request for this news feed
             $feedLog = new LogFile($config->get('app.file.store.dir').'logs/feeds.log');
-            $feedLog->writeLine(array($this->ActiveRecordType, $this->type, date("Y-m-d H:i:s"), $request->getUserAgent(), $request->getIP()));
+            $feedLog->writeLine(array($this->ActiveRecordType, $this->type, date('Y-m-d H:i:s'), $request->getUserAgent(), $request->getIP()));
         } catch (IllegalArguementException $e) {
             self::$logger->error($e->getMessage());
             throw new ResourceNotFoundException($e->getMessage());
         }
 
         self::$logger->debug('<<doGet');
+
         return $response;
     }
 
     /**
-     * setup the feed title, field mappings and description based on common BO types
+     * setup the feed title, field mappings and description based on common BO types.
      */
     protected function setup()
     {
@@ -218,7 +231,7 @@ class FeedController extends Controller implements ControllerInterface
 
         $config = ConfigProvider::getInstance();
 
-        $bo = new $this->ActiveRecordType;
+        $bo = new $this->ActiveRecordType();
 
         if ($bo instanceof Article) {
             $this->title = 'Latest articles from '.$config->get('app.title');
@@ -230,5 +243,3 @@ class FeedController extends Controller implements ControllerInterface
         self::$logger->debug('<<setup');
     }
 }
-
-?>

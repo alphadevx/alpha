@@ -3,9 +3,10 @@
 namespace Alpha\Util\Http;
 
 /**
- * A utility class for carrying out various tasks on HTTP user agent strings
+ * A utility class for carrying out various tasks on HTTP user agent strings.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -42,91 +43,91 @@ namespace Alpha\Util\Http;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class AgentUtils
 {
-	/**
-	 * An array of partial user agent strings belonging to well known web spider bots
-	 *
-	 * @var array
-	 * @since 1.0
-	 */
-	private static $bots = array(
-		'ia_archiver',
-		'Scooter/',
-		'Ask Jeeves',
-		'Baiduspider+(',
-		'bingbot/',
-		'Disqus/',
-		'Exabot/',
-		'FAST Enterprise Crawler',
-		'FAST-WebCrawler/',
-		'http://www.neomo.de/',
-		'Gigabot/',
-		'Mediapartners-Google',
-		'Google Desktop',
-		'Feedfetcher-Google',
-		'Googlebot',
-		'heise-IT-Markt-Crawler',
-		'heritrix/1.',
-		'ibm.com/cs/crawler',
-		'ICCrawler - ICjobs',
-		'ichiro/2',
-		'MJ12bot/',
-		'MetagerBot/',
-		'msnbot-NewsBlogs/',
-		'msnbot/',
-		'msnbot-media/',
-		'NG-Search/',
-		'http://lucene.apache.org/nutch/',
-		'NutchCVS/',
-		'OmniExplorer_Bot/',
-		'online link validator',
-		'psbot/0',
-		'Seekbot/',
-		'Sensis Web Crawler',
-		'SEO search Crawler/',
-		'Seoma [SEO Crawler]',
-		'SEOsearch/',
-		'Snappy/1.1 ( http://www.urltrends.com/ )',
-		'http://www.tkl.iis.u-tokyo.ac.jp/~crawler/',
-		'SynooBot/',
-		'crawleradmin.t-info@telekom.de',
-		'TurnitinBot/',
-		'voyager/1.0',
-		'W3 SiteSearch Crawler',
-		'W3C-checklink/',
-		'W3C_*Validator',
-		'http://www.WISEnutbot.com',
-		'yacybot',
-		'Yahoo-MMCrawler/',
-		'Yahoo! DE Slurp',
-		'Yahoo! Slurp',
-		'YahooSeeker/'
-		);
+    /**
+     * An array of partial user agent strings belonging to well known web spider bots.
+     *
+     * @var array
+     *
+     * @since 1.0
+     */
+    private static $bots = array(
+        'ia_archiver',
+        'Scooter/',
+        'Ask Jeeves',
+        'Baiduspider+(',
+        'bingbot/',
+        'Disqus/',
+        'Exabot/',
+        'FAST Enterprise Crawler',
+        'FAST-WebCrawler/',
+        'http://www.neomo.de/',
+        'Gigabot/',
+        'Mediapartners-Google',
+        'Google Desktop',
+        'Feedfetcher-Google',
+        'Googlebot',
+        'heise-IT-Markt-Crawler',
+        'heritrix/1.',
+        'ibm.com/cs/crawler',
+        'ICCrawler - ICjobs',
+        'ichiro/2',
+        'MJ12bot/',
+        'MetagerBot/',
+        'msnbot-NewsBlogs/',
+        'msnbot/',
+        'msnbot-media/',
+        'NG-Search/',
+        'http://lucene.apache.org/nutch/',
+        'NutchCVS/',
+        'OmniExplorer_Bot/',
+        'online link validator',
+        'psbot/0',
+        'Seekbot/',
+        'Sensis Web Crawler',
+        'SEO search Crawler/',
+        'Seoma [SEO Crawler]',
+        'SEOsearch/',
+        'Snappy/1.1 ( http://www.urltrends.com/ )',
+        'http://www.tkl.iis.u-tokyo.ac.jp/~crawler/',
+        'SynooBot/',
+        'crawleradmin.t-info@telekom.de',
+        'TurnitinBot/',
+        'voyager/1.0',
+        'W3 SiteSearch Crawler',
+        'W3C-checklink/',
+        'W3C_*Validator',
+        'http://www.WISEnutbot.com',
+        'yacybot',
+        'Yahoo-MMCrawler/',
+        'Yahoo! DE Slurp',
+        'Yahoo! Slurp',
+        'YahooSeeker/',
+        );
 
-	/**
-	 * Static method to check if the provided user agent string matches any of the known user
-	 * agent strings in the $bots array on this class.
-	 *
-	 * @param string $userAgent The user agent string that we want to check.
-	 * @return boolean
-	 * @since 1.0
-	 */
-	public static function isBot($userAgent)
-	{
-		$isBot = false;
+    /**
+     * Static method to check if the provided user agent string matches any of the known user
+     * agent strings in the $bots array on this class.
+     *
+     * @param string $userAgent The user agent string that we want to check.
+     *
+     * @return bool
+     *
+     * @since 1.0
+     */
+    public static function isBot($userAgent)
+    {
+        $isBot = false;
 
-		foreach (self::$bots as $botName) {
-			if (stristr($userAgent, $botName) == true) {
-				$isBot = true;
-				break;
-			}
-		}
+        foreach (self::$bots as $botName) {
+            if (stristr($userAgent, $botName) == true) {
+                $isBot = true;
+                break;
+            }
+        }
 
-		return $isBot;
-	}
+        return $isBot;
+    }
 }
-
-?>

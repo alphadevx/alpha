@@ -6,9 +6,10 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\File\FileUtils;
 
 /**
- * A utility class for carrying out various backup tasks
+ * A utility class for carrying out various backup tasks.
  *
  * @since 1.1
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -45,14 +46,14 @@ use Alpha\Util\File\FileUtils;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class BackupUtils
 {
     /**
-     * Backs up the attachments and logs directories to the destination backup directory
+     * Backs up the attachments and logs directories to the destination backup directory.
      *
      * @param string $backupDir
+     *
      * @since 1.1
      */
     public static function backUpAttachmentsAndLogs($backupDir)
@@ -64,19 +65,18 @@ class BackupUtils
     }
 
     /**
-     * Uses the mysqldump command line program to back-up the system database into an .sql file in the supplied target directory
+     * Uses the mysqldump command line program to back-up the system database into an .sql file in the supplied target directory.
      *
      * @param string $backupDir The directory where we will write the .sql back-up file
+     *
      * @since 1.1
      */
     public static function backUpDatabase($backupDir)
     {
         $config = ConfigProvider::getInstance();
 
-        $targetFileName = $backupDir.$config->get('db.name').'_'.date("Y-m-d").'.sql';
+        $targetFileName = $backupDir.$config->get('db.name').'_'.date('Y-m-d').'.sql';
 
         exec('mysqldump  --host="'.$config->get('db.hostname').'" --user="'.$config->get('db.username').'" --password="'.$config->get('db.password').'" --opt '.$config->get('db.name').' 2>&1 >'.$targetFileName);
     }
 }
-
-?>

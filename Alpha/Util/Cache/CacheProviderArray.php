@@ -5,11 +5,11 @@ namespace Alpha\Util\Cache;
 use Alpha\Util\Logging\Logger;
 
 /**
- *
  * An implementation of the CacheProviderInterface interface that uses an array as the
  * target store.  Only useful for unit tests.
  *
  * @since 1.2.1
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -46,14 +46,14 @@ use Alpha\Util\Logging\Logger;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class CacheProviderArray implements CacheProviderInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.2.1
      */
     private static $logger = null;
@@ -62,12 +62,13 @@ class CacheProviderArray implements CacheProviderInterface
      * The hash array containing the cached items.
      *
      * @var array
+     *
      * @since 1.2.1
      */
     public static $cacheArray = array();
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @since 1.2.1
      */
@@ -77,7 +78,7 @@ class CacheProviderArray implements CacheProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function get($key)
     {
@@ -85,16 +86,17 @@ class CacheProviderArray implements CacheProviderInterface
 
         self::$logger->debug('Getting value for key ['.$key.']');
 
-        if (array_key_exists($key, self::$cacheArray))
+        if (array_key_exists($key, self::$cacheArray)) {
             return self::$cacheArray[$key];
-        else
+        } else {
             return false;
+        }
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function set($key, $value, $expiry=0)
+    public function set($key, $value, $expiry = 0)
     {
         self::$logger->debug('Setting value for key ['.$key.']');
 
@@ -102,7 +104,7 @@ class CacheProviderArray implements CacheProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function delete($key)
     {
@@ -111,5 +113,3 @@ class CacheProviderArray implements CacheProviderInterface
         unset(self::$cacheArray[$key]);
     }
 }
-
-?>

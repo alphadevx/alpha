@@ -4,7 +4,6 @@ namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\File\FileUtils;
-use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Helper\Validator;
@@ -13,10 +12,10 @@ use Alpha\Exception\IllegalArguementException;
 use Alpha\Model\Article;
 
 /**
- *
- * Controller used to view (download) an attachment file on an Article
+ * Controller used to view (download) an attachment file on an Article.
  *
  * @since 1.0
+ *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -53,20 +52,20 @@ use Alpha\Model\Article;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
- *
  */
 class AttachmentController extends Controller implements ControllerInterface
 {
     /**
-     * Trace logger
+     * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
+     *
      * @since 1.0
      */
     private static $logger = null;
 
     /**
-     * The constructor
+     * The constructor.
      *
      * @since 1.0
      */
@@ -82,10 +81,12 @@ class AttachmentController extends Controller implements ControllerInterface
     }
 
     /**
-     * Handle GET requests
+     * Handle GET requests.
      *
      * @param Alpha\Util\Http\Request $request
+     *
      * @since 1.0
+     *
      * @throws Alpha\Exception\ResourceNotFoundException
      */
     public function doGET($request)
@@ -98,8 +99,9 @@ class AttachmentController extends Controller implements ControllerInterface
 
         try {
             if (isset($params['articleOID']) && isset($params['filename'])) {
-                if (!Validator::isInteger($params['articleOID']))
+                if (!Validator::isInteger($params['articleOID'])) {
                     throw new IllegalArguementException('The articleOID ['.$params['articleOID'].'] provided is invalid');
+                }
 
                 $article = new Article();
                 $article->setOID($params['articleOID']);
@@ -117,6 +119,7 @@ class AttachmentController extends Controller implements ControllerInterface
                     $response->setHeader('Content-Length', filesize($filePath));
 
                     self::$logger->debug('<<doGET');
+
                     return $response;
                 } else {
                     self::$logger->error('Could not access article attachment file ['.$filePath.'] as it does not exist!');
@@ -134,5 +137,3 @@ class AttachmentController extends Controller implements ControllerInterface
         self::$logger->debug('<<doGET');
     }
 }
-
-?>
