@@ -59,7 +59,7 @@ use Alpha\Model\Type\DEnumItem;
  * </pre>
  *
  */
-class DEnumController extends ListController implements ControllerInterface
+class DEnumController extends ActiveRecordController implements ControllerInterface
 {
     /**
      * Trace logger

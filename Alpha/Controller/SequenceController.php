@@ -53,7 +53,7 @@ use Alpha\View\View;
  * </pre>
  *
  */
-class SequenceController extends ListController implements ControllerInterface
+class SequenceController extends ActiveRecordController implements ControllerInterface
 {
     /**
      * Trace logger

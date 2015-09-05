@@ -25,7 +25,6 @@ use Alpha\Controller\FeedController;
 use Alpha\Controller\GenSecureQueryStringController;
 use Alpha\Controller\ImageController;
 use Alpha\Controller\ListActiveRecordsController;
-use Alpha\Controller\ListController;
 use Alpha\Controller\LogController;
 use Alpha\Controller\LoginController;
 use Alpha\Controller\LogoutController;
@@ -217,11 +216,6 @@ class FrontController
             $controller = new ListActiveRecordsController();
             return $controller->process($request);
         });
-
-        $this->addRoute('/listall/{ActiveRecordType}/{start}/{limit}', function($request) {
-            $controller = new ListController();
-            return $controller->process($request);
-        })->value('start', 1)->value('limit', $config->get('app.list.page.amount'));
 
         $this->addRoute('/log/{logPath}', function($request) {
             $controller = new LogController();

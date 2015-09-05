@@ -183,7 +183,7 @@ class ArticleCommentView extends View
             $temp = new Button($js, "Delete", "deleteBut");
             $html .= $temp->render();
             $html .= '&nbsp;&nbsp;';
-            $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ListController&ActiveRecordType='.get_class($this->BO))."'",'Back to List','cancelBut');
+            $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO))."'",'Back to List','cancelBut');
             $html .= $temp->render();
             $html .= '</td></tr>';
 

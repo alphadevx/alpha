@@ -647,9 +647,9 @@ class ActiveRecordController extends Controller implements ControllerInterface
         if ($this->startPoint > 1) {
             // handle secure URLs
             if ($this->request->getParam('token', null) != null)
-                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ListController&ActiveRecordType='.$this->activeRecordType.'&start='.($this->startPoint-$config->get('app.list.page.amount'))).'">&lt;&lt;-Previous</a></li>';
+                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\AcitveRecordController&ActiveRecordType='.$this->activeRecordType.'&start='.($this->startPoint-$config->get('app.list.page.amount'))).'">&lt;&lt;-Previous</a></li>';
             else
-                $body .= '<li><a href="/listall/'.urlencode($this->activeRecordType)."/".($this->startPoint-$config->get('app.list.page.amount')).'">&lt;&lt;-Previous</a></li>';
+                $body .= '<li><a href="/records/'.urlencode($this->activeRecordType)."/".($this->startPoint-$config->get('app.list.page.amount')).'">&lt;&lt;-Previous</a></li>';
         } elseif ($this->recordCount > $config->get('app.list.page.amount')){
             $body .= '<li class="disabled"><a href="#">&lt;&lt;-Previous</a></li>';
         }
@@ -660,9 +660,9 @@ class ActiveRecordController extends Controller implements ControllerInterface
             if ($i != ($this->startPoint-1)) {
                 // handle secure URLs
                 if ($this->request->getParam('token', null) != null)
-                    $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ListController&ActiveRecordType='.$this->activeRecordType.'&start='.($i+1)).'">'.$page.'</a></li>';
+                    $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->activeRecordType.'&start='.($i+1)).'">'.$page.'</a></li>';
                 else
-                    $body .= '<li><a href="/listall/'.urlencode($this->activeRecordType)."/".($i+1).'">'.$page.'</a></li>';
+                    $body .= '<li><a href="/records/'.urlencode($this->activeRecordType)."/".($i+1).'">'.$page.'</a></li>';
             } elseif ($this->recordCount > $config->get('app.list.page.amount')) {
                 $body .= '<li class="active"><a href="#">'.$page.'</a></li>';
             }
@@ -673,9 +673,9 @@ class ActiveRecordController extends Controller implements ControllerInterface
         if ($this->recordCount > $end) {
             // handle secure URLs
             if ($this->request->getParam('token', null) != null)
-                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ListController&ActiveRecordType='.$this->activeRecordType.'&start='.($this->startPoint+$config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a></li>';
+                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->activeRecordType.'&start='.($this->startPoint+$config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a></li>';
             else
-                $body .= '<li><a href="/listall/'.urlencode($this->activeRecordType)."/".($this->startPoint+$config->get('app.list.page.amount')).
+                $body .= '<li><a href="/records/'.urlencode($this->activeRecordType)."/".($this->startPoint+$config->get('app.list.page.amount')).
                     '">Next-&gt;&gt;</a></li>';
         } elseif ($this->recordCount > $config->get('app.list.page.amount')) {
             $body .= '<li class="disabled"><a href="#">Next-&gt;&gt;</a></li>';

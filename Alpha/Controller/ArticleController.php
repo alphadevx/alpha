@@ -261,7 +261,7 @@ class ArticleController extends Controller implements ControllerInterface
 
         // handle requests to view a list of articles
         if ($this->mode == 'read') {
-            $listController = new ListController();
+            $listController = new ActiveRecordController();
             $request->addParams(array('ActiveRecordType' => 'Alpha\Model\Article'));#
             $listController->setRequest($request);
             return $listController->doGET($request);
@@ -677,7 +677,7 @@ class ArticleController extends Controller implements ControllerInterface
 
                         $body .= '<center>';
 
-                        $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ListController&ActiveRecordType='.get_class($this->BO))."'",
+                        $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO))."'",
                             'Back to List','cancelBut');
                         $body .= $temp->render();
 
