@@ -444,7 +444,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
         // list all button
         if ($this->BO->checkTableExists()) {
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.get_class($this->BO))."'", 'List All', 'list'.stripslashes(get_class($this->BO)).'But');
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.get_class($this->BO).'&start=0&limit='.$config->get('app.list.page.amount'))."'", 'List All', 'list'.stripslashes(get_class($this->BO)).'But');
             $fields['listButton'] = $button->render();
         } else {
             $fields['listButton'] = '';
