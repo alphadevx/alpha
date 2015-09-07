@@ -73,7 +73,7 @@ class Inspector
      *
      * @since 1.0
      */
-    private $excludeSubDirectories = array('cache','lib','docs','attachments','dist');
+    private $excludeSubDirectories = array('cache','lib','docs','attachments','dist','vendor');
 
     /**
      * The Total Lines of Code (TLOC) for the project.
