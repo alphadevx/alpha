@@ -222,7 +222,7 @@ class CacheController extends Controller implements ControllerInterface
                 }
             }
 
-            return $this->doGET($params);
+            return $this->doGET($request);
         } catch (SecurityException $e) {
             $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
 
