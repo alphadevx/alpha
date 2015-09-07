@@ -173,9 +173,8 @@ class FeedController extends Controller implements ControllerInterface
                 throw new IllegalArguementException('No feed type specified to generate feed!');
             }
 
-            $className = "Alpha\\Model\\$ActiveRecordType";
-            if (class_exists($className)) {
-                $this->ActiveRecordType = $className;
+            if (class_exists($ActiveRecordType)) {
+                $this->ActiveRecordType = $ActiveRecordType;
             } else {
                 throw new IllegalArguementException('No ActiveRecord available to render!');
             }
@@ -185,17 +184,17 @@ class FeedController extends Controller implements ControllerInterface
 
             switch ($type) {
                 case 'RSS2':
-                    $feed = new RSS2($className, $this->title, str_replace('&', '&amp;', $request->getURI()), $this->description);
+                    $feed = new RSS2($this->ActiveRecordType, $this->title, str_replace('&', '&amp;', $request->getURI()), $this->description);
                     $feed->setFieldMappings($this->fieldMappings[0], $this->fieldMappings[1], $this->fieldMappings[2], $this->fieldMappings[3]);
                     $response->setHeader('Content-Type', 'application/rss+xml');
                 break;
                 case 'RSS':
-                    $feed = new RSS($className, $this->title, str_replace('&', '&amp;', $request->getURI()), $this->description);
+                    $feed = new RSS($this->ActiveRecordType, $this->title, str_replace('&', '&amp;', $request->getURI()), $this->description);
                     $feed->setFieldMappings($this->fieldMappings[0], $this->fieldMappings[1], $this->fieldMappings[2], $this->fieldMappings[3]);
                     $response->setHeader('Content-Type', 'application/rss+xml');
                 break;
                 case 'Atom':
-                    $feed = new Atom($className, $this->title, str_replace('&', '&amp;', $request->getURI()), $this->description);
+                    $feed = new Atom($this->ActiveRecordType, $this->title, str_replace('&', '&amp;', $request->getURI()), $this->description);
                     $feed->setFieldMappings($this->fieldMappings[0], $this->fieldMappings[1], $this->fieldMappings[2], $this->fieldMappings[3],
                         $this->fieldMappings[4]);
                     if ($config->get('feeds.atom.author') != '') {
