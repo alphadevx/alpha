@@ -67,7 +67,16 @@ class ActiveRecordController extends Controller implements ControllerInterface
      *
      * @since 2.0
      */
-    protected $startPoint = 1;
+    protected $start = 1;
+
+    /**
+     * The amount of records to return during pageination.
+     *
+     * @var int
+     *
+     * @since 2.0
+     */
+    protected $limit = 1;
 
     /**
      * The count of the records of this type in the database (used during pagination).
@@ -253,7 +262,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
                         $records = $record->loadAllByAttribute($this->filterField, $this->filterValue, $params['start'], $params['limit']);
                     }
 
-                    $this->BOCount = $record->getCount(array($this->filterField), array($this->filterValue));
+                    $this->recordCount = $record->getCount(array($this->filterField), array($this->filterValue));
                 } else {
                     if (isset($this->sort) && isset($this->order)) {
                         $records = $record->loadAll($params['start'], $params['limit'], $this->sort, $this->order);
@@ -261,7 +270,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
                         $records = $record->loadAll($params['start'], $params['limit']);
                     }
 
-                    $this->BOCount = $record->getCount();
+                    $this->recordCount = $record->getCount();
                 }
 
                 ActiveRecord::disconnect();
@@ -590,7 +599,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
     }
 
     /**
-     * Sets up the pagination start point.
+     * Sets up the pagination start point and limit.
      *
      * @since 2.0
      */
@@ -600,15 +609,20 @@ class ActiveRecordController extends Controller implements ControllerInterface
 
         // set the start point for the list pagination
         if ($this->request->getParam('start') != null) {
-            $this->startPoint = $this->request->getParam('start');
+            $this->start = $this->request->getParam('start');
+
+            if ($this->request->getParam('limit') != null) {
+                $this->limit = $this->request->getParam('limit');
+            } else {
+                $config = ConfigProvider::getInstance();
+                $this->limit = $config->get('app.list.page.amount');
+            }
 
             $accept = $this->request->getAccept();
 
             if ($accept == 'application/json') {
                 $body .= '[';
             }
-
-            $body .= '';
         }
 
         return $body;
@@ -654,7 +668,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
 
         $body = '';
 
-        $end = (($this->startPoint - 1) + $config->get('app.list.page.amount'));
+        $end = (($this->start - 1) + $config->get('app.list.page.amount'));
 
         if ($end > $this->recordCount) {
             $end = $this->recordCount;
@@ -668,43 +682,45 @@ class ActiveRecordController extends Controller implements ControllerInterface
             return $body;
         }
 
-        if ($this->startPoint > 1) {
+        if ($this->start > 1) {
             // handle secure URLs
             if ($this->request->getParam('token', null) != null) {
-                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\AcitveRecordController&ActiveRecordType='.$this->activeRecordType.'&start='.($this->startPoint - $config->get('app.list.page.amount'))).'">&lt;&lt;-Previous</a></li>';
+                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->request->getParam('ActiveRecordType').'&start='.($this->start - $this->limit).'&limit='.$this->limit).'">&lt;&lt;-Previous</a></li>';
             } else {
-                $body .= '<li><a href="/records/'.urlencode($this->activeRecordType).'/'.($this->startPoint - $config->get('app.list.page.amount')).'">&lt;&lt;-Previous</a></li>';
+                $body .= '<li><a href="/records/'.urlencode($this->request->getParam('ActiveRecordType')).'/'.($this->start - $this->limit).'/'.$this->limit.'">&lt;&lt;-Previous</a></li>';
             }
-        } elseif ($this->recordCount > $config->get('app.list.page.amount')) {
+        } elseif ($this->recordCount > $this->limit) {
             $body .= '<li class="disabled"><a href="#">&lt;&lt;-Previous</a></li>';
         }
 
-        $page = 1;
+        if ($this->recordCount > $this->limit) {
+            $page = 1;
 
-        for ($i = 0; $i < $this->recordCount; $i += $config->get('app.list.page.amount')) {
-            if ($i != ($this->startPoint - 1)) {
-                // handle secure URLs
-                if ($this->request->getParam('token', null) != null) {
-                    $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->activeRecordType.'&start='.($i + 1)).'">'.$page.'</a></li>';
-                } else {
-                    $body .= '<li><a href="/records/'.urlencode($this->activeRecordType).'/'.($i + 1).'">'.$page.'</a></li>';
+            for ($i = 0; $i < $this->recordCount; $i += $this->limit) {
+                if ($i != ($this->start - 1)) {
+                    // handle secure URLs
+                    if ($this->request->getParam('token', null) != null) {
+                        $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->request->getParam('ActiveRecordType').'&start='.($i + 1).'&limit='.$this->limit).'">'.$page.'</a></li>';
+                    } else {
+                        $body .= '<li><a href="/records/'.urlencode($this->request->getParam('ActiveRecordType')).'/'.($i + 1).'/'.$this->limit.'">'.$page.'</a></li>';
+                    }
+                } elseif ($this->recordCount > $this->limit) {
+                    $body .= '<li class="active"><a href="#">'.$page.'</a></li>';
                 }
-            } elseif ($this->recordCount > $config->get('app.list.page.amount')) {
-                $body .= '<li class="active"><a href="#">'.$page.'</a></li>';
-            }
 
-            ++$page;
+                ++$page;
+            }
         }
 
         if ($this->recordCount > $end) {
             // handle secure URLs
             if ($this->request->getParam('token', null) != null) {
-                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->activeRecordType.'&start='.($this->startPoint + $config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a></li>';
+                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->request->getParam('ActiveRecordType').'&start='.($this->start + $this->limit).'&limit='.$this->limit).'">Next-&gt;&gt;</a></li>';
             } else {
-                $body .= '<li><a href="/records/'.urlencode($this->activeRecordType).'/'.($this->startPoint + $config->get('app.list.page.amount')).
+                $body .= '<li><a href="/records/'.urlencode($this->request->getParam('ActiveRecordType')).'/'.($this->start + $this->limit.'/'.$this->limit).
                     '">Next-&gt;&gt;</a></li>';
             }
-        } elseif ($this->recordCount > $config->get('app.list.page.amount')) {
+        } elseif ($this->recordCount > $this->limit) {
             $body .= '<li class="disabled"><a href="#">Next-&gt;&gt;</a></li>';
         }
 
