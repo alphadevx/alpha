@@ -158,21 +158,21 @@ class FeedControllerTest extends \PHPUnit_Framework_TestCase
         $article = $this->createArticleObject('test article');
         $article->save();
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/feed/Article'));
+        $request = new Request(array('method' => 'GET', 'URI' => '/feed/'.urlencode('Alpha\Model\Article')));
 
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('application/atom+xml', $response->getHeader('Content-Type'), 'Testing the doGET method');
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/feed/Article/RSS'));
+        $request = new Request(array('method' => 'GET', 'URI' => '/feed/'.urlencode('Alpha\Model\Article').'/RSS'));
 
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('application/rss+xml', $response->getHeader('Content-Type'), 'Testing the doGET method');
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/feed/Article/RSS2'));
+        $request = new Request(array('method' => 'GET', 'URI' => '/feed/'.urlencode('Alpha\Model\Article').'/RSS2'));
 
         $response = $front->process($request);
 

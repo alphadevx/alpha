@@ -162,7 +162,7 @@ class FeedController extends Controller implements ControllerInterface
 
         try {
             if (isset($params['ActiveRecordType'])) {
-                $ActiveRecordType = $params['ActiveRecordType'];
+                $ActiveRecordType = urldecode($params['ActiveRecordType']);
             } else {
                 throw new IllegalArguementException('ActiveRecordType not specified to generate feed!');
             }
