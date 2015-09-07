@@ -126,6 +126,11 @@ class TagController extends ActiveRecordController implements ControllerInterfac
             $body .= $message;
         }
 
+        // just listing tags records, so invoke the parent
+        if (isset($params['start'])) {
+            return parent::doGET($request);
+        }
+
         // render the tag manager screen
         if (!isset($params['ActiveRecordType']) && !isset($params['ActiveRecordOID'])) {
             $body .= '<h3>Listing active record which are tagged</h3>';
