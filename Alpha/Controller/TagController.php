@@ -94,8 +94,6 @@ class TagController extends ActiveRecordController implements ControllerInterfac
         $this->setDescription('Page to edit tags.');
         $this->setKeywords('edit,tags');
 
-        $this->BO = new Tag();
-
         self::$logger->debug('<<__construct');
     }
 
@@ -119,20 +117,18 @@ class TagController extends ActiveRecordController implements ControllerInterfac
 
         $config = ConfigProvider::getInstance();
 
-        $body = View::displayPageHead($this);
-
-        $message = $this->getStatusMessage();
-        if (!empty($message)) {
-            $body .= $message;
-        }
-
-        // just listing tags records, so invoke the parent
-        if (isset($params['start'])) {
-            return parent::doGET($request);
-        }
+        $body = '';
 
         // render the tag manager screen
         if (!isset($params['ActiveRecordType']) && !isset($params['ActiveRecordOID'])) {
+
+            $body .= View::displayPageHead($this);
+
+            $message = $this->getStatusMessage();
+            if (!empty($message)) {
+                $body .= $message;
+            }
+
             $body .= '<h3>Listing active record which are tagged</h3>';
             $ActiveRecordTypes = ActiveRecord::getBOClassNames();
 
@@ -179,21 +175,30 @@ class TagController extends ActiveRecordController implements ControllerInterfac
             $body .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'"/>';
             $body .= View::renderSecurityFields();
             $body .= '</form>';
-        } else { // render screen for managing individual tags on a given active record
+        } elseif (isset($params['ActiveRecordType']) && $params['ActiveRecordType'] != 'Alpha\Model\Tag' && isset($params['ActiveRecordOID'])) {
+
+            // render screen for managing individual tags on a given active record
+
+            $body .= View::displayPageHead($this);
+
+            $message = $this->getStatusMessage();
+            if (!empty($message)) {
+                $body .= $message;
+            }
 
             $ActiveRecordType = urldecode($params['ActiveRecordType']);
             $ActiveRecordOID = $params['ActiveRecordOID'];
 
             if (class_exists($ActiveRecordType)) {
-                $this->BO = new $ActiveRecordType();
+                $record = new $ActiveRecordType();
             } else {
                 throw new IllegalArguementException('No ActiveRecord available to display tags for!');
             }
 
             try {
-                $this->BO->load($ActiveRecordOID);
+                $record->load($ActiveRecordOID);
 
-                $tags = $this->BO->getPropObject('tags')->getRelatedObjects();
+                $tags = $record->getPropObject('tags')->getRelatedObjects();
 
                 ActiveRecord::disconnect();
 
@@ -257,6 +262,8 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                 self::$logger->error($msg);
                 throw new FileNotFoundException($msg);
             }
+        } else {
+            return parent::doGET($request);
         }
 
         $body .= View::displayPageFoot($this);
@@ -283,7 +290,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
         self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
 
         $params = $request->getParams();
-
+print_r($params);
         try {
             // check the hidden security fields before accepting the form POST data
             if (!$this->checkSecurityFields()) {
@@ -314,33 +321,22 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                 ActiveRecord::disconnect();
 
                 return $this->doGET($request);
-            } else {
+            } elseif (isset($params['ActiveRecordType']) && isset($params['ActiveRecordOID'])) {
 
-                // ensure that a bo is provided
-                if (isset($params['ActiveRecordType'])) {
-                    $ActiveRecordType = urldecode($params['ActiveRecordType']);
-                } else {
-                    throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordType was not supplied!');
-                }
-
-                // ensure that a OID is provided
-                if (isset($params['ActiveRecordOID'])) {
-                    $ActiveRecordOID = $params['ActiveRecordOID'];
-                } else {
-                    throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordOID was not supplied!');
-                }
+                $ActiveRecordType = urldecode($params['ActiveRecordType']);
+                $ActiveRecordOID = $params['ActiveRecordOID'];
 
                 if (class_exists($ActiveRecordType)) {
-                    $this->BO = new $ActiveRecordType();
+                    $record = new $ActiveRecordType();
                 } else {
                     throw new IllegalArguementException('No ActiveRecord available to display tags for!');
                 }
 
                 if (isset($params['saveBut'])) {
                     try {
-                        $this->BO->load($ActiveRecordOID);
+                        $record->load($ActiveRecordOID);
 
-                        $tags = $this->BO->getPropObject('tags')->getRelatedObjects();
+                        $tags = $record->getPropObject('tags')->getRelatedObjects();
 
                         ActiveRecord::begin();
 
@@ -362,7 +358,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
 
                         ActiveRecord::commit();
 
-                        $this->setStatusMessage(View::displayUpdateMessage('Tags on '.get_class($this->BO).' '.$this->BO->getID().' saved successfully.'));
+                        $this->setStatusMessage(View::displayUpdateMessage('Tags on '.get_class($record).' '.$record->getID().' saved successfully.'));
 
                         return $this->doGET($request);
                     } catch (ValidationException $e) {
@@ -372,20 +368,22 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                          */
                         ActiveRecord::rollback();
 
-                        $this->setStatusMessage(View::displayErrorMessage('Tags on '.get_class($this->BO).' '.$this->BO->getID().' not saved due to duplicate tag values, please try again.'));
+                        $this->setStatusMessage(View::displayErrorMessage('Tags on '.get_class($record).' '.$record->getID().' not saved due to duplicate tag values, please try again.'));
 
                         return $this->doGET($request);
                     } catch (FailedSaveException $e) {
                         self::$logger->error('Unable to save the tags of id ['.$params['ActiveRecordOID'].'], error was ['.$e->getMessage().']');
                         ActiveRecord::rollback();
 
-                        $this->setStatusMessage(View::displayErrorMessage('Tags on '.get_class($this->BO).' '.$this->BO->getID().' not saved, please check the application logs.'));
+                        $this->setStatusMessage(View::displayErrorMessage('Tags on '.get_class($record).' '.$record->getID().' not saved, please check the application logs.'));
 
                         return $this->doGET($request);
                     }
 
                     ActiveRecord::disconnect();
                 }
+            } else {
+                return parent::doPOST($request);
             }
         } catch (SecurityException $e) {
             $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
@@ -441,15 +439,15 @@ class TagController extends ActiveRecordController implements ControllerInterfac
             }
 
             if (class_exists($ActiveRecordType)) {
-                $this->BO = new $ActiveRecordType();
+                $record = new $ActiveRecordType();
             } else {
                 throw new IllegalArguementException('No ActiveRecord available to display tags for!');
             }
 
             if (!empty($params['deleteOID'])) {
                 try {
-                    $this->BO = new $ActiveRecordType();
-                    $this->BO->load($ActiveRecordOID);
+                    $record = new $ActiveRecordType();
+                    $record->load($ActiveRecordOID);
 
                     $tag = new Tag();
                     $tag->load($params['deleteOID']);
@@ -463,14 +461,14 @@ class TagController extends ActiveRecordController implements ControllerInterfac
 
                     ActiveRecord::commit();
 
-                    $this->setStatusMessage(View::displayUpdateMessage('Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' deleted successfully.'));
+                    $this->setStatusMessage(View::displayUpdateMessage('Tag <em>'.$content.'</em> on '.get_class($record).' '.$record->getID().' deleted successfully.'));
 
                     return $this->doGET($request);
                 } catch (AlphaException $e) {
                     self::$logger->error('Unable to delete the tag of id ['.$params['deleteOID'].'], error was ['.$e->getMessage().']');
                     ActiveRecord::rollback();
 
-                    $this->setStatusMessage(View::displayErrorMessage('Tag <em>'.$content.'</em> on '.get_class($this->BO).' '.$this->BO->getID().' not deleted, please check the application logs.'));
+                    $this->setStatusMessage(View::displayErrorMessage('Tag <em>'.$content.'</em> on '.get_class($record).' '.$record->getID().' not deleted, please check the application logs.'));
 
                     return $this->doGET($request);
                 }
@@ -503,7 +501,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
     {
         foreach ($records as $record) {
             foreach ($record->get('taggedAttributes') as $tagged) {
-                $tags = Tag::tokenize($BO->get($tagged), get_class($record), $record->getOID());
+                $tags = Tag::tokenize($record->get($tagged), get_class($record), $record->getOID());
                 foreach ($tags as $tag) {
                     try {
                         $tag->save();
