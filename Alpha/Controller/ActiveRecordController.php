@@ -9,6 +9,7 @@ use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\Util\Helper\Validator;
 use Alpha\View\View;
+use Alpha\View\ViewState;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\ResourceNotAllowedException;
@@ -610,6 +611,9 @@ class ActiveRecordController extends Controller implements ControllerInterface
         // set the start point for the list pagination
         if ($this->request->getParam('start') != null) {
             $this->start = $this->request->getParam('start');
+
+            $viewState = ViewState::getInstance();
+            $viewState->set('selectedStart', $this->start);
 
             if ($this->request->getParam('limit') != null) {
                 $this->limit = $this->request->getParam('limit');

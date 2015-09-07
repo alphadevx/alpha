@@ -187,7 +187,9 @@ class RendererProviderHTML implements RendererProviderInterface
         $button = new Button($js, 'Delete', 'deleteBut');
         $fields['deleteButton'] = $button->render();
 
-        $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO))."'", 'Back to List', 'cancelBut');
+        $viewState = ViewState::getInstance();
+        $start = $viewState->get('selectedStart');
+        $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO).'&start='.$start.'&limit='.$config->get('app.list.page.amount'))."'", 'Back to List', 'cancelBut');
         $fields['cancelButton'] = $button->render();
 
         // buffer security fields to $formSecurityFields variable

@@ -79,6 +79,15 @@ class ViewState
     protected $renderAdminMenu = false;
 
     /**
+     * The start position of the last pagination page by the user.
+     *
+     * @var int
+     *
+     * @since 2.0
+     */
+    protected $selectedStart = 0;
+
+    /**
      * The view state object singleton.
      *
      * @var Alpha\View\ViewState
