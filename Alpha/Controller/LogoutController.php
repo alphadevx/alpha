@@ -80,7 +80,7 @@ class LogoutController extends Controller implements ControllerInterface
         $session = SessionProviderFactory::getInstance($sessionProvider);
 
         if ($session->get('currentUser') !== false) {
-            $this->setBO($session->get('currentUser'));
+            $this->setRecord($session->get('currentUser'));
         } else {
             self::$logger->warn('Logout controller called when no user is logged in');
         }

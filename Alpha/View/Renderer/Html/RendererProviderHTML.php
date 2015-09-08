@@ -592,8 +592,8 @@ class RendererProviderHTML implements RendererProviderInterface
         $html .= '</head>';
 
         try {
-            if ($controller->getBO() != null) {
-                $html .= '<body'.($controller->getBO()->get('bodyOnload') != '' ? ' onload="'.$controller->getBO()->get('bodyOnload').'"' : '').'>';
+            if ($controller->getRecord() != null) {
+                $html .= '<body'.($controller->getRecord()->get('bodyOnload') != '' ? ' onload="'.$controller->getRecord()->get('bodyOnload').'"' : '').'>';
             } else {
                 $html .= '<body>';
             }

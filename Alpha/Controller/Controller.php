@@ -92,7 +92,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    protected $BO = null;
+    protected $record = null;
 
     /**
      * Used to determine if the controller is part of a unit of work sequence
@@ -294,35 +294,35 @@ abstract class Controller
     }
 
     /**
-     * Get the BO for this controller (if any).
+     * Get the record for this controller (if any).
      *
      * @return mixed
      *
      * @since 1.0
      */
-    public function getBO()
+    public function getRecord()
     {
-        self::$logger->debug('>>getBO()');
-        self::$logger->debug('<<getBO ['.var_export($this->BO, true).']');
+        self::$logger->debug('>>getRecord()');
+        self::$logger->debug('<<getRecord ['.var_export($this->record, true).']');
 
-        return $this->BO;
+        return $this->record;
     }
 
     /**
-     * Setter for the BO for this controller.
+     * Setter for the record for this controller.
      *
-     * @param Alpha\Model\ActiveRecord $BO
+     * @param Alpha\Model\ActiveRecord $record
      *
      * @since 1.0
      */
-    public function setBO($BO)
+    public function setRecord($record)
     {
-        self::$logger->debug('>>setBO(BO=['.var_export($BO, true).'])');
-        $this->BO = $BO;
+        self::$logger->debug('>>setRecord(record=['.var_export($record, true).'])');
+        $this->record = $record;
 
-        // if the BO has tags, use these as the meta keywords for this controller
-        if ($this->BO->isTagged()) {
-            $tags = $this->BO->getPropObject('tags')->getRelatedObjects();
+        // if the record has tags, use these as the meta keywords for this controller
+        if ($this->record->isTagged()) {
+            $tags = $this->record->getPropObject('tags')->getRelatedObjects();
 
             $keywords = '';
 
@@ -335,7 +335,7 @@ abstract class Controller
             $this->setKeywords(mb_substr($keywords, 1));
         }
 
-        self::$logger->debug('<<setBO');
+        self::$logger->debug('<<setRecord');
     }
 
     /**
@@ -1083,7 +1083,7 @@ abstract class Controller
 
                     return true;
                 // the person is editing their own profile which is allowed
-                } elseif (get_class($this->BO) == 'Alpha\Model\Person' && $session->get('currentUser')->getDisplayName() == $this->BO->getDisplayName()) {
+                } elseif (get_class($this->record) == 'Alpha\Model\Person' && $session->get('currentUser')->getDisplayName() == $this->record->getDisplayName()) {
                     if (method_exists($this, 'after_checkRights_callback')) {
                         $this->after_checkRights_callback();
                     }

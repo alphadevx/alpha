@@ -105,7 +105,7 @@ class LoginController extends Controller implements ControllerInterface
 
         $this->personObject = new Person();
         $this->personView = View::getInstance($this->personObject);
-        $this->setBO($this->personObject);
+        $this->setRecord($this->personObject);
 
         // set up the title and meta details
         $this->setTitle('Login to '.$config->get('app.title'));

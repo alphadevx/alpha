@@ -603,7 +603,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         }
         $this->assertTrue($found, 'Testing the Tag::tokenize method returns a tag called "unittestarticle"');
 
-        $this->controller->setBO($this->article);
+        $this->controller->setRecord($this->article);
 
         $this->assertEquals('unittestarticle,unittestarticletagone,unittestarticletagtwo', $this->controller->getKeywords(), 'Testing that a BO attached to a controller that contains tags will have those tags mapped to the controller\'s keywords');
     }
