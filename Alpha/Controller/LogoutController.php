@@ -110,8 +110,8 @@ class LogoutController extends Controller implements ControllerInterface
 
         $config = ConfigProvider::getInstance();
 
-        if ($this->BO instanceof Person) {
-            self::$logger->debug('Logging out ['.$this->BO->get('email').'] at ['.date('Y-m-d H:i:s').']');
+        if ($this->record instanceof Person) {
+            self::$logger->debug('Logging out ['.$this->record->get('email').'] at ['.date('Y-m-d H:i:s').']');
             self::$logger->action('Logout');
         }
 

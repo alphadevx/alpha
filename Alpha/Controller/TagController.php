@@ -290,7 +290,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
         self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
 
         $params = $request->getParams();
-print_r($params);
+
         try {
             // check the hidden security fields before accepting the form POST data
             if (!$this->checkSecurityFields()) {
