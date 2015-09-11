@@ -645,7 +645,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($controller->checkIfAccessingFromSecureURL(), 'Testing that the true is returned when tk is set in global _GET array');
 
         $_GET['tk'] = null;
-        $_SERVER['REQUEST_URI'] = $config->get('app.url').'tk/8kqoeebEej0V-FN5-DOdA1HBDDieFcNWTib2yLSUNjq0B0FWzAupIA==';
+        $_SERVER['REQUEST_URI'] = $config->get('app.url').'/tk/8kqoeebEej0V-FN5-DOdA1HBDDieFcNWTib2yLSUNjq0B0FWzAupIA==';
         $request = new Request(array('method' => 'GET'));
         $controller->setRequest($request);
 

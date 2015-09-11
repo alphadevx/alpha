@@ -544,7 +544,7 @@ class Request
     {
         $config = ConfigProvider::getInstance();
 
-        return substr($config->get('app.url'), 0, strlen($config->get('app.url')) - 1).$this->getURI();
+        return $config->get('app.url').$this->getURI();
     }
 
     /**

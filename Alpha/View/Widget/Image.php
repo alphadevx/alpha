@@ -432,7 +432,7 @@ class Image
     {
         $config = ConfigProvider::getInstance();
 
-        $imgPath = str_replace($config->get('app.url'), '', $imgURL);
+        $imgPath = str_replace($config->get('app.url').'/', '', $imgURL);
 
         return $imgPath;
     }

@@ -199,66 +199,6 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
     }
 
-    public function testDoPOST()
-    {
-        $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
-
-        $front = new FrontController();
-        $controller = new ArticleController();
-
-        $article = $this->createArticleObject('test article');
-        $article->save();
-
-        $person = $this->createPersonObject('test');
-        $person->save();
-        $session->set('currentUser', $person);
-
-        $securityParams = $controller->generateSecurityFields();
-
-        $request = new Request(array('method' => 'POST', 'URI' => '/a/test-article', 'params' => array('voteBut' => true, 'userVote' => 4, 'var1' => $securityParams[0], 'var2' => $securityParams[1])));
-
-        $response = $front->process($request);
-
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
-
-        $comment = new ArticleComment();
-        $comment->set('articleOID', $article->getOID());
-        $comment->set('content', 'A test comment');
-        $params = array('createCommentBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
-        $params = array_merge($params, $comment->toArray());
-
-        $request = new Request(array('method' => 'POST', 'URI' => '/a', 'params' => $params));
-
-        $response = $front->process($request);
-
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
-
-        $comment->set('content', 'Updated comment');
-        $comment->set('version_num', 1);
-
-        $params = array('article_comment_id' => 1, 'saveBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
-        $params = array_merge($params, $comment->toArray());
-
-        $request = new Request(array('method' => 'PUT', 'URI' => '/a', 'params' => $params));
-
-        $response = $front->process($request);
-
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doPUT method');
-
-        $article = $this->createArticleObject('another test article');
-
-        $params = array('createBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
-        $params = array_merge($params, $article->toArray());
-
-        $request = new Request(array('method' => 'POST', 'URI' => '/a', 'params' => $params));
-
-        $response = $front->process($request);
-
-        $this->assertEquals(301, $response->getStatus(), 'Testing the doPOST method');
-    }
-
     public function testDoPUT()
     {
         $config = ConfigProvider::getInstance();
@@ -315,38 +255,5 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doPUT method');
         $this->assertFalse(file_exists($article->getAttachmentsLocation().'/logo.png'));
-    }
-
-    public function testDoDELETE()
-    {
-        $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
-
-        $front = new FrontController();
-        $controller = new ArticleController();
-
-        $securityParams = $controller->generateSecurityFields();
-
-        $article = $this->createArticleObject('test article');
-        $article->save();
-
-        $request = new Request(array('method' => 'GET', 'URI' => '/a/test-article'));
-
-        $response = $front->process($request);
-
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doDELETE method');
-
-        $request = new Request(array('method' => 'DELETE', 'URI' => '/a/test-article?var1='.urlencode($securityParams[0]).'&var2='.urlencode($securityParams[1])));
-
-        $response = $front->process($request);
-
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doDELETE method');
-
-        $request = new Request(array('method' => 'GET', 'URI' => '/a/not-there'));
-
-        $response = $front->process($request);
-
-        $this->assertEquals(404, $response->getStatus(), 'Testing the doDELETE method');
     }
 }

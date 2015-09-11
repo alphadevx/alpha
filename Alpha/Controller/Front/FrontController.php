@@ -181,11 +181,17 @@ class FrontController
             return $controller->process($request);
         });
 
-        $this->addRoute('/a/{title}/{mode}', function ($request) {
+        $this->addRoute('/a/{title}/{view}', function ($request) {
             $controller = new ArticleController();
 
             return $controller->process($request);
-        })->value('mode', 'read')->value('title', null);
+        })->value('title', null)->value('view', 'detailed');;
+
+        $this->addRoute('/articles/{start}/{limit}', function ($request) {
+            $controller = new ArticleController();
+
+            return $controller->process($request);
+        })->value('start', 0)->value('limit', $config->get('app.list.page.amount'));
 
         $this->addRoute('/attach/{articleOID}/{filename}', function ($request) {
             $controller = new AttachmentController();
@@ -370,7 +376,7 @@ class FrontController
         $config = ConfigProvider::getInstance();
 
         if ($config->get('app.use.mod.rewrite')) {
-            return $config->get('app.url').'tk/'.self::encodeQuery($params);
+            return $config->get('app.url').'/tk/'.self::encodeQuery($params);
         } else {
             return $config->get('app.url').'?tk='.self::encodeQuery($params);
         }

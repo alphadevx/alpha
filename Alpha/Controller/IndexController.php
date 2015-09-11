@@ -98,7 +98,7 @@ class IndexController extends Controller implements ControllerInterface
 
         if ($config->get('app.check.installed') && !ActiveRecord::isInstalled()) {
             $response = new Response(301);
-            $response->redirect($config->get('app.url').'install');
+            $response->redirect($config->get('app.url').'/install');
 
             self::$logger->warn('App not installed so re-directing to the install controller');
             self::$logger->debug('<<doGET');

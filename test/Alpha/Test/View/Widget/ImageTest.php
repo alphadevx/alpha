@@ -151,6 +151,6 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     {
         $config = ConfigProvider::getInstance();
 
-        $this->assertEquals('images/testimage.png', Image::convertImageURLToPath($config->get('app.url').'images/testimage.png'), 'testing the convertImageURLToPath method');
+        $this->assertEquals('images/testimage.png', Image::convertImageURLToPath($config->get('app.url').'/images/testimage.png'), 'testing the convertImageURLToPath method');
     }
 }

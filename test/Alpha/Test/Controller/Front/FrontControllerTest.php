@@ -171,7 +171,7 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
         $params = 'act=ViewArticleTitle&title=Test_Title';
 
         $config->set('app.use.mod.rewrite', true);
-        $this->assertEquals($config->get('app.url').'tk/LzScUG2btO7VEDFz5pvO4gvFK017l-_WSNFl1TnO5FcGUBgKXDnILQ==', FrontController::generateSecureURL($params), 'Testing the generateSecureURL() returns the correct URL with mod_rewrite style URLs enabled');
+        $this->assertEquals($config->get('app.url').'/tk/LzScUG2btO7VEDFz5pvO4gvFK017l-_WSNFl1TnO5FcGUBgKXDnILQ==', FrontController::generateSecureURL($params), 'Testing the generateSecureURL() returns the correct URL with mod_rewrite style URLs enabled');
 
         $config->set('app.use.mod.rewrite', false);
         $this->assertEquals($config->get('app.url').'?tk=LzScUG2btO7VEDFz5pvO4gvFK017l-_WSNFl1TnO5FcGUBgKXDnILQ==', FrontController::generateSecureURL($params), 'Testing the generateSecureURL() returns the correct URL with mod_rewrite style URLs disabled');

@@ -380,6 +380,12 @@ class ActiveRecordController extends Controller implements ControllerInterface
 
             self::$logger->action('Created new '.$ActiveRecordType.' instance with OID '.$record->getOID());
 
+            if (isset($params['statusMessage'])) {
+                $this->setStatusMessage(View::displayUpdateMessage($params['statusMessage']));
+            } else {
+                $this->setStatusMessage(View::displayUpdateMessage('Created a new '.$record->getFriendlyClassName().' record'));
+            }
+
             ActiveRecord::disconnect();
         } catch (SecurityException $e) {
             self::$logger->warn($e->getMessage());
@@ -397,7 +403,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
             $body = $view->detailedView();
             $response = new Response(201);
             $response->setHeader('Content-Type', 'application/json');
-            $response->setHeader('Location', $config->get('app.url').'record/'.$params['ActiveRecordType'].'/'.$record->getOID());
+            $response->setHeader('Location', $config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getOID());
             $response->setBody($body);
         } else {
             $response = new Response(301);
@@ -408,7 +414,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 if ($this->request->isSecureURI()) {
                     $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.$ActiveRecordType.'&ActiveRecordOID='.$record->getOID()));
                 } else {
-                    $response->redirect($config->get('app.url').'record/'.$params['ActiveRecordType'].'/'.$record->getOID());
+                    $response->redirect($config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getOID());
                 }
             }
         }
@@ -487,7 +493,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
             $body = $view->detailedView();
             $response = new Response(200);
             $response->setHeader('Content-Type', 'application/json');
-            $response->setHeader('Location', $config->get('app.url').'record/'.$params['ActiveRecordType'].'/'.$record->getOID());
+            $response->setHeader('Location', $config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getOID());
             $response->setBody($body);
         } else {
             $response = new Response(301);
@@ -498,7 +504,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 if ($this->request->isSecureURI()) {
                     $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.$ActiveRecordType.'&ActiveRecordOID='.$record->getOID().'&view=edit'));
                 } else {
-                    $response->redirect($config->get('app.url').'record/'.$params['ActiveRecordType'].'/'.$record->getOID().'/edit');
+                    $response->redirect($config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getOID().'/edit');
                 }
             }
         }
@@ -578,7 +584,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
                     if ($this->request->isSecureURI()) {
                         $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.$ActiveRecordType.'&start=0&limit='.$config->get('app.list.page.amount')));
                     } else {
-                        $response->redirect($config->get('app.url').'records/'.$params['ActiveRecordType']);
+                        $response->redirect($config->get('app.url').'/records/'.$params['ActiveRecordType']);
                     }
                 }
             }

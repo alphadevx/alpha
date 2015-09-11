@@ -136,7 +136,7 @@ class Markdown extends MarkdownExtra
         if (!$external) {
             $result .= ">$link_text</a>";
         } else {
-            $result .= '>'.$link_text.'<img src="'.$config->get('app.url').'alpha/images/icons/page_go.png'.'" class="externalLink"/></a>';
+            $result .= '>'.$link_text.'<img src="'.$config->get('app.url').'/images/icons/page_go.png'.'" class="externalLink"/></a>';
         }
 
         return $result;

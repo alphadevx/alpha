@@ -177,7 +177,7 @@ class RecordSelector
                             title: 'Please select',
                             message: 'Loading...',
                             onshow: function(dialogRef){
-                                dialogRef.getModalBody().load('".$config->get('app.url')."recordselector/12m/'+document.getElementById('".$fieldname."').value+'/".$this->name.'/'.urlencode($this->relationObject->getRelatedClass()).'/'.$this->relationObject->getRelatedClassField().'/'.$this->relationObject->getRelatedClassDisplayField()."');
+                                dialogRef.getModalBody().load('".$config->get('app.url')."/recordselector/12m/'+document.getElementById('".$fieldname."').value+'/".$this->name.'/'.urlencode($this->relationObject->getRelatedClass()).'/'.$this->relationObject->getRelatedClassField().'/'.$this->relationObject->getRelatedClassDisplayField()."');
                             },
                             buttons: [
                             {
@@ -217,7 +217,7 @@ class RecordSelector
                     $html .= '<p><strong>'.$this->label.':</strong>';
 
                     foreach ($objects as $tag) {
-                        $html .= ' <a href="'.$config->get('app.url').'search/'.$tag->get('content').'">'.$tag->get('content').'</a>';
+                        $html .= ' <a href="'.$config->get('app.url').'/search/'.$tag->get('content').'">'.$tag->get('content').'</a>';
                     }
 
                     $html .= '</p>';
@@ -235,7 +235,7 @@ class RecordSelector
 
                     $html .= '<div id="relation_field_'.$this->name.'" style="display:'.($expanded ? '' : 'none').';">';
 
-                    // TDOD: remove these checks
+                    // TODO: remove these checks
                     $customViewControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'view');
                     $customEditControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'edit');
 
@@ -249,7 +249,7 @@ class RecordSelector
                             $viewURL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($obj).'&ActiveRecordOID='.$obj->getOID());
                             $editURL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($obj).'&ActiveRecordOID='.$obj->getOID().'/edit');
                         } else {
-                            // TOOD: revisit all of these links once the generic CRUD controller is done
+                            // TODO: revisit all of these links once the generic CRUD controller is done
                             if (isset($customViewControllerName)) {
                                 if ($config->get('app.use.mod.rewrite')) {
                                     $viewURL = $config->get('app.url').$customViewControllerName.'/oid/'.$obj->getOID();
@@ -338,7 +338,7 @@ class RecordSelector
                             title: 'Please select',
                             message: 'Loading...',
                             onshow: function(dialogRef){
-                                dialogRef.getModalBody().load('".$config->get('app.url')."recordselector/m2m/'+document.getElementById('".$fieldname2."').value+'/".$this->name.'/'.urlencode($this->relationObject->getRelatedClass('left')).'/'.$this->relationObject->getRelatedClassDisplayField('left').'/'.urlencode($this->relationObject->getRelatedClass('right')).'/'.$this->relationObject->getRelatedClassDisplayField('right').'/'.urlencode($this->accessingClassName)."/'+document.getElementById('".$fieldname1."').value);
+                                dialogRef.getModalBody().load('".$config->get('app.url')."/recordselector/m2m/'+document.getElementById('".$fieldname2."').value+'/".$this->name.'/'.urlencode($this->relationObject->getRelatedClass('left')).'/'.$this->relationObject->getRelatedClassDisplayField('left').'/'.urlencode($this->relationObject->getRelatedClass('right')).'/'.$this->relationObject->getRelatedClassDisplayField('right').'/'.urlencode($this->accessingClassName)."/'+document.getElementById('".$fieldname1."').value);
                             },
                             buttons: [
                             {

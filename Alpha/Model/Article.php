@@ -326,9 +326,9 @@ class Article extends ActiveRecord
     {
         $config = ConfigProvider::getInstance();
 
-        $this->URL = $config->get('app.url').'a/'.str_replace(' ', $config->get('cms.url.title.separator'), $this->title->getValue());
+        $this->URL = $config->get('app.url').'/a/'.str_replace(' ', $config->get('cms.url.title.separator'), $this->title->getValue());
 
-        $this->printURL = $config->get('app.url').'a/'.str_replace(' ', $config->get('cms.url.title.separator'), $this->title->getValue()).'/print';
+        $this->printURL = $config->get('app.url').'/a/'.str_replace(' ', $config->get('cms.url.title.separator'), $this->title->getValue()).'/print';
 
         $this->setupRels();
     }
@@ -391,7 +391,7 @@ class Article extends ActiveRecord
     {
         $config = ConfigProvider::getInstance();
 
-        return $config->get('app.url').'attachments/article_'.$this->getID();
+        return $config->get('app.url').'/attachments/article_'.$this->getID();
     }
 
     /**

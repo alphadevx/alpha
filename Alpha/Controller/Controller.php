@@ -7,6 +7,7 @@ use Alpha\Model\Type\Integer;
 use Alpha\Model\ActiveRecord;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
+use Alpha\Util\Helper\Validator;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
@@ -356,7 +357,7 @@ abstract class Controller
     /**
      * Setter for the unit of work job name.
      *
-     * @param string $name
+     * @param string $name The fully-qualified controller class name, or an absolute URL.
      *
      * @since 1.0
      */
@@ -399,7 +400,7 @@ abstract class Controller
     /**
      * Gets the name of the first job in this unit of work.
      *
-     * @return string
+     * @return string The fully-qualified controller class name, or an absolute URL.
      *
      * @since 1.0
      */
@@ -414,7 +415,7 @@ abstract class Controller
     /**
      * Gets the name of the next job in this unit of work.
      *
-     * @return string
+     * @return string The fully-qualified controller class name, or an absolute URL.
      *
      * @since 1.0
      */
@@ -429,7 +430,7 @@ abstract class Controller
     /**
      * Gets the name of the previous job in this unit of work.
      *
-     * @return string
+     * @return string The fully-qualified controller class name, or an absolute URL.
      *
      * @since 1.0
      */
@@ -444,7 +445,7 @@ abstract class Controller
     /**
      * Gets the name of the last job in this unit of work.
      *
-     * @return string
+     * @return string The fully-qualified controller class name, or an absolute URL.
      *
      * @since 1.0
      */
@@ -460,7 +461,7 @@ abstract class Controller
      * Sets the name of the controller job sequence to the values in the supplied
      * array (and stores the array in the session).
      *
-     * @param array $jobs The names of the controllers in this unit of work sequence.
+     * @param array $jobs The names of the controllers in this unit of work sequence.  Will accept fully-qualified controller class name, or an absolute URL.
      *
      * @throws Alpha\Exception\IllegalArguementException
      *
@@ -483,7 +484,7 @@ abstract class Controller
 
         // validate that each controller name in the array actually exists
         foreach ($jobs as $job) {
-            if (!class_exists($job)) {
+            if (!Validator::isURL($job) && !class_exists($job)) {
                 throw new IllegalArguementException('The controller name ['.$job.'] provided in the jobs array is not defined anywhere!');
             }
         }
@@ -521,6 +522,14 @@ abstract class Controller
             if ($i == ($numOfJobs - 1)) {
                 $this->lastJob = $jobs[$i];
             }
+        }
+
+        if ($this->previousJob == null) {
+            $this->previousJob = $this->firstJob;
+        }
+
+        if ($this->nextJob == null) {
+            $this->nextJob = $this->lastJob;
         }
 
         $session->set('unitOfWork', $jobs);

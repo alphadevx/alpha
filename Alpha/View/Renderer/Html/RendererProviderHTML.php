@@ -288,7 +288,7 @@ class RendererProviderHTML implements RendererProviderInterface
             if ($this->BO->hasAttribute('URL')) {
                 $button = new Button("document.location = '".$this->BO->get('URL')."';", 'View', 'view'.$this->BO->getOID().'But');
             } else {
-                $button = new Button("document.location = '".$config->get('app.url').'record/'.urlencode(get_class($this->BO)).'/'.$this->BO->getOID()."';", 'View', 'view'.$this->BO->getOID().'But');
+                $button = new Button("document.location = '".$config->get('app.url').'/record/'.urlencode(get_class($this->BO)).'/'.$this->BO->getOID()."';", 'View', 'view'.$this->BO->getOID().'But');
             }
 
             $fields['viewButton'] = $button->render();
@@ -672,8 +672,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $config = ConfigProvider::getInstance();
 
         $html = '<html><head>';
-        $html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/lib/jquery/ui/themes/'.$config->get('app.css.theme').'/jquery.ui.all.css">';
-        $html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'alpha/css/alpha.css">';
+        $html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'/css/alpha.css">';
         $html .= '<title>'.$code.' - '.$message.'</title></head>';
         $html .= '<body>';
         $html .= self::displayErrorMessage('<strong>'.$code.':</strong> '.$message);
