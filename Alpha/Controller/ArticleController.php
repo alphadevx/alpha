@@ -305,155 +305,6 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     }
 
     /**
-     * Method to handle POST requests.
-     *
-     * @param Alpha\Util\Http\Request
-     *
-     * @return Alpha\Util\Http\Response
-     *
-     * @throws Alpha\Exception\SecurityException
-     *
-     * @since 1.0
-     *
-     * @todo handle all of this functionality with ActiveRecordController
-     */
-    /*public function doPOST($request)
-    {
-        self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
-
-        $config = ConfigProvider::getInstance();
-
-        $params = $request->getParams();
-
-        $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
-
-        $this->setMode();
-
-        if ($this->mode == 'read') {
-            try {
-                // check the hidden security fields before accepting the form POST data
-                if (!$this->checkSecurityFields()) {
-                    throw new SecurityException('This page cannot accept post data from remote servers!');
-                }
-
-                // save an article up-vote
-                // TODO: move to dedicated controller, or use generic Create::doPOST().
-                if (isset($params['voteBut']) && !$record->checkUserVoted()) {
-                    $vote = new ArticleVote();
-
-                    if (isset($params['oid'])) {
-                        $vote->set('articleOID', $params['oid']);
-                    } else {
-                        // load article by title?
-                        if (isset($params['title'])) {
-                            $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
-                        } else {
-                            throw new IllegalArguementException('Could not load the article as a title or OID was not supplied!');
-                        }
-
-                        $record = new Article();
-                        $record->loadByAttribute('title', $title);
-                        $vote->set('articleOID', $record->getOID());
-                    }
-
-                    $vote->set('personOID', $session->get('currentUser')->getID());
-                    $vote->set('score', $params['userVote']);
-
-                    try {
-                        $vote->save();
-
-                        self::$logger->action('Voted on the article ['.$record->getOID().']');
-
-                        ActiveRecord::disconnect();
-
-                        $this->setStatusMessage(View::displayUpdateMessage('Thank you for rating this article!'));
-
-                        return $this->doGET($request);
-                    } catch (FailedSaveException $e) {
-                        self::$logger->error($e->getMessage());
-                    }
-                }
-
-                // save an article comment
-                // TODO: move to dedicated controller, or use generic Create::doPOST().
-                if (isset($params['createCommentBut'])) {
-                    $comment = new ArticleComment();
-
-                    // populate the transient object from post data
-                    $comment->populateFromArray($params);
-
-                    // filter the comment before saving
-                    $comment->set('content', InputFilter::encode($comment->get('content')));
-
-                    try {
-                        $success = $comment->save();
-
-                        self::$logger->action('Commented on the article ['.$record->getOID().']');
-
-                        ActiveRecord::disconnect();
-
-                        $this->setStatusMessage(View::displayUpdateMessage('Thank you for your comment!'));
-
-                        return $this->doGET($request);
-                    } catch (FailedSaveException $e) {
-                        self::$logger->error($e->getMessage());
-                    }
-                }
-            } catch (SecurityException $e) {
-                self::$logger->warn($e->getMessage());
-                throw new ResourceNotAllowedException($e->getMessage());
-            }
-        }
-
-        try {
-            // check the hidden security fields before accepting the form POST data
-            if (!$this->checkSecurityFields()) {
-                throw new SecurityException('This page cannot accept post data from remote servers!');
-            }
-
-            $record = new Article();
-
-            // saving a new article
-            if (isset($params['createBut'])) {
-                try {
-                    $record->populateFromArray($params);
-                    $record->save();
-                } catch (AlphaException $e) {
-                    $this->setStatusMessage(View::displayErrorMessage('Error creating the new article, title already in use!'));
-                    self::$logger->warn($e->getMessage());
-                    $this->mode = 'create';
-
-                    return $this->doGET($request);
-                }
-
-                self::$logger->action('Created new Article instance with OID '.$record->getOID());
-
-                ActiveRecord::disconnect();
-
-                try {
-                    $response = new Response(301);
-                    if ($this->getNextJob() != '') {
-                        $response->redirect($this->getNextJob());
-                    } else {
-                        $response->redirect(FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&title='.$record->get('title')));
-                    }
-
-                    return $response;
-                } catch (\Exception $e) {
-                    self::$logger->error($e->getTraceAsString());
-                    $this->setStatusMessage(View::displayErrorMessage('Error creating the new article, check the log!'));
-                }
-            }
-        } catch (SecurityException $e) {
-            self::$logger->warn($e->getMessage());
-            throw new ResourceNotAllowedException($e->getMessage());
-        }
-
-        self::$logger->debug('<<doPOST');
-    }*/
-
-    /**
      * Method to handle PUT requests.
      *
      * @param Alpha\Util\Http\Request
@@ -906,7 +757,9 @@ class ArticleController extends ActiveRecordController implements ControllerInte
         $comments = $this->record->getArticleComments();
         $commentsCount = count($comments);
 
-        $fields = array('formAction' => $this->request->getURI());
+        $URL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType=Alpha\Model\ArticleComment');
+
+        $fields = array('formAction' => $URL);
 
         if ($config->get('cms.display.comments') && $commentsCount > 0) {
             $html .= '<h2>There are ['.$commentsCount.'] user comments for this article</h2>';

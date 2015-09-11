@@ -135,7 +135,6 @@ class RendererProviderHTML implements RendererProviderInterface
         $fields['formSecurityFields'] = self::renderSecurityFields();
 
         self::$logger->debug('<<createView [HTML]');
-
         return View::loadTemplate($this->BO, 'create', $fields);
     }
 

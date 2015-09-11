@@ -122,7 +122,7 @@ class ArticleCommentView extends View
         $html .= $textBox->render();
 
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('articleOID')) : 'articleOID');
-        $html .= '<input type="hidden" name="articleOID" value="'.$this->BO->get('articleOID').'"/>';
+        $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->BO->get('articleOID').'"/>';
         $html .= '<tr><td colspan="2">';
 
         $button = new Button('submit', 'Post Comment', 'createCommentBut');
@@ -131,6 +131,9 @@ class ArticleCommentView extends View
         $html .= '</td></tr>';
 
         $html .= View::renderSecurityFields();
+
+        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('statusMessage')) : 'statusMessage');
+        $html .= '<input type="hidden" name="'.$fieldname.'" value="Thank you for your comment!"/>';
 
         $html .= '</form></table>';
         $html .= '<p class="warning">Please note that any comment you post may be moderated for spam or offensive material.</p>';
