@@ -179,7 +179,7 @@ class ArticleCommentView extends View
                 $('#dialogDiv').dialog({
                 buttons: {
                     'OK': function(event, ui) {
-                        $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
+                        $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->BO->getOID()."');
                         $('#deleteForm').submit();
                     },
                     'Cancel': function(event, ui) {

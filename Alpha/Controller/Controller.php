@@ -494,6 +494,10 @@ abstract class Controller
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
         $session->delete('unitOfWork');
+        $this->firstJob = null;
+        $this->previousJob = null;
+        $this->nextJob = null;
+        $this->lastJob = null;
         $this->dirtyObjects = array();
         $this->newObjects = array();
 

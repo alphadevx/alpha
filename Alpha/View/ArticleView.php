@@ -148,7 +148,7 @@ class ArticleView extends View
                                 label: 'Okay',
                                 cssClass: 'btn btn-default btn-xs',
                                 action: function(dialogItself) {
-                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
+                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->BO->getOID()."');
                                     $('#deleteForm').submit();
                                     dialogItself.close();
                                 }

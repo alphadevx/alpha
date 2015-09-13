@@ -175,7 +175,7 @@ class RendererProviderHTML implements RendererProviderInterface
                                 label: 'Okay',
                                 cssClass: 'btn btn-default btn-xs',
                                 action: function(dialogItself) {
-                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
+                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->BO->getOID()."');
                                     $('#deleteForm').submit();
                                     dialogItself.close();
                                 }
@@ -319,7 +319,7 @@ class RendererProviderHTML implements RendererProviderInterface
                                 label: 'Okay',
                                 cssClass: 'btn btn-default btn-xs',
                                 action: function(dialogItself) {
-                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
+                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->BO->getOID()."');
                                     $('#deleteForm').submit();
                                     dialogItself.close();
                                 }
@@ -388,7 +388,7 @@ class RendererProviderHTML implements RendererProviderInterface
                                 label: 'Okay',
                                 cssClass: 'btn btn-default btn-xs',
                                 action: function(dialogItself) {
-                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$this->BO->getOID()."');
+                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->BO->getOID()."');
                                     $('#deleteForm').submit();
                                     dialogItself.close();
                                 }
@@ -693,7 +693,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $config = ConfigProvider::getInstance();
 
         $html = '<form action="'.$URI.'" method="POST" id="deleteForm" accept-charset="UTF-8">';
-        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('deleteOID')) : 'deleteOID');
+        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID');
         $html .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value=""/>';
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('_METHOD')) : '_METHOD');
         $html .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value="DELETE"/>';

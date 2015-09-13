@@ -279,6 +279,12 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 $view = View::getInstance($record, false, $accept);
 
                 $body .= View::displayPageHead($this);
+
+                $message = $this->getStatusMessage();
+                if (!empty($message)) {
+                    $body .= $message;
+                }
+
                 $body .= View::renderDeleteForm($this->request->getURI());
 
                 foreach ($records as $record) {
@@ -383,7 +389,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
             if (isset($params['statusMessage'])) {
                 $this->setStatusMessage(View::displayUpdateMessage($params['statusMessage']));
             } else {
-                $this->setStatusMessage(View::displayUpdateMessage('Created a new '.$record->getFriendlyClassName().' record'));
+                $this->setStatusMessage(View::displayUpdateMessage('Created'));
             }
 
             ActiveRecord::disconnect();
@@ -471,7 +477,11 @@ class ActiveRecordController extends Controller implements ControllerInterface
 
             self::$logger->action('Saved '.$ActiveRecordType.' instance with OID '.$record->getOID());
 
-            $this->setStatusMessage(View::displayUpdateMessage('Saved '.$ActiveRecordType.' instance with OID '.$record->getOID()));
+            if (isset($params['statusMessage'])) {
+                $this->setStatusMessage(View::displayUpdateMessage($params['statusMessage']));
+            } else {
+                $this->setStatusMessage(View::displayUpdateMessage('Saved'));
+            }
 
             ActiveRecord::disconnect();
         } catch (SecurityException $e) {
@@ -576,7 +586,11 @@ class ActiveRecordController extends Controller implements ControllerInterface
             } else {
                 $response = new Response(301);
 
-                $this->setStatusMessage(View::displayUpdateMessage('Deleted '.$ActiveRecordType.' instance with OID '.$params['ActiveRecordOID']));
+                if (isset($params['statusMessage'])) {
+                    $this->setStatusMessage(View::displayUpdateMessage($params['statusMessage']));
+                } else {
+                    $this->setStatusMessage(View::displayUpdateMessage('Deleted'));
+                }
 
                 if ($this->getNextJob() != '') {
                     $response->redirect($this->getNextJob());
@@ -596,7 +610,6 @@ class ActiveRecordController extends Controller implements ControllerInterface
             throw new ResourceNotFoundException('The item that you have requested cannot be found!');
         } catch (AlphaException $e) {
             self::$logger->error($e->getMessage());
-            $body .= View::displayErrorMessage('Error deleting the BO of OID ['.$params['ActiveRecordOID'].'], check the log!');
             ActiveRecord::rollback();
         }
 

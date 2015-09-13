@@ -473,7 +473,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     }
 
     /**
-     * Method to handle PUT requests.
+     * Method to handle DELETE requests.
      *
      * @param Alpha\Util\Http\Request
      *
@@ -481,82 +481,16 @@ class ArticleController extends ActiveRecordController implements ControllerInte
      *
      * @since 2.0
      *
-     * @todo handle all of this functionality with ActiveRecordController
      */
-    /*public function doDELETE($request)
+    public function doDELETE($request)
     {
         self::$logger->debug('>>doDELETE($request=['.var_export($request, true).'])');
 
-        $config = ConfigProvider::getInstance();
-
-        $params = $request->getParams();
-
-        try {
-            // check the hidden security fields before accepting the form DELETE data
-            if (!$this->checkSecurityFields()) {
-                throw new SecurityException('This page cannot accept post data from remote servers!');
-                self::$logger->debug('<<doPUT');
-            }
-
-            if (isset($params['title']) || isset($params['deleteOID'])) {
-                if (isset($params['deleteOID'])) {
-                    $record->load($params['deleteOID']);
-                } else {
-                    $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
-
-                    $record->loadbyAttribute('title', $title);
-                }
-
-                try {
-                    $title = $record->get('title');
-                    $record->delete();
-                    $record = null;
-                    self::$logger->action('Article '.$title.' deleted.');
-
-                    // if we are deleting a record from a single request request, just render a message
-                    if (isset($params['title'])) {
-                        $body = View::displayPageHead($this);
-                        $body .= View::displayUpdateMessage('Article '.$title.' deleted.');
-
-                        $body .= '<center>';
-
-                        $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($record))."'",
-                            'Back to List', 'cancelBut');
-                        $body .= $temp->render();
-
-                        $body .= '</center>';
-
-                        $body .= View::displayPageFoot($this);
-
-                        self::$logger->debug('<<doDELETE');
-
-                        return new Response(200, $body, array('Content-Type' => 'text/html'));
-                    }
-
-                    $this->setStatusMessage(View::displayUpdateMessage('Article '.$title.' deleted.'));
-                    self::$logger->debug('<<doDELETE');
-
-                    return $this->doGET($request);
-                } catch (AlphaException $e) {
-                    self::$logger->error($e->getTraceAsString());
-                    $response = new Response(500, json_encode(array('message' => 'Error deleting the article, check the log!')), array('Content-Type' => 'application/json'));
-
-                    self::$logger->debug('<<doDELETE');
-
-                    return $response;
-                }
-            } else {
-                $body .= View::renderErrorPage(404, 'Failed to find the requested article!');
-
-                return new Response(404, $body, array('Content-Type' => 'text/html'));
-            }
-        } catch (SecurityException $e) {
-            self::$logger->warn($e->getMessage());
-            throw new ResourceNotAllowedException($e->getMessage());
-        }
+        $this->setUnitOfWork(array());
 
         self::$logger->debug('<<doDELETE');
-    }*/
+        return parent::doDELETE($request);
+    }
 
     /**
      * Renders custom HTML header content.
