@@ -642,8 +642,12 @@ class ArticleController extends ActiveRecordController implements ControllerInte
         $params = $this->request->getParams();
 
         // this will ensure that direct requests to ActiveRecordController will be re-directed here.
-        $this->setName($config->get('app.url').$this->request->getURI());
-        $this->setUnitOfWork(array($config->get('app.url').$this->request->getURI(), $config->get('app.url').$this->request->getURI()));
+        if (isset($this->record) && !$this->record->isTransient()) {
+            $this->setName($config->get('app.url').$this->request->getURI());
+            $this->setUnitOfWork(array($config->get('app.url').$this->request->getURI(), $config->get('app.url').$this->request->getURI()));
+        } else {
+            $this->setUnitOfWork(array());
+        }
 
         if ($this->record != null) {
             if (isset($params['view']) && $params['view'] == 'detailed') {
