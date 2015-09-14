@@ -164,7 +164,7 @@ class ArticleCommentView extends View
 
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('version_num')) : 'version_num');
         $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->BO->getVersion().'"/>';
-        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('article_comment_id')) : 'article_comment_id');
+        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID');
         $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->BO->getID().'"/>';
 
         // render special buttons for admins only
