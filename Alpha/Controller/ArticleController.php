@@ -185,6 +185,11 @@ class ArticleController extends ActiveRecordController implements ControllerInte
 
             $body .= View::displayPageHead($this);
 
+            $message = $this->getStatusMessage();
+            if (!empty($message)) {
+                $body .= $message;
+            }
+
             $body .= $view->editView(array('URI' => $request->getURI()));
             $body .= View::renderDeleteForm($request->getURI());
 
@@ -321,11 +326,6 @@ class ArticleController extends ActiveRecordController implements ControllerInte
 
         $params = $request->getParams();
 
-        $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
-
-        $body = '';
-
         try {
             // check the hidden security fields before accepting the form POST data
             if (!$this->checkSecurityFields()) {
@@ -338,41 +338,10 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                 $viewState->set('markdownTextBoxRows', $params['markdownTextBoxRows']);
             }
 
-            if (isset($params['title'])) {
-                $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
+            if (isset($params['ActiveRecordOID'])) {
 
                 $record = new Article();
-                $record->loadByAttribute('title', $title);
-
-                $View = View::getInstance($record);
-
-                // set up the title and meta details
-                $this->setTitle($record->get('title').' (editing)');
-                $this->setDescription('Page to edit '.$record->get('title').'.');
-                $this->setKeywords('edit,article');
-
-                $body = View::displayPageHead($this);
-
-                // saving an article
-                if (isset($params['saveBut'])) {
-
-                    // populate the transient object from post data
-                    $record->populateFromArray($params);
-                    $record->set('title', $title);
-
-                    try {
-                        $success = $record->save();
-
-                        self::$logger->action('Article '.$record->getID().' saved');
-                        $body .= View::displayUpdateMessage('Article '.$record->getID().' saved successfully.');
-                    } catch (LockingException $e) {
-                        $record->reload();
-                        $body .= View::displayErrorMessage($e->getMessage());
-                    }
-
-                    ActiveRecord::disconnect();
-                    $body .= $View->editView(array('URI' => $request->getURI()));
-                }
+                $record->load($params['ActiveRecordOID']);
 
                 // uploading an article attachment
                 if (isset($params['uploadBut'])) {
@@ -394,16 +363,10 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                     }
 
                     if ($success) {
-                        $body .= View::displayUpdateMessage('File uploaded successfully.');
                         self::$logger->action('File '.$source.' uploaded to '.$dest);
+                        $this->setStatusMessage(View::displayUpdateMessage('File '.$source.' uploaded to '.$dest));
                     }
-
-                    $view = View::getInstance($record);
-
-                    $body .= $view->editView(array('URI' => $request->getURI()));
-                }
-
-                if (isset($params['deletefile'])) {
+                } elseif (isset($params['deletefile'])) {
                     $success = unlink($record->getAttachmentsLocation().'/'.$params['deletefile']);
 
                     if (!$success) {
@@ -411,13 +374,12 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                     }
 
                     if ($success) {
-                        $body .= View::displayUpdateMessage($params['deletefile'].' deleted successfully.');
                         self::$logger->action('File '.$record->getAttachmentsLocation().'/'.$params['deletefile'].' deleted');
+                        $this->setStatusMessage(View::displayUpdateMessage('File '.$record->getAttachmentsLocation().'/'.$params['deletefile'].' deleted'));
                     }
-
-                    $view = View::getInstance($record);
-
-                    $body .= $view->editView(array('URI' => $request->getURI()));
+                } else {
+                    self::$logger->debug('<<doPUT');
+                    return parent::doPUT($request);
                 }
             } else {
                 throw new IllegalArguementException('No valid article ID provided!');
@@ -436,14 +398,19 @@ class ArticleController extends ActiveRecordController implements ControllerInte
             self::$logger->error($e->getMessage());
         }
 
-        $body .= View::renderDeleteForm($request->getURI());
+        $response = new Response(301);
 
-        $body .= View::displayPageFoot($this);
-
-        $response = new Response(200, $body, array('Content-Type' => 'text/html'));
+        if ($this->getNextJob() != '') {
+            $response->redirect($this->getNextJob());
+        } else {
+            if ($this->request->isSecureURI()) {
+                $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.$ActiveRecordType.'&ActiveRecordOID='.$record->getOID().'&view=edit'));
+            } else {
+                $response->redirect($config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getOID().'/edit');
+            }
+        }
 
         self::$logger->debug('<<doPUT');
-
         return $response;
     }
 
