@@ -121,7 +121,7 @@ class ArticleView extends View
         $fields['formAction'] = $fields['URI'];
 
         // the form ID
-        $fields['formID'] = get_class($this->BO).'_'.$this->BO->getID();
+        $fields['formID'] = stripslashes(get_class($this->BO)).'_'.$this->BO->getID();
 
         // buffer form fields to $formFields
         $fields['formFields'] = $this->renderAllFields('edit');
@@ -238,8 +238,8 @@ class ArticleView extends View
                                         label: 'Okay',
                                         cssClass: 'btn btn-default btn-xs',
                                         action: function(dialogItself) {
-                                            $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('file_to_delete')) : 'file_to_delete')."\"]').attr('value', '".$file."');
-                                    $('#".get_class($this->BO).'_'.$this->BO->getID()."').submit();
+                                            $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('deletefile')) : 'deletefile')."\"]').attr('value', '".$file."');
+                                            $('[id=\"".stripslashes(get_class($this->BO)).'_'.$this->BO->getID()."\"]').submit();
                                             dialogItself.close();
                                         }
                                     }
@@ -266,7 +266,7 @@ class ArticleView extends View
         $temp = new Button('submit', 'Upload', 'uploadBut');
         $html .= $temp->render();
 
-        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('file_to_delete')) : 'file_to_delete');
+        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('deletefile')) : 'deletefile');
         $html .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value=""/>';
 
         $html .= '</div>';

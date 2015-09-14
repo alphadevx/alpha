@@ -338,10 +338,17 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                 $viewState->set('markdownTextBoxRows', $params['markdownTextBoxRows']);
             }
 
-            if (isset($params['ActiveRecordOID'])) {
+            if (isset($params['title']) || isset($params['ActiveRecordOID'])) {
 
                 $record = new Article();
-                $record->load($params['ActiveRecordOID']);
+
+                if (isset($params['title'])) {
+                    $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
+
+                    $record->loadByAttribute('title', $title, false, array('OID', 'version_num', 'created_ts', 'updated_ts', 'title', 'author', 'published', 'content', 'headerContent'));
+                } else {
+                    $record->load($params['ActiveRecordOID']);
+                }
 
                 // uploading an article attachment
                 if (isset($params['uploadBut'])) {
@@ -366,7 +373,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                         self::$logger->action('File '.$source.' uploaded to '.$dest);
                         $this->setStatusMessage(View::displayUpdateMessage('File '.$source.' uploaded to '.$dest));
                     }
-                } elseif (isset($params['deletefile'])) {
+                } elseif (isset($params['deletefile']) && $params['deletefile'] != '') {
                     $success = unlink($record->getAttachmentsLocation().'/'.$params['deletefile']);
 
                     if (!$success) {
@@ -404,9 +411,9 @@ class ArticleController extends ActiveRecordController implements ControllerInte
             $response->redirect($this->getNextJob());
         } else {
             if ($this->request->isSecureURI()) {
-                $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.$ActiveRecordType.'&ActiveRecordOID='.$record->getOID().'&view=edit'));
+                $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType=Alpha\Model\Article&ActiveRecordOID='.$record->getOID().'&view=edit'));
             } else {
-                $response->redirect($config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getOID().'/edit');
+                $response->redirect($config->get('app.url').'/a/'.$params['title'].'/edit');
             }
         }
 

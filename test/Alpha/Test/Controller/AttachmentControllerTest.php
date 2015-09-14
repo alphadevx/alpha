@@ -172,7 +172,8 @@ class AttachmentControllerTest extends \PHPUnit_Framework_TestCase
 
         $response = $front->process($request);
 
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doPUT method');
+        $this->assertEquals(301, $response->getStatus(), 'Testing the doGET method');
+        $this->assertTrue(strpos($response->getHeader('Location'), '/a/test-article/edit') !== false, 'Testing the doGET method');
         $this->assertTrue(file_exists($article->getAttachmentsLocation().'/logo.png'));
 
         $controller = new AttachmentController();
@@ -192,7 +193,8 @@ class AttachmentControllerTest extends \PHPUnit_Framework_TestCase
 
         $response = $front->process($request);
 
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doPUT method');
+        $this->assertEquals(301, $response->getStatus(), 'Testing the doGET method');
+        $this->assertTrue(strpos($response->getHeader('Location'), '/a/test-article/edit') !== false, 'Testing the doGET method');
         $this->assertFalse(file_exists($article->getAttachmentsLocation().'/logo.png'));
     }
 }

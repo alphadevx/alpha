@@ -119,7 +119,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $config = ConfigProvider::getInstance();
 
         // the form ID
-        $fields['formID'] = get_class($this->BO).'_'.$this->BO->getOID();
+        $fields['formID'] = stripslashes(get_class($this->BO).'_'.$this->BO->getOID());
 
         // buffer form fields to $formFields
         $fields['formFields'] = $this->renderAllFields('create');
@@ -148,7 +148,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $config = ConfigProvider::getInstance();
 
         // the form ID
-        $fields['formID'] = get_class($this->BO).'_'.$this->BO->getOID();
+        $fields['formID'] = stripslashes(get_class($this->BO).'_'.$this->BO->getOID());
 
         // buffer form fields to $formFields
         $fields['formFields'] = $this->renderAllFields('edit');
