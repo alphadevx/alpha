@@ -622,11 +622,14 @@ class Request
 
         for ($i = 0; $i < count($paramNames); ++$i) {
             $name = $paramNames[$i];
-            if (isset($paramValues[$i]) && substr($name, 0, 1) == '{' && substr($name, strlen($name) - 1, 1) == '}') {
-                $this->params[trim($name, '{}')] = $paramValues[$i];
-            }
-            if (!isset($paramValues[$i]) && isset($defaultParams[trim($name, '{}')])) {
-                $this->params[trim($name, '{}')] = $defaultParams[trim($name, '{}')];
+
+            if (!isset($this->params[trim($name, '{}')])) {
+                if (isset($paramValues[$i]) && substr($name, 0, 1) == '{' && substr($name, strlen($name) - 1, 1) == '}') {
+                    $this->params[trim($name, '{}')] = $paramValues[$i];
+                }
+                if (!isset($paramValues[$i]) && isset($defaultParams[trim($name, '{}')])) {
+                    $this->params[trim($name, '{}')] = $defaultParams[trim($name, '{}')];
+                }
             }
         }
     }
