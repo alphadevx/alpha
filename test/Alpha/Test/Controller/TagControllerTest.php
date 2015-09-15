@@ -220,13 +220,14 @@ class TagControllerTest extends ControllerTestCase
 
         $this->assertTrue($found, 'Checking that the new tag added was actually saved');
 
-        $params = array('deleteOID' => $tagOID, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = array('ActiveRecordOID' => $tagOID, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
 
         $request = new Request(array('method' => 'DELETE', 'URI' => '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getOID(), 'params' => $params));
 
         $response = $front->process($request);
 
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doDELETE method');
+        $this->assertEquals(301, $response->getStatus(), 'Testing the doDELETE method');
+        $this->assertTrue(strpos($response->getHeader('Location'), '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getOID()) !== false, 'Testing the doDELETE method');
 
         $tags = $article->getPropObject('tags')->getRelatedObjects();
 

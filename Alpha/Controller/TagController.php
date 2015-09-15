@@ -229,7 +229,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                                     label: 'Okay',
                                     cssClass: 'btn btn-default btn-xs',
                                     action: function(dialogItself) {
-                                        $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('deleteOID')) : 'deleteOID')."\"]').attr('value', '".$tag->getID()."');
+                                        $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$tag->getID()."');
                                         $('#deleteForm').submit();
                                         dialogItself.close();
                                     }
@@ -416,78 +416,15 @@ class TagController extends ActiveRecordController implements ControllerInterfac
     {
         self::$logger->debug('>>doDELETE($request=['.var_export($request, true).'])');
 
-        $params = $request->getParams();
+        $config = ConfigProvider::getInstance();
 
-        try {
-            // check the hidden security fields before accepting the form POST data
-            if (!$this->checkSecurityFields()) {
-                throw new SecurityException('This page cannot accept post data from remote servers!');
-            }
+        $this->setName($config->get('app.url').$this->request->getURI());
+        $this->setUnitOfWork(array($config->get('app.url').$this->request->getURI(), $config->get('app.url').$this->request->getURI()));
 
-            // ensure that a bo is provided
-            if (isset($params['ActiveRecordType'])) {
-                $ActiveRecordType = urldecode($params['ActiveRecordType']);
-            } else {
-                throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordType was not supplied!');
-            }
-
-            // ensure that a OID is provided
-            if (isset($params['ActiveRecordOID'])) {
-                $ActiveRecordOID = $params['ActiveRecordOID'];
-            } else {
-                throw new IllegalArguementException('Could not load the tag objects as an ActiveRecordOID was not supplied!');
-            }
-
-            if (class_exists($ActiveRecordType)) {
-                $record = new $ActiveRecordType();
-            } else {
-                throw new IllegalArguementException('No ActiveRecord available to display tags for!');
-            }
-
-            if (!empty($params['deleteOID'])) {
-                try {
-                    $record = new $ActiveRecordType();
-                    $record->load($ActiveRecordOID);
-
-                    $tag = new Tag();
-                    $tag->load($params['deleteOID']);
-                    $content = $tag->get('content');
-
-                    ActiveRecord::begin();
-
-                    $tag->delete();
-
-                    self::$logger->action('Deleted tag '.$content.' on '.$ActiveRecordType.' instance with OID '.$ActiveRecordOID);
-
-                    ActiveRecord::commit();
-
-                    $this->setStatusMessage(View::displayUpdateMessage('Tag <em>'.$content.'</em> on '.get_class($record).' '.$record->getID().' deleted successfully.'));
-
-                    return $this->doGET($request);
-                } catch (AlphaException $e) {
-                    self::$logger->error('Unable to delete the tag of id ['.$params['deleteOID'].'], error was ['.$e->getMessage().']');
-                    ActiveRecord::rollback();
-
-                    $this->setStatusMessage(View::displayErrorMessage('Tag <em>'.$content.'</em> on '.get_class($record).' '.$record->getID().' not deleted, please check the application logs.'));
-
-                    return $this->doGET($request);
-                }
-
-                ActiveRecord::disconnect();
-            }
-        } catch (SecurityException $e) {
-            $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
-
-            self::$logger->warn($e->getMessage());
-        } catch (IllegalArguementException $e) {
-            self::$logger->error($e->getMessage());
-        } catch (RecordNotFoundException $e) {
-            self::$logger->warn($e->getMessage());
-
-            $this->setStatusMessage(View::displayErrorMessage('Failed to load the requested item from the database!'));
-        }
+        $request->addParams(array('ActiveRecordType' => 'Alpha\Model\Tag'));
 
         self::$logger->debug('<<doDELETE');
+        return parent::doDELETE($request);
     }
 
     /**

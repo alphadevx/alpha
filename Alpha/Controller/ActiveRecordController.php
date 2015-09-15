@@ -535,8 +535,6 @@ class ActiveRecordController extends Controller implements ControllerInterface
      * @return Alpha\Util\Http\Response
      *
      * @since 2.0
-     *
-     * @todo implement
      */
     public function doDELETE($request)
     {
