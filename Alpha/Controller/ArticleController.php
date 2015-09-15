@@ -413,7 +413,8 @@ class ArticleController extends ActiveRecordController implements ControllerInte
             if ($this->request->isSecureURI()) {
                 $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType=Alpha\Model\Article&ActiveRecordOID='.$record->getOID().'&view=edit'));
             } else {
-                $response->redirect($config->get('app.url').'/a/'.$params['title'].'/edit');
+                $title = str_replace(' ', $config->get('cms.url.title.separator'), $record->get('title'));
+                $response->redirect($config->get('app.url').'/a/'.$title.'/edit');
             }
         }
 
