@@ -329,7 +329,7 @@ class FrontController
                         }
                     }
 
-                    $request->addParams($params);
+                    $request->setParams(array_merge($params, $request->getParams()));
 
                     return $controller->process($request);
                 }
