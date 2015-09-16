@@ -101,6 +101,7 @@ class RendererProviderJSON implements RendererProviderInterface
      */
     public function editView($fields = array())
     {
+        return '';
     }
 
     /**
@@ -136,6 +137,7 @@ class RendererProviderJSON implements RendererProviderInterface
      */
     public function adminView($fields = array())
     {
+        return '';
     }
 
     /**
@@ -143,6 +145,7 @@ class RendererProviderJSON implements RendererProviderInterface
      */
     public static function displayPageHead($controller)
     {
+        return '';
     }
 
     /**
@@ -150,6 +153,7 @@ class RendererProviderJSON implements RendererProviderInterface
      */
     public static function displayPageFoot($controller)
     {
+        return '';
     }
 
     /**
@@ -157,6 +161,13 @@ class RendererProviderJSON implements RendererProviderInterface
      */
     public static function displayUpdateMessage($message)
     {
+        self::$logger->debug('>>displayUpdateMessage(fields=['.var_export($message, true).'])');
+
+        $json = json_encode(array('message' => $message));
+
+        self::$logger->debug('<<displayUpdateMessage [JSON]');
+
+        return $json;
     }
 
     /**
@@ -164,6 +175,13 @@ class RendererProviderJSON implements RendererProviderInterface
      */
     public static function displayErrorMessage($message)
     {
+        self::$logger->debug('>>displayErrorMessage(fields=['.var_export($message, true).'])');
+
+        $json = json_encode(array('message' => $message));
+
+        self::$logger->debug('<<displayErrorMessage [JSON]');
+
+        return $json;
     }
 
     /**
@@ -171,6 +189,7 @@ class RendererProviderJSON implements RendererProviderInterface
      */
     public static function renderErrorPage($code, $message)
     {
+        return '';
     }
 
     /**
@@ -178,6 +197,7 @@ class RendererProviderJSON implements RendererProviderInterface
      */
     public static function renderDeleteForm($URI)
     {
+        return '';
     }
 
     /**
@@ -185,6 +205,7 @@ class RendererProviderJSON implements RendererProviderInterface
      */
     public static function renderSecurityFields()
     {
+        return '';
     }
 
     /**
@@ -192,6 +213,7 @@ class RendererProviderJSON implements RendererProviderInterface
      */
     public function renderIntegerField($name, $label, $mode, $value = '')
     {
+        return '';
     }
 
     /**
@@ -199,6 +221,7 @@ class RendererProviderJSON implements RendererProviderInterface
      */
     public function renderDoubleField($name, $label, $mode, $value = '')
     {
+        return '';
     }
 
     /**
@@ -213,6 +236,7 @@ class RendererProviderJSON implements RendererProviderInterface
      */
     public function renderEnumField($name, $label, $mode, $options, $value = '')
     {
+        return '';
     }
 
     /**
@@ -220,6 +244,7 @@ class RendererProviderJSON implements RendererProviderInterface
      */
     public function renderDEnumField($name, $label, $mode, $options, $value = '')
     {
+        return '';
     }
 
     /**
@@ -227,6 +252,7 @@ class RendererProviderJSON implements RendererProviderInterface
      */
     public function renderDefaultField($name, $label, $mode, $value = '')
     {
+        return '';
     }
 
     /**
@@ -234,6 +260,7 @@ class RendererProviderJSON implements RendererProviderInterface
      */
     public function renderTextField($name, $label, $mode, $value = '')
     {
+        return '';
     }
 
     /**
@@ -241,6 +268,7 @@ class RendererProviderJSON implements RendererProviderInterface
      */
     public function renderStringField($name, $label, $mode, $value = '')
     {
+        return '';
     }
 
     /**
@@ -248,6 +276,7 @@ class RendererProviderJSON implements RendererProviderInterface
      */
     public function renderRelationField($name, $label, $mode, $value = '', $expanded = false, $buttons = true)
     {
+        return '';
     }
 
     /**
@@ -255,5 +284,12 @@ class RendererProviderJSON implements RendererProviderInterface
      */
     public function renderAllFields($mode, $filterFields = array(), $readOnlyFields = array())
     {
+        self::$logger->debug('>>renderAllFields(fields=['.var_export($fields, true).'])');
+
+        $json = json_encode(array_diff($this->BO->toArray(), $filterFields));
+
+        self::$logger->debug('<<renderAllFields [JSON]');
+
+        return $json;
     }
 }
