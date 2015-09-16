@@ -53,6 +53,117 @@ The model layer of Alpha consists of an active record implementation, and a set 
 
 ### ActiveRecord
 
+An active record then uses these data types to store the attributes of an object we care about in the database. For example, here is how our _Person_ active record makes use of these complex types:
+
+	<?php
+
+	namespace Alpha\Model;
+
+	// ...
+
+	class Person extends ActiveRecord
+	{
+	    /**
+	     * The forum display name of the person.
+	     *
+	     * @var Alpha\Model\Type\String
+	     *
+	     * @since 1.0
+	     */
+	    protected $displayName;
+
+	    /**
+	     * The email address for the person.
+	     *
+	     * @var Alpha\Model\Type\String
+	     *
+	     * @since 1.0
+	     */
+	    protected $email;
+
+	    /**
+	     * The password for the person.
+	     *
+	     * @var Alpha\Model\Type\String
+	     *
+	     * @since 1.0
+	     */
+	    protected $password;
+
+	    // ...
+
+	    /**
+	     * An array of data display labels for the class properties.
+	     *
+	     * @var array
+	     *
+	     * @since 1.0
+	     */
+	    protected $dataLabels = array('OID' => 'Member ID#',
+	                                    'displayName' => 'Display Name',
+	                                    'email' => 'E-mail Address',
+	                                    'password' => 'Password',
+	                                    'state' => 'Account state',
+	                                    'URL' => 'Your site address',
+	                                    'rights' => 'Rights Group Membership',
+	                                    'actions' => 'Actions', );
+	    /**
+	     * The name of the database table for the class.
+	     *
+	     * @var string
+	     *
+	     * @since 1.0
+	     */
+	    const TABLE_NAME = 'Person';
+
+	    /**
+	     * The state of the person (account status).
+	     *
+	     * @var Aplha\Model\Type\Enum
+	     *
+	     * @since 1.0
+	     */
+	    protected $state;
+
+		// ...
+
+	    /**
+	     * Constructor for the class that populates all of the complex types with default values.
+	     *
+	     * @since 1.0
+	     */
+	    public function __construct()
+	    {
+	        // ...
+
+	        $this->displayName = new String();
+	        $this->displayName->setRule(Validator::REQUIRED_USERNAME);
+	        $this->displayName->setSize(70);
+	        $this->displayName->setHelper('Please provide a name for display on the website (only letters, numbers, and .-_ characters are allowed!).');
+
+	        $this->email = new String();
+	        $this->email->setRule(Validator::REQUIRED_EMAIL);
+	        $this->email->setSize(70);
+	        $this->email->setHelper('Please provide a valid e-mail address as your username.');
+
+	        $this->password = new String();
+	        $this->password->setSize(70);
+	        $this->password->setHelper('Please provide a password for logging in.');
+	        $this->password->isPassword(true);
+
+	        $this->state = new Enum(array('Active', 'Disabled'));
+	        $this->state->setValue('Active');
+
+	        // ...
+	    }
+
+	    // ...
+	}
+
+As you can see in the example above, each attribute of the _Alpha\Model\Person_ record is defined using a data type in the constructor, along with any additional validation rules, sizes, and helper text to display to the user if the validation rules are broken by their input.  Each attribute will then be mapped to an appropriate column and data type in the database in the _Person_ table, that will be created for you by Alpha.
+
+### ActiveRecord CRUD methods
+
 TODO
 
 Learn more
