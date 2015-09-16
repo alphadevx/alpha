@@ -25,11 +25,35 @@ The Alpha Framework is a full-stack MVC framework for PHP.  It provides the foll
  * Complete logging solution, including optional user audit trail.
  * Build-in application back-up task along with support for other, custom tasks.
 
-
 Status
 ------
 
 Note that this is the working branch for the 2.0 release, currently with **alpha** status so **not suitable for production**.  The stable 1.x release are available from here: http://www.alphaframework.org/article/Download
+
+Models
+------
+
+### Data types
+
+The model layer of Alpha consists of an active record implementation, and a set of data types.  The data types are designed to map to corresponding database types seamlessly, as well as providing validation and frontend widgets.  The following data types are included:
+
+| Type                      | Size | Validation rules                      | Description                                                                              |
+|---------------------------|------|---------------------------------------|------------------------------------------------------------------------------------------|
+| Alpha\Model\Type\Boolean  | 1    | 1/0 or true/false.                    | A boolean value.                                                                         |
+| Alpha\Model\Type\Enum     | -    | One of the items from the list.       | A fixed listed of strings to choose from, e.g. weekdays, gender etc.                     |
+| Alpha\Model\Type\DEnum    | -    | ID for one of the items from the list.| A Dynamic Enum, allows you to modify the elements in the enum as stored in the database. |
+| Alpha\Model\Type\Date     | 10   | A date in ISO YYYY-mm-dd format.      | A date value.                                                                            |
+| Alpha\Model\Type\Timestamp| 19   | A timestamp YYYY-mm-dd hh:ii:ss.      | A timestamp value.                                                                       |
+| Alpha\Model\Type\Double   | 13   | A valid double value.                 | A double value.                                                                          |
+| Alpha\Model\Type\Integer  | 11   | A valid integer value.                | An integer value.                                                                        |
+| Alpha\Model\Type\Relation | 11   | ID of the related record, or empty.   | A relation type supporting MANY-TO-ONE, ONE-TO-MANY, ONE-TO-ONE, MANY-TO-MANY types.     |
+| Alpha\Model\Type\Sequence | 255  | Sequence in format PREFIX-00000000000.| A database sequence number with a string prefix defined by the developer.                |
+| Alpha\Model\Type\String   | 255  | A small string value.                 | A string value.                                                                          |
+| Alpha\Model\Type\Text     | 65535| A large string value.                 | A string value.                                                                          |
+
+### ActiveRecord
+
+TODO
 
 Learn more
 ----------
