@@ -164,6 +164,31 @@ As you can see in the example above, each attribute of the _Alpha\Model\Person_ 
 
 ### ActiveRecord CRUD methods
 
+Once you have an active record defined and the database in place, carrying out typical CRUD operations becomes trivial:
+
+	$record = new Person();
+	$record->set('email', 'some@user.com');
+	$record->save();
+
+	$record->load(25);
+	$record->loadByAttribute('email', 'some@user.com');
+	$records = $record->loadAll(0, 25, 'created_ts'); // load the first 25 Person records sorted by created timestamp
+	$records = $record->loadAllByAttribute('state', 'Active', 0, 25, 'created_ts');
+
+	$record->delete();
+
+For a full list of the supported CRUD and table management methods, check the notes in the _Alpha/Model/ActiveRecordProviderInterface_.
+
+### Transaction and error handling
+
+TODO
+
+### Object locking and versioning
+
+TODO
+
+### History
+
 TODO
 
 Learn more
