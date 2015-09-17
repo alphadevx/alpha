@@ -3,7 +3,7 @@
 namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
-use Alpha\Util\Logging\LogFile;
+use Alpha\Util\Logging\LogProviderFile;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\Exception\IllegalArguementException;
@@ -120,7 +120,7 @@ class LogController extends Controller implements ControllerInterface
 
             $body .= View::displayPageHead($this);
 
-            $log = new LogFile($this->logPath);
+            $log = new LogProviderFile($this->logPath);
             if (preg_match('/alpha.*/', basename($this->logPath))) {
                 $body .= $log->renderLog(array('Date/time', 'Level', 'Class', 'Message', 'Client', 'IP', 'Server hostname'));
             }

@@ -4,7 +4,7 @@ namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Logging\KPI;
-use Alpha\Util\Logging\LogFile;
+use Alpha\Util\Logging\LogProviderFile;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
@@ -148,7 +148,7 @@ class SearchController extends Controller implements ControllerInterface
             $body .= View::displayPageHead($this);
 
             // log the user's search query in a log file
-            $log = new LogFile($config->get('app.file.store.dir').'logs/search.log');
+            $log = new LogProviderFile($config->get('app.file.store.dir').'logs/search.log');
             $log->writeLine(array($params['query'], date('Y-m-d H:i:s'), $request->getUserAgent(), $request->getIP()));
 
             $KPI->logStep('log search query');

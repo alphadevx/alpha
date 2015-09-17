@@ -66,7 +66,7 @@ class BackupTask implements TaskInterface
         $config = ConfigProvider::getInstance();
 
         self::$logger = new Logger('BackupTask');
-        self::$logger->setLogFile($config->get('app.file.store.dir').'logs/tasks.log');
+        self::$logger->setLogProviderFile($config->get('app.file.store.dir').'logs/tasks.log');
 
         if (!file_exists($config->get('backup.dir'))) {
             mkdir($config->get('backup.dir'));

@@ -169,7 +169,7 @@ class KPI
 
         $this->duration = $this->endTime - $this->startTime;
 
-        $logfile = new LogFile($config->get('app.file.store.dir').'logs/kpi-'.$this->name->getValue().'.csv');
+        $logfile = new LogProviderFile($config->get('app.file.store.dir').'logs/kpi-'.$this->name->getValue().'.csv');
 
         $logfile->setMaxSize($config->get('app.log.file.max.size'));
 
@@ -190,7 +190,7 @@ class KPI
 
         $this->duration = $this->endTime - $this->startTime;
 
-        $logfile = new LogFile($config->get('app.file.store.dir').'logs/kpi-'.$this->name->getValue().'.csv');
+        $logfile = new LogProviderFile($config->get('app.file.store.dir').'logs/kpi-'.$this->name->getValue().'.csv');
 
         $logfile->setMaxSize($config->get('app.log.file.max.size'));
 

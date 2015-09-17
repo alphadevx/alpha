@@ -3,7 +3,7 @@
 namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
-use Alpha\Util\Logging\LogFile;
+use Alpha\Util\Logging\LogProviderFile;
 use Alpha\Util\Feed\RSS2;
 use Alpha\Util\Feed\RSS;
 use Alpha\Util\Feed\Atom;
@@ -209,7 +209,7 @@ class FeedController extends Controller implements ControllerInterface
             $response->setBody($feed->render());
 
             // log the request for this news feed
-            $feedLog = new LogFile($config->get('app.file.store.dir').'logs/feeds.log');
+            $feedLog = new LogProviderFile($config->get('app.file.store.dir').'logs/feeds.log');
             $feedLog->writeLine(array($this->ActiveRecordType, $this->type, date('Y-m-d H:i:s'), $request->getUserAgent(), $request->getIP()));
         } catch (IllegalArguementException $e) {
             self::$logger->error($e->getMessage());

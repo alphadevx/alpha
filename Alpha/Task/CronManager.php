@@ -69,7 +69,7 @@ class CronManager
         $config = ConfigProvider::getInstance();
 
         self::$logger = new Logger('CronManager');
-        self::$logger->setLogFile($config->get('app.file.store.dir').'logs/tasks.log');
+        self::$logger->setLogProviderFile($config->get('app.file.store.dir').'logs/tasks.log');
 
         self::$logger->debug('>>__construct()');
 
