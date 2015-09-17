@@ -46,7 +46,7 @@ use Alpha\Util\Config\ConfigProvider;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class LogFile
+class LogProviderFile implements LogProvider
 {
     /**
      * The log file path.
@@ -92,11 +92,7 @@ class LogFile
     }
 
     /**
-     * Writes a line of data to the log file.
-     *
-     * $param array $line
-     *
-     * @since 1.0
+     * {@inheritdoc}
      */
     public function writeLine($line)
     {
@@ -166,13 +162,7 @@ class LogFile
     }
 
     /**
-     * Renders a log file as a HTML table.
-     *
-     * @param array $cols The headings to use when rendering the log file
-     *
-     * @return string
-     *
-     * @since 1.0
+     * {@inheritdoc}
      */
     public function renderLog($cols)
     {

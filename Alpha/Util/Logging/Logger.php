@@ -54,11 +54,11 @@ class Logger
     /**
      * The log file the log entries will be saved to.
      *
-     * @var Alpha\Util\Logging\LogFile
+     * @var Alpha\Util\Logging\LogProviderFile
      *
      * @since 1.0
      */
-    private $logfile;
+    private $logProvider;
 
     /**
      * The logging level applied accross the system.  Valid options are DEBUG, INFO, WARN, ERROR, FATAL, and SQL.
@@ -110,8 +110,9 @@ class Logger
         $this->classname = $classname;
         $this->level = $config->get('app.log.trace.level');
         $this->debugClasses = explode(',', $config->get('app.log.trace.debug.classes'));
-        $this->logfile = new LogFile($config->get('app.file.store.dir').'logs/'.$config->get('app.log.file'));
-        $this->logfile->setMaxSize($config->get('app.log.file.max.size'));
+        $this->logProvider = new LogProviderFile($config->get('app.file.store.dir').'logs/'.$config->get('app.log.file'));
+        // TODO: move the setMaxSize call to the new log factory
+        $this->logProvider->setMaxSize($config->get('app.log.file.max.size'));
 
         $this->request = new Request(array('method' => 'GET')); // hard-coding to GET here is fine as we don't log HTTP method (yet).
     }
@@ -127,7 +128,7 @@ class Logger
     {
         if ($this->level == 'DEBUG' || in_array($this->classname, $this->debugClasses)) {
             $dateTime = date('Y-m-d H:i:s');
-            $this->logfile->writeLine(array($dateTime, 'DEBUG', $this->classname, $message,
+            $this->logProvider->writeLine(array($dateTime, 'DEBUG', $this->classname, $message,
                 $this->request->getUserAgent(), $this->request->getIP(), gethostname(), ));
         }
     }
@@ -143,7 +144,7 @@ class Logger
     {
         if ($this->level == 'DEBUG' || $this->level == 'INFO' || in_array($this->classname, $this->debugClasses)) {
             $dateTime = date('Y-m-d H:i:s');
-            $this->logfile->writeLine(array($dateTime, 'INFO', $this->classname, $message,
+            $this->logProvider->writeLine(array($dateTime, 'INFO', $this->classname, $message,
                 $this->request->getUserAgent(), $this->request->getIP(), gethostname(), ));
         }
     }
@@ -159,7 +160,7 @@ class Logger
     {
         if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || in_array($this->classname, $this->debugClasses)) {
             $dateTime = date('Y-m-d H:i:s');
-            $this->logfile->writeLine(array($dateTime, 'WARN', $this->classname, $message,
+            $this->logProvider->writeLine(array($dateTime, 'WARN', $this->classname, $message,
                 $this->request->getUserAgent(), $this->request->getIP(), gethostname(), ));
         }
     }
@@ -177,7 +178,7 @@ class Logger
             in_array($this->classname, $this->debugClasses)) {
             $dateTime = date('Y-m-d H:i:s');
             $line = array($dateTime, 'ERROR', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP(), gethostname());
-            $this->logfile->writeLine($line);
+            $this->logProvider->writeLine($line);
 
             $this->notifyAdmin(print_r($line, true));
         }
@@ -196,7 +197,7 @@ class Logger
             $this->level == 'FATAL' || in_array($this->classname, $this->debugClasses)) {
             $dateTime = date('Y-m-d H:i:s');
             $line = array($dateTime, 'FATAL', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP(), gethostname());
-            $this->logfile->writeLine($line);
+            $this->logProvider->writeLine($line);
 
             $this->notifyAdmin(print_r($line, true));
         }
@@ -214,7 +215,7 @@ class Logger
         if ($this->level == 'SQL') {
             $dateTime = date('Y-m-d H:i:s');
             $line = array($dateTime, 'SQL', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP(), gethostname());
-            $this->logfile->writeLine($line);
+            $this->logProvider->writeLine($line);
         }
     }
 
@@ -272,12 +273,14 @@ class Logger
      * @param string $filepath
      *
      * @since 1.0
+     *
+     * @todo revise!
      */
-    public function setLogFile($filepath)
+    public function setLogProviderFile($filepath)
     {
         $config = ConfigProvider::getInstance();
 
-        $this->logfile = new LogFile($filepath);
-        $this->logfile->setMaxSize($config->get('app.log.file.max.size'));
+        $this->logProvider = new LogProviderFile($filepath);
+        $this->logProvider->setMaxSize($config->get('app.log.file.max.size'));
     }
 }
