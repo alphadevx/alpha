@@ -209,7 +209,8 @@ class FeedController extends Controller implements ControllerInterface
             $response->setBody($feed->render());
 
             // log the request for this news feed
-            $feedLog = new LogProviderFile($config->get('app.file.store.dir').'logs/feeds.log');
+            $feedLog = new LogProviderFile();
+            $feedLog->setPath($config->get('app.file.store.dir').'logs/feeds.log');
             $feedLog->writeLine(array($this->ActiveRecordType, $this->type, date('Y-m-d H:i:s'), $request->getUserAgent(), $request->getIP()));
         } catch (IllegalArguementException $e) {
             self::$logger->error($e->getMessage());

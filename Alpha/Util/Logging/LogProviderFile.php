@@ -46,7 +46,7 @@ use Alpha\Util\Config\ConfigProvider;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class LogProviderFile implements LogProvider
+class LogProviderFile implements LogProviderInterface
 {
     /**
      * The log file path.
@@ -68,13 +68,13 @@ class LogProviderFile implements LogProvider
     private $MaxSize = 5;
 
     /**
-     * The constructor.
+     * Set the file path.
      *
      * @param string $path
      *
-     * @since 1.0
+     * @since 2.0
      */
-    public function __construct($path)
+    public function setPath($path)
     {
         $this->path = $path;
     }
@@ -98,21 +98,8 @@ class LogProviderFile implements LogProvider
     {
         $config = ConfigProvider::getInstance();
 
-        try {
-            $fp = fopen($this->path, 'a+');
-            fputcsv($fp, $line, ',', '"', '\\');
-
-            if ($this->checkFileSize() >= $this->MaxSize) {
-                $this->backupFile();
-            }
-        } catch (\Exception $e) {
+        if ($this->path != '') {
             try {
-                $logsDir = $config->get('app.file.store.dir').'logs';
-
-                if (!file_exists($logsDir)) {
-                    mkdir($logsDir, 0766);
-                }
-
                 $fp = fopen($this->path, 'a+');
                 fputcsv($fp, $line, ',', '"', '\\');
 
@@ -120,9 +107,24 @@ class LogProviderFile implements LogProvider
                     $this->backupFile();
                 }
             } catch (\Exception $e) {
-                // TODO log to PHP system log file instead
-                echo 'Unable to write to the log file ['.$this->path.'], error ['.$e->getMessage().']';
-                exit;
+                try {
+                    $logsDir = $config->get('app.file.store.dir').'logs';
+
+                    if (!file_exists($logsDir)) {
+                        mkdir($logsDir, 0766);
+                    }
+
+                    $fp = fopen($this->path, 'a+');
+                    fputcsv($fp, $line, ',', '"', '\\');
+
+                    if ($this->checkFileSize() >= $this->MaxSize) {
+                        $this->backupFile();
+                    }
+                } catch (\Exception $e) {
+                    // TODO log to PHP system log file instead
+                    echo 'Unable to write to the log file ['.$this->path.'], error ['.$e->getMessage().']';
+                    exit;
+                }
             }
         }
     }

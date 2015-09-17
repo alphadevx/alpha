@@ -2,8 +2,13 @@
 
 namespace Alpha\Util\Logging;
 
+use Alpha\Exception\IllegalArguementException;
+use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Logging\Logger;
+
 /**
- * Interface that defines the methods required for a logging provider.
+ * A factory for creating log provider implementations that implement the
+ * LogProviderInterface interface.
  *
  * @since 2.0
  *
@@ -44,25 +49,36 @@ namespace Alpha\Util\Logging;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-interface LogProvider
+class LogProviderFactory
 {
     /**
-     * Writes a line of data to the log.
+     * A static method that attempts to return a LogProviderInterface instance
+     * based on the name of the provider class supplied.
      *
-     * $param array $line
+     * @param $providerName The class name of the provider class (fully qualified).
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     *
+     * @return Alpha\Util\Logging\LogProviderInterface
      *
      * @since 2.0
      */
-    public function writeLine($line);
+    public static function getInstance($providerName)
+    {
+        $config = ConfigProvider::getInstance();
 
-    /**
-     * Renders a log as a HTML table.
-     *
-     * @param array $cols The headings to use when rendering the log.
-     *
-     * @return string
-     *
-     * @since 2.0
-     */
-    public function renderLog($cols);
+        if (class_exists($providerName)) {
+            $instance = new $providerName();
+
+            if (!$instance instanceof LogProviderInterface) {
+                throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected LogProviderInterface intwerface!');
+            }
+
+            $instance->setMaxSize($config->get('app.log.file.max.size'));
+
+            return $instance;
+        } else {
+            throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
+        }
+    }
 }

@@ -110,9 +110,8 @@ class Logger
         $this->classname = $classname;
         $this->level = $config->get('app.log.trace.level');
         $this->debugClasses = explode(',', $config->get('app.log.trace.debug.classes'));
-        $this->logProvider = new LogProviderFile($config->get('app.file.store.dir').'logs/'.$config->get('app.log.file'));
-        // TODO: move the setMaxSize call to the new log factory
-        $this->logProvider->setMaxSize($config->get('app.log.file.max.size'));
+        $this->logProvider = LogProviderFactory::getInstance('Alpha\Util\Logging\LogProviderFile');
+        $this->logProvider->setPath($config->get('app.file.store.dir').'logs/'.$config->get('app.log.file'));
 
         $this->request = new Request(array('method' => 'GET')); // hard-coding to GET here is fine as we don't log HTTP method (yet).
     }

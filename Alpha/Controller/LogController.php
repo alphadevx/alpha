@@ -120,7 +120,9 @@ class LogController extends Controller implements ControllerInterface
 
             $body .= View::displayPageHead($this);
 
-            $log = new LogProviderFile($this->logPath);
+            $log = new LogProviderFile();
+            $log->setPath($this->logPath);
+
             if (preg_match('/alpha.*/', basename($this->logPath))) {
                 $body .= $log->renderLog(array('Date/time', 'Level', 'Class', 'Message', 'Client', 'IP', 'Server hostname'));
             }
