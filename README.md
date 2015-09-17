@@ -203,7 +203,14 @@ Alpha supports database transactions via a number of static methods on the _Acti
 
 ### Object locking and versioning
 
-TODO
+Each active record in Alpha maintains a version number that is automatically incremented each time the record is saved.  In order to prevent race conditions when two or more seperate threads attempt to save the same record, a version check is performed pre-save and if the version number being saved is older than the version currently in the database, a _Alpha\Exception\LockingException_ is thrown.  Naturally in your application, you should capture that exception an try to handle it gracefully:
+
+	try {
+		$record->save();
+	} catch (LockingException $e) {
+	    // Reload updated record from the database, display something useful to the user and
+	    // then let them try to save the record again...
+	}
 
 ### History
 
