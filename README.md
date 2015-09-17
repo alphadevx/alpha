@@ -181,7 +181,25 @@ For a full list of the supported CRUD and table management methods, check the no
 
 ### Transaction and error handling
 
-TODO
+Alpha supports database transactions via a number of static methods on the _ActiveRecord_ class.  Here is a typical example:
+
+	try {
+	    ActiveRecord::begin();
+	    $cart = new Cart();
+	    $cart->load(100);
+	    $items = $cart->loadItems();
+
+	    foreach ($items as $item) {
+	    	$item->set('amount', $item->get('ammount') - 1);
+	    	$item->save();
+	    }
+
+	    ActiveRecord::commit();
+	} catch (AlphaException $e) {
+	    self::$logger->error($e->getMessage());
+	    ActiveRecord::rollback();
+	    // ...
+	}
 
 ### Object locking and versioning
 
