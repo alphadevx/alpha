@@ -214,7 +214,25 @@ Each active record in Alpha maintains a version number that is automatically inc
 
 ### History
 
-TODO
+Alpha can optionally maintain the history of each active record for you, by setting the maintainHistory attribute on the record to true.  Alpha will then create and maintain a second database table for the record type, suffixed with "_history", where it will save a copy of the record each time it is updated.  This means that a full history of changes applied to a record can be maintained indefinetly, if you wish to do so in your application.
+
+	$record = new Person();
+	$record->setMaintainHistory(true);
+	$record->set('email', 'one@test.com');
+	$record->save();
+	
+	$record->set('email', 'two@test.com');
+	$record->save();
+	
+	echo $record->getHistoryCount(); // should be 2
+	
+	// load version 1 of person record 10
+	$record->load(10, 1);
+	echo $record->get('email'); // one@test.com
+	
+	// load version 2 of person record 10
+	$record->load(10, 2);
+	echo $record->get('email'); // two@test.com
 
 Learn more
 ----------
