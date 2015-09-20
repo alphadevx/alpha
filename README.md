@@ -2,7 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/alphadevx/alpha/badge.svg?branch=2.0.0&service=github)](https://coveralls.io/github/alphadevx/alpha?branch=2.0.0)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/alphadevx/alpha/badges/quality-score.png?b=2.0.0)](https://scrutinizer-ci.com/g/alphadevx/alpha/?branch=2.0.0)
 
-Alpha Framework (2.0 alpha)
+Alpha Framework (2.0 beta)
 ===========================
 
 Introduction
@@ -28,7 +28,7 @@ The Alpha Framework is a full-stack MVC framework for PHP.  It provides the foll
 Status
 ------
 
-Note that this is the working branch for the 2.0 release, currently with **alpha** status so **not suitable for production**.  The stable 1.x release are available from here: http://www.alphaframework.org/article/Download
+Note that this is the working branch for the 2.0 release, currently with **beta** status so **not suitable for production**, but is **suitable for new development projects**.  The stable (but deprecated) 1.x releases are available from here: http://www.alphaframework.org/article/Download
 
 Models
 ------
@@ -234,14 +234,9 @@ Alpha can optionally maintain the history of each active record for you, by sett
 	$record->load(10, 2);
 	echo $record->get('email'); // two@test.com
 
-Learn more
-----------
-
-For further information including installation instructions, please visit the following web page:
-
-http://www.alphaframework.org/article/Documentation
-
 Contact
 -------
 
 For bug reports and feature requests, please e-mail: dev@alphaframework.org
+
+On Twitter: [@alphaframework](https://twitter.com/alphaframework)

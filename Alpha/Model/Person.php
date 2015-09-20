@@ -8,6 +8,7 @@ use Alpha\Model\Type\Relation;
 use Alpha\Util\Helper\Validator;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Email\EmailProviderFactory;
 use Alpha\Exception\MailNotSentException;
 use Alpha\Exception\PHPException;
 use Alpha\Exception\RecordNotFoundException;
@@ -409,19 +410,8 @@ class Person extends ActiveRecord
 
         $body .= '</body></html>';
 
-        $headers = 'MIME-Version: 1.0'."\n";
-        $headers .= 'Content-type: text/html; charset=iso-8859-1'."\n";
-        $headers .= 'From: '.$config->get('email.reply.to')."\n";
-
-        if ($config->getEnvironment() != 'dev') {
-            try {
-                mb_send_mail($this->get('email'), $subject, $body, $headers);
-            } catch (PHPException $e) {
-                throw new MailNotSentException('Error sending a mail to ['.$this->get('email').']');
-            }
-        } else {
-            self::$logger->info("Sending email:\n".$headers."\n".$body);
-        }
+        $mailer = EmailProviderFactory::getInstance('Alpha\Util\Email\EmailProviderPHP');
+        $mailer->send($this->get('email'), $config->get('email.reply.to'), $subject, $body, true);
     }
 
     /**

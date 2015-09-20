@@ -2,7 +2,9 @@
 
 namespace Alpha\Util\Logging;
 
+use Alpha\Exception\MailNotSentException;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Email\EmailProviderFactory;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Util\Http\Request;
 use Alpha\Model\ActionLog;
@@ -246,6 +248,8 @@ class Logger
      * @param string $message
      *
      * @since 1.0
+     *
+     * @throws Alpha\Exception\MailNotSentException
      */
     public function notifyAdmin($message)
     {
@@ -261,8 +265,8 @@ class Logger
 
             $body .= "\n\nKind regards,\n\nAdministrator\n--\n".$config->get('app.url');
 
-            mb_send_mail($config->get('app.log.error.mail.address'), 'Error in class '.$this->classname.' on site '.$config->get('app.title'), $body,
-                'From: '.$config->get('email.reply.to')."\r\nReply-To: ".$config->get('email.reply.to')."\r\nX-Mailer: PHP/".phpversion());
+            $mailer = EmailProviderFactory::getInstance('Alpha\Util\Email\EmailProviderPHP');
+            $mailer->send($config->get('app.log.error.mail.address'), $config->get('email.reply.to'), 'Error in class '.$this->classname.' on site '.$config->get('app.title'), $body);
         }
     }
 
