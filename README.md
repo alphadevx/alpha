@@ -262,27 +262,47 @@ All controllers in Alpha should inherit from the _Controller_ abstract class and
 
 ### Routing
 
-Routing a HTTP request to the correct controller is handled by the _FrontController_.  There are two ways to route a request: using a user-friendly URI, or using a secure URI containing an encrypted token that holds the params and controller name for the request.
+Routing a HTTP request to the correct controller is handled by the _FrontController_.  There are two ways to route a request: using a user-friendly URL, or using a secure URL containing an encrypted token that holds the params and controller name for the request.
 
-#### User-friendly URI
+#### User-friendly URL
 
-TODO
+In your _index.php_ bootstrap file, you should instantiate a new _FrontController_ to handle all requests.  Routes can then be added to the FrontController like so:
 
 	use Alpha\Controller\Front\FrontController;
+	use My\App\Controller\HelloController;
 
 	// ...
 
 	$front = new FrontController();
 
-	$this->addRoute('/hello/{title}/{view}', function ($request) {
-        $controller = new ArticleController();
+	$this->addRoute('/hello/{name}', function ($request) {
+        $controller = new HelloController();
 
         return $controller->process($request);
-    })->value('title', null)->value('view', 'detailed');
+    });
 
-#### Secure token URI
+    $request = new Request(); // this will build the request from super global data.
+	$response = $front->process($request); // this will map the requested route to the correct controller
+	echo $response->send(); // send the response to the client
 
-TODO
+The _FrontController::process()_ method will take care to map the requested route to the correct controller, while the _Controller::process()_ method called within the addRoute closure will map the HTTP request verb (e.g. GET) to the correct controller method (e.g. doGET).
+
+Note that you can also define default request parameters in the route, effectively making them optional:
+
+	$this->addRoute('/hello/{name}', function ($request) {
+        $controller = new HelloController();
+
+        return $controller->process($request);
+    })->value('name', 'unknown'); // if the client requests /hello, return "hello unknown"
+
+#### Secure token URL
+
+If you are concerned about passing sensitive information via the query string or as a route parameter, you can generate a secure URL for the controller like so:
+
+	$url = FrontController::generateSecureURL('act=My\App\Controller\HelloController&name=bob');
+	// $url now something like "http://www.myapp.com/tk/gKwbKqR7uQq-d07z2y8Nnm1JnW_ZTKIUpT-KUJ7pYHxMouGoosktcIUiLKFz4uR8"
+
+Note that the URL generate will be automatically unencoded and decrypted by the FrontController when requested, using the secret encryption key set in your config file during installation.
 
 Contact
 -------
