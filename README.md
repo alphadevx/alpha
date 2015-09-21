@@ -234,6 +234,56 @@ Alpha can optionally maintain the history of each active record for you, by sett
 	$record->load(10, 2);
 	echo $record->get('email'); // two@test.com
 
+Controllers
+-----------
+
+### ControllerInterface
+
+All controllers in Alpha should inherit from the _Controller_ abstract class and implement the _ControllerInterface_.  The interface defines all of the methods that handle a HTTP request, and includes a method for each of the HTTP verbs (doGET, doPOST, doPUT etc.).  Each of these methods accept a _Request_ object as the only parameter, and return a _Response_ object.  Here is a simple example:
+
+	<?php
+
+	namespace My\App\Controller;
+
+	use Alpha\Controller\Controller;
+	use Alpha\Controller\ControllerInterface;
+	use Alpha\Util\Http\Request;
+	use Alpha\Util\Http\Response;
+
+	class HelloController extends Controller implements ControllerInterface
+	{
+		public function doGET($request)
+		{
+			$name = $request->getParam('name');
+
+			return new Response(200, 'Hello '.$name, array('Content-Type' => 'text/plain'));
+		}
+	}
+
+### Routing
+
+Routing a HTTP request to the correct controller is handled by the _FrontController_.  There are two ways to route a request: using a user-friendly URI, or using a secure URI containing an encrypted token that holds the params and controller name for the request.
+
+#### User-friendly URI
+
+TODO
+
+	use Alpha\Controller\Front\FrontController;
+
+	// ...
+
+	$front = new FrontController();
+
+	$this->addRoute('/hello/{title}/{view}', function ($request) {
+        $controller = new ArticleController();
+
+        return $controller->process($request);
+    })->value('title', null)->value('view', 'detailed');
+
+#### Secure token URI
+
+TODO
+
 Contact
 -------
 

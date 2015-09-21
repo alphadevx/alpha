@@ -185,7 +185,7 @@ class FrontController
             $controller = new ArticleController();
 
             return $controller->process($request);
-        })->value('title', null)->value('view', 'detailed');;
+        })->value('title', null)->value('view', 'detailed');
 
         $this->addRoute('/articles/{start}/{limit}', function ($request) {
             $controller = new ArticleController();
