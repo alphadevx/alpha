@@ -304,6 +304,47 @@ If you are concerned about passing sensitive information via the query string or
 
 Note that the URL generate will be automatically unencoded and decrypted by the FrontController when requested, using the secret encryption key set in your config file during installation.
 
+Views
+-----
+
+Views in Alpha are made up of two parts: _view classes_ that are responsible for marshalling active records to views, and _view templates_ that are responsible for defining the actual view content.
+
+### View classes
+
+A view class should extend the _Alpha\View\View_ class, that defines standard set of methods that are available to a view (createView(), editView(), listView() etc.).  You can then override these methods in case you need to do something specific in your view.  Typically, there is a one-to-one mapping between a view and the corresponding active record that it is rendering, and the view is responsible for marshalling the record data to an underlying template.
+
+Here is an example where we are injecting in a count of the items in a given shopping cart, to be used later on in the template to display cart details:
+
+	<?php
+
+	use Alpha\View\View;
+	use My\App\Model\Cart;
+	use My\App\Model\Item;
+	// ...
+
+	class CartView extends View
+	{
+	    // ...
+
+	    public function detailedView($fields = array())
+	    {
+	        // this->BO will be set to our cart at this stage during factory instantiation
+	        $items = $this->BO->getItems();
+
+	        $fields['itemCount'] = count($items);
+
+	        // ...
+
+	        $html = $this->loadTemplate($this->BO, 'detail', $fields);
+
+	        return $html;
+	    }
+	}
+
+### View templates
+
+TODO
+
 Contact
 -------
 
