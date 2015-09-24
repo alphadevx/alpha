@@ -362,7 +362,21 @@ Here is an example where we are injecting in a count of the items in a given sho
 
 ### View templates
 
-TODO
+While you can generate HTML directly in your view class methods and return that, typcially you will want to maintain your HTML in a template where it is easier to manage.  The _View_ class provides two seperate methods for loading a template:
+
+	// Assuming that this->BO is a My\App\Model\Cart instance, this will check in the following locations for the template:
+	// 1. [app.root]/View/Html/Templates/Cart/detail.phtml (this is where you should place your custom templates)
+	// 2. [app.root]/Alpha/View/Renderer/Html/Templates/Cart/detail.phtml
+	$html = $this->loadTemplate($this->BO, 'detail', $fields);
+
+	// You can also load a fragment template (does not require a record to be passed).  It will check for the file in:
+	// 1. [app.root]/View/Html/Fragments/[fileName]
+	// 2. [app.root]/Alpha/View/Renderer/Html/Fragments/[fileName]
+	$html = $this->loadTemplateFragment('html', 'header.phtml', $fields);
+
+In the template itself, you can reference any of the values passed in the $fields array as a regular variable:
+
+	<p>There are <?= $itemCount ?> items in your shopping cart.</p>
 
 ### Widgets
 
