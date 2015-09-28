@@ -380,7 +380,17 @@ In the template itself, you can reference any of the values passed in the $field
 
 ### Widgets
 
-TODO
+Alpha provides a number of HTML widgets in the _Alpha\View\Widget_ package, that are very convenient for renderer nice interfaces quickly using Twitter Bootstrap CSS and addition JQuery code.
+
+The following widgets are included:
+
+| Widget class                     | Description                | Paramters                                                          |
+|----------------------------------|----------------------------|--------------------------------------------------------------------|
+| Alpha\View\Widget\Button         | A Bootstrap button.        | Some Javascript to execute when the button is pressed.             |
+| Alpha\View\Widget\DateBox        | A Bootstrap date picker.   | An Alpha\Model\Type\Date or Alpha\Model\Type\Timestamp instance.   |
+| Alpha\View\Widget\Image          | A scaled, secure image.    | The source path of the original file along with desired dimensions.|
+| Alpha\View\Widget\RecordSelector | Used for relating records. | A _Alpha\Model\Type\Relation_ instance.                            |
+| Alpha\View\Widget\StringBox      | One-line string input box. | A _Alpha\Model\Type\String_ instance.                              |
 
 Utils
 -----
@@ -393,7 +403,14 @@ TODO
 
 ### Cache
 
-TODO
+A data cache is provided, that provides a factory and injectable providers that support Memcache, Redis, and APCu.  The classes are provided in the _Alpha\Util\Cache_ package, while the providers implement the _Alpha\Util\Cache\CacheProviderInterface_.  Here is an example using the Redis provider:
+
+	use Alpha\Util\Cache\CacheProviderFactory;
+
+	// ...
+
+	$cache = CacheProviderFactory::getInstance('Alpha\Util\Cache\CacheProviderRedis');
+	$record = $cache->get($cacheKey);
 
 ### Code highlighting
 
