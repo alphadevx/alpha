@@ -397,10 +397,6 @@ Utils
 
 Alpha includes many varied utilities in the _Alpha\Util_ package.  The following sections cover some of the highlights.
 
-### Backup
-
-TODO
-
 ### Cache
 
 A data cache is provided, that provides a factory and injectable providers that support Memcache, Redis, and APCu.  The classes are provided in the _Alpha\Util\Cache_ package, while the providers implement the _Alpha\Util\Cache\CacheProviderInterface_.  Here is an example using the Redis provider:
