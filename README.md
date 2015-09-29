@@ -422,7 +422,20 @@ The _Alpha\Util\Code\Highlight\HighlightProviderFactory_ providers objects for c
 
 ### Email
 
-TODO
+Alpha provides an email package with a factory and an interface for injecting different email providers.  Here is an example usage:
+
+	use Alpha\Util\Email\EmailProviderFactory;
+	use Alpha\Exception\MailNotSentException;
+
+	// ...
+
+	$mailer = EmailProviderFactory::getInstance('Alpha\Util\Email\EmailProviderPHP');
+
+	try {
+    	$mailer->send('to@mail.com', 'from@mail.com', 'Subject', 'Some HTML...', true);
+    } catch (MailNotSentException $e) {
+    	// handle error...
+    }
 
 ### Feeds
 
