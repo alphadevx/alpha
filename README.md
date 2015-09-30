@@ -462,7 +462,7 @@ If you want to use the feed classes directly in your application, you can do so:
 
 ### Validation
 
-TODO
+A validation class is provided for handling typical type checks or for testing for common string patterns (email address, URLs etc.).  The class in question is _Alpha\Util\Helper\Validator_, check the _Alpha\Test\Util\Helper\ValidatorTest_ unit test for lots of code examples on how to use this class.
 
 ### HTTP
 

@@ -11,8 +11,6 @@ use Alpha\Util\Helper\Validator;
  *
  * @author John Collins <dev@alphaframework.org>
  *
- * @version $Id$
- *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
