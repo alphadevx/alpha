@@ -468,7 +468,28 @@ A validation class is provided for handling typical type checks or for testing f
 
 #### Filters
 
-TODO
+Alpha provides a framework for injecting optional request filters into the front controller, that are run before any request in routed through there.  You can write your own filters that implement the _Alpha\Util\Http\Filter\FilterInterface_, in addition Alpha provides the following build-in filters that you can choose to enable:
+
+|Filter                                           |Purpose                                                                       |
+|-------------------------------------------------|------------------------------------------------------------------------------|
+|Alpha\Util\Http\Filter\ClientBlacklistFilter     |Block any request from a client matching the blacklisted User-Agent.          |
+|Alpha\Util\Http\Filter\IPBlacklistFilter         |Block any request from a client matching the blacklisted IP.                  |
+|Alpha\Util\Http\Filter\ClientTempBlacklistFilter |Block too many requests from a given client/IP compination for a short period.|
+
+Registering a filter with the front controller is easy, and should be done on application bootstrap, typlically in your index.php file:
+
+	use Alpha\Controller\Front\FrontController;
+	use Alpha\Util\Http\Filter\ClientBlacklistFilter;
+	use Alpha\Exception\ResourceNotAllowedException;
+
+	// ...
+
+	try {
+		$front = new FrontController();
+		$front->registerFilter(new ClientBlacklistFilter());
+	} catch (ResourceNotAllowedException $e) {
+		// the filters will throw this exception when invoked so you will need to handle, e.g. send 403 response.
+	}
 
 #### Sessions
 
