@@ -439,7 +439,26 @@ Alpha provides an email package with a factory and an interface for injecting di
 
 ### Feeds
 
-TODO
+Alpha can generate an Atom, RSS, or RSS2 feed based on a list of active records, using the classes in the _Alpha\Util\Feed_ package.  The _FeedController_ is also provided for convience, that has the following route already set-up in the _FrontController_:
+
+	$this->addRoute('/feed/{ActiveRecordType}/{type}', function ($request) {
+        $controller = new FeedController();
+
+        return $controller->process($request);
+    })->value('type', 'Atom');
+
+If you want to use the feed classes directly in your application, you can do so:
+
+	use Alpha\Util\Feed\Atom;
+
+	// ...
+
+	$feed = new Atom($ActiveRecordType, $title, $url, $description, $pubDate, $OID);
+    $feed->setFieldMappings('title', 'URL', 'description', 'created_ts', 'OID');
+    $feed->addAuthor('Feed author');
+    $feed->loadBOs(20, 'OID');
+
+    $xml = $feed->render();
 
 ### Validation
 
