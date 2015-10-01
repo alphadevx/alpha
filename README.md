@@ -505,7 +505,18 @@ Alpha provides a session abstraction layer to allow the inject of different sess
 
 #### Request and Response
 
-TODO
+Rather than working with PHP super-globals such as _GET and _POST directly, Alpha provides Request and Response classes in the _Alpha\Util\Http_ package to encapsulate those globals.
+
+The attributes of the Request objects (HTTP headers, HTTP verbs, request body etc.) are set during the object instantiation via the __construct($overrides) method, based on the available super-global values.  Note that you can override any of the super-global values via the $overrides hash array parameter, which is useful for unit testing.
+
+The Response constructor expects a HTTP response code, body, and optional array of HTTP headers during construction.  Here is an example:
+
+	use Alpha\Util\Http\Response;
+
+	// ...
+
+	$response = new Response(200, '<p>hello world!</p>', array('Content-Type' => 'text/html'));
+	$response->send();
 
 ### Logging
 
