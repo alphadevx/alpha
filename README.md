@@ -520,7 +520,42 @@ The Response constructor expects a HTTP response code, body, and optional array 
 
 ### Logging
 
-TODO
+A logging class is provided with a standard set of methods for logging at different levels:
+
+	use Alpha\Util\Logging\Logger;
+
+	// ...
+
+	self::$logger = new Logger('ClassName');
+    self::$logger->debug('Debug information');
+    self::$logger->info('Notable information');
+    self::$logger->warn('Something went wrong');
+    self::$logger->error('A serious error');
+    self::$logger->fatal('A fatal error');
+    self::$logger->sql('SELECT * FROM...');
+    self::$logger->action('Action carried out by the current user logged in the ActionLog table');
+
+The log that is written to is defined by the following configuration properties:
+
+	$config->get('app.file.store.dir').'logs/'.$config->get('app.log.file');
+
+Alpha also provides a KPI class, or _Key Performance Indicator_, that is useful for logging time-sensitive entries that can indicate how your application is performing in production.  Here is an example usage:
+
+	use Alpha\Util\Logging\KPI;
+
+	// ...
+
+	$KPI = new KPI('KPIName');
+	// ...
+	$KPI->logStep('something happened');
+	// ...
+	$KPI->logStep('something else happened');
+	// ...
+	$KPI->log();
+
+Each KPI is logged, along with timings and session IDs, in a seperate log file in the following location:
+
+	$config->get('app.file.store.dir').'logs/kpi-'.$KPIName.'.csv';
 
 ### Search
 
