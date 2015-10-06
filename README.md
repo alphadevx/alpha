@@ -35,7 +35,20 @@ Installation
 
 ### Composer
 
-TODO
+Alpha should be installed using Composer.  Here is a minimum example _composer.json_ file to install the current beta 2.0 release:
+
+	{
+	    "require": {
+	        "alphadevx/alpha": "2.0.0.x-dev"
+	    },
+	    "repositories": [
+	        {
+	            "type": "pear",
+	            "url": "http://pear.php.net"
+	        }
+	    ],
+	    "minimum-stability": "dev"
+	}
 
 ### Configuration
 
