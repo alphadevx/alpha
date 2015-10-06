@@ -526,14 +526,14 @@ A logging class is provided with a standard set of methods for logging at differ
 
 	// ...
 
-	self::$logger = new Logger('ClassName');
-    self::$logger->debug('Debug information');
-    self::$logger->info('Notable information');
-    self::$logger->warn('Something went wrong');
-    self::$logger->error('A serious error');
-    self::$logger->fatal('A fatal error');
-    self::$logger->sql('SELECT * FROM...');
-    self::$logger->action('Action carried out by the current user logged in the ActionLog table');
+	$logger = new Logger('ClassName');
+    $logger->debug('Debug information');
+    $logger->info('Notable information');
+    $logger->warn('Something went wrong');
+    $logger->error('A serious error');
+    $logger->fatal('A fatal error');
+    $logger->sql('SELECT * FROM...');
+    $logger->action('Action carried out by the current user logged in the ActionLog table');
 
 The log that is written to is defined by the following configuration properties:
 
@@ -559,7 +559,21 @@ Each KPI is logged, along with timings and session IDs, in a seperate log file i
 
 ### Search
 
-TODO
+A simple search engine is provided to use in your applications, that is made up of a seach controller and an abstract search API on the backend that searches the main active record database for matching records, based on tags attached to those records.
+
+The key classes are:
+
+|Class                                     |Description                                                                     |
+|------------------------------------------|--------------------------------------------------------------------------------|
+|Alpha\Controller\SearchController         |Handles search queries sent via HTTP requests.                                  |
+|Alpha\Util\Search\SearchProviderInterface |The main search API.                                                            |
+|Alpha\Util\Search\SearchProviderTags      |Implements the SearchProviderInterface using Tag active records.                |
+|Alpha\Model\Tag                           |Contains a simple string value that helps to describe the related active record.|
+|Alpha\Controller\TagController            |Used to edit tags on a single record, and manage all tags in the admin backend. |
+
+A typical use case is contained in the content management system included with Alpha.  When an Article record is saved, a callback is used to generate a set of Tag records based on the content of the Article (excluding stop-words contained in the _stopwords-large.ini_ or _stopwords-small.ini_ files), and those Tag records are related to the Article via a ONE-TO-MANY Relation type, and saved to the main database.  Searches are then conducted against the Tag table, and once matching Tags are found we load the related Article records.
+
+For example code, please view the _Alpha\Controller\SearchController_ class and the _Alpha\Test\Controller\SearchControllerTest_ and _Alpha\Test\Util\Search\SearchProviderTagsTest_ unit tests.
 
 ### Security
 
