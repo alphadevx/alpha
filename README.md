@@ -50,6 +50,15 @@ Alpha should be installed using Composer.  Here is a minimum example _composer.j
 	    "minimum-stability": "dev"
 	}
 
+### Database
+
+Alpha stores its records in a relational database, currently MySQL and SQLite are supported via injectable providers (more will be written in the future).  For SQLite, a file will be written to the filesystem based on your configuration (see the next section), but for MySQL you will need to manually create the database first:
+
+	MariaDB [(none)]> CREATE DATABASE alphaframework DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+	Query OK, 1 row affected (0.00 sec)
+
+You should also ensure that the MySQL user account that you are going to use to access that database has the correct rights granted to it.
+
 ### Configuration
 
 TODO
