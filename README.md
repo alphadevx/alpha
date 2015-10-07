@@ -61,7 +61,22 @@ You should also ensure that the MySQL user account that you are going to use to 
 
 ### Configuration
 
-TODO
+Alpha configuration is broken down into three deployment envrionments, which in turn have their own config files:
+
+|Name |Description                               |Config file     |
+|-----|------------------------------------------|----------------|
+|dev  |Your developer environment (localhost).   |config/dev.ini  |
+|test |Your test environment for QA/UAT testing. |config/test.ini |
+|pro  |Your production environment.              |config/pro.ini  |
+
+Alpha chooses the correct file to load based on the hostname of the current server.  That hostname to config environment mapping occurs in the _config/servers.ini_ file.  Here is an example of that file:
+
+	; The server names for the three environments
+	dev = localhost,alphaframework.local
+	pro = alphaframework.org
+	test = unittests,qa.alphaframework.org
+
+Multiple server hostnames can be added per environment, seperated by commas.
 
 ### Bootstrap
 
