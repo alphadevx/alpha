@@ -78,6 +78,22 @@ Alpha chooses the correct file to load based on the hostname of the current serv
 
 Multiple server hostnames can be added per environment, seperated by commas.
 
+The config files themselves are well-commented, but here is a list of the minimum settings you should configure before continuing with your installation:
+
+|Setting                 |Description                                                                              |
+|------------------------|-----------------------------------------------------------------------------------------|
+|app.url                 |System root URL.                                                                         |
+|app.root                |The OS root directory.                                                                   |
+|app.file.store.dir      |The path to the directory where files are stored (logs, attachments, cached files etc.). |
+|app.title               |The title of the web site.                                                               |
+|db.name                 |The name of the main database to use.                                                    |
+|db.username             |Database username.                                                                       |
+|db.password             |Database password.                                                                       |
+|db.hostname             |Database host.                                                                           |
+|security.encryption.key |Secret key used for encryption when using the SecurityUtils class.                       |
+
+Please review the comments in the config files for addition optional settings.
+
 ### Bootstrap
 
 TODO
