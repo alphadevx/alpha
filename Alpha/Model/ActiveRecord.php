@@ -1920,8 +1920,11 @@ abstract class ActiveRecord
         }
 
         // now loop over the core BOs provided with Alpha
-
-        $handle = opendir($config->get('app.root').'Alpha/Model');
+        if (file_exists($config->get('app.root').'Alpha/Model')) {
+            $handle = opendir($config->get('app.root').'Alpha/Model');
+        } elseif ($config->get('app.root').'vendor/alphadevx/alpha/Alpha/Model') {
+            $handle = opendir($config->get('app.root').'vendor/alphadevx/alpha/Alpha/Model');
+        }
 
         // loop over the business object directory
         while (false !== ($file = readdir($handle))) {
