@@ -69,10 +69,14 @@ Alpha configuration is broken down into three deployment envrionments, which in 
 |test |Your test environment for QA/UAT testing. |config/test.ini |
 |pro  |Your production environment.              |config/pro.ini  |
 
+From the _vendor_ directy created by Composer, you should copy those files into your application root directory:
+
+	$ cp -R vendor/alphadevx/alpha/config .
+
 Alpha chooses the correct file to load based on the hostname of the current server.  That hostname to config environment mapping occurs in the _config/servers.ini_ file.  Here is an example of that file:
 
 	; The server names for the three environments
-	dev = localhost,alphaframework.local
+	dev = localhost,alphaframework.dev
 	pro = alphaframework.org
 	test = unittests,qa.alphaframework.org
 
@@ -96,7 +100,29 @@ Please review the comments in the config files for addition optional settings.
 
 ### Bootstrap
 
-TODO
+Alpha uses a front controller to route all traffic to a single physical file in your web server configuration.  That file, _index.php_, is contained with the _public_ directory of the framework.  Copy that directory into the root of your application:
+
+	$ cp -R vendor/alphadevx/alpha/public .
+
+Now open that file in your editor to review: it is this file that you will use to add in customer routes to your custom controllers.  You will then need to configure your web server to send all traffic to your _public/index.php_ file (with the exception of static files that are also in _public_), here is an example Apache virtual host configuration:
+
+	<VirtualHost alphaframework.dev:80>
+	   DocumentRoot "/home/john/Git/alphaframework/public"
+	   ServerName alphaframework.dev
+
+
+	   <Directory "/home/john/Git/alphaframework/public">
+	      Options FollowSymLinks
+	      Require all granted
+
+	      RewriteEngine On
+	      RewriteBase /
+	      RewriteCond %{REQUEST_FILENAME} !-f
+	      RewriteCond %{REQUEST_FILENAME} !-d
+	      RewriteCond %{DOCUMENT_ROOT}/index\.php -f
+	      RewriteRule ^(.*)$  /index.php?page=$1 [QSA]
+	   </Directory>
+	</VirtualHost>
 
 ### Running the installer
 
