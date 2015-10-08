@@ -98,10 +98,7 @@ class View
 
         $config = ConfigProvider::getInstance();
 
-        $class = new ReflectionClass($BO);
-        $className = $class->getShortname();
-
-        if (ActiveRecord::checkClassDefExists($className)) {
+        if ($BO instanceof ActiveRecord) {
             $this->BO = $BO;
         } else {
             throw new IllegalArguementException('The BO provided ['.get_class($BO).'] is not defined anywhere!');

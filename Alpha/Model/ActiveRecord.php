@@ -2131,42 +2131,6 @@ abstract class ActiveRecord
     }
 
     /**
-     * Checks if the definition for the BO class name provided exists on the file system.
-     *
-     * @param string $classname The name of the business object class name.
-     *
-     * @return bool
-     *
-     * @since 1.0
-     * @deprecated Use autoloader!
-     */
-    public static function checkClassDefExists($classname)
-    {
-        if (self::$logger == null) {
-            self::$logger = new Logger('ActiveRecord');
-        }
-        self::$logger->debug('>>checkClassDefExists(classname=['.$classname.'])');
-
-        $config = ConfigProvider::getInstance();
-
-        $exists = false;
-
-        if (file_exists($config->get('app.root').'Model/'.$classname.'.php')) {
-            $exists = true;
-        }
-        if (file_exists($config->get('app.root').'Alpha/Model/'.$classname.'.php')) {
-            $exists = true;
-        }
-        if (file_exists($config->get('app.root').'Alpha/Model/Type/'.$classname.'.php')) {
-            $exists = true;
-        }
-
-        self::$logger->debug('<<checkClassDefExists ['.$exists.']');
-
-        return $exists;
-    }
-
-    /**
      * Checks that a record exists for the BO in the database.
      *
      * @param int $OID The Object ID of the object we want to see whether it exists or not.
