@@ -96,7 +96,6 @@ class ConfigProvider
         if (!isset(self::$instance)) {
             self::$instance = new self();
             self::$instance->setRootPath();
-            self::$instance->setIncludePath();
 
             // check to see if a child class with callbacks has been implemented
             if (file_exists(self::$instance->get('rootPath').'config/ConfigCallbacks.inc')) {
@@ -104,7 +103,6 @@ class ConfigProvider
 
                 self::$instance = new ConfigCallbacks();
                 self::$instance->setRootPath();
-                self::$instance->setIncludePath();
             }
 
             // populate the config from the ini file
@@ -164,49 +162,11 @@ class ConfigProvider
      */
     private function setRootPath()
     {
-        $currentScript = __FILE__;
-
-        // reverse the slashes in case we are running on Windows
-        $currentScript = str_replace('\\', '/', $currentScript);
-
-        $rootPath = '';
-
-        if (mb_strrpos($currentScript, 'Alpha/View/Widget/') !== false) {
-            // set path for widgets
-            $rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'Alpha/View/Widget/'));
-        } elseif (mb_strrpos($currentScript, 'Alpha/Util/') !== false) {
-            // set the path for util scripts
-            $rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'Alpha/Util/'));
-        } elseif (mb_strrpos($currentScript, 'Alpha/') !== false) {
-            // check to see if it is a controller under /alpha
-            $rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'Alpha/'));
-        } elseif (!mb_strrpos($currentScript, 'Alpha/') && mb_strrpos($currentScript, 'Controller/') != false) {
-            // handle custom controllers at a lower level
-            $rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'Controller/'));
-        } elseif (mb_strrpos($currentScript, 'Config/css/') !== false) {
-            // set path for CSS files
-            $rootPath = mb_substr($currentScript, 0, mb_strrpos($currentScript, 'config/css/'));
-        } elseif (mb_strrpos($currentScript, 'CronManager') !== false) {
-            // set the path for the CronManager being run from CLI
-            $rootPath = '../../';
+        if (strpos(__DIR__, 'vendor/alphadevx/alpha/Alpha/Util/Config') !== false) {
+            $this->set('rootPath', str_replace('vendor/alphadevx/alpha/Alpha/Util/Config', '', __DIR__));
         } else {
-            $rootPath = '.';
+            $this->set('rootPath', str_replace('Alpha/Util/Config', '', __DIR__));
         }
-
-        $this->set('rootPath', $rootPath);
-    }
-
-    /**
-     * Attempt to set the include_path to include the alpha/lib directory.
-     *
-     * @since 1.0
-     */
-    private function setIncludePath()
-    {
-        $config = self::getInstance();
-        $rootPath = $config->get('rootPath');
-
-        ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.$rootPath.'alpha/lib/');
     }
 
     /**
