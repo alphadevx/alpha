@@ -656,7 +656,16 @@ For example code, please view the _Alpha\Controller\SearchController_ class and 
 
 ### Security
 
-TODO
+Alpha provides a static utility class with two methods for encrypting or decrypting data:
+
+	use Alpha\Util\Security\SecurityUtils;
+
+	// ...
+
+	$encrypted = SecurityUtils::encrypt('Some data');
+	$decrypted = SecurityUtils::decrypt($encrypted);
+
+The class makes use of the MCrypt extension in PHP to handle encryption, using the TripleDES algorithm.  The secret key used is what you set in the _security.encryption.key_ setting in your config file, which is unique to your application.
 
 ### Error handling
 
