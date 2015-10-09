@@ -669,7 +669,13 @@ The class makes use of the MCrypt extension in PHP to handle encryption, using t
 
 ### Error handling
 
-TODO
+It is best practice to build in your own error handling into your application using try/catch blocks, however in the event of an uncaught exception or a generic (non-fatal) PHP error, Alpha provides the _Alpha\Util\ErrorHandlers_ class that should be used in your bootsrap file like so:
+
+	set_exception_handler('Alpha\Util\ErrorHandlers::catchException');
+	set_error_handler('Alpha\Util\ErrorHandlers::catchError', $config->get('php.error.log.level'));
+
+The _catchException()_ method captures an uncaught Exception object and logs it to the application log (message and stacktrace).  The 
+_catchError()_ method captures a general PHP error and converts it to an _Alpha\Exception\PHPException_ object, which is then thrown to be captured and logged by _catchException()_.
 
 Contact
 -------
