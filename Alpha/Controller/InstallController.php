@@ -113,6 +113,7 @@ class InstallController extends Controller implements ControllerInterface
 
             $controller = new LoginController();
             $controller->setName('LoginController');
+            $controller->setRequest($request);
             $controller->setUnitOfWork(array('Alpha\Controller\LoginController', 'Alpha\Controller\InstallController'));
 
             self::$logger->debug('<<__construct');
