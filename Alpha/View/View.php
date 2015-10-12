@@ -866,8 +866,8 @@ class View
         $className = $class->getShortname();
 
         $customPath = $config->get('app.root').'View/Html/Templates/'.$className.'/'.$filename;
-        $defaultPath1 = $config->get('app.root').'vendor/alphadevx/alphaframework/Alpha/View/Renderer/Html/Templates/'.$className.'/'.$filename;
-        $defaultPath2 = $config->get('app.root').'vendor/alphadevx/alphaframework/Alpha/View/Renderer/Html/Templates/'.$filename;
+        $defaultPath1 = $config->get('app.root').'vendor/alpha/alphaframework/Alpha/View/Renderer/Html/Templates/'.$className.'/'.$filename;
+        $defaultPath2 = $config->get('app.root').'vendor/alpha/alphaframework/Alpha/View/Renderer/Html/Templates/'.$filename;
         $defaultPath3 = $config->get('app.root').'Alpha/View/Renderer/Html/Templates/'.$className.'/'.$filename;
         $defaultPath4 = $config->get('app.root').'Alpha/View/Renderer/Html/Templates/'.$filename;
 
@@ -942,7 +942,7 @@ class View
         }
 
         $customPath = $config->get('app.root').'View/'.ucfirst($type).'/Fragments/'.$fileName;
-        $defaultPath1 = $config->get('app.root').'vendor/alphadevx/alphaframework/Alpha/View/Renderer/'.ucfirst($type).'/Fragments/'.$fileName;
+        $defaultPath1 = $config->get('app.root').'vendor/alpha/alphaframework/Alpha/View/Renderer/'.ucfirst($type).'/Fragments/'.$fileName;
         $defaultPath2 = $config->get('app.root').'Alpha/View/Renderer/'.ucfirst($type).'/Fragments/'.$fileName;
 
         // Check to see if a custom template exists for this BO, and if it does load that
