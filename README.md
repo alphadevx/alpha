@@ -126,7 +126,13 @@ Now open that file in your editor to review: it is this file that you will use t
 
 ### Running the installer
 
-TODO
+Once you have configured your application, your web server, and created an empty database, you should then start up you web and database servers and navigate to the root URL of your application.  Alpha will automatically detect that it is not installed, and will re-direct to the _Alpha\Controller\InstallController_ for you.
+
+The first thing you will see is a prompt for a username and password, you should enter the values for _app.install.username_ and _app.install.password_ from your application config file to gain access.
+
+The InstallController will create any directories required for you (to store log files, the file cache, article attachments etc.), in addition to creating the database tables, indexes, and foreign keys required to support our active records.  Once all of this work is completed, a link to the administration backend will be presented.
+
+Once your application is installed in production, you should set the _app.check.installed_ config value to false to remove the overhead of checking to see if the application is installed on each request.
 
 Models
 ------
