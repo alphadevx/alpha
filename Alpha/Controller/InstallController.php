@@ -157,90 +157,6 @@ class InstallController extends Controller implements ControllerInterface
         }
 
         /*
-         * Create the cron tasks directory
-         */
-        try {
-            $tasksDir = $config->get('app.root').'tasks';
-
-            $body .= '<p>Attempting to create the tasks directory <em>'.$tasksDir.'</em>...';
-
-            if (!file_exists($tasksDir)) {
-                mkdir($tasksDir, 0774);
-            }
-
-            self::$logger->info('Tasks directory ['.$tasksDir.'] successfully created');
-            $body .= View::displayUpdateMessage('Tasks directory ['.$tasksDir.'] successfully created');
-        } catch (\Exception $e) {
-            $body .= View::displayErrorMessage($e->getMessage());
-            $body .= View::displayErrorMessage('Aborting.');
-
-            return new Response(500, $body, array('Content-Type' => 'text/html'));
-        }
-
-        /*
-         * Create the controller directory
-         */
-        try {
-            $controllerDir = $config->get('app.root').'controller';
-
-            $body .= '<p>Attempting to create the controller directory <em>'.$controllerDir.'</em>...';
-
-            if (!file_exists($controllerDir)) {
-                mkdir($controllerDir, 0774);
-            }
-
-            self::$logger->info('Controller directory ['.$controllerDir.'] successfully created');
-            $body .= View::displayUpdateMessage('Controllers directory ['.$controllerDir.'] successfully created');
-        } catch (\Exception $e) {
-            $body .= View::displayErrorMessage($e->getMessage());
-            $body .= View::displayErrorMessage('Aborting.');
-
-            return new Response(500, $body, array('Content-Type' => 'text/html'));
-        }
-
-        /*
-         * Create the model directory
-         */
-        try {
-            $modelDir = $config->get('app.root').'model';
-
-            $body .= '<p>Attempting to create the model directory <em>'.$modelDir.'</em>...';
-
-            if (!file_exists($modelDir)) {
-                mkdir($modelDir, 0774);
-            }
-
-            self::$logger->info('Model directory ['.$modelDir.'] successfully created');
-            $body .= View::displayUpdateMessage('Model directory ['.$modelDir.'] successfully created');
-        } catch (\Exception $e) {
-            $body .= View::displayErrorMessage($e->getMessage());
-            $body .= View::displayErrorMessage('Aborting.');
-
-            return new Response(500, $body, array('Content-Type' => 'text/html'));
-        }
-
-        /*
-         * Create the view directory
-         */
-        try {
-            $viewDir = $config->get('app.root').'view';
-
-            $body .= '<p>Attempting to create the view directory <em>'.$viewDir.'</em>...';
-
-            if (!file_exists($viewDir)) {
-                mkdir($viewDir, 0774);
-            }
-
-            self::$logger->info('View directory ['.$viewDir.'] successfully created');
-            $body .= View::displayUpdateMessage('View directory ['.$viewDir.'] successfully created');
-        } catch (\Exception $e) {
-            $body .= View::displayErrorMessage($e->getMessage());
-            $body .= View::displayErrorMessage('Aborting.');
-
-            return new Response(500, $body, array('Content-Type' => 'text/html'));
-        }
-
-        /*
          * Create the attachments directory
          */
         try {
@@ -481,7 +397,7 @@ class InstallController extends Controller implements ControllerInterface
             return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
-        $body .= '<br><p align="center"><a href="'.FrontController::generateSecureURL('act=ListActiveRecordsController').'">Administration Home Page</a></p><br>';
+        $body .= '<br><p align="center"><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ListActiveRecordsController').'">Administration Home Page</a></p><br>';
         $body .= View::displayPageFoot($this);
 
         // commit
