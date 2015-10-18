@@ -121,7 +121,6 @@ class TagController extends ActiveRecordController implements ControllerInterfac
 
         // render the tag manager screen
         if (!isset($params['ActiveRecordType']) && !isset($params['ActiveRecordOID'])) {
-
             $body .= View::displayPageHead($this);
 
             $message = $this->getStatusMessage();
@@ -322,7 +321,6 @@ class TagController extends ActiveRecordController implements ControllerInterfac
 
                 return $this->doGET($request);
             } elseif (isset($params['ActiveRecordType']) && isset($params['ActiveRecordOID'])) {
-
                 $ActiveRecordType = urldecode($params['ActiveRecordType']);
                 $ActiveRecordOID = $params['ActiveRecordOID'];
 
@@ -424,6 +422,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
         $request->addParams(array('ActiveRecordType' => 'Alpha\Model\Tag'));
 
         self::$logger->debug('<<doDELETE');
+
         return parent::doDELETE($request);
     }
 

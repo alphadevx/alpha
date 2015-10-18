@@ -1841,7 +1841,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                 }
 
                 if (!$foundMatch) {
-                    $matchCount--;
+                    --$matchCount;
                 }
 
                 $result->data_seek(0);
@@ -1859,7 +1859,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                 }
             }
             if (!$foundMatch) {
-                $matchCount--;
+                --$matchCount;
             }
         }
 

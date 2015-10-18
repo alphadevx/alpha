@@ -2,7 +2,6 @@
 
 namespace Alpha\Controller;
 
-use Alpha\Util\InputFilter;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Logging\KPI;
 use Alpha\Util\Config\ConfigProvider;
@@ -13,7 +12,6 @@ use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Util\File\FileUtils;
 use Alpha\Model\Article;
-use Alpha\Model\ArticleVote;
 use Alpha\Model\ArticleComment;
 use Alpha\View\View;
 use Alpha\View\ViewState;
@@ -21,11 +19,8 @@ use Alpha\View\Widget\Button;
 use Alpha\Exception\SecurityException;
 use Alpha\Exception\AlphaException;
 use Alpha\Exception\RecordNotFoundException;
-use Alpha\Exception\LockingException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\ResourceNotFoundException;
-use Alpha\Exception\ResourceNotAllowedException;
-use Alpha\Exception\FailedSaveException;
 use Alpha\Exception\FileNotFoundException;
 use Alpha\Model\ActiveRecord;
 use Alpha\Controller\Front\FrontController;
@@ -195,6 +190,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
 
             $body .= View::displayPageFoot($this);
             self::$logger->debug('<<doGET');
+
             return new Response(200, $body, array('Content-Type' => 'text/html'));
         }
 
@@ -306,6 +302,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
 
         $body .= View::displayPageFoot($this);
         self::$logger->debug('<<doGET');
+
         return new Response(200, $body, array('Content-Type' => 'text/html'));
     }
 
@@ -339,7 +336,6 @@ class ArticleController extends ActiveRecordController implements ControllerInte
             }
 
             if (isset($params['title']) || isset($params['ActiveRecordOID'])) {
-
                 $record = new Article();
 
                 if (isset($params['title'])) {
@@ -386,6 +382,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                     }
                 } else {
                     self::$logger->debug('<<doPUT');
+
                     return parent::doPUT($request);
                 }
             } else {
@@ -419,6 +416,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
         }
 
         self::$logger->debug('<<doPUT');
+
         return $response;
     }
 
@@ -430,7 +428,6 @@ class ArticleController extends ActiveRecordController implements ControllerInte
      * @return Alpha\Util\Http\Response
      *
      * @since 2.0
-     *
      */
     public function doDELETE($request)
     {
@@ -439,6 +436,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
         $this->setUnitOfWork(array());
 
         self::$logger->debug('<<doDELETE');
+
         return parent::doDELETE($request);
     }
 

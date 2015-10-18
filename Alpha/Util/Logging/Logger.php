@@ -2,7 +2,6 @@
 
 namespace Alpha\Util\Logging;
 
-use Alpha\Exception\MailNotSentException;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Email\EmailProviderFactory;
 use Alpha\Util\Http\Session\SessionProviderFactory;

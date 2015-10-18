@@ -51,7 +51,7 @@ use Alpha\Util\Config\ConfigProvider;
  */
 class EmailProviderPHP implements EmailProviderInterface
 {
-	/**
+    /**
      * Trace logger.
      *
      * @var Alpha\Util\Logging\Logger
@@ -75,13 +75,13 @@ class EmailProviderPHP implements EmailProviderInterface
      */
     public function send($to, $from, $subject, $body, $isHTML = false)
     {
-    	self::$logger->debug('>>send(to=['.$to.'], from=['.$from.'], subject=['.$subject.'], body=['.$body.'], isHTML=['.$isHTML.'])');
+        self::$logger->debug('>>send(to=['.$to.'], from=['.$from.'], subject=['.$subject.'], body=['.$body.'], isHTML=['.$isHTML.'])');
 
-    	$config = ConfigProvider::getInstance();
+        $config = ConfigProvider::getInstance();
 
         $headers = 'MIME-Version: 1.0'."\n";
         if ($isHTML) {
-        	$headers .= 'Content-type: text/html; charset=iso-8859-1'."\n";
+            $headers .= 'Content-type: text/html; charset=iso-8859-1'."\n";
         }
         $headers .= 'From: '.$from."\n";
 
@@ -95,6 +95,6 @@ class EmailProviderPHP implements EmailProviderInterface
             self::$logger->info("Sending email:\n".$headers."\n".$body);
         }
 
-    	self::$logger->debug('<<send');
+        self::$logger->debug('<<send');
     }
 }

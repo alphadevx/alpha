@@ -9,8 +9,6 @@ use Alpha\Util\Helper\Validator;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Email\EmailProviderFactory;
-use Alpha\Exception\MailNotSentException;
-use Alpha\Exception\PHPException;
 use Alpha\Exception\RecordNotFoundException;
 
 /**

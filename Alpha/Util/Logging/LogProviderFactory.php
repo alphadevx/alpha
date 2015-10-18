@@ -4,8 +4,6 @@ namespace Alpha\Util\Logging;
 
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Logging\Logger;
-
 /**
  * A factory for creating log provider implementations that implement the
  * LogProviderInterface interface.

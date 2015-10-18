@@ -1844,7 +1844,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                 }
 
                 if (!$foundMatch) {
-                    $matchCount--;
+                    --$matchCount;
                 }
 
                 $result->reset();
@@ -1862,7 +1862,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                 }
             }
             if (!$foundMatch) {
-                $matchCount--;
+                --$matchCount;
             }
         }
 
