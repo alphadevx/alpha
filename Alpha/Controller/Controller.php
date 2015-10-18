@@ -892,8 +892,10 @@ abstract class Controller
 
     /**
      * Clears the session and object attributes related to unit of work sessions.
+     *
+     * @since 1.0
      */
-    private function clearUnitOfWorkAttributes()
+    public function clearUnitOfWorkAttributes()
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
