@@ -320,6 +320,7 @@ class LoginController extends Controller implements ControllerInterface
                 $response = new Response(301);
                 if ($this->getNextJob() != '') {
                     $response->redirect(FrontController::generateSecureURL('act='.$this->getNextJob()));
+                    $this->clearUnitOfWorkAttributes();
                 } else {
                     $response->redirect($config->get('app.url'));
                 }
