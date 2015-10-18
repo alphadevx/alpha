@@ -1,0 +1,17 @@
+---
+- hosts: yourhost
+  remote_user: deploy
+  sudo: false
+  gather_facts: false
+  vars_prompt:
+    appversion: "What is the version number for this deployment?"
+  tasks:
+  # appdeploy
+  - name: create the new dir for the release
+    command: mkdir /var/www/{{appversion}}
+  - name: copy the contents of the app directory to the target server
+    synchronize: src=../ dest=/var/www/{{appversion}}
+  - name: remove the old symlink
+    command: rm -f /var/www/current
+  - name: recreate the new symlink pointing to new replease
+    command: ln -s /var/www/{{appversion}} /var/www/current
