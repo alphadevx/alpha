@@ -6,6 +6,7 @@ use Alpha\View\Renderer\RendererProviderInterface;
 use Alpha\View\Widget\Button;
 use Alpha\View\Widget\TextBox;
 use Alpha\View\Widget\StringBox;
+use Alpha\View\Widget\DateBox;
 use Alpha\View\Widget\RecordSelector;
 use Alpha\View\View;
 use Alpha\View\ViewState;
