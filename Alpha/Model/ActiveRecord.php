@@ -1905,9 +1905,9 @@ abstract class ActiveRecord
 
         $classNameArray = array();
 
-        if (file_exists($config->get('app.root').'Model')) { // it is possible it has not been created yet...
+        if (file_exists($config->get('app.root').'src/Model')) { // it is possible it has not been created yet...
             // first get any custom BOs
-            $handle = opendir($config->get('app.root').'Model');
+            $handle = opendir($config->get('app.root').'src/Model');
 
             // loop over the business object directory
             while (false !== ($file = readdir($handle))) {
