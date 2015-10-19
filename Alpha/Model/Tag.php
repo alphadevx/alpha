@@ -8,6 +8,7 @@ use Alpha\Exception\AlphaException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\CustomQueryException;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Cache\CacheProviderFactory;
 use Alpha\Util\Helper\Validator;
 use Alpha\Util\Logging\Logger;
 
