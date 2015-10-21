@@ -1090,8 +1090,7 @@ class RendererProviderHTML implements RendererProviderInterface
                     $html .= $widget->render($expanded, $buttons);
                 } catch (IllegalArguementException $iae) {
                     // the rel may be on a parent class
-                    $parentClassName = ucfirst($this->BO->getTableName()).'Object';
-                    $widget = new RecordSelector($rel, $label, $name, $parentClassName);
+                    $widget = new RecordSelector($rel, $label, $name, get_parent_class($this->BO));
                     $html .= $widget->render($expanded, $buttons);
                 }
             } else {
@@ -1110,8 +1109,7 @@ class RendererProviderHTML implements RendererProviderInterface
                     $html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue(get_class($this->BO)));
                 } catch (IllegalArguementException $iae) {
                     // the rel may be on a parent class
-                    $parentClassName = ucfirst($this->BO->getTableName()).'Object';
-                    $html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue($parentClassName));
+                    $html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue(get_parent_class($this->BO)));
                 }
             } else {
                 $rel = new RecordSelector($rel, $label, $name);
