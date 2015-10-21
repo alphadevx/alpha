@@ -1010,7 +1010,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                                     // check to see if the rel is on this class
                                     $side = $prop->getSide(get_class($this->BO));
                                 } catch (IllegalArguementException $iae) {
-                                    $side = $prop->getSide(ucfirst($this->BO->getTableName()).'Object');
+                                    $side = $prop->getSide(get_parent_class($this->BO));
                                 }
 
                                 $lookUp = $prop->getLookup();

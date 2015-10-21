@@ -738,7 +738,7 @@ abstract class ActiveRecord
                         // check to see if the rel is on this class
                         $side = $prop->getSide(get_class($this));
                     } catch (IllegalArguementException $iae) {
-                        $side = $prop->getSide(ucfirst($this->getTableName()).'Object');
+                        $side = $prop->getSide(get_parent_class($this));
                     }
 
                     self::$logger->debug('Side is ['.$side.']'.$this->getOID());
