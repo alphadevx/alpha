@@ -2217,7 +2217,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             $BOclasses = ActiveRecord::getBOClassNames();
 
             foreach ($BOclasses as $BOclassName) {
-                if ($tablename == $BOclassName) {
+                $reflection = new ReflectionClass($BOclassName);
+                $classname = $reflection->getShortName();
+                if ($tablename == $classname) {
                     self::$logger->debug('<<isTableOverloaded [true]');
 
                     return true;
