@@ -3,6 +3,7 @@
 namespace Alpha\View\Widget;
 
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Security\SecurityUtils;
 
 /**
  * Button HTML custom widget.
@@ -101,7 +102,7 @@ class Button
 
         $this->action = $action;
         $this->title = $title;
-        $this->id = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt($id)) : $id);
+        $this->id = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt($id)) : $id);
         $this->imgURL = $imgURL;
         $this->glyphIcon = $glyphIcon;
         $this->title = $title;

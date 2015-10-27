@@ -10,6 +10,6 @@
 		</div>
 		<?= $fileAttachments; ?>
 		<?= $formSecurityFields ?>
-	<input type="hidden" name="<?= ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('version_num')) : 'version_num') ?>" value="<?= $version_num ?>"/>
-	<input type="hidden" name="<?= ($config->get('security.encrypt.http.fieldnames') ? base64_encode(AlphaSecurityUtils::encrypt('_METHOD')) : '_METHOD') ?>" value="PUT"/>
+	<input type="hidden" name="<?= ($config->get('security.encrypt.http.fieldnames') ? base64_encode(\Alpha\Util\Security\SecurityUtils::encrypt('version_num')) : 'version_num') ?>" value="<?= $version_num ?>"/>
+	<input type="hidden" name="<?= ($config->get('security.encrypt.http.fieldnames') ? base64_encode(\Alpha\Util\Security\SecurityUtils::encrypt('_METHOD')) : '_METHOD') ?>" value="PUT"/>
 </form>

@@ -1385,7 +1385,7 @@ abstract class Controller
 
             // set request params where fieldnames provided are based64 encoded and encrypted
             if (Validator::isBase64($fieldname)) {
-                $decrypted[trim(AlphaSecurityUtils::decrypt(base64_decode($fieldname)))] = $params[$fieldname];
+                $decrypted[trim(SecurityUtils::decrypt(base64_decode($fieldname)))] = $params[$fieldname];
             }
         }
     }
