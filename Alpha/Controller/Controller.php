@@ -1374,6 +1374,8 @@ abstract class Controller
      * Descrypts the HTTP param fieldnames in the array provided and returns the plain version.
      *
      * @param $params array
+     *
+     * @return array
      * 
      * @since 1.2.2
      */
@@ -1388,6 +1390,8 @@ abstract class Controller
                 $decrypted[trim(SecurityUtils::decrypt(base64_decode($fieldname)))] = $params[$fieldname];
             }
         }
+
+        return $decrypted;
     }
 
     /**
