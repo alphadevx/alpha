@@ -265,6 +265,24 @@ class Request
     }
 
     /**
+     * Set the HTTP method of this request.
+     *
+     * @param string $method
+     *
+     * @throws Alpha\Exception\IllegalArguementException
+     *
+     * @since 2.0
+     */
+    public function setMethod($method)
+    {
+        if (in_array($method, $this->HTTPMethods)) {
+            $this->method = $method;
+        } else {
+            throw new IllegalArguementException('The method provided ['.$method.'] is not valid!');
+        }
+    }
+
+    /**
      * Return all headers on this request.
      *
      * @return array

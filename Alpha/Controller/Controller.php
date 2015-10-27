@@ -1548,7 +1548,12 @@ abstract class Controller
         if (in_array($method, array('POST', 'PUT', 'PATCH'))) {
             if ($config->get('security.encrypt.http.fieldnames')) {
                 $decryptedParams = $this->decryptFieldNames($request->getParams());
-                $request->setParams($decryptedParams);
+                $request->addParams($decryptedParams);
+
+                if ($request->getParam('_METHOD') != null) {
+                    $request->setMethod($request->getParam('_METHOD'));
+                    $method = $request->getMethod();
+                }
             }
         }
 
