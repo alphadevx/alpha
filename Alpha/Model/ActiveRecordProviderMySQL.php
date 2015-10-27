@@ -1597,7 +1597,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         self::$logger->debug('>>getCount(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'])');
 
         if ($this->BO->isTableOverloaded()) {
-            $whereClause = ' WHERE classname = \''.get_class($this->BO).'\' AND';
+            $whereClause = ' WHERE classname = \''.addslashes(get_class($this->BO)).'\' AND';
         } else {
             $whereClause = ' WHERE';
         }
