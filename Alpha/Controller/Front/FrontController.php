@@ -618,7 +618,7 @@ class FrontController
              // route URIs with params missing (will attempt to layer on defaults later on in Request class)
             foreach ($this->routes as $route => $callback) {
                 $pattern = '#^'.$route.'$#s';
-                $pattern = preg_replace('#\/\{\S+\}#', '.*', $pattern);
+                $pattern = preg_replace('#\/\{\S+\}#', '\/?', $pattern);
 
                 if (preg_match($pattern, $URI)) {
                     $this->currentRoute = $route;
