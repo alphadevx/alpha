@@ -672,12 +672,13 @@ class RendererProviderHTML implements RendererProviderInterface
     {
         $config = ConfigProvider::getInstance();
 
-        $html = '<html><head>';
-        $html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'/css/alpha.css">';
-        $html .= '<title>'.$code.' - '.$message.'</title></head>';
+        $html = View::loadTemplateFragment('html', 'head.phtml', array('title' => $code.' - '.$message, 'description' => $message, 'allowCSSOverrides' => false));
+        $html .= '</head>';
         $html .= '<body>';
+        $html .= '<div class="container">';
         $html .= self::displayErrorMessage('<strong>'.$code.':</strong> '.$message);
-        $html .= '</body></html>';
+        $html .= '<div align="center"><a href="'.$config->get('app.url').'">Home Page</a></div>';
+        $html .= '</div></body></html>';
 
         return $html;
     }
