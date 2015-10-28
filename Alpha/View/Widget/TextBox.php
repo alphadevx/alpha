@@ -158,8 +158,8 @@ class TextBox
         $html .= '</div>';
 
         if ($this->textObject->getRule() != '') {
-            $html .= '<input type="hidden" id="'.$this->name.'_msg" value="'.$this->textObject->getHelper().'"/>';
-            $html .= '<input type="hidden" id="'.$this->name.'_rule" value="'.$this->textObject->getRule().'"/>';
+            $html .= '<input type="hidden" id="text_field_'.$this->name.'_'.$this->identifier.'_msg" value="'.$this->textObject->getHelper().'"/>';
+            $html .= '<input type="hidden" id="text_field_'.$this->name.'_'.$this->identifier.'_rule" value="'.$this->textObject->getRule().'"/>';
         }
 
         return $html;
