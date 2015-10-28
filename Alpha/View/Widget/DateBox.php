@@ -141,9 +141,12 @@ class DateBox
             $value = '';
         }
 
-        $html .= '<div class="input-group date">';
-        $html .= '<input type="text" class="form-control" name="'.$this->name.'" id="'.$this->name.'" value="'.$value.'"/>';
-        $html .= '<span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>';
+        $html = '<div class="form-group">';
+        $html .= '  <label for="'.$this->name.'">'.$this->label.'</label>';
+        $html .= '  <div class="input-group date">';
+        $html .= '    <input type="text" class="form-control" name="'.$this->name.'" id="'.$this->name.'" value="'.$value.'" readonly/>';
+        $html .= '    <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>';
+        $html .= '  </div>';
         $html .= '</div>';
 
         $html .= '<script language="javascript">';
