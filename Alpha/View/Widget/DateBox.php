@@ -154,6 +154,7 @@ class DateBox
         $html .= '  $(\'[Id="'.$this->name.'"]\').parent().datepicker({';
         $html .= '      format: "yyyy-mm-dd",';
         $html .= '      todayBtn: "linked",';
+        $html .= '      todayHighlight: true,';
         $html .= '      autoclose: true';
         $html .= '  });';
         $html .= '}';
