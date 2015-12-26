@@ -56,7 +56,7 @@ class Request
      *
      * @since 2.0
      */
-    private $HTTPMethods = array('HEAD','GET','POST','PUT','PATCH','DELETE','OPTIONS');
+    private $HTTPMethods = array('HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS');
 
     /**
      * The HTTP method of this request (must be in HTTPMethods array).

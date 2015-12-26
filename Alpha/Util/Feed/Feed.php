@@ -113,7 +113,7 @@ abstract class Feed
      *
      * @since 1.0
      */
-    protected $tagMap = array('item' => 'item','feeddesc' => 'description','itemdesc' => 'description');
+    protected $tagMap = array('item' => 'item', 'feeddesc' => 'description', 'itemdesc' => 'description');
 
     /**
      * The BO which we will serve up in this feed.

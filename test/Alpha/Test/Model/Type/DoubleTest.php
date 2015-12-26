@@ -55,7 +55,7 @@ class DoubleTest extends \PHPUnit_Framework_TestCase
     /**
      * An Double for testing.
      *
-     * @var Double
+     * @var float
      *
      * @since 1.0
      */
@@ -64,7 +64,7 @@ class DoubleTest extends \PHPUnit_Framework_TestCase
     /**
      * An Double for testing.
      *
-     * @var Double
+     * @var float
      *
      * @since 1.0
      */

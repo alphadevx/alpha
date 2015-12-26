@@ -76,7 +76,7 @@ class DEnum extends ActiveRecord implements TypeInterface
     /**
      * The name of the DEnum used in the database.
      *
-     * @var String
+     * @var string
      *
      * @since 1.0
      */
@@ -98,7 +98,7 @@ class DEnum extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    protected $dataLabels = array('OID' => 'DEnum ID#','name' => 'Name');
+    protected $dataLabels = array('OID' => 'DEnum ID#', 'name' => 'Name');
 
     /**
      * The message to display to the user when validation fails.
@@ -229,7 +229,7 @@ class DEnum extends ActiveRecord implements TypeInterface
     /**
      * Getter for the name.
      *
-     * @return String
+     * @return string
      *
      * @since 1.0
      */

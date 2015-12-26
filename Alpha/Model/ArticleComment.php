@@ -75,7 +75,7 @@ class ArticleComment extends ActiveRecord
      *
      * @since 1.0
      */
-    protected $dataLabels = array('OID' => 'Article Comment ID#','articleOID' => 'Article','content' => 'Comment');
+    protected $dataLabels = array('OID' => 'Article Comment ID#', 'articleOID' => 'Article', 'content' => 'Comment');
 
     /**
      * The name of the database table for the class.

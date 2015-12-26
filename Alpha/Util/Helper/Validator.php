@@ -184,7 +184,7 @@ class Validator
     public static function isInteger($value)
     {
         if (preg_match(self::REQUIRED_INTEGER, $value)) {
-            return (is_numeric($value) ? intval($value) == $value : false);
+            return is_numeric($value) ? intval($value) == $value : false;
         } else {
             return false;
         }
@@ -202,7 +202,7 @@ class Validator
     public static function isDouble($value)
     {
         if (preg_match(self::REQUIRED_DOUBLE, $value)) {
-            return (is_numeric($value) ? doubleval($value) == $value : false);
+            return is_numeric($value) ? doubleval($value) == $value : false;
         } else {
             return false;
         }

@@ -55,7 +55,7 @@ class BooleanTest extends \PHPUnit_Framework_TestCase
     /**
      * An Boolean for testing.
      *
-     * @var Boolean
+     * @var bool
      *
      * @since 1.0
      */

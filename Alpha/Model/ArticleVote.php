@@ -84,7 +84,7 @@ class ArticleVote extends ActiveRecord
      *
      * @since 1.0
      */
-    protected $dataLabels = array('OID' => 'Article Vote ID#','articleOID' => 'Article','personOID' => 'Voter','score' => 'Article Score');
+    protected $dataLabels = array('OID' => 'Article Vote ID#', 'articleOID' => 'Article', 'personOID' => 'Voter', 'score' => 'Article Score');
 
     /**
      * The name of the database table for the class.

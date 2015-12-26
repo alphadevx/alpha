@@ -183,7 +183,7 @@ class Article extends ActiveRecord
      *
      * @since 1.0
      */
-    protected $dataLabels = array('OID' => 'Article ID#','title' => 'Title','section' => 'Site Section','description' => 'Description','bodyOnload' => 'Body onload Javascript','content' => 'Content','headerContent' => 'HTML Header Content','author' => 'Author','created_ts' => 'Date Added','updated_ts' => 'Date of last Update','published' => 'Published','URL' => 'URL','printURL' => 'Printer version URL','comments' => 'Comments','votes' => 'Votes','tags' => 'Tags');
+    protected $dataLabels = array('OID' => 'Article ID#', 'title' => 'Title', 'section' => 'Site Section', 'description' => 'Description', 'bodyOnload' => 'Body onload Javascript', 'content' => 'Content', 'headerContent' => 'HTML Header Content', 'author' => 'Author', 'created_ts' => 'Date Added', 'updated_ts' => 'Date of last Update', 'published' => 'Published', 'URL' => 'URL', 'printURL' => 'Printer version URL', 'comments' => 'Comments', 'votes' => 'Votes', 'tags' => 'Tags');
 
     /**
      * The name of the database table for the class.
@@ -556,7 +556,7 @@ class Article extends ActiveRecord
      */
     public function isLoadedFromFile()
     {
-        return ($this->filePath == '' ? false : true);
+        return $this->filePath == '' ? false : true;
     }
 
     /**

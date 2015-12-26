@@ -65,7 +65,7 @@ class BlacklistedIP extends ActiveRecord
      *
      * @since 1.2
      */
-    protected $dataLabels = array('OID' => 'Blacklisted IP ID#','IP' => 'IP Address');
+    protected $dataLabels = array('OID' => 'Blacklisted IP ID#', 'IP' => 'IP Address');
 
     /**
      * The name of the database table for the class.

@@ -41,7 +41,8 @@
         "phpunit/phpunit": "4.8.2",
         "phing/phing": "2.8.2",
         "apigen/apigen": "2.8.1",
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "dev-master",
+        "fabpot/php-cs-fixer": "v1.11"
     },
     "autoload": {
         "psr-0": {

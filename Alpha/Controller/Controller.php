@@ -632,7 +632,7 @@ abstract class Controller
     /**
      * Getter for the unit of work MAX duration.
      *
-     * @return Integer
+     * @return int
      *
      * @since 1.0
      */
@@ -1505,7 +1505,7 @@ abstract class Controller
      */
     public function doOPTIONS($request)
     {
-        $HTTPMethods = array('HEAD','GET','POST','PUT','PATCH','DELETE','OPTIONS');
+        $HTTPMethods = array('HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS');
         $supported = array();
 
         foreach ($HTTPMethods as $HTTPMethod) {

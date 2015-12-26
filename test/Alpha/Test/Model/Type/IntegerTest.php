@@ -55,7 +55,7 @@ class IntegerTest extends \PHPUnit_Framework_TestCase
     /**
      * An Integer for testing.
      *
-     * @var Integer
+     * @var int
      *
      * @since 1.0
      */
@@ -64,7 +64,7 @@ class IntegerTest extends \PHPUnit_Framework_TestCase
     /**
      * An Integer for testing.
      *
-     * @var Integer
+     * @var int
      *
      * @since 1.0
      */

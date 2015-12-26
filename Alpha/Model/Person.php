@@ -421,7 +421,7 @@ class Person extends ActiveRecord
      */
     public function generatePassword()
     {
-        $alphabet = array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
+        $alphabet = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z');
         // the password will be 7 random characters and 2 numbers
         $newPassword = '';
         for ($i = 0; $i < 7; ++$i) {

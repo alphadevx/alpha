@@ -169,7 +169,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    private $allowableRelationTypes = array('MANY-TO-ONE','ONE-TO-MANY','ONE-TO-ONE','MANY-TO-MANY');
+    private $allowableRelationTypes = array('MANY-TO-ONE', 'ONE-TO-MANY', 'ONE-TO-ONE', 'MANY-TO-MANY');
 
     /**
      * The object ID (OID) value of the related object.  In the special case of a MANY-TO-MANY

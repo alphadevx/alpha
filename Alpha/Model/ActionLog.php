@@ -94,7 +94,7 @@ class ActionLog extends ActiveRecord
      *
      * @since 1.2.2
      */
-    protected $dataLabels = array('OID' => 'Action Log ID#','client' => 'Client string','IP' => 'IP address','message' => 'Message','personOID' => 'Owner');
+    protected $dataLabels = array('OID' => 'Action Log ID#', 'client' => 'Client string', 'IP' => 'IP address', 'message' => 'Message', 'personOID' => 'Owner');
 
     /**
      * The name of the database table for the class.

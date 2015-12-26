@@ -47,7 +47,11 @@ Alpha should be installed using Composer.  Here is a minimum example _composer.j
 	            "url": "http://pear.php.net"
 	        }
 	    ],
-	    "minimum-stability": "dev"
+	    "minimum-stability": "dev",
+	    "autoload": {
+        "psr-0": {
+            "": "src/"
+        }
 	}
 
 ### Database

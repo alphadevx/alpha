@@ -65,7 +65,7 @@ class BlacklistedClient extends ActiveRecord
      *
      * @since 1.0
      */
-    protected $dataLabels = array('OID' => 'Blacklisted Client ID#','client' => 'Client string');
+    protected $dataLabels = array('OID' => 'Blacklisted Client ID#', 'client' => 'Client string');
 
     /**
      * The name of the database table for the class.

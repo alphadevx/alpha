@@ -56,7 +56,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
     /**
      * A String for testing.
      *
-     * @var String
+     * @var string
      *
      * @since 1.0
      */

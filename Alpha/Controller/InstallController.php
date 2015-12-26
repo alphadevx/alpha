@@ -130,107 +130,8 @@ class InstallController extends Controller implements ControllerInterface
 
         $body .= '<h1>Installing the '.$config->get('app.title').' application</h1>';
 
-        // set the umask first before attempt mkdir
-        umask(0);
-
-        /*
-         * Create the logs directory, then instantiate a new logger
-         */
         try {
-            $logsDir = $config->get('app.file.store.dir').'logs';
-
-            $body .= '<p>Attempting to create the logs directory <em>'.$logsDir.'</em>...';
-
-            if (!file_exists($logsDir)) {
-                mkdir($logsDir, 0774);
-            }
-
-            self::$logger = new Logger('InstallController');
-            self::$logger->info('Started installation process!');
-            self::$logger->info('Logs directory ['.$logsDir.'] successfully created');
-            $body .= View::displayUpdateMessage('Logs directory ['.$logsDir.'] successfully created');
-        } catch (\Exception $e) {
-            $body .= View::displayErrorMessage($e->getMessage());
-            $body .= View::displayErrorMessage('Aborting.');
-
-            return new Response(500, $body, array('Content-Type' => 'text/html'));
-        }
-
-        /*
-         * Create the attachments directory
-         */
-        try {
-            $attachmentsDir = $config->get('app.file.store.dir').'attachments';
-
-            $body .= '<p>Attempting to create the attachments directory <em>'.$attachmentsDir.'</em>...';
-
-            if (!file_exists($attachmentsDir)) {
-                mkdir($attachmentsDir, 0774);
-            }
-
-            self::$logger->info('Attachments directory ['.$attachmentsDir.'] successfully created');
-            $body .= View::displayUpdateMessage('Attachments directory ['.$attachmentsDir.'] successfully created');
-        } catch (\Exception $e) {
-            $body .= View::displayErrorMessage($e->getMessage());
-            $body .= View::displayErrorMessage('Aborting.');
-
-            return new Response(500, $body, array('Content-Type' => 'text/html'));
-        }
-
-        /*
-         * Create the cache directory and sub-directories
-         */
-        try {
-            $cacheDir = $config->get('app.file.store.dir').'cache';
-            $htmlDir = $config->get('app.file.store.dir').'cache/html';
-            $imagesDir = $config->get('app.file.store.dir').'cache/images';
-            $pdfDir = $config->get('app.file.store.dir').'cache/pdf';
-            $xlsDir = $config->get('app.file.store.dir').'cache/xls';
-
-            // cache
-            $body .= '<p>Attempting to create the cache directory <em>'.$cacheDir.'</em>...';
-            if (!file_exists($cacheDir)) {
-                mkdir($cacheDir, 0774);
-            }
-
-            self::$logger->info('Cache directory ['.$cacheDir.'] successfully created');
-            $body .= View::displayUpdateMessage('Cache directory ['.$cacheDir.'] successfully created');
-
-            // cache/html
-            $body .= '<p>Attempting to create the HTML cache directory <em>'.$htmlDir.'</em>...';
-            if (!file_exists($htmlDir)) {
-                mkdir($htmlDir, 0774);
-            }
-
-            self::$logger->info('Cache directory ['.$htmlDir.'] successfully created');
-            $body .= View::displayUpdateMessage('Cache directory ['.$htmlDir.'] successfully created');
-
-            // cache/images
-            $body .= '<p>Attempting to create the cache directory <em>'.$imagesDir.'</em>...';
-            if (!file_exists($imagesDir)) {
-                mkdir($imagesDir, 0774);
-            }
-
-            self::$logger->info('Cache directory ['.$imagesDir.'] successfully created');
-            $body .= View::displayUpdateMessage('Cache directory ['.$imagesDir.'] successfully created');
-
-            // cache/pdf
-            $body .= '<p>Attempting to create the cache directory <em>'.$pdfDir.'</em>...';
-            if (!file_exists($pdfDir)) {
-                mkdir($pdfDir, 0774);
-            }
-
-            self::$logger->info('Cache directory ['.$pdfDir.'] successfully created');
-            $body .= View::displayUpdateMessage('Cache directory ['.$pdfDir.'] successfully created');
-
-            // cache/xls
-            $body .= '<p>Attempting to create the cache directory <em>'.$xlsDir.'</em>...';
-            if (!file_exists($xlsDir)) {
-                mkdir($xlsDir, 0774);
-            }
-
-            self::$logger->info('Cache directory ['.$xlsDir.'] successfully created');
-            $body .= View::displayUpdateMessage('Cache directory ['.$xlsDir.'] successfully created');
+            $body .= $this->createApplicationDirs();
         } catch (\Exception $e) {
             $body .= View::displayErrorMessage($e->getMessage());
             $body .= View::displayErrorMessage('Aborting.');
@@ -408,6 +309,145 @@ class InstallController extends Controller implements ControllerInterface
         self::$logger->debug('<<doGET');
 
         return new Response(200, $body, array('Content-Type' => 'text/html'));
+    }
+
+    /**
+     * Create the directories required by the application.
+     *
+     * @return string
+     *
+     * @since 2.0
+     */
+    public function createApplicationDirs()
+    {
+        self::$logger->debug('>>createApplicationDirs()');
+
+        $config = ConfigProvider::getInstance();
+
+        $body = '';
+
+        // set the umask first before attempt mkdir
+        umask(0);
+
+        /*
+         * Create the logs directory, then instantiate a new logger
+         */
+        $logsDir = $config->get('app.file.store.dir').'logs';
+
+        $body .= '<p>Attempting to create the logs directory <em>'.$logsDir.'</em>...';
+
+        if (!file_exists($logsDir)) {
+            var_dump(mkdir($logsDir, 0774));
+        }
+
+        self::$logger = new Logger('InstallController');
+        self::$logger->info('Started installation process!');
+        self::$logger->info('Logs directory ['.$logsDir.'] successfully created');
+        $body .= View::displayUpdateMessage('Logs directory ['.$logsDir.'] successfully created');
+
+        /*
+         * Create the src directory and sub-directories
+         */
+        $srcDir = $config->get('app.root').'src';
+
+        $body .= '<p>Attempting to create the src directory <em>'.$srcDir.'</em>...';
+
+        if (!file_exists($srcDir)) {
+            mkdir($srcDir, 0774);
+        }
+
+        self::$logger->info('Source directory ['.$srcDir.'] successfully created');
+        $body .= View::displayUpdateMessage('Source directory ['.$srcDir.'] successfully created');
+
+        $srcDir = $config->get('app.root').'src/Model';
+
+        if (!file_exists($srcDir)) {
+            mkdir($srcDir, 0774);
+        }
+
+        self::$logger->info('Source directory ['.$srcDir.'] successfully created');
+        $body .= View::displayUpdateMessage('Source directory ['.$srcDir.'] successfully created');
+
+        $srcDir = $config->get('app.root').'src/View';
+
+        if (!file_exists($srcDir)) {
+            mkdir($srcDir, 0774);
+        }
+
+        self::$logger->info('Source directory ['.$srcDir.'] successfully created');
+        $body .= View::displayUpdateMessage('Source directory ['.$srcDir.'] successfully created');
+
+        /*
+         * Create the attachments directory
+         */
+        $attachmentsDir = $config->get('app.file.store.dir').'attachments';
+
+        $body .= '<p>Attempting to create the attachments directory <em>'.$attachmentsDir.'</em>...';
+
+        if (!file_exists($attachmentsDir)) {
+            mkdir($attachmentsDir, 0774);
+        }
+
+        self::$logger->info('Attachments directory ['.$attachmentsDir.'] successfully created');
+        $body .= View::displayUpdateMessage('Attachments directory ['.$attachmentsDir.'] successfully created');
+
+        /*
+         * Create the cache directory and sub-directories
+         */
+        $cacheDir = $config->get('app.file.store.dir').'cache';
+        $htmlDir = $config->get('app.file.store.dir').'cache/html';
+        $imagesDir = $config->get('app.file.store.dir').'cache/images';
+        $pdfDir = $config->get('app.file.store.dir').'cache/pdf';
+        $xlsDir = $config->get('app.file.store.dir').'cache/xls';
+
+        // cache
+        $body .= '<p>Attempting to create the cache directory <em>'.$cacheDir.'</em>...';
+        if (!file_exists($cacheDir)) {
+            mkdir($cacheDir, 0774);
+        }
+
+        self::$logger->info('Cache directory ['.$cacheDir.'] successfully created');
+        $body .= View::displayUpdateMessage('Cache directory ['.$cacheDir.'] successfully created');
+
+        // cache/html
+        $body .= '<p>Attempting to create the HTML cache directory <em>'.$htmlDir.'</em>...';
+        if (!file_exists($htmlDir)) {
+            mkdir($htmlDir, 0774);
+        }
+
+        self::$logger->info('Cache directory ['.$htmlDir.'] successfully created');
+        $body .= View::displayUpdateMessage('Cache directory ['.$htmlDir.'] successfully created');
+
+        // cache/images
+        $body .= '<p>Attempting to create the cache directory <em>'.$imagesDir.'</em>...';
+        if (!file_exists($imagesDir)) {
+            mkdir($imagesDir, 0774);
+        }
+
+        self::$logger->info('Cache directory ['.$imagesDir.'] successfully created');
+        $body .= View::displayUpdateMessage('Cache directory ['.$imagesDir.'] successfully created');
+
+        // cache/pdf
+        $body .= '<p>Attempting to create the cache directory <em>'.$pdfDir.'</em>...';
+        if (!file_exists($pdfDir)) {
+            mkdir($pdfDir, 0774);
+        }
+
+        self::$logger->info('Cache directory ['.$pdfDir.'] successfully created');
+        $body .= View::displayUpdateMessage('Cache directory ['.$pdfDir.'] successfully created');
+
+        // cache/xls
+        $body .= '<p>Attempting to create the cache directory <em>'.$xlsDir.'</em>...';
+        if (!file_exists($xlsDir)) {
+            mkdir($xlsDir, 0774);
+        }
+
+        self::$logger->info('Cache directory ['.$xlsDir.'] successfully created');
+        $body .= View::displayUpdateMessage('Cache directory ['.$xlsDir.'] successfully created');
+
+        self::$logger->debug('<<createApplicationDirs');
+
+        return $body;
     }
 
     /**

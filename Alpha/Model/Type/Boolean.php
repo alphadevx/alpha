@@ -157,6 +157,6 @@ class Boolean extends Type implements TypeInterface
      */
     public function __toString()
     {
-        return ($this->value ? 'true' : 'false');
+        return $this->value ? 'true' : 'false';
     }
 }

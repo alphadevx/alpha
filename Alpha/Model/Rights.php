@@ -75,7 +75,7 @@ class Rights extends ActiveRecord
      *
      * @since 1.0
      */
-    protected $dataLabels = array('OID' => 'Rights Group ID#','name' => 'Rights Group Name','members' => 'Rights Group Members');
+    protected $dataLabels = array('OID' => 'Rights Group ID#', 'name' => 'Rights Group Name', 'members' => 'Rights Group Members');
 
     /**
      * The name of the database table for the class.
