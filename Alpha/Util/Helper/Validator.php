@@ -125,7 +125,7 @@ class Validator
      *
      * @since 1.0
      */
-    const REQUIRED_HTTP_URL = '/^(http:\/\/.*)$/i';
+    const REQUIRED_HTTP_URL = '/^((http|https):\/\/.*)$/i';
 
     /**
      * Optional HTTP URL value.
@@ -134,7 +134,7 @@ class Validator
      *
      * @since 1.0
      */
-    const OPTIONAL_HTTP_URL = '/http.*|^$/i';
+    const OPTIONAL_HTTP_URL = '/(http|https).*|^$/i';
 
     /**
      * Required IP address value.

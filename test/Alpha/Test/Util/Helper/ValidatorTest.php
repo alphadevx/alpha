@@ -136,6 +136,9 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(Validator::isURL('http://www.alphaframework.org'));
         $this->assertTrue(Validator::isURL('http://www.alphaframework.org/controller/View.php?some=value'));
         $this->assertTrue(Validator::isURL('http://alphaframework.org/'));
+        $this->assertTrue(Validator::isURL('https://www.alphaframework.org'));
+        $this->assertTrue(Validator::isURL('https://www.alphaframework.org/controller/View.php?some=value'));
+        $this->assertTrue(Validator::isURL('https://alphaframework.org/'));
         $this->assertFalse(Validator::isURL('http://alpha framework.org/'));
         $this->assertFalse(Validator::isURL('http//www.alphaframework.org'));
         $this->assertFalse(Validator::isURL('http:/www.alphaframework.org'));
