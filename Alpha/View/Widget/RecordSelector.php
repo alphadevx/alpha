@@ -235,7 +235,6 @@ class RecordSelector
 
                     $html .= '<div id="relation_field_'.$this->name.'" style="display:'.($expanded ? '' : 'none').';">';
 
-                    // TODO: remove these checks
                     $customViewControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'view');
                     $customEditControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'edit');
 
@@ -249,7 +248,6 @@ class RecordSelector
                             $viewURL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($obj).'&ActiveRecordOID='.$obj->getOID());
                             $editURL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($obj).'&ActiveRecordOID='.$obj->getOID().'/edit');
                         } else {
-                            // TODO: revisit all of these links once the generic CRUD controller is done
                             if (isset($customViewControllerName)) {
                                 if ($config->get('app.use.mod.rewrite')) {
                                     $viewURL = $config->get('app.url').$customViewControllerName.'/oid/'.$obj->getOID();

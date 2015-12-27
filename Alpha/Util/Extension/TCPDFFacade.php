@@ -112,8 +112,6 @@ class TCPDFFacade
      * @param Alpha\Model\ActiveRecord $BO the business object that stores the content will be rendered to Markdown
      *
      * @since 1.0
-     *
-     * @todo the constructor should not be doing so much work
      */
     public function __construct($BO)
     {
@@ -200,8 +198,6 @@ class TCPDFFacade
         $this->pdf->SetAuthor($this->BO->get('author'));
         $this->pdf->SetTitle($this->BO->get('title'));
         $this->pdf->SetSubject($this->BO->get('description'));
-        // TODO inject tags here?
-        //$this->pdf->SetKeywords($this->BO->get('keywords'));
 
         //set margins
         $this->pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);

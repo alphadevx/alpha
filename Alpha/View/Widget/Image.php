@@ -206,8 +206,6 @@ class Image
      * @return string
      *
      * @since 1.0
-     *
-     * @todo revise generated links
      */
     public function renderHTMLLink($altText = '')
     {
@@ -289,7 +287,6 @@ class Image
         $config = ConfigProvider::getInstance();
 
         // if scaled, we need to compute the target image size
-        // TODO: move cookie check to ImageController level
         if ($this->scale->getBooleanValue() && isset($_COOKIE['screenSize'])) {
             $originalScreenResolution = explode('x', $config->get('sysCMSImagesWidgetScreenResolution'));
             $originalScreenX = $originalScreenResolution[0];

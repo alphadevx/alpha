@@ -351,8 +351,6 @@ class ActiveRecordController extends Controller implements ControllerInterface
      * @return Alpha\Util\Http\Response
      *
      * @since 2.0
-     *
-     * @todo implement
      */
     public function doPOST($request)
     {
@@ -441,8 +439,6 @@ class ActiveRecordController extends Controller implements ControllerInterface
      * @return Alpha\Util\Http\Response
      *
      * @since 2.0
-     *
-     * @todo implement
      */
     public function doPUT($request)
     {
@@ -680,8 +676,6 @@ class ActiveRecordController extends Controller implements ControllerInterface
      * @return string
      *
      * @since 2.0
-     *
-     * @todo review how the links are generated
      */
     protected function renderPageLinks()
     {

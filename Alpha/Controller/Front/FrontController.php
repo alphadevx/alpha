@@ -479,8 +479,6 @@ class FrontController
      * @param string $string     The string to explode.
      * @param array  $delimiters An array of delimiters.
      *
-     * @todo move to string utils class
-     *
      * @return array
      *
      * @since 1.2

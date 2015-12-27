@@ -1040,7 +1040,7 @@ abstract class ActiveRecord
                     $propClass = get_class($this->getPropObject($propName));
 
                     if (isset($hashArray[$propName])) {
-                        if (mb_strtoupper($propClass) != 'DATE' && mb_strtoupper($propClass) != 'TIMESTAMP') { // TODO: not sure those class names are not namepaced
+                        if (mb_strtoupper($propClass) != 'DATE' && mb_strtoupper($propClass) != 'TIMESTAMP') {
                             $this->getPropObject($propName)->setValue($hashArray[$propName]);
                         } else {
                             $this->getPropObject($propName)->populateFromString($hashArray[$propName]);

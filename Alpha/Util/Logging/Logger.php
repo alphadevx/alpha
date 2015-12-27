@@ -275,8 +275,6 @@ class Logger
      * @param string $filepath
      *
      * @since 1.0
-     *
-     * @todo revise!
      */
     public function setLogProviderFile($filepath)
     {

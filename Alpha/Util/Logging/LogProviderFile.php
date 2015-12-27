@@ -121,7 +121,6 @@ class LogProviderFile implements LogProviderInterface
                         $this->backupFile();
                     }
                 } catch (\Exception $e) {
-                    // TODO log to PHP system log file instead
                     echo 'Unable to write to the log file ['.$this->path.'], error ['.$e->getMessage().']';
                     exit;
                 }

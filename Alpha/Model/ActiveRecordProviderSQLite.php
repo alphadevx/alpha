@@ -1295,7 +1295,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                     case 'INTEGER':
                         // special properties for RelationLookup OIDs
                         if ($this->BO instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
-                            // TODO add a $foreignKeys entry here...
                             $sqlQuery .= "$propName INTEGER(".$this->BO->getPropObject($propName)->getSize().') NOT NULL,';
                         } else {
                             $sqlQuery .= "$propName INTEGER(".$this->BO->getPropObject($propName)->getSize().'),';
@@ -2031,8 +2030,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                 }
             }
         }
-
-        // TODO: Processing foreign key indexes should go here, however there is no obvious way to list existing foreign keys in SQLite, see: https://www.assembla.com/spaces/alpha-framework/tickets/38
 
         self::$logger->debug('<<checkIndexes');
     }

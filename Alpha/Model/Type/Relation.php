@@ -559,8 +559,6 @@ class Relation extends Type implements TypeInterface
      */
     public function getRelatedClassDisplayFieldValue($accessingClassName = '')
     {
-        global $config; // TODO: remove!
-
         if ($this->relationType == 'MANY-TO-MANY') {
             /*
              * 1. Use RelationLookup to get OIDs of related objects

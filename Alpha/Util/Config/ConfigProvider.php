@@ -157,8 +157,6 @@ class ConfigProvider
      * Sets the root directory of the application.
      *
      * @since 1.0
-     *
-     * @todo refactor!
      */
     private function setRootPath()
     {
