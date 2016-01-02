@@ -100,10 +100,11 @@ class Markdown extends MarkdownExtra
     {
         $config = ConfigProvider::getInstance();
 
-        $whole_match = $matches[1];
-        $link_text = $this->runSpanGamut($matches[2]);
-        $url = $matches[3];
-        $title = &$matches[6];
+        $whole_match    =  $matches[1];
+        $link_text      =  $this->runSpanGamut($matches[2]);
+        $url            =  $matches[3] == '' ? $matches[4] : $matches[3];
+        $title          =& $matches[7];
+        $attr  = $this->doExtraAttributes("a", $dummy =& $matches[8]);
 
         $external = false;
 
@@ -120,26 +121,22 @@ class Markdown extends MarkdownExtra
             $external = true;
         }
 
-        $url = $this->encodeAmpsAndAngles($url);
+        $url = $this->encodeAttribute($url);
 
         $result = "<a href=\"$url\"";
         if (isset($title)) {
-            $title = str_replace('"', '&quot;', $title);
-            $title = $this->encodeAmpsAndAngles($title);
+            $title = $this->encodeAttribute($title);
             $result .=  " title=\"$title\"";
         }
         if ($external) {
             $result .= " target=\"$url\"";
         }
-
+        $result .= $attr;
+        
         $link_text = $this->runSpanGamut($link_text);
-        if (!$external) {
-            $result .= ">$link_text</a>";
-        } else {
-            $result .= '>'.$link_text.'<img src="'.$config->get('app.url').'/images/icons/page_go.png'.'" class="externalLink"/></a>';
-        }
+        $result .= ">$link_text</a>";
 
-        return $result;
+        return $this->hashPart($result);
     }
 
     /**
@@ -174,7 +171,7 @@ class Markdown extends MarkdownExtra
 
         # Creating code spans before splitting the row is an easy way to
         # handle a code span containg pipes.
-        $head = $this->doCodeSpans($head);
+        $head = $this->makeCodeSpan($head);
         $headers = preg_split('/ *[|] */', $head);
         $col_count = count($headers);
 
@@ -195,7 +192,7 @@ class Markdown extends MarkdownExtra
         foreach ($rows as $row) {
             # Creating code spans before splitting the row is an easy way to
             # handle a code span containg pipes.
-            $row = $this->doCodeSpans($row);
+            $row = $this->makeCodeSpan($row);
 
             # Split row by cell.
             $row_cells = preg_split('/ *[|] */', $row, $col_count);
