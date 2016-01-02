@@ -115,7 +115,7 @@ class DEnumView extends View
         // render edit buttons for admins only
         if ($session->get('currentUser') != null && $session->get('currentUser')->inGroup('Admin')) {
             $html .= '&nbsp;&nbsp;';
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=EditDEnum&oid='.$this->BO->getOID())."'", 'Edit', 'edit'.$this->BO->getOID().'But');
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\DEnumController&denumOID='.$this->BO->getOID())."'", 'Edit', 'edit'.$this->BO->getOID().'But');
             $html .= $button->render();
         }
         $html .= '</td></tr>';
