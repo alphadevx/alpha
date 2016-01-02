@@ -171,7 +171,7 @@ class DEnumView extends View
         $temp = new Button('submit', 'Save', 'saveBut');
         $html .= $temp->render();
         $html .= '&nbsp;&nbsp;';
-        $temp = new Button("document.location = '".FrontController::generateSecureURL('act=ListDEnums')."'", 'Back to List', 'cancelBut');
+        $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\DEnumController')."'", 'Back to List', 'cancelBut');
         $html .= $temp->render();
         $html .= '';
 
