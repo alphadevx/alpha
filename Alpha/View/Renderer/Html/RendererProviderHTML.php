@@ -129,7 +129,11 @@ class RendererProviderHTML implements RendererProviderInterface
         $button = new Button('submit', 'Create', 'createBut');
         $fields['createButton'] = $button->render();
 
-        $button = new Button("document.location.replace('".FrontController::generateSecureURL('act=Alpha\\Controller\\ListActiveRecordsController')."')", 'Cancel', 'cancelBut');
+        if (isset($fields['cancelButtonURL'])) {
+            $button = new Button("document.location.replace('".$fields['cancelButtonURL']."')", 'Cancel', 'cancelBut');
+        } else {
+            $button = new Button("document.location.replace('".FrontController::generateSecureURL('act=Alpha\\Controller\\ListActiveRecordsController')."')", 'Cancel', 'cancelBut');
+        }
         $fields['cancelButton'] = $button->render();
 
         // buffer security fields to $formSecurityFields variable
@@ -190,7 +194,12 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $viewState = ViewState::getInstance();
         $start = $viewState->get('selectedStart');
-        $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO).'&start='.$start.'&limit='.$config->get('app.list.page.amount'))."'", 'Back to List', 'cancelBut');
+
+        if (isset($fields['cancelButtonURL'])) {
+            $button = new Button("document.location = '".$fields['cancelButtonURL']."'", 'Back to List', 'cancelBut');
+        } else {
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO).'&start='.$start.'&limit='.$config->get('app.list.page.amount'))."'", 'Back to List', 'cancelBut');
+        }
         $fields['cancelButton'] = $button->render();
 
         // buffer security fields to $formSecurityFields variable
@@ -283,7 +292,11 @@ class RendererProviderHTML implements RendererProviderInterface
 
         // View button
         if (mb_strpos($request->getURI(), '/tk/') !== false) {
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID())."';", 'View', 'view'.$this->BO->getOID().'But');
+            if (isset($fields['viewButtonURL'])) {
+                $button = new Button("document.location = '".$fields['viewButtonURL']."';", 'View', 'view'.$this->BO->getOID().'But');
+            } else {
+                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID())."';", 'View', 'view'.$this->BO->getOID().'But');
+            }
             $fields['viewButton'] = $button->render();
         } else {
             if ($this->BO->hasAttribute('URL')) {
@@ -299,7 +312,12 @@ class RendererProviderHTML implements RendererProviderInterface
         // render edit and delete buttons for admins only
         if ($session->get('currentUser') && $session->get('currentUser')->inGroup('Admin')) {
             $html .= '&nbsp;&nbsp;';
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID().'&view=edit')."'", 'Edit', 'edit'.$this->BO->getOID().'But');
+            if (isset($fields['editButtonURL'])) {
+                $button = new Button("document.location = '".$fields['editButtonURL']."'", 'Edit', 'edit'.$this->BO->getOID().'But');
+            } else {
+                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID().'&view=edit')."'", 'Edit', 'edit'.$this->BO->getOID().'But');
+            }
+
             $html .= $button->render();
             $html .= '&nbsp;&nbsp;';
 
@@ -369,7 +387,11 @@ class RendererProviderHTML implements RendererProviderInterface
         $html = '';
         // render edit and delete buttons for admins only
         if ($session->get('currentUser') !== false && $session->get('currentUser')->inGroup('Admin')) {
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID().'&view=edit')."'", 'Edit', 'editBut');
+            if (isset($fields['editButtonURL'])) {
+                $button = new Button("document.location = '".$fields['editButtonURL']."'", 'Edit', 'editBut');
+            } else {
+                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID().'&view=edit')."'", 'Edit', 'editBut');
+            }
             $html .= $button->render();
 
             $js = "if(window.jQuery) {

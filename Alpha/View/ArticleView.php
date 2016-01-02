@@ -96,6 +96,7 @@ class ArticleView extends View
     public function listView($fields = array())
     {
         $fields['dateAdded'] = $this->BO->getCreateTS()->getDate();
+        $fields['editButtonURL'] = FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID().'&view=edit');
 
         return parent::listView($fields);
     }
