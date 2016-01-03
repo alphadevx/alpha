@@ -486,7 +486,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
             return '';
         }
 
-        if (!$this->record instanceof Alpha\Model\Article) {
+        if (!$this->record instanceof Article) {
             return '';
         }
 
