@@ -1636,7 +1636,7 @@ abstract class Controller
     {
         $accept = $this->request->getAccept();
 
-        if ($accept != 'application/json') {
+        if ($accept != 'application/json' && $this->checkIfAccessingFromSecureURL()) {
             $viewState = ViewState::getInstance();
             if ($viewState->get('renderAdminMenu') === true) {
                 $menu = View::loadTemplateFragment('html', 'adminmenu.phtml', array());
