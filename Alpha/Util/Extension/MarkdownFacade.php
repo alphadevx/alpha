@@ -91,11 +91,9 @@ class MarkdownFacade
 
         $this->BO = $BO;
 
-        if ($this->BO instanceof \Alpha\Model\Article) {
-            if ($this->BO->isLoadedFromFile()) {
-                $underscoreTimeStamp = str_replace(array('-', ' ', ':'), '_', $this->BO->getContentFileDate());
-                $this->filename = $config->get('app.file.store.dir').'cache/html/'.get_class($this->BO).'_'.$this->BO->get('title').'_'.$underscoreTimeStamp.'.html';
-            }
+        if ($this->BO instanceof \Alpha\Model\Article && $this->BO->isLoadedFromFile()) {
+            $underscoreTimeStamp = str_replace(array('-', ' ', ':'), '_', $this->BO->getContentFileDate());
+            $this->filename = $config->get('app.file.store.dir').'cache/html/'.get_class($this->BO).'_'.$this->BO->get('title').'_'.$underscoreTimeStamp.'.html';
         } else {
             $this->filename = $config->get('app.file.store.dir').'cache/html/'.get_class($this->BO).'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.html';
         }
