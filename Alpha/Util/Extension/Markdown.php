@@ -4,6 +4,7 @@ namespace Alpha\Util\Extension;
 
 use Alpha\Util\Config\ConfigProvider;
 use Michelf\MarkdownExtra;
+use Alpha\Util\Code\Highlight\HighlightProviderFactory;
 
 /**
  * A custom version of the Markdown class which uses the geshi library for rendering code.
@@ -76,18 +77,23 @@ class Markdown extends MarkdownExtra
             $end = mb_strpos($codeTypeTag[0], ']');
             $language = mb_substr($codeTypeTag[0], $start + 1, $end - ($start + 1));
         } else {
-            // will use php as a defualt language type when none is provided
+            // will use php as a default language type when none is provided
             $language = 'php';
         }
 
         if ($config->get('cms.highlight.provider.name') != '') {
-            $highlighter = AlphaHighlightProviderFactory::getInstance($config->get('cms.highlight.provider.name'));
+            $highlighter = HighlightProviderFactory::getInstance($config->get('cms.highlight.provider.name'));
             $codeblock = $highlighter->highlight($codeblock, $language);
+        } else {
+            $codeblock = htmlspecialchars($codeblock, ENT_NOQUOTES);
+
+            # trim leading newlines and trailing newlines
+            $codeblock = preg_replace('/\A\n+|\n+\z/', '', $codeblock);
+
+            $codeblock = "<pre><code>$codeblock\n</code></pre>";
         }
 
-        $result = "\n\n".$this->hashBlock('<pre><code>'.$codeblock."\n</code></pre>")."\n\n";
-
-        return $result;
+        return "\n\n".$this->hashBlock($codeblock)."\n\n";
     }
 
     /**
