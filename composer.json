@@ -34,6 +34,7 @@
         "michelf/php-markdown": "1.6.0",
         "themattharris/tmhoauth": "0.8.4",
         "geshi/geshi": "dev-master",
+        "luminous/luminous": "0.7.*",
         "pear-pear.php.net/pear": "*",
         "pear-pear.php.net/File_Find": "*"
     },

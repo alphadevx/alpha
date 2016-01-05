@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c37a524e4646bbd47ee3c876aeda575f",
-    "content-hash": "2e074170d341fbe33e75909345de14cf",
+    "hash": "bf611d25527350533aaf24b915ebd8b9",
+    "content-hash": "c033058cdfa88f235faefab0456c661b",
     "packages": [
         {
             "name": "geshi/geshi",
@@ -43,6 +43,47 @@
             "description": "Generic Syntax Highlighter",
             "homepage": "http://qbnz.com/highlighter/",
             "time": "2014-11-03 21:20:34"
+        },
+        {
+            "name": "luminous/luminous",
+            "version": "v0.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/markwatkinson/luminous.git",
+                "reference": "a2d5d45bd27ce324dd59cee6fcc27169ee45427c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/markwatkinson/luminous/zipball/a2d5d45bd27ce324dd59cee6fcc27169ee45427c",
+                "reference": "a2d5d45bd27ce324dd59cee6fcc27169ee45427c",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "luminous": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Watkinson",
+                    "email": "markwatkinson@gmail.com",
+                    "homepage": "http://blog.asgaard.co.uk",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A full featured syntax highlighting library.",
+            "homepage": "http://luminous.asgaard.co.uk",
+            "keywords": [
+                "highlighter",
+                "highlighting",
+                "syntax"
+            ],
+            "time": "2013-01-12 16:00:45"
         },
         {
             "name": "michelf/php-markdown",
