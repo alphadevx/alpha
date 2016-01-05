@@ -2,6 +2,8 @@
 
 namespace Alpha\Util\Code\Highlight;
 
+use luminous;
+
 /**
  * Wraps Luminous in the standard API defined in HighlightProviderInterface,
  * for use in the Alpha CMS module.
@@ -52,7 +54,7 @@ class HighlightProviderLuminous implements HighlightProviderInterface
      */
     public function highlight($source, $language)
     {
-        $codeblock = luminous($language, $source, false);
+        $codeblock = luminous::highlight($language, $source, false);
 
         return $codeblock;
     }

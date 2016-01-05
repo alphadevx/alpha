@@ -453,12 +453,18 @@ class ArticleController extends ActiveRecordController implements ControllerInte
 
         $params = $this->request->getParams();
 
+        $html = '';
+
+        if ($config->get('cms.highlight.provider.name') == 'Alpha\Util\Code\Highlight\HighlightProviderLuminous') {
+            $html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'/css/luminous.css">';
+            $html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'/css/luminous_light.css">';
+        }
+
         if ((isset($params['view']) && $params['view'] == 'edit') || (isset($params['ActiveRecordType']) && !isset($params['ActiveRecordOID']))) {
-            $config = ConfigProvider::getInstance();
 
             $fieldid = ($config->get('security.encrypt.http.fieldnames') ? 'text_field_'.base64_encode(SecurityUtils::encrypt('content')).'_0' : 'text_field_content_0');
 
-            $html = '
+            $html .= '
                 <script type="text/javascript">
                 $(document).ready(function() {
                     $(\'[id="'.$fieldid.'"]\').pagedownBootstrap({
@@ -467,10 +473,11 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                 });
                 </script>';
 
-            return $html;
         } elseif (isset($params['view']) && $params['view'] == 'print') {
-            return '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'/css/print.css">';
+            $html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'/css/print.css">';
         }
+
+        return $html;
     }
 
     /**
