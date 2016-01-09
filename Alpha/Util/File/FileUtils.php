@@ -590,16 +590,14 @@ class FileUtils
             $dir = new DirectoryIterator($sourceDir);
 
             foreach ($dir as $file) {
-                if (!in_array($file->getFilename(), $excludeFiles)) {
-                    if ($file->isDir() && !$file->isDot()) {
-                        if (count(scandir($file->getPathname())) == 2) { // remove an empty directory
-                            rmdir($file->getPathname());
-                        } else {
-                            self::deleteDirectoryContents($file->getPathname(), $excludeFiles);
-                        }
-                    } elseif (!$file->isDot()) {
-                        unlink($file->getPathname());
+                if ($file->isDir() && !$file->isDot()) {
+                    if (count(scandir($file->getPathname())) == 2 && !in_array($file->getFilename(), $excludeFiles)) { // remove an empty directory
+                        rmdir($file->getPathname());
+                    } else {
+                        self::deleteDirectoryContents($file->getPathname(), $excludeFiles);
                     }
+                } elseif (!$file->isDot() && !in_array($file->getFilename(), $excludeFiles)) {
+                    unlink($file->getPathname());
                 }
             }
         } catch (\Exception $e) {
