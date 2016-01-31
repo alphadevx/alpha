@@ -235,7 +235,7 @@ class Person extends ActiveRecord
             if (!$this->inGroup('Standard')) {
                 try {
                     $standardGroup->loadByAttribute('name', 'Standard');
-                } catch (BONotFoundException $e) {
+                } catch (RecordNotFoundException $e) {
                     $standardGroup->set('name', 'Standard');
                     $standardGroup->save();
                 }

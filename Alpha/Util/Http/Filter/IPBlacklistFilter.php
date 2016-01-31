@@ -4,7 +4,7 @@ namespace Alpha\Util\Http\Filter;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Model\BlacklistedIP;
-use Alpha\Exception\BONotFoundException;
+use Alpha\Exception\RecordNotFoundException;
 use Alpha\Exception\ResourceNotAllowedException;
 
 /**
@@ -82,7 +82,7 @@ class IPBlacklistFilter implements FilterInterface
 
             try {
                 $badIP->loadByAttribute('IP', $ip);
-            } catch (BONotFoundException $bonf) {
+            } catch (RecordNotFoundException $bonf) {
                 // ip is not on the list!
                 return;
             }

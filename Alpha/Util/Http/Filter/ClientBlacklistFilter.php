@@ -4,7 +4,7 @@ namespace Alpha\Util\Http\Filter;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Model\BlacklistedClient;
-use Alpha\Exception\BONotFoundException;
+use Alpha\Exception\RecordNotFoundException;
 use Alpha\Exception\ResourceNotAllowedException;
 
 /**
@@ -86,7 +86,7 @@ class ClientBlacklistFilter implements FilterInterface
             $badClient = new BlacklistedClient();
             try {
                 $badClient->loadByAttribute('client', $client);
-            } catch (BONotFoundException $bonf) {
+            } catch (RecordNotFoundException $bonf) {
                 // client is not on the list!
                 return;
             }

@@ -18,6 +18,7 @@ use Alpha\Util\Http\Request;
 use Alpha\Exception\PHPException;
 use Alpha\Exception\FailedUnitCommitException;
 use Alpha\Exception\IllegalArguementException;
+use Alpha\Exception\RecordNotFoundException;
 
 /**
  * Test cases for the Controller class.
@@ -453,14 +454,14 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $newPerson = new Person();
         try {
             $newPerson->loadByAttribute('email', 'newuser@test.com');
-        } catch (BONotFoundException $e) {
+        } catch (RecordNotFoundException $e) {
             $this->fail('Failed to load the new person that we commited in the unit of work');
         }
 
         $dirtyPerson = new Person();
         try {
             $dirtyPerson->loadByAttribute('email', 'changed@test.com');
-        } catch (BONotFoundException $e) {
+        } catch (RecordNotFoundException $e) {
             $this->fail('Failed to load the dirty person that we commited in the unit of work');
         }
     }
