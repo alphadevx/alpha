@@ -575,7 +575,7 @@ abstract class Controller
     public function setUnitStartTime($year, $month, $day, $hour, $minute, $second)
     {
         self::$logger->debug('>>setUnitStartTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'],
-	 		second=['.$second.'])');
+            second=['.$second.'])');
 
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -617,7 +617,7 @@ abstract class Controller
     public function setUnitEndTime($year, $month, $day, $hour, $minute, $second)
     {
         self::$logger->debug('>>setUnitEndTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'],
-	 	 second=['.$second.'])');
+         second=['.$second.'])');
 
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -1136,9 +1136,9 @@ abstract class Controller
         $ip = $this->request->getIP();
 
         // the server hostname + today's date
-        $var1 = base64_encode(SecurityUtils::encrypt($host.date('Ymd')));
+        $var1 = rtrim(strtr(base64_encode(SecurityUtils::encrypt($host.date('Ymd'))), '+/', '-_'), '=');
         // the server's IP plus $var1
-        $var2 = base64_encode(SecurityUtils::encrypt($ip.$var1));
+        $var2 = rtrim(strtr(base64_encode(SecurityUtils::encrypt($ip.$var1)), '+/', '-_'), '=');
 
         if ($this->request->getParam('var1') === null || $this->request->getParam('var2') === null) {
             self::$logger->warn('The required var1/var2 params where not provided on the HTTP request');
@@ -1159,9 +1159,9 @@ abstract class Controller
              */
 
             // the server hostname + today's date less 1 hour (i.e. yesterday where time is < 1:00AM)
-            $var1 = base64_encode(SecurityUtils::encrypt($host.date('Ymd', (time() - 3600))));
+            $var1 = rtrim(strtr(base64_encode(SecurityUtils::encrypt($host.date('Ymd', (time() - 3600)))), '+/', '-_'), '=');
             // the server's IP plus $var1
-            $var2 = base64_encode(SecurityUtils::encrypt($ip.$var1));
+            $var2 = rtrim(strtr(base64_encode(SecurityUtils::encrypt($ip.$var1)), '+/', '-_'), '=');
 
             if ($var1 == $this->request->getParam('var1') && $var2 == $this->request->getParam('var2')) {
                 self::$logger->debug('<<checkSecurityFields [true]');
@@ -1196,9 +1196,9 @@ abstract class Controller
         $ip = $request->getIP();
 
         // the server hostname + today's date
-        $var1 = base64_encode(SecurityUtils::encrypt($host.date('Ymd')));
+        $var1 = rtrim(strtr(base64_encode(SecurityUtils::encrypt($host.date('Ymd'))), '+/', '-_'), '=');
         // the server's IP plus $var1
-        $var2 = base64_encode(SecurityUtils::encrypt($ip.$var1));
+        $var2 = rtrim(strtr(base64_encode(SecurityUtils::encrypt($ip.$var1)), '+/', '-_'), '=');
 
         self::$logger->debug('<<generateSecurityFields [array('.$var1.', '.$var2.')]');
 
