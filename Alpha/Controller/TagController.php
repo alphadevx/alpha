@@ -248,7 +248,11 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                 $temp = new Button('submit', 'Save', 'saveBut');
                 $body .= $temp->render();
                 $body .= '&nbsp;&nbsp;';
-                $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$params['ActiveRecordType'].'&ActiveRecordOID='.$params['ActiveRecordOID'].'&view=edit')."'", 'Back to record', 'cancelBut');
+                if ($params['ActiveRecordType'] = 'Alpha\Model\Article') {
+                    $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.$params['ActiveRecordType'].'&ActiveRecordOID='.$params['ActiveRecordOID'].'&view=edit')."'", 'Back to record', 'cancelBut');
+                } else {
+                    $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$params['ActiveRecordType'].'&ActiveRecordOID='.$params['ActiveRecordOID'].'&view=edit')."'", 'Back to record', 'cancelBut');
+                }
                 $body .= $temp->render();
 
                 $body .= View::renderSecurityFields();

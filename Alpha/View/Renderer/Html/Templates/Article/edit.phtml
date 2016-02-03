@@ -1,4 +1,4 @@
-<form action="<?= $formAction ?>" id="<?= $formID ?>" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
+<form<?= (isset($formAction) ? ' action="'.$formAction.'"' : '') ?> id="<?= $formID ?>" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
 		<?= $formFields ?>
 		<div class="form-group lower spread">
 			<?= $saveButton ?>

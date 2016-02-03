@@ -119,7 +119,9 @@ class ArticleView extends View
         $config = ConfigProvider::getInstance();
 
         // the form action
-        $fields['formAction'] = $fields['URI'];
+        if (isset($fields['URI'])) {
+            $fields['formAction'] = $fields['URI'];
+        }
 
         // the form ID
         $fields['formID'] = stripslashes(get_class($this->BO)).'_'.$this->BO->getID();
