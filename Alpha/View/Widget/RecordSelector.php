@@ -246,7 +246,7 @@ class RecordSelector
                         // check to see if we are in the admin back-end
                         if (mb_strpos($URI, '/tk/') !== false) {
                             $viewURL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($obj).'&ActiveRecordOID='.$obj->getOID());
-                            $editURL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($obj).'&ActiveRecordOID='.$obj->getOID().'/edit');
+                            $editURL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($obj).'&ActiveRecordOID='.$obj->getOID().'&view=edit');
                         } else {
                             if (isset($customViewControllerName)) {
                                 if ($config->get('app.use.mod.rewrite')) {
