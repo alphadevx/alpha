@@ -2,7 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/alphadevx/alpha/badge.svg?branch=2.0.0&service=github)](https://coveralls.io/github/alphadevx/alpha?branch=2.0.0)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/alphadevx/alpha/badges/quality-score.png?b=2.0.0)](https://scrutinizer-ci.com/g/alphadevx/alpha/?branch=2.0.0)
 
-Alpha Framework (2.0 beta)
+Alpha Framework (2.0.0)
 ===========================
 
 Introduction
@@ -28,18 +28,18 @@ The Alpha Framework is a full-stack MVC framework for PHP.  It provides the foll
 Status
 ------
 
-Note that this is the working branch for the 2.0 release, currently with **beta** status so **not suitable for production**, but is **suitable for new development projects**.  The stable (but deprecated) 1.x releases are available from here: http://www.alphaframework.org/article/Download
+The current latest stable release is tested via unit tested and manual testing, and is considered suitable for production usage.
 
 Installation
 ------------
 
 ### Composer
 
-Alpha should be installed using Composer.  Here is a minimum example _composer.json_ file to install the current beta 2.0 release:
+Alpha should be installed using Composer.  Here is a minimum example _composer.json_ file to install the current release:
 
 	{
 	    "require": {
-	        "alphadevx/alpha": "2.0.0.x-dev"
+	        "alphadevx/alpha": "2.*-stable"
 	    },
 	    "repositories": [
 	        {
@@ -47,7 +47,6 @@ Alpha should be installed using Composer.  Here is a minimum example _composer.j
 	            "url": "http://pear.php.net"
 	        }
 	    ],
-	    "minimum-stability": "dev",
 	    "autoload": {
         "psr-0": {
             "": "src/"
