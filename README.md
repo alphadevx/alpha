@@ -39,7 +39,7 @@ Alpha should be installed using Composer.  Here is a minimum example _composer.j
 
 	{
 	    "require": {
-	        "alphadevx/alpha": "2.*-stable"
+	        "alphadevx/alpha": ">=1.2-stable"
 	    },
 	    "repositories": [
 	        {
