@@ -4,6 +4,8 @@ namespace Alpha\Test\Model\Type;
 
 use Alpha\Test\Model\ModelTestCase;
 use Alpha\Model\Type\Enum;
+use Alpha\Model\Person;
+use Alpha\Model\Rights;
 use Alpha\Exception\IllegalArguementException;
 
 /**
@@ -12,8 +14,6 @@ use Alpha\Exception\IllegalArguementException;
  * @since 1.0
  *
  * @author John Collins <dev@alphaframework.org>
- *
- * @version $Id: EnumTest.php 1839 2014-11-10 18:01:20Z alphadevx $
  *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -65,7 +65,7 @@ class EnumTest extends ModelTestCase
     /**
      * A person for testing.
      *
-     * @var PersonObject
+     * @var Person
      *
      * @since 1.0
      */
@@ -77,24 +77,22 @@ class EnumTest extends ModelTestCase
      * here.
      *
      * @since 1.0
-     *
-     * @todo Re-enable test once DAO functionality is migrated to namespaces
      */
-    /*protected function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->enum1 = new Enum();
 
-        $rights = new RightsObject();
+        $rights = new Rights();
         $rights->rebuildTable();
 
-        $this->person = new PersonObject();
-        $this->person->set('displayName', $_SESSION['currentUser']->getDisplayName());
-        $this->person->set('email', $_SESSION['currentUser']->get('email'));
+        $this->person = new Person();
+        $this->person->set('displayName', 'enumunittest');
+        $this->person->set('email', 'enumunittest@test.com');
         $this->person->set('password', 'password');
         $this->person->rebuildTable();
         $this->person->save();
-    }*/
+    }
 
     /**
      * Called after the test functions are executed
@@ -102,33 +100,29 @@ class EnumTest extends ModelTestCase
      * here.
      *
      * @since 1.0
-     *
-     * @todo Re-enable test once DAO functionality is migrated to namespaces
      */
-    /*protected function tearDown()
+    protected function tearDown()
     {
         parent::tearDown();
         unset($this->enum1);
         $this->person->dropTable();
-        $rights = new RightsObject();
+        $rights = new Rights();
         $rights->dropTable();
         $rights->dropTable('Person2Rights');
         unset($this->person);
-    }*/
+    }
 
     /**
      * Testing that enum options are loaded correctly from the database.
      *
      * @since 1.0
-     *
-     * @todo Re-enable test once DAO functionality is migrated to namespaces
      */
-    /*public function testLoadEnumOptions()
+    public function testLoadEnumOptions()
     {
-    	$this->person->loadByAttribute('displayName', $_SESSION['currentUser']->getDisplayName(), true);
+    	$this->person->loadByAttribute('displayName', 'enumunittest', true);
 
-    	$this->assertEquals('Active', $this->person->getPropObject('state')->getValue(), "testing that enum options are loaded correctly from the database");
-    }*/
+    	$this->assertEquals('Active', $this->person->getPropObject('state')->getValue(), 'Testing that enum options are loaded correctly from the database');
+    }
 
     /**
      * Testing the set/get enum option methods.

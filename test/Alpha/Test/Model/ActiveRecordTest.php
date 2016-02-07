@@ -132,7 +132,6 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      *
-     * @todo remove _SESSION refs
      * @dataProvider getActiveRecordProviders
      */
     public function testDefaultHouseKeepingValues($provider)
