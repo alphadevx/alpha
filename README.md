@@ -38,8 +38,10 @@ Installation
 Alpha should be installed using Composer.  Here is a minimum example _composer.json_ file to install the current release:
 
 	{
+	    "minimum-stability": "dev",
+	    "prefer-stable": true,
 	    "require": {
-	        "alphadevx/alpha": ">=1.2-stable"
+	        "alphadevx/alpha": "2.0.*"
 	    },
 	    "repositories": [
 	        {
