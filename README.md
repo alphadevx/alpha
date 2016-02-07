@@ -28,7 +28,7 @@ The Alpha Framework is a full-stack MVC framework for PHP.  It provides the foll
 Status
 ------
 
-The current latest stable release is tested via unit tested and manual testing, and is considered suitable for production usage.
+The current latest stable release is tested via unit testing and manual testing, and is considered suitable for production usage.
 
 Installation
 ------------
