@@ -50,9 +50,10 @@ Alpha should be installed using Composer.  Here is a minimum example _composer.j
 	        }
 	    ],
 	    "autoload": {
-        "psr-0": {
-            "": "src/"
-        }
+	        "psr-0": {
+	            "": "src/"
+	        }
+		}
 	}
 
 ### Database
