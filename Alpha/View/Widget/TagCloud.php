@@ -133,4 +133,16 @@ class TagCloud
 
         return $html.'</p>';
     }
+
+    /**
+     * Get the array of popular tags.
+     *
+     * @return array
+     *
+     * @since 2.0.1
+     */
+    public function getPopTags()
+    {
+        return $this->popTags;
+    }
 }
