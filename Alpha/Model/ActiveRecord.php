@@ -1243,7 +1243,7 @@ abstract class ActiveRecord
         try {
             $provider->setEnumOptions();
         } catch (NotImplementedException $e) {
-            self::$logger->info($e->getMessage());
+            self::$logger->debug($e->getMessage());
         }
 
         self::$logger->debug('<<setEnumOptions');
