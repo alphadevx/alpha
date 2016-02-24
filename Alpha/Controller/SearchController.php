@@ -82,7 +82,7 @@ class SearchController extends Controller implements ControllerInterface
      *
      * @since 1.0
      */
-    private $resultCount = 0;
+    protected $resultCount = 0;
 
     /**
      * The search query supplied.
@@ -91,7 +91,7 @@ class SearchController extends Controller implements ControllerInterface
      *
      * @since 1.0
      */
-    private $query;
+    protected $query;
 
     /**
      * constructor to set up the object.
@@ -310,7 +310,7 @@ class SearchController extends Controller implements ControllerInterface
             if (isset($params['tk'])) {
                 $body .= '<li><a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint - $config->get('app.list.page.amount'))).'">&laquo;</a></li>';
             } else {
-                $body .= '<li><a href="'.$config->get('app.url').'/search/'.$this->query.'/start/'.($this->startPoint - $config->get('app.list.page.amount')).'">&laquo;</a></li>';
+                $body .= '<li><a href="'.$config->get('app.url').'/search/'.$this->query.'/'.($this->startPoint - $config->get('app.list.page.amount')).'">&laquo;</a></li>';
             }
         } elseif ($this->resultCount > $config->get('app.list.page.amount')) {
             $body .= '<li class="disabled"><a href="#">&laquo;</a></li>';
@@ -324,7 +324,7 @@ class SearchController extends Controller implements ControllerInterface
                 if (isset($params['tk'])) {
                     $body .= '<li><a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.$i).'">'.$page.'</a></li>';
                 } else {
-                    $body .= '<li><a href="'.$config->get('app.url').'/search/'.$this->query.'/start/'.$i.'">'.$page.'</a></li>';
+                    $body .= '<li><a href="'.$config->get('app.url').'/search/'.$this->query.'/'.$i.'">'.$page.'</a></li>';
                 }
             } elseif ($this->resultCount > $config->get('app.list.page.amount')) {
                 $body .= '<li class="active"><a href="#">'.$page.'</a></li>';
@@ -338,7 +338,7 @@ class SearchController extends Controller implements ControllerInterface
             if (isset($params['tk'])) {
                 $body .= '<li><a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint + $config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a></li>';
             } else {
-                $body .= '<li><a href="'.$config->get('app.url').'/search/'.$this->query.'/start/'.($this->startPoint + $config->get('app.list.page.amount')).'">&raquo;</a></li>';
+                $body .= '<li><a href="'.$config->get('app.url').'/search/'.$this->query.'/'.($this->startPoint + $config->get('app.list.page.amount')).'">&raquo;</a></li>';
             }
         } elseif ($this->resultCount > $config->get('app.list.page.amount')) {
             $body .= '<li class="disabled"><a href="#">&raquo;</a></li>';
