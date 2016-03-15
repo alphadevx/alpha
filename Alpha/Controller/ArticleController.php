@@ -120,7 +120,11 @@ class ArticleController extends ActiveRecordController implements ControllerInte
             try {
                 $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
 
-                $record = new Article();
+                if (isset($params['ActiveRecordType']) && class_exists($params['ActiveRecordType'])) {
+                    $record = new $params['ActiveRecordType'];
+                } else {
+                    $record = new Article();
+                }
                 $record->loadByAttribute('title', $title);
                 $this->record = $record;
 
@@ -152,7 +156,11 @@ class ArticleController extends ActiveRecordController implements ControllerInte
 
         // view edit article requests
         if ((isset($params['view']) && $params['view'] == 'edit') && (isset($params['title']) || isset($params['ActiveRecordOID']))) {
-            $record = new Article();
+            if (isset($params['ActiveRecordType']) && class_exists($params['ActiveRecordType'])) {
+                $record = new $params['ActiveRecordType'];
+            } else {
+                $record = new Article();
+            }
 
             try {
                 if (isset($params['title'])) {
@@ -197,7 +205,11 @@ class ArticleController extends ActiveRecordController implements ControllerInte
         // handle requests for viewing articles
         if (isset($params['title']) || isset($params['ActiveRecordOID'])) {
             $KDP = new KPI('viewarticle');
-            $record = new Article();
+            if (isset($params['ActiveRecordType']) && class_exists($params['ActiveRecordType'])) {
+                $record = new $params['ActiveRecordType'];
+            } else {
+                $record = new Article();
+            }
 
             try {
                 if (isset($params['title'])) {
@@ -336,7 +348,11 @@ class ArticleController extends ActiveRecordController implements ControllerInte
             }
 
             if (isset($params['title']) || isset($params['ActiveRecordOID'])) {
-                $record = new Article();
+                if (isset($params['ActiveRecordType']) && class_exists($params['ActiveRecordType'])) {
+                    $record = new $params['ActiveRecordType'];
+                } else {
+                    $record = new Article();
+                }
 
                 if (isset($params['title'])) {
                     $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
