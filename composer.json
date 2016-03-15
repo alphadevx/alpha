@@ -50,5 +50,8 @@
             "Alpha": ".",
             "Alpha\\Test": "test"
         }
+    },
+    "config": {
+      "secure-http": false
     }
 }
