@@ -328,7 +328,7 @@ abstract class ActiveRecord
     public function loadByAttribute($attribute, $value, $ignoreClassType = false, $loadAttributes = array())
     {
         self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'], ignoreClassType=['.$ignoreClassType.'], 
-			loadAttributes=['.var_export($loadAttributes, true).'])');
+            loadAttributes=['.var_export($loadAttributes, true).'])');
 
         if (method_exists($this, 'before_loadByAttribute_callback')) {
             $this->before_loadByAttribute_callback();
@@ -1139,7 +1139,7 @@ abstract class ActiveRecord
 
     /**
      * Gets the count from the database for the amount of entries in the [tableName]_history table for this business object.  Only call
-     * this	method on classes where	maintainHistory	= true,	otherwise an exception will be thrown.
+     * this method on classes where maintainHistory = true, otherwise an exception will be thrown.
      *
      * @return int
      *
@@ -1912,9 +1912,11 @@ abstract class ActiveRecord
             // loop over the business object directory
             while (false !== ($file = readdir($handle))) {
                 if (preg_match('/.php/', $file)) {
-                    $classname = mb_substr($file, 0, -4);
+                    $classname = 'Model\\'.mb_substr($file, 0, -4);
 
-                    array_push($classNameArray, 'Model\\'.$classname);
+                    if (class_exists($classname)) {
+                        array_push($classNameArray, $classname);
+                    }
                 }
             }
         }
@@ -1929,10 +1931,10 @@ abstract class ActiveRecord
         // loop over the business object directory
         while (false !== ($file = readdir($handle))) {
             if (preg_match('/.php/', $file)) {
-                $classname = mb_substr($file, 0, -4);
+                $classname = 'Alpha\\Model\\'.mb_substr($file, 0, -4);
 
-                if (substr($classname, 0, 12) != 'ActiveRecord') {
-                    array_push($classNameArray, 'Alpha\\Model\\'.$classname);
+                if (class_exists($classname) && substr($classname, 0, 24) != 'Alpha\\Model\\ActiveRecord') {
+                    array_push($classNameArray, $classname);
                 }
             }
         }
@@ -2462,7 +2464,7 @@ abstract class ActiveRecord
             $cache->set(get_class($this).'-'.$this->getOID(), $this, 3600);
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to store a business object to the ['.$config->get('cache.provider.name').'] 
-      			instance: ['.$e->getMessage().']');
+                instance: ['.$e->getMessage().']');
         }
 
         self::$logger->debug('<<addToCache');
@@ -2483,7 +2485,7 @@ abstract class ActiveRecord
             $cache->delete(get_class($this).'-'.$this->getOID());
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to remove a business object from ['.$config->get('cache.provider.name').']
-      			instance: ['.$e->getMessage().']');
+                instance: ['.$e->getMessage().']');
         }
 
         self::$logger->debug('<<removeFromCache');
@@ -2537,7 +2539,7 @@ abstract class ActiveRecord
             }
         } catch (Exception $e) {
             self::$logger->error('Error while attempting to load a business object from ['.$config->get('cache.provider.name').']
-      		 instance: ['.$e->getMessage().']');
+             instance: ['.$e->getMessage().']');
 
             self::$logger->debug('<<loadFromCache: [false]');
 
