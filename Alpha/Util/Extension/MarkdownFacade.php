@@ -131,16 +131,15 @@ class MarkdownFacade
 
         // Handle image attachments
         $attachments = array();
-        preg_match_all('/\<img\ src\=\"\$attachURL\/.*\".*\>/', $this->content, $attachments);
+        preg_match_all('/\<img\ src\=\"\$attachURL\/.*\.[a-zA-Z]{3}\"[^<]*/', $this->content, $attachments);
 
         foreach ($attachments[0] as $attachmentURL) {
-            $start = mb_strpos($attachmentURL, '/');
-            $end = mb_strrpos($attachmentURL, '" alt');
-            $fileName = mb_substr($attachmentURL, $start + 1, $end - ($start + 1));
+            preg_match('/\/.*\.[a-zA-Z]{3}/', $attachmentURL, $matches);
+            $fileName = $matches[0];
 
             if ($config->get('cms.images.widget')) {
                 // get the details of the source image
-                $path = $this->BO->getAttachmentsLocation().'/'.$fileName;
+                $path = $this->BO->getAttachmentsLocation().$fileName;
                 $image_details = getimagesize($path);
                 $imgType = $image_details[2];
                 if ($imgType == 1) {
