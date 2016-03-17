@@ -13,8 +13,6 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @author John Collins <dev@alphaframework.org>
  *
- * @version $Id: TimestampTest.php 1838 2014-11-10 16:37:44Z alphadevx $
- *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
  * All rights reserved.
