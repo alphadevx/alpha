@@ -159,7 +159,8 @@ class Inspector
     {
         $this->rootDir = $rootDir;
         // populate the file and directories arrays using the File_Find class
-        list($this->directories, $this->files) = File_Find::maptree($rootDir);
+        $finder = new File_Find();
+        list($this->directories, $this->files) = $finder->maptree($rootDir);
     }
 
     /**
