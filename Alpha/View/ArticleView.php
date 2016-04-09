@@ -118,6 +118,22 @@ class ArticleView extends View
     }
 
     /**
+     * Renders the detail view for the Article, with edit button pointed to the ArticleController.
+     *
+     * @param array $fields Hash array of fields to pass to the template
+     *
+     * @return string
+     *
+     * @since 2.0.1
+     */
+    public function detailedView($fields = array())
+    {
+        $fields['editButtonURL'] = FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID().'&view=edit');
+
+        return parent::detailedView($fields);
+    }
+
+    /**
      * Renders a form to enable article editing with attachments options.
      *
      * @param array $fields hash array of HTML fields to pass to the template
