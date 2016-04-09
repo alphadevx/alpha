@@ -129,7 +129,7 @@ class Logger
         if ($this->level == 'DEBUG' || in_array($this->classname, $this->debugClasses)) {
             $dateTime = date('Y-m-d H:i:s');
             $this->logProvider->writeLine(array($dateTime, 'DEBUG', $this->classname, $message,
-                $this->request->getUserAgent(), $this->request->getIP(), gethostname(), ));
+                $this->request->getUserAgent(), $this->request->getIP(), gethostname(), $this->request->getURI()));
         }
     }
 
@@ -145,7 +145,7 @@ class Logger
         if ($this->level == 'DEBUG' || $this->level == 'INFO' || in_array($this->classname, $this->debugClasses)) {
             $dateTime = date('Y-m-d H:i:s');
             $this->logProvider->writeLine(array($dateTime, 'INFO', $this->classname, $message,
-                $this->request->getUserAgent(), $this->request->getIP(), gethostname(), ));
+                $this->request->getUserAgent(), $this->request->getIP(), gethostname(), $this->request->getURI()));
         }
     }
 
@@ -161,7 +161,7 @@ class Logger
         if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || in_array($this->classname, $this->debugClasses)) {
             $dateTime = date('Y-m-d H:i:s');
             $this->logProvider->writeLine(array($dateTime, 'WARN', $this->classname, $message,
-                $this->request->getUserAgent(), $this->request->getIP(), gethostname(), ));
+                $this->request->getUserAgent(), $this->request->getIP(), gethostname(), $this->request->getURI()));
         }
     }
 
@@ -177,7 +177,7 @@ class Logger
         if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' ||
             in_array($this->classname, $this->debugClasses)) {
             $dateTime = date('Y-m-d H:i:s');
-            $line = array($dateTime, 'ERROR', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP(), gethostname());
+            $line = array($dateTime, 'ERROR', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP(), gethostname(), $this->request->getURI());
             $this->logProvider->writeLine($line);
 
             $this->notifyAdmin(print_r($line, true));
@@ -196,7 +196,7 @@ class Logger
         if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' ||
             $this->level == 'FATAL' || in_array($this->classname, $this->debugClasses)) {
             $dateTime = date('Y-m-d H:i:s');
-            $line = array($dateTime, 'FATAL', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP(), gethostname());
+            $line = array($dateTime, 'FATAL', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP(), gethostname(), $this->request->getURI());
             $this->logProvider->writeLine($line);
 
             $this->notifyAdmin(print_r($line, true));
@@ -214,7 +214,7 @@ class Logger
     {
         if ($this->level == 'SQL') {
             $dateTime = date('Y-m-d H:i:s');
-            $line = array($dateTime, 'SQL', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP(), gethostname());
+            $line = array($dateTime, 'SQL', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP(), gethostname(), $this->request->getURI());
             $this->logProvider->writeLine($line);
         }
     }
