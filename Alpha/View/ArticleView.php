@@ -102,6 +102,22 @@ class ArticleView extends View
     }
 
     /**
+     * Renders the admin view for the Article, with create button pointed to the ArticleController.
+     *
+     * @param array $fields Hash array of fields to pass to the template
+     *
+     * @return string
+     *
+     * @since 2.0.1
+     */
+    public function adminView($fields = array())
+    {
+        $fields['createButtonURL'] = FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.get_class($this->BO).'&view=create');
+
+        return parent::adminView($fields);
+    }
+
+    /**
      * Renders a form to enable article editing with attachments options.
      *
      * @param array $fields hash array of HTML fields to pass to the template
