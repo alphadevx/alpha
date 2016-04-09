@@ -476,7 +476,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
             $html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'/css/luminous_light.css">';
         }
 
-        if ((isset($params['view']) && $params['view'] == 'edit') || (isset($params['ActiveRecordType']) && !isset($params['ActiveRecordOID']))) {
+        if ((isset($params['view']) && ($params['view'] == 'edit' || $params['view'] == 'create')) || (isset($params['ActiveRecordType']) && !isset($params['ActiveRecordOID']))) {
 
             $fieldid = ($config->get('security.encrypt.http.fieldnames') ? 'text_field_'.base64_encode(SecurityUtils::encrypt('content')).'_0' : 'text_field_content_0');
 
