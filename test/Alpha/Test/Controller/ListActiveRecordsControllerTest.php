@@ -5,6 +5,9 @@ namespace Alpha\Test\Controller;
 use Alpha\Controller\Front\FrontController;
 use Alpha\Controller\ListActiveRecordsController;
 use Alpha\Util\Http\Request;
+use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Model\Article;
 
 /**
  * Test cases for the ListActiveRecordsController class.
@@ -65,5 +68,38 @@ class ListActiveRecordsControllerTest extends ControllerTestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+    }
+
+    /**
+     * Testing creating a table via doPOST method
+     */
+    public function testDoPOSTCreateTable()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        $front = new FrontController();
+        $controller = new ListActiveRecordsController();
+        $article = new Article();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $params = array(
+            'var1' => $securityParams[0],
+            'var2' => $securityParams[1],
+            'createTableBut' => true,
+            'createTableClass' => 'Alpha\Model\Article'
+            );
+
+        $article->dropTable();
+        $this->assertFalse($article->checkTableExists());
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/listactiverecords', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing creating a table via doPOST method');
+        $this->assertTrue($article->checkTableExists());
     }
 }
