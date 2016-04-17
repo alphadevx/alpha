@@ -1928,7 +1928,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                         break;
                     }
                 }
-                $result->seek(0);
+                $result->reset();
             } else {
                 ++$matchCount;
             }

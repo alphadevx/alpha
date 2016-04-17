@@ -167,7 +167,36 @@ class ListActiveRecordsControllerTest extends ControllerTestCase
 
         $response = $front->process($request);
 
-        $this->assertEquals(200, $response->getStatus(), 'Testing creating a table via doPOST method');
+        $this->assertEquals(200, $response->getStatus(), 'Testing recreating a table via doPOST method');
         $this->assertTrue($article->checkTableExists());
+    }
+
+    /**
+     * Testing updating a table via doPOST method
+     */
+    public function testDoPOSTUpdateTable()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        $front = new FrontController();
+        $controller = new ListActiveRecordsController();
+        $article = new Article();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $params = array(
+            'var1' => $securityParams[0],
+            'var2' => $securityParams[1],
+            'admin_AlphaModelArticle_button_pressed' => 'updateTableBut',
+            'updateTableClass' => 'Alpha\Model\Article'
+            );
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/listactiverecords', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(0, count($article->findMissingFields()), 'Testing updating a table via doPOST method');
     }
 }
