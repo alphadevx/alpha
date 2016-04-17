@@ -174,7 +174,7 @@ class TreeGraph
      * @param string $message
      * @param int    $w
      * @param int    $h
-     * @param string $nodeColour
+     * @param array  $nodeColour
      * @param string $URL
      *
      * @since 1.0
@@ -194,6 +194,24 @@ class TreeGraph
         }
 
         $this->nodes[$id] = $node;
+    }
+
+    /**
+     * Get the specified node from the graph.
+     *
+     * @param int    $id
+     *
+     * @return Alpha\Util\Graph\GraphNode
+     *
+     * @since 2.0.1
+     */
+    public function get($id)
+    {
+        if (isset($this->nodes[$id])) {
+            return $this->nodes[$id];
+        } else {
+            return null;
+        }
     }
 
     /**
