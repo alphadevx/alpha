@@ -1461,6 +1461,17 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             self::$logger->debug('<<dropTable');
         }
 
+        if ($this->BO->getMaintainHistory()) {
+            $sqlQuery = 'DROP TABLE IF EXISTS '.$tableName.'_history;';
+
+            $this->BO->setLastQuery($sqlQuery);
+
+            if (!$result = self::getConnection()->query($sqlQuery)) {
+                throw new AlphaException('Failed to drop the table ['.$tableName.'_history] for the class ['.get_class($this->BO).'], query is ['.$this->BO->getLastQuery().']');
+                self::$logger->debug('<<dropTable');
+            }
+        }
+
         self::$logger->debug('<<dropTable');
     }
 
