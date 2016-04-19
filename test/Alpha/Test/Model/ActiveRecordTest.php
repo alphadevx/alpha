@@ -9,6 +9,7 @@ use Alpha\Model\BadRequest;
 use Alpha\Model\Article;
 use Alpha\Model\ArticleComment;
 use Alpha\Model\BlacklistedIP;
+use Alpha\Model\Tag;
 use Alpha\Model\Type\RelationLookup;
 use Alpha\Model\Type\String;
 use Alpha\Exception\LockingException;
@@ -106,6 +107,11 @@ class ActiveRecordTest extends ModelTestCase
             // just making sure no previous test user is in the DB
             $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/');
             $this->person->deleteAllByAttribute('displayName', 'unitTestUser');
+
+            $article = new Article();
+            $article->rebuildTable();
+            $tag = new Tag();
+            $tag->rebuildTable();
         }
     }
 
@@ -457,6 +463,33 @@ class ActiveRecordTest extends ModelTestCase
                             'Testing the delete method');
         }
     }
+
+    /**
+     * Testing the delete method also removes Tags related to the deleted record.
+     *
+     * @since 2.0.1
+     * @dataProvider getActiveRecordProviders
+     */
+    public function testDeleteRelatedTags($provider)
+    {
+        $article = new Article();
+        $tag = new Tag();
+        $this->assertEquals(0, $tag->getCount(), 'Testing the delete method also removes Tags related to the deleted record.');
+
+        $article->set('title', 'Unit test');
+        $article->set('description', 'Unit test');
+        $article->set('author', 'Unit test');
+        $article->set('content', 'jupiter neptune venus');
+        $article->save();
+
+        $this->assertEquals(3, $tag->getCount(), 'Testing the delete method also removes Tags related to the deleted record.');
+
+        $article->delete();
+
+        $this->assertEquals(0, $article->getCount(), 'Testing the delete method also removes Tags related to the deleted record.');
+        $this->assertEquals(0, $tag->getCount(), 'Testing the delete method also removes Tags related to the deleted record.');
+    }
+
 
     /**
      * Testing the deleteAllByAttribute method.
