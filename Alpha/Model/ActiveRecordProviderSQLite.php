@@ -20,6 +20,7 @@ use Alpha\Exception\CustomQueryException;
 use Alpha\Exception\RecordNotFoundException;
 use Alpha\Exception\BadTableNameException;
 use Alpha\Exception\NotImplementedException;
+use Alpha\Exception\PHPException;
 use Exception;
 use SQLite3Stmt;
 use SQLite3;
@@ -200,11 +201,12 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             $sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE OID = :OID LIMIT 1;';
         }
         $this->BO->setLastQuery($sqlQuery);
-        $stmt = self::getConnection()->prepare($sqlQuery);
 
-        $row = array();
+        try {
+            $stmt = self::getConnection()->prepare($sqlQuery);
 
-        if ($stmt instanceof SQLite3Stmt) {
+            $row = array();
+
             if ($version > 0) {
                 $stmt->bindValue(':version', $version, SQLITE3_INTEGER);
             }
@@ -217,7 +219,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             $row = $result->fetchArray(SQLITE3_ASSOC);
 
             $stmt->close();
-        } else {
+        } catch (PHPException $e) {
             self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
             if (!$this->BO->checkTableExists()) {
                 $this->BO->makeTable();
@@ -1502,6 +1504,17 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             self::$logger->debug('<<dropTable');
         }
 
+        if ($this->BO->getMaintainHistory()) {
+            $sqlQuery = 'DROP TABLE IF EXISTS '.$tableName.'_history;';
+
+            $this->BO->setLastQuery($sqlQuery);
+
+            if (!$result = self::getConnection()->query($sqlQuery)) {
+                throw new AlphaException('Failed to drop the table ['.$tableName.'_history] for the class ['.get_class($this->BO).'], query is ['.$this->BO->getLastQuery().']');
+                self::$logger->debug('<<dropTable');
+            }
+        }
+
         self::$logger->debug('<<dropTable');
     }
 
@@ -1917,7 +1930,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                         break;
                     }
                 }
-                $result->seek(0);
+                $result->reset();
             } else {
                 ++$matchCount;
             }

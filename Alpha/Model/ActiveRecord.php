@@ -756,7 +756,7 @@ abstract class ActiveRecord
                 }
 
                 // should set related field values to null (MySQL is doing this for us as-is)
-                if ($prop->getRelationType() == 'ONE-TO-MANY' && !$prop->getRelatedClass() == 'TagObject') {
+                if ($prop->getRelationType() == 'ONE-TO-MANY' && !$prop->getRelatedClass() == 'Alpha\Model\Tag') {
                     $relatedObjects = $prop->getRelatedObjects();
 
                     foreach ($relatedObjects as $object) {
@@ -766,7 +766,7 @@ abstract class ActiveRecord
                 }
 
                 // in the case of tags, we will always remove the related tags once the BO is deleted
-                if ($prop->getRelationType() == 'ONE-TO-MANY' && $prop->getRelatedClass() == 'TagObject') {
+                if ($prop->getRelationType() == 'ONE-TO-MANY' && $prop->getRelatedClass() == 'Alpha\Model\Tag') {
                     // just making sure that the Relation is set to current OID as its transient
                     $prop->setValue($this->getOID());
                     $relatedObjects = $prop->getRelatedObjects();

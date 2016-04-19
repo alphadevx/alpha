@@ -9,7 +9,7 @@ namespace Alpha\Util\Helper;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2016, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -380,5 +380,20 @@ class Validator
     public static function isBase64($value)
     {
         return (bool) preg_match('/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/', $value);
+    }
+
+    /**
+     * Will return true if the value provided contains any HTML code that is stripable by
+     * the native strip_tags() function.
+     *
+     * @param $value
+     *
+     * @return bool
+     *
+     * @since 2.0.1
+     */
+    public static function isHTML($value)
+    {
+        return $value != strip_tags($value) ? true : false;
     }
 }
