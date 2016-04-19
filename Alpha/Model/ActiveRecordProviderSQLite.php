@@ -20,6 +20,7 @@ use Alpha\Exception\CustomQueryException;
 use Alpha\Exception\RecordNotFoundException;
 use Alpha\Exception\BadTableNameException;
 use Alpha\Exception\NotImplementedException;
+use Alpha\Exception\PHPException;
 use Exception;
 use SQLite3Stmt;
 use SQLite3;
@@ -200,11 +201,12 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             $sqlQuery = 'SELECT '.$fields.' FROM '.$this->BO->getTableName().' WHERE OID = :OID LIMIT 1;';
         }
         $this->BO->setLastQuery($sqlQuery);
-        $stmt = self::getConnection()->prepare($sqlQuery);
 
-        $row = array();
+        try {
+            $stmt = self::getConnection()->prepare($sqlQuery);
 
-        if ($stmt instanceof SQLite3Stmt) {
+            $row = array();
+
             if ($version > 0) {
                 $stmt->bindValue(':version', $version, SQLITE3_INTEGER);
             }
@@ -217,7 +219,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             $row = $result->fetchArray(SQLITE3_ASSOC);
 
             $stmt->close();
-        } else {
+        } catch (PHPException $e) {
             self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.']');
             if (!$this->BO->checkTableExists()) {
                 $this->BO->makeTable();

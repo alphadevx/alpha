@@ -196,6 +196,31 @@ class ActiveRecordTest extends ModelTestCase
     }
 
     /**
+     * Testing that load will create a table if it does not already exist
+     *
+     * @since 2.0.1
+     * @dataProvider getActiveRecordProviders
+     */
+    public function testLoadCreatesMissingTable($provider)
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
+        $this->assertTrue($this->person->checkTableExists(), 'Testing that load will create a table if it does not already exist');
+        $this->person->dropTable();
+        $this->assertFalse($this->person->checkTableExists(), 'Testing that load will create a table if it does not already exist');
+
+        try {
+            $this->person->load('123');
+            $this->fail('Testing that load will create a table if it does not already exist');
+        } catch (RecordNotFoundException $e) {
+            $this->assertEquals('Failed to load object of OID [123], table [Person] did not exist so had to create!', $e->getMessage(), 'Testing that load will create a table if it does not already exist');
+        }
+
+        $this->assertTrue($this->person->checkTableExists(), 'Testing that load will create a table if it does not already exist');
+    }
+
+    /**
      * Testing the checkRecordExists method.
      *
      * @since 1.0
