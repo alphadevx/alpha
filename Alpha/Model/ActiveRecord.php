@@ -1757,14 +1757,15 @@ abstract class ActiveRecord
      * @param string $relatedClass          The name of the related class in the format "NameObject".
      * @param string $relatedClassAttribute The name of the field to relate to on the related class.
      * @param bool   $allowNullValues       For foreign key indexes that don't allow null values, set this to false (default is true).
+     * @param string $indexName             The optional name for the index, will calculate if not provided.
      *
      * @since 1.0
      *
      * @throws Alpha\Exception\FailedIndexCreateException
      */
-    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute)
+    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null)
     {
-        self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.']');
+        self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.'], indexName=['.$indexName.']');
 
         $config = ConfigProvider::getInstance();
 
@@ -1783,7 +1784,7 @@ abstract class ActiveRecord
         }
 
         $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
-        $provider->createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute);
+        $provider->createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName);
 
         if (method_exists($this, 'after_createForeignIndex_callback')) {
             $this->after_createForeignIndex_callback();

@@ -427,12 +427,13 @@ interface ActiveRecordProviderInterface
      * @param string $relatedClass          The fully-qualified name of the related class.
      * @param string $relatedClassAttribute The name of the field to relate to on the related class.
      * @param bool   $allowNullValues       For foreign key indexes that don't allow null values, set this to false (default is true).
+     * @param string $indexName             The optional name for the index, will calculate if not provided.
      *
      * @since 1.1
      *
      * @throws Alpha\Exception\FailedIndexCreateException
      */
-    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute);
+    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null);
 
     /**
      * Creates a unique index in the database on the given attribute(s).

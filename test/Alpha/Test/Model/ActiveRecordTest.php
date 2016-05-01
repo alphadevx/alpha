@@ -8,6 +8,7 @@ use Alpha\Model\Rights;
 use Alpha\Model\BadRequest;
 use Alpha\Model\Article;
 use Alpha\Model\ArticleComment;
+use Alpha\Model\ArticleVote;
 use Alpha\Model\BlacklistedIP;
 use Alpha\Model\Tag;
 use Alpha\Model\Type\RelationLookup;
@@ -110,6 +111,8 @@ class ActiveRecordTest extends ModelTestCase
 
             $article = new Article();
             $article->rebuildTable();
+            $comment = new ArticleComment();
+            $comment->rebuildTable();
             $tag = new Tag();
             $tag->rebuildTable();
         }
@@ -131,6 +134,25 @@ class ActiveRecordTest extends ModelTestCase
         $person->set('URL', 'http://unitTestUser/');
 
         return $person;
+    }
+
+    /**
+     * Testing the createForeignIndex method
+     *
+     * @since 2.0.1
+     *
+     * @dataProvider getActiveRecordProviders
+     */
+    public function testCreateForeignIndex($provider)
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
+        $article = new Article();
+
+        $article->createForeignIndex('author', 'Alpha\Model\Person', 'displayName');
+
+        $this->assertTrue(in_array('Article_author_fk_idx', $article->getIndexes()), 'Testing the createForeignIndex method');
     }
 
     /**

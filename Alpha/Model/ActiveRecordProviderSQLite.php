@@ -98,6 +98,15 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
     private $BO;
 
     /**
+     * An array of new foreign keys that need to be created.
+     *
+     * @var array
+     *
+     * @since 2.0.1
+     */
+    private $foreignKeys = array();
+
+    /**
      * The constructor.
      *
      * @since 1.2
@@ -1356,6 +1365,12 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             }
         }
 
+        if (count($this->foreignKeys) > 0) {
+            foreach ($this->foreignKeys as $field => $related) {
+                $sqlQuery .= ', FOREIGN KEY ('.$field.') REFERENCES '.$related[0].'('.$related[1].')';
+            }
+        }
+
         $sqlQuery .= ');';
 
         $this->BO->setLastQuery($sqlQuery);
@@ -1989,6 +2004,21 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             }
         }
 
+        // in SQLite foreign keys are not stored in sqlite_master, so we have to run a different query and append the results
+        $sqlQuery = 'PRAGMA foreign_key_list('.$this->BO->getTableName().')';
+        
+        $this->BO->setLastQuery($sqlQuery);
+
+        if (!$result = self::getConnection()->query($sqlQuery)) {
+            self::$logger->warn('Error during pragma table foreign key lookup ['.self::getLastDatabaseError().']');
+        } else {
+            while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+                // SQLite does not name FK indexes, so we will return a fake name based the same convention used in MySQL
+                $fakeIndexName = $this->BO->getTableName().'_'.$row['from'].'_fk_idx';
+                array_push($indexNames, $fakeIndexName);
+            }
+        }
+
         self::$logger->debug('<<getIndexes');
 
         return $indexNames;
@@ -2054,42 +2084,46 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::createForeignIndex()
      */
-    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute)
+    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null)
     {
-        self::$logger->info('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.']');
+        self::$logger->info('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.'], indexName=['.$indexName.']');
 
         /*
          * High-level approach
          *
          * 1. Rename the source table to [tablename]_temp
-         * 2. Creata a new [tablename] table, with the new FK in place.
+         * 2. Create a new [tablename] table, with the new FK in place.
          * 3. Copy all of the data from [tablename]_temp to [tablename].
          * 4. Drop [tablename]_temp.
          */
         try {
             ActiveRecord::begin($this->BO);
 
-                // rename the table to [tablename]_temp
-                $query = 'ALTER TABLE '.$this->BO->getTableName().' RENAME TO '.$this->BO->getTableName().'_temp;';
+            // rename the table to [tablename]_temp
+            $query = 'ALTER TABLE '.$this->BO->getTableName().' RENAME TO '.$this->BO->getTableName().'_temp;';
             $this->BO->setLastQuery($query);
             self::getConnection()->query($query);
 
             self::$logger->info('Renamed the table ['.$this->BO->getTableName().'] to ['.$this->BO->getTableName().'_temp]');
 
-                // now create the new table with the FK in place
-                $this->BO->makeTable();
+            // now create the new table with the FK in place
+            $record = new $relatedClass();
+            $tableName = $record->getTableName();
+            $this->foreignKeys[$attributeName] = array($tableName, $relatedClassAttribute);
+
+            $this->makeTable();
 
             self::$logger->info('Made a new copy of the table ['.$this->BO->getTableName().']');
 
-                // copy all of the old data to the new table
-                $query = 'INSERT INTO '.$this->BO->getTableName().' SELECT * FROM '.$this->BO->getTableName().'_temp;';
+            // copy all of the old data to the new table
+            $query = 'INSERT INTO '.$this->BO->getTableName().' SELECT * FROM '.$this->BO->getTableName().'_temp;';
             $this->BO->setLastQuery($query);
             self::getConnection()->query($query);
 
             self::$logger->info('Copied all of the data from ['.$this->BO->getTableName().'] to ['.$this->BO->getTableName().'_temp]');
 
-                // finally, drop the _temp table and commit the changes
-                $this->BO->dropTable($this->BO->getTableName().'_temp');
+            // finally, drop the _temp table and commit the changes
+            $this->BO->dropTable($this->BO->getTableName().'_temp');
 
             self::$logger->info('Dropped the table ['.$this->BO->getTableName().'_temp]');
 
