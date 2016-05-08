@@ -3,6 +3,7 @@
 namespace Alpha\Util\Logging;
 
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Exception\PHPException;
 
 /**
  * Generic log file class to encapsulate common file I/O and rendering calls.
@@ -111,11 +112,15 @@ class LogProviderFile implements LogProviderInterface
                     $logsDir = $config->get('app.file.store.dir').'logs';
 
                     if (!file_exists($logsDir)) {
-                        mkdir($logsDir, 0766);
+                        if (!mkdir($logsDir, 0766)) {
+                            throw new PHPException('Could not create the directory ['.$logsDir.']');
+                        }
                     }
 
                     $fp = fopen($this->path, 'a+');
-                    fputcsv($fp, $line, ',', '"', '\\');
+                    if (!fputcsv($fp, $line, ',', '"', '\\')) {
+                        throw new PHPException('Could not write to the CSV file ['.$this->path.']');
+                    }
 
                     if ($this->checkFileSize() >= $this->MaxSize) {
                         $this->backupFile();
