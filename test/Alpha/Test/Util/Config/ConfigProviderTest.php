@@ -111,4 +111,20 @@ class ConfigProviderTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals('The config property [keyDoesNotExist] is not set in the .ini config file', $e->getMessage(), 'Testing that attempting to access a config value that is not set will cause an exception');
         }
     }
+
+    /**
+     * Testing that the ConfigProvider reloadConfig method reloads the config from storage
+     *
+     * @since 2.0.1
+     */
+    public function testReloadConfig()
+    {
+        $this->configCopy->set('app.title', 'Testing');
+
+        $this->assertEquals('Testing', $this->configCopy->get('app.title'), 'testing that the ConfigProvider reloadConfig method reloads the config from storage');
+
+        $this->configCopy->reloadConfig();
+
+        $this->assertEquals('Alpha Unit Tests', $this->configCopy->get('app.title'), 'testing that the ConfigProvider reloadConfig method reloads the config from storage');
+    }
 }

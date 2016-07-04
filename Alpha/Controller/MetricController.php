@@ -96,7 +96,11 @@ class MetricController extends Controller implements ControllerInterface
 
         $body = View::displayPageHead($this);
 
-        $dir = $config->get('app.root');
+        if ($request->getParam('dir')) {
+            $dir = $request->getParam('dir');
+        } else {
+            $dir = $config->get('app.root');
+        }
 
         $metrics = new Inspector($dir);
         $metrics->calculateLOC();

@@ -1,21 +1,18 @@
 <?php
 
-namespace Alpha\Test\Controller;
+namespace Alpha\Test\Util\Code\Highlight;
 
-use Alpha\Controller\Front\FrontController;
-use Alpha\Controller\MetricController;
-use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Http\Request;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Code\Highlight\HighlightProviderFactory;
+use Alpha\Util\Helper\Validator;
 
 /**
- * Test cases for the MetricController class.
+ * Test cases for the HighlightProviderInterface implementations.
  *
- * @since 2.0
+ * @since 2.0.1
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2016, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -50,23 +47,38 @@ use Alpha\Util\Http\Session\SessionProviderFactory;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class MetricControllerTest extends ControllerTestCase
+class HighlightProviderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Testing the doGET method.
+     * Returns an array of highlight providers.
+     *
+     * @return array
+     *
+     * @since 2.0.1
      */
-    public function testDoGET()
+    public function getHighlightProviders()
     {
-        $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        return array(
+            array('Alpha\Util\Code\Highlight\HighlightProviderGeshi'),
+            array('Alpha\Util\Code\Highlight\HighlightProviderLuminous')
+        );
+    }
 
-        $front = new FrontController();
+    /**
+     * Testing the highlight() method.
+     *
+     * @since 2.0.1
+     * @dataProvider getHighlightProviders
+     */
+    public function testHighlight($provider)
+    {
+        $highlighter = HighlightProviderFactory::getInstance($provider);
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/metric', 'params' => array('dir' => 'Alpha')));
-        $response = $front->process($request);
+        $code = '<?= $value ?>';
 
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
-        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+        $highlighted = $highlighter->highlight($code, 'php');
+
+        $this->assertNotEmpty($highlighted, 'Testing the highlight() method');
+        $this->assertTrue(Validator::isHTML($highlighted), 'Testing the highlight() method');
     }
 }

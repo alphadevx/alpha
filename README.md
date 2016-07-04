@@ -1,8 +1,8 @@
-[![Build Status](https://travis-ci.org/alphadevx/alpha.svg?branch=2.0.0)](https://travis-ci.org/alphadevx/alpha)
-[![Coverage Status](https://coveralls.io/repos/alphadevx/alpha/badge.svg?branch=2.0.0&service=github)](https://coveralls.io/github/alphadevx/alpha?branch=2.0.0)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/alphadevx/alpha/badges/quality-score.png?b=2.0.0)](https://scrutinizer-ci.com/g/alphadevx/alpha/?branch=2.0.0)
+[![Build Status](https://travis-ci.org/alphadevx/alpha.svg?branch=develop)](https://travis-ci.org/alphadevx/alpha)
+[![Coverage Status](https://coveralls.io/repos/alphadevx/alpha/badge.svg?branch=develop&service=github)](https://coveralls.io/github/alphadevx/alpha?branch=develop)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/alphadevx/alpha/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/alphadevx/alpha/?branch=develop)
 
-Alpha Framework (2.0.0)
+Alpha Framework (2.0.1)
 ===========================
 
 Introduction

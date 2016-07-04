@@ -1,17 +1,13 @@
 <?php
 
-namespace Alpha\Test\Controller;
+namespace Alpha\Test\Util\Graph;
 
-use Alpha\Controller\Front\FrontController;
-use Alpha\Controller\MetricController;
-use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Http\Request;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Graph\TreeGraph;
 
 /**
- * Test cases for the MetricController class.
+ * Test cases for the TreeGraph class.
  *
- * @since 2.0
+ * @since 2.0.1
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
@@ -50,23 +46,26 @@ use Alpha\Util\Http\Session\SessionProviderFactory;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class MetricControllerTest extends ControllerTestCase
+class TreeGraphTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Testing the doGET method.
-     */
-    public function testDoGET()
-    {
-        $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+	public function testAdd()
+	{
+		$graph = new TreeGraph();
+		$graph->add(1, 0, 'First child', 10, 10, array(0, 0, 0), 'http://www.alphaframework.org/');
 
-        $front = new FrontController();
+		$this->assertEquals('First child', $graph->get(1)->getMessage(), 'Testing the add method');
+	}
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/metric', 'params' => array('dir' => 'Alpha')));
-        $response = $front->process($request);
+	public function testNext()
+	{
+		$graph = new TreeGraph();
+		$graph->add(1, 0, 'First child', 10, 10, array(0, 0, 0), 'http://www.alphaframework.org/');
+		$graph->add(2, 0, 'Second child', 10, 10, array(0, 0, 0), 'http://www.alphaframework.org/');
 
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
-        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
-    }
+		$this->assertTrue($graph->hasNext(), 'Testing the hasNext method');
+		$this->assertEquals('First child', $graph->next()->getMessage(), 'Testing the next method');
+		$this->assertTrue($graph->hasNext(), 'Testing the hasNext method');
+		$this->assertEquals('Second child', $graph->next()->getMessage(), 'Testing the next method');
+		$this->assertFalse($graph->hasNext(), 'Testing the hasNext method');
+	}
 }

@@ -81,8 +81,7 @@ class ConfigProvider
      * @since 1.0
      */
     private function __construct()
-    {
-    }
+    {}
 
     /**
      * Get the config object instance.
@@ -165,6 +164,18 @@ class ConfigProvider
         } else {
             $this->set('rootPath', str_replace('Alpha/Util/Config', '', __DIR__));
         }
+    }
+
+    /**
+     * Reloads the config from the relevent .ini file, dependant upon the current
+     * environment (hostname).
+     *
+     * @since 2.0.1
+     */
+    public function reloadConfig()
+    {
+        $this->setRootPath();
+        $this->loadConfig();
     }
 
     /**

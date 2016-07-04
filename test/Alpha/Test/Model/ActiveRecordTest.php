@@ -8,7 +8,9 @@ use Alpha\Model\Rights;
 use Alpha\Model\BadRequest;
 use Alpha\Model\Article;
 use Alpha\Model\ArticleComment;
+use Alpha\Model\ArticleVote;
 use Alpha\Model\BlacklistedIP;
+use Alpha\Model\Tag;
 use Alpha\Model\Type\RelationLookup;
 use Alpha\Model\Type\String;
 use Alpha\Exception\LockingException;
@@ -106,6 +108,13 @@ class ActiveRecordTest extends ModelTestCase
             // just making sure no previous test user is in the DB
             $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/');
             $this->person->deleteAllByAttribute('displayName', 'unitTestUser');
+
+            $article = new Article();
+            $article->rebuildTable();
+            $comment = new ArticleComment();
+            $comment->rebuildTable();
+            $tag = new Tag();
+            $tag->rebuildTable();
         }
     }
 
@@ -125,6 +134,25 @@ class ActiveRecordTest extends ModelTestCase
         $person->set('URL', 'http://unitTestUser/');
 
         return $person;
+    }
+
+    /**
+     * Testing the createForeignIndex method
+     *
+     * @since 2.0.1
+     *
+     * @dataProvider getActiveRecordProviders
+     */
+    public function testCreateForeignIndex($provider)
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
+        $article = new Article();
+
+        $article->createForeignIndex('author', 'Alpha\Model\Person', 'displayName');
+
+        $this->assertTrue(in_array('Article_author_fk_idx', $article->getIndexes()), 'Testing the createForeignIndex method');
     }
 
     /**
@@ -187,6 +215,31 @@ class ActiveRecordTest extends ModelTestCase
         $id = $this->person->getMAX();
         $this->person->load($id);
         $this->assertEquals('unitTestUser', $this->person->getDisplayname()->getValue(), 'Testing the basic load/save functionality');
+    }
+
+    /**
+     * Testing that load will create a table if it does not already exist
+     *
+     * @since 2.0.1
+     * @dataProvider getActiveRecordProviders
+     */
+    public function testLoadCreatesMissingTable($provider)
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
+        $this->assertTrue($this->person->checkTableExists(), 'Testing that load will create a table if it does not already exist');
+        $this->person->dropTable();
+        $this->assertFalse($this->person->checkTableExists(), 'Testing that load will create a table if it does not already exist');
+
+        try {
+            $this->person->load('123');
+            $this->fail('Testing that load will create a table if it does not already exist');
+        } catch (RecordNotFoundException $e) {
+            $this->assertEquals('Failed to load object of OID [123], table [Person] did not exist so had to create!', $e->getMessage(), 'Testing that load will create a table if it does not already exist');
+        }
+
+        $this->assertTrue($this->person->checkTableExists(), 'Testing that load will create a table if it does not already exist');
     }
 
     /**
@@ -457,6 +510,33 @@ class ActiveRecordTest extends ModelTestCase
                             'Testing the delete method');
         }
     }
+
+    /**
+     * Testing the delete method also removes Tags related to the deleted record.
+     *
+     * @since 2.0.1
+     * @dataProvider getActiveRecordProviders
+     */
+    public function testDeleteRelatedTags($provider)
+    {
+        $article = new Article();
+        $tag = new Tag();
+        $this->assertEquals(0, $tag->getCount(), 'Testing the delete method also removes Tags related to the deleted record.');
+
+        $article->set('title', 'Unit test');
+        $article->set('description', 'Unit test');
+        $article->set('author', 'Unit test');
+        $article->set('content', 'jupiter neptune venus');
+        $article->save();
+
+        $this->assertEquals(3, $tag->getCount(), 'Testing the delete method also removes Tags related to the deleted record.');
+
+        $article->delete();
+
+        $this->assertEquals(0, $article->getCount(), 'Testing the delete method also removes Tags related to the deleted record.');
+        $this->assertEquals(0, $tag->getCount(), 'Testing the delete method also removes Tags related to the deleted record.');
+    }
+
 
     /**
      * Testing the deleteAllByAttribute method.

@@ -124,7 +124,7 @@ class LogController extends Controller implements ControllerInterface
             $log->setPath($this->logPath);
 
             if (preg_match('/alpha.*/', basename($this->logPath))) {
-                $body .= $log->renderLog(array('Date/time', 'Level', 'Class', 'Message', 'Client', 'IP', 'Server hostname'));
+                $body .= $log->renderLog(array('Date/time', 'Level', 'Class', 'Message', 'Client', 'IP', 'Server hostname', 'URI'));
             }
             if (preg_match('/search.*/', basename($this->logPath))) {
                 $body .= $log->renderLog(array('Search query', 'Search date', 'Client Application', 'Client IP'));
