@@ -11,7 +11,7 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2016, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -88,5 +88,21 @@ class SecurityUtils
         $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
 
         return mcrypt_decrypt('tripledes', $config->get('security.encryption.key'), $data, 'ecb', $iv);
+    }
+
+    /**
+     * Checks to see if the admin password provided matches the default admin password in the config file.
+     *
+     * @param string $password The encrypted admin password stored in the database.
+     *
+     * @return boolean
+     *
+     * @since 2.0.2
+     */
+    public static function checkAdminPasswordIsDefault($password)
+    {
+        $config = ConfigProvider::getInstance();
+
+        return password_verify($config->get('app.install.password'), $password);
     }
 }

@@ -30,7 +30,7 @@ use Exception;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2016, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -1639,7 +1639,12 @@ abstract class Controller
         if ($accept != 'application/json' && $this->checkIfAccessingFromSecureURL()) {
             $viewState = ViewState::getInstance();
             if ($viewState->get('renderAdminMenu') === true) {
-                $menu = View::loadTemplateFragment('html', 'adminmenu.phtml', array());
+
+                $sessionProvider = $config->get('session.provider.name');
+                $session = SessionProviderFactory::getInstance($sessionProvider);
+
+                $passwordResetRequired = SecurityUtils::checkAdminPasswordIsDefault($session->get('currentUser')->get('password'));
+                $menu = View::loadTemplateFragment('html', 'adminmenu.phtml', array('passwordResetRequired' => $passwordResetRequired));
 
                 return $menu;
             }
