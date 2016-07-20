@@ -1640,6 +1640,8 @@ abstract class Controller
             $viewState = ViewState::getInstance();
             if ($viewState->get('renderAdminMenu') === true) {
 
+                $config = ConfigProvider::getInstance();
+
                 $sessionProvider = $config->get('session.provider.name');
                 $session = SessionProviderFactory::getInstance($sessionProvider);
 
