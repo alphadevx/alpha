@@ -1,13 +1,14 @@
 <?php
 
-namespace Alpha\Util\Security;
+namespace Alpha\Test\Util\Code\Highlight;
 
+use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Config\ConfigProvider;
 
 /**
- * A utility class for carrying out various security tasks.
+ * Test cases for the SecurityUtils class.
  *
- * @since 1.2.2
+ * @since 2.0.2
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
@@ -46,63 +47,19 @@ use Alpha\Util\Config\ConfigProvider;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class SecurityUtils
+class SecurityUtilsTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Encrypt provided data using mcrypt() with the TripleDES algorithm and the security.encryption.key.
-     *
-     * @param string $data
-     *
-     * @return string
-     *
-     * @since 1.2.2
-     */
-    public static function encrypt($data)
-    {
-        $config = ConfigProvider::getInstance();
-
-        $td = mcrypt_module_open('tripledes', '', 'ecb', '');
-        $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
-        mcrypt_generic_init($td, $config->get('security.encryption.key'), $iv);
-        $encryptedData = mcrypt_generic($td, $data);
-        mcrypt_generic_deinit($td);
-        mcrypt_module_close($td);
-
-        return $encryptedData;
-    }
-
-    /**
-     * Decrypt provided data using mcrypt() with the TripleDES algorithm and the security.encryption.key.
-     *
-     * @param string $data
-     *
-     * @return string
-     *
-     * @since 1.2.2
-     */
-    public static function decrypt($data)
-    {
-        $config = ConfigProvider::getInstance();
-
-        $td = mcrypt_module_open('tripledes', '', 'ecb', '');
-        $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
-
-        return mcrypt_decrypt('tripledes', $config->get('security.encryption.key'), $data, 'ecb', $iv);
-    }
-
-    /**
-     * Checks to see if the admin password provided matches the default admin password in the config file.
-     *
-     * @param string $password The encrypted admin password stored in the database.
-     *
-     * @return boolean
+     * Testing the checkAdminPasswordIsDefault() method.
      *
      * @since 2.0.2
      */
-    public static function checkAdminPasswordIsDefault($password)
+    public function testCheckAdminPasswordIsDefault()
     {
         $config = ConfigProvider::getInstance();
+        $config->set('app.install.password', 'test');
 
-        return password_verify($config->get('app.install.password'), $password);
+        $this->assertTrue(SecurityUtils::checkAdminPasswordIsDefault(password_hash('test', PASSWORD_DEFAULT, ['cost' => 12])), 'Testing when the default password is compared');
+        $this->assertFalse(SecurityUtils::checkAdminPasswordIsDefault(password_hash('different', PASSWORD_DEFAULT, ['cost' => 12])), 'Testing when a non-default password is compared');
     }
 }

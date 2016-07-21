@@ -19,3 +19,7 @@
 		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\LogoutController') ?>">Logout</a></li>
 	</ul>
 </nav>
+
+<?php if ($passwordResetRequired) { ?>
+<div class="alert alert-danger">You current admin password matches the value of app.install.password from the config file, please reset it to something different!</div>
+<?php } ?>

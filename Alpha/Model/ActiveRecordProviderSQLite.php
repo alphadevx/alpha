@@ -482,9 +482,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
         if (!$ignoreClassType && $this->BO->isTableOverloaded()) {
             if ($limit == 0) {
-                $sqlQuery = 'SELECT OID FROM '.$this->BO->getTableName().' WHERE classname = \''.get_class($this->BO).'\' ORDER BY '.$orderBy.' '.$order.';';
+                $sqlQuery = 'SELECT OID FROM '.$this->BO->getTableName().' WHERE classname = \''.addslashes(get_class($this->BO)).'\' ORDER BY '.$orderBy.' '.$order.';';
             } else {
-                $sqlQuery = 'SELECT OID FROM '.$this->BO->getTableName().' WHERE classname = \''.get_class($this->BO).'\' ORDER BY '.$orderBy.' '.$order.' LIMIT '.
+                $sqlQuery = 'SELECT OID FROM '.$this->BO->getTableName().' WHERE classname = \''.addslashes(get_class($this->BO)).'\' ORDER BY '.$orderBy.' '.$order.' LIMIT '.
                     $limit.' OFFSET '.$start.';';
             }
         } else {
@@ -769,7 +769,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         }
 
         if (!$ignoreClassType && $this->BO->isTableOverloaded()) {
-            $sqlQuery = 'SELECT OID FROM '.$this->BO->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' AND classname = '".get_class($this->BO)."' ORDER BY ".$orderBy.' '.$order.$limit;
+            $sqlQuery = 'SELECT OID FROM '.$this->BO->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' AND classname = '".addslashes(get_class($this->BO))."' ORDER BY ".$orderBy.' '.$order.$limit;
         } else {
             $sqlQuery = 'SELECT OID FROM '.$this->BO->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' ORDER BY ".$orderBy.' '.$order.$limit;
         }
@@ -810,7 +810,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         self::$logger->debug('>>loadAllFieldValuesByAttribute(attribute=['.$attribute.'], value=['.$value.'], returnAttribute=['.$returnAttribute.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
         if (!$ignoreClassType && $this->BO->isTableOverloaded()) {
-            $sqlQuery = 'SELECT '.$returnAttribute.' FROM '.$this->BO->getTableName()." WHERE $attribute = '$value' AND classname = '".get_class($this->BO)."' ORDER BY OID ".$order.';';
+            $sqlQuery = 'SELECT '.$returnAttribute.' FROM '.$this->BO->getTableName()." WHERE $attribute = '$value' AND classname = '".addslashes(get_class($this->BO))."' ORDER BY OID ".$order.';';
         } else {
             $sqlQuery = 'SELECT '.$returnAttribute.' FROM '.$this->BO->getTableName()." WHERE $attribute = '$value' ORDER BY OID ".$order.';';
         }
@@ -1661,7 +1661,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         self::$logger->debug('>>getCount(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'])');
 
         if ($this->BO->isTableOverloaded()) {
-            $whereClause = ' WHERE classname = \''.get_class($this->BO).'\' AND';
+            $whereClause = ' WHERE classname = \''.addslashes(get_class($this->BO)).'\' AND';
         } else {
             $whereClause = ' WHERE';
         }
