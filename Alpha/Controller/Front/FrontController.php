@@ -422,7 +422,7 @@ class FrontController
             // replace any troublesome characters from the URL with the original values
             $token = strtr($params['token'], '-_', '+/');
             $token = base64_decode($token);
-            $this->queryString = trim(SecurityUtils::decrypt($token));
+            $this->queryString = SecurityUtils::decrypt($token);
         }
     }
 
@@ -440,7 +440,7 @@ class FrontController
         // replace any troublesome characters from the URL with the original values
         $token = strtr($tk, '-_', '+/');
         $token = base64_decode($token);
-        $params = trim(SecurityUtils::decrypt($token));
+        $params = SecurityUtils::decrypt($token);
 
         return $params;
     }
@@ -459,7 +459,7 @@ class FrontController
         // replace any troublesome characters from the URL with the original values
         $token = strtr($tk, '-_', '+/');
         $token = base64_decode($token);
-        $params = trim(SecurityUtils::decrypt($token));
+        $params = SecurityUtils::decrypt($token);
 
         $pairs = explode('&', $params);
 
