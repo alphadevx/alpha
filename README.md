@@ -101,6 +101,8 @@ The config files themselves are well-commented, but here is a list of the minimu
 |db.password             |Database password.                                                                       |
 |db.hostname             |Database host.                                                                           |
 |security.encryption.key |Secret key used for encryption when using the SecurityUtils class.                       |
+|app.install.username    |Username used for admin access during intallation when creating the database.            |
+|app.install.password    |Password used for admin access during intallation when creating the database.            |
 
 Please review the comments in the config files for addition optional settings.
 
