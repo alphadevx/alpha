@@ -62,4 +62,17 @@ class SecurityUtilsTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(SecurityUtils::checkAdminPasswordIsDefault(password_hash('test', PASSWORD_DEFAULT, ['cost' => 12])), 'Testing when the default password is compared');
         $this->assertFalse(SecurityUtils::checkAdminPasswordIsDefault(password_hash('different', PASSWORD_DEFAULT, ['cost' => 12])), 'Testing when a non-default password is compared');
     }
+
+    /**
+     * Testing encrypt/decrypt methods.
+     *
+     * @since 2.0.2
+     */
+    public function testEncryptDecrypt()
+    {
+        $plain = "test string";
+        $encrypted = SecurityUtils::encrypt($plain);
+
+        $this->assertEquals($plain, SecurityUtils::decrypt($encrypted), "Testing encrypt/decrypt methods");
+    }
 }
