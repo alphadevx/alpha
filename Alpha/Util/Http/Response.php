@@ -370,6 +370,8 @@ class Response
             header($header.': '.$value);
         }
 
+        header_remove('X-Powered-By');
+
         if (isset($this->body)) {
             header('Content-Length: '.$this->getContentLength());
             echo $this->body;

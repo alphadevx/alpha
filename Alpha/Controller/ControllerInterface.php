@@ -9,10 +9,8 @@ namespace Alpha\Controller;
  *
  * @author John Collins <dev@alphaframework.org>
  *
- * @version $Id: AlphaControllerInterface.inc 1624 2012-12-21 12:17:55Z alphadevx $
- *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2016, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -118,4 +116,14 @@ interface ControllerInterface
      * @since 1.0
      */
     public function doOPTIONS($params);
+
+    /**
+     * Handles TRACE HTTP requests.
+     *
+     * @param Alpha\Util\Http\Request $request
+     *
+     * @since Alpha\Util\Http\Response
+     * @since 2.0.2
+     */
+    public function doTRACE($params);
 }
