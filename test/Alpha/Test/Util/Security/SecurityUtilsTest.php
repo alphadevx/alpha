@@ -1,14 +1,16 @@
 <?php
 
-namespace Alpha\Controller;
+namespace Alpha\Test\Util\Code\Highlight;
+
+use Alpha\Util\Security\SecurityUtils;
+use Alpha\Util\Config\ConfigProvider;
 
 /**
- * The interface for all page controllers.
+ * Test cases for the SecurityUtils class.
  *
- * @since 1.0
+ * @since 2.0.2
  *
  * @author John Collins <dev@alphaframework.org>
- *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2016, John Collins (founder of Alpha Framework).
  * All rights reserved.
@@ -45,85 +47,32 @@ namespace Alpha\Controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-interface ControllerInterface
+class SecurityUtilsTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Handles HEAD HTTP requests.
+     * Testing the checkAdminPasswordIsDefault() method.
      *
-     * @param Alpha\Util\Http\Request $request
-     *
-     * @since Alpha\Util\Http\Response
-     * @since 1.0
-     */
-    public function doHEAD($request);
-
-    /**
-     * Handles GET HTTP requests.
-     *
-     * @param Alpha\Util\Http\Request $request
-     *
-     * @since Alpha\Util\Http\Response
-     * @since 1.0
-     */
-    public function doGET($params);
-
-    /**
-     * Handles POST HTTP requests.
-     *
-     * @param Alpha\Util\Http\Request $request
-     *
-     * @since Alpha\Util\Http\Response
-     * @since 1.0
-     */
-    public function doPOST($params);
-
-    /**
-     * Handles PUT HTTP requests.
-     *
-     * @param Alpha\Util\Http\Request $request
-     *
-     * @since Alpha\Util\Http\Response
-     * @since 1.0
-     */
-    public function doPUT($params);
-
-    /**
-     * Handles PATCH HTTP requests.
-     *
-     * @param Alpha\Util\Http\Request $request
-     *
-     * @since Alpha\Util\Http\Response
-     * @since 1.0
-     */
-    public function doPATCH($params);
-
-    /**
-     * Handles DELETE HTTP requests.
-     *
-     * @param Alpha\Util\Http\Request $request
-     *
-     * @since Alpha\Util\Http\Response
-     * @since 1.0
-     */
-    public function doDELETE($params);
-
-    /**
-     * Handles OPTIONS HTTP requests.
-     *
-     * @param Alpha\Util\Http\Request $request
-     *
-     * @since Alpha\Util\Http\Response
-     * @since 1.0
-     */
-    public function doOPTIONS($params);
-
-    /**
-     * Handles TRACE HTTP requests.
-     *
-     * @param Alpha\Util\Http\Request $request
-     *
-     * @since Alpha\Util\Http\Response
      * @since 2.0.2
      */
-    public function doTRACE($params);
+    public function testCheckAdminPasswordIsDefault()
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('app.install.password', 'test');
+
+        $this->assertTrue(SecurityUtils::checkAdminPasswordIsDefault(password_hash('test', PASSWORD_DEFAULT, ['cost' => 12])), 'Testing when the default password is compared');
+        $this->assertFalse(SecurityUtils::checkAdminPasswordIsDefault(password_hash('different', PASSWORD_DEFAULT, ['cost' => 12])), 'Testing when a non-default password is compared');
+    }
+
+    /**
+     * Testing encrypt/decrypt methods.
+     *
+     * @since 2.0.2
+     */
+    public function testEncryptDecrypt()
+    {
+        $plain = "test string";
+        $encrypted = SecurityUtils::encrypt($plain);
+
+        $this->assertEquals($plain, SecurityUtils::decrypt($encrypted), "Testing encrypt/decrypt methods");
+    }
 }

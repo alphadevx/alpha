@@ -1,15 +1,7 @@
 # Change Log
 
-## [Unreleased](https://github.com/alphadevx/alpha/tree/HEAD)
-
-[Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.1-RC.1...HEAD)
-
-**Fixed bugs:**
-
-- Alpha fails silently if it cannot write to alpha.log [\#170](https://github.com/alphadevx/alpha/issues/170)
-
-## [2.0.1-RC.1](https://github.com/alphadevx/alpha/tree/2.0.1-RC.1) (2016-05-08)
-[Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.0...2.0.1-RC.1)
+## [2.0.1](https://github.com/alphadevx/alpha/tree/2.0.1) (2016-07-04)
+[Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.1-RC.1...2.0.1)
 
 **Implemented enhancements:**
 
@@ -27,6 +19,7 @@
 - Child classes of Alpha\Model\Article should be editable via the CMS [\#272](https://github.com/alphadevx/alpha/issues/272)
 - ActiveRecord::getBOClassNames\(\) needs to filter out any traits that might be placed in the model packages [\#271](https://github.com/alphadevx/alpha/issues/271)
 - Fix broken links rendered by SearchController::renderPageLinks\(\) [\#268](https://github.com/alphadevx/alpha/issues/268)
+- Alpha fails silently if it cannot write to alpha.log [\#170](https://github.com/alphadevx/alpha/issues/170)
 
 **Closed issues:**
 
@@ -35,9 +28,16 @@
 
 **Merged pull requests:**
 
-- \#170 - added better error checking to the file I/O calls in the LogPr… [\#283](https://github.com/alphadevx/alpha/pull/283) ([alphadevx](https://github.com/alphadevx))
+- Release/2.0.1 release [\#288](https://github.com/alphadevx/alpha/pull/288) ([alphadevx](https://github.com/alphadevx))
 - \#82 - added the optional indexName param to the ActiveRecord::createF… [\#282](https://github.com/alphadevx/alpha/pull/282) ([alphadevx](https://github.com/alphadevx))
 - Feature/277 add 10 more unit tests [\#281](https://github.com/alphadevx/alpha/pull/281) ([alphadevx](https://github.com/alphadevx))
+
+## [2.0.1-RC.1](https://github.com/alphadevx/alpha/tree/2.0.1-RC.1) (2016-05-08)
+[Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.0...2.0.1-RC.1)
+
+**Merged pull requests:**
+
+- \#170 - added better error checking to the file I/O calls in the LogPr… [\#283](https://github.com/alphadevx/alpha/pull/283) ([alphadevx](https://github.com/alphadevx))
 - Feature/272 child classes of article should be editable via the cms [\#279](https://github.com/alphadevx/alpha/pull/279) ([alphadevx](https://github.com/alphadevx))
 - feature/276 the logger class should log requested uri where available [\#278](https://github.com/alphadevx/alpha/pull/278) ([alphadevx](https://github.com/alphadevx))
 

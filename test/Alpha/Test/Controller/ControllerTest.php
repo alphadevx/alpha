@@ -673,6 +673,27 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('GET', $response->getHeader('Allow'), 'Testing the process method');
     }
 
+
+    /**
+     * Testing that a TRACE request is rejected.
+     */
+    public function testTraceRequest()
+    {
+        $front = new FrontController();
+        $front->addRoute('/hello', function ($request) {
+            $controller = new ImageController();
+
+            return $controller->process($request);
+        });
+
+        $request = new Request(array('method' => 'TRACE', 'URI' => '/hello'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(405, $response->getStatus(), 'Testing that a TRACE request is rejected');
+        $this->assertEquals('Method Not Allowed', $response->getStatusMessage(), 'Testing that a TRACE request is rejected');
+    }
+
     /**
      * Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD.
      */

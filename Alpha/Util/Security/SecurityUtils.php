@@ -11,7 +11,7 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2016, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -49,7 +49,7 @@ use Alpha\Util\Config\ConfigProvider;
 class SecurityUtils
 {
     /**
-     * Encrypt provided data using mcrypt() with the TripleDES algorithm and the security.encryption.key.
+     * Encrypt provided data using AES 256 algorithm and the security.encryption.key.
      *
      * @param string $data
      *
@@ -61,18 +61,22 @@ class SecurityUtils
     {
         $config = ConfigProvider::getInstance();
 
-        $td = mcrypt_module_open('tripledes', '', 'ecb', '');
-        $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
-        mcrypt_generic_init($td, $config->get('security.encryption.key'), $iv);
-        $encryptedData = mcrypt_generic($td, $data);
-        mcrypt_generic_deinit($td);
-        mcrypt_module_close($td);
+        $ivsize = openssl_cipher_iv_length('aes-256-ecb');
+        $iv = openssl_random_pseudo_bytes($ivsize);
 
-        return $encryptedData;
+        $encryptedData = openssl_encrypt(
+            $data,
+            'aes-256-ecb',
+            $config->get('security.encryption.key'),
+            OPENSSL_RAW_DATA,
+            $iv
+        );
+
+        return $iv . $encryptedData;
     }
 
     /**
-     * Decrypt provided data using mcrypt() with the TripleDES algorithm and the security.encryption.key.
+     * Decrypt provided data using AES 256 algorithm and the security.encryption.key.
      *
      * @param string $data
      *
@@ -84,9 +88,34 @@ class SecurityUtils
     {
         $config = ConfigProvider::getInstance();
 
-        $td = mcrypt_module_open('tripledes', '', 'ecb', '');
-        $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
+        $ivsize = openssl_cipher_iv_length('aes-256-ecb');
+        $iv = mb_substr($data, 0, $ivsize, '8bit');
+        $ciphertext = mb_substr($data, $ivsize, null, '8bit');
 
-        return mcrypt_decrypt('tripledes', $config->get('security.encryption.key'), $data, 'ecb', $iv);
+        $decryptedData = openssl_decrypt(
+            $ciphertext,
+            'aes-256-ecb',
+            $config->get('security.encryption.key'),
+            OPENSSL_RAW_DATA,
+            $iv
+        );
+
+        return $decryptedData;
+    }
+
+    /**
+     * Checks to see if the admin password provided matches the default admin password in the config file.
+     *
+     * @param string $password The encrypted admin password stored in the database.
+     *
+     * @return boolean
+     *
+     * @since 2.0.2
+     */
+    public static function checkAdminPasswordIsDefault($password)
+    {
+        $config = ConfigProvider::getInstance();
+
+        return password_verify($config->get('app.install.password'), $password);
     }
 }

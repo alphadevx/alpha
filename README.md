@@ -2,7 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/alphadevx/alpha/badge.svg?branch=develop&service=github)](https://coveralls.io/github/alphadevx/alpha?branch=develop)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/alphadevx/alpha/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/alphadevx/alpha/?branch=develop)
 
-Alpha Framework (2.0.1)
+Alpha Framework (2.0.2)
 ===========================
 
 Introduction
@@ -101,6 +101,8 @@ The config files themselves are well-commented, but here is a list of the minimu
 |db.password             |Database password.                                                                       |
 |db.hostname             |Database host.                                                                           |
 |security.encryption.key |Secret key used for encryption when using the SecurityUtils class.                       |
+|app.install.username    |Username used for admin access during intallation when creating the database.            |
+|app.install.password    |Password used for admin access during intallation when creating the database.            |
 
 Please review the comments in the config files for addition optional settings.
 
@@ -677,7 +679,7 @@ Alpha provides a static utility class with two methods for encrypting or decrypt
 	$encrypted = SecurityUtils::encrypt('Some data');
 	$decrypted = SecurityUtils::decrypt($encrypted);
 
-The class makes use of the MCrypt extension in PHP to handle encryption, using the TripleDES algorithm.  The secret key used is what you set in the _security.encryption.key_ setting in your config file, which is unique to your application.
+The class makes use of the OpenSSL extension in PHP to handle encryption, using the AES 256 algorithm.  The secret key used is what you set in the _security.encryption.key_ setting in your config file, which is unique to your application.
 
 ### Error handling
 
