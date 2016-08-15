@@ -1675,8 +1675,12 @@ abstract class Controller
                 $sessionProvider = $config->get('session.provider.name');
                 $session = SessionProviderFactory::getInstance($sessionProvider);
 
-                $passwordResetRequired = SecurityUtils::checkAdminPasswordIsDefault($session->get('currentUser')->get('password'));
-                $menu = View::loadTemplateFragment('html', 'adminmenu.phtml', array('passwordResetRequired' => $passwordResetRequired));
+                if ($session->get('currentUser') !== false) {
+                    $passwordResetRequired = SecurityUtils::checkAdminPasswordIsDefault($session->get('currentUser')->get('password'));
+                    $menu = View::loadTemplateFragment('html', 'adminmenu.phtml', array('passwordResetRequired' => $passwordResetRequired));
+                } else {
+                    $menu = '';
+                }
 
                 return $menu;
             }
