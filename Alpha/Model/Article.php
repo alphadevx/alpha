@@ -405,7 +405,7 @@ class Article extends ActiveRecord
     {
         $config = ConfigProvider::getInstance();
 
-        return FrontController::generateSecureURL('act=ViewAttachment&dir='.$this->getAttachmentsLocation().'&filename='.$filename);
+        return FrontController::generateSecureURL('act=Alpha\\Controller\\AttachmentController&articleOID='.$this->getOID().'&filename='.$filename);
     }
 
     /**
