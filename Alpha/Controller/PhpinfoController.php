@@ -99,7 +99,11 @@ class PhpinfoController extends Controller implements ControllerInterface
 
         $body = View::displayPageHead($this);
 
-        $body .= phpinfo();
+        ob_start() ;
+        phpinfo() ;
+        $html = ob_get_contents () ;
+
+        $body .= $html;
 
         $body .= View::displayPageFoot($this);
 
