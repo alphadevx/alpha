@@ -42,7 +42,7 @@ try {
 	$response = new Response(403, View::renderErrorPage(403, $rnae->getMessage(), array('Content-Type' => 'text/html')));
 }
 
-if ($config->get('security.http.header.x.frame.options') != '') {
+if ($config->get('security.http.header.x.frame.options') != '' && $response->getHeader('X-Frame-Options') == null) {
 	$response->setHeader('X-Frame-Options', $config->get('security.http.header.x.frame.options'));
 }
 
