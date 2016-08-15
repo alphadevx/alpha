@@ -34,6 +34,7 @@ use Alpha\Controller\TagController;
 use Alpha\Controller\IndexController;
 use Alpha\Controller\InstallController;
 use Alpha\Controller\ActiveRecordController;
+use Alpha\Controller\PhpinfoController;
 
 /**
  * The front controller designed to optionally handle all requests.
@@ -42,7 +43,7 @@ use Alpha\Controller\ActiveRecordController;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2016, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -343,6 +344,12 @@ class FrontController
         $this->addRoute('/alpha/service', function ($request) {
             $controller = new LoginController();
             $controller->setUnitOfWork(array('Alpha\Controller\LoginController', 'Alpha\Controller\ListActiveRecordsController'));
+
+            return $controller->process($request);
+        });
+
+        $this->addRoute('/phpinfo', function ($request) {
+            $controller = new PhpinfoController();
 
             return $controller->process($request);
         });
