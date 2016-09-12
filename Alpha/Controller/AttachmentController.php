@@ -126,7 +126,7 @@ class AttachmentController extends Controller implements ControllerInterface
                     throw new IllegalArguementException('File not found');
                 }
             } else {
-                self::$logger->error('Could not access article attachment as dir and/or filename were not provided!');
+                self::$logger->error('Could not access article attachment as articleOID and/or filename were not provided!');
                 throw new IllegalArguementException('File not found');
             }
         } catch (IllegalArguementException $e) {

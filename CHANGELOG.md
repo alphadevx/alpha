@@ -1,5 +1,28 @@
 # Change Log
 
+## [2.0.2](https://github.com/alphadevx/alpha/tree/2.0.2) (2016-08-08)
+[Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.2-RC.1...2.0.2)
+
+**Implemented enhancements:**
+
+- Place a warning banner on the admin UI if the admin user password matches what is in the config file [\#291](https://github.com/alphadevx/alpha/issues/291)
+- Do not use a default login/password in the config file for installations [\#290](https://github.com/alphadevx/alpha/issues/290)
+- Remove MCrypt calls from Alpha [\#286](https://github.com/alphadevx/alpha/issues/286)
+- Run a security audit using W3AF [\#232](https://github.com/alphadevx/alpha/issues/232)
+
+**Merged pull requests:**
+
+- Release/2.0.2 release [\#296](https://github.com/alphadevx/alpha/pull/296) ([alphadevx](https://github.com/alphadevx))
+
+## [2.0.2-RC.1](https://github.com/alphadevx/alpha/tree/2.0.2-RC.1) (2016-07-25)
+[Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.1...2.0.2-RC.1)
+
+**Merged pull requests:**
+
+- Feature/232 run a security audit using w3 af [\#295](https://github.com/alphadevx/alpha/pull/295) ([alphadevx](https://github.com/alphadevx))
+- \#286 - removed MCrypt TripleDES calls from the SecurityUtils class and replaced with OpenSSL AES 265 [\#294](https://github.com/alphadevx/alpha/pull/294) ([alphadevx](https://github.com/alphadevx))
+- Feature/291 admin password reset warning banner [\#293](https://github.com/alphadevx/alpha/pull/293) ([alphadevx](https://github.com/alphadevx))
+
 ## [2.0.1](https://github.com/alphadevx/alpha/tree/2.0.1) (2016-07-04)
 [Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.1-RC.1...2.0.1)
 
@@ -23,11 +46,13 @@
 
 **Closed issues:**
 
+- Prep 2.0.1 release [\#287](https://github.com/alphadevx/alpha/issues/287)
 - Address deprecation warning in File\_Find usage from the Inspector class [\#280](https://github.com/alphadevx/alpha/issues/280)
 - Investigate error while attempting to create SQLite indexes [\#82](https://github.com/alphadevx/alpha/issues/82)
 
 **Merged pull requests:**
 
+- Release/2.0.1 release [\#289](https://github.com/alphadevx/alpha/pull/289) ([alphadevx](https://github.com/alphadevx))
 - Release/2.0.1 release [\#288](https://github.com/alphadevx/alpha/pull/288) ([alphadevx](https://github.com/alphadevx))
 - \#82 - added the optional indexName param to the ActiveRecord::createF… [\#282](https://github.com/alphadevx/alpha/pull/282) ([alphadevx](https://github.com/alphadevx))
 - Feature/277 add 10 more unit tests [\#281](https://github.com/alphadevx/alpha/pull/281) ([alphadevx](https://github.com/alphadevx))
