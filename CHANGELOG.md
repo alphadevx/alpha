@@ -1,5 +1,26 @@
 # Change Log
 
+## [2.0.3](https://github.com/alphadevx/alpha/tree/2.0.3) (2016-09-12)
+[Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.3-RC.1...2.0.3)
+
+**Implemented enhancements:**
+
+- Add a phpinfo\(\) controller to the admin backend [\#292](https://github.com/alphadevx/alpha/issues/292)
+- Update to the latest Bootstrap [\#233](https://github.com/alphadevx/alpha/issues/233)
+
+**Merged pull requests:**
+
+- Release/2.0.3 release [\#301](https://github.com/alphadevx/alpha/pull/301) ([alphadevx](https://github.com/alphadevx))
+- \#233 - updated the version number to 2.0.3 [\#299](https://github.com/alphadevx/alpha/pull/299) ([alphadevx](https://github.com/alphadevx))
+- Feature/233 update to the latest bootstrap [\#298](https://github.com/alphadevx/alpha/pull/298) ([alphadevx](https://github.com/alphadevx))
+
+## [2.0.3-RC.1](https://github.com/alphadevx/alpha/tree/2.0.3-RC.1) (2016-09-09)
+[Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.2...2.0.3-RC.1)
+
+**Merged pull requests:**
+
+- Feature/292 phpinfo controller admin backend [\#297](https://github.com/alphadevx/alpha/pull/297) ([alphadevx](https://github.com/alphadevx))
+
 ## [2.0.2](https://github.com/alphadevx/alpha/tree/2.0.2) (2016-08-08)
 [Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.2-RC.1...2.0.2)
 
