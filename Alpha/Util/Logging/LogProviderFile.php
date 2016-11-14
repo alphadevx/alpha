@@ -4,6 +4,7 @@ namespace Alpha\Util\Logging;
 
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Exception\PHPException;
+use Alpha\Util\File\FileUtils;
 
 /**
  * Generic log file class to encapsulate common file I/O and rendering calls.
@@ -12,7 +13,7 @@ use Alpha\Exception\PHPException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2016, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -66,7 +67,7 @@ class LogProviderFile implements LogProviderInterface
      *
      * @since 1.0
      */
-    private $MaxSize = 5;
+    private $maxSize = 5;
 
     /**
      * Set the file path.
@@ -83,13 +84,13 @@ class LogProviderFile implements LogProviderInterface
     /**
      * Set the max log size in megabytes.
      *
-     * @param int $MaxSize
+     * @param int $maxSize
      *
      * @since 1.0
      */
-    public function setMaxSize($MaxSize)
+    public function setMaxSize($maxSize)
     {
-        $this->MaxSize = $MaxSize;
+        $this->maxSize = $maxSize;
     }
 
     /**
@@ -104,7 +105,7 @@ class LogProviderFile implements LogProviderInterface
                 $fp = fopen($this->path, 'a+');
                 fputcsv($fp, $line, ',', '"', '\\');
 
-                if ($this->checkFileSize() >= $this->MaxSize) {
+                if ($this->checkFileSize() >= $this->maxSize) {
                     $this->backupFile();
                 }
             } catch (\Exception $e) {
@@ -122,7 +123,7 @@ class LogProviderFile implements LogProviderInterface
                         throw new PHPException('Could not write to the CSV file ['.$this->path.']');
                     }
 
-                    if ($this->checkFileSize() >= $this->MaxSize) {
+                    if ($this->checkFileSize() >= $this->maxSize) {
                         $this->backupFile();
                     }
                 } catch (\Exception $e) {
@@ -160,10 +161,14 @@ class LogProviderFile implements LogProviderInterface
 
         // renames the logfile as the value of $backName
         rename($this->path, $backName);
-        //creates a new log file, and sets it's permission for writting!
+
+        FileUtils::zip($backName, $backName.'.zip');
+        unlink($backName);
+
+        // creates a new log file, and sets it's permission for writing!
         $fp = fopen($this->path, 'a+'); // remember set directory permissons to allow creation!
         fclose($fp);
-        //sets the new permission to rw+:rw+:rw+
+        //s ets the new permission to rw+:rw+:rw+
         chmod($this->path, 0666);
     }
 
