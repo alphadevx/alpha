@@ -3,6 +3,7 @@
 namespace Alpha\Util\Config;
 
 use Alpha\Exception\IllegalArguementException;
+use Alpha\Exception\AlphaException;
 
 /**
  * A singleton config class.
@@ -11,7 +12,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2016, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -235,7 +236,12 @@ class ConfigProvider
             die('Failed to load the config file ['.$envIni.']');
         }
 
-        $configArray = parse_ini_file($envIni);
+        if (file_exists('../cache/config.php')) {
+            require_once '../cache/config.php';
+        } else {
+            $configArray = parse_ini_file($envIni);
+            $this->cache('../cache/config.php', $configArray);
+        }
 
         foreach (array_keys($configArray) as $key) {
             $this->set($key, $configArray[$key]);
@@ -252,5 +258,36 @@ class ConfigProvider
     public function getEnvironment()
     {
         return $this->environment;
+    }
+
+    /**
+     * Cache the config .ini into config.php
+     *
+     * @return string
+     *
+     * @since 2.0.4
+     */
+    private function cache($filePath, $configArray)
+    {
+        $php = '<?php
+
+        $configArray = array(
+        ';
+
+        foreach (array_keys($configArray) as $key) {
+            $php .= '"'.$key.'" => "'.$configArray[$key].'",';
+        }
+
+        $php .= ');'
+
+        $fp = fopen($filePath, 'w');
+        if (!$fp) {
+            throw new AlphaException('Failed to open the cache file for writing, directory permissions my not be set correctly!');
+        } else {
+            flock($fp, 2); // locks the file for writting
+            fwrite($fp, $php);
+            flock($fp, 3); // unlocks the file
+            fclose($fp); //closes the file
+        }
     }
 }
