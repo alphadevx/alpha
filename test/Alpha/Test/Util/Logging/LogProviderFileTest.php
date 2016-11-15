@@ -1,14 +1,13 @@
 <?php
 
-namespace Alpha\Test\Util\Security;
+namespace Alpha\Test\Util\Logging;
 
-use Alpha\Util\Security\SecurityUtils;
-use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Logging\LogProviderFile;
 
 /**
- * Test cases for the SecurityUtils class.
+ * Test cases for the LogProviderFile class.
  *
- * @since 2.0.2
+ * @since 2.0.4
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
@@ -47,32 +46,60 @@ use Alpha\Util\Config\ConfigProvider;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class SecurityUtilsTest extends \PHPUnit_Framework_TestCase
+class LogProviderFileTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Testing the checkAdminPasswordIsDefault() method.
-     *
-     * @since 2.0.2
-     */
-    public function testCheckAdminPasswordIsDefault()
-    {
-        $config = ConfigProvider::getInstance();
-        $config->set('app.install.password', 'test');
+    private $logPath = '/tmp/alphatestlog.log';
 
-        $this->assertTrue(SecurityUtils::checkAdminPasswordIsDefault(password_hash('test', PASSWORD_DEFAULT, ['cost' => 12])), 'Testing when the default password is compared');
-        $this->assertFalse(SecurityUtils::checkAdminPasswordIsDefault(password_hash('different', PASSWORD_DEFAULT, ['cost' => 12])), 'Testing when a non-default password is compared');
+    protected function setUp()
+    {
+        if (file_exists($this->logPath)) {
+            unlink($this->logPath);
+        }
+
+        $backName = str_replace('.log', '-backup-'.date('y-m-d').'.log.zip', $this->logPath);
+
+        if (file_exists($backName)) {
+            unlink($backName);
+        }
     }
 
     /**
-     * Testing encrypt/decrypt methods.
+     * Testing the writeLine() method.
      *
-     * @since 2.0.2
+     * @since 2.0.4
      */
-    public function testEncryptDecrypt()
+    public function testWriteLine()
     {
-        $plain = "test string";
-        $encrypted = SecurityUtils::encrypt($plain);
+        $this->assertFalse(file_exists($this->logPath));
 
-        $this->assertEquals($plain, SecurityUtils::decrypt($encrypted), "Testing encrypt/decrypt methods");
+        $logFile = new LogProviderFile();
+        $logFile->setPath($this->logPath);
+        $logFile->writeLine(array('test entry'));
+
+        $this->assertTrue(file_exists($this->logPath));
+    }
+
+    /**
+     * Testing the backupFile() method.
+     *
+     * @since 2.0.4
+     */
+    public function testBackupFile()
+    {
+        $this->assertFalse(file_exists($this->logPath));
+
+        $logFile = new LogProviderFile();
+        $logFile->setPath($this->logPath);
+        $logFile->setMaxSize(1);
+
+        for ($i = 0; $i < 15000; $i++) {
+            $logFile->writeLine(array('test entry test entry test entry test entry test entry test entry test entry'));
+        }
+
+        $this->assertTrue(file_exists($this->logPath));
+
+        $backName = str_replace('.log', '-backup-'.date('y-m-d').'.log.zip', $this->logPath);
+
+        $this->assertTrue(file_exists($backName));
     }
 }

@@ -143,9 +143,10 @@ class LogProviderFile implements LogProviderInterface
      */
     private function checkFileSize()
     {
+        clearstatcache();
         $size = filesize($this->path);
 
-        return ($size / 1024) / 1024;
+        return ($size / 1024) /1024;
     }
 
     /**
@@ -157,7 +158,7 @@ class LogProviderFile implements LogProviderInterface
     private function backupFile()
     {
         // generate the name of the backup file name to contain a timestampe
-        $backName = str_replace('.log', '-backup-'.date('y-m-d H.i.s').'.log', $this->path);
+        $backName = str_replace('.log', '-backup-'.date('y-m-d').'.log', $this->path);
 
         // renames the logfile as the value of $backName
         rename($this->path, $backName);
