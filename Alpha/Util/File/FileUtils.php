@@ -16,7 +16,7 @@ use RecursiveDirectoryIterator;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2016, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -649,7 +649,7 @@ class FileUtils
     }
 
     /**
-     * Recursively compresses the contens of the source directory indicated to the desintation zip archive.
+     * Recursively compresses the contents of the source directory indicated to the destintation zip archive.
      *
      * @param string $source The path to the source directory or file.
      * @param string $dest   The destination zip file file.
