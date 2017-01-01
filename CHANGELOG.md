@@ -1,5 +1,45 @@
 # Change Log
 
+## [2.0.4-RC.1](https://github.com/alphadevx/alpha/tree/2.0.4-RC.1) (2016-11-28)
+[Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.3...2.0.4-RC.1)
+
+**Implemented enhancements:**
+
+- Install PHPCI and get Alpha building under it [\#117](https://github.com/alphadevx/alpha/issues/117)
+- All existing unit tests should be runnable from the CLI [\#116](https://github.com/alphadevx/alpha/issues/116)
+- The log file backup method should compress the old log files [\#32](https://github.com/alphadevx/alpha/issues/32)
+
+**Closed issues:**
+
+- AlphaDAOProviderInterface::save\(\) implementations should not be accessing $\_POST directly [\#161](https://github.com/alphadevx/alpha/issues/161)
+- 404s should be logged at INFO rather than WARN [\#81](https://github.com/alphadevx/alpha/issues/81)
+- All interactions on a single BO should be wrapped in one controller [\#37](https://github.com/alphadevx/alpha/issues/37)
+
+**Merged pull requests:**
+
+- Feature/32 log file backup compression [\#302](https://github.com/alphadevx/alpha/pull/302) ([alphadevx](https://github.com/alphadevx))
+
+## [2.0.3](https://github.com/alphadevx/alpha/tree/2.0.3) (2016-09-12)
+[Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.3-RC.1...2.0.3)
+
+**Implemented enhancements:**
+
+- Add a phpinfo\(\) controller to the admin backend [\#292](https://github.com/alphadevx/alpha/issues/292)
+- Update to the latest Bootstrap [\#233](https://github.com/alphadevx/alpha/issues/233)
+
+**Merged pull requests:**
+
+- Release/2.0.3 release [\#301](https://github.com/alphadevx/alpha/pull/301) ([alphadevx](https://github.com/alphadevx))
+- \#233 - updated the version number to 2.0.3 [\#299](https://github.com/alphadevx/alpha/pull/299) ([alphadevx](https://github.com/alphadevx))
+- Feature/233 update to the latest bootstrap [\#298](https://github.com/alphadevx/alpha/pull/298) ([alphadevx](https://github.com/alphadevx))
+
+## [2.0.3-RC.1](https://github.com/alphadevx/alpha/tree/2.0.3-RC.1) (2016-09-09)
+[Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.2...2.0.3-RC.1)
+
+**Merged pull requests:**
+
+- Feature/292 phpinfo controller admin backend [\#297](https://github.com/alphadevx/alpha/pull/297) ([alphadevx](https://github.com/alphadevx))
+
 ## [2.0.2](https://github.com/alphadevx/alpha/tree/2.0.2) (2016-08-08)
 [Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.2-RC.1...2.0.2)
 
