@@ -138,7 +138,7 @@ class Sequence extends ActiveRecord implements TypeInterface
 
         $this->sequence = new Integer();
 
-        $this->prefix = new String();
+        $this->prefix = new SmallText();
         $this->prefix->setRule(Validator::REQUIRED_ALPHA_UPPER);
         $this->prefix->setHelper('Sequence prefix must be uppercase string!');
         $this->markUnique('prefix');

@@ -2,18 +2,16 @@
 
 namespace Alpha\Test\Model\Type;
 
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- * Test case for the String data type.
+ * Test case for the SmallText data type.
  *
  * @since 1.0
  *
  * @author John Collins <dev@alphaframework.org>
- *
- * @version $Id: StringTest.php 1835 2014-11-10 15:59:23Z alphadevx $
  *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
@@ -51,10 +49,10 @@ use Alpha\Exception\IllegalArguementException;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class StringTest extends \PHPUnit_Framework_TestCase
+class SmallTextTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * A String for testing.
+     * A SmallText for testing.
      *
      * @var string
      *
@@ -98,7 +96,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->str1 = new String();
+        $this->str1 = new SmallText();
     }
 
     /**
@@ -120,9 +118,9 @@ class StringTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructorPass()
     {
-        $this->str1 = new String('A String Value!');
+        $this->str1 = new SmallText('A SmallText Value!');
 
-        $this->assertEquals('A String Value!', $this->str1->getValue(), 'testing the String constructor for pass');
+        $this->assertEquals('A SmallText Value!', $this->str1->getValue(), 'testing the SmallText constructor for pass');
     }
 
     /**
@@ -255,7 +253,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetSizeInvalid()
     {
-        $this->str1 = new String();
+        $this->str1 = new SmallText();
         $this->str1->setSize(4);
 
         try {
@@ -273,7 +271,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
      */
     public function testToString()
     {
-        $this->str1 = new String('__toString result');
+        $this->str1 = new SmallText('__toString result');
 
         $this->assertEquals('The value of __toString result', 'The value of '.$this->str1, 'testing the __toString method');
     }

@@ -5,7 +5,7 @@ namespace Alpha\View;
 use Alpha\Controller\Front\FrontController;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 use Alpha\View\Widget\Button;
 
 /**

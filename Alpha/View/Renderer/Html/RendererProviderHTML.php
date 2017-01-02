@@ -18,7 +18,7 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\InputFilter;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Util\Http\Request;
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 use Alpha\Model\ActiveRecord;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\AlphaException;

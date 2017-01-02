@@ -11,7 +11,7 @@ use Alpha\View\Widget\SmallTextBox;
 use Alpha\View\Widget\Button;
 use Alpha\Model\Tag;
 use Alpha\Model\ActiveRecord;
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 use Alpha\Controller\Front\FrontController;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\SecurityException;
@@ -242,7 +242,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
 
                 $body .= '<h3>Add a new tag:</h3>';
 
-                $temp = new SmallTextBox(new String(), 'New tag', 'NewTagValue', '');
+                $temp = new SmallTextBox(new SmallText(), 'New tag', 'NewTagValue', '');
                 $body .= $temp->render(false);
 
                 $temp = new Button('submit', 'Save', 'saveBut');

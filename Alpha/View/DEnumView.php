@@ -9,7 +9,7 @@ use Alpha\Controller\Front\FrontController;
 use Alpha\View\Widget\SmallTextBox;
 use Alpha\View\Widget\Button;
 use Alpha\Model\Type\DEnumItem;
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 
 /**
  * The rendering class for the DEnum class.
@@ -165,7 +165,7 @@ class DEnumView extends View
 
         $html .= '<h3>Add a new value to the DEnum dropdown list:</h3>';
 
-        $temp = new SmallTextBox(new String(), 'Dropdown value', 'new_value', '');
+        $temp = new SmallTextBox(new SmallText(), 'Dropdown value', 'new_value', '');
         $html .= $temp->render();
 
         $temp = new Button('submit', 'Save', 'saveBut');

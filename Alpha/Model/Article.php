@@ -2,7 +2,7 @@
 
 namespace Alpha\Model;
 
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\Text;
 use Alpha\Model\Type\Boolean;
@@ -62,7 +62,7 @@ class Article extends ActiveRecord
     /**
      * The article title.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -80,7 +80,7 @@ class Article extends ActiveRecord
     /**
      * The description of the article.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -89,7 +89,7 @@ class Article extends ActiveRecord
     /**
      * Optional custom body onload Javascript.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -116,7 +116,7 @@ class Article extends ActiveRecord
     /**
      * The author of the article.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -233,21 +233,21 @@ class Article extends ActiveRecord
         // ensure to call the parent constructor
         parent::__construct();
 
-        $this->title = new String();
+        $this->title = new SmallText();
         $this->title->setHelper('Please provide a title for the article.');
         $this->title->setSize(100);
         $this->title->setRule("/\w+/");
 
         $this->section = new DEnum('Alpha\Model\Article::section');
 
-        $this->description = new String();
+        $this->description = new SmallText();
         $this->description->setHelper('Please provide a brief description of the article.');
         $this->description->setSize(200);
         $this->description->setRule("/\w+/");
-        $this->bodyOnload = new String();
+        $this->bodyOnload = new SmallText();
         $this->content = new Text();
         $this->headerContent = new Text();
-        $this->author = new String();
+        $this->author = new SmallText();
         $this->author->setHelper('Please state the name of the author of this article');
         $this->author->setSize(70);
         $this->author->setRule("/\w+/");

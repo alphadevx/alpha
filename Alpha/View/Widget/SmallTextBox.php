@@ -5,7 +5,7 @@ namespace Alpha\View\Widget;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Http\Request;
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 use Alpha\Exception\IllegalArguementException;
 
 /**
@@ -55,7 +55,7 @@ class SmallTextBox
     /**
      * The string object that will be edited by this string box.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -91,7 +91,7 @@ class SmallTextBox
     /**
      * The constructor.
      *
-     * @param Alpha\Model\Type\String $string The string object that will be edited by this text box.
+     * @param Alpha\Model\Type\SmallText $string The string object that will be edited by this text box.
      * @param string                  $label  The data label for the string object.
      * @param string                  $name   The name of the HTML input box.
      * @param int                     $size   The display size (characters).
@@ -149,7 +149,7 @@ class SmallTextBox
     /**
      * Setter for string object.
      *
-     * @param Alpha\Model\Type\String $string
+     * @param Alpha\Model\Type\SmallText $string
      *
      * @since 1.0
      *
@@ -167,7 +167,7 @@ class SmallTextBox
     /**
      * Getter for string object.
      *
-     * @return Alpha\Model\Type\String
+     * @return Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */

@@ -12,7 +12,7 @@ use Alpha\Model\ArticleVote;
 use Alpha\Model\BlacklistedIP;
 use Alpha\Model\Tag;
 use Alpha\Model\Type\RelationLookup;
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 use Alpha\Exception\LockingException;
 use Alpha\Exception\ValidationException;
 use Alpha\Exception\RecordNotFoundException;
@@ -1245,7 +1245,7 @@ class ActiveRecordTest extends ModelTestCase
     public function testAddProperty()
     {
         $record = new BadRequest();
-        $record->newStringField = new String();
+        $record->newStringField = new SmallText();
 
         $record->addProperty('newStringField');
 
@@ -1259,7 +1259,7 @@ class ActiveRecordTest extends ModelTestCase
         $record = new BadRequest();
         $record->setMaintainHistory(true);
         $record->rebuildTable();
-        $record->anotherNewStringField = new String();
+        $record->anotherNewStringField = new SmallText();
 
         $record->addProperty('anotherNewStringField');
 

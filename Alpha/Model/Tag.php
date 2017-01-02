@@ -2,7 +2,7 @@
 
 namespace Alpha\Model;
 
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 use Alpha\Model\Type\Integer;
 use Alpha\Exception\AlphaException;
 use Alpha\Exception\IllegalArguementException;
@@ -59,7 +59,7 @@ class Tag extends ActiveRecord
     /**
      * The name of the class of the object which is tagged.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -77,7 +77,7 @@ class Tag extends ActiveRecord
     /**
      * The content of the tag.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -121,9 +121,9 @@ class Tag extends ActiveRecord
 
         // ensure to call the parent constructor
         parent::__construct();
-        $this->taggedClass = new String();
+        $this->taggedClass = new SmallText();
         $this->taggedOID = new Integer();
-        $this->content = new String();
+        $this->content = new SmallText();
 
         $this->markUnique('taggedClass', 'taggedOID', 'content');
     }

@@ -121,7 +121,7 @@ class DEnum extends ActiveRecord implements TypeInterface
     /**
      * Constructor that sets up the DEnum options.
      *
-     * @param Alpha\Model\Type\String $name
+     * @param Alpha\Model\Type\SmallText $name
      */
     public function __construct($name = null)
     {
@@ -134,7 +134,7 @@ class DEnum extends ActiveRecord implements TypeInterface
         $this->markTransient('value');
         $this->markTransient('helper');
 
-        $this->name = new String($name);
+        $this->name = new SmallText($name);
 
         if (isset($name) && $this->checkTableExists()) {
             try {

@@ -6,7 +6,7 @@ use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- * The String complex data type.
+ * The SmallText complex data type.
  *
  * @since 1.0
  *
@@ -47,7 +47,7 @@ use Alpha\Exception\IllegalArguementException;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class String extends Type implements TypeInterface
+class SmallText extends Type implements TypeInterface
 {
     /**
      * The value of the string.

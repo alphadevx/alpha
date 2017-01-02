@@ -7,7 +7,7 @@ use Alpha\Util\Helper\Validator;
 use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Http\Request;
 use Alpha\Controller\Front\FrontController;
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 use Alpha\View\Widget\SmallTextBox;
 use Alpha\View\Widget\Button;
 
@@ -71,14 +71,14 @@ class PersonView extends View
         $html .= '<form action="'.FrontController::generateSecureURL('act=Alpha\Controller\LoginController').'" method="POST" id="loginForm" accept-charset="UTF-8">';
 
         $request = new Request(array('method' => 'GET'));
-        $email = new String($request->getParam('email', ''));
+        $email = new SmallText($request->getParam('email', ''));
         $email->setRule(Validator::REQUIRED_EMAIL);
         $email->setSize(70);
         $email->setHelper('Please provide a valid e-mail address!');
         $stringBox = new SmallTextBox($email, $this->BO->getDataLabel('email'), 'email', 'loginForm', '50');
         $html .= $stringBox->render();
 
-        $password = new String();
+        $password = new SmallText();
         $password->isPassword();
 
         $stringBox = new SmallTextBox($password, $this->BO->getDataLabel('password'), 'password', 'loginForm', '50');
@@ -114,7 +114,7 @@ class PersonView extends View
         $html .= '<form action="'.FrontController::generateSecureURL('act=Alpha\Controller\LoginController&reset=true').'" method="POST" id="resetForm" accept-charset="UTF-8">';
 
         $request = new Request(array('method' => 'GET'));
-        $email = new String($request->getParam('email', ''));
+        $email = new SmallText($request->getParam('email', ''));
         $email->setRule(Validator::REQUIRED_EMAIL);
         $email->setSize(70);
         $email->setHelper('Please provide a valid e-mail address!');

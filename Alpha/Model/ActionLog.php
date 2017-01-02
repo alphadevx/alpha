@@ -2,7 +2,7 @@
 
 namespace Alpha\Model;
 
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 use Alpha\Model\Type\Relation;
 use Alpha\Util\Logging\Logger;
 
@@ -54,7 +54,7 @@ class ActionLog extends ActiveRecord
     /**
      * The HTTP user-agent client string.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.2.2
      */
@@ -63,7 +63,7 @@ class ActionLog extends ActiveRecord
     /**
      * The IP of the client.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.2.2
      */
@@ -72,7 +72,7 @@ class ActionLog extends ActiveRecord
     /**
      * The action carried out by the person should be described here.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.2.2
      */
@@ -126,9 +126,9 @@ class ActionLog extends ActiveRecord
         // ensure to call the parent constructor
         parent::__construct();
 
-        $this->client = new String();
-        $this->IP = new String();
-        $this->message = new String();
+        $this->client = new SmallText();
+        $this->IP = new SmallText();
+        $this->message = new SmallText();
 
         $this->personOID = new Relation();
         $this->personOID->setRelatedClass('Alpha\Model\Person');
