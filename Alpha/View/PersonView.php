@@ -8,7 +8,7 @@ use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Http\Request;
 use Alpha\Controller\Front\FrontController;
 use Alpha\Model\Type\String;
-use Alpha\View\Widget\StringBox;
+use Alpha\View\Widget\SmallTextBox;
 use Alpha\View\Widget\Button;
 
 /**
@@ -75,13 +75,13 @@ class PersonView extends View
         $email->setRule(Validator::REQUIRED_EMAIL);
         $email->setSize(70);
         $email->setHelper('Please provide a valid e-mail address!');
-        $stringBox = new StringBox($email, $this->BO->getDataLabel('email'), 'email', 'loginForm', '50');
+        $stringBox = new SmallTextBox($email, $this->BO->getDataLabel('email'), 'email', 'loginForm', '50');
         $html .= $stringBox->render();
 
         $password = new String();
         $password->isPassword();
 
-        $stringBox = new StringBox($password, $this->BO->getDataLabel('password'), 'password', 'loginForm', '50');
+        $stringBox = new SmallTextBox($password, $this->BO->getDataLabel('password'), 'password', 'loginForm', '50');
         $html .= $stringBox->render();
 
         $temp = new Button('submit', 'Login', 'loginBut');
@@ -118,7 +118,7 @@ class PersonView extends View
         $email->setRule(Validator::REQUIRED_EMAIL);
         $email->setSize(70);
         $email->setHelper('Please provide a valid e-mail address!');
-        $stringBox = new StringBox($email, $this->BO->getDataLabel('email'), 'email', 'resetForm', '50');
+        $stringBox = new SmallTextBox($email, $this->BO->getDataLabel('email'), 'email', 'resetForm', '50');
         $html .= $stringBox->render();
 
         $html .= '<div class="form-group lower spread">';

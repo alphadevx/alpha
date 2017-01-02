@@ -8,10 +8,10 @@ use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\View\View;
-use Alpha\View\Widget\StringBox;
+use Alpha\View\Widget\SmallTextBox;
 use Alpha\View\Widget\Button;
 use Alpha\Controller\Front\FrontController;
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 
 /**
  * Controller used to generate secure URLs from the query strings provided.
@@ -20,7 +20,7 @@ use Alpha\Model\Type\String;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -163,7 +163,7 @@ class GenSecureQueryStringController extends Controller implements ControllerInt
             ' <em>act=Alpha\Controller\FeedController&amp;ActiveRecordType=Alpha\Model\Article&amp;type=Atom</em></p>';
 
         $html .= '<form action="'.$this->request->getURI().'" method="post" accept-charset="UTF-8"><div class="form-group">';
-        $string = new StringBox(new String(''), 'Parameters', 'QS');
+        $string = new SmallTextBox(new SmallText(''), 'Parameters', 'QS');
         $html .= $string->render();
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('saveBut')) : 'saveBut');
         $temp = new Button('submit', 'Generate', $fieldname);

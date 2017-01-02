@@ -7,7 +7,7 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Http\Response;
 use Alpha\View\View;
-use Alpha\View\Widget\StringBox;
+use Alpha\View\Widget\SmallTextBox;
 use Alpha\View\Widget\Button;
 use Alpha\Model\Tag;
 use Alpha\Model\ActiveRecord;
@@ -207,7 +207,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                 foreach ($tags as $tag) {
                     $labels = $tag->getDataLabels();
 
-                    $temp = new StringBox($tag->getPropObject('content'), $labels['content'], 'content_'.$tag->getID(), '');
+                    $temp = new SmallTextBox($tag->getPropObject('content'), $labels['content'], 'content_'.$tag->getID(), '');
                     $body .= $temp->render(false);
 
                     $js = "if(window.jQuery) {
@@ -242,7 +242,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
 
                 $body .= '<h3>Add a new tag:</h3>';
 
-                $temp = new StringBox(new String(), 'New tag', 'NewTagValue', '');
+                $temp = new SmallTextBox(new String(), 'New tag', 'NewTagValue', '');
                 $body .= $temp->render(false);
 
                 $temp = new Button('submit', 'Save', 'saveBut');

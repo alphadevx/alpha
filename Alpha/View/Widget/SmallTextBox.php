@@ -50,7 +50,7 @@ use Alpha\Exception\IllegalArguementException;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class StringBox
+class SmallTextBox
 {
     /**
      * The string object that will be edited by this string box.

@@ -6,7 +6,7 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Controller\Front\FrontController;
-use Alpha\View\Widget\StringBox;
+use Alpha\View\Widget\SmallTextBox;
 use Alpha\View\Widget\Button;
 use Alpha\Model\Type\DEnumItem;
 use Alpha\Model\Type\String;
@@ -143,7 +143,7 @@ class DEnumView extends View
 
         $html = '<form action="'.$fields['URI'].'" method="POST" accept-charset="UTF-8">';
 
-        $temp = new StringBox($this->BO->getPropObject('name'), $labels['name'], 'name', '', 0, true, true);
+        $temp = new SmallTextBox($this->BO->getPropObject('name'), $labels['name'], 'name', '', 0, true, true);
         $html .= $temp->render();
 
         $html .= '<h3>DEnum display values:</h3>';
@@ -155,7 +155,7 @@ class DEnumView extends View
 
         foreach ($denumItems as $item) {
             $labels = $item->getDataLabels();
-            $temp = new StringBox($item->getPropObject('value'), $labels['value'], 'value_'.$item->getID(), '');
+            $temp = new SmallTextBox($item->getPropObject('value'), $labels['value'], 'value_'.$item->getID(), '');
             $html .= $temp->render();
         }
 
@@ -165,7 +165,7 @@ class DEnumView extends View
 
         $html .= '<h3>Add a new value to the DEnum dropdown list:</h3>';
 
-        $temp = new StringBox(new String(), 'Dropdown value', 'new_value', '');
+        $temp = new SmallTextBox(new String(), 'Dropdown value', 'new_value', '');
         $html .= $temp->render();
 
         $temp = new Button('submit', 'Save', 'saveBut');

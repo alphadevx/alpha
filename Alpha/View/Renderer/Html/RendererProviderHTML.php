@@ -5,7 +5,7 @@ namespace Alpha\View\Renderer\Html;
 use Alpha\View\Renderer\RendererProviderInterface;
 use Alpha\View\Widget\Button;
 use Alpha\View\Widget\TextBox;
-use Alpha\View\Widget\StringBox;
+use Alpha\View\Widget\SmallTextBox;
 use Alpha\View\Widget\DateBox;
 use Alpha\View\Widget\RecordSelector;
 use Alpha\View\View;
@@ -1082,7 +1082,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $html = '';
 
         if ($mode == 'create' || $mode == 'edit') {
-            $string = new StringBox($this->BO->getPropObject($name), $label, $name);
+            $string = new SmallTextBox($this->BO->getPropObject($name), $label, $name);
             $html .= $string->render();
         }
 
