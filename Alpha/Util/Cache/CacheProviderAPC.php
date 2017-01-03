@@ -76,7 +76,7 @@ class CacheProviderAPC implements CacheProviderInterface
         self::$logger->debug('>>get(key=['.$key.'])');
 
         try {
-            $value = apc_fetch($key);
+            $value = apcu_fetch($key);
 
             self::$logger->debug('<<get: ['.print_r($value, true).'])');
 
@@ -96,9 +96,9 @@ class CacheProviderAPC implements CacheProviderInterface
     {
         try {
             if ($expiry > 0) {
-                apc_store($key, $value, $expiry);
+                apcu_store($key, $value, $expiry);
             } else {
-                apc_store($key, $value);
+                apcu_store($key, $value);
             }
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to store a value to APC cache: ['.$e->getMessage().']');
@@ -111,7 +111,7 @@ class CacheProviderAPC implements CacheProviderInterface
     public function delete($key)
     {
         try {
-            apc_delete($key);
+            apcu_delete($key);
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to remove a value from APC cache: ['.$e->getMessage().']');
         }
