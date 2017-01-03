@@ -11,7 +11,7 @@ before_script:
  - wget http://getcomposer.org/composer.phar
  - php composer.phar install --dev --no-interaction
  - phpenv config-add php.ini
- - yes '' | pecl install -f apcu-4.0.10
+ - yes '' | pecl install -f apcu-5.1.7
 
 script:
  - vendor/bin/phpunit
