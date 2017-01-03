@@ -337,7 +337,7 @@ class InstallController extends Controller implements ControllerInterface
         $body .= '<p>Attempting to create the logs directory <em>'.$logsDir.'</em>...';
 
         if (!file_exists($logsDir)) {
-            var_dump(mkdir($logsDir, 0774));
+            mkdir($logsDir, 0774);
         }
 
         self::$logger = new Logger('InstallController');

@@ -104,7 +104,7 @@ class SmallTextBox
     {
         $config = ConfigProvider::getInstance();
 
-        if ($string instanceof String) {
+        if ($string instanceof SmallText) {
             $this->stringObject = $string;
         } else {
             throw new IllegalArguementException('String object passed ['.var_export($string, true).'] is not a valid String object!');
@@ -135,7 +135,7 @@ class SmallTextBox
 
         $html = '<div class="form-group">';
         $html .= '  <label for="'.$this->name.'">'.$this->label.'</label>';
-        $html .= '  <input '.($this->stringObject->checkIsPassword() ? 'type="password"' : 'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.String::MAX_SIZE.'" name="'.$this->name.'" id="'.$this->name.'" value="'.(($request->getParam($this->name, false) && $this->stringObject->getValue() == '' && !$this->stringObject->checkIsPassword()) ? $request->getParam($this->name) : $this->stringObject->getValue()).'" class="form-control"'.($readOnly ? ' disabled="disabled"' : '').'/>';
+        $html .= '  <input '.($this->stringObject->checkIsPassword() ? 'type="password"' : 'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.SmallText::MAX_SIZE.'" name="'.$this->name.'" id="'.$this->name.'" value="'.(($request->getParam($this->name, false) && $this->stringObject->getValue() == '' && !$this->stringObject->checkIsPassword()) ? $request->getParam($this->name) : $this->stringObject->getValue()).'" class="form-control"'.($readOnly ? ' disabled="disabled"' : '').'/>';
 
         if ($this->stringObject->getRule() != '') {
             $html .= '  <input type="hidden" id="'.$this->name.'_msg" value="'.$this->stringObject->getHelper().'"/>';
@@ -157,7 +157,7 @@ class SmallTextBox
      */
     public function setStringObject($string)
     {
-        if ($string instanceof String) {
+        if ($string instanceof SmallText) {
             $this->stringObject = $string;
         } else {
             throw new IllegalArguementException('String object passed ['.var_export($string, true).'] is not a valid String object!');

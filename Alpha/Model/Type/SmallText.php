@@ -74,7 +74,7 @@ class SmallText extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    protected $helper = 'Not a valid string value!';
+    protected $helper = 'Not a valid smalltext value!';
 
     /**
      * The size of the value for the this String.
@@ -226,7 +226,7 @@ class SmallText extends Type implements TypeInterface
     {
         if ($req) {
             $this->validationRule = Validator::REQUIRED_STRING;
-            $this->helper = 'This string requires a value!';
+            $this->helper = 'This smalltext requires a value!';
         }
     }
 

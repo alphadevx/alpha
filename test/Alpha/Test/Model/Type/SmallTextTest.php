@@ -260,7 +260,7 @@ class SmallTextTest extends \PHPUnit_Framework_TestCase
             $this->str1->setValue('Too many characters!');
             $this->fail('testing the setSize method to see if validation fails');
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('Not a valid string value!', $e->getMessage(), 'testing the setSize method to see if validation fails');
+            $this->assertEquals('Not a valid smalltext value!', $e->getMessage(), 'testing the setSize method to see if validation fails');
         }
     }
 

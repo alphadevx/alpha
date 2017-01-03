@@ -240,7 +240,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
             // skip over password fields
             $property = $this->BO->getPropObject($propName);
-            if (!($property instanceof String && $property->checkIsPassword())) {
+            if (!($property instanceof SmallText && $property->checkIsPassword())) {
                 if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
                     $html .= '  <th>'.$this->BO->getDataLabel($propName).'</th>';
                 }
@@ -262,7 +262,7 @@ class RendererProviderHTML implements RendererProviderInterface
             $propName = $propObj->name;
 
             $property = $this->BO->getPropObject($propName);
-            if (!($property instanceof String && $property->checkIsPassword())) {
+            if (!($property instanceof SmallText && $property->checkIsPassword())) {
                 if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
                     $propClass = get_class($this->BO->getPropObject($propName));
 

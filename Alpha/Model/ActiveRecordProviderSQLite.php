@@ -1314,7 +1314,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                     case 'DOUBLE':
                         $sqlQuery .= "$propName REAL(".$this->BO->getPropObject($propName)->getSize(true).'),';
                     break;
-                    case 'STRING':
+                    case 'SMALLTEXT':
                         $sqlQuery .= "$propName TEXT(".$this->BO->getPropObject($propName)->getSize().'),';
                     break;
                     case 'TEXT':
@@ -1424,7 +1424,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                     case 'DOUBLE':
                         $sqlQuery .= "$propName REAL(".$this->BO->getPropObject($propName)->getSize(true).'),';
                     break;
-                    case 'STRING':
+                    case 'SMALLTEXT':
                         $sqlQuery .= "$propName TEXT(".$this->BO->getPropObject($propName)->getSize().'),';
                     break;
                     case 'TEXT':
@@ -1563,7 +1563,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                     case 'DOUBLE':
                         $sqlQuery .= "$propName REAL(".$this->BO->getPropObject($propName)->getSize(true).'),';
                     break;
-                    case 'STRING':
+                    case 'SMALLTEXT':
                         $sqlQuery .= "$propName TEXT(".$this->BO->getPropObject($propName)->getSize().'),';
                     break;
                     case 'TEXT':
