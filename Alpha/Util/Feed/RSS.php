@@ -106,7 +106,7 @@ class RSS extends Feed
     /**
      * {@inheritdoc}
      */
-    protected function createRSSNode($type, $parent, $title, $url, $description, $pubDate = null)
+    protected function createRSSNode($type, $parent, $title, $url, $description, $pubDate = null, $id = null)
     {
         $parent->setAttributeNS($this->rdfns, 'rdf:about', $url);
         parent::createRSSNode($type, $parent, $title, $url, $description, $pubDate);
