@@ -12,6 +12,7 @@ before_script:
  - php composer.phar install --dev --no-interaction
  - phpenv config-add php.ini
  - yes '' | pecl install -f apcu-5.1.7
+ - yes '' | pecl install -f memcached-2.2.0
 
 script:
  - vendor/bin/phpunit
