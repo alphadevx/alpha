@@ -85,7 +85,7 @@ class EmailProviderPHP implements EmailProviderInterface
         }
         $headers .= 'From: '.$from."\n";
 
-        if ($config->getEnvironment() != 'dev') {
+        if ($config->getEnvironment() != 'dev' && $config->getEnvironment() != 'test') {
             try {
                 mb_send_mail($to, $subject, $body, $headers);
             } catch (PHPException $e) {
