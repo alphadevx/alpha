@@ -1,18 +1,19 @@
 language: php
 
 php:
- - 7.0
+ - '7.0'
 
 services:
  - memcached
  - redis
+
+before_install: echo "extension = memcached.so" >> ~/.phpenv/versions/7.0.14/etc/php.ini
 
 before_script:
  - wget http://getcomposer.org/composer.phar
  - php composer.phar install --dev --no-interaction
  - phpenv config-add php.ini
  - yes '' | pecl install -f apcu-5.1.7
- - yes '' | pecl install -f memcached-2.2.0
 
 script:
  - vendor/bin/phpunit
