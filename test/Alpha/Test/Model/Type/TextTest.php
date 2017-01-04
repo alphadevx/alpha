@@ -16,7 +16,7 @@ use Alpha\Exception\IllegalArguementException;
  * @version $Id: TextTest.php 1837 2014-11-10 16:26:29Z alphadevx $
  *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>

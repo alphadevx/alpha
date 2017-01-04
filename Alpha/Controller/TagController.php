@@ -7,11 +7,11 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Http\Response;
 use Alpha\View\View;
-use Alpha\View\Widget\StringBox;
+use Alpha\View\Widget\SmallTextBox;
 use Alpha\View\Widget\Button;
 use Alpha\Model\Tag;
 use Alpha\Model\ActiveRecord;
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 use Alpha\Controller\Front\FrontController;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\SecurityException;
@@ -30,7 +30,7 @@ use Alpha\Exception\AlphaException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -207,7 +207,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                 foreach ($tags as $tag) {
                     $labels = $tag->getDataLabels();
 
-                    $temp = new StringBox($tag->getPropObject('content'), $labels['content'], 'content_'.$tag->getID(), '');
+                    $temp = new SmallTextBox($tag->getPropObject('content'), $labels['content'], 'content_'.$tag->getID(), '');
                     $body .= $temp->render(false);
 
                     $js = "if(window.jQuery) {
@@ -242,7 +242,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
 
                 $body .= '<h3>Add a new tag:</h3>';
 
-                $temp = new StringBox(new String(), 'New tag', 'NewTagValue', '');
+                $temp = new SmallTextBox(new SmallText(), 'New tag', 'NewTagValue', '');
                 $body .= $temp->render(false);
 
                 $temp = new Button('submit', 'Save', 'saveBut');

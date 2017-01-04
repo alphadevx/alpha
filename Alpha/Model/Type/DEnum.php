@@ -18,7 +18,7 @@ use Alpha\Util\Logging\Logger;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -121,7 +121,7 @@ class DEnum extends ActiveRecord implements TypeInterface
     /**
      * Constructor that sets up the DEnum options.
      *
-     * @param Alpha\Model\Type\String $name
+     * @param Alpha\Model\Type\SmallText $name
      */
     public function __construct($name = null)
     {
@@ -134,7 +134,7 @@ class DEnum extends ActiveRecord implements TypeInterface
         $this->markTransient('value');
         $this->markTransient('helper');
 
-        $this->name = new String($name);
+        $this->name = new SmallText($name);
 
         if (isset($name) && $this->checkTableExists()) {
             try {

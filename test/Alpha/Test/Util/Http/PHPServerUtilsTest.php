@@ -11,7 +11,7 @@ use Alpha\Util\Http\PHPServerUtils;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>

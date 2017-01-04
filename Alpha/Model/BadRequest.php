@@ -2,7 +2,7 @@
 
 namespace Alpha\Model;
 
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Exception\AlphaException;
@@ -15,7 +15,7 @@ use Alpha\Exception\AlphaException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -55,7 +55,7 @@ class BadRequest extends ActiveRecord
     /**
      * The HTTP user-agent client string.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -64,7 +64,7 @@ class BadRequest extends ActiveRecord
     /**
      * The IP of the client.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -73,7 +73,7 @@ class BadRequest extends ActiveRecord
     /**
      * The resource that the client requested.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -119,9 +119,9 @@ class BadRequest extends ActiveRecord
         // ensure to call the parent constructor
         parent::__construct();
 
-        $this->client = new String();
-        $this->IP = new String();
-        $this->requestedResource = new String();
+        $this->client = new SmallText();
+        $this->IP = new SmallText();
+        $this->requestedResource = new SmallText();
 
         self::$logger->debug('<<__construct');
     }

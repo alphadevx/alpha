@@ -2,7 +2,7 @@
 
 namespace Alpha\Model;
 
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 use Alpha\Model\Type\Enum;
 use Alpha\Model\Type\Relation;
 use Alpha\Util\Helper\Validator;
@@ -18,7 +18,7 @@ use Alpha\Exception\RecordNotFoundException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -58,7 +58,7 @@ class Person extends ActiveRecord
     /**
      * The forum display name of the person.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -67,7 +67,7 @@ class Person extends ActiveRecord
     /**
      * The email address for the person.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -76,7 +76,7 @@ class Person extends ActiveRecord
     /**
      * The password for the person.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -137,7 +137,7 @@ class Person extends ActiveRecord
     /**
      * The website URL of the person.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -164,15 +164,15 @@ class Person extends ActiveRecord
 
         // ensure to call the parent constructor
         parent::__construct();
-        $this->displayName = new String();
+        $this->displayName = new SmallText();
         $this->displayName->setRule(Validator::REQUIRED_USERNAME);
         $this->displayName->setSize(70);
         $this->displayName->setHelper('Please provide a name for display on the website (only letters, numbers, and .-_ characters are allowed!).');
-        $this->email = new String();
+        $this->email = new SmallText();
         $this->email->setRule(Validator::REQUIRED_EMAIL);
         $this->email->setSize(70);
         $this->email->setHelper('Please provide a valid e-mail address as your username.');
-        $this->password = new String();
+        $this->password = new SmallText();
         $this->password->setSize(70);
         $this->password->setHelper('Please provide a password for logging in.');
         $this->password->isPassword(true);
@@ -180,7 +180,7 @@ class Person extends ActiveRecord
                                     'Active',
                                     'Disabled', ));
         $this->state->setValue('Active');
-        $this->URL = new String();
+        $this->URL = new SmallText();
         $this->URL->setRule(Validator::OPTIONAL_HTTP_URL);
         $this->URL->setHelper('URLs must be in the format http://some_domain/ or left blank!');
         // add unique keys to displayName and email (which is effectively the username in Alpha)
@@ -300,7 +300,7 @@ class Person extends ActiveRecord
     /**
      * Getter for displayName.
      *
-     * @return Alpha\Model\Type\String
+     * @return Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */

@@ -11,7 +11,7 @@ use Alpha\Util\Helper\Validator;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -58,8 +58,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(Validator::isInteger(100));
         $this->assertTrue(Validator::isInteger(-100));
         $this->assertTrue(Validator::isInteger(0));
-        $this->assertTrue(Validator::isInteger(00000000008));
-        $this->assertTrue(Validator::isInteger('00000000008'));
+        $this->assertTrue(Validator::isInteger(8));
+        $this->assertTrue(Validator::isInteger('8'));
         $this->assertTrue(Validator::isInteger('100'));
         $this->assertFalse(Validator::isInteger('1.1'));
         $this->assertFalse(Validator::isInteger(1.1));

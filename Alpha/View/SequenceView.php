@@ -5,7 +5,7 @@ namespace Alpha\View;
 use Alpha\Controller\Front\FrontController;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 use Alpha\View\Widget\Button;
 
 /**
@@ -15,7 +15,7 @@ use Alpha\View\Widget\Button;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -116,7 +116,7 @@ class SequenceView extends View
 
             // skip over password fields
             $property = $this->BO->getPropObject($propName);
-            if (!($property instanceof String && $property->checkIsPassword())) {
+            if (!($property instanceof SmallText && $property->checkIsPassword())) {
                 if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
                     $html .= '  <th>'.$this->BO->getDataLabel($propName).'</th>';
                 }
@@ -138,7 +138,7 @@ class SequenceView extends View
             $propName = $propObj->name;
 
             $property = $this->BO->getPropObject($propName);
-            if (!($property instanceof String && $property->checkIsPassword())) {
+            if (!($property instanceof SmallText && $property->checkIsPassword())) {
                 if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
                     $propClass = get_class($this->BO->getPropObject($propName));
 

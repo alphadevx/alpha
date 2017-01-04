@@ -4,7 +4,7 @@ namespace Alpha\Util\Cache;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
-use Memcache;
+use Memcached;
 
 /**
  * An implementation of the CacheProviderInterface interface that uses Memcache as the
@@ -14,7 +14,7 @@ use Memcache;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -81,8 +81,9 @@ class CacheProviderMemcache implements CacheProviderInterface
         $config = ConfigProvider::getInstance();
 
         try {
-            $this->connection = new Memcache();
-            $this->connection->connect($config->get('cache.memcached.host'), $config->get('cache.memcached.port'));
+            $this->connection = new Memcached();
+            $this->connection->addServer($config->get('cache.memcached.host'), $config->get('cache.memcached.port'));
+            $this->connection->setOption(Memcached::OPT_COMPRESSION, true);
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to load connect to Memcache cache: ['.$e->getMessage().']');
         }
@@ -116,9 +117,9 @@ class CacheProviderMemcache implements CacheProviderInterface
     {
         try {
             if ($expiry > 0) {
-                $this->connection->set($key, $value, MEMCACHE_COMPRESSED, $expiry);
+                $this->connection->set($key, $value, $expiry);
             } else {
-                $this->connection->set($key, $value, MEMCACHE_COMPRESSED);
+                $this->connection->set($key, $value);
             }
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to store a value to Memcached instance: ['.$e->getMessage().']');

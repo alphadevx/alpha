@@ -14,7 +14,7 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -85,7 +85,7 @@ class EmailProviderPHP implements EmailProviderInterface
         }
         $headers .= 'From: '.$from."\n";
 
-        if ($config->getEnvironment() != 'dev') {
+        if ($config->getEnvironment() != 'dev' && $config->getEnvironment() != 'test') {
             try {
                 mb_send_mail($to, $subject, $body, $headers);
             } catch (PHPException $e) {

@@ -33,7 +33,7 @@ use ReflectionClass;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -1314,7 +1314,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                     case 'DOUBLE':
                         $sqlQuery .= "$propName REAL(".$this->BO->getPropObject($propName)->getSize(true).'),';
                     break;
-                    case 'STRING':
+                    case 'SMALLTEXT':
                         $sqlQuery .= "$propName TEXT(".$this->BO->getPropObject($propName)->getSize().'),';
                     break;
                     case 'TEXT':
@@ -1424,7 +1424,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                     case 'DOUBLE':
                         $sqlQuery .= "$propName REAL(".$this->BO->getPropObject($propName)->getSize(true).'),';
                     break;
-                    case 'STRING':
+                    case 'SMALLTEXT':
                         $sqlQuery .= "$propName TEXT(".$this->BO->getPropObject($propName)->getSize().'),';
                     break;
                     case 'TEXT':
@@ -1563,7 +1563,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                     case 'DOUBLE':
                         $sqlQuery .= "$propName REAL(".$this->BO->getPropObject($propName)->getSize(true).'),';
                     break;
-                    case 'STRING':
+                    case 'SMALLTEXT':
                         $sqlQuery .= "$propName TEXT(".$this->BO->getPropObject($propName)->getSize().'),';
                     break;
                     case 'TEXT':

@@ -23,7 +23,7 @@ use Alpha\View\View;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -337,7 +337,7 @@ class InstallController extends Controller implements ControllerInterface
         $body .= '<p>Attempting to create the logs directory <em>'.$logsDir.'</em>...';
 
         if (!file_exists($logsDir)) {
-            var_dump(mkdir($logsDir, 0774));
+            mkdir($logsDir, 0774);
         }
 
         self::$logger = new Logger('InstallController');

@@ -15,7 +15,7 @@ use Alpha\Model\ActiveRecord;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -138,7 +138,7 @@ class Sequence extends ActiveRecord implements TypeInterface
 
         $this->sequence = new Integer();
 
-        $this->prefix = new String();
+        $this->prefix = new SmallText();
         $this->prefix->setRule(Validator::REQUIRED_ALPHA_UPPER);
         $this->prefix->setHelper('Sequence prefix must be uppercase string!');
         $this->markUnique('prefix');

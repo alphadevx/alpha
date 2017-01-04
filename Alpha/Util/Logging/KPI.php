@@ -3,7 +3,7 @@
 namespace Alpha\Util\Logging;
 
 use Alpha\Model\Type\Timestamp;
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 use Alpha\Util\Helper\Validator;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Session\SessionProviderFactory;
@@ -15,7 +15,7 @@ use Alpha\Util\Http\Session\SessionProviderFactory;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -64,7 +64,7 @@ class KPI
     /**
      * The name of the KPI.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.1
      */
@@ -119,7 +119,7 @@ class KPI
     {
         $config = ConfigProvider::getInstance();
 
-        $this->name = new String();
+        $this->name = new SmallText();
         $this->name->setRule(Validator::REQUIRED_ALPHA_NUMERIC);
         $this->name->setHelper('The KPI name can only contain letters and numbers');
 

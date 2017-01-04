@@ -17,7 +17,7 @@ use Alpha\Exception\CustomQueryException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -57,7 +57,7 @@ class DEnumItem extends ActiveRecord implements TypeInterface
     /**
      * The value that will appear in the drop-down.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -109,7 +109,7 @@ class DEnumItem extends ActiveRecord implements TypeInterface
         // ensure to call the parent constructor
         parent::__construct();
 
-        $this->value = new String();
+        $this->value = new SmallText();
         $this->value->setRule(Validator::REQUIRED_STRING);
         $this->value->setHelper('A blank dropdown value is not allowed!');
         $this->DEnumID = new Integer();
@@ -162,7 +162,7 @@ class DEnumItem extends ActiveRecord implements TypeInterface
     /**
      * used to get the current DEnum item.
      *
-     * @return Alpha\Model\Type\String
+     * @return Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */

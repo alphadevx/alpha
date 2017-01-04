@@ -31,7 +31,7 @@ use Mysqli;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -1073,8 +1073,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             } else {
                 $bindingsType = 's';
             }
-            $stmt->bind_param($bindingsType.'ii', $value, $newVersionNumber, $this->BO->getOID());
-            self::$logger->debug('Binding params ['.$bindingsType.'i, '.$value.', '.$this->BO->getOID().']');
+            $OID = $this->BO->getOID();
+            $stmt->bind_param($bindingsType.'ii', $value, $newVersionNumber, $OID);
+            self::$logger->debug('Binding params ['.$bindingsType.'i, '.$value.', '.$OID.']');
             $stmt->execute();
         } else {
             throw new FailedSaveException('Failed to save attribute, error is ['.$stmt->error.'], query ['.$this->BO->getLastQuery().']');
@@ -1170,7 +1171,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         $stmt = self::getConnection()->stmt_init();
 
         if ($stmt->prepare($sqlQuery)) {
-            $stmt->bind_param('i', $this->BO->getOID());
+            $OID = $this->BO->getOID();
+            $stmt->bind_param('i', $OID);
             $stmt->execute();
             self::$logger->debug('Deleted the object ['.$this->BO->getOID().'] of class ['.get_class($this->BO).']');
         } else {
@@ -1197,7 +1199,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         $stmt = self::getConnection()->stmt_init();
 
         if ($stmt->prepare($sqlQuery)) {
-            $stmt->bind_param('i', $this->BO->getOID());
+            $OID = $this->BO->getOID();
+            $stmt->bind_param('i', $OID);
 
             $stmt->execute();
 
@@ -1265,7 +1268,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                     case 'DOUBLE':
                         $sqlQuery .= "$propName DOUBLE(".$this->BO->getPropObject($propName)->getSize(true).'),';
                     break;
-                    case 'STRING':
+                    case 'SMALLTEXT':
                         $sqlQuery .= "$propName VARCHAR(".$this->BO->getPropObject($propName)->getSize().') CHARACTER SET utf8,';
                     break;
                     case 'TEXT':
@@ -1359,7 +1362,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                     case 'DOUBLE':
                         $sqlQuery .= "$propName DOUBLE(".$this->BO->getPropObject($propName)->getSize(true).'),';
                     break;
-                    case 'STRING':
+                    case 'SMALLTEXT':
                         $sqlQuery .= "$propName VARCHAR(".$this->BO->getPropObject($propName)->getSize().'),';
                     break;
                     case 'TEXT':
@@ -1500,7 +1503,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                     case 'DOUBLE':
                         $sqlQuery .= "$propName DOUBLE(".$this->BO->getPropObject($propName)->getSize(true).')';
                     break;
-                    case 'STRING':
+                    case 'SMALLTEXT':
                         $sqlQuery .= "$propName VARCHAR(".$this->BO->getPropObject($propName)->getSize().')';
                     break;
                     case 'SEQUENCE':

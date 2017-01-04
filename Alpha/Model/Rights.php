@@ -2,7 +2,7 @@
 
 namespace Alpha\Model;
 
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 use Alpha\Model\Type\Relation;
 use Alpha\Util\Logging\Logger;
 
@@ -13,7 +13,7 @@ use Alpha\Util\Logging\Logger;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -53,7 +53,7 @@ class Rights extends ActiveRecord
     /**
      * The name of the rights.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -106,7 +106,7 @@ class Rights extends ActiveRecord
 
         // ensure to call the parent constructor
         parent::__construct();
-        $this->name = new String();
+        $this->name = new SmallText();
 
         // add unique key to name field
         $this->markUnique('name');

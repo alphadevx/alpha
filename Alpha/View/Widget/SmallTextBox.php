@@ -5,7 +5,7 @@ namespace Alpha\View\Widget;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Http\Request;
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 use Alpha\Exception\IllegalArguementException;
 
 /**
@@ -15,7 +15,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -50,12 +50,12 @@ use Alpha\Exception\IllegalArguementException;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class StringBox
+class SmallTextBox
 {
     /**
      * The string object that will be edited by this string box.
      *
-     * @var Alpha\Model\Type\String
+     * @var Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -91,7 +91,7 @@ class StringBox
     /**
      * The constructor.
      *
-     * @param Alpha\Model\Type\String $string The string object that will be edited by this text box.
+     * @param Alpha\Model\Type\SmallText $string The string object that will be edited by this text box.
      * @param string                  $label  The data label for the string object.
      * @param string                  $name   The name of the HTML input box.
      * @param int                     $size   The display size (characters).
@@ -104,7 +104,7 @@ class StringBox
     {
         $config = ConfigProvider::getInstance();
 
-        if ($string instanceof String) {
+        if ($string instanceof SmallText) {
             $this->stringObject = $string;
         } else {
             throw new IllegalArguementException('String object passed ['.var_export($string, true).'] is not a valid String object!');
@@ -135,7 +135,7 @@ class StringBox
 
         $html = '<div class="form-group">';
         $html .= '  <label for="'.$this->name.'">'.$this->label.'</label>';
-        $html .= '  <input '.($this->stringObject->checkIsPassword() ? 'type="password"' : 'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.String::MAX_SIZE.'" name="'.$this->name.'" id="'.$this->name.'" value="'.(($request->getParam($this->name, false) && $this->stringObject->getValue() == '' && !$this->stringObject->checkIsPassword()) ? $request->getParam($this->name) : $this->stringObject->getValue()).'" class="form-control"'.($readOnly ? ' disabled="disabled"' : '').'/>';
+        $html .= '  <input '.($this->stringObject->checkIsPassword() ? 'type="password"' : 'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.SmallText::MAX_SIZE.'" name="'.$this->name.'" id="'.$this->name.'" value="'.(($request->getParam($this->name, false) && $this->stringObject->getValue() == '' && !$this->stringObject->checkIsPassword()) ? $request->getParam($this->name) : $this->stringObject->getValue()).'" class="form-control"'.($readOnly ? ' disabled="disabled"' : '').'/>';
 
         if ($this->stringObject->getRule() != '') {
             $html .= '  <input type="hidden" id="'.$this->name.'_msg" value="'.$this->stringObject->getHelper().'"/>';
@@ -149,7 +149,7 @@ class StringBox
     /**
      * Setter for string object.
      *
-     * @param Alpha\Model\Type\String $string
+     * @param Alpha\Model\Type\SmallText $string
      *
      * @since 1.0
      *
@@ -157,7 +157,7 @@ class StringBox
      */
     public function setStringObject($string)
     {
-        if ($string instanceof String) {
+        if ($string instanceof SmallText) {
             $this->stringObject = $string;
         } else {
             throw new IllegalArguementException('String object passed ['.var_export($string, true).'] is not a valid String object!');
@@ -167,7 +167,7 @@ class StringBox
     /**
      * Getter for string object.
      *
-     * @return Alpha\Model\Type\String
+     * @return Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */

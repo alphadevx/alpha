@@ -5,7 +5,7 @@ namespace Alpha\View\Renderer\Html;
 use Alpha\View\Renderer\RendererProviderInterface;
 use Alpha\View\Widget\Button;
 use Alpha\View\Widget\TextBox;
-use Alpha\View\Widget\StringBox;
+use Alpha\View\Widget\SmallTextBox;
 use Alpha\View\Widget\DateBox;
 use Alpha\View\Widget\RecordSelector;
 use Alpha\View\View;
@@ -18,7 +18,7 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\InputFilter;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Util\Http\Request;
-use Alpha\Model\Type\String;
+use Alpha\Model\Type\SmallText;
 use Alpha\Model\ActiveRecord;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\AlphaException;
@@ -34,7 +34,7 @@ use ReflectionClass;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -240,7 +240,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
             // skip over password fields
             $property = $this->BO->getPropObject($propName);
-            if (!($property instanceof String && $property->checkIsPassword())) {
+            if (!($property instanceof SmallText && $property->checkIsPassword())) {
                 if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
                     $html .= '  <th>'.$this->BO->getDataLabel($propName).'</th>';
                 }
@@ -262,7 +262,7 @@ class RendererProviderHTML implements RendererProviderInterface
             $propName = $propObj->name;
 
             $property = $this->BO->getPropObject($propName);
-            if (!($property instanceof String && $property->checkIsPassword())) {
+            if (!($property instanceof SmallText && $property->checkIsPassword())) {
                 if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
                     $propClass = get_class($this->BO->getPropObject($propName));
 
@@ -1082,7 +1082,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $html = '';
 
         if ($mode == 'create' || $mode == 'edit') {
-            $string = new StringBox($this->BO->getPropObject($name), $label, $name);
+            $string = new SmallTextBox($this->BO->getPropObject($name), $label, $name);
             $html .= $string->render();
         }
 

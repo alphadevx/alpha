@@ -6,13 +6,13 @@ use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- * The String complex data type.
+ * The SmallText complex data type.
  *
  * @since 1.0
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -47,7 +47,7 @@ use Alpha\Exception\IllegalArguementException;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class String extends Type implements TypeInterface
+class SmallText extends Type implements TypeInterface
 {
     /**
      * The value of the string.
@@ -74,7 +74,7 @@ class String extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    protected $helper = 'Not a valid string value!';
+    protected $helper = 'Not a valid smalltext value!';
 
     /**
      * The size of the value for the this String.
@@ -226,7 +226,7 @@ class String extends Type implements TypeInterface
     {
         if ($req) {
             $this->validationRule = Validator::REQUIRED_STRING;
-            $this->helper = 'This string requires a value!';
+            $this->helper = 'This smalltext requires a value!';
         }
     }
 

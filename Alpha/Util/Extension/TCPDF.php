@@ -15,7 +15,7 @@ use Alpha\View\Widget\Image;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2015, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -79,10 +79,14 @@ class TCPDF extends \TCPDF
      * @param bool   $ismask  true if this image is a mask, false otherwise
      * @param mixed  $imgmask image object returned by this function or false
      * @param mixed  $border  Indicates if borders must be drawn around the image. The value can be either a number:<ul><li>0: no border (default)</li><li>1: frame</li></ul>or a string containing some or all of the following characters (in any order):<ul><li>L: left</li><li>T: top</li><li>R: right</li><li>B: bottom</li></ul>
+     * @param $hidden (boolean) If true do not display the image.
+     * @param $fitonpage (boolean) If true the image is resized to not exceed page dimensions.
+     * @param $alt (boolean) If true the image will be added as alternative and not directly printed (the ID of the image will be returned).
+     * @param $altimgs (array) Array of alternate images IDs. Each alternative image must be an array with two values: an integer representing the image ID (the value returned by the Image method) and a boolean value to indicate if the image is the default for printing.
      *
      * @since 1.0
      */
-    public function Image($file, $x = '', $y = '', $w = 0, $h = 0, $type = '', $link = '', $align = '', $resize = false, $dpi = 300, $palign = '', $ismask = false, $imgmask = false, $border = 0)
+    public function Image($file, $x = '', $y = '', $w = 0, $h = 0, $type = '', $link = '', $align = '', $resize = false, $dpi = 300, $palign = '', $ismask = false, $imgmask = false, $border = 0, $fitbox = false, $hidden = false, $fitonpage = false, $alt = false, $altimgs = array())
     {
         if (self::$logger == null) {
             self::$logger = new Logger('TCPDF');
@@ -103,9 +107,9 @@ class TCPDF extends \TCPDF
             } else {
                 // it has no query string, so threat as a regular image URL
                 if (Validator::isURL($file)) {
-                    parent::Image($config->get('app.root').'/'.Image::convertImageURLToPath($file), $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border);
+                    parent::Image($config->get('app.root').'/'.Image::convertImageURLToPath($file), $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, $fitonpage, $alt, $altimgs);
                 } else {
-                    parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border);
+                    parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, $fitonpage, $alt, $altimgs);
                 }
             }
         } catch (\Exception $e) {
