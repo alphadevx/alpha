@@ -160,8 +160,8 @@ The model layer of Alpha consists of an active record implementation, and a set 
 | Alpha\Model\Type\Integer  | 11   | A valid integer value.                | An integer value.                                                                        |
 | Alpha\Model\Type\Relation | 11   | ID of the related record, or empty.   | A relation type supporting MANY-TO-ONE, ONE-TO-MANY, ONE-TO-ONE, MANY-TO-MANY types.     |
 | Alpha\Model\Type\Sequence | 255  | Sequence in format PREFIX-00000000000.| A database sequence number with a string prefix defined by the developer.                |
-| Alpha\Model\Type\String   | 255  | A small string value.                 | A string value.                                                                          |
-| Alpha\Model\Type\Text     | 65535| A large string value.                 | A string value.                                                                          |
+| Alpha\Model\Type\SmallText| 255  | A small text value.                   | A small text value (single line).                                                        |
+| Alpha\Model\Type\Text     | 65535| A large text value.                   | A large value (paragraphs).                                                              |
 
 ### ActiveRecord
 
@@ -178,7 +178,7 @@ An active record then uses these data types to store the attributes of an object
 	    /**
 	     * The forum display name of the person.
 	     *
-	     * @var Alpha\Model\Type\String
+	     * @var Alpha\Model\Type\SmallText
 	     *
 	     * @since 1.0
 	     */
@@ -187,7 +187,7 @@ An active record then uses these data types to store the attributes of an object
 	    /**
 	     * The email address for the person.
 	     *
-	     * @var Alpha\Model\Type\String
+	     * @var Alpha\Model\Type\SmallText
 	     *
 	     * @since 1.0
 	     */
@@ -196,7 +196,7 @@ An active record then uses these data types to store the attributes of an object
 	    /**
 	     * The password for the person.
 	     *
-	     * @var Alpha\Model\Type\String
+	     * @var Alpha\Model\Type\SmallText
 	     *
 	     * @since 1.0
 	     */
@@ -248,17 +248,17 @@ An active record then uses these data types to store the attributes of an object
 	    {
 	        // ...
 
-	        $this->displayName = new String();
+	        $this->displayName = new SmallText();
 	        $this->displayName->setRule(Validator::REQUIRED_USERNAME);
 	        $this->displayName->setSize(70);
 	        $this->displayName->setHelper('Please provide a name for display on the website (only letters, numbers, and .-_ characters are allowed!).');
 
-	        $this->email = new String();
+	        $this->email = new SmallText();
 	        $this->email->setRule(Validator::REQUIRED_EMAIL);
 	        $this->email->setSize(70);
 	        $this->email->setHelper('Please provide a valid e-mail address as your username.');
 
-	        $this->password = new String();
+	        $this->password = new SmallText();
 	        $this->password->setSize(70);
 	        $this->password->setHelper('Please provide a password for logging in.');
 	        $this->password->isPassword(true);
@@ -483,7 +483,10 @@ The following widgets are included:
 | Alpha\View\Widget\DateBox        | A Bootstrap date picker.   | An Alpha\Model\Type\Date or Alpha\Model\Type\Timestamp instance.   |
 | Alpha\View\Widget\Image          | A scaled, secure image.    | The source path of the original file along with desired dimensions.|
 | Alpha\View\Widget\RecordSelector | Used for relating records. | A _Alpha\Model\Type\Relation_ instance.                            |
-| Alpha\View\Widget\StringBox      | One-line string input box. | A _Alpha\Model\Type\String_ instance.                              |
+| Alpha\View\Widget\SmallTextBox   | One-line text input box.   | A _Alpha\Model\Type\SmallText_ instance.                           |
+| Alpha\View\Widget\TextBox        | Multi-line text input box. | A _Alpha\Model\Type\Text_ instance.                                |
+| Alpha\View\Widget\TagCloud       | A cloud of popular tags.   | The maximum amount of tags to include in the cloud.                |
+
 
 Utils
 -----
