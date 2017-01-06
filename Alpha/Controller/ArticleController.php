@@ -477,7 +477,6 @@ class ArticleController extends ActiveRecordController implements ControllerInte
         }
 
         if ((isset($params['view']) && ($params['view'] == 'edit' || $params['view'] == 'create')) || (isset($params['ActiveRecordType']) && !isset($params['ActiveRecordOID']))) {
-
             $fieldid = ($config->get('security.encrypt.http.fieldnames') ? 'text_field_'.base64_encode(SecurityUtils::encrypt('content')).'_0' : 'text_field_content_0');
 
             $html .= '
@@ -488,7 +487,6 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                     });
                 });
                 </script>';
-
         } elseif (isset($params['view']) && $params['view'] == 'print') {
             $html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'/css/print.css">';
         }

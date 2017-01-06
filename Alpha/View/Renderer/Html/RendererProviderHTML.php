@@ -1185,21 +1185,21 @@ class RendererProviderHTML implements RendererProviderInterface
                 }
 
                 switch (mb_strtoupper($propClass)) {
-                    case 'INTEGER' :
+                    case 'INTEGER':
                         if ($mode == 'view') {
                             $html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
                         } else {
                             $html .= $this->renderIntegerField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
                         }
                     break;
-                    case 'DOUBLE' :
+                    case 'DOUBLE':
                         if ($mode == 'view') {
                             $html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
                         } else {
                             $html .= $this->renderDoubleField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
                         }
                     break;
-                    case 'DATE' :
+                    case 'DATE':
                         if ($mode == 'view') {
                             $value = $this->BO->get($propName);
                             if ($value == '0000-00-00') {
@@ -1211,7 +1211,7 @@ class RendererProviderHTML implements RendererProviderInterface
                             $html .= $date->render();
                         }
                     break;
-                    case 'TIMESTAMP' :
+                    case 'TIMESTAMP':
                         if ($mode == 'view') {
                             $value = $this->BO->get($propName);
                             if ($value == '0000-00-00 00:00:00') {
@@ -1223,20 +1223,20 @@ class RendererProviderHTML implements RendererProviderInterface
                             $html .= $timestamp->render();
                         }
                     break;
-                    case 'STRING' :
+                    case 'STRING':
                         $html .= $this->renderStringField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
                     break;
-                    case 'TEXT' :
+                    case 'TEXT':
                         $html .= $this->renderTextField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
                     break;
-                    case 'BOOLEAN' :
+                    case 'BOOLEAN':
                         if ($mode == 'view') {
                             $html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
                         } else {
                             $html .= $this->renderBooleanField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
                         }
                     break;
-                    case 'ENUM' :
+                    case 'ENUM':
                         if ($mode == 'view') {
                             $html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
                         } else {
@@ -1244,7 +1244,7 @@ class RendererProviderHTML implements RendererProviderInterface
                             $html .= $this->renderEnumField($propName, $this->BO->getDataLabel($propName), $mode, $enum->getOptions(), $this->BO->get($propName));
                         }
                     break;
-                    case 'DENUM' :
+                    case 'DENUM':
                         if ($mode == 'view') {
                             $html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->getPropObject($propName)->getDisplayValue());
                         } else {
@@ -1252,10 +1252,10 @@ class RendererProviderHTML implements RendererProviderInterface
                             $html .= $this->renderDEnumField($propName, $this->BO->getDataLabel($propName), $mode, $denum->getOptions(), $this->BO->get($propName));
                         }
                     break;
-                    case 'RELATION' :
+                    case 'RELATION':
                         $html .= $this->renderRelationField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
                     break;
-                    default :
+                    default:
                         $html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
                     break;
                 }

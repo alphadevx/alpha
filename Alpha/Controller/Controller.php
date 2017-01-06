@@ -1376,7 +1376,7 @@ abstract class Controller
      * @param $params array
      *
      * @return array
-     * 
+     *
      * @since 1.2.2
      */
     private function decryptFieldNames($params)
@@ -1669,7 +1669,6 @@ abstract class Controller
         if ($accept != 'application/json' && $this->checkIfAccessingFromSecureURL()) {
             $viewState = ViewState::getInstance();
             if ($viewState->get('renderAdminMenu') === true) {
-
                 $config = ConfigProvider::getInstance();
 
                 $sessionProvider = $config->get('session.provider.name');

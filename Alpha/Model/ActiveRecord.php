@@ -1669,7 +1669,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Removes the name of the attribute provided from the list of transient (non-saved) attributes for this BO, 
+     * Removes the name of the attribute provided from the list of transient (non-saved) attributes for this BO,
      * ensuring that it will be saved on the next attempt.
      *
      * @param string $attributeName The name of the attribute to save.

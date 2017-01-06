@@ -637,7 +637,6 @@ class Timestamp extends Type implements TypeInterface
         }
 
         for ($i = 0; $difference >= $lengths[$i] && $i < count($lengths) - 1; ++$i) {
-
             $difference = round($difference / $lengths[$i]);
         }
 

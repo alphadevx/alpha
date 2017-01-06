@@ -119,9 +119,9 @@ class EnumTest extends ModelTestCase
      */
     public function testLoadEnumOptions()
     {
-    	$this->person->loadByAttribute('displayName', 'enumunittest', true);
+        $this->person->loadByAttribute('displayName', 'enumunittest', true);
 
-    	$this->assertEquals('Active', $this->person->getPropObject('state')->getValue(), 'Testing that enum options are loaded correctly from the database');
+        $this->assertEquals('Active', $this->person->getPropObject('state')->getValue(), 'Testing that enum options are loaded correctly from the database');
     }
 
     /**

@@ -98,13 +98,10 @@ class PhpinfoController extends Controller implements ControllerInterface
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
         if ($request->getParam('displayphpinfo') != null) {
-
             ob_start();
             phpinfo();
             $body = ob_get_contents();
-
         } else {
-
             $body = View::displayPageHead($this);
 
             $url = FrontController::generateSecureURL('act=Alpha\Controller\PhpinfoController&displayphpinfo=true');
@@ -112,7 +109,6 @@ class PhpinfoController extends Controller implements ControllerInterface
             $body .= '<iframe src="'.$url.'" style="border:none; overflow-x: scroll; overflow-y: scroll; width:100%; height:100vh;"></iframe>';
 
             $body .= View::displayPageFoot($this);
-
         }
 
         self::$logger->debug('<<doGET');

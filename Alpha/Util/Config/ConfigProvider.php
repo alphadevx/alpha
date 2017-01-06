@@ -81,7 +81,8 @@ class ConfigProvider
      * @since 1.0
      */
     private function __construct()
-    {}
+    {
+    }
 
     /**
      * Get the config object instance.

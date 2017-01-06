@@ -48,24 +48,24 @@ use Alpha\Util\Graph\TreeGraph;
  */
 class TreeGraphTest extends \PHPUnit_Framework_TestCase
 {
-	public function testAdd()
-	{
-		$graph = new TreeGraph();
-		$graph->add(1, 0, 'First child', 10, 10, array(0, 0, 0), 'http://www.alphaframework.org/');
+    public function testAdd()
+    {
+        $graph = new TreeGraph();
+        $graph->add(1, 0, 'First child', 10, 10, array(0, 0, 0), 'http://www.alphaframework.org/');
 
-		$this->assertEquals('First child', $graph->get(1)->getMessage(), 'Testing the add method');
-	}
+        $this->assertEquals('First child', $graph->get(1)->getMessage(), 'Testing the add method');
+    }
 
-	public function testNext()
-	{
-		$graph = new TreeGraph();
-		$graph->add(1, 0, 'First child', 10, 10, array(0, 0, 0), 'http://www.alphaframework.org/');
-		$graph->add(2, 0, 'Second child', 10, 10, array(0, 0, 0), 'http://www.alphaframework.org/');
+    public function testNext()
+    {
+        $graph = new TreeGraph();
+        $graph->add(1, 0, 'First child', 10, 10, array(0, 0, 0), 'http://www.alphaframework.org/');
+        $graph->add(2, 0, 'Second child', 10, 10, array(0, 0, 0), 'http://www.alphaframework.org/');
 
-		$this->assertTrue($graph->hasNext(), 'Testing the hasNext method');
-		$this->assertEquals('First child', $graph->next()->getMessage(), 'Testing the next method');
-		$this->assertTrue($graph->hasNext(), 'Testing the hasNext method');
-		$this->assertEquals('Second child', $graph->next()->getMessage(), 'Testing the next method');
-		$this->assertFalse($graph->hasNext(), 'Testing the hasNext method');
-	}
+        $this->assertTrue($graph->hasNext(), 'Testing the hasNext method');
+        $this->assertEquals('First child', $graph->next()->getMessage(), 'Testing the next method');
+        $this->assertTrue($graph->hasNext(), 'Testing the hasNext method');
+        $this->assertEquals('Second child', $graph->next()->getMessage(), 'Testing the next method');
+        $this->assertFalse($graph->hasNext(), 'Testing the hasNext method');
+    }
 }

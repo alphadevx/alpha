@@ -164,17 +164,18 @@ class Markdown extends MarkdownExtra
         # Reading alignement from header underline.
         $separators = preg_split('/ *[|] */', $underline);
         foreach ($separators as $n => $s) {
-            if (preg_match('/^ *-+: *$/', $s))
+            if (preg_match('/^ *-+: *$/', $s)) {
                 $attr[$n] = $this->_doTable_makeAlignAttr('right');
-            else if (preg_match('/^ *:-+: *$/', $s))
+            } elseif (preg_match('/^ *:-+: *$/', $s)) {
                 $attr[$n] = $this->_doTable_makeAlignAttr('center');
-            else if (preg_match('/^ *:-+ *$/', $s))
+            } elseif (preg_match('/^ *:-+ *$/', $s)) {
                 $attr[$n] = $this->_doTable_makeAlignAttr('left');
-            else
+            } else {
                 $attr[$n] = '';
+            }
         }
         
-        # Parsing span elements, including code spans, character escapes, 
+        # Parsing span elements, including code spans, character escapes,
         # and inline HTML tags, so that pipes inside those gets ignored.
         $head       = $this->parseSpan($head);
         $headers    = preg_split('/ *[|] */', $head);
@@ -185,8 +186,9 @@ class Markdown extends MarkdownExtra
         $text = "<table class=\"table table-bordered\">\n";
         $text .= "<thead>\n";
         $text .= "<tr>\n";
-        foreach ($headers as $n => $header)
+        foreach ($headers as $n => $header) {
             $text .= "  <th$attr[$n]>".$this->runSpanGamut(trim($header))."</th>\n";
+        }
         $text .= "</tr>\n";
         $text .= "</thead>\n";
         
@@ -195,7 +197,7 @@ class Markdown extends MarkdownExtra
         
         $text .= "<tbody>\n";
         foreach ($rows as $row) {
-            # Parsing span elements, including code spans, character escapes, 
+            # Parsing span elements, including code spans, character escapes,
             # and inline HTML tags, so that pipes inside those gets ignored.
             $row = $this->parseSpan($row);
             
@@ -204,8 +206,9 @@ class Markdown extends MarkdownExtra
             $row_cells = array_pad($row_cells, $col_count, '');
             
             $text .= "<tr>\n";
-            foreach ($row_cells as $n => $cell)
+            foreach ($row_cells as $n => $cell) {
                 $text .= "  <td$attr[$n]>".$this->runSpanGamut(trim($cell))."</td>\n";
+            }
             $text .= "</tr>\n";
         }
         $text .= "</tbody>\n";
