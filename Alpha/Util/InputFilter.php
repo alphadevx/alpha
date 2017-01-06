@@ -58,18 +58,10 @@ class InputFilter
      */
     public static function encode($text, $allowHTML = false)
     {
-        if (!get_magic_quotes_gpc()) {
-            if ($allowHTML) {
-                return $text;
-            } else {
-                return htmlentities($text, ENT_COMPAT, 'utf-8');
-            }
+        if ($allowHTML) {
+            return $text;
         } else {
-            if ($allowHTML) {
-                return $text;
-            } else {
-                return htmlentities($text, ENT_COMPAT, 'utf-8');
-            }
+            return htmlentities($text, ENT_COMPAT, 'utf-8');
         }
     }
 
@@ -85,13 +77,7 @@ class InputFilter
      */
     public static function decode($text, $allowHTML = false)
     {
-        if (!get_magic_quotes_gpc()) {
-            if ($allowHTML) {
-                return $text;
-            } else {
-                return html_entity_decode($text);
-            }
-        } elseif ($allowHTML) {
+        if ($allowHTML) {
             return $text;
         } else {
             return html_entity_decode($text);
