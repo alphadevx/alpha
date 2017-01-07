@@ -394,7 +394,7 @@ class View
     /**
      * Method to render the page footer content.
      *
-     * @param \Alpha\Aonctoller\Controller $controller
+     * @param \Alpha\Controller\Controller $controller
      *
      * @return string
      *
