@@ -79,8 +79,6 @@ class SearchProviderFactory
 
         self::$logger->debug('>>getInstance(providerName=['.$providerName.'])');
 
-        global $config;
-
         if (class_exists($providerName)) {
             $instance = new $providerName();
 
