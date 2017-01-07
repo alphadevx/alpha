@@ -564,20 +564,18 @@ abstract class ActiveRecord
         $config = ConfigProvider::getInstance();
 
         // firstly we will validate the object before we try to save it
-        if (!$this->validate()) {
-            throw new FailedSaveException('Could not save due to a validation error.');
-        } else {
-            $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
-            $provider->save();
+        $this->validate();
 
-            if ($config->get('cache.provider.name') != '') {
-                $this->removeFromCache();
-                $this->addToCache();
-            }
+        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider->save();
 
-            if (method_exists($this, 'after_save_callback')) {
-                $this->after_save_callback();
-            }
+        if ($config->get('cache.provider.name') != '') {
+            $this->removeFromCache();
+            $this->addToCache();
+        }
+
+        if (method_exists($this, 'after_save_callback')) {
+            $this->after_save_callback();
         }
     }
 
