@@ -55,7 +55,7 @@ class ImageUtils
      * @param string $thumbnail  The path to the new thumbnail file to generate
      * @param int    $dimensions The width/height of the generated thumbnail
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.1
      */
@@ -113,7 +113,7 @@ class ImageUtils
      * @param string $type          The image type (jpg, png, or gif)
      * @param string $destination   The desination file path of the image file to create
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.1
      */

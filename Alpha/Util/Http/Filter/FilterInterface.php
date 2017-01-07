@@ -49,9 +49,9 @@ interface FilterInterface
     /**
      * The method for doing the work of the filter.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
-     * @throws Alpha\Exception\ResourceNotAllowedException
+     * @throws \Alpha\Exception\ResourceNotAllowedException
      *
      * @since 1.0
      */

@@ -101,7 +101,7 @@ class Integer extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function __construct($val = 0)
     {
@@ -125,7 +125,7 @@ class Integer extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function setValue($val)
     {
@@ -171,7 +171,7 @@ class Integer extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function setSize($size)
     {

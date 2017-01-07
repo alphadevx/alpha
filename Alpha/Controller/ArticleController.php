@@ -72,7 +72,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -97,11 +97,11 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     /**
      * Handle GET requests.
      *
-     * @param Alpha\Util\Http\Request
+     * @param \Alpha\Util\Http\Request
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
-     * @throws Alpha\Exception\ResourceNotFoundException
+     * @throws \Alpha\Exception\ResourceNotFoundException
      *
      * @since 1.0
      */
@@ -321,9 +321,9 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     /**
      * Method to handle PUT requests.
      *
-     * @param Alpha\Util\Http\Request
+     * @param \Alpha\Util\Http\Request
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
      * @since 1.0
      */
@@ -439,9 +439,9 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     /**
      * Method to handle DELETE requests.
      *
-     * @param Alpha\Util\Http\Request
+     * @param \Alpha\Util\Http\Request
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
      * @since 2.0
      */

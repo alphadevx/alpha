@@ -138,7 +138,7 @@ class Relation extends Type implements TypeInterface
     /**
      * In the case of MANY-TO-MANY relationship, a lookup object will be required.
      *
-     * @var Alpha\Model\Type\RelationLookup
+     * @var \Alpha\Model\Type\RelationLookup
      *
      * @since 1.0
      */
@@ -236,7 +236,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function setRelatedClass($RC, $side = '')
     {
@@ -268,7 +268,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function getRelatedClass($side = '')
     {
@@ -296,7 +296,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function setRelatedClassField($RCF)
     {
@@ -364,7 +364,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function setRelatedClassDisplayField($RCDF, $side = '')
     {
@@ -392,7 +392,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function getRelatedClassDisplayField($side = '')
     {
@@ -418,8 +418,8 @@ class Relation extends Type implements TypeInterface
      *
      * @param string $RT
      *
-     * @throws Alpha\Exception\IllegalArguementException
-     * @throws Alpha\Exception\FailedLookupCreateException
+     * @throws \Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\FailedLookupCreateException
      *
      * @since 1.0
      */
@@ -460,7 +460,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function setValue($val)
     {
@@ -498,7 +498,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 2.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function setRelatedOIDs($OIDs)
     {
@@ -555,7 +555,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function getRelatedClassDisplayFieldValue($accessingClassName = '')
     {
@@ -628,7 +628,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function getRelatedObjects($accessingClassName = '')
     {
@@ -690,7 +690,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Model\Type\IllegalArguementException
+     * @throws \Alpha\Model\Type\IllegalArguementException
      */
     public function getRelatedObject()
     {
@@ -737,7 +737,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Model\Type\IllegalArguementException
+     * @throws \Alpha\Model\Type\IllegalArguementException
      */
     public function getSide($BOClassname)
     {

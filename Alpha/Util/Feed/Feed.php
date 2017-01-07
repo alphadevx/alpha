@@ -118,7 +118,7 @@ abstract class Feed
     /**
      * The BO which we will serve up in this feed.
      *
-     * @var Alpha\Model\ActiveRecord
+     * @var \Alpha\Model\ActiveRecord
      *
      * @since 1.0
      */
@@ -143,7 +143,7 @@ abstract class Feed
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Loggin\Logger
+     * @var \Alpha\Util\Loggin\Logger
      *
      * @since 1.0
      */
@@ -214,7 +214,7 @@ abstract class Feed
     /**
      * Method for adding a BO to the current feed.
      *
-     * @param Alpha\Model\ActiveRecord $BO
+     * @param \Alpha\Model\ActiveRecord $BO
      */
     public function addBO($BO)
     {
@@ -322,7 +322,7 @@ abstract class Feed
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     protected function createRSSNode($type, $parent, $title, $url, $description, $pubDate = null, $id = null)
     {

@@ -51,7 +51,7 @@ interface RendererProviderInterface
     /**
      * Provide the BO that we are going render.
      *
-     * @param Alpha\Model\ActiveRecord $BO
+     * @param \Alpha\Model\ActiveRecord $BO
      *
      * @since 1.2
      */
@@ -115,11 +115,11 @@ interface RendererProviderInterface
     /**
      * Renders the header content using the given renderer.
      *
-     * @param Alpha\Controller\Controller $controller
+     * @param \Alpha\Controller\Controller $controller
      *
      * @return string
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.2
      */
@@ -128,7 +128,7 @@ interface RendererProviderInterface
     /**
      * Renders the footer content using the given renderer.
      *
-     * @param Alpha\Controller\Controller $controller
+     * @param \Alpha\Controller\Controller $controller
      *
      * @return string
      *

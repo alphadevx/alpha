@@ -64,9 +64,9 @@ class SequenceView extends View
     /**
      * Constructor.
      *
-     * @param Alpha\Model\ActiveRecord $BO
+     * @param \Alpha\Model\ActiveRecord $BO
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */

@@ -59,7 +59,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
     /**
      * The OID of the left business object in the relation.
      *
-     * @var Alpha\Model\Type\Integer
+     * @var \Alpha\Model\Type\Integer
      *
      * @since 1.0
      */
@@ -68,7 +68,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
     /**
      * The OID of the right business object in the relation.
      *
-     * @var Alpha\Model\Type\Integer
+     * @var \Alpha\Model\Type\Integer
      *
      * @since 1.0
      */
@@ -95,7 +95,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -122,8 +122,8 @@ class RelationLookup extends ActiveRecord implements TypeInterface
     /**
      * The constructor.
      *
-     * @throws Alpha\Exception\FailedLookupCreateException
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\FailedLookupCreateException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
@@ -198,7 +198,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function getTableName()
     {
@@ -329,7 +329,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function setValue($OIDs)
     {

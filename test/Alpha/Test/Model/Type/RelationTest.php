@@ -58,7 +58,7 @@ class RelationTest extends ModelTestCase
     /**
      * A Relation for testing.
      *
-     * @var Alpha\Model\Type\Relation
+     * @var \Alpha\Model\Type\Relation
      *
      * @since 1.0
      */
@@ -67,7 +67,7 @@ class RelationTest extends ModelTestCase
     /**
      * A Person for testing.
      *
-     * @var Alpha\Model\Person
+     * @var \Alpha\Model\Person
      *
      * @since 1.2.1
      */

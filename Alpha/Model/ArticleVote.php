@@ -53,7 +53,7 @@ class ArticleVote extends ActiveRecord
     /**
      * The article this comment belongs to.
      *
-     * @var Alpha\Model\Type\Relation
+     * @var \Alpha\Model\Type\Relation
      *
      * @since 1.0
      */
@@ -62,7 +62,7 @@ class ArticleVote extends ActiveRecord
     /**
      * The person who cast the vote.
      *
-     * @var Alpha\Model\Type\Relation
+     * @var \Alpha\Model\Type\Relation
      *
      * @since 1.0
      */
@@ -71,7 +71,7 @@ class ArticleVote extends ActiveRecord
     /**
      * The actual vote score (default 1-10).
      *
-     * @var Alpha\Model\Type\Integer
+     * @var \Alpha\Model\Type\Integer
      *
      * @since 1.0
      */
@@ -98,7 +98,7 @@ class ArticleVote extends ActiveRecord
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.1
      */

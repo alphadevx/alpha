@@ -55,7 +55,7 @@ class Logger
     /**
      * The log file the log entries will be saved to.
      *
-     * @var Alpha\Util\Logging\LogProviderFile
+     * @var \Alpha\Util\Logging\LogProviderFile
      *
      * @since 1.0
      */
@@ -91,7 +91,7 @@ class Logger
     /**
      * A request object that will give us the IP, user-agent etc. of the client we are logging for.
      *
-     * @var Alpha\Util\Http\Request
+     * @var \Alpha\Util\Http\Request
      *
      * @since 2.0
      */
@@ -248,7 +248,7 @@ class Logger
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\MailNotSentException
+     * @throws \Alpha\Exception\MailNotSentException
      */
     public function notifyAdmin($message)
     {

@@ -53,7 +53,7 @@ class ArticleComment extends ActiveRecord
     /**
      * The article this comment belongs to.
      *
-     * @var Alpha\Model\Type\Relation
+     * @var \Alpha\Model\Type\Relation
      *
      * @since 1.0
      */
@@ -62,7 +62,7 @@ class ArticleComment extends ActiveRecord
     /**
      * The content of the comment posted by the user.
      *
-     * @var Alpha\Model\Type\Text
+     * @var \Alpha\Model\Type\Text
      *
      * @since 1.0
      */
@@ -89,7 +89,7 @@ class ArticleComment extends ActiveRecord
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.1
      */

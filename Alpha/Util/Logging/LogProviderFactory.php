@@ -56,9 +56,9 @@ class LogProviderFactory
      *
      * @param $providerName The class name of the provider class (fully qualified).
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
-     * @return Alpha\Util\Logging\LogProviderInterface
+     * @return \Alpha\Util\Logging\LogProviderInterface
      *
      * @since 2.0
      */

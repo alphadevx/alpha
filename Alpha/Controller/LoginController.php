@@ -64,7 +64,7 @@ class LoginController extends Controller implements ControllerInterface
     /**
      * The person to be logged in.
      *
-     * @var Alpha\Model\Person
+     * @var \Alpha\Model\Person
      *
      * @since 1.0
      */
@@ -73,7 +73,7 @@ class LoginController extends Controller implements ControllerInterface
     /**
      * The person view object.
      *
-     * @var Alpha\View\PersonView
+     * @var \Alpha\View\PersonView
      *
      * @since 1.0
      */
@@ -82,7 +82,7 @@ class LoginController extends Controller implements ControllerInterface
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -118,11 +118,11 @@ class LoginController extends Controller implements ControllerInterface
     /**
      * Handle GET requests.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
@@ -154,11 +154,11 @@ class LoginController extends Controller implements ControllerInterface
     /**
      * Handle POST requests (adds $currentUser Person to the session).
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
@@ -296,9 +296,9 @@ class LoginController extends Controller implements ControllerInterface
      *
      * @param string $password The password supplied by the user logging in
      *
-     * @throws Alpha\Exception\ValidationException
+     * @throws \Alpha\Exception\ValidationException
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
      * @since 1.0
      */

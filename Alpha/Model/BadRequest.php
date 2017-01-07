@@ -55,7 +55,7 @@ class BadRequest extends ActiveRecord
     /**
      * The HTTP user-agent client string.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -64,7 +64,7 @@ class BadRequest extends ActiveRecord
     /**
      * The IP of the client.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -73,7 +73,7 @@ class BadRequest extends ActiveRecord
     /**
      * The resource that the client requested.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -100,7 +100,7 @@ class BadRequest extends ActiveRecord
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -134,7 +134,7 @@ class BadRequest extends ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function getBadRequestCount()
     {

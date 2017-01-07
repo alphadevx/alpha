@@ -57,7 +57,7 @@ class View
     /**
      * The business object that will be rendered.
      *
-     * @var Alpha\Model\ActiveRecord
+     * @var \Alpha\Model\ActiveRecord
      *
      * @since 1.0
      */
@@ -66,7 +66,7 @@ class View
     /**
      * The rendering provider that will be used to render the active record.
      *
-     * @var Alpha\View\Renderer\RendererProviderInterface
+     * @var \Alpha\View\Renderer\RendererProviderInterface
      *
      * @since 1.2
      */
@@ -87,7 +87,7 @@ class View
      * @param ActiveRecord $BO           The main business object that this view is going to render
      * @param string       $acceptHeader Optionally pass the HTTP Accept header to select the correct renderer provider.
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
@@ -170,9 +170,9 @@ class View
     /**
      * Simple setter for the view business object.
      *
-     * @param Alpha\Model\ActiveRecord $BO
+     * @param \Alpha\Model\ActiveRecord $BO
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
@@ -192,7 +192,7 @@ class View
     /**
      * Gets the BO attached to this view (if any).
      *
-     * @return Alpha\Model\ActiveRecord
+     * @return \Alpha\Model\ActiveRecord
      *
      * @since 1.0
      */
@@ -354,11 +354,11 @@ class View
     /**
      * Method to render the page header content.
      *
-     * @param Alpha\Controller\Controller $controller
+     * @param \Alpha\Controller\Controller $controller
      *
      * @return string
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
@@ -394,7 +394,7 @@ class View
     /**
      * Method to render the page footer content.
      *
-     * @param Alpha\Aonctoller\Controller $controller
+     * @param \Alpha\Aonctoller\Controller $controller
      *
      * @return string
      *
@@ -823,7 +823,7 @@ class View
      * Loads a template for the BO specified if one exists.  Lower level custom templates
      * take precedence.
      *
-     * @param Alpha\Model\ActiveRecord $BO
+     * @param \Alpha\Model\ActiveRecord $BO
      * @param string                   $mode
      * @param array                    $fields
      *
@@ -831,7 +831,7 @@ class View
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public static function loadTemplate($BO, $mode, $fields = array())
     {
@@ -925,7 +925,7 @@ class View
      *
      * @since 1.2
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public static function loadTemplateFragment($type, $fileName, $fields = array())
     {
@@ -983,7 +983,7 @@ class View
      *
      * @since 1.2
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public static function setProvider($ProviderClassName, $acceptHeader = null)
     {
@@ -1013,7 +1013,7 @@ class View
     /**
      * Get the current view renderer provider.
      *
-     * @return Alpha\View\Renderer\RendererProviderInterface
+     * @return \Alpha\View\Renderer\RendererProviderInterface
      *
      * @since 2.0
      */

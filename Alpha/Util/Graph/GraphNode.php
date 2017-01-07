@@ -96,7 +96,7 @@ class GraphNode
     /**
      * The node to the left of this one.
      *
-     * @var Alpha\Util\Graph\GraphNode
+     * @var \Alpha\Util\Graph\GraphNode
      *
      * @since 1.0
      */
@@ -105,7 +105,7 @@ class GraphNode
     /**
      * The node to the right of this one.
      *
-     * @var Alpha\Util\Graph\GraphNode
+     * @var \Alpha\Util\Graph\GraphNode
      *
      * @since 1.0
      */
@@ -141,7 +141,7 @@ class GraphNode
     /**
      * Parent node of this node (if any).
      *
-     * @var Alpha\Util\Graph\GraphNode
+     * @var \Alpha\Util\Graph\GraphNode
      *
      * @since 1.0
      */
@@ -220,7 +220,7 @@ class GraphNode
      *
      * @param array $nodeColour
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
@@ -344,7 +344,7 @@ class GraphNode
     /**
      * Get the parent node of this node (if any).
      *
-     * @return Alpha\Util\Graph\GraphNode
+     * @return \Alpha\Util\Graph\GraphNode
      *
      * @since 1.0
      */
@@ -356,9 +356,9 @@ class GraphNode
     /**
      * Set the parent node.
      *
-     * @param Alpha\Util\Graph\GraphNode $node
+     * @param \Alpha\Util\Graph\GraphNode $node
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
@@ -374,7 +374,7 @@ class GraphNode
     /**
      * Get the node to the left of this one (if any).
      *
-     * @return Alpha\Util\Graph\GraphNode
+     * @return \Alpha\Util\Graph\GraphNode
      *
      * @since 1.0
      */
@@ -390,9 +390,9 @@ class GraphNode
     /**
      * Sets the node to the left of this node.
      *
-     * @param Alpha\Util\Graph\GraphNode $node
+     * @param \Alpha\Util\Graph\GraphNode $node
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
@@ -408,7 +408,7 @@ class GraphNode
     /**
      * Get the node to the right of this one (if any).
      *
-     * @return Alpha\Util\Graph\GraphNode
+     * @return \Alpha\Util\Graph\GraphNode
      *
      * @since 1.0
      */
@@ -424,9 +424,9 @@ class GraphNode
     /**
      * Sets the node to the right of this node.
      *
-     * @param Alpha\Util\Graph\GraphNode $node
+     * @param \Alpha\Util\Graph\GraphNode $node
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
@@ -487,7 +487,7 @@ class GraphNode
     /**
      * Add a new node to the children array of this node.
      *
-     * @param Alpha\Util\Graph\GraphNode $node
+     * @param \Alpha\Util\Graph\GraphNode $node
      *
      * @throws ALpha\Exception\IllegalArguementException
      *

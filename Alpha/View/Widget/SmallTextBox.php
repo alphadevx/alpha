@@ -55,7 +55,7 @@ class SmallTextBox
     /**
      * The string object that will be edited by this string box.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -91,14 +91,14 @@ class SmallTextBox
     /**
      * The constructor.
      *
-     * @param Alpha\Model\Type\SmallText $string The string object that will be edited by this text box.
+     * @param \Alpha\Model\Type\SmallText $string The string object that will be edited by this text box.
      * @param string                  $label  The data label for the string object.
      * @param string                  $name   The name of the HTML input box.
      * @param int                     $size   The display size (characters).
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function __construct($string, $label, $name, $size = 0)
     {
@@ -149,11 +149,11 @@ class SmallTextBox
     /**
      * Setter for string object.
      *
-     * @param Alpha\Model\Type\SmallText $string
+     * @param \Alpha\Model\Type\SmallText $string
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function setStringObject($string)
     {
@@ -167,7 +167,7 @@ class SmallTextBox
     /**
      * Getter for string object.
      *
-     * @return Alpha\Model\Type\SmallText
+     * @return \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */

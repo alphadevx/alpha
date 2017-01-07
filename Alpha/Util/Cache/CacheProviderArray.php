@@ -52,7 +52,7 @@ class CacheProviderArray implements CacheProviderInterface
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.2.1
      */

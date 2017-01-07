@@ -74,7 +74,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger;
+     * @var \Alpha\Util\Logging\Logger;
      *
      * @since 1.2
      */
@@ -83,7 +83,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * The business object that we are renderering.
      *
-     * @var Alpha\Model\ActiveRecord
+     * @var \Alpha\Model\ActiveRecord
      *
      * @since 1.2
      */

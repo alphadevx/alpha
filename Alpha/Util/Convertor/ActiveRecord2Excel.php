@@ -51,7 +51,7 @@ class ActiveRecord2Excel
     /**
      * The record we will convert to an Excel sheet.
      *
-     * @var Alpha\Model\ActiveRecord
+     * @var \Alpha\Model\ActiveRecord
      *
      * @since 1.0
      */
@@ -60,7 +60,7 @@ class ActiveRecord2Excel
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -69,7 +69,7 @@ class ActiveRecord2Excel
     /**
      * Constructor.
      *
-     * @param Alpha\Model\ActiveRecord $BO
+     * @param \Alpha\Model\ActiveRecord $BO
      *
      * @since 1.0
      */

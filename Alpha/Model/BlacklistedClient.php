@@ -52,7 +52,7 @@ class BlacklistedClient extends ActiveRecord
     /**
      * The (unique) client string this is blocked.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -79,7 +79,7 @@ class BlacklistedClient extends ActiveRecord
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.1
      */

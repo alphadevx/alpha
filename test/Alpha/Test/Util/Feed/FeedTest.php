@@ -59,7 +59,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
     /**
      * Test object to inject into a feed.
      *
-     * @var Alpha\Model\Article
+     * @var \Alpha\Model\Article
      */
     private $BO;
 

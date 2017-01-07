@@ -69,7 +69,7 @@ class TreeGraph
     /**
      * The root node of the graph.
      *
-     * @var Alpha\Util\Graph\GraphNode
+     * @var \Alpha\Util\Graph\GraphNode
      *
      * @since 1.0
      */
@@ -141,7 +141,7 @@ class TreeGraph
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -201,7 +201,7 @@ class TreeGraph
      *
      * @param int    $id
      *
-     * @return Alpha\Util\Graph\GraphNode
+     * @return \Alpha\Util\Graph\GraphNode
      *
      * @since 2.0.1
      */
@@ -217,7 +217,7 @@ class TreeGraph
     /**
      * The first pass of the graph.
      *
-     * @param Alpha\Util\Graph\GraphNode $node
+     * @param \Alpha\Util\Graph\GraphNode $node
      * @param int                        $level
      *
      * @since 1.0
@@ -261,7 +261,7 @@ class TreeGraph
     /**
      * The second pass of the graph.
      *
-     * @param Alpha\Util\Graph\GraphNode $node
+     * @param \Alpha\Util\Graph\GraphNode $node
      * @param int                        $level
      * @param int                        $x
      * @param int                        $y
@@ -295,7 +295,7 @@ class TreeGraph
     /**
      * Handles the laying out of multi-branch trees.
      *
-     * @param Alpha\Util\Graph\GraphNode $node
+     * @param \Alpha\Util\Graph\GraphNode $node
      * @param int                        $level
      *
      * @since 1.0
@@ -358,7 +358,7 @@ class TreeGraph
     /**
      * Setup neighbour nodes.
      *
-     * @param Alpha\Util\Graph\GraphNode $node
+     * @param \Alpha\Util\Graph\GraphNode $node
      * @param int                        $level
      *
      * @since 1.0
@@ -378,11 +378,11 @@ class TreeGraph
     /**
      * Get left most node in the branch.
      *
-     * @param Alpha\Util\Graph\GraphNode $node
+     * @param \Alpha\Util\Graph\GraphNode $node
      * @param int                        $level
      * @param int                        $maxlevel
      *
-     * @return Alpha\Util\Graph\GraphNode
+     * @return \Alpha\Util\Graph\GraphNode
      *
      * @since 1.0
      */
@@ -459,7 +459,7 @@ class TreeGraph
     /**
      * Get the next GraphNode instance in the graph, will invoke render() if not already rendered.
      *
-     * @return Alpha\Util\Graph\GraphNode
+     * @return \Alpha\Util\Graph\GraphNode
      *
      * @since 1.0
      */

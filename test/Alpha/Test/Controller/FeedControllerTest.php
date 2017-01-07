@@ -109,7 +109,7 @@ class FeedControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * Creates an article object for Testing.
      *
-     * @return Alpha\Model\Article
+     * @return \Alpha\Model\Article
      *
      * @since 2.0
      */
@@ -129,7 +129,7 @@ class FeedControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * Creates a person object for testing.
      *
-     * @return Alpha\Model\Person
+     * @return \Alpha\Model\Person
      *
      * @since 2.0
      */

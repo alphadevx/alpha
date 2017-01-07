@@ -59,7 +59,7 @@ class Tag extends ActiveRecord
     /**
      * The name of the class of the object which is tagged.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -68,7 +68,7 @@ class Tag extends ActiveRecord
     /**
      * The OID of the object which is tagged.
      *
-     * @var Alpha\Model\Type\Integer
+     * @var \Alpha\Model\Type\Integer
      *
      * @since 1.0
      */
@@ -77,7 +77,7 @@ class Tag extends ActiveRecord
     /**
      * The content of the tag.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -104,7 +104,7 @@ class Tag extends ActiveRecord
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -138,8 +138,8 @@ class Tag extends ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function loadTags($taggedClass, $taggedOID)
     {
@@ -174,7 +174,7 @@ class Tag extends ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public static function getPopularTagsArray($limit)
     {
@@ -216,7 +216,7 @@ class Tag extends ActiveRecord
      *
      * @return array
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      *
      * @since 1.0
      */

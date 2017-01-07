@@ -110,7 +110,7 @@ class SmallText extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function __construct($val = '')
     {
@@ -134,7 +134,7 @@ class SmallText extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function setValue($val)
     {
@@ -192,7 +192,7 @@ class SmallText extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function setSize($size)
     {

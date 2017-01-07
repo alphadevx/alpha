@@ -52,7 +52,7 @@ class SessionProviderPHP implements SessionProviderInterface
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 2.0
      */

@@ -73,7 +73,7 @@ class TagCloudTest extends \PHPUnit_Framework_TestCase
     /**
      * Creates an article object for testing.
      *
-     * @return Alpha\Model\Article
+     * @return \Alpha\Model\Article
      *
      * @since 1.2.3
      */

@@ -63,7 +63,7 @@ class InstallController extends Controller implements ControllerInterface
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -92,9 +92,9 @@ class InstallController extends Controller implements ControllerInterface
     /**
      * Handle GET requests.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
      * @since 1.0
      */

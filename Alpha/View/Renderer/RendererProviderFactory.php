@@ -53,7 +53,7 @@ class RendererProviderFactory
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.2
      */
@@ -66,9 +66,9 @@ class RendererProviderFactory
      * @param $providerName The fully-qualified class name of the provider class, must implement Alpha\View\Renderer\RendererProviderInterface.
      * @param $BO The Alpha\Model\ActiveRecord instance to pass to the renderer provider for passing data.
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
-     * @return Alpha\View\Renderer\RendererProviderInterface
+     * @return \Alpha\View\Renderer\RendererProviderInterface
      *
      * @since 1.2
      */

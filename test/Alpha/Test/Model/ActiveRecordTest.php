@@ -68,7 +68,7 @@ class ActiveRecordTest extends ModelTestCase
     /**
      * A Person for testing (any business object will do).
      *
-     * @var Alpha\Model\Person
+     * @var \Alpha\Model\Person
      *
      * @since 1.0
      */
@@ -121,7 +121,7 @@ class ActiveRecordTest extends ModelTestCase
     /**
      * Creates a person object for Testing.
      *
-     * @return Alpha\Model\Person
+     * @return \Alpha\Model\Person
      *
      * @since 1.0
      */

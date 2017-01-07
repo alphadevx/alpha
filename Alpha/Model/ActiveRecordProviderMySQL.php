@@ -71,7 +71,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.1
      */
@@ -89,7 +89,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
     /**
      * The business object that we are mapping back to.
      *
-     * @var Alpha\Model\ActiveRecord
+     * @var \Alpha\Model\ActiveRecord
      *
      * @since 1.1
      */

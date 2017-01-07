@@ -90,7 +90,7 @@ class ViewState
     /**
      * The view state object singleton.
      *
-     * @var Alpha\View\ViewState
+     * @var \Alpha\View\ViewState
      *
      * @since 1.0
      */
@@ -109,7 +109,7 @@ class ViewState
      * Get the ViewState instance.  Loads from $_SESSION if its not already in memory, otherwise
      * a new instance will be returned with empty properties.
      *
-     * @return Alpha\View\ViewState
+     * @return \Alpha\View\ViewState
      *
      * @since 1.0
      */
@@ -139,7 +139,7 @@ class ViewState
      *
      * @param string $key
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @return string
      *
@@ -162,7 +162,7 @@ class ViewState
      * @param string $key
      * @param string $value
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */

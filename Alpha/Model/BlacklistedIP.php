@@ -52,7 +52,7 @@ class BlacklistedIP extends ActiveRecord
     /**
      * The (unique) IP address that is blocked.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.2
      */
@@ -79,7 +79,7 @@ class BlacklistedIP extends ActiveRecord
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.2
      */

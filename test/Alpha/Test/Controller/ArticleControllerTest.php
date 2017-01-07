@@ -114,7 +114,7 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * Creates an article object for Testing.
      *
-     * @return Alpha\Model\Article
+     * @return \Alpha\Model\Article
      *
      * @since 2.0
      */
@@ -134,7 +134,7 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * Creates a person object for Testing.
      *
-     * @return Alpha\Model\Person
+     * @return \Alpha\Model\Person
      *
      * @since 1.0
      */

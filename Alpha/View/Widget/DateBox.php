@@ -55,7 +55,7 @@ class DateBox
     /**
      * The date or timestamp object for the widget.
      *
-     * @var Alpha\Model\Type\Date or Alpha\Model\Type\Timestamp
+     * @var \Alpha\Model\Type\Date or Alpha\Model\Type\Timestamp
      *
      * @since 1.0
      */
@@ -82,13 +82,13 @@ class DateBox
     /**
      * The constructor.
      *
-     * @param Alpha\Model\Type\Date or Alpha\Model\Type\Timestamp $object The date or timestamp object that will be edited by this widget.
+     * @param \Alpha\Model\Type\Date or Alpha\Model\Type\Timestamp $object The date or timestamp object that will be edited by this widget.
      * @param string                                              $label  The data label for the object.
      * @param string                                              $name   The name of the HTML input box.
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function __construct($object, $label = '', $name = '')
     {

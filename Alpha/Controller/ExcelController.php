@@ -58,7 +58,7 @@ class ExcelController extends Controller implements ControllerInterface
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -83,11 +83,11 @@ class ExcelController extends Controller implements ControllerInterface
     /**
      * Loads the BO indicated in the GET request and handles the conversion to Excel.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
-     * @throws Alpha\Exception\ResourceNotFoundException
+     * @throws \Alpha\Exception\ResourceNotFoundException
      *
      * @since 1.0
      */

@@ -57,7 +57,7 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
     /**
      * An Article for testing.
      *
-     * @var Alpha\Model\Article
+     * @var \Alpha\Model\Article
      *
      * @since 1.2.3
      */
@@ -121,7 +121,7 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
     /**
      * Creates an article object for testing.
      *
-     * @return Alpha\Model\Article
+     * @return \Alpha\Model\Article
      *
      * @since 1.2.3
      */

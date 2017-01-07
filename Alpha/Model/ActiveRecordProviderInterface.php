@@ -80,7 +80,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\RecordFoundException
+     * @throws \Alpha\Exception\RecordFoundException
      */
     public function load($OID, $version = 0);
 
@@ -93,7 +93,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 2.0
      *
-     * @throws Alpha\Exception\RecordFoundException
+     * @throws \Alpha\Exception\RecordFoundException
      */
     public function loadAllOldVersions($OID);
 
@@ -107,7 +107,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\RecordFoundException
+     * @throws \Alpha\Exception\RecordFoundException
      */
     public function loadByAttribute($attribute, $value, $ignoreClassType = false, $loadAttributes = array());
 
@@ -124,7 +124,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\RecordFoundException
+     * @throws \Alpha\Exception\RecordFoundException
      */
     public function loadAll($start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false);
 
@@ -144,8 +144,8 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\RecordFoundException
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\RecordFoundException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array());
 
@@ -165,8 +165,8 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\RecordFoundException
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\RecordFoundException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array());
 
@@ -184,7 +184,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\RecordFoundException
+     * @throws \Alpha\Exception\RecordFoundException
      */
     public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false);
 
@@ -202,7 +202,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\RecordFoundException
+     * @throws \Alpha\Exception\RecordFoundException
      */
     public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order = 'ASC', $ignoreClassType = false);
 
@@ -211,9 +211,9 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\FailedSaveException
-     * @throws Alpha\Exception\LockingException
-     * @throws Alpha\Exception\ValidationException
+     * @throws \Alpha\Exception\FailedSaveException
+     * @throws \Alpha\Exception\LockingException
+     * @throws \Alpha\Exception\ValidationException
      */
     public function save();
 
@@ -226,8 +226,8 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\IllegalArguementException
-     * @throws Alpha\Exception\FailedSaveException
+     * @throws \Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\FailedSaveException
      */
     public function saveAttribute($attribute, $value);
 
@@ -236,7 +236,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.2
      *
-     * @throws Alpha\Exception\FailedSaveException
+     * @throws \Alpha\Exception\FailedSaveException
      */
     public function saveHistory();
 
@@ -245,7 +245,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\FailedDeleteException
+     * @throws \Alpha\Exception\FailedDeleteException
      */
     public function delete();
 
@@ -256,7 +256,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\RecordFoundException
+     * @throws \Alpha\Exception\RecordFoundException
      */
     public function getVersion();
 
@@ -265,7 +265,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function makeTable();
 
@@ -274,7 +274,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.2
      *
-     * @throws AlphaException
+     * @throws \AlphaException
      */
     public function makeHistoryTable();
 
@@ -283,7 +283,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function rebuildTable();
 
@@ -294,7 +294,7 @@ interface ActiveRecordProviderInterface
      *
      * @param string $tableName Optional table name, leave blank for the defined table for this class to be dropped
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function dropTable($tableName = null);
 
@@ -306,7 +306,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function addProperty($propName);
 
@@ -317,7 +317,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function getMAX();
 
@@ -331,7 +331,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function getCount($attributes = array(), $values = array());
 
@@ -343,7 +343,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.2
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function getHistoryCount();
 
@@ -352,7 +352,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function setEnumOptions();
 
@@ -365,7 +365,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function checkTableExists($checkHistoryTable = false);
 
@@ -380,8 +380,8 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\AlphaException
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public static function checkBOTableExists($BOClassName, $checkHistoryTable = false);
 
@@ -393,7 +393,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function checkTableNeedsUpdate();
 
@@ -405,7 +405,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function findMissingFields();
 
@@ -416,7 +416,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function getIndexes();
 
@@ -431,7 +431,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\FailedIndexCreateException
+     * @throws \Alpha\Exception\FailedIndexCreateException
      */
     public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null);
 
@@ -444,7 +444,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\FailedIndexCreateException
+     * @throws \Alpha\Exception\FailedIndexCreateException
      */
     public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '');
 
@@ -453,7 +453,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function reload();
 
@@ -466,7 +466,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function checkRecordExists($OID);
 
@@ -479,7 +479,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\BadBOTableNameException
+     * @throws \Alpha\Exception\BadBOTableNameException
      */
     public function isTableOverloaded();
 
@@ -488,7 +488,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public static function begin();
 
@@ -497,7 +497,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\FailedSaveException
+     * @throws \Alpha\Exception\FailedSaveException
      */
     public static function commit();
 
@@ -506,14 +506,14 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public static function rollback();
 
     /**
      * Provide the BO that we are going to map the data to from this provider.
      *
-     * @param Alpha\Model\ActiveRecord $BO
+     * @param \Alpha\Model\ActiveRecord $BO
      *
      * @since 1.1
      */
@@ -525,7 +525,7 @@ interface ActiveRecordProviderInterface
      *
      * @param string $sqlQuery
      *
-     * @throws Alpha\Exception\CustomQueryException
+     * @throws \Alpha\Exception\CustomQueryException
      *
      * @return array
      *
@@ -545,7 +545,7 @@ interface ActiveRecordProviderInterface
     /**
      * Creates the configured database.
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      *
      * @since 2.0
      */
@@ -554,7 +554,7 @@ interface ActiveRecordProviderInterface
     /**
      * Drops the configured database.
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      *
      * @since 2.0
      */

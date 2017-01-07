@@ -70,7 +70,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -100,12 +100,12 @@ class TagController extends ActiveRecordController implements ControllerInterfac
     /**
      * Handle GET requests.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
-     * @throws Alpha\Exception\IllegalArguementException
-     * @throws Alpha\Exception\FileNotFoundException
+     * @throws \Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\FileNotFoundException
      *
      * @since 1.0
      */
@@ -279,12 +279,12 @@ class TagController extends ActiveRecordController implements ControllerInterfac
     /**
      * Handle POST requests.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
-     * @throws Alpha\Exception\SecurityException
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\SecurityException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
@@ -405,12 +405,12 @@ class TagController extends ActiveRecordController implements ControllerInterfac
     /**
      * Handle DELETE requests.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
-     * @throws Alpha\Exception\SecurityException
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\SecurityException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 2.0
      */

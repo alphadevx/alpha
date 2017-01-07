@@ -122,7 +122,7 @@ class ControllerTestCase extends \PHPUnit_Framework_TestCase
     /**
      * Creates a person object for Testing.
      *
-     * @return Alpha\Model\Person
+     * @return \Alpha\Model\Person
      *
      * @since 2.0
      */

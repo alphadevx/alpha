@@ -51,7 +51,7 @@ interface EmailProviderInterface
      *
      * @since 2.0
      *
-     * @throws Alpha\Exception\MailNotSentException
+     * @throws \Alpha\Exception\MailNotSentException
      */
     public function send($to, $from, $subject, $body, $isHTML = false);
 }

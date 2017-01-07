@@ -52,7 +52,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger;
+     * @var \Alpha\Util\Logging\Logger;
      *
      * @since 2.0
      */
@@ -61,7 +61,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * The active record that we are renderering.
      *
-     * @var Alpha\Model\ActiveRecord
+     * @var \Alpha\Model\ActiveRecord
      *
      * @since 2.0
      */

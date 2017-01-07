@@ -50,7 +50,7 @@ interface ControllerInterface
     /**
      * Handles HEAD HTTP requests.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
      * @since Alpha\Util\Http\Response
      * @since 1.0
@@ -60,7 +60,7 @@ interface ControllerInterface
     /**
      * Handles GET HTTP requests.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
      * @since Alpha\Util\Http\Response
      * @since 1.0
@@ -70,7 +70,7 @@ interface ControllerInterface
     /**
      * Handles POST HTTP requests.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
      * @since Alpha\Util\Http\Response
      * @since 1.0
@@ -80,7 +80,7 @@ interface ControllerInterface
     /**
      * Handles PUT HTTP requests.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
      * @since Alpha\Util\Http\Response
      * @since 1.0
@@ -90,7 +90,7 @@ interface ControllerInterface
     /**
      * Handles PATCH HTTP requests.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
      * @since Alpha\Util\Http\Response
      * @since 1.0
@@ -100,7 +100,7 @@ interface ControllerInterface
     /**
      * Handles DELETE HTTP requests.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
      * @since Alpha\Util\Http\Response
      * @since 1.0
@@ -110,7 +110,7 @@ interface ControllerInterface
     /**
      * Handles OPTIONS HTTP requests.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
      * @since Alpha\Util\Http\Response
      * @since 1.0
@@ -120,7 +120,7 @@ interface ControllerInterface
     /**
      * Handles TRACE HTTP requests.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
      * @since Alpha\Util\Http\Response
      * @since 2.0.2

@@ -521,7 +521,7 @@ class FileUtils
      *
      * @return string
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
@@ -545,7 +545,7 @@ class FileUtils
      *
      * @return int The current filecount for the directory.
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      *
      * @since 1.0
      */
@@ -580,7 +580,7 @@ class FileUtils
      * @param string $sourceDir    The path to the source directory.
      * @param array  $excludeFiles An array of file names to exclude from the deletion.
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      *
      * @since 1.0
      */
@@ -611,7 +611,7 @@ class FileUtils
      * @param string $source The path to the source directory or file.
      * @param string $dest   The destination source directory or file.
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      *
      * @since 1.1
      */
@@ -654,7 +654,7 @@ class FileUtils
      * @param string $source The path to the source directory or file.
      * @param string $dest   The destination zip file file.
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      *
      * @since 1.1
      */

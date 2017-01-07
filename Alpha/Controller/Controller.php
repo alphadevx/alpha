@@ -89,7 +89,7 @@ abstract class Controller
     /**
      * Optionally, the main record object that this controller is currently working with.
      *
-     * @var Alpha\Model\ActiveRecord
+     * @var \Alpha\Model\ActiveRecord
      *
      * @since 1.0
      */
@@ -108,7 +108,7 @@ abstract class Controller
     /**
      * Stores the start time of a unit of work transaction.
      *
-     * @var Alpha\Model\Type\Timestamp
+     * @var \Alpha\Model\Type\Timestamp
      *
      * @since 1.0
      */
@@ -117,7 +117,7 @@ abstract class Controller
     /**
      * Stores the end time of a unit of work transaction.
      *
-     * @var Alpha\Model\Type\Timestamp
+     * @var \Alpha\Model\Type\Timestamp
      *
      * @since 1.0
      */
@@ -126,7 +126,7 @@ abstract class Controller
     /**
      * Stores the maximum allowed time duration (in seconds) of the unit of work.
      *
-     * @var Alpha\Model\Type\Integer
+     * @var \Alpha\Model\Type\Integer
      *
      * @since 1.0
      */
@@ -229,7 +229,7 @@ abstract class Controller
     /**
      * The request that has been passed to this controller for processing.
      *
-     * @var Alpha\Util\Http\Request
+     * @var \Alpha\Util\Http\Request
      *
      * @since 2.0
      */
@@ -238,7 +238,7 @@ abstract class Controller
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -312,7 +312,7 @@ abstract class Controller
     /**
      * Setter for the record for this controller.
      *
-     * @param Alpha\Model\ActiveRecord $record
+     * @param \Alpha\Model\ActiveRecord $record
      *
      * @since 1.0
      */
@@ -463,7 +463,7 @@ abstract class Controller
      *
      * @param array $jobs The names of the controllers in this unit of work sequence.  Will accept fully-qualified controller class name, or an absolute URL.
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
@@ -590,7 +590,7 @@ abstract class Controller
     /**
      * Getter for the unit end time.
      *
-     * @return Alpha\Model\Type\Timestamp
+     * @return \Alpha\Model\Type\Timestamp
      *
      * @since 1.0
      */
@@ -695,7 +695,7 @@ abstract class Controller
     /**
      * Adds the supplied business object to the dirtyObjects array in the session.
      *
-     * @param Alpha\Model\ActiveRecord $object
+     * @param \Alpha\Model\ActiveRecord $object
      *
      * @since 1.0
      */
@@ -740,7 +740,7 @@ abstract class Controller
     /**
      * Adds a newly created business object to the newObjects array in the session.
      *
-     * @param Alpha\Model\ActiveRecord $object
+     * @param \Alpha\Model\ActiveRecord $object
      *
      * @since 1.0
      */
@@ -862,7 +862,7 @@ abstract class Controller
     /**
      * Method to clearup a cancelled unit of work.
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      *
      * @since 1.0
      */
@@ -999,7 +999,7 @@ abstract class Controller
     /**
      * Method to return an access error for trespassing users.  HTTP response header code will be 403.
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
      * @since 1.0
      */
@@ -1330,7 +1330,7 @@ abstract class Controller
      *
      * @param string $controllerName
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
@@ -1431,7 +1431,7 @@ abstract class Controller
      *
      * @since 2.0
      *
-     * @throws Alpha\Exception\NotImplementedException
+     * @throws \Alpha\Exception\NotImplementedException
      */
     public function doHEAD($request)
     {
@@ -1443,7 +1443,7 @@ abstract class Controller
      *
      * @since 2.0
      *
-     * @throws Alpha\Exception\NotImplementedException
+     * @throws \Alpha\Exception\NotImplementedException
      */
     public function doGET($request)
     {
@@ -1455,7 +1455,7 @@ abstract class Controller
      *
      * @since 2.0
      *
-     * @throws Alpha\Exception\NotImplementedException
+     * @throws \Alpha\Exception\NotImplementedException
      */
     public function doPOST($request)
     {
@@ -1467,7 +1467,7 @@ abstract class Controller
      *
      * @since 2.0
      *
-     * @throws Alpha\Exception\NotImplementedException
+     * @throws \Alpha\Exception\NotImplementedException
      */
     public function doPUT($request)
     {
@@ -1479,7 +1479,7 @@ abstract class Controller
      *
      * @since 2.0
      *
-     * @throws Alpha\Exception\NotImplementedException
+     * @throws \Alpha\Exception\NotImplementedException
      */
     public function doPATCH($request)
     {
@@ -1491,7 +1491,7 @@ abstract class Controller
      *
      * @since 2.0
      *
-     * @throws Alpha\Exception\NotImplementedException
+     * @throws \Alpha\Exception\NotImplementedException
      */
     public function doDELETE($request)
     {
@@ -1556,9 +1556,9 @@ abstract class Controller
      * Maps the supplied request with the appropiate method to run on this controller, for example
      * GET to doGET(), POST to doPOST() etc.  Returns the response generated by the method called.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
      * @since 2.0
      */
@@ -1630,7 +1630,7 @@ abstract class Controller
     /**
      * Get the request this controller is processing (if any).
      *
-     * @return Alpha\Util\Http\Request
+     * @return \Alpha\Util\Http\Request
      *
      * @since 2.0
      */
@@ -1642,7 +1642,7 @@ abstract class Controller
     /**
      * Set the request this controller is processing.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
      * @since 2.0
      */

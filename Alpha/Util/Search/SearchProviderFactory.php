@@ -53,7 +53,7 @@ class SearchProviderFactory
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger;
+     * @var \Alpha\Util\Logging\Logger;
      *
      * @since 1.2.3
      */
@@ -65,9 +65,9 @@ class SearchProviderFactory
      *
      * @param $providerName The class name of the provider class, should be fully-qualified.
      *
-     * @throws Alpha\Exception\IllegalArguementException;
+     * @throws \Alpha\Exception\IllegalArguementException;
      *
-     * @return Alpha\Util\Search\SearchProviderInterface
+     * @return \Alpha\Util\Search\SearchProviderInterface
      *
      * @since 1.2.3
      */

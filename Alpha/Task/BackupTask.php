@@ -54,7 +54,7 @@ class BackupTask implements TaskInterface
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      */
     private static $logger = null;
 

@@ -57,7 +57,7 @@ class ActiveRecordProviderFactory
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.1
      */
@@ -70,9 +70,9 @@ class ActiveRecordProviderFactory
      * @param $providerName The fully-qualified class name of the provider class.
      * @param $BO The (optional) active record instance to pass to the persistance provider for mapping.
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
-     * @return Alpha\Model\ActiveRecordProviderInterface
+     * @return \Alpha\Model\ActiveRecordProviderInterface
      *
      * @since 1.1
      */

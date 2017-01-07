@@ -56,7 +56,7 @@ class RecordSelectorController extends Controller implements ControllerInterface
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -81,13 +81,13 @@ class RecordSelectorController extends Controller implements ControllerInterface
     /**
      * Handles get requests.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\ResourceNotFoundException
+     * @throws \Alpha\Exception\ResourceNotFoundException
      */
     public function doGet($request)
     {

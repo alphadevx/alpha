@@ -57,7 +57,7 @@ class DEnumItem extends ActiveRecord implements TypeInterface
     /**
      * The value that will appear in the drop-down.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -66,7 +66,7 @@ class DEnumItem extends ActiveRecord implements TypeInterface
     /**
      * The ID of the parent DEnum object.
      *
-     * @var Alpha\Model\Type\Integer
+     * @var \Alpha\Model\Type\Integer
      *
      * @since 1.0
      */
@@ -125,7 +125,7 @@ class DEnumItem extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function loadItems($EnumID)
     {
@@ -162,7 +162,7 @@ class DEnumItem extends ActiveRecord implements TypeInterface
     /**
      * used to get the current DEnum item.
      *
-     * @return Alpha\Model\Type\SmallText
+     * @return \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */

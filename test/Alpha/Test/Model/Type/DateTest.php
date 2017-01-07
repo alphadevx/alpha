@@ -56,7 +56,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
     /**
      * An Date for testing.
      *
-     * @var Alpha\Model\Type\Date
+     * @var \Alpha\Model\Type\Date
      *
      * @since 1.0
      */

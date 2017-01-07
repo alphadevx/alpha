@@ -55,7 +55,7 @@ class KPI
     /**
      * The date/time of the KPI event.
      *
-     * @var Alpha\Model\Type\Timestamp
+     * @var \Alpha\Model\Type\Timestamp
      *
      * @since 1.1
      */
@@ -64,7 +64,7 @@ class KPI
     /**
      * The name of the KPI.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.1
      */
@@ -111,7 +111,7 @@ class KPI
      *
      * @param string $name The name of the KPI which is used in the log files, must only be letters and/or numbers.
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.1
      */

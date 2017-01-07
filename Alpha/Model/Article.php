@@ -62,7 +62,7 @@ class Article extends ActiveRecord
     /**
      * The article title.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -71,7 +71,7 @@ class Article extends ActiveRecord
     /**
      * The article site section.
      *
-     * @var Alpha\Model\Type\DEnum
+     * @var \Alpha\Model\Type\DEnum
      *
      * @since 1.0
      */
@@ -80,7 +80,7 @@ class Article extends ActiveRecord
     /**
      * The description of the article.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -89,7 +89,7 @@ class Article extends ActiveRecord
     /**
      * Optional custom body onload Javascript.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -98,7 +98,7 @@ class Article extends ActiveRecord
     /**
      * Any custom HTML header content (e.g. Javascript) for the article.
      *
-     * @var Alpha\Model\Type\Text
+     * @var \Alpha\Model\Type\Text
      *
      * @since 1.0
      */
@@ -107,7 +107,7 @@ class Article extends ActiveRecord
     /**
      * The article content.
      *
-     * @var Alpha\Model\Type\Text
+     * @var \Alpha\Model\Type\Text
      *
      * @since 1.0
      */
@@ -116,7 +116,7 @@ class Article extends ActiveRecord
     /**
      * The author of the article.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -125,7 +125,7 @@ class Article extends ActiveRecord
     /**
      * A boolean to control whether the artcile is publically accessible or not.
      *
-     * @var Alpha\Model\Type\Boolean
+     * @var \Alpha\Model\Type\Boolean
      *
      * @since 1.0
      */
@@ -134,7 +134,7 @@ class Article extends ActiveRecord
     /**
      * A Relation containing all of the comments on this article.
      *
-     * @var Alpha\Model\Type\Relation
+     * @var \Alpha\Model\Type\Relation
      *
      * @since 1.0
      */
@@ -143,7 +143,7 @@ class Article extends ActiveRecord
     /**
      * A Relation containing all of the votes on this article.
      *
-     * @var Alpha\Model\Type\Relation
+     * @var \Alpha\Model\Type\Relation
      *
      * @since 1.0
      */
@@ -152,7 +152,7 @@ class Article extends ActiveRecord
     /**
      * A Relation containing all of the tags on this article.
      *
-     * @var Alpha\Model\Type\Relation
+     * @var \Alpha\Model\Type\Relation
      *
      * @since 1.0
      */
@@ -215,7 +215,7 @@ class Article extends ActiveRecord
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -344,7 +344,7 @@ class Article extends ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function loadRecentWithLimit($limit, $excludeID = '')
     {
@@ -413,7 +413,7 @@ class Article extends ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function createAttachmentsFolder()
     {
@@ -479,7 +479,7 @@ class Article extends ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function checkUserVoted()
     {
@@ -535,7 +535,7 @@ class Article extends ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\FileNotFoundException
+     * @throws \Alpha\Exception\FileNotFoundException
      */
     public function loadContentFromFile($filePath)
     {
@@ -567,7 +567,7 @@ class Article extends ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\FileNotFoundException
+     * @throws \Alpha\Exception\FileNotFoundException
      */
     public function getContentFileDate()
     {

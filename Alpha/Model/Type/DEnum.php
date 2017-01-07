@@ -112,7 +112,7 @@ class DEnum extends ActiveRecord implements TypeInterface
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.2
      */
@@ -121,7 +121,7 @@ class DEnum extends ActiveRecord implements TypeInterface
     /**
      * Constructor that sets up the DEnum options.
      *
-     * @param Alpha\Model\Type\SmallText $name
+     * @param \Alpha\Model\Type\SmallText $name
      */
     public function __construct($name = null)
     {
@@ -173,7 +173,7 @@ class DEnum extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function getOptions($alphaSort = false)
     {
@@ -301,7 +301,7 @@ class DEnum extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function getItemCount()
     {

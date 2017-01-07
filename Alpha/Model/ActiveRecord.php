@@ -1368,7 +1368,7 @@ abstract class ActiveRecord
      *
      * @param string $prop The name of the property we are getting.
      *
-     * @return Alpha\Model\Type\TypeInterface The complex type object found.
+     * @return \Alpha\Model\Type\TypeInterface The complex type object found.
      *
      * @since 1.0
      *

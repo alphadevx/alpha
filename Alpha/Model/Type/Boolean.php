@@ -83,7 +83,7 @@ class Boolean extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function __construct($val = true)
     {
@@ -107,7 +107,7 @@ class Boolean extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function setValue($val)
     {

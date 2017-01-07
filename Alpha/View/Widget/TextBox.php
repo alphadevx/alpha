@@ -55,7 +55,7 @@ class TextBox
     /**
      * The text object that will be edited by this text box.
      *
-     * @var Alpha\Model\Type\Text
+     * @var \Alpha\Model\Type\Text
      *
      * @since 1.0
      */
@@ -100,7 +100,7 @@ class TextBox
     /**
      * The constructor.
      *
-     * @param Alpha\Model\Type\Text $text       The text object that will be edited by this text box.
+     * @param \Alpha\Model\Type\Text $text       The text object that will be edited by this text box.
      * @param string                $label      The data label for the text object.
      * @param string                $name       The name of the HTML input box.
      * @param int                   $rows       The display size (rows).
@@ -108,7 +108,7 @@ class TextBox
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function __construct($text, $label, $name, $rows = 5, $identifier = 0)
     {
@@ -172,7 +172,7 @@ class TextBox
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function setTextObject($text)
     {
@@ -186,7 +186,7 @@ class TextBox
     /**
      * Getter for text object.
      *
-     * @return Alpha\Model\Type\Text
+     * @return \Alpha\Model\Type\Text
      *
      * @since 1.0
      */

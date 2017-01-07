@@ -53,7 +53,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     /**
      * An Image for testing.
      *
-     * @var Alpha\View\Widget\Image
+     * @var \Alpha\View\Widget\Image
      *
      * @since 1.0
      */

@@ -65,7 +65,7 @@ interface SearchProviderInterface
      * Gets a list of documents related to the business objects matching the object provided.  An array
      * of business objects will be returned (ordered by the search engine).
      *
-     * @param Alpha\Model\ActiveRecord $sourceObject The source object for comparison.
+     * @param \Alpha\Model\ActiveRecord $sourceObject The source object for comparison.
      * @param string                   $returnType   Use this filter to determine that only business objects of a certain class hould be returned (default is to return all classes indexed).
      * @param int                      $start        Start point for pagination.
      * @param int                      $limit        The maximum amount to return in the list (for pagination).
@@ -80,9 +80,9 @@ interface SearchProviderInterface
     /**
      * Adds/updates the business object provided to the search engine index.
      *
-     * @param Alpha\Model\ActiveRecord $sourceObject The object to add to the search index. The sourceObject should already be stored in the database.
+     * @param \Alpha\Model\ActiveRecord $sourceObject The object to add to the search index. The sourceObject should already be stored in the database.
      *
-     * @throws Alpha\Exception\SearchIndexWriteException
+     * @throws \Alpha\Exception\SearchIndexWriteException
      *
      * @since 1.2.3
      */
@@ -91,9 +91,9 @@ interface SearchProviderInterface
     /**
      * Deletes the business object provided from the search engine index.
      *
-     * @param Alpha\Model\ActiveRecord $sourceObject The object to delete from the search index.
+     * @param \Alpha\Model\ActiveRecord $sourceObject The object to delete from the search index.
      *
-     * @throws Alpha\Exception\SearchIndexWriteException
+     * @throws \Alpha\Exception\SearchIndexWriteException
      *
      * @since 1.2.3
      */

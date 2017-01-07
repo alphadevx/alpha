@@ -58,7 +58,7 @@ class PHPServerUtils
      *
      * @return int The PID of the new server
      *
-     * @throws AlphaException
+     * @throws \AlphaException
      */
     public static function start($host, $port, $docRoot)
     {

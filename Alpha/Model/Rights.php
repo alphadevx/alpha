@@ -53,7 +53,7 @@ class Rights extends ActiveRecord
     /**
      * The name of the rights.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -62,7 +62,7 @@ class Rights extends ActiveRecord
     /**
      * A Relation containing all of the Person objects that have these rights.
      *
-     * @var Alpha\Model\Type\Relation
+     * @var \Alpha\Model\Type\Relation
      *
      * @since 1.0
      */
@@ -89,7 +89,7 @@ class Rights extends ActiveRecord
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.1
      */
@@ -119,7 +119,7 @@ class Rights extends ActiveRecord
     /**
      * Get the group members Relation.
      *
-     * @return Alpha\Model\Type\Relation
+     * @return \Alpha\Model\Type\Relation
      *
      * @since 1.0
      */

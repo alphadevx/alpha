@@ -56,7 +56,7 @@ class SequenceTest extends ModelTestCase
     /**
      * a Sequence for testing.
      *
-     * @var Alpha\Model\Type\Sequence
+     * @var \Alpha\Model\Type\Sequence
      *
      * @since 1.0
      */

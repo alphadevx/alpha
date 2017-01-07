@@ -154,7 +154,7 @@ class Request
      *
      * @param array $overrides Hash array of PHP super globals to override
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 2.0
      */
@@ -269,7 +269,7 @@ class Request
      *
      * @param string $method
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 2.0
      */

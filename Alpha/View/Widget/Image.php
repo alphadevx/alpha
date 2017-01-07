@@ -79,7 +79,7 @@ class Image
     /**
      * The width of the image (can differ from the source file when scale=true).
      *
-     * @var Alpha\Model\Type\Integer
+     * @var \Alpha\Model\Type\Integer
      *
      * @since 1.0
      */
@@ -88,7 +88,7 @@ class Image
     /**
      * The height of the image (can differ from the source file when scale=true).
      *
-     * @var Alpha\Model\Type\Integer
+     * @var \Alpha\Model\Type\Integer
      *
      * @since 1.0
      */
@@ -97,7 +97,7 @@ class Image
     /**
      * The file type of the source image (gif, jpg, or png supported).
      *
-     * @var Alpha\Model\Type\Enum
+     * @var \Alpha\Model\Type\Enum
      *
      * @since 1.0
      */
@@ -106,7 +106,7 @@ class Image
     /**
      * The quality of the jpg image generated (0.00 to 1.00, 0.75 by default).
      *
-     * @var Alpha\Model\Type\Double
+     * @var \Alpha\Model\Type\Double
      *
      * @since 1.0
      */
@@ -116,7 +116,7 @@ class Image
      * Flag to determine if the image will scale to match the target resolution (false
      * by default).
      *
-     * @var Alpha\Model\Type\Boolean
+     * @var \Alpha\Model\Type\Boolean
      *
      * @since 1.0
      */
@@ -126,7 +126,7 @@ class Image
      * Flag to determine if the link to the image will change every 24hrs, making hot-linking
      * to the image difficult (false by default).
      *
-     * @var Alpha\Model\Type\Boolean
+     * @var \Alpha\Model\Type\Boolean
      *
      * @since 1.0
      */
@@ -144,7 +144,7 @@ class Image
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -160,7 +160,7 @@ class Image
      * @param $quality
      * @param $scale
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
@@ -225,7 +225,7 @@ class Image
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     private function setFilename()
     {

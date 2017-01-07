@@ -57,7 +57,7 @@ class PhpinfoController extends Controller implements ControllerInterface
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 2.0.3
      */
@@ -87,9 +87,9 @@ class PhpinfoController extends Controller implements ControllerInterface
     /**
      * Handle GET requests.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
      * @since 2.0.3
      */

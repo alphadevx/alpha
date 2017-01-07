@@ -54,7 +54,7 @@ class ActionLog extends ActiveRecord
     /**
      * The HTTP user-agent client string.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.2.2
      */
@@ -63,7 +63,7 @@ class ActionLog extends ActiveRecord
     /**
      * The IP of the client.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.2.2
      */
@@ -72,7 +72,7 @@ class ActionLog extends ActiveRecord
     /**
      * The action carried out by the person should be described here.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.2.2
      */
@@ -81,7 +81,7 @@ class ActionLog extends ActiveRecord
     /**
      * The person who carried out the action.
      *
-     * @var Alpha\Model\Person
+     * @var \Alpha\Model\Person
      *
      * @since 2.0
      */
@@ -108,7 +108,7 @@ class ActionLog extends ActiveRecord
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.2.2
      */

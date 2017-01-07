@@ -55,7 +55,7 @@ class Sequence extends ActiveRecord implements TypeInterface
     /**
      * The string prefix (must be capital alphabet characters only).
      *
-     * @var Alpha\Model\String
+     * @var \Alpha\Model\String
      *
      * @since 1.0
      */
@@ -64,7 +64,7 @@ class Sequence extends ActiveRecord implements TypeInterface
     /**
      * The integer sequence number incremented for each Sequence value with this prefix.
      *
-     * @var Alpha\Model\Integer
+     * @var \Alpha\Model\Integer
      *
      * @since 1.0
      */
@@ -226,7 +226,7 @@ class Sequence extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function setValue($val)
     {

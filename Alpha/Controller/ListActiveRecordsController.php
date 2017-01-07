@@ -59,7 +59,7 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */

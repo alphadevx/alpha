@@ -53,7 +53,7 @@ class EmailProviderFactory
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 2.0
      */
@@ -65,9 +65,9 @@ class EmailProviderFactory
      *
      * @param $providerName The class name of the provider class (fully qualified).
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
-     * @return Alpha\Util\Http\Email\EmailProviderInterface
+     * @return \Alpha\Util\Http\Email\EmailProviderInterface
      *
      * @since 2.0
      */

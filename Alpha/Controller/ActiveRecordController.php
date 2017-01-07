@@ -127,7 +127,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 2.0
      */
@@ -156,12 +156,12 @@ class ActiveRecordController extends Controller implements ControllerInterface
     /**
      * Handle GET requests.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
-     * @throws Alpha\Exception\ResourceNotFoundException
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\ResourceNotFoundException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
      * @since 2.0
      */
@@ -343,12 +343,12 @@ class ActiveRecordController extends Controller implements ControllerInterface
     /**
      * Method to handle POST requests.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
-     * @throws Alpha\Exception\IllegalArguementException
-     * @throws Alpha\Exception\SecurityException
+     * @throws \Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\SecurityException
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
      * @since 2.0
      */
@@ -431,12 +431,12 @@ class ActiveRecordController extends Controller implements ControllerInterface
     /**
      * Method to handle PUT requests.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
-     * @throws Alpha\Exception\IllegalArguementException
-     * @throws Alpha\Exception\SecurityException
+     * @throws \Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\SecurityException
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
      * @since 2.0
      */
@@ -523,12 +523,12 @@ class ActiveRecordController extends Controller implements ControllerInterface
     /**
      * Method to handle DELETE requests.
      *
-     * @param Alpha\Util\Http\Request $request
+     * @param \Alpha\Util\Http\Request $request
      *
-     * @throws Alpha\Exception\IllegalArguementException
-     * @throws Alpha\Exception\SecurityException
+     * @throws \Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\SecurityException
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
      * @since 2.0
      */

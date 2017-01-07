@@ -111,7 +111,7 @@ class Date extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function __construct($date = '')
     {
@@ -146,7 +146,7 @@ class Date extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function setValue($date)
     {
@@ -160,7 +160,7 @@ class Date extends Type implements TypeInterface
      * @param int $month
      * @param int $day
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
@@ -293,7 +293,7 @@ class Date extends Type implements TypeInterface
      *
      * @param string $date
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */

@@ -52,7 +52,7 @@ class ConfigProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * A copy of the global config singleton that we will use for testing.
      *
-     * @var Alpha\Util\Config\ConfigProvider
+     * @var \Alpha\Util\Config\ConfigProvider
      */
     private $configCopy;
 

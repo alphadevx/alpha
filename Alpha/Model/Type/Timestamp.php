@@ -136,7 +136,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function __construct($timestamp = '')
     {
@@ -194,7 +194,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function setTimestampValue($year, $month, $day, $hour, $minute, $second)
     {
@@ -293,7 +293,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function setDate($year, $month, $day)
     {
@@ -428,7 +428,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function setTime($hour, $minute, $second)
     {
@@ -460,7 +460,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function populateFromString($dateTime)
     {

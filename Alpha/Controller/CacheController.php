@@ -70,7 +70,7 @@ class CacheController extends Controller implements ControllerInterface
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -100,11 +100,11 @@ class CacheController extends Controller implements ControllerInterface
     /**
      * Handle GET requests.
      *
-     * @param Alpha\Util\Http\Response $request
+     * @param \Alpha\Util\Http\Response $request
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
      * @since 1.0
      */
@@ -180,12 +180,12 @@ class CacheController extends Controller implements ControllerInterface
     /**
      * Handle POST requests.
      *
-     * @param Alpha\Util\Http\Response $request
+     * @param \Alpha\Util\Http\Response $request
      *
-     * @throws Alpha\Exception\SecurityException
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\SecurityException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
      * @since 1.0
      */

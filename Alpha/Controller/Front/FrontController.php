@@ -147,7 +147,7 @@ class FrontController
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -156,7 +156,7 @@ class FrontController
     /**
      * The constructor method.
      *
-     * @throws Alpha\Exception\BadRequestException
+     * @throws \Alpha\Exception\BadRequestException
      *
      * @since 1.0
      */
@@ -412,7 +412,7 @@ class FrontController
     /**
      * Method to decode the current query string.
      *
-     * @throws Alpha\Exception\SecurityException
+     * @throws \Alpha\Exception\SecurityException
      *
      * @since 1.0
      * @deprecated
@@ -520,9 +520,9 @@ class FrontController
     /**
      * Add the supplied filter object to the list of filters ran on each request to the front controller.
      *
-     * @param Alpha\Util\Http\Filter\FilterInterface $filterObject
+     * @param \Alpha\Util\Http\Filter\FilterInterface $filterObject
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
@@ -554,9 +554,9 @@ class FrontController
      * @param string   $URI      The URL to match, can include params within curly {} braces.
      * @param callable $callback The method to service the matched requests (should return a Response!).
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
-     * @return Alpha\Controller\Front\FrontController
+     * @return \Alpha\Controller\Front\FrontController
      *
      * @since 2.0
      */
@@ -578,7 +578,7 @@ class FrontController
      * @param string $param        The param name (as defined on the route between {} braces)
      * @param mixed  $defaultValue The value to use
      *
-     * @return Alpha\Controller\Front\FrontController
+     * @return \Alpha\Controller\Front\FrontController
      *
      * @since 2.0
      */
@@ -596,7 +596,7 @@ class FrontController
      *
      * @return callable
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 2.0
      */
@@ -640,13 +640,13 @@ class FrontController
     /**
      * Processes the supplied request by invoking the callable defined matching the request's URI.
      *
-     * @param Alpha\Util\Http\Request $request The request to process
+     * @param \Alpha\Util\Http\Request $request The request to process
      *
-     * @return Alpha\Util\Http\Response
+     * @return \Alpha\Util\Http\Response
      *
-     * @throws Alpha\Exception\ResourceNotFoundException
-     * @throws Alpha\Exception\ResourceNotAllowedException
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\ResourceNotFoundException
+     * @throws \Alpha\Exception\ResourceNotAllowedException
+     * @throws \Alpha\Exception\AlphaException
      *
      * @since 2.0
      */

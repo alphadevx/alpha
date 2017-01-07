@@ -60,7 +60,7 @@ class ConfigProvider
     /**
      * The config object singleton.
      *
-     * @var Alpha\Util\Config\ConfigProvider
+     * @var \Alpha\Util\Config\ConfigProvider
      *
      * @since 1.0
      */
@@ -87,7 +87,7 @@ class ConfigProvider
     /**
      * Get the config object instance.
      *
-     * @return Alpha\Util\Config\ConfigProvider
+     * @return \Alpha\Util\Config\ConfigProvider
      *
      * @since 1.0
      */
@@ -119,7 +119,7 @@ class ConfigProvider
      *
      * @return string
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */

@@ -53,7 +53,7 @@ class HighlightProviderFactory
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.2
      */
@@ -65,9 +65,9 @@ class HighlightProviderFactory
      *
      * @param $providerName The fully-qualified class name of the provider class, should implement Alpha\Util\Code\Highlight\HighlightProviderInterface
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
-     * @return Alpha\Util\Code\Highlight\HighlightProviderInterface
+     * @return \Alpha\Util\Code\Highlight\HighlightProviderInterface
      *
      * @since 1.2
      */

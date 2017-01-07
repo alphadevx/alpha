@@ -58,7 +58,7 @@ class Person extends ActiveRecord
     /**
      * The forum display name of the person.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -67,7 +67,7 @@ class Person extends ActiveRecord
     /**
      * The email address for the person.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -76,7 +76,7 @@ class Person extends ActiveRecord
     /**
      * The password for the person.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -85,7 +85,7 @@ class Person extends ActiveRecord
     /**
      * A Relation containing all of the rights groups that this person belongs to.
      *
-     * @var Alpha\Model\Type\Relation
+     * @var \Alpha\Model\Type\Relation
      *
      * @since 1.0
      */
@@ -94,7 +94,7 @@ class Person extends ActiveRecord
     /**
      * A Relation containing all of the actions carried out by this person.
      *
-     * @var Alpha\Model\Type\Relation
+     * @var \Alpha\Model\Type\Relation
      *
      * @since 1.2.2
      */
@@ -137,7 +137,7 @@ class Person extends ActiveRecord
     /**
      * The website URL of the person.
      *
-     * @var Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -146,7 +146,7 @@ class Person extends ActiveRecord
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -300,7 +300,7 @@ class Person extends ActiveRecord
     /**
      * Getter for displayName.
      *
-     * @return Alpha\Model\Type\SmallText
+     * @return \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
@@ -367,7 +367,7 @@ class Person extends ActiveRecord
      *
      * @param string $groupName
      *
-     * @throws Alpha\Exception\RecordNotFoundException
+     * @throws \Alpha\Exception\RecordNotFoundException
      *
      * @since 2.0
      */
@@ -396,7 +396,7 @@ class Person extends ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\MailNotSentException
+     * @throws \Alpha\Exception\MailNotSentException
      */
     public function sendMail($message, $subject)
     {

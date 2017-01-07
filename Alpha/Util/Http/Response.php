@@ -157,7 +157,7 @@ class Response
      * @param string $body    The body of the response (optional).
      * @param array  $headers The headers to set on the response (optional).
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function __construct($status, $body = null, $headers = array())
     {
@@ -225,7 +225,7 @@ class Response
      *
      * @param int $status The response code.
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 2.0
      */
@@ -343,7 +343,7 @@ class Response
      *
      * @param string $URL The URL to redirect the client to.
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 2.0
      */

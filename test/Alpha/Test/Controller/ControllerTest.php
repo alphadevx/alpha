@@ -67,7 +67,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * Sample controller for testing with.
      *
-     * @var Alpha\Controller\ImageController
+     * @var \Alpha\Controller\ImageController
      *
      * @since 1.0
      */
@@ -76,7 +76,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * An Article object for testing.
      *
-     * @var Alpha\Model\Article
+     * @var \Alpha\Model\Article
      *
      * @since 1.0
      */
@@ -85,7 +85,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * A Person object for testing (any business object will do).
      *
-     * @var Alpha\Model\Person
+     * @var \Alpha\Model\Person
      *
      * @since 1.0
      */
@@ -94,7 +94,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * Test rights group.
      *
-     * @var Alpha\Model\Rights
+     * @var \Alpha\Model\Rights
      *
      * @since 1.0
      */
@@ -183,7 +183,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * Creates a person object for Testing.
      *
-     * @return Alpha\Model\Person
+     * @return \Alpha\Model\Person
      *
      * @since 1.0
      */
@@ -201,7 +201,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * Creates an article object for Testing.
      *
-     * @return Alpha\Model\Article
+     * @return \Alpha\Model\Article
      *
      * @since 1.0
      */

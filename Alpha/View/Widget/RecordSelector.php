@@ -59,7 +59,7 @@ class RecordSelector
     /**
      * The relation object that we are going to render a view for.
      *
-     * @var Alpha\Model\Type\Relation
+     * @var \Alpha\Model\Type\Relation
      *
      * @since 1.0
      */
@@ -105,7 +105,7 @@ class RecordSelector
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -114,14 +114,14 @@ class RecordSelector
     /**
      * The constructor.
      *
-     * @param Alpha\Model\Type\Relation $relation
+     * @param \Alpha\Model\Type\Relation $relation
      * @param string                    $label
      * @param string                    $name
      * @param string                    $accessingClassName
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function __construct($relation, $label = '', $name = '', $accessingClassName = '')
     {

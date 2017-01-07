@@ -60,7 +60,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     /**
      * Blacklisted client string.
      *
-     * @var Alpha\Model\BlacklistedClient
+     * @var \Alpha\Model\BlacklistedClient
      *
      * @since 1.0
      */
@@ -69,7 +69,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     /**
      * Blacklisted IP.
      *
-     * @var Alpha\Model\BlacklistedIP
+     * @var \Alpha\Model\BlacklistedIP
      *
      * @since 1.2.3
      */
@@ -105,7 +105,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     /**
      * A test BadRequest.
      *
-     * @var Alpha\Model\BadRequest
+     * @var \Alpha\Model\BadRequest
      *
      * @since 1.0
      */
@@ -114,7 +114,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     /**
      * A test BadRequestObject.
      *
-     * @var Alpha\Model\BadRequest
+     * @var \Alpha\Model\BadRequest
      *
      * @since 1.0
      */
@@ -123,7 +123,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     /**
      * A test BadRequestObject.
      *
-     * @var Alpha\Model\BadRequest
+     * @var \Alpha\Model\BadRequest
      *
      * @since 1.0
      */
