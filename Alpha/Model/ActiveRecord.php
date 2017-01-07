@@ -85,7 +85,7 @@ abstract class ActiveRecord
     /**
      * The version number of the object, used for locking mechanism.
      *
-     * @var Alpha\Model\Type\Integer
+     * @var \Alpha\Model\Type\Integer
      *
      * @since 1.0
      */
@@ -94,7 +94,7 @@ abstract class ActiveRecord
     /**
      * The timestamp of creation.
      *
-     * @var Alpha\Model\Type\Timestamp
+     * @var \Alpha\Model\Type\Timestamp
      *
      * @since 1.0
      */
@@ -103,7 +103,7 @@ abstract class ActiveRecord
     /**
      * The OID of the person who created this BO.
      *
-     * @var Alpha\Model\Type\Integer
+     * @var \Alpha\Model\Type\Integer
      *
      * @since 1.0
      */
@@ -112,7 +112,7 @@ abstract class ActiveRecord
     /**
      * The timestamp of the last update.
      *
-     * @var Alpha\Model\Type\Timestamp
+     * @var \Alpha\Model\Type\Timestamp
      *
      * @since 1.0
      */
@@ -121,7 +121,7 @@ abstract class ActiveRecord
     /**
      * The OID of the person who last updated this BO.
      *
-     * @var Alpha\Model\Type\Integer
+     * @var \Alpha\Model\Type\Integer
      *
      * @since 1.0
      */
@@ -166,7 +166,7 @@ abstract class ActiveRecord
     /**
      * Trace logger.
      *
-     * @var Alpha\Util\Logging\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -230,7 +230,7 @@ abstract class ActiveRecord
      *
      * @since 1.1
      *
-     * @throws Alpha\Exception\CustomQueryException
+     * @throws \Alpha\Exception\CustomQueryException
      */
     public function query($sqlQuery)
     {
@@ -254,7 +254,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\RecordNotFoundException
+     * @throws \Alpha\Exception\RecordNotFoundException
      */
     public function load($OID, $version = 0)
     {
@@ -297,7 +297,7 @@ abstract class ActiveRecord
      *
      * @since 2.0
      *
-     * @throws Alpha\Exception\RecordFoundException
+     * @throws \Alpha\Exception\RecordFoundException
      */
     public function loadAllOldVersions($OID)
     {
@@ -323,7 +323,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\RecordNotFoundException
+     * @throws \Alpha\Exception\RecordNotFoundException
      */
     public function loadByAttribute($attribute, $value, $ignoreClassType = false, $loadAttributes = array())
     {
@@ -365,7 +365,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\RecordNotFoundException
+     * @throws \Alpha\Exception\RecordNotFoundException
      */
     public function loadAll($start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false)
     {
@@ -405,8 +405,8 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\RecordNotFoundException
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\RecordNotFoundException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
     {
@@ -445,8 +445,8 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\RecordNotFoundException
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\RecordNotFoundException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false)
     {
@@ -490,7 +490,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\RecordNotFoundException
+     * @throws \Alpha\Exception\RecordNotFoundException
      */
     public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false)
     {
@@ -528,7 +528,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\RecordNotFoundException
+     * @throws \Alpha\Exception\RecordNotFoundException
      */
     public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order = 'ASC', $ignoreClassType = false)
     {
@@ -549,9 +549,9 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\FailedSaveException
-     * @throws Alpha\Exception\LockingException
-     * @throws Alpha\Exception\ValidationException
+     * @throws \Alpha\Exception\FailedSaveException
+     * @throws \Alpha\Exception\LockingException
+     * @throws \Alpha\Exception\ValidationException
      */
     public function save()
     {
@@ -566,8 +566,6 @@ abstract class ActiveRecord
         // firstly we will validate the object before we try to save it
         if (!$this->validate()) {
             throw new FailedSaveException('Could not save due to a validation error.');
-
-            return;
         } else {
             $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
             $provider->save();
@@ -592,8 +590,8 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
-     * @throws Alpha\Exception\FailedSaveException
+     * @throws \Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\FailedSaveException
      */
     public function saveAttribute($attribute, $value)
     {
@@ -633,7 +631,7 @@ abstract class ActiveRecord
      *
      * @since 1.2
      *
-     * @throws FailedSaveException
+     * @throws \Alpha\Exception\FailedSaveException
      */
     public function saveHistory()
     {
@@ -656,11 +654,9 @@ abstract class ActiveRecord
     /**
      * Validates the object to be saved.
      *
-     * @return bool
-     *
      * @since 1.0
      *
-     * @throws ValidationException
+     * @throws \Alpha\Exception\ValidationException
      */
     protected function validate()
     {
@@ -669,8 +665,6 @@ abstract class ActiveRecord
         if (method_exists($this, 'before_validate_callback')) {
             $this->before_validate_callback();
         }
-
-        $valid = true;
 
         // get the class attributes
         $reflection = new ReflectionClass(get_class($this));
@@ -686,8 +680,8 @@ abstract class ActiveRecord
                 mb_strtoupper($propClass) != 'DENUMITEM' &&
                 mb_strtoupper($propClass) != 'BOOLEAN') {
                     if ($this->getPropObject($propName) != false && !preg_match($this->getPropObject($propName)->getRule(), $this->getPropObject($propName)->getValue())) {
+                        self::$logger->debug('<<validate');
                         throw new ValidationException('Failed to save, validation error is: '.$this->getPropObject($propName)->getHelper());
-                        $valid = false;
                     }
                 }
             }
@@ -697,9 +691,7 @@ abstract class ActiveRecord
             $this->after_validate_callback();
         }
 
-        self::$logger->debug('<<validate ['.$valid.']');
-
-        return $valid;
+        self::$logger->debug('<<validate');
     }
 
     /**
@@ -707,7 +699,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\FailedDeleteException
+     * @throws \Alpha\Exception\FailedDeleteException
      */
     public function delete()
     {
@@ -803,7 +795,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\FailedDeleteException
+     * @throws \Alpha\Exception\FailedDeleteException
      */
     public function deleteAllByAttribute($attribute, $value)
     {
@@ -827,10 +819,8 @@ abstract class ActiveRecord
 
             return 0;
         } catch (AlphaException $e) {
-            throw new FailedDeleteException('Failed to delete objects, error is ['.$e->getMessage().']');
             self::$logger->debug('<<deleteAllByAttribute [0]');
-
-            return 0;
+            throw new FailedDeleteException('Failed to delete objects, error is ['.$e->getMessage().']');
         }
 
         if (method_exists($this, 'after_deleteAllByAttribute_callback')) {
@@ -849,7 +839,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\RecordNotFoundException
+     * @throws \Alpha\Exception\RecordNotFoundException
      */
     public function getVersion()
     {
@@ -878,7 +868,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function makeTable()
     {
@@ -907,7 +897,7 @@ abstract class ActiveRecord
      *
      * @since 1.2
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function makeHistoryTable()
     {
@@ -936,7 +926,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function rebuildTable()
     {
@@ -965,7 +955,7 @@ abstract class ActiveRecord
      *
      * @param string $tableName Optional table name, leave blank for the defined table for this class to be dropped
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function dropTable($tableName = null)
     {
@@ -995,7 +985,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function addProperty($propName)
     {
@@ -1074,7 +1064,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function getMAX()
     {
@@ -1108,8 +1098,8 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function getCount($attributes = array(), $values = array())
     {
@@ -1145,7 +1135,7 @@ abstract class ActiveRecord
      *
      * @since 1.2
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function getHistoryCount()
     {
@@ -1210,7 +1200,7 @@ abstract class ActiveRecord
     /**
      * Method for getting version number of the object.
      *
-     * @return Alpha\Model\Type\Integer The object version number.
+     * @return \Alpha\Model\Type\Integer The object version number.
      *
      * @since 1.0
      */
@@ -1227,7 +1217,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     protected function setEnumOptions()
     {
@@ -1261,8 +1251,8 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function get($prop, $noChildMethods = false)
     {
@@ -1312,10 +1302,8 @@ abstract class ActiveRecord
 
                 return $this->$prop;
             } else {
+                self::$logger->debug('<<get');
                 throw new AlphaException('Could not access the property ['.$prop.'] on the object of class ['.get_class($this).']');
-                self::$logger->debug('<<get [false])');
-
-                return false;
             }
         }
     }
@@ -1331,7 +1319,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function set($prop, $value, $noChildMethods = false)
     {
@@ -1386,7 +1374,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function getPropObject($prop)
     {
@@ -1441,7 +1429,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function checkTableExists($checkHistoryTable = false)
     {
@@ -1476,7 +1464,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public static function checkBOTableExists($BOClassName, $checkHistoryTable = false)
     {
@@ -1504,7 +1492,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function checkTableNeedsUpdate()
     {
@@ -1544,7 +1532,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function findMissingFields()
     {
@@ -1575,7 +1563,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function getTableName()
     {
@@ -1597,7 +1585,7 @@ abstract class ActiveRecord
     /**
      * Method for getting the OID of the person who created this BO.
      *
-     * @return Alpha\Model\Type\Integer The OID of the creator.
+     * @return \Alpha\Model\Type\Integer The OID of the creator.
      *
      * @since 1.0
      */
@@ -1612,7 +1600,7 @@ abstract class ActiveRecord
     /**
      * Method for getting the OID of the person who updated this BO.
      *
-     * @return Alpha\Model\Type\Integer The OID of the updator.
+     * @return \Alpha\Model\Type\Integer The OID of the updator.
      *
      * @since 1.0
      */
@@ -1627,7 +1615,7 @@ abstract class ActiveRecord
     /**
      * Method for getting the date/time of when the BO was created.
      *
-     * @return Alpha\Model\Type\Timestamp
+     * @return \Alpha\Model\Type\Timestamp
      *
      * @since 1.0
      */
@@ -1642,7 +1630,7 @@ abstract class ActiveRecord
     /**
      * Method for getting the date/time of when the BO was last updated.
      *
-     * @return Alpha\Model\Type\Timestamp
+     * @return \Alpha\Model\Type\Timestamp
      *
      * @since 1.0
      */
@@ -1734,7 +1722,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function getIndexes()
     {
@@ -1761,7 +1749,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\FailedIndexCreateException
+     * @throws \Alpha\Exception\FailedIndexCreateException
      */
     public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null)
     {
@@ -1802,7 +1790,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\FailedIndexCreateException
+     * @throws \Alpha\Exception\FailedIndexCreateException
      */
     public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '')
     {
@@ -1844,7 +1832,7 @@ abstract class ActiveRecord
      *
      * @param array $labels
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.2
      */
@@ -1870,7 +1858,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function getDataLabel($att)
     {
@@ -2086,7 +2074,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function reload()
     {
@@ -2107,7 +2095,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @deprecated Use autoloader!
      */
@@ -2142,7 +2130,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public function checkRecordExists($OID)
     {
@@ -2175,7 +2163,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\BadBOTableNameException
+     * @throws \Alpha\Exception\BadBOTableNameException
      */
     public function isTableOverloaded()
     {
@@ -2198,7 +2186,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public static function begin($BO = null)
     {
@@ -2231,7 +2219,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws Alpha\Exception\FailedSaveException
+     * @throws \Alpha\Exception\FailedSaveException
      */
     public static function commit($BO = null)
     {
@@ -2264,7 +2252,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @throws ALpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      */
     public static function rollback($BO = null)
     {
@@ -2373,9 +2361,9 @@ abstract class ActiveRecord
      * values will be copied accross.
      *
      * @param string                   $targetClassName The fully-qualified name of the target BO class.
-     * @param Alpha\Model\ActiveRecord $originalBO      The original business object.
+     * @param \Alpha\Model\ActiveRecord $originalBO      The original business object.
      *
-     * @return Alpha\Model\ActiveRecord The new business object resulting from the cast.
+     * @return \Alpha\Model\ActiveRecord The new business object resulting from the cast.
      *
      * @since 1.0
      */
@@ -2423,8 +2411,6 @@ abstract class ActiveRecord
      */
     public function getFriendlyClassName()
     {
-        $name = mb_substr(get_class($this), 0, -6);
-
         $reflectClass = new ReflectionClass($this);
 
         return $reflectClass->getShortname();
@@ -2538,7 +2524,7 @@ abstract class ActiveRecord
 
                 return true;
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             self::$logger->error('Error while attempting to load a business object from ['.$config->get('cache.provider.name').']
              instance: ['.$e->getMessage().']');
 
@@ -2579,7 +2565,7 @@ abstract class ActiveRecord
      *
      * @param bool $maintainHistory
      *
-     * @throws ALpha\Exception\IllegalArguementException
+     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.2
      */
@@ -2655,7 +2641,7 @@ abstract class ActiveRecord
     /**
      * Creates the configured database.
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      *
      * @since 2.0
      */
@@ -2670,7 +2656,7 @@ abstract class ActiveRecord
     /**
      * Drops the configured database.
      *
-     * @throws Alpha\Exception\AlphaException
+     * @throws \Alpha\Exception\AlphaException
      *
      * @since 2.0
      */
