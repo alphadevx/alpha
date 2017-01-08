@@ -316,7 +316,7 @@ abstract class ActiveRecord
     /**
      * Populates the child object from the database table by the given attribute value.
      *
-     * @param string $atribute        The name of the attribute to load the object by.
+     * @param string $attribute       The name of the attribute to load the object by.
      * @param string $value           The value of the attribute to load the object by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
      * @param array  $loadAttributes  The attributes to load from the database to this object (leave blank to load all attributes)
@@ -392,7 +392,7 @@ abstract class ActiveRecord
     /**
      * Loads all of the objects of this class by the specified attribute into an array which is returned.
      *
-     * @param string $atribute        The attribute to load the objects by.
+     * @param string $attribute       The attribute to load the objects by.
      * @param string $value           The value of the attribute to load the objects by.
      * @param int    $start           The start of the SQL LIMIT clause, useful for pagination.
      * @param int    $limit           The amount (limit) of objects to load, useful for pagination.
@@ -433,7 +433,7 @@ abstract class ActiveRecord
     /**
      * Loads all of the objects of this class by the specified attributes into an array which is returned.
      *
-     * @param array  $atributes       The attributes to load the objects by.
+     * @param array  $attributes      The attributes to load the objects by.
      * @param array  $values          The values of the attributes to load the objects by.
      * @param int    $start           The start of the SQL LIMIT clause, useful for pagination.
      * @param int    $limit           The amount (limit) of objects to load, useful for pagination.
@@ -1089,8 +1089,8 @@ abstract class ActiveRecord
     /**
      * Gets the count from the database for the amount of objects of this class.
      *
-     * @param array $atributes The attributes to count the objects by (optional).
-     * @param array $values    The values of the attributes to count the objects by (optional).
+     * @param array $attributes The attributes to count the objects by (optional).
+     * @param array $values     The values of the attributes to count the objects by (optional).
      *
      * @return int
      *
@@ -1344,7 +1344,7 @@ abstract class ActiveRecord
                 }
 
                 // complex types will have a setValue() method to call
-                if (is_object($this->$prop) && get_class($this->$prop) != false) {
+                if (is_object($this->$prop) && get_class($this->$prop) !== false) {
                     if (mb_strtoupper(get_class($this->$prop)) != 'DATE' && mb_strtoupper(get_class($this->$prop)) != 'TIMESTAMP') {
                         $this->$prop->setValue($value);
                     } else {
@@ -1368,7 +1368,7 @@ abstract class ActiveRecord
      *
      * @param string $prop The name of the property we are getting.
      *
-     * @return \Alpha\Model\Type\TypeInterface The complex type object found.
+     * @return \Alpha\Model\Type\TypeInterface|bool The complex type object found.
      *
      * @since 1.0
      *
@@ -1412,10 +1412,9 @@ abstract class ActiveRecord
                 return $this->$prop;
             }
         }
-        throw new IllegalArguementException('Could not access the property object ['.$prop.'] on the object of class ['.get_class($this).']');
-        self::$logger->debug('<<getPropObject [false]');
 
-        return false;
+        self::$logger->debug('<<getPropObject');
+        throw new IllegalArguementException('Could not access the property object ['.$prop.'] on the object of class ['.get_class($this).']');
     }
 
     /**
@@ -1742,7 +1741,6 @@ abstract class ActiveRecord
      * @param string $attributeName         The name of the attribute to apply the index on.
      * @param string $relatedClass          The name of the related class in the format "NameObject".
      * @param string $relatedClassAttribute The name of the field to relate to on the related class.
-     * @param bool   $allowNullValues       For foreign key indexes that don't allow null values, set this to false (default is true).
      * @param string $indexName             The optional name for the index, will calculate if not provided.
      *
      * @since 1.0
@@ -1867,10 +1865,8 @@ abstract class ActiveRecord
 
             return $this->dataLabels[$att];
         } else {
+            self::$logger->debug('<<getDataLabel');
             throw new IllegalArguementException('No data label found on the class ['.get_class($this).'] for the attribute ['.$att.']');
-            self::$logger->debug('<<getDataLabel [])');
-
-            return '';
         }
     }
 
