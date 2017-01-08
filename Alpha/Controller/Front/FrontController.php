@@ -171,7 +171,6 @@ class FrontController
         mb_internal_encoding('UTF-8');
         mb_http_output('UTF-8');
         mb_http_input('UTF-8');
-        ini_set('default_charset', 'utf-8');
         if (!mb_check_encoding()) {
             throw new BadRequestException('Request character encoding does not match expected UTF-8');
         }
