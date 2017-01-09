@@ -314,7 +314,7 @@ class Article extends ActiveRecord
      */
     protected function after_loadByAttribute_callback()
     {
-        $this->after_load_callback();
+        $this->{'after_load_callback'}();
     }
 
     /**

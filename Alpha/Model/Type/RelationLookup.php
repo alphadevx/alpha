@@ -232,7 +232,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
         self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
 
         if (method_exists($this, 'before_loadAllByAttribute_callback')) {
-            $this->before_loadAllByAttribute_callback();
+            $this->{'before_loadAllByAttribute_callback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -241,7 +241,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
         $objects = $provider->loadAllByAttribute($attribute, $value, $start, $limit, $orderBy, $order, $ignoreClassType, array($this->leftClassName, $this->rightClassName));
 
         if (method_exists($this, 'after_loadAllByAttribute_callback')) {
-            $this->after_loadAllByAttribute_callback();
+            $this->{'after_loadAllByAttribute_callback'}();
         }
 
         self::$logger->debug('<<loadAllByAttribute ['.count($objects).']');
@@ -263,7 +263,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
             $start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
         if (method_exists($this, 'before_loadAllByAttributes_callback')) {
-            $this->before_loadAllByAttributes_callback();
+            $this->{'before_loadAllByAttributes_callback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -277,7 +277,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
         $objects = $provider->loadAllByAttributes($attributes, $values, $start, $limit, $orderBy, $order, $ignoreClassType, array($this->leftClassName, $this->rightClassName));
 
         if (method_exists($this, 'after_loadAllByAttributes_callback')) {
-            $this->after_loadAllByAttributes_callback();
+            $this->{'after_loadAllByAttributes_callback'}();
         }
 
         self::$logger->debug('<<loadAllByAttributes ['.count($objects).']');

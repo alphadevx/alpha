@@ -1725,7 +1725,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         if (!$dbError) {
             if (method_exists($this, 'after_setEnumOptions_callback')) {
-                $this->after_setEnumOptions_callback();
+                $this->{'after_setEnumOptions_callback'}();
             }
         } else {
             throw new AlphaException('Failed to load enum options correctly for object instance of class ['.get_class($this).']');

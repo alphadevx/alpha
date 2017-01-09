@@ -147,7 +147,7 @@ class ConfigProvider
          * files, you can override this class and implement this callback method
          */
         if (method_exists($this, 'before_set_callback')) {
-            $val = $this->before_set_callback($key, $val, $this->configVars);
+            $val = $this->{'before_set_callback('.$key.', '.$val.', '.$this->configVars.')'};
         }
 
         $this->configVars[$key] = $val;

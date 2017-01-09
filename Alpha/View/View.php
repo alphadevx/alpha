@@ -215,7 +215,7 @@ class View
         self::$logger->debug('>>createView(fields=['.var_export($fields, true).'])');
 
         if (method_exists($this, 'before_createView_callback')) {
-            $this->before_createView_callback();
+            $this->{'before_createView_callback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -223,7 +223,7 @@ class View
         $body = self::$provider->createView($fields);
 
         if (method_exists($this, 'after_createView_callback')) {
-            $this->after_createView_callback();
+            $this->{'after_createView_callback'}();
         }
 
         self::$logger->debug('<<createView');
@@ -245,7 +245,7 @@ class View
         self::$logger->debug('>>editView(fields=['.var_export($fields, true).'])');
 
         if (method_exists($this, 'before_editView_callback')) {
-            $this->before_editView_callback();
+            $this->{'before_editView_callback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -253,7 +253,7 @@ class View
         $body = self::$provider->editView($fields);
 
         if (method_exists($this, 'after_editView_callback')) {
-            $this->after_editView_callback();
+            $this->{'after_editView_callback'}();
         }
 
         self::$logger->debug('<<editView');
@@ -275,7 +275,7 @@ class View
         self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
 
         if (method_exists($this, 'before_listView_callback')) {
-            $this->before_listView_callback();
+            $this->{'before_listView_callback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -283,7 +283,7 @@ class View
         $body = self::$provider->listView($fields);
 
         if (method_exists($this, 'after_listView_callback')) {
-            $this->after_listView_callback();
+            $this->{'after_listView_callback'}();
         }
 
         self::$logger->debug('<<listView');
@@ -305,7 +305,7 @@ class View
         self::$logger->debug('>>detailedView(fields=['.var_export($fields, true).'])');
 
         if (method_exists($this, 'before_detailedView_callback')) {
-            $this->before_detailedView_callback();
+            $this->{'before_detailedView_callback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -313,7 +313,7 @@ class View
         $body = self::$provider->detailedView($fields);
 
         if (method_exists($this, 'after_detailedView_callback')) {
-            $this->after_detailedView_callback();
+            $this->{'after_detailedView_callback'}();
         }
 
         self::$logger->debug('<<detailedView');
@@ -335,7 +335,7 @@ class View
         self::$logger->debug('>>adminView(fields=['.var_export($fields, true).'])');
 
         if (method_exists($this, 'before_adminView_callback')) {
-            $this->before_adminView_callback();
+            $this->{'before_adminView_callback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -343,7 +343,7 @@ class View
         $body = self::$provider->adminView($fields);
 
         if (method_exists($this, 'after_adminView_callback')) {
-            $this->after_adminView_callback();
+            $this->{'after_adminView_callback'}();
         }
 
         self::$logger->debug('<<adminView');

@@ -326,6 +326,6 @@ class Tag extends ActiveRecord
      */
     protected function before_delete_callback()
     {
-        $this->after_save_callback();
+        $this->{'after_save_callback'}();
     }
 }

@@ -145,7 +145,7 @@ class ArticleView extends View
     public function editView($fields = array())
     {
         if (method_exists($this, 'before_editView_callback')) {
-            $this->before_editView_callback();
+            $this->{'before_editView_callback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -219,7 +219,7 @@ class ArticleView extends View
         $fields['fileAttachments'] = $this->renderFileUploadSection();
 
         if (method_exists($this, 'after_editView_callback')) {
-            $this->after_editView_callback();
+            $this->{'after_editView_callback'}();
         }
 
         return $this->loadTemplate($this->BO, 'edit', $fields);

@@ -92,7 +92,7 @@ class SequenceView extends View
         self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
 
         if (method_exists($this, 'before_listView_callback')) {
-            $this->before_listView_callback();
+            $this->{'before_listView_callback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -176,7 +176,7 @@ class SequenceView extends View
         $html = $this->loadTemplate($this->BO, 'list', $fields);
 
         if (method_exists($this, 'after_listView_callback')) {
-            $this->after_listView_callback();
+            $this->{'after_listView_callback'}();
         }
 
         self::$logger->debug('<<listView');
@@ -196,7 +196,7 @@ class SequenceView extends View
         self::$logger->debug('>>detailedView(fields=['.var_export($fields, true).'])');
 
         if (method_exists($this, 'before_detailedView_callback')) {
-            $this->before_detailedView_callback();
+            $this->{'before_detailedView_callback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -217,7 +217,7 @@ class SequenceView extends View
         $html = $this->loadTemplate($this->BO, 'detail', $fields);
 
         if (method_exists($this, 'after_detailedView_callback')) {
-            $this->after_detailedView_callback();
+            $this->{'after_detailedView_callback'}();
         }
 
         self::$logger->debug('<<detailedView');

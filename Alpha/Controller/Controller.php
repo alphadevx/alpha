@@ -472,7 +472,7 @@ abstract class Controller
         self::$logger->debug('>>setUnitOfWork(jobs=['.var_export($jobs, true).'])');
 
         if (method_exists($this, 'before_setUnitOfWork_callback')) {
-            $this->before_setUnitOfWork_callback();
+            $this->{'before_setUnitOfWork_callback'}();
         }
 
         if (!is_array($jobs)) {
@@ -539,7 +539,7 @@ abstract class Controller
         $session->set('unitOfWork', $jobs);
 
         if (method_exists($this, 'after_setUnitOfWork_callback')) {
-            $this->after_setUnitOfWork_callback();
+            $this->{'after_setUnitOfWork_callback'}();
         }
 
         self::$logger->debug('<<setUnitOfWork');
@@ -704,7 +704,7 @@ abstract class Controller
         self::$logger->debug('>>markDirty(object=['.var_export($object, true).'])');
 
         if (method_exists($this, 'before_markDirty_callback')) {
-            $this->before_markDirty_callback();
+            $this->{'before_markDirty_callback'}();
         }
 
         $this->dirtyObjects[count($this->dirtyObjects)] = $object;
@@ -716,7 +716,7 @@ abstract class Controller
         $session->set('dirtyObjects', $this->dirtyObjects);
 
         if (method_exists($this, 'after_markDirty_callback')) {
-            $this->after_markDirty_callback();
+            $this->{'after_markDirty_callback'}();
         }
 
         self::$logger->debug('<<markDirty');
@@ -749,7 +749,7 @@ abstract class Controller
         self::$logger->debug('>>markNew(object=['.var_export($object, true).'])');
 
         if (method_exists($this, 'before_markNew_callback')) {
-            $this->before_markNew_callback();
+            $this->{'before_markNew_callback'}();
         }
 
         $this->newObjects[count($this->newObjects)] = $object;
@@ -761,7 +761,7 @@ abstract class Controller
         $session->set('newObjects', $this->newObjects);
 
         if (method_exists($this, 'after_markNew_callback')) {
-            $this->after_markNew_callback();
+            $this->{'after_markNew_callback'}();
         }
 
         self::$logger->debug('<<markNew');
@@ -794,7 +794,7 @@ abstract class Controller
         self::$logger->debug('>>commit()');
 
         if (method_exists($this, 'before_commit_callback')) {
-            $this->before_commit_callback();
+            $this->{'before_commit_callback'}();
         }
 
         ActiveRecord::begin();
@@ -849,7 +849,7 @@ abstract class Controller
             $this->clearUnitOfWorkAttributes();
 
             if (method_exists($this, 'after_commit_callback')) {
-                $this->after_commit_callback();
+                $this->{'after_commit_callback'}();
             }
 
             self::$logger->debug('<<commit');
@@ -871,7 +871,7 @@ abstract class Controller
         self::$logger->debug('>>abort()');
 
         if (method_exists($this, 'before_abort_callback')) {
-            $this->before_abort_callback();
+            $this->{'before_abort_callback'}();
         }
 
         try {
@@ -880,7 +880,7 @@ abstract class Controller
             $this->clearUnitOfWorkAttributes();
 
             if (method_exists($this, 'after_abort_callback')) {
-                $this->after_abort_callback();
+                $this->{'after_abort_callback'}();
             }
 
             self::$logger->debug('<<abort');
@@ -1008,7 +1008,7 @@ abstract class Controller
         self::$logger->debug('>>accessError()');
 
         if (method_exists($this, 'before_accessError_callback')) {
-            $this->before_accessError_callback();
+            $this->{'before_accessError_callback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -1026,7 +1026,7 @@ abstract class Controller
         $response->setBody(View::renderErrorPage(403, 'You do not have the correct access rights to view this page.  If you have not logged in yet, try going back to the home page and logging in from there.'));
 
         if (method_exists($this, 'after_accessError_callback')) {
-            $this->after_accessError_callback();
+            $this->{'after_accessError_callback'}();
         }
 
         self::$logger->debug('<<accessError');
@@ -1053,13 +1053,13 @@ abstract class Controller
         $session = SessionProviderFactory::getInstance($sessionProvider);
 
         if (method_exists($this, 'before_checkRights_callback')) {
-            $this->before_checkRights_callback();
+            $this->{'before_checkRights_callback'}();
         }
 
         // firstly if the page is Public then there is no issue
         if ($this->getVisibility() == 'Public') {
             if (method_exists($this, 'after_checkRights_callback')) {
-                $this->after_checkRights_callback();
+                $this->{'after_checkRights_callback'}();
             }
 
             self::$logger->debug('<<checkRights [true]');
@@ -1072,7 +1072,7 @@ abstract class Controller
                 // if the visibility is 'Session', just being logged in enough
                 if ($this->getVisibility() == 'Session') {
                     if (method_exists($this, 'after_checkRights_callback')) {
-                        $this->after_checkRights_callback();
+                        $this->{'after_checkRights_callback'}();
                     }
 
                     self::$logger->debug('<<checkRights [true]');
@@ -1083,7 +1083,7 @@ abstract class Controller
                 // checking for admins (can access everything)
                 if ($session->get('currentUser')->inGroup('Admin')) {
                     if (method_exists($this, 'after_checkRights_callback')) {
-                        $this->after_checkRights_callback();
+                        $this->{'after_checkRights_callback'}();
                     }
 
                     self::$logger->debug('<<checkRights [true]');
@@ -1091,7 +1091,7 @@ abstract class Controller
                     return true;
                 } elseif ($session->get('currentUser')->inGroup($this->getVisibility())) {
                     if (method_exists($this, 'after_checkRights_callback')) {
-                        $this->after_checkRights_callback();
+                        $this->{'after_checkRights_callback'}();
                     }
 
                     self::$logger->debug('<<checkRights [true]');
@@ -1100,7 +1100,7 @@ abstract class Controller
                 // the person is editing their own profile which is allowed
                 } elseif (get_class($this->record) == 'Alpha\Model\Person' && $session->get('currentUser')->getDisplayName() == $this->record->getDisplayName()) {
                     if (method_exists($this, 'after_checkRights_callback')) {
-                        $this->after_checkRights_callback();
+                        $this->{'after_checkRights_callback'}();
                     }
 
                     self::$logger->debug('<<checkRights [true]');
