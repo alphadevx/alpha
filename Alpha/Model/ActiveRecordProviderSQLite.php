@@ -21,6 +21,7 @@ use Alpha\Exception\RecordNotFoundException;
 use Alpha\Exception\BadTableNameException;
 use Alpha\Exception\NotImplementedException;
 use Alpha\Exception\PHPException;
+use Alpha\Exception\ResourceNotAllowedException;
 use Exception;
 use SQLite3Stmt;
 use SQLite3;

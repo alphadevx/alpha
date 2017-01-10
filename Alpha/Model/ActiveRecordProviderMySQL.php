@@ -20,6 +20,7 @@ use Alpha\Exception\ValidationException;
 use Alpha\Exception\CustomQueryException;
 use Alpha\Exception\RecordNotFoundException;
 use Alpha\Exception\BadTableNameException;
+use Alpha\Exception\ResourceNotAllowedException;
 use Exception;
 use ReflectionClass;
 use Mysqli;
