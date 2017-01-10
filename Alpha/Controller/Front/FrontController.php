@@ -480,31 +480,6 @@ class FrontController
     }
 
     /**
-     * Explodes the provided string into an array based on the array of delimiters provided.
-     *
-     * @param string $string     The string to explode.
-     * @param array  $delimiters An array of delimiters.
-     *
-     * @return array
-     *
-     * @since 1.2
-     */
-    private static function multipleExplode($string, $delimiters = array())
-    {
-        $mainDelim = $delimiters[count($delimiters) - 1];
-
-        array_pop($delimiters);
-
-        foreach ($delimiters as $delimiter) {
-            $string = str_replace($delimiter, $mainDelim, $string);
-        }
-
-        $result = explode($mainDelim, $string);
-
-        return $result;
-    }
-
-    /**
      * Getter for the page controller.
      *
      * @return string
