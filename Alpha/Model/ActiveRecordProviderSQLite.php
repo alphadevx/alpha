@@ -175,8 +175,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
             throw new CustomQueryException('Failed to run the custom query, SQLite error is ['.self::getLastDatabaseError().'], query ['.$sqlQuery.']');
-
-            return array();
         } else {
             while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
                 array_push($resultArray, $row);
@@ -194,8 +192,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
     public function load($OID, $version = 0)
     {
         self::$logger->debug('>>load(OID=['.$OID.'], version=['.$version.'])');
-
-        $config = ConfigProvider::getInstance();
 
         $attributes = $this->BO->getPersistentAttributes();
         $fields = '';
@@ -240,10 +236,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         }
 
         if (!isset($row['OID']) || $row['OID'] < 1) {
-            throw new RecordNotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');
             self::$logger->debug('<<load');
-
-            return;
+            throw new RecordNotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');
         }
 
         // get the class attributes
@@ -284,10 +278,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                     $this->BO->addProperty($missingFields[$i]);
                 }
 
-                throw new RecordFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->BO->getTableName().'] was out of sync with the database so had to be updated!');
                 self::$logger->debug('<<load');
-
-                return;
+                throw new RecordFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->BO->getTableName().'] was out of sync with the database so had to be updated!');
             }
         }
 
@@ -303,8 +295,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>loadAllOldVersions(OID=['.$OID.'])');
 
-        $config = ConfigProvider::getInstance();
-
         if (!$this->BO->getMaintainHistory()) {
             throw new RecordFoundException('loadAllOldVersions method called on an active record where no history is maintained!');
         }
@@ -314,10 +304,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         $this->BO->setLastQuery($sqlQuery);
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
+            self::$logger->debug('<<loadAllOldVersions');
             throw new RecordNotFoundException('Failed to load object versions, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
-            self::$logger->debug('<<loadAllOldVersions [0]');
-
-            return array();
         }
 
         // now build an array of objects to be returned
@@ -411,10 +399,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         }
 
         if (!isset($row['OID']) || $row['OID'] < 1) {
-            throw new RecordNotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], not found in database.');
             self::$logger->debug('<<loadByAttribute');
-
-            return;
+            throw new RecordNotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], not found in database.');
         }
 
         $this->OID = $row['OID'];
@@ -454,10 +440,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                     $this->BO->addProperty($missingFields[$i]);
                 }
 
-                throw new RecordNotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table ['.$this->BO->getTableName().'] was out of sync with the database so had to be updated!');
                 self::$logger->debug('<<loadByAttribute');
-
-                return;
+                throw new RecordNotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table ['.$this->BO->getTableName().'] was out of sync with the database so had to be updated!');
             }
         }
 
@@ -498,10 +482,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         $this->BO->setLastQuery($sqlQuery);
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
+            self::$logger->debug('<<loadAll');
             throw new RecordNotFoundException('Failed to load object OIDs, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
-            self::$logger->debug('<<loadAll [0]');
-
-            return array();
         }
 
         // now build an array of objects to be returned
@@ -601,7 +583,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                                 break;
                             default:
                                 throw new IllegalArguementException('Too many elements in the $constructorArgs array passed to the loadAllByAttribute method!');
-                                break;
                         }
                     }
 
@@ -734,7 +715,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                             break;
                         default:
                             throw new IllegalArguementException('Too many elements in the $constructorArgs array passed to the loadAllByAttribute method!');
-                            break;
                     }
                 }
 
@@ -777,10 +757,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         $this->BO->setLastQuery($sqlQuery);
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
+            self::$logger->debug('<<loadAllByDayUpdated');
             throw new RecordNotFoundException('Failed to load object OIDs, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
-            self::$logger->debug('<<loadAllByDayUpdated []');
-
-            return array();
         }
 
         // now build an array of objects to be returned
@@ -820,10 +798,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         self::$logger->debug('lastQuery ['.$sqlQuery.']');
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
+            self::$logger->debug('<<loadAllFieldValuesByAttribute');
             throw new RecordNotFoundException('Failed to load field ['.$returnAttribute.'] values, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
-            self::$logger->debug('<<loadAllFieldValuesByAttribute []');
-
-            return array();
         }
 
         // now build an array of attribute values to be returned
@@ -857,13 +833,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         // get the class attributes
         $reflection = new ReflectionClass(get_class($this->BO));
         $properties = $reflection->getProperties();
-        $sqlQuery = '';
-        $stmt = null;
 
         if ($this->BO->getVersion() != $this->BO->getVersionNumber()->getValue()) {
             throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
-
-            return;
         }
 
         // set the "updated by" fields, we can only set the user id if someone is logged in
@@ -1068,8 +1040,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                 }
             } catch (Exception $e) {
                 throw new FailedSaveException('Failed to save object, error is ['.$e->getMessage().']');
-
-                return;
             }
 
             $stmt->close();
@@ -1142,8 +1112,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         // get the class attributes
         $reflection = new ReflectionClass(get_class($this->BO));
         $properties = $reflection->getProperties();
-        $sqlQuery = '';
-        $stmt = null;
 
         $savedFields = array();
         $attributeNames = array();
@@ -1197,7 +1165,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                 $stmt->bindValue(':classname', get_class($this->BO), SQLITE3_TEXT);
             }
 
-            $result = $stmt->execute();
+            $stmt->execute();
         } else {
             throw new FailedSaveException('Failed to save object history, error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
         }
@@ -1376,8 +1344,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         $this->BO->setLastQuery($sqlQuery);
 
         if (!self::getConnection()->exec($sqlQuery)) {
-            throw new AlphaException('Failed to create the table ['.$this->BO->getTableName().'] for the class ['.get_class($this->BO).'], database error is ['.self::getLastDatabaseError().']');
             self::$logger->debug('<<makeTable');
+            throw new AlphaException('Failed to create the table ['.$this->BO->getTableName().'] for the class ['.get_class($this->BO).'], database error is ['.self::getLastDatabaseError().']');
         }
 
         // check the table indexes if any additional ones required
@@ -1465,8 +1433,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         $this->BO->setLastQuery($sqlQuery);
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
-            throw new AlphaException('Failed to create the table ['.$this->BO->getTableName().'_history] for the class ['.get_class($this->BO).'], database error is ['.self::getLastDatabaseError().']');
             self::$logger->debug('<<makeHistoryTable');
+            throw new AlphaException('Failed to create the table ['.$this->BO->getTableName().'_history] for the class ['.get_class($this->BO).'], database error is ['.self::getLastDatabaseError().']');
         }
 
         self::$logger->debug('<<makeHistoryTable');
@@ -1487,8 +1455,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         $this->BO->setLastQuery($sqlQuery);
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
-            throw new AlphaException('Failed to drop the table ['.$this->BO->getTableName().'] for the class ['.get_class($this->BO).'], database error is ['.self::getLastDatabaseError().']');
             self::$logger->debug('<<rebuildTable');
+            throw new AlphaException('Failed to drop the table ['.$this->BO->getTableName().'] for the class ['.get_class($this->BO).'], database error is ['.self::getLastDatabaseError().']');
         }
 
         $this->BO->makeTable();
@@ -1515,8 +1483,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         $this->BO->setLastQuery($sqlQuery);
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
-            throw new AlphaException('Failed to drop the table ['.$tableName.'] for the class ['.get_class($this->BO).'], query is ['.$this->BO->getLastQuery().']');
             self::$logger->debug('<<dropTable');
+            throw new AlphaException('Failed to drop the table ['.$tableName.'] for the class ['.get_class($this->BO).'], query is ['.$this->BO->getLastQuery().']');
         }
 
         if ($this->BO->getMaintainHistory()) {
@@ -1525,8 +1493,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             $this->BO->setLastQuery($sqlQuery);
 
             if (!$result = self::getConnection()->query($sqlQuery)) {
-                throw new AlphaException('Failed to drop the table ['.$tableName.'_history] for the class ['.get_class($this->BO).'], query is ['.$this->BO->getLastQuery().']');
                 self::$logger->debug('<<dropTable');
+                throw new AlphaException('Failed to drop the table ['.$tableName.'_history] for the class ['.get_class($this->BO).'], query is ['.$this->BO->getLastQuery().']');
             }
         }
 
@@ -1598,8 +1566,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         $this->BO->setLastQuery($sqlQuery);
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
-            throw new AlphaException('Failed to add the new attribute ['.$propName.'] to the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
             self::$logger->debug('<<addProperty');
+            throw new AlphaException('Failed to add the new attribute ['.$propName.'] to the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
         } else {
             self::$logger->info('Successfully added the ['.$propName.'] column onto the ['.$this->BO->getTableName().'] table for the class ['.get_class($this->BO).']');
         }
@@ -1608,8 +1576,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             $sqlQuery = str_replace($this->BO->getTableName(), $this->BO->getTableName().'_history', $sqlQuery);
 
             if (!$result = self::getConnection()->query($sqlQuery)) {
-                throw new AlphaException('Failed to add the new attribute ['.$propName.'] to the table ['.$this->BO->getTableName().'_history], query is ['.$this->BO->getLastQuery().']');
                 self::$logger->debug('<<addProperty');
+                throw new AlphaException('Failed to add the new attribute ['.$propName.'] to the table ['.$this->BO->getTableName().'_history], query is ['.$this->BO->getLastQuery().']');
             } else {
                 self::$logger->info('Successfully added the ['.$propName.'] column onto the ['.$this->BO->getTableName().'_history] table for the class ['.get_class($this->BO).']');
             }
@@ -1644,10 +1612,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                 throw new AlphaException('Failed to get the MAX ID for the class ['.get_class($this->BO).'] from the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
             }
         } catch (Exception $e) {
+            self::$logger->debug('<<getMAX');
             throw new AlphaException($e->getMessage());
-            self::$logger->debug('<<getMAX [0]');
-
-            return 0;
         }
     }
 
@@ -1684,11 +1650,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         $this->BO->setLastQuery($sqlQuery);
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
+            self::$logger->debug('<<getCount');
             throw new AlphaException('Failed to get the count for the class ['.get_class($this->BO).'] from the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
-
-            self::$logger->debug('<<getCount [0]');
-
-            return 0;
         } else {
             $row = $result->fetchArray(SQLITE3_ASSOC);
 
@@ -1717,11 +1680,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         self::$logger->debug('query ['.$sqlQuery.']');
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
+            self::$logger->debug('<<getHistoryCount');
             throw new AlphaException('Failed to get the history count for the business object ['.$this->BO->getOID().'] from the table ['.$this->BO->getTableName().'_history], query is ['.$this->BO->getLastQuery().']');
-
-            self::$logger->debug('<<getHistoryCount [0]');
-
-            return 0;
         } else {
             $row = $result->fetchArray(SQLITE3_ASSOC);
 
@@ -1776,10 +1736,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
             return $tableExists;
         } else {
+            self::$logger->debug('<<checkTableExists');
             throw new AlphaException('Failed to access the system database correctly, error is ['.self::getLastDatabaseError().']');
-            self::$logger->debug('<<checkTableExists [false]');
-
-            return false;
         }
     }
 
@@ -1826,10 +1784,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
             return $tableExists;
         } else {
+            self::$logger->debug('<<checkBOTableExists');
             throw new AlphaException('Failed to access the system database correctly, error is ['.self::getLastDatabaseError().']');
-            self::$logger->debug('<<checkBOTableExists [false]');
-
-            return false;
         }
     }
 
@@ -1898,10 +1854,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         }
 
         if (!$result) {
+            self::$logger->debug('<<checkTableNeedsUpdate');
             throw new AlphaException('Failed to access the system database correctly, error is ['.self::getLastDatabaseError().']');
-            self::$logger->debug('<<checkTableNeedsUpdate [false]');
-
-            return false;
         } else {
             // check the table indexes
             try {
@@ -2214,10 +2168,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
             $stmt->close();
         } else {
+            self::$logger->debug('<<checkRecordExists');
             throw new AlphaException('Failed to check for the record ['.$OID.'] on the class ['.get_class($this->BO).'] from the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
-            self::$logger->debug('<<checkRecordExists [false]');
-
-            return false;
         }
 
         if (!isset($row['OID'])) {
@@ -2269,10 +2221,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                     return true;
                 }
             }
+            self::$logger->debug('<<isTableOverloaded');
             throw new BadTableNameException('The table name ['.$tablename.'] for the class ['.$classname.'] is invalid as it does not match a BO definition in the system!');
-            self::$logger->debug('<<isTableOverloaded [false]');
-
-            return false;
         } else {
             // check to see if there is already a "classname" column in the database for this BO
             $sqlQuery = 'PRAGMA table_info('.$this->BO->getTableName().')';
