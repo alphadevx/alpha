@@ -15,6 +15,8 @@ use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\ResourceNotAllowedException;
 use Alpha\Exception\SecurityException;
 use Alpha\Exception\AlphaException;
+use Alpha\Exception\RecordNotFoundException;
+use Alpha\Exception\ValidationException;
 use Alpha\Model\ActiveRecord;
 
 /**
@@ -145,8 +147,6 @@ class ActiveRecordController extends Controller implements ControllerInterface
         self::$logger = new Logger('ActiveRecordController');
         self::$logger->debug('>>__construct()');
 
-        $config = ConfigProvider::getInstance();
-
         // ensure that the super class constructor is called, indicating the rights group
         parent::__construct($visibility);
 
@@ -168,8 +168,6 @@ class ActiveRecordController extends Controller implements ControllerInterface
     public function doGET($request)
     {
         self::$logger->debug('>>doGET(request=['.var_export($request, true).'])');
-
-        $config = ConfigProvider::getInstance();
 
         $params = $request->getParams();
         $accept = $request->getAccept();
