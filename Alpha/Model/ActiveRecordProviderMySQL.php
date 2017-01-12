@@ -21,6 +21,8 @@ use Alpha\Exception\CustomQueryException;
 use Alpha\Exception\RecordNotFoundException;
 use Alpha\Exception\BadTableNameException;
 use Alpha\Exception\ResourceNotAllowedException;
+use Alpha\Exception\IllegalArguementException;
+use Alpha\Exception\PHPException;
 use Exception;
 use ReflectionClass;
 use Mysqli;
@@ -816,7 +818,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         self::$logger->debug('lastQuery ['.$sqlQuery.']');
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
-            throw new RecordNotFoundException('Failed to load field ['.$returnAttribute.'] values, MySql error is ['.self::getConnection()->error.'], query ['.$this->getLastQuery().']');
+            throw new RecordNotFoundException('Failed to load field ['.$returnAttribute.'] values, MySql error is ['.self::getConnection()->error.'], query ['.$this->BO->getLastQuery().']');
             self::$logger->debug('<<loadAllFieldValuesByAttribute []');
 
             return array();
@@ -1452,7 +1454,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>dropTable()');
 
-        if ($tableName == null) {
+        if ($tableName === null) {
             $tableName = $this->BO->getTableName();
         }
 
@@ -2129,13 +2131,13 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             $sqlQuery = '';
 
             if ($attributeName == 'leftID') {
-                if ($indexName == null) {
+                if ($indexName === null) {
                     $indexName = $this->BO->getTableName().'_leftID_fk_idx';
                 }
                 $sqlQuery = 'ALTER TABLE '.$this->BO->getTableName().' ADD INDEX '.$indexName.' (leftID);';
             }
             if ($attributeName == 'rightID') {
-                if ($indexName == null) {
+                if ($indexName === null) {
                     $indexName = $this->BO->getTableName().'_rightID_fk_idx';
                 }
                 $sqlQuery = 'ALTER TABLE '.$this->BO->getTableName().' ADD INDEX '.$indexName.' (rightID);';
@@ -2151,7 +2153,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                 }
             }
 
-            if ($indexName == null) {
+            if ($indexName === null) {
                 $indexName = $this->BO->getTableName().'_'.$attributeName.'_fk_idx';
             }
 
@@ -2178,6 +2180,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
     public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '')
     {
         self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
+
+        $sqlQuery = '';
 
         if ($attribute2Name != '' && $attribute3Name != '') {
             $sqlQuery = 'CREATE UNIQUE INDEX '.$attribute1Name.'_'.$attribute2Name.'_'.$attribute3Name.'_unq_idx ON '.$this->BO->getTableName().' ('.$attribute1Name.','.$attribute2Name.','.$attribute3Name.');';
@@ -2213,8 +2217,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>reload()');
 
-        if (!$this->isTransient()) {
-            $this->load($this->getOID());
+        if (!$this->BO->isTransient()) {
+            $this->BO->load($this->getOID());
         } else {
             throw new AlphaException('Cannot reload transient object from database!');
         }
@@ -2437,13 +2441,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             }
 
             if ($this->BO->isTableOverloaded()) {
-                if (isset($this->classname)) {
-                    $bindingsTypes .= 's';
-                    array_push($params, $this->classname);
-                } else {
-                    $bindingsTypes .= 's';
-                    array_push($params, get_class($this->BO));
-                }
+                $bindingsTypes .= 's';
+                array_push($params, get_class($this->BO));
             }
         } else { // bind all attributes on the business object
 
@@ -2474,13 +2473,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             }
 
             if ($this->BO->isTableOverloaded()) {
-                if (isset($this->classname)) {
-                    $bindingsTypes .= 's';
-                    array_push($params, $this->classname);
-                } else {
-                    $bindingsTypes .= 's';
-                    array_push($params, get_class($this->BO));
-                }
+                $bindingsTypes .= 's';
+                array_push($params, get_class($this->BO));
             }
 
             // the OID may be on the WHERE clause for UPDATEs and DELETEs
