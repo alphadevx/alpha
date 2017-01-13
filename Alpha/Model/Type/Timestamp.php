@@ -53,7 +53,7 @@ class Timestamp extends Type implements TypeInterface
     /**
      * The year part.
      *
-     * @var int
+     * @var string
      *
      * @since 1.0
      */
@@ -62,7 +62,7 @@ class Timestamp extends Type implements TypeInterface
     /**
      * The month part.
      *
-     * @var int
+     * @var string
      *
      * @since 1.0
      */
@@ -71,7 +71,7 @@ class Timestamp extends Type implements TypeInterface
     /**
      * The day part.
      *
-     * @var int
+     * @var string
      *
      * @since 1.0
      */
@@ -80,7 +80,7 @@ class Timestamp extends Type implements TypeInterface
     /**
      * The hour part.
      *
-     * @var int
+     * @var string
      *
      * @since 1.0
      */
@@ -89,7 +89,7 @@ class Timestamp extends Type implements TypeInterface
     /**
      * The minute part.
      *
-     * @var int
+     * @var string
      *
      * @since 1.0
      */
@@ -98,7 +98,7 @@ class Timestamp extends Type implements TypeInterface
     /**
      * The second part.
      *
-     * @var int
+     * @var string
      *
      * @since 1.0
      */
