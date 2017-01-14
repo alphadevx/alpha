@@ -177,8 +177,6 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
             throw new CustomQueryException('Failed to run the custom query, MySql error is ['.self::getConnection()->error.'], query ['.$sqlQuery.']');
-
-            return array();
         } else {
             while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
                 array_push($resultArray, $row);
@@ -196,8 +194,6 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
     public function load($OID, $version = 0)
     {
         self::$logger->debug('>>load(OID=['.$OID.'], version=['.$version.'])');
-
-        $config = ConfigProvider::getInstance();
 
         $attributes = $this->BO->getPersistentAttributes();
         $fields = '';
@@ -243,10 +239,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         }
 
         if (!isset($row['OID']) || $row['OID'] < 1) {
-            throw new RecordNotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');
             self::$logger->debug('<<load');
-
-            return;
+            throw new RecordNotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');
         }
 
         // get the class attributes
@@ -287,10 +281,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                     $this->BO->addProperty($missingFields[$i]);
                 }
 
-                throw new RecordNotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->BO->getTableName().'] was out of sync with the database so had to be updated!');
                 self::$logger->warn('<<load');
-
-                return;
+                throw new RecordNotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->BO->getTableName().'] was out of sync with the database so had to be updated!');
             }
         }
 
@@ -306,8 +298,6 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>loadAllOldVersions(OID=['.$OID.'])');
 
-        $config = ConfigProvider::getInstance();
-
         if (!$this->BO->getMaintainHistory()) {
             throw new RecordFoundException('loadAllOldVersions method called on an active record where no history is maintained!');
         }
@@ -317,10 +307,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         $this->BO->setLastQuery($sqlQuery);
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
-            throw new RecordNotFoundException('Failed to load object versions, MySQL error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
             self::$logger->debug('<<loadAllOldVersions [0]');
-
-            return array();
+            throw new RecordNotFoundException('Failed to load object versions, MySQL error is ['.self::getLastDatabaseError().'], query ['.$this->BO->getLastQuery().']');
         }
 
         // now build an array of objects to be returned
@@ -415,10 +403,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         }
 
         if (!isset($row['OID']) || $row['OID'] < 1) {
-            throw new RecordNotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], not found in database.');
             self::$logger->debug('<<loadByAttribute');
-
-            return;
+            throw new RecordNotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], not found in database.');
         }
 
         $this->BO->setOID($row['OID']);
@@ -458,10 +444,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                     $this->BO->addProperty($missingFields[$i]);
                 }
 
-                throw new RecordNotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table ['.$this->BO->getTableName().'] was out of sync with the database so had to be updated!');
                 self::$logger->debug('<<loadByAttribute');
-
-                return;
+                throw new RecordNotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], table ['.$this->BO->getTableName().'] was out of sync with the database so had to be updated!');
             }
         }
 
@@ -479,7 +463,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         // ensure that the field name provided in the orderBy param is legit
         try {
-            $field = $this->BO->get($orderBy);
+            $this->BO->get($orderBy);
         } catch (AlphaException $e) {
             throw new AlphaException('The field name ['.$orderBy.'] provided in the param orderBy does not exist on the class ['.get_class($this->BO).']');
         }
@@ -502,10 +486,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         $this->BO->setLastQuery($sqlQuery);
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
-            throw new RecordNotFoundException('Failed to load object OIDs, MySql error is ['.self::getConnection()->error.'], query ['.$this->BO->getLastQuery().']');
             self::$logger->debug('<<loadAll [0]');
-
-            return array();
+            throw new RecordNotFoundException('Failed to load object OIDs, MySql error is ['.self::getConnection()->error.'], query ['.$this->BO->getLastQuery().']');
         }
 
         // now build an array of objects to be returned
@@ -619,7 +601,6 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                         break;
                         default:
                             throw new IllegalArguementException('Too many elements in the $constructorArgs array passed to the loadAllByAttribute method!');
-                        break;
                     }
                 }
 
@@ -734,7 +715,6 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                         break;
                         default:
                             throw new IllegalArguementException('Too many elements in the $constructorArgs array passed to the loadAllByAttribute method!');
-                        break;
                     }
                 }
 
@@ -775,10 +755,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         $this->BO->setLastQuery($sqlQuery);
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
-            throw new RecordNotFoundException('Failed to load object OIDs, MySql error is ['.self::getConnection()->error.'], query ['.$this->BO->getLastQuery().']');
             self::$logger->debug('<<loadAllByDayUpdated []');
-
-            return array();
+            throw new RecordNotFoundException('Failed to load object OIDs, MySql error is ['.self::getConnection()->error.'], query ['.$this->BO->getLastQuery().']');
         }
 
         // now build an array of objects to be returned
@@ -818,16 +796,13 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         self::$logger->debug('lastQuery ['.$sqlQuery.']');
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
-            throw new RecordNotFoundException('Failed to load field ['.$returnAttribute.'] values, MySql error is ['.self::getConnection()->error.'], query ['.$this->BO->getLastQuery().']');
             self::$logger->debug('<<loadAllFieldValuesByAttribute []');
-
-            return array();
+            throw new RecordNotFoundException('Failed to load field ['.$returnAttribute.'] values, MySql error is ['.self::getConnection()->error.'], query ['.$this->BO->getLastQuery().']');
         }
 
         // now build an array of attribute values to be returned
         $values = array();
         $count = 0;
-        $RecordClass = get_class($this->BO);
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $values[$count] = $row[$returnAttribute];
@@ -855,13 +830,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         // get the class attributes
         $reflection = new ReflectionClass(get_class($this->BO));
         $properties = $reflection->getProperties();
-        $sqlQuery = '';
-        $stmt = null;
 
         if ($this->BO->getVersion() != $this->BO->getVersionNumber()->getValue()) {
             throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
-
-            return;
         }
 
         // set the "updated by" fields, we can only set the user id if someone is logged in
@@ -1015,8 +986,6 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                                 }
                             } catch (\Exception $e) {
                                 throw new FailedSaveException('Failed to update a MANY-TO-MANY relation on the object, error is ['.$e->getMessage().']');
-
-                                return;
                             }
                         }
 
@@ -1028,8 +997,6 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                 }
             } catch (\Exception $e) {
                 throw new FailedSaveException('Failed to save object, error is ['.$e->getMessage().']');
-
-                return;
             }
 
             $stmt->close();
@@ -1041,8 +1008,6 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             // check for unique violations
             if (self::getConnection()->errno == '1062') {
                 throw new ValidationException('Failed to save, the value '.$this->findOffendingValue(self::getConnection()->error).' is already in use!');
-
-                return;
             } else {
                 throw new FailedSaveException('Failed to save object, MySql error is ['.self::getConnection()->error.'], query ['.$this->BO->getLastQuery().']');
             }
@@ -1108,8 +1073,6 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         // get the class attributes
         $reflection = new ReflectionClass(get_class($this->BO));
         $properties = $reflection->getProperties();
-        $sqlQuery = '';
-        $stmt = null;
 
         $savedFieldsCount = 0;
         $attributeNames = array();
@@ -1317,8 +1280,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         $this->BO->setLastQuery($sqlQuery);
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
-            throw new AlphaException('Failed to create the table ['.$this->BO->getTableName().'] for the class ['.get_class($this->BO).'], database error is ['.self::getConnection()->error.']');
             self::$logger->debug('<<makeTable');
+            throw new AlphaException('Failed to create the table ['.$this->BO->getTableName().'] for the class ['.get_class($this->BO).'], database error is ['.self::getConnection()->error.']');
         }
 
         // check the table indexes if any additional ones required
@@ -1415,8 +1378,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         $this->BO->setLastQuery($sqlQuery);
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
-            throw new AlphaException('Failed to create the table ['.$this->BO->getTableName().'_history] for the class ['.get_class($this->BO).'], database error is ['.self::getConnection()->error.']');
             self::$logger->debug('<<makeHistoryTable');
+            throw new AlphaException('Failed to create the table ['.$this->BO->getTableName().'_history] for the class ['.get_class($this->BO).'], database error is ['.self::getConnection()->error.']');
         }
 
         self::$logger->debug('<<makeHistoryTable');
@@ -1436,8 +1399,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         $this->BO->setLastQuery($sqlQuery);
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
-            throw new AlphaException('Failed to drop the table ['.$this->BO->getTableName().'] for the class ['.get_class($this->BO).'], database error is ['.self::getConnection()->error.']');
             self::$logger->debug('<<rebuildTable');
+            throw new AlphaException('Failed to drop the table ['.$this->BO->getTableName().'] for the class ['.get_class($this->BO).'], database error is ['.self::getConnection()->error.']');
         }
 
         $this->BO->makeTable();
@@ -1463,8 +1426,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         $this->BO->setLastQuery($sqlQuery);
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
-            throw new AlphaException('Failed to drop the table ['.$tableName.'] for the class ['.get_class($this->BO).'], query is ['.$this->BO->getLastQuery().']');
             self::$logger->debug('<<dropTable');
+            throw new AlphaException('Failed to drop the table ['.$tableName.'] for the class ['.get_class($this->BO).'], query is ['.$this->BO->getLastQuery().']');
         }
 
         if ($this->BO->getMaintainHistory()) {
@@ -1473,8 +1436,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             $this->BO->setLastQuery($sqlQuery);
 
             if (!$result = self::getConnection()->query($sqlQuery)) {
-                throw new AlphaException('Failed to drop the table ['.$tableName.'_history] for the class ['.get_class($this->BO).'], query is ['.$this->BO->getLastQuery().']');
                 self::$logger->debug('<<dropTable');
+                throw new AlphaException('Failed to drop the table ['.$tableName.'_history] for the class ['.get_class($this->BO).'], query is ['.$this->BO->getLastQuery().']');
             }
         }
 
@@ -1551,8 +1514,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         $this->BO->setLastQuery($sqlQuery);
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
-            throw new AlphaException('Failed to add the new attribute ['.$propName.'] to the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
             self::$logger->debug('<<addProperty');
+            throw new AlphaException('Failed to add the new attribute ['.$propName.'] to the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
         } else {
             self::$logger->info('Successfully added the ['.$propName.'] column onto the ['.$this->BO->getTableName().'] table for the class ['.get_class($this->BO).']');
         }
@@ -1561,8 +1524,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             $sqlQuery = str_replace($this->BO->getTableName(), $this->BO->getTableName().'_history', $sqlQuery);
 
             if (!$result = self::getConnection()->query($sqlQuery)) {
-                throw new AlphaException('Failed to add the new attribute ['.$propName.'] to the table ['.$this->BO->getTableName().'_history], query is ['.$this->BO->getLastQuery().']');
                 self::$logger->debug('<<addProperty');
+                throw new AlphaException('Failed to add the new attribute ['.$propName.'] to the table ['.$this->BO->getTableName().'_history], query is ['.$this->BO->getLastQuery().']');
             } else {
                 self::$logger->info('Successfully added the ['.$propName.'] column onto the ['.$this->BO->getTableName().'_history] table for the class ['.get_class($this->BO).']');
             }
@@ -1597,10 +1560,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                 throw new AlphaException('Failed to get the MAX ID for the class ['.get_class($this->BO).'] from the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
             }
         } catch (\Exception $e) {
+            self::$logger->debug('<<getMAX');
             throw new AlphaException($e->getMessage());
-            self::$logger->debug('<<getMAX [0]');
-
-            return 0;
         }
     }
 
@@ -1645,10 +1606,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
             return $row['class_count'];
         } else {
+            self::$logger->debug('<<getCount');
             throw new AlphaException('Failed to get the count for the class ['.get_class($this->BO).'] from the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
-            self::$logger->debug('<<getCount [0]');
-
-            return 0;
         }
     }
 
@@ -1678,10 +1637,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
             return $row['object_count'];
         } else {
+            self::$logger->debug('<<getHistoryCount');
             throw new AlphaException('Failed to get the history count for the business object ['.$this->BO->getOID().'] from the table ['.$this->BO->getTableName().'_history], query is ['.$this->BO->getLastQuery().']');
-            self::$logger->debug('<<getHistoryCount [0]');
-
-            return 0;
         }
     }
 
@@ -1744,8 +1701,6 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
     public function checkTableExists($checkHistoryTable = false)
     {
         self::$logger->debug('>>checkTableExists(checkHistoryTable=['.$checkHistoryTable.'])');
-
-        $config = ConfigProvider::getInstance();
 
         $tableExists = false;
 
@@ -1817,10 +1772,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
             return $tableExists;
         } else {
+            self::$logger->debug('<<checkBOTableExists');
             throw new AlphaException('Failed to access the system database correctly, error is ['.self::getConnection()->error.']');
-            self::$logger->debug('<<checkBOTableExists [false]');
-
-            return false;
         }
     }
 
@@ -1896,10 +1849,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
             return $updateRequired;
         } else {
+            self::$logger->debug('<<checkTableNeedsUpdate');
             throw new AlphaException('Failed to access the system database correctly, error is ['.self::getConnection()->error.']');
-            self::$logger->debug('<<checkTableNeedsUpdate [false]');
-
-            return false;
         }
     }
 
@@ -2260,16 +2211,12 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                     return false;
                 }
             } else {
+                self::$logger->debug('<<checkRecordExists');
                 throw new AlphaException('Failed to check for the record ['.$OID.'] on the class ['.get_class($this->BO).'] from the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
-                self::$logger->debug('<<checkRecordExists [false]');
-
-                return false;
             }
         } else {
+            self::$logger->debug('<<checkRecordExists');
             throw new AlphaException('Failed to check for the record ['.$OID.'] on the class ['.get_class($this->BO).'] from the table ['.$this->BO->getTableName().'], query is ['.$this->BO->getLastQuery().']');
-            self::$logger->debug('<<checkRecordExists [false]');
-
-            return false;
         }
     }
 
@@ -2311,10 +2258,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                     return true;
                 }
             }
-            throw new BadTableNameException('The table name ['.$tablename.'] for the class ['.$classname.'] is invalid as it does not match a BO definition in the system!');
-            self::$logger->debug('<<isTableOverloaded [false]');
 
-            return false;
+            self::$logger->debug('<<isTableOverloaded');
+            throw new BadTableNameException('The table name ['.$tablename.'] for the class ['.$classname.'] is invalid as it does not match a BO definition in the system!');
         } else {
             // check to see if there is already a "classname" column in the database for this BO
 
@@ -2598,7 +2544,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         $connection = new Mysqli($config->get('db.hostname'), $config->get('db.username'), $config->get('db.password'));
 
-        $result = $connection->query('CREATE DATABASE '.$config->get('db.name'));
+        $connection->query('CREATE DATABASE '.$config->get('db.name'));
     }
 
     /**
@@ -2612,6 +2558,6 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         $connection = new Mysqli($config->get('db.hostname'), $config->get('db.username'), $config->get('db.password'));
 
-        $result = $connection->query('DROP DATABASE '.$config->get('db.name'));
+        $connection->query('DROP DATABASE '.$config->get('db.name'));
     }
 }
