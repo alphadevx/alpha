@@ -22,6 +22,7 @@ use Alpha\Exception\BadTableNameException;
 use Alpha\Exception\NotImplementedException;
 use Alpha\Exception\PHPException;
 use Alpha\Exception\ResourceNotAllowedException;
+use Alpha\Exception\IllegalArguementException;
 use Exception;
 use SQLite3Stmt;
 use SQLite3;
@@ -404,7 +405,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             throw new RecordNotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], not found in database.');
         }
 
-        $this->OID = $row['OID'];
+        $this->BO->setOID($row['OID']);
 
         // get the class attributes
         $reflection = new ReflectionClass(get_class($this->BO));
@@ -1474,7 +1475,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>dropTable()');
 
-        if ($tableName == null) {
+        if ($tableName === null) {
             $tableName = $this->BO->getTableName();
         }
 
@@ -2101,6 +2102,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
 
+        $sqlQuery = '';
+
         if ($attribute2Name != '' && $attribute3Name != '') {
             $sqlQuery = 'CREATE UNIQUE INDEX IF NOT EXISTS '.$attribute1Name.'_'.$attribute2Name.'_'.$attribute3Name.'_unq_idx ON '.$this->BO->getTableName().' ('.$attribute1Name.','.$attribute2Name.','.$attribute3Name.');';
         }
@@ -2120,7 +2123,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         if ($result) {
             self::$logger->debug('Successfully created the unique index on ['.$this->BO->getTableName().']');
         } else {
-            throw new FailedIndexCreateException('Failed to create the unique index on ['.$this->BO->getTableName().'], error is ['.self::getConnection()->error.']');
+            throw new FailedIndexCreateException('Failed to create the unique index on ['.$this->BO->getTableName().'], error is ['.self::getConnection()->lastErrorMsg().']');
         }
 
         self::$logger->debug('<<createUniqueIndex');

@@ -396,7 +396,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
             self::$logger->warn($e->getMessage());
             throw new ResourceNotFoundException('The record that you have requested cannot be found!');
         } catch (ValidationException $e) {
-            self::$logger->warn($e->getMessage().', query ['.$record->getLastQuery().']');
+            self::$logger->warn($e->getMessage());
             $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
         }
 
@@ -488,7 +488,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
             self::$logger->warn($e->getMessage());
             throw new ResourceNotFoundException('The record that you have requested cannot be found!');
         } catch (ValidationException $e) {
-            self::$logger->warn($e->getMessage().', query ['.$record->getLastQuery().']');
+            self::$logger->warn($e->getMessage());
             $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
         }
 
@@ -506,7 +506,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 $response->redirect($this->getNextJob());
             } else {
                 if ($this->request->isSecureURI()) {
-                    $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.$ActiveRecordType.'&ActiveRecordOID='.$record->getOID().'&view=edit'));
+                    $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.urldecode($params['ActiveRecordType']).'&ActiveRecordOID='.$record->getOID().'&view=edit'));
                 } else {
                     $response->redirect($config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getOID().'/edit');
                 }
@@ -525,6 +525,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      * @throws \Alpha\Exception\SecurityException
+     * @throws \Alpha\Exception\ResourceNotAllowedException
      *
      * @return \Alpha\Util\Http\Response
      *
@@ -594,6 +595,10 @@ class ActiveRecordController extends Controller implements ControllerInterface
                     }
                 }
             }
+
+            self::$logger->debug('<<doDELETE');
+
+            return $response;
         } catch (SecurityException $e) {
             self::$logger->warn($e->getMessage());
             throw new ResourceNotAllowedException($e->getMessage());
@@ -603,11 +608,8 @@ class ActiveRecordController extends Controller implements ControllerInterface
         } catch (AlphaException $e) {
             self::$logger->error($e->getMessage());
             ActiveRecord::rollback();
+            throw new ResourceNotAllowedException($e->getMessage());
         }
-
-        self::$logger->debug('<<doDELETE');
-
-        return $response;
     }
 
     /**

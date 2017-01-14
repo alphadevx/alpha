@@ -421,7 +421,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             return;
         }
 
-        $this->OID = $row['OID'];
+        $this->BO->setOID($row['OID']);
 
         // get the class attributes
         $reflection = new ReflectionClass(get_class($this->BO));

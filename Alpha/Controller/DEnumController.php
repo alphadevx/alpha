@@ -10,6 +10,7 @@ use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\SecurityException;
 use Alpha\Exception\FailedSaveException;
 use Alpha\Exception\AlphaException;
+use Alpha\Exception\RecordNotFoundException;
 use Alpha\Model\ActiveRecord;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
@@ -68,6 +69,15 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
     private static $logger = null;
 
     /**
+     * DEnum to work on
+     *
+     * @var \Alpha\Model\Type\DEnum
+     *
+     * @since 3.0.0
+     */
+    protected $record;
+
+    /**
      * constructor to set up the object.
      *
      * @since 1.0
@@ -80,7 +90,7 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
         // ensure that the super class constructor is called, indicating the rights group
         parent::__construct('Admin');
 
-        $this->BO = new DEnum();
+        $this->record = new DEnum();
 
         self::$logger->debug('<<__construct');
     }
@@ -121,17 +131,15 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
             }
 
             try {
-                $this->BO->load($BOoid);
+                $this->record->load($BOoid);
 
                 ActiveRecord::disconnect();
 
-                $this->BOName = 'DEnum';
-
-                $this->BOView = View::getInstance($this->BO);
+                $view = View::getInstance($this->record);
 
                 $body .= View::renderDeleteForm($request->getURI());
 
-                $body .= $this->BOView->editView(array('URI' => $request->getURI()));
+                $body .= $view->editView(array('URI' => $request->getURI()));
             } catch (RecordNotFoundException $e) {
                 self::$logger->error('Unable to load the DEnum of id ['.$params['denumOID'].'], error was ['.$e->getMessage().']');
             }
@@ -144,7 +152,7 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
             $body .= View::displayPageHead($this);
 
             // make sure that the DEnum tables exist
-            if (!$this->BO->checkTableExists()) {
+            if (!$this->record->checkTableExists()) {
                 $body .= View::displayErrorMessage('Warning! The DEnum tables do not exist, attempting to create them now...');
                 $body .= $this->createDEnumTables();
             }
@@ -152,13 +160,13 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
             // get all of the BOs and invoke the list view on each one
 
             // set the start point for the list pagination
-            if (isset($params['start']) ? $this->startPoint = $params['start'] : $this->startPoint = 1);
+            if (isset($params['start']) ? $this->start = $params['start'] : $this->start = 1);
 
-            $objects = $this->BO->loadAll($this->startPoint);
+            $objects = $this->record->loadAll($this->start);
 
             ActiveRecord::disconnect();
 
-            $this->BOCount = $this->BO->getCount();
+            $this->recordCount = $this->record->getCount();
 
             $body .= View::renderDeleteForm($request->getURI());
 
@@ -208,19 +216,19 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
 
             if (isset($params['saveBut'])) {
                 try {
-                    $this->BO->load($BOoid);
+                    $this->record->load($BOoid);
                     // update the object from post data
-                    $this->BO->populateFromArray($params);
+                    $this->record->populateFromArray($params);
 
                     ActiveRecord::begin();
 
-                    $this->BO->save();
+                    $this->record->save();
 
-                    self::$logger->action('DEnum '.$this->BO->getOID().' saved');
+                    self::$logger->action('DEnum '.$this->record->getOID().' saved');
 
                     // now save the DEnumItems
                     $tmp = new DEnumItem();
-                    $denumItems = $tmp->loadItems($this->BO->getID());
+                    $denumItems = $tmp->loadItems($this->record->getID());
 
                     foreach ($denumItems as $item) {
                         $item->set('value', $params['value_'.$item->getID()]);
@@ -233,7 +241,7 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
                     if (isset($params['new_value']) && trim($params['new_value']) != '') {
                         $newItem = new DEnumItem();
                         $newItem->set('value', $params['new_value']);
-                        $newItem->set('DEnumID', $this->BO->getID());
+                        $newItem->set('DEnumID', $this->record->getID());
                         $newItem->save();
 
                         self::$logger->action('DEnumItem '.$newItem->getOID().' created');
@@ -241,7 +249,7 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
 
                     ActiveRecord::commit();
 
-                    $this->setStatusMessage(View::displayUpdateMessage(get_class($this->BO).' '.$this->BO->getID().' saved successfully.'));
+                    $this->setStatusMessage(View::displayUpdateMessage(get_class($this->record).' '.$this->record->getID().' saved successfully.'));
 
                     return $this->doGET($request);
                 } catch (FailedSaveException $e) {

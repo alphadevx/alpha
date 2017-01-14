@@ -4,6 +4,7 @@ namespace Alpha\Model\Type;
 
 use Alpha\Model\ActiveRecord;
 use Alpha\Model\ActiveRecordProviderFactory;
+use Alpha\Model\Type\SmallText;
 use Alpha\Exception\RecordNotFoundException;
 use Alpha\Exception\AlphaException;
 use Alpha\Exception\IllegalArguementException;
@@ -76,7 +77,7 @@ class DEnum extends ActiveRecord implements TypeInterface
     /**
      * The name of the DEnum used in the database.
      *
-     * @var string
+     * @var \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
