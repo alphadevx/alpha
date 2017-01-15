@@ -5,6 +5,7 @@ namespace Alpha\View;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Model\ActiveRecord;
+use Alpha\Model\Type\DEnum;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\View\Renderer\RendererProviderFactory;
 use Alpha\View\Renderer\RendererProviderInterface;
@@ -370,7 +371,7 @@ class View
         self::$logger->debug('>>displayPageHead(controller=['.var_export($controller, true).'])');
 
         if (method_exists($controller, 'before_displayPageHead_callback')) {
-            $controller->before_displayPageHead_callback();
+            $controller->{'before_displayPageHead_callback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -383,7 +384,7 @@ class View
         $header = $provider::displayPageHead($controller);
 
         if (method_exists($controller, 'after_displayPageHead_callback')) {
-            $header .= $controller->after_displayPageHead_callback();
+            $header .= $controller->{'after_displayPageHead_callback'}();
         }
 
         self::$logger->debug('<<displayPageHead ['.$header.']');
@@ -1022,6 +1023,8 @@ class View
         if (self::$provider instanceof RendererProviderInterface) {
             return self::$provider;
         } else {
+            $config = ConfigProvider::getInstance();
+
             self::$provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'));
 
             return self::$provider;
