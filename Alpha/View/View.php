@@ -130,8 +130,6 @@ class View
         }
         self::$logger->debug('>>getInstance(BO=['.var_export($BO, true).'], returnParent=['.$returnParent.'], acceptHeader=['.$acceptHeader.'])');
 
-        $config = ConfigProvider::getInstance();
-
         $class = new ReflectionClass($BO);
         $childView = $class->getShortname();
         $childView = $childView.'View';
@@ -219,8 +217,6 @@ class View
             $this->{'before_createView_callback'}();
         }
 
-        $config = ConfigProvider::getInstance();
-
         $body = self::$provider->createView($fields);
 
         if (method_exists($this, 'after_createView_callback')) {
@@ -248,8 +244,6 @@ class View
         if (method_exists($this, 'before_editView_callback')) {
             $this->{'before_editView_callback'}();
         }
-
-        $config = ConfigProvider::getInstance();
 
         $body = self::$provider->editView($fields);
 
@@ -279,8 +273,6 @@ class View
             $this->{'before_listView_callback'}();
         }
 
-        $config = ConfigProvider::getInstance();
-
         $body = self::$provider->listView($fields);
 
         if (method_exists($this, 'after_listView_callback')) {
@@ -309,8 +301,6 @@ class View
             $this->{'before_detailedView_callback'}();
         }
 
-        $config = ConfigProvider::getInstance();
-
         $body = self::$provider->detailedView($fields);
 
         if (method_exists($this, 'after_detailedView_callback')) {
@@ -338,8 +328,6 @@ class View
         if (method_exists($this, 'before_adminView_callback')) {
             $this->{'before_adminView_callback'}();
         }
-
-        $config = ConfigProvider::getInstance();
 
         $body = self::$provider->adminView($fields);
 
@@ -591,19 +579,16 @@ class View
      * @param string $label     The label to apply to the field
      * @param string $mode      The field mode (create/edit/view)
      * @param string $value     The field value (optional)
-     * @param bool   $tableTags Include table tags and label (optional)
      *
      * @return string
      *
      * @since 1.0
      */
-    public function renderIntegerField($name, $label, $mode, $value = '', $tableTags = true)
+    public function renderIntegerField($name, $label, $mode, $value = '')
     {
-        self::$logger->debug('>>renderIntegerField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+        self::$logger->debug('>>renderIntegerField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.']');
 
-        $config = ConfigProvider::getInstance();
-
-        $html = self::$provider->renderIntegerField($name, $label, $mode, $value, $tableTags);
+        $html = self::$provider->renderIntegerField($name, $label, $mode, $value);
 
         self::$logger->debug('<<renderIntegerField ['.$html.']');
 
@@ -617,19 +602,16 @@ class View
      * @param string $label     The label to apply to the field
      * @param string $mode      The field mode (create/edit/view)
      * @param string $value     The field value (optional)
-     * @param bool   $tableTags Include table tags and label (optional)
      *
      * @return string
      *
      * @since 1.0
      */
-    public function renderDoubleField($name, $label, $mode, $value = '', $tableTags = true)
+    public function renderDoubleField($name, $label, $mode, $value = '')
     {
-        self::$logger->debug('>>renderDoubleField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+        self::$logger->debug('>>renderDoubleField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
-        $config = ConfigProvider::getInstance();
-
-        $html = self::$provider->renderDoubleField($name, $label, $mode, $value, $tableTags);
+        $html = self::$provider->renderDoubleField($name, $label, $mode, $value);
 
         self::$logger->debug('<<renderDoubleField ['.$html.']');
 
@@ -643,19 +625,16 @@ class View
      * @param string $label     The label to apply to the field
      * @param string $mode      The field mode (create/edit/view)
      * @param string $value     The field value (optional)
-     * @param bool   $tableTags Include table tags and label (optional)
      *
      * @return string
      *
      * @since 1.0
      */
-    public function renderBooleanField($name, $label, $mode, $value = '', $tableTags = true)
+    public function renderBooleanField($name, $label, $mode, $value = '')
     {
-        self::$logger->debug('>>renderBooleanField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+        self::$logger->debug('>>renderBooleanField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
-        $config = ConfigProvider::getInstance();
-
-        $html = self::$provider->renderBooleanField($name, $label, $mode, $value, $tableTags);
+        $html = self::$provider->renderBooleanField($name, $label, $mode, $value);
 
         self::$logger->debug('<<renderBooleanField ['.$html.']');
 
@@ -670,19 +649,16 @@ class View
      * @param string $mode      The field mode (create/edit/view)
      * @param array  $options   The Enum options
      * @param string $value     The field value (optional)
-     * @param bool   $tableTags Include table tags and label (optional)
      *
      * @return string
      *
      * @since 1.0
      */
-    public function renderEnumField($name, $label, $mode, $options, $value = '', $tableTags = true)
+    public function renderEnumField($name, $label, $mode, $options, $value = '')
     {
-        self::$logger->debug('>>renderEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+        self::$logger->debug('>>renderEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
-        $config = ConfigProvider::getInstance();
-
-        $html = self::$provider->renderEnumField($name, $label, $mode, $options, $value, $tableTags);
+        $html = self::$provider->renderEnumField($name, $label, $mode, $options, $value);
 
         self::$logger->debug('<<renderEnumField ['.$html.']');
 
@@ -697,17 +673,14 @@ class View
      * @param string $mode      The field mode (create/edit/view)
      * @param array  $options   The DEnum options
      * @param string $value     The field value (optional)
-     * @param bool   $tableTags Include table tags and label (optional)
      *
      * @return string
      *
      * @since 1.0
      */
-    public function renderDEnumField($name, $label, $mode, $options, $value = '', $tableTags = true)
+    public function renderDEnumField($name, $label, $mode, $options, $value = '')
     {
-        self::$logger->debug('>>renderDEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
-
-        $config = ConfigProvider::getInstance();
+        self::$logger->debug('>>renderDEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
         $html = self::$provider->renderDEnumField($name, $label, $mode, $options, $value, $tableTags);
 
@@ -723,19 +696,16 @@ class View
      * @param string $label     The label to apply to the field
      * @param string $mode      The field mode (create/edit/view)
      * @param string $value     The field value (optional)
-     * @param bool   $tableTags Include table tags and label (optional)
      *
      * @return string
      *
      * @since 1.0
      */
-    public function renderDefaultField($name, $label, $mode, $value = '', $tableTags = true)
+    public function renderDefaultField($name, $label, $mode, $value = '')
     {
-        self::$logger->debug('>>renderDefaultField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+        self::$logger->debug('>>renderDefaultField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
-        $config = ConfigProvider::getInstance();
-
-        $html = self::$provider->renderDefaultField($name, $label, $mode, $value, $tableTags);
+        $html = self::$provider->renderDefaultField($name, $label, $mode, $value);
 
         self::$logger->debug('<<renderDefaultField ['.$html.']');
 
@@ -749,19 +719,16 @@ class View
      * @param string $label     The label to apply to the field
      * @param string $mode      The field mode (create/edit/view)
      * @param string $value     The field value (optional)
-     * @param bool   $tableTags Include table tags and label (optional)
      *
      * @return string
      *
      * @since 1.0
      */
-    public function renderTextField($name, $label, $mode, $value = '', $tableTags = true)
+    public function renderTextField($name, $label, $mode, $value = '')
     {
-        self::$logger->debug('>>renderTextField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'])');
+        self::$logger->debug('>>renderTextField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
-        $config = ConfigProvider::getInstance();
-
-        $html = self::$provider->renderTextField($name, $label, $mode, $value, $tableTags);
+        $html = self::$provider->renderTextField($name, $label, $mode, $value);
 
         self::$logger->debug('<<renderTextField ['.$html.']');
 
@@ -775,7 +742,6 @@ class View
      * @param string $label     The label to apply to the field
      * @param string $mode      The field mode (create/edit/view)
      * @param string $value     The field value (optional)
-     * @param bool   $tableTags Include table tags and label (optional)
      * @param bool   $expanded  Render the related fields in expanded format or not (optional)
      * @param bool   $buttons   Render buttons for expanding/contacting the related fields (optional)
      *
@@ -783,13 +749,11 @@ class View
      *
      * @since 1.0
      */
-    public function renderRelationField($name, $label, $mode, $value = '', $tableTags = true, $expanded = false, $buttons = true)
+    public function renderRelationField($name, $label, $mode, $value = '', $expanded = false, $buttons = true)
     {
-        self::$logger->debug('>>renderRelationField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], tableTags=['.$tableTags.'], expanded=['.$expanded.'], buttons=['.$buttons.'])');
+        self::$logger->debug('>>renderRelationField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], expanded=['.$expanded.'], buttons=['.$buttons.'])');
 
-        $config = ConfigProvider::getInstance();
-
-        $html = self::$provider->renderRelationField($name, $label, $mode, $value, $tableTags, $expanded, $buttons);
+        $html = self::$provider->renderRelationField($name, $label, $mode, $value, $expanded, $buttons);
 
         self::$logger->debug('<<renderRelationField ['.$html.']');
 
@@ -810,8 +774,6 @@ class View
     public function renderAllFields($mode, $filterFields = array(), $readOnlyFields = array())
     {
         self::$logger->debug('>>renderAllFields(mode=['.$mode.'], filterFields=['.var_export($filterFields, true).'], readOnlyFields=['.var_export($readOnlyFields, true).'])');
-
-        $config = ConfigProvider::getInstance();
 
         $html = self::$provider->renderAllFields($mode, $filterFields, $readOnlyFields);
 
@@ -879,6 +841,7 @@ class View
             require $customPath;
             $html = ob_get_clean();
 
+            self::$logger->debug('<<loadTemplate');
             return $html;
         } elseif (file_exists($defaultPath1)) {
             self::$logger->debug('Loading template ['.$defaultPath1.']');
@@ -886,6 +849,7 @@ class View
             require $defaultPath1;
             $html = ob_get_clean();
 
+            self::$logger->debug('<<loadTemplate');
             return $html;
         } elseif (file_exists($defaultPath2)) {
             self::$logger->debug('Loading template ['.$defaultPath2.']');
@@ -893,6 +857,7 @@ class View
             require $defaultPath2;
             $html = ob_get_clean();
 
+            self::$logger->debug('<<loadTemplate');
             return $html;
         } elseif (file_exists($defaultPath3)) {
             self::$logger->debug('Loading template ['.$defaultPath3.']');
@@ -900,6 +865,7 @@ class View
             require $defaultPath3;
             $html = ob_get_clean();
 
+            self::$logger->debug('<<loadTemplate');
             return $html;
         } elseif (file_exists($defaultPath4)) {
             self::$logger->debug('Loading template ['.$defaultPath4.']');
@@ -907,12 +873,12 @@ class View
             require $defaultPath4;
             $html = ob_get_clean();
 
+            self::$logger->debug('<<loadTemplate');
             return $html;
         } else {
+            self::$logger->debug('<<loadTemplate');
             throw new IllegalArguementException('No ['.$mode.'] HTML template found for class ['.$className.']');
         }
-
-        self::$logger->debug('<<loadTemplate');
     }
 
     /**
