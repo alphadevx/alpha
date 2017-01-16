@@ -280,19 +280,21 @@ class Image
     /**
      * Renders the actual binary image using GD library calls.
      *
-     *  @since 1.0
+     * @param $screenSize The optional size of the target screen to scale to in the format [X-pixels]x[Y-pixels]
+     *
+     * @since 1.0
      */
-    public function renderImage()
+    public function renderImage($screenSize = null)
     {
         $config = ConfigProvider::getInstance();
 
         // if scaled, we need to compute the target image size
-        if ($this->scale->getBooleanValue() && isset($_COOKIE['screenSize'])) {
+        if ($this->scale->getBooleanValue() && $screenSize !== null) {
             $originalScreenResolution = explode('x', $config->get('sysCMSImagesWidgetScreenResolution'));
             $originalScreenX = $originalScreenResolution[0];
             $originalScreenY = $originalScreenResolution[1];
 
-            $targetScreenResolution = explode('x', $_COOKIE['screenSize']);
+            $targetScreenResolution = explode('x', $screenSize);
             $targetScreenX = $targetScreenResolution[0];
             $targetScreenY = $targetScreenResolution[1];
 

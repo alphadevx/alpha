@@ -166,7 +166,7 @@ class ImageController extends Controller implements ControllerInterface
         try {
             $image = new Image($imgSource, $imgWidth, $imgHeight, $imgType, $imgQuality, $imgScale->getBooleanValue(), $imgSecure->getBooleanValue());
             ob_start();
-            $image->renderImage();
+            $image->renderImage($request->getCookie('screenSize'));
             $body = ob_get_contents();
             ob_end_clean();
         } catch (IllegalArguementException $e) {
