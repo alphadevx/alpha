@@ -2,8 +2,10 @@
 
 namespace Alpha\Model;
 
+use Alpha\Model\Type\Date;
 use Alpha\Model\Type\Integer;
 use Alpha\Model\Type\Timestamp;
+use Alpha\Model\Type\TypeInterface;
 use Alpha\Model\Type\Enum;
 use Alpha\Model\Type\Relation;
 use Alpha\Util\Config\ConfigProvider;
@@ -1024,16 +1026,10 @@ abstract class ActiveRecord
             $propName = $propObj->name;
 
             if (isset($hashArray[$propName])) {
-                if (!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
-                    $propClass = get_class($this->getPropObject($propName));
-
-                    if (isset($hashArray[$propName])) {
-                        if (mb_strtoupper($propClass) != 'DATE' && mb_strtoupper($propClass) != 'TIMESTAMP') {
-                            $this->getPropObject($propName)->setValue($hashArray[$propName]);
-                        } else {
-                            $this->getPropObject($propName)->populateFromString($hashArray[$propName]);
-                        }
-                    }
+                if ($this->getPropObject($propName) instanceof Date || $this->getPropObject($propName) instanceof Timestamp) {
+                    $this->getPropObject($propName)->populateFromString($hashArray[$propName]);
+                } elseif ($this->getPropObject($propName) instanceof TypeInterface) {
+                    $this->getPropObject($propName)->setValue($hashArray[$propName]);
                 }
 
                 if ($propName == 'version_num' && isset($hashArray['version_num'])) {

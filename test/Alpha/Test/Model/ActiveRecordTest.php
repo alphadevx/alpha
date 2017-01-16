@@ -1270,4 +1270,21 @@ class ActiveRecordTest extends ModelTestCase
 
         $this->assertEquals('test value', $record->get('anotherNewStringField'), 'Testing that the new column was added to the _history table');
     }
+
+    /**
+     * Testing the populateFromArray() method
+     *
+     * @since 3.0.0
+     */
+    public function testPopulateFromArray()
+    {
+        $record = new BadRequest();
+        $record->populateFromArray(array('client'=>'SomeBot', 'IP'=>'127.0.0.1', 'resource'=>'/test'));
+
+        $this->assertEquals('SomeBot', $record->get('client'), 'Testing the populateFromArray() method');
+
+        $record->populateFromArray(array('client'=>'SomeBot', 'updated_ts'=>'2001-01-01 20:20:20'));
+
+        $this->assertEquals('2001-01-01 20:20:20', $record->getUpdateTS()->getValue(), 'Testing the populateFromArray() method');
+    }
 }
