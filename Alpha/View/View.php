@@ -682,7 +682,7 @@ class View
     {
         self::$logger->debug('>>renderDEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
-        $html = self::$provider->renderDEnumField($name, $label, $mode, $options, $value, $tableTags);
+        $html = self::$provider->renderDEnumField($name, $label, $mode, $options, $value);
 
         self::$logger->debug('<<renderDEnumField ['.$html.']');
 

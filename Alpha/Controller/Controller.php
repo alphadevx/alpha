@@ -476,10 +476,8 @@ abstract class Controller
         }
 
         if (!is_array($jobs)) {
-            throw new IllegalArguementException('Bad $jobs array ['.var_export($jobs, true).'] passed to setUnitOfWork method!');
             self::$logger->debug('<<setUnitOfWork');
-
-            return;
+            throw new IllegalArguementException('Bad $jobs array ['.var_export($jobs, true).'] passed to setUnitOfWork method!');
         }
 
         // validate that each controller name in the array actually exists
@@ -785,7 +783,7 @@ abstract class Controller
     /**
      * Commits (saves) all of the new and modified (dirty) objects in the unit of work to the database.
      *
-     * @throws FailedUnitCommitException
+     * @throws \Alpha\Exception\FailedUnitCommitException
      *
      * @since 1.0
      */
@@ -807,17 +805,15 @@ abstract class Controller
             try {
                 $newObjects[$i]->save();
             } catch (FailedSaveException $e) {
-                throw new FailedUnitCommitException($e->getMessage());
                 self::$logger->error('Failed to save new object of type ['.get_class($newObjects[$i]).'], aborting...');
                 $this->abort();
 
-                return;
+                throw new FailedUnitCommitException($e->getMessage());
             } catch (LockingException $e) {
-                throw new FailedUnitCommitException($e->getMessage());
                 self::$logger->error('Failed to save new object of type ['.get_class($newObjects[$i]).'], aborting...');
                 $this->abort();
 
-                return;
+                throw new FailedUnitCommitException($e->getMessage());
             }
         }
 
@@ -829,17 +825,15 @@ abstract class Controller
             try {
                 $dirtyObjects[$i]->save();
             } catch (FailedSaveException $e) {
-                throw new FailedUnitCommitException($e->getMessage());
                 self::$logger->error('Failed to save OID ['.$dirtyObjects[$i]->getID().'] of type ['.get_class($dirtyObjects[$i]).'], aborting...');
                 $this->abort();
 
-                return;
+                throw new FailedUnitCommitException($e->getMessage());
             } catch (LockingException $e) {
-                throw new FailedUnitCommitException($e->getMessage());
                 self::$logger->error('Failed to save OID ['.$dirtyObjects[$i]->getID().'] of type ['.get_class($dirtyObjects[$i]).'], aborting...');
                 $this->abort();
 
-                return;
+                throw new FailedUnitCommitException($e->getMessage());
             }
         }
 
@@ -854,8 +848,8 @@ abstract class Controller
 
             self::$logger->debug('<<commit');
         } catch (FailedSaveException $e) {
-            throw new FailedUnitCommitException('Failed to commit the transaction, error is ['.$e->getMessage().']');
             self::$logger->debug('<<commit');
+            throw new FailedUnitCommitException('Failed to commit the transaction, error is ['.$e->getMessage().']');
         }
     }
 
@@ -885,8 +879,8 @@ abstract class Controller
 
             self::$logger->debug('<<abort');
         } catch (AlphaException $e) {
-            throw new AlphaException('Failed to rollback the transaction, error is ['.$e->getMessage().']');
             self::$logger->debug('<<abort');
+            throw new AlphaException('Failed to rollback the transaction, error is ['.$e->getMessage().']');
         }
     }
 
@@ -1435,6 +1429,7 @@ abstract class Controller
      */
     public function doHEAD($request)
     {
+        self::$logger->debug('doHEAD() called but not implement in child class, request URI ['.$request->getURI().']');
         throw new NotImplementedException('The HEAD method is not supported by this controller');
     }
 
@@ -1447,6 +1442,7 @@ abstract class Controller
      */
     public function doGET($request)
     {
+        self::$logger->debug('doGET() called but not implement in child class, request URI ['.$request->getURI().']');
         throw new NotImplementedException('The GET method is not supported by this controller');
     }
 
@@ -1459,6 +1455,7 @@ abstract class Controller
      */
     public function doPOST($request)
     {
+        self::$logger->debug('doPOST() called but not implement in child class, request URI ['.$request->getURI().']');
         throw new NotImplementedException('The POST method is not supported by this controller');
     }
 
@@ -1471,6 +1468,7 @@ abstract class Controller
      */
     public function doPUT($request)
     {
+        self::$logger->debug('doPUT() called but not implement in child class, request URI ['.$request->getURI().']');
         throw new NotImplementedException('The PUT method is not supported by this controller');
     }
 
@@ -1483,6 +1481,7 @@ abstract class Controller
      */
     public function doPATCH($request)
     {
+        self::$logger->debug('doPATCH() called but not implement in child class, request URI ['.$request->getURI().']');
         throw new NotImplementedException('The PATCH method is not supported by this controller');
     }
 
@@ -1495,6 +1494,7 @@ abstract class Controller
      */
     public function doDELETE($request)
     {
+        self::$logger->debug('doDELETE() called but not implement in child class, request URI ['.$request->getURI().']');
         throw new NotImplementedException('The DELETE method is not supported by this controller');
     }
 
