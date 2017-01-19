@@ -143,7 +143,7 @@ abstract class Feed
     /**
      * Trace logger.
      *
-     * @var \Alpha\Util\Loggin\Logger
+     * @var \Alpha\Util\Logging\Logger
      *
      * @since 1.0
      */
@@ -342,12 +342,12 @@ abstract class Feed
         $parent->appendChild($description);
 
         // id elements and updated elements are just for Atom!
-        if ($id != null) {
+        if ($id !== null) {
             $idnode = $this->createFeedElement('id', $id);
             $parent->appendChild($idnode);
         }
 
-        if ($pubDate != null) {
+        if ($pubDate !== null) {
             $datenode = $this->createFeedElement('updated', $pubDate);
             $parent->appendChild($datenode);
         }
