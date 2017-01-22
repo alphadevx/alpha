@@ -364,8 +364,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         $this->BO->setLastQuery($sqlQuery);
         $stmt = self::getConnection()->prepare($sqlQuery);
 
-        $row = array();
-
         if ($stmt instanceof SQLite3Stmt) {
             if ($this->BO->getPropObject($attribute) instanceof Integer) {
                 if (!$ignoreClassType && $this->BO->isTableOverloaded()) {
@@ -461,7 +459,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
         // ensure that the field name provided in the orderBy param is legit
         try {
-            $field = $this->BO->get($orderBy);
+            $this->BO->get($orderBy);
         } catch (AlphaException $e) {
             throw new AlphaException('The field name ['.$orderBy.'] provided in the param orderBy does not exist on the class ['.get_class($this->BO).']');
         }
@@ -807,7 +805,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         // now build an array of attribute values to be returned
         $values = array();
         $count = 0;
-        $RecordClass = get_class($this->BO);
 
         while ($row = $result->fetchArray()) {
             $values[$count] = $row[$returnAttribute];
@@ -1029,8 +1026,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                                 }
                             } catch (Exception $e) {
                                 throw new FailedSaveException('Failed to update a MANY-TO-MANY relation on the object, error is ['.$e->getMessage().']');
-
-                                return;
                             }
                         }
 
@@ -1716,8 +1711,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>checkTableExists(checkHistoryTable=['.$checkHistoryTable.'])');
 
-        $config = ConfigProvider::getInstance();
-
         $tableExists = false;
 
         $sqlQuery = 'SELECT name FROM sqlite_master WHERE type = "table";';
@@ -2159,8 +2152,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         $sqlQuery = 'SELECT OID FROM '.$this->BO->getTableName().' WHERE OID = :OID;';
         $this->BO->setLastQuery($sqlQuery);
         $stmt = self::getConnection()->prepare($sqlQuery);
-
-        $row = array();
 
         if ($stmt instanceof SQLite3Stmt) {
             $stmt->bindValue(':OID', $OID, SQLITE3_INTEGER);
