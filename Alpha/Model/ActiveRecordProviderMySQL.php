@@ -370,13 +370,15 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         if ($stmt->prepare($sqlQuery)) {
             if ($this->BO->getPropObject($attribute) instanceof Integer) {
                 if (!$ignoreClassType && $this->BO->isTableOverloaded()) {
-                    $stmt->bind_param('is', $value, get_class($this->BO));
+                    $classname = get_class($this->BO);
+                    $stmt->bind_param('is', $value, $classname);
                 } else {
                     $stmt->bind_param('i', $value);
                 }
             } else {
                 if (!$ignoreClassType && $this->BO->isTableOverloaded()) {
-                    $stmt->bind_param('ss', $value, get_class($this->BO));
+                    $classname = get_class($this->BO);
+                    $stmt->bind_param('ss', $value, $classname);
                 } else {
                     $stmt->bind_param('s', $value);
                 }
@@ -542,13 +544,15 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         if ($stmt->prepare($sqlQuery)) {
             if ($this->BO->getPropObject($attribute) instanceof Integer) {
                 if ($this->BO->isTableOverloaded()) {
-                    $stmt->bind_param('is', $value, get_class($this->BO));
+                    $classname = get_class($this->BO);
+                    $stmt->bind_param('is', $value, $classname);
                 } else {
                     $stmt->bind_param('i', $value);
                 }
             } else {
                 if ($this->BO->isTableOverloaded()) {
-                    $stmt->bind_param('ss', $value, get_class($this->BO));
+                    $classname = get_class($this->BO);
+                    $stmt->bind_param('ss', $value, $classname);
                 } else {
                     $stmt->bind_param('s', $value);
                 }
@@ -662,7 +666,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             } else {
                 // we'll still need to bind the "classname" for overloaded BOs...
                 if ($this->BO->isTableOverloaded()) {
-                    $stmt->bind_param('s', get_class($this->BO));
+                    $classname = get_class($this->BO);
+                    $stmt->bind_param('s', $classname);
                 }
             }
             $stmt->execute();
@@ -2169,7 +2174,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         self::$logger->debug('>>reload()');
 
         if (!$this->BO->isTransient()) {
-            $this->BO->load($this->getOID());
+            $this->BO->load($this->BO->getOID());
         } else {
             throw new AlphaException('Cannot reload transient object from database!');
         }
@@ -2200,7 +2205,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
             $stmt->close();
 
-            if ($result) {
+            if (is_array($result)) {
                 if (count($result) > 0) {
                     self::$logger->debug('<<checkRecordExists [true]');
 
@@ -2456,7 +2461,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      * Dynamically binds the result of the supplied prepared statement to a 2d array, where each element in the array is another array
      * representing a database row.
      *
-     * @param mysqli_stmt $stmt
+     * @param \mysqli_stmt $stmt
      *
      * @return array A 2D array containing the query result.
      *
