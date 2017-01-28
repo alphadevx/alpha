@@ -1062,8 +1062,27 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>saveAttribute(attribute=['.$attribute.'], value=['.$value.'])');
 
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        // get the class attributes
+        $reflection = new ReflectionClass(get_class($this->BO));
+        $properties = $reflection->getProperties();
+
+        if ($this->BO->getVersion() != $this->BO->getVersionNumber()->getValue()) {
+            throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
+        }
+
+        // set the "updated by" fields, we can only set the user id if someone is logged in
+        if ($session->get('currentUser') != null) {
+            $this->BO->set('updated_by', $session->get('currentUser')->getOID());
+        }
+
+        $this->BO->set('updated_ts', new Timestamp(date('Y-m-d H:i:s')));
+
         // assume that it is a persistent object that needs to be updated
-        $sqlQuery = 'UPDATE '.$this->BO->getTableName().' SET '.$attribute.'=:attribute, version_num =:version WHERE OID=:OID;';
+        $sqlQuery = 'UPDATE '.$this->BO->getTableName().' SET '.$attribute.'=:attribute, version_num=:version, updated_by=:updated_by, updated_ts=:updated_ts WHERE OID=:OID;';
 
         $this->BO->setLastQuery($sqlQuery);
         $stmt = self::getConnection()->prepare($sqlQuery);
@@ -1077,7 +1096,12 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                 $stmt->bindValue(':attribute', $value, SQLITE3_TEXT);
             }
 
+            $updatedBy = $this->BO->get('updated_by');
+            $updatedTS = $this->BO->get('updated_ts');
+
             $stmt->bindValue(':version', $newVersionNumber, SQLITE3_INTEGER);
+            $stmt->bindValue(':updated_by', $updatedBy, SQLITE3_INTEGER);
+            $stmt->bindValue(':updated_ts', $updatedTS, SQLITE3_TEXT);
             $stmt->bindValue(':OID', $this->BO->getOID(), SQLITE3_INTEGER);
 
             $stmt->execute();

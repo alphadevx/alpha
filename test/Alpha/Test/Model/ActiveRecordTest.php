@@ -1048,6 +1048,18 @@ class ActiveRecordTest extends ModelTestCase
         } catch (RecordNotFoundException $e) {
             $this->fail('Failed to load the BO that was updated with the saveAttribute method');
         }
+
+        $oldTimestamp = $person->get('updated_ts');
+
+        sleep(1);
+
+        $person->saveAttribute('displayName', 'unitTestUserNew');
+
+        $this->assertNotEquals($oldTimestamp, $person->get('updated_ts'), 'Testing that updated_ts changed');
+
+        $person->reload();
+
+        $this->assertNotEquals($oldTimestamp, $person->get('updated_ts'), 'Testing that updated_ts changed');
     }
 
     /**

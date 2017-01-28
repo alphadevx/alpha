@@ -1032,8 +1032,27 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>saveAttribute(attribute=['.$attribute.'], value=['.$value.'])');
 
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        // get the class attributes
+        $reflection = new ReflectionClass(get_class($this->BO));
+        $properties = $reflection->getProperties();
+
+        if ($this->BO->getVersion() != $this->BO->getVersionNumber()->getValue()) {
+            throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
+        }
+
+        // set the "updated by" fields, we can only set the user id if someone is logged in
+        if ($session->get('currentUser') != null) {
+            $this->BO->set('updated_by', $session->get('currentUser')->getOID());
+        }
+
+        $this->BO->set('updated_ts', new Timestamp(date('Y-m-d H:i:s')));
+
         // assume that it is a persistent object that needs to be updated
-        $sqlQuery = 'UPDATE '.$this->BO->getTableName().' SET '.$attribute.'=?, version_num = ? WHERE OID=?;';
+        $sqlQuery = 'UPDATE '.$this->BO->getTableName().' SET '.$attribute.' = ?, version_num = ? , updated_by = ?, updated_ts = ? WHERE OID = ?;';
 
         $this->BO->setLastQuery($sqlQuery);
         $stmt = self::getConnection()->stmt_init();
@@ -1047,8 +1066,10 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                 $bindingsType = 's';
             }
             $OID = $this->BO->getOID();
-            $stmt->bind_param($bindingsType.'ii', $value, $newVersionNumber, $OID);
-            self::$logger->debug('Binding params ['.$bindingsType.'i, '.$value.', '.$OID.']');
+            $updatedBy = $this->BO->get('updated_by');
+            $updatedTS = $this->BO->get('updated_ts');
+            $stmt->bind_param($bindingsType.'iisi', $value, $newVersionNumber, $updatedBy, $updatedTS, $OID);
+            self::$logger->debug('Binding params ['.$bindingsType.'iisi, '.$value.', '.$newVersionNumber.', '.$updatedBy.', '.$updatedTS.', '.$OID.']');
             $stmt->execute();
         } else {
             throw new FailedSaveException('Failed to save attribute, error is ['.$stmt->error.'], query ['.$this->BO->getLastQuery().']');

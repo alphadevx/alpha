@@ -7,7 +7,7 @@ services:
  - memcached
  - redis
 
-before_install: echo "extension = memcached.so" >> ~/.phpenv/versions/7.0.14/etc/php.ini
+before_install: echo "extension = memcached.so" >> ~/.phpenv/versions/7.0.15/etc/php.ini
 
 before_script:
  - wget http://getcomposer.org/composer.phar

@@ -228,6 +228,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      * @throws \Alpha\Exception\FailedSaveException
+     * @throws \Alpha\Exception\LockingException
      */
     public function saveAttribute($attribute, $value);
 
