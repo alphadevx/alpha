@@ -53,7 +53,7 @@ class Date extends Type implements TypeInterface
     /**
      * The year part.
      *
-     * @var int
+     * @var string
      *
      * @since 1.0
      */
@@ -62,7 +62,7 @@ class Date extends Type implements TypeInterface
     /**
      * The month part.
      *
-     * @var int
+     * @var string
      *
      * @since 1.0
      */
@@ -71,7 +71,7 @@ class Date extends Type implements TypeInterface
     /**
      * The day part.
      *
-     * @var int
+     * @var string
      *
      * @since 1.0
      */
