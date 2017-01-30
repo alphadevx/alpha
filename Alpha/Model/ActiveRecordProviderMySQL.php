@@ -7,6 +7,12 @@ use Alpha\Model\Type\Timestamp;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\Relation;
 use Alpha\Model\Type\RelationLookup;
+use Alpha\Model\Type\Double;
+use Alpha\Model\Type\Text;
+use Alpha\Model\Type\SmallText;
+use Alpha\Model\Type\Date;
+use Alpha\Model\Type\Enum;
+use Alpha\Model\Type\Boolean;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Helper\Validator;
@@ -1245,55 +1251,39 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             $propName = $propObj->name;
 
             if (!in_array($propName, $this->BO->getTransientAttributes()) && $propName != 'OID') {
-                $propReflect = new ReflectionClass($this->BO->getPropObject($propName));
-                $propClass = $propReflect->getShortName();
+                $prop = $this->BO->getPropObject($propName);
 
-                switch (mb_strtoupper($propClass)) {
-                    case 'INTEGER':
-                        // special properties for RelationLookup OIDs
-                        if ($this->BO instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
-                            $sqlQuery .= "$propName INT(".$this->BO->getPropObject($propName)->getSize().') ZEROFILL NOT NULL,';
-                        } else {
-                            $sqlQuery .= "$propName INT(".$this->BO->getPropObject($propName)->getSize().'),';
-                        }
-                    break;
-                    case 'DOUBLE':
-                        $sqlQuery .= "$propName DOUBLE(".$this->BO->getPropObject($propName)->getSize(true).'),';
-                    break;
-                    case 'SMALLTEXT':
-                        $sqlQuery .= "$propName VARCHAR(".$this->BO->getPropObject($propName)->getSize().') CHARACTER SET utf8,';
-                    break;
-                    case 'TEXT':
-                        $sqlQuery .= "$propName TEXT CHARACTER SET utf8,";
-                    break;
-                    case 'BOOLEAN':
-                        $sqlQuery .= "$propName CHAR(1) DEFAULT '0',";
-                    break;
-                    case 'DATE':
-                        $sqlQuery .= "$propName DATE,";
-                    break;
-                    case 'TIMESTAMP':
-                        $sqlQuery .= "$propName DATETIME,";
-                    break;
-                    case 'ENUM':
-                        $sqlQuery .= "$propName ENUM(";
-                        $enumVals = $this->BO->getPropObject($propName)->getOptions();
-                        foreach ($enumVals as $val) {
-                            $sqlQuery .= "'".$val."',";
-                        }
-                        $sqlQuery = rtrim($sqlQuery, ',');
-                        $sqlQuery .= ') CHARACTER SET utf8,';
-                    break;
-                    case 'DENUM':
-                        $tmp = new DEnum(get_class($this->BO).'::'.$propName);
-                        $sqlQuery .= "$propName INT(11) ZEROFILL,";
-                    break;
-                    case 'RELATION':
-                        $sqlQuery .= "$propName INT(11) ZEROFILL UNSIGNED,";
-                    break;
-                    default:
-                        $sqlQuery .= '';
-                    break;
+                if ($prop instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
+                    $sqlQuery .= "$propName INT(".$prop->getSize().') ZEROFILL NOT NULL,';
+                } elseif ($prop instanceof Integer) {
+                    $sqlQuery .= "$propName INT(".$prop->getSize().'),';
+                } elseif ($prop instanceof Double) {
+                    $sqlQuery .= "$propName DOUBLE(".$prop->getSize(true).'),';
+                } elseif ($prop instanceof SmallText) {
+                    $sqlQuery .= "$propName VARCHAR(".$prop->getSize().') CHARACTER SET utf8,';
+                } elseif ($prop instanceof Text) {
+                    $sqlQuery .= "$propName TEXT CHARACTER SET utf8,";
+                } elseif ($prop instanceof Boolean) {
+                    $sqlQuery .= "$propName CHAR(1) DEFAULT '0',";
+                } elseif ($prop instanceof Date) {
+                    $sqlQuery .= "$propName DATE,";
+                } elseif ($prop instanceof Timestamp) {
+                    $sqlQuery .= "$propName DATETIME,";
+                } elseif ($prop instanceof Enum) {
+                    $sqlQuery .= "$propName ENUM(";
+                    $enumVals = $this->BO->getPropObject($propName)->getOptions();
+                    foreach ($enumVals as $val) {
+                        $sqlQuery .= "'".$val."',";
+                    }
+                    $sqlQuery = rtrim($sqlQuery, ',');
+                    $sqlQuery .= ') CHARACTER SET utf8,';
+                } elseif ($prop instanceof DEnum) {
+                    $tmp = new DEnum(get_class($this->BO).'::'.$propName);
+                    $sqlQuery .= "$propName INT(11) ZEROFILL,";
+                } elseif ($prop instanceof Relation) {
+                    $sqlQuery .= "$propName INT(11) ZEROFILL UNSIGNED,";
+                } else {
+                    $sqlQuery .= '';
                 }
             }
         }

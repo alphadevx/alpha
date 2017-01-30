@@ -7,6 +7,12 @@ use Alpha\Model\Type\Timestamp;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\Relation;
 use Alpha\Model\Type\RelationLookup;
+use Alpha\Model\Type\Double;
+use Alpha\Model\Type\Text;
+use Alpha\Model\Type\SmallText;
+use Alpha\Model\Type\Date;
+use Alpha\Model\Type\Enum;
+use Alpha\Model\Type\Boolean;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Http\Session\SessionProviderFactory;
@@ -1288,57 +1294,41 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             $propName = $propObj->name;
 
             if (!in_array($propName, $this->BO->getTransientAttributes()) && $propName != 'OID') {
-                $propReflect = new ReflectionClass($this->BO->getPropObject($propName));
-                $propClass = $propReflect->getShortName();
+                $prop = $this->BO->getPropObject($propName);
 
-                switch (mb_strtoupper($propClass)) {
-                    case 'INTEGER':
-                        // special properties for RelationLookup OIDs
-                        if ($this->BO instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
-                            $sqlQuery .= "$propName INTEGER(".$this->BO->getPropObject($propName)->getSize().') NOT NULL,';
-                        } else {
-                            $sqlQuery .= "$propName INTEGER(".$this->BO->getPropObject($propName)->getSize().'),';
-                        }
-                    break;
-                    case 'DOUBLE':
-                        $sqlQuery .= "$propName REAL(".$this->BO->getPropObject($propName)->getSize(true).'),';
-                    break;
-                    case 'SMALLTEXT':
-                        $sqlQuery .= "$propName TEXT(".$this->BO->getPropObject($propName)->getSize().'),';
-                    break;
-                    case 'TEXT':
-                        $sqlQuery .= "$propName TEXT,";
-                    break;
-                    case 'BOOLEAN':
-                        $sqlQuery .= "$propName INTEGER(1) DEFAULT '0',";
-                    break;
-                    case 'DATE':
-                        $sqlQuery .= "$propName TEXT,";
-                    break;
-                    case 'TIMESTAMP':
-                        $sqlQuery .= "$propName TEXT,";
-                    break;
-                    case 'ENUM':
-                        $sqlQuery .= "$propName TEXT,";
-                    break;
-                    case 'DENUM':
-                        $tmp = new DEnum(get_class($this->BO).'::'.$propName);
-                        $sqlQuery .= "$propName INTEGER(11),";
-                    break;
-                    case 'RELATION':
-                        $sqlQuery .= "$propName INTEGER(11),";
+                if ($prop instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
+                    $sqlQuery .= "$propName INTEGER(".$prop->getSize().') NOT NULL,';
+                } elseif ($prop instanceof Integer) {
+                    $sqlQuery .= "$propName INTEGER(".$prop->getSize().'),';
+                } elseif ($prop instanceof Double) {
+                    $sqlQuery .= "$propName REAL(".$prop->getSize(true).'),';
+                } elseif ($prop instanceof SmallText) {
+                    $sqlQuery .= "$propName TEXT(".$prop->getSize().'),';
+                } elseif ($prop instanceof Text) {
+                    $sqlQuery .= "$propName TEXT,";
+                } elseif ($prop instanceof Boolean) {
+                    $sqlQuery .= "$propName INTEGER(1) DEFAULT '0',";
+                } elseif ($prop instanceof Date) {
+                    $sqlQuery .= "$propName TEXT,";
+                } elseif ($prop instanceof Timestamp) {
+                    $sqlQuery .= "$propName TEXT,";
+                } elseif ($prop instanceof Enum) {
+                    $sqlQuery .= "$propName TEXT,";
+                } elseif ($prop instanceof DEnum) {
+                    $tmp = new DEnum(get_class($this->BO).'::'.$propName);
+                    $sqlQuery .= "$propName INTEGER(11),";
+                } elseif ($prop instanceof Relation) {
+                    $sqlQuery .= "$propName INTEGER(11),";
 
-                        $rel = $this->BO->getPropObject($propName);
+                    $rel = $this->BO->getPropObject($propName);
 
-                        $relatedField = $rel->getRelatedClassField();
-                        $relatedClass = $rel->getRelatedClass();
-                        $relatedBO = new $relatedClass();
-                        $tableName = $relatedBO->getTableName();
-                        $foreignKeys[$propName] = array($tableName, $relatedField);
-                    break;
-                    default:
-                        $sqlQuery .= '';
-                    break;
+                    $relatedField = $rel->getRelatedClassField();
+                    $relatedClass = $rel->getRelatedClass();
+                    $relatedBO = new $relatedClass();
+                    $tableName = $relatedBO->getTableName();
+                    $foreignKeys[$propName] = array($tableName, $relatedField);
+                } else {
+                    $sqlQuery .= '';
                 }
             }
         }
