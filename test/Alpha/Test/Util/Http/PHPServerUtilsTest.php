@@ -55,13 +55,13 @@ class PHPServerUtilsTest extends \PHPUnit_Framework_TestCase
      */
     public function testStart()
     {
-        $pid = PHPServerUtils::start('localhost', '8771', '.');
+        $pid = PHPServerUtils::start('localhost', '8713', '.');
         sleep(1); // wait a second to give the server time to start...
 
         $this->assertTrue($pid > 0, 'Testing that a PID was returned after starting the server');
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'http://localhost:8771/');
+        curl_setopt($ch, CURLOPT_URL, 'http://localhost:8713/');
         ob_start();
         $result = curl_exec($ch);
         ob_end_clean();
@@ -80,13 +80,13 @@ class PHPServerUtilsTest extends \PHPUnit_Framework_TestCase
      */
     public function testStop()
     {
-        $pid = PHPServerUtils::start('localhost', '8771', '.');
+        $pid = PHPServerUtils::start('localhost', '8713', '.');
         sleep(1); // wait a second to give the server time to start...
 
         $this->assertTrue($pid > 0, 'Testing that a PID was returned after starting the server');
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'http://localhost:8771/');
+        curl_setopt($ch, CURLOPT_URL, 'http://localhost:8713/');
         curl_setopt($ch, CURLOPT_TIMEOUT, 3);
         ob_start();
         $result = curl_exec($ch);
@@ -111,7 +111,7 @@ class PHPServerUtilsTest extends \PHPUnit_Framework_TestCase
      */
     public function testStatus()
     {
-        $pid = PHPServerUtils::start('localhost', '8771', '.');
+        $pid = PHPServerUtils::start('localhost', '8713', '.');
 
         $this->assertTrue(PHPServerUtils::status($pid), 'Testing that the status of the server is true when it is running');
 
