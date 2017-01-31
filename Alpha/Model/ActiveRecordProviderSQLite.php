@@ -1421,7 +1421,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                     $relatedClass = $rel->getRelatedClass();
                     $relatedBO = new $relatedClass();
                     $tableName = $relatedBO->getTableName();
-                    $foreignKeys[$propName] = array($tableName, $relatedField);
                 } else {
                     $sqlQuery .= '';
                 }
@@ -1520,6 +1519,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             $sqlQuery .= 'classname TEXT(100)';
         } else {
             if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
+                $prop = $this->BO->getPropObject($propName);
+
                 if ($prop instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
                     $sqlQuery .= "$propName INTEGER(".$prop->getSize().') NOT NULL';
                 } elseif ($prop instanceof Integer) {
@@ -1550,7 +1551,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                     $relatedClass = $rel->getRelatedClass();
                     $relatedBO = new $relatedClass();
                     $tableName = $relatedBO->getTableName();
-                    $foreignKeys[$propName] = array($tableName, $relatedField);
                 } else {
                     $sqlQuery .= '';
                 }
