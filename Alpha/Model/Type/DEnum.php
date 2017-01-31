@@ -122,7 +122,7 @@ class DEnum extends ActiveRecord implements TypeInterface
     /**
      * Constructor that sets up the DEnum options.
      *
-     * @param \Alpha\Model\Type\SmallText $name
+     * @param string $name
      */
     public function __construct($name = null)
     {
