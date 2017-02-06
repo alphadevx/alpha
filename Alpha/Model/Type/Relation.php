@@ -3,9 +3,9 @@
 namespace Alpha\Model\Type;
 
 use Alpha\Util\Helper\Validator;
-use Alpha\Util\Config\ConfigProvider;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Model\ActiveRecord;
+use Alpha\Exception\FailedLookupCreateException;
 use ReflectionClass;
 
 /**
@@ -252,7 +252,7 @@ class Relation extends Type implements TypeInterface
                     $this->relatedClassRight = $RC;
                 break;
                 default:
-                    throw new IllegalArguementException('The side paramter ['.$RC.'] is not valid!');
+                    throw new IllegalArguementException('The side parameter ['.$RC.'] is not valid!');
             }
         } else {
             throw new IllegalArguementException('The class ['.$RC.'] is not defined anywhere!');
@@ -262,7 +262,7 @@ class Relation extends Type implements TypeInterface
     /**
      * Get the name of the business object class that this class is related to.
      *
-     * @param string $RC
+     * @param string $side
      *
      * @return string
      *
@@ -283,9 +283,7 @@ class Relation extends Type implements TypeInterface
                 return $this->relatedClassRight;
             break;
             default:
-                throw new IllegalArguementException('The side paramter ['.$RC.'] is not valid!');
-
-                return '';
+                throw new IllegalArguementException('The side parameter ['.$side.'] is not valid!');
         }
     }
 
@@ -408,8 +406,6 @@ class Relation extends Type implements TypeInterface
             break;
             default:
                 throw new IllegalArguementException('The side paramter ['.$RC.'] is not valid!');
-
-                return '';
         }
     }
 
@@ -632,8 +628,6 @@ class Relation extends Type implements TypeInterface
      */
     public function getRelatedObjects($accessingClassName = '')
     {
-        $config = ConfigProvider::getInstance();
-
         if ($this->relationType == 'ONE-TO-MANY') {
             if ($this->getValue() == '') { // if the value is empty, then return an empty array
                 return array();
