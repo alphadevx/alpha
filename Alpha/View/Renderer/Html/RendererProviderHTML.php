@@ -117,8 +117,6 @@ class RendererProviderHTML implements RendererProviderInterface
     {
         self::$logger->debug('>>createView(fields=['.var_export($fields, true).'])');
 
-        $config = ConfigProvider::getInstance();
-
         // the form ID
         $fields['formID'] = stripslashes(get_class($this->BO).'_'.$this->BO->getOID());
 
@@ -613,7 +611,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $html = View::loadTemplateFragment('html', 'head.phtml', array('title' => $controller->getTitle(), 'description' => $controller->getDescription(), 'allowCSSOverrides' => $allowCSSOverrides));
 
         if (method_exists($controller, 'during_displayPageHead_callback')) {
-            $html .= $controller->during_displayPageHead_callback();
+            $html .= $controller->{'during_displayPageHead_callback'}();
         }
 
         $html .= '</head>';
@@ -631,7 +629,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $html .= '<div class="container">';
 
         if (method_exists($controller, 'insert_CMSDisplayStandardHeader_callback')) {
-            $html .= $controller->insert_CMSDisplayStandardHeader_callback();
+            $html .= $controller->{'insert_CMSDisplayStandardHeader_callback'}();
         }
 
         self::$logger->debug('<<displayPageHead [HTML]');
@@ -1013,8 +1011,6 @@ class RendererProviderHTML implements RendererProviderInterface
     {
         self::$logger->debug('>>renderTextField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
-        $config = ConfigProvider::getInstance();
-
         $html = '';
 
         if ($mode == 'create') {
@@ -1077,8 +1073,6 @@ class RendererProviderHTML implements RendererProviderInterface
     {
         self::$logger->debug('>>renderStringField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
-        $config = ConfigProvider::getInstance();
-
         $html = '';
 
         if ($mode == 'create' || $mode == 'edit') {
@@ -1101,8 +1095,6 @@ class RendererProviderHTML implements RendererProviderInterface
     public function renderRelationField($name, $label, $mode, $value = '', $expanded = false, $buttons = true)
     {
         self::$logger->debug('>>renderRelationField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], expanded=['.$expanded.'], buttons=['.$buttons.'])');
-
-        $config = ConfigProvider::getInstance();
 
         $html = '';
 
