@@ -249,7 +249,7 @@ class RecordSelector
                             $editURL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($obj).'&ActiveRecordOID='.$obj->getOID().'&view=edit');
                         } else {
                             if (isset($customViewControllerName)) {
-                                if ($config->get('app.use.mod.rewrite')) {
+                                if ($config->get('app.use.pretty.urls')) {
                                     $viewURL = $config->get('app.url').$customViewControllerName.'/oid/'.$obj->getOID();
                                 } else {
                                     $viewURL = $config->get('app.url').'controller/'.$customViewControllerName.'.php?oid='.$obj->getOID();
@@ -258,7 +258,7 @@ class RecordSelector
                                 $viewURL = $config->get('app.url').'alpha/controller/Detail.php?bo='.get_class($obj).'&oid='.$obj->getOID();
                             }
                             if (isset($customEditControllerName)) {
-                                if ($config->get('app.use.mod.rewrite')) {
+                                if ($config->get('app.use.pretty.urls')) {
                                     $editURL = $config->get('app.url').$customEditControllerName.'/oid/'.$obj->getOID();
                                 } else {
                                     $editURL = $config->get('app.url').'controller/'.$customEditControllerName.'.php?oid='.$obj->getOID();

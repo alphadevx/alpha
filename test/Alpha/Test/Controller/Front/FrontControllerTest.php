@@ -165,19 +165,19 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
         $config = ConfigProvider::getInstance();
 
         $oldKey = $config->get('security.encryption.key');
-        $oldRewriteSetting = $config->get('app.use.mod.rewrite');
+        $oldRewriteSetting = $config->get('app.use.pretty.urls');
 
         $config->set('security.encryption.key', 'testkey12345678901234567');
         $params = 'act=ViewArticleTitle&title=Test_Title';
 
-        $config->set('app.use.mod.rewrite', true);
+        $config->set('app.use.pretty.urls', true);
         $this->assertEquals($config->get('app.url').'/tk/7eYCDOP1AFAv2Kc45D2eSgFM1dJ2mboM4fMMMjs3PP6cb8Qafsv0L06zZjWeIWRH', FrontController::generateSecureURL($params), 'Testing the generateSecureURL() returns the correct URL with mod_rewrite style URLs enabled');
 
-        $config->set('app.use.mod.rewrite', false);
+        $config->set('app.use.pretty.urls', false);
         $this->assertEquals($config->get('app.url').'?tk=7eYCDOP1AFAv2Kc45D2eSgFM1dJ2mboM4fMMMjs3PP6cb8Qafsv0L06zZjWeIWRH', FrontController::generateSecureURL($params), 'Testing the generateSecureURL() returns the correct URL with mod_rewrite style URLs disabled');
 
         $config->set('security.encryption.key', $oldKey);
-        $config->set('app.use.mod.rewrite', $oldRewriteSetting);
+        $config->set('app.use.pretty.urls', $oldRewriteSetting);
     }
 
     /**

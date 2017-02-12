@@ -381,7 +381,7 @@ class FrontController
     {
         $config = ConfigProvider::getInstance();
 
-        if ($config->get('app.use.mod.rewrite')) {
+        if ($config->get('app.use.pretty.urls')) {
             return $config->get('app.url').'/tk/'.self::encodeQuery($params);
         } else {
             return $config->get('app.url').'?tk='.self::encodeQuery($params);
