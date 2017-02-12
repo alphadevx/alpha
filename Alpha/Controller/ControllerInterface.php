@@ -65,7 +65,7 @@ interface ControllerInterface
      * @since Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doGET($params);
+    public function doGET($request);
 
     /**
      * Handles POST HTTP requests.
@@ -75,7 +75,7 @@ interface ControllerInterface
      * @since Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doPOST($params);
+    public function doPOST($request);
 
     /**
      * Handles PUT HTTP requests.
@@ -85,7 +85,7 @@ interface ControllerInterface
      * @since Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doPUT($params);
+    public function doPUT($request);
 
     /**
      * Handles PATCH HTTP requests.
@@ -95,7 +95,7 @@ interface ControllerInterface
      * @since Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doPATCH($params);
+    public function doPATCH($request);
 
     /**
      * Handles DELETE HTTP requests.
@@ -105,7 +105,7 @@ interface ControllerInterface
      * @since Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doDELETE($params);
+    public function doDELETE($request);
 
     /**
      * Handles OPTIONS HTTP requests.
@@ -115,7 +115,7 @@ interface ControllerInterface
      * @since Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doOPTIONS($params);
+    public function doOPTIONS($request);
 
     /**
      * Handles TRACE HTTP requests.
@@ -125,5 +125,5 @@ interface ControllerInterface
      * @since Alpha\Util\Http\Response
      * @since 2.0.2
      */
-    public function doTRACE($params);
+    public function doTRACE($request);
 }
