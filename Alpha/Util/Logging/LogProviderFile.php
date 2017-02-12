@@ -109,26 +109,21 @@ class LogProviderFile implements LogProviderInterface
                     $this->backupFile();
                 }
             } catch (\Exception $e) {
-                try {
-                    $logsDir = $config->get('app.file.store.dir').'logs';
+                $logsDir = $config->get('app.file.store.dir').'logs';
 
-                    if (!file_exists($logsDir)) {
-                        if (!mkdir($logsDir, 0766)) {
-                            throw new PHPException('Could not create the directory ['.$logsDir.']');
-                        }
+                if (!file_exists($logsDir)) {
+                    if (!mkdir($logsDir, 0766)) {
+                        throw new PHPException('Could not create the directory ['.$logsDir.']');
                     }
+                }
 
-                    $fp = fopen($this->path, 'a+');
-                    if (!fputcsv($fp, $line, ',', '"', '\\')) {
-                        throw new PHPException('Could not write to the CSV file ['.$this->path.']');
-                    }
+                $fp = fopen($this->path, 'a+');
+                if (!fputcsv($fp, $line, ',', '"', '\\')) {
+                    throw new PHPException('Could not write to the CSV file ['.$this->path.']');
+                }
 
-                    if ($this->checkFileSize() >= $this->maxSize) {
-                        $this->backupFile();
-                    }
-                } catch (\Exception $e) {
-                    echo 'Unable to write to the log file ['.$this->path.'], error ['.$e->getMessage().']';
-                    exit;
+                if ($this->checkFileSize() >= $this->maxSize) {
+                    $this->backupFile();
                 }
             }
         }

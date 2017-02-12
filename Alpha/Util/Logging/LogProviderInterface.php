@@ -49,7 +49,9 @@ interface LogProviderInterface
     /**
      * Writes a line of data to the log.
      *
-     * $param array $line
+     * @param array $line
+     *
+     * @throws \Alpha\Exception\PHPException
      *
      * @since 2.0
      */

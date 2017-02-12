@@ -3,6 +3,7 @@
 namespace Alpha\Util\Config;
 
 use Alpha\Exception\IllegalArguementException;
+use Alpha\Exception\PHPException;
 
 /**
  * A singleton config class.
@@ -181,7 +182,9 @@ class ConfigProvider
 
     /**
      * Loads the config from the relevent .ini file, dependant upon the current
-     * environment (hostname).  Note that this method will die() on failure!
+     * environment (hostname).
+     *
+     * @throws \Alpha\Exception\PHPException
      *
      * @since 1.0
      */
@@ -199,7 +202,7 @@ class ConfigProvider
             // CLI on Linux or Windows should have this
             $server = php_uname('n');
         } else {
-            die('Unable to determine the server name');
+            throw new PHPException('Unable to determine the server name');
         }
 
         // Load the servers to see which environment the current server is set as
@@ -218,10 +221,10 @@ class ConfigProvider
             }
 
             if ($environment == '') {
-                die('No environment configured for the server '.$server);
+                throw new PHPException('No environment configured for the server '.$server);
             }
         } else {
-            die('Failed to load the config file ['.$serverIni.']');
+            throw new PHPException('Failed to load the config file ['.$serverIni.']');
         }
 
         $this->environment = $environment;
@@ -233,7 +236,7 @@ class ConfigProvider
         }
 
         if (!file_exists($envIni)) {
-            die('Failed to load the config file ['.$envIni.']');
+            throw new PHPException('Failed to load the config file ['.$envIni.']');
         }
 
         $configArray = parse_ini_file($envIni);
