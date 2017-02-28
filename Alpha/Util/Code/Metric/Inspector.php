@@ -2,8 +2,6 @@
 
 namespace Alpha\Util\Code\Metric;
 
-use File_Find;
-
 /**
  * Utility class for calcualting some software metrics related to a project.
  *
@@ -131,15 +129,6 @@ class Inspector
     private $files = array();
 
     /**
-     * An array of the directories in the project.
-     *
-     * @var array
-     *
-     * @since 1.0
-     */
-    private $directories = array();
-
-    /**
      * An array of the first characters of a comment line in source code.
      *
      * @var array
@@ -158,9 +147,7 @@ class Inspector
     public function __construct($rootDir = '.')
     {
         $this->rootDir = $rootDir;
-        // populate the file and directories arrays using the File_Find class
-        $finder = new File_Find();
-        list($this->directories, $this->files) = $finder->maptree($rootDir);
+        $this->files = scandir($rootDir);
     }
 
     /**
