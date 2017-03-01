@@ -43,12 +43,6 @@ Alpha should be installed using Composer.  Here is a minimum example _composer.j
 	    "require": {
 	        "alphadevx/alpha": "2.0.*"
 	    },
-	    "repositories": [
-	        {
-	            "type": "pear",
-	            "url": "http://pear.php.net"
-	        }
-	    ],
 	    "autoload": {
 	        "psr-0": {
 	            "": "src/"
