@@ -685,7 +685,7 @@ abstract class Controller
             intval($this->unitEndTime->getYear())
             );
 
-        self::$logger->debug('<<getUnitDuration ['.$intEndTime - $intStartTime.']');
+        self::$logger->debug('<<getUnitDuration ['.($intEndTime - $intStartTime).']');
 
         return $intEndTime - $intStartTime;
     }
