@@ -47,7 +47,7 @@ Alpha should be installed using Composer.  Here is a minimum example _composer.j
 	        "psr-0": {
 	            "": "src/"
 	        }
-		}
+	    }
 	}
 
 ### Database
