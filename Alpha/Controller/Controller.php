@@ -668,21 +668,21 @@ abstract class Controller
         self::$logger->debug('>>getUnitDuration()');
 
         $intStartTime = mktime(
-            $this->unitStartTime->getHour(),
-            $this->unitStartTime->getMinute(),
-            $this->unitStartTime->getSecond(),
-            $this->unitStartTime->getMonth(),
-            $this->unitStartTime->getDay(),
-            $this->unitStartTime->getYear()
+            intval($this->unitStartTime->getHour()),
+            intval($this->unitStartTime->getMinute()),
+            intval($this->unitStartTime->getSecond()),
+            intval($this->unitStartTime->getMonth()),
+            intval($this->unitStartTime->getDay()),
+            intval($this->unitStartTime->getYear())
             );
 
         $intEndTime = mktime(
-            $this->unitEndTime->getHour(),
-            $this->unitEndTime->getMinute(),
-            $this->unitEndTime->getSecond(),
-            $this->unitEndTime->getMonth(),
-            $this->unitEndTime->getDay(),
-            $this->unitEndTime->getYear()
+            intval($this->unitEndTime->getHour()),
+            intval($this->unitEndTime->getMinute()),
+            intval($this->unitEndTime->getSecond()),
+            intval($this->unitEndTime->getMonth()),
+            intval($this->unitEndTime->getDay()),
+            intval($this->unitEndTime->getYear())
             );
 
         self::$logger->debug('<<getUnitDuration ['.$intEndTime - $intStartTime.']');
