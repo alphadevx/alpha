@@ -66,7 +66,7 @@ class MarkdownFacade
      *
      * @since 1.0
      */
-    private $BO = null;
+    private $Record = null;
 
     /**
      * The auto-generated name of the Markdown HTML cache file for the BO.
@@ -80,36 +80,36 @@ class MarkdownFacade
     /**
      * The constructor.
      *
-     * @param \Alpha\Model\ActiveRecord $BO
+     * @param \Alpha\Model\ActiveRecord $Record
      * @param bool                     $useCache
      *
      * @since 1.0
      */
-    public function __construct($BO, $useCache = true)
+    public function __construct($Record, $useCache = true)
     {
         $config = ConfigProvider::getInstance();
 
-        $this->BO = $BO;
+        $this->record = $Record;
 
-        if ($this->BO instanceof \Alpha\Model\Article && $this->BO->isLoadedFromFile()) {
-            $underscoreTimeStamp = str_replace(array('-', ' ', ':'), '_', $this->BO->getContentFileDate());
-            $this->filename = $config->get('app.file.store.dir').'cache/html/'.get_class($this->BO).'_'.$this->BO->get('title').'_'.$underscoreTimeStamp.'.html';
+        if ($this->record instanceof \Alpha\Model\Article && $this->record->isLoadedFromFile()) {
+            $underscoreTimeStamp = str_replace(array('-', ' ', ':'), '_', $this->record->getContentFileDate());
+            $this->filename = $config->get('app.file.store.dir').'cache/html/'.get_class($this->record).'_'.$this->record->get('title').'_'.$underscoreTimeStamp.'.html';
         } else {
-            $this->filename = $config->get('app.file.store.dir').'cache/html/'.get_class($this->BO).'_'.$this->BO->getID().'_'.$this->BO->getVersion().'.html';
+            $this->filename = $config->get('app.file.store.dir').'cache/html/'.get_class($this->record).'_'.$this->record->getID().'_'.$this->record->getVersion().'.html';
         }
 
         if (!$useCache) {
-            $this->content = $this->markdown($this->BO->get('content', true));
+            $this->content = $this->markdown($this->record->get('content', true));
         } else {
             if ($this->checkCache()) {
                 $this->loadCache();
             } else {
-                if ($this->BO->get('content', true) == '') {
+                if ($this->record->get('content', true) == '') {
                     // the content may not be loaded from the DB at this stage due to a previous soft-load
-                    $this->BO->reload();
+                    $this->record->reload();
                 }
 
-                $this->content = $this->markdown($this->BO->get('content', true));
+                $this->content = $this->markdown($this->record->get('content', true));
 
                 $this->cache();
             }
@@ -124,8 +124,8 @@ class MarkdownFacade
             $end = mb_strrpos($attachmentURL, '"');
             $fileName = mb_substr($attachmentURL, $start + 1, $end - ($start + 1));
 
-            if (method_exists($this->BO, 'getAttachmentSecureURL')) {
-                $this->content = str_replace($attachmentURL, 'href="'.$this->BO->getAttachmentSecureURL($fileName).'" rel="nofollow"', $this->content);
+            if (method_exists($this->record, 'getAttachmentSecureURL')) {
+                $this->content = str_replace($attachmentURL, 'href="'.$this->record->getAttachmentSecureURL($fileName).'" rel="nofollow"', $this->content);
             }
         }
 
@@ -139,7 +139,7 @@ class MarkdownFacade
 
             if ($config->get('cms.images.widget')) {
                 // get the details of the source image
-                $path = $this->BO->getAttachmentsLocation().$fileName;
+                $path = $this->record->getAttachmentsLocation().$fileName;
                 $image_details = getimagesize($path);
                 $imgType = $image_details[2];
                 if ($imgType == 1) {
@@ -155,8 +155,8 @@ class MarkdownFacade
                 $this->content = str_replace($attachmentURL, $img->renderHTMLLink(), $this->content);
             } else {
                 // render a normal image link to the ViewAttachment controller
-                if (method_exists($this->BO, 'getAttachmentSecureURL')) {
-                    $this->content = str_replace($attachmentURL, '<img src="'.$this->BO->getAttachmentSecureURL($fileName).'">', $this->content);
+                if (method_exists($this->record, 'getAttachmentSecureURL')) {
+                    $this->content = str_replace($attachmentURL, '<img src="'.$this->record->getAttachmentSecureURL($fileName).'">', $this->content);
                 }
             }
         }
@@ -211,7 +211,7 @@ class MarkdownFacade
     private function cache()
     {
         // check to ensure that the article is not transient before caching it
-        if (!$this->BO->isTransient() && $this->filename != '') {
+        if (!$this->record->isTransient() && $this->filename != '') {
             $fp = fopen($this->filename, 'w');
             if (!$fp) {
                 throw new AlphaException('Failed to open the cache file for writing, directory permissions my not be set correctly!');
@@ -225,7 +225,7 @@ class MarkdownFacade
     }
 
     /**
-     * Used to check the HTML cache for the BO cache file.
+     * Used to check the HTML cache for the Record cache file.
      *
      * @return bool
      *

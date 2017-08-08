@@ -64,7 +64,7 @@ class RendererProviderFactory
      * based on the name of the provider class supplied.
      *
      * @param $providerName The fully-qualified class name of the provider class, must implement Alpha\View\Renderer\RendererProviderInterface.
-     * @param $BO The Alpha\Model\ActiveRecord instance to pass to the renderer provider for passing data.
+     * @param $Record The Alpha\Model\ActiveRecord instance to pass to the renderer provider for passing data.
      *
      * @throws \Alpha\Exception\IllegalArguementException
      *
@@ -72,7 +72,7 @@ class RendererProviderFactory
      *
      * @since 1.2
      */
-    public static function getInstance($providerName, $BO = null)
+    public static function getInstance($providerName, $Record = null)
     {
         if (self::$logger == null) {
             self::$logger = new Logger('RendererProviderFactory');
@@ -85,8 +85,8 @@ class RendererProviderFactory
         }
 
         $instance = new $providerName();
-        if (isset($BO)) {
-            $instance->setBO($BO);
+        if (isset($Record)) {
+            $instance->setRecord($Record);
         }
 
         if (!$instance instanceof RendererProviderInterface) {

@@ -116,16 +116,16 @@ abstract class Feed
     protected $tagMap = array('item' => 'item', 'feeddesc' => 'description', 'itemdesc' => 'description');
 
     /**
-     * The BO which we will serve up in this feed.
+     * The Record which we will serve up in this feed.
      *
      * @var \Alpha\Model\ActiveRecord
      *
      * @since 1.0
      */
-    private $BO;
+    private $Record;
 
     /**
-     * An array containing BO field names -> RSS field name mappings.
+     * An array containing Record field names -> RSS field name mappings.
      *
      * @var array
      *
@@ -152,7 +152,7 @@ abstract class Feed
     /**
      * The constructor.
      *
-     * @param string $BOName      The fully-qualifified classname of the BO to render a feed for.
+     * @param string $RecordName      The fully-qualifified classname of the Record to render a feed for.
      * @param string $title       The title of the feed.
      * @param string $url         The base URL for the feed.
      * @param string $description The description of the feed.
@@ -164,20 +164,20 @@ abstract class Feed
      *
      * @since 1.0
      */
-    public function __construct($BOName, $title, $url, $description, $pubDate = null, $id = null, $limit = 10)
+    public function __construct($RecordName, $title, $url, $description, $pubDate = null, $id = null, $limit = 10)
     {
         self::$logger = new Logger('Feed');
-        self::$logger->debug('>>__construct(BOName=['.$BOName.'], title=['.$title.'], url=['.$url.'], description=['.$description.'], pubDate=['.$pubDate.'], id=['.$id.'], limit=['.$limit.'])');
+        self::$logger->debug('>>__construct(RecordName=['.$RecordName.'], title=['.$title.'], url=['.$url.'], description=['.$description.'], pubDate=['.$pubDate.'], id=['.$id.'], limit=['.$limit.'])');
 
         $this->rssDoc = new DOMDocument();
         $this->rssDoc->loadXML($this->rootTag);
         $this->docElement = $this->rssDoc->documentElement;
 
-        if (!class_exists($BOName)) {
-            throw new IllegalArguementException('Unable to load the class definition for the class ['.$BOName.'] while trying to generate a feed!');
+        if (!class_exists($RecordName)) {
+            throw new IllegalArguementException('Unable to load the class definition for the class ['.$RecordName.'] while trying to generate a feed!');
         }
 
-        $this->BO = new $BOName();
+        $this->record = new $RecordName();
 
         if ($this->hasChannel) {
             $root = $this->createFeedElement('channel');
@@ -192,7 +192,7 @@ abstract class Feed
     }
 
     /**
-     * Method to load all of the BO items to the feed from the database, from the newest to the
+     * Method to load all of the Record items to the feed from the database, from the newest to the
      * $limit provided.
      *
      * @param int    $limit  The amount of items to render in the feed.
@@ -200,42 +200,42 @@ abstract class Feed
      *
      * @since 1.0
      */
-    public function loadBOs($limit, $sortBy)
+    public function loadRecords($limit, $sortBy)
     {
-        $BOs = $this->BO->loadAll(0, $limit, $sortBy, 'DESC');
+        $Records = $this->record->loadAll(0, $limit, $sortBy, 'DESC');
 
         ActiveRecord::disconnect();
 
-        foreach ($BOs as $BO) {
-            $this->addBO($BO);
+        foreach ($Records as $Record) {
+            $this->addRecord($Record);
         }
     }
 
     /**
-     * Method for adding a BO to the current feed.
+     * Method for adding a Record to the current feed.
      *
-     * @param \Alpha\Model\ActiveRecord $BO
+     * @param \Alpha\Model\ActiveRecord $Record
      */
-    public function addBO($BO)
+    public function addRecord($Record)
     {
-        $title = $BO->get($this->fieldNameMappings['title']);
-        $url = $BO->get($this->fieldNameMappings['url']);
+        $title = $Record->get($this->fieldNameMappings['title']);
+        $url = $Record->get($this->fieldNameMappings['url']);
 
         if (isset($this->fieldNameMappings['description'])) {
-            $description = $BO->get($this->fieldNameMappings['description']);
+            $description = $Record->get($this->fieldNameMappings['description']);
         } else {
             $description = '';
         }
 
         if (isset($this->fieldNameMappings['pubDate'])) {
-            $dateTS = strtotime($BO->get($this->fieldNameMappings['pubDate']));
+            $dateTS = strtotime($Record->get($this->fieldNameMappings['pubDate']));
             $pubDate = date(DATE_ATOM, $dateTS);
         } else {
             $pubDate = '';
         }
 
         if (isset($this->fieldNameMappings['id'])) {
-            $id = $BO->get($this->fieldNameMappings['id']);
+            $id = $Record->get($this->fieldNameMappings['id']);
         } else {
             $id = '';
         }
@@ -244,7 +244,7 @@ abstract class Feed
     }
 
     /**
-     * Method for mapping BO fieldnames to feed field names.
+     * Method for mapping Record fieldnames to feed field names.
      *
      * @param string $title       The title of the feed.
      * @param string $url         The base URL for the feed.

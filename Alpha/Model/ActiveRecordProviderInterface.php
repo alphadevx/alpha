@@ -138,7 +138,7 @@ interface ActiveRecordProviderInterface
      * @param string $orderBy         The name of the field to sort the objects by.
      * @param string $order           The order to sort the objects by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type.
-     * @param array  $constructorArgs An optional array of contructor arguements to pass to the BOs that will be generated and returned.  Supports a maximum of 5 arguements.
+     * @param array  $constructorArgs An optional array of contructor arguements to pass to the records that will be generated and returned.  Supports a maximum of 5 arguements.
      *
      * @return array An array containing objects of this type of business object.
      *
@@ -159,7 +159,7 @@ interface ActiveRecordProviderInterface
      * @param string $orderBy         The name of the field to sort the records by.
      * @param string $order           The order to sort the records by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
-     * @param array  $constructorArgs An optional array of contructor arguements to pass to the BOs that will be generated and returned.  Supports a maximum of 5 arguements.
+     * @param array  $constructorArgs An optional array of contructor arguements to pass to the records that will be generated and returned.  Supports a maximum of 5 arguements.
      *
      * @return array An array containing objects of this type of record object.
      *
@@ -218,7 +218,7 @@ interface ActiveRecordProviderInterface
     public function save();
 
     /**
-     * Saves the field specified with the value supplied.  Only works for persistent BOs.  Note that no Alpha type
+     * Saves the field specified with the value supplied.  Only works for persistent records.  Note that no Alpha type
      * validation is performed with this method!
      *
      * @param string $attribute The name of the attribute to save.
@@ -251,7 +251,7 @@ interface ActiveRecordProviderInterface
     public function delete();
 
     /**
-     * Gets the version_num of the object from the database (returns 0 if the BO is not saved yet).
+     * Gets the version_num of the object from the database (returns 0 if the Record is not saved yet).
      *
      * @return int
      *
@@ -262,7 +262,7 @@ interface ActiveRecordProviderInterface
     public function getVersion();
 
     /**
-     * Builds a new database table for the BO class.
+     * Builds a new database table for the Record class.
      *
      * @since 1.1
      *
@@ -271,7 +271,7 @@ interface ActiveRecordProviderInterface
     public function makeTable();
 
     /**
-     * Builds a new database table for the BO class to store it's history.
+     * Builds a new database table for the Record class to store it's history.
      *
      * @since 1.2
      *
@@ -371,10 +371,10 @@ interface ActiveRecordProviderInterface
     public function checkTableExists($checkHistoryTable = false);
 
     /**
-     * Static method to check the database and see if the table for the indicated BO class name
-     * exists (assumes table name will be $BOClassName less "Object").
+     * Static method to check the database and see if the table for the indicated Record class name
+     * exists (assumes table name will be $RecordClassName less "Object").
      *
-     * @param string $BOClassName       The name of the business object class we are checking.
+     * @param string $RecordClassName       The name of the business object class we are checking.
      * @param bool   $checkHistoryTable Set to true if you	want to	check for the existance	of the _history	table for this DAO.
      *
      * @return bool
@@ -384,7 +384,7 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\AlphaException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public static function checkBOTableExists($BOClassName, $checkHistoryTable = false);
+    public static function checkRecordTableExists($RecordClassName, $checkHistoryTable = false);
 
     /**
      * Checks to see if the table in the database matches (for fields) the business class definition, i.e. if the
@@ -459,7 +459,7 @@ interface ActiveRecordProviderInterface
     public function reload();
 
     /**
-     * Checks that a record exists for the BO in the database.
+     * Checks that a record exists for the Record in the database.
      *
      * @param int $OID The Object ID of the object we want to see whether it exists or not.
      *
@@ -473,14 +473,14 @@ interface ActiveRecordProviderInterface
 
     /**
      * Checks to see if the table name matches the classname, and if not if the table
-     * name matches the classname name of another BO, i.e. the table is used to store
-     * multiple types of BOs.
+     * name matches the classname name of another record, i.e. the table is used to store
+     * multiple types of records.
      *
      * @return bool
      *
      * @since 1.1
      *
-     * @throws \Alpha\Exception\BadBOTableNameException
+     * @throws \Alpha\Exception\BadTableNameException
      */
     public function isTableOverloaded();
 
@@ -512,13 +512,13 @@ interface ActiveRecordProviderInterface
     public static function rollback();
 
     /**
-     * Provide the BO that we are going to map the data to from this provider.
+     * Provide the Record that we are going to map the data to from this provider.
      *
-     * @param \Alpha\Model\ActiveRecord $BO
+     * @param \Alpha\Model\ActiveRecord $Record
      *
      * @since 1.1
      */
-    public function setBO($BO);
+    public function setRecord($Record);
 
     /**
      * Returns a 2d array, where each element in the array is another array

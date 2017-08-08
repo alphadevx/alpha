@@ -65,7 +65,7 @@ class RendererProviderJSON implements RendererProviderInterface
      *
      * @since 2.0
      */
-    private $BO;
+    private $Record;
 
     /**
      * The constructor.
@@ -83,9 +83,9 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setBO($BO)
+    public function setRecord($Record)
     {
-        $this->BO = $BO;
+        $this->record = $Record;
     }
 
     /**
@@ -111,7 +111,7 @@ class RendererProviderJSON implements RendererProviderInterface
     {
         self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
 
-        $json = json_encode($this->BO->toArray()).',';
+        $json = json_encode($this->record->toArray()).',';
 
         self::$logger->debug('<<listView [JSON]');
 
@@ -125,7 +125,7 @@ class RendererProviderJSON implements RendererProviderInterface
     {
         self::$logger->debug('>>detailedView(fields=['.var_export($fields, true).'])');
 
-        $json = json_encode($this->BO->toArray());
+        $json = json_encode($this->record->toArray());
 
         self::$logger->debug('<<detailedView [JSON]');
 
@@ -286,7 +286,7 @@ class RendererProviderJSON implements RendererProviderInterface
     {
         self::$logger->debug('>>renderAllFields(fields=['.var_export($fields, true).'])');
 
-        $json = json_encode(array_diff($this->BO->toArray(), $filterFields));
+        $json = json_encode(array_diff($this->record->toArray(), $filterFields));
 
         self::$logger->debug('<<renderAllFields [JSON]');
 

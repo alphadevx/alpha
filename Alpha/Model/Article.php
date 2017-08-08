@@ -159,7 +159,7 @@ class Article extends ActiveRecord
     protected $tags;
 
     /**
-     * An array of all of the attributes on this BO which are tagged.
+     * An array of all of the attributes on this Record which are tagged.
      *
      * @var array
      *
@@ -296,7 +296,7 @@ class Article extends ActiveRecord
                         $tag->save();
                     } catch (ValidationException $e) {
                         /*
-                         * The unique key has most-likely been violated because this BO is already tagged with this
+                         * The unique key has most-likely been violated because this Record is already tagged with this
                          * value, so we can ignore in this case.
                          */
                     }

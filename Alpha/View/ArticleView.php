@@ -65,11 +65,11 @@ class ArticleView extends View
     {
         $config = ConfigProvider::getInstance();
 
-        $markdown = new MarkdownFacade($this->BO);
+        $markdown = new MarkdownFacade($this->record);
 
         $fields['markdownContent'] = $markdown->getContent();
 
-        return $this->loadTemplate($this->BO, 'markdown', $fields);
+        return $this->loadTemplate($this->record, 'markdown', $fields);
     }
 
     /**
@@ -95,8 +95,8 @@ class ArticleView extends View
      */
     public function listView($fields = array())
     {
-        $fields['dateAdded'] = $this->BO->getCreateTS()->getDate();
-        $fields['editButtonURL'] = FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID().'&view=edit');
+        $fields['dateAdded'] = $this->record->getCreateTS()->getDate();
+        $fields['editButtonURL'] = FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.get_class($this->record).'&ActiveRecordOID='.$this->record->getOID().'&view=edit');
 
         return parent::listView($fields);
     }
@@ -112,7 +112,7 @@ class ArticleView extends View
      */
     public function adminView($fields = array())
     {
-        $fields['createButtonURL'] = FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.get_class($this->BO).'&view=create');
+        $fields['createButtonURL'] = FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.get_class($this->record).'&view=create');
 
         return parent::adminView($fields);
     }
@@ -128,7 +128,7 @@ class ArticleView extends View
      */
     public function detailedView($fields = array())
     {
-        $fields['editButtonURL'] = FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID().'&view=edit');
+        $fields['editButtonURL'] = FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.get_class($this->record).'&ActiveRecordOID='.$this->record->getOID().'&view=edit');
 
         return parent::detailedView($fields);
     }
@@ -156,7 +156,7 @@ class ArticleView extends View
         }
 
         // the form ID
-        $fields['formID'] = stripslashes(get_class($this->BO)).'_'.$this->BO->getID();
+        $fields['formID'] = stripslashes(get_class($this->record)).'_'.$this->record->getID();
 
         // buffer form fields to $formFields
         $fields['formFields'] = $this->renderAllFields('edit');
@@ -183,7 +183,7 @@ class ArticleView extends View
                                 label: 'Okay',
                                 cssClass: 'btn btn-default btn-xs',
                                 action: function(dialogItself) {
-                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->BO->getOID()."');
+                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->record->getOID()."');
                                     $('#deleteForm').submit();
                                     dialogItself.close();
                                 }
@@ -195,17 +195,17 @@ class ArticleView extends View
         $button = new Button($js, 'Delete', 'deleteBut');
         $fields['deleteButton'] = $button->render();
 
-        $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO).'&start=0&limit='.$config->get('app.list.page.amount'))."'", 'Back to List', 'cancelBut');
+        $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->record).'&start=0&limit='.$config->get('app.list.page.amount'))."'", 'Back to List', 'cancelBut');
         $fields['cancelButton'] = $button->render();
 
         $tags = array();
 
-        if (is_object($this->BO->getPropObject('tags'))) {
-            $tags = $this->BO->getPropObject('tags')->getRelatedObjects();
+        if (is_object($this->record->getPropObject('tags'))) {
+            $tags = $this->record->getPropObject('tags')->getRelatedObjects();
         }
 
         if (count($tags) > 0) {
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\TagController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID())."'", 'Edit Tags', 'tagsBut');
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\TagController&ActiveRecordType='.get_class($this->record).'&ActiveRecordOID='.$this->record->getOID())."'", 'Edit Tags', 'tagsBut');
             $fields['tagsButton'] = $button->render();
         }
 
@@ -213,7 +213,7 @@ class ArticleView extends View
         $fields['formSecurityFields'] = $this->renderSecurityFields();
 
         // OID will need to be posted for optimistic lock checking
-        $fields['version_num'] = $this->BO->getVersionNumber();
+        $fields['version_num'] = $this->record->getVersionNumber();
 
         // file attachments section
         $fields['fileAttachments'] = $this->renderFileUploadSection();
@@ -222,7 +222,7 @@ class ArticleView extends View
             $this->{'after_editView_callback'}();
         }
 
-        return $this->loadTemplate($this->BO, 'edit', $fields);
+        return $this->loadTemplate($this->record, 'edit', $fields);
     }
 
     /**
@@ -239,8 +239,8 @@ class ArticleView extends View
         $html = '<div class="form-group">';
         $html .= '  <h3>File Attachments:</h3>';
 
-        if (is_dir($this->BO->getAttachmentsLocation())) {
-            $handle = opendir($this->BO->getAttachmentsLocation());
+        if (is_dir($this->record->getAttachmentsLocation())) {
+            $handle = opendir($this->record->getAttachmentsLocation());
 
             $fileCount = 0;
 
@@ -253,7 +253,7 @@ class ArticleView extends View
 
                     $html .= '<tr>';
 
-                    $html .= '<td>'.$file.' <em>('.number_format(filesize($this->BO->getAttachmentsLocation().'/'.$file) / 1024).' KB)</em></td>';
+                    $html .= '<td>'.$file.' <em>('.number_format(filesize($this->record->getAttachmentsLocation().'/'.$file) / 1024).' KB)</em></td>';
 
                     $js = "if(window.jQuery) {
                             BootstrapDialog.show({
@@ -274,7 +274,7 @@ class ArticleView extends View
                                         cssClass: 'btn btn-default btn-xs',
                                         action: function(dialogItself) {
                                             $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('deletefile')) : 'deletefile')."\"]').attr('value', '".$file."');
-                                            $('[id=\"".stripslashes(get_class($this->BO)).'_'.$this->BO->getID()."\"]').submit();
+                                            $('[id=\"".stripslashes(get_class($this->record)).'_'.$this->record->getID()."\"]').submit();
                                             dialogItself.close();
                                         }
                                     }
@@ -291,7 +291,7 @@ class ArticleView extends View
         } else {
             // we will take this opportunity to create the attachments folder is it does
             // not already exist.
-            $this->BO->createAttachmentsFolder();
+            $this->record->createAttachmentsFolder();
         }
 
         $html .= '<span class="btn btn-default btn-file">';

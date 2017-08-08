@@ -108,7 +108,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
             $bad = View::getInstance(new self());
             $this->fail('testing that passing a bad object to the getInstance method will throw an IllegalArguementException');
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('The BO provided [Alpha\Test\View\ViewTest] is not defined anywhere!', $e->getMessage(), 'testing that passing a bad object to the getInstance method will throw an IllegalArguementException');
+            $this->assertEquals('The record type provided [Alpha\Test\View\ViewTest] is not defined anywhere!', $e->getMessage(), 'testing that passing a bad object to the getInstance method will throw an IllegalArguementException');
         }
     }
 
@@ -128,7 +128,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that we can force the return of an View object even when a child definition for the provided BO exists.
+     * Testing that we can force the return of an View object even when a child definition for the provided record exists.
      *
      * @since 1.0
      */
@@ -136,21 +136,21 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $good = View::getInstance(new Article(), true);
-            $this->assertTrue($good instanceof View, 'testing that we can force the return of an View object even when a child definition for the provided BO exists');
+            $this->assertTrue($good instanceof View, 'testing that we can force the return of an View object even when a child definition for the provided record exists');
         } catch (IllegalArguementException $e) {
             $this->fail($e->getMessage());
         }
     }
 
     /**
-     * Testing that we can attach a good BO to an existing view object.
+     * Testing that we can attach a good record to an existing view object.
      *
      * @since 1.0
      */
-    public function testSetBOGood()
+    public function testSetRecordGood()
     {
         try {
-            $this->view->setBO(new Article());
+            $this->view->setRecord(new Article());
             $this->assertTrue(true);
         } catch (IllegalArguementException $e) {
             $this->fail($e->getMessage());
@@ -158,15 +158,15 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing that attempting to attach a bad BO object to an existing view object will cause an exception.
+     * Testing that attempting to attach a bad record to an existing view object will cause an exception.
      *
      * @since 1.0
      */
-    public function testSetBOBad()
+    public function testSetRecordBad()
     {
         try {
-            $this->view->setBO(new self());
-            $this->fail('testing that attempting to attach a bad BO object to an existing view object will cause an exception');
+            $this->view->setRecord(new self());
+            $this->fail('testing that attempting to attach a bad record object to an existing view object will cause an exception');
         } catch (IllegalArguementException $e) {
             $this->assertTrue(true);
         }
@@ -180,7 +180,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     public function testLoadTemplateBad()
     {
         try {
-            $this->view->loadTemplate($this->view->getBO(), 'BadMode', array());
+            $this->view->loadTemplate($this->view->getRecord(), 'BadMode', array());
             $this->fail('testing that a bad mode param provided to the loadTemplate method will throw an exception');
         } catch (IllegalArguementException $e) {
             $this->assertEquals('No [BadMode] HTML template found for class [Article]', $e->getMessage(), 'testing that a bad mode param provided to the loadTemplate method will throw an exception');
@@ -188,17 +188,17 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Testing accessing the attached BO via getBO().
+     * Testing accessing the attached record via getRecord().
      *
      * @since 1.0
      */
-    public function testGetBO()
+    public function testGetRecord()
     {
         $article = new Article();
         $article->set('title', 'Test Article');
-        $this->view->setBO($article);
+        $this->view->setRecord($article);
 
-        $this->assertEquals('Test Article', $this->view->getBO()->get('title'), 'testing accessing the attached BO via getBO()');
+        $this->assertEquals('Test Article', $this->view->getRecord()->get('title'), 'testing accessing the attached record via getRecord()');
     }
 
     /**

@@ -49,16 +49,16 @@ namespace Alpha\View\Renderer;
 interface RendererProviderInterface
 {
     /**
-     * Provide the BO that we are going render.
+     * Provide the Record that we are going render.
      *
-     * @param \Alpha\Model\ActiveRecord $BO
+     * @param \Alpha\Model\ActiveRecord $Record
      *
      * @since 1.2
      */
-    public function setBO($BO);
+    public function setRecord($Record);
 
     /**
-     * Renders the create view for the BO using the selected renderer.
+     * Renders the create view for the Record using the selected renderer.
      *
      * @param array $fields Hash array of fields to pass to the template.
      *
@@ -69,7 +69,7 @@ interface RendererProviderInterface
     public function createView($fields = array());
 
     /**
-     * Renders the edit view for the BO using the selected renderer.
+     * Renders the edit view for the Record using the selected renderer.
      *
      * @param array $fields Hash array of fields to pass to the template.
      *
@@ -80,7 +80,7 @@ interface RendererProviderInterface
     public function editView($fields = array());
 
     /**
-     * Renders the list view for the BO using the selected renderer.
+     * Renders the list view for the Record using the selected renderer.
      *
      * @param array $fields Hash array of fields to pass to the template.
      *
@@ -91,7 +91,7 @@ interface RendererProviderInterface
     public function listView($fields = array());
 
     /**
-     * Renders the detailed read-only view for the BO using the selected renderer.
+     * Renders the detailed read-only view for the Record using the selected renderer.
      *
      * @param array $fields Hash array of fields to pass to the template.
      *
@@ -102,7 +102,7 @@ interface RendererProviderInterface
     public function detailedView($fields = array());
 
     /**
-     * Renders the admin view for the BO using the selected renderer.
+     * Renders the admin view for the Record using the selected renderer.
      *
      * @param array $fields Hash array of fields to pass to the template.
      *
@@ -323,7 +323,7 @@ interface RendererProviderInterface
     public function renderRelationField($name, $label, $mode, $value = '', $expanded = false, $buttons = true);
 
     /**
-     * Convenience method that renders all fields for the current BO in edit/create/view mode.
+     * Convenience method that renders all fields for the current Record in edit/create/view mode.
      *
      * @param string $mode           (view|edit|create)
      * @param array  $filterFields   Optional list of field names to exclude from rendering.

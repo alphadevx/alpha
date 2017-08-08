@@ -180,7 +180,7 @@ class InstallController extends Controller implements ControllerInterface
         /*
          * Loop over each business object in the system, and create a table for it
          */
-        $classNames = ActiveRecord::getBOClassNames();
+        $classNames = ActiveRecord::getRecordClassNames();
         $loadedClasses = array();
 
         foreach ($classNames as $classname) {
@@ -192,18 +192,18 @@ class InstallController extends Controller implements ControllerInterface
                 $body .= '<p>Attempting to create the table for the class ['.$classname.']...';
 
                 try {
-                    $BO = new $classname();
+                    $Record = new $classname();
 
-                    if (!$BO->checkTableExists()) {
-                        $BO->makeTable();
+                    if (!$Record->checkTableExists()) {
+                        $Record->makeTable();
                     } else {
-                        if ($BO->checkTableNeedsUpdate()) {
-                            $missingFields = $BO->findMissingFields();
+                        if ($Record->checkTableNeedsUpdate()) {
+                            $missingFields = $Record->findMissingFields();
 
                             $count = count($missingFields);
 
                             for ($i = 0; $i < $count; ++$i) {
-                                $BO->addProperty($missingFields[$i]);
+                                $Record->addProperty($missingFields[$i]);
                             }
                         }
                     }
@@ -215,8 +215,8 @@ class InstallController extends Controller implements ControllerInterface
                     self::$logger->warn($elce->getMessage());
                 }
 
-                self::$logger->info('Created the ['.$BO->getTableName().'] table successfully');
-                $body .= View::displayUpdateMessage('Created the ['.$BO->getTableName().'] table successfully');
+                self::$logger->info('Created the ['.$Record->getTableName().'] table successfully');
+                $body .= View::displayUpdateMessage('Created the ['.$Record->getTableName().'] table successfully');
             } catch (\Exception $e) {
                 $body .= View::displayErrorMessage($e->getMessage());
                 $body .= View::displayErrorMessage('Aborting.');

@@ -286,7 +286,7 @@ class RecordSelector
 
                                 $html .= '<em>'.$label.': </em>'.$value.'&nbsp;&nbsp;&nbsp;&nbsp;';
                             }
-                            // if the related BO has been updated, render the update time
+                            // if the related Record has been updated, render the update time
                             if ($obj->getCreateTS() != $obj->getUpdateTS()) {
                                 try {
                                     $html .= '<em>'.$obj->getDataLabel('updated_ts').': </em>'.$obj->get('updated_ts');
@@ -366,10 +366,10 @@ class RecordSelector
 
             $html .= '</div>';
 
-            // hidden field to store the OID of the current BO
+            // hidden field to store the OID of the current record
             $html .= '<input type="hidden" name="'.$fieldname2.'" id="'.$fieldname2.'" value="'.$this->relationObject->getValue().'"/>';
 
-            // hidden field to store the OIDs of the related BOs on the other side of the rel (this is what we check for when saving)
+            // hidden field to store the OIDs of the related records on the other side of the rel (this is what we check for when saving)
             if ($this->relationObject->getSide($this->accessingClassName) == 'left') {
                 $lookupOIDs = $this->relationObject->getLookup()->loadAllFieldValuesByAttribute('leftID', $this->relationObject->getValue(), 'rightID', 'DESC');
             } else {

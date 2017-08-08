@@ -111,16 +111,16 @@ class SearchProviderTags implements SearchProviderInterface
 
         if (count($matches) == 0) {
             /*
-             * Build an array of BOs for the matching tags from the DB:
-             * array key = BO ID
-             * array value = weight (the amount of tags matching the BO)
+             * Build an array of records for the matching tags from the DB:
+             * array key = Record ID
+             * array value = weight (the amount of tags matching the record)
              */
             foreach ($matchingTags as $tag) {
                 if ($returnType == 'all' || $tag->get('taggedClass') == $returnType) {
                     $key = $tag->get('taggedClass').'-'.$tag->get('taggedOID');
 
                     if (isset($matches[$key])) {
-                        // increment the weight if the same BO is tagged more than once
+                        // increment the weight if the same Record is tagged more than once
                         $weight = intval($matches[$key]) + 1;
                         $matches[$key] = $weight;
                     } else {
@@ -149,12 +149,12 @@ class SearchProviderTags implements SearchProviderInterface
                 $parts = explode('-', $key);
 
                 try {
-                    $BO = new $parts[0]();
-                    $BO->load($parts[1]);
+                    $Record = new $parts[0]();
+                    $Record->load($parts[1]);
 
-                    $results[] = $BO;
+                    $results[] = $Record;
                 } catch (RecordNotFoundException $e) {
-                    self::$logger->warn('Orpaned Tag detected pointing to a non-existant BO of OID ['.$parts[1].'] and type ['.$parts[0].'].');
+                    self::$logger->warn('Orpaned Tag detected pointing to a non-existant Record of OID ['.$parts[1].'] and type ['.$parts[0].'].');
                 }
             }
         }
@@ -207,16 +207,16 @@ class SearchProviderTags implements SearchProviderInterface
                         // matches on the distinct if defined need to be skipped
                         if ($distinct != '') {
                             try {
-                                $BO = new $matchingTag['taggedClass']();
-                                $BO->load($matchingTag['taggedOID']);
+                                $Record = new $matchingTag['taggedClass']();
+                                $Record->load($matchingTag['taggedOID']);
 
                                 // skip where the source object field is identical
-                                if ($sourceObject->get($distinct) == $BO->get($distinct)) {
+                                if ($sourceObject->get($distinct) == $Record->get($distinct)) {
                                     continue;
                                 }
 
-                                if (!in_array($BO->get($distinct), $distinctValues)) {
-                                    $distinctValues[] = $BO->get($distinct);
+                                if (!in_array($Record->get($distinct), $distinctValues)) {
+                                    $distinctValues[] = $Record->get($distinct);
                                 } else {
                                     continue;
                                 }
@@ -226,7 +226,7 @@ class SearchProviderTags implements SearchProviderInterface
                         }
 
                         if (isset($matches[$key])) {
-                            // increment the weight if the same BO is tagged more than once
+                            // increment the weight if the same Record is tagged more than once
                             $weight = intval($matches[$key]) + 1;
                             $matches[$key] = $weight;
                         } else {
@@ -254,10 +254,10 @@ class SearchProviderTags implements SearchProviderInterface
         foreach ($matches as $key => $weight) {
             $parts = explode('-', $key);
 
-            $BO = new $parts[0]();
-            $BO->load($parts[1]);
+            $Record = new $parts[0]();
+            $Record->load($parts[1]);
 
-            $results[] = $BO;
+            $results[] = $Record;
         }
 
         return $results;
@@ -278,7 +278,7 @@ class SearchProviderTags implements SearchProviderInterface
                     $tag->save();
                 } catch (ValidationException $e) {
                     /*
-                     * The unique key has most-likely been violated because this BO is already tagged with this
+                     * The unique key has most-likely been violated because this Record is already tagged with this
                      * value, so we can ignore in this case.
                      */
                 }

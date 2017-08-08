@@ -70,15 +70,15 @@ class ArticleCommentView extends View
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
 
-        $markdown = new MarkdownFacade($this->BO);
+        $markdown = new MarkdownFacade($this->record);
         $author = new Person();
-        $id = $this->BO->getCreatorID();
+        $id = $this->record->getCreatorID();
         $author->load($id->getValue());
 
         $html = '<blockquote class="usercomment">';
 
-        $createTS = $this->BO->getCreateTS();
-        $updateTS = $this->BO->getUpdateTS();
+        $createTS = $this->record->getCreateTS();
+        $updateTS = $this->record->getUpdateTS();
 
         $html .= '<p>Posted by '.($author->get('URL') == '' ? $author->get('username') : '<a href="'.$author->get('URL').'" target="new window">'.$author->get('username').'</a>').' at '.$createTS->getValue().'.';
         $html .= '&nbsp;'.$author->get('username').' has posted ['.$author->getCommentCount().'] comments on articles since joining.';
@@ -91,7 +91,7 @@ class ArticleCommentView extends View
 
         if ($createTS->getValue() != $updateTS->getValue()) {
             $updator = new Person();
-            $id = $this->BO->getCreatorID();
+            $id = $this->record->getCreatorID();
             $updator->load($id->getValue());
             $html .= '<p>Updated by '.($updator->get('URL') == '' ? $updator->get('username') : '<a href="'.$updator->get('URL').'" target="new window">'.$updator->get('username').'</a>').' at '.$updateTS->getValue().'.</p>';
         }
@@ -118,11 +118,11 @@ class ArticleCommentView extends View
         $html .= '<table cols="2" class="create_view">';
         $html .= '<form action="'.$fields['formAction'].'" method="POST" accept-charset="UTF-8">';
 
-        $textBox = new TextBox($this->BO->getPropObject('content'), $this->BO->getDataLabel('content'), 'content', '', 10);
+        $textBox = new TextBox($this->record->getPropObject('content'), $this->record->getDataLabel('content'), 'content', '', 10);
         $html .= $textBox->render();
 
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('articleOID')) : 'articleOID');
-        $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->BO->get('articleOID').'"/>';
+        $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->record->get('articleOID').'"/>';
         $html .= '<tr><td colspan="2">';
 
         $button = new Button('submit', 'Post Comment', 'createCommentBut');
@@ -159,13 +159,13 @@ class ArticleCommentView extends View
         $html = '<table cols="2" class="edit_view" style="width:100%; margin:0px">';
         $html .= '<form action="'.$fields['formAction'].'" method="POST" accept-charset="UTF-8">';
 
-        $textBox = new TextBox($this->BO->getPropObject('content'), $this->BO->getDataLabel('content'), 'content', '', 5, $this->BO->getID());
+        $textBox = new TextBox($this->record->getPropObject('content'), $this->record->getDataLabel('content'), 'content', '', 5, $this->record->getID());
         $html .= $textBox->render();
 
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('version_num')) : 'version_num');
-        $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->BO->getVersion().'"/>';
+        $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->record->getVersion().'"/>';
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID');
-        $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->BO->getID().'"/>';
+        $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->record->getID().'"/>';
 
         // render special buttons for admins only
         if ($session->get('currentUser')->inGroup('Admin') && strpos($fields['formAction'], '/tk/') !== false) {
@@ -179,7 +179,7 @@ class ArticleCommentView extends View
                 $('#dialogDiv').dialog({
                 buttons: {
                     'OK': function(event, ui) {
-                        $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->BO->getOID()."');
+                        $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->record->getOID()."');
                         $('#deleteForm').submit();
                     },
                     'Cancel': function(event, ui) {
@@ -192,7 +192,7 @@ class ArticleCommentView extends View
             $temp = new Button($js, 'Delete', 'deleteBut');
             $html .= $temp->render();
             $html .= '&nbsp;&nbsp;';
-            $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO))."'", 'Back to List', 'cancelBut');
+            $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->record))."'", 'Back to List', 'cancelBut');
             $html .= $temp->render();
             $html .= '</td></tr>';
 
@@ -206,7 +206,7 @@ class ArticleCommentView extends View
             $html .= '</table>';
 
             $html .= '<div align="center">';
-            $temp = new Button('submit', 'Update Your Comment', 'saveBut'.$this->BO->getID());
+            $temp = new Button('submit', 'Update Your Comment', 'saveBut'.$this->record->getID());
             $html .= $temp->render();
             $html .= '</div>';
 

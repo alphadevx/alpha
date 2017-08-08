@@ -58,9 +58,9 @@ class RSS2 extends Feed
     /**
      * {@inheritdoc}
      */
-    public function __construct($BOName, $title, $url, $description, $pubDate = null, $id = null, $limit = 10)
+    public function __construct($RecordName, $title, $url, $description, $pubDate = null, $id = null, $limit = 10)
     {
-        parent::__construct($BOName, $title, $url, $description, $pubDate, $id, $limit);
+        parent::__construct($RecordName, $title, $url, $description, $pubDate, $id, $limit);
         $this->docElement = $this->root;
     }
 }

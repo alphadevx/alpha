@@ -108,7 +108,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    protected $dataLabels = array('OID' => 'RelationLookup ID#', 'leftID' => 'Left BO ID#', 'rightID' => 'Right BO ID#');
+    protected $dataLabels = array('OID' => 'RelationLookup ID#', 'leftID' => 'Left Record ID#', 'rightID' => 'Right Record ID#');
 
     /**
      * The message to display to the user when validation fails.
@@ -155,11 +155,11 @@ class RelationLookup extends ActiveRecord implements TypeInterface
 
         // make sure the lookup table exists
         if (!$this->checkTableExists() && ActiveRecord::isInstalled()) {
-            // first make sure that the two BO tables exist before relating them with a lookup table
-            if (ActiveRecord::checkBOTableExists($leftClassName) && ActiveRecord::checkBOTableExists($rightClassName)) {
+            // first make sure that the two Record tables exist before relating them with a lookup table
+            if (ActiveRecord::checkRecordTableExists($leftClassName) && ActiveRecord::checkRecordTableExists($rightClassName)) {
                 $this->makeTable();
             } else {
-                throw new FailedLookupCreateException('Error trying to create a lookup table ['.$this->getTableName().'], as tables for BOs ['.$leftClassName.'] or ['.$rightClassName.'] don\'t exist!');
+                throw new FailedLookupCreateException('Error trying to create a lookup table ['.$this->getTableName().'], as tables for records ['.$leftClassName.'] or ['.$rightClassName.'] don\'t exist!');
             }
         }
 

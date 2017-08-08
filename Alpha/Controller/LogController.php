@@ -109,7 +109,6 @@ class LogController extends Controller implements ControllerInterface
         $body = '';
 
         try {
-            // load the business object (BO) definition
             if (isset($params['logPath']) && file_exists(urldecode($params['logPath']))) {
                 $logPath = urldecode($params['logPath']);
             } else {

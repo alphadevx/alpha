@@ -129,7 +129,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
             }
 
             $body .= '<h3>Listing active record which are tagged</h3>';
-            $ActiveRecordTypes = ActiveRecord::getBOClassNames();
+            $ActiveRecordTypes = ActiveRecord::getRecordClassNames();
 
             foreach ($ActiveRecordTypes as $ActiveRecordType) {
                 $record = new $ActiveRecordType();
@@ -365,7 +365,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                         return $this->doGET($request);
                     } catch (ValidationException $e) {
                         /*
-                         * The unique key has most-likely been violated because this BO is already tagged with this
+                         * The unique key has most-likely been violated because this Record is already tagged with this
                          * value.
                          */
                         ActiveRecord::rollback();

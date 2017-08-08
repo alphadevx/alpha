@@ -55,7 +55,7 @@ class ActiveRecord2Excel
      *
      * @since 1.0
      */
-    private $BO;
+    private $Record;
 
     /**
      * Trace logger.
@@ -69,16 +69,16 @@ class ActiveRecord2Excel
     /**
      * Constructor.
      *
-     * @param \Alpha\Model\ActiveRecord $BO
+     * @param \Alpha\Model\ActiveRecord $Record
      *
      * @since 1.0
      */
-    public function __construct($BO)
+    public function __construct($Record)
     {
         self::$logger = new Logger('ActiveRecord2Excel');
-        self::$logger->debug('>>__construct(BO=['.var_export($BO, true).'])');
+        self::$logger->debug('>>__construct(Record=['.var_export($Record, true).'])');
 
-        $this->BO = $BO;
+        $this->record = $Record;
 
         self::$logger->debug('<<__construct');
     }
@@ -102,16 +102,16 @@ class ActiveRecord2Excel
         $output = '';
 
         // get the class attributes
-        $reflection = new \ReflectionClass(get_class($this->BO));
+        $reflection = new \ReflectionClass(get_class($this->record));
         $properties = $reflection->getProperties();
 
         // print headers
         if ($renderHeaders) {
-            $output .= $this->BO->getDataLabel('OID').$sep;
+            $output .= $this->record->getDataLabel('OID').$sep;
             foreach ($properties as $propObj) {
                 $propName = $propObj->name;
-                if (!in_array($propName, $this->BO->getTransientAttributes()) && !in_array($propName, $this->BO->getDefaultAttributes())) {
-                    $output .= $this->BO->getDataLabel($propName).$sep;
+                if (!in_array($propName, $this->record->getTransientAttributes()) && !in_array($propName, $this->record->getDefaultAttributes())) {
+                    $output .= $this->record->getDataLabel($propName).$sep;
                 }
             }
 
@@ -119,11 +119,11 @@ class ActiveRecord2Excel
         }
 
         // print values
-        $output .= $this->BO->getOID().$sep;
+        $output .= $this->record->getOID().$sep;
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
-            $prop = $this->BO->getPropObject($propName);
-            if (!in_array($propName, $this->BO->getTransientAttributes()) && !in_array($propName, $this->BO->getDefaultAttributes())) {
+            $prop = $this->record->getPropObject($propName);
+            if (!in_array($propName, $this->record->getTransientAttributes()) && !in_array($propName, $this->record->getDefaultAttributes())) {
                 if (get_class($prop) == 'DEnum') {
                     $output .= $prop->getDisplayValue().$sep;
                 } elseif (get_class($prop) == 'Relation') {

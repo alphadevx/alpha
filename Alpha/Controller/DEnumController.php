@@ -116,7 +116,7 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
 
         // load one DEnum
         if (isset($params['denumOID'])) {
-            $BOoid = $params['denumOID'];
+            $RecordOid = $params['denumOID'];
 
             // set up the title and meta details
             $this->setTitle('Editing a DEnum');
@@ -131,7 +131,7 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
             }
 
             try {
-                $this->record->load($BOoid);
+                $this->record->load($RecordOid);
 
                 ActiveRecord::disconnect();
 
@@ -157,7 +157,7 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
                 $body .= $this->createDEnumTables();
             }
 
-            // get all of the BOs and invoke the list view on each one
+            // get all of the records and invoke the list view on each one
 
             // set the start point for the list pagination
             if (isset($params['start']) ? $this->start = $params['start'] : $this->start = 1);
@@ -209,14 +209,14 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
 
             // ensure that a OID is provided
             if (isset($params['denumOID'])) {
-                $BOoid = $params['denumOID'];
+                $RecordOid = $params['denumOID'];
             } else {
                 throw new IllegalArguementException('Could not load the DEnum object as an denumOID was not supplied!');
             }
 
             if (isset($params['saveBut'])) {
                 try {
-                    $this->record->load($BOoid);
+                    $this->record->load($RecordOid);
                     // update the object from post data
                     $this->record->populateFromArray($params);
 

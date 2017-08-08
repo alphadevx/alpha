@@ -59,7 +59,7 @@ use Alpha\Model\Article;
 class FeedController extends Controller implements ControllerInterface
 {
     /**
-     * The name of the BO to render as a feed.
+     * The name of the Record to render as a feed.
      *
      * @var string
      *
@@ -95,7 +95,7 @@ class FeedController extends Controller implements ControllerInterface
     protected $description;
 
     /**
-     * The BO to feed field mappings.
+     * The Record to feed field mappings.
      *
      * @var array
      *
@@ -104,7 +104,7 @@ class FeedController extends Controller implements ControllerInterface
     protected $fieldMappings;
 
     /**
-     * The BO field name to sort the feed by (descending), default is OID.
+     * The Record field name to sort the feed by (descending), default is OID.
      *
      * @var string
      *
@@ -205,7 +205,7 @@ class FeedController extends Controller implements ControllerInterface
             }
 
             // now add the twenty last items (from newest to oldest) to the feed, and render
-            $feed->loadBOs(20, $this->sortBy);
+            $feed->loadRecords(20, $this->sortBy);
             $response->setBody($feed->render());
 
             // log the request for this news feed
@@ -223,7 +223,7 @@ class FeedController extends Controller implements ControllerInterface
     }
 
     /**
-     * setup the feed title, field mappings and description based on common BO types.
+     * setup the feed title, field mappings and description based on common Record types.
      */
     protected function setup()
     {

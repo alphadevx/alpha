@@ -115,7 +115,7 @@ class SequenceController extends ActiveRecordController implements ControllerInt
 
         ActiveRecord::disconnect();
 
-        $this->BOCount = $sequence->getCount();
+        $this->recordCount = $sequence->getCount();
 
         $body .= View::renderDeleteForm($this->request->getURI());
 

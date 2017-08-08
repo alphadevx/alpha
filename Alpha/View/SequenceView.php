@@ -64,18 +64,18 @@ class SequenceView extends View
     /**
      * Constructor.
      *
-     * @param \Alpha\Model\ActiveRecord $BO
+     * @param \Alpha\Model\ActiveRecord $Record
      *
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    protected function __construct($BO)
+    protected function __construct($Record)
     {
         self::$logger = new Logger('SequenceView');
-        self::$logger->debug('>>__construct(BO=['.var_export($BO, true).'])');
+        self::$logger->debug('>>__construct(Record=['.var_export($Record, true).'])');
 
-        parent::__construct($BO);
+        parent::__construct($Record);
 
         self::$logger->debug('<<__construct');
     }
@@ -101,9 +101,9 @@ class SequenceView extends View
         $fields['formAction'] = $fields['URI'];
 
         // work out how many columns will be in the table
-        $reflection = new \ReflectionClass(get_class($this->BO));
+        $reflection = new \ReflectionClass(get_class($this->record));
         $properties = array_keys($reflection->getDefaultProperties());
-        $fields['colCount'] = 1 + count(array_diff($properties, $this->BO->getDefaultAttributes(), $this->BO->getTransientAttributes()));
+        $fields['colCount'] = 1 + count(array_diff($properties, $this->record->getDefaultAttributes(), $this->record->getTransientAttributes()));
 
         // get the class attributes
         $properties = $reflection->getProperties();
@@ -115,13 +115,13 @@ class SequenceView extends View
             $propName = $propObj->name;
 
             // skip over password fields
-            $property = $this->BO->getPropObject($propName);
+            $property = $this->record->getPropObject($propName);
             if (!($property instanceof SmallText && $property->checkIsPassword())) {
-                if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
-                    $html .= '  <th>'.$this->BO->getDataLabel($propName).'</th>';
+                if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $this->record->getTransientAttributes())) {
+                    $html .= '  <th>'.$this->record->getDataLabel($propName).'</th>';
                 }
                 if ($propName == 'OID') {
-                    $html .= '  <th>'.$this->BO->getDataLabel($propName).'</th>';
+                    $html .= '  <th>'.$this->record->getDataLabel($propName).'</th>';
                 }
             } else {
                 $fields['colCount'] = $fields['colCount'] - 1;
@@ -137,26 +137,26 @@ class SequenceView extends View
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
 
-            $property = $this->BO->getPropObject($propName);
+            $property = $this->record->getPropObject($propName);
             if (!($property instanceof SmallText && $property->checkIsPassword())) {
-                if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
-                    $propClass = get_class($this->BO->getPropObject($propName));
+                if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $this->record->getTransientAttributes())) {
+                    $propClass = get_class($this->record->getPropObject($propName));
 
                     if ($propClass == 'Alpha\Model\Type\Text') {
-                        $text = htmlentities($this->BO->get($propName), ENT_COMPAT, 'utf-8');
+                        $text = htmlentities($this->record->get($propName), ENT_COMPAT, 'utf-8');
                         if (mb_strlen($text) > 70) {
                             $html .= '  <td>&nbsp;'.mb_substr($text, 0, 70).'...</td>';
                         } else {
                             $html .= '  <td>&nbsp;'.$text.'</td>';
                         }
                     } elseif ($propClass == 'Alpha\Model\Type\DEnum') {
-                        $html .= '  <td>&nbsp;'.$this->BO->getPropObject($propName)->getDisplayValue().'</td>';
+                        $html .= '  <td>&nbsp;'.$this->record->getPropObject($propName)->getDisplayValue().'</td>';
                     } else {
-                        $html .= '  <td>&nbsp;'.$this->BO->get($propName).'</td>';
+                        $html .= '  <td>&nbsp;'.$this->record->get($propName).'</td>';
                     }
                 }
                 if ($propName == 'OID') {
-                    $html .= '  <td>&nbsp;'.$this->BO->getOID().'</td>';
+                    $html .= '  <td>&nbsp;'.$this->record->getOID().'</td>';
                 }
             }
         }
@@ -164,7 +164,7 @@ class SequenceView extends View
 
         $fields['formFields'] = $html;
 
-        $button = new Button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->BO).'&oid='.$this->BO->getOID())."';", 'View', 'viewBut');
+        $button = new Button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->record).'&oid='.$this->record->getOID())."';", 'View', 'viewBut');
         $fields['viewButton'] = $button->render();
 
         // supressing the edit/delete buttons for Sequences
@@ -173,7 +173,7 @@ class SequenceView extends View
         // buffer security fields to $formSecurityFields variable
         $fields['formSecurityFields'] = $this->renderSecurityFields();
 
-        $html = $this->loadTemplate($this->BO, 'list', $fields);
+        $html = $this->loadTemplate($this->record, 'list', $fields);
 
         if (method_exists($this, 'after_listView_callback')) {
             $this->{'after_listView_callback'}();
@@ -202,8 +202,8 @@ class SequenceView extends View
         $config = ConfigProvider::getInstance();
 
         // we may want to display the OID regardless of class
-        $fields['OIDLabel'] = $this->BO->getDataLabel('OID');
-        $fields['OID'] = $this->BO->getOID();
+        $fields['OIDLabel'] = $this->record->getDataLabel('OID');
+        $fields['OID'] = $this->record->getOID();
 
         // buffer form fields to $formFields
         $fields['formFields'] = $this->renderAllFields('view');
@@ -214,7 +214,7 @@ class SequenceView extends View
 
         $fields['adminButtons'] = '';
 
-        $html = $this->loadTemplate($this->BO, 'detail', $fields);
+        $html = $this->loadTemplate($this->record, 'detail', $fields);
 
         if (method_exists($this, 'after_detailedView_callback')) {
             $this->{'after_detailedView_callback'}();

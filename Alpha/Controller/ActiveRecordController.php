@@ -109,7 +109,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
     protected $order;
 
     /**
-     * The name of the BO field to filter the list by (optional).
+     * The name of the Record field to filter the list by (optional).
      *
      * @var string
      *

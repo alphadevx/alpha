@@ -154,7 +154,7 @@ class Relation extends Type implements TypeInterface
     private $OIDs = array();
 
     /**
-     * When building a relation with the TagObject BO, set this to the name of the tagged class.
+     * When building a relation with the TagObject record, set this to the name of the tagged class.
      *
      * @var string
      *
@@ -240,7 +240,7 @@ class Relation extends Type implements TypeInterface
      */
     public function setRelatedClass($RC, $side = '')
     {
-        if (in_array($RC, ActiveRecord::getBOClassNames())) {
+        if (in_array($RC, ActiveRecord::getRecordClassNames())) {
             switch ($side) {
                 case '':
                     $this->relatedClass = $RC;
@@ -689,7 +689,7 @@ class Relation extends Type implements TypeInterface
     public function getRelatedObject()
     {
         if (!class_exists($this->relatedClass)) {
-            throw new IllegalArguementException('Could not load the definition for the BO class ['.$this->relatedClass.']');
+            throw new IllegalArguementException('Could not load the definition for the Record class ['.$this->relatedClass.']');
         }
 
         $obj = new $this->relatedClass();
@@ -725,7 +725,7 @@ class Relation extends Type implements TypeInterface
     /**
      * Gets the side ('left' or 'right') of the passed classname on the current Relation object.
      *
-     * @param string $BOClassname
+     * @param string $RecordClassname
      *
      * @return string
      *
@@ -733,20 +733,20 @@ class Relation extends Type implements TypeInterface
      *
      * @throws \Alpha\Model\Type\IllegalArguementException
      */
-    public function getSide($BOClassname)
+    public function getSide($RecordClassname)
     {
-        if ($BOClassname == $this->relatedClassLeft) {
+        if ($RecordClassname == $this->relatedClassLeft) {
             return 'left';
-        } elseif ($BOClassname == $this->relatedClassRight) {
+        } elseif ($RecordClassname == $this->relatedClassRight) {
             return 'right';
         } else {
-            throw new IllegalArguementException('Error trying to determine the MANY-TO-MANY relationship side for the classname ['.$BOClassname.']');
+            throw new IllegalArguementException('Error trying to determine the MANY-TO-MANY relationship side for the classname ['.$RecordClassname.']');
         }
     }
 
     /**
      * Set the taggedClass property to the name of the tagged class when building relations
-     * to the TagObject BO.
+     * to the TagObject record.
      *
      * @param $taggedClass
      *

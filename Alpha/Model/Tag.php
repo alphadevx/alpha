@@ -210,8 +210,8 @@ class Tag extends ActiveRecord
      * and returns an array of Tag instances.
      *
      * @param $content
-     * @param $taggedClass Optionally provide a BO class name (with namespace)
-     * @param $taggedOID Optionally provide a BO instance OID
+     * @param $taggedClass Optionally provide a Record class name (with namespace)
+     * @param $taggedOID Optionally provide a Record instance OID
      * @param $applyStopwords Defaults true, set to false if you want to ignore the stopwords.
      *
      * @return array

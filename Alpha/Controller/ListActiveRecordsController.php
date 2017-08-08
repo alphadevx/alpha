@@ -144,8 +144,8 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
                 try {
                     $classname = $params['createTableClass'];
 
-                    $BO = new $classname();
-                    $BO->makeTable();
+                    $Record = new $classname();
+                    $Record->makeTable();
 
                     self::$logger->action('Created the table for class '.$classname);
 
@@ -160,8 +160,8 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
                 try {
                     $classname = $params['createTableClass'];
 
-                    $BO = new $classname();
-                    $BO->makeHistoryTable();
+                    $Record = new $classname();
+                    $Record->makeHistoryTable();
 
                     self::$logger->action('Created the history table for class '.$classname);
 
@@ -175,8 +175,8 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
             if (isset($params['recreateTableClass']) && $params['admin_'.stripslashes($params['recreateTableClass']).'_button_pressed'] == 'recreateTableBut') {
                 try {
                     $classname = $params['recreateTableClass'];
-                    $BO = new $classname();
-                    $BO->rebuildTable();
+                    $Record = new $classname();
+                    $Record->rebuildTable();
 
                     self::$logger->action('Recreated the table for class '.$classname);
 
@@ -191,13 +191,13 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
                 try {
                     $classname = $params['updateTableClass'];
 
-                    $BO = new $classname();
-                    $missingFields = $BO->findMissingFields();
+                    $Record = new $classname();
+                    $missingFields = $Record->findMissingFields();
 
                     $count = count($missingFields);
 
                     for ($i = 0; $i < $count; ++$i) {
-                        $BO->addProperty($missingFields[$i]);
+                        $Record->addProperty($missingFields[$i]);
                     }
 
                     self::$logger->action('Updated the table for class '.$classname);
@@ -231,7 +231,7 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
      */
     private function displayBodyContent()
     {
-        $classNames = ActiveRecord::getBOClassNames();
+        $classNames = ActiveRecord::getRecordClassNames();
 
         $body = '';
 

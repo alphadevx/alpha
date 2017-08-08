@@ -61,7 +61,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
      *
      * @var \Alpha\Model\Article
      */
-    private $BO;
+    private $record;
 
     /**
      * Called before the test functions will be executed
@@ -78,10 +78,10 @@ class FeedTest extends \PHPUnit_Framework_TestCase
         $item = new DEnumItem();
         $item->rebuildTable();
 
-        $this->BO = new Article();
-        $this->BO->set('title', 'Test Article Title');
-        $this->BO->set('description', 'Test Article Description');
-        $this->BO->set('created_ts', '2011-01-01 00:00:00');
+        $this->record = new Article();
+        $this->record->set('title', 'Test Article Title');
+        $this->record->set('description', 'Test Article Description');
+        $this->record->set('created_ts', '2011-01-01 00:00:00');
     }
 
     /**
@@ -93,7 +93,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        unset($this->BO);
+        unset($this->record);
 
         $denum = new DEnum();
         $denum->dropTable();
@@ -106,7 +106,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
     {
         $feed = new RSS('Alpha\Model\Article', 'Test Feed Title', 'http://www.alphaframework.org/', 'Test Feed Description');
         $feed->setFieldMappings('title', 'URL', 'description', 'created_ts', 'OID');
-        $feed->addBO($this->BO);
+        $feed->addRecord($this->record);
         $xml = $feed->render();
 
         $reader = new XMLReader();
@@ -131,7 +131,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
     {
         $feed = new RSS2('Alpha\Model\Article', 'Test Feed Title', 'http://www.alphaframework.org/', 'Test Feed Description');
         $feed->setFieldMappings('title', 'URL', 'description', 'created_ts', 'OID');
-        $feed->addBO($this->BO);
+        $feed->addrecord($this->record);
         $xml = $feed->render();
 
         $reader = new XMLReader();
@@ -155,7 +155,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
     {
         $feed = new Atom('Alpha\Model\Article', 'Test Feed Title', 'http://www.alphaframework.org/', 'Test Feed Description');
         $feed->setFieldMappings('title', 'URL', 'description', 'created_ts', 'OID');
-        $feed->addBO($this->BO);
+        $feed->addrecord($this->record);
         $xml = $feed->render();
 
         $reader = new XMLReader();

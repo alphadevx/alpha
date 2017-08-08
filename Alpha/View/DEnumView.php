@@ -68,9 +68,9 @@ class DEnumView extends View
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
 
-        $reflection = new \ReflectionClass(get_class($this->BO));
+        $reflection = new \ReflectionClass(get_class($this->record));
         $properties = $reflection->getProperties();
-        $labels = $this->BO->getDataLabels();
+        $labels = $this->record->getDataLabels();
         $colCount = 1;
 
         $html = '<form action="'.$fields['URI'].'" method="POST">';
@@ -79,8 +79,8 @@ class DEnumView extends View
         $html .= '<tr>';
         foreach ($properties as $propObj) {
             $prop = $propObj->name;
-            if (!in_array($prop, $this->BO->getDefaultAttributes()) && !in_array($prop, $this->BO->getTransientAttributes())) {
-                if (get_class($this->BO->getPropObject($prop)) != 'Alpha\Model\Type\Text') {
+            if (!in_array($prop, $this->record->getDefaultAttributes()) && !in_array($prop, $this->record->getTransientAttributes())) {
+                if (get_class($this->record->getPropObject($prop)) != 'Alpha\Model\Type\Text') {
                     ++$colCount;
                     $html .= '  <th>'.$labels[$prop].'</th>';
                 }
@@ -97,17 +97,17 @@ class DEnumView extends View
         // and now the values
         foreach ($properties as $propObj) {
             $prop = $propObj->name;
-            if (!in_array($prop, $this->BO->getDefaultAttributes()) && !in_array($prop, $this->BO->getTransientAttributes())) {
-                if (get_class($this->BO->getPropObject($prop)) != 'Alpha\Model\Type\Text') {
-                    $html .= '  <td>&nbsp;'.$this->BO->get($prop).'</td>';
+            if (!in_array($prop, $this->record->getDefaultAttributes()) && !in_array($prop, $this->record->getTransientAttributes())) {
+                if (get_class($this->record->getPropObject($prop)) != 'Alpha\Model\Type\Text') {
+                    $html .= '  <td>&nbsp;'.$this->record->get($prop).'</td>';
                 }
             }
             if ($prop == 'OID') {
-                $html .= '  <td>&nbsp;'.$this->BO->getID().'</td>';
+                $html .= '  <td>&nbsp;'.$this->record->getID().'</td>';
             }
         }
         // render the count
-        $html .= '  <td>&nbsp;'.$this->BO->getItemCount().'</td>';
+        $html .= '  <td>&nbsp;'.$this->record->getItemCount().'</td>';
 
         $html .= '</tr>';
 
@@ -115,7 +115,7 @@ class DEnumView extends View
         // render edit buttons for admins only
         if ($session->get('currentUser') != null && $session->get('currentUser')->inGroup('Admin')) {
             $html .= '&nbsp;&nbsp;';
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\DEnumController&denumOID='.$this->BO->getOID())."'", 'Edit', 'edit'.$this->BO->getOID().'But');
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\DEnumController&denumOID='.$this->record->getOID())."'", 'Edit', 'edit'.$this->record->getOID().'But');
             $html .= $button->render();
         }
         $html .= '</td></tr>';
@@ -138,18 +138,18 @@ class DEnumView extends View
     {
         $config = ConfigProvider::getInstance();
 
-        $labels = $this->BO->getDataLabels();
+        $labels = $this->record->getDataLabels();
         $obj_type = '';
 
         $html = '<form action="'.$fields['URI'].'" method="POST" accept-charset="UTF-8">';
 
-        $temp = new SmallTextBox($this->BO->getPropObject('name'), $labels['name'], 'name', '', 0, true, true);
+        $temp = new SmallTextBox($this->record->getPropObject('name'), $labels['name'], 'name', '', 0, true, true);
         $html .= $temp->render();
 
         $html .= '<h3>DEnum display values:</h3>';
 
         // now get all of the options for the enum and render
-        $denum = $this->BO;
+        $denum = $this->record;
         $tmp = new DEnumItem();
         $denumItems = $tmp->loadItems($denum->getID());
 
@@ -161,7 +161,7 @@ class DEnumView extends View
 
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('version_num')) : 'version_num');
 
-        $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->BO->getVersion().'"/>';
+        $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->record->getVersion().'"/>';
 
         $html .= '<h3>Add a new value to the DEnum dropdown list:</h3>';
 

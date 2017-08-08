@@ -27,7 +27,7 @@ use ReflectionClass;
 /**
  * HTML renderer.  Will invoke widgets from the Alpha\View\Widgets package
  * automatically for the correct data type.  Templates from ./templates/html
- * will be loaded by default, but these can be overridden on a per-BO level in
+ * will be loaded by default, but these can be overridden on a per-record level in
  * the application when required (consider the default ones to be scaffolding).
  *
  * @since 1.2
@@ -87,7 +87,7 @@ class RendererProviderHTML implements RendererProviderInterface
      *
      * @since 1.2
      */
-    private $BO;
+    private $Record;
 
     /**
      * The constructor.
@@ -105,9 +105,9 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setBO($BO)
+    public function setRecord($Record)
     {
-        $this->BO = $BO;
+        $this->record = $Record;
     }
 
     /**
@@ -118,7 +118,7 @@ class RendererProviderHTML implements RendererProviderInterface
         self::$logger->debug('>>createView(fields=['.var_export($fields, true).'])');
 
         // the form ID
-        $fields['formID'] = stripslashes(get_class($this->BO).'_'.$this->BO->getOID());
+        $fields['formID'] = stripslashes(get_class($this->record).'_'.$this->record->getOID());
 
         // buffer form fields to $formFields
         $fields['formFields'] = $this->renderAllFields('create');
@@ -139,7 +139,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
         self::$logger->debug('<<createView [HTML]');
 
-        return View::loadTemplate($this->BO, 'create', $fields);
+        return View::loadTemplate($this->record, 'create', $fields);
     }
 
     /**
@@ -152,7 +152,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $config = ConfigProvider::getInstance();
 
         // the form ID
-        $fields['formID'] = stripslashes(get_class($this->BO).'_'.$this->BO->getOID());
+        $fields['formID'] = stripslashes(get_class($this->record).'_'.$this->record->getOID());
 
         // buffer form fields to $formFields
         $fields['formFields'] = $this->renderAllFields('edit');
@@ -179,7 +179,7 @@ class RendererProviderHTML implements RendererProviderInterface
                                 label: 'Okay',
                                 cssClass: 'btn btn-default btn-xs',
                                 action: function(dialogItself) {
-                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->BO->getOID()."');
+                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->record->getOID()."');
                                     $('#deleteForm').submit();
                                     dialogItself.close();
                                 }
@@ -196,7 +196,7 @@ class RendererProviderHTML implements RendererProviderInterface
         if (isset($fields['cancelButtonURL'])) {
             $button = new Button("document.location = '".$fields['cancelButtonURL']."'", 'Back to List', 'cancelBut');
         } else {
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO).'&start='.$start.'&limit='.$config->get('app.list.page.amount'))."'", 'Back to List', 'cancelBut');
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->record).'&start='.$start.'&limit='.$config->get('app.list.page.amount'))."'", 'Back to List', 'cancelBut');
         }
         $fields['cancelButton'] = $button->render();
 
@@ -204,11 +204,11 @@ class RendererProviderHTML implements RendererProviderInterface
         $fields['formSecurityFields'] = self::renderSecurityFields();
 
         // OID will need to be posted for optimistic lock checking
-        $fields['version_num'] = $this->BO->getVersionNumber();
+        $fields['version_num'] = $this->record->getVersionNumber();
 
         self::$logger->debug('<<editView [HTML]');
 
-        return View::loadTemplate($this->BO, 'edit', $fields);
+        return View::loadTemplate($this->record, 'edit', $fields);
     }
 
     /**
@@ -223,9 +223,9 @@ class RendererProviderHTML implements RendererProviderInterface
         $session = SessionProviderFactory::getInstance($sessionProvider);
 
         // work out how many columns will be in the table
-        $reflection = new ReflectionClass(get_class($this->BO));
+        $reflection = new ReflectionClass(get_class($this->record));
         $properties = array_keys($reflection->getDefaultProperties());
-        $fields['colCount'] = 1 + count(array_diff($properties, $this->BO->getDefaultAttributes(), $this->BO->getTransientAttributes()));
+        $fields['colCount'] = 1 + count(array_diff($properties, $this->record->getDefaultAttributes(), $this->record->getTransientAttributes()));
 
         // get the class attributes
         $properties = $reflection->getProperties();
@@ -237,13 +237,13 @@ class RendererProviderHTML implements RendererProviderInterface
             $propName = $propObj->name;
 
             // skip over password fields
-            $property = $this->BO->getPropObject($propName);
+            $property = $this->record->getPropObject($propName);
             if (!($property instanceof SmallText && $property->checkIsPassword())) {
-                if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
-                    $html .= '  <th>'.$this->BO->getDataLabel($propName).'</th>';
+                if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $this->record->getTransientAttributes())) {
+                    $html .= '  <th>'.$this->record->getDataLabel($propName).'</th>';
                 }
                 if ($propName == 'OID') {
-                    $html .= '  <th>'.$this->BO->getDataLabel($propName).'</th>';
+                    $html .= '  <th>'.$this->record->getDataLabel($propName).'</th>';
                 }
             } else {
                 $fields['colCount'] = $fields['colCount'] - 1;
@@ -259,26 +259,26 @@ class RendererProviderHTML implements RendererProviderInterface
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
 
-            $property = $this->BO->getPropObject($propName);
+            $property = $this->record->getPropObject($propName);
             if (!($property instanceof SmallText && $property->checkIsPassword())) {
-                if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $this->BO->getTransientAttributes())) {
-                    $propClass = get_class($this->BO->getPropObject($propName));
+                if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $this->record->getTransientAttributes())) {
+                    $propClass = get_class($this->record->getPropObject($propName));
 
                     if ($propClass == 'Text') {
-                        $text = htmlentities($this->BO->get($propName), ENT_COMPAT, 'utf-8');
+                        $text = htmlentities($this->record->get($propName), ENT_COMPAT, 'utf-8');
                         if (mb_strlen($text) > 70) {
                             $html .= '  <td>&nbsp;'.mb_substr($text, 0, 70).'...</td>';
                         } else {
                             $html .= '  <td>&nbsp;'.$text.'</td>';
                         }
                     } elseif ($propClass == 'DEnum') {
-                        $html .= '  <td>&nbsp;'.$this->BO->getPropObject($propName)->getDisplayValue().'</td>';
+                        $html .= '  <td>&nbsp;'.$this->record->getPropObject($propName)->getDisplayValue().'</td>';
                     } else {
-                        $html .= '  <td>&nbsp;'.$this->BO->get($propName).'</td>';
+                        $html .= '  <td>&nbsp;'.$this->record->get($propName).'</td>';
                     }
                 }
                 if ($propName == 'OID') {
-                    $html .= '  <td>&nbsp;'.$this->BO->getOID().'</td>';
+                    $html .= '  <td>&nbsp;'.$this->record->getOID().'</td>';
                 }
             }
         }
@@ -291,16 +291,16 @@ class RendererProviderHTML implements RendererProviderInterface
         // View button
         if (mb_strpos($request->getURI(), '/tk/') !== false) {
             if (isset($fields['viewButtonURL'])) {
-                $button = new Button("document.location = '".$fields['viewButtonURL']."';", 'View', 'view'.$this->BO->getOID().'But');
+                $button = new Button("document.location = '".$fields['viewButtonURL']."';", 'View', 'view'.$this->record->getOID().'But');
             } else {
-                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID())."';", 'View', 'view'.$this->BO->getOID().'But');
+                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->record).'&ActiveRecordOID='.$this->record->getOID())."';", 'View', 'view'.$this->record->getOID().'But');
             }
             $fields['viewButton'] = $button->render();
         } else {
-            if ($this->BO->hasAttribute('URL')) {
-                $button = new Button("document.location = '".$this->BO->get('URL')."';", 'View', 'view'.$this->BO->getOID().'But');
+            if ($this->record->hasAttribute('URL')) {
+                $button = new Button("document.location = '".$this->record->get('URL')."';", 'View', 'view'.$this->record->getOID().'But');
             } else {
-                $button = new Button("document.location = '".$config->get('app.url').'/record/'.urlencode(get_class($this->BO)).'/'.$this->BO->getOID()."';", 'View', 'view'.$this->BO->getOID().'But');
+                $button = new Button("document.location = '".$config->get('app.url').'/record/'.urlencode(get_class($this->record)).'/'.$this->record->getOID()."';", 'View', 'view'.$this->record->getOID().'But');
             }
 
             $fields['viewButton'] = $button->render();
@@ -311,9 +311,9 @@ class RendererProviderHTML implements RendererProviderInterface
         if ($session->get('currentUser') && $session->get('currentUser')->inGroup('Admin')) {
             $html .= '&nbsp;&nbsp;';
             if (isset($fields['editButtonURL'])) {
-                $button = new Button("document.location = '".$fields['editButtonURL']."'", 'Edit', 'edit'.$this->BO->getOID().'But');
+                $button = new Button("document.location = '".$fields['editButtonURL']."'", 'Edit', 'edit'.$this->record->getOID().'But');
             } else {
-                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID().'&view=edit')."'", 'Edit', 'edit'.$this->BO->getOID().'But');
+                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->record).'&ActiveRecordOID='.$this->record->getOID().'&view=edit')."'", 'Edit', 'edit'.$this->record->getOID().'But');
             }
 
             $html .= $button->render();
@@ -337,7 +337,7 @@ class RendererProviderHTML implements RendererProviderInterface
                                 label: 'Okay',
                                 cssClass: 'btn btn-default btn-xs',
                                 action: function(dialogItself) {
-                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->BO->getOID()."');
+                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->record->getOID()."');
                                     $('#deleteForm').submit();
                                     dialogItself.close();
                                 }
@@ -346,7 +346,7 @@ class RendererProviderHTML implements RendererProviderInterface
                     });
                 }";
 
-            $button = new Button($js, 'Delete', 'delete'.$this->BO->getOID().'But');
+            $button = new Button($js, 'Delete', 'delete'.$this->record->getOID().'But');
             $html .= $button->render();
         }
         $fields['adminButtons'] = $html;
@@ -356,7 +356,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
         self::$logger->debug('<<listView [HTML]');
 
-        return View::loadTemplate($this->BO, 'list', $fields);
+        return View::loadTemplate($this->record, 'list', $fields);
     }
 
     /**
@@ -372,8 +372,8 @@ class RendererProviderHTML implements RendererProviderInterface
         $session = SessionProviderFactory::getInstance($sessionProvider);
 
         // we may want to display the OID regardless of class
-        $fields['OIDLabel'] = $this->BO->getDataLabel('OID');
-        $fields['OID'] = $this->BO->getOID();
+        $fields['OIDLabel'] = $this->record->getDataLabel('OID');
+        $fields['OID'] = $this->record->getOID();
 
         // buffer form fields to $formFields
         $fields['formFields'] = $this->renderAllFields('view');
@@ -388,7 +388,7 @@ class RendererProviderHTML implements RendererProviderInterface
             if (isset($fields['editButtonURL'])) {
                 $button = new Button("document.location = '".$fields['editButtonURL']."'", 'Edit', 'editBut');
             } else {
-                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->BO).'&ActiveRecordOID='.$this->BO->getOID().'&view=edit')."'", 'Edit', 'editBut');
+                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->record).'&ActiveRecordOID='.$this->record->getOID().'&view=edit')."'", 'Edit', 'editBut');
             }
             $html .= $button->render();
 
@@ -410,7 +410,7 @@ class RendererProviderHTML implements RendererProviderInterface
                                 label: 'Okay',
                                 cssClass: 'btn btn-default btn-xs',
                                 action: function(dialogItself) {
-                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->BO->getOID()."');
+                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->record->getOID()."');
                                     $('#deleteForm').submit();
                                     dialogItself.close();
                                 }
@@ -426,7 +426,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
         self::$logger->debug('<<detailedView [HTML]');
 
-        return View::loadTemplate($this->BO, 'detail', $fields);
+        return View::loadTemplate($this->record, 'detail', $fields);
     }
 
     /**
@@ -438,31 +438,31 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $config = ConfigProvider::getInstance();
 
-        // the class name of the BO
-        $fields['fullClassName'] = stripslashes(get_class($this->BO));
+        // the class name of the record
+        $fields['fullClassName'] = stripslashes(get_class($this->record));
 
-        // the table name in the DB for the BO
-        $fields['tableName'] = $this->BO->getTableName();
+        // the table name in the DB for the record
+        $fields['tableName'] = $this->record->getTableName();
 
-        // record count for the BO in the DB
-        $fields['count'] = ($this->BO->checkTableExists() ? $this->BO->getCount() : '<span class="warning">unavailable</span>');
+        // record count for the Record in the DB
+        $fields['count'] = ($this->record->checkTableExists() ? $this->record->getCount() : '<span class="warning">unavailable</span>');
 
         // table exists in the DB?
-        $fields['tableExists'] = ($this->BO->checkTableExists() ? '<span class="success">Yes</span>' : '<span class="warning">No</span>');
+        $fields['tableExists'] = ($this->record->checkTableExists() ? '<span class="success">Yes</span>' : '<span class="warning">No</span>');
 
-        if ($this->BO->getMaintainHistory()) {
-            $fields['tableExists'] = ($this->BO->checkTableExists(true) ? '<span class="success">Yes</span>' : '<span class="warning">No history table</span>');
+        if ($this->record->getMaintainHistory()) {
+            $fields['tableExists'] = ($this->record->checkTableExists(true) ? '<span class="success">Yes</span>' : '<span class="warning">No history table</span>');
         }
 
         // table schema needs to be updated in the DB?
-        $fields['tableNeedsUpdate'] = ($this->BO->checkTableNeedsUpdate() ? '<span class="warning">Yes</span>' : '<span class="success">No</span>');
+        $fields['tableNeedsUpdate'] = ($this->record->checkTableNeedsUpdate() ? '<span class="warning">Yes</span>' : '<span class="success">No</span>');
 
         // create button
-        if ($this->BO->checkTableExists()) {
+        if ($this->record->checkTableExists()) {
             if (isset($fields['createButtonURL'])) {
-                $button = new Button("document.location = '".$fields['createButtonURL']."'", 'Create New', 'create'.stripslashes(get_class($this->BO)).'But');
+                $button = new Button("document.location = '".$fields['createButtonURL']."'", 'Create New', 'create'.stripslashes(get_class($this->record)).'But');
             } else {
-                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.get_class($this->BO))."'", 'Create New', 'create'.stripslashes(get_class($this->BO)).'But');
+                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.get_class($this->record))."'", 'Create New', 'create'.stripslashes(get_class($this->record)).'But');
             }
             $fields['createButton'] = $button->render();
         } else {
@@ -470,8 +470,8 @@ class RendererProviderHTML implements RendererProviderInterface
         }
 
         // list all button
-        if ($this->BO->checkTableExists()) {
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.get_class($this->BO).'&start=0&limit='.$config->get('app.list.page.amount'))."'", 'List All', 'list'.stripslashes(get_class($this->BO)).'But');
+        if ($this->record->checkTableExists()) {
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.get_class($this->record).'&start=0&limit='.$config->get('app.list.page.amount'))."'", 'List All', 'list'.stripslashes(get_class($this->record)).'But');
             $fields['listButton'] = $button->render();
         } else {
             $fields['listButton'] = '';
@@ -480,28 +480,28 @@ class RendererProviderHTML implements RendererProviderInterface
         // the create table button (if required)
         $html = '';
 
-        if (!$this->BO->checkTableExists()) {
+        if (!$this->record->checkTableExists()) {
             $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('createTableBut')) : 'createTableBut');
             $button = new Button('submit', 'Create Table', $fieldname);
             $html .= $button->render();
             // hidden field so that we know which class to create the table for
             $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('createTableClass')) : 'createTableClass');
-            $html .= '<input type="hidden" name="'.$fieldname.'" value="'.get_class($this->BO).'"/>';
+            $html .= '<input type="hidden" name="'.$fieldname.'" value="'.get_class($this->record).'"/>';
         }
 
-        if ($html == '' && $this->BO->getMaintainHistory() && !$this->BO->checkTableExists(true)) {
+        if ($html == '' && $this->record->getMaintainHistory() && !$this->record->checkTableExists(true)) {
             $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('createHistoryTableBut')) : 'createHistoryTableBut');
             $button = new Button('submit', 'Create History Table', $fieldname);
             $html .= $button->render();
             // hidden field so that we know which class to create the table for
             $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('createTableClass')) : 'createTableClass');
-            $html .= '<input type="hidden" name="'.$fieldname.'" value="'.get_class($this->BO).'"/>';
+            $html .= '<input type="hidden" name="'.$fieldname.'" value="'.get_class($this->record).'"/>';
         }
         $fields['createTableButton'] = $html;
 
         // recreate and update table buttons (if required)
         $html = '';
-        if ($this->BO->checkTableNeedsUpdate() && $this->BO->checkTableExists()) {
+        if ($this->record->checkTableNeedsUpdate() && $this->record->checkTableExists()) {
             $js = "if(window.jQuery) {
                     BootstrapDialog.show({
                         title: 'Confirmation',
@@ -520,8 +520,8 @@ class RendererProviderHTML implements RendererProviderInterface
                                 label: 'Okay',
                                 cssClass: 'btn btn-default btn-xs',
                                 action: function(dialogItself) {
-                                    $('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->BO)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->BO)).'_button_pressed')."\"]').attr('value', 'recreateTableBut');
-                                    $('#admin_".stripslashes(get_class($this->BO))."').submit();
+                                    $('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->record)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->record)).'_button_pressed')."\"]').attr('value', 'recreateTableBut');
+                                    $('#admin_".stripslashes(get_class($this->record))."').submit();
                                     dialogItself.close();
                                 }
                             }
@@ -532,7 +532,7 @@ class RendererProviderHTML implements RendererProviderInterface
             $button = new Button($js, 'Recreate Table', 'recreateTableBut');
             $html .= $button->render();
             // hidden field so that we know which class to recreate the table for
-            $html .= '<input type="hidden" name="recreateTableClass" value="'.get_class($this->BO).'"/>';
+            $html .= '<input type="hidden" name="recreateTableClass" value="'.get_class($this->record).'"/>';
             $html .= '&nbsp;&nbsp;';
 
             $js = "if(window.jQuery) {
@@ -553,8 +553,8 @@ class RendererProviderHTML implements RendererProviderInterface
                                 label: 'Okay',
                                 cssClass: 'btn btn-default btn-xs',
                                 action: function(dialogItself) {
-                                    $('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->BO)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->BO)).'_button_pressed')."\"]').attr('value', 'updateTableBut');
-                                    $('#admin_".stripslashes(get_class($this->BO))."').submit();
+                                    $('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->record)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->record)).'_button_pressed')."\"]').attr('value', 'updateTableBut');
+                                    $('#admin_".stripslashes(get_class($this->record))."').submit();
                                     dialogItself.close();
                                 }
                             }
@@ -566,9 +566,9 @@ class RendererProviderHTML implements RendererProviderInterface
             $html .= $button->render();
             // hidden field so that we know which class to update the table for
             $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('updateTableClass')) : 'updateTableClass');
-            $html .= '<input type="hidden" name="'.$fieldname.'" value="'.get_class($this->BO).'"/>';
+            $html .= '<input type="hidden" name="'.$fieldname.'" value="'.get_class($this->record).'"/>';
             // hidden field to tell us which button was pressed
-            $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->BO)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->BO)).'_button_pressed');
+            $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->record)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->record)).'_button_pressed');
             $html .= '<input type="hidden" id="'.$fieldname.'" name="'.$fieldname.'" value=""/>';
         }
         $fields['recreateOrUpdateButtons'] = $html;
@@ -578,7 +578,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
         self::$logger->debug('<<adminView [HTML]');
 
-        return View::loadTemplate($this->BO, 'admin', $fields);
+        return View::loadTemplate($this->record, 'admin', $fields);
     }
 
     /**
@@ -1016,9 +1016,9 @@ class RendererProviderHTML implements RendererProviderInterface
         if ($mode == 'create') {
             // give 10 rows for content fields (other 5 by default)
             if ($name == 'content') {
-                $text = new TextBox($this->BO->getPropObject($name), $label, $name, 10);
+                $text = new TextBox($this->record->getPropObject($name), $label, $name, 10);
             } else {
-                $text = new TextBox($this->BO->getPropObject($name), $label, $name);
+                $text = new TextBox($this->record->getPropObject($name), $label, $name);
             }
             $html .= $text->render();
         }
@@ -1029,14 +1029,14 @@ class RendererProviderHTML implements RendererProviderInterface
                 $viewState = ViewState::getInstance();
 
                 if ($viewState->get('markdownTextBoxRows') == '') {
-                    $text = new TextBox($this->BO->getPropObject($name), $label, $name, 10);
+                    $text = new TextBox($this->record->getPropObject($name), $label, $name, 10);
                 } else {
-                    $text = new TextBox($this->BO->getPropObject($name), $label, $name, (integer) $viewState->get('markdownTextBoxRows'));
+                    $text = new TextBox($this->record->getPropObject($name), $label, $name, (integer) $viewState->get('markdownTextBoxRows'));
                 }
 
                 $html .= $text->render();
             } else {
-                $text = new TextBox($this->BO->getPropObject($name), $label, $name);
+                $text = new TextBox($this->record->getPropObject($name), $label, $name);
                 $html .= $text->render();
             }
         }
@@ -1076,7 +1076,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $html = '';
 
         if ($mode == 'create' || $mode == 'edit') {
-            $string = new SmallTextBox($this->BO->getPropObject($name), $label, $name);
+            $string = new SmallTextBox($this->record->getPropObject($name), $label, $name);
             $html .= $string->render();
         }
 
@@ -1098,18 +1098,18 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $html = '';
 
-        $rel = $this->BO->getPropObject($name);
+        $rel = $this->record->getPropObject($name);
 
         if ($mode == 'create' || $mode == 'edit') {
             if ($rel->getRelationType() == 'MANY-TO-MANY') {
                 try {
                     // check to see if the rel is on this class
-                    $rel->getSide(get_class($this->BO));
-                    $widget = new RecordSelector($rel, $label, $name, get_class($this->BO));
+                    $rel->getSide(get_class($this->record));
+                    $widget = new RecordSelector($rel, $label, $name, get_class($this->record));
                     $html .= $widget->render($expanded, $buttons);
                 } catch (IllegalArguementException $iae) {
                     // the rel may be on a parent class
-                    $widget = new RecordSelector($rel, $label, $name, get_parent_class($this->BO));
+                    $widget = new RecordSelector($rel, $label, $name, get_parent_class($this->record));
                     $html .= $widget->render($expanded, $buttons);
                 }
             } else {
@@ -1124,11 +1124,11 @@ class RendererProviderHTML implements RendererProviderInterface
             } elseif ($rel->getRelationType() == 'MANY-TO-MANY') {
                 try {
                     // check to see if the rel is on this class
-                    $rel->getSide(get_class($this->BO));
-                    $html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue(get_class($this->BO)));
+                    $rel->getSide(get_class($this->record));
+                    $html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue(get_class($this->record)));
                 } catch (IllegalArguementException $iae) {
                     // the rel may be on a parent class
-                    $html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue(get_parent_class($this->BO)));
+                    $html .= $this->renderDefaultField($name, $label, 'view', $rel->getRelatedClassDisplayFieldValue(get_parent_class($this->record)));
                 }
             } else {
                 $rel = new RecordSelector($rel, $label, $name);
@@ -1151,12 +1151,12 @@ class RendererProviderHTML implements RendererProviderInterface
         $html = '';
 
         // get the class attributes
-        $properties = array_keys($this->BO->getDataLabels());
+        $properties = array_keys($this->record->getDataLabels());
 
         $orignalMode = $mode;
 
         foreach ($properties as $propName) {
-            if (!in_array($propName, $this->BO->getDefaultAttributes()) && !in_array($propName, $filterFields)) {
+            if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $filterFields)) {
                 // render readonly fields in the supplied array
                 if (in_array($propName, $readOnlyFields)) {
                     $mode = 'view';
@@ -1164,91 +1164,91 @@ class RendererProviderHTML implements RendererProviderInterface
                     $mode = $orignalMode;
                 }
 
-                if (!is_object($this->BO->getPropObject($propName))) {
+                if (!is_object($this->record->getPropObject($propName))) {
                     continue;
                 }
 
-                $reflection = new ReflectionClass($this->BO->getPropObject($propName));
+                $reflection = new ReflectionClass($this->record->getPropObject($propName));
                 $propClass = $reflection->getShortName();
 
                 // exclude non-Relation transient attributes from create and edit screens
-                if ($propClass != 'Relation' && ($mode == 'edit' || $mode == 'create') && in_array($propName, $this->BO->getTransientAttributes())) {
+                if ($propClass != 'Relation' && ($mode == 'edit' || $mode == 'create') && in_array($propName, $this->record->getTransientAttributes())) {
                     continue;
                 }
 
                 switch (mb_strtoupper($propClass)) {
                     case 'INTEGER':
                         if ($mode == 'view') {
-                            $html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
+                            $html .= $this->renderDefaultField($propName, $this->record->getDataLabel($propName), 'view', $this->record->get($propName));
                         } else {
-                            $html .= $this->renderIntegerField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
+                            $html .= $this->renderIntegerField($propName, $this->record->getDataLabel($propName), $mode, $this->record->get($propName));
                         }
                     break;
                     case 'DOUBLE':
                         if ($mode == 'view') {
-                            $html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
+                            $html .= $this->renderDefaultField($propName, $this->record->getDataLabel($propName), 'view', $this->record->get($propName));
                         } else {
-                            $html .= $this->renderDoubleField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
+                            $html .= $this->renderDoubleField($propName, $this->record->getDataLabel($propName), $mode, $this->record->get($propName));
                         }
                     break;
                     case 'DATE':
                         if ($mode == 'view') {
-                            $value = $this->BO->get($propName);
+                            $value = $this->record->get($propName);
                             if ($value == '0000-00-00') {
                                 $value = '';
                             }
-                            $html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $value);
+                            $html .= $this->renderDefaultField($propName, $this->record->getDataLabel($propName), 'view', $value);
                         } else {
-                            $date = new DateBox($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
+                            $date = new DateBox($this->record->getPropObject($propName), $this->record->getDataLabel($propName), $propName);
                             $html .= $date->render();
                         }
                     break;
                     case 'TIMESTAMP':
                         if ($mode == 'view') {
-                            $value = $this->BO->get($propName);
+                            $value = $this->record->get($propName);
                             if ($value == '0000-00-00 00:00:00') {
                                 $value = '';
                             }
-                            $html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $value);
+                            $html .= $this->renderDefaultField($propName, $this->record->getDataLabel($propName), 'view', $value);
                         } else {
-                            $timestamp = new DateBox($this->BO->getPropObject($propName), $this->BO->getDataLabel($propName), $propName);
+                            $timestamp = new DateBox($this->record->getPropObject($propName), $this->record->getDataLabel($propName), $propName);
                             $html .= $timestamp->render();
                         }
                     break;
                     case 'STRING':
-                        $html .= $this->renderStringField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
+                        $html .= $this->renderStringField($propName, $this->record->getDataLabel($propName), $mode, $this->record->get($propName));
                     break;
                     case 'TEXT':
-                        $html .= $this->renderTextField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
+                        $html .= $this->renderTextField($propName, $this->record->getDataLabel($propName), $mode, $this->record->get($propName));
                     break;
                     case 'BOOLEAN':
                         if ($mode == 'view') {
-                            $html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
+                            $html .= $this->renderDefaultField($propName, $this->record->getDataLabel($propName), 'view', $this->record->get($propName));
                         } else {
-                            $html .= $this->renderBooleanField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
+                            $html .= $this->renderBooleanField($propName, $this->record->getDataLabel($propName), $mode, $this->record->get($propName));
                         }
                     break;
                     case 'ENUM':
                         if ($mode == 'view') {
-                            $html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->get($propName));
+                            $html .= $this->renderDefaultField($propName, $this->record->getDataLabel($propName), 'view', $this->record->get($propName));
                         } else {
-                            $enum = $this->BO->getPropObject($propName);
-                            $html .= $this->renderEnumField($propName, $this->BO->getDataLabel($propName), $mode, $enum->getOptions(), $this->BO->get($propName));
+                            $enum = $this->record->getPropObject($propName);
+                            $html .= $this->renderEnumField($propName, $this->record->getDataLabel($propName), $mode, $enum->getOptions(), $this->record->get($propName));
                         }
                     break;
                     case 'DENUM':
                         if ($mode == 'view') {
-                            $html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), 'view', $this->BO->getPropObject($propName)->getDisplayValue());
+                            $html .= $this->renderDefaultField($propName, $this->record->getDataLabel($propName), 'view', $this->record->getPropObject($propName)->getDisplayValue());
                         } else {
-                            $denum = $this->BO->getPropObject($propName);
-                            $html .= $this->renderDEnumField($propName, $this->BO->getDataLabel($propName), $mode, $denum->getOptions(), $this->BO->get($propName));
+                            $denum = $this->record->getPropObject($propName);
+                            $html .= $this->renderDEnumField($propName, $this->record->getDataLabel($propName), $mode, $denum->getOptions(), $this->record->get($propName));
                         }
                     break;
                     case 'RELATION':
-                        $html .= $this->renderRelationField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
+                        $html .= $this->renderRelationField($propName, $this->record->getDataLabel($propName), $mode, $this->record->get($propName));
                     break;
                     default:
-                        $html .= $this->renderDefaultField($propName, $this->BO->getDataLabel($propName), $mode, $this->BO->get($propName));
+                        $html .= $this->renderDefaultField($propName, $this->record->getDataLabel($propName), $mode, $this->record->get($propName));
                     break;
                 }
             }

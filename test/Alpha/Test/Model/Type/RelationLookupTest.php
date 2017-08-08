@@ -122,7 +122,7 @@ class RelationLookupTest extends ModelTestCase
             $lookup = new RelationLookup('Alpha\Model\Person', 'Alpha\Model\Article');
             $this->fail('testing the RelationLookup constructor');
         } catch (FailedLookupCreateException $e) {
-            $this->assertEquals('Error trying to create a lookup table [Person2Article], as tables for BOs [Alpha\Model\Person] or [Alpha\Model\Article] don\'t exist!', $e->getMessage(), 'testing the RelationLookup constructor');
+            $this->assertEquals('Error trying to create a lookup table [Person2Article], as tables for records [Alpha\Model\Person] or [Alpha\Model\Article] don\'t exist!', $e->getMessage(), 'testing the RelationLookup constructor');
         }
 
         $article->rebuildTable();

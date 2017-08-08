@@ -103,7 +103,7 @@ abstract class ActiveRecord
     protected $created_ts;
 
     /**
-     * The OID of the person who created this BO.
+     * The OID of the person who created this record.
      *
      * @var \Alpha\Model\Type\Integer
      *
@@ -121,7 +121,7 @@ abstract class ActiveRecord
     protected $updated_ts;
 
     /**
-     * The OID of the person who last updated this BO.
+     * The OID of the person who last updated this record.
      *
      * @var \Alpha\Model\Type\Integer
      *
@@ -130,7 +130,7 @@ abstract class ActiveRecord
     protected $updated_by;
 
     /**
-     * An array of the names of all of the default attributes of a persistent BO defined in this class.
+     * An array of the names of all of the default attributes of a persistent Record defined in this class.
      *
      * @var array
      *
@@ -139,7 +139,7 @@ abstract class ActiveRecord
     protected $defaultAttributes = array('OID', 'lastQuery', 'version_num', 'dataLabels', 'created_ts', 'created_by', 'updated_ts', 'updated_by', 'defaultAttributes', 'transientAttributes', 'uniqueAttributes', 'TABLE_NAME', 'logger');
 
     /**
-     * An array of the names of all of the transient attributes of a persistent BO which are not saved to the DB.
+     * An array of the names of all of the transient attributes of a persistent Record which are not saved to the DB.
      *
      * @var array
      *
@@ -148,7 +148,7 @@ abstract class ActiveRecord
     protected $transientAttributes = array('lastQuery', 'dataLabels', 'defaultAttributes', 'transientAttributes', 'uniqueAttributes', 'TABLE_NAME', 'logger');
 
     /**
-     * An array of the uniquely-constained attributes of this persistent BO.
+     * An array of the uniquely-constained attributes of this persistent record.
      *
      * @var array
      *
@@ -271,7 +271,7 @@ abstract class ActiveRecord
         $this->OID = $OID;
 
         if ($config->get('cache.provider.name') != '' && $this->loadFromCache()) {
-            // BO was found in cache
+            // Record was found in cache
         } else {
             $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
             $provider->load($OID, $version);
@@ -343,7 +343,7 @@ abstract class ActiveRecord
 
         $this->setEnumOptions();
 
-        if ($config->get('cache.provider.name') != '' && count($loadAttributes) == 0) { // we will only cache fully-populated BOs
+        if ($config->get('cache.provider.name') != '' && count($loadAttributes) == 0) { // we will only cache fully-populated records
             $this->addToCache();
         }
 
@@ -401,7 +401,7 @@ abstract class ActiveRecord
      * @param string $orderBy         The name of the field to sort the objects by.
      * @param string $order           The order to sort the objects by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type.
-     * @param array  $constructorArgs An optional array of contructor arguements to pass to the BOs that will be generated and returned.  Supports a maximum of 5 arguements.
+     * @param array  $constructorArgs An optional array of contructor arguements to pass to the records that will be generated and returned.  Supports a maximum of 5 arguements.
      *
      * @return array An array containing objects of this type of business object.
      *
@@ -523,7 +523,7 @@ abstract class ActiveRecord
      * @param string $attribute       The attribute name to load the field values by.
      * @param string $value           The value of the attribute to load the field values by.
      * @param string $returnAttribute The name of the attribute to return.
-     * @param string $order           The order to sort the BOs by.
+     * @param string $order           The order to sort the records by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type.
      *
      * @return array An array of field values.
@@ -582,7 +582,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Saves the field specified with the value supplied.  Only works for persistent BOs.  Note that no Alpha type
+     * Saves the field specified with the value supplied.  Only works for persistent records.  Note that no Alpha type
      * validation is performed with this method!
      *
      * @param string $attribute The name of the attribute to save.
@@ -608,7 +608,7 @@ abstract class ActiveRecord
         }
 
         if ($this->isTransient()) {
-            throw new FailedSaveException('Cannot perform saveAttribute method on transient BO!');
+            throw new FailedSaveException('Cannot perform saveAttribute method on transient record!');
         }
 
         $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
@@ -757,7 +757,7 @@ abstract class ActiveRecord
                     }
                 }
 
-                // in the case of tags, we will always remove the related tags once the BO is deleted
+                // in the case of tags, we will always remove the related tags once the Record is deleted
                 if ($prop->getRelationType() == 'ONE-TO-MANY' && $prop->getRelatedClass() == 'Alpha\Model\Tag') {
                     // just making sure that the Relation is set to current OID as its transient
                     $prop->setValue($this->getOID());
@@ -833,7 +833,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Gets the version_num of the object from the database (returns 0 if the BO is not saved yet).
+     * Gets the version_num of the object from the database (returns 0 if the Record is not saved yet).
      *
      * @return int
      *
@@ -864,7 +864,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Builds a new database table for the BO class.
+     * Builds a new database table for the Record class.
      *
      * @since 1.0
      *
@@ -893,7 +893,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Builds a new database table for the BO class to story it's history of changes.
+     * Builds a new database table for the Record class to story it's history of changes.
      *
      * @since 1.2
      *
@@ -1447,10 +1447,10 @@ abstract class ActiveRecord
     }
 
     /**
-     * Static method to check the database and see if the table for the indicated BO class name
-     * exists (assumes table name will be $BOClassName less "Object").
+     * Static method to check the database and see if the table for the indicated Record class name
+     * exists (assumes table name will be $RecordClassName less "Object").
      *
-     * @param string $BOClassName       The name of the business object class we are checking.
+     * @param string $RecordClassName       The name of the business object class we are checking.
      * @param bool   $checkHistoryTable Set to true if you want to check for the existance of the _history table for this DAO.
      *
      * @return bool
@@ -1459,20 +1459,20 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public static function checkBOTableExists($BOClassName, $checkHistoryTable = false)
+    public static function checkRecordTableExists($RecordClassName, $checkHistoryTable = false)
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
         }
-        self::$logger->debug('>>checkBOTableExists(BOClassName=['.$BOClassName.'])');
+        self::$logger->debug('>>checkRecordTableExists(RecordClassName=['.$RecordClassName.'])');
 
         $config = ConfigProvider::getInstance();
 
         $provider = $config->get('db.provider.name');
 
-        $tableExists = $provider::checkBOTableExists($BOClassName, $checkHistoryTable);
+        $tableExists = $provider::checkRecordTableExists($RecordClassName, $checkHistoryTable);
 
-        self::$logger->debug('<<checkBOTableExists ['.($tableExists ? 'true' : 'false').']');
+        self::$logger->debug('<<checkRecordTableExists ['.($tableExists ? 'true' : 'false').']');
 
         return $tableExists;
     }
@@ -1576,7 +1576,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Method for getting the OID of the person who created this BO.
+     * Method for getting the OID of the person who created this record.
      *
      * @return \Alpha\Model\Type\Integer The OID of the creator.
      *
@@ -1591,7 +1591,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Method for getting the OID of the person who updated this BO.
+     * Method for getting the OID of the person who updated this record.
      *
      * @return \Alpha\Model\Type\Integer The OID of the updator.
      *
@@ -1606,7 +1606,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Method for getting the date/time of when the BO was created.
+     * Method for getting the date/time of when the Record was created.
      *
      * @return \Alpha\Model\Type\Timestamp
      *
@@ -1621,7 +1621,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Method for getting the date/time of when the BO was last updated.
+     * Method for getting the date/time of when the Record was last updated.
      *
      * @return \Alpha\Model\Type\Timestamp
      *
@@ -1636,7 +1636,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Adds the name of the attribute provided to the list of transient (non-saved) attributes for this BO.
+     * Adds the name of the attribute provided to the list of transient (non-saved) attributes for this record.
      *
      * @param string $attributeName The name of the attribute to not save.
      *
@@ -1650,7 +1650,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Removes the name of the attribute provided from the list of transient (non-saved) attributes for this BO,
+     * Removes the name of the attribute provided from the list of transient (non-saved) attributes for this record,
      * ensuring that it will be saved on the next attempt.
      *
      * @param string $attributeName The name of the attribute to save.
@@ -1665,7 +1665,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Adds the name of the attribute(s) provided to the list of unique (constrained) attributes for this BO.
+     * Adds the name of the attribute(s) provided to the list of unique (constrained) attributes for this record.
      *
      * @param string $attribute1Name The first attribute to mark unique in the database.
      * @param string $attribute2Name The second attribute to mark unique in the databse (optional, use only for composite keys).
@@ -1694,7 +1694,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Returns the array of names of unique attributes on this BO.
+     * Returns the array of names of unique attributes on this record.
      *
      * @return array
      *
@@ -1753,8 +1753,8 @@ abstract class ActiveRecord
             $this->{'before_createForeignIndex_callback'}();
         }
 
-        $relatedBO = new $relatedClass();
-        $tableName = $relatedBO->getTableName();
+        $relatedRecord = new $relatedClass();
+        $tableName = $relatedRecord->getTableName();
 
         // if the relation is on itself (table-wise), exit without attempting to create the foreign keys
         if ($this->getTableName() == $tableName) {
@@ -1867,25 +1867,25 @@ abstract class ActiveRecord
     }
 
     /**
-     * Loops over the core and custom BO directories and builds an array of all of the BO class names in the system.
+     * Loops over the core and custom Record directories and builds an array of all of the Record class names in the system.
      *
      * @return array An array of business object class names.
      *
      * @since 1.0
      */
-    public static function getBOClassNames()
+    public static function getRecordClassNames()
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
         }
-        self::$logger->debug('>>getBOClassNames()');
+        self::$logger->debug('>>getRecordClassNames()');
 
         $config = ConfigProvider::getInstance();
 
         $classNameArray = array();
 
         if (file_exists($config->get('app.root').'src/Model')) { // it is possible it has not been created yet...
-            // first get any custom BOs
+            // first get any custom records
             $handle = opendir($config->get('app.root').'src/Model');
 
             // loop over the business object directory
@@ -1900,7 +1900,7 @@ abstract class ActiveRecord
             }
         }
 
-        // now loop over the core BOs provided with Alpha
+        // now loop over the core records provided with Alpha
         if (file_exists($config->get('app.root').'Alpha/Model')) {
             $handle = opendir($config->get('app.root').'Alpha/Model');
         } elseif ($config->get('app.root').'vendor/alphadevx/alpha/Alpha/Model') {
@@ -1919,7 +1919,7 @@ abstract class ActiveRecord
         }
 
         asort($classNameArray);
-        self::$logger->debug('<<getBOClassNames ['.var_export($classNameArray, true).']');
+        self::$logger->debug('<<getRecordClassNames ['.var_export($classNameArray, true).']');
 
         return $classNameArray;
     }
@@ -2079,7 +2079,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Loads the definition from the file system for the BO class name provided.
+     * Loads the definition from the file system for the Record class name provided.
      *
      * @param string $classname The name of the business object class name.
      *
@@ -2112,7 +2112,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Checks that a record exists for the BO in the database.
+     * Checks that a record exists for the Record in the database.
      *
      * @param int $OID The Object ID of the object we want to see whether it exists or not.
      *
@@ -2146,14 +2146,14 @@ abstract class ActiveRecord
 
     /**
      * Checks to see if the table name matches the classname, and if not if the table
-     * name matches the classname name of another BO, i.e. the table is used to store
-     * multiple types of BOs.
+     * name matches the classname name of another record, i.e. the table is used to store
+     * multiple types of records.
      *
      * @return bool
      *
      * @since 1.0
      *
-     * @throws \Alpha\Exception\BadBOTableNameException
+     * @throws \Alpha\Exception\BadTableNameException
      */
     public function isTableOverloaded()
     {
@@ -2172,13 +2172,13 @@ abstract class ActiveRecord
     /**
      * Starts a new database transaction.
      *
-     * @param $BO The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
+     * @param $Record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public static function begin($BO = null)
+    public static function begin($Record = null)
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2187,8 +2187,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        if (isset($BO)) {
-            $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $BO);
+        if (isset($Record)) {
+            $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $Record);
         } else {
             $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), new Person());
         }
@@ -2205,13 +2205,13 @@ abstract class ActiveRecord
     /**
      * Commits the current database transaction.
      *
-     * @param $BO The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
+     * @param $Record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\FailedSaveException
      */
-    public static function commit($BO = null)
+    public static function commit($Record = null)
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2220,8 +2220,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        if (isset($BO)) {
-            $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $BO);
+        if (isset($Record)) {
+            $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $Record);
         } else {
             $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), new Person());
         }
@@ -2238,13 +2238,13 @@ abstract class ActiveRecord
     /**
      * Aborts the current database transaction.
      *
-     * @param $BO The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
+     * @param $Record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public static function rollback($BO = null)
+    public static function rollback($Record = null)
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2253,8 +2253,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        if (isset($BO)) {
-            $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $BO);
+        if (isset($Record)) {
+            $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $Record);
         } else {
             $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), new Person());
         }
@@ -2290,7 +2290,7 @@ abstract class ActiveRecord
          * 1. person table exists
          * 2. rights table exists
          */
-        if (self::checkBOTableExists('Alpha\Model\Person') && self::checkBOTableExists('Alpha\Model\Rights')) {
+        if (self::checkRecordTableExists('Alpha\Model\Person') && self::checkRecordTableExists('Alpha\Model\Rights')) {
             self::$logger->debug('<<isInstalled [true]');
 
             return true;
@@ -2302,7 +2302,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Returns true if the BO has a Relation property called tags, false otherwise.
+     * Returns true if the Record has a Relation property called tags, false otherwise.
      *
      * @return bool
      *
@@ -2334,7 +2334,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Setter for the BO version number.
+     * Setter for the Record version number.
      *
      * @param int $versionNumber The version number.
      *
@@ -2346,50 +2346,50 @@ abstract class ActiveRecord
     }
 
     /**
-     * Cast a BO to another type of BO.  A new BO will be returned with the same OID and
-     * version_num as the old BO, so this is NOT a true cast but is a copy.  All attribute
+     * Cast a Record to another type of record.  A new Record will be returned with the same OID and
+     * version_num as the old record, so this is NOT a true cast but is a copy.  All attribute
      * values will be copied accross.
      *
-     * @param string                   $targetClassName The fully-qualified name of the target BO class.
-     * @param \Alpha\Model\ActiveRecord $originalBO      The original business object.
+     * @param string                    $targetClassName     The fully-qualified name of the target Record class.
+     * @param \Alpha\Model\ActiveRecord $originalRecord      The original business object.
      *
      * @return \Alpha\Model\ActiveRecord The new business object resulting from the cast.
      *
      * @since 1.0
      */
-    public function cast($targetClassName, $originalBO)
+    public function cast($targetClassName, $originalRecord)
     {
-        $BO = new $targetClassName();
-        $BO->setOID($originalBO->getOID());
-        $BO->setVersion($originalBO->getVersion());
+        $Record = new $targetClassName();
+        $Record->setOID($originalRecord->getOID());
+        $Record->setVersion($originalRecord->getVersion());
 
         // get the class attributes
-        $originalBOreflection = new ReflectionClass(get_class($originalBO));
-        $originalBOproperties = $originalBOreflection->getProperties();
-        $newBOreflection = new ReflectionClass($targetClassName);
-        $newBOproperties = $newBOreflection->getProperties();
+        $originalRecordreflection = new ReflectionClass(get_class($originalRecord));
+        $originalRecordproperties = $originalRecordreflection->getProperties();
+        $newRecordreflection = new ReflectionClass($targetClassName);
+        $newRecordproperties = $newRecordreflection->getProperties();
 
-        // copy the property values from the old BO to the new BO
+        // copy the property values from the old Record to the new record
 
-        if (count($originalBOproperties) < count($newBOproperties)) {
-            // the original BO is smaller, so loop over its properties
-            foreach ($originalBOproperties as $propObj) {
+        if (count($originalRecordproperties) < count($newRecordproperties)) {
+            // the original Record is smaller, so loop over its properties
+            foreach ($originalRecordproperties as $propObj) {
                 $propName = $propObj->name;
                 if (!in_array($propName, $this->transientAttributes)) {
-                    $BO->set($propName, $originalBO->get($propName));
+                    $Record->set($propName, $originalRecord->get($propName));
                 }
             }
         } else {
-            // the new BO is smaller, so loop over its properties
-            foreach ($newBOproperties as $propObj) {
+            // the new Record is smaller, so loop over its properties
+            foreach ($newRecordproperties as $propObj) {
                 $propName = $propObj->name;
                 if (!in_array($propName, $this->transientAttributes)) {
-                    $BO->set($propName, $originalBO->get($propName));
+                    $Record->set($propName, $originalRecord->get($propName));
                 }
             }
         }
 
-        return $BO;
+        return $Record;
     }
 
     /**
@@ -2407,7 +2407,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Check to see if an attribute exists on the BO.
+     * Check to see if an attribute exists on the record.
      *
      * @param $attribute The attribute name.
      *
@@ -2482,9 +2482,9 @@ abstract class ActiveRecord
 
         try {
             $cache = CacheProviderFactory::getInstance($config->get('cache.provider.name'));
-            $BO = $cache->get(get_class($this).'-'.$this->getOID());
+            $Record = $cache->get(get_class($this).'-'.$this->getOID());
 
-            if (!$BO) {
+            if (!$Record) {
                 self::$logger->debug('Cache miss on key ['.get_class($this).'-'.$this->getOID().']');
                 self::$logger->debug('<<loadFromCache: [false]');
 
@@ -2499,7 +2499,7 @@ abstract class ActiveRecord
 
                     // filter transient attributes
                     if (!in_array($propName, $this->transientAttributes)) {
-                        $this->set($propName, $BO->get($propName, true));
+                        $this->set($propName, $Record->get($propName, true));
                     } elseif (!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {
                         $prop = $this->getPropObject($propName);
 
@@ -2538,7 +2538,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Re-initialize the static logger property on the BO after de-serialize, as PHP does
+     * Re-initialize the static logger property on the Record after de-serialize, as PHP does
      * not serialize static properties.
      *
      * @since 1.2

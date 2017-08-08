@@ -159,7 +159,7 @@ class Rights extends ActiveRecord
     }
 
     /**
-     * Sets up the Relation definitions on this BO.
+     * Sets up the Relation definitions on this record.
      *
      * @since 1.0
      */

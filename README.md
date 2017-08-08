@@ -434,14 +434,14 @@ Here is an example where we are injecting in a count of the items in a given sho
 
 	    public function detailedView($fields = array())
 	    {
-	        // this->BO will be set to our cart at this stage during factory instantiation
-	        $items = $this->BO->getItems();
+	        // this->record will be set to our cart at this stage during factory instantiation
+	        $items = $this->record->getItems();
 
 	        $fields['itemCount'] = count($items);
 
 	        // ...
 
-	        $html = $this->loadTemplate($this->BO, 'detail', $fields);
+	        $html = $this->loadTemplate($this->record, 'detail', $fields);
 
 	        return $html;
 	    }
@@ -451,10 +451,10 @@ Here is an example where we are injecting in a count of the items in a given sho
 
 While you can generate HTML directly in your view class methods and return that, typcially you will want to maintain your HTML in a template where it is easier to manage.  The _View_ class provides two seperate methods for loading a template:
 
-	// Assuming that this->BO is a My\App\Model\Cart instance, this will check in the following locations for the template:
+	// Assuming that this->record is a My\App\Model\Cart instance, this will check in the following locations for the template:
 	// 1. [app.root]/View/Html/Templates/Cart/detail.phtml (this is where you should place your custom templates)
 	// 2. [app.root]/Alpha/View/Renderer/Html/Templates/Cart/detail.phtml
-	$html = $this->loadTemplate($this->BO, 'detail', $fields);
+	$html = $this->loadTemplate($this->record, 'detail', $fields);
 
 	// You can also load a fragment template (does not require a record to be passed).  It will check for the file in:
 	// 1. [app.root]/View/Html/Fragments/[fileName]
@@ -546,7 +546,7 @@ If you want to use the feed classes directly in your application, you can do so:
 	$feed = new Atom($ActiveRecordType, $title, $url, $description, $pubDate, $OID);
     $feed->setFieldMappings('title', 'URL', 'description', 'created_ts', 'OID');
     $feed->addAuthor('Feed author');
-    $feed->loadBOs(20, 'OID');
+    $feed->loadRecords(20, 'OID');
 
     $xml = $feed->render();
 

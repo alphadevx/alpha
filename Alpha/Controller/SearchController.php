@@ -156,7 +156,7 @@ class SearchController extends Controller implements ControllerInterface
 
             $provider = SearchProviderFactory::getInstance('Alpha\Util\Search\SearchProviderTags');
 
-            // if a BO name is provided, only search tags on that class, otherwise search all BOs
+            // if a Record name is provided, only search tags on that class, otherwise search all records
             if (isset($params['ActiveRecordType'])) {
                 $results = $provider->search($params['query'], $params['bo'], $this->startPoint);
             } else {

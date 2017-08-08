@@ -81,7 +81,7 @@ class ExcelController extends Controller implements ControllerInterface
     }
 
     /**
-     * Loads the BO indicated in the GET request and handles the conversion to Excel.
+     * Loads the Record indicated in the GET request and handles the conversion to Excel.
      *
      * @param \Alpha\Util\Http\Request $request
      *
@@ -105,16 +105,16 @@ class ExcelController extends Controller implements ControllerInterface
 
                 $className = "Alpha\\Model\\$ActiveRecordType";
                 if (class_exists($className)) {
-                    $this->BO = new $className();
+                    $this->record = new $className();
                 } else {
                     throw new IllegalArguementException('No ActiveRecord available to render!');
                 }
 
                 // the name of the file download
                 if (isset($params['ActiveRecordOID'])) {
-                    $fileName = $this->BO->getTableName().'-'.$params['ActiveRecordOID'];
+                    $fileName = $this->record->getTableName().'-'.$params['ActiveRecordOID'];
                 } else {
-                    $fileName = $this->BO->getTableName();
+                    $fileName = $this->record->getTableName();
                 }
 
                 $response = new Response(200);
@@ -125,22 +125,22 @@ class ExcelController extends Controller implements ControllerInterface
                 $response->setHeader('Pragma', 'no-cache');
                 $response->setHeader('Expires', '0');
 
-                // handle a single BO
+                // handle a single record
                 if (isset($params['ActiveRecordOID'])) {
-                    $this->BO->load($params['ActiveRecordOID']);
+                    $this->record->load($params['ActiveRecordOID']);
                     ActiveRecord::disconnect();
 
-                    $convertor = new ActiveRecord2Excel($this->BO);
+                    $convertor = new ActiveRecord2Excel($this->record);
                     $body .= $convertor->render();
                 } else {
-                    // handle all BOs of this type
-                    $BOs = $BO->loadAll();
+                    // handle all records of this type
+                    $Records = $Record->loadAll();
                     ActiveRecord::disconnect();
 
                     $first = true;
 
-                    foreach ($BOs as $BO) {
-                        $convertor = new ActiveRecord2Excel($BO);
+                    foreach ($Records as $Record) {
+                        $convertor = new ActiveRecord2Excel($Record);
                         if ($first) {
                             $body .= $convertor->render(true);
                             $first = false;

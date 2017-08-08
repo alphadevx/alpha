@@ -62,7 +62,7 @@ class View
      *
      * @since 1.0
      */
-    protected $BO;
+    protected $Record;
 
     /**
      * The rendering provider that will be used to render the active record.
@@ -85,63 +85,63 @@ class View
     /**
      * Constructor for the View.  As this is protected, use the View::getInstance method from a public scope.
      *
-     * @param ActiveRecord $BO           The main business object that this view is going to render
+     * @param ActiveRecord $Record           The main business object that this view is going to render
      * @param string       $acceptHeader Optionally pass the HTTP Accept header to select the correct renderer provider.
      *
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    protected function __construct($BO, $acceptHeader = null)
+    protected function __construct($Record, $acceptHeader = null)
     {
         self::$logger = new Logger('View');
-        self::$logger->debug('>>__construct(BO=['.var_export($BO, true).'], acceptHeader=['.$acceptHeader.'])');
+        self::$logger->debug('>>__construct(Record=['.var_export($Record, true).'], acceptHeader=['.$acceptHeader.'])');
 
         $config = ConfigProvider::getInstance();
 
-        if ($BO instanceof ActiveRecord) {
-            $this->BO = $BO;
+        if ($Record instanceof ActiveRecord) {
+            $this->record = $Record;
         } else {
-            throw new IllegalArguementException('The BO provided ['.get_class($BO).'] is not defined anywhere!');
+            throw new IllegalArguementException('The record type provided ['.get_class($Record).'] is not defined anywhere!');
         }
 
         self::setProvider($config->get('app.renderer.provider.name'), $acceptHeader);
-        self::$provider->setBO($this->BO);
+        self::$provider->setRecord($this->record);
 
         self::$logger->debug('<<__construct');
     }
 
     /**
-     * Static method which returns a View object or a custom child view for the BO specified
+     * Static method which returns a View object or a custom child view for the Record specified
      * if one exists.
      *
-     * @param ActiveRecord $BO           The main business object that this view is going to render
+     * @param ActiveRecord $Record           The main business object that this view is going to render
      * @param bool         $returnParent Flag to enforce the return of this object instead of a child (defaults to false)
      * @param string       $acceptHeader Optionally pass the HTTP Accept header to select the correct renderer provider.
      *
-     * @return View Returns a View object, or a child view object if one exists for this BO
+     * @return View Returns a View object, or a child view object if one exists for this record
      *
      * @since 1.0
      */
-    public static function getInstance($BO, $returnParent = false, $acceptHeader = null)
+    public static function getInstance($Record, $returnParent = false, $acceptHeader = null)
     {
         if (self::$logger == null) {
             self::$logger = new Logger('View');
         }
-        self::$logger->debug('>>getInstance(BO=['.var_export($BO, true).'], returnParent=['.$returnParent.'], acceptHeader=['.$acceptHeader.'])');
+        self::$logger->debug('>>getInstance(Record=['.var_export($Record, true).'], returnParent=['.$returnParent.'], acceptHeader=['.$acceptHeader.'])');
 
-        $class = new ReflectionClass($BO);
+        $class = new ReflectionClass($Record);
         $childView = $class->getShortname();
         $childView = $childView.'View';
 
-        // Check to see if a custom view exists for this BO, and if it does return that view instead
+        // Check to see if a custom view exists for this record, and if it does return that view instead
         if (!$returnParent) {
             $className = '\Alpha\View\\'.$childView;
 
             if (class_exists($className)) {
-                self::$logger->debug('<<getInstance [new '.$className.'('.get_class($BO).')]');
+                self::$logger->debug('<<getInstance [new '.$className.'('.get_class($Record).')]');
 
-                $instance = new $className($BO, $acceptHeader);
+                $instance = new $className($Record, $acceptHeader);
 
                 return $instance;
             }
@@ -149,55 +149,55 @@ class View
             $className = '\View\\'.$childView;
 
             if (class_exists('\View\\'.$childView)) {
-                self::$logger->debug('<<getInstance [new '.$className.'('.get_class($BO).')]');
+                self::$logger->debug('<<getInstance [new '.$className.'('.get_class($Record).')]');
 
-                $instance = new $className($BO, $acceptHeader);
+                $instance = new $className($Record, $acceptHeader);
 
                 return $instance;
             }
 
-            self::$logger->debug('<<getInstance [new View('.get_class($BO).', '.$acceptHeader.')]');
+            self::$logger->debug('<<getInstance [new View('.get_class($Record).', '.$acceptHeader.')]');
 
-            return new self($BO, $acceptHeader);
+            return new self($Record, $acceptHeader);
         } else {
-            self::$logger->debug('<<getInstance [new View('.get_class($BO).', '.$acceptHeader.')]');
+            self::$logger->debug('<<getInstance [new View('.get_class($Record).', '.$acceptHeader.')]');
 
-            return new self($BO, $acceptHeader);
+            return new self($Record, $acceptHeader);
         }
     }
 
     /**
      * Simple setter for the view business object.
      *
-     * @param \Alpha\Model\ActiveRecord $BO
+     * @param \Alpha\Model\ActiveRecord $Record
      *
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    public function setBO($BO)
+    public function setRecord($Record)
     {
-        self::$logger->debug('>>setBO(BO=['.var_export($BO, true).'])');
+        self::$logger->debug('>>setRecord(Record=['.var_export($Record, true).'])');
 
-        if ($BO instanceof \Alpha\Model\ActiveRecord) {
-            $this->BO = $BO;
+        if ($Record instanceof \Alpha\Model\ActiveRecord) {
+            $this->record = $Record;
         } else {
-            throw new IllegalArguementException('The BO provided ['.get_class($BO).'] is not defined anywhere!');
+            throw new IllegalArguementException('The Record provided ['.get_class($Record).'] is not defined anywhere!');
         }
 
-        self::$logger->debug('<<setBO');
+        self::$logger->debug('<<setRecord');
     }
 
     /**
-     * Gets the BO attached to this view (if any).
+     * Gets the Record attached to this view (if any).
      *
      * @return \Alpha\Model\ActiveRecord
      *
      * @since 1.0
      */
-    public function getBO()
+    public function getRecord()
     {
-        return $this->BO;
+        return $this->record;
     }
 
     /**
@@ -761,7 +761,7 @@ class View
     }
 
     /**
-     * Renders all fields for the current BO in edit/create/view mode.
+     * Renders all fields for the current Record in edit/create/view mode.
      *
      * @param string $mode           (view|edit|create)
      * @param array  $filterFields   Optional list of field names to exclude from rendering
@@ -783,10 +783,10 @@ class View
     }
 
     /**
-     * Loads a template for the BO specified if one exists.  Lower level custom templates
+     * Loads a template for the Record specified if one exists.  Lower level custom templates
      * take precedence.
      *
-     * @param \Alpha\Model\ActiveRecord $BO
+     * @param \Alpha\Model\ActiveRecord $Record
      * @param string                   $mode
      * @param array                    $fields
      *
@@ -796,25 +796,25 @@ class View
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public static function loadTemplate($BO, $mode, $fields = array())
+    public static function loadTemplate($Record, $mode, $fields = array())
     {
-        self::$logger->debug('>>loadTemplate(BO=['.var_export($BO, true).'], mode=['.$mode.'], fields=['.var_export($fields, true).'])');
+        self::$logger->debug('>>loadTemplate(Record=['.var_export($Record, true).'], mode=['.$mode.'], fields=['.var_export($fields, true).'])');
 
         $config = ConfigProvider::getInstance();
 
-        // for each BO property, create a local variable holding its value
-        $reflection = new ReflectionClass(get_class($BO));
+        // for each Record property, create a local variable holding its value
+        $reflection = new ReflectionClass(get_class($Record));
         $properties = $reflection->getProperties();
 
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
 
             if ($propName != 'logger' && !$propObj->isPrivate()) {
-                $prop = $BO->getPropObject($propName);
+                $prop = $Record->getPropObject($propName);
                 if ($prop instanceof DEnum) {
-                    ${$propName} = $BO->getPropObject($propName)->getDisplayValue();
+                    ${$propName} = $Record->getPropObject($propName)->getDisplayValue();
                 } else {
-                    ${$propName} = $BO->get($propName);
+                    ${$propName} = $Record->get($propName);
                 }
             }
         }
@@ -825,7 +825,7 @@ class View
         }
 
         $filename = $mode.'.phtml';
-        $class = new ReflectionClass($BO);
+        $class = new ReflectionClass($Record);
         $className = $class->getShortname();
 
         $customPath = $config->get('app.root').'src/View/Html/Templates/'.$className.'/'.$filename;
@@ -834,7 +834,7 @@ class View
         $defaultPath3 = $config->get('app.root').'Alpha/View/Renderer/Html/Templates/'.$className.'/'.$filename;
         $defaultPath4 = $config->get('app.root').'Alpha/View/Renderer/Html/Templates/'.$filename;
 
-        // Check to see if a custom template exists for this BO, and if it does load that
+        // Check to see if a custom template exists for this record, and if it does load that
         if (file_exists($customPath)) {
             self::$logger->debug('Loading template ['.$customPath.']');
             ob_start();
@@ -912,7 +912,7 @@ class View
         $defaultPath1 = $config->get('app.root').'vendor/alphadevx/alpha/Alpha/View/Renderer/'.ucfirst($type).'/Fragments/'.$fileName;
         $defaultPath2 = $config->get('app.root').'Alpha/View/Renderer/'.ucfirst($type).'/Fragments/'.$fileName;
 
-        // Check to see if a custom template exists for this BO, and if it does load that
+        // Check to see if a custom template exists for this record, and if it does load that
         if (file_exists($customPath)) {
             self::$logger->debug('Loading template ['.$customPath.']');
             ob_start();
