@@ -188,7 +188,7 @@ class LoginController extends Controller implements ControllerInterface
                     if ($params['email'] == $config->get('app.install.username') && password_verify($params['password'], password_hash($config->get('app.install.password'), PASSWORD_DEFAULT, ['cost' => 12]))) {
                         self::$logger->info('Logging in ['.$params['email'].'] at ['.date('Y-m-d H:i:s').']');
                         $admin = new Person();
-                        $admin->set('displayName', 'Admin');
+                        $admin->set('username', 'Admin');
                         $admin->set('email', $params['email']);
                         $admin->set('password', password_hash($params['password'], PASSWORD_DEFAULT, ['cost' => 12]));
                         $admin->set('OID', '00000000001');

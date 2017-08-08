@@ -107,7 +107,7 @@ class ActiveRecordTest extends ModelTestCase
 
             // just making sure no previous test user is in the DB
             $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/');
-            $this->person->deleteAllByAttribute('displayName', 'unitTestUser');
+            $this->person->deleteAllByAttribute('username', 'unitTestUser');
 
             $article = new Article();
             $article->rebuildTable();
@@ -128,7 +128,7 @@ class ActiveRecordTest extends ModelTestCase
     private function createPersonObject($name)
     {
         $person = new Person();
-        $person->setDisplayname($name);
+        $person->setUsername($name);
         $person->set('email', $name.'@test.com');
         $person->set('password', 'passwordTest');
         $person->set('URL', 'http://unitTestUser/');
@@ -150,7 +150,7 @@ class ActiveRecordTest extends ModelTestCase
 
         $article = new Article();
 
-        $article->createForeignIndex('author', 'Alpha\Model\Person', 'displayName');
+        $article->createForeignIndex('author', 'Alpha\Model\Person', 'username');
 
         $this->assertTrue(in_array('Article_author_fk_idx', $article->getIndexes()), 'Testing the createForeignIndex method');
     }
@@ -214,7 +214,7 @@ class ActiveRecordTest extends ModelTestCase
         $this->person->save();
         $id = $this->person->getMAX();
         $this->person->load($id);
-        $this->assertEquals('unitTestUser', $this->person->getDisplayname()->getValue(), 'Testing the basic load/save functionality');
+        $this->assertEquals('unitTestUser', $this->person->getUsername()->getValue(), 'Testing the basic load/save functionality');
     }
 
     /**
@@ -270,10 +270,10 @@ class ActiveRecordTest extends ModelTestCase
         $config->set('db.provider.name', $provider);
 
         $this->person->save();
-        $this->person->loadByAttribute('displayName', 'unitTestUser');
+        $this->person->loadByAttribute('username', 'unitTestUser');
         $this->assertEquals('unitTestUser@test.com', $this->person->get('email'), 'Testing the loadByAttribute method');
         $this->person->loadByAttribute('email', 'unitTestUser@test.com');
-        $this->assertEquals('unitTestUser', $this->person->getDisplayname()->getValue(), 'Testing the loadByAttribute method');
+        $this->assertEquals('unitTestUser', $this->person->getUsername()->getValue(), 'Testing the loadByAttribute method');
     }
 
     /**
@@ -290,17 +290,17 @@ class ActiveRecordTest extends ModelTestCase
         $this->person->setMaintainHistory(true);
         $this->person->rebuildTable();
 
-        $this->person->set('displayName', 'unitTestUser1');
+        $this->person->set('username', 'unitTestUser1');
         $this->person->save();
 
         $this->assertEquals(1, $this->person->getHistoryCount(), 'Testing loadAllOldVersions method');
-        $this->assertEquals('unitTestUser1', $this->person->loadAllOldVersions($this->person->getOID())[0]->getDisplayName()->getValue());
+        $this->assertEquals('unitTestUser1', $this->person->loadAllOldVersions($this->person->getOID())[0]->getUsername()->getValue());
 
-        $this->person->saveAttribute('displayName', 'unitTestUser2');
+        $this->person->saveAttribute('username', 'unitTestUser2');
 
         $this->assertEquals(2, $this->person->getHistoryCount(), 'Testing loadAllOldVersions method');
-        $this->assertEquals('unitTestUser1', $this->person->loadAllOldVersions($this->person->getOID())[0]->getDisplayName()->getValue());
-        $this->assertEquals('unitTestUser2', $this->person->loadAllOldVersions($this->person->getOID())[1]->getDisplayName()->getValue());
+        $this->assertEquals('unitTestUser1', $this->person->loadAllOldVersions($this->person->getOID())[0]->getUsername()->getValue());
+        $this->assertEquals('unitTestUser2', $this->person->loadAllOldVersions($this->person->getOID())[1]->getUsername()->getValue());
 
         $this->person->dropTable('Person_history');
     }
@@ -339,7 +339,7 @@ class ActiveRecordTest extends ModelTestCase
         $this->person->save();
         $people = $this->person->loadAllByAttribute('email', 'unitTestUser@test.com');
         $this->assertEquals(1, count($people), 'Testing the loadAllByAttribute method');
-        $this->assertEquals('unitTestUser', $people[0]->getDisplayname()->getValue(), 'Testing the loadAllByAttribute method');
+        $this->assertEquals('unitTestUser', $people[0]->getUsername()->getValue(), 'Testing the loadAllByAttribute method');
         $people[0]->delete();
     }
 
@@ -357,7 +357,7 @@ class ActiveRecordTest extends ModelTestCase
         $this->person->save();
         $people = $this->person->loadAllByAttributes(array('OID'), array($this->person->getOID()));
         $this->assertEquals(1, count($people), 'Testing the loadAllByAttribute method');
-        $this->assertEquals('unitTestUser', $people[0]->getDisplayname()->getValue(), 'Testing the loadAllByAttributes method');
+        $this->assertEquals('unitTestUser', $people[0]->getUsername()->getValue(), 'Testing the loadAllByAttributes method');
         $people[0]->delete();
     }
 
@@ -550,19 +550,19 @@ class ActiveRecordTest extends ModelTestCase
         $config->set('db.provider.name', $provider);
 
         $person1 = new Person();
-        $person1->setDisplayname('unitTestUser1');
+        $person1->setUsername('unitTestUser1');
         $person1->set('email', 'unitTestUser1@test.com');
         $person1->set('password', 'passwordTest');
         $person1->set('URL', 'http://unitTestUser/');
 
         $person2 = new Person();
-        $person2->setDisplayname('unitTestUser2');
+        $person2->setUsername('unitTestUser2');
         $person2->set('email', 'unitTestUser2@test.com');
         $person2->set('password', 'passwordTest');
         $person2->set('URL', 'http://unitTestUser/');
 
         $person3 = new Person();
-        $person3->setDisplayname('unitTestUser3');
+        $person3->setUsername('unitTestUser3');
         $person3->set('email', 'unitTestUser3@test.com');
         $person3->set('password', 'passwordTest');
         $person3->set('URL', 'http://unitTestUser/');
@@ -967,7 +967,7 @@ class ActiveRecordTest extends ModelTestCase
             $this->assertEquals('SELECT MAX(OID)', mb_substr($this->person->getLastQuery(), 0, 15),
                     'Testing the getLastQuery method after various persistance calls');
             $this->person->load($this->person->getID());
-            $this->assertEquals('SELECT displayName,email,password,state,URL,OID,version_num,created_ts,created_by,updated_ts,updated_by FROM Person WHERE OID = :OID LIMIT 1;',
+            $this->assertEquals('SELECT username,email,password,state,URL,OID,version_num,created_ts,created_by,updated_ts,updated_by FROM Person WHERE OID = :OID LIMIT 1;',
                     mb_substr($this->person->getLastQuery(), 0, 150),
                     'Testing the getLastQuery method after various persistance calls');
         }
@@ -1035,16 +1035,16 @@ class ActiveRecordTest extends ModelTestCase
         $config->set('db.provider.name', $provider);
 
         $this->person->save();
-        $this->person->saveAttribute('displayName', 'unitTestUserNew');
+        $this->person->saveAttribute('username', 'unitTestUserNew');
 
-        $this->assertEquals('unitTestUserNew', $this->person->getDisplayName()->getValue(),
+        $this->assertEquals('unitTestUserNew', $this->person->getUsername()->getValue(),
             'Testing that the value was set on the object in memory along with saving to the database');
 
         $person = new Person();
 
         try {
-            $person->loadByAttribute('displayName', 'unitTestUserNew');
-            $this->assertEquals('unitTestUserNew', $person->getDisplayName()->getValue(), 'Testing that the value was saved to the database');
+            $person->loadByAttribute('username', 'unitTestUserNew');
+            $this->assertEquals('unitTestUserNew', $person->getUsername()->getValue(), 'Testing that the value was saved to the database');
         } catch (RecordNotFoundException $e) {
             $this->fail('Failed to load the BO that was updated with the saveAttribute method');
         }
@@ -1053,7 +1053,7 @@ class ActiveRecordTest extends ModelTestCase
 
         sleep(1);
 
-        $person->saveAttribute('displayName', 'unitTestUserNew');
+        $person->saveAttribute('username', 'unitTestUserNew');
 
         $this->assertNotEquals($oldTimestamp, $person->get('updated_ts'), 'Testing that updated_ts changed');
 
@@ -1136,7 +1136,7 @@ class ActiveRecordTest extends ModelTestCase
         $fromCache->setOID($this->person->getOID());
 
         $this->assertTrue($fromCache->loadFromCache(), 'testing that the item loads from the cache');
-        $this->assertEquals('unitTestUser', $fromCache->get('displayName', true), 'testing that you can add a DAO directly to the cache without saving');
+        $this->assertEquals('unitTestUser', $fromCache->get('username', true), 'testing that you can add a DAO directly to the cache without saving');
 
         $config->set('cache.provider.name', $oldSetting);
     }
@@ -1163,7 +1163,7 @@ class ActiveRecordTest extends ModelTestCase
         $fromCache->setOID($this->person->getOID());
 
         $this->assertTrue($fromCache->loadFromCache(), 'testing that the item loads from the cache');
-        $this->assertEquals('unitTestUser', $fromCache->get('displayName', true), 'testing that a saved record is subsequently retrievable from the cache');
+        $this->assertEquals('unitTestUser', $fromCache->get('username', true), 'testing that a saved record is subsequently retrievable from the cache');
 
         $config->set('cache.provider.name', $oldSetting);
     }

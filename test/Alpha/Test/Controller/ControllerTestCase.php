@@ -129,7 +129,7 @@ class ControllerTestCase extends \PHPUnit_Framework_TestCase
     protected function createPersonObject($name)
     {
         $person = new Person();
-        $person->setDisplayname($name);
+        $person->setUsername($name);
         $person->set('email', $name.'@test.com');
         $person->set('password', 'passwordTest');
         $person->set('URL', 'http://unitTestUser/');

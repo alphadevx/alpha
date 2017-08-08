@@ -87,7 +87,7 @@ class EnumTest extends ModelTestCase
         $rights->rebuildTable();
 
         $this->person = new Person();
-        $this->person->set('displayName', 'enumunittest');
+        $this->person->set('username', 'enumunittest');
         $this->person->set('email', 'enumunittest@test.com');
         $this->person->set('password', 'password');
         $this->person->rebuildTable();
@@ -119,7 +119,7 @@ class EnumTest extends ModelTestCase
      */
     public function testLoadEnumOptions()
     {
-        $this->person->loadByAttribute('displayName', 'enumunittest', true);
+        $this->person->loadByAttribute('username', 'enumunittest', true);
 
         $this->assertEquals('Active', $this->person->getPropObject('state')->getValue(), 'Testing that enum options are loaded correctly from the database');
     }

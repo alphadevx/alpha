@@ -215,7 +215,7 @@ class CacheController extends Controller implements ControllerInterface
                     $sessionProvider = $config->get('session.provider.name');
                     $session = SessionProviderFactory::getInstance($sessionProvider);
 
-                    self::$logger->info('Cache contents deleted successfully by user ['.$session->get('currentUser')->get('displayName').'].');
+                    self::$logger->info('Cache contents deleted successfully by user ['.$session->get('currentUser')->get('username').'].');
                 } catch (AlphaException $e) {
                     self::$logger->error($e->getMessage());
                     $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));

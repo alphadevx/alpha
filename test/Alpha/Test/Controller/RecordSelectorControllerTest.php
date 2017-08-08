@@ -72,7 +72,7 @@ class RecordSelectorControllerTest extends \PHPUnit_Framework_TestCase
         $standardGroup->save();
 
         $person = new Person();
-        $person->set('displayName', 'unittestuser');
+        $person->set('username', 'unittestuser');
         $person->set('email', 'unittestuser@alphaframework.org');
         $person->set('password', 'password');
         $person->rebuildTable();

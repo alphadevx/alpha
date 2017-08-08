@@ -89,7 +89,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('application/json', $response->getHeader('Content-Type'), 'Testing the doGET method');
-        $this->assertEquals('test', json_decode($response->getBody())->displayName, 'Testing the doGET method');
+        $this->assertEquals('test', json_decode($response->getBody())->username, 'Testing the doGET method');
 
         // GET a list this time...
         $person = $this->createPersonObject('test2');
@@ -117,8 +117,8 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals(2, count($records), 'Testing the doGET method');
         $this->assertEquals('application/json', $response->getHeader('Content-Type'), 'Testing the doGET method');
-        $this->assertEquals('test', $records[0]->displayName, 'Testing the doGET method');
-        $this->assertEquals('test2', $records[1]->displayName, 'Testing the doGET method');
+        $this->assertEquals('test', $records[0]->username, 'Testing the doGET method');
+        $this->assertEquals('test2', $records[1]->username, 'Testing the doGET method');
 
         // get the record creation screen
         $request = new Request(array('method' => 'GET', 'URI' => '/record/'.urlencode('Alpha\Model\Person')));
@@ -187,7 +187,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $this->assertEquals(201, $response->getStatus(), 'Testing the doPOST method');
         $this->assertEquals('application/json', $response->getHeader('Content-Type'), 'Testing the doPOST method');
         $this->assertTrue(strpos($response->getHeader('Location'), '/record/'.urlencode('Alpha\Model\Person')) !== false, 'Testing the doPOST method');
-        $this->assertEquals('test3', json_decode($response->getBody())->displayName, 'Testing the doPOST method');
+        $this->assertEquals('test3', json_decode($response->getBody())->username, 'Testing the doPOST method');
     }
 
     /**

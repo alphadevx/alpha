@@ -80,8 +80,8 @@ class ArticleCommentView extends View
         $createTS = $this->BO->getCreateTS();
         $updateTS = $this->BO->getUpdateTS();
 
-        $html .= '<p>Posted by '.($author->get('URL') == '' ? $author->get('displayname') : '<a href="'.$author->get('URL').'" target="new window">'.$author->get('displayname').'</a>').' at '.$createTS->getValue().'.';
-        $html .= '&nbsp;'.$author->get('displayname').' has posted ['.$author->getCommentCount().'] comments on articles since joining.';
+        $html .= '<p>Posted by '.($author->get('URL') == '' ? $author->get('username') : '<a href="'.$author->get('URL').'" target="new window">'.$author->get('username').'</a>').' at '.$createTS->getValue().'.';
+        $html .= '&nbsp;'.$author->get('username').' has posted ['.$author->getCommentCount().'] comments on articles since joining.';
         $html .= '</p>';
         if ($config->get('cms.comments.allowed') && $session->get('currentUser') != null && $session->get('currentUser')->getID() == $author->getID()) {
             $html .= $this->editView($fields);
@@ -93,7 +93,7 @@ class ArticleCommentView extends View
             $updator = new Person();
             $id = $this->BO->getCreatorID();
             $updator->load($id->getValue());
-            $html .= '<p>Updated by '.($updator->get('URL') == '' ? $updator->get('displayname') : '<a href="'.$updator->get('URL').'" target="new window">'.$updator->get('displayname').'</a>').' at '.$updateTS->getValue().'.</p>';
+            $html .= '<p>Updated by '.($updator->get('URL') == '' ? $updator->get('username') : '<a href="'.$updator->get('URL').'" target="new window">'.$updator->get('username').'</a>').' at '.$updateTS->getValue().'.</p>';
         }
         $html .= '</blockquote>';
 

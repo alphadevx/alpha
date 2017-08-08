@@ -62,7 +62,7 @@ class Person extends ActiveRecord
      *
      * @since 1.0
      */
-    protected $displayName;
+    protected $username;
 
     /**
      * The email address for the person.
@@ -108,7 +108,7 @@ class Person extends ActiveRecord
      * @since 1.0
      */
     protected $dataLabels = array('OID' => 'Member ID#',
-                                    'displayName' => 'Display Name',
+                                    'username' => 'Username',
                                     'email' => 'E-mail Address',
                                     'password' => 'Password',
                                     'state' => 'Account state',
@@ -164,10 +164,10 @@ class Person extends ActiveRecord
 
         // ensure to call the parent constructor
         parent::__construct();
-        $this->displayName = new SmallText();
-        $this->displayName->setRule(Validator::REQUIRED_USERNAME);
-        $this->displayName->setSize(70);
-        $this->displayName->setHelper('Please provide a name for display on the website (only letters, numbers, and .-_ characters are allowed!).');
+        $this->username = new SmallText();
+        $this->username->setRule(Validator::REQUIRED_USERNAME);
+        $this->username->setSize(70);
+        $this->username->setHelper('Please provide a name for display on the website (only letters, numbers, and .-_ characters are allowed!).');
         $this->email = new SmallText();
         $this->email->setRule(Validator::REQUIRED_EMAIL);
         $this->email->setSize(70);
@@ -183,8 +183,8 @@ class Person extends ActiveRecord
         $this->URL = new SmallText();
         $this->URL->setRule(Validator::OPTIONAL_HTTP_URL);
         $this->URL->setHelper('URLs must be in the format http://some_domain/ or left blank!');
-        // add unique keys to displayName and email (which is effectively the username in Alpha)
-        $this->markUnique('displayName');
+        // add unique keys to username and email (which is effectively the username in Alpha)
+        $this->markUnique('username');
         $this->markUnique('email');
 
         $this->rights = new Relation();
@@ -286,27 +286,27 @@ class Person extends ActiveRecord
     }
 
     /**
-     * Setter for displayName.
+     * Setter for username.
      *
-     * @param string $displayName
+     * @param string $username
      *
      * @since 1.0
      */
-    public function setDisplayName($displayName)
+    public function setUsername($username)
     {
-        $this->displayName->setValue($displayName);
+        $this->username->setValue($username);
     }
 
     /**
-     * Getter for displayName.
+     * Getter for username.
      *
      * @return \Alpha\Model\Type\SmallText
      *
      * @since 1.0
      */
-    public function getDisplayName()
+    public function getUsername()
     {
-        return $this->displayName;
+        return $this->username;
     }
 
     /**
@@ -402,7 +402,7 @@ class Person extends ActiveRecord
     {
         $config = ConfigProvider::getInstance();
 
-        $body = '<html><head></head><body><p>Dear '.$this->getDisplayName().',</p>';
+        $body = '<html><head></head><body><p>Dear '.$this->getUsername().',</p>';
 
         $body .= $message;
 

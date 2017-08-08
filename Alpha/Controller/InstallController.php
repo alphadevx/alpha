@@ -268,7 +268,7 @@ class InstallController extends Controller implements ControllerInterface
             try {
                 $body .= '<p>Attempting to save the Admin account...';
                 $admin = new Person();
-                $admin->set('displayName', 'Admin');
+                $admin->set('username', 'Admin');
                 $admin->set('email', $session->get('currentUser')->get('email'));
                 $admin->set('password', $session->get('currentUser')->get('password'));
                 $admin->save();

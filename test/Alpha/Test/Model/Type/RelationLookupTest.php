@@ -189,7 +189,7 @@ class RelationLookupTest extends ModelTestCase
         $group->save();
 
         $person1 = new Person();
-        $person1->set('displayName', 'user1');
+        $person1->set('username', 'user1');
         $person1->set('email', 'user1@test.com');
         $person1->set('password', 'password');
         $person1->save();
@@ -198,7 +198,7 @@ class RelationLookupTest extends ModelTestCase
         $lookup->save();
 
         $person2 = new Person();
-        $person2->set('displayName', 'user2');
+        $person2->set('username', 'user2');
         $person2->set('email', 'user2@test.com');
         $person2->set('password', 'password');
         $person2->save();

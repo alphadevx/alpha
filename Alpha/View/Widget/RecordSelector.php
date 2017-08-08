@@ -281,7 +281,7 @@ class RecordSelector
                                 if ($field == 'created_by' || $field == 'updated_by') {
                                     $person = new PersonObject();
                                     $person->load($value);
-                                    $value = $person->getDisplayName();
+                                    $value = $person->getUsername();
                                 }
 
                                 $html .= '<em>'.$label.': </em>'.$value.'&nbsp;&nbsp;&nbsp;&nbsp;';

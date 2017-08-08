@@ -176,7 +176,7 @@ An active record then uses these data types to store the attributes of an object
 	     *
 	     * @since 1.0
 	     */
-	    protected $displayName;
+	    protected $username;
 
 	    /**
 	     * The email address for the person.
@@ -206,7 +206,7 @@ An active record then uses these data types to store the attributes of an object
 	     * @since 1.0
 	     */
 	    protected $dataLabels = array('OID' => 'Member ID#',
-	                                    'displayName' => 'Display Name',
+	                                    'username' => 'Username',
 	                                    'email' => 'E-mail Address',
 	                                    'password' => 'Password',
 	                                    'state' => 'Account state',
@@ -242,10 +242,10 @@ An active record then uses these data types to store the attributes of an object
 	    {
 	        // ...
 
-	        $this->displayName = new SmallText();
-	        $this->displayName->setRule(Validator::REQUIRED_USERNAME);
-	        $this->displayName->setSize(70);
-	        $this->displayName->setHelper('Please provide a name for display on the website (only letters, numbers, and .-_ characters are allowed!).');
+	        $this->username = new SmallText();
+	        $this->username->setRule(Validator::REQUIRED_USERNAME);
+	        $this->username->setSize(70);
+	        $this->username->setHelper('Please provide a name for display on the website (only letters, numbers, and .-_ characters are allowed!).');
 
 	        $this->email = new SmallText();
 	        $this->email->setRule(Validator::REQUIRED_EMAIL);

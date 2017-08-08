@@ -99,7 +99,7 @@ class RelationTest extends ModelTestCase
         $standardGroup->save();
 
         $this->person = new Person();
-        $this->person->set('displayName', 'unittestuser');
+        $this->person->set('username', 'unittestuser');
         $this->person->set('email', 'unittestuser@alphaframework.org');
         $this->person->set('password', 'password');
         $this->person->rebuildTable();
@@ -295,25 +295,25 @@ class RelationTest extends ModelTestCase
         $oneToManyRel = new Relation();
         $oneToManyRel->setRelatedClass('Alpha\Model\Person');
         $oneToManyRel->setRelatedClassField('OID');
-        $oneToManyRel->setRelatedClassDisplayField('displayName');
+        $oneToManyRel->setRelatedClassDisplayField('username');
         $oneToManyRel->setRelationType('ONE-TO-MANY');
         $oneToManyRel->setValue($this->person->getOID());
 
-        $this->assertEquals($this->person->getDisplayName(), $oneToManyRel->getRelatedClassDisplayFieldValue(), 'testing the getRelatedClassDisplayFieldValue() method on ONE-TO-MANY relation');
+        $this->assertEquals($this->person->getUsername(), $oneToManyRel->getRelatedClassDisplayFieldValue(), 'testing the getRelatedClassDisplayFieldValue() method on ONE-TO-MANY relation');
 
         $group = new Rights();
         $group->set('name', 'unittestgroup');
         $group->save();
 
         $person1 = new Person();
-        $person1->set('displayName', 'user1');
+        $person1->set('username', 'user1');
         $person1->set('email', 'user1@test.com');
         $person1->set('password', 'password');
         $person1->save();
         $person1->addToGroup('unittestgroup');
 
         $person2 = new Person();
-        $person2->set('displayName', 'user2');
+        $person2->set('username', 'user2');
         $person2->set('email', 'user2@test.com');
         $person2->set('password', 'password');
         $person2->save();
@@ -416,11 +416,11 @@ class RelationTest extends ModelTestCase
         $oneToOneRel = new Relation();
         $oneToOneRel->setRelatedClass('Alpha\Model\Person');
         $oneToOneRel->setRelatedClassField('OID');
-        $oneToOneRel->setRelatedClassDisplayField('displayName');
+        $oneToOneRel->setRelatedClassDisplayField('username');
         $oneToOneRel->setRelationType('ONE-TO-ONE');
         $oneToOneRel->setValue($this->person->getOID());
 
-        $this->assertEquals($this->person->getDisplayName(), $oneToOneRel->getRelatedObject()->get('displayName'), 'testing the getRelatedObject method');
+        $this->assertEquals($this->person->getUsername(), $oneToOneRel->getRelatedObject()->get('username'), 'testing the getRelatedObject method');
     }
 
     /**
@@ -435,7 +435,7 @@ class RelationTest extends ModelTestCase
         $group->save();
 
         $person1 = new Person();
-        $person1->set('displayName', 'user1');
+        $person1->set('username', 'user1');
         $person1->set('email', 'user1@test.com');
         $person1->set('password', 'password');
         $person1->save();
@@ -444,7 +444,7 @@ class RelationTest extends ModelTestCase
         $lookup->save();
 
         $person2 = new Person();
-        $person2->set('displayName', 'user2');
+        $person2->set('username', 'user2');
         $person2->set('email', 'user2@test.com');
         $person2->set('password', 'password');
         $person2->save();

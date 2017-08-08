@@ -133,7 +133,7 @@ class ActionLog extends ActiveRecord
         $this->personOID = new Relation();
         $this->personOID->setRelatedClass('Alpha\Model\Person');
         $this->personOID->setRelatedClassField('OID');
-        $this->personOID->setRelatedClassDisplayField('displayName');
+        $this->personOID->setRelatedClassDisplayField('username');
         $this->personOID->setRelationType('MANY-TO-ONE');
         $this->personOID->setValue($this->created_by->getValue());
     }

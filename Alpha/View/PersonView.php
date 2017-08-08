@@ -157,9 +157,9 @@ class PersonView extends View
         $html .= '<form action="'.$request->getURI().'?reset=true" method="POST" accept-charset="UTF-8">';
         $html .= '<tr>';
         if ($config->get('security.encrypt.http.fieldnames')) {
-            $fieldname = base64_encode(SecurityUtils::encrypt('displayname'));
+            $fieldname = base64_encode(SecurityUtils::encrypt('username'));
         } else {
-            $fieldname = 'displayname';
+            $fieldname = 'username';
         }
         $html .= '  <td>Forum name</td> <td><input type="text" name="'.$fieldname.'" size="50" value="'.$request->getParam($fieldname, '').'"/></td>';
         $html .= '</tr>';
