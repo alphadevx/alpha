@@ -103,7 +103,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @since 1.2
      */
-    private $Record;
+    private $record;
 
     /**
      * An array of new foreign keys that need to be created.

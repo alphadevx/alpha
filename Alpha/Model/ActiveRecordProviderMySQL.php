@@ -102,7 +102,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @since 1.1
      */
-    private $Record;
+    private $record;
 
     /**
      * The constructor.
