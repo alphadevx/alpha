@@ -96,11 +96,11 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
         $article->makeTable();
 
         $denum = new DEnum('Alpha\Model\Article::section');
-        $item->set('DEnumID', $denum->getOID());
+        $item->set('DEnumID', $denum->getID());
         $item->set('value', 'Test');
         $item->save();
 
-        $this->DEnumID = $denum->getOID();
+        $this->DEnumID = $denum->getID();
 
         $this->article = $this->createArticle('unitTestArticle');
     }
@@ -198,7 +198,7 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
         $results = $provider->search('unitTestArticle');
 
         $this->assertTrue(count($results) == 1, 'Testing the search method for expected results');
-        $this->assertEquals($this->article->getOID(), $results[0]->getOID(), 'Testing the search method for expected results');
+        $this->assertEquals($this->article->getID(), $results[0]->getID(), 'Testing the search method for expected results');
 
         $results = $provider->search('unitTestArticle', 'PersonObject');
 

@@ -66,13 +66,13 @@ class Tag extends ActiveRecord
     protected $taggedClass;
 
     /**
-     * The OID of the object which is tagged.
+     * The ID of the object which is tagged.
      *
      * @var \Alpha\Model\Type\Integer
      *
      * @since 1.0
      */
-    protected $taggedOID;
+    protected $taggedID;
 
     /**
      * The content of the tag.
@@ -90,7 +90,7 @@ class Tag extends ActiveRecord
      *
      * @since 1.0
      */
-    protected $dataLabels = array('OID' => 'Tag ID#', 'taggedClass' => 'Class Name', 'taggedOID' => 'Tagged Object ID#', 'content' => 'Tag');
+    protected $dataLabels = array('ID' => 'Tag ID#', 'taggedClass' => 'Class Name', 'taggedID' => 'Tagged Object ID#', 'content' => 'Tag');
 
     /**
      * The name of the database table for the class.
@@ -122,17 +122,17 @@ class Tag extends ActiveRecord
         // ensure to call the parent constructor
         parent::__construct();
         $this->taggedClass = new SmallText();
-        $this->taggedOID = new Integer();
+        $this->taggedID = new Integer();
         $this->content = new SmallText();
 
-        $this->markUnique('taggedClass', 'taggedOID', 'content');
+        $this->markUnique('taggedClass', 'taggedID', 'content');
     }
 
     /**
-     * Returns an array of Tags matching the class and OID provided.
+     * Returns an array of Tags matching the class and ID provided.
      *
      * @param $taggedClass The class name of the DAO that has been tagged (with namespace).
-     * @param $taggedOID The Object ID of the DAO that has been tagged.
+     * @param $taggedID The Object ID of the DAO that has been tagged.
      *
      * @return array
      *
@@ -141,18 +141,18 @@ class Tag extends ActiveRecord
      * @throws \Alpha\Exception\AlphaException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function loadTags($taggedClass, $taggedOID)
+    public function loadTags($taggedClass, $taggedID)
     {
         $config = ConfigProvider::getInstance();
 
-        if ($taggedClass == '' || $taggedOID == '') {
-            throw new IllegalArguementException('The taggedClass or taggedOID provided are empty');
+        if ($taggedClass == '' || $taggedID == '') {
+            throw new IllegalArguementException('The taggedClass or taggedID provided are empty');
         }
 
         $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
 
         try {
-            $tags = $provider->loadAllByAttributes(array('taggedOID', 'taggedClass'), array($taggedOID, $taggedClass));
+            $tags = $provider->loadAllByAttributes(array('taggedID', 'taggedClass'), array($taggedID, $taggedClass));
 
             return $tags;
         } catch (RecordNotFoundException $bonf) {
@@ -211,7 +211,7 @@ class Tag extends ActiveRecord
      *
      * @param $content
      * @param $taggedClass Optionally provide a Record class name (with namespace)
-     * @param $taggedOID Optionally provide a Record instance OID
+     * @param $taggedID Optionally provide a Record instance ID
      * @param $applyStopwords Defaults true, set to false if you want to ignore the stopwords.
      *
      * @return array
@@ -220,7 +220,7 @@ class Tag extends ActiveRecord
      *
      * @since 1.0
      */
-    public static function tokenize($content, $taggedClass = '', $taggedOID = '', $applyStopwords = true)
+    public static function tokenize($content, $taggedClass = '', $taggedID = '', $applyStopwords = true)
     {
         if (self::$logger == null) {
             self::$logger = new Logger('Tag');
@@ -261,8 +261,8 @@ class Tag extends ActiveRecord
                     if (!empty($taggedClass)) {
                         $tag->set('taggedClass', $taggedClass);
                     }
-                    if (!empty($taggedOID)) {
-                        $tag->set('taggedOID', $taggedOID);
+                    if (!empty($taggedID)) {
+                        $tag->set('taggedID', $taggedID);
                     }
 
                     array_push($tagObjects, $tag);

@@ -85,7 +85,7 @@ class ActionLog extends ActiveRecord
      *
      * @since 2.0
      */
-    protected $personOID;
+    protected $personID;
 
     /**
      * An array of data display labels for the class properties.
@@ -94,7 +94,7 @@ class ActionLog extends ActiveRecord
      *
      * @since 1.2.2
      */
-    protected $dataLabels = array('OID' => 'Action Log ID#', 'client' => 'Client string', 'IP' => 'IP address', 'message' => 'Message', 'personOID' => 'Owner');
+    protected $dataLabels = array('ID' => 'Action Log ID#', 'client' => 'Client string', 'IP' => 'IP address', 'message' => 'Message', 'personID' => 'Owner');
 
     /**
      * The name of the database table for the class.
@@ -130,11 +130,11 @@ class ActionLog extends ActiveRecord
         $this->IP = new SmallText();
         $this->message = new SmallText();
 
-        $this->personOID = new Relation();
-        $this->personOID->setRelatedClass('Alpha\Model\Person');
-        $this->personOID->setRelatedClassField('OID');
-        $this->personOID->setRelatedClassDisplayField('username');
-        $this->personOID->setRelationType('MANY-TO-ONE');
-        $this->personOID->setValue($this->created_by->getValue());
+        $this->personID = new Relation();
+        $this->personID->setRelatedClass('Alpha\Model\Person');
+        $this->personID->setRelatedClassField('ID');
+        $this->personID->setRelatedClassDisplayField('username');
+        $this->personID->setRelationType('MANY-TO-ONE');
+        $this->personID->setValue($this->created_by->getValue());
     }
 }

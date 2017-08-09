@@ -245,32 +245,32 @@ class RecordSelector
 
                         // check to see if we are in the admin back-end
                         if (mb_strpos($URI, '/tk/') !== false) {
-                            $viewURL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($obj).'&ActiveRecordOID='.$obj->getOID());
-                            $editURL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($obj).'&ActiveRecordOID='.$obj->getOID().'&view=edit');
+                            $viewURL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($obj).'&ActiveRecordID='.$obj->getID());
+                            $editURL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($obj).'&ActiveRecordID='.$obj->getID().'&view=edit');
                         } else {
                             if (isset($customViewControllerName)) {
                                 if ($config->get('app.use.pretty.urls')) {
-                                    $viewURL = $config->get('app.url').$customViewControllerName.'/oid/'.$obj->getOID();
+                                    $viewURL = $config->get('app.url').$customViewControllerName.'/oid/'.$obj->getID();
                                 } else {
-                                    $viewURL = $config->get('app.url').'controller/'.$customViewControllerName.'.php?oid='.$obj->getOID();
+                                    $viewURL = $config->get('app.url').'controller/'.$customViewControllerName.'.php?oid='.$obj->getID();
                                 }
                             } else {
-                                $viewURL = $config->get('app.url').'alpha/controller/Detail.php?bo='.get_class($obj).'&oid='.$obj->getOID();
+                                $viewURL = $config->get('app.url').'alpha/controller/Detail.php?bo='.get_class($obj).'&oid='.$obj->getID();
                             }
                             if (isset($customEditControllerName)) {
                                 if ($config->get('app.use.pretty.urls')) {
-                                    $editURL = $config->get('app.url').$customEditControllerName.'/oid/'.$obj->getOID();
+                                    $editURL = $config->get('app.url').$customEditControllerName.'/oid/'.$obj->getID();
                                 } else {
-                                    $editURL = $config->get('app.url').'controller/'.$customEditControllerName.'.php?oid='.$obj->getOID();
+                                    $editURL = $config->get('app.url').'controller/'.$customEditControllerName.'.php?oid='.$obj->getID();
                                 }
                             } else {
-                                $editURL = $config->get('app.url').'alpha/controller/Edit.php?bo='.get_class($obj).'&oid='.$obj->getOID();
+                                $editURL = $config->get('app.url').'alpha/controller/Edit.php?bo='.get_class($obj).'&oid='.$obj->getID();
                             }
                         }
 
                         /*
                          * If any display headers were set with setRelatedClassHeaderFields, use them otherwise
-                         * use the OID of the related class as the only header.
+                         * use the ID of the related class as the only header.
                          */
                         $headerFields = $this->relationObject->getRelatedClassHeaderFields();
                         if (count($headerFields) > 0) {
@@ -295,7 +295,7 @@ class RecordSelector
                                 }
                             }
                         } else {
-                            $html .= '<em>'.$obj->getDataLabel('OID').': </em>'.$obj->get('OID');
+                            $html .= '<em>'.$obj->getDataLabel('ID').': </em>'.$obj->get('ID');
                         }
                         // ensures that line returns are rendered
                         $value = str_replace("\n", '<br>', $obj->get($this->relationObject->getRelatedClassDisplayField()));
@@ -304,7 +304,7 @@ class RecordSelector
                         $html .= '<div class="centered">';
                         $html .= '<a href="'.$viewURL.'">View</a>';
                         // if the current user owns it, they get the edit link
-                        if ($session->get('currentUser') != null && $session->get('currentUser')->getOID() == $obj->getCreatorId()) {
+                        if ($session->get('currentUser') != null && $session->get('currentUser')->getID() == $obj->getCreatorId()) {
                             $html .= '&nbsp;&nbsp;&nbsp;&nbsp;<a href="'.$editURL.'">Edit</a>';
                         }
                         $html .= '</div>';
@@ -329,7 +329,7 @@ class RecordSelector
             $html .= '</textarea>';
 
             $fieldname1 = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt($this->name)) : $this->name);
-            $fieldname2 = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt($this->name.'_OID')) : $this->name.'_OID');
+            $fieldname2 = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt($this->name.'_ID')) : $this->name.'_ID');
 
             $js = "if(window.jQuery) {
                         BootstrapDialog.show({
@@ -366,17 +366,17 @@ class RecordSelector
 
             $html .= '</div>';
 
-            // hidden field to store the OID of the current record
+            // hidden field to store the ID of the current record
             $html .= '<input type="hidden" name="'.$fieldname2.'" id="'.$fieldname2.'" value="'.$this->relationObject->getValue().'"/>';
 
-            // hidden field to store the OIDs of the related records on the other side of the rel (this is what we check for when saving)
+            // hidden field to store the IDs of the related records on the other side of the rel (this is what we check for when saving)
             if ($this->relationObject->getSide($this->accessingClassName) == 'left') {
-                $lookupOIDs = $this->relationObject->getLookup()->loadAllFieldValuesByAttribute('leftID', $this->relationObject->getValue(), 'rightID', 'DESC');
+                $lookupIDs = $this->relationObject->getLookup()->loadAllFieldValuesByAttribute('leftID', $this->relationObject->getValue(), 'rightID', 'DESC');
             } else {
-                $lookupOIDs = $this->relationObject->getLookup()->loadAllFieldValuesByAttribute('rightID', $this->relationObject->getValue(), 'leftID', 'DESC');
+                $lookupIDs = $this->relationObject->getLookup()->loadAllFieldValuesByAttribute('rightID', $this->relationObject->getValue(), 'leftID', 'DESC');
             }
 
-            $html .= '<input type="hidden" name="'.$fieldname1.'" id="'.$fieldname1.'" value="'.implode(',', $lookupOIDs).'"/>';
+            $html .= '<input type="hidden" name="'.$fieldname1.'" id="'.$fieldname1.'" value="'.implode(',', $lookupIDs).'"/>';
         }
 
         self::$logger->debug('<<__render [html]');
@@ -388,49 +388,49 @@ class RecordSelector
      * Returns the HTML for the record selector that will appear in a pop-up window.
      *
      * @param string $fieldname  The hidden HTML form field in the parent to pass values back to.
-     * @param array  $lookupOIDs An optional array of related look-up OIDs, only required for rendering MANY-TO-MANY rels
+     * @param array  $lookupIDs An optional array of related look-up IDs, only required for rendering MANY-TO-MANY rels
      *
      * @since 1.0
      *
      * @return string
      */
-    public function renderSelector($fieldname, $lookupOIDs = array())
+    public function renderSelector($fieldname, $lookupIDs = array())
     {
-        self::$logger->debug('>>renderSelector(fieldname=['.$fieldname.'], lookupOIDs=['.var_export($lookupOIDs, true).'])');
+        self::$logger->debug('>>renderSelector(fieldname=['.$fieldname.'], lookupIDs=['.var_export($lookupIDs, true).'])');
 
         $config = ConfigProvider::getInstance();
 
         $html = '<script language="JavaScript">
-            var selectedOIDs = new Object();
+            var selectedIDs = new Object();
 
             function toggelOID(oid, displayValue, isSelected) {
                 if(isSelected)
-                    selectedOIDs[oid] = displayValue;
+                    selectedIDs[oid] = displayValue;
                 else
-                    delete selectedOIDs[oid];
+                    delete selectedIDs[oid];
             }
 
             function setParentFieldValues() {
-                var OIDs;
+                var IDs;
                 var displayValues;
 
-                for(key in selectedOIDs) {
-                    if(OIDs == null)
-                        OIDs = key;
+                for(key in selectedIDs) {
+                    if(IDs == null)
+                        IDs = key;
                     else
-                        OIDs = OIDs + \',\' + key;
+                        IDs = IDs + \',\' + key;
 
                     if(displayValues == null)
-                        displayValues = selectedOIDs[key];
+                        displayValues = selectedIDs[key];
                     else
-                        displayValues = displayValues + \'\\n\' + selectedOIDs[key];
+                        displayValues = displayValues + \'\\n\' + selectedIDs[key];
                 }
 
-                if(OIDs == null) {
+                if(IDs == null) {
                     document.getElementById(\''.$fieldname.'\').value = "00000000000";
                     document.getElementById(\''.$fieldname.'_display\').value = "";
                 }else{
-                    document.getElementById(\''.$fieldname.'\').value = OIDs;
+                    document.getElementById(\''.$fieldname.'\').value = IDs;
                     document.getElementById(\''.$fieldname.'_display\').value = displayValues;
                 }
             }
@@ -445,18 +445,18 @@ class RecordSelector
                 $tmpObject = new $classNameRight();
                 $fieldName = $this->relationObject->getRelatedClassDisplayField('right');
                 $fieldLabel = $tmpObject->getDataLabel($fieldName);
-                $oidLabel = $tmpObject->getDataLabel('OID');
+                $oidLabel = $tmpObject->getDataLabel('ID');
 
-                $objects = $tmpObject->loadAll(0, 0, 'OID', 'ASC', true);
+                $objects = $tmpObject->loadAll(0, 0, 'ID', 'ASC', true);
 
                 self::$logger->debug('['.count($objects).'] related ['.$classNameLeft.'] objects loaded');
             } else {
                 $tmpObject = new $classNameLeft();
                 $fieldName = $this->relationObject->getRelatedClassDisplayField('left');
                 $fieldLabel = $tmpObject->getDataLabel($fieldName);
-                $oidLabel = $tmpObject->getDataLabel('OID');
+                $oidLabel = $tmpObject->getDataLabel('ID');
 
-                $objects = $tmpObject->loadAll(0, 0, 'OID', 'ASC', true);
+                $objects = $tmpObject->loadAll(0, 0, 'ID', 'ASC', true);
 
                 self::$logger->debug('['.count($objects).'] related ['.$classNameLeft.'] objects loaded');
             }
@@ -471,18 +471,18 @@ class RecordSelector
             foreach ($objects as $obj) {
                 $html .= '<tr>';
                 $html .= '<td width="20%">';
-                $html .= $obj->getOID();
+                $html .= $obj->getID();
                 $html .= '</td>';
                 $html .= '<td width="60%">';
                 $html .= $obj->get($fieldName);
                 $html .= '</td>';
                 $html .= '<td width="20%">';
 
-                if (in_array($obj->getOID(), $lookupOIDs)) {
-                    $this->onloadJS .= 'toggelOID(\''.$obj->getOID().'\',\''.$obj->get($fieldName).'\',true);';
-                    $html .= '<input name = "'.$obj->getOID().'" type="checkbox" checked onclick="toggelOID(\''.$obj->getOID().'\',\''.$obj->get($fieldName).'\',this.checked);"/>';
+                if (in_array($obj->getID(), $lookupIDs)) {
+                    $this->onloadJS .= 'toggelOID(\''.$obj->getID().'\',\''.$obj->get($fieldName).'\',true);';
+                    $html .= '<input name = "'.$obj->getID().'" type="checkbox" checked onclick="toggelOID(\''.$obj->getID().'\',\''.$obj->get($fieldName).'\',this.checked);"/>';
                 } else {
-                    $html .= '<input name = "'.$obj->getOID().'" type="checkbox" onclick="toggelOID(\''.$obj->getOID().'\',\''.$obj->get($fieldName).'\',this.checked);"/>';
+                    $html .= '<input name = "'.$obj->getID().'" type="checkbox" onclick="toggelOID(\''.$obj->getID().'\',\''.$obj->get($fieldName).'\',this.checked);"/>';
                 }
                 $html .= '</td>';
                 $html .= '</tr>';
@@ -493,9 +493,9 @@ class RecordSelector
 
             $tmpObject = new $className();
             $label = $tmpObject->getDataLabel($this->relationObject->getRelatedClassDisplayField());
-            $oidLabel = $tmpObject->getDataLabel('OID');
+            $oidLabel = $tmpObject->getDataLabel('ID');
 
-            $objects = $tmpObject->loadAll(0, 0, 'OID', 'DESC');
+            $objects = $tmpObject->loadAll(0, 0, 'ID', 'DESC');
 
             $html = '<table cols="3" width="100%" class="bordered">';
             $html .= '<tr>';
@@ -507,16 +507,16 @@ class RecordSelector
             foreach ($objects as $obj) {
                 $html .= '<tr>';
                 $html .= '<td width="20%">';
-                $html .= $obj->getOID();
+                $html .= $obj->getID();
                 $html .= '</td>';
                 $html .= '<td width="60%">';
                 $html .= $obj->get($this->relationObject->getRelatedClassDisplayField());
                 $html .= '</td>';
                 $html .= '<td width="20%">';
-                if ($obj->getOID() == $this->relationObject->getValue()) {
+                if ($obj->getID() == $this->relationObject->getValue()) {
                     $html .= '<img src="'.$config->get('app.url').'/images/icons/accept_ghost.png"/>';
                 } else {
-                    $tmp = new Button("document.getElementById('".$fieldname."').value = '".$obj->getOID()."'; document.getElementById('".$fieldname."_display').value = '".$obj->get($this->relationObject->getRelatedClassDisplayField())."'; $('[Id=".$fieldname."_display]').blur(); window.jQuery.dialog.close();", '', 'selBut', $config->get('app.url').'/images/icons/accept.png');
+                    $tmp = new Button("document.getElementById('".$fieldname."').value = '".$obj->getID()."'; document.getElementById('".$fieldname."_display').value = '".$obj->get($this->relationObject->getRelatedClassDisplayField())."'; $('[Id=".$fieldname."_display]').blur(); window.jQuery.dialog.close();", '', 'selBut', $config->get('app.url').'/images/icons/accept.png');
                     $html .= $tmp->render();
                 }
                 $html .= '</td>';

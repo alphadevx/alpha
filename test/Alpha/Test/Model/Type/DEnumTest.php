@@ -77,7 +77,7 @@ class DEnumTest extends ModelTestCase
         $item->rebuildTable();
 
         $this->denum1 = new DEnum('Article::section');
-        $item->set('DEnumID', $this->denum1->getOID());
+        $item->set('DEnumID', $this->denum1->getID());
         $item->set('value', 'Test');
         $item->save();
     }
@@ -194,7 +194,7 @@ class DEnumTest extends ModelTestCase
      */
     public function testDEnumItemLoadItems()
     {
-        $DEnumID = $this->denum1->getOID();
+        $DEnumID = $this->denum1->getID();
         $item = new DEnumItem();
         $items = $item->loadItems($DEnumID);
 

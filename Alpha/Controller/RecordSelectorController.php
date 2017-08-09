@@ -101,7 +101,7 @@ class RecordSelectorController extends Controller implements ControllerInterface
 
         try {
             $relationType = $params['relationType'];
-            $ActiveRecordOID = $params['ActiveRecordOID'];
+            $ActiveRecordID = $params['ActiveRecordID'];
             $field = $params['field'];
         } catch (\Exception $e) {
             self::$logger->error('Required param missing for RecordSelectorController controller['.$e->getMessage().']');
@@ -115,7 +115,7 @@ class RecordSelectorController extends Controller implements ControllerInterface
                 $relatedClassRight = urldecode($params['relatedClassRight']);
                 $relatedClassRightDisplayField = $params['relatedClassRightDisplayField'];
                 $accessingClassName = urldecode($params['accessingClassName']);
-                $lookupOIDs = $params['lookupOIDs'];
+                $lookupIDs = $params['lookupIDs'];
             } catch (\Exception $e) {
                 self::$logger->error('Required param missing for RecordSelectorController controller['.$e->getMessage().']');
                 throw new ResourceNotFoundException('File not found');
@@ -126,10 +126,10 @@ class RecordSelectorController extends Controller implements ControllerInterface
             $relationObject->setRelatedClass($relatedClassRight, 'right');
             $relationObject->setRelatedClassDisplayField($relatedClassRightDisplayField, 'right');
             $relationObject->setRelationType($relationType);
-            $relationObject->setValue($ActiveRecordOID);
+            $relationObject->setValue($ActiveRecordID);
 
             $recSelector = new RecordSelector($relationObject, '', $field, $accessingClassName);
-            $body .= $recSelector->renderSelector($field, explode(',', $lookupOIDs));
+            $body .= $recSelector->renderSelector($field, explode(',', $lookupIDs));
         } else {
             try {
                 $relatedClass = urldecode($params['relatedClass']);
@@ -144,7 +144,7 @@ class RecordSelectorController extends Controller implements ControllerInterface
             $relationObject->setRelatedClassField($relatedClassField);
             $relationObject->setRelatedClassDisplayField($relatedClassDisplayField);
             $relationObject->setRelationType($relationType);
-            $relationObject->setValue($ActiveRecordOID);
+            $relationObject->setValue($ActiveRecordID);
 
             $recSelector = new RecordSelector($relationObject);
             $body .= $recSelector->renderSelector($field);

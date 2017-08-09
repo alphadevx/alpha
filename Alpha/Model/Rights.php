@@ -75,7 +75,7 @@ class Rights extends ActiveRecord
      *
      * @since 1.0
      */
-    protected $dataLabels = array('OID' => 'Rights Group ID#', 'name' => 'Rights Group Name', 'members' => 'Rights Group Members');
+    protected $dataLabels = array('ID' => 'Rights Group ID#', 'name' => 'Rights Group Name', 'members' => 'Rights Group Members');
 
     /**
      * The name of the database table for the class.
@@ -171,6 +171,6 @@ class Rights extends ActiveRecord
         $this->members->setRelatedClass('Alpha\Model\Rights', 'right');
         $this->members->setRelatedClassDisplayField('name', 'right');
         $this->members->setRelationType('MANY-TO-MANY');
-        $this->members->setValue($this->getOID());
+        $this->members->setValue($this->getID());
     }
 }

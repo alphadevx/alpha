@@ -191,7 +191,7 @@ class LoginController extends Controller implements ControllerInterface
                         $admin->set('username', 'Admin');
                         $admin->set('email', $params['email']);
                         $admin->set('password', password_hash($params['password'], PASSWORD_DEFAULT, ['cost' => 12]));
-                        $admin->set('OID', '00000000001');
+                        $admin->set('ID', '00000000001');
 
                         $sessionProvider = $config->get('session.provider.name');
                         $session = SessionProviderFactory::getInstance($sessionProvider);

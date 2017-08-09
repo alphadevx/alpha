@@ -104,13 +104,13 @@ class FeedController extends Controller implements ControllerInterface
     protected $fieldMappings;
 
     /**
-     * The Record field name to sort the feed by (descending), default is OID.
+     * The Record field name to sort the feed by (descending), default is ID.
      *
      * @var string
      *
      * @since 1.0
      */
-    private $sortBy = 'OID';
+    private $sortBy = 'ID';
 
     /**
      * Trace logger.
@@ -236,7 +236,7 @@ class FeedController extends Controller implements ControllerInterface
         if ($bo instanceof Article) {
             $this->title = 'Latest articles from '.$config->get('app.title');
             $this->description = 'News feed containing all of the details on the latest articles published on '.$config->get('app.title').'.';
-            $this->fieldMappings = array('title', 'URL', 'description', 'created_ts', 'OID');
+            $this->fieldMappings = array('title', 'URL', 'description', 'created_ts', 'ID');
             $this->sortBy = 'created_ts';
         }
 

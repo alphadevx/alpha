@@ -107,7 +107,7 @@ class ActiveRecord2Excel
 
         // print headers
         if ($renderHeaders) {
-            $output .= $this->record->getDataLabel('OID').$sep;
+            $output .= $this->record->getDataLabel('ID').$sep;
             foreach ($properties as $propObj) {
                 $propName = $propObj->name;
                 if (!in_array($propName, $this->record->getTransientAttributes()) && !in_array($propName, $this->record->getDefaultAttributes())) {
@@ -119,7 +119,7 @@ class ActiveRecord2Excel
         }
 
         // print values
-        $output .= $this->record->getOID().$sep;
+        $output .= $this->record->getID().$sep;
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
             $prop = $this->record->getPropObject($propName);

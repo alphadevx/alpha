@@ -155,7 +155,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
         }
 
         // view edit article requests
-        if ((isset($params['view']) && $params['view'] == 'edit') && (isset($params['title']) || isset($params['ActiveRecordOID']))) {
+        if ((isset($params['view']) && $params['view'] == 'edit') && (isset($params['title']) || isset($params['ActiveRecordID']))) {
             if (isset($params['ActiveRecordType']) && class_exists($params['ActiveRecordType'])) {
                 $record = new $params['ActiveRecordType'];
             } else {
@@ -167,7 +167,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                     $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
                     $record->loadByAttribute('title', $title);
                 } else {
-                    $record->load($params['ActiveRecordOID']);
+                    $record->load($params['ActiveRecordID']);
                 }
             } catch (RecordNotFoundException $e) {
                 self::$logger->warn($e->getMessage());
@@ -203,7 +203,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
         }
 
         // handle requests for viewing articles
-        if (isset($params['title']) || isset($params['ActiveRecordOID'])) {
+        if (isset($params['title']) || isset($params['ActiveRecordID'])) {
             $KDP = new KPI('viewarticle');
             if (isset($params['ActiveRecordType']) && class_exists($params['ActiveRecordType'])) {
                 $record = new $params['ActiveRecordType'];
@@ -215,16 +215,16 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                 if (isset($params['title'])) {
                     $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
 
-                    $record->loadByAttribute('title', $title, false, array('OID', 'version_num', 'created_ts', 'updated_ts', 'title', 'author', 'published', 'content', 'headerContent'));
+                    $record->loadByAttribute('title', $title, false, array('ID', 'version_num', 'created_ts', 'updated_ts', 'title', 'author', 'published', 'content', 'headerContent'));
                 } else {
-                    $record->load($params['ActiveRecordOID']);
+                    $record->load($params['ActiveRecordID']);
                 }
 
                 if (!$record->get('published')) {
                     throw new RecordNotFoundException('Attempted to load an article which is not published yet');
                 }
 
-                $record->set('tags', $record->getOID());
+                $record->set('tags', $record->getID());
             } catch (IllegalArguementException $e) {
                 self::$logger->warn($e->getMessage());
                 throw new ResourceNotFoundException('The file that you have requested cannot be found!');
@@ -347,7 +347,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                 $viewState->set('markdownTextBoxRows', $params['markdownTextBoxRows']);
             }
 
-            if (isset($params['title']) || isset($params['ActiveRecordOID'])) {
+            if (isset($params['title']) || isset($params['ActiveRecordID'])) {
                 if (isset($params['ActiveRecordType']) && class_exists($params['ActiveRecordType'])) {
                     $record = new $params['ActiveRecordType'];
                 } else {
@@ -357,9 +357,9 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                 if (isset($params['title'])) {
                     $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
 
-                    $record->loadByAttribute('title', $title, false, array('OID', 'version_num', 'created_ts', 'updated_ts', 'title', 'author', 'published', 'content', 'headerContent'));
+                    $record->loadByAttribute('title', $title, false, array('ID', 'version_num', 'created_ts', 'updated_ts', 'title', 'author', 'published', 'content', 'headerContent'));
                 } else {
-                    $record->load($params['ActiveRecordOID']);
+                    $record->load($params['ActiveRecordID']);
                 }
 
                 // uploading an article attachment
@@ -424,7 +424,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
             $response->redirect($this->getNextJob());
         } else {
             if ($this->request->isSecureURI()) {
-                $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType=Alpha\Model\Article&ActiveRecordOID='.$record->getOID().'&view=edit'));
+                $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType=Alpha\Model\Article&ActiveRecordID='.$record->getID().'&view=edit'));
             } else {
                 $title = str_replace(' ', $config->get('cms.url.title.separator'), $record->get('title'));
                 $response->redirect($config->get('app.url').'/a/'.$title.'/edit');
@@ -476,7 +476,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
             $html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'/css/luminous_light.css">';
         }
 
-        if ((isset($params['view']) && ($params['view'] == 'edit' || $params['view'] == 'create')) || (isset($params['ActiveRecordType']) && !isset($params['ActiveRecordOID']))) {
+        if ((isset($params['view']) && ($params['view'] == 'edit' || $params['view'] == 'create')) || (isset($params['ActiveRecordType']) && !isset($params['ActiveRecordID']))) {
             $fieldid = ($config->get('security.encrypt.http.fieldnames') ? 'text_field_'.base64_encode(SecurityUtils::encrypt('content')).'_0' : 'text_field_content_0');
 
             $html .= '
@@ -595,10 +595,10 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                             '<option value="10">10'.
                             '</select></p>&nbsp;&nbsp;';
 
-                    $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('articleOID')) : 'articleOID');
-                    $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->record->getOID().'"/>';
+                    $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('articleID')) : 'articleID');
+                    $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->record->getID().'"/>';
 
-                    $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('personOID')) : 'personOID');
+                    $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('personID')) : 'personID');
                     $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$session->get('currentUser')->getID().'"/>';
 
                     $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('statusMessage')) : 'statusMessage');
@@ -629,7 +629,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                 // render edit button for admins only
                 if ($session->get('currentUser') instanceof Alpha\Model\Person && $session->get('currentUser')->inGroup('Admin')) {
                     $html .= '&nbsp;&nbsp;';
-                    $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&mode=edit&ActiveRecordOID='.$this->record->getID())."'", 'Edit', 'editBut');
+                    $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&mode=edit&ActiveRecordID='.$this->record->getID())."'", 'Edit', 'editBut');
                     $html .= $button->render();
                 }
             }
@@ -679,7 +679,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
 
         if ($session->get('currentUser') != null && $config->get('cms.comments.allowed')) {
             $comment = new ArticleComment();
-            $comment->set('articleOID', $this->record->getID());
+            $comment->set('articleID', $this->record->getID());
 
             $view = View::getInstance($comment);
             $html .= $view->createView($fields);

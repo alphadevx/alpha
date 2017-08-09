@@ -73,7 +73,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    protected $OID;
+    protected $ID;
 
     /**
      * The last database query run by this object.  Useful for tracing an error.
@@ -103,7 +103,7 @@ abstract class ActiveRecord
     protected $created_ts;
 
     /**
-     * The OID of the person who created this record.
+     * The ID of the person who created this record.
      *
      * @var \Alpha\Model\Type\Integer
      *
@@ -121,7 +121,7 @@ abstract class ActiveRecord
     protected $updated_ts;
 
     /**
-     * The OID of the person who last updated this record.
+     * The ID of the person who last updated this record.
      *
      * @var \Alpha\Model\Type\Integer
      *
@@ -136,7 +136,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    protected $defaultAttributes = array('OID', 'lastQuery', 'version_num', 'dataLabels', 'created_ts', 'created_by', 'updated_ts', 'updated_by', 'defaultAttributes', 'transientAttributes', 'uniqueAttributes', 'TABLE_NAME', 'logger');
+    protected $defaultAttributes = array('ID', 'lastQuery', 'version_num', 'dataLabels', 'created_ts', 'created_by', 'updated_ts', 'updated_by', 'defaultAttributes', 'transientAttributes', 'uniqueAttributes', 'TABLE_NAME', 'logger');
 
     /**
      * An array of the names of all of the transient attributes of a persistent Record which are not saved to the DB.
@@ -202,7 +202,7 @@ abstract class ActiveRecord
 
         $this->version_num = new Integer(0);
         $this->created_ts = new Timestamp(date('Y-m-d H:i:s'));
-        $person_ID = ($session->get('currentUser') != null ? $session->get('currentUser')->getOID() : 0);
+        $person_ID = ($session->get('currentUser') != null ? $session->get('currentUser')->getID() : 0);
         $this->created_by = new Integer($person_ID);
         $this->updated_ts = new Timestamp(date('Y-m-d H:i:s'));
         $this->updated_by = new Integer($person_ID);
@@ -249,18 +249,18 @@ abstract class ActiveRecord
     }
 
     /**
-     * Populates the child object with the properties retrived from the database for the object $OID.
+     * Populates the child object with the properties retrived from the database for the object $ID.
      *
-     * @param int $OID     The object ID of the business object to load.
+     * @param int $ID     The object ID of the business object to load.
      * @param int $version Optionaly, provide the version to load that version from the [tablename]_history table.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function load($OID, $version = 0)
+    public function load($ID, $version = 0)
     {
-        self::$logger->debug('>>load(OID=['.$OID.'], version=['.$version.'])');
+        self::$logger->debug('>>load(ID=['.$ID.'], version=['.$version.'])');
 
         if (method_exists($this, 'before_load_callback')) {
             $this->{'before_load_callback'}();
@@ -268,13 +268,13 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $this->OID = $OID;
+        $this->ID = $ID;
 
         if ($config->get('cache.provider.name') != '' && $this->loadFromCache()) {
             // Record was found in cache
         } else {
             $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
-            $provider->load($OID, $version);
+            $provider->load($ID, $version);
 
             if ($config->get('cache.provider.name') != '') {
                 $this->addToCache();
@@ -293,7 +293,7 @@ abstract class ActiveRecord
     /**
      * Load all old versions (if any) of this record from the [tablename]_history table.
      *
-     * @param int $OID The object ID of the record to load.
+     * @param int $ID The object ID of the record to load.
      *
      * @return array An array containing objects of this type of record object, order by version.
      *
@@ -301,14 +301,14 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\RecordFoundException
      */
-    public function loadAllOldVersions($OID)
+    public function loadAllOldVersions($ID)
     {
-        self::$logger->debug('>>loadAllOldVersions(OID=['.$OID.'])');
+        self::$logger->debug('>>loadAllOldVersions(ID=['.$ID.'])');
 
         $config = ConfigProvider::getInstance();
 
         $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
-        $objects = $provider->loadAllOldVersions($OID);
+        $objects = $provider->loadAllOldVersions($ID);
 
         self::$logger->debug('<<loadAllOldVersions['.count($objects).']');
 
@@ -369,7 +369,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function loadAll($start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false)
+    public function loadAll($start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false)
     {
         self::$logger->debug('>>loadAll(start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
@@ -410,7 +410,7 @@ abstract class ActiveRecord
      * @throws \Alpha\Exception\RecordNotFoundException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
+    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
     {
         self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
 
@@ -450,7 +450,7 @@ abstract class ActiveRecord
      * @throws \Alpha\Exception\RecordNotFoundException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false)
+    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false)
     {
         self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.
             $start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
@@ -494,7 +494,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false)
+    public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false)
     {
         self::$logger->debug('>>loadAllByDayUpdated(date=['.$date.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
@@ -547,7 +547,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Saves the object.  If $this->OID is empty or null it will INSERT, otherwise UPDATE.
+     * Saves the object.  If $this->ID is empty or null it will INSERT, otherwise UPDATE.
      *
      * @since 1.0
      *
@@ -733,16 +733,16 @@ abstract class ActiveRecord
                         $side = $prop->getSide(get_parent_class($this));
                     }
 
-                    self::$logger->debug('Side is ['.$side.']'.$this->getOID());
+                    self::$logger->debug('Side is ['.$side.']'.$this->getID());
 
                     $lookUp = $prop->getLookup();
                     self::$logger->debug('Lookup object['.var_export($lookUp, true).']');
 
                     // delete all of the old RelationLookup objects for this rel
                     if ($side == 'left') {
-                        $lookUp->deleteAllByAttribute('leftID', $this->getOID());
+                        $lookUp->deleteAllByAttribute('leftID', $this->getID());
                     } else {
-                        $lookUp->deleteAllByAttribute('rightID', $this->getOID());
+                        $lookUp->deleteAllByAttribute('rightID', $this->getID());
                     }
                     self::$logger->debug('...done deleting!');
                 }
@@ -759,8 +759,8 @@ abstract class ActiveRecord
 
                 // in the case of tags, we will always remove the related tags once the Record is deleted
                 if ($prop->getRelationType() == 'ONE-TO-MANY' && $prop->getRelatedClass() == 'Alpha\Model\Tag') {
-                    // just making sure that the Relation is set to current OID as its transient
-                    $prop->setValue($this->getOID());
+                    // just making sure that the Relation is set to current ID as its transient
+                    $prop->setValue($this->getID());
                     $relatedObjects = $prop->getRelatedObjects();
 
                     foreach ($relatedObjects as $object) {
@@ -1040,8 +1040,8 @@ abstract class ActiveRecord
                     $rel = $this->getPropObject($propName);
 
                     if ($rel->getRelationType() == 'MANY-TO-MANY') {
-                        $OIDs = explode(',', $hashArray[$propName]);
-                        $rel->setRelatedOIDs($OIDs);
+                        $IDs = explode(',', $hashArray[$propName]);
+                        $rel->setRelatedIDs($IDs);
                         $this->$propName = $rel;
                     }
                 }
@@ -1052,9 +1052,9 @@ abstract class ActiveRecord
     }
 
     /**
-     * Gets the maximum OID value from the database for this class type.
+     * Gets the maximum ID value from the database for this class type.
      *
-     * @return int The maximum OID value in the class table.
+     * @return int The maximum ID value in the class table.
      *
      * @since 1.0
      *
@@ -1154,39 +1154,20 @@ abstract class ActiveRecord
     }
 
     /**
-     * Gets the OID for the object in zero-padded format (same as getOID()).  This version is designed
-     * to be overridden in case you want to do something different with the ID of your objects outside
-     * of the standard 11 digit OID sequence used internally in Alpha.
+     * Gets the ID for the object in zero-padded format (same as getID()).
      *
-     * @return int 11 digit zero-padded OID value.
+     * @return int 11 digit zero-padded ID value.
      *
      * @since 1.0
      */
-    public function getID()
-    {
-        self::$logger->debug('>>getID()');
-        $oid = str_pad($this->OID, 11, '0', STR_PAD_LEFT);
-        self::$logger->debug('<<getID ['.$oid.']');
-
-        return $oid;
-    }
-
-    /**
-     * Gets the OID for the object in zero-padded format (same as getID()).  This version is final so cannot
-     * be overridden.
-     *
-     * @return int 11 digit zero-padded OID value.
-     *
-     * @since 1.0
-     */
-    final public function getOID()
+    final public function getID()
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
         }
-        self::$logger->debug('>>getOID()');
-        $oid = str_pad($this->OID, 11, '0', STR_PAD_LEFT);
-        self::$logger->debug('<<getOID ['.$oid.']');
+        self::$logger->debug('>>getID()');
+        $oid = str_pad($this->ID, 11, '0', STR_PAD_LEFT);
+        self::$logger->debug('<<getID ['.$oid.']');
 
         return $oid;
     }
@@ -1576,9 +1557,9 @@ abstract class ActiveRecord
     }
 
     /**
-     * Method for getting the OID of the person who created this record.
+     * Method for getting the ID of the person who created this record.
      *
-     * @return \Alpha\Model\Type\Integer The OID of the creator.
+     * @return \Alpha\Model\Type\Integer The ID of the creator.
      *
      * @since 1.0
      */
@@ -1591,9 +1572,9 @@ abstract class ActiveRecord
     }
 
     /**
-     * Method for getting the OID of the person who updated this record.
+     * Method for getting the ID of the person who updated this record.
      *
-     * @return \Alpha\Model\Type\Integer The OID of the updator.
+     * @return \Alpha\Model\Type\Integer The ID of the updator.
      *
      * @since 1.0
      */
@@ -1986,17 +1967,17 @@ abstract class ActiveRecord
     }
 
     /**
-     * Setter for the Object ID (OID).
+     * Setter for the Object ID (ID).
      *
-     * @param int $OID The Object ID.
+     * @param int $ID The Object ID.
      *
      * @since 1.0
      */
-    public function setOID($OID)
+    public function setID($ID)
     {
-        self::$logger->debug('>>setOID(OID=['.$OID.'])');
-        self::$logger->debug('<<setOID');
-        $this->OID = $OID;
+        self::$logger->debug('>>setID(ID=['.$ID.'])');
+        self::$logger->debug('<<setID');
+        $this->ID = $ID;
     }
 
     /**
@@ -2010,7 +1991,7 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>isTransient()');
 
-        if (empty($this->OID) || !isset($this->OID) || $this->OID == '00000000000') {
+        if (empty($this->ID) || !isset($this->ID) || $this->ID == '00000000000') {
             self::$logger->debug('<<isTransient [true]');
 
             return true;
@@ -2071,7 +2052,7 @@ abstract class ActiveRecord
         self::$logger->debug('>>reload()');
 
         if (!$this->isTransient()) {
-            $this->load($this->getOID());
+            $this->load($this->getID());
         } else {
             throw new AlphaException('Cannot reload transient object from database!');
         }
@@ -2114,7 +2095,7 @@ abstract class ActiveRecord
     /**
      * Checks that a record exists for the Record in the database.
      *
-     * @param int $OID The Object ID of the object we want to see whether it exists or not.
+     * @param int $ID The Object ID of the object we want to see whether it exists or not.
      *
      * @return bool
      *
@@ -2122,9 +2103,9 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function checkRecordExists($OID)
+    public function checkRecordExists($ID)
     {
-        self::$logger->debug('>>checkRecordExists(OID=['.$OID.'])');
+        self::$logger->debug('>>checkRecordExists(ID=['.$ID.'])');
 
         if (method_exists($this, 'before_checkRecordExists_callback')) {
             $this->{'before_checkRecordExists_callback'}();
@@ -2133,7 +2114,7 @@ abstract class ActiveRecord
         $config = ConfigProvider::getInstance();
 
         $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
-        $recordExists = $provider->checkRecordExists($OID);
+        $recordExists = $provider->checkRecordExists($ID);
 
         if (method_exists($this, 'after_checkRecordExists_callback')) {
             $this->{'after_checkRecordExists_callback'}();
@@ -2346,7 +2327,7 @@ abstract class ActiveRecord
     }
 
     /**
-     * Cast a Record to another type of record.  A new Record will be returned with the same OID and
+     * Cast a Record to another type of record.  A new Record will be returned with the same ID and
      * version_num as the old record, so this is NOT a true cast but is a copy.  All attribute
      * values will be copied accross.
      *
@@ -2360,7 +2341,7 @@ abstract class ActiveRecord
     public function cast($targetClassName, $originalRecord)
     {
         $Record = new $targetClassName();
-        $Record->setOID($originalRecord->getOID());
+        $Record->setID($originalRecord->getID());
         $Record->setVersion($originalRecord->getVersion());
 
         // get the class attributes
@@ -2438,7 +2419,7 @@ abstract class ActiveRecord
 
         try {
             $cache = CacheProviderFactory::getInstance($config->get('cache.provider.name'));
-            $cache->set(get_class($this).'-'.$this->getOID(), $this, 3600);
+            $cache->set(get_class($this).'-'.$this->getID(), $this, 3600);
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to store a business object to the ['.$config->get('cache.provider.name').'] 
                 instance: ['.$e->getMessage().']');
@@ -2459,7 +2440,7 @@ abstract class ActiveRecord
 
         try {
             $cache = CacheProviderFactory::getInstance($config->get('cache.provider.name'));
-            $cache->delete(get_class($this).'-'.$this->getOID());
+            $cache->delete(get_class($this).'-'.$this->getID());
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to remove a business object from ['.$config->get('cache.provider.name').']
                 instance: ['.$e->getMessage().']');
@@ -2482,10 +2463,10 @@ abstract class ActiveRecord
 
         try {
             $cache = CacheProviderFactory::getInstance($config->get('cache.provider.name'));
-            $Record = $cache->get(get_class($this).'-'.$this->getOID());
+            $Record = $cache->get(get_class($this).'-'.$this->getID());
 
             if (!$Record) {
-                self::$logger->debug('Cache miss on key ['.get_class($this).'-'.$this->getOID().']');
+                self::$logger->debug('Cache miss on key ['.get_class($this).'-'.$this->getID().']');
                 self::$logger->debug('<<loadFromCache: [false]');
 
                 return false;
@@ -2505,7 +2486,7 @@ abstract class ActiveRecord
 
                         // handle the setting of ONE-TO-MANY relation values
                         if ($prop->getRelationType() == 'ONE-TO-MANY') {
-                            $this->set($propObj->name, $this->getOID());
+                            $this->set($propObj->name, $this->getID());
                         }
                     }
                 }

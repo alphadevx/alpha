@@ -79,7 +79,7 @@ class DEnumControllerTest extends ControllerTestCase
         $item->rebuildTable();
 
         $this->denum = new DEnum('Article::section');
-        $item->set('DEnumID', $this->denum->getOID());
+        $item->set('DEnumID', $this->denum->getID());
         $item->set('value', 'Test');
         $item->save();
     }
@@ -118,13 +118,13 @@ class DEnumControllerTest extends ControllerTestCase
         $securityParams = $controller->generateSecurityFields();
 
         $item = new DEnumItem();
-        $denumItems = $item->loadItems($this->denum->getOID());
+        $denumItems = $item->loadItems($this->denum->getID());
         $item = $denumItems[0];
 
-        $params = array('saveBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1], 'value_'.$item->getOID() => 'updated');
+        $params = array('saveBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1], 'value_'.$item->getID() => 'updated');
         $params = array_merge($params, $item->toArray());
 
-        $request = new Request(array('method' => 'POST', 'URI' => '/denum/'.$this->denum->getOID(), 'params' => $params));
+        $request = new Request(array('method' => 'POST', 'URI' => '/denum/'.$this->denum->getID(), 'params' => $params));
 
         $response = $front->process($request);
 

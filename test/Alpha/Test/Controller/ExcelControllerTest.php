@@ -109,7 +109,7 @@ class ExcelControllerTest extends \PHPUnit_Framework_TestCase
         $person = $this->createPersonObject('test');
         $person->save();
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/excel/Person/'.$person->getOID()));
+        $request = new Request(array('method' => 'GET', 'URI' => '/excel/Person/'.$person->getID()));
 
         $response = $front->process($request);
 

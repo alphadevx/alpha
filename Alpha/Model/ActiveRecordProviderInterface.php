@@ -73,21 +73,21 @@ interface ActiveRecordProviderInterface
     public static function getLastDatabaseError();
 
     /**
-     * Populates the record object with the properties retrived from the database for the record $OID.
+     * Populates the record object with the properties retrived from the database for the record $ID.
      *
-     * @param int $OID     The object ID of the record to load.
+     * @param int $ID     The object ID of the record to load.
      * @param int $version Optionaly, provide the version to load that version from the [tablename]_history table.
      *
      * @since 1.1
      *
      * @throws \Alpha\Exception\RecordFoundException
      */
-    public function load($OID, $version = 0);
+    public function load($ID, $version = 0);
 
     /**
      * Load all old versions (if any) of this record from the [tablename]_history table.
      *
-     * @param int $OID The object ID of the record to load.
+     * @param int $ID The object ID of the record to load.
      *
      * @return array An array containing objects of this type of record object, order by version.
      *
@@ -95,7 +95,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\RecordFoundException
      */
-    public function loadAllOldVersions($OID);
+    public function loadAllOldVersions($ID);
 
     /**
      * Populates the record object from the database table by the given attribute value.
@@ -126,7 +126,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\RecordFoundException
      */
-    public function loadAll($start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false);
+    public function loadAll($start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false);
 
     /**
      * Loads all of the objects of this class by the specified attribute into an array which is returned.
@@ -147,7 +147,7 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\RecordFoundException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array());
+    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array());
 
     /**
      * Loads all of the record objects of this class by the specified attributes into an array which is returned.
@@ -168,7 +168,7 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\RecordFoundException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array());
+    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array());
 
     /**
      * Loads all of the record objects of this class that where updated (updated_ts value) on the date indicated.
@@ -186,7 +186,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\RecordFoundException
      */
-    public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false);
+    public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false);
 
     /**
      * Loads all of the specified attribute values of this class by the specified attribute into an
@@ -207,7 +207,7 @@ interface ActiveRecordProviderInterface
     public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order = 'ASC', $ignoreClassType = false);
 
     /**
-     * Saves the record.  If $this->OID is empty or null it will INSERT, otherwise UPDATE.
+     * Saves the record.  If $this->ID is empty or null it will INSERT, otherwise UPDATE.
      *
      * @since 1.1
      *
@@ -312,9 +312,9 @@ interface ActiveRecordProviderInterface
     public function addProperty($propName);
 
     /**
-     * Gets the maximum OID value from the database for this class type.
+     * Gets the maximum ID value from the database for this class type.
      *
-     * @return int The maximum OID value in the class table.
+     * @return int The maximum ID value in the class table.
      *
      * @since 1.1
      *
@@ -461,7 +461,7 @@ interface ActiveRecordProviderInterface
     /**
      * Checks that a record exists for the Record in the database.
      *
-     * @param int $OID The Object ID of the object we want to see whether it exists or not.
+     * @param int $ID The Object ID of the object we want to see whether it exists or not.
      *
      * @return bool
      *
@@ -469,7 +469,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function checkRecordExists($OID);
+    public function checkRecordExists($ID);
 
     /**
      * Checks to see if the table name matches the classname, and if not if the table

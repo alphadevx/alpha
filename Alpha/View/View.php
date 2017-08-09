@@ -513,7 +513,7 @@ class View
     }
 
     /**
-     * Method to render a hidden HTML form for posting the OID of an object to be deleted.
+     * Method to render a hidden HTML form for posting the ID of an object to be deleted.
      *
      * @param string $URI The URI that the form will point to
      *

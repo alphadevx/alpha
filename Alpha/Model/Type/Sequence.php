@@ -86,7 +86,7 @@ class Sequence extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    protected $dataLabels = array('OID' => 'Sequence ID#', 'prefix' => 'Sequence prefix', 'sequence' => 'Sequence number');
+    protected $dataLabels = array('ID' => 'Sequence ID#', 'prefix' => 'Sequence prefix', 'sequence' => 'Sequence number');
 
     /**
      * The message to display to the user when validation fails.

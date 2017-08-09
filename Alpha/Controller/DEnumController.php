@@ -115,8 +115,8 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
         $body = '';
 
         // load one DEnum
-        if (isset($params['denumOID'])) {
-            $RecordOid = $params['denumOID'];
+        if (isset($params['denumID'])) {
+            $RecordOid = $params['denumID'];
 
             // set up the title and meta details
             $this->setTitle('Editing a DEnum');
@@ -141,7 +141,7 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
 
                 $body .= $view->editView(array('URI' => $request->getURI()));
             } catch (RecordNotFoundException $e) {
-                self::$logger->error('Unable to load the DEnum of id ['.$params['denumOID'].'], error was ['.$e->getMessage().']');
+                self::$logger->error('Unable to load the DEnum of id ['.$params['denumID'].'], error was ['.$e->getMessage().']');
             }
         } else { // load all DEnums
             // set up the title and meta details
@@ -207,11 +207,11 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
                 self::$logger->debug('<<doPOST');
             }
 
-            // ensure that a OID is provided
-            if (isset($params['denumOID'])) {
-                $RecordOid = $params['denumOID'];
+            // ensure that a ID is provided
+            if (isset($params['denumID'])) {
+                $RecordOid = $params['denumID'];
             } else {
-                throw new IllegalArguementException('Could not load the DEnum object as an denumOID was not supplied!');
+                throw new IllegalArguementException('Could not load the DEnum object as an denumID was not supplied!');
             }
 
             if (isset($params['saveBut'])) {
@@ -224,7 +224,7 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
 
                     $this->record->save();
 
-                    self::$logger->action('DEnum '.$this->record->getOID().' saved');
+                    self::$logger->action('DEnum '.$this->record->getID().' saved');
 
                     // now save the DEnumItems
                     $tmp = new DEnumItem();
@@ -234,7 +234,7 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
                         $item->set('value', $params['value_'.$item->getID()]);
                         $item->save();
 
-                        self::$logger->action('DEnumItem '.$item->getOID().' saved');
+                        self::$logger->action('DEnumItem '.$item->getID().' saved');
                     }
 
                     // handle new DEnumItem if posted
@@ -244,7 +244,7 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
                         $newItem->set('DEnumID', $this->record->getID());
                         $newItem->save();
 
-                        self::$logger->action('DEnumItem '.$newItem->getOID().' created');
+                        self::$logger->action('DEnumItem '.$newItem->getID().' created');
                     }
 
                     ActiveRecord::commit();

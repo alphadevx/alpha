@@ -57,7 +57,7 @@ class ArticleComment extends ActiveRecord
      *
      * @since 1.0
      */
-    protected $articleOID;
+    protected $articleID;
 
     /**
      * The content of the comment posted by the user.
@@ -75,7 +75,7 @@ class ArticleComment extends ActiveRecord
      *
      * @since 1.0
      */
-    protected $dataLabels = array('OID' => 'Article Comment ID#', 'articleOID' => 'Article', 'content' => 'Comment');
+    protected $dataLabels = array('ID' => 'Article Comment ID#', 'articleID' => 'Article', 'content' => 'Comment');
 
     /**
      * The name of the database table for the class.
@@ -107,11 +107,11 @@ class ArticleComment extends ActiveRecord
         // ensure to call the parent constructor
         parent::__construct();
 
-        $this->articleOID = new Relation();
-        $this->articleOID->setRelatedClass('Alpha\Model\Article');
-        $this->articleOID->setRelatedClassField('OID');
-        $this->articleOID->setRelatedClassDisplayField('description');
-        $this->articleOID->setRelationType('MANY-TO-ONE');
+        $this->articleID = new Relation();
+        $this->articleID->setRelatedClass('Alpha\Model\Article');
+        $this->articleID->setRelatedClassField('ID');
+        $this->articleID->setRelatedClassDisplayField('description');
+        $this->articleID->setRelationType('MANY-TO-ONE');
 
         $this->content = new Text();
         $this->content->setAllowHTML(false);

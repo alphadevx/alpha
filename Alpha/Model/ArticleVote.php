@@ -57,7 +57,7 @@ class ArticleVote extends ActiveRecord
      *
      * @since 1.0
      */
-    protected $articleOID;
+    protected $articleID;
 
     /**
      * The person who cast the vote.
@@ -66,7 +66,7 @@ class ArticleVote extends ActiveRecord
      *
      * @since 1.0
      */
-    protected $personOID;
+    protected $personID;
 
     /**
      * The actual vote score (default 1-10).
@@ -84,7 +84,7 @@ class ArticleVote extends ActiveRecord
      *
      * @since 1.0
      */
-    protected $dataLabels = array('OID' => 'Article Vote ID#', 'articleOID' => 'Article', 'personOID' => 'Voter', 'score' => 'Article Score');
+    protected $dataLabels = array('ID' => 'Article Vote ID#', 'articleID' => 'Article', 'personID' => 'Voter', 'score' => 'Article Score');
 
     /**
      * The name of the database table for the class.
@@ -116,17 +116,17 @@ class ArticleVote extends ActiveRecord
         // ensure to call the parent constructor
         parent::__construct();
 
-        $this->articleOID = new Relation();
-        $this->articleOID->setRelatedClass('Alpha\Model\Article');
-        $this->articleOID->setRelatedClassField('OID');
-        $this->articleOID->setRelatedClassDisplayField('description');
-        $this->articleOID->setRelationType('MANY-TO-ONE');
+        $this->articleID = new Relation();
+        $this->articleID->setRelatedClass('Alpha\Model\Article');
+        $this->articleID->setRelatedClassField('ID');
+        $this->articleID->setRelatedClassDisplayField('description');
+        $this->articleID->setRelationType('MANY-TO-ONE');
 
-        $this->personOID = new Relation();
-        $this->personOID->setRelatedClass('Alpha\Model\Person');
-        $this->personOID->setRelatedClassField('OID');
-        $this->personOID->setRelatedClassDisplayField('email');
-        $this->personOID->setRelationType('MANY-TO-ONE');
+        $this->personID = new Relation();
+        $this->personID->setRelatedClass('Alpha\Model\Person');
+        $this->personID->setRelatedClassField('ID');
+        $this->personID->setRelatedClassDisplayField('email');
+        $this->personID->setRelationType('MANY-TO-ONE');
 
         $this->score = new Integer();
     }

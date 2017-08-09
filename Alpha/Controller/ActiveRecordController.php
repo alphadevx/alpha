@@ -91,7 +91,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
     protected $recordCount = 0;
 
     /**
-     * The field name to sort the list by (optional, default is OID).
+     * The field name to sort the list by (optional, default is ID).
      *
      * @var string
      *
@@ -176,9 +176,9 @@ class ActiveRecordController extends Controller implements ControllerInterface
 
         try {
             // get a single record
-            if (isset($params['ActiveRecordType']) && isset($params['ActiveRecordOID'])) {
-                if (!Validator::isInteger($params['ActiveRecordOID'])) {
-                    throw new IllegalArguementException('Invalid oid ['.$params['ActiveRecordOID'].'] provided on the request!');
+            if (isset($params['ActiveRecordType']) && isset($params['ActiveRecordID'])) {
+                if (!Validator::isInteger($params['ActiveRecordID'])) {
+                    throw new IllegalArguementException('Invalid oid ['.$params['ActiveRecordID'].'] provided on the request!');
                 }
 
                 $ActiveRecordType = urldecode($params['ActiveRecordType']);
@@ -212,7 +212,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
                     }
                 }
 
-                $record->load($params['ActiveRecordOID']);
+                $record->load($params['ActiveRecordID']);
                 ActiveRecord::disconnect();
 
                 $view = View::getInstance($record, false, $accept);
@@ -380,7 +380,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
             $record->populateFromArray($params);
             $record->save();
 
-            self::$logger->action('Created new '.$ActiveRecordType.' instance with OID '.$record->getOID());
+            self::$logger->action('Created new '.$ActiveRecordType.' instance with ID '.$record->getID());
 
             if (isset($params['statusMessage'])) {
                 $this->setStatusMessage(View::displayUpdateMessage($params['statusMessage']));
@@ -405,7 +405,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
             $body = $view->detailedView();
             $response = new Response(201);
             $response->setHeader('Content-Type', 'application/json');
-            $response->setHeader('Location', $config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getOID());
+            $response->setHeader('Location', $config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getID());
             $response->setBody($body);
         } else {
             $response = new Response(301);
@@ -414,9 +414,9 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 $response->redirect($this->getNextJob());
             } else {
                 if ($this->request->isSecureURI()) {
-                    $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.$ActiveRecordType.'&ActiveRecordOID='.$record->getOID()));
+                    $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.$ActiveRecordType.'&ActiveRecordID='.$record->getID()));
                 } else {
-                    $response->redirect($config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getOID());
+                    $response->redirect($config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getID());
                 }
             }
         }
@@ -465,11 +465,11 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 throw new SecurityException('This page cannot accept post data from remote servers!');
             }
 
-            $record->load($params['ActiveRecordOID']);
+            $record->load($params['ActiveRecordID']);
             $record->populateFromArray($params);
             $record->save();
 
-            self::$logger->action('Saved '.$ActiveRecordType.' instance with OID '.$record->getOID());
+            self::$logger->action('Saved '.$ActiveRecordType.' instance with ID '.$record->getID());
 
             if (isset($params['statusMessage'])) {
                 $this->setStatusMessage(View::displayUpdateMessage($params['statusMessage']));
@@ -497,7 +497,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
             $body = $view->detailedView();
             $response = new Response(200);
             $response->setHeader('Content-Type', 'application/json');
-            $response->setHeader('Location', $config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getOID());
+            $response->setHeader('Location', $config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getID());
             $response->setBody($body);
         } else {
             $response = new Response(301);
@@ -506,9 +506,9 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 $response->redirect($this->getNextJob());
             } else {
                 if ($this->request->isSecureURI()) {
-                    $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.urldecode($params['ActiveRecordType']).'&ActiveRecordOID='.$record->getOID().'&view=edit'));
+                    $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.urldecode($params['ActiveRecordType']).'&ActiveRecordID='.$record->getID().'&view=edit'));
                 } else {
-                    $response->redirect($config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getOID().'/edit');
+                    $response->redirect($config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getID().'/edit');
                 }
             }
         }
@@ -563,14 +563,14 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 throw new SecurityException('This page cannot accept post data from remote servers!');
             }
 
-            $record->load($params['ActiveRecordOID']);
+            $record->load($params['ActiveRecordID']);
 
             ActiveRecord::begin();
             $record->delete();
             ActiveRecord::commit();
             ActiveRecord::disconnect();
 
-            self::$logger->action('Deleted '.$ActiveRecordType.' instance with OID '.$params['ActiveRecordOID']);
+            self::$logger->action('Deleted '.$ActiveRecordType.' instance with ID '.$params['ActiveRecordID']);
 
             if ($accept == 'application/json') {
                 $response = new Response(200);

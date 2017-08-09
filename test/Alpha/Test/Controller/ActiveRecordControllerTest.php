@@ -69,7 +69,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $person = $this->createPersonObject('test');
         $person->save();
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getOID()));
+        $request = new Request(array('method' => 'GET', 'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getID()));
 
         $response = $front->process($request);
 
@@ -80,7 +80,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $request = new Request(
             array(
                 'method' => 'GET',
-                'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getOID(),
+                'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getID(),
                 'headers' => array('Accept' => 'application/json'),
             )
         );
@@ -210,19 +210,19 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $params = array('var1' => $securityParams[0], 'var2' => $securityParams[1]);
         $params = array_merge($params, $person->toArray());
 
-        $request = new Request(array('method' => 'PUT', 'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getOID(), 'params' => $params));
+        $request = new Request(array('method' => 'PUT', 'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getID(), 'params' => $params));
 
         $response = $front->process($request);
 
         $this->assertEquals(301, $response->getStatus(), 'Testing the doPUT method');
-        $this->assertTrue(strpos($response->getHeader('Location'), '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getOID().'/edit') !== false, 'Testing the doGET method');
+        $this->assertTrue(strpos($response->getHeader('Location'), '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getID().'/edit') !== false, 'Testing the doGET method');
 
         $person->reload();
         $person->set('email', 'updated1@test.com');
         $params = array('var1' => $securityParams[0], 'var2' => $securityParams[1]);
         $params = array_merge($params, $person->toArray());
 
-        $request = new Request(array('method' => 'PUT', 'URI' => '/tk/'.FrontController::encodeQuery('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType=Alpha\Model\Person&ActiveRecordOID='.$person->getOID()), 'params' => $params));
+        $request = new Request(array('method' => 'PUT', 'URI' => '/tk/'.FrontController::encodeQuery('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType=Alpha\Model\Person&ActiveRecordID='.$person->getID()), 'params' => $params));
 
         $response = $front->process($request);
 
@@ -237,7 +237,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $request = new Request(
             array(
                 'method' => 'PUT',
-                'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getOID(),
+                'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getID(),
                 'params' => $params,
                 'headers' => array('Accept' => 'application/json'),
             )
@@ -247,7 +247,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doPUT method');
         $this->assertEquals('application/json', $response->getHeader('Content-Type'), 'Testing the doPUT method');
-        $this->assertTrue(strpos($response->getHeader('Location'), '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getOID()) !== false, 'Testing the doPUT method');
+        $this->assertTrue(strpos($response->getHeader('Location'), '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getID()) !== false, 'Testing the doPUT method');
         $this->assertEquals('updated2@test.com', json_decode($response->getBody())->email, 'Testing the doPUT method');
     }
 
@@ -270,7 +270,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
 
         $params = array('var1' => $securityParams[0], 'var2' => $securityParams[1]);
 
-        $request = new Request(array('method' => 'DELETE', 'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getOID(), 'params' => $params));
+        $request = new Request(array('method' => 'DELETE', 'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getID(), 'params' => $params));
 
         $response = $front->process($request);
 
@@ -282,7 +282,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
 
         $params = array('var1' => $securityParams[0], 'var2' => $securityParams[1]);
 
-        $request = new Request(array('method' => 'DELETE', 'URI' => '/tk/'.FrontController::encodeQuery('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType=Alpha\Model\Person&ActiveRecordOID='.$person->getOID()), 'params' => $params));
+        $request = new Request(array('method' => 'DELETE', 'URI' => '/tk/'.FrontController::encodeQuery('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType=Alpha\Model\Person&ActiveRecordID='.$person->getID()), 'params' => $params));
 
         $response = $front->process($request);
 
@@ -295,7 +295,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $request = new Request(
             array(
                 'method' => 'DELETE',
-                'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getOID(),
+                'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getID(),
                 'params' => $params,
                 'headers' => array('Accept' => 'application/json'),
             )

@@ -197,9 +197,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::load()
      */
-    public function load($OID, $version = 0)
+    public function load($ID, $version = 0)
     {
-        self::$logger->debug('>>load(OID=['.$OID.'], version=['.$version.'])');
+        self::$logger->debug('>>load(ID=['.$ID.'], version=['.$version.'])');
 
         $attributes = $this->record->getPersistentAttributes();
         $fields = '';
@@ -209,9 +209,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         $fields = mb_substr($fields, 0, -1);
 
         if ($version > 0) {
-            $sqlQuery = 'SELECT '.$fields.' FROM '.$this->record->getTableName().'_history WHERE OID = ? AND version_num = ? LIMIT 1;';
+            $sqlQuery = 'SELECT '.$fields.' FROM '.$this->record->getTableName().'_history WHERE ID = ? AND version_num = ? LIMIT 1;';
         } else {
-            $sqlQuery = 'SELECT '.$fields.' FROM '.$this->record->getTableName().' WHERE OID = ? LIMIT 1;';
+            $sqlQuery = 'SELECT '.$fields.' FROM '.$this->record->getTableName().' WHERE ID = ? LIMIT 1;';
         }
         $this->record->setLastQuery($sqlQuery);
         $stmt = self::getConnection()->stmt_init();
@@ -220,9 +220,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         if ($stmt->prepare($sqlQuery)) {
             if ($version > 0) {
-                $stmt->bind_param('ii', $OID, $version);
+                $stmt->bind_param('ii', $ID, $version);
             } else {
-                $stmt->bind_param('i', $OID);
+                $stmt->bind_param('i', $ID);
             }
 
             $stmt->execute();
@@ -234,19 +234,19 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
             $stmt->close();
         } else {
-            self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.'], OID is ['.print_r($OID, true).'], MySql error is ['.self::getConnection()->error.']');
+            self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.'], ID is ['.print_r($ID, true).'], MySql error is ['.self::getConnection()->error.']');
             if (!$this->record->checkTableExists()) {
                 $this->record->makeTable();
 
-                throw new RecordNotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->record->getTableName().'] did not exist so had to create!');
+                throw new RecordNotFoundException('Failed to load object of ID ['.$ID.'], table ['.$this->record->getTableName().'] did not exist so had to create!');
             }
 
             return;
         }
 
-        if (!isset($row['OID']) || $row['OID'] < 1) {
+        if (!isset($row['ID']) || $row['ID'] < 1) {
             self::$logger->debug('<<load');
-            throw new RecordNotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');
+            throw new RecordNotFoundException('Failed to load object of ID ['.$ID.'] not found in database.');
         }
 
         // get the class attributes
@@ -265,7 +265,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
                     // handle the setting of ONE-TO-MANY relation values
                     if ($prop->getRelationType() == 'ONE-TO-MANY') {
-                        $this->record->set($propObj->name, $this->record->getOID());
+                        $this->record->set($propObj->name, $this->record->getID());
                     }
 
                     // handle the setting of MANY-TO-ONE relation values
@@ -288,11 +288,11 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                 }
 
                 self::$logger->warn('<<load');
-                throw new RecordNotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->record->getTableName().'] was out of sync with the database so had to be updated!');
+                throw new RecordNotFoundException('Failed to load object of ID ['.$ID.'], table ['.$this->record->getTableName().'] was out of sync with the database so had to be updated!');
             }
         }
 
-        self::$logger->debug('<<load ['.$OID.']');
+        self::$logger->debug('<<load ['.$ID.']');
     }
 
     /**
@@ -300,15 +300,15 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAllOldVersions()
      */
-    public function loadAllOldVersions($OID)
+    public function loadAllOldVersions($ID)
     {
-        self::$logger->debug('>>loadAllOldVersions(OID=['.$OID.'])');
+        self::$logger->debug('>>loadAllOldVersions(ID=['.$ID.'])');
 
         if (!$this->record->getMaintainHistory()) {
             throw new RecordFoundException('loadAllOldVersions method called on an active record where no history is maintained!');
         }
 
-        $sqlQuery = 'SELECT version_num FROM '.$this->record->getTableName().'_history WHERE OID = \''.$OID.'\' ORDER BY version_num;';
+        $sqlQuery = 'SELECT version_num FROM '.$this->record->getTableName().'_history WHERE ID = \''.$ID.'\' ORDER BY version_num;';
 
         $this->record->setLastQuery($sqlQuery);
 
@@ -325,7 +325,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             try {
                 $obj = new $RecordClass();
-                $obj->load($OID, $row['version_num']);
+                $obj->load($ID, $row['version_num']);
                 $objects[$count] = $obj;
                 ++$count;
             } catch (ResourceNotAllowedException $e) {
@@ -410,12 +410,12 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             return;
         }
 
-        if (!isset($row['OID']) || $row['OID'] < 1) {
+        if (!isset($row['ID']) || $row['ID'] < 1) {
             self::$logger->debug('<<loadByAttribute');
             throw new RecordNotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], not found in database.');
         }
 
-        $this->record->setOID($row['OID']);
+        $this->record->setID($row['ID']);
 
         // get the class attributes
         $reflection = new ReflectionClass(get_class($this->record));
@@ -434,7 +434,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
                         // handle the setting of ONE-TO-MANY relation values
                         if ($prop->getRelationType() == 'ONE-TO-MANY') {
-                            $this->record->set($propObj->name, $this->record->getOID());
+                            $this->record->set($propObj->name, $this->record->getID());
                         }
                     }
                 }
@@ -465,7 +465,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAll()
      */
-    public function loadAll($start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false)
+    public function loadAll($start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false)
     {
         self::$logger->debug('>>loadAll(start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
@@ -478,16 +478,16 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         if (!$ignoreClassType && $this->record->isTableOverloaded()) {
             if ($limit == 0) {
-                $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName().' WHERE classname = \''.addslashes(get_class($this->record)).'\' ORDER BY '.$orderBy.' '.$order.';';
+                $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().' WHERE classname = \''.addslashes(get_class($this->record)).'\' ORDER BY '.$orderBy.' '.$order.';';
             } else {
-                $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName().' WHERE classname = \''.addslashes(get_class($this->record)).'\' ORDER BY '.$orderBy.' '.$order.' LIMIT '.
+                $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().' WHERE classname = \''.addslashes(get_class($this->record)).'\' ORDER BY '.$orderBy.' '.$order.' LIMIT '.
                     $start.', '.$limit.';';
             }
         } else {
             if ($limit == 0) {
-                $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName().' ORDER BY '.$orderBy.' '.$order.';';
+                $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().' ORDER BY '.$orderBy.' '.$order.';';
             } else {
-                $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName().' ORDER BY '.$orderBy.' '.$order.' LIMIT '.$start.', '.$limit.';';
+                $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().' ORDER BY '.$orderBy.' '.$order.' LIMIT '.$start.', '.$limit.';';
             }
         }
 
@@ -495,7 +495,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
             self::$logger->debug('<<loadAll [0]');
-            throw new RecordNotFoundException('Failed to load object OIDs, MySql error is ['.self::getConnection()->error.'], query ['.$this->record->getLastQuery().']');
+            throw new RecordNotFoundException('Failed to load object IDs, MySql error is ['.self::getConnection()->error.'], query ['.$this->record->getLastQuery().']');
         }
 
         // now build an array of objects to be returned
@@ -506,7 +506,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             try {
                 $obj = new $RecordClass();
-                $obj->load($row['OID']);
+                $obj->load($row['ID']);
                 $objects[$count] = $obj;
                 ++$count;
             } catch (ResourceNotAllowedException $e) {
@@ -524,7 +524,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAllByAttribute()
      */
-    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
+    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
     {
         self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
 
@@ -535,9 +535,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         }
 
         if (!$ignoreClassType && $this->record->isTableOverloaded()) {
-            $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName()." WHERE $attribute = ? AND classname = ? ORDER BY ".$orderBy.' '.$order.$limit;
+            $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName()." WHERE $attribute = ? AND classname = ? ORDER BY ".$orderBy.' '.$order.$limit;
         } else {
-            $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName()." WHERE $attribute = ? ORDER BY ".$orderBy.' '.$order.$limit;
+            $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName()." WHERE $attribute = ? ORDER BY ".$orderBy.' '.$order.$limit;
         }
 
         $this->record->setLastQuery($sqlQuery);
@@ -614,7 +614,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                     }
                 }
 
-                $obj->load($row['OID']);
+                $obj->load($row['ID']);
                 $objects[$count] = $obj;
                 ++$count;
             } catch (ResourceNotAllowedException $e) {
@@ -632,7 +632,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAllByAttributes()
      */
-    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
+    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
     {
         self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.
             $start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
@@ -659,7 +659,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             $limit = ';';
         }
 
-        $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName().$whereClause.' ORDER BY '.$orderBy.' '.$order.$limit;
+        $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().$whereClause.' ORDER BY '.$orderBy.' '.$order.$limit;
 
         $this->record->setLastQuery($sqlQuery);
 
@@ -729,7 +729,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                     }
                 }
 
-                $obj->load($row['OID']);
+                $obj->load($row['ID']);
                 $objects[$count] = $obj;
                 ++$count;
             } catch (ResourceNotAllowedException $e) {
@@ -747,7 +747,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAllByDayUpdated()
      */
-    public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false)
+    public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false)
     {
         self::$logger->debug('>>loadAllByDayUpdated(date=['.$date.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
@@ -758,16 +758,16 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         }
 
         if (!$ignoreClassType && $this->record->isTableOverloaded()) {
-            $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' AND classname = '".addslashes(get_class($this->record))."' ORDER BY ".$orderBy.' '.$order.$limit;
+            $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' AND classname = '".addslashes(get_class($this->record))."' ORDER BY ".$orderBy.' '.$order.$limit;
         } else {
-            $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' ORDER BY ".$orderBy.' '.$order.$limit;
+            $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' ORDER BY ".$orderBy.' '.$order.$limit;
         }
 
         $this->record->setLastQuery($sqlQuery);
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
             self::$logger->debug('<<loadAllByDayUpdated []');
-            throw new RecordNotFoundException('Failed to load object OIDs, MySql error is ['.self::getConnection()->error.'], query ['.$this->record->getLastQuery().']');
+            throw new RecordNotFoundException('Failed to load object IDs, MySql error is ['.self::getConnection()->error.'], query ['.$this->record->getLastQuery().']');
         }
 
         // now build an array of objects to be returned
@@ -777,7 +777,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $obj = new $RecordClass();
-            $obj->load($row['OID']);
+            $obj->load($row['ID']);
             $objects[$count] = $obj;
             ++$count;
         }
@@ -797,9 +797,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         self::$logger->debug('>>loadAllFieldValuesByAttribute(attribute=['.$attribute.'], value=['.$value.'], returnAttribute=['.$returnAttribute.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
         if (!$ignoreClassType && $this->record->isTableOverloaded()) {
-            $sqlQuery = 'SELECT '.$returnAttribute.' FROM '.$this->record->getTableName()." WHERE $attribute = '$value' AND classname = '".addslashes(get_class($this->record))."' ORDER BY OID ".$order.';';
+            $sqlQuery = 'SELECT '.$returnAttribute.' FROM '.$this->record->getTableName()." WHERE $attribute = '$value' AND classname = '".addslashes(get_class($this->record))."' ORDER BY ID ".$order.';';
         } else {
-            $sqlQuery = 'SELECT '.$returnAttribute.' FROM '.$this->record->getTableName()." WHERE $attribute = '$value' ORDER BY OID ".$order.';';
+            $sqlQuery = 'SELECT '.$returnAttribute.' FROM '.$this->record->getTableName()." WHERE $attribute = '$value' ORDER BY ID ".$order.';';
         }
 
         $this->record->setLastQuery($sqlQuery);
@@ -848,7 +848,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         // set the "updated by" fields, we can only set the user id if someone is logged in
         if ($session->get('currentUser') != null) {
-            $this->record->set('updated_by', $session->get('currentUser')->getOID());
+            $this->record->set('updated_by', $session->get('currentUser')->getID());
         }
 
         $this->record->set('updated_ts', new Timestamp(date('Y-m-d H:i:s')));
@@ -861,8 +861,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             foreach ($properties as $propObj) {
                 $propName = $propObj->name;
                 if (!in_array($propName, $this->record->getTransientAttributes())) {
-                    // Skip the OID, database auto number takes care of this.
-                    if ($propName != 'OID' && $propName != 'version_num') {
+                    // Skip the ID, database auto number takes care of this.
+                    if ($propName != 'ID' && $propName != 'version_num') {
                         $sqlQuery .= "$propName,";
                         ++$savedFieldsCount;
                     }
@@ -911,8 +911,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             foreach ($properties as $propObj) {
                 $propName = $propObj->name;
                 if (!in_array($propName, $this->record->getTransientAttributes())) {
-                    // Skip the OID, database auto number takes care of this.
-                    if ($propName != 'OID' && $propName != 'version_num') {
+                    // Skip the ID, database auto number takes care of this.
+                    if ($propName != 'ID' && $propName != 'version_num') {
                         $sqlQuery .= "$propName = ?,";
                         ++$savedFieldsCount;
                     }
@@ -930,7 +930,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
             $sqlQuery = rtrim($sqlQuery, ',');
 
-            $sqlQuery .= ' WHERE OID=?;';
+            $sqlQuery .= ' WHERE ID = ?;';
 
             $this->record->setLastQuery($sqlQuery);
             $stmt = self::getConnection()->stmt_init();
@@ -944,9 +944,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         }
 
         if ($stmt != null && $stmt->error == '') {
-            // populate the updated OID in case we just done an insert
+            // populate the updated ID in case we just done an insert
             if ($this->record->isTransient()) {
-                $this->record->setOID(self::getConnection()->insert_id);
+                $this->record->setID(self::getConnection()->insert_id);
             }
 
             try {
@@ -957,7 +957,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                         $prop = $this->record->getPropObject($propName);
 
                         // handle the saving of MANY-TO-MANY relation values
-                        if ($prop->getRelationType() == 'MANY-TO-MANY' && count($prop->getRelatedOIDs()) > 0) {
+                        if ($prop->getRelationType() == 'MANY-TO-MANY' && count($prop->getRelatedIDs()) > 0) {
                             try {
                                 try {
                                     // check to see if the rel is on this class
@@ -971,26 +971,26 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                                 // first delete all of the old RelationLookup objects for this rel
                                 try {
                                     if ($side == 'left') {
-                                        $lookUp->deleteAllByAttribute('leftID', $this->record->getOID());
+                                        $lookUp->deleteAllByAttribute('leftID', $this->record->getID());
                                     } else {
-                                        $lookUp->deleteAllByAttribute('rightID', $this->record->getOID());
+                                        $lookUp->deleteAllByAttribute('rightID', $this->record->getID());
                                     }
                                 } catch (\Exception $e) {
                                     throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
                                 }
 
-                                $OIDs = $prop->getRelatedOIDs();
+                                $IDs = $prop->getRelatedIDs();
 
-                                if (isset($OIDs) && !empty($OIDs[0])) {
-                                    // now for each posted OID, create a new RelationLookup record and save
-                                    foreach ($OIDs as $oid) {
+                                if (isset($IDs) && !empty($IDs[0])) {
+                                    // now for each posted ID, create a new RelationLookup record and save
+                                    foreach ($IDs as $id) {
                                         $newLookUp = new RelationLookup($lookUp->get('leftClassName'), $lookUp->get('rightClassName'));
                                         if ($side == 'left') {
-                                            $newLookUp->set('leftID', $this->record->getOID());
-                                            $newLookUp->set('rightID', $oid);
+                                            $newLookUp->set('leftID', $this->record->getID());
+                                            $newLookUp->set('rightID', $id);
                                         } else {
-                                            $newLookUp->set('rightID', $this->record->getOID());
-                                            $newLookUp->set('leftID', $oid);
+                                            $newLookUp->set('rightID', $this->record->getID());
+                                            $newLookUp->set('leftID', $id);
                                         }
                                         $newLookUp->save();
                                     }
@@ -1002,7 +1002,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
                         // handle the saving of ONE-TO-MANY relation values
                         if ($prop->getRelationType() == 'ONE-TO-MANY') {
-                            $prop->setValue($this->record->getOID());
+                            $prop->setValue($this->record->getID());
                         }
                     }
                 }
@@ -1052,13 +1052,13 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         // set the "updated by" fields, we can only set the user id if someone is logged in
         if ($session->get('currentUser') != null) {
-            $this->record->set('updated_by', $session->get('currentUser')->getOID());
+            $this->record->set('updated_by', $session->get('currentUser')->getID());
         }
 
         $this->record->set('updated_ts', new Timestamp(date('Y-m-d H:i:s')));
 
         // assume that it is a persistent object that needs to be updated
-        $sqlQuery = 'UPDATE '.$this->record->getTableName().' SET '.$attribute.' = ?, version_num = ? , updated_by = ?, updated_ts = ? WHERE OID = ?;';
+        $sqlQuery = 'UPDATE '.$this->record->getTableName().' SET '.$attribute.' = ?, version_num = ? , updated_by = ?, updated_ts = ? WHERE ID = ?;';
 
         $this->record->setLastQuery($sqlQuery);
         $stmt = self::getConnection()->stmt_init();
@@ -1071,11 +1071,11 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             } else {
                 $bindingsType = 's';
             }
-            $OID = $this->record->getOID();
+            $ID = $this->record->getID();
             $updatedBy = $this->record->get('updated_by');
             $updatedTS = $this->record->get('updated_ts');
-            $stmt->bind_param($bindingsType.'iisi', $value, $newVersionNumber, $updatedBy, $updatedTS, $OID);
-            self::$logger->debug('Binding params ['.$bindingsType.'iisi, '.$value.', '.$newVersionNumber.', '.$updatedBy.', '.$updatedTS.', '.$OID.']');
+            $stmt->bind_param($bindingsType.'iisi', $value, $newVersionNumber, $updatedBy, $updatedTS, $ID);
+            self::$logger->debug('Binding params ['.$bindingsType.'iisi, '.$value.', '.$newVersionNumber.', '.$updatedBy.', '.$updatedTS.', '.$ID.']');
             $stmt->execute();
         } else {
             throw new FailedSaveException('Failed to save attribute, error is ['.$stmt->error.'], query ['.$this->record->getLastQuery().']');
@@ -1162,19 +1162,19 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>delete()');
 
-        $sqlQuery = 'DELETE FROM '.$this->record->getTableName().' WHERE OID = ?;';
+        $sqlQuery = 'DELETE FROM '.$this->record->getTableName().' WHERE ID = ?;';
 
         $this->record->setLastQuery($sqlQuery);
 
         $stmt = self::getConnection()->stmt_init();
 
         if ($stmt->prepare($sqlQuery)) {
-            $OID = $this->record->getOID();
-            $stmt->bind_param('i', $OID);
+            $ID = $this->record->getID();
+            $stmt->bind_param('i', $ID);
             $stmt->execute();
-            self::$logger->debug('Deleted the object ['.$this->record->getOID().'] of class ['.get_class($this->record).']');
+            self::$logger->debug('Deleted the object ['.$this->record->getID().'] of class ['.get_class($this->record).']');
         } else {
-            throw new FailedDeleteException('Failed to delete object ['.$this->record->getOID().'], error is ['.$stmt->error.'], query ['.$this->record->getLastQuery().']');
+            throw new FailedDeleteException('Failed to delete object ['.$this->record->getID().'], error is ['.$stmt->error.'], query ['.$this->record->getLastQuery().']');
         }
 
         $stmt->close();
@@ -1191,14 +1191,14 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>getVersion()');
 
-        $sqlQuery = 'SELECT version_num FROM '.$this->record->getTableName().' WHERE OID = ?;';
+        $sqlQuery = 'SELECT version_num FROM '.$this->record->getTableName().' WHERE ID = ?;';
         $this->record->setLastQuery($sqlQuery);
 
         $stmt = self::getConnection()->stmt_init();
 
         if ($stmt->prepare($sqlQuery)) {
-            $OID = $this->record->getOID();
-            $stmt->bind_param('i', $OID);
+            $ID = $this->record->getID();
+            $stmt->bind_param('i', $ID);
 
             $stmt->execute();
 
@@ -1241,7 +1241,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>makeTable()');
 
-        $sqlQuery = 'CREATE TABLE '.$this->record->getTableName().' (OID INT(11) ZEROFILL NOT NULL AUTO_INCREMENT,';
+        $sqlQuery = 'CREATE TABLE '.$this->record->getTableName().' (ID INT(11) ZEROFILL NOT NULL AUTO_INCREMENT,';
 
         // get the class attributes
         $reflection = new ReflectionClass(get_class($this->record));
@@ -1250,7 +1250,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
 
-            if (!in_array($propName, $this->record->getTransientAttributes()) && $propName != 'OID') {
+            if (!in_array($propName, $this->record->getTransientAttributes()) && $propName != 'ID') {
                 $prop = $this->record->getPropObject($propName);
 
                 if ($prop instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
@@ -1291,7 +1291,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             $sqlQuery .= 'classname VARCHAR(100),';
         }
 
-        $sqlQuery .= 'PRIMARY KEY (OID)) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;';
+        $sqlQuery .= 'PRIMARY KEY (ID)) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;';
 
         $this->record->setLastQuery($sqlQuery);
 
@@ -1319,7 +1319,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>makeHistoryTable()');
 
-        $sqlQuery = 'CREATE TABLE '.$this->record->getTableName().'_history (OID INT(11) ZEROFILL NOT NULL,';
+        $sqlQuery = 'CREATE TABLE '.$this->record->getTableName().'_history (ID INT(11) ZEROFILL NOT NULL,';
 
         // get the class attributes
         $reflection = new ReflectionClass(get_class($this->record));
@@ -1328,7 +1328,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
 
-            if (!in_array($propName, $this->record->getTransientAttributes()) && $propName != 'OID') {
+            if (!in_array($propName, $this->record->getTransientAttributes()) && $propName != 'ID') {
                 $prop = $this->record->getPropObject($propName);
 
                 if ($prop instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
@@ -1370,7 +1370,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             $sqlQuery .= 'classname VARCHAR(100),';
         }
 
-        $sqlQuery .= 'PRIMARY KEY (OID, version_num)) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;';
+        $sqlQuery .= 'PRIMARY KEY (ID, version_num)) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;';
 
         $this->record->setLastQuery($sqlQuery);
 
@@ -1525,7 +1525,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>getMAX()');
 
-        $sqlQuery = 'SELECT MAX(OID) AS max_OID FROM '.$this->record->getTableName();
+        $sqlQuery = 'SELECT MAX(ID) AS max_ID FROM '.$this->record->getTableName();
 
         $this->record->setLastQuery($sqlQuery);
 
@@ -1534,10 +1534,10 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
             $row = $result[0];
 
-            if (isset($row['max_OID'])) {
-                self::$logger->debug('<<getMAX ['.$row['max_OID'].']');
+            if (isset($row['max_ID'])) {
+                self::$logger->debug('<<getMAX ['.$row['max_ID'].']');
 
-                return $row['max_OID'];
+                return $row['max_ID'];
             } else {
                 throw new AlphaException('Failed to get the MAX ID for the class ['.get_class($this->record).'] from the table ['.$this->record->getTableName().'], query is ['.$this->record->getLastQuery().']');
             }
@@ -1572,9 +1572,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         $whereClause = mb_substr($whereClause, 0, -4);
 
         if ($whereClause != ' WHERE') {
-            $sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->record->getTableName().$whereClause;
+            $sqlQuery = 'SELECT COUNT(ID) AS class_count FROM '.$this->record->getTableName().$whereClause;
         } else {
-            $sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->record->getTableName();
+            $sqlQuery = 'SELECT COUNT(ID) AS class_count FROM '.$this->record->getTableName();
         }
 
         $this->record->setLastQuery($sqlQuery);
@@ -1606,7 +1606,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             throw new AlphaException('getHistoryCount method called on a DAO where no history is maintained!');
         }
 
-        $sqlQuery = 'SELECT COUNT(OID) AS object_count FROM '.$this->record->getTableName().'_history WHERE OID='.$this->record->getOID();
+        $sqlQuery = 'SELECT COUNT(ID) AS object_count FROM '.$this->record->getTableName().'_history WHERE ID='.$this->record->getID();
 
         $this->record->setLastQuery($sqlQuery);
 
@@ -1620,7 +1620,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             return $row['object_count'];
         } else {
             self::$logger->debug('<<getHistoryCount');
-            throw new AlphaException('Failed to get the history count for the business object ['.$this->record->getOID().'] from the table ['.$this->record->getTableName().'_history], query is ['.$this->record->getLastQuery().']');
+            throw new AlphaException('Failed to get the history count for the business object ['.$this->record->getID().'] from the table ['.$this->record->getTableName().'_history], query is ['.$this->record->getLastQuery().']');
         }
     }
 
@@ -2021,7 +2021,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                             }
 
                             if (!$indexExists) {
-                                $lookup->createForeignIndex('leftID', $prop->getRelatedClass('left'), 'OID');
+                                $lookup->createForeignIndex('leftID', $prop->getRelatedClass('left'), 'ID');
                             }
 
                             // handle index check/creation on right side of Relation
@@ -2033,7 +2033,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                             }
 
                             if (!$indexExists) {
-                                $lookup->createForeignIndex('rightID', $prop->getRelatedClass('right'), 'OID');
+                                $lookup->createForeignIndex('rightID', $prop->getRelatedClass('right'), 'ID');
                             }
                         } catch (AlphaException $e) {
                             self::$logger->error($e->getMessage());
@@ -2151,7 +2151,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         self::$logger->debug('>>reload()');
 
         if (!$this->record->isTransient()) {
-            $this->record->load($this->record->getOID());
+            $this->record->load($this->record->getID());
         } else {
             throw new AlphaException('Cannot reload transient object from database!');
         }
@@ -2163,18 +2163,18 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkRecordExists()
      */
-    public function checkRecordExists($OID)
+    public function checkRecordExists($ID)
     {
-        self::$logger->debug('>>checkRecordExists(OID=['.$OID.'])');
+        self::$logger->debug('>>checkRecordExists(ID=['.$ID.'])');
 
-        $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName().' WHERE OID = ?;';
+        $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().' WHERE ID = ?;';
 
         $this->record->setLastQuery($sqlQuery);
 
         $stmt = self::getConnection()->stmt_init();
 
         if ($stmt->prepare($sqlQuery)) {
-            $stmt->bind_param('i', $OID);
+            $stmt->bind_param('i', $ID);
 
             $stmt->execute();
 
@@ -2194,11 +2194,11 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                 }
             } else {
                 self::$logger->debug('<<checkRecordExists');
-                throw new AlphaException('Failed to check for the record ['.$OID.'] on the class ['.get_class($this->record).'] from the table ['.$this->record->getTableName().'], query is ['.$this->record->getLastQuery().']');
+                throw new AlphaException('Failed to check for the record ['.$ID.'] on the class ['.get_class($this->record).'] from the table ['.$this->record->getTableName().'], query is ['.$this->record->getLastQuery().']');
             }
         } else {
             self::$logger->debug('<<checkRecordExists');
-            throw new AlphaException('Failed to check for the record ['.$OID.'] on the class ['.get_class($this->record).'] from the table ['.$this->record->getTableName().'], query is ['.$this->record->getLastQuery().']');
+            throw new AlphaException('Failed to check for the record ['.$ID.'] on the class ['.get_class($this->record).'] from the table ['.$this->record->getTableName().'], query is ['.$this->record->getLastQuery().']');
         }
     }
 
@@ -2381,8 +2381,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             foreach ($properties as $propObj) {
                 $propName = $propObj->name;
                 if (!in_array($propName, $this->record->getTransientAttributes())) {
-                    // Skip the OID, database auto number takes care of this.
-                    if ($propName != 'OID' && $propName != 'version_num') {
+                    // Skip the ID, database auto number takes care of this.
+                    if ($propName != 'ID' && $propName != 'version_num') {
                         if ($this->record->getPropObject($propName) instanceof Integer) {
                             $bindingsTypes .= 'i';
                         } else {
@@ -2405,10 +2405,10 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                 array_push($params, get_class($this->record));
             }
 
-            // the OID may be on the WHERE clause for UPDATEs and DELETEs
+            // the ID may be on the WHERE clause for UPDATEs and DELETEs
             if (!$this->record->isTransient()) {
                 $bindingsTypes .= 'i';
-                array_push($params, $this->record->getOID());
+                array_push($params, $this->record->getID());
             }
         }
 

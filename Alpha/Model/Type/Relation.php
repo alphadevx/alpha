@@ -145,13 +145,13 @@ class Relation extends Type implements TypeInterface
     private $lookup;
 
     /**
-     * In the case of MANY-TO-MANY relationship, this transient array can be used to hold the OIDs of related records.
+     * In the case of MANY-TO-MANY relationship, this transient array can be used to hold the IDs of related records.
      *
      * @var array
      *
      * @since 2.0
      */
-    private $OIDs = array();
+    private $IDs = array();
 
     /**
      * When building a relation with the TagObject record, set this to the name of the tagged class.
@@ -172,8 +172,8 @@ class Relation extends Type implements TypeInterface
     private $allowableRelationTypes = array('MANY-TO-ONE', 'ONE-TO-MANY', 'ONE-TO-ONE', 'MANY-TO-MANY');
 
     /**
-     * The object ID (OID) value of the related object.  In the special case of a MANY-TO-MANY
-     * relation, contains the OID of the object on the current, accessing side.  Can contain NULL.
+     * The ID value of the related object.  In the special case of a MANY-TO-MANY
+     * relation, contains the ID of the object on the current, accessing side.  Can contain NULL.
      *
      * @var mixed
      *
@@ -450,7 +450,7 @@ class Relation extends Type implements TypeInterface
     }
 
     /**
-     * Setter for the value (OID of related object) of this relation.
+     * Setter for the value ID of this relation.
      *
      * @param int $val
      *
@@ -476,32 +476,32 @@ class Relation extends Type implements TypeInterface
     }
 
     /**
-     * Getter for the array of OIDs used by MANY-TO-MANY instances.
+     * Getter for the array of IDs used by MANY-TO-MANY instances.
      *
      * @return array
      *
      * @since 2.0
      */
-    public function getRelatedOIDs()
+    public function getRelatedIDs()
     {
-        return $this->OIDs;
+        return $this->IDs;
     }
 
     /**
-     * Setter for the array of OIDs used by MANY-TO-MANY instances.
+     * Setter for the array of IDs used by MANY-TO-MANY instances.
      *
-     * @param array $OIDs
+     * @param array $IDs
      *
      * @since 2.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setRelatedOIDs($OIDs)
+    public function setRelatedIDs($IDs)
     {
-        if (is_array($OIDs)) {
-            $this->OIDs = $OIDs;
+        if (is_array($IDs)) {
+            $this->IDs = $IDs;
         } else {
-            throw new IllegalArguementException('An array must be provided to setRelatedOIDs()!');
+            throw new IllegalArguementException('An array must be provided to setRelatedIDs()!');
         }
     }
 
@@ -557,7 +557,7 @@ class Relation extends Type implements TypeInterface
     {
         if ($this->relationType == 'MANY-TO-MANY') {
             /*
-             * 1. Use RelationLookup to get OIDs of related objects
+             * 1. Use RelationLookup to get IDs of related objects
              * 2. Load related objects
              * 3. Access the value of the field on the object to build the
              * comma-seperated list.

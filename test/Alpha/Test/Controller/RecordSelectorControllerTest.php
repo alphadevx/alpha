@@ -88,7 +88,7 @@ class RecordSelectorControllerTest extends \PHPUnit_Framework_TestCase
 
         $comment = new ArticleComment();
         $comment->set('content', 'unit test');
-        $comment->getPropObject('articleOID')->setValue($article->getOID());
+        $comment->getPropObject('articleID')->setValue($article->getID());
         $comment->rebuildTable();
         $comment->save();
     }
@@ -111,7 +111,7 @@ class RecordSelectorControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method for MANY-TO-MANY relation');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
 
-        $uri = '/recordselector/12m/1/hiddenformfield/'.urlencode('Alpha\Model\ArticleComment').'/articleOID/content';
+        $uri = '/recordselector/12m/1/hiddenformfield/'.urlencode('Alpha\Model\ArticleComment').'/articleID/content';
 
         $request = new Request(array('method' => 'GET', 'URI' => $uri));
         $response = $front->process($request);

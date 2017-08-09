@@ -99,7 +99,7 @@ class DEnum extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    protected $dataLabels = array('OID' => 'DEnum ID#', 'name' => 'Name');
+    protected $dataLabels = array('ID' => 'DEnum ID#', 'name' => 'Name');
 
     /**
      * The message to display to the user when validation fails.
@@ -191,7 +191,7 @@ class DEnum extends ActiveRecord implements TypeInterface
 
         $tmp = new DEnumItem();
 
-        foreach ($tmp->loadItems($options->getOID()) as $DEnumItem) {
+        foreach ($tmp->loadItems($options->getID()) as $DEnumItem) {
             $this->options[$DEnumItem->getID()] = $DEnumItem->getValue();
             ++$count;
         }
@@ -310,7 +310,7 @@ class DEnum extends ActiveRecord implements TypeInterface
 
         $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
 
-        $sqlQuery = 'SELECT COUNT(OID) AS item_count FROM DEnumItem WHERE DEnumID = \''.$this->getID().'\';';
+        $sqlQuery = 'SELECT COUNT(ID) AS item_count FROM DEnumItem WHERE DEnumID = \''.$this->getID().'\';';
 
         $this->setLastQuery($sqlQuery);
 

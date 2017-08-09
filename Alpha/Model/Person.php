@@ -107,7 +107,7 @@ class Person extends ActiveRecord
      *
      * @since 1.0
      */
-    protected $dataLabels = array('OID' => 'Member ID#',
+    protected $dataLabels = array('ID' => 'Member ID#',
                                     'username' => 'Username',
                                     'email' => 'E-mail Address',
                                     'password' => 'Password',
@@ -219,7 +219,7 @@ class Person extends ActiveRecord
     }
 
     /**
-     * Looks up the OID for the Standard rights group, then relates the new person
+     * Looks up the ID for the Standard rights group, then relates the new person
      * to that group if they are not in it already.  If that group does not exist it
      * will be recreated!
      *
@@ -277,7 +277,7 @@ class Person extends ActiveRecord
         }
 
         if (isset($this->actions)) {
-            $this->actions->setValue($this->OID);
+            $this->actions->setValue($this->ID);
             $this->actions->setRelatedClass('Alpha\Model\ActionLog');
             $this->actions->setRelatedClassField('created_by');
             $this->actions->setRelatedClassDisplayField('message');
@@ -342,7 +342,7 @@ class Person extends ActiveRecord
             // load all person2rights RelationLookup objects for this person
             $lookUps = $rel->getLookup()->loadAllByAttribute('leftID', $this->getID());
             foreach ($lookUps as $lookUp) {
-                // the rightID (i.e. Rights OID) will be on the right side of the value array
+                // the rightID (i.e. Rights ID) will be on the right side of the value array
                 $ids = $lookUp->getValue();
                 // if we have found a match, return true right away
                 if ($ids[1] == $group->getID()) {
@@ -382,7 +382,7 @@ class Person extends ActiveRecord
         $group->loadByAttribute('name', $groupName);
 
         $lookup = $this->getPropObject('rights')->getLookup();
-        $lookup->setValue(array($this->getOID(), $group->getOID()));
+        $lookup->setValue(array($this->getID(), $group->getID()));
         $lookup->save();
 
         self::$logger->debug('<<addToGroup');
@@ -444,7 +444,7 @@ class Person extends ActiveRecord
     {
         $temp = new ArticleComment();
 
-        $sqlQuery = 'SELECT COUNT(OID) AS post_count FROM '.$temp->getTableName()." WHERE created_by='".$this->OID."';";
+        $sqlQuery = 'SELECT COUNT(ID) AS post_count FROM '.$temp->getTableName()." WHERE created_by='".$this->ID."';";
 
         $result = $this->query($sqlQuery);
 

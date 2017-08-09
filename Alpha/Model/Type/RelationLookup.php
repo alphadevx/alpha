@@ -57,7 +57,7 @@ use ReflectionClass;
 class RelationLookup extends ActiveRecord implements TypeInterface
 {
     /**
-     * The OID of the left business object in the relation.
+     * The ID of the left business object in the relation.
      *
      * @var \Alpha\Model\Type\Integer
      *
@@ -66,7 +66,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
     protected $leftID;
 
     /**
-     * The OID of the right business object in the relation.
+     * The ID of the right business object in the relation.
      *
      * @var \Alpha\Model\Type\Integer
      *
@@ -108,7 +108,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    protected $dataLabels = array('OID' => 'RelationLookup ID#', 'leftID' => 'Left Record ID#', 'rightID' => 'Right Record ID#');
+    protected $dataLabels = array('ID' => 'RelationLookup ID#', 'leftID' => 'Left Record ID#', 'rightID' => 'Right Record ID#');
 
     /**
      * The message to display to the user when validation fails.
@@ -223,7 +223,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
      *
      * @see Alpha\Model\ActiveRecord::loadAllByAttribute()
      */
-    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
+    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
     {
         if (!isset(self::$logger)) {
             self::$logger = new Logger('RelationLookup');
@@ -257,7 +257,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
      *
      * @see Alpha\Model\ActiveRecord::loadAllByAttributes()
      */
-    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false)
+    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false)
     {
         self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.
             $start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
@@ -310,7 +310,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
     }
 
     /**
-     * Returns an array of the OIDs of the related objects.
+     * Returns an array of the IDs of the related objects.
      *
      * @return array
      *
@@ -322,22 +322,22 @@ class RelationLookup extends ActiveRecord implements TypeInterface
     }
 
     /**
-     * Used to set the OIDs of the related objects.  Pass a two-item array of OIDs, the first
-     * one being the left object OID, the second being the right.
+     * Used to set the IDs of the related objects.  Pass a two-item array of IDs, the first
+     * one being the left object ID, the second being the right.
      *
-     * @param array $OIDs
+     * @param array $IDs
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($OIDs)
+    public function setValue($IDs)
     {
         try {
-            $this->leftID->setValue($OIDs[0]);
-            $this->rightID->setValue($OIDs[1]);
+            $this->leftID->setValue($IDs[0]);
+            $this->rightID->setValue($IDs[1]);
         } catch (\Exception $e) {
-            throw new IllegalArguementException('Array value passed to setValue is not valid ['.var_export($OIDs, true).'], array should contain two OIDs');
+            throw new IllegalArguementException('Array value passed to setValue is not valid ['.var_export($IDs, true).'], array should contain two IDs');
         }
     }
 

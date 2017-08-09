@@ -139,7 +139,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->group->save();
 
         $lookup = $this->group->getMembers()->getLookup();
-        $lookup->setValue('00000000001', $this->group->getOID());
+        $lookup->setValue('00000000001', $this->group->getID());
         $lookup->save();
     }
 
@@ -299,7 +299,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->person->save();
 
         $lookup = $this->person->getPropObject('rights')->getLookup();
-        $lookup->setValue(array($this->person->getOID(), $this->group->getOID()));
+        $lookup->setValue(array($this->person->getID(), $this->group->getID()));
         $lookup->save();
 
         $sessionProvider = $config->get('session.provider.name');

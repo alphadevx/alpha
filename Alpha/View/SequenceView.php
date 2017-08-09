@@ -120,7 +120,7 @@ class SequenceView extends View
                 if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $this->record->getTransientAttributes())) {
                     $html .= '  <th>'.$this->record->getDataLabel($propName).'</th>';
                 }
-                if ($propName == 'OID') {
+                if ($propName == 'ID') {
                     $html .= '  <th>'.$this->record->getDataLabel($propName).'</th>';
                 }
             } else {
@@ -155,8 +155,8 @@ class SequenceView extends View
                         $html .= '  <td>&nbsp;'.$this->record->get($propName).'</td>';
                     }
                 }
-                if ($propName == 'OID') {
-                    $html .= '  <td>&nbsp;'.$this->record->getOID().'</td>';
+                if ($propName == 'ID') {
+                    $html .= '  <td>&nbsp;'.$this->record->getID().'</td>';
                 }
             }
         }
@@ -164,7 +164,7 @@ class SequenceView extends View
 
         $fields['formFields'] = $html;
 
-        $button = new Button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->record).'&oid='.$this->record->getOID())."';", 'View', 'viewBut');
+        $button = new Button("document.location = '".FrontController::generateSecureURL('act=Detail&bo='.get_class($this->record).'&oid='.$this->record->getID())."';", 'View', 'viewBut');
         $fields['viewButton'] = $button->render();
 
         // supressing the edit/delete buttons for Sequences
@@ -201,9 +201,9 @@ class SequenceView extends View
 
         $config = ConfigProvider::getInstance();
 
-        // we may want to display the OID regardless of class
-        $fields['OIDLabel'] = $this->record->getDataLabel('OID');
-        $fields['OID'] = $this->record->getOID();
+        // we may want to display the ID regardless of class
+        $fields['IDLabel'] = $this->record->getDataLabel('ID');
+        $fields['ID'] = $this->record->getID();
 
         // buffer form fields to $formFields
         $fields['formFields'] = $this->renderAllFields('view');

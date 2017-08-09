@@ -88,7 +88,7 @@ class DEnumItem extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    protected $dataLabels = array('OID' => 'DEnumItem ID#', 'value' => 'Dropdown value');
+    protected $dataLabels = array('ID' => 'DEnumItem ID#', 'value' => 'Dropdown value');
 
     /**
      * The message to display to the user when validation fails.
@@ -133,7 +133,7 @@ class DEnumItem extends ActiveRecord implements TypeInterface
 
         $this->DEnumID->setValue($EnumID);
 
-        $sqlQuery = 'SELECT OID FROM '.self::TABLE_NAME.' WHERE DEnumID = \''.$EnumID.'\';';
+        $sqlQuery = 'SELECT ID FROM '.self::TABLE_NAME.' WHERE DEnumID = \''.$EnumID.'\';';
 
         $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
 
@@ -151,7 +151,7 @@ class DEnumItem extends ActiveRecord implements TypeInterface
 
         foreach ($result as $row) {
             $obj = new self();
-            $obj->load($row['OID']);
+            $obj->load($row['ID']);
             $objects[$count] = $obj;
             ++$count;
         }

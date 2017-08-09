@@ -98,13 +98,13 @@ class AttachmentController extends Controller implements ControllerInterface
         $params = $request->getParams();
 
         try {
-            if (isset($params['articleOID']) && isset($params['filename'])) {
-                if (!Validator::isInteger($params['articleOID'])) {
-                    throw new IllegalArguementException('The articleOID ['.$params['articleOID'].'] provided is invalid');
+            if (isset($params['articleID']) && isset($params['filename'])) {
+                if (!Validator::isInteger($params['articleID'])) {
+                    throw new IllegalArguementException('The articleID ['.$params['articleID'].'] provided is invalid');
                 }
 
                 $article = new Article();
-                $article->setOID($params['articleOID']);
+                $article->setID($params['articleID']);
                 $filePath = $article->getAttachmentsLocation().'/'.$params['filename'];
 
                 if (file_exists($filePath)) {
@@ -126,7 +126,7 @@ class AttachmentController extends Controller implements ControllerInterface
                     throw new IllegalArguementException('File not found');
                 }
             } else {
-                self::$logger->error('Could not access article attachment as articleOID and/or filename were not provided!');
+                self::$logger->error('Could not access article attachment as articleID and/or filename were not provided!');
                 throw new IllegalArguementException('File not found');
             }
         } catch (IllegalArguementException $e) {

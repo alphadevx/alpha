@@ -96,7 +96,7 @@ class ArticleView extends View
     public function listView($fields = array())
     {
         $fields['dateAdded'] = $this->record->getCreateTS()->getDate();
-        $fields['editButtonURL'] = FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.get_class($this->record).'&ActiveRecordOID='.$this->record->getOID().'&view=edit');
+        $fields['editButtonURL'] = FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.get_class($this->record).'&ActiveRecordID='.$this->record->getID().'&view=edit');
 
         return parent::listView($fields);
     }
@@ -128,7 +128,7 @@ class ArticleView extends View
      */
     public function detailedView($fields = array())
     {
-        $fields['editButtonURL'] = FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.get_class($this->record).'&ActiveRecordOID='.$this->record->getOID().'&view=edit');
+        $fields['editButtonURL'] = FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.get_class($this->record).'&ActiveRecordID='.$this->record->getID().'&view=edit');
 
         return parent::detailedView($fields);
     }
@@ -183,7 +183,7 @@ class ArticleView extends View
                                 label: 'Okay',
                                 cssClass: 'btn btn-default btn-xs',
                                 action: function(dialogItself) {
-                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->record->getOID()."');
+                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID')."\"]').attr('value', '".$this->record->getID()."');
                                     $('#deleteForm').submit();
                                     dialogItself.close();
                                 }
@@ -205,14 +205,14 @@ class ArticleView extends View
         }
 
         if (count($tags) > 0) {
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\TagController&ActiveRecordType='.get_class($this->record).'&ActiveRecordOID='.$this->record->getOID())."'", 'Edit Tags', 'tagsBut');
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\TagController&ActiveRecordType='.get_class($this->record).'&ActiveRecordID='.$this->record->getID())."'", 'Edit Tags', 'tagsBut');
             $fields['tagsButton'] = $button->render();
         }
 
         // buffer security fields to $formSecurityFields variable
         $fields['formSecurityFields'] = $this->renderSecurityFields();
 
-        // OID will need to be posted for optimistic lock checking
+        // ID will need to be posted for optimistic lock checking
         $fields['version_num'] = $this->record->getVersionNumber();
 
         // file attachments section

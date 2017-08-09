@@ -180,7 +180,7 @@ abstract class Controller
 
     /**
      * An array for storing new reord objects in a session (transient business objects that
-     * have no OID yet).
+     * have no ID yet).
      *
      * @var array
      *
@@ -825,12 +825,12 @@ abstract class Controller
             try {
                 $dirtyObjects[$i]->save();
             } catch (FailedSaveException $e) {
-                self::$logger->error('Failed to save OID ['.$dirtyObjects[$i]->getID().'] of type ['.get_class($dirtyObjects[$i]).'], aborting...');
+                self::$logger->error('Failed to save ID ['.$dirtyObjects[$i]->getID().'] of type ['.get_class($dirtyObjects[$i]).'], aborting...');
                 $this->abort();
 
                 throw new FailedUnitCommitException($e->getMessage());
             } catch (LockingException $e) {
-                self::$logger->error('Failed to save OID ['.$dirtyObjects[$i]->getID().'] of type ['.get_class($dirtyObjects[$i]).'], aborting...');
+                self::$logger->error('Failed to save ID ['.$dirtyObjects[$i]->getID().'] of type ['.get_class($dirtyObjects[$i]).'], aborting...');
                 $this->abort();
 
                 throw new FailedUnitCommitException($e->getMessage());

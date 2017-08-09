@@ -117,7 +117,7 @@ class SearchProviderTags implements SearchProviderInterface
              */
             foreach ($matchingTags as $tag) {
                 if ($returnType == 'all' || $tag->get('taggedClass') == $returnType) {
-                    $key = $tag->get('taggedClass').'-'.$tag->get('taggedOID');
+                    $key = $tag->get('taggedClass').'-'.$tag->get('taggedID');
 
                     if (isset($matches[$key])) {
                         // increment the weight if the same Record is tagged more than once
@@ -154,7 +154,7 @@ class SearchProviderTags implements SearchProviderInterface
 
                     $results[] = $Record;
                 } catch (RecordNotFoundException $e) {
-                    self::$logger->warn('Orpaned Tag detected pointing to a non-existant Record of OID ['.$parts[1].'] and type ['.$parts[0].'].');
+                    self::$logger->warn('Orpaned Tag detected pointing to a non-existant Record of ID ['.$parts[1].'] and type ['.$parts[0].'].');
                 }
             }
         }
@@ -177,7 +177,7 @@ class SearchProviderTags implements SearchProviderInterface
         $distinctValues = array();
 
         if ($config->get('cache.provider.name') != '') {
-            $key = get_class($sourceObject).'-'.$sourceObject->getOID().'-related'.($distinct == '' ? '' : '-distinct');
+            $key = get_class($sourceObject).'-'.$sourceObject->getID().'-related'.($distinct == '' ? '' : '-distinct');
             $matches = $this->loadFromCache($key);
         }
 
@@ -191,24 +191,24 @@ class SearchProviderTags implements SearchProviderInterface
                 if ($distinct == '') {
                     $matchingTags = $Tag->query('SELECT * FROM '.$Tag->getTableName()." WHERE 
                         content='".$tag->get('content')."' AND NOT 
-                        (taggedOID = '".$sourceObject->getOID()."' AND taggedClass = '".get_class($sourceObject)."');");
+                        (taggedID = '".$sourceObject->getID()."' AND taggedClass = '".get_class($sourceObject)."');");
                 } else {
                     // filter out results where the source object field is identical to distinct param
                     $matchingTags = $Tag->query('SELECT * FROM '.$Tag->getTableName()." WHERE 
                         content='".$tag->get('content')."' AND NOT 
-                        (taggedOID = '".$sourceObject->getOID()."' AND taggedClass = '".get_class($sourceObject)."')
-                        AND taggedOID IN (SELECT OID FROM ".$sourceObject->getTableName().' WHERE '.$distinct." != '".addslashes($sourceObject->get($distinct))."');");
+                        (taggedID = '".$sourceObject->getID()."' AND taggedClass = '".get_class($sourceObject)."')
+                        AND taggedID IN (SELECT ID FROM ".$sourceObject->getTableName().' WHERE '.$distinct." != '".addslashes($sourceObject->get($distinct))."');");
                 }
 
                 foreach ($matchingTags as $matchingTag) {
                     if ($returnType == 'all' || $tag->get('taggedClass') == $returnType) {
-                        $key = $matchingTag['taggedClass'].'-'.$matchingTag['taggedOID'];
+                        $key = $matchingTag['taggedClass'].'-'.$matchingTag['taggedID'];
 
                         // matches on the distinct if defined need to be skipped
                         if ($distinct != '') {
                             try {
                                 $Record = new $matchingTag['taggedClass']();
-                                $Record->load($matchingTag['taggedOID']);
+                                $Record->load($matchingTag['taggedID']);
 
                                 // skip where the source object field is identical
                                 if ($sourceObject->get($distinct) == $Record->get($distinct)) {
@@ -221,7 +221,7 @@ class SearchProviderTags implements SearchProviderInterface
                                     continue;
                                 }
                             } catch (RecordNotFoundException $e) {
-                                self::$logger->warn('Error loading object ['.$matchingTag['taggedOID'].'] of type ['.$matchingTag['taggedClass'].'], probable orphan');
+                                self::$logger->warn('Error loading object ['.$matchingTag['taggedID'].'] of type ['.$matchingTag['taggedClass'].'], probable orphan');
                             }
                         }
 
@@ -236,7 +236,7 @@ class SearchProviderTags implements SearchProviderInterface
                 }
 
                 if ($config->get('cache.provider.name') != '') {
-                    $key = get_class($sourceObject).'-'.$sourceObject->getOID().'-related'.($distinct == '' ? '' : '-distinct');
+                    $key = get_class($sourceObject).'-'.$sourceObject->getID().'-related'.($distinct == '' ? '' : '-distinct');
                     $this->addToCache($key, $matches);
                 }
             }
@@ -271,7 +271,7 @@ class SearchProviderTags implements SearchProviderInterface
         $taggedAttributes = $sourceObject->getTaggedAttributes();
 
         foreach ($taggedAttributes as $tagged) {
-            $tags = Tag::tokenize($sourceObject->get($tagged), get_class($sourceObject), $sourceObject->getOID());
+            $tags = Tag::tokenize($sourceObject->get($tagged), get_class($sourceObject), $sourceObject->getID());
 
             foreach ($tags as $tag) {
                 try {

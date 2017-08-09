@@ -87,11 +87,11 @@ class TagTest extends \PHPUnit_Framework_TestCase
         $article->rebuildTable();
 
         $denum = new DEnum('Alpha\Model\Article::section');
-        $item->set('DEnumID', $denum->getOID());
+        $item->set('DEnumID', $denum->getID());
         $item->set('value', 'Test');
         $item->save();
 
-        $this->DEnumID = $denum->getOID();
+        $this->DEnumID = $denum->getID();
 
         $this->article = $this->createArticle('unitTestArticle');
     }
@@ -144,7 +144,7 @@ class TagTest extends \PHPUnit_Framework_TestCase
      */
     public function testTokenizeForExpectedTag()
     {
-        $tags = Tag::tokenize($this->article->get('description'), 'Article', $this->article->getOID());
+        $tags = Tag::tokenize($this->article->get('description'), 'Article', $this->article->getID());
 
         $found = false;
         foreach ($tags as $tag) {
@@ -163,7 +163,7 @@ class TagTest extends \PHPUnit_Framework_TestCase
      */
     public function testTokenizeForUnexpectedTag()
     {
-        $tags = Tag::tokenize($this->article->get('description'), 'Article', $this->article->getOID());
+        $tags = Tag::tokenize($this->article->get('description'), 'Article', $this->article->getID());
 
         $found = false;
         foreach ($tags as $tag) {
@@ -182,7 +182,7 @@ class TagTest extends \PHPUnit_Framework_TestCase
      */
     public function testTokenizeNoDuplicates()
     {
-        $tags = Tag::tokenize($this->article->get('description'), 'Article', $this->article->getOID());
+        $tags = Tag::tokenize($this->article->get('description'), 'Article', $this->article->getID());
 
         $count = 0;
         foreach ($tags as $tag) {
@@ -225,7 +225,7 @@ class TagTest extends \PHPUnit_Framework_TestCase
         $tagsA = $this->article->getPropObject('tags')->getRelatedObjects();
 
         $tag = new Tag();
-        $tagsB = $tag->loadTags('Alpha\Model\Article', $this->article->getOID());
+        $tagsB = $tag->loadTags('Alpha\Model\Article', $this->article->getID());
 
         $this->assertEquals(count($tagsA), count($tagsB), 'testing the loadTags() method for accessing the tags on a given object type directly');
     }

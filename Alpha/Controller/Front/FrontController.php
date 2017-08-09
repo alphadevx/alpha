@@ -193,7 +193,7 @@ class FrontController
             return $controller->process($request);
         })->value('start', 0)->value('limit', $config->get('app.list.page.amount'));
 
-        $this->addRoute('/attach/{articleOID}/{filename}', function ($request) {
+        $this->addRoute('/attach/{articleID}/{filename}', function ($request) {
             $controller = new AttachmentController();
 
             return $controller->process($request);
@@ -205,17 +205,17 @@ class FrontController
             return $controller->process($request);
         });
 
-        $this->addRoute('/denum/{denumOID}', function ($request) {
+        $this->addRoute('/denum/{denumID}', function ($request) {
             $controller = new DEnumController();
 
             return $controller->process($request);
-        })->value('denumOID', null);
+        })->value('denumID', null);
 
-        $this->addRoute('/excel/{ActiveRecordType}/{ActiveRecordOID}', function ($request) {
+        $this->addRoute('/excel/{ActiveRecordType}/{ActiveRecordID}', function ($request) {
             $controller = new ExcelController();
 
             return $controller->process($request);
-        })->value('ActiveRecordOID', null);
+        })->value('ActiveRecordID', null);
 
         $this->addRoute('/feed/{ActiveRecordType}/{type}', function ($request) {
             $controller = new FeedController();
@@ -265,13 +265,13 @@ class FrontController
             return $controller->process($request);
         });
 
-        $this->addRoute('/recordselector/12m/{ActiveRecordOID}/{field}/{relatedClass}/{relatedClassField}/{relatedClassDisplayField}/{relationType}', function ($request) {
+        $this->addRoute('/recordselector/12m/{ActiveRecordID}/{field}/{relatedClass}/{relatedClassField}/{relatedClassDisplayField}/{relationType}', function ($request) {
             $controller = new RecordSelectorController();
 
             return $controller->process($request);
         })->value('relationType', 'ONE-TO-MANY');
 
-        $this->addRoute('/recordselector/m2m/{ActiveRecordOID}/{field}/{relatedClassLeft}/{relatedClassLeftDisplayField}/{relatedClassRight}/{relatedClassRightDisplayField}/{accessingClassName}/{lookupOIDs}/{relationType}', function ($request) {
+        $this->addRoute('/recordselector/m2m/{ActiveRecordID}/{field}/{relatedClassLeft}/{relatedClassLeftDisplayField}/{relatedClassRight}/{relatedClassRightDisplayField}/{accessingClassName}/{lookupIDs}/{relationType}', function ($request) {
             $controller = new RecordSelectorController();
 
             return $controller->process($request);
@@ -289,7 +289,7 @@ class FrontController
             return $controller->process($request);
         })->value('start', 0)->value('limit', $config->get('app.list.page.amount'));
 
-        $this->addRoute('/tag/{ActiveRecordType}/{ActiveRecordOID}', function ($request) {
+        $this->addRoute('/tag/{ActiveRecordType}/{ActiveRecordID}', function ($request) {
             $controller = new TagController();
 
             return $controller->process($request);
@@ -301,11 +301,11 @@ class FrontController
             return $controller->process($request);
         });
 
-        $this->addRoute('/record/{ActiveRecordType}/{ActiveRecordOID}/{view}', function ($request) {
+        $this->addRoute('/record/{ActiveRecordType}/{ActiveRecordID}/{view}', function ($request) {
             $controller = new ActiveRecordController();
 
             return $controller->process($request);
-        })->value('ActiveRecordOID', null)->value('view', 'detailed');
+        })->value('ActiveRecordID', null)->value('view', 'detailed');
 
         $this->addRoute('/records/{ActiveRecordType}/{start}/{limit}', function ($request) {
             $controller = new ActiveRecordController();

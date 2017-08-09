@@ -197,9 +197,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::load()
      */
-    public function load($OID, $version = 0)
+    public function load($ID, $version = 0)
     {
-        self::$logger->debug('>>load(OID=['.$OID.'], version=['.$version.'])');
+        self::$logger->debug('>>load(ID=['.$ID.'], version=['.$version.'])');
 
         $attributes = $this->record->getPersistentAttributes();
         $fields = '';
@@ -209,9 +209,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         $fields = mb_substr($fields, 0, -1);
 
         if ($version > 0) {
-            $sqlQuery = 'SELECT '.$fields.' FROM '.$this->record->getTableName().'_history WHERE OID = :OID AND version_num = :version LIMIT 1;';
+            $sqlQuery = 'SELECT '.$fields.' FROM '.$this->record->getTableName().'_history WHERE ID = :ID AND version_num = :version LIMIT 1;';
         } else {
-            $sqlQuery = 'SELECT '.$fields.' FROM '.$this->record->getTableName().' WHERE OID = :OID LIMIT 1;';
+            $sqlQuery = 'SELECT '.$fields.' FROM '.$this->record->getTableName().' WHERE ID = :ID LIMIT 1;';
         }
         $this->record->setLastQuery($sqlQuery);
 
@@ -224,7 +224,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                 $stmt->bindValue(':version', $version, SQLITE3_INTEGER);
             }
 
-            $stmt->bindValue(':OID', $OID, SQLITE3_INTEGER);
+            $stmt->bindValue(':ID', $ID, SQLITE3_INTEGER);
 
             $result = $stmt->execute();
 
@@ -237,15 +237,15 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             if (!$this->record->checkTableExists()) {
                 $this->record->makeTable();
 
-                throw new RecordNotFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->record->getTableName().'] did not exist so had to create!');
+                throw new RecordNotFoundException('Failed to load object of ID ['.$ID.'], table ['.$this->record->getTableName().'] did not exist so had to create!');
             }
 
             return;
         }
 
-        if (!isset($row['OID']) || $row['OID'] < 1) {
+        if (!isset($row['ID']) || $row['ID'] < 1) {
             self::$logger->debug('<<load');
-            throw new RecordNotFoundException('Failed to load object of OID ['.$OID.'] not found in database.');
+            throw new RecordNotFoundException('Failed to load object of ID ['.$ID.'] not found in database.');
         }
 
         // get the class attributes
@@ -264,7 +264,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
                     // handle the setting of ONE-TO-MANY relation values
                     if ($prop->getRelationType() == 'ONE-TO-MANY') {
-                        $this->record->set($propObj->name, $this->record->getOID());
+                        $this->record->set($propObj->name, $this->record->getID());
                     }
 
                     // handle the setting of MANY-TO-ONE relation values
@@ -287,7 +287,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                 }
 
                 self::$logger->debug('<<load');
-                throw new RecordFoundException('Failed to load object of OID ['.$OID.'], table ['.$this->record->getTableName().'] was out of sync with the database so had to be updated!');
+                throw new RecordFoundException('Failed to load object of ID ['.$ID.'], table ['.$this->record->getTableName().'] was out of sync with the database so had to be updated!');
             }
         }
 
@@ -299,15 +299,15 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAllOldVersions()
      */
-    public function loadAllOldVersions($OID)
+    public function loadAllOldVersions($ID)
     {
-        self::$logger->debug('>>loadAllOldVersions(OID=['.$OID.'])');
+        self::$logger->debug('>>loadAllOldVersions(ID=['.$ID.'])');
 
         if (!$this->record->getMaintainHistory()) {
             throw new RecordFoundException('loadAllOldVersions method called on an active record where no history is maintained!');
         }
 
-        $sqlQuery = 'SELECT version_num FROM '.$this->record->getTableName().'_history WHERE OID = \''.$OID.'\' ORDER BY version_num;';
+        $sqlQuery = 'SELECT version_num FROM '.$this->record->getTableName().'_history WHERE ID = \''.$ID.'\' ORDER BY version_num;';
 
         $this->record->setLastQuery($sqlQuery);
 
@@ -324,7 +324,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         while ($row = $result->fetchArray()) {
             try {
                 $obj = new $RecordClass();
-                $obj->load($OID, $row['version_num']);
+                $obj->load($ID, $row['version_num']);
                 $objects[$count] = $obj;
                 ++$count;
             } catch (ResourceNotAllowedException $e) {
@@ -404,12 +404,12 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             return;
         }
 
-        if (!isset($row['OID']) || $row['OID'] < 1) {
+        if (!isset($row['ID']) || $row['ID'] < 1) {
             self::$logger->debug('<<loadByAttribute');
             throw new RecordNotFoundException('Failed to load object by attribute ['.$attribute.'] and value ['.$value.'], not found in database.');
         }
 
-        $this->record->setOID($row['OID']);
+        $this->record->setID($row['ID']);
 
         // get the class attributes
         $reflection = new ReflectionClass(get_class($this->record));
@@ -428,7 +428,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
                         // handle the setting of ONE-TO-MANY relation values
                         if ($prop->getRelationType() == 'ONE-TO-MANY') {
-                            $this->record->set($propObj->name, $this->record->getOID());
+                            $this->record->set($propObj->name, $this->record->getID());
                         }
                     }
                 }
@@ -459,7 +459,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAll()
      */
-    public function loadAll($start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false)
+    public function loadAll($start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false)
     {
         self::$logger->debug('>>loadAll(start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
@@ -472,16 +472,16 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
         if (!$ignoreClassType && $this->record->isTableOverloaded()) {
             if ($limit == 0) {
-                $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName().' WHERE classname = \''.addslashes(get_class($this->record)).'\' ORDER BY '.$orderBy.' '.$order.';';
+                $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().' WHERE classname = \''.addslashes(get_class($this->record)).'\' ORDER BY '.$orderBy.' '.$order.';';
             } else {
-                $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName().' WHERE classname = \''.addslashes(get_class($this->record)).'\' ORDER BY '.$orderBy.' '.$order.' LIMIT '.
+                $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().' WHERE classname = \''.addslashes(get_class($this->record)).'\' ORDER BY '.$orderBy.' '.$order.' LIMIT '.
                     $limit.' OFFSET '.$start.';';
             }
         } else {
             if ($limit == 0) {
-                $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName().' ORDER BY '.$orderBy.' '.$order.';';
+                $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().' ORDER BY '.$orderBy.' '.$order.';';
             } else {
-                $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName().' ORDER BY '.$orderBy.' '.$order.' LIMIT '.$limit.' OFFSET '.$start.';';
+                $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().' ORDER BY '.$orderBy.' '.$order.' LIMIT '.$limit.' OFFSET '.$start.';';
             }
         }
 
@@ -489,7 +489,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
             self::$logger->debug('<<loadAll');
-            throw new RecordNotFoundException('Failed to load object OIDs, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->record->getLastQuery().']');
+            throw new RecordNotFoundException('Failed to load object IDs, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->record->getLastQuery().']');
         }
 
         // now build an array of objects to be returned
@@ -500,7 +500,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         while ($row = $result->fetchArray()) {
             try {
                 $obj = new $RecordClass();
-                $obj->load($row['OID']);
+                $obj->load($row['ID']);
                 $objects[$count] = $obj;
                 ++$count;
             } catch (ResourceNotAllowedException $e) {
@@ -518,7 +518,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAllByAttribute()
      */
-    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
+    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
     {
         self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
 
@@ -529,9 +529,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         }
 
         if (!$ignoreClassType && $this->record->isTableOverloaded()) {
-            $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName()." WHERE $attribute = :attribute AND classname = :classname ORDER BY ".$orderBy.' '.$order.$limit;
+            $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName()." WHERE $attribute = :attribute AND classname = :classname ORDER BY ".$orderBy.' '.$order.$limit;
         } else {
-            $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName()." WHERE $attribute = :attribute ORDER BY ".$orderBy.' '.$order.$limit;
+            $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName()." WHERE $attribute = :attribute ORDER BY ".$orderBy.' '.$order.$limit;
         }
 
         $this->record->setLastQuery($sqlQuery);
@@ -592,7 +592,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                         }
                     }
 
-                    $obj->load($row['OID']);
+                    $obj->load($row['ID']);
                     $objects[$count] = $obj;
                     ++$count;
                 } catch (ResourceNotAllowedException $e) {
@@ -625,7 +625,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAllByAttributes()
      */
-    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
+    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
     {
         self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.
             $start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
@@ -652,7 +652,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             $limit = ';';
         }
 
-        $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName().$whereClause.' ORDER BY '.$orderBy.' '.$order.$limit;
+        $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().$whereClause.' ORDER BY '.$orderBy.' '.$order.$limit;
 
         $this->record->setLastQuery($sqlQuery);
 
@@ -724,7 +724,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                     }
                 }
 
-                $obj->load($row['OID']);
+                $obj->load($row['ID']);
                 $objects[$count] = $obj;
                 ++$count;
             } catch (ResourceNotAllowedException $e) {
@@ -744,7 +744,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAllByDayUpdated()
      */
-    public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'OID', $order = 'ASC', $ignoreClassType = false)
+    public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false)
     {
         self::$logger->debug('>>loadAllByDayUpdated(date=['.$date.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
@@ -755,16 +755,16 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         }
 
         if (!$ignoreClassType && $this->record->isTableOverloaded()) {
-            $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' AND classname = '".addslashes(get_class($this->record))."' ORDER BY ".$orderBy.' '.$order.$limit;
+            $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' AND classname = '".addslashes(get_class($this->record))."' ORDER BY ".$orderBy.' '.$order.$limit;
         } else {
-            $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' ORDER BY ".$orderBy.' '.$order.$limit;
+            $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName()." WHERE updated_ts >= '".$date." 00:00:00' AND updated_ts <= '".$date." 23:59:59' ORDER BY ".$orderBy.' '.$order.$limit;
         }
 
         $this->record->setLastQuery($sqlQuery);
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
             self::$logger->debug('<<loadAllByDayUpdated');
-            throw new RecordNotFoundException('Failed to load object OIDs, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->record->getLastQuery().']');
+            throw new RecordNotFoundException('Failed to load object IDs, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->record->getLastQuery().']');
         }
 
         // now build an array of objects to be returned
@@ -774,7 +774,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
         while ($row = $result->fetchArray()) {
             $obj = new $RecordClass();
-            $obj->load($row['OID']);
+            $obj->load($row['ID']);
             $objects[$count] = $obj;
             ++$count;
         }
@@ -794,9 +794,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         self::$logger->debug('>>loadAllFieldValuesByAttribute(attribute=['.$attribute.'], value=['.$value.'], returnAttribute=['.$returnAttribute.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
         if (!$ignoreClassType && $this->record->isTableOverloaded()) {
-            $sqlQuery = 'SELECT '.$returnAttribute.' FROM '.$this->record->getTableName()." WHERE $attribute = '$value' AND classname = '".addslashes(get_class($this->record))."' ORDER BY OID ".$order.';';
+            $sqlQuery = 'SELECT '.$returnAttribute.' FROM '.$this->record->getTableName()." WHERE $attribute = '$value' AND classname = '".addslashes(get_class($this->record))."' ORDER BY ID ".$order.';';
         } else {
-            $sqlQuery = 'SELECT '.$returnAttribute.' FROM '.$this->record->getTableName()." WHERE $attribute = '$value' ORDER BY OID ".$order.';';
+            $sqlQuery = 'SELECT '.$returnAttribute.' FROM '.$this->record->getTableName()." WHERE $attribute = '$value' ORDER BY ID ".$order.';';
         }
 
         $this->record->setLastQuery($sqlQuery);
@@ -845,7 +845,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
         // set the "updated by" fields, we can only set the user id if someone is logged in
         if ($session->get('currentUser') != null) {
-            $this->record->set('updated_by', $session->get('currentUser')->getOID());
+            $this->record->set('updated_by', $session->get('currentUser')->getID());
         }
 
         $this->record->set('updated_ts', new Timestamp(date('Y-m-d H:i:s')));
@@ -858,8 +858,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             foreach ($properties as $propObj) {
                 $propName = $propObj->name;
                 if (!in_array($propName, $this->record->getTransientAttributes())) {
-                    // Skip the OID, database auto number takes care of this.
-                    if ($propName != 'OID' && $propName != 'version_num') {
+                    // Skip the ID, database auto number takes care of this.
+                    if ($propName != 'ID' && $propName != 'version_num') {
                         $sqlQuery .= "$propName,";
                         $savedFields[] = $propName;
                     }
@@ -929,8 +929,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             foreach ($properties as $propObj) {
                 $propName = $propObj->name;
                 if (!in_array($propName, $this->record->getTransientAttributes())) {
-                    // Skip the OID, database auto number takes care of this.
-                    if ($propName != 'OID' && $propName != 'version_num') {
+                    // Skip the ID, database auto number takes care of this.
+                    if ($propName != 'ID' && $propName != 'version_num') {
                         $sqlQuery .= "$propName = :$propName,";
                         $savedFields[] = $propName;
                     }
@@ -948,7 +948,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
             $sqlQuery = rtrim($sqlQuery, ',');
 
-            $sqlQuery .= ' WHERE OID=:OID;';
+            $sqlQuery .= ' WHERE ID=:ID;';
 
             $this->record->setLastQuery($sqlQuery);
             $stmt = self::getConnection()->prepare($sqlQuery);
@@ -966,7 +966,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                     $stmt->bindValue(':classname', get_class($this->record), SQLITE3_TEXT);
                 }
 
-                $stmt->bindValue(':OID', $this->record->getOID(), SQLITE3_INTEGER);
+                $stmt->bindValue(':ID', $this->record->getID(), SQLITE3_INTEGER);
 
                 $temp = $this->record->getVersionNumber()->getValue();
                 $this->record->set('version_num', $temp + 1);
@@ -979,9 +979,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         }
 
         if ($stmt != null && $stmt != false) {
-            // populate the updated OID in case we just done an insert
+            // populate the updated ID in case we just done an insert
             if ($this->record->isTransient()) {
-                $this->record->setOID(self::getConnection()->lastInsertRowID());
+                $this->record->setID(self::getConnection()->lastInsertRowID());
             }
 
             try {
@@ -992,7 +992,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                         $prop = $this->record->getPropObject($propName);
 
                         // handle the saving of MANY-TO-MANY relation values
-                        if ($prop->getRelationType() == 'MANY-TO-MANY' && count($prop->getRelatedOIDs()) > 0) {
+                        if ($prop->getRelationType() == 'MANY-TO-MANY' && count($prop->getRelatedIDs()) > 0) {
                             try {
                                 try {
                                     // check to see if the rel is on this class
@@ -1006,26 +1006,26 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                                 // first delete all of the old RelationLookup objects for this rel
                                 try {
                                     if ($side == 'left') {
-                                        $lookUp->deleteAllByAttribute('leftID', $this->record->getOID());
+                                        $lookUp->deleteAllByAttribute('leftID', $this->record->getID());
                                     } else {
-                                        $lookUp->deleteAllByAttribute('rightID', $this->record->getOID());
+                                        $lookUp->deleteAllByAttribute('rightID', $this->record->getID());
                                     }
                                 } catch (Exception $e) {
                                     throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
                                 }
 
-                                $OIDs = $prop->getRelatedOIDs();
+                                $IDs = $prop->getRelatedIDs();
 
-                                if (isset($OIDs) && !empty($OIDs[0])) {
-                                    // now for each posted OID, create a new RelationLookup record and save
-                                    foreach ($OIDs as $oid) {
+                                if (isset($IDs) && !empty($IDs[0])) {
+                                    // now for each posted ID, create a new RelationLookup record and save
+                                    foreach ($IDs as $id) {
                                         $newLookUp = new RelationLookup($lookUp->get('leftClassName'), $lookUp->get('rightClassName'));
                                         if ($side == 'left') {
-                                            $newLookUp->set('leftID', $this->record->getOID());
-                                            $newLookUp->set('rightID', $oid);
+                                            $newLookUp->set('leftID', $this->record->getID());
+                                            $newLookUp->set('rightID', $id);
                                         } else {
-                                            $newLookUp->set('rightID', $this->record->getOID());
-                                            $newLookUp->set('leftID', $oid);
+                                            $newLookUp->set('rightID', $this->record->getID());
+                                            $newLookUp->set('leftID', $id);
                                         }
                                         $newLookUp->save();
                                     }
@@ -1037,7 +1037,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
                         // handle the saving of ONE-TO-MANY relation values
                         if ($prop->getRelationType() == 'ONE-TO-MANY') {
-                            $prop->setValue($this->record->getOID());
+                            $prop->setValue($this->record->getID());
                         }
                     }
                 }
@@ -1082,13 +1082,13 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
         // set the "updated by" fields, we can only set the user id if someone is logged in
         if ($session->get('currentUser') != null) {
-            $this->record->set('updated_by', $session->get('currentUser')->getOID());
+            $this->record->set('updated_by', $session->get('currentUser')->getID());
         }
 
         $this->record->set('updated_ts', new Timestamp(date('Y-m-d H:i:s')));
 
         // assume that it is a persistent object that needs to be updated
-        $sqlQuery = 'UPDATE '.$this->record->getTableName().' SET '.$attribute.'=:attribute, version_num=:version, updated_by=:updated_by, updated_ts=:updated_ts WHERE OID=:OID;';
+        $sqlQuery = 'UPDATE '.$this->record->getTableName().' SET '.$attribute.'=:attribute, version_num=:version, updated_by=:updated_by, updated_ts=:updated_ts WHERE ID=:ID;';
 
         $this->record->setLastQuery($sqlQuery);
         $stmt = self::getConnection()->prepare($sqlQuery);
@@ -1108,7 +1108,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             $stmt->bindValue(':version', $newVersionNumber, SQLITE3_INTEGER);
             $stmt->bindValue(':updated_by', $updatedBy, SQLITE3_INTEGER);
             $stmt->bindValue(':updated_ts', $updatedTS, SQLITE3_TEXT);
-            $stmt->bindValue(':OID', $this->record->getOID(), SQLITE3_INTEGER);
+            $stmt->bindValue(':ID', $this->record->getID(), SQLITE3_INTEGER);
 
             $stmt->execute();
         } else {
@@ -1207,18 +1207,18 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>delete()');
 
-        $sqlQuery = 'DELETE FROM '.$this->record->getTableName().' WHERE OID = :OID;';
+        $sqlQuery = 'DELETE FROM '.$this->record->getTableName().' WHERE ID = :ID;';
 
         $this->record->setLastQuery($sqlQuery);
 
         $stmt = self::getConnection()->prepare($sqlQuery);
 
         if ($stmt instanceof SQLite3Stmt) {
-            $stmt->bindValue(':OID', $this->record->getOID(), SQLITE3_INTEGER);
+            $stmt->bindValue(':ID', $this->record->getID(), SQLITE3_INTEGER);
             $stmt->execute();
-            self::$logger->debug('Deleted the object ['.$this->record->getOID().'] of class ['.get_class($this->record).']');
+            self::$logger->debug('Deleted the object ['.$this->record->getID().'] of class ['.get_class($this->record).']');
         } else {
-            throw new FailedDeleteException('Failed to delete object ['.$this->record->getOID().'], error is ['.self::getLastDatabaseError().'], query ['.$this->record->getLastQuery().']');
+            throw new FailedDeleteException('Failed to delete object ['.$this->record->getID().'], error is ['.self::getLastDatabaseError().'], query ['.$this->record->getLastQuery().']');
         }
 
         $stmt->close();
@@ -1235,13 +1235,13 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>getVersion()');
 
-        $sqlQuery = 'SELECT version_num FROM '.$this->record->getTableName().' WHERE OID = :OID;';
+        $sqlQuery = 'SELECT version_num FROM '.$this->record->getTableName().' WHERE ID = :ID;';
         $this->record->setLastQuery($sqlQuery);
 
         $stmt = self::getConnection()->prepare($sqlQuery);
 
         if ($stmt instanceof SQLite3Stmt) {
-            $stmt->bindValue(':OID', $this->record->getOID(), SQLITE3_INTEGER);
+            $stmt->bindValue(':ID', $this->record->getID(), SQLITE3_INTEGER);
 
             $result = $stmt->execute();
 
@@ -1282,7 +1282,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>makeTable()');
 
-        $sqlQuery = 'CREATE TABLE '.$this->record->getTableName().' (OID INTEGER PRIMARY KEY,';
+        $sqlQuery = 'CREATE TABLE '.$this->record->getTableName().' (ID INTEGER PRIMARY KEY,';
 
         // get the class attributes
         $reflection = new ReflectionClass(get_class($this->record));
@@ -1293,7 +1293,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
 
-            if (!in_array($propName, $this->record->getTransientAttributes()) && $propName != 'OID') {
+            if (!in_array($propName, $this->record->getTransientAttributes()) && $propName != 'ID') {
                 $prop = $this->record->getPropObject($propName);
 
                 if ($prop instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
@@ -1379,7 +1379,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>makeHistoryTable()');
 
-        $sqlQuery = 'CREATE TABLE '.$this->record->getTableName().'_history (OID INTEGER NOT NULL,';
+        $sqlQuery = 'CREATE TABLE '.$this->record->getTableName().'_history (ID INTEGER NOT NULL,';
 
         // get the class attributes
         $reflection = new ReflectionClass(get_class($this->record));
@@ -1388,7 +1388,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
 
-            if (!in_array($propName, $this->record->getTransientAttributes()) && $propName != 'OID') {
+            if (!in_array($propName, $this->record->getTransientAttributes()) && $propName != 'ID') {
                 $prop = $this->record->getPropObject($propName);
 
                 if ($prop instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
@@ -1431,7 +1431,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             $sqlQuery .= 'classname TEXT(100),';
         }
 
-        $sqlQuery .= 'PRIMARY KEY (OID, version_num));';
+        $sqlQuery .= 'PRIMARY KEY (ID, version_num));';
 
         $this->record->setLastQuery($sqlQuery);
 
@@ -1589,7 +1589,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>getMAX()');
 
-        $sqlQuery = 'SELECT MAX(OID) AS max_OID FROM '.$this->record->getTableName();
+        $sqlQuery = 'SELECT MAX(ID) AS max_ID FROM '.$this->record->getTableName();
 
         $this->record->setLastQuery($sqlQuery);
 
@@ -1598,10 +1598,10 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
             $row = $result[0];
 
-            if (isset($row['max_OID'])) {
-                self::$logger->debug('<<getMAX ['.$row['max_OID'].']');
+            if (isset($row['max_ID'])) {
+                self::$logger->debug('<<getMAX ['.$row['max_ID'].']');
 
-                return $row['max_OID'];
+                return $row['max_ID'];
             } else {
                 throw new AlphaException('Failed to get the MAX ID for the class ['.get_class($this->record).'] from the table ['.$this->record->getTableName().'], query is ['.$this->record->getLastQuery().']');
             }
@@ -1636,9 +1636,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         $whereClause = mb_substr($whereClause, 0, -4);
 
         if ($whereClause != ' WHERE') {
-            $sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->record->getTableName().$whereClause;
+            $sqlQuery = 'SELECT COUNT(ID) AS class_count FROM '.$this->record->getTableName().$whereClause;
         } else {
-            $sqlQuery = 'SELECT COUNT(OID) AS class_count FROM '.$this->record->getTableName();
+            $sqlQuery = 'SELECT COUNT(ID) AS class_count FROM '.$this->record->getTableName();
         }
 
         $this->record->setLastQuery($sqlQuery);
@@ -1668,14 +1668,14 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             throw new AlphaException('getHistoryCount method called on a DAO where no history is maintained!');
         }
 
-        $sqlQuery = 'SELECT COUNT(OID) AS object_count FROM '.$this->record->getTableName().'_history WHERE OID='.$this->record->getOID();
+        $sqlQuery = 'SELECT COUNT(ID) AS object_count FROM '.$this->record->getTableName().'_history WHERE ID='.$this->record->getID();
 
         $this->record->setLastQuery($sqlQuery);
         self::$logger->debug('query ['.$sqlQuery.']');
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
             self::$logger->debug('<<getHistoryCount');
-            throw new AlphaException('Failed to get the history count for the business object ['.$this->record->getOID().'] from the table ['.$this->record->getTableName().'_history], query is ['.$this->record->getLastQuery().']');
+            throw new AlphaException('Failed to get the history count for the business object ['.$this->record->getID().'] from the table ['.$this->record->getTableName().'_history], query is ['.$this->record->getLastQuery().']');
         } else {
             $row = $result->fetchArray(SQLITE3_ASSOC);
 
@@ -2129,7 +2129,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         self::$logger->debug('>>reload()');
 
         if (!$this->record->isTransient()) {
-            $this->record->load($this->record->getOID());
+            $this->record->load($this->record->getID());
         } else {
             throw new AlphaException('Cannot reload transient object from database!');
         }
@@ -2142,16 +2142,16 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkRecordExists()
      */
-    public function checkRecordExists($OID)
+    public function checkRecordExists($ID)
     {
-        self::$logger->debug('>>checkRecordExists(OID=['.$OID.'])');
+        self::$logger->debug('>>checkRecordExists(ID=['.$ID.'])');
 
-        $sqlQuery = 'SELECT OID FROM '.$this->record->getTableName().' WHERE OID = :OID;';
+        $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().' WHERE ID = :ID;';
         $this->record->setLastQuery($sqlQuery);
         $stmt = self::getConnection()->prepare($sqlQuery);
 
         if ($stmt instanceof SQLite3Stmt) {
-            $stmt->bindValue(':OID', $OID, SQLITE3_INTEGER);
+            $stmt->bindValue(':ID', $ID, SQLITE3_INTEGER);
 
             $result = $stmt->execute();
 
@@ -2161,10 +2161,10 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             $stmt->close();
         } else {
             self::$logger->debug('<<checkRecordExists');
-            throw new AlphaException('Failed to check for the record ['.$OID.'] on the class ['.get_class($this->record).'] from the table ['.$this->record->getTableName().'], query is ['.$this->record->getLastQuery().']');
+            throw new AlphaException('Failed to check for the record ['.$ID.'] on the class ['.get_class($this->record).'] from the table ['.$this->record->getTableName().'], query is ['.$this->record->getLastQuery().']');
         }
 
-        if (!isset($row['OID'])) {
+        if (!isset($row['ID'])) {
             self::$logger->debug('<<checkRecordExists [false]');
 
             return false;

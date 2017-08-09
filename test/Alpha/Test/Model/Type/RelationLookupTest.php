@@ -173,7 +173,7 @@ class RelationLookupTest extends ModelTestCase
             $lookup->setValue(2);
             $this->fail('testing the setValue() method with bad params');
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('Array value passed to setValue is not valid [2], array should contain two OIDs', $e->getMessage(), 'testing the setValue() method with bad params');
+            $this->assertEquals('Array value passed to setValue is not valid [2], array should contain two IDs', $e->getMessage(), 'testing the setValue() method with bad params');
         }
     }
 
@@ -194,7 +194,7 @@ class RelationLookupTest extends ModelTestCase
         $person1->set('password', 'password');
         $person1->save();
         $lookup = $person1->getPropObject('rights')->getLookup();
-        $lookup->setValue(array($person1->getOID(), $group->getOID()));
+        $lookup->setValue(array($person1->getID(), $group->getID()));
         $lookup->save();
 
         $person2 = new Person();
@@ -203,10 +203,10 @@ class RelationLookupTest extends ModelTestCase
         $person2->set('password', 'password');
         $person2->save();
         $lookup = $person2->getPropObject('rights')->getLookup();
-        $lookup->setValue(array($person2->getOID(), $group->getOID()));
+        $lookup->setValue(array($person2->getID(), $group->getID()));
         $lookup->save();
 
         $lookup = new RelationLookup('Alpha\Model\Person', 'Alpha\Model\Rights');
-        $this->assertEquals(2, count($lookup->loadAllbyAttribute('rightID', $group->getOID())), 'testing the loadAllbyAttribute() method');
+        $this->assertEquals(2, count($lookup->loadAllbyAttribute('rightID', $group->getID())), 'testing the loadAllbyAttribute() method');
     }
 }

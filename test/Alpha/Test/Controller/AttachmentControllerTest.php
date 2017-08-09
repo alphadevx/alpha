@@ -178,7 +178,7 @@ class AttachmentControllerTest extends \PHPUnit_Framework_TestCase
 
         $controller = new AttachmentController();
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/attach/'.$article->getOID().'/logo.png'));
+        $request = new Request(array('method' => 'GET', 'URI' => '/attach/'.$article->getID().'/logo.png'));
 
         $response = $front->process($request);
 

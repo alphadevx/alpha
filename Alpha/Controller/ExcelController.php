@@ -111,8 +111,8 @@ class ExcelController extends Controller implements ControllerInterface
                 }
 
                 // the name of the file download
-                if (isset($params['ActiveRecordOID'])) {
-                    $fileName = $this->record->getTableName().'-'.$params['ActiveRecordOID'];
+                if (isset($params['ActiveRecordID'])) {
+                    $fileName = $this->record->getTableName().'-'.$params['ActiveRecordID'];
                 } else {
                     $fileName = $this->record->getTableName();
                 }
@@ -126,8 +126,8 @@ class ExcelController extends Controller implements ControllerInterface
                 $response->setHeader('Expires', '0');
 
                 // handle a single record
-                if (isset($params['ActiveRecordOID'])) {
-                    $this->record->load($params['ActiveRecordOID']);
+                if (isset($params['ActiveRecordID'])) {
+                    $this->record->load($params['ActiveRecordID']);
                     ActiveRecord::disconnect();
 
                     $convertor = new ActiveRecord2Excel($this->record);

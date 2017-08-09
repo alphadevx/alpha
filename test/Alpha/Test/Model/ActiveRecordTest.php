@@ -178,7 +178,7 @@ class ActiveRecordTest extends ModelTestCase
         $request->save();
 
         // make sure the person logged in is the same person to create/update the object
-        $this->assertEquals($session->get('currentUser')->getOID(), $request->getCreatorId()->getValue(),
+        $this->assertEquals($session->get('currentUser')->getID(), $request->getCreatorId()->getValue(),
             'test that the constructor sets the correct values of the "house keeping" attributes');
         $this->assertEquals($session->get('currentUser')->getID(), $request->getUpdatorId()->getValue(),
             'test that the constructor sets the correct values of the "house keeping" attributes');
@@ -236,7 +236,7 @@ class ActiveRecordTest extends ModelTestCase
             $this->person->load('123');
             $this->fail('Testing that load will create a table if it does not already exist');
         } catch (RecordNotFoundException $e) {
-            $this->assertEquals('Failed to load object of OID [123], table [Person] did not exist so had to create!', $e->getMessage(), 'Testing that load will create a table if it does not already exist');
+            $this->assertEquals('Failed to load object of ID [123], table [Person] did not exist so had to create!', $e->getMessage(), 'Testing that load will create a table if it does not already exist');
         }
 
         $this->assertTrue($this->person->checkTableExists(), 'Testing that load will create a table if it does not already exist');
@@ -255,7 +255,7 @@ class ActiveRecordTest extends ModelTestCase
 
         $this->person->save();
         $person = new Person();
-        $this->assertTrue($person->checkRecordExists($this->person->getOID()), 'Testing the checkRecordExists method');
+        $this->assertTrue($person->checkRecordExists($this->person->getID()), 'Testing the checkRecordExists method');
     }
 
     /**
@@ -294,13 +294,13 @@ class ActiveRecordTest extends ModelTestCase
         $this->person->save();
 
         $this->assertEquals(1, $this->person->getHistoryCount(), 'Testing loadAllOldVersions method');
-        $this->assertEquals('unitTestUser1', $this->person->loadAllOldVersions($this->person->getOID())[0]->getUsername()->getValue());
+        $this->assertEquals('unitTestUser1', $this->person->loadAllOldVersions($this->person->getID())[0]->getUsername()->getValue());
 
         $this->person->saveAttribute('username', 'unitTestUser2');
 
         $this->assertEquals(2, $this->person->getHistoryCount(), 'Testing loadAllOldVersions method');
-        $this->assertEquals('unitTestUser1', $this->person->loadAllOldVersions($this->person->getOID())[0]->getUsername()->getValue());
-        $this->assertEquals('unitTestUser2', $this->person->loadAllOldVersions($this->person->getOID())[1]->getUsername()->getValue());
+        $this->assertEquals('unitTestUser1', $this->person->loadAllOldVersions($this->person->getID())[0]->getUsername()->getValue());
+        $this->assertEquals('unitTestUser2', $this->person->loadAllOldVersions($this->person->getID())[1]->getUsername()->getValue());
 
         $this->person->dropTable('Person_history');
     }
@@ -355,7 +355,7 @@ class ActiveRecordTest extends ModelTestCase
         $config->set('db.provider.name', $provider);
 
         $this->person->save();
-        $people = $this->person->loadAllByAttributes(array('OID'), array($this->person->getOID()));
+        $people = $this->person->loadAllByAttributes(array('ID'), array($this->person->getID()));
         $this->assertEquals(1, count($people), 'Testing the loadAllByAttribute method');
         $this->assertEquals('unitTestUser', $people[0]->getUsername()->getValue(), 'Testing the loadAllByAttributes method');
         $people[0]->delete();
@@ -415,20 +415,20 @@ class ActiveRecordTest extends ModelTestCase
     }
 
     /**
-     * Testing to ensure that a transient object, once saved, will have an OID.
+     * Testing to ensure that a transient object, once saved, will have an ID.
      *
      * @since 1.0
      * @dataProvider getActiveRecordProviders
      */
-    public function testSaveTransientOID($provider)
+    public function testSaveTransientID($provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
 
-        $this->assertTrue($this->person->isTransient(), 'Testing to ensure that a transient object, once saved, will have an OID');
+        $this->assertTrue($this->person->isTransient(), 'Testing to ensure that a transient object, once saved, will have an ID');
         $this->person->save();
-        $this->assertGreaterThan(0, $this->person->getID(), 'Testing to ensure that a transient object, once saved, will have an OID');
-        $this->assertFalse($this->person->isTransient(), 'Testing to ensure that a transient object, once saved, will have an OID');
+        $this->assertGreaterThan(0, $this->person->getID(), 'Testing to ensure that a transient object, once saved, will have an ID');
+        $this->assertFalse($this->person->isTransient(), 'Testing to ensure that a transient object, once saved, will have an ID');
     }
 
     /**
@@ -887,7 +887,7 @@ class ActiveRecordTest extends ModelTestCase
     {
         $this->assertTrue(is_array($this->person->getDataLabels()), 'Testing the getDataLabels method');
         $labels = $this->person->getDataLabels();
-        $this->assertTrue(in_array('OID', array_keys($labels)), 'Testing the getDataLabels method');
+        $this->assertTrue(in_array('ID', array_keys($labels)), 'Testing the getDataLabels method');
         $this->assertTrue(in_array('E-mail Address', $labels), 'Testing the getDataLabels method');
     }
 
@@ -944,10 +944,10 @@ class ActiveRecordTest extends ModelTestCase
             $this->assertEquals('SHOW INDEX FROM Person', mb_substr($this->person->getLastQuery(), 0, 22),
                 'Testing the getLastQuery method after various persistance calls');
             $this->person->getCount();
-            $this->assertEquals('SELECT COUNT(OID)', mb_substr($this->person->getLastQuery(), 0, 17),
+            $this->assertEquals('SELECT COUNT(ID)', mb_substr($this->person->getLastQuery(), 0, 17),
                 'Testing the getLastQuery method after various persistance calls');
             $this->person->getMAX();
-            $this->assertEquals('SELECT MAX(OID)', mb_substr($this->person->getLastQuery(), 0, 15),
+            $this->assertEquals('SELECT MAX(ID)', mb_substr($this->person->getLastQuery(), 0, 15),
                 'Testing the getLastQuery method after various persistance calls');
             $this->person->load($this->person->getID());
             $this->assertEquals('SHOW COLUMNS FROM Person', mb_substr($this->person->getLastQuery(), 0, 24),
@@ -961,13 +961,13 @@ class ActiveRecordTest extends ModelTestCase
             $this->assertEquals('SELECT name FROM sqlite_master WHERE type=\'index\'', mb_substr($this->person->getLastQuery(), 0, 49),
                     'Testing the getLastQuery method after various persistance calls');
             $this->person->getCount();
-            $this->assertEquals('SELECT COUNT(OID)', mb_substr($this->person->getLastQuery(), 0, 17),
+            $this->assertEquals('SELECT COUNT(ID)', mb_substr($this->person->getLastQuery(), 0, 17),
                     'Testing the getLastQuery method after various persistance calls');
             $this->person->getMAX();
-            $this->assertEquals('SELECT MAX(OID)', mb_substr($this->person->getLastQuery(), 0, 15),
+            $this->assertEquals('SELECT MAX(ID)', mb_substr($this->person->getLastQuery(), 0, 15),
                     'Testing the getLastQuery method after various persistance calls');
             $this->person->load($this->person->getID());
-            $this->assertEquals('SELECT username,email,password,state,URL,OID,version_num,created_ts,created_by,updated_ts,updated_by FROM Person WHERE OID = :OID LIMIT 1;',
+            $this->assertEquals('SELECT username,email,password,state,URL,ID,version_num,created_ts,created_by,updated_ts,updated_by FROM Person WHERE ID = :ID LIMIT 1;',
                     mb_substr($this->person->getLastQuery(), 0, 150),
                     'Testing the getLastQuery method after various persistance calls');
         }
@@ -1129,11 +1129,11 @@ class ActiveRecordTest extends ModelTestCase
         $oldSetting = $config->get('cache.provider.name');
         $config->set('cache.provider.name', 'Alpha\Util\Cache\CacheProviderArray');
 
-        $this->person->setOID('123');
+        $this->person->setID('123');
         $this->person->addToCache();
 
         $fromCache = new Person();
-        $fromCache->setOID($this->person->getOID());
+        $fromCache->setID($this->person->getID());
 
         $this->assertTrue($fromCache->loadFromCache(), 'testing that the item loads from the cache');
         $this->assertEquals('unitTestUser', $fromCache->get('username', true), 'testing that you can add a DAO directly to the cache without saving');
@@ -1160,7 +1160,7 @@ class ActiveRecordTest extends ModelTestCase
         $this->person->save();
 
         $fromCache = new Person();
-        $fromCache->setOID($this->person->getOID());
+        $fromCache->setID($this->person->getID());
 
         $this->assertTrue($fromCache->loadFromCache(), 'testing that the item loads from the cache');
         $this->assertEquals('unitTestUser', $fromCache->get('username', true), 'testing that a saved record is subsequently retrievable from the cache');
@@ -1187,7 +1187,7 @@ class ActiveRecordTest extends ModelTestCase
         $this->person->save();
 
         $fromCache = new Person();
-        $fromCache->setOID($this->person->getOID());
+        $fromCache->setID($this->person->getID());
 
         $this->assertTrue($fromCache->loadFromCache(), 'testing that the item loads from the cache');
 
@@ -1278,7 +1278,7 @@ class ActiveRecordTest extends ModelTestCase
         $record->set('anotherNewStringField', 'test value');
         $record->save();
 
-        $record->load($record->getOID(), 1);
+        $record->load($record->getID(), 1);
 
         $this->assertEquals('test value', $record->get('anotherNewStringField'), 'Testing that the new column was added to the _history table');
     }

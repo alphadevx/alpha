@@ -105,7 +105,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
     public function testAddItemToRSSandParse()
     {
         $feed = new RSS('Alpha\Model\Article', 'Test Feed Title', 'http://www.alphaframework.org/', 'Test Feed Description');
-        $feed->setFieldMappings('title', 'URL', 'description', 'created_ts', 'OID');
+        $feed->setFieldMappings('title', 'URL', 'description', 'created_ts', 'ID');
         $feed->addRecord($this->record);
         $xml = $feed->render();
 
@@ -130,7 +130,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
     public function testAddItemToRSS2andParse()
     {
         $feed = new RSS2('Alpha\Model\Article', 'Test Feed Title', 'http://www.alphaframework.org/', 'Test Feed Description');
-        $feed->setFieldMappings('title', 'URL', 'description', 'created_ts', 'OID');
+        $feed->setFieldMappings('title', 'URL', 'description', 'created_ts', 'ID');
         $feed->addrecord($this->record);
         $xml = $feed->render();
 
@@ -154,7 +154,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
     public function testAddItemToAtomandParse()
     {
         $feed = new Atom('Alpha\Model\Article', 'Test Feed Title', 'http://www.alphaframework.org/', 'Test Feed Description');
-        $feed->setFieldMappings('title', 'URL', 'description', 'created_ts', 'OID');
+        $feed->setFieldMappings('title', 'URL', 'description', 'created_ts', 'ID');
         $feed->addrecord($this->record);
         $xml = $feed->render();
 

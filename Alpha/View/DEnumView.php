@@ -85,7 +85,7 @@ class DEnumView extends View
                     $html .= '  <th>'.$labels[$prop].'</th>';
                 }
             }
-            if ($prop == 'OID') {
+            if ($prop == 'ID') {
                 $html .= '  <th>'.$labels[$prop].'</th>';
             }
         }
@@ -102,7 +102,7 @@ class DEnumView extends View
                     $html .= '  <td>&nbsp;'.$this->record->get($prop).'</td>';
                 }
             }
-            if ($prop == 'OID') {
+            if ($prop == 'ID') {
                 $html .= '  <td>&nbsp;'.$this->record->getID().'</td>';
             }
         }
@@ -115,7 +115,7 @@ class DEnumView extends View
         // render edit buttons for admins only
         if ($session->get('currentUser') != null && $session->get('currentUser')->inGroup('Admin')) {
             $html .= '&nbsp;&nbsp;';
-            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\DEnumController&denumOID='.$this->record->getOID())."'", 'Edit', 'edit'.$this->record->getOID().'But');
+            $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\DEnumController&denumID='.$this->record->getID())."'", 'Edit', 'edit'.$this->record->getID().'But');
             $html .= $button->render();
         }
         $html .= '</td></tr>';

@@ -78,11 +78,11 @@ class TagControllerTest extends ControllerTestCase
         $article->rebuildTable();
 
         $denum = new DEnum('Alpha\Model\Article::section');
-        $item->set('DEnumID', $denum->getOID());
+        $item->set('DEnumID', $denum->getID());
         $item->set('value', 'Test');
         $item->save();
 
-        $this->DEnumID = $denum->getOID();
+        $this->DEnumID = $denum->getID();
 
         $this->article = $this->createArticle('unitTestArticle');
     }
@@ -118,7 +118,7 @@ class TagControllerTest extends ControllerTestCase
         $article = $this->createArticle('testing');
         $article->save();
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getOID()));
+        $request = new Request(array('method' => 'GET', 'URI' => '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getID()));
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
@@ -146,13 +146,13 @@ class TagControllerTest extends ControllerTestCase
         $existingTags = array();
 
         foreach ($tags as $tag) {
-            $existingTags['content_'.$tag->getOID()] = $tag->get('content');
+            $existingTags['content_'.$tag->getID()] = $tag->get('content');
         }
 
         $params = array('saveBut' => true, 'NewTagValue' => 'somenewtag', 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
         $params = array_merge($params, $existingTags);
 
-        $request = new Request(array('method' => 'POST', 'URI' => '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getOID(), 'params' => $params));
+        $request = new Request(array('method' => 'POST', 'URI' => '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getID(), 'params' => $params));
 
         $response = $front->process($request);
 
@@ -161,12 +161,12 @@ class TagControllerTest extends ControllerTestCase
         $tags = $article->getPropObject('tags')->getRelatedObjects();
 
         $found = false;
-        $tagOID = '';
+        $tagID = '';
 
         foreach ($tags as $tag) {
             if ($tag->get('content') == 'somenewtag') {
                 $found = true;
-                $tagOID = $tag->getOID();
+                $tagID = $tag->getID();
                 break;
             }
         }
@@ -195,39 +195,39 @@ class TagControllerTest extends ControllerTestCase
         $existingTags = array();
 
         foreach ($tags as $tag) {
-            $existingTags['content_'.$tag->getOID()] = $tag->get('content');
+            $existingTags['content_'.$tag->getID()] = $tag->get('content');
         }
 
         $params = array('saveBut' => true, 'NewTagValue' => 'somenewtag', 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
         $params = array_merge($params, $existingTags);
 
-        $request = new Request(array('method' => 'POST', 'URI' => '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getOID(), 'params' => $params));
+        $request = new Request(array('method' => 'POST', 'URI' => '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getID(), 'params' => $params));
 
         $response = $front->process($request);
 
         $tags = $article->getPropObject('tags')->getRelatedObjects();
 
         $found = false;
-        $tagOID = '';
+        $tagID = '';
 
         foreach ($tags as $tag) {
             if ($tag->get('content') == 'somenewtag') {
                 $found = true;
-                $tagOID = $tag->getOID();
+                $tagID = $tag->getID();
                 break;
             }
         }
 
         $this->assertTrue($found, 'Checking that the new tag added was actually saved');
 
-        $params = array('ActiveRecordOID' => $tagOID, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = array('ActiveRecordID' => $tagID, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
 
-        $request = new Request(array('method' => 'DELETE', 'URI' => '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getOID(), 'params' => $params));
+        $request = new Request(array('method' => 'DELETE', 'URI' => '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getID(), 'params' => $params));
 
         $response = $front->process($request);
 
         $this->assertEquals(301, $response->getStatus(), 'Testing the doDELETE method');
-        $this->assertTrue(strpos($response->getHeader('Location'), '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getOID()) !== false, 'Testing the doDELETE method');
+        $this->assertTrue(strpos($response->getHeader('Location'), '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getID()) !== false, 'Testing the doDELETE method');
 
         $tags = $article->getPropObject('tags')->getRelatedObjects();
 

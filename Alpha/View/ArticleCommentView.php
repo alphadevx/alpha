@@ -121,8 +121,8 @@ class ArticleCommentView extends View
         $textBox = new TextBox($this->record->getPropObject('content'), $this->record->getDataLabel('content'), 'content', '', 10);
         $html .= $textBox->render();
 
-        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('articleOID')) : 'articleOID');
-        $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->record->get('articleOID').'"/>';
+        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('articleID')) : 'articleID');
+        $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->record->get('articleID').'"/>';
         $html .= '<tr><td colspan="2">';
 
         $button = new Button('submit', 'Post Comment', 'createCommentBut');
@@ -164,7 +164,7 @@ class ArticleCommentView extends View
 
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('version_num')) : 'version_num');
         $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->record->getVersion().'"/>';
-        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID');
+        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID');
         $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->record->getID().'"/>';
 
         // render special buttons for admins only
@@ -179,7 +179,7 @@ class ArticleCommentView extends View
                 $('#dialogDiv').dialog({
                 buttons: {
                     'OK': function(event, ui) {
-                        $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->record->getOID()."');
+                        $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID')."\"]').attr('value', '".$this->record->getID()."');
                         $('#deleteForm').submit();
                     },
                     'Cancel': function(event, ui) {

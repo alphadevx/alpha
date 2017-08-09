@@ -183,7 +183,7 @@ class Article extends ActiveRecord
      *
      * @since 1.0
      */
-    protected $dataLabels = array('OID' => 'Article ID#', 'title' => 'Title', 'section' => 'Site Section', 'description' => 'Description', 'bodyOnload' => 'Body onload Javascript', 'content' => 'Content', 'headerContent' => 'HTML Header Content', 'author' => 'Author', 'created_ts' => 'Date Added', 'updated_ts' => 'Date of last Update', 'published' => 'Published', 'URL' => 'URL', 'printURL' => 'Printer version URL', 'comments' => 'Comments', 'votes' => 'Votes', 'tags' => 'Tags');
+    protected $dataLabels = array('ID' => 'Article ID#', 'title' => 'Title', 'section' => 'Site Section', 'description' => 'Description', 'bodyOnload' => 'Body onload Javascript', 'content' => 'Content', 'headerContent' => 'HTML Header Content', 'author' => 'Author', 'created_ts' => 'Date Added', 'updated_ts' => 'Date of last Update', 'published' => 'Published', 'URL' => 'URL', 'printURL' => 'Printer version URL', 'comments' => 'Comments', 'votes' => 'Votes', 'tags' => 'Tags');
 
     /**
      * The name of the database table for the class.
@@ -286,11 +286,11 @@ class Article extends ActiveRecord
     protected function after_save_callback()
     {
         if ($this->getVersion() == 1 && $this->tags instanceof \Alpha\Model\Type\Relation) {
-            // update the empty tags values to reference this OID
-            $this->tags->setValue($this->OID);
+            // update the empty tags values to reference this ID
+            $this->tags->setValue($this->ID);
 
             foreach ($this->taggedAttributes as $tagged) {
-                $tags = Tag::tokenize($this->get($tagged), 'Alpha\Model\Article', $this->getOID());
+                $tags = Tag::tokenize($this->get($tagged), 'Alpha\Model\Article', $this->getID());
                 foreach ($tags as $tag) {
                     try {
                         $tag->save();
@@ -334,7 +334,7 @@ class Article extends ActiveRecord
     }
 
     /**
-     * Gets an array of the OIDs of the most recent articles added to the system (by date), from the newest
+     * Gets an array of the IDs of the most recent articles added to the system (by date), from the newest
      * article to the amount specified by the $limit.
      *
      * @param int    $limit
@@ -353,17 +353,17 @@ class Article extends ActiveRecord
             $excludeID = $denum->getOptionID($excludeID);
         }
 
-        $sqlQuery = 'SELECT OID FROM '.$this->getTableName()." WHERE published='1' AND section!='$excludeID' ORDER BY created_ts DESC LIMIT 0, $limit;";
+        $sqlQuery = 'SELECT ID FROM '.$this->getTableName()." WHERE published='1' AND section!='$excludeID' ORDER BY created_ts DESC LIMIT 0, $limit;";
 
         $result = $this->query($sqlQuery);
 
-        $OIDs = array();
+        $IDs = array();
 
         foreach ($result as $row) {
-            array_push($OIDs, $row['OID']);
+            array_push($IDs, $row['ID']);
         }
 
-        return $OIDs;
+        return $IDs;
     }
 
     /**
@@ -405,7 +405,7 @@ class Article extends ActiveRecord
     {
         $config = ConfigProvider::getInstance();
 
-        return FrontController::generateSecureURL('act=Alpha\\Controller\\AttachmentController&articleOID='.$this->getOID().'&filename='.$filename);
+        return FrontController::generateSecureURL('act=Alpha\\Controller\\AttachmentController&articleID='.$this->getID().'&filename='.$filename);
     }
 
     /**
@@ -495,12 +495,12 @@ class Article extends ActiveRecord
 
         $vote = new ArticleVote();
 
-        $sqlQuery = 'SELECT COUNT(*) AS usersVote FROM '.$vote->getTableName()." WHERE articleOID='".$this->OID."' AND personOID='".$userID."';";
+        $sqlQuery = 'SELECT COUNT(*) AS usersVote FROM '.$vote->getTableName()." WHERE articleID='".$this->ID."' AND personID='".$userID."';";
 
         $result = $this->query($sqlQuery);
 
         if (!isset($result[0])) {
-            throw new AlphaException('Failed to check if the current user voted for the article ['.$this->OID.'], query ['.$sqlQuery.']');
+            throw new AlphaException('Failed to check if the current user voted for the article ['.$this->ID.'], query ['.$sqlQuery.']');
 
             return false;
         }
@@ -589,23 +589,23 @@ class Article extends ActiveRecord
      */
     protected function setupRels()
     {
-        $this->comments->setValue($this->OID);
+        $this->comments->setValue($this->ID);
         $this->comments->setRelatedClass('Alpha\Model\ArticleComment');
-        $this->comments->setRelatedClassField('articleOID');
+        $this->comments->setRelatedClassField('articleID');
         $this->comments->setRelatedClassDisplayField('content');
         $this->comments->setRelationType('ONE-TO-MANY');
 
-        $this->votes->setValue($this->OID);
+        $this->votes->setValue($this->ID);
         $this->votes->setRelatedClass('Alpha\Model\ArticleVote');
-        $this->votes->setRelatedClassField('articleOID');
+        $this->votes->setRelatedClassField('articleID');
         $this->votes->setRelatedClassDisplayField('score');
         $this->votes->setRelationType('ONE-TO-MANY');
 
         $this->tags->setRelatedClass('Alpha\Model\Tag');
-        $this->tags->setRelatedClassField('taggedOID');
+        $this->tags->setRelatedClassField('taggedID');
         $this->tags->setRelatedClassDisplayField('content');
         $this->tags->setRelationType('ONE-TO-MANY');
         $this->tags->setTaggedClass(get_class($this));
-        $this->tags->setValue($this->OID);
+        $this->tags->setValue($this->ID);
     }
 }

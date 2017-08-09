@@ -118,7 +118,7 @@ class RendererProviderHTML implements RendererProviderInterface
         self::$logger->debug('>>createView(fields=['.var_export($fields, true).'])');
 
         // the form ID
-        $fields['formID'] = stripslashes(get_class($this->record).'_'.$this->record->getOID());
+        $fields['formID'] = stripslashes(get_class($this->record).'_'.$this->record->getID());
 
         // buffer form fields to $formFields
         $fields['formFields'] = $this->renderAllFields('create');
@@ -152,7 +152,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $config = ConfigProvider::getInstance();
 
         // the form ID
-        $fields['formID'] = stripslashes(get_class($this->record).'_'.$this->record->getOID());
+        $fields['formID'] = stripslashes(get_class($this->record).'_'.$this->record->getID());
 
         // buffer form fields to $formFields
         $fields['formFields'] = $this->renderAllFields('edit');
@@ -179,7 +179,7 @@ class RendererProviderHTML implements RendererProviderInterface
                                 label: 'Okay',
                                 cssClass: 'btn btn-default btn-xs',
                                 action: function(dialogItself) {
-                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->record->getOID()."');
+                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID')."\"]').attr('value', '".$this->record->getID()."');
                                     $('#deleteForm').submit();
                                     dialogItself.close();
                                 }
@@ -203,7 +203,7 @@ class RendererProviderHTML implements RendererProviderInterface
         // buffer security fields to $formSecurityFields variable
         $fields['formSecurityFields'] = self::renderSecurityFields();
 
-        // OID will need to be posted for optimistic lock checking
+        // ID will need to be posted for optimistic lock checking
         $fields['version_num'] = $this->record->getVersionNumber();
 
         self::$logger->debug('<<editView [HTML]');
@@ -242,7 +242,7 @@ class RendererProviderHTML implements RendererProviderInterface
                 if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $this->record->getTransientAttributes())) {
                     $html .= '  <th>'.$this->record->getDataLabel($propName).'</th>';
                 }
-                if ($propName == 'OID') {
+                if ($propName == 'ID') {
                     $html .= '  <th>'.$this->record->getDataLabel($propName).'</th>';
                 }
             } else {
@@ -277,8 +277,8 @@ class RendererProviderHTML implements RendererProviderInterface
                         $html .= '  <td>&nbsp;'.$this->record->get($propName).'</td>';
                     }
                 }
-                if ($propName == 'OID') {
-                    $html .= '  <td>&nbsp;'.$this->record->getOID().'</td>';
+                if ($propName == 'ID') {
+                    $html .= '  <td>&nbsp;'.$this->record->getID().'</td>';
                 }
             }
         }
@@ -291,16 +291,16 @@ class RendererProviderHTML implements RendererProviderInterface
         // View button
         if (mb_strpos($request->getURI(), '/tk/') !== false) {
             if (isset($fields['viewButtonURL'])) {
-                $button = new Button("document.location = '".$fields['viewButtonURL']."';", 'View', 'view'.$this->record->getOID().'But');
+                $button = new Button("document.location = '".$fields['viewButtonURL']."';", 'View', 'view'.$this->record->getID().'But');
             } else {
-                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->record).'&ActiveRecordOID='.$this->record->getOID())."';", 'View', 'view'.$this->record->getOID().'But');
+                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->record).'&ActiveRecordID='.$this->record->getID())."';", 'View', 'view'.$this->record->getID().'But');
             }
             $fields['viewButton'] = $button->render();
         } else {
             if ($this->record->hasAttribute('URL')) {
-                $button = new Button("document.location = '".$this->record->get('URL')."';", 'View', 'view'.$this->record->getOID().'But');
+                $button = new Button("document.location = '".$this->record->get('URL')."';", 'View', 'view'.$this->record->getID().'But');
             } else {
-                $button = new Button("document.location = '".$config->get('app.url').'/record/'.urlencode(get_class($this->record)).'/'.$this->record->getOID()."';", 'View', 'view'.$this->record->getOID().'But');
+                $button = new Button("document.location = '".$config->get('app.url').'/record/'.urlencode(get_class($this->record)).'/'.$this->record->getID()."';", 'View', 'view'.$this->record->getID().'But');
             }
 
             $fields['viewButton'] = $button->render();
@@ -311,9 +311,9 @@ class RendererProviderHTML implements RendererProviderInterface
         if ($session->get('currentUser') && $session->get('currentUser')->inGroup('Admin')) {
             $html .= '&nbsp;&nbsp;';
             if (isset($fields['editButtonURL'])) {
-                $button = new Button("document.location = '".$fields['editButtonURL']."'", 'Edit', 'edit'.$this->record->getOID().'But');
+                $button = new Button("document.location = '".$fields['editButtonURL']."'", 'Edit', 'edit'.$this->record->getID().'But');
             } else {
-                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->record).'&ActiveRecordOID='.$this->record->getOID().'&view=edit')."'", 'Edit', 'edit'.$this->record->getOID().'But');
+                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->record).'&ActiveRecordID='.$this->record->getID().'&view=edit')."'", 'Edit', 'edit'.$this->record->getID().'But');
             }
 
             $html .= $button->render();
@@ -337,7 +337,7 @@ class RendererProviderHTML implements RendererProviderInterface
                                 label: 'Okay',
                                 cssClass: 'btn btn-default btn-xs',
                                 action: function(dialogItself) {
-                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->record->getOID()."');
+                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID')."\"]').attr('value', '".$this->record->getID()."');
                                     $('#deleteForm').submit();
                                     dialogItself.close();
                                 }
@@ -346,7 +346,7 @@ class RendererProviderHTML implements RendererProviderInterface
                     });
                 }";
 
-            $button = new Button($js, 'Delete', 'delete'.$this->record->getOID().'But');
+            $button = new Button($js, 'Delete', 'delete'.$this->record->getID().'But');
             $html .= $button->render();
         }
         $fields['adminButtons'] = $html;
@@ -371,9 +371,9 @@ class RendererProviderHTML implements RendererProviderInterface
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
 
-        // we may want to display the OID regardless of class
-        $fields['OIDLabel'] = $this->record->getDataLabel('OID');
-        $fields['OID'] = $this->record->getOID();
+        // we may want to display the ID regardless of class
+        $fields['IDLabel'] = $this->record->getDataLabel('ID');
+        $fields['ID'] = $this->record->getID();
 
         // buffer form fields to $formFields
         $fields['formFields'] = $this->renderAllFields('view');
@@ -388,7 +388,7 @@ class RendererProviderHTML implements RendererProviderInterface
             if (isset($fields['editButtonURL'])) {
                 $button = new Button("document.location = '".$fields['editButtonURL']."'", 'Edit', 'editBut');
             } else {
-                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->record).'&ActiveRecordOID='.$this->record->getOID().'&view=edit')."'", 'Edit', 'editBut');
+                $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($this->record).'&ActiveRecordID='.$this->record->getID().'&view=edit')."'", 'Edit', 'editBut');
             }
             $html .= $button->render();
 
@@ -410,7 +410,7 @@ class RendererProviderHTML implements RendererProviderInterface
                                 label: 'Okay',
                                 cssClass: 'btn btn-default btn-xs',
                                 action: function(dialogItself) {
-                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID')."\"]').attr('value', '".$this->record->getOID()."');
+                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID')."\"]').attr('value', '".$this->record->getID()."');
                                     $('#deleteForm').submit();
                                     dialogItself.close();
                                 }
@@ -720,7 +720,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $config = ConfigProvider::getInstance();
 
         $html = '<form action="'.$URI.'" method="POST" id="deleteForm" accept-charset="UTF-8">';
-        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordOID')) : 'ActiveRecordOID');
+        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID');
         $html .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value=""/>';
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('_METHOD')) : '_METHOD');
         $html .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value="DELETE"/>';

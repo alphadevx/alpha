@@ -205,7 +205,7 @@ An active record then uses these data types to store the attributes of an object
 	     *
 	     * @since 1.0
 	     */
-	    protected $dataLabels = array('OID' => 'Member ID#',
+	    protected $dataLabels = array('ID' => 'Member ID#',
 	                                    'username' => 'Username',
 	                                    'email' => 'E-mail Address',
 	                                    'password' => 'Password',
@@ -543,10 +543,10 @@ If you want to use the feed classes directly in your application, you can do so:
 
 	// ...
 
-	$feed = new Atom($ActiveRecordType, $title, $url, $description, $pubDate, $OID);
-    $feed->setFieldMappings('title', 'URL', 'description', 'created_ts', 'OID');
+	$feed = new Atom($ActiveRecordType, $title, $url, $description, $pubDate, $ID);
+    $feed->setFieldMappings('title', 'URL', 'description', 'created_ts', 'ID');
     $feed->addAuthor('Feed author');
-    $feed->loadRecords(20, 'OID');
+    $feed->loadRecords(20, 'ID');
 
     $xml = $feed->render();
 
