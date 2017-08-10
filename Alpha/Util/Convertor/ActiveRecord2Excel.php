@@ -76,7 +76,7 @@ class ActiveRecord2Excel
     public function __construct($record)
     {
         self::$logger = new Logger('ActiveRecord2Excel');
-        self::$logger->debug('>>__construct(Record=['.var_export($Record, true).'])');
+        self::$logger->debug('>>__construct(Record=['.var_export($record, true).'])');
 
         $this->record = $record;
 
