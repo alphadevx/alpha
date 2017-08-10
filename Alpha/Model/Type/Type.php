@@ -47,6 +47,15 @@ namespace Alpha\Model\Type;
 abstract class Type
 {
     /**
+     * The error message for the string type when validation fails.
+     *
+     * @var string
+     *
+     * @since 3.0
+     */
+    protected $helper;
+ 
+    /**
      * Used to get the validation helper message string.
      *
      * @return string
