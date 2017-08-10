@@ -1884,7 +1884,7 @@ abstract class ActiveRecord
         // now loop over the core records provided with Alpha
         if (file_exists($config->get('app.root').'Alpha/Model')) {
             $handle = opendir($config->get('app.root').'Alpha/Model');
-        } elseif ($config->get('app.root').'vendor/alphadevx/alpha/Alpha/Model') {
+        } else {
             $handle = opendir($config->get('app.root').'vendor/alphadevx/alpha/Alpha/Model');
         }
 
