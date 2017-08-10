@@ -119,23 +119,7 @@ class DateBox
      */
     public function render()
     {
-        $config = ConfigProvider::getInstance();
-
-        $html = '';
-
-        /*
-         * decide on the size of the text box and the height of the widget pop-up,
-         * depending on the dateObject type
-         */
-        if (mb_strtoupper(get_class($this->dateObject)) == 'TIMESTAMP') {
-            $size = 18;
-            $cal_height = 230;
-        } else {
-            $size = 10;
-            $cal_height = 230;
-        }
-
-        $value = $this->dateObject->getValue();
+         $value = $this->dateObject->getValue();
 
         if ($value == '0000-00-00') {
             $value = '';
