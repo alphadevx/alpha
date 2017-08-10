@@ -129,7 +129,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    private $helper = 'Not a valid timestamp value!  A timestamp should be in the format YYYY-MM-DD HH:MM:SS.';
+    protected $helper = 'Not a valid timestamp value!  A timestamp should be in the format YYYY-MM-DD HH:MM:SS.';
 
     /**
      * Constructor.
