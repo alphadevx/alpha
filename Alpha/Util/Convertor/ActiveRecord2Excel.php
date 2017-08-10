@@ -55,7 +55,7 @@ class ActiveRecord2Excel
      *
      * @since 1.0
      */
-    private $Record;
+    private $record;
 
     /**
      * Trace logger.
@@ -69,16 +69,16 @@ class ActiveRecord2Excel
     /**
      * Constructor.
      *
-     * @param \Alpha\Model\ActiveRecord $Record
+     * @param \Alpha\Model\ActiveRecord $record
      *
      * @since 1.0
      */
-    public function __construct($Record)
+    public function __construct($record)
     {
         self::$logger = new Logger('ActiveRecord2Excel');
         self::$logger->debug('>>__construct(Record=['.var_export($Record, true).'])');
 
-        $this->record = $Record;
+        $this->record = $record;
 
         self::$logger->debug('<<__construct');
     }
