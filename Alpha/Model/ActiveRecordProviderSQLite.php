@@ -1072,10 +1072,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
 
-        // get the class attributes
-        $reflection = new ReflectionClass(get_class($this->record));
-        $properties = $reflection->getProperties();
-
         if ($this->record->getVersion() != $this->record->getVersionNumber()->getValue()) {
             throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
         }
@@ -1414,13 +1410,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                     $sqlQuery .= "$propName INTEGER(11),";
                 } elseif ($prop instanceof Relation) {
                     $sqlQuery .= "$propName INTEGER(11),";
-
-                    $rel = $this->record->getPropObject($propName);
-
-                    $relatedField = $rel->getRelatedClassField();
-                    $relatedClass = $rel->getRelatedClass();
-                    $relatedRecord = new $relatedClass();
-                    $tableName = $relatedRecord->getTableName();
                 } else {
                     $sqlQuery .= '';
                 }
