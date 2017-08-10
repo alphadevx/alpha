@@ -66,7 +66,7 @@ class MarkdownFacade
      *
      * @since 1.0
      */
-    private $Record = null;
+    private $record = null;
 
     /**
      * The auto-generated name of the Markdown HTML cache file for the BO.
