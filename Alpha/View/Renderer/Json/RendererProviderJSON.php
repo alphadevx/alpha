@@ -65,7 +65,7 @@ class RendererProviderJSON implements RendererProviderInterface
      *
      * @since 2.0
      */
-    private $Record;
+    private $record;
 
     /**
      * The constructor.
@@ -83,9 +83,9 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setRecord($Record)
+    public function setRecord($record)
     {
-        $this->record = $Record;
+        $this->record = $record;
     }
 
     /**
