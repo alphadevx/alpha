@@ -62,7 +62,7 @@ class View
      *
      * @since 1.0
      */
-    protected $Record;
+    protected $record;
 
     /**
      * The rendering provider that will be used to render the active record.
