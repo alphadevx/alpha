@@ -87,7 +87,7 @@ class RendererProviderHTML implements RendererProviderInterface
      *
      * @since 1.2
      */
-    private $Record;
+    private $record;
 
     /**
      * The constructor.
