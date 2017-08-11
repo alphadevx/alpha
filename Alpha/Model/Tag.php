@@ -7,10 +7,12 @@ use Alpha\Model\Type\Integer;
 use Alpha\Exception\AlphaException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\CustomQueryException;
+use Alpha\Exception\RecordNotFoundException;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Cache\CacheProviderFactory;
 use Alpha\Util\Helper\Validator;
 use Alpha\Util\Logging\Logger;
+use Exception;
 
 /**
  * The tag class used in tag clouds and search.
