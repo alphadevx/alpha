@@ -452,7 +452,7 @@ class Article extends ActiveRecord
         }
 
         if ($vote_count > 0) {
-            $score = $total_score / $vote_count;
+            $score = $total_score/$vote_count;
         }
 
         return sprintf('%01.2f', $score);

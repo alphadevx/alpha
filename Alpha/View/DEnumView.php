@@ -111,7 +111,7 @@ class DEnumView extends View
 
         $html .= '</tr>';
 
-        $html .= '<tr><td colspan="'.($colCount + 1).'" style="text-align:center;">';
+        $html .= '<tr><td colspan="'.($colCount+1).'" style="text-align:center;">';
         // render edit buttons for admins only
         if ($session->get('currentUser') != null && $session->get('currentUser')->inGroup('Admin')) {
             $html .= '&nbsp;&nbsp;';

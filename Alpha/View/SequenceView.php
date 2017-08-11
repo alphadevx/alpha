@@ -103,7 +103,7 @@ class SequenceView extends View
         // work out how many columns will be in the table
         $reflection = new \ReflectionClass(get_class($this->record));
         $properties = array_keys($reflection->getDefaultProperties());
-        $fields['colCount'] = 1 + count(array_diff($properties, $this->record->getDefaultAttributes(), $this->record->getTransientAttributes()));
+        $fields['colCount'] = 1+count(array_diff($properties, $this->record->getDefaultAttributes(), $this->record->getTransientAttributes()));
 
         // get the class attributes
         $properties = $reflection->getProperties();
@@ -124,7 +124,7 @@ class SequenceView extends View
                     $html .= '  <th>'.$this->record->getDataLabel($propName).'</th>';
                 }
             } else {
-                $fields['colCount'] = $fields['colCount'] - 1;
+                $fields['colCount'] = $fields['colCount']-1;
             }
         }
         $html .= '</tr><tr>';

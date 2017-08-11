@@ -199,7 +199,7 @@ class SearchController extends Controller implements ControllerInterface
         $config = ConfigProvider::getInstance();
 
         // used to track when our pagination range ends
-        $end = ($this->startPoint + $config->get('app.list.page.amount'));
+        $end = ($this->startPoint+$config->get('app.list.page.amount'));
 
         $body = '';
 
@@ -289,14 +289,14 @@ class SearchController extends Controller implements ControllerInterface
 
         $body = '';
 
-        $end = ($this->startPoint + $config->get('app.list.page.amount'));
+        $end = ($this->startPoint+$config->get('app.list.page.amount'));
 
         if ($end > $this->resultCount) {
             $end = $this->resultCount;
         }
 
         if ($this->resultCount > 0) {
-            $body .= '<p align="center">Displaying '.($this->startPoint + 1).' to '.$end.' of <strong>'.$this->resultCount.'</strong>.&nbsp;&nbsp;';
+            $body .= '<p align="center">Displaying '.($this->startPoint+1).' to '.$end.' of <strong>'.$this->resultCount.'</strong>.&nbsp;&nbsp;';
         } else {
             if (!empty($this->query)) {
                 $body .= View::displayUpdateMessage('There were no search results for your query.');
@@ -308,9 +308,9 @@ class SearchController extends Controller implements ControllerInterface
         if ($this->startPoint > 0) {
             // handle secure URLs
             if (isset($params['tk'])) {
-                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint - $config->get('app.list.page.amount'))).'">&laquo;</a></li>';
+                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint-$config->get('app.list.page.amount'))).'">&laquo;</a></li>';
             } else {
-                $body .= '<li><a href="'.$config->get('app.url').'/search/'.$this->query.'/'.($this->startPoint - $config->get('app.list.page.amount')).'">&laquo;</a></li>';
+                $body .= '<li><a href="'.$config->get('app.url').'/search/'.$this->query.'/'.($this->startPoint-$config->get('app.list.page.amount')).'">&laquo;</a></li>';
             }
         } elseif ($this->resultCount > $config->get('app.list.page.amount')) {
             $body .= '<li class="disabled"><a href="#">&laquo;</a></li>';
@@ -336,9 +336,9 @@ class SearchController extends Controller implements ControllerInterface
         if ($this->resultCount > $end) {
             // handle secure URLs
             if (isset($params['tk'])) {
-                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint + $config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a></li>';
+                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Search&q='.$this->query.'&start='.($this->startPoint+$config->get('app.list.page.amount'))).'">Next-&gt;&gt;</a></li>';
             } else {
-                $body .= '<li><a href="'.$config->get('app.url').'/search/'.$this->query.'/'.($this->startPoint + $config->get('app.list.page.amount')).'">&raquo;</a></li>';
+                $body .= '<li><a href="'.$config->get('app.url').'/search/'.$this->query.'/'.($this->startPoint+$config->get('app.list.page.amount')).'">&raquo;</a></li>';
             }
         } elseif ($this->resultCount > $config->get('app.list.page.amount')) {
             $body .= '<li class="disabled"><a href="#">&raquo;</a></li>';

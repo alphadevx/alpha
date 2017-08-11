@@ -107,7 +107,7 @@ class ImageController extends Controller implements ControllerInterface
             $imgWidth = $params['width'];
             $imgHeight = $params['height'];
             $imgType = $params['type'];
-            $imgQuality = (double) $params['quality'];
+            $imgQuality = (double)$params['quality'];
             $imgScale = new Boolean($params['scale']);
             $imgSecure = new Boolean($params['secure']);
         } catch (\Exception $e) {

@@ -240,7 +240,7 @@ class Image
             }
         } else {
             // make a cache dir for the article
-            $cacheDir = $config->get('app.file.store.dir').'cache/images/article_'.mb_substr($this->source, mb_strpos($this->source, 'attachments/article_') + 20, 11);
+            $cacheDir = $config->get('app.file.store.dir').'cache/images/article_'.mb_substr($this->source, mb_strpos($this->source, 'attachments/article_')+20, 11);
             if (!file_exists($cacheDir)) {
                 $success = mkdir($cacheDir);
 
@@ -299,11 +299,11 @@ class Image
             $targetScreenY = $targetScreenResolution[1];
 
             // calculate the new units we will scale by
-            $xu = $targetScreenX / $originalScreenX;
-            $yu = $targetScreenY / $originalScreenY;
+            $xu = $targetScreenX/$originalScreenX;
+            $yu = $targetScreenY/$originalScreenY;
 
-            $this->width = new Integer(intval($this->width->getValue() * $xu));
-            $this->height = new Integer(intval($this->height->getValue() * $yu));
+            $this->width = new Integer(intval($this->width->getValue()*$xu));
+            $this->height = new Integer(intval($this->height->getValue()*$yu));
 
             // need to update the cache filename as the dimensions have changed
             $this->setFilename();
@@ -367,7 +367,7 @@ class Image
                 if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
                     imagepng($new_image);
                 } else {
-                    imagejpeg($new_image, null, 100 * $this->quality->getValue());
+                    imagejpeg($new_image, null, 100*$this->quality->getValue());
                 }
 
                 $this->cache($new_image);
@@ -391,7 +391,7 @@ class Image
         if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
             imagepng($image, $this->filename);
         } else {
-            imagejpeg($image, $this->filename, 100 * $this->quality->getValue());
+            imagejpeg($image, $this->filename, 100*$this->quality->getValue());
         }
     }
 

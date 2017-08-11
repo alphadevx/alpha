@@ -72,7 +72,7 @@ class SecurityUtils
             $iv
         );
 
-        return $iv . $encryptedData;
+        return $iv.$encryptedData;
     }
 
     /**

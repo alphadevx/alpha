@@ -628,7 +628,7 @@ class Request
             $URI = mb_substr($this->URI, 0, mb_strpos($this->URI, '?'));
 
             // let's take this opportunity to pass query string params to $this->params
-            $queryString = mb_substr($this->URI, (mb_strpos($this->URI, '?') + 1));
+            $queryString = mb_substr($this->URI, (mb_strpos($this->URI, '?')+1));
             $this->queryString = $queryString;
             parse_str($queryString, $this->params);
         } else {
@@ -642,7 +642,7 @@ class Request
             $name = $paramNames[$i];
 
             if (!isset($this->params[trim($name, '{}')])) {
-                if (isset($paramValues[$i]) && substr($name, 0, 1) == '{' && substr($name, strlen($name) - 1, 1) == '}') {
+                if (isset($paramValues[$i]) && substr($name, 0, 1) == '{' && substr($name, strlen($name)-1, 1) == '}') {
                     $this->params[trim($name, '{}')] = $paramValues[$i];
                 }
                 if (!isset($paramValues[$i]) && isset($defaultParams[trim($name, '{}')])) {

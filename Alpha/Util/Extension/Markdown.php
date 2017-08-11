@@ -75,7 +75,7 @@ class Markdown extends MarkdownExtra
         if (isset($codeTypeTag[0])) {
             $start = mb_strpos($codeTypeTag[0], '[');
             $end = mb_strpos($codeTypeTag[0], ']');
-            $language = mb_substr($codeTypeTag[0], $start + 1, $end - ($start + 1));
+            $language = mb_substr($codeTypeTag[0], $start+1, $end-($start+1));
         } else {
             // will use php as a default language type when none is provided
             $language = 'php';
@@ -106,11 +106,11 @@ class Markdown extends MarkdownExtra
     {
         $config = ConfigProvider::getInstance();
 
-        $whole_match    =  $matches[1];
-        $link_text      =  $this->runSpanGamut($matches[2]);
-        $url            =  $matches[3] == '' ? $matches[4] : $matches[3];
-        $title          =& $matches[7];
-        $attr  = $this->doExtraAttributes("a", $dummy =& $matches[8]);
+        $whole_match    = $matches[1];
+        $link_text      = $this->runSpanGamut($matches[2]);
+        $url            = $matches[3] == '' ? $matches[4] : $matches[3];
+        $title          = & $matches[7];
+        $attr = $this->doExtraAttributes("a", $dummy = & $matches[8]);
 
         $external = false;
 
@@ -132,7 +132,7 @@ class Markdown extends MarkdownExtra
         $result = "<a href=\"$url\"";
         if (isset($title)) {
             $title = $this->encodeAttribute($title);
-            $result .=  " title=\"$title\"";
+            $result .= " title=\"$title\"";
         }
         if ($external) {
             $result .= " target=\"$url\"";
@@ -214,6 +214,6 @@ class Markdown extends MarkdownExtra
         $text .= "</tbody>\n";
         $text .= "</table>";
         
-        return $this->hashBlock($text) . "\n";
+        return $this->hashBlock($text)."\n";
     }
 }

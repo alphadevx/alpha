@@ -85,7 +85,7 @@ class CronManager
             $task = new $taskClass();
 
             $startTime = microtime(true);
-            $maxAllowedTime = $startTime + $task->getMaxRunTime();
+            $maxAllowedTime = $startTime+$task->getMaxRunTime();
 
             self::$logger->info('Start time is ['.$startTime.'], maximum task run time is ['.$task->getMaxRunTime().']');
 
@@ -93,7 +93,7 @@ class CronManager
             set_time_limit($task->getMaxRunTime());
             $task->doTask();
 
-            self::$logger->info('Done in ['.round(microtime(true) - $startTime, 5).'] seconds');
+            self::$logger->info('Done in ['.round(microtime(true)-$startTime, 5).'] seconds');
         }
 
         self::$logger->info('Finished processing all cron tasks');

@@ -167,7 +167,7 @@ class KPI
 
         $this->endTime = microtime(true);
 
-        $this->duration = $this->endTime - $this->startTime;
+        $this->duration = $this->endTime-$this->startTime;
 
         $logfile = new LogProviderFile();
         $logfile->setPath($config->get('app.file.store.dir').'logs/kpi-'.$this->name->getValue().'.csv');
@@ -189,7 +189,7 @@ class KPI
 
         $this->endTime = microtime(true);
 
-        $this->duration = $this->endTime - $this->startTime;
+        $this->duration = $this->endTime-$this->startTime;
 
         $logfile = new LogProviderFile();
         $logfile->setPath($config->get('app.file.store.dir').'logs/kpi-'.$this->name->getValue().'.csv');

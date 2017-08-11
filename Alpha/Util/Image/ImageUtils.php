@@ -95,7 +95,7 @@ class ImageUtils
         list($originalWidth, $originalHeight) = $imageInfo;
 
         if ($originalWidth > $originalHeight) {
-            $originalX = floor(($originalWidth - $originalHeight) / 2);
+            $originalX = floor(($originalWidth-$originalHeight)/2);
             $sourceWidth = $sourceHeight = $originalHeight;
         } else {
             $sourceWidth = $sourceHeight = $originalWidth;

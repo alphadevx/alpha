@@ -122,7 +122,7 @@ class MarkdownFacade
         foreach ($attachments[0] as $attachmentURL) {
             $start = mb_strpos($attachmentURL, '/');
             $end = mb_strrpos($attachmentURL, '"');
-            $fileName = mb_substr($attachmentURL, $start + 1, $end - ($start + 1));
+            $fileName = mb_substr($attachmentURL, $start+1, $end-($start+1));
 
             if (method_exists($this->record, 'getAttachmentSecureURL')) {
                 $this->content = str_replace($attachmentURL, 'href="'.$this->record->getAttachmentSecureURL($fileName).'" rel="nofollow"', $this->content);
@@ -150,7 +150,7 @@ class MarkdownFacade
                     $type = 'png';
                 }
 
-                $img = new Image($path, $image_details[0], $image_details[1], $type, 0.95, false, (boolean) $config->get('cms.images.widget.secure'));
+                $img = new Image($path, $image_details[0], $image_details[1], $type, 0.95, false, (boolean)$config->get('cms.images.widget.secure'));
 
                 $this->content = str_replace($attachmentURL, $img->renderHTMLLink(), $this->content);
             } else {

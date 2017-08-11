@@ -306,17 +306,17 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                     $startTime = microtime(true);
                     $record = new $params['clearTaggedClass']();
                     $records = $record->loadAll();
-                    self::$logger->info('Loaded all of the active records (elapsed time ['.round(microtime(true) - $startTime, 5).'] seconds)');
+                    self::$logger->info('Loaded all of the active records (elapsed time ['.round(microtime(true)-$startTime, 5).'] seconds)');
                     ActiveRecord::begin();
                     $tag = new Tag();
                     $tag->deleteAllByAttribute('taggedClass', $params['clearTaggedClass']);
-                    self::$logger->info('Deleted all of the old tags (elapsed time ['.round(microtime(true) - $startTime, 5).'] seconds)');
+                    self::$logger->info('Deleted all of the old tags (elapsed time ['.round(microtime(true)-$startTime, 5).'] seconds)');
                     $this->regenerateTagsOnRecords($records);
-                    self::$logger->info('Saved all of the new tags (elapsed time ['.round(microtime(true) - $startTime, 5).'] seconds)');
+                    self::$logger->info('Saved all of the new tags (elapsed time ['.round(microtime(true)-$startTime, 5).'] seconds)');
                     self::$logger->action('Tags recreated on the ['.$params['clearTaggedClass'].'] class');
                     ActiveRecord::commit();
                     $this->setStatusMessage(View::displayUpdateMessage('Tags recreated on the '.$record->getFriendlyClassName().' class.'));
-                    self::$logger->info('Tags recreated on the ['.$params['clearTaggedClass'].'] class (time taken ['.round(microtime(true) - $startTime, 5).'] seconds).');
+                    self::$logger->info('Tags recreated on the ['.$params['clearTaggedClass'].'] class (time taken ['.round(microtime(true)-$startTime, 5).'] seconds).');
                 } catch (AlphaException $e) {
                     self::$logger->error($e->getMessage());
                     ActiveRecord::rollback();

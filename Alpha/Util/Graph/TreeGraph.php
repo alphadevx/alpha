@@ -230,7 +230,7 @@ class TreeGraph
             $leftSibling = $node->getLeftSibling();
 
             if (isset($leftSibling)) {
-                $node->setOffset($leftSibling->getOffset() + $leftSibling->getWidth() + $this->colSpace);
+                $node->setOffset($leftSibling->getOffset()+$leftSibling->getWidth()+$this->colSpace);
             } else {
                 $node->setOffset(0);
             }
@@ -238,16 +238,16 @@ class TreeGraph
             $childCount = $node->childCount();
 
             for ($i = 0; $i < $childCount; ++$i) {
-                $this->firstPass($node->getChildAt($i), $level + 1);
+                $this->firstPass($node->getChildAt($i), $level+1);
             }
 
             $midPoint = $node->getChildrenCenter();
-            $midPoint -= $node->getWidth() / 2;
+            $midPoint -= $node->getWidth()/2;
             $leftSibling = $node->getLeftSibling();
 
             if (isset($leftSibling)) {
-                $node->setOffset($leftSibling->getOffset() + $leftSibling->getWidth() + $this->colSpace);
-                $node->setModifier($node->getOffset() - $midPoint);
+                $node->setOffset($leftSibling->getOffset()+$leftSibling->getWidth()+$this->colSpace);
+                $node->setModifier($node->getOffset()-$midPoint);
 
                 $this->layout($node, $level);
             } else {
@@ -255,7 +255,7 @@ class TreeGraph
             }
         }
 
-        self::$logger->debug('Memory usage at first scan ['.((memory_get_usage(true) / 1024) / 1024).' MB]');
+        self::$logger->debug('Memory usage at first scan ['.((memory_get_usage(true)/1024)/1024).' MB]');
     }
 
     /**
@@ -270,17 +270,17 @@ class TreeGraph
      */
     private function secondPass($node, $level, $x = 0, $y = 0)
     {
-        $nodeX = $node->getOffset() + $x;
+        $nodeX = $node->getOffset()+$x;
         $nodeY = $y;
 
         $node->setX($nodeX);
         $node->setY($nodeY);
 
-        $this->height = ($this->height > $node->getY() + $node->getWidth()) ? $this->height : $node->getY() + $node->getWidth();
-        $this->width = ($this->width > $nodeX + $node->getWidth()) ? $this->width : $nodeX + $node->getWidth() + 10;
+        $this->height = ($this->height > $node->getY()+$node->getWidth()) ? $this->height : $node->getY()+$node->getWidth();
+        $this->width = ($this->width > $nodeX+$node->getWidth()) ? $this->width : $nodeX+$node->getWidth()+10;
 
         if ($node->childCount() > 0) {
-            $this->secondPass($node->getChildAt(0), $level + 1, $x + $node->getModifier(), $y + $node->getHeight() + $this->rowSpace);
+            $this->secondPass($node->getChildAt(0), $level+1, $x+$node->getModifier(), $y+$node->getHeight()+$this->rowSpace);
         }
 
         $rightSibling = $node->getRightSibling();
@@ -289,7 +289,7 @@ class TreeGraph
             $this->secondPass($rightSibling, $level, $x, $y);
         }
 
-        self::$logger->debug('Memory usage at second scan ['.((memory_get_usage(true) / 1024) / 1024).' MB]');
+        self::$logger->debug('Memory usage at second scan ['.((memory_get_usage(true)/1024)/1024).' MB]');
     }
 
     /**
@@ -318,7 +318,7 @@ class TreeGraph
                 $modifierSumLeft += $leftAncestor->getModifier();
             }
 
-            $totalGap = ($firstChildLeftNeighbour->getOffset() + $modifierSumLeft + $firstChildLeftNeighbour->getWidth() + $this->branchSpace) - ($firstChild->getOffset() + $modifierSumRight);
+            $totalGap = ($firstChildLeftNeighbour->getOffset()+$modifierSumLeft+$firstChildLeftNeighbour->getWidth()+$this->branchSpace)-($firstChild->getOffset()+$modifierSumRight);
 
             if ($totalGap > 0) {
                 $subTree = $node;
@@ -330,14 +330,14 @@ class TreeGraph
                 }
 
                 $subTreeMove = $node;
-                $singleGap = $totalGap / $subTreesCount;
+                $singleGap = $totalGap/$subTreesCount;
 
                 while (isset($subTreeMove) && $subTreeMove !== $leftAncestor) {
                     $subTreeMove = $subTreeMove->getLeftSibling();
 
                     if (isset($subTreeMove)) {
-                        $subTreeMove->setOffset($subTreeMove->getOffset() + $totalGap);
-                        $subTreeMove->setModifier($subTreeMove->getModifier() + $totalGap);
+                        $subTreeMove->setOffset($subTreeMove->getOffset()+$totalGap);
+                        $subTreeMove->setModifier($subTreeMove->getModifier()+$totalGap);
                         $totalGap -= $singleGap;
                     }
                 }
@@ -401,7 +401,7 @@ class TreeGraph
         for ($i = 0; $i < $childCount; ++$i) {
             $child = $node->getChildAt($i);
 
-            $leftmostDescendant = $this->getLeftmost($child, $level + 1, $maxlevel);
+            $leftmostDescendant = $this->getLeftmost($child, $level+1, $maxlevel);
 
             if (isset($leftmostDescendant)) {
                 return $leftmostDescendant;
@@ -469,7 +469,7 @@ class TreeGraph
             $this->render();
         }
 
-        if (isset($this->nodes[$this->position + 1])) {
+        if (isset($this->nodes[$this->position+1])) {
             ++$this->position;
 
             return $this->nodes[$this->position];
@@ -487,7 +487,7 @@ class TreeGraph
      */
     public function hasNext()
     {
-        if (isset($this->nodes[$this->position + 1])) {
+        if (isset($this->nodes[$this->position+1])) {
             return true;
         } else {
             return false;

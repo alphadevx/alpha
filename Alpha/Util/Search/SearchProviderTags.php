@@ -121,7 +121,7 @@ class SearchProviderTags implements SearchProviderInterface
 
                     if (isset($matches[$key])) {
                         // increment the weight if the same Record is tagged more than once
-                        $weight = intval($matches[$key]) + 1;
+                        $weight = intval($matches[$key])+1;
                         $matches[$key] = $weight;
                     } else {
                         $matches[$key] = 1;
@@ -141,7 +141,7 @@ class SearchProviderTags implements SearchProviderInterface
         $this->numberFound = count($matches);
 
         // now paginate
-        $matches = array_slice($matches, $start, $limit + 5); // the +5 is just some padding in case of orphans
+        $matches = array_slice($matches, $start, $limit+5); // the +5 is just some padding in case of orphans
 
         // now load each object
         foreach ($matches as $key => $weight) {
@@ -227,7 +227,7 @@ class SearchProviderTags implements SearchProviderInterface
 
                         if (isset($matches[$key])) {
                             // increment the weight if the same Record is tagged more than once
-                            $weight = intval($matches[$key]) + 1;
+                            $weight = intval($matches[$key])+1;
                             $matches[$key] = $weight;
                         } else {
                             $matches[$key] = 1;
