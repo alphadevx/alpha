@@ -134,12 +134,6 @@ class TCPDFFacade
             return;
         }
 
-        if (method_exists($this->article, 'getAttachmentsURL')) {
-            $attachURL = $this->article->getAttachmentsURL();
-        } else {
-            $attachURL = '';
-        }
-
         if ($this->checkHTMLCache()) {
             $this->loadHTMLCache();
         } else {

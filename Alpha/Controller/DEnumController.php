@@ -108,8 +108,6 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
-        $config = ConfigProvider::getInstance();
-
         $params = $request->getParams();
 
         $body = '';
@@ -203,8 +201,8 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
         try {
             // check the hidden security fields before accepting the form POST data
             if (!$this->checkSecurityFields()) {
-                throw new SecurityException('This page cannot accept post data from remote servers!');
                 self::$logger->debug('<<doPOST');
+                throw new SecurityException('This page cannot accept post data from remote servers!');
             }
 
             // ensure that a ID is provided

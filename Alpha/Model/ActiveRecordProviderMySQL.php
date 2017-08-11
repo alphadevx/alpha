@@ -1042,10 +1042,6 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
 
-        // get the class attributes
-        $reflection = new ReflectionClass(get_class($this->record));
-        $properties = $reflection->getProperties();
-
         if ($this->record->getVersion() != $this->record->getVersionNumber()->getValue()) {
             throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
         }

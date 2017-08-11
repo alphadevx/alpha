@@ -93,8 +93,6 @@ class AttachmentController extends Controller implements ControllerInterface
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
-        $config = ConfigProvider::getInstance();
-
         $params = $request->getParams();
 
         try {
@@ -133,7 +131,5 @@ class AttachmentController extends Controller implements ControllerInterface
             self::$logger->error($e->getMessage());
             throw new ResourceNotFoundException($e->getMessage());
         }
-
-        self::$logger->debug('<<doGET');
     }
 }

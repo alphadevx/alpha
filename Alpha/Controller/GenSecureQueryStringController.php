@@ -76,8 +76,6 @@ class GenSecureQueryStringController extends Controller implements ControllerInt
         self::$logger = new Logger('GenSecureQueryStringController');
         self::$logger->debug('>>__construct()');
 
-        $config = ConfigProvider::getInstance();
-
         // ensure that the super class constructor is called, indicating the rights group
         parent::__construct('Admin');
 
@@ -122,8 +120,6 @@ class GenSecureQueryStringController extends Controller implements ControllerInt
     public function doPOST($request)
     {
         self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
-
-        $config = ConfigProvider::getInstance();
 
         $params = $request->getParams();
 
