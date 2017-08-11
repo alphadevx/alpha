@@ -174,7 +174,7 @@ class Sequence extends ActiveRecord implements TypeInterface
             $this->set('sequence', 0);
         }
 
-        $this->set('sequence', $this->get('sequence') + 1);
+        $this->set('sequence', $this->get('sequence')+1);
         $this->save();
     }
 

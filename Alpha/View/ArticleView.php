@@ -253,7 +253,7 @@ class ArticleView extends View
 
                     $html .= '<tr>';
 
-                    $html .= '<td>'.$file.' <em>('.number_format(filesize($this->record->getAttachmentsLocation().'/'.$file) / 1024).' KB)</em></td>';
+                    $html .= '<td>'.$file.' <em>('.number_format(filesize($this->record->getAttachmentsLocation().'/'.$file)/1024).' KB)</em></td>';
 
                     $js = "if(window.jQuery) {
                             BootstrapDialog.show({

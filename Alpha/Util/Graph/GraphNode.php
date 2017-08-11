@@ -467,9 +467,9 @@ class GraphNode
     public function getChildrenCenter()
     {
         $node = $this->getChildAt(0);
-        $node1 = $this->getChildAt(count($this->children) - 1);
+        $node1 = $this->getChildAt(count($this->children)-1);
 
-        return $node->getOffset() + (($node1->getOffset() - $node->getOffset()) + $node1->getWidth()) / 2;
+        return $node->getOffset()+(($node1->getOffset()-$node->getOffset())+$node1->getWidth())/2;
     }
 
     /**
@@ -521,14 +521,14 @@ class GraphNode
      */
     public function setUpLinks()
     {
-        $xa = $this->x + ($this->width / 2);
-        $ya = $this->y + $this->height;
+        $xa = $this->x+($this->width/2);
+        $ya = $this->y+$this->height;
 
         foreach ($this->children as $child) {
-            $xd = $xc = $child->getX() + ($child->getWidth() / 2);
+            $xd = $xc = $child->getX()+($child->getWidth()/2);
             $yd = $child->getY();
             $xb = $xa;
-            $yb = $yc = $ya + ($yd - $ya) / 2;
+            $yb = $yc = $ya+($yd-$ya)/2;
             $this->links[$child->id]['xa'] = $xa;
             $this->links[$child->id]['ya'] = $ya;
             $this->links[$child->id]['xb'] = $xb;

@@ -98,9 +98,9 @@ class TCPDF extends \TCPDF
 
         try {
             if (mb_strpos($file, '/tk/') !== false) {
-                $start = mb_strpos($file, '/tk/') + 3;
+                $start = mb_strpos($file, '/tk/')+3;
                 $end = mb_strlen($file);
-                $tk = mb_substr($file, $start + 1, $end - ($start + 1));
+                $tk = mb_substr($file, $start+1, $end-($start+1));
                 $decoded = FrontController::getDecodeQueryParams($tk);
 
                 parent::Image($decoded['source'], $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border);

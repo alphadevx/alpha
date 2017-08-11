@@ -1014,7 +1014,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         } else {
             // there has been an error, so decrement the version number back
             $temp = $this->record->getVersionNumber()->getValue();
-            $this->record->set('version_num', $temp - 1);
+            $this->record->set('version_num', $temp-1);
 
             // check for unique violations
             if (self::getConnection()->errno == '1062') {
@@ -1059,7 +1059,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         $this->record->setLastQuery($sqlQuery);
         $stmt = self::getConnection()->stmt_init();
 
-        $newVersionNumber = $this->record->getVersionNumber()->getValue() + 1;
+        $newVersionNumber = $this->record->getVersionNumber()->getValue()+1;
 
         if ($stmt->prepare($sqlQuery)) {
             if ($this->record->getPropObject($attribute) instanceof Integer) {
@@ -2386,7 +2386,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
                     if ($propName == 'version_num') {
                         $temp = $this->record->getVersionNumber()->getValue();
-                        $this->record->set('version_num', $temp + 1);
+                        $this->record->set('version_num', $temp+1);
                         $bindingsTypes .= 'i';
                         array_push($params, $this->record->getVersionNumber()->getValue());
                     }
@@ -2482,7 +2482,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         $singleQuote1 = mb_strpos($error, "'");
         $singleQuote2 = mb_strrpos($error, "'");
 
-        $value = mb_substr($error, $singleQuote1, ($singleQuote2 - $singleQuote1) + 1);
+        $value = mb_substr($error, $singleQuote1, ($singleQuote2-$singleQuote1)+1);
         self::$logger->debug('<<findOffendingValue ['.$value.'])');
 
         return $value;

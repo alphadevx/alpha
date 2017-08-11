@@ -629,15 +629,15 @@ class Timestamp extends Type implements TypeInterface
         $unixTS = $this->getUnixValue();
 
         if ($now > $unixTS) {
-            $difference = $now - $unixTS;
+            $difference = $now-$unixTS;
             $tense = 'ago';
         } else {
-            $difference = $unixTS - $now;
+            $difference = $unixTS-$now;
             $tense = 'from now';
         }
 
-        for ($i = 0; $difference >= $lengths[$i] && $i < count($lengths) - 1; ++$i) {
-            $difference = round($difference / $lengths[$i]);
+        for ($i = 0; $difference >= $lengths[$i] && $i < count($lengths)-1; ++$i) {
+            $difference = round($difference/$lengths[$i]);
         }
 
         $difference = round($difference);

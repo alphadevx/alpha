@@ -97,7 +97,7 @@ class PHPServerUtils
             // Execute the command and store the process ID
             $output = array();
             exec($command, $output);
-            $pid = (int) $output[0];
+            $pid = (int)$output[0];
         }
 
         if (!isset($pid)) {

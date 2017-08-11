@@ -509,19 +509,19 @@ abstract class Controller
             }
             // found the current job
             if ($this->name == $jobs[$i]) {
-                if (isset($jobs[$i - 1])) {
+                if (isset($jobs[$i-1])) {
                     // set the previous job if it exists
-                    $this->previousJob = $jobs[$i - 1];
+                    $this->previousJob = $jobs[$i-1];
                     self::$logger->debug('Previous job ['.$this->previousJob.']');
                 }
-                if (isset($jobs[$i + 1])) {
+                if (isset($jobs[$i+1])) {
                     // set the next job if it exists
-                    $this->nextJob = $jobs[$i + 1];
+                    $this->nextJob = $jobs[$i+1];
                     self::$logger->debug('Next job ['.$this->nextJob.']');
                 }
             }
             // the last job in the sequence
-            if ($i == ($numOfJobs - 1)) {
+            if ($i == ($numOfJobs-1)) {
                 $this->lastJob = $jobs[$i];
             }
         }
@@ -685,9 +685,9 @@ abstract class Controller
             intval($this->unitEndTime->getYear())
             );
 
-        self::$logger->debug('<<getUnitDuration ['.($intEndTime - $intStartTime).']');
+        self::$logger->debug('<<getUnitDuration ['.($intEndTime-$intStartTime).']');
 
-        return $intEndTime - $intStartTime;
+        return $intEndTime-$intStartTime;
     }
 
     /**
@@ -1153,7 +1153,7 @@ abstract class Controller
              */
 
             // the server hostname + today's date less 1 hour (i.e. yesterday where time is < 1:00AM)
-            $var1 = rtrim(strtr(base64_encode(SecurityUtils::encrypt($host.date('Ymd', (time() - 3600)))), '+/', '-_'), '=');
+            $var1 = rtrim(strtr(base64_encode(SecurityUtils::encrypt($host.date('Ymd', (time()-3600)))), '+/', '-_'), '=');
             // the server's IP plus $var1
             $var2 = rtrim(strtr(base64_encode(SecurityUtils::encrypt($ip.$var1)), '+/', '-_'), '=');
 

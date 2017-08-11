@@ -969,8 +969,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                 $stmt->bindValue(':ID', $this->record->getID(), SQLITE3_INTEGER);
 
                 $temp = $this->record->getVersionNumber()->getValue();
-                $this->record->set('version_num', $temp + 1);
-                $stmt->bindValue(':version_num', $temp + 1, SQLITE3_INTEGER);
+                $this->record->set('version_num', $temp+1);
+                $stmt->bindValue(':version_num', $temp+1, SQLITE3_INTEGER);
 
                 $stmt->execute();
             } else {
@@ -1049,7 +1049,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         } else {
             // there has been an error, so decrement the version number back
             $temp = $this->record->getVersionNumber()->getValue();
-            $this->record->set('version_num', $temp - 1);
+            $this->record->set('version_num', $temp-1);
 
             throw new FailedSaveException('Failed to save object, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->record->getLastQuery().']');
         }
@@ -1089,7 +1089,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         $this->record->setLastQuery($sqlQuery);
         $stmt = self::getConnection()->prepare($sqlQuery);
 
-        $newVersionNumber = $this->record->getVersionNumber()->getValue() + 1;
+        $newVersionNumber = $this->record->getVersionNumber()->getValue()+1;
 
         if ($stmt instanceof SQLite3Stmt) {
             if ($this->record->getPropObject($attribute) instanceof Integer) {

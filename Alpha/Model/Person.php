@@ -114,7 +114,7 @@ class Person extends ActiveRecord
                                     'state' => 'Account state',
                                     'URL' => 'Your site address',
                                     'rights' => 'Rights Group Membership',
-                                    'actions' => 'Actions', );
+                                    'actions' => 'Actions',);
 
     /**
      * The name of the database table for the class.
@@ -178,7 +178,7 @@ class Person extends ActiveRecord
         $this->password->isPassword(true);
         $this->state = new Enum(array(
                                     'Active',
-                                    'Disabled', ));
+                                    'Disabled',));
         $this->state->setValue('Active');
         $this->URL = new SmallText();
         $this->URL->setRule(Validator::OPTIONAL_HTTP_URL);

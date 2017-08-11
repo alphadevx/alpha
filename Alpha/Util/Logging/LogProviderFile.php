@@ -141,7 +141,7 @@ class LogProviderFile implements LogProviderInterface
         clearstatcache();
         $size = filesize($this->path);
 
-        return ($size / 1024) /1024;
+        return ($size/1024)/1024;
     }
 
     /**
