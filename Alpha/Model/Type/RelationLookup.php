@@ -222,6 +222,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
      * (non-PHPdoc)
      *
      * @see Alpha\Model\ActiveRecord::loadAllByAttribute()
+     * @param string $attribute
      */
     public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
     {
@@ -312,7 +313,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
     /**
      * Returns an array of the IDs of the related objects.
      *
-     * @return array
+     * @return integer[]
      *
      * @since 1.0
      */
@@ -325,7 +326,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
      * Used to set the IDs of the related objects.  Pass a two-item array of IDs, the first
      * one being the left object ID, the second being the right.
      *
-     * @param array $IDs
+     * @param string[] $IDs
      *
      * @since 1.0
      *

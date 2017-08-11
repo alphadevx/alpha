@@ -116,7 +116,7 @@ class ConfigProvider
     /**
      * Get config value.
      *
-     * @param $key string
+     * @param string $key string
      *
      * @return string
      *

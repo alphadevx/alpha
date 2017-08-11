@@ -300,7 +300,7 @@ class Request
      * @param string $key     The key to search for
      * @param mixed  $default If key is not found, return this instead
      *
-     * @return mixed
+     * @return string
      *
      * @since 2.0
      */
@@ -391,7 +391,7 @@ class Request
      * @param string $key     The key to search for
      * @param mixed  $default If key is not found, return this instead
      *
-     * @return mixed
+     * @return string
      *
      * @since 2.0
      */

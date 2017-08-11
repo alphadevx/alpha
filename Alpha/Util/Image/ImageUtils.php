@@ -109,7 +109,7 @@ class ImageUtils
     /**
      * Saves the GD image resource to the file path indicated.
      *
-     * @param image  $imageResource The GD image resource to save
+     * @param resource  $imageResource The GD image resource to save
      * @param string $type          The image type (jpg, png, or gif)
      * @param string $destination   The desination file path of the image file to create
      *

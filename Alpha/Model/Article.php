@@ -435,7 +435,7 @@ class Article extends ActiveRecord
     /**
      * Method for returning the calculated score for this article.
      *
-     * @return float
+     * @return string
      *
      * @since 1.0
      */
@@ -531,7 +531,7 @@ class Article extends ActiveRecord
     /**
      * Loads the content of the ArticleObject from the specified file path.
      *
-     * @param $filePath
+     * @param string $filePath
      *
      * @since 1.0
      *

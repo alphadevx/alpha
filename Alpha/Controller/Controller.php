@@ -297,7 +297,7 @@ abstract class Controller
     /**
      * Get the record for this controller (if any).
      *
-     * @return mixed
+     * @return ActiveRecord
      *
      * @since 1.0
      */
@@ -630,7 +630,7 @@ abstract class Controller
     /**
      * Getter for the unit of work MAX duration.
      *
-     * @return int
+     * @return Integer
      *
      * @since 1.0
      */
@@ -1173,7 +1173,7 @@ abstract class Controller
     /**
      * Generates the two security fields to prevent remote form processing.
      *
-     * @return array An array containing the two fields
+     * @return string[] An array containing the two fields
      *
      * @since 1.0
      */
@@ -1426,6 +1426,7 @@ abstract class Controller
      * @since 2.0
      *
      * @throws \Alpha\Exception\NotImplementedException
+     * @param Request $request
      */
     public function doHEAD($request)
     {
@@ -1439,6 +1440,7 @@ abstract class Controller
      * @since 2.0
      *
      * @throws \Alpha\Exception\NotImplementedException
+     * @param Request $request
      */
     public function doGET($request)
     {
@@ -1452,6 +1454,7 @@ abstract class Controller
      * @since 2.0
      *
      * @throws \Alpha\Exception\NotImplementedException
+     * @param Request $request
      */
     public function doPOST($request)
     {
@@ -1465,6 +1468,7 @@ abstract class Controller
      * @since 2.0
      *
      * @throws \Alpha\Exception\NotImplementedException
+     * @param Request $request
      */
     public function doPUT($request)
     {
@@ -1478,6 +1482,7 @@ abstract class Controller
      * @since 2.0
      *
      * @throws \Alpha\Exception\NotImplementedException
+     * @param Request $request
      */
     public function doPATCH($request)
     {
@@ -1491,6 +1496,7 @@ abstract class Controller
      * @since 2.0
      *
      * @throws \Alpha\Exception\NotImplementedException
+     * @param Request $request
      */
     public function doDELETE($request)
     {
@@ -1502,6 +1508,7 @@ abstract class Controller
      * {@inheritdoc}
      *
      * @since 2.0
+     * @param Request $request
      */
     public function doOPTIONS($request)
     {
@@ -1529,6 +1536,7 @@ abstract class Controller
      * {@inheritdoc}
      *
      * @since 2.0.2
+     * @param Request $request
      */
     public function doTRACE($request)
     {

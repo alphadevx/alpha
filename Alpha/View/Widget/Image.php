@@ -153,7 +153,7 @@ class Image
     /**
      * The constructor.
      *
-     * @param $source
+     * @param string $source
      * @param $width
      * @param $height
      * @param $sourceType

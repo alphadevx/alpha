@@ -63,7 +63,7 @@ class SearchProviderFactory
      * A static method that attempts to return a SearchProviderInterface instance
      * based on the name of the provider class supplied.
      *
-     * @param $providerName The class name of the provider class, should be fully-qualified.
+     * @param string $providerName The class name of the provider class, should be fully-qualified.
      *
      * @throws \Alpha\Exception\IllegalArguementException;
      *

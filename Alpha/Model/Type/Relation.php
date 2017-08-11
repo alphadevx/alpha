@@ -508,7 +508,7 @@ class Relation extends Type implements TypeInterface
     /**
      * Getter for the Relation value.
      *
-     * @return mixed
+     * @return string
      *
      * @since 1.0
      */
@@ -748,7 +748,7 @@ class Relation extends Type implements TypeInterface
      * Set the taggedClass property to the name of the tagged class when building relations
      * to the TagObject record.
      *
-     * @param $taggedClass
+     * @param string $taggedClass
      *
      * @since 1.0
      */

@@ -284,7 +284,7 @@ class GraphNode
     /**
      * Get the node offset.
      *
-     * @return string
+     * @return integer
      *
      * @since 1.0
      */
@@ -460,7 +460,7 @@ class GraphNode
     /**
      * Calculates and returns the midpoint X coordinate of the children of this node.
      *
-     * @return int
+     * @return double
      *
      * @since 1.0
      */
@@ -487,7 +487,7 @@ class GraphNode
     /**
      * Add a new node to the children array of this node.
      *
-     * @param Alpha\Util\Graph\GraphNode $node
+     * @param GraphNode $node
      *
      * @throws ALpha\Exception\IllegalArguementException
      *
