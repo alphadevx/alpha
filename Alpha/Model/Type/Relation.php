@@ -244,13 +244,10 @@ class Relation extends Type implements TypeInterface
             switch ($side) {
                 case '':
                     $this->relatedClass = $RC;
-                break;
                 case 'left':
                     $this->relatedClassLeft = $RC;
-                break;
                 case 'right':
                     $this->relatedClassRight = $RC;
-                break;
                 default:
                     throw new IllegalArguementException('The side parameter ['.$RC.'] is not valid!');
             }
@@ -397,13 +394,10 @@ class Relation extends Type implements TypeInterface
         switch ($side) {
             case '':
                 return $this->relatedClassDisplayField;
-            break;
             case 'left':
                 return $this->relatedClassLeftDisplayField;
-            break;
             case 'right':
                 return $this->relatedClassRightDisplayField;
-            break;
             default:
                 throw new IllegalArguementException('The side paramter ['.$RC.'] is not valid!');
         }
