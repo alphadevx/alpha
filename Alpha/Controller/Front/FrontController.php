@@ -399,8 +399,6 @@ class FrontController
      */
     public static function encodeQuery($queryString)
     {
-        $config = ConfigProvider::getInstance();
-
         $return = base64_encode(SecurityUtils::encrypt($queryString));
         // remove any characters that are likely to cause trouble on a URL
         $return = strtr($return, '+/', '-_');
@@ -418,8 +416,6 @@ class FrontController
      */
     private function decodeQuery()
     {
-        $config = ConfigProvider::getInstance();
-
         $params = $this->request->getParams();
 
         if (!isset($params['token'])) {
@@ -441,8 +437,6 @@ class FrontController
      */
     public static function decodeQueryParams($tk)
     {
-        $config = ConfigProvider::getInstance();
-
         // replace any troublesome characters from the URL with the original values
         $token = strtr($tk, '-_', '+/');
         $token = base64_decode($token);
@@ -460,8 +454,6 @@ class FrontController
      */
     public static function getDecodeQueryParams($tk)
     {
-        $config = ConfigProvider::getInstance();
-
         // replace any troublesome characters from the URL with the original values
         $token = strtr($tk, '-_', '+/');
         $token = base64_decode($token);

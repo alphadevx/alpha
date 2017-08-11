@@ -1533,13 +1533,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                     $sqlQuery .= "$propName INTEGER(11)";
                 } elseif ($prop instanceof Relation) {
                     $sqlQuery .= "$propName INTEGER(11)";
-
-                    $rel = $this->record->getPropObject($propName);
-
-                    $relatedField = $rel->getRelatedClassField();
-                    $relatedClass = $rel->getRelatedClass();
-                    $relatedRecord = new $relatedClass();
-                    $tableName = $relatedRecord->getTableName();
                 } else {
                     $sqlQuery .= '';
                 }

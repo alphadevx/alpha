@@ -1705,9 +1705,6 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             return $tableExists;
         } else {
             throw new AlphaException('Failed to access the system database correctly, error is ['.self::getConnection()->error.']');
-            self::$logger->debug('<<checkTableExists [false]');
-
-            return false;
         }
     }
 

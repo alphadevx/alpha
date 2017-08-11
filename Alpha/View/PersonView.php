@@ -64,8 +64,6 @@ class PersonView extends View
      */
     public function displayLoginForm()
     {
-        $config = ConfigProvider::getInstance();
-
         $html = '<div class="bordered padded">';
         $html .= '<h1>Login</h1>';
         $html .= '<form action="'.FrontController::generateSecureURL('act=Alpha\Controller\LoginController').'" method="POST" id="loginForm" accept-charset="UTF-8">';
@@ -75,13 +73,13 @@ class PersonView extends View
         $email->setRule(Validator::REQUIRED_EMAIL);
         $email->setSize(70);
         $email->setHelper('Please provide a valid e-mail address!');
-        $stringBox = new SmallTextBox($email, $this->record->getDataLabel('email'), 'email', 'loginForm', '50');
+        $stringBox = new SmallTextBox($email, $this->record->getDataLabel('email'), 'email', '50');
         $html .= $stringBox->render();
 
         $password = new SmallText();
         $password->isPassword();
 
-        $stringBox = new SmallTextBox($password, $this->record->getDataLabel('password'), 'password', 'loginForm', '50');
+        $stringBox = new SmallTextBox($password, $this->record->getDataLabel('password'), 'password', '50');
         $html .= $stringBox->render();
 
         $temp = new Button('submit', 'Login', 'loginBut');
@@ -118,7 +116,7 @@ class PersonView extends View
         $email->setRule(Validator::REQUIRED_EMAIL);
         $email->setSize(70);
         $email->setHelper('Please provide a valid e-mail address!');
-        $stringBox = new SmallTextBox($email, $this->record->getDataLabel('email'), 'email', 'resetForm', '50');
+        $stringBox = new SmallTextBox($email, $this->record->getDataLabel('email'), 'email', '50');
         $html .= $stringBox->render();
 
         $html .= '<div class="form-group lower spread">';

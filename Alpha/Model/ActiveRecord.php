@@ -2263,8 +2263,6 @@ abstract class ActiveRecord
         }
         self::$logger->debug('>>isInstalled()');
 
-        $config = ConfigProvider::getInstance();
-
         /*
          * Install conditions are:
          *
