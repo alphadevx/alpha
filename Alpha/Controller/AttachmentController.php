@@ -5,7 +5,6 @@ namespace Alpha\Controller;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\File\FileUtils;
 use Alpha\Util\Http\Response;
-use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Helper\Validator;
 use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\IllegalArguementException;
