@@ -50,6 +50,7 @@ interface SessionProviderInterface
      * Starts a new session, or resumes an existing session if there is already a session ID available.
      *
      * @since 2.0
+     * @return void
      */
     public function init();
 
@@ -57,13 +58,14 @@ interface SessionProviderInterface
      * Destroys the current session.
      *
      * @since 2.0
+     * @return void
      */
     public function destroy();
 
     /**
      * Get the key value from the session.  Returns false if nothing is found.
      *
-     * @param $key
+     * @param string $key
      *
      * @since 2.0
      *
@@ -78,6 +80,7 @@ interface SessionProviderInterface
      * @param mixed  $value
      *
      * @since 2.0
+     * @return void
      */
     public function set($key, $value);
 
@@ -85,9 +88,9 @@ interface SessionProviderInterface
      * Deletes the value provided at that key in the session.
      *
      * @param string $key
-     * @param mixed  $value
      *
      * @since 2.0
+     * @return void
      */
     public function delete($key);
 

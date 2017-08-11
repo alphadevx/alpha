@@ -63,11 +63,11 @@ class EmailProviderFactory
      * A static method that attempts to return a EmailProviderInterface instance
      * based on the name of the provider class supplied.
      *
-     * @param $providerName The class name of the provider class (fully qualified).
+     * @param string $providerName The class name of the provider class (fully qualified).
      *
      * @throws \Alpha\Exception\IllegalArguementException
      *
-     * @return \Alpha\Util\Http\Email\EmailProviderInterface
+     * @return EmailProviderInterface|null
      *
      * @since 2.0
      */

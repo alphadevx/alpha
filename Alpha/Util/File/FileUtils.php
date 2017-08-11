@@ -541,7 +541,7 @@ class FileUtils
      * @param string $sourceDir    The path to the source directory.
      * @param string $fileList     The HTML list of files generated (pass by reference).
      * @param int    $fileCount    The current file count (used in recursive calls).
-     * @param array  $excludeFiles An array of file names to exclude from the list rendered.
+     * @param string[]  $excludeFiles An array of file names to exclude from the list rendered.
      *
      * @return int The current filecount for the directory.
      *
@@ -578,7 +578,7 @@ class FileUtils
      * Recursively deletes the contents of the directory indicated (the directory itself is not deleted).
      *
      * @param string $sourceDir    The path to the source directory.
-     * @param array  $excludeFiles An array of file names to exclude from the deletion.
+     * @param string[]  $excludeFiles An array of file names to exclude from the deletion.
      *
      * @throws \Alpha\Exception\AlphaException
      *

@@ -132,7 +132,7 @@ class LogProviderFile implements LogProviderInterface
     /**
      * Returns the size in megabytes of the log file on disc.
      *
-     * @return float
+     * @return integer
      *
      * @since 1.0
      */

@@ -60,6 +60,7 @@ interface ActiveRecordProviderInterface
      * Disconnects the current database connection if one exists (self::$connection is set).
      *
      * @since 1.1
+     * @return void
      */
     public static function disconnect();
 
@@ -81,6 +82,7 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\RecordFoundException
+     * @return void
      */
     public function load($ID, $version = 0);
 
@@ -100,7 +102,7 @@ interface ActiveRecordProviderInterface
     /**
      * Populates the record object from the database table by the given attribute value.
      *
-     * @param string $atribute        The name of the attribute to load the record by.
+     * @param string $attribute        The name of the attribute to load the record by.
      * @param string $value           The value of the attribute to load the record by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
      * @param array  $loadAttributes  The attributes to load from the database to this object (leave blank to load all attributes)
@@ -108,6 +110,7 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\RecordFoundException
+     * @return void
      */
     public function loadByAttribute($attribute, $value, $ignoreClassType = false, $loadAttributes = array());
 
@@ -131,14 +134,14 @@ interface ActiveRecordProviderInterface
     /**
      * Loads all of the objects of this class by the specified attribute into an array which is returned.
      *
-     * @param string $atribute        The attribute to load the objects by.
+     * @param string $attribute        The attribute to load the objects by.
      * @param string $value           The value of the attribute to load the objects by.
      * @param int    $start           The start of the SQL LIMIT clause, useful for pagination.
      * @param int    $limit           The amount (limit) of objects to load, useful for pagination.
      * @param string $orderBy         The name of the field to sort the objects by.
      * @param string $order           The order to sort the objects by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type.
-     * @param array  $constructorArgs An optional array of contructor arguements to pass to the records that will be generated and returned.  Supports a maximum of 5 arguements.
+     * @param string[]  $constructorArgs An optional array of contructor arguements to pass to the records that will be generated and returned.  Supports a maximum of 5 arguements.
      *
      * @return array An array containing objects of this type of business object.
      *
@@ -152,14 +155,14 @@ interface ActiveRecordProviderInterface
     /**
      * Loads all of the record objects of this class by the specified attributes into an array which is returned.
      *
-     * @param array  $atributes       The attributes to load the records by.
+     * @param array  $attributes       The attributes to load the records by.
      * @param array  $values          The values of the attributes to load the records by.
      * @param int    $start           The start of the SQL LIMIT clause, useful for pagination.
      * @param int    $limit           The amount (limit) of records to load, useful for pagination.
      * @param string $orderBy         The name of the field to sort the records by.
      * @param string $order           The order to sort the records by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
-     * @param array  $constructorArgs An optional array of contructor arguements to pass to the records that will be generated and returned.  Supports a maximum of 5 arguements.
+     * @param string[]  $constructorArgs An optional array of contructor arguements to pass to the records that will be generated and returned.  Supports a maximum of 5 arguements.
      *
      * @return array An array containing objects of this type of record object.
      *
@@ -214,6 +217,7 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\FailedSaveException
      * @throws \Alpha\Exception\LockingException
      * @throws \Alpha\Exception\ValidationException
+     * @return void
      */
     public function save();
 
@@ -229,6 +233,7 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\IllegalArguementException
      * @throws \Alpha\Exception\FailedSaveException
      * @throws \Alpha\Exception\LockingException
+     * @return void
      */
     public function saveAttribute($attribute, $value);
 
@@ -238,6 +243,7 @@ interface ActiveRecordProviderInterface
      * @since 1.2
      *
      * @throws \Alpha\Exception\FailedSaveException
+     * @return void
      */
     public function saveHistory();
 
@@ -247,6 +253,7 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\FailedDeleteException
+     * @return void
      */
     public function delete();
 
@@ -267,6 +274,7 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
+     * @return void
      */
     public function makeTable();
 
@@ -276,6 +284,7 @@ interface ActiveRecordProviderInterface
      * @since 1.2
      *
      * @throws \AlphaException
+     * @return void
      */
     public function makeHistoryTable();
 
@@ -285,6 +294,7 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
+     * @return void
      */
     public function rebuildTable();
 
@@ -296,6 +306,7 @@ interface ActiveRecordProviderInterface
      * @param string $tableName Optional table name, leave blank for the defined table for this class to be dropped
      *
      * @throws \Alpha\Exception\AlphaException
+     * @return void
      */
     public function dropTable($tableName = null);
 
@@ -308,6 +319,7 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
+     * @return void
      */
     public function addProperty($propName);
 
@@ -325,7 +337,7 @@ interface ActiveRecordProviderInterface
     /**
      * Gets the count from the database for the amount of objects of this class.
      *
-     * @param array $atributes The attributes to count the objects by (optional).
+     * @param array $attributes The attributes to count the objects by (optional).
      * @param array $values    The values of the attributes to count the objects by (optional).
      *
      * @return int
@@ -354,6 +366,7 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
+     * @return void
      */
     public function setEnumOptions();
 
@@ -427,12 +440,12 @@ interface ActiveRecordProviderInterface
      * @param string $attributeName         The name of the attribute to apply the index on.
      * @param string $relatedClass          The fully-qualified name of the related class.
      * @param string $relatedClassAttribute The name of the field to relate to on the related class.
-     * @param bool   $allowNullValues       For foreign key indexes that don't allow null values, set this to false (default is true).
      * @param string $indexName             The optional name for the index, will calculate if not provided.
      *
      * @since 1.1
      *
      * @throws \Alpha\Exception\FailedIndexCreateException
+     * @return void
      */
     public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null);
 
@@ -446,6 +459,7 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\FailedIndexCreateException
+     * @return void
      */
     public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '');
 
@@ -455,6 +469,7 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
+     * @return void
      */
     public function reload();
 
@@ -490,6 +505,7 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
+     * @return void
      */
     public static function begin();
 
@@ -499,6 +515,7 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\FailedSaveException
+     * @return void
      */
     public static function commit();
 
@@ -508,6 +525,7 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
+     * @return void
      */
     public static function rollback();
 
@@ -517,6 +535,7 @@ interface ActiveRecordProviderInterface
      * @param \Alpha\Model\ActiveRecord $Record
      *
      * @since 1.1
+     * @return void
      */
     public function setRecord($Record);
 
@@ -549,6 +568,7 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\AlphaException
      *
      * @since 2.0
+     * @return void
      */
     public static function createDatabase();
 
@@ -558,6 +578,7 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\AlphaException
      *
      * @since 2.0
+     * @return void
      */
     public static function dropDatabase();
 }

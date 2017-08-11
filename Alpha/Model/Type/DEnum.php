@@ -230,7 +230,7 @@ class DEnum extends ActiveRecord implements TypeInterface
     /**
      * Getter for the name.
      *
-     * @return string
+     * @return SmallText
      *
      * @since 1.0
      */

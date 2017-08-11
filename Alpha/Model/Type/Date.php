@@ -243,7 +243,7 @@ class Date extends Type implements TypeInterface
     /**
      * Get the year part.
      *
-     * @return int
+     * @return string
      *
      * @since 1.0
      */
@@ -255,7 +255,7 @@ class Date extends Type implements TypeInterface
     /**
      * Get the month part.
      *
-     * @return int
+     * @return string
      *
      * @since 1.0
      */
@@ -267,7 +267,7 @@ class Date extends Type implements TypeInterface
     /**
      * Get the day part.
      *
-     * @return int
+     * @return string
      *
      * @since 1.0
      */

@@ -454,7 +454,7 @@ class InstallController extends Controller implements ControllerInterface
      * Custom version of the check rights method that only checks for a session for the config admin username/password,
      * when the system database is not set-up.
      *
-     * @return bool
+     * @return boolean|null
      *
      * @since 1.0
      */

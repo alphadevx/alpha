@@ -63,7 +63,7 @@ class CacheProviderFactory
      * A static method that attempts to return a CacheProviderInterface instance
      * based on the name of the provider class supplied.
      *
-     * @param $providerName The class name of the provider class (fully qualified).
+     * @param string $providerName The class name of the provider class (fully qualified).
      *
      * @throws \Alpha\Exception\IllegalArguementException
      *

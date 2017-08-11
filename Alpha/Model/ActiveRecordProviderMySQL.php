@@ -2333,11 +2333,11 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      * parameters.  If arrays of attribute names and values are provided, only those will be bound to
      * the supplied statement.
      *
-     * @param mysqli_stmt $stmt The SQL statement to bind to.
+     * @param \mysqli_stmt $stmt The SQL statement to bind to.
      * @param array Optional array of Record attributes.
      * @param array Optional array of Record values.
      *
-     * @return mysqli_stmt
+     * @return \mysqli_stmt
      *
      * @since 1.1
      */

@@ -1156,7 +1156,7 @@ abstract class ActiveRecord
     /**
      * Gets the ID for the object in zero-padded format (same as getID()).
      *
-     * @return int 11 digit zero-padded ID value.
+     * @return string 11 digit zero-padded ID value.
      *
      * @since 1.0
      */
@@ -2153,7 +2153,7 @@ abstract class ActiveRecord
     /**
      * Starts a new database transaction.
      *
-     * @param $Record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
+     * @param ActiveRecord $Record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
      *
      * @since 1.0
      *
@@ -2186,7 +2186,7 @@ abstract class ActiveRecord
     /**
      * Commits the current database transaction.
      *
-     * @param $Record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
+     * @param ActiveRecord $Record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
      *
      * @since 1.0
      *
@@ -2219,7 +2219,7 @@ abstract class ActiveRecord
     /**
      * Aborts the current database transaction.
      *
-     * @param $Record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
+     * @param ActiveRecord $Record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
      *
      * @since 1.0
      *
@@ -2388,7 +2388,7 @@ abstract class ActiveRecord
     /**
      * Check to see if an attribute exists on the record.
      *
-     * @param $attribute The attribute name.
+     * @param string $attribute The attribute name.
      *
      * @return bool
      *
