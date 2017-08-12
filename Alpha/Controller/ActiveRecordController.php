@@ -378,7 +378,13 @@ class ActiveRecordController extends Controller implements ControllerInterface
             }
 
             $record->populateFromArray($params);
-            $record->save();
+
+            try {
+                $record->save();
+            } catch (ValidationException $e) {
+                self::$logger->warn($e->getMessage());
+                $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
+            }
 
             self::$logger->action('Created new '.$ActiveRecordType.' instance with ID '.$record->getID());
 
@@ -397,6 +403,10 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 $response->setHeader('Content-Type', 'application/json');
                 $response->setHeader('Location', $config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getID());
                 $response->setBody($body);
+
+                self::$logger->debug('<<doPOST');
+
+                return $response;
             } else {
                 $response = new Response(301);
 
@@ -409,6 +419,10 @@ class ActiveRecordController extends Controller implements ControllerInterface
                         $response->redirect($config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getID());
                     }
                 }
+
+                self::$logger->debug('<<doPOST');
+
+                return $response;
             }
         } catch (SecurityException $e) {
             self::$logger->warn($e->getMessage());
@@ -416,14 +430,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
         } catch (IllegalArguementException $e) {
             self::$logger->warn($e->getMessage());
             throw new ResourceNotFoundException('The record that you have requested cannot be found!');
-        } catch (ValidationException $e) {
-            self::$logger->warn($e->getMessage());
-            $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
         }
-
-        self::$logger->debug('<<doPOST');
-
-        return $response;
     }
 
     /**
