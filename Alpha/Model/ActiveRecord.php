@@ -2289,7 +2289,7 @@ abstract class ActiveRecord
      */
     public function isTagged()
     {
-        if (isset($this->taggedAttributes) && isset($this->tags) && $this->tags instanceof \Alpha\Model\Type\Relation) {
+        if (property_exists($this, 'taggedAttributes') && property_exists($this, 'tags') && $this->{'tags'} instanceof \Alpha\Model\Type\Relation) {
             return true;
         } else {
             return false;
@@ -2306,7 +2306,7 @@ abstract class ActiveRecord
     public function getTaggedAttributes()
     {
         if ($this->isTagged()) {
-            return $this->taggedAttributes;
+            return $this->{'taggedAttributes'};
         } else {
             return array();
         }
@@ -2396,13 +2396,7 @@ abstract class ActiveRecord
      */
     public function hasAttribute($attribute)
     {
-        try {
-            $exists = $this->$attribute;
-
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
+        return property_exists($this, $attribute);
     }
 
     /**
