@@ -389,6 +389,27 @@ class ActiveRecordController extends Controller implements ControllerInterface
             }
 
             ActiveRecord::disconnect();
+
+            if ($accept == 'application/json') {
+                $view = View::getInstance($record, false, $accept);
+                $body = $view->detailedView();
+                $response = new Response(201);
+                $response->setHeader('Content-Type', 'application/json');
+                $response->setHeader('Location', $config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getID());
+                $response->setBody($body);
+            } else {
+                $response = new Response(301);
+
+                if ($this->getNextJob() != '') {
+                    $response->redirect($this->getNextJob());
+                } else {
+                    if ($this->request->isSecureURI()) {
+                        $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.$ActiveRecordType.'&ActiveRecordID='.$record->getID()));
+                    } else {
+                        $response->redirect($config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getID());
+                    }
+                }
+            }
         } catch (SecurityException $e) {
             self::$logger->warn($e->getMessage());
             throw new ResourceNotAllowedException($e->getMessage());
@@ -398,27 +419,6 @@ class ActiveRecordController extends Controller implements ControllerInterface
         } catch (ValidationException $e) {
             self::$logger->warn($e->getMessage());
             $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
-        }
-
-        if ($accept == 'application/json') {
-            $view = View::getInstance($record, false, $accept);
-            $body = $view->detailedView();
-            $response = new Response(201);
-            $response->setHeader('Content-Type', 'application/json');
-            $response->setHeader('Location', $config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getID());
-            $response->setBody($body);
-        } else {
-            $response = new Response(301);
-
-            if ($this->getNextJob() != '') {
-                $response->redirect($this->getNextJob());
-            } else {
-                if ($this->request->isSecureURI()) {
-                    $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.$ActiveRecordType.'&ActiveRecordID='.$record->getID()));
-                } else {
-                    $response->redirect($config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getID());
-                }
-            }
         }
 
         self::$logger->debug('<<doPOST');
