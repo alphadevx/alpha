@@ -85,24 +85,24 @@ class View
     /**
      * Constructor for the View.  As this is protected, use the View::getInstance method from a public scope.
      *
-     * @param ActiveRecord $Record           The main business object that this view is going to render
+     * @param ActiveRecord $record           The main business object that this view is going to render
      * @param string       $acceptHeader Optionally pass the HTTP Accept header to select the correct renderer provider.
      *
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    protected function __construct($Record, $acceptHeader = null)
+    protected function __construct($record, $acceptHeader = null)
     {
         self::$logger = new Logger('View');
-        self::$logger->debug('>>__construct(Record=['.var_export($Record, true).'], acceptHeader=['.$acceptHeader.'])');
+        self::$logger->debug('>>__construct(Record=['.var_export($record, true).'], acceptHeader=['.$acceptHeader.'])');
 
         $config = ConfigProvider::getInstance();
 
-        if ($Record instanceof ActiveRecord) {
-            $this->record = $Record;
+        if ($record instanceof ActiveRecord) {
+            $this->record = $record;
         } else {
-            throw new IllegalArguementException('The record type provided ['.get_class($Record).'] is not defined anywhere!');
+            throw new IllegalArguementException('The record type provided ['.get_class($record).'] is not defined anywhere!');
         }
 
         self::setProvider($config->get('app.renderer.provider.name'), $acceptHeader);
@@ -115,7 +115,7 @@ class View
      * Static method which returns a View object or a custom child view for the Record specified
      * if one exists.
      *
-     * @param ActiveRecord $Record           The main business object that this view is going to render
+     * @param ActiveRecord $record           The main business object that this view is going to render
      * @param bool         $returnParent Flag to enforce the return of this object instead of a child (defaults to false)
      * @param string       $acceptHeader Optionally pass the HTTP Accept header to select the correct renderer provider.
      *
@@ -123,14 +123,14 @@ class View
      *
      * @since 1.0
      */
-    public static function getInstance($Record, $returnParent = false, $acceptHeader = null)
+    public static function getInstance($record, $returnParent = false, $acceptHeader = null)
     {
         if (self::$logger == null) {
             self::$logger = new Logger('View');
         }
-        self::$logger->debug('>>getInstance(Record=['.var_export($Record, true).'], returnParent=['.$returnParent.'], acceptHeader=['.$acceptHeader.'])');
+        self::$logger->debug('>>getInstance(Record=['.var_export($record, true).'], returnParent=['.$returnParent.'], acceptHeader=['.$acceptHeader.'])');
 
-        $class = new ReflectionClass($Record);
+        $class = new ReflectionClass($record);
         $childView = $class->getShortname();
         $childView = $childView.'View';
 
@@ -139,9 +139,9 @@ class View
             $className = '\Alpha\View\\'.$childView;
 
             if (class_exists($className)) {
-                self::$logger->debug('<<getInstance [new '.$className.'('.get_class($Record).')]');
+                self::$logger->debug('<<getInstance [new '.$className.'('.get_class($record).')]');
 
-                $instance = new $className($Record, $acceptHeader);
+                $instance = new $className($record, $acceptHeader);
 
                 return $instance;
             }
@@ -149,40 +149,40 @@ class View
             $className = '\View\\'.$childView;
 
             if (class_exists('\View\\'.$childView)) {
-                self::$logger->debug('<<getInstance [new '.$className.'('.get_class($Record).')]');
+                self::$logger->debug('<<getInstance [new '.$className.'('.get_class($record).')]');
 
-                $instance = new $className($Record, $acceptHeader);
+                $instance = new $className($record, $acceptHeader);
 
                 return $instance;
             }
 
-            self::$logger->debug('<<getInstance [new View('.get_class($Record).', '.$acceptHeader.')]');
+            self::$logger->debug('<<getInstance [new View('.get_class($record).', '.$acceptHeader.')]');
 
-            return new self($Record, $acceptHeader);
+            return new self($record, $acceptHeader);
         } else {
-            self::$logger->debug('<<getInstance [new View('.get_class($Record).', '.$acceptHeader.')]');
+            self::$logger->debug('<<getInstance [new View('.get_class($record).', '.$acceptHeader.')]');
 
-            return new self($Record, $acceptHeader);
+            return new self($record, $acceptHeader);
         }
     }
 
     /**
      * Simple setter for the view business object.
      *
-     * @param \Alpha\Model\ActiveRecord $Record
+     * @param \Alpha\Model\ActiveRecord $record
      *
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    public function setRecord($Record)
+    public function setRecord($record)
     {
-        self::$logger->debug('>>setRecord(Record=['.var_export($Record, true).'])');
+        self::$logger->debug('>>setRecord(Record=['.var_export($record, true).'])');
 
-        if ($Record instanceof \Alpha\Model\ActiveRecord) {
-            $this->record = $Record;
+        if ($record instanceof \Alpha\Model\ActiveRecord) {
+            $this->record = $record;
         } else {
-            throw new IllegalArguementException('The Record provided ['.get_class($Record).'] is not defined anywhere!');
+            throw new IllegalArguementException('The Record provided ['.get_class($record).'] is not defined anywhere!');
         }
 
         self::$logger->debug('<<setRecord');
@@ -413,7 +413,7 @@ class View
         $footer .= $provider::displayPageFoot($controller);
 
         if (method_exists($controller, 'after_displayPageFoot_callback')) {
-            $footer .= $controller->after_displayPageFoot_callback();
+            $footer .= $controller->{'after_displayPageFoot_callback'}();
         }
 
         self::$logger->debug('<<displayPageFoot ['.$footer.']');
@@ -786,7 +786,7 @@ class View
      * Loads a template for the Record specified if one exists.  Lower level custom templates
      * take precedence.
      *
-     * @param \Alpha\Model\ActiveRecord $Record
+     * @param \Alpha\Model\ActiveRecord $record
      * @param string                   $mode
      * @param array                    $fields
      *
@@ -796,25 +796,25 @@ class View
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public static function loadTemplate($Record, $mode, $fields = array())
+    public static function loadTemplate($record, $mode, $fields = array())
     {
-        self::$logger->debug('>>loadTemplate(Record=['.var_export($Record, true).'], mode=['.$mode.'], fields=['.var_export($fields, true).'])');
+        self::$logger->debug('>>loadTemplate(Record=['.var_export($record, true).'], mode=['.$mode.'], fields=['.var_export($fields, true).'])');
 
         $config = ConfigProvider::getInstance();
 
         // for each Record property, create a local variable holding its value
-        $reflection = new ReflectionClass(get_class($Record));
+        $reflection = new ReflectionClass(get_class($record));
         $properties = $reflection->getProperties();
 
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
 
             if ($propName != 'logger' && !$propObj->isPrivate()) {
-                $prop = $Record->getPropObject($propName);
+                $prop = $record->getPropObject($propName);
                 if ($prop instanceof DEnum) {
-                    ${$propName} = $Record->getPropObject($propName)->getDisplayValue();
+                    ${$propName} = $prop->getDisplayValue();
                 } else {
-                    ${$propName} = $Record->get($propName);
+                    ${$propName} = $record->get($propName);
                 }
             }
         }
@@ -825,7 +825,7 @@ class View
         }
 
         $filename = $mode.'.phtml';
-        $class = new ReflectionClass($Record);
+        $class = new ReflectionClass($record);
         $className = $class->getShortname();
 
         $customPath = $config->get('app.root').'src/View/Html/Templates/'.$className.'/'.$filename;
@@ -919,6 +919,7 @@ class View
             require $customPath;
             $html = ob_get_clean();
 
+            self::$logger->debug('<<loadTemplateFragment');
             return $html;
         } elseif (file_exists($defaultPath1)) {
             self::$logger->debug('Loading template ['.$defaultPath1.']');
@@ -926,6 +927,7 @@ class View
             require $defaultPath1;
             $html = ob_get_clean();
 
+            self::$logger->debug('<<loadTemplateFragment');
             return $html;
         } elseif (file_exists($defaultPath2)) {
             self::$logger->debug('Loading template ['.$defaultPath2.']');
@@ -933,12 +935,12 @@ class View
             require $defaultPath2;
             $html = ob_get_clean();
 
+            self::$logger->debug('<<loadTemplateFragment');
             return $html;
         } else {
+            self::$logger->debug('<<loadTemplateFragment');
             throw new IllegalArguementException('Template fragment not found in ['.$customPath.'] or ['.$defaultPath1.'] or ['.$defaultPath2.']!');
         }
-
-        self::$logger->debug('<<loadTemplateFragment');
     }
 
     /**
