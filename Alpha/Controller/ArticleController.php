@@ -335,11 +335,13 @@ class ArticleController extends ActiveRecordController implements ControllerInte
 
         $params = $request->getParams();
 
+        $record = null;
+
         try {
             // check the hidden security fields before accepting the form POST data
             if (!$this->checkSecurityFields()) {
-                throw new SecurityException('This page cannot accept post data from remote servers!');
                 self::$logger->debug('<<doPUT');
+                throw new SecurityException('This page cannot accept post data from remote servers!');
             }
 
             if (isset($params['markdownTextBoxRows']) && $params['markdownTextBoxRows'] != '') {
@@ -627,7 +629,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                 }
 
                 // render edit button for admins only
-                if ($session->get('currentUser') instanceof Alpha\Model\Person && $session->get('currentUser')->inGroup('Admin')) {
+                if ($session->get('currentUser') instanceof \Alpha\Model\Person && $session->get('currentUser')->inGroup('Admin')) {
                     $html .= '&nbsp;&nbsp;';
                     $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&mode=edit&ActiveRecordID='.$this->record->getID())."'", 'Edit', 'editBut');
                     $html .= $button->render();
