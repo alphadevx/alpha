@@ -8,7 +8,6 @@ use Alpha\Model\Type\Text;
 use Alpha\Model\Type\Boolean;
 use Alpha\Model\Type\Relation;
 use Alpha\Util\Logging\Logger;
-use Alpha\Util\Config\Configprovider;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Exception\ValidationException;
 use Alpha\Exception\FileNotFoundException;

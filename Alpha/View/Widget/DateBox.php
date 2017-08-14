@@ -119,7 +119,7 @@ class DateBox
      */
     public function render()
     {
-         $value = $this->dateObject->getValue();
+            $value = $this->dateObject->getValue();
 
         if ($value == '0000-00-00') {
             $value = '';

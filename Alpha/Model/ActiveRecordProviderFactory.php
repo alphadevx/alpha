@@ -67,8 +67,8 @@ class ActiveRecordProviderFactory
      * A static method that attempts to return a ActiveRecordProviderInterface instance
      * based on the name of the provider class supplied.
      *
-     * @param $providerName The fully-qualified class name of the provider class.
-     * @param $Record The (optional) active record instance to pass to the persistance provider for mapping.
+     * @param string $providerName The fully-qualified class name of the provider class.
+     * @param ActiveRecord $Record The (optional) active record instance to pass to the persistance provider for mapping.
      *
      * @throws \Alpha\Exception\IllegalArguementException
      *
