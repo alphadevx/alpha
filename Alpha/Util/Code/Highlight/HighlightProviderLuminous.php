@@ -2,7 +2,7 @@
 
 namespace Alpha\Util\Code\Highlight;
 
-use luminous;
+use Luminous;
 
 /**
  * Wraps Luminous in the standard API defined in HighlightProviderInterface,
@@ -54,7 +54,7 @@ class HighlightProviderLuminous implements HighlightProviderInterface
      */
     public function highlight($source, $language)
     {
-        $codeblock = luminous::highlight($language, $source, false);
+        $codeblock = Luminous::highlight($language, $source, false);
 
         return $codeblock;
     }
