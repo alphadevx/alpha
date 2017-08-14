@@ -75,8 +75,6 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
         self::$logger = new Logger('ListActiveRecordsController');
         self::$logger->debug('>>__construct()');
 
-        $config = ConfigProvider::getInstance();
-
         // ensure that the super class constructor is called, indicating the rights group
         parent::__construct('Admin');
 
@@ -129,8 +127,6 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
         self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
 
         $params = $request->getParams();
-
-        $config = ConfigProvider::getInstance();
 
         $body = View::displayPageHead($this);
 
