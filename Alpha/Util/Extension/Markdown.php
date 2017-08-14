@@ -106,7 +106,6 @@ class Markdown extends MarkdownExtra
     {
         $config = ConfigProvider::getInstance();
 
-        $whole_match    = $matches[1];
         $link_text      = $this->runSpanGamut($matches[2]);
         $url            = $matches[3] == '' ? $matches[4] : $matches[3];
         $title          = & $matches[7];
@@ -160,6 +159,8 @@ class Markdown extends MarkdownExtra
         $head       = preg_replace('/[|] *$/m', '', $head);
         $underline  = preg_replace('/[|] *$/m', '', $underline);
         $content    = preg_replace('/[|] *$/m', '', $content);
+
+        $attr = array();
         
         # Reading alignement from header underline.
         $separators = preg_split('/ *[|] */', $underline);

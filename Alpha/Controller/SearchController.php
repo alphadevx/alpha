@@ -194,8 +194,6 @@ class SearchController extends Controller implements ControllerInterface
      */
     protected function renderResultList($results, $query = '', $showTags = true)
     {
-        $config = ConfigProvider::getInstance();
-
         $body = '';
 
         if (!empty($query)) {

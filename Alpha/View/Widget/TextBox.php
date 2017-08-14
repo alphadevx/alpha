@@ -140,8 +140,6 @@ class TextBox
      */
     public function render()
     {
-        $config = ConfigProvider::getInstance();
-
         $html = '<div class="form-group">';
         $html .= '  <label for="'.$this->name.'">'.$this->label.'</label>';
 
@@ -168,7 +166,7 @@ class TextBox
     /**
      * Setter for text object.
      *
-     * @param string $text
+     * @param \Alpha\Model\Type\Text $text
      *
      * @since 1.0
      *
@@ -177,7 +175,7 @@ class TextBox
     public function setTextObject($text)
     {
         if ($text instanceof Text) {
-            $this->text = $text;
+            $this->textObject = $text;
         } else {
             throw new IllegalArguementException('Text object passed ['.var_export($text, true).'] is not a valid Text object!');
         }

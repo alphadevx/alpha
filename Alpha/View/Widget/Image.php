@@ -169,8 +169,6 @@ class Image
         self::$logger = new Logger('Image');
         self::$logger->debug('>>__construct(source=['.$source.'], width=['.$width.'], height=['.$height.'], sourceType=['.$sourceType.'], quality=['.$quality.'], scale=['.$scale.'], secure=['.$secure.'])');
 
-        $config = ConfigProvider::getInstance();
-
         if (file_exists($source)) {
             $this->source = $source;
         } else {
@@ -316,17 +314,16 @@ class Image
             // now get the old image
             switch ($this->sourceType->getValue()) {
                 case 'gif':
-                    $old_image = imagecreatefromgif($this->source);
+                    $oldImage = imagecreatefromgif($this->source);
                 break;
                 case 'jpg':
-                    $old_image = imagecreatefromjpeg($this->source);
+                    $oldImage = imagecreatefromjpeg($this->source);
                 break;
-                case 'png':
-                    $old_image = imagecreatefrompng($this->source);
-                break;
+                default:
+                    $oldImage = imagecreatefrompng($this->source);
             }
 
-            if (!$old_image) {
+            if (!$oldImage) {
                 $im = imagecreatetruecolor($this->width->getValue(), $this->height->getValue());
                 $bgc = imagecolorallocate($im, 255, 255, 255);
                 $tc = imagecolorallocate($im, 0, 0, 0);
@@ -341,38 +338,38 @@ class Image
                 imagedestroy($im);
             } else {
                 // the dimensions of the source image
-                $oldWidth = imagesx($old_image);
-                $oldHeight = imagesy($old_image);
+                $oldWidth = imagesx($oldImage);
+                $oldHeight = imagesy($oldImage);
 
                 // now create the new image
-                $new_image = imagecreatetruecolor($this->width->getValue(), $this->height->getValue());
+                $newImage = imagecreatetruecolor($this->width->getValue(), $this->height->getValue());
 
                 // set a transparent background for PNGs
                 if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
                     // Turn off transparency blending (temporarily)
-                    imagealphablending($new_image, false);
+                    imagealphablending($newImage, false);
 
                     // Create a new transparent color for image
-                    $color = imagecolorallocatealpha($new_image, 255, 0, 0, 0);
+                    $color = imagecolorallocatealpha($newImage, 255, 0, 0, 0);
 
                     // Completely fill the background of the new image with allocated color.
-                    imagefill($new_image, 0, 0, $color);
+                    imagefill($newImage, 0, 0, $color);
 
                     // Restore transparency blending
-                    imagesavealpha($new_image, true);
+                    imagesavealpha($newImage, true);
                 }
                 // copy the old image to the new image (in memory, not the file!)
-                imagecopyresampled($new_image, $old_image, 0, 0, 0, 0, $this->width->getValue(), $this->height->getValue(), $oldWidth, $oldHeight);
+                imagecopyresampled($newImage, $oldImage, 0, 0, 0, 0, $this->width->getValue(), $this->height->getValue(), $oldWidth, $oldHeight);
 
                 if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
-                    imagepng($new_image);
+                    imagepng($newImage);
                 } else {
-                    imagejpeg($new_image, null, 100*$this->quality->getValue());
+                    imagejpeg($newImage, null, 100*$this->quality->getValue());
                 }
 
-                $this->cache($new_image);
-                imagedestroy($old_image);
-                imagedestroy($new_image);
+                $this->cache($newImage);
+                imagedestroy($oldImage);
+                imagedestroy($newImage);
             }
         }
     }
