@@ -63,7 +63,7 @@ class HighlightProviderFactory
      * A static method that attempts to return a HighlightProviderInterface instance
      * based on the name of the provider class supplied.
      *
-     * @param $providerName The fully-qualified class name of the provider class, should implement Alpha\Util\Code\Highlight\HighlightProviderInterface
+     * @param string $providerName The fully-qualified class name of the provider class, should implement Alpha\Util\Code\Highlight\HighlightProviderInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      *

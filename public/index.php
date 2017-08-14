@@ -14,36 +14,36 @@ use Alpha\Exception\ResourceNotAllowedException;
 use Alpha\View\View;
 
 try {
-	$config = ConfigProvider::getInstance();
+    $config = ConfigProvider::getInstance();
 
-	set_exception_handler('Alpha\Util\ErrorHandlers::catchException');
-	set_error_handler('Alpha\Util\ErrorHandlers::catchError', $config->get('php.error.log.level'));
+    set_exception_handler('Alpha\Util\ErrorHandlers::catchException');
+    set_error_handler('Alpha\Util\ErrorHandlers::catchError', $config->get('php.error.log.level'));
 
-	$front = new FrontController();
+    $front = new FrontController();
 	
-	if ($config->get('security.client.blacklist.filter.enabled')) {
-		$front->registerFilter(new ClientBlacklistFilter());
-	}
+    if ($config->get('security.client.blacklist.filter.enabled')) {
+        $front->registerFilter(new ClientBlacklistFilter());
+    }
 
-	if ($config->get('security.ip.blacklist.filter.enabled')) {
-		$front->registerFilter(new IPBlacklistFilter());
-	}
+    if ($config->get('security.ip.blacklist.filter.enabled')) {
+        $front->registerFilter(new IPBlacklistFilter());
+    }
 
-	if ($config->get('security.client.temp.blacklist.filter.enabled')) {
-		$front->registerFilter(new ClientTempBlacklistFilter());
-	}
+    if ($config->get('security.client.temp.blacklist.filter.enabled')) {
+        $front->registerFilter(new ClientTempBlacklistFilter());
+    }
 
-	$request = new Request();
-	$response = $front->process($request);
+    $request = new Request();
+    $response = $front->process($request);
 
 } catch (ResourceNotFoundException $rnfe) {
-	$response = new Response(404, View::renderErrorPage(404, $rnfe->getMessage(), array('Content-Type' => 'text/html')));
+    $response = new Response(404, View::renderErrorPage(404, $rnfe->getMessage(), array('Content-Type' => 'text/html')));
 } catch (ResourceNotAllowedException $rnae) {
-	$response = new Response(403, View::renderErrorPage(403, $rnae->getMessage(), array('Content-Type' => 'text/html')));
+    $response = new Response(403, View::renderErrorPage(403, $rnae->getMessage(), array('Content-Type' => 'text/html')));
 }
 
 if ($config->get('security.http.header.x.frame.options') != '' && $response->getHeader('X-Frame-Options') == null) {
-	$response->setHeader('X-Frame-Options', $config->get('security.http.header.x.frame.options'));
+    $response->setHeader('X-Frame-Options', $config->get('security.http.header.x.frame.options'));
 }
 
 echo $response->send();

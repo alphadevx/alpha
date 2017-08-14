@@ -228,16 +228,16 @@ class TCPDFFacade
         self::$logger->debug('<<__construct()');
     }
 
-     /**
-      * Facade method which will invoke our custom markdown class rather than the standard one.
-      *
-      * @param $text The markdown content to parse
-      *
-      * @since 1.0
-      */
-     private function markdown($text)
-     {
-         $config = ConfigProvider::getInstance();
+        /**
+         * Facade method which will invoke our custom markdown class rather than the standard one.
+         *
+         * @param $text The markdown content to parse
+         *
+         * @since 1.0
+         */
+        private function markdown($text)
+        {
+            $config = ConfigProvider::getInstance();
 
         /*
          * Initialize the parser and return the result of its transform method.
@@ -245,9 +245,9 @@ class TCPDFFacade
          */
         static $parser;
 
-         if (!isset($parser)) {
-             $parser = new Markdown();
-         }
+            if (!isset($parser)) {
+                $parser = new Markdown();
+            }
 
         /*
          * Replace all instances of $sysURL in the text with the app.url setting from config
@@ -257,7 +257,7 @@ class TCPDFFacade
 
         // transform text using parser.
         return $parser->transform($text);
-     }
+        }
 
     /**
      * Fetter for the content.
