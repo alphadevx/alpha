@@ -130,6 +130,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
 
             $body .= '<h3>Listing active record which are tagged</h3>';
             $ActiveRecordTypes = ActiveRecord::getRecordClassNames();
+            $fieldname = '';
 
             foreach ($ActiveRecordTypes as $ActiveRecordType) {
                 $record = new $ActiveRecordType();
@@ -169,6 +170,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                     $body .= $button->render();
                 }
             }
+
             ActiveRecord::disconnect();
             $body .= '<form action="'.$request->getURI().'" method="POST" id="clearForm">';
             $body .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'"/>';
@@ -381,8 +383,6 @@ class TagController extends ActiveRecordController implements ControllerInterfac
 
                         return $this->doGET($request);
                     }
-
-                    ActiveRecord::disconnect();
                 }
             } else {
                 return parent::doPOST($request);

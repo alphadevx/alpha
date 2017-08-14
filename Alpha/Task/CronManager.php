@@ -85,7 +85,6 @@ class CronManager
             $task = new $taskClass();
 
             $startTime = microtime(true);
-            $maxAllowedTime = $startTime+$task->getMaxRunTime();
 
             self::$logger->info('Start time is ['.$startTime.'], maximum task run time is ['.$task->getMaxRunTime().']');
 
@@ -115,7 +114,7 @@ class CronManager
 
         if (self::$logger == null) {
             self::$logger = new Logger('CronManager');
-            self::$logger->setLogFile($config->get('app.file.store.dir').'logs/tasks.log');
+            self::$logger->setLogProviderFile($config->get('app.file.store.dir').'logs/tasks.log');
         }
         self::$logger->debug('>>getTaskClassNames()');
 

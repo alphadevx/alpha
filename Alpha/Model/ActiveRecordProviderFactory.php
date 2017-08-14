@@ -84,8 +84,6 @@ class ActiveRecordProviderFactory
 
         self::$logger->debug('>>getInstance(providerName=['.$providerName.'], Record=['.print_r($Record, true).'])');
 
-        $config = ConfigProvider::getInstance();
-
         if (class_exists($providerName)) {
             $instance = new $providerName();
 
@@ -101,9 +99,8 @@ class ActiveRecordProviderFactory
 
             return $instance;
         } else {
+            self::$logger->debug('<<getInstance');
             throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
         }
-
-        self::$logger->debug('<<getInstance');
     }
 }

@@ -105,8 +105,6 @@ class SearchController extends Controller implements ControllerInterface
         self::$logger = new Logger('SearchController');
         self::$logger->debug('>>__construct(visibility=['.$visibility.'])');
 
-        $config = ConfigProvider::getInstance();
-
         // ensure that the super class constructor is called, indicating the rights group
         parent::__construct($visibility);
 
@@ -197,9 +195,6 @@ class SearchController extends Controller implements ControllerInterface
     protected function renderResultList($results, $query = '', $showTags = true)
     {
         $config = ConfigProvider::getInstance();
-
-        // used to track when our pagination range ends
-        $end = ($this->startPoint+$config->get('app.list.page.amount'));
 
         $body = '';
 

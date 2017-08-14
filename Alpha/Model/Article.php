@@ -403,8 +403,6 @@ class Article extends ActiveRecord
      */
     public function getAttachmentSecureURL($filename)
     {
-        $config = ConfigProvider::getInstance();
-
         return FrontController::generateSecureURL('act=Alpha\\Controller\\AttachmentController&articleID='.$this->getID().'&filename='.$filename);
     }
 
@@ -501,8 +499,6 @@ class Article extends ActiveRecord
 
         if (!isset($result[0])) {
             throw new AlphaException('Failed to check if the current user voted for the article ['.$this->ID.'], query ['.$sqlQuery.']');
-
-            return false;
         }
 
         $row = $result[0];
