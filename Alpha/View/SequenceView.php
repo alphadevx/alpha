@@ -95,8 +95,6 @@ class SequenceView extends View
             $this->{'before_listView_callback'}();
         }
 
-        $config = ConfigProvider::getInstance();
-
         // the form action
         $fields['formAction'] = $fields['URI'];
 
@@ -198,8 +196,6 @@ class SequenceView extends View
         if (method_exists($this, 'before_detailedView_callback')) {
             $this->{'before_detailedView_callback'}();
         }
-
-        $config = ConfigProvider::getInstance();
 
         // we may want to display the ID regardless of class
         $fields['IDLabel'] = $this->record->getDataLabel('ID');
