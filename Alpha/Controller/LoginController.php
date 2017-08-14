@@ -223,10 +223,6 @@ class LoginController extends Controller implements ControllerInterface
                     // check the password
                     return $this->doLoginAndRedirect($params['password']);
                 }
-
-                $body .= View::displayPageHead($this);
-
-                $body .= $this->personView->displayLoginForm();
             }
 
             if (isset($params['resetBut'])) {
@@ -327,8 +323,8 @@ class LoginController extends Controller implements ControllerInterface
 
                 return $response;
             } else {
-                throw new ValidationException('Failed to login user '.$this->personObject->get('email').', the password is incorrect!');
                 self::$logger->debug('<<doLoginAndRedirect');
+                throw new ValidationException('Failed to login user '.$this->personObject->get('email').', the password is incorrect!');
             }
         }
     }
