@@ -122,7 +122,7 @@ abstract class Feed
      *
      * @since 1.0
      */
-    private $Record;
+    private $record;
 
     /**
      * An array containing Record field names -> RSS field name mappings.
