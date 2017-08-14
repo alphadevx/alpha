@@ -131,8 +131,6 @@ class FeedController extends Controller implements ControllerInterface
         self::$logger = new Logger('FeedController');
         self::$logger->debug('>>__construct()');
 
-        $config = ConfigProvider::getInstance();
-
         // ensure that the super class constructor is called, indicating the rights group
         parent::__construct('Public');
 
@@ -182,6 +180,8 @@ class FeedController extends Controller implements ControllerInterface
 
             $this->setup();
 
+            $feed = null;
+            
             switch ($type) {
                 case 'RSS2':
                     $feed = new RSS2($this->ActiveRecordType, $this->title, str_replace('&', '&amp;', $request->getURI()), $this->description);
