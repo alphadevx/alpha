@@ -180,7 +180,7 @@ class CacheController extends Controller implements ControllerInterface
     /**
      * Handle POST requests.
      *
-     * @param \Alpha\Util\Http\Response $request
+     * @param \Alpha\Util\Http\Request $request
      *
      * @throws \Alpha\Exception\SecurityException
      * @throws \Alpha\Exception\IllegalArguementException

@@ -121,8 +121,6 @@ class InstallController extends Controller implements ControllerInterface
             return $controller->doGET($request);
         }
 
-        $params = $request->getParams();
-
         $sessionProvider = $config->get('session.provider.name');
         $session = SessionProviderFactory::getInstance($sessionProvider);
 

@@ -134,13 +134,13 @@ class ExcelController extends Controller implements ControllerInterface
                     $body .= $convertor->render();
                 } else {
                     // handle all records of this type
-                    $Records = $Record->loadAll();
+                    $records = $this->record->loadAll();
                     ActiveRecord::disconnect();
 
                     $first = true;
 
-                    foreach ($Records as $Record) {
-                        $convertor = new ActiveRecord2Excel($Record);
+                    foreach ($records as $record) {
+                        $convertor = new ActiveRecord2Excel($record);
                         if ($first) {
                             $body .= $convertor->render(true);
                             $first = false;
