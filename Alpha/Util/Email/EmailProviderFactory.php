@@ -90,9 +90,8 @@ class EmailProviderFactory
 
             return $instance;
         } else {
+            self::$logger->debug('<<getInstance');
             throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
         }
-
-        self::$logger->debug('<<getInstance');
     }
 }

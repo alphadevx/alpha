@@ -106,8 +106,6 @@ class LogoutController extends Controller implements ControllerInterface
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
-        $params = $request->getParams();
-
         $config = ConfigProvider::getInstance();
 
         if ($this->record instanceof Person) {

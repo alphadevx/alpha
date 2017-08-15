@@ -193,7 +193,7 @@ class GraphNode
      * @param array  $nodeColour
      * @param string $URL
      */
-    public function __construct($id, $width, $height, $message = '', $nodeColour = null, $URL = null)
+    public function __construct($id, $width, $height, $message = '', $nodeColour = array(), $URL = null)
     {
         $this->id = $id;
         $this->width = $width;

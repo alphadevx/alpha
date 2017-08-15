@@ -54,7 +54,7 @@ class HighlightProviderLuminous implements HighlightProviderInterface
      */
     public function highlight($source, $language)
     {
-        $codeblock = Luminous::highlight($language, $source, false);
+        $codeblock = strval(Luminous::highlight($language, $source, false));
 
         return $codeblock;
     }

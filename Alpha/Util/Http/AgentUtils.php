@@ -122,7 +122,7 @@ class AgentUtils
         $isBot = false;
 
         foreach (self::$bots as $botName) {
-            if (stristr($userAgent, $botName) == true) {
+            if (stristr($userAgent, $botName) !== false) {
                 $isBot = true;
                 break;
             }

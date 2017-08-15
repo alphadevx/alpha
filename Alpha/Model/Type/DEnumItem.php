@@ -141,8 +141,6 @@ class DEnumItem extends ActiveRecord implements TypeInterface
             $result = $provider->query($sqlQuery);
         } catch (CustomQueryException $e) {
             throw new AlphaException('Failed to load objects, error is ['.$e->getMessage().']');
-
-            return array();
         }
 
         // now build an array of objects to be returned

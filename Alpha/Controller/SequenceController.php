@@ -109,9 +109,9 @@ class SequenceController extends ActiveRecordController implements ControllerInt
         }
 
         // set the start point for the list pagination
-        if (isset($params['start']) ? $this->startPoint = $params['start'] : $this->startPoint = 1);
+        if (isset($params['start']) ? $this->start = $params['start'] : $this->start = 1);
 
-        $records = $sequence->loadAll($this->startPoint);
+        $records = $sequence->loadAll($this->start);
 
         ActiveRecord::disconnect();
 

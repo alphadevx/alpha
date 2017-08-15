@@ -106,8 +106,6 @@ class IndexController extends Controller implements ControllerInterface
             return $response;
         }
 
-        $params = $request->getParams();
-
         $body = View::loadTemplateFragment('html', 'head.phtml', array('title' => $config->get('app.title'), 'description' => 'Welcome to our site', 'allowCSSOverrides' => true));
         $body .= View::loadTemplateFragment('html', 'index.phtml');
         $body .= View::loadTemplateFragment('html', 'footer.phtml');
