@@ -139,7 +139,6 @@ class DEnumView extends View
         $config = ConfigProvider::getInstance();
 
         $labels = $this->record->getDataLabels();
-        $obj_type = '';
 
         $html = '<form action="'.$fields['URI'].'" method="POST" accept-charset="UTF-8">';
 
