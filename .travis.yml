@@ -7,10 +7,6 @@ services:
  - memcached
  - redis
 
-install:
- - echo 'extension = memcached.so' >> ~/.phpenv/versions/7.1.7/etc/php.ini;
- - echo 'max_execution_time = 600' >> ~/.phpenv/versions/7.1.7/etc/php.ini;
-
 before_script:
  - wget http://getcomposer.org/composer.phar
  - php composer.phar install --dev --no-interaction
