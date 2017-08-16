@@ -146,7 +146,7 @@ class MarkdownFacade
                     $type = 'gif';
                 } elseif ($imgType == 2) {
                     $type = 'jpg';
-                } elseif ($imgType == 3) {
+                } else {
                     $type = 'png';
                 }
 
