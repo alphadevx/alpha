@@ -190,8 +190,6 @@ class Tag extends ActiveRecord
             $result = $provider->query($sqlQuery);
         } catch (CustomQueryException $e) {
             throw new AlphaException('Failed to query the tags table, error is ['.$e->getMessage().']');
-
-            return array();
         }
 
         // now build an array of tags to be returned
