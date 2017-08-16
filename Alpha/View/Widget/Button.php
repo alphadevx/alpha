@@ -84,6 +84,15 @@ class Button
      * @since 1.0
      */
     private $imgURL;
+    
+    /**
+     * If provided, the Bootsrap glyphIcon to use for this button.
+     *
+     * @var string
+     *
+     * @since 3.0
+     */
+    private $glyphIcon;
 
     /**
      * The constructor.
@@ -105,7 +114,6 @@ class Button
         $this->id = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt($id)) : $id);
         $this->imgURL = $imgURL;
         $this->glyphIcon = $glyphIcon;
-        $this->title = $title;
     }
 
     /**
