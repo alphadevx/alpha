@@ -63,8 +63,6 @@ class ArticleView extends View
      */
     public function markdownView($fields = array())
     {
-        $config = ConfigProvider::getInstance();
-
         $markdown = new MarkdownFacade($this->record);
 
         $fields['markdownContent'] = $markdown->getContent();
