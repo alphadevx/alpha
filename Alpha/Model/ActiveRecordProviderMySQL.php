@@ -1274,7 +1274,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                     $sqlQuery = rtrim($sqlQuery, ',');
                     $sqlQuery .= ') CHARACTER SET utf8,';
                 } elseif ($prop instanceof DEnum) {
-                    $tmp = new DEnum(get_class($this->record).'::'.$propName);
+                    $denum = new DEnum(get_class($this->record).'::'.$propName);
+                    $denum->saveIfNew();
                     $sqlQuery .= "$propName INT(11) ZEROFILL,";
                 } elseif ($prop instanceof Relation) {
                     $sqlQuery .= "$propName INT(11) ZEROFILL UNSIGNED,";
@@ -1352,7 +1353,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                     $sqlQuery = rtrim($sqlQuery, ',');
                     $sqlQuery .= ') CHARACTER SET utf8,';
                 } elseif ($prop instanceof DEnum) {
-                    $tmp = new DEnum(get_class($this->record).'::'.$propName);
+                    $denum = new DEnum(get_class($this->record).'::'.$propName);
+                    $denum->saveIfNew();
                     $sqlQuery .= "$propName INT(11) ZEROFILL,";
                 } elseif ($prop instanceof Relation) {
                     $sqlQuery .= "$propName INT(11) ZEROFILL UNSIGNED,";
@@ -1479,7 +1481,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                     $sqlQuery = rtrim($sqlQuery, ',');
                     $sqlQuery .= ') CHARACTER SET utf8';
                 } elseif ($prop instanceof DEnum) {
-                    $tmp = new DEnum(get_class($this->record).'::'.$propName);
+                    $denum = new DEnum(get_class($this->record).'::'.$propName);
+                    $denum->saveIfNew();
                     $sqlQuery .= "$propName INT(11) ZEROFILL";
                 } elseif ($prop instanceof Relation) {
                     $sqlQuery .= "$propName INT(11) ZEROFILL UNSIGNED";

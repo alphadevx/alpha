@@ -1311,7 +1311,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                 } elseif ($prop instanceof Enum) {
                     $sqlQuery .= "$propName TEXT,";
                 } elseif ($prop instanceof DEnum) {
-                    $tmp = new DEnum(get_class($this->record).'::'.$propName);
+                    $denum = new DEnum(get_class($this->record).'::'.$propName);
+                    $denum->saveIfNew();
                     $sqlQuery .= "$propName INTEGER(11),";
                 } elseif ($prop instanceof Relation) {
                     $sqlQuery .= "$propName INTEGER(11),";
@@ -1406,7 +1407,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                 } elseif ($prop instanceof Enum) {
                     $sqlQuery .= "$propName TEXT,";
                 } elseif ($prop instanceof DEnum) {
-                    $tmp = new DEnum(get_class($this->record).'::'.$propName);
+                    $denum = new DEnum(get_class($this->record).'::'.$propName);
+                    $denum->saveIfNew();
                     $sqlQuery .= "$propName INTEGER(11),";
                 } elseif ($prop instanceof Relation) {
                     $sqlQuery .= "$propName INTEGER(11),";
@@ -1529,7 +1531,8 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                 } elseif ($prop instanceof Enum) {
                     $sqlQuery .= "$propName TEXT";
                 } elseif ($prop instanceof DEnum) {
-                    $tmp = new DEnum(get_class($this->record).'::'.$propName);
+                    $denum = new DEnum(get_class($this->record).'::'.$propName);
+                    $denum->saveIfNew();
                     $sqlQuery .= "$propName INTEGER(11)";
                 } elseif ($prop instanceof Relation) {
                     $sqlQuery .= "$propName INTEGER(11)";

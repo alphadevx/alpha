@@ -137,9 +137,23 @@ class DEnum extends ActiveRecord implements TypeInterface
 
         $this->name = new SmallText($name);
 
-        if (isset($name) && $this->checkTableExists()) {
+        if (isset($name)) {
+            $this->saveIfNew();
+        }
+    }
+
+    /**
+     * Saves a new DEnum record with the same name as this instance if one does not already exist
+     *
+     * @return void
+     *
+     * @since 3.0
+     */
+    public function saveIfNew()
+    {
+        if (isset($this->name) && $this->checkTableExists()) {
             try {
-                $this->loadByAttribute('name', $name);
+                $this->loadByAttribute('name', $this->name);
             } catch (RecordNotFoundException $e) {
                 // DEnum does not exist so create it
                 $this->save();
@@ -189,9 +203,9 @@ class DEnum extends ActiveRecord implements TypeInterface
         $count = 0;
         $this->options = array();
 
-        $tmp = new DEnumItem();
+        $item = new DEnumItem();
 
-        foreach ($tmp->loadItems($options->getID()) as $DEnumItem) {
+        foreach ($item->loadItems($options->getID()) as $DEnumItem) {
             $this->options[$DEnumItem->getID()] = $DEnumItem->getValue();
             ++$count;
         }
