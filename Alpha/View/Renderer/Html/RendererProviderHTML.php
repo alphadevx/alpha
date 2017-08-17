@@ -18,7 +18,9 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\InputFilter;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Util\Http\Request;
+use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\SmallText;
+use Alpha\Model\Type\Text;
 use Alpha\Model\ActiveRecord;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\AlphaException;
@@ -262,20 +264,17 @@ class RendererProviderHTML implements RendererProviderInterface
             $property = $this->record->getPropObject($propName);
             if (!($property instanceof SmallText && $property->checkIsPassword())) {
                 if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $this->record->getTransientAttributes())) {
-                    $propClass = get_class($this->record->getPropObject($propName));
-
-                    if ($propClass == 'Text') {
+                    if ($property instanceof Text) {
                         $text = htmlentities($this->record->get($propName), ENT_COMPAT, 'utf-8');
                         if (mb_strlen($text) > 70) {
                             $html .= '  <td>&nbsp;'.mb_substr($text, 0, 70).'...</td>';
                         } else {
                             $html .= '  <td>&nbsp;'.$text.'</td>';
                         }
-                    } elseif ($propClass == 'DEnum') {
-                        $prop = $this->record->getPropObject($propName);
-                        $html .= '  <td>&nbsp;'.$prop->getDisplayValue().'</td>';
+                    } elseif ($property instanceof DEnum) {
+                        $html .= '  <td>&nbsp;'.$property->getDisplayValue().'</td>';
                     } else {
-                        $html .= '  <td>&nbsp;'.$this->record->get($propName).'</td>';
+                        $html .= '  <td>&nbsp;'.$property->getValue().'</td>';
                     }
                 }
                 if ($propName == 'ID') {
