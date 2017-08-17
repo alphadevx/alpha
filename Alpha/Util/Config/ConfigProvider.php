@@ -88,7 +88,7 @@ class ConfigProvider
     /**
      * Get the config object instance.
      *
-     * @return \Alpha\Util\Config\ConfigProvider
+     * @return \Alpha\Util\Config\ConfigProvider|Alpha\Util\Config\ConfigCallbacks
      *
      * @since 1.0
      */
