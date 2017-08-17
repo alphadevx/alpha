@@ -272,7 +272,8 @@ class RendererProviderHTML implements RendererProviderInterface
                             $html .= '  <td>&nbsp;'.$text.'</td>';
                         }
                     } elseif ($propClass == 'DEnum') {
-                        $html .= '  <td>&nbsp;'.$this->record->getPropObject($propName)->getDisplayValue().'</td>';
+                        $prop = $this->record->getPropObject($propName);
+                        $html .= '  <td>&nbsp;'.$prop->getDisplayValue().'</td>';
                     } else {
                         $html .= '  <td>&nbsp;'.$this->record->get($propName).'</td>';
                     }
