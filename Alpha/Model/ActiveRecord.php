@@ -1344,7 +1344,7 @@ abstract class ActiveRecord
      *
      * @param string $prop The name of the property we are getting.
      *
-     * @return \Alpha\Model\Type\Type|\Alpha\Model\Type\DEnum|bool The complex type object found.
+     * @return \Alpha\Model\Type\Type|bool The complex type object found.
      *
      * @since 1.0
      *
