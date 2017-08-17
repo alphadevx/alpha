@@ -1630,6 +1630,8 @@ abstract class Controller
             case 'TRACE':
                 $response = $this->doTRACE($request);
             break;
+            default:
+                $response = $this->doGET($request);
         }
 
         return $response;

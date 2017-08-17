@@ -474,7 +474,13 @@ class ActiveRecordController extends Controller implements ControllerInterface
 
             $record->load($params['ActiveRecordID']);
             $record->populateFromArray($params);
-            $record->save();
+
+            try {
+                $record->save();
+            } catch (ValidationException $e) {
+                self::$logger->warn($e->getMessage());
+                $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
+            }
 
             self::$logger->action('Saved '.$ActiveRecordType.' instance with ID '.$record->getID());
 
@@ -485,6 +491,31 @@ class ActiveRecordController extends Controller implements ControllerInterface
             }
 
             ActiveRecord::disconnect();
+
+            if ($accept == 'application/json') {
+                $view = View::getInstance($record, false, $accept);
+                $body = $view->detailedView();
+                $response = new Response(200);
+                $response->setHeader('Content-Type', 'application/json');
+                $response->setHeader('Location', $config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getID());
+                $response->setBody($body);
+            } else {
+                $response = new Response(301);
+
+                if ($this->getNextJob() != '') {
+                    $response->redirect($this->getNextJob());
+                } else {
+                    if ($this->request->isSecureURI()) {
+                        $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.urldecode($params['ActiveRecordType']).'&ActiveRecordID='.$record->getID().'&view=edit'));
+                    } else {
+                        $response->redirect($config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getID().'/edit');
+                    }
+                }
+            }
+
+            self::$logger->debug('<<doPUT');
+
+            return $response;
         } catch (SecurityException $e) {
             self::$logger->warn($e->getMessage());
             throw new ResourceNotAllowedException($e->getMessage());
@@ -494,35 +525,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
         } catch (RecordNotFoundException $e) {
             self::$logger->warn($e->getMessage());
             throw new ResourceNotFoundException('The record that you have requested cannot be found!');
-        } catch (ValidationException $e) {
-            self::$logger->warn($e->getMessage());
-            $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
         }
-
-        if ($accept == 'application/json') {
-            $view = View::getInstance($record, false, $accept);
-            $body = $view->detailedView();
-            $response = new Response(200);
-            $response->setHeader('Content-Type', 'application/json');
-            $response->setHeader('Location', $config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getID());
-            $response->setBody($body);
-        } else {
-            $response = new Response(301);
-
-            if ($this->getNextJob() != '') {
-                $response->redirect($this->getNextJob());
-            } else {
-                if ($this->request->isSecureURI()) {
-                    $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType='.urldecode($params['ActiveRecordType']).'&ActiveRecordID='.$record->getID().'&view=edit'));
-                } else {
-                    $response->redirect($config->get('app.url').'/record/'.$params['ActiveRecordType'].'/'.$record->getID().'/edit');
-                }
-            }
-        }
-
-        self::$logger->debug('<<doPUT');
-
-        return $response;
     }
 
     /**
