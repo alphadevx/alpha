@@ -177,61 +177,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
         try {
             // get a single record
             if (isset($params['ActiveRecordType']) && isset($params['ActiveRecordID'])) {
-                if (!Validator::isInteger($params['ActiveRecordID'])) {
-                    throw new IllegalArguementException('Invalid oid ['.$params['ActiveRecordID'].'] provided on the request!');
-                }
-
-                $ActiveRecordType = urldecode($params['ActiveRecordType']);
-
-                if (class_exists($ActiveRecordType)) {
-                    $record = new $ActiveRecordType();
-                } else {
-                    throw new IllegalArguementException('No ActiveRecord available to view!');
-                }
-
-                // set up the title and meta details
-                if (isset($params['view']) && $params['view'] == 'edit') {
-                    if (!isset($this->title)) {
-                        $this->setTitle('Editing a '.$record->getFriendlyClassName());
-                    }
-                    if (!isset($this->description)) {
-                        $this->setDescription('Page to edit a '.$record->getFriendlyClassName().'.');
-                    }
-                    if (!isset($this->keywords)) {
-                        $this->setKeywords('edit,'.$record->getFriendlyClassName());
-                    }
-                } else {
-                    if (!isset($this->title)) {
-                        $this->setTitle('Viewing a '.$record->getFriendlyClassName());
-                    }
-                    if (!isset($this->description)) {
-                        $this->setDescription('Page to view a '.$record->getFriendlyClassName().'.');
-                    }
-                    if (!isset($this->keywords)) {
-                        $this->setKeywords('view,'.$record->getFriendlyClassName());
-                    }
-                }
-
-                $record->load($params['ActiveRecordID']);
-                ActiveRecord::disconnect();
-
-                $view = View::getInstance($record, false, $accept);
-
-                $body .= View::displayPageHead($this);
-
-                $message = $this->getStatusMessage();
-                if (!empty($message)) {
-                    $body .= $message;
-                }
-
-                $body .= View::renderDeleteForm($request->getURI());
-
-                if (isset($params['view']) && $params['view'] == 'edit') {
-                    $fields = array('formAction' => $this->request->getURI());
-                    $body .= $view->editView($fields);
-                } else {
-                    $body .= $view->detailedView();
-                }
+                $body .= $this->renderRecord($params, $accept);
             } elseif (isset($params['ActiveRecordType']) && isset($params['start'])) {
                 // list all records of this type
                 $ActiveRecordType = urldecode($params['ActiveRecordType']);
@@ -756,6 +702,80 @@ class ActiveRecordController extends Controller implements ControllerInterface
         }
 
         $body .= '</ul>';
+
+        return $body;
+    }
+
+    /**
+     * Load the requested record and render the HTML or JSON for it.
+     *
+     * @param array $params The request params
+     * @param string $accept The HTTP accept heard value
+     *
+     * @throws \Alpha\Exception\ResourceNotFoundException
+     * @throws \Alpha\Exception\IllegalArguementException
+     *
+     * @return string The display data for the requested record
+     *
+     * @since 3.0
+     */
+    private function renderRecord($params, $accept)
+    {
+        if (!Validator::isInteger($params['ActiveRecordID'])) {
+            throw new IllegalArguementException('Invalid oid ['.$params['ActiveRecordID'].'] provided on the request!');
+        }
+
+        $ActiveRecordType = urldecode($params['ActiveRecordType']);
+
+        if (class_exists($ActiveRecordType)) {
+            $record = new $ActiveRecordType();
+        } else {
+            throw new IllegalArguementException('No ActiveRecord available to view!');
+        }
+
+        // set up the title and meta details
+        if (isset($params['view']) && $params['view'] == 'edit') {
+            if (!isset($this->title)) {
+                $this->setTitle('Editing a '.$record->getFriendlyClassName());
+            }
+            if (!isset($this->description)) {
+                $this->setDescription('Page to edit a '.$record->getFriendlyClassName().'.');
+            }
+            if (!isset($this->keywords)) {
+                $this->setKeywords('edit,'.$record->getFriendlyClassName());
+            }
+        } else {
+            if (!isset($this->title)) {
+                $this->setTitle('Viewing a '.$record->getFriendlyClassName());
+            }
+            if (!isset($this->description)) {
+                $this->setDescription('Page to view a '.$record->getFriendlyClassName().'.');
+            }
+            if (!isset($this->keywords)) {
+                $this->setKeywords('view,'.$record->getFriendlyClassName());
+            }
+        }
+
+        $record->load($params['ActiveRecordID']);
+        ActiveRecord::disconnect();
+
+        $view = View::getInstance($record, false, $accept);
+
+        $body = View::displayPageHead($this);
+
+        $message = $this->getStatusMessage();
+        if (!empty($message)) {
+            $body .= $message;
+        }
+
+        $body .= View::renderDeleteForm($this->request->getURI());
+
+        if (isset($params['view']) && $params['view'] == 'edit') {
+            $fields = array('formAction' => $this->request->getURI());
+            $body .= $view->editView($fields);
+        } else {
+            $body .= $view->detailedView();
+        }
 
         return $body;
     }
