@@ -776,8 +776,6 @@ class ActiveRecordController extends Controller implements ControllerInterface
 
         ActiveRecord::disconnect();
 
-        $view = View::getInstance($record, false, $accept);
-
         $body = View::displayPageHead($this);
 
         $message = $this->getStatusMessage();
