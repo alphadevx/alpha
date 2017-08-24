@@ -180,66 +180,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 $body .= $this->renderRecord($params, $accept);
             } elseif (isset($params['ActiveRecordType']) && isset($params['start'])) {
                 // list all records of this type
-                $ActiveRecordType = urldecode($params['ActiveRecordType']);
-
-                if (class_exists($ActiveRecordType)) {
-                    $record = new $ActiveRecordType();
-                } else {
-                    throw new IllegalArguementException('No ActiveRecord available to view!');
-                }
-
-                // set up the title and meta details
-                if (!isset($this->title)) {
-                    $this->setTitle('Listing all '.$record->getFriendlyClassName());
-                }
-                if (!isset($this->description)) {
-                    $this->setDescription('Listing all '.$record->getFriendlyClassName());
-                }
-                if (!isset($this->keywords)) {
-                    $this->setKeywords('list,all,'.$record->getFriendlyClassName());
-                }
-
-                if (isset($this->filterField) && isset($this->filterValue)) {
-                    if (isset($this->sort) && isset($this->order)) {
-                        $records = $record->loadAllByAttribute($this->filterField, $this->filterValue, $params['start'], $params['limit'],
-                            $this->sort, $this->order);
-                    } else {
-                        $records = $record->loadAllByAttribute($this->filterField, $this->filterValue, $params['start'], $params['limit']);
-                    }
-
-                    $this->recordCount = $record->getCount(array($this->filterField), array($this->filterValue));
-                } else {
-                    if (isset($this->sort) && isset($this->order)) {
-                        $records = $record->loadAll($params['start'], $params['limit'], $this->sort, $this->order);
-                    } else {
-                        $records = $record->loadAll($params['start'], $params['limit']);
-                    }
-
-                    $this->recordCount = $record->getCount();
-                }
-
-                ActiveRecord::disconnect();
-
-                $view = View::getInstance($record, false, $accept);
-
-                $body .= View::displayPageHead($this);
-
-                $message = $this->getStatusMessage();
-                if (!empty($message)) {
-                    $body .= $message;
-                }
-
-                $body .= View::renderDeleteForm($this->request->getURI());
-
-                foreach ($records as $record) {
-                    $view = View::getInstance($record, false, $accept);
-                    $fields = array('formAction' => $this->request->getURI());
-                    $body .= $view->listView($fields);
-                }
-
-                if ($accept == 'application/json') {
-                    $body = rtrim($body, ',');
-                }
+                $body .= $this->renderRecords($params, $accept);
             } elseif (isset($params['ActiveRecordType'])) {
                 // create a new record of this type
                 $ActiveRecordType = urldecode($params['ActiveRecordType']);
@@ -775,6 +716,85 @@ class ActiveRecordController extends Controller implements ControllerInterface
             $body .= $view->editView($fields);
         } else {
             $body .= $view->detailedView();
+        }
+
+        return $body;
+    }
+
+    /**
+     * Load all records of the type requested and render the HTML or JSON for them.
+     *
+     * @param array $params The request params
+     * @param string $accept The HTTP accept heard value
+     *
+     * @throws \Alpha\Exception\ResourceNotFoundException
+     * @throws \Alpha\Exception\IllegalArguementException
+     *
+     * @return string The display data for the requested records
+     *
+     * @since 3.0
+     */
+    private function renderRecords($params, $accept)
+    {
+        $ActiveRecordType = urldecode($params['ActiveRecordType']);
+
+        if (class_exists($ActiveRecordType)) {
+            $record = new $ActiveRecordType();
+        } else {
+            throw new IllegalArguementException('No ActiveRecord available to view!');
+        }
+
+        // set up the title and meta details
+        if (!isset($this->title)) {
+            $this->setTitle('Listing all '.$record->getFriendlyClassName());
+        }
+        if (!isset($this->description)) {
+            $this->setDescription('Listing all '.$record->getFriendlyClassName());
+        }
+        if (!isset($this->keywords)) {
+            $this->setKeywords('list,all,'.$record->getFriendlyClassName());
+        }
+
+        if (isset($this->filterField) && isset($this->filterValue)) {
+            if (isset($this->sort) && isset($this->order)) {
+                $records = $record->loadAllByAttribute($this->filterField, $this->filterValue, $params['start'], $params['limit'],
+                    $this->sort, $this->order);
+            } else {
+                $records = $record->loadAllByAttribute($this->filterField, $this->filterValue, $params['start'], $params['limit']);
+            }
+
+            $this->recordCount = $record->getCount(array($this->filterField), array($this->filterValue));
+        } else {
+            if (isset($this->sort) && isset($this->order)) {
+                $records = $record->loadAll($params['start'], $params['limit'], $this->sort, $this->order);
+            } else {
+                $records = $record->loadAll($params['start'], $params['limit']);
+            }
+
+            $this->recordCount = $record->getCount();
+        }
+
+        ActiveRecord::disconnect();
+
+        $view = View::getInstance($record, false, $accept);
+
+        $body = View::displayPageHead($this);
+
+        $message = $this->getStatusMessage();
+        if (!empty($message)) {
+            $body .= $message;
+        }
+
+        $body .= View::renderDeleteForm($this->request->getURI());
+
+        foreach ($records as $record) {
+            $view = View::getInstance($record, false, $accept);
+            $fields = array('formAction' => $this->request->getURI());
+            $body .= $view->listView($fields);
+        }
+
+        if ($accept == 'application/json') {
+            $body = rtrim($body, ',');
         }
 
         return $body;
