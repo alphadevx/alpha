@@ -95,17 +95,37 @@ class Button
     private $glyphIcon;
 
     /**
+     * If provided, the Bootsrap tooltip to use for this button.
+     *
+     * @var string
+     *
+     * @since 3.0
+     */
+    private $tooltip;
+
+    /**
+     * If provided, the Bootsrap tooltip position (left|right|top|bottom) to use for this button.
+     *
+     * @var string
+     *
+     * @since 3.0
+     */
+    private $tooltipPosition;
+
+    /**
      * The constructor.
      *
-     * @param string $action    The javascript action to be carried out (or set to "submit" to make a submit button, "file" for file uploads).
-     * @param string $title     The title to appear on the button.
-     * @param string $id        The HTML id attribute for the button.
-     * @param string $imgURL    If provided, the button will be a clickable image using this image.
-     * @param string $glyphIcon If provided, the Bootsrap glyphIcon to use for this button.
+     * @param string $action           The javascript action to be carried out (or set to "submit" to make a submit button, "file" for file uploads).
+     * @param string $title            The title to appear on the button.
+     * @param string $id               The HTML id attribute for the button.
+     * @param string $imgURL           If provided, the button will be a clickable image using this image.
+     * @param string $glyphIcon        If provided, the Bootsrap glyphIcon to use for this button.
+     * @param string $tooltip          If provided, the Bootsrap tooltip to use for this button.
+     * @param string $tooltipPosition  If provided, the Bootsrap tooltip position (left|right|top|bottom) to use for this button.
      *
      * @since 1.0
      */
-    public function __construct($action, $title, $id, $imgURL = '', $glyphIcon = '')
+    public function __construct($action, $title, $id, $imgURL = '', $glyphIcon = '', $tooltip = '', $tooltipPosition = '')
     {
         $config = ConfigProvider::getInstance();
 
@@ -114,6 +134,8 @@ class Button
         $this->id = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt($id)) : $id);
         $this->imgURL = $imgURL;
         $this->glyphIcon = $glyphIcon;
+        $this->tooltip = $tooltip;
+        $this->tooltipPosition = $tooltipPosition;
     }
 
     /**
@@ -128,29 +150,39 @@ class Button
     public function render($width = 0)
     {
         $html = '';
+        $tooltip = '';
+
+        if (!empty($this->tooltip)) {
+            $position = 'bottom';
+            if (!empty($this->tooltipPosition)) {
+                $position = $this->tooltipPosition;
+            }
+
+            $tooltip = ' data-toggle="tooltip" data-placement="'.$position.'" title="'.$this->tooltip.'"';
+        }
 
         if (!empty($this->glyphIcon)) {
-            $html .= '<button type="button" id="'.$this->id.'" name="'.$this->id.'" class="btn btn-default btn-xs"><span class="glyphicon '.$this->glyphIcon.'"></span> '.$this->title.'</button>';
+            $html .= '<button type="button" id="'.$this->id.'" name="'.$this->id.'" class="btn btn-default btn-xs"'.$tooltip.'><span class="glyphicon '.$this->glyphIcon.'"></span> '.$this->title.'</button>';
             $html .= '<script>document.getElementById(\''.$this->id.'\').onclick = function() { '.$this->action.'; };</script>';
 
             return $html;
         }
 
         if (!empty($this->imgURL)) {
-            $html .= '<img src="'.$this->imgURL.'" alt="'.$this->title.'" onClick="'.$this->action.'" style="cursor:pointer; vertical-align:bottom;"/>';
+            $html .= '<img src="'.$this->imgURL.'" alt="'.$this->title.'" onClick="'.$this->action.'" style="cursor:pointer; vertical-align:bottom;" id="'.$this->id.'"'.$tooltip.'/>';
 
             return $html;
         }
 
         switch ($this->action) {
             case 'submit':
-                $html .= '<input type="submit" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="btn btn-primary"'.($width == 0 ? '' : ' style="width:'.$width.';"').'/>';
+                $html .= '<input type="submit" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="btn btn-primary"'.($width == 0 ? '' : ' style="width:'.$width.';"').$tooltip.'/>';
             break;
             case 'file':
-                $html .= '<input type="file" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="btn btn-primary"'.($width == 0 ? '' : ' style="width:'.$width.';"').'/>';
+                $html .= '<input type="file" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="btn btn-primary"'.($width == 0 ? '' : ' style="width:'.$width.';"').$tooltip.'/>';
             break;
             default:
-                $html .= '<input type="button" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="btn btn-primary"'.($width == 0 ? '' : ' style="width:'.$width.';"').'/>';
+                $html .= '<input type="button" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="btn btn-primary"'.($width == 0 ? '' : ' style="width:'.$width.';"').$tooltip.'/>';
                 $html .= '<script>document.getElementById(\''.$this->id.'\').onclick = function() { '.$this->action.'; };</script>';
             break;
         }
