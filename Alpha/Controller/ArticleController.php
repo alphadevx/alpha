@@ -237,7 +237,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
             $this->setTitle($record->get('title'));
             $this->setDescription($record->get('description'));
 
-            $RecordView = View::getInstance($record);
+            $recordView = View::getInstance($record);
 
             $body .= View::displayPageHead($this);
 
@@ -246,7 +246,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                 $body .= $message;
             }
 
-            $body .= $RecordView->markdownView();
+            $body .= $recordView->markdownView();
 
             $body .= View::displayPageFoot($this);
 
@@ -277,11 +277,11 @@ class ArticleController extends ActiveRecordController implements ControllerInte
             $this->record = $record;
             $this->setTitle($record->get('title'));
 
-            $RecordView = View::getInstance($record);
+            $recordView = View::getInstance($record);
 
             $body .= View::displayPageHead($this, false);
 
-            $body .= $RecordView->markdownView();
+            $body .= $recordView->markdownView();
 
             $body .= View::displayPageFoot($this);
 
@@ -491,6 +491,13 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                 </script>';
         } elseif (isset($params['view']) && $params['view'] == 'print') {
             $html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'/css/print.css">';
+        }
+
+        if ($this->record instanceof Article) {
+            $headerContent = $this->record->get('headerContent');
+            if ($headerContent != '') {
+                $html .= $headerContent;
+            }
         }
 
         return $html;

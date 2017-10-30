@@ -127,6 +127,7 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $article->set('content', 'unitTestArticleTagOneCC');
         $article->set('published', true);
         $article->set('section', 1);
+        $article->set('headerContent', '<script>alert();</script>');
 
         return $article;
     }
@@ -166,6 +167,8 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+
+        $this->assertContains('<script>alert();</script>', $response->getBody(), 'Testing that the article header content was rendered');
 
         $request = new Request(array('method' => 'GET', 'URI' => '/a/not-there'));
 
