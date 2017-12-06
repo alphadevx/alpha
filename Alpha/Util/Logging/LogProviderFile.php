@@ -113,13 +113,13 @@ class LogProviderFile implements LogProviderInterface
 
                 if (!file_exists($logsDir)) {
                     if (!mkdir($logsDir, 0766)) {
-                        throw new PHPException('Could not create the directory ['.$logsDir.']');
+                        error_log('Could not create the directory ['.$logsDir.']');
                     }
                 }
 
                 $fp = fopen($this->path, 'a+');
                 if (!fputcsv($fp, $line, ',', '"', '\\')) {
-                    throw new PHPException('Could not write to the CSV file ['.$this->path.']');
+                    error_log('Could not write to the CSV file ['.$this->path.']');
                 }
 
                 if ($this->checkFileSize() >= $this->maxSize) {

@@ -51,8 +51,6 @@ interface LogProviderInterface
      *
      * @param array $line
      *
-     * @throws \Alpha\Exception\PHPException
-     *
      * @since 2.0
      */
     public function writeLine($line);
