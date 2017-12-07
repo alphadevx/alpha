@@ -163,7 +163,7 @@ class Rights extends ActiveRecord
      *
      * @since 1.0
      */
-    private function setupRels()
+    protected function setupRels()
     {
         // set up MANY-TO-MANY relation person2rights
         $this->members->setRelatedClass('Alpha\Model\Person', 'left');
