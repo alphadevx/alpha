@@ -3,7 +3,6 @@
 namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
-use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\View\View;

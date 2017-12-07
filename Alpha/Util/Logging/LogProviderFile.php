@@ -3,7 +3,6 @@
 namespace Alpha\Util\Logging;
 
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Exception\PHPException;
 use Alpha\Util\File\FileUtils;
 
 /**
