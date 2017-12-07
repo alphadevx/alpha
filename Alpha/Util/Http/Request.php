@@ -170,8 +170,11 @@ class Request
         // set HTTP method
         if (isset($overrides['method']) && in_array($overrides['method'], $this->HTTPMethods)) {
             $this->method = $overrides['method'];
-        } elseif (isset($_SERVER['REQUEST_METHOD']) && in_array($_SERVER['REQUEST_METHOD'], $this->HTTPMethods)) {
-            $this->method = $_SERVER['REQUEST_METHOD'];
+        } else {
+            $method = $this->getGlobalServerValue('REQUEST_METHOD');
+            if (in_array($method, $this->HTTPMethods)) {
+                $this->method = $method;
+            }
         }
 
         // allow the POST param _METHOD to override the HTTP method
@@ -253,6 +256,25 @@ class Request
     }
 
     /**
+     * Tries to get the requested param from the $_SERVER super global, otherwise returns an
+     * empty string.
+     *
+     * @return string
+     *
+     * @since 3.0
+     */
+    private function getGlobalServerValue($param)
+    {
+        $server = $_SERVER;
+
+        if (isset($server[$param])) {
+            return $server[$param];
+        } else {
+            return '';
+        }
+    }
+
+    /**
      * Get the HTTP method of this request.
      *
      * @return string
@@ -314,7 +336,7 @@ class Request
     }
 
     /**
-     * Tries to get the current HTTP request headers from supoer globals.
+     * Tries to get the current HTTP request headers from super globals.
      *
      * @return array
      *
