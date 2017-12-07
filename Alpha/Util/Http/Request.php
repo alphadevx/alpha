@@ -259,6 +259,7 @@ class Request
      * Tries to get the requested param from the $_SERVER super global, otherwise returns an
      * empty string.
      *
+     * @param string $param
      * @return string
      *
      * @since 3.0
