@@ -13,6 +13,7 @@ use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Util\File\FileUtils;
 use Alpha\Model\Article;
 use Alpha\Model\ArticleComment;
+use Alpha\Model\Type\Relation;
 use Alpha\View\View;
 use Alpha\View\ViewState;
 use Alpha\View\Widget\Button;
@@ -69,6 +70,15 @@ use Alpha\Controller\Front\FrontController;
  */
 class ArticleController extends ActiveRecordController implements ControllerInterface
 {
+    /**
+     * The Article record object that this controller is currently working with.
+     *
+     * @var \Alpha\Model\Article
+     *
+     * @since 3.0
+     */
+    protected $record = null;
+
     /**
      * Trace logger.
      *
@@ -568,16 +578,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                 }
 
                 if ($config->get('cms.display.tags')) {
-                    $tags = $this->record->getPropObject('tags')->getRelatedObjects();
-
-                    if (count($tags) > 0) {
-                        $html .= '<p>Tags:';
-
-                        foreach ($tags as $tag) {
-                            $html .= ' <a href="'.$config->get('app.url').'/search/'.$tag->get('content').'">'.$tag->get('content').'</a>';
-                        }
-                        $html .= '</p>';
-                    }
+                    $html .= $this->renderTags();
                 }
 
                 if ($config->get('cms.display.votes')) {
@@ -692,6 +693,36 @@ class ArticleController extends ActiveRecordController implements ControllerInte
 
             $view = View::getInstance($comment);
             $html .= $view->createView($fields);
+        }
+
+        return $html;
+    }
+
+    /**
+     * Method for displaying the tags for the article.
+     *
+     * @return string
+     *
+     * @since 3.0
+     */
+    private function renderTags()
+    {
+        $config = ConfigProvider::getInstance();
+        $relation = $this->record->getPropObject('tags');
+
+        $html = '';
+
+        if ($relation instanceof Relation) {
+            $tags = $relation->getRelatedObjects();
+
+            if (count($tags) > 0) {
+                $html .= '<p>Tags:';
+
+                foreach ($tags as $tag) {
+                    $html .= ' <a href="'.$config->get('app.url').'/search/'.$tag->get('content').'">'.$tag->get('content').'</a>';
+                }
+                $html .= '</p>';
+            }
         }
 
         return $html;
