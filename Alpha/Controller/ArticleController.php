@@ -615,9 +615,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
             }
 
             if ($config->get('cms.display.standard.footer')) {
-                $html .= '<p>Article URL: <a href="'.$this->record->get('URL').'">'.$this->record->get('URL').'</a><br>';
-                $html .= 'Title: '.$this->record->get('title').'<br>';
-                $html .= 'Author: '.$this->record->get('author').'</p>';
+                $html .= $this->renderStandardFooter();
             }
         }
 
@@ -708,6 +706,8 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     private function renderVotes()
     {
         $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
 
         $URL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType=Alpha\Model\ArticleVote');
         $html = '<form action="'.$URL.'" method="post" accept-charset="UTF-8">';
@@ -740,6 +740,22 @@ class ArticleController extends ActiveRecordController implements ControllerInte
 
         $html .= View::renderSecurityFields();
         $html .= '<form>';
+
+        return $html;
+    }
+
+    /**
+     * Method for displaying the standard CMS footer for the article.
+     *
+     * @return string
+     *
+     * @since 3.0
+     */
+    private function renderStandardFooter()
+    {
+        $html = '<p>Article URL: <a href="'.$this->record->get('URL').'">'.$this->record->get('URL').'</a><br>';
+        $html .= 'Title: '.$this->record->get('title').'<br>';
+        $html .= 'Author: '.$this->record->get('author').'</p>';
 
         return $html;
     }
