@@ -588,37 +588,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                 }
 
                 if (!$this->record->checkUserVoted() && $config->get('cms.voting.allowed')) {
-                    $URL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType=Alpha\Model\ArticleVote');
-                    $html .= '<form action="'.$URL.'" method="post" accept-charset="UTF-8">';
-                    $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('score')) : 'score');
-                    $html .= '<p>Please rate this article from 1-10 (10 being the best):'.
-                            '<select name="'.$fieldname.'">'.
-                            '<option value="1">1'.
-                            '<option value="2">2'.
-                            '<option value="3">3'.
-                            '<option value="4">4'.
-                            '<option value="5">5'.
-                            '<option value="6">6'.
-                            '<option value="7">7'.
-                            '<option value="8">8'.
-                            '<option value="9">9'.
-                            '<option value="10">10'.
-                            '</select></p>&nbsp;&nbsp;';
-
-                    $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('articleID')) : 'articleID');
-                    $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->record->getID().'"/>';
-
-                    $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('personID')) : 'personID');
-                    $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$session->get('currentUser')->getID().'"/>';
-
-                    $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('statusMessage')) : 'statusMessage');
-                    $html .= '<input type="hidden" name="'.$fieldname.'" value="Thank you for rating this article!"/>';
-
-                    $temp = new Button('submit', 'Vote!', 'voteBut');
-                    $html .= $temp->render();
-
-                    $html .= View::renderSecurityFields();
-                    $html .= '<form>';
+                    $html .= $this->renderVotes();
                 }
 
                 ActiveRecord::disconnect();
@@ -724,6 +694,52 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                 $html .= '</p>';
             }
         }
+
+        return $html;
+    }
+
+    /**
+     * Method for displaying the votes for the article.
+     *
+     * @return string
+     *
+     * @since 3.0
+     */
+    private function renderVotes()
+    {
+        $config = ConfigProvider::getInstance();
+
+        $URL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType=Alpha\Model\ArticleVote');
+        $html = '<form action="'.$URL.'" method="post" accept-charset="UTF-8">';
+        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('score')) : 'score');
+        $html .= '<p>Please rate this article from 1-10 (10 being the best):'.
+                '<select name="'.$fieldname.'">'.
+                '<option value="1">1'.
+                '<option value="2">2'.
+                '<option value="3">3'.
+                '<option value="4">4'.
+                '<option value="5">5'.
+                '<option value="6">6'.
+                '<option value="7">7'.
+                '<option value="8">8'.
+                '<option value="9">9'.
+                '<option value="10">10'.
+                '</select></p>&nbsp;&nbsp;';
+
+        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('articleID')) : 'articleID');
+        $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->record->getID().'"/>';
+
+        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('personID')) : 'personID');
+        $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$session->get('currentUser')->getID().'"/>';
+
+        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('statusMessage')) : 'statusMessage');
+        $html .= '<input type="hidden" name="'.$fieldname.'" value="Thank you for rating this article!"/>';
+
+        $temp = new Button('submit', 'Vote!', 'voteBut');
+        $html .= $temp->render();
+
+        $html .= View::renderSecurityFields();
+        $html .= '<form>';
 
         return $html;
     }
