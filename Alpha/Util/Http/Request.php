@@ -225,26 +225,22 @@ class Request
         // set HTTP host
         if (isset($overrides['host'])) {
             $this->host = $overrides['host'];
-        } elseif (isset($_SERVER['HTTP_HOST'])) {
-            $this->host = $_SERVER['HTTP_HOST'];
         } else {
-            $this->host = 'localhost';
+            $this->host = $this->getGlobalServerValue('HTTP_HOST');
         }
 
         // set IP of the client
         if (isset($overrides['IP'])) {
             $this->IP = $overrides['IP'];
-        } elseif (isset($_SERVER['REMOTE_ADDR'])) {
-            $this->IP = $_SERVER['REMOTE_ADDR'];
         } else {
-            $this->IP = '127.0.0.1';
+            $this->IP = $this->getGlobalServerValue('REMOTE_ADDR');
         }
 
         // set requested URI
         if (isset($overrides['URI'])) {
             $this->URI = $overrides['URI'];
-        } elseif (isset($_SERVER['REQUEST_URI'])) {
-            $this->URI = $_SERVER['REQUEST_URI'];
+        } else {
+            $this->URI = $this->getGlobalServerValue('REQUEST_URI');
         }
 
         // set uploaded files (if any)
