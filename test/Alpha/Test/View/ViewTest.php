@@ -264,4 +264,19 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEmpty($this->view->renderAllFields('view'), 'Testing the renderAllFields() method');
         $this->assertTrue(strpos($this->view->renderAllFields('view'), 'Test Article') !== false, 'Testing the renderAllFields() method');
     }
+
+    /**
+     * Testing the editView() method.
+     *
+     * @since 3.0
+     */
+    public function testEditView()
+    {
+        $article = new Article();
+        $article->set('title', 'Test Article');
+        $this->view = View::getInstance($article);
+
+        $this->assertNotEmpty($this->view->editView(), 'Testing the editView() method');
+        $this->assertTrue(strpos($this->view->editView(), 'Test Article') !== false, 'Testing the editView() method');
+    }
 }
