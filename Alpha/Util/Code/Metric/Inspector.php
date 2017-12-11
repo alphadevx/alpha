@@ -158,6 +158,7 @@ class Inspector
     public function calculateLOC()
     {
         foreach ($this->files as $file) {
+            $file = $this->rootDir.'/'.$file;
             $file_type = mb_substr($file, mb_strrpos($file, '.'));
             if (in_array($file_type, $this->includeFileTypes)) {
                 $exclude = false;
