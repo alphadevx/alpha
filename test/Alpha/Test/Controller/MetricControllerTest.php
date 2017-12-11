@@ -63,7 +63,7 @@ class MetricControllerTest extends ControllerTestCase
 
         $front = new FrontController();
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/metric', 'params' => array('dir' => './Alpha')));
+        $request = new Request(array('method' => 'GET', 'URI' => '/metric', 'params' => array('dir' => './Alpha/Controller')));
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
