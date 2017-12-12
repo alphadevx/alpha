@@ -2,8 +2,12 @@
 
 namespace Alpha\Test\Controller;
 
+use Alpha\Controller\Front\FrontController;
 use Alpha\Controller\InstallController;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Model\Person;
 
 /**
  * Test cases for the InstallController class.
@@ -47,15 +51,77 @@ use Alpha\Util\Config\ConfigProvider;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class InstallControllerTest extends ControllerTestCase
+class InstallControllerTest extends \PHPUnit_Framework_TestCase
 {
+    protected function setup()
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+
+        $testInstallDir = '/tmp/alphainstalltestdir';
+
+        $config = ConfigProvider::getInstance();
+        $config->set('app.file.store.dir', $testInstallDir.'/store/');
+        $config->set('db.file.path', $testInstallDir.'/unittests.db');
+        $config->set('db.file.test.path', $testInstallDir.'/unittests.db');
+
+        if (!file_exists($testInstallDir)) {
+            mkdir($testInstallDir);
+        }
+
+        if (!file_exists($testInstallDir.'/store')) {
+            mkdir($testInstallDir.'/store');
+        }
+
+        if (file_exists($testInstallDir.'/unittests.db')) {
+            unlink($testInstallDir.'/unittests.db');
+        }
+
+        $person = new Person();
+        $person->set('email', $config->get('app.install.username'));
+        $person->set('password', 'testpassword');
+
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session->set('currentUser', $person);
+    }
+
     protected function teardown()
     {
         $config = ConfigProvider::getInstance();
         $config->set('app.root', '');
         $config->set('app.file.store.dir', '/tmp/');
+        $config->set('db.file.path', '/tmp/unittests.db');
+    }
 
-        parent::teardown();
+    /**
+     * Testing the doGET method.
+     */
+    public function testDoGET()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        $front = new FrontController();
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/install'));
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+
+        $testInstallDir = '/tmp/alphainstalltestdir/store';
+        $this->assertTrue(file_exists($testInstallDir.'/logs'));
+        $this->assertTrue(file_exists($testInstallDir.'/attachments'));
+        $this->assertTrue(file_exists($testInstallDir.'/cache'));
+        $this->assertTrue(file_exists($testInstallDir.'/cache/html'));
+        $this->assertTrue(file_exists($testInstallDir.'/cache/images'));
+        $this->assertTrue(file_exists($testInstallDir.'/cache/pdf'));
+        $this->assertTrue(file_exists($testInstallDir.'/cache/xls'));
+
+        $person = new Person();
+        $this->assertTrue($person->checkTableExists(), 'Testing that the person database table was created');
     }
 
     /**
