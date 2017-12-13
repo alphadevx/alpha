@@ -120,11 +120,16 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
      */
     private function createArticleObject($name)
     {
+        $markdown = 'First Header  | Second Header
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell';
+
         $article = new Article();
         $article->set('title', $name);
         $article->set('description', 'unitTestArticleTagOneAA unitTestArticleTagTwo');
         $article->set('author', 'unitTestArticleTagOneBB');
-        $article->set('content', 'unitTestArticleTagOneCC');
+        $article->set('content', $markdown);
         $article->set('published', true);
         $article->set('section', 1);
         $article->set('headerContent', '<script>alert();</script>');
