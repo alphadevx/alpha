@@ -4,6 +4,7 @@ namespace Alpha\Test\View;
 
 use Alpha\View\View;
 use Alpha\Model\Article;
+use Alpha\Model\BlacklistedClient;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
 use Alpha\Exception\IllegalArguementException;
@@ -278,5 +279,12 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNotEmpty($this->view->editView(), 'Testing the editView() method');
         $this->assertTrue(strpos($this->view->editView(), 'Test Article') !== false, 'Testing the editView() method');
+        
+        $badClient = new BlacklistedClient();
+        $badClient->set('client', 'very bad client');
+        $this->view = View::getInstance($badClient);
+
+        $this->assertNotEmpty($this->view->editView(), 'Testing the editView() method');
+        $this->assertTrue(strpos($this->view->editView(), 'very bad client') !== false, 'Testing the editView() method');
     }
 }
