@@ -284,7 +284,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $badClient->set('client', 'very bad client');
         $this->view = View::getInstance($badClient);
 
-        $this->assertNotEmpty($this->view->editView(), 'Testing the editView() method');
+        $this->assertNotEmpty($this->view->editView(array('formAction' => '/')), 'Testing the editView() method');
         $this->assertTrue(strpos($this->view->editView(), 'very bad client') !== false, 'Testing the editView() method');
     }
 }
