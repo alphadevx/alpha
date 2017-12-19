@@ -318,7 +318,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $response = $front->process($request);
 
         $this->assertEquals(403, $response->getStatus(), 'Testing that an admin page request is rejected');
-        $this->assertTrue(strpos($response->getBody(), 'not have the correct rights') !== false, 'Testing that an admin page request is rejected');
+        $this->assertTrue(strpos($response->getBody(), 'not have the correct access rights') !== false, 'Testing that an admin page request is rejected');
     }
 
     /**
