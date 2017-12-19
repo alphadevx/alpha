@@ -162,6 +162,16 @@ Content Cell  | Content Cell';
     {
         $article = $this->createArticleObject('test article');
         $article->save();
+        
+        $comment = new ArticleComment();
+        $comment->set('content', 'Test comment');
+        $comment->set('articleID', $article->getID());
+        $comment->save();
+
+        $vote = new ArticleVote();
+        $vote->set('score', 10);
+        $vote->set('articleID', $article->getID());
+        $vote->save();
 
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
