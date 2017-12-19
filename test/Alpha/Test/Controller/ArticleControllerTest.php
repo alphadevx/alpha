@@ -160,6 +160,14 @@ Content Cell  | Content Cell';
      */
     public function testDoGET()
     {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = SessionProviderFactory::getInstance($sessionProvider);
+
+        $person = $this->createPersonObject('test');
+        $person->save();
+        $session->set('currentUser', $person);
+        
         $article = $this->createArticleObject('test article');
         $article->save();
         
