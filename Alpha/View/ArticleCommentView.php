@@ -72,7 +72,7 @@ class ArticleCommentView extends View
 
         $markdown = new MarkdownFacade($this->record);
         $author = new Person();
-        $id = $this->record->getCreatorID();
+        $id = $this->record->getCreatorId();
         $author->load($id->getValue());
 
         $html = '<blockquote class="usercomment">';
