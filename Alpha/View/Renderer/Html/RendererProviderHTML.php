@@ -608,29 +608,22 @@ class RendererProviderHTML implements RendererProviderInterface
             $allowCSSOverrides = false;
         }
 
-        $html = View::loadTemplateFragment('html', 'head.phtml', array('title' => $controller->getTitle(), 'description' => $controller->getDescription(), 'allowCSSOverrides' => $allowCSSOverrides));
-
+        $duringCallbackOutput = '';
         if (method_exists($controller, 'during_displayPageHead_callback')) {
-            $html .= $controller->{'during_displayPageHead_callback'}();
+            $duringCallbackOutput = $controller->{'during_displayPageHead_callback'}();
         }
 
-        $html .= '</head>';
-
-        try {
-            if ($controller->getRecord() != null) {
-                $html .= '<body'.($controller->getRecord()->get('bodyOnload') != '' ? ' onload="'.$controller->getRecord()->get('bodyOnload').'"' : '').'>';
-            } else {
-                $html .= '<body>';
-            }
-        } catch (AlphaException $e) {
-            $html .= '<body>';
+        $onloadEvent = '';
+        if ($controller->getRecord() != null && $controller->getRecord()->hasAttribute('bodyOnload')) {
+            $onloadEvent = $controller->getRecord()->get('bodyOnload');
         }
 
-        $html .= '<div class="container">';
-
+        $cmsCallbackOutput = '';
         if (method_exists($controller, 'insert_CMSDisplayStandardHeader_callback')) {
-            $html .= $controller->{'insert_CMSDisplayStandardHeader_callback'}();
+            $cmsCallbackOutput = $controller->{'insert_CMSDisplayStandardHeader_callback'}();
         }
+
+        $html = View::loadTemplateFragment('html', 'head.phtml', array('title' => $controller->getTitle(), 'description' => $controller->getDescription(), 'allowCSSOverrides' => $allowCSSOverrides, 'duringCallbackOutput' => $duringCallbackOutput, 'cmsCallbackOutput' => $cmsCallbackOutput, 'onloadEvent' => $onloadEvent));
 
         self::$logger->debug('<<displayPageHead [HTML]');
 

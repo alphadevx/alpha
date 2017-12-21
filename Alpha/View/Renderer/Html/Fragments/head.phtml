@@ -33,3 +33,12 @@
     <script>window.jQuery || document.write('<script src="<?= $config->get('app.url') ?>/js/vendor/jquery-3.1.0.min.js"><\/script>')</script>
 
     <script src="<?= $config->get('app.url') ?>/js/vendor/bootstrap-datepicker.min.js"></script>
+
+    <?= (isset($duringCallbackOutput) ? $duringCallbackOutput : '') ?>
+
+</head>
+<body<?= (isset($onloadEvent) && $onloadEvent != '' ? ' onload="'.$onloadEvent.'"' : '') ?>>
+
+<div class="container">
+
+<?= (isset($cmsCallbackOutput) ? $cmsCallbackOutput : '') ?>
