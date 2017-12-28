@@ -230,13 +230,16 @@ class Article extends ActiveRecord
     {
         self::$logger = new Logger('Article');
 
+        $config = ConfigProvider::getInstance();
+        $separator = $config->get('cms.url.title.separator');
+
         // ensure to call the parent constructor
         parent::__construct();
 
         $this->title = new SmallText();
-        $this->title->setHelper('Please provide a title for the article.');
+        $this->title->setHelper('Please provide a title for the article. Note that the '.$separator.' character is not allowed!');
         $this->title->setSize(100);
-        $this->title->setRule("/\w+/");
+        $this->title->setRule('/^[^'.$separator.']*$/');
 
         $this->section = new DEnum('Alpha\Model\Article::section');
 
