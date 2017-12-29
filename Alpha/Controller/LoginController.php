@@ -7,6 +7,7 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Helper\Validator;
 use Alpha\View\View;
 use Alpha\View\PersonView;
 use Alpha\Model\Person;
@@ -314,7 +315,10 @@ class LoginController extends Controller implements ControllerInterface
                 self::$logger->action('Login');
 
                 $response = new Response(301);
-                if ($this->getNextJob() != '') {
+                if (Validator::isURL($this->getNextJob())) {
+                    $response->redirect($this->getNextJob());
+                    $this->clearUnitOfWorkAttributes();
+                } elseif ($this->getNextJob() != '') {
                     $response->redirect(FrontController::generateSecureURL('act='.$this->getNextJob()));
                     $this->clearUnitOfWorkAttributes();
                 } else {

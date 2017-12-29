@@ -9,6 +9,7 @@ use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Model\Person;
 use Alpha\Model\Rights;
+use Alpha\Model\ActionLog;
 
 /**
  * Test cases for the LoginController class.
@@ -71,6 +72,9 @@ class LoginControllerTest extends \PHPUnit_Framework_TestCase
         $rights->rebuildTable();
         $rights->set('name', 'Standard');
         $rights->save();
+
+        $log = new ActionLog();
+        $log->rebuildTable();
     }
 
     /**
@@ -166,6 +170,23 @@ class LoginControllerTest extends \PHPUnit_Framework_TestCase
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST with incorrect password');
+
+        $params = array(
+            'loginBut' => true,
+            'var1' => $securityParams[0],
+            'var2' => $securityParams[1],
+            'email' => 'logintest@test.com',
+            'password' => 'passwordTest',
+        );
+
+        $controller->setUnitOfWork(array('Alpha\Controller\LoginController','http://www.alphaframework.org/'));
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/login', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(301, $response->getStatus(), 'Testing the doPOST method can redirect to any URL via the unit of work next action field');
+        $this->assertEquals('http://www.alphaframework.org/', $response->getHeader('Location'), 'Testing the doPOST method can redirect to any URL via the unit of work next action field');
 
         $params = array(
             'resetBut' => true,
