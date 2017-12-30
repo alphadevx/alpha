@@ -491,11 +491,11 @@ Alpha includes many varied utilities in the _Alpha\Util_ package.  The following
 
 A data cache is provided, that provides a factory and injectable providers that support Memcache, Redis, and APCu.  The classes are provided in the _Alpha\Util\Cache_ package, while the providers implement the _Alpha\Util\Cache\CacheProviderInterface_.  Here is an example using the Redis provider:
 
-	use Alpha\Util\Cache\CacheProviderFactory;
+	use Alpha\Util\Service\ServiceFactory;
 
 	// ...
 
-	$cache = CacheProviderFactory::getInstance('Alpha\Util\Cache\CacheProviderRedis');
+	$cache = ServiceFactory::getInstance('Alpha\Util\Cache\CacheProviderRedis','Alpha\Util\Cache\CacheProviderInterface');
 	$record = $cache->get($cacheKey);
 
 ### Code highlighting

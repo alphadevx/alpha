@@ -1,15 +1,14 @@
 <?php
 
-namespace Alpha\Util\Cache;
+namespace Alpha\Util\Service;
 
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Logging\Logger;
 
 /**
- * A factory for creating cache provider implementations that implement the
- * CacheProviderInterface interface.
+ * A factory for creating service instances that match the provider name and interface provided
  *
- * @since 1.1
+ * @since 3.0
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
@@ -48,50 +47,52 @@ use Alpha\Util\Logging\Logger;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class CacheProviderFactory
+class ServiceFactory
 {
     /**
      * Trace logger.
      *
      * @var \Alpha\Util\Logging\Logger
      *
-     * @since 1.1
+     * @since 3.0
      */
     private static $logger = null;
 
     /**
-     * A static method that attempts to return a CacheProviderInterface instance
-     * based on the name of the provider class supplied.
+     * A static method that attempts to return a service provider instance
+     * based on the name of the provider class supplied.  If the instance does not
+     * implement the desired interface, an exception is thrown.
      *
-     * @param string $providerName The class name of the provider class (fully qualified).
+     * @param string $serviceName The class name of the service class (fully qualified).
+     * @param string $serviceInterface The interface name of the service class returned (fully qualified).
      *
      * @throws \Alpha\Exception\IllegalArguementException
      *
-     * @return \Alpha\Util\Cache\CacheProviderInterface
+     * @return \stdClass
      *
-     * @since 1.1
+     * @since 3.0
      */
-    public static function getInstance($providerName)
+    public static function getInstance($serviceName, $serviceInterface)
     {
         if (self::$logger == null) {
-            self::$logger = new Logger('CacheProviderFactory');
+            self::$logger = new Logger('ServiceFactory');
         }
 
-        self::$logger->debug('>>getInstance(providerName=['.$providerName.'])');
+        self::$logger->debug('>>getInstance(serviceName=['.$serviceName.'], serviceInterface=['.$serviceInterface.'])');
 
-        if (class_exists($providerName)) {
-            $instance = new $providerName();
+        if (class_exists($serviceName)) {
+            $instance = new $serviceName();
 
-            if (!$instance instanceof CacheProviderInterface) {
-                throw new IllegalArguementException('The class ['.$providerName.'] does not implement the expected CacheProviderInterface intwerface!');
+            if (!$instance instanceof $serviceInterface) {
+                throw new IllegalArguementException('The class ['.$serviceName.'] does not implement the expected ['.$serviceInterface.'] interface!');
             }
 
-            self::$logger->debug('<<getInstance: [Object '.$providerName.']');
+            self::$logger->debug('<<getInstance: [Object '.$serviceName.']');
 
             return $instance;
         } else {
             self::$logger->debug('<<getInstance');
-            throw new IllegalArguementException('The class ['.$providerName.'] is not defined anywhere!');
+            throw new IllegalArguementException('The class ['.$serviceName.'] is not defined anywhere!');
         }
     }
 }

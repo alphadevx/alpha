@@ -9,7 +9,7 @@ use Alpha\Model\Type\TypeInterface;
 use Alpha\Model\Type\Relation;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
-use Alpha\Util\Cache\CacheProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Exception\AlphaException;
 use Alpha\Exception\FailedSaveException;
@@ -2409,7 +2409,7 @@ abstract class ActiveRecord
         $config = ConfigProvider::getInstance();
 
         try {
-            $cache = CacheProviderFactory::getInstance($config->get('cache.provider.name'));
+            $cache = ServiceFactory::getInstance($config->get('cache.provider.name'), 'Alpha\Util\Cache\CacheProviderInterface');
             $cache->set(get_class($this).'-'.$this->getID(), $this, 3600);
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to store a business object to the ['.$config->get('cache.provider.name').'] 
@@ -2430,7 +2430,7 @@ abstract class ActiveRecord
         $config = ConfigProvider::getInstance();
 
         try {
-            $cache = CacheProviderFactory::getInstance($config->get('cache.provider.name'));
+            $cache = ServiceFactory::getInstance($config->get('cache.provider.name'), 'Alpha\Util\Cache\CacheProviderInterface');
             $cache->delete(get_class($this).'-'.$this->getID());
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to remove a business object from ['.$config->get('cache.provider.name').']
@@ -2453,7 +2453,7 @@ abstract class ActiveRecord
         $config = ConfigProvider::getInstance();
 
         try {
-            $cache = CacheProviderFactory::getInstance($config->get('cache.provider.name'));
+            $cache = ServiceFactory::getInstance($config->get('cache.provider.name'), 'Alpha\Util\Cache\CacheProviderInterface');
             $Record = $cache->get(get_class($this).'-'.$this->getID());
 
             if (!$Record) {

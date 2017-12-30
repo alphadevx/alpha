@@ -9,7 +9,7 @@ use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\CustomQueryException;
 use Alpha\Exception\RecordNotFoundException;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Cache\CacheProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Helper\Validator;
 use Alpha\Util\Logging\Logger;
 use Exception;
@@ -310,7 +310,7 @@ class Tag extends ActiveRecord
 
         if ($config->get('cache.provider.name') != '') {
             try {
-                $cache = CacheProviderFactory::getInstance($config->get('cache.provider.name'));
+                $cache = ServiceFactory::getInstance($config->get('cache.provider.name'), 'Alpha\Util\Cache\CacheProviderInterface');
                 $cache->delete($this->get('content'));
             } catch (\Exception $e) {
                 self::$logger->error('Error while attempting to remove search matches array from the ['.$config->get('cache.provider.name').'] 

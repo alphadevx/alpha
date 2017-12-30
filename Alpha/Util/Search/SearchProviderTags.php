@@ -6,7 +6,7 @@ use Alpha\Exception\RecordNotFoundException;
 use Alpha\Exception\ValidationException;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Cache\CacheProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Model\Tag;
 
 /**
@@ -316,7 +316,7 @@ class SearchProviderTags implements SearchProviderInterface
         $config = ConfigProvider::getInstance();
 
         try {
-            $cache = CacheProviderFactory::getInstance($config->get('cache.provider.name'));
+            $cache = ServiceFactory::getInstance($config->get('cache.provider.name'), 'Alpha\Util\Cache\CacheProviderInterface');
             $matches = $cache->get($key);
 
             if (!$matches) {
@@ -346,7 +346,7 @@ class SearchProviderTags implements SearchProviderInterface
         $config = ConfigProvider::getInstance();
 
         try {
-            $cache = CacheProviderFactory::getInstance($config->get('cache.provider.name'));
+            $cache = ServiceFactory::getInstance($config->get('cache.provider.name'), 'Alpha\Util\Cache\CacheProviderInterface');
             $cache->set($key, $matches, 86400); // cache search matches for a day
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to store a search matches array to the ['.$config->get('cache.provider.name').'] 
