@@ -2,7 +2,7 @@
 
 namespace Alpha\Test\Util\Code\Highlight;
 
-use Alpha\Util\Code\Highlight\HighlightProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Helper\Validator;
 
 /**
@@ -72,7 +72,7 @@ class HighlightProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testHighlight($provider)
     {
-        $highlighter = HighlightProviderFactory::getInstance($provider);
+        $highlighter = ServiceFactory::getInstance($provider, 'Alpha\Util\Code\Highlight\HighlightProviderInterface');
 
         $code = '<?= $value ?>';
 

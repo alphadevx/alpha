@@ -502,11 +502,11 @@ A data cache is provided, that provides a factory and injectable providers that 
 
 The _Alpha\Util\Code\Highlight\HighlightProviderFactory_ providers objects for converting plain source code into code-highlighted HTML source code.  Providers for the Geshi and Luminous libraries are provided.  Here is an example:
 
-	use Alpha\Util\Code\Highlight\HighlightProviderFactory;
+	use Alpha\Util\Service\ServiceFactory;
 	
 	// ...
 	
-	$highlighter = HighlightProviderFactory::getInstance('Alpha\Util\Code\Highlight\HighlightProviderGeshi');
+	$highlighter = ServiceFactory::getInstance('Alpha\Util\Code\Highlight\HighlightProviderGeshi','Alpha\Util\Code\Highlight\HighlightProviderInterface');
 	
 	$html = $highlighter->highlight($code, 'php');
 
