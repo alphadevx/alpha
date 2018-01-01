@@ -15,7 +15,7 @@ use Alpha\Model\Person;
 use Alpha\Model\Rights;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 
 /**
  * Test cases for the AttachmentController class.
@@ -145,7 +145,7 @@ class AttachmentControllerTest extends \PHPUnit_Framework_TestCase
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $front = new FrontController();
         $controller = new ArticleController();

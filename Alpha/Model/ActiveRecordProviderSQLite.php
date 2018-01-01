@@ -15,7 +15,7 @@ use Alpha\Model\Type\Enum;
 use Alpha\Model\Type\Boolean;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Exception\AlphaException;
 use Alpha\Exception\FailedSaveException;
 use Alpha\Exception\FailedDeleteException;
@@ -833,7 +833,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         // get the class attributes
         $reflection = new ReflectionClass(get_class($this->record));
@@ -1070,7 +1070,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         if ($this->record->getVersion() != $this->record->getVersionNumber()->getValue()) {
             throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');

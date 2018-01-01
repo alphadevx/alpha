@@ -585,11 +585,11 @@ Registering a filter with the front controller is easy, and should be done on ap
 
 Alpha provides a session abstraction layer to allow the inject of different session providers, which is very useful for example if you want to store your session in an array for unit testing.  It is also possible to write providers to store sessions in NoSQL or database backends.  Here is an example of using the default PHP session mechanism:
 
-	use Alpha\Util\Http\Session\SessionProviderFactory;
+	use Alpha\Util\Service\ServiceFactory;
 
 	// ...
 
-	$session = SessionProviderFactory::getInstance('Alpha\Util\Http\Session\SessionProviderPHP');
+	$session = ServiceFactory::getInstance('Alpha\Util\Http\Session\SessionProviderPHP', 'Alpha\Util\Http\Session\SessionProviderInterface');
 	$session->set('somekey', 'somevalue'); // you can also pass complex types
 	echo $session->get('somekey');
 

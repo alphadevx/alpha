@@ -9,7 +9,7 @@ use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Extension\TCPDFFacade;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\File\FileUtils;
 use Alpha\Model\Article;
 use Alpha\Model\ArticleComment;
@@ -558,7 +558,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $html = '';
         $params = $this->request->getParams();
@@ -635,7 +635,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $html = '';
 
@@ -707,7 +707,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $URL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType=Alpha\Model\ArticleVote');
         $html = '<form action="'.$URL.'" method="post" accept-charset="UTF-8">';

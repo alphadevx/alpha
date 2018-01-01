@@ -5,7 +5,7 @@ namespace Alpha\Controller;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Response;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Model\ActiveRecord;
 use Alpha\Model\Rights;
 use Alpha\Model\Person;
@@ -105,7 +105,7 @@ class InstallController extends Controller implements ControllerInterface
         $config = ConfigProvider::getInstance();
 
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         // if there is nobody logged in, we will send them off to the Login controller to do so before coming back here
         if ($session->get('currentUser') === false) {
@@ -122,7 +122,7 @@ class InstallController extends Controller implements ControllerInterface
         }
 
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $body = View::displayPageHead($this);
 
@@ -462,7 +462,7 @@ class InstallController extends Controller implements ControllerInterface
 
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         if ($this->getVisibility() == 'Public') {
             self::$logger->debug('<<checkRights [true]');

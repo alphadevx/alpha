@@ -4,7 +4,6 @@ namespace Alpha\Util\Logging;
 
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Service\ServiceFactory;
-use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Util\Http\Request;
 use Alpha\Model\ActionLog;
 
@@ -230,7 +229,7 @@ class Logger
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         if ($session->get('currentUser') != null) {
             $action = new ActionLog();

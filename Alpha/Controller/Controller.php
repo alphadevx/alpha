@@ -8,7 +8,7 @@ use Alpha\Model\ActiveRecord;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Helper\Validator;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
 use Alpha\Util\Logging\Logger;
@@ -273,7 +273,7 @@ abstract class Controller
         }
 
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         if ($session->get('unitOfWork') !== false && is_array($session->get('unitOfWork'))) {
             $this->setUnitOfWork($session->get('unitOfWork'));
@@ -490,7 +490,7 @@ abstract class Controller
         // clear out any previous unit of work from the session
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
         $session->delete('unitOfWork');
         $this->firstJob = null;
         $this->previousJob = null;
@@ -577,7 +577,7 @@ abstract class Controller
 
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $this->unitStartTime->setTimestampValue($year, $month, $day, $hour, $minute, $second);
         $session->set('unitStartTime', $this->unitStartTime->getValue());
@@ -619,7 +619,7 @@ abstract class Controller
 
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $this->unitEndTime->setTimestampValue($year, $month, $day, $hour, $minute, $second);
         $session->set('unitEndTime', $this->unitEndTime->getValue());
@@ -709,7 +709,7 @@ abstract class Controller
 
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $session->set('dirtyObjects', $this->dirtyObjects);
 
@@ -754,7 +754,7 @@ abstract class Controller
 
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $session->set('newObjects', $this->newObjects);
 
@@ -893,7 +893,7 @@ abstract class Controller
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $session->delete('unitOfWork');
         $this->unitOfWork = null;
@@ -1008,7 +1008,7 @@ abstract class Controller
         $config = ConfigProvider::getInstance();
 
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         if ($session->get('currentUser') !== false) {
             self::$logger->warn('The user ['.$session->get('currentUser')->get('email').'] attempted to access the resource ['.$this->request->getURI().'] but was denied due to insufficient rights');
@@ -1044,7 +1044,7 @@ abstract class Controller
         $config = ConfigProvider::getInstance();
 
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         if (method_exists($this, 'before_checkRights_callback')) {
             $this->{'before_checkRights_callback'}();
@@ -1256,7 +1256,7 @@ abstract class Controller
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $this->statusMessage = $message;
         $session->set('statusMessage', $message);
@@ -1275,7 +1275,7 @@ abstract class Controller
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $session->delete('statusMessage');
 
@@ -1682,7 +1682,7 @@ abstract class Controller
                 $config = ConfigProvider::getInstance();
 
                 $sessionProvider = $config->get('session.provider.name');
-                $session = SessionProviderFactory::getInstance($sessionProvider);
+                $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
                 if ($session->get('currentUser') !== false) {
                     $passwordResetRequired = SecurityUtils::checkAdminPasswordIsDefault($session->get('currentUser')->get('password'));

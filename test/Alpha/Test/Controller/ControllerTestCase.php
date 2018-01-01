@@ -3,7 +3,7 @@
 namespace Alpha\Test\Controller;
 
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Model\Person;
 use Alpha\Model\Rights;
 use Alpha\Model\ActionLog;
@@ -95,7 +95,7 @@ class ControllerTestCase extends \PHPUnit_Framework_TestCase
         }
 
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
         $session->set('currentUser', $person);
     }
 
@@ -108,7 +108,7 @@ class ControllerTestCase extends \PHPUnit_Framework_TestCase
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
         $session->set('currentUser', null);
 
         $person = new Person();

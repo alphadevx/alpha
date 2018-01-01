@@ -16,7 +16,7 @@ use Alpha\Util\Logging\Logger;
 use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\InputFilter;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Http\Request;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\SmallText;
@@ -222,7 +222,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         // work out how many columns will be in the table
         $reflection = new ReflectionClass(get_class($this->record));
@@ -369,7 +369,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $config = ConfigProvider::getInstance();
 
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         // we may want to display the ID regardless of class
         $fields['IDLabel'] = $this->record->getDataLabel('ID');
@@ -594,7 +594,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         if (!class_exists(get_class($controller))) {
             throw new IllegalArguementException('The controller provided ['.get_class($controller).'] is not defined anywhere!');

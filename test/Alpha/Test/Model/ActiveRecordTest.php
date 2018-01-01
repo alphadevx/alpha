@@ -19,7 +19,7 @@ use Alpha\Exception\RecordNotFoundException;
 use Alpha\Exception\AlphaException;
 use Alpha\Exception\PHPException;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 
 /**
  * Test case for the ActiveRecord class.
@@ -170,7 +170,7 @@ class ActiveRecordTest extends ModelTestCase
         $this->person->save();
 
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
         $session->set('currentUser', $this->person);
 
         $request = new BadRequest();

@@ -4,7 +4,7 @@ namespace Alpha\Controller;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Http\Response;
 use Alpha\Model\Person;
 use Alpha\View\View;
@@ -77,7 +77,7 @@ class LogoutController extends Controller implements ControllerInterface
 
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         if ($session->get('currentUser') !== false) {
             $this->setRecord($session->get('currentUser'));
@@ -114,7 +114,7 @@ class LogoutController extends Controller implements ControllerInterface
         }
 
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
         $session->destroy();
 
         $body = View::displayPageHead($this);

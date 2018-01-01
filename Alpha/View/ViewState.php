@@ -4,7 +4,7 @@ namespace Alpha\View;
 
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use ReflectionProperty;
 
 /**
@@ -117,7 +117,7 @@ class ViewState
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         // if we don't already have the object in memory...
         if (!isset(self::$instance)) {
@@ -170,7 +170,7 @@ class ViewState
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
         $attribute = new ReflectionProperty(get_class($this), $key);
 
         if ($attribute != null) {

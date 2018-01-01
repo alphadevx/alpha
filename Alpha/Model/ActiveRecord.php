@@ -10,7 +10,6 @@ use Alpha\Model\Type\Relation;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Service\ServiceFactory;
-use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Exception\AlphaException;
 use Alpha\Exception\FailedSaveException;
 use Alpha\Exception\FailedDeleteException;
@@ -194,7 +193,7 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         set_exception_handler('Alpha\Util\ErrorHandlers::catchException');
         set_error_handler('Alpha\Util\ErrorHandlers::catchError', $config->get('php.error.log.level'));

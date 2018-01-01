@@ -6,7 +6,7 @@ use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Helper\Validator;
 use Alpha\View\View;
 use Alpha\View\PersonView;
@@ -195,7 +195,7 @@ class LoginController extends Controller implements ControllerInterface
                         $admin->set('ID', '00000000001');
 
                         $sessionProvider = $config->get('session.provider.name');
-                        $session = SessionProviderFactory::getInstance($sessionProvider);
+                        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
                         $session->set('currentUser', $admin);
 
                         $response = new Response(301);
@@ -308,7 +308,7 @@ class LoginController extends Controller implements ControllerInterface
         if (!$this->personObject->isTransient() && $this->personObject->get('state') == 'Active') {
             if (password_verify($password, $this->personObject->get('password'))) {
                 $sessionProvider = $config->get('session.provider.name');
-                $session = SessionProviderFactory::getInstance($sessionProvider);
+                $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
                 $session->set('currentUser', $this->personObject);
 
                 self::$logger->debug('Logging in ['.$this->personObject->get('email').'] at ['.date('Y-m-d H:i:s').']');
