@@ -512,14 +512,14 @@ The _Alpha\Util\Code\Highlight\HighlightProviderFactory_ providers objects for c
 
 ### Email
 
-Alpha provides an email package with a factory and an interface for injecting different email providers.  Here is an example usage:
+Alpha provides an email package with an interface for injecting different email providers.  Here is an example usage:
 
-	use Alpha\Util\Email\EmailProviderFactory;
+	use Alpha\Util\Service\ServiceFactory;
 	use Alpha\Exception\MailNotSentException;
 
 	// ...
 
-	$mailer = EmailProviderFactory::getInstance('Alpha\Util\Email\EmailProviderPHP');
+	$mailer = ServiceFactory::getInstance('Alpha\Util\Email\EmailProviderPHP','Alpha\Util\Email\EmailProviderInterface');
 
 	try {
     	$mailer->send('to@mail.com', 'from@mail.com', 'Subject', 'Some HTML...', true);

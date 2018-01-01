@@ -8,7 +8,7 @@ use Alpha\Model\Type\Relation;
 use Alpha\Util\Helper\Validator;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Email\EmailProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Exception\RecordNotFoundException;
 
 /**
@@ -408,7 +408,7 @@ class Person extends ActiveRecord
 
         $body .= '</body></html>';
 
-        $mailer = EmailProviderFactory::getInstance('Alpha\Util\Email\EmailProviderPHP');
+        $mailer = ServiceFactory::getInstance('Alpha\Util\Email\EmailProviderPHP', 'Alpha\Util\Email\EmailProviderInterface');
         $mailer->send($this->get('email'), $config->get('email.reply.to'), $subject, $body, true);
     }
 

@@ -3,7 +3,7 @@
 namespace Alpha\Util\Logging;
 
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Email\EmailProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Http\Session\SessionProviderFactory;
 use Alpha\Util\Http\Request;
 use Alpha\Model\ActionLog;
@@ -264,7 +264,7 @@ class Logger
 
             $body .= "\n\nKind regards,\n\nAdministrator\n--\n".$config->get('app.url');
 
-            $mailer = EmailProviderFactory::getInstance('Alpha\Util\Email\EmailProviderPHP');
+            $mailer = ServiceFactory::getInstance('Alpha\Util\Email\EmailProviderPHP', 'Alpha\Util\Email\EmailProviderInterface');
             $mailer->send($config->get('app.log.error.mail.address'), $config->get('email.reply.to'), 'Error in class '.$this->classname.' on site '.$config->get('app.title'), $body);
         }
     }
