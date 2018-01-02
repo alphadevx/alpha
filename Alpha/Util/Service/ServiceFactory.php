@@ -59,12 +59,22 @@ class ServiceFactory
     private static $logger = null;
 
     /**
+     * A static array of service singletons in case any service needs to be accessed as a single instance.
+     *
+     * @var array
+     *
+     * @since 3.0
+     */
+    private static $singletons = array();
+
+    /**
      * A static method that attempts to return a service provider instance
      * based on the name of the provider class supplied.  If the instance does not
      * implement the desired interface, an exception is thrown.
      *
      * @param string $serviceName The class name of the service class (fully qualified).
      * @param string $serviceInterface The interface name of the service class returned (fully qualified).
+     * @param bool   $isSingleton Set to true if the service instance requested is a singleton, default is false (you get a new instance each time).
      *
      * @throws \Alpha\Exception\IllegalArguementException
      *
@@ -72,26 +82,42 @@ class ServiceFactory
      *
      * @since 3.0
      */
-    public static function getInstance($serviceName, $serviceInterface)
+    public static function getInstance($serviceName, $serviceInterface, $isSingleton = false)
     {
-        if (self::$logger == null) {
+        // as the LogProviderInterface is itself a service, we don't call it's constructor again during instantiation
+        if (self::$logger == null && $serviceInterface != 'Alpha\Util\Logging\LogProviderInterface') {
             self::$logger = new Logger('ServiceFactory');
         }
 
-        self::$logger->debug('>>getInstance(serviceName=['.$serviceName.'], serviceInterface=['.$serviceInterface.'])');
+        if (self::$logger != null) {
+            self::$logger->debug('>>getInstance(serviceName=['.$serviceName.'], serviceInterface=['.$serviceInterface.'], isSingleton=['.$isSingleton.'])');
+        }
 
         if (class_exists($serviceName)) {
+            if ($isSingleton && in_array($serviceName, self::$singletons)) {
+                return self::$singletons[$serviceName];
+            }
+
             $instance = new $serviceName();
 
             if (!$instance instanceof $serviceInterface) {
                 throw new IllegalArguementException('The class ['.$serviceName.'] does not implement the expected ['.$serviceInterface.'] interface!');
             }
 
-            self::$logger->debug('<<getInstance: [Object '.$serviceName.']');
+            if ($isSingleton && !in_array($serviceName, self::$singletons)) {
+                self::$singletons[$serviceName] = $instance;
+            }
+
+            if (self::$logger != null) {
+                self::$logger->debug('<<getInstance: [Object '.$serviceName.']');
+            }
 
             return $instance;
         } else {
-            self::$logger->debug('<<getInstance');
+            if (self::$logger != null) {
+                self::$logger->debug('<<getInstance');
+            }
+            
             throw new IllegalArguementException('The class ['.$serviceName.'] is not defined anywhere!');
         }
     }
