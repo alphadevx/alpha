@@ -1208,7 +1208,7 @@ class RendererProviderHTML implements RendererProviderInterface
                             $html .= $timestamp->render();
                         }
                     break;
-                    case 'STRING':
+                    case 'SMALLTEXT':
                         $html .= $this->renderStringField($propName, $this->record->getDataLabel($propName), $mode, $this->record->get($propName));
                     break;
                     case 'TEXT':
