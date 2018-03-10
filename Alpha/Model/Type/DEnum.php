@@ -3,7 +3,7 @@
 namespace Alpha\Model\Type;
 
 use Alpha\Model\ActiveRecord;
-use Alpha\Model\ActiveRecordProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Model\Type\SmallText;
 use Alpha\Exception\RecordNotFoundException;
 use Alpha\Exception\AlphaException;
@@ -322,7 +322,8 @@ class DEnum extends ActiveRecord implements TypeInterface
     {
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
 
         $sqlQuery = 'SELECT COUNT(ID) AS item_count FROM DEnumItem WHERE DEnumID = \''.$this->getID().'\';';
 

@@ -3,7 +3,7 @@
 namespace Alpha\Model\Type;
 
 use Alpha\Model\ActiveRecord;
-use Alpha\Model\ActiveRecordProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Helper\Validator;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Exception\AlphaException;
@@ -135,7 +135,8 @@ class DEnumItem extends ActiveRecord implements TypeInterface
 
         $sqlQuery = 'SELECT ID FROM '.self::TABLE_NAME.' WHERE DEnumID = \''.$EnumID.'\';';
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
 
         try {
             $result = $provider->query($sqlQuery);

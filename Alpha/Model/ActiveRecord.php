@@ -217,7 +217,7 @@ abstract class ActiveRecord
     {
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'));
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
         $provider->disconnect();
     }
 
@@ -238,7 +238,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $result = $provider->query($sqlQuery);
 
         self::$logger->debug('<<query ['.print_r($result, true).']');
@@ -271,7 +272,8 @@ abstract class ActiveRecord
         if ($config->get('cache.provider.name') != '' && $this->loadFromCache()) {
             // Record was found in cache
         } else {
-            $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+            $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+            $provider->setRecord($this);
             $provider->load($ID, $version);
 
             if ($config->get('cache.provider.name') != '') {
@@ -305,7 +307,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $objects = $provider->loadAllOldVersions($ID);
 
         self::$logger->debug('<<loadAllOldVersions['.count($objects).']');
@@ -336,7 +339,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $provider->loadByAttribute($attribute, $value, $ignoreClassType, $loadAttributes);
 
         $this->setEnumOptions();
@@ -377,7 +381,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $objects = $provider->loadAll($start, $limit, $orderBy, $order, $ignoreClassType);
 
         if (method_exists($this, 'after_loadAll_callback')) {
@@ -418,7 +423,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $objects = $provider->loadAllByAttribute($attribute, $value, $start, $limit, $orderBy, $order, $ignoreClassType);
 
         if (method_exists($this, 'after_loadAllByAttribute_callback')) {
@@ -464,7 +470,8 @@ abstract class ActiveRecord
                 '] provided to loadAllByAttributes');
         }
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $objects = $provider->loadAllByAttributes($attributes, $values, $start, $limit, $orderBy, $order, $ignoreClassType);
 
         if (method_exists($this, 'after_loadAllByAttributes_callback')) {
@@ -502,7 +509,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $objects = $provider->loadAllByDayUpdated($date, $start, $limit, $orderBy, $order, $ignoreClassType);
 
         if (method_exists($this, 'after_loadAllByDayUpdated_callback')) {
@@ -536,7 +544,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $values = $provider->loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order, $ignoreClassType);
 
         self::$logger->debug('<<loadAllFieldValuesByAttribute ['.count($values).']');
@@ -566,7 +575,8 @@ abstract class ActiveRecord
         // firstly we will validate the object before we try to save it
         $this->validate();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $provider->save();
 
         if ($config->get('cache.provider.name') != '') {
@@ -609,7 +619,8 @@ abstract class ActiveRecord
             throw new FailedSaveException('Cannot perform saveAttribute method on transient record!');
         }
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $provider->saveAttribute($attribute, $value);
 
         if ($config->get('cache.provider.name') != '') {
@@ -641,7 +652,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $provider->saveHistory();
 
         if (method_exists($this, 'after_saveHistory_callback')) {
@@ -768,7 +780,8 @@ abstract class ActiveRecord
             }
         }
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $provider->delete();
 
         if ($config->get('cache.provider.name') != '') {
@@ -849,7 +862,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $ver = $provider->getVersion();
 
         if (method_exists($this, 'after_getVersion_callback')) {
@@ -878,7 +892,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $provider->makeTable();
 
         if (method_exists($this, 'after_makeTable_callback')) {
@@ -907,7 +922,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $provider->makeHistoryTable();
 
         if (method_exists($this, 'after_makeHistoryTable_callback')) {
@@ -936,7 +952,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $provider->rebuildTable();
 
         if (method_exists($this, 'after_rebuildTable_callback')) {
@@ -965,7 +982,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $provider->dropTable($tableName);
 
         if (method_exists($this, 'after_dropTable_callback')) {
@@ -995,7 +1013,8 @@ abstract class ActiveRecord
             $this->{'before_addProperty_callback'}();
         }
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $provider->addProperty($propName);
 
         if (method_exists($this, 'after_addProperty_callback')) {
@@ -1068,7 +1087,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $max = $provider->getMAX();
 
         if (method_exists($this, 'after_getMAX_callback')) {
@@ -1107,7 +1127,8 @@ abstract class ActiveRecord
             throw new IllegalArguementException('Illegal arrays attributes=['.var_export($attributes, true).'] and values=['.var_export($values, true).'] provided to loadAllByAttributes');
         }
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $count = $provider->getCount($attributes, $values);
 
         if (method_exists($this, 'after_getCount_callback')) {
@@ -1139,7 +1160,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $count = $provider->getHistoryCount();
 
         if (method_exists($this, 'after_getHistoryCount_callback')) {
@@ -1202,7 +1224,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         try {
             $provider->setEnumOptions();
         } catch (NotImplementedException $e) {
@@ -1413,7 +1436,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $tableExists = $provider->checkTableExists($checkHistoryTable);
 
         if (method_exists($this, 'after_checkTableExists_callback')) {
@@ -1427,9 +1451,9 @@ abstract class ActiveRecord
 
     /**
      * Static method to check the database and see if the table for the indicated Record class name
-     * exists (assumes table name will be $RecordClassName less "Object").
+     * exists (assumes table name will be $recordClassName less "Object").
      *
-     * @param string $RecordClassName       The name of the business object class we are checking.
+     * @param string $recordClassName       The name of the business object class we are checking.
      * @param bool   $checkHistoryTable Set to true if you want to check for the existance of the _history table for this DAO.
      *
      * @return bool
@@ -1438,18 +1462,18 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public static function checkRecordTableExists($RecordClassName, $checkHistoryTable = false)
+    public static function checkRecordTableExists($recordClassName, $checkHistoryTable = false)
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
         }
-        self::$logger->debug('>>checkRecordTableExists(RecordClassName=['.$RecordClassName.'])');
+        self::$logger->debug('>>checkRecordTableExists(RecordClassName=['.$recordClassName.'])');
 
         $config = ConfigProvider::getInstance();
 
         $provider = $config->get('db.provider.name');
 
-        $tableExists = $provider::checkRecordTableExists($RecordClassName, $checkHistoryTable);
+        $tableExists = $provider::checkRecordTableExists($recordClassName, $checkHistoryTable);
 
         self::$logger->debug('<<checkRecordTableExists ['.($tableExists ? 'true' : 'false').']');
 
@@ -1483,7 +1507,8 @@ abstract class ActiveRecord
 
             return true;
         } else {
-            $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+            $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+            $provider->setRecord($this);
             $updateRequired = $provider->checkTableNeedsUpdate();
 
             if (method_exists($this, 'after_checkTableNeedsUpdate_callback')) {
@@ -1516,7 +1541,8 @@ abstract class ActiveRecord
             $this->{'before_findMissingFields_callback'}();
         }
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $missingFields = $provider->findMissingFields();
 
         if (method_exists($this, 'after_findMissingFields_callback')) {
@@ -1702,7 +1728,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $indexNames = $provider->getIndexes();
 
         self::$logger->debug('<<getIndexes ['.print_r($indexNames, true).']');
@@ -1742,7 +1769,8 @@ abstract class ActiveRecord
             return;
         }
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $provider->createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName);
 
         if (method_exists($this, 'after_createForeignIndex_callback')) {
@@ -1773,7 +1801,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $provider->createUniqueIndex($attribute1Name, $attribute2Name, $attribute3Name);
 
         if (method_exists($this, 'after_createUniqueIndex_callback')) {
@@ -2111,7 +2140,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $recordExists = $provider->checkRecordExists($ID);
 
         if (method_exists($this, 'after_checkRecordExists_callback')) {
@@ -2140,7 +2170,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $isOverloaded = $provider->isTableOverloaded();
 
         self::$logger->debug('<<isTableOverloaded ['.$isOverloaded.']');
@@ -2151,13 +2182,13 @@ abstract class ActiveRecord
     /**
      * Starts a new database transaction.
      *
-     * @param ActiveRecord $Record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
+     * @param ActiveRecord $record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public static function begin($Record = null)
+    public static function begin($record = null)
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2166,10 +2197,12 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        if (isset($Record)) {
-            $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $Record);
+        if (isset($record)) {
+            $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+            $provider->setRecord($record);
         } else {
-            $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), new Person());
+            $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+            $provider->setRecord(new Person());
         }
 
         try {
@@ -2184,13 +2217,13 @@ abstract class ActiveRecord
     /**
      * Commits the current database transaction.
      *
-     * @param ActiveRecord $Record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
+     * @param ActiveRecord $record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\FailedSaveException
      */
-    public static function commit($Record = null)
+    public static function commit($record = null)
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2199,10 +2232,12 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        if (isset($Record)) {
-            $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $Record);
+        if (isset($record)) {
+            $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+            $provider->setRecord($record);
         } else {
-            $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), new Person());
+            $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+            $provider->setRecord(new Person());
         }
 
         try {
@@ -2217,13 +2252,13 @@ abstract class ActiveRecord
     /**
      * Aborts the current database transaction.
      *
-     * @param ActiveRecord $Record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
+     * @param ActiveRecord $record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public static function rollback($Record = null)
+    public static function rollback($record = null)
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2232,10 +2267,12 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        if (isset($Record)) {
-            $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $Record);
+        if (isset($record)) {
+            $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+            $provider->setRecord($record);
         } else {
-            $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), new Person());
+            $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+            $provider->setRecord(new Person());
         }
 
         try {
@@ -2336,9 +2373,9 @@ abstract class ActiveRecord
      */
     public function cast($targetClassName, $originalRecord)
     {
-        $Record = new $targetClassName();
-        $Record->setID($originalRecord->getID());
-        $Record->setVersion($originalRecord->getVersion());
+        $record = new $targetClassName();
+        $record->setID($originalRecord->getID());
+        $record->setVersion($originalRecord->getVersion());
 
         // get the class attributes
         $originalRecordreflection = new ReflectionClass(get_class($originalRecord));
@@ -2353,7 +2390,7 @@ abstract class ActiveRecord
             foreach ($originalRecordproperties as $propObj) {
                 $propName = $propObj->name;
                 if (!in_array($propName, $this->transientAttributes)) {
-                    $Record->set($propName, $originalRecord->get($propName));
+                    $record->set($propName, $originalRecord->get($propName));
                 }
             }
         } else {
@@ -2361,12 +2398,12 @@ abstract class ActiveRecord
             foreach ($newRecordproperties as $propObj) {
                 $propName = $propObj->name;
                 if (!in_array($propName, $this->transientAttributes)) {
-                    $Record->set($propName, $originalRecord->get($propName));
+                    $record->set($propName, $originalRecord->get($propName));
                 }
             }
         }
 
-        return $Record;
+        return $record;
     }
 
     /**
@@ -2453,9 +2490,9 @@ abstract class ActiveRecord
 
         try {
             $cache = ServiceFactory::getInstance($config->get('cache.provider.name'), 'Alpha\Util\Cache\CacheProviderInterface');
-            $Record = $cache->get(get_class($this).'-'.$this->getID());
+            $record = $cache->get(get_class($this).'-'.$this->getID());
 
-            if (!$Record) {
+            if (!$record) {
                 self::$logger->debug('Cache miss on key ['.get_class($this).'-'.$this->getID().']');
                 self::$logger->debug('<<loadFromCache: [false]');
 
@@ -2470,7 +2507,7 @@ abstract class ActiveRecord
 
                     // filter transient attributes
                     if (!in_array($propName, $this->transientAttributes)) {
-                        $this->set($propName, $Record->get($propName, true));
+                        $this->set($propName, $record->get($propName, true));
                     } elseif (!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {
                         $prop = $this->getPropObject($propName);
 
@@ -2594,7 +2631,8 @@ abstract class ActiveRecord
     {
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), new Person());
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord(new Person());
 
         return $provider->checkDatabaseExists();
     }
@@ -2610,7 +2648,8 @@ abstract class ActiveRecord
     {
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), new Person());
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord(new Person());
         $provider->createDatabase();
     }
 
@@ -2625,7 +2664,8 @@ abstract class ActiveRecord
     {
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), new Person());
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord(new Person());
         $provider->dropDatabase();
     }
 }

@@ -151,7 +151,8 @@ class Tag extends ActiveRecord
             throw new IllegalArguementException('The taggedClass or taggedID provided are empty');
         }
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
 
         try {
             $tags = $provider->loadAllByAttributes(array('taggedID', 'taggedClass'), array($taggedID, $taggedClass));
@@ -182,7 +183,8 @@ class Tag extends ActiveRecord
     {
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), new self());
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord(new self());
 
         $sqlQuery = 'SELECT content, count(*) as count FROM '.self::TABLE_NAME." GROUP BY content ORDER BY count DESC LIMIT $limit";
 
