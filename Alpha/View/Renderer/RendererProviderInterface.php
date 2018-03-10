@@ -5,7 +5,7 @@ namespace Alpha\View\Renderer;
 /**
  * Defines the renderer interface, which allows us to have various implementations (HTML,
  * JSON, XML etc.) behind one unified interface.  Use the
- * RendererProviderFactory::getInstance() method to get instances of this.
+ * ServiceFactory::getInstance() method to get instances of this.
  *
  * @since 1.2
  *
