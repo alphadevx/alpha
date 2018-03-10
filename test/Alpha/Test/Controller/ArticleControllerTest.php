@@ -83,12 +83,6 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
         $item = new DEnumItem();
         $item->rebuildTable();
 
-        // create a default article DEnum category
-        $denum = new DEnum('Alpha\Model\Article::section');
-        $item->set('value', 'Main');
-        $item->set('DEnumID', $denum->getID());
-        $item->save();
-
         $article = new Article();
         $article->rebuildTable();
 
@@ -131,7 +125,6 @@ Content Cell  | Content Cell';
         $article->set('author', 'unitTestArticleTagOneBB');
         $article->set('content', $markdown);
         $article->set('published', true);
-        $article->set('section', 1);
         $article->set('headerContent', '<script>alert();</script>');
 
         return $article;

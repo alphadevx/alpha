@@ -77,13 +77,6 @@ class TagControllerTest extends ControllerTestCase
         $article = new Article();
         $article->rebuildTable();
 
-        $denum = new DEnum('Alpha\Model\Article::section');
-        $item->set('DEnumID', $denum->getID());
-        $item->set('value', 'Test');
-        $item->save();
-
-        $this->DEnumID = $denum->getID();
-
         $this->article = $this->createArticle('unitTestArticle');
     }
 
@@ -101,7 +94,6 @@ class TagControllerTest extends ControllerTestCase
         $article->set('description', 'A test article called unitTestArticle');
         $article->set('author', 'blah');
         $article->set('content', 'blah');
-        $article->set('section', $this->DEnumID);
 
         return $article;
     }

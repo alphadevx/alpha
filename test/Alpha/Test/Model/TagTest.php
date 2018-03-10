@@ -61,13 +61,6 @@ class TagTest extends \PHPUnit_Framework_TestCase
     private $article;
 
     /**
-     * ID of the artice section DEnum item to use during testing.
-     *
-     * @var int
-     */
-    private $DEnumID;
-
-    /**
      * Set up tests.
      *
      * @since 1.0
@@ -85,13 +78,6 @@ class TagTest extends \PHPUnit_Framework_TestCase
 
         $article = new Article();
         $article->rebuildTable();
-
-        $denum = new DEnum('Alpha\Model\Article::section');
-        $item->set('DEnumID', $denum->getID());
-        $item->set('value', 'Test');
-        $item->save();
-
-        $this->DEnumID = $denum->getID();
 
         $this->article = $this->createArticle('unitTestArticle');
     }
@@ -132,7 +118,6 @@ class TagTest extends \PHPUnit_Framework_TestCase
         $article->set('description', 'A test article called unitTestArticle with some stop words and the unitTestArticle title twice');
         $article->set('author', 'blah');
         $article->set('content', 'blah');
-        $article->set('section', $this->DEnumID);
 
         return $article;
     }

@@ -69,15 +69,6 @@ class Article extends ActiveRecord
     protected $title;
 
     /**
-     * The article site section.
-     *
-     * @var \Alpha\Model\Type\DEnum
-     *
-     * @since 1.0
-     */
-    protected $section;
-
-    /**
      * The description of the article.
      *
      * @var \Alpha\Model\Type\SmallText
@@ -183,7 +174,7 @@ class Article extends ActiveRecord
      *
      * @since 1.0
      */
-    protected $dataLabels = array('ID' => 'Article ID#', 'title' => 'Title', 'section' => 'Site Section', 'description' => 'Description', 'bodyOnload' => 'Body onload Javascript', 'content' => 'Content', 'headerContent' => 'HTML Header Content', 'author' => 'Author', 'created_ts' => 'Date Added', 'updated_ts' => 'Date of last Update', 'published' => 'Published', 'URL' => 'URL', 'printURL' => 'Printer version URL', 'comments' => 'Comments', 'votes' => 'Votes', 'tags' => 'Tags');
+    protected $dataLabels = array('ID' => 'Article ID#', 'title' => 'Title', 'description' => 'Description', 'bodyOnload' => 'Body onload Javascript', 'content' => 'Content', 'headerContent' => 'HTML Header Content', 'author' => 'Author', 'created_ts' => 'Date Added', 'updated_ts' => 'Date of last Update', 'published' => 'Published', 'URL' => 'URL', 'printURL' => 'Printer version URL', 'comments' => 'Comments', 'votes' => 'Votes', 'tags' => 'Tags');
 
     /**
      * The name of the database table for the class.
@@ -240,8 +231,6 @@ class Article extends ActiveRecord
         $this->title->setHelper('Please provide a title for the article. Note that the '.$separator.' character is not allowed!');
         $this->title->setSize(100);
         $this->title->setRule('/^[^'.$separator.']*$/');
-
-        $this->section = new DEnum('Alpha\Model\Article::section');
 
         $this->description = new SmallText();
         $this->description->setHelper('Please provide a brief description of the article.');
@@ -341,7 +330,6 @@ class Article extends ActiveRecord
      * article to the amount specified by the $limit.
      *
      * @param int    $limit
-     * @param string $excludeID
      *
      * @return array
      *
@@ -349,14 +337,9 @@ class Article extends ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function loadRecentWithLimit($limit, $excludeID = '')
+    public function loadRecentWithLimit($limit)
     {
-        if ($excludeID != '') {
-            $denum = new DEnum('Alpha\Model\Article::section');
-            $excludeID = $denum->getOptionID($excludeID);
-        }
-
-        $sqlQuery = 'SELECT ID FROM '.$this->getTableName()." WHERE published='1' AND section!='$excludeID' ORDER BY created_ts DESC LIMIT 0, $limit;";
+        $sqlQuery = 'SELECT ID FROM '.$this->getTableName()." WHERE published='1' ORDER BY created_ts DESC LIMIT 0, $limit;";
 
         $result = $this->query($sqlQuery);
 

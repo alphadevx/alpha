@@ -76,7 +76,7 @@ class DEnumTest extends ModelTestCase
         $item = new DEnumItem();
         $item->rebuildTable();
 
-        $this->denum1 = new DEnum('Article::section');
+        $this->denum1 = new DEnum('Alpha\Model\Article::section');
         $item->set('DEnumID', $this->denum1->getID());
         $item->set('value', 'Test');
         $item->save();
