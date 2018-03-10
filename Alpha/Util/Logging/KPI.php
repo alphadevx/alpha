@@ -6,7 +6,7 @@ use Alpha\Model\Type\Timestamp;
 use Alpha\Model\Type\SmallText;
 use Alpha\Util\Helper\Validator;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 
 /**
  * A Key Performance Indicator (KPI) logging class.
@@ -130,7 +130,7 @@ class KPI
         $this->startTime = microtime(true);
 
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         // a startTime value may have been passed from a previous request
         if ($session->get($name.'-startTime') !== false) {
@@ -150,7 +150,7 @@ class KPI
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $session->set($this->name->getValue().'-startTime', $this->startTime);
     }

@@ -3,7 +3,7 @@
 namespace Alpha\Model\Type;
 
 use Alpha\Model\ActiveRecord;
-use Alpha\Model\ActiveRecordProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Exception\FailedLookupCreateException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\AlphaException;
@@ -238,7 +238,8 @@ class RelationLookup extends ActiveRecord implements TypeInterface
 
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $objects = $provider->loadAllByAttribute($attribute, $value, $start, $limit, $orderBy, $order, $ignoreClassType, array($this->leftClassName, $this->rightClassName));
 
         if (method_exists($this, 'after_loadAllByAttribute_callback')) {
@@ -274,7 +275,8 @@ class RelationLookup extends ActiveRecord implements TypeInterface
                 '] provided to loadAllByAttributes');
         }
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
         $objects = $provider->loadAllByAttributes($attributes, $values, $start, $limit, $orderBy, $order, $ignoreClassType, array($this->leftClassName, $this->rightClassName));
 
         if (method_exists($this, 'after_loadAllByAttributes_callback')) {

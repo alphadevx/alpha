@@ -2,7 +2,7 @@
 
 namespace Alpha\Test\Util\Http\Session;
 
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 
 /**
  * Test case for the session providers.
@@ -98,15 +98,15 @@ class SessionProviderInterfaceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('stillhere', $provider->get('itisstillthere'), 'Testing values survive re-initialization of session');
 
-        $provider = SessionProviderFactory::getInstance(get_class($provider));
+        $provider = ServiceFactory::getInstance(get_class($provider), 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $this->assertEquals('stillhere', $provider->get('itisstillthere'), 'Testing values survive re-initialization of session');
     }
 
     public function getProviders()
     {
-        $arrayProvider = SessionProviderFactory::getInstance('Alpha\Util\Http\Session\SessionProviderArray');
-        $PHPSessionProvider = SessionProviderFactory::getInstance('Alpha\Util\Http\Session\SessionProviderPHP');
+        $arrayProvider = ServiceFactory::getInstance('Alpha\Util\Http\Session\SessionProviderArray', 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $PHPSessionProvider = ServiceFactory::getInstance('Alpha\Util\Http\Session\SessionProviderPHP', 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         return array(
             array($arrayProvider),

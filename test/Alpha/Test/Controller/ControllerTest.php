@@ -13,7 +13,7 @@ use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
 use Alpha\Model\ActiveRecord;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Http\Request;
 use Alpha\Exception\PHPException;
 use Alpha\Exception\FailedUnitCommitException;
@@ -303,7 +303,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $lookup->save();
 
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
         $session->set('currentUser', $this->person);
 
         try {
@@ -532,7 +532,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $controller = new ImageController('Admin');
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
         $session->delete('currentUser');
 
         $this->assertFalse($controller->checkRights(), 'Testing that a user with no session cannot access an Admin controller');

@@ -4,7 +4,7 @@ namespace Alpha\View\Widget;
 
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Cache\CacheProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Model\Tag;
 
 /**
@@ -85,7 +85,7 @@ class TagCloud
         self::$logger = new Logger('TagCloud');
 
         if ($cacheKey != '' && $config->get('cache.provider.name') != '') {
-            $cache = CacheProviderFactory::getInstance($config->get('cache.provider.name'));
+            $cache = ServiceFactory::getInstance($config->get('cache.provider.name'), 'Alpha\Util\Cache\CacheProviderInterface');
             $this->popTags = $cache->get($cacheKey);
 
             // cache look-up failed, so add it for the next time

@@ -7,7 +7,7 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\File\FileUtils;
 use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\Http\Response;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\SecurityException;
 use Alpha\Exception\AlphaException;
@@ -213,7 +213,7 @@ class CacheController extends Controller implements ControllerInterface
 
                     $config = ConfigProvider::getInstance();
                     $sessionProvider = $config->get('session.provider.name');
-                    $session = SessionProviderFactory::getInstance($sessionProvider);
+                    $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
                     self::$logger->info('Cache contents deleted successfully by user ['.$session->get('currentUser')->get('username').'].');
                 } catch (AlphaException $e) {

@@ -9,7 +9,7 @@ use Alpha\Model\Type\Boolean;
 use Alpha\Model\Type\Relation;
 use Alpha\Util\Config\Configprovider;
 use Alpha\Util\Logging\Logger;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Exception\ValidationException;
 use Alpha\Exception\FileNotFoundException;
 use Alpha\Exception\AlphaException;
@@ -486,7 +486,7 @@ class Article extends ActiveRecord
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
         // just going to return true if nobody is logged in
         if ($session->get('currentUser') == null) {
             return true;

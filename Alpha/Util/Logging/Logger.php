@@ -3,8 +3,7 @@
 namespace Alpha\Util\Logging;
 
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Email\EmailProviderFactory;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Http\Request;
 use Alpha\Model\ActionLog;
 
@@ -111,7 +110,7 @@ class Logger
         $this->classname = $classname;
         $this->level = $config->get('app.log.trace.level');
         $this->debugClasses = explode(',', $config->get('app.log.trace.debug.classes'));
-        $this->logProvider = LogProviderFactory::getInstance('Alpha\Util\Logging\LogProviderFile');
+        $this->logProvider = ServiceFactory::getInstance('Alpha\Util\Logging\LogProviderFile', 'Alpha\Util\Logging\LogProviderInterface', true);
         $this->logProvider->setPath($config->get('app.file.store.dir').'logs/'.$config->get('app.log.file'));
 
         $this->request = new Request(array('method' => 'GET')); // hard-coding to GET here is fine as we don't log HTTP method (yet).
@@ -230,7 +229,7 @@ class Logger
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         if ($session->get('currentUser') != null) {
             $action = new ActionLog();
@@ -264,7 +263,7 @@ class Logger
 
             $body .= "\n\nKind regards,\n\nAdministrator\n--\n".$config->get('app.url');
 
-            $mailer = EmailProviderFactory::getInstance('Alpha\Util\Email\EmailProviderPHP');
+            $mailer = ServiceFactory::getInstance('Alpha\Util\Email\EmailProviderPHP', 'Alpha\Util\Email\EmailProviderInterface');
             $mailer->send($config->get('app.log.error.mail.address'), $config->get('email.reply.to'), 'Error in class '.$this->classname.' on site '.$config->get('app.title'), $body);
         }
     }

@@ -6,7 +6,7 @@ use Alpha\Controller\Front\FrontController;
 use Alpha\Controller\ActiveRecordController;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Model\Person;
 use Alpha\Model\Rights;
 
@@ -61,7 +61,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $front = new FrontController();
 
@@ -137,7 +137,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $front = new FrontController();
         $controller = new ActiveRecordController();
@@ -197,7 +197,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $front = new FrontController();
         $controller = new ActiveRecordController();
@@ -258,7 +258,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $front = new FrontController();
         $controller = new ActiveRecordController();

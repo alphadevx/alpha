@@ -491,35 +491,35 @@ Alpha includes many varied utilities in the _Alpha\Util_ package.  The following
 
 A data cache is provided, that provides a factory and injectable providers that support Memcache, Redis, and APCu.  The classes are provided in the _Alpha\Util\Cache_ package, while the providers implement the _Alpha\Util\Cache\CacheProviderInterface_.  Here is an example using the Redis provider:
 
-	use Alpha\Util\Cache\CacheProviderFactory;
+	use Alpha\Util\Service\ServiceFactory;
 
 	// ...
 
-	$cache = CacheProviderFactory::getInstance('Alpha\Util\Cache\CacheProviderRedis');
+	$cache = ServiceFactory::getInstance('Alpha\Util\Cache\CacheProviderRedis','Alpha\Util\Cache\CacheProviderInterface');
 	$record = $cache->get($cacheKey);
 
 ### Code highlighting
 
 The _Alpha\Util\Code\Highlight\HighlightProviderFactory_ providers objects for converting plain source code into code-highlighted HTML source code.  Providers for the Geshi and Luminous libraries are provided.  Here is an example:
 
-	use Alpha\Util\Code\Highlight\HighlightProviderFactory;
+	use Alpha\Util\Service\ServiceFactory;
 	
 	// ...
 	
-	$highlighter = HighlightProviderFactory::getInstance('Alpha\Util\Code\Highlight\HighlightProviderGeshi');
+	$highlighter = ServiceFactory::getInstance('Alpha\Util\Code\Highlight\HighlightProviderGeshi','Alpha\Util\Code\Highlight\HighlightProviderInterface');
 	
 	$html = $highlighter->highlight($code, 'php');
 
 ### Email
 
-Alpha provides an email package with a factory and an interface for injecting different email providers.  Here is an example usage:
+Alpha provides an email package with an interface for injecting different email providers.  Here is an example usage:
 
-	use Alpha\Util\Email\EmailProviderFactory;
+	use Alpha\Util\Service\ServiceFactory;
 	use Alpha\Exception\MailNotSentException;
 
 	// ...
 
-	$mailer = EmailProviderFactory::getInstance('Alpha\Util\Email\EmailProviderPHP');
+	$mailer = ServiceFactory::getInstance('Alpha\Util\Email\EmailProviderPHP','Alpha\Util\Email\EmailProviderInterface');
 
 	try {
     	$mailer->send('to@mail.com', 'from@mail.com', 'Subject', 'Some HTML...', true);
@@ -585,11 +585,11 @@ Registering a filter with the front controller is easy, and should be done on ap
 
 Alpha provides a session abstraction layer to allow the inject of different session providers, which is very useful for example if you want to store your session in an array for unit testing.  It is also possible to write providers to store sessions in NoSQL or database backends.  Here is an example of using the default PHP session mechanism:
 
-	use Alpha\Util\Http\Session\SessionProviderFactory;
+	use Alpha\Util\Service\ServiceFactory;
 
 	// ...
 
-	$session = SessionProviderFactory::getInstance('Alpha\Util\Http\Session\SessionProviderPHP');
+	$session = ServiceFactory::getInstance('Alpha\Util\Http\Session\SessionProviderPHP', 'Alpha\Util\Http\Session\SessionProviderInterface');
 	$session->set('somekey', 'somevalue'); // you can also pass complex types
 	echo $session->get('somekey');
 

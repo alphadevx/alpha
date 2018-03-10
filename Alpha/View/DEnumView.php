@@ -4,7 +4,7 @@ namespace Alpha\View;
 
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Controller\Front\FrontController;
 use Alpha\View\Widget\SmallTextBox;
 use Alpha\View\Widget\Button;
@@ -66,7 +66,7 @@ class DEnumView extends View
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $reflection = new \ReflectionClass(get_class($this->record));
         $properties = $reflection->getProperties();

@@ -66,6 +66,7 @@ class SessionProviderPHP implements SessionProviderInterface
     public function __construct()
     {
         self::$logger = new Logger('SessionProviderPHP');
+        $this->init();
     }
 
     /**

@@ -83,6 +83,7 @@ class SessionProviderArray implements SessionProviderInterface
     public function __construct()
     {
         self::$logger = new Logger('SessionProviderArray');
+        $this->init();
     }
 
     /**

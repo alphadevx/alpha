@@ -2,7 +2,7 @@
 
 namespace Alpha\Test\Util\Cache;
 
-use Alpha\Util\Cache\CacheProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 
 /**
  * Test cases for the CacheProviderInterface implementations.
@@ -73,7 +73,7 @@ class CacheProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetGetDelete($provider)
     {
-        $cache = CacheProviderFactory::getInstance($provider);
+        $cache = ServiceFactory::getInstance($provider, 'Alpha\Util\Cache\CacheProviderInterface');
 
         $cached = array('value' => 5);
 

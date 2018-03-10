@@ -7,7 +7,7 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Model\ActiveRecord;
 use Alpha\Model\Type\DEnum;
 use Alpha\Exception\IllegalArguementException;
-use Alpha\View\Renderer\RendererProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\View\Renderer\RendererProviderInterface;
 use ReflectionClass;
 
@@ -963,13 +963,13 @@ class View
                 $ProviderClassName = 'Alpha\View\Renderer\Json\RendererProviderJSON';
             }
 
-            self::$provider = RendererProviderFactory::getInstance($ProviderClassName);
+            self::$provider = ServiceFactory::getInstance($ProviderClassName, 'Alpha\View\Renderer\RendererProviderInterface');
         } else {
             if (class_exists($ProviderClassName)) {
                 $provider = new $ProviderClassName();
 
                 if ($provider instanceof RendererProviderInterface) {
-                    self::$provider = RendererProviderFactory::getInstance($ProviderClassName);
+                    self::$provider = ServiceFactory::getInstance($ProviderClassName, 'Alpha\View\Renderer\RendererProviderInterface');
                 } else {
                     throw new IllegalArguementException('The provider class ['.$ProviderClassName.'] does not implement the RendererProviderInterface interface!');
                 }
@@ -993,7 +993,7 @@ class View
         } else {
             $config = ConfigProvider::getInstance();
 
-            self::$provider = RendererProviderFactory::getInstance($config->get('app.renderer.provider.name'));
+            self::$provider = ServiceFactory::getInstance($config->get('app.renderer.provider.name'), 'Alpha\View\Renderer\RendererProviderInterface');
 
             return self::$provider;
         }

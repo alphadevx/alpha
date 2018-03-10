@@ -5,7 +5,7 @@ namespace Alpha\View;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Extension\MarkdownFacade;
 use Alpha\Util\Security\SecurityUtils;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Model\Person;
 use Alpha\View\Widget\TextBox;
 use Alpha\View\Widget\Button;
@@ -68,7 +68,7 @@ class ArticleCommentView extends View
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $markdown = new MarkdownFacade($this->record);
         $author = new Person();
@@ -154,7 +154,7 @@ class ArticleCommentView extends View
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         $html = '<table cols="2" class="edit_view" style="width:100%; margin:0px">';
         $html .= '<form action="'.$fields['formAction'].'" method="POST" accept-charset="UTF-8">';

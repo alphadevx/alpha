@@ -9,7 +9,7 @@ use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\CustomQueryException;
 use Alpha\Exception\RecordNotFoundException;
 use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Cache\CacheProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Helper\Validator;
 use Alpha\Util\Logging\Logger;
 use Exception;
@@ -151,7 +151,8 @@ class Tag extends ActiveRecord
             throw new IllegalArguementException('The taggedClass or taggedID provided are empty');
         }
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), $this);
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord($this);
 
         try {
             $tags = $provider->loadAllByAttributes(array('taggedID', 'taggedClass'), array($taggedID, $taggedClass));
@@ -182,7 +183,8 @@ class Tag extends ActiveRecord
     {
         $config = ConfigProvider::getInstance();
 
-        $provider = ActiveRecordProviderFactory::getInstance($config->get('db.provider.name'), new self());
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord(new self());
 
         $sqlQuery = 'SELECT content, count(*) as count FROM '.self::TABLE_NAME." GROUP BY content ORDER BY count DESC LIMIT $limit";
 
@@ -310,7 +312,7 @@ class Tag extends ActiveRecord
 
         if ($config->get('cache.provider.name') != '') {
             try {
-                $cache = CacheProviderFactory::getInstance($config->get('cache.provider.name'));
+                $cache = ServiceFactory::getInstance($config->get('cache.provider.name'), 'Alpha\Util\Cache\CacheProviderInterface');
                 $cache->delete($this->get('content'));
             } catch (\Exception $e) {
                 self::$logger->error('Error while attempting to remove search matches array from the ['.$config->get('cache.provider.name').'] 

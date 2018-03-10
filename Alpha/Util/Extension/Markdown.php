@@ -4,7 +4,7 @@ namespace Alpha\Util\Extension;
 
 use Alpha\Util\Config\ConfigProvider;
 use Michelf\MarkdownExtra;
-use Alpha\Util\Code\Highlight\HighlightProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 
 /**
  * A custom version of the Markdown class which uses the geshi library for rendering code.
@@ -82,7 +82,7 @@ class Markdown extends MarkdownExtra
         }
 
         if ($config->get('cms.highlight.provider.name') != '') {
-            $highlighter = HighlightProviderFactory::getInstance($config->get('cms.highlight.provider.name'));
+            $highlighter = ServiceFactory::getInstance($config->get('cms.highlight.provider.name'), 'Alpha\Util\Code\Highlight\HighlightProviderInterface');
             $codeblock = $highlighter->highlight($codeblock, $language);
         } else {
             $codeblock = htmlspecialchars($codeblock, ENT_NOQUOTES);

@@ -8,7 +8,7 @@ use Alpha\Util\Logging\LogProviderFile;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Http\Response;
-use Alpha\Util\Search\SearchProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\View\View;
 use Alpha\View\Widget\Button;
 use Alpha\Controller\Front\FrontController;
@@ -152,7 +152,7 @@ class SearchController extends Controller implements ControllerInterface
 
             $KPI->logStep('log search query');
 
-            $provider = SearchProviderFactory::getInstance('Alpha\Util\Search\SearchProviderTags');
+            $provider = ServiceFactory::getInstance('Alpha\Util\Search\SearchProviderTags', 'Alpha\Util\Search\SearchProviderInterface');
 
             // if a Record name is provided, only search tags on that class, otherwise search all records
             if (isset($params['ActiveRecordType'])) {

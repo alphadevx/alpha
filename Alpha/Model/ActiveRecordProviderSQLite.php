@@ -15,7 +15,7 @@ use Alpha\Model\Type\Enum;
 use Alpha\Model\Type\Boolean;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
-use Alpha\Util\Http\Session\SessionProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Exception\AlphaException;
 use Alpha\Exception\FailedSaveException;
 use Alpha\Exception\FailedDeleteException;
@@ -472,9 +472,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
         if (!$ignoreClassType && $this->record->isTableOverloaded()) {
             if ($limit == 0) {
-                $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().' WHERE classname = \''.addslashes(get_class($this->record)).'\' ORDER BY '.$orderBy.' '.$order.';';
+                $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().' WHERE classname = \''.get_class($this->record).'\' ORDER BY '.$orderBy.' '.$order.';';
             } else {
-                $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().' WHERE classname = \''.addslashes(get_class($this->record)).'\' ORDER BY '.$orderBy.' '.$order.' LIMIT '.
+                $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().' WHERE classname = \''.get_class($this->record).'\' ORDER BY '.$orderBy.' '.$order.' LIMIT '.
                     $limit.' OFFSET '.$start.';';
             }
         } else {
@@ -833,7 +833,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         // get the class attributes
         $reflection = new ReflectionClass(get_class($this->record));
@@ -1070,7 +1070,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
-        $session = SessionProviderFactory::getInstance($sessionProvider);
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
         if ($this->record->getVersion() != $this->record->getVersionNumber()->getValue()) {
             throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
@@ -1606,7 +1606,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         self::$logger->debug('>>getCount(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'])');
 
         if ($this->record->isTableOverloaded()) {
-            $whereClause = ' WHERE classname = \''.addslashes(get_class($this->record)).'\' AND';
+            $whereClause = ' WHERE classname = \''.get_class($this->record).'\' AND';
         } else {
             $whereClause = ' WHERE';
         }
