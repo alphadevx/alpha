@@ -114,6 +114,7 @@ class DEnumItem extends ActiveRecord implements TypeInterface
         $this->value->setHelper('A blank dropdown value is not allowed!');
         $this->DEnumID = new Integer();
         $this->markTransient('helper');
+        $this->markUnique('value', 'DEnumID');
     }
 
     /**

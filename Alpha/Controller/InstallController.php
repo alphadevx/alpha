@@ -137,6 +137,8 @@ class InstallController extends Controller implements ControllerInterface
             return new Response(500, $body, array('Content-Type' => 'text/html'));
         }
 
+        ActiveRecord::createDatabase();
+
         // start a new database transaction
         ActiveRecord::begin();
 
@@ -157,13 +159,6 @@ class InstallController extends Controller implements ControllerInterface
                 $DEnumItem->makeTable();
             }
             self::$logger->info('Created the ['.$DEnumItem->getTableName().'] table successfully');
-
-            // create a default article DEnum category
-            $DEnum = new DEnum('Alpha\Model\Article::section');
-            $DEnumItem = new DEnumItem();
-            $DEnumItem->set('value', 'Main');
-            $DEnumItem->set('DEnumID', $DEnum->getID());
-            $DEnumItem->save();
 
             $body .= View::displayUpdateMessage('DEnums set up successfully.');
         } catch (\Exception $e) {

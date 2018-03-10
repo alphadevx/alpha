@@ -8,6 +8,7 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Service\ServiceFactory;
 use Alpha\Model\Person;
+use Alpha\Model\ActiveRecord;
 
 /**
  * Test cases for the InstallController class.
@@ -60,7 +61,6 @@ class InstallControllerTest extends \PHPUnit_Framework_TestCase
 
         $testInstallDir = '/tmp/alphainstalltestdir';
 
-        $config = ConfigProvider::getInstance();
         $config->set('app.file.store.dir', $testInstallDir.'/store/');
         $config->set('db.file.path', $testInstallDir.'/unittests.db');
         $config->set('db.file.test.path', $testInstallDir.'/unittests.db');
@@ -73,9 +73,7 @@ class InstallControllerTest extends \PHPUnit_Framework_TestCase
             mkdir($testInstallDir.'/store');
         }
 
-        if (file_exists($testInstallDir.'/unittests.db')) {
-            unlink($testInstallDir.'/unittests.db');
-        }
+        ActiveRecord::dropDatabase();
 
         $person = new Person();
         $person->set('email', $config->get('app.install.username'));
