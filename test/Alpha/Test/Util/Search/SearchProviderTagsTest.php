@@ -7,7 +7,7 @@ use Alpha\Model\Tag;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
 use Alpha\Model\ActiveRecord;
-use Alpha\Util\Search\SearchProviderFactory;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Config\ConfigProvider;
 
 /**
@@ -150,7 +150,7 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
         $tag->dropTable();
         $tag->rebuildTable();
 
-        $provider = SearchProviderFactory::getInstance('Alpha\Util\Search\SearchProviderTags');
+        $provider = ServiceFactory::getInstance('Alpha\Util\Search\SearchProviderTags', 'Alpha\Util\Search\SearchProviderInterface');
         $provider->index($this->article);
 
         $tags = $this->article->getPropObject('tags')->getRelatedObjects();
@@ -177,7 +177,7 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue(count($tags) > 0, 'Confirming that tags exist after saving the article (ArticleObject::after_save_callback())');
 
-        $provider = SearchProviderFactory::getInstance('Alpha\Util\Search\SearchProviderTags');
+        $provider = ServiceFactory::getInstance('Alpha\Util\Search\SearchProviderTags', 'Alpha\Util\Search\SearchProviderInterface');
         $provider->delete($this->article);
 
         $tags = $this->article->getPropObject('tags')->getRelatedObjects();
@@ -194,7 +194,7 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
     {
         $this->article->save();
 
-        $provider = SearchProviderFactory::getInstance('Alpha\Util\Search\SearchProviderTags');
+        $provider = ServiceFactory::getInstance('Alpha\Util\Search\SearchProviderTags', 'Alpha\Util\Search\SearchProviderInterface');
         $results = $provider->search('unitTestArticle');
 
         $this->assertTrue(count($results) == 1, 'Testing the search method for expected results');
@@ -214,7 +214,7 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
     {
         $this->article->save();
 
-        $provider = SearchProviderFactory::getInstance('Alpha\Util\Search\SearchProviderTags');
+        $provider = ServiceFactory::getInstance('Alpha\Util\Search\SearchProviderTags', 'Alpha\Util\Search\SearchProviderInterface');
         $results = $provider->search('unitTestArticle');
 
         $this->assertTrue($provider->getNumberFound() == 1, 'Testing the method for getting the expected number of results');
@@ -245,7 +245,7 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
         $article3 = $this->createArticle('unitTestArticle 3');
         $article3->save();
 
-        $provider = SearchProviderFactory::getInstance('Alpha\Util\Search\SearchProviderTags');
+        $provider = ServiceFactory::getInstance('Alpha\Util\Search\SearchProviderTags', 'Alpha\Util\Search\SearchProviderInterface');
         $results = $provider->getRelated($this->article);
 
         $this->assertTrue(count($results) == 2, 'Testing the method for getting related objects');

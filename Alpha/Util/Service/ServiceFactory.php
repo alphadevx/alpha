@@ -85,11 +85,11 @@ class ServiceFactory
     public static function getInstance($serviceName, $serviceInterface, $isSingleton = false)
     {
         // as the LogProviderInterface is itself a service, we don't call it's constructor again during instantiation
-        if (self::$logger == null && $serviceInterface != 'Alpha\Util\Logging\LogProviderInterface') {
+        if (self::$logger === null && $serviceInterface != 'Alpha\Util\Logging\LogProviderInterface') {
             self::$logger = new Logger('ServiceFactory');
         }
 
-        if (self::$logger != null) {
+        if (self::$logger !== null) {
             self::$logger->debug('>>getInstance(serviceName=['.$serviceName.'], serviceInterface=['.$serviceInterface.'], isSingleton=['.$isSingleton.'])');
         }
 
@@ -108,16 +108,16 @@ class ServiceFactory
                 self::$singletons[$serviceName] = $instance;
             }
 
-            if (self::$logger != null) {
+            if (self::$logger !== null) {
                 self::$logger->debug('<<getInstance: [Object '.$serviceName.']');
             }
 
             return $instance;
         } else {
-            if (self::$logger != null) {
+            if (self::$logger !== null) {
                 self::$logger->debug('<<getInstance');
             }
-            
+
             throw new IllegalArguementException('The class ['.$serviceName.'] is not defined anywhere!');
         }
     }

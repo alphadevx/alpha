@@ -472,9 +472,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
         if (!$ignoreClassType && $this->record->isTableOverloaded()) {
             if ($limit == 0) {
-                $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().' WHERE classname = \''.addslashes(get_class($this->record)).'\' ORDER BY '.$orderBy.' '.$order.';';
+                $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().' WHERE classname = \''.get_class($this->record).'\' ORDER BY '.$orderBy.' '.$order.';';
             } else {
-                $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().' WHERE classname = \''.addslashes(get_class($this->record)).'\' ORDER BY '.$orderBy.' '.$order.' LIMIT '.
+                $sqlQuery = 'SELECT ID FROM '.$this->record->getTableName().' WHERE classname = \''.get_class($this->record).'\' ORDER BY '.$orderBy.' '.$order.' LIMIT '.
                     $limit.' OFFSET '.$start.';';
             }
         } else {
@@ -1606,7 +1606,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         self::$logger->debug('>>getCount(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'])');
 
         if ($this->record->isTableOverloaded()) {
-            $whereClause = ' WHERE classname = \''.addslashes(get_class($this->record)).'\' AND';
+            $whereClause = ' WHERE classname = \''.get_class($this->record).'\' AND';
         } else {
             $whereClause = ' WHERE';
         }
