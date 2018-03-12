@@ -58,15 +58,15 @@ class PersonView extends View
     /**
      * Method to render the login HTML form.
      *
+     * @param array $fields Hash array of fields to pass to the template
+     *
      * @return string
      *
      * @since 1.0
      */
-    public function displayLoginForm()
+    public function displayLoginForm($fields = array())
     {
-        $html = '<div class="bordered padded">';
-        $html .= '<h1>Login</h1>';
-        $html .= '<form action="'.FrontController::generateSecureURL('act=Alpha\Controller\LoginController').'" method="POST" id="loginForm" accept-charset="UTF-8">';
+        $fields['formAction'] = FrontController::generateSecureURL('act=Alpha\Controller\LoginController');
 
         $request = new Request(array('method' => 'GET'));
         $email = new SmallText($request->getParam('email', ''));
@@ -74,25 +74,22 @@ class PersonView extends View
         $email->setSize(70);
         $email->setHelper('Please provide a valid e-mail address!');
         $stringBox = new SmallTextBox($email, $this->record->getDataLabel('email'), 'email', '50');
-        $html .= $stringBox->render();
+        $fields['emailBox'] = $stringBox->render();
 
         $password = new SmallText();
         $password->isPassword();
 
         $stringBox = new SmallTextBox($password, $this->record->getDataLabel('password'), 'password', '50');
-        $html .= $stringBox->render();
+        $fields['passwordBox'] = $stringBox->render();
 
         $temp = new Button('submit', 'Login', 'loginBut');
-        $html .= '<div class="centered">'.$temp->render(80).'</div>';
+        $fields['loginButton'] = $temp->render(80);
 
-        $html .= $this->renderSecurityFields();
+        $fields['formSecurityFields'] = $this->renderSecurityFields();
 
-        $html .= '</form>';
+        $fields['resetURL'] = FrontController::generateSecureURL('act=Alpha\Controller\LoginController&reset=true');
 
-        $html .= '<p><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\LoginController&reset=true').'">Forgotten your password?</a></p>';
-        $html .= '</div>';
-
-        return $html;
+        return View::loadTemplate($this->record, 'login', $fields);
     }
 
     /**
