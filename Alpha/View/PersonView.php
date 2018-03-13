@@ -95,18 +95,17 @@ class PersonView extends View
     /**
      * Method to render the reset password HTML form.
      *
+     * @param array $fields Hash array of fields to pass to the template
+     *
      * @return string
      *
      * @since 1.0
      */
-    public function displayResetForm()
+    public function displayResetForm($fields = array())
     {
         $config = ConfigProvider::getInstance();
 
-        $html = '<div class="bordered padded">';
-        $html .= '<h1>Password reset</h1>';
-        $html .= '<p>If you have forgotten your password, you can use this form to have a new password automatically generated and sent to your e-mail address.</p>';
-        $html .= '<form action="'.FrontController::generateSecureURL('act=Alpha\Controller\LoginController&reset=true').'" method="POST" id="resetForm" accept-charset="UTF-8">';
+        $fields['formAction'] = FrontController::generateSecureURL('act=Alpha\Controller\LoginController&reset=true');
 
         $request = new Request(array('method' => 'GET'));
         $email = new SmallText($request->getParam('email', ''));
@@ -114,24 +113,17 @@ class PersonView extends View
         $email->setSize(70);
         $email->setHelper('Please provide a valid e-mail address!');
         $stringBox = new SmallTextBox($email, $this->record->getDataLabel('email'), 'email', '50');
-        $html .= $stringBox->render();
-
-        $html .= '<div class="form-group lower spread">';
+        $fields['emailBox'] = $stringBox->render();
 
         $temp = new Button('submit', 'Reset Password', 'resetBut');
-        $html .= $temp->render();
+        $fields['resetButton'] = $temp->render();
 
         $temp = new Button("document.location.replace('".$config->get('app.url')."')", 'Cancel', 'cancelBut');
-        $html .= $temp->render();
+        $fields['cancelButton'] = $temp->render();
 
-        $html .= '</div>';
+        $fields['formSecurityFields'] = $this->renderSecurityFields();
 
-        $html .= $this->renderSecurityFields();
-
-        $html .= '</form>';
-        $html .= '</div>';
-
-        return $html;
+        return View::loadTemplate($this->record, 'reset', $fields);
     }
 
     /**

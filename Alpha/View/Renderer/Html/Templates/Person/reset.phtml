@@ -1,0 +1,19 @@
+<div class="bordered padded">
+        <h1>Password reset</h1>
+        <p>If you have forgotten your password, you can use this form to have a new password automatically generated and sent to your e-mail address.</p>
+        <form action="<?= $formAction ?>" method="POST" id="resetForm" accept-charset="UTF-8">
+
+        <?= $emailBox ?>
+
+        <div class="form-group lower spread">
+
+        <?= $resetButton ?>
+
+        <?= $cancelButton ?>
+
+        </div>
+
+        <?= $formSecurityFields ?>
+
+        </form>
+</div>
