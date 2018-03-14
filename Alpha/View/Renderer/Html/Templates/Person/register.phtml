@@ -1,0 +1,17 @@
+<p>In order to access this site, you will need to create a user account.  In order to do so, please provide a valid email address below and a password will be sent to your inbox shortly (you can change your password once you log in).</p>
+<table cols="2">';
+<form action="<?= $formAction ?>" method="POST" accept-charset="UTF-8">
+    <tr>
+        <td>Username</td> <td><input type="text" name="<?= $usernameFieldname ?>" size="50" value="<?= $username ?>"/></td>
+    </tr>
+    <tr>
+        <td>E-mail Address</td> <td><input type="text" name="<?= $emailFieldname ?>" size="50" value="<?= $email ?>"/></td>
+    </tr>
+    <tr>
+        <td colspan="2"><?= $registerButton ?>&nbsp;&nbsp;<?= $cancelButton ?></td>
+    </tr>
+
+    <?= $formSecurityFields ?>
+
+</form>
+</table>

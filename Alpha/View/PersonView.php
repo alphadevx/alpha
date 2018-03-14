@@ -129,48 +129,42 @@ class PersonView extends View
     /**
      * Method to render the user registration form.
      *
+     * @param array $fields Hash array of fields to pass to the template
+     *
      * @return string
      *
      * @since 1.0
      */
-    public function displayRegisterForm()
+    public function displayRegisterForm($fields = array())
     {
         $config = ConfigProvider::getInstance();
 
         $request = new Request(array('method' => 'GET'));
 
-        $html = '<p>In order to access this site, you will need to create a user account.  In order to do so, please provide a valid email address below and a password will be sent to your inbox shortly (you can change your password once you log in).</p>';
-        $html .= '<table cols="2">';
-        $html .= '<form action="'.$request->getURI().'?reset=true" method="POST" accept-charset="UTF-8">';
-        $html .= '<tr>';
+        $fields['formAction'] = $request->getURI().'?reset=true';
+        
         if ($config->get('security.encrypt.http.fieldnames')) {
-            $fieldname = base64_encode(SecurityUtils::encrypt('username'));
+            $fields['usernameFieldname'] = base64_encode(SecurityUtils::encrypt('username'));
         } else {
-            $fieldname = 'username';
+            $fields['usernameFieldname'] = 'username';
         }
-        $html .= '  <td>Forum name</td> <td><input type="text" name="'.$fieldname.'" size="50" value="'.$request->getParam($fieldname, '').'"/></td>';
-        $html .= '</tr>';
-        $html .= '<tr>';
+        $fields['username'] = $request->getParam($fields['usernameFieldname'], '');
+        
         if ($config->get('security.encrypt.http.fieldnames')) {
-            $fieldname = base64_encode(SecurityUtils::encrypt('email'));
+            $fields['emailFieldname'] = base64_encode(SecurityUtils::encrypt('email'));
         } else {
-            $fieldname = 'email';
+            $fields['emailFieldname'] = 'email';
         }
-        $html .= '  <td>E-mail Address</td> <td><input type="text" name="'.$fieldname.'" size="50" value="'.$request->getParam($fieldname, '').'"/></td>';
-        $html .= '</tr>';
-        $html .= '<tr><td colspan="2">';
+        $fields['email'] = $request->getParam($fields['emailFieldname'], '');
+        
         $temp = new Button('submit', 'Register', 'registerBut');
-        $html .= $temp->render();
-        $html .= '&nbsp;&nbsp;';
+        $fields['registerButton'] = $temp->render();
+        
         $temp = new Button("document.location.replace('".$config->get('app.url')."')", 'Cancel', 'cancelBut');
-        $html .= $temp->render();
-        $html .= '</td></tr>';
+        $fields['cancelButton'] = $temp->render();
 
-        $html .= $this->renderSecurityFields();
+        $fields['formSecurityFields'] = $this->renderSecurityFields();
 
-        $html .= '</form>';
-        $html .= '</table>';
-
-        return $html;
+        return View::loadTemplate($this->record, 'register', $fields);
     }
 }
