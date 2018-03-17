@@ -235,8 +235,7 @@ class RecordSelector
 
                     $html .= '<div id="relation_field_'.$this->name.'" style="display:'.($expanded ? '' : 'none').';">';
 
-                    $customViewControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'view');
-                    $customEditControllerName = Controller::getCustomControllerName(get_class($objects[0]), 'edit');
+                    $customControllerName = Controller::getCustomControllerName(get_class($objects[0]));
 
                     $request = new Request(array('method' => 'GET'));
                     $URI = $request->getURI();
@@ -248,23 +247,17 @@ class RecordSelector
                             $viewURL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($obj).'&ActiveRecordID='.$obj->getID());
                             $editURL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.get_class($obj).'&ActiveRecordID='.$obj->getID().'&view=edit');
                         } else {
-                            if (isset($customViewControllerName)) {
+                            if (isset($customControllerName)) {
                                 if ($config->get('app.use.pretty.urls')) {
-                                    $viewURL = $config->get('app.url').$customViewControllerName.'/oid/'.$obj->getID();
+                                    $viewURL = $config->get('app.url').'/'.urlencode($customControllerName).'/ActiveRecordID/'.$obj->getID();
+                                    $editURL = $config->get('app.url').'/'.urlencode($customControllerName).'/ActiveRecordID/'.$obj->getID().'/edit';
                                 } else {
-                                    $viewURL = $config->get('app.url').'controller/'.$customViewControllerName.'.php?oid='.$obj->getID();
+                                    $viewURL = $config->get('app.url').'/?act='.urlencode($customControllerName).'&ActiveRecordID='.$obj->getID();
+                                    $editURL = $config->get('app.url').'/?act='.urlencode($customControllerName).'&ActiveRecordID='.$obj->getID().'&view=edit';
                                 }
                             } else {
-                                $viewURL = $config->get('app.url').'alpha/controller/Detail.php?bo='.get_class($obj).'&oid='.$obj->getID();
-                            }
-                            if (isset($customEditControllerName)) {
-                                if ($config->get('app.use.pretty.urls')) {
-                                    $editURL = $config->get('app.url').$customEditControllerName.'/oid/'.$obj->getID();
-                                } else {
-                                    $editURL = $config->get('app.url').'controller/'.$customEditControllerName.'.php?oid='.$obj->getID();
-                                }
-                            } else {
-                                $editURL = $config->get('app.url').'alpha/controller/Edit.php?bo='.get_class($obj).'&oid='.$obj->getID();
+                                $viewURL = $config->get('app.url').'/record/'.urlencode(get_class($obj)).'/'.$obj->getID();
+                                $editURL = $config->get('app.url').'/record/'.urlencode(get_class($obj)).'/'.$obj->getID().'/edit';
                             }
                         }
 

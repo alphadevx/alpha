@@ -95,7 +95,7 @@ class RecordSelectorController extends Controller implements ControllerInterface
 
         $params = $request->getParams();
 
-        $relationObject = new Relation();
+        $relation = new Relation();
 
         $body = '';
 
@@ -121,14 +121,14 @@ class RecordSelectorController extends Controller implements ControllerInterface
                 throw new ResourceNotFoundException('File not found');
             }
 
-            $relationObject->setRelatedClass($relatedClassLeft, 'left');
-            $relationObject->setRelatedClassDisplayField($relatedClassLeftDisplayField, 'left');
-            $relationObject->setRelatedClass($relatedClassRight, 'right');
-            $relationObject->setRelatedClassDisplayField($relatedClassRightDisplayField, 'right');
-            $relationObject->setRelationType($relationType);
-            $relationObject->setValue($ActiveRecordID);
+            $relation->setRelatedClass($relatedClassLeft, 'left');
+            $relation->setRelatedClassDisplayField($relatedClassLeftDisplayField, 'left');
+            $relation->setRelatedClass($relatedClassRight, 'right');
+            $relation->setRelatedClassDisplayField($relatedClassRightDisplayField, 'right');
+            $relation->setRelationType($relationType);
+            $relation->setValue($ActiveRecordID);
 
-            $recSelector = new RecordSelector($relationObject, '', $field, $accessingClassName);
+            $recSelector = new RecordSelector($relation, '', $field, $accessingClassName);
             $body .= $recSelector->renderSelector($field, explode(',', $lookupIDs));
         } else {
             try {
@@ -140,13 +140,13 @@ class RecordSelectorController extends Controller implements ControllerInterface
                 throw new ResourceNotFoundException('File not found');
             }
 
-            $relationObject->setRelatedClass($relatedClass);
-            $relationObject->setRelatedClassField($relatedClassField);
-            $relationObject->setRelatedClassDisplayField($relatedClassDisplayField);
-            $relationObject->setRelationType($relationType);
-            $relationObject->setValue($ActiveRecordID);
+            $relation->setRelatedClass($relatedClass);
+            $relation->setRelatedClassField($relatedClassField);
+            $relation->setRelatedClassDisplayField($relatedClassDisplayField);
+            $relation->setRelationType($relationType);
+            $relation->setValue($ActiveRecordID);
 
-            $recSelector = new RecordSelector($relationObject);
+            $recSelector = new RecordSelector($relation);
             $body .= $recSelector->renderSelector($field);
         }
 

@@ -517,7 +517,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCustomControllerName()
     {
-        $this->assertNull(Controller::getCustomControllerName('DoesNotExistObject', 'view'), 'Testing that providing a bad BO name returns null');
+        $this->assertNull(Controller::getCustomControllerName('DoesNotExistObject'), 'Testing that providing a bad BO name returns null');
     }
 
     /**
