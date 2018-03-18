@@ -209,13 +209,17 @@ class Image
     {
         $config = ConfigProvider::getInstance();
 
+        $url = '';
+
         if ($this->secure->getBooleanValue()) {
             $params = Controller::generateSecurityFields();
 
-            return '<img src="'.FrontController::generateSecureURL('act=Alpha\Controller\ImageController&source='.$this->source.'&width='.$this->width->getValue().'&height='.$this->height->getValue().'&type='.$this->sourceType->getValue().'&quality='.$this->quality->getValue().'&scale='.$this->scale->getValue().'&secure='.$this->secure->getValue().'&var1='.$params[0].'&var2='.$params[1]).'"'.(empty($altText) ? '' : ' alt="'.$altText.'"').($config->get('cms.images.widget.bootstrap.responsive') ? ' class="img-responsive"' : '').'/>';
+            $url = FrontController::generateSecureURL('act=Alpha\Controller\ImageController&source='.$this->source.'&width='.$this->width->getValue().'&height='.$this->height->getValue().'&type='.$this->sourceType->getValue().'&quality='.$this->quality->getValue().'&scale='.$this->scale->getValue().'&secure='.$this->secure->getValue().'&var1='.$params[0].'&var2='.$params[1]);
         } else {
-            return '<img src="'.FrontController::generateSecureURL('act=Alpha\Controller\ImageController&source='.$this->source.'&width='.$this->width->getValue().'&height='.$this->height->getValue().'&type='.$this->sourceType->getValue().'&quality='.$this->quality->getValue().'&scale='.$this->scale->getValue().'&secure='.$this->secure->getValue()).'"'.(empty($altText) ? '' : ' alt="'.$altText.'"').($config->get('cms.images.widget.bootstrap.responsive') ? ' class="img-responsive"' : '').'/>';
+            $url = FrontController::generateSecureURL('act=Alpha\Controller\ImageController&source='.$this->source.'&width='.$this->width->getValue().'&height='.$this->height->getValue().'&type='.$this->sourceType->getValue().'&quality='.$this->quality->getValue().'&scale='.$this->scale->getValue().'&secure='.$this->secure->getValue());
         }
+
+        return '<img src="'.$url.'"'.(empty($altText) ? '' : ' alt="'.$altText.'"').($config->get('cms.images.widget.bootstrap.responsive') ? ' class="img-responsive"' : '').'/>';
     }
 
     /**
