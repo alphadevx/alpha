@@ -759,7 +759,7 @@ abstract class ActiveRecord
 
                 // should set related field values to null (MySQL is doing this for us as-is)
                 if ($prop->getRelationType() == 'ONE-TO-MANY' && !$prop->getRelatedClass() == 'Alpha\Model\Tag') {
-                    $relatedObjects = $prop->getRelatedObjects();
+                    $relatedObjects = $prop->getRelated();
 
                     foreach ($relatedObjects as $object) {
                         $object->set($prop->getRelatedClassField(), null);
@@ -771,7 +771,7 @@ abstract class ActiveRecord
                 if ($prop->getRelationType() == 'ONE-TO-MANY' && $prop->getRelatedClass() == 'Alpha\Model\Tag') {
                     // just making sure that the Relation is set to current ID as its transient
                     $prop->setValue($this->getID());
-                    $relatedObjects = $prop->getRelatedObjects();
+                    $relatedObjects = $prop->getRelated();
 
                     foreach ($relatedObjects as $object) {
                         $object->delete();

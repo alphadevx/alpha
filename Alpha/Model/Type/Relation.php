@@ -616,86 +616,77 @@ class Relation extends Type implements TypeInterface
     }
 
     /**
-     * For one-to-many and many-to-many relations, get the objects on the other side.
+     * For one-to-many and many-to-many relations, get an array of records on the other side.  For one-to-one
+     * relations, get the record (Alpha\Model\ActiveRecord instance) on the other side.
      *
      * string $accessingClassName Used to indicate the reading side when accessing from MANY-TO-MANY relation (leave blank for other relation types)
      *
-     * @return array
+     * @return array|Alpha\Model\ActiveRecord
      *
-     * @since 1.0
+     * @since 3.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function getRelatedObjects($accessingClassName = '')
+    public function getRelated($accessingClassName = '')
     {
+        if ($this->relationType == 'ONE-TO-ONE') {
+            if (!class_exists($this->relatedClass)) {
+                throw new IllegalArguementException('Could not load the definition for the ActiveRecord class ['.$this->relatedClass.']');
+            }
+
+            $record = new $this->relatedClass();
+            $record->loadByAttribute($this->getRelatedClassField(), $this->getValue());
+
+            return $record;
+        }
+
         if ($this->relationType == 'ONE-TO-MANY') {
             if ($this->getValue() == '') { // if the value is empty, then return an empty array
                 return array();
             }
 
-            $obj = new $this->relatedClass();
+            $record = new $this->relatedClass();
             if ($this->relatedClass == 'Alpha\Model\Tag') {
-                $objects = $obj->loadTags($this->taggedClass, $this->getValue());
+                $records = $record->loadTags($this->taggedClass, $this->getValue());
             } else {
-                $objects = $obj->loadAllByAttribute($this->getRelatedClassField(), $this->getValue());
+                $records = $record->loadAllByAttribute($this->getRelatedClassField(), $this->getValue());
             }
 
-            return $objects;
+            return $records;
         } else { // MANY-TO-MANY
             if (empty($this->lookup)) {
                 throw new IllegalArguementException('Tried to load related MANY-TO-MANY objects but no RelationLookup set on the Relation object!');
             }
 
             if (empty($accessingClassName)) {
-                throw new IllegalArguementException('Tried to load related MANY-TO-MANY objects but no accessingClassName parameter set on the call to getRelatedObjects!');
+                throw new IllegalArguementException('Tried to load related MANY-TO-MANY objects but no accessingClassName parameter set on the call to getRelated!');
             }
 
-            $objects = array();
+            $records = array();
 
             // load objects on the right from accessing on the left
             if ($accessingClassName == $this->relatedClassLeft) {
-                $lookupObjects = $this->lookup->loadAllByAttribute('leftID', $this->value);
+                $lookups = $this->lookup->loadAllByAttribute('leftID', $this->value);
 
-                foreach ($lookupObjects as $lookupObject) {
-                    $obj = new $this->relatedClassRight();
-                    $obj->load($lookupObject->get('rightID'));
-                    array_push($objects, $obj);
+                foreach ($lookups as $lookup) {
+                    $record = new $this->relatedClassRight();
+                    $record->load($lookup->get('rightID'));
+                    array_push($records, $record);
                 }
             }
             // load objects on the left from accessing on the right
-            if ($accessingClassName == $this->relatedClassRight && count($objects) == 0) {
-                $lookupObjects = $this->lookup->loadAllByAttribute('rightID', $this->value);
+            if ($accessingClassName == $this->relatedClassRight && count($records) == 0) {
+                $lookups = $this->lookup->loadAllByAttribute('rightID', $this->value);
 
-                foreach ($lookupObjects as $lookupObject) {
-                    $obj = new $this->relatedClassLeft();
-                    $obj->load($lookupObject->get('leftID'));
-                    array_push($objects, $obj);
+                foreach ($lookups as $lookup) {
+                    $record = new $this->relatedClassLeft();
+                    $record->load($lookup->get('leftID'));
+                    array_push($records, $record);
                 }
             }
 
-            return $objects;
+            return $records;
         }
-    }
-
-    /**
-     * For one-to-one relations, get the object on the other side.
-     *
-     * @return array
-     *
-     * @since 1.0
-     *
-     * @throws \Alpha\Model\Type\IllegalArguementException
-     */
-    public function getRelatedObject()
-    {
-        if (!class_exists($this->relatedClass)) {
-            throw new IllegalArguementException('Could not load the definition for the Record class ['.$this->relatedClass.']');
-        }
-
-        $obj = new $this->relatedClass();
-        $obj->loadByAttribute($this->getRelatedClassField(), $this->getValue());
-
-        return $obj;
     }
 
     /**

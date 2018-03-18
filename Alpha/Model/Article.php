@@ -451,7 +451,7 @@ class Article extends ActiveRecord
      */
     public function getArticleVotes()
     {
-        $votes = $this->votes->getRelatedObjects();
+        $votes = $this->votes->getRelated();
 
         return $votes;
     }
@@ -505,7 +505,7 @@ class Article extends ActiveRecord
      */
     public function getArticleComments()
     {
-        $comments = $this->comments->getRelatedObjects();
+        $comments = $this->comments->getRelated();
 
         return $comments;
     }

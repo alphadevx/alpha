@@ -681,7 +681,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
         $html = '';
 
         if ($relation instanceof Relation) {
-            $tags = $relation->getRelatedObjects();
+            $tags = $relation->getRelated();
 
             if (count($tags) > 0) {
                 $html .= '<p>Tags:';

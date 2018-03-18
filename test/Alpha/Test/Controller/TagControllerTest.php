@@ -134,7 +134,7 @@ class TagControllerTest extends ControllerTestCase
         $article = $this->createArticle('testing');
         $article->save();
 
-        $tags = $article->getPropObject('tags')->getRelatedObjects();
+        $tags = $article->getPropObject('tags')->getRelated();
         $existingTags = array();
 
         foreach ($tags as $tag) {
@@ -150,7 +150,7 @@ class TagControllerTest extends ControllerTestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
 
-        $tags = $article->getPropObject('tags')->getRelatedObjects();
+        $tags = $article->getPropObject('tags')->getRelated();
 
         $found = false;
         $tagID = '';
@@ -183,7 +183,7 @@ class TagControllerTest extends ControllerTestCase
         $article = $this->createArticle('testing');
         $article->save();
 
-        $tags = $article->getPropObject('tags')->getRelatedObjects();
+        $tags = $article->getPropObject('tags')->getRelated();
         $existingTags = array();
 
         foreach ($tags as $tag) {
@@ -197,7 +197,7 @@ class TagControllerTest extends ControllerTestCase
 
         $response = $front->process($request);
 
-        $tags = $article->getPropObject('tags')->getRelatedObjects();
+        $tags = $article->getPropObject('tags')->getRelated();
 
         $found = false;
         $tagID = '';
@@ -221,7 +221,7 @@ class TagControllerTest extends ControllerTestCase
         $this->assertEquals(301, $response->getStatus(), 'Testing the doDELETE method');
         $this->assertTrue(strpos($response->getHeader('Location'), '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getID()) !== false, 'Testing the doDELETE method');
 
-        $tags = $article->getPropObject('tags')->getRelatedObjects();
+        $tags = $article->getPropObject('tags')->getRelated();
 
         $notFound = true;
 

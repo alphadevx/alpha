@@ -183,7 +183,7 @@ class SearchProviderTags implements SearchProviderInterface
 
         if (count($matches) == 0) {
             // all the tags on the source object for comparison
-            $tags = $sourceObject->getPropObject('tags')->getRelatedObjects();
+            $tags = $sourceObject->getPropObject('tags')->getRelated();
 
             foreach ($tags as $tag) {
                 $Tag = new Tag();
@@ -291,7 +291,7 @@ class SearchProviderTags implements SearchProviderInterface
      */
     public function delete($sourceObject)
     {
-        $tags = $sourceObject->getPropObject('tags')->getRelatedObjects();
+        $tags = $sourceObject->getPropObject('tags')->getRelated();
 
         foreach ($tags as $tag) {
             $tag->delete();

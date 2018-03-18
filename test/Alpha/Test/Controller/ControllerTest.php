@@ -601,7 +601,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         ActiveRecord::begin();
         $this->article->save();
         ActiveRecord::commit();
-        $tags = $this->article->getPropObject('tags')->getRelatedObjects();
+        $tags = $this->article->getPropObject('tags')->getRelated();
 
         $found = false;
         foreach ($tags as $tag) {
