@@ -209,7 +209,7 @@ class RecordSelector
 
         // render read-only list for one-to-many relations
         if ($this->relationObject->getRelationType() == 'ONE-TO-MANY') {
-            $objects = $this->relationObject->getRelatedObjects();
+            $objects = $this->relationObject->getRelated();
 
             if (count($objects) > 0) {
                 // render tags differently

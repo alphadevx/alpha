@@ -323,7 +323,7 @@ abstract class Controller
 
         // if the record has tags, use these as the meta keywords for this controller
         if ($this->record->isTagged()) {
-            $tags = $this->record->getPropObject('tags')->getRelatedObjects();
+            $tags = $this->record->getPropObject('tags')->getRelated();
 
             $keywords = '';
 
