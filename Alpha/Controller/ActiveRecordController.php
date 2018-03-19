@@ -578,7 +578,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
     {
         $config = ConfigProvider::getInstance();
 
-        $body = '';
+        $html = '';
 
         // the index of the last record displayed on this page
         $last = $this->start+$config->get('app.list.page.amount');
@@ -590,23 +590,24 @@ class ActiveRecordController extends Controller implements ControllerInterface
 
         // render a message for an empty list
         if ($this->recordCount > 0) {
-            $body .= '<ul class="pagination">';
+            $html .= '<ul class="pagination">';
         } else {
-            $body .= '<p align="center">The list is empty.&nbsp;&nbsp;</p>';
+            $html .= '<p align="center">The list is empty.&nbsp;&nbsp;</p>';
 
-            return $body;
+            return $html;
         }
 
         // render "Previous" link
         if ($this->start > 0) {
             // handle secure URLs
             if ($this->request->getParam('token', null) != null) {
-                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->request->getParam('ActiveRecordType').'&start='.($this->start-$this->limit).'&limit='.$this->limit).'">&lt;&lt;-Previous</a></li>';
+                $url = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->request->getParam('ActiveRecordType').'&start='.($this->start-$this->limit).'&limit='.$this->limit);
             } else {
-                $body .= '<li><a href="/records/'.urlencode($this->request->getParam('ActiveRecordType')).'/'.($this->start-$this->limit).'/'.$this->limit.'">&lt;&lt;-Previous</a></li>';
+                $url = '/records/'.urlencode($this->request->getParam('ActiveRecordType')).'/'.($this->start-$this->limit).'/'.$this->limit;
             }
+            $html .= '<li><a href="'.$url.'">&lt;&lt;-Previous</a></li>';
         } elseif ($this->recordCount > $this->limit) {
-            $body .= '<li class="disabled"><a href="#">&lt;&lt;-Previous</a></li>';
+            $html .= '<li class="disabled"><a href="#">&lt;&lt;-Previous</a></li>';
         }
 
         // render the page index links
@@ -617,12 +618,13 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 if ($i != $this->start) {
                     // handle secure URLs
                     if ($this->request->getParam('token', null) != null) {
-                        $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->request->getParam('ActiveRecordType').'&start='.$i.'&limit='.$this->limit).'">'.$page.'</a></li>';
+                        $url = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->request->getParam('ActiveRecordType').'&start='.$i.'&limit='.$this->limit);
                     } else {
-                        $body .= '<li><a href="/records/'.urlencode($this->request->getParam('ActiveRecordType')).'/'.$i.'/'.$this->limit.'">'.$page.'</a></li>';
+                        $url = '/records/'.urlencode($this->request->getParam('ActiveRecordType')).'/'.$i.'/'.$this->limit;
                     }
+                    $html .= '<li><a href="'.$url.'">'.$page.'</a></li>';
                 } elseif ($this->recordCount > $this->limit) { // render an anchor for the current page
-                    $body .= '<li class="active"><a href="#">'.$page.'</a></li>';
+                    $html .= '<li class="active"><a href="#">'.$page.'</a></li>';
                 }
 
                 ++$page;
@@ -633,18 +635,18 @@ class ActiveRecordController extends Controller implements ControllerInterface
         if ($this->recordCount > $last) {
             // handle secure URLs
             if ($this->request->getParam('token', null) != null) {
-                $body .= '<li><a href="'.FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->request->getParam('ActiveRecordType').'&start='.($this->start+$this->limit).'&limit='.$this->limit).'">Next-&gt;&gt;</a></li>';
+                $url = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->request->getParam('ActiveRecordType').'&start='.($this->start+$this->limit).'&limit='.$this->limit);
             } else {
-                $body .= '<li><a href="/records/'.urlencode($this->request->getParam('ActiveRecordType')).'/'.($this->start+$this->limit.'/'.$this->limit).
-                    '">Next-&gt;&gt;</a></li>';
+                $url = '/records/'.urlencode($this->request->getParam('ActiveRecordType')).'/'.($this->start+$this->limit.'/'.$this->limit);
             }
+            $html .= '<li><a href="'.$url.'">Next-&gt;&gt;</a></li>';
         } elseif ($this->recordCount > $this->limit) {
-            $body .= '<li class="disabled"><a href="#">Next-&gt;&gt;</a></li>';
+            $html .= '<li class="disabled"><a href="#">Next-&gt;&gt;</a></li>';
         }
 
-        $body .= '</ul>';
+        $html .= '</ul>';
 
-        return $body;
+        return $html;
     }
 
     /**
