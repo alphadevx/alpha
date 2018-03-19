@@ -138,7 +138,7 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
         $provider = ServiceFactory::getInstance('Alpha\Util\Search\SearchProviderTags', 'Alpha\Util\Search\SearchProviderInterface');
         $provider->index($this->article);
 
-        $tags = $this->article->getPropObject('tags')->getRelatedObjects();
+        $tags = $this->article->getPropObject('tags')->getRelated();
 
         $found = false;
         foreach ($tags as $tag) {
@@ -158,14 +158,14 @@ class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
     public function testDelete()
     {
         $this->article->save();
-        $tags = $this->article->getPropObject('tags')->getRelatedObjects();
+        $tags = $this->article->getPropObject('tags')->getRelated();
 
         $this->assertTrue(count($tags) > 0, 'Confirming that tags exist after saving the article (ArticleObject::after_save_callback())');
 
         $provider = ServiceFactory::getInstance('Alpha\Util\Search\SearchProviderTags', 'Alpha\Util\Search\SearchProviderInterface');
         $provider->delete($this->article);
 
-        $tags = $this->article->getPropObject('tags')->getRelatedObjects();
+        $tags = $this->article->getPropObject('tags')->getRelated();
 
         $this->assertTrue(count($tags) == 0, 'Testing that tags have been deleted once a DAO has been deleted from the search index');
     }

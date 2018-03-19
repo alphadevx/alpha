@@ -209,7 +209,7 @@ class SearchController extends Controller implements ControllerInterface
                 $body .= $view->listView(array('formAction' => $URI));
 
                 if ($showTags) {
-                    $tags = $bo->getPropObject('tags')->getRelatedObjects();
+                    $tags = $bo->getPropObject('tags')->getRelated();
 
                     if (count($tags) > 0) {
                         $body .= '<p>Tags: ';

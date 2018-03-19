@@ -199,7 +199,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
             try {
                 $record->load($ActiveRecordID);
 
-                $tags = $record->getPropObject('tags')->getRelatedObjects();
+                $tags = $record->getPropObject('tags')->getRelated();
 
                 ActiveRecord::disconnect();
 
@@ -340,7 +340,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                     try {
                         $record->load($ActiveRecordID);
 
-                        $tags = $record->getPropObject('tags')->getRelatedObjects();
+                        $tags = $record->getPropObject('tags')->getRelated();
 
                         ActiveRecord::begin();
 

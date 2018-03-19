@@ -199,7 +199,7 @@ class ArticleView extends View
         $tags = array();
 
         if (is_object($this->record->getPropObject('tags'))) {
-            $tags = $this->record->getPropObject('tags')->getRelatedObjects();
+            $tags = $this->record->getPropObject('tags')->getRelated();
         }
 
         if (count($tags) > 0) {

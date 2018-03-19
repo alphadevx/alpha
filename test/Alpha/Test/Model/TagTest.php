@@ -187,7 +187,7 @@ class TagTest extends \PHPUnit_Framework_TestCase
     public function testSaveArticleGeneratesDescriptionTags()
     {
         $this->article->save();
-        $tags = $this->article->getPropObject('tags')->getRelatedObjects();
+        $tags = $this->article->getPropObject('tags')->getRelated();
 
         $found = false;
         foreach ($tags as $tag) {
@@ -207,7 +207,7 @@ class TagTest extends \PHPUnit_Framework_TestCase
     public function testLoadTags()
     {
         $this->article->save();
-        $tagsA = $this->article->getPropObject('tags')->getRelatedObjects();
+        $tagsA = $this->article->getPropObject('tags')->getRelated();
 
         $tag = new Tag();
         $tagsB = $tag->loadTags('Alpha\Model\Article', $this->article->getID());

@@ -321,7 +321,7 @@ class RelationTest extends ModelTestCase
 
         $person2->getPropObject('rights')->setValue($group->getID());
 
-        $this->assertEquals(2, count($group->getPropObject('members')->getRelatedObjects('Alpha\Model\Rights')), 'testing the getRelatedClassDisplayFieldValue() method on MANY-TO-MANY relation');
+        $this->assertEquals(2, count($group->getPropObject('members')->getRelated('Alpha\Model\Rights')), 'testing the getRelatedClassDisplayFieldValue() method on MANY-TO-MANY relation');
 
         try {
             $this->assertEquals('user1@test.com,user2@test.com', $person2->getPropObject('rights')->getRelatedClassDisplayFieldValue(), 'testing the getRelatedClassDisplayFieldValue() method on MANY-TO-MANY relation');
@@ -407,11 +407,11 @@ class RelationTest extends ModelTestCase
     }
 
     /**
-     * Testing the getRelatedObject method.
+     * Testing the getRelated method.
      *
      * @since 1.2.1
      */
-    public function testGetRelatedObject()
+    public function testGetRelated()
     {
         $oneToOneRel = new Relation();
         $oneToOneRel->setRelatedClass('Alpha\Model\Person');
@@ -420,16 +420,8 @@ class RelationTest extends ModelTestCase
         $oneToOneRel->setRelationType('ONE-TO-ONE');
         $oneToOneRel->setValue($this->person->getID());
 
-        $this->assertEquals($this->person->getUsername(), $oneToOneRel->getRelatedObject()->get('username'), 'testing the getRelatedObject method');
-    }
+        $this->assertEquals($this->person->getUsername(), $oneToOneRel->getRelated()->get('username'), 'testing the getRelated method');
 
-    /**
-     * Testing the getRelatedObjects method with a ONE-TO-MANY and MANY-TO-MANY relation.
-     *
-     * @since 1.2.1
-     */
-    public function testGetRelatedObjects()
-    {
         $group = new Rights();
         $group->set('name', 'unittestgroup');
         $group->save();
@@ -454,8 +446,8 @@ class RelationTest extends ModelTestCase
 
         $person2->getPropObject('rights')->setValue($group->getID());
 
-        $this->assertEquals(2, count($group->getPropObject('members')->getRelatedObjects('Alpha\Model\Rights')), 'testing the getRelatedObjects method with a MANY-TO-MANY relation');
-        $this->assertTrue($group->getPropObject('members')->getRelatedObjects('Alpha\Model\Rights')[0] instanceof Person, 'testing the getRelatedObjects method with a MANY-TO-MANY relation');
+        $this->assertEquals(2, count($group->getPropObject('members')->getRelated('Alpha\Model\Rights')), 'testing the getRelated method with a MANY-TO-MANY relation');
+        $this->assertTrue($group->getPropObject('members')->getRelated('Alpha\Model\Rights')[0] instanceof Person, 'testing the getRelated method with a MANY-TO-MANY relation');
 
         $article = new Article();
         $article->set('title', 'unit test');
@@ -474,7 +466,7 @@ class RelationTest extends ModelTestCase
         $comment2->getPropObject('articleID')->setValue($article->getID());
         $comment2->save();
 
-        $this->assertEquals(2, count($article->getPropObject('comments')->getRelatedObjects()), 'testing the getRelatedObjects method with a ONE-TO-MANY relation');
-        $this->assertTrue($article->getPropObject('comments')->getRelatedObjects()[0] instanceof ArticleComment, 'testing the getRelatedObjects method with a ONE-TO-MANY relation');
+        $this->assertEquals(2, count($article->getPropObject('comments')->getRelated()), 'testing the getRelated method with a ONE-TO-MANY relation');
+        $this->assertTrue($article->getPropObject('comments')->getRelated()[0] instanceof ArticleComment, 'testing the getRelated method with a ONE-TO-MANY relation');
     }
 }
