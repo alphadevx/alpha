@@ -422,6 +422,93 @@ class View
     }
 
     /**
+     * Method for rendering the pagination links.
+     *
+     * @param \Alpha\Controller\Controller $controller
+     *
+     * @return string
+     *
+     * @since 3.0
+     */
+    public static function displayPageLinks($controller)
+    {
+        $config = ConfigProvider::getInstance();
+
+        $html = '';
+        $recordCount = $controller->getRecordCount();
+        $start = $controller->getStart();
+        $limit = $controller->getLimit();
+
+        // the index of the last record displayed on this page
+        $last = $start+$config->get('app.list.page.amount');
+
+        // ensure that the last index never overruns the total record count
+        if ($last > $recordCount) {
+            $last = $recordCount ;
+        }
+
+        // render a message for an empty list
+        if ($recordCount  > 0) {
+            $html .= '<ul class="pagination">';
+        } else {
+            $html .= '<p align="center">The list is empty.&nbsp;&nbsp;</p>';
+
+            return $html;
+        }
+
+        // render "Previous" link
+        if ($start  > 0) {
+            // handle secure URLs
+            if ($controller->getRequest()->getParam('token', null) != null) {
+                $url = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$controller->getRequest()->getParam('ActiveRecordType').'&start='.($start-$controller->getLimit()).'&limit='.$limit);
+            } else {
+                $url = '/records/'.urlencode($controller->getRequest()->getParam('ActiveRecordType')).'/'.($start-$limit).'/'.$limit;
+            }
+            $html .= '<li><a href="'.$url.'">&lt;&lt;-Previous</a></li>';
+        } elseif ($recordCount  > $limit) {
+            $html .= '<li class="disabled"><a href="#">&lt;&lt;-Previous</a></li>';
+        }
+
+        // render the page index links
+        if ($recordCount  > $limit) {
+            $page = 1;
+
+            for ($i = 0; $i < $recordCount ; $i += $limit) {
+                if ($i != $start) {
+                    // handle secure URLs
+                    if ($controller->getRequest()->getParam('token', null) != null) {
+                        $url = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$controller->getRequest()->getParam('ActiveRecordType').'&start='.$i.'&limit='.$limit);
+                    } else {
+                        $url = '/records/'.urlencode($controller->getRequest()->getParam('ActiveRecordType')).'/'.$i.'/'.$limit;
+                    }
+                    $html .= '<li><a href="'.$url.'">'.$page.'</a></li>';
+                } elseif ($recordCount  > $limit) { // render an anchor for the current page
+                    $html .= '<li class="active"><a href="#">'.$page.'</a></li>';
+                }
+
+                ++$page;
+            }
+        }
+
+        // render "Next" link
+        if ($recordCount  > $last) {
+            // handle secure URLs
+            if ($controller->getRequest()->getParam('token', null) != null) {
+                $url = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$controller->getRequest()->getParam('ActiveRecordType').'&start='.($start+$limit).'&limit='.$limit);
+            } else {
+                $url = '/records/'.urlencode($controller->getRequest()->getParam('ActiveRecordType')).'/'.($start+$limit.'/'.$limit);
+            }
+            $html .= '<li><a href="'.$url.'">Next-&gt;&gt;</a></li>';
+        } elseif ($recordCount  > $limit) {
+            $html .= '<li class="disabled"><a href="#">Next-&gt;&gt;</a></li>';
+        }
+
+        $html .= '</ul>';
+
+        return $html;
+    }
+
+    /**
      * Renders the content for an update (e.g. successful save) message.
      *
      * @param string $message

@@ -559,94 +559,12 @@ class ActiveRecordController extends Controller implements ControllerInterface
             if ($accept == 'application/json') {
                 $body .= ']';
             } else {
-                $body .= $this->renderPageLinks();
+                $body .= View::displayPageLinks($this);
                 $body .= '<br>';
             }
         }
 
         return $body;
-    }
-
-    /**
-     * Method for rendering the pagination links.
-     *
-     * @return string
-     *
-     * @since 2.0
-     */
-    protected function renderPageLinks()
-    {
-        $config = ConfigProvider::getInstance();
-
-        $html = '';
-
-        // the index of the last record displayed on this page
-        $last = $this->start+$config->get('app.list.page.amount');
-
-        // ensure that the last index never overruns the total record count
-        if ($last > $this->recordCount) {
-            $last = $this->recordCount;
-        }
-
-        // render a message for an empty list
-        if ($this->recordCount > 0) {
-            $html .= '<ul class="pagination">';
-        } else {
-            $html .= '<p align="center">The list is empty.&nbsp;&nbsp;</p>';
-
-            return $html;
-        }
-
-        // render "Previous" link
-        if ($this->start > 0) {
-            // handle secure URLs
-            if ($this->request->getParam('token', null) != null) {
-                $url = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->request->getParam('ActiveRecordType').'&start='.($this->start-$this->limit).'&limit='.$this->limit);
-            } else {
-                $url = '/records/'.urlencode($this->request->getParam('ActiveRecordType')).'/'.($this->start-$this->limit).'/'.$this->limit;
-            }
-            $html .= '<li><a href="'.$url.'">&lt;&lt;-Previous</a></li>';
-        } elseif ($this->recordCount > $this->limit) {
-            $html .= '<li class="disabled"><a href="#">&lt;&lt;-Previous</a></li>';
-        }
-
-        // render the page index links
-        if ($this->recordCount > $this->limit) {
-            $page = 1;
-
-            for ($i = 0; $i < $this->recordCount; $i += $this->limit) {
-                if ($i != $this->start) {
-                    // handle secure URLs
-                    if ($this->request->getParam('token', null) != null) {
-                        $url = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->request->getParam('ActiveRecordType').'&start='.$i.'&limit='.$this->limit);
-                    } else {
-                        $url = '/records/'.urlencode($this->request->getParam('ActiveRecordType')).'/'.$i.'/'.$this->limit;
-                    }
-                    $html .= '<li><a href="'.$url.'">'.$page.'</a></li>';
-                } elseif ($this->recordCount > $this->limit) { // render an anchor for the current page
-                    $html .= '<li class="active"><a href="#">'.$page.'</a></li>';
-                }
-
-                ++$page;
-            }
-        }
-
-        // render "Next" link
-        if ($this->recordCount > $last) {
-            // handle secure URLs
-            if ($this->request->getParam('token', null) != null) {
-                $url = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$this->request->getParam('ActiveRecordType').'&start='.($this->start+$this->limit).'&limit='.$this->limit);
-            } else {
-                $url = '/records/'.urlencode($this->request->getParam('ActiveRecordType')).'/'.($this->start+$this->limit.'/'.$this->limit);
-            }
-            $html .= '<li><a href="'.$url.'">Next-&gt;&gt;</a></li>';
-        } elseif ($this->recordCount > $this->limit) {
-            $html .= '<li class="disabled"><a href="#">Next-&gt;&gt;</a></li>';
-        }
-
-        $html .= '</ul>';
-
-        return $html;
     }
 
     /**
@@ -800,5 +718,41 @@ class ActiveRecordController extends Controller implements ControllerInterface
         }
 
         return $body;
+    }
+
+    /**
+     * Get the pagination start point
+     *
+     * @return int
+     *
+     * @since 3.0
+     */
+    public function getStart()
+    {
+        return $this->start;
+    }
+
+    /**
+     * Get the pagination record count
+     *
+     * @return int
+     *
+     * @since 3.0
+     */
+    public function getRecordCount()
+    {
+        return $this->recordCount;
+    }
+
+    /**
+     * Get the pagination limit
+     *
+     * @return int
+     *
+     * @since 3.0
+     */
+    public function getLimit()
+    {
+        return $this->limit;
     }
 }
