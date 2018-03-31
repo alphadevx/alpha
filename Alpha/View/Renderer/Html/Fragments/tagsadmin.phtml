@@ -1,0 +1,35 @@
+<h4><?= $friendlyClassName ?> record type is tagged (<?= $count ?> tags found)</h4>
+
+<?php
+
+$js = "if(window.jQuery) {
+        BootstrapDialog.show({
+            title: 'Confirmation',
+            message: 'Are you sure you want to delete all tags attached to the ".$friendlyClassName." class, and have them re-created?',
+            buttons: [
+                {
+                    icon: 'glyphicon glyphicon-remove',
+                    label: 'Cancel',
+                    cssClass: 'btn btn-default btn-xs',
+                    action: function(dialogItself){
+                        dialogItself.close();
+                    }
+                },
+                {
+                    icon: 'glyphicon glyphicon-ok',
+                    label: 'Okay',
+                    cssClass: 'btn btn-default btn-xs',
+                    action: function(dialogItself) {
+                        $('[id=\"".$fieldname."\"]').attr('value', '".addslashes($ActiveRecordType)."');
+                        $('#clearForm').submit();
+                        dialogItself.close();
+                    }
+                }
+            ]
+        });
+    }";
+
+$button = new Button($js, 'Re-create tags', 'clearBut'.stripslashes($ActiveRecordType));
+echo $button->render();
+
+?>

@@ -118,6 +118,8 @@ class TagController extends ActiveRecordController implements ControllerInterfac
         $config = ConfigProvider::getInstance();
 
         $body = '';
+        $fields = array();
+        $tagsHTML = '';
 
         // render the tag manager screen
         if (!isset($params['ActiveRecordType']) && !isset($params['ActiveRecordID'])) {
@@ -128,7 +130,6 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                 $body .= $message;
             }
 
-            $body .= '<h3>Listing active record which are tagged</h3>';
             $ActiveRecordTypes = ActiveRecord::getRecordClassNames();
             $fieldname = '';
 
@@ -138,44 +139,23 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                 if ($record->isTagged()) {
                     $tag = new Tag();
                     $count = count($tag->loadAllByAttribute('taggedClass', $ActiveRecordType));
-                    $body .= '<h4>'.$record->getFriendlyClassName().' record type is tagged ('.$count.' tags found)</h4>';
-                    $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('clearTaggedClass')) : 'clearTaggedClass');
-                    $js = "if(window.jQuery) {
-                        BootstrapDialog.show({
-                            title: 'Confirmation',
-                            message: 'Are you sure you want to delete all tags attached to the ".$record->getFriendlyClassName()." class, and have them re-created?',
-                            buttons: [
-                                {
-                                    icon: 'glyphicon glyphicon-remove',
-                                    label: 'Cancel',
-                                    cssClass: 'btn btn-default btn-xs',
-                                    action: function(dialogItself){
-                                        dialogItself.close();
-                                    }
-                                },
-                                {
-                                    icon: 'glyphicon glyphicon-ok',
-                                    label: 'Okay',
-                                    cssClass: 'btn btn-default btn-xs',
-                                    action: function(dialogItself) {
-                                        $('[id=\"".$fieldname."\"]').attr('value', '".addslashes($ActiveRecordType)."');
-                                        $('#clearForm').submit();
-                                        dialogItself.close();
-                                    }
-                                }
-                            ]
-                        });
-                    }";
-                    $button = new Button($js, 'Re-create tags', 'clearBut'.stripslashes($ActiveRecordType));
-                    $body .= $button->render();
+                    $fields['friendlyClassName'] = $record->getFriendlyClassName();
+                    $fields['count'] = $count;
+                    $fields['fieldname'] = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('clearTaggedClass')) : 'clearTaggedClass');
+                    $fields['ActiveRecordType'] = $ActiveRecordType;
+
+                    $tagsHTML .= View::loadTemplateFragment('html', 'tagsadmin.phtml', $fields);
                 }
             }
 
             ActiveRecord::disconnect();
-            $body .= '<form action="'.$request->getURI().'" method="POST" id="clearForm">';
-            $body .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'"/>';
-            $body .= View::renderSecurityFields();
-            $body .= '</form>';
+            $fields = array();
+            $fields['formAction'] = $request->getURI();
+            $fields['fieldname'] = $fieldname;
+            $fields['securityFields'] = View::renderSecurityFields();
+            $fields['tagsHTML'] = $tagsHTML;
+
+            $body .= View::loadTemplateFragment('html', 'taglist.phtml', $fields);
         } elseif (isset($params['ActiveRecordType']) && $params['ActiveRecordType'] != 'Alpha\Model\Tag' && isset($params['ActiveRecordID'])) {
 
             // render screen for managing individual tags on a given active record
