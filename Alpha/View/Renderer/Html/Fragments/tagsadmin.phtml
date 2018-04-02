@@ -1,11 +1,45 @@
-<h4><?= $friendlyClassName ?> record type is tagged (<?= $count ?> tags found)</h4>
-
 <?php
 
-$js = "if(window.jQuery) {
+if ($adminView) {
+	echo "<h4>$friendlyClassName record type is tagged ($count tags found)</h4>";
+
+	$js = "if(window.jQuery) {
+	        BootstrapDialog.show({
+	            title: 'Confirmation',
+	            message: 'Are you sure you want to delete all tags attached to the ".$friendlyClassName." class, and have them re-created?',
+	            buttons: [
+	                {
+	                    icon: 'glyphicon glyphicon-remove',
+	                    label: 'Cancel',
+	                    cssClass: 'btn btn-default btn-xs',
+	                    action: function(dialogItself){
+	                        dialogItself.close();
+	                    }
+	                },
+	                {
+	                    icon: 'glyphicon glyphicon-ok',
+	                    label: 'Okay',
+	                    cssClass: 'btn btn-default btn-xs',
+	                    action: function(dialogItself) {
+	                        $('[id=\"".$fieldname."\"]').attr('value', '".addslashes($ActiveRecordType)."');
+	                        $('#clearForm').submit();
+	                        dialogItself.close();
+	                    }
+	                }
+	            ]
+	        });
+	    }";
+
+	$button = new \Alpha\View\Widget\Button($js, 'Re-create tags', 'clearBut'.stripslashes($ActiveRecordType));
+	echo $button->render();
+} else {
+
+	echo $contentSmallTextBox;
+
+    $js = "if(window.jQuery) {
         BootstrapDialog.show({
             title: 'Confirmation',
-            message: 'Are you sure you want to delete all tags attached to the ".$friendlyClassName." class, and have them re-created?',
+            message: 'Are you sure you wish to delete this tag?',
             buttons: [
                 {
                     icon: 'glyphicon glyphicon-remove',
@@ -20,8 +54,8 @@ $js = "if(window.jQuery) {
                     label: 'Okay',
                     cssClass: 'btn btn-default btn-xs',
                     action: function(dialogItself) {
-                        $('[id=\"".$fieldname."\"]').attr('value', '".addslashes($ActiveRecordType)."');
-                        $('#clearForm').submit();
+                        $('[id=\"".$fieldname."\"]').attr('value', '".$tagID."');
+                        $('#deleteForm').submit();
                         dialogItself.close();
                     }
                 }
@@ -29,7 +63,6 @@ $js = "if(window.jQuery) {
         });
     }";
 
-$button = new Button($js, 'Re-create tags', 'clearBut'.stripslashes($ActiveRecordType));
-echo $button->render();
-
-?>
+    $button = new \Alpha\View\Widget\Button($js, 'Delete', 'delete'.$tagID.'But');
+    echo $button->render();
+}

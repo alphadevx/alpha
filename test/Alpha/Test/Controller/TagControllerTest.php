@@ -113,8 +113,16 @@ class TagControllerTest extends ControllerTestCase
         $request = new Request(array('method' => 'GET', 'URI' => '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getID()));
         $response = $front->process($request);
 
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method for rendering tags on an existing ActiveRecord');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+        $this->assertTrue(strpos($response->getBody(), 'blah') !== false, 'Testing the created tag is listed');
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/tag'));
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method for rendering a summary of all tagged classes');
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+        $this->assertTrue(strpos($response->getBody(), '<h4>Article record type is tagged (2 tags found)</h4>') !== false, 'Testing the ArticleRecord class is listed as having tags');
     }
 
     /**

@@ -143,6 +143,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                     $fields['count'] = $count;
                     $fields['fieldname'] = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('clearTaggedClass')) : 'clearTaggedClass');
                     $fields['ActiveRecordType'] = $ActiveRecordType;
+                    $fields['adminView'] = true;
 
                     $tagsHTML .= View::loadTemplateFragment('html', 'tagsadmin.phtml', $fields);
                 }
@@ -155,7 +156,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
             $fields['securityFields'] = View::renderSecurityFields();
             $fields['tagsHTML'] = $tagsHTML;
 
-            $body .= View::loadTemplateFragment('html', 'taglist.phtml', $fields);
+            $body .= View::loadTemplateFragment('html', 'tagslist.phtml', $fields);
         } elseif (isset($params['ActiveRecordType']) && $params['ActiveRecordType'] != 'Alpha\Model\Tag' && isset($params['ActiveRecordID'])) {
 
             // render screen for managing individual tags on a given active record
@@ -183,65 +184,37 @@ class TagController extends ActiveRecordController implements ControllerInterfac
 
                 ActiveRecord::disconnect();
 
-                $body .= '<form action="'.$request->getURI().'" method="POST" accept-charset="UTF-8">';
-                $body .= '<h3>The following tags were found:</h3>';
-
                 foreach ($tags as $tag) {
                     $labels = $tag->getDataLabels();
 
                     $temp = new SmallTextBox($tag->getPropObject('content'), $labels['content'], 'content_'.$tag->getID(), '');
-                    $body .= $temp->render(false);
+                    $fields['contentSmallTextBox'] = $temp->render(false);
+                    $fields['fieldname'] = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID');
+                    $fields['tagID'] = $tag->getID();
+                    $fields['adminView'] = false;
 
-                    $js = "if(window.jQuery) {
-                        BootstrapDialog.show({
-                            title: 'Confirmation',
-                            message: 'Are you sure you wish to delete this tag?',
-                            buttons: [
-                                {
-                                    icon: 'glyphicon glyphicon-remove',
-                                    label: 'Cancel',
-                                    cssClass: 'btn btn-default btn-xs',
-                                    action: function(dialogItself){
-                                        dialogItself.close();
-                                    }
-                                },
-                                {
-                                    icon: 'glyphicon glyphicon-ok',
-                                    label: 'Okay',
-                                    cssClass: 'btn btn-default btn-xs',
-                                    action: function(dialogItself) {
-                                        $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID')."\"]').attr('value', '".$tag->getID()."');
-                                        $('#deleteForm').submit();
-                                        dialogItself.close();
-                                    }
-                                }
-                            ]
-                        });
-                    }";
-                    $button = new Button($js, 'Delete', 'delete'.$tag->getID().'But');
-                    $body .= $button->render();
+                    $tagsHTML .= View::loadTemplateFragment('html', 'tagsadmin.phtml', $fields);
                 }
 
-                $body .= '<h3>Add a new tag:</h3>';
-
                 $temp = new SmallTextBox(new SmallText(), 'New tag', 'NewTagValue', '');
-                $body .= $temp->render(false);
+                $fields['newTagValueTextBox'] = $temp->render(false);
 
                 $temp = new Button('submit', 'Save', 'saveBut');
-                $body .= $temp->render();
-                $body .= '&nbsp;&nbsp;';
+                $fields['saveButton'] = $temp->render();
+
                 if ($params['ActiveRecordType'] = 'Alpha\Model\Article') {
                     $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.$params['ActiveRecordType'].'&ActiveRecordID='.$params['ActiveRecordID'].'&view=edit')."'", 'Back to record', 'cancelBut');
                 } else {
                     $temp = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType='.$params['ActiveRecordType'].'&ActiveRecordID='.$params['ActiveRecordID'].'&view=edit')."'", 'Back to record', 'cancelBut');
                 }
-                $body .= $temp->render();
+                $fields['cancelButton'] = $temp->render();
 
-                $body .= View::renderSecurityFields();
+                $fields['securityFields'] = View::renderSecurityFields();
+                $fields['deleteForm'] = View::renderDeleteForm($request->getURI());
+                $fields['formAction'] = $request->getURI();
+                $fields['tagsHTML'] = $tagsHTML;
 
-                $body .= '</form>';
-
-                $body .= View::renderDeleteForm($request->getURI());
+                $body .= View::loadTemplateFragment('html', 'tagsonrecord.phtml', $fields);
             } catch (RecordNotFoundException $e) {
                 $msg = 'Unable to load the ActiveRecord of id ['.$params['ActiveRecordID'].'], error was ['.$e->getMessage().']';
                 self::$logger->error($msg);
