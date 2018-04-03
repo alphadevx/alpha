@@ -345,56 +345,6 @@ class ArticleController extends ActiveRecordController implements ControllerInte
 
         $params = $request->getParams();
 
-        /*$record = null;
-
-        try {
-            // check the hidden security fields before accepting the form POST data
-            if (!$this->checkSecurityFields()) {
-                self::$logger->debug('<<doPUT');
-                throw new SecurityException('This page cannot accept post data from remote servers!');
-            }
-
-            if (isset($params['markdownTextBoxRows']) && $params['markdownTextBoxRows'] != '') {
-                $viewState = ViewState::getInstance();
-                $viewState->set('markdownTextBoxRows', $params['markdownTextBoxRows']);
-            }
-
-            if (isset($params['title']) || isset($params['ActiveRecordID'])) {
-                if (isset($params['ActiveRecordType']) && class_exists($params['ActiveRecordType'])) {
-                    $record = new $params['ActiveRecordType'];
-                } else {
-                    $record = new Article();
-                }
-
-                if (isset($params['ActiveRecordID'])) {
-                    $record->load($params['ActiveRecordID']);
-                } else {
-                    $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
-
-                    $record->loadByAttribute('title', $title, false, array('ID', 'version_num', 'created_ts', 'updated_ts', 'title', 'author', 'published', 'content', 'headerContent'));
-                }
-
-                self::$logger->debug('<<doPUT');
-
-                return parent::doPUT($request);
-            } else {
-                throw new IllegalArguementException('No valid article ID provided!');
-            }
-        } catch (SecurityException $e) {
-            $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
-            self::$logger->warn($e->getMessage());
-        } catch (IllegalArguementException $e) {
-            $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
-            self::$logger->error($e->getMessage());
-        } catch (RecordNotFoundException $e) {
-            self::$logger->warn($e->getMessage());
-            $this->setStatusMessage(View::displayErrorMessage('Failed to load the requested article from the database!'));
-        } catch (AlphaException $e) {
-            $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));
-            self::$logger->error($e->getMessage());
-        }
-
-        $response = new Response(301);*/
         if (!isset($params['ActiveRecordID']) && isset($params['title'])) {
             $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
             $record = new Article();
