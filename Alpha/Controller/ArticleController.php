@@ -345,7 +345,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
 
         $params = $request->getParams();
 
-        $record = null;
+        /*$record = null;
 
         try {
             // check the hidden security fields before accepting the form POST data
@@ -366,53 +366,17 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                     $record = new Article();
                 }
 
-                if (isset($params['title'])) {
+                if (isset($params['ActiveRecordID'])) {
+                    $record->load($params['ActiveRecordID']);
+                } else {
                     $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
 
                     $record->loadByAttribute('title', $title, false, array('ID', 'version_num', 'created_ts', 'updated_ts', 'title', 'author', 'published', 'content', 'headerContent'));
-                } else {
-                    $record->load($params['ActiveRecordID']);
                 }
 
-                // uploading an article attachment
-                if (isset($params['uploadBut'])) {
-                    $source = $request->getFile('userfile')['tmp_name'];
-                    $dest = $record->getAttachmentsLocation().'/'.$request->getFile('userfile')['name'];
+                self::$logger->debug('<<doPUT');
 
-                    // upload the file to the attachments directory
-                    FileUtils::copy($source, $dest);
-
-                    if (!file_exists($dest)) {
-                        throw new AlphaException('Could not move the uploaded file ['.$request->getFile('userfile')['name'].']');
-                    }
-
-                    // set read/write permissions on the file
-                    $success = chmod($dest, 0666);
-
-                    if (!$success) {
-                        throw new AlphaException('Unable to set read/write permissions on the uploaded file ['.$dest.'].');
-                    }
-
-                    if ($success) {
-                        self::$logger->action('File '.$source.' uploaded to '.$dest);
-                        $this->setStatusMessage(View::displayUpdateMessage('File '.$source.' uploaded to '.$dest));
-                    }
-                } elseif (isset($params['deletefile']) && $params['deletefile'] != '') {
-                    $success = unlink($record->getAttachmentsLocation().'/'.$params['deletefile']);
-
-                    if (!$success) {
-                        throw new AlphaException('Could not delete the file ['.$params['deletefile'].']');
-                    }
-
-                    if ($success) {
-                        self::$logger->action('File '.$record->getAttachmentsLocation().'/'.$params['deletefile'].' deleted');
-                        $this->setStatusMessage(View::displayUpdateMessage('File '.$record->getAttachmentsLocation().'/'.$params['deletefile'].' deleted'));
-                    }
-                } else {
-                    self::$logger->debug('<<doPUT');
-
-                    return parent::doPUT($request);
-                }
+                return parent::doPUT($request);
             } else {
                 throw new IllegalArguementException('No valid article ID provided!');
             }
@@ -430,15 +394,23 @@ class ArticleController extends ActiveRecordController implements ControllerInte
             self::$logger->error($e->getMessage());
         }
 
-        $response = new Response(301);
+        $response = new Response(301);*/
+        if (!isset($params['ActiveRecordID']) && isset($params['title'])) {
+            $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
+            $record = new Article();
+            $record->loadByAttribute('title', $title);
+            $params['ActiveRecordID'] = $record->getID();
+        }
+        $request->addParams(array('ActiveRecordType' => 'Alpha\Model\Article', 'ActiveRecordID' => isset($params['ActiveRecordID'])));
+        $response = parent::doPUT($request);
 
         if ($this->getNextJob() != '') {
             $response->redirect($this->getNextJob());
         } else {
             if ($this->request->isSecureURI()) {
-                $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType=Alpha\Model\Article&ActiveRecordID='.$record->getID().'&view=edit'));
+                $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType=Alpha\Model\Article&ActiveRecordID='.$this->record->getID().'&view=edit'));
             } else {
-                $title = str_replace(' ', $config->get('cms.url.title.separator'), $record->get('title'));
+                $title = str_replace(' ', $config->get('cms.url.title.separator'), $this->record->get('title'));
                 $response->redirect($config->get('app.url').'/a/'.$title.'/edit');
             }
         }

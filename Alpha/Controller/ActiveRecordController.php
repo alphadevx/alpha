@@ -364,6 +364,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
 
             try {
                 $record->save();
+                $this->record = $record;
             } catch (ValidationException $e) {
                 self::$logger->warn($e->getMessage());
                 $this->setStatusMessage(View::displayErrorMessage($e->getMessage()));

@@ -1,15 +1,20 @@
 <form<?= (isset($formAction) ? ' action="'.$formAction.'"' : '') ?> id="<?= $formID ?>" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
-		<?= $formFields ?>
-		<div class="form-group lower spread">
-			<?= $saveButton ?>
-			<?= $deleteButton ?>
-			<?= $cancelButton ?>
-		<?php if(isset($tagsButton)) { ?>
-			<?= $tagsButton ?>
-		<?php }?>
-		</div>
-		<?= $fileAttachments; ?>
-		<?= $formSecurityFields ?>
+	<?= $formFields ?>
+	<div class="form-group lower spread">
+		<?= $saveButton ?>
+		<?= $deleteButton ?>
+		<?= $cancelButton ?>
+	<?php if(isset($tagsButton)) { ?>
+		<?= $tagsButton ?>
+	<?php }?>
+	</div>
+	<?= $fileAttachments ?>
+	<?= $formSecurityFields ?>
 	<input type="hidden" name="<?= ($config->get('security.encrypt.http.fieldnames') ? base64_encode(\Alpha\Util\Security\SecurityUtils::encrypt('version_num')) : 'version_num') ?>" value="<?= $version_num ?>"/>
+	<input type="hidden" name="<?= ($config->get('security.encrypt.http.fieldnames') ? base64_encode(\Alpha\Util\Security\SecurityUtils::encrypt('_METHOD')) : '_METHOD') ?>" value="PUT"/>
+</form>
+<form action="/attach" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
+	<?= $fileAttachments ?>
+	<?= $formSecurityFields ?>
 	<input type="hidden" name="<?= ($config->get('security.encrypt.http.fieldnames') ? base64_encode(\Alpha\Util\Security\SecurityUtils::encrypt('_METHOD')) : '_METHOD') ?>" value="PUT"/>
 </form>

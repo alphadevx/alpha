@@ -165,10 +165,10 @@ class AttachmentControllerTest extends \PHPUnit_Framework_TestCase
             'tmp_name' => $config->get('app.root').'public/images/logo-small.png',
         );
 
-        $params = array('uploadBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = array('uploadBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1], 'articleID' => $article->getID());
         $params = array_merge($params, $article->toArray());
 
-        $request = new Request(array('method' => 'PUT', 'URI' => '/a/test-article', 'params' => $params, 'files' => array('userfile' => $attachment)));
+        $request = new Request(array('method' => 'PUT', 'URI' => '/attach', 'params' => $params, 'files' => array('userfile' => $attachment)));
 
         $response = $front->process($request);
 
@@ -185,16 +185,58 @@ class AttachmentControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('image/png', $response->getHeader('Content-Type'), 'Testing the doGET method');
         $this->assertEquals('attachment; filename="logo.png"', $response->getHeader('Content-Disposition'), 'Testing the doGET method');
+    }
 
-        $params = array('deletefile' => 'logo.png', 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
-        $params = array_merge($params, $article->toArray());
+    /**
+     * Testing the doPUT method.
+     */
+    public function testDoPUT()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
-        $request = new Request(array('method' => 'PUT', 'URI' => '/a/test-article', 'params' => $params));
+        $front = new FrontController();
+        $controller = new ArticleController();
+
+        $article = $this->createArticleObject('test article');
+        $article->save();
+
+        if (!file_exists($article->getAttachmentsLocation())) {
+            mkdir($article->getAttachmentsLocation(), 0774);
+        }
+
+        $person = $this->createPersonObject('test');
+        $person->save();
+        $session->set('currentUser', $person);
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $attachment = array(
+            'name' => 'logo.png',
+            'type' => 'image/png',
+            'tmp_name' => $config->get('app.root').'public/images/logo-small.png',
+        );
+
+        $params = array('uploadBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1], 'articleID' => $article->getID());
+
+        $request = new Request(array('method' => 'PUT', 'URI' => '/attach', 'params' => $params, 'files' => array('userfile' => $attachment)));
 
         $response = $front->process($request);
 
-        $this->assertEquals(301, $response->getStatus(), 'Testing the doGET method');
-        $this->assertTrue(strpos($response->getHeader('Location'), '/a/test-article/edit') !== false, 'Testing the doGET method');
+        $this->assertEquals(301, $response->getStatus(), 'Testing the doPUT method');
+        $this->assertTrue(strpos($response->getHeader('Location'), '/a/test-article/edit') !== false, 'Testing the doPUT method');
+        $this->assertTrue(file_exists($article->getAttachmentsLocation().'/logo.png'));
+
+        $params = array('deletefile' => 'logo.png', 'var1' => $securityParams[0], 'var2' => $securityParams[1], 'articleID' => $article->getID());
+        $params = array_merge($params, $article->toArray());
+
+        $request = new Request(array('method' => 'PUT', 'URI' => '/attach', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(301, $response->getStatus(), 'Testing the doPUT method');
+        $this->assertTrue(strpos($response->getHeader('Location'), '/a/test-article/edit') !== false, 'Testing the doPUT method');
         $this->assertFalse(file_exists($article->getAttachmentsLocation().'/logo.png'));
     }
 }

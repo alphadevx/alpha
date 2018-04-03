@@ -302,6 +302,9 @@ class ArticleView extends View
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('deletefile')) : 'deletefile');
         $html .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value=""/>';
 
+        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('articleID')) : 'articleID');
+        $html .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value="'.$this->record->getID().'"/>';
+
         $html .= '</div>';
 
         return $html;

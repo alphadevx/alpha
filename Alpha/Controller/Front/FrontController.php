@@ -174,145 +174,145 @@ class FrontController
             throw new BadRequestException('Request character encoding does not match expected UTF-8');
         }
 
-        $this->addRoute('/', function($request) {
+        $this->addRoute('/', function ($request) {
             $controller = new IndexController();
 
             return $controller->process($request);
         });
 
-        $this->addRoute('/a/{title}/{view}', function($request) {
+        $this->addRoute('/a/{title}/{view}', function ($request) {
             $controller = new ArticleController();
 
             return $controller->process($request);
         })->value('title', null)->value('view', 'detailed');
 
-        $this->addRoute('/articles/{start}/{limit}', function($request) {
+        $this->addRoute('/articles/{start}/{limit}', function ($request) {
             $controller = new ArticleController();
 
             return $controller->process($request);
         })->value('start', 0)->value('limit', $config->get('app.list.page.amount'));
 
-        $this->addRoute('/attach/{articleID}/{filename}', function($request) {
+        $this->addRoute('/attach/{articleID}/{filename}', function ($request) {
             $controller = new AttachmentController();
 
             return $controller->process($request);
-        });
+        })->value('filename', null);
 
-        $this->addRoute('/cache', function($request) {
+        $this->addRoute('/cache', function ($request) {
             $controller = new CacheController();
 
             return $controller->process($request);
         });
 
-        $this->addRoute('/denum/{denumID}', function($request) {
+        $this->addRoute('/denum/{denumID}', function ($request) {
             $controller = new DEnumController();
 
             return $controller->process($request);
         })->value('denumID', null);
 
-        $this->addRoute('/excel/{ActiveRecordType}/{ActiveRecordID}', function($request) {
+        $this->addRoute('/excel/{ActiveRecordType}/{ActiveRecordID}', function ($request) {
             $controller = new ExcelController();
 
             return $controller->process($request);
         })->value('ActiveRecordID', null);
 
-        $this->addRoute('/feed/{ActiveRecordType}/{type}', function($request) {
+        $this->addRoute('/feed/{ActiveRecordType}/{type}', function ($request) {
             $controller = new FeedController();
 
             return $controller->process($request);
         })->value('type', 'Atom');
 
-        $this->addRoute('/gensecure', function($request) {
+        $this->addRoute('/gensecure', function ($request) {
             $controller = new GenSecureQueryStringController();
 
             return $controller->process($request);
         });
 
-        $this->addRoute('/image/{source}/{width}/{height}/{type}/{quality}/{scale}/{secure}/{var1}/{var2}', function($request) {
+        $this->addRoute('/image/{source}/{width}/{height}/{type}/{quality}/{scale}/{secure}/{var1}/{var2}', function ($request) {
             $controller = new ImageController();
 
             return $controller->process($request);
         })->value('var1', null)->value('var2', null);
 
-        $this->addRoute('/listactiverecords', function($request) {
+        $this->addRoute('/listactiverecords', function ($request) {
             $controller = new ListActiveRecordsController();
 
             return $controller->process($request);
         });
 
-        $this->addRoute('/log/{logPath}', function($request) {
+        $this->addRoute('/log/{logPath}', function ($request) {
             $controller = new LogController();
 
             return $controller->process($request);
         });
 
-        $this->addRoute('/login', function($request) {
+        $this->addRoute('/login', function ($request) {
             $controller = new LoginController();
 
             return $controller->process($request);
         });
 
-        $this->addRoute('/logout', function($request) {
+        $this->addRoute('/logout', function ($request) {
             $controller = new LogoutController();
 
             return $controller->process($request);
         });
 
-        $this->addRoute('/metric', function($request) {
+        $this->addRoute('/metric', function ($request) {
             $controller = new MetricController();
 
             return $controller->process($request);
         });
 
-        $this->addRoute('/recordselector/12m/{ActiveRecordID}/{field}/{relatedClass}/{relatedClassField}/{relatedClassDisplayField}/{relationType}', function($request) {
+        $this->addRoute('/recordselector/12m/{ActiveRecordID}/{field}/{relatedClass}/{relatedClassField}/{relatedClassDisplayField}/{relationType}', function ($request) {
             $controller = new RecordSelectorController();
 
             return $controller->process($request);
         })->value('relationType', 'ONE-TO-MANY');
 
-        $this->addRoute('/recordselector/m2m/{ActiveRecordID}/{field}/{relatedClassLeft}/{relatedClassLeftDisplayField}/{relatedClassRight}/{relatedClassRightDisplayField}/{accessingClassName}/{lookupIDs}/{relationType}', function($request) {
+        $this->addRoute('/recordselector/m2m/{ActiveRecordID}/{field}/{relatedClassLeft}/{relatedClassLeftDisplayField}/{relatedClassRight}/{relatedClassRightDisplayField}/{accessingClassName}/{lookupIDs}/{relationType}', function ($request) {
             $controller = new RecordSelectorController();
 
             return $controller->process($request);
         })->value('relationType', 'MANY-TO-MANY');
 
-        $this->addRoute('/search/{query}/{start}/{limit}', function($request) {
+        $this->addRoute('/search/{query}/{start}/{limit}', function ($request) {
             $controller = new SearchController();
 
             return $controller->process($request);
         })->value('start', 0)->value('limit', $config->get('app.list.page.amount'));
 
-        $this->addRoute('/sequence/{start}/{limit}', function($request) {
+        $this->addRoute('/sequence/{start}/{limit}', function ($request) {
             $controller = new SequenceController();
 
             return $controller->process($request);
         })->value('start', 0)->value('limit', $config->get('app.list.page.amount'));
 
-        $this->addRoute('/tag/{ActiveRecordType}/{ActiveRecordID}', function($request) {
+        $this->addRoute('/tag/{ActiveRecordType}/{ActiveRecordID}', function ($request) {
             $controller = new TagController();
 
             return $controller->process($request);
         });
 
-        $this->addRoute('/install', function($request) {
+        $this->addRoute('/install', function ($request) {
             $controller = new InstallController();
 
             return $controller->process($request);
         });
 
-        $this->addRoute('/record/{ActiveRecordType}/{ActiveRecordID}/{view}', function($request) {
+        $this->addRoute('/record/{ActiveRecordType}/{ActiveRecordID}/{view}', function ($request) {
             $controller = new ActiveRecordController();
 
             return $controller->process($request);
         })->value('ActiveRecordID', null)->value('view', 'detailed');
 
-        $this->addRoute('/records/{ActiveRecordType}/{start}/{limit}', function($request) {
+        $this->addRoute('/records/{ActiveRecordType}/{start}/{limit}', function ($request) {
             $controller = new ActiveRecordController();
 
             return $controller->process($request);
         })->value('start', 0)->value('limit', $config->get('app.list.page.amount'));
 
-        $this->addRoute('/tk/{token}', function($request) {
+        $this->addRoute('/tk/{token}', function ($request) {
             $params = self::getDecodeQueryParams($request->getParam('token'));
 
             if (isset($params['act'])) {
@@ -339,14 +339,14 @@ class FrontController
             return new Response(404, 'Resource not found');
         });
 
-        $this->addRoute('/alpha/service', function($request) {
+        $this->addRoute('/alpha/service', function ($request) {
             $controller = new LoginController();
             $controller->setUnitOfWork(array('Alpha\Controller\LoginController', 'Alpha\Controller\ListActiveRecordsController'));
 
             return $controller->process($request);
         });
 
-        $this->addRoute('/phpinfo', function($request) {
+        $this->addRoute('/phpinfo', function ($request) {
             $controller = new PhpinfoController();
 
             return $controller->process($request);

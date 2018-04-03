@@ -218,6 +218,9 @@ Content Cell  | Content Cell';
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
     }
 
+    /**
+     * Testing the doPUT method.
+     */
     public function testDoPUT()
     {
         $config = ConfigProvider::getInstance();
@@ -240,24 +243,9 @@ Content Cell  | Content Cell';
 
         $securityParams = $controller->generateSecurityFields();
 
-        $attachment = array(
-            'name' => 'logo.png',
-            'type' => 'image/png',
-            'tmp_name' => $config->get('app.root').'public/images/logo-small.png',
-        );
+        $article->set('title', 'new put title');
 
-        $params = array('uploadBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
-        $params = array_merge($params, $article->toArray());
-
-        $request = new Request(array('method' => 'PUT', 'URI' => '/a/test-article', 'params' => $params, 'files' => array('userfile' => $attachment)));
-
-        $response = $front->process($request);
-
-        $this->assertEquals(301, $response->getStatus(), 'Testing the doPUT method');
-        $this->assertTrue(strpos($response->getHeader('Location'), '/a/test-article/edit') !== false, 'Testing the doPUT method');
-        $this->assertTrue(file_exists($article->getAttachmentsLocation().'/logo.png'));
-
-        $params = array('deletefile' => 'logo.png', 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = array('saveBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1], 'ActiveRecordID' => $article->getID());
         $params = array_merge($params, $article->toArray());
 
         $request = new Request(array('method' => 'PUT', 'URI' => '/a/test-article', 'params' => $params));
@@ -265,7 +253,6 @@ Content Cell  | Content Cell';
         $response = $front->process($request);
 
         $this->assertEquals(301, $response->getStatus(), 'Testing the doPUT method');
-        $this->assertTrue(strpos($response->getHeader('Location'), '/a/test-article/edit') !== false, 'Testing the doPUT method');
-        $this->assertFalse(file_exists($article->getAttachmentsLocation().'/logo.png'));
+        $this->assertTrue(strpos($response->getHeader('Location'), '/a/new-put-title/edit') !== false, 'Testing the doPUT method');
     }
 }

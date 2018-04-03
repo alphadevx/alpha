@@ -6,9 +6,11 @@ use Alpha\Util\Logging\Logger;
 use Alpha\Util\File\FileUtils;
 use Alpha\Util\Http\Response;
 use Alpha\Util\Helper\Validator;
+use Alpha\Util\Config\ConfigProvider;
 use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Model\Article;
+use Alpha\View\View;
 
 /**
  * Controller used to view (download) an attachment file on an Article.
@@ -124,6 +126,89 @@ class AttachmentController extends Controller implements ControllerInterface
                 }
             } else {
                 self::$logger->error('Could not access article attachment as articleID and/or filename were not provided!');
+                throw new IllegalArguementException('File not found');
+            }
+        } catch (IllegalArguementException $e) {
+            self::$logger->error($e->getMessage());
+            throw new ResourceNotFoundException($e->getMessage());
+        }
+    }
+
+    /**
+     * Handle PUT requests.
+     *
+     * @param \Alpha\Util\Http\Request $request
+     *
+     * @since 3.0
+     *
+     * @throws \Alpha\Exception\ResourceNotFoundException
+     */
+    public function doPUT($request)
+    {
+        self::$logger->debug('>>doPUT($request=['.var_export($request, true).'])');
+
+        $params = $request->getParams();
+
+        $config = ConfigProvider::getInstance();
+
+        try {
+            if (isset($params['articleID'])) {
+                $article = new Article();
+                $article->load($params['articleID']);
+
+                if (isset($params['uploadBut'])) {
+                    $source = $request->getFile('userfile')['tmp_name'];
+                    $dest = $article->getAttachmentsLocation().'/'.$request->getFile('userfile')['name'];
+
+                    // upload the file to the attachments directory
+                    FileUtils::copy($source, $dest);
+
+                    if (!file_exists($dest)) {
+                        throw new AlphaException('Could not move the uploaded file ['.$request->getFile('userfile')['name'].']');
+                    }
+
+                    // set read/write permissions on the file
+                    $success = chmod($dest, 0666);
+
+                    if (!$success) {
+                        throw new AlphaException('Unable to set read/write permissions on the uploaded file ['.$dest.'].');
+                    }
+
+                    if ($success) {
+                        self::$logger->action('File '.$source.' uploaded to '.$dest);
+                        $this->setStatusMessage(View::displayUpdateMessage('File '.$source.' uploaded to '.$dest));
+                    }
+                } elseif (isset($params['deletefile']) && $params['deletefile'] != '') {
+                    $success = unlink($article->getAttachmentsLocation().'/'.$params['deletefile']);
+
+                    if (!$success) {
+                        throw new AlphaException('Could not delete the file ['.$params['deletefile'].']');
+                    }
+
+                    if ($success) {
+                        self::$logger->action('File '.$article->getAttachmentsLocation().'/'.$params['deletefile'].' deleted');
+                        $this->setStatusMessage(View::displayUpdateMessage('File '.$article->getAttachmentsLocation().'/'.$params['deletefile'].' deleted'));
+                    }
+                }
+
+                $response = new Response(301);
+
+                if ($this->getNextJob() != '') {
+                    $response->redirect($this->getNextJob());
+                } else {
+                    if ($this->request->isSecureURI()) {
+                        $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType=Alpha\Model\Article&ActiveRecordID='.$article->getID().'&view=edit'));
+                    } else {
+                        $title = str_replace(' ', $config->get('cms.url.title.separator'), $article->get('title'));
+                        $response->redirect($config->get('app.url').'/a/'.$title.'/edit');
+                    }
+                }
+
+                self::$logger->debug('<<doPUT');
+
+                return $response;
+            } else {
+                self::$logger->error('Could not process article attachment as articleID was not provided!');
                 throw new IllegalArguementException('File not found');
             }
         } catch (IllegalArguementException $e) {
