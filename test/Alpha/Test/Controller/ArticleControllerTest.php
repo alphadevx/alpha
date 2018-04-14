@@ -114,10 +114,14 @@ class ArticleControllerTest extends \PHPUnit_Framework_TestCase
      */
     private function createArticleObject($name)
     {
+        $config = ConfigProvider::getInstance();
+
         $markdown = 'First Header  | Second Header
 ------------- | -------------
 Content Cell  | Content Cell
-Content Cell  | Content Cell';
+Content Cell  | Content Cell
+
+![Alpha logo]('.$config->get('app.root').'public/images/logo-small.png "Alpha logo")';
 
         $article = new Article();
         $article->set('title', $name);
