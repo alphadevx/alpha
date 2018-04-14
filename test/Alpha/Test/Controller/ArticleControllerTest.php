@@ -161,6 +161,9 @@ Content Cell  | Content Cell
         $sessionProvider = $config->get('session.provider.name');
         $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
+        $oldSetting = $config->get('cache.provider.name');
+        $config->set('cache.provider.name', 'Alpha\Util\Cache\CacheProviderArray');
+
         $person = $this->createPersonObject('test');
         $person->save();
         $session->set('currentUser', $person);
@@ -220,6 +223,8 @@ Content Cell  | Content Cell
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+
+        $config->set('cache.provider.name', $oldSetting);
     }
 
     /**
