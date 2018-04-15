@@ -6,6 +6,7 @@ use Alpha\View\View;
 use Alpha\Model\Article;
 use Alpha\Model\ArticleComment;
 use Alpha\Test\Controller\ControllerTestCase;
+use Alpha\Util\Config\ConfigProvider;
 
 /**
  * Test cases for the ArticleCommentView class.
@@ -90,6 +91,10 @@ class ArticleCommentViewTest extends ControllerTestCase
      */
     public function testMarkdownView()
     {
+        $config = ConfigProvider::getInstance();
+        $oldSetting = $config->get('cache.provider.name');
+        $config->set('cache.provider.name', 'Alpha\Util\Cache\CacheProviderArray');
+
         $articleComment = new ArticleComment();
         $articleComment->set('content', 'test comment');
         $articleComment->save();
@@ -97,6 +102,8 @@ class ArticleCommentViewTest extends ControllerTestCase
 
         $this->assertNotEmpty($view->markdownView(array('formAction' => '/')), 'Testing the markdownView() method');
         $this->assertTrue(strpos($view->markdownView(array('formAction' => '/')), 'test comment') !== false, 'Testing the markdownView() method');
+
+        $config->set('cache.provider.name', $oldSetting);
     }
 
     /**
