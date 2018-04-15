@@ -121,7 +121,7 @@ class TCPDFFacade
         self::$logger->debug('>>__construct()');
 
         $config = ConfigProvider::getInstance();
-        $cache = ServiceFactory::getInstance($config->get('cache.provider.name'), 'Alpha\Util\Cache\CacheProviderInterface');
+        $cache = ServiceFactory::getInstance('Alpha\Util\Cache\CacheProviderFile', 'Alpha\Util\Cache\CacheProviderInterface');
 
         $this->article = $article;
 
@@ -283,7 +283,7 @@ class TCPDFFacade
     public function getPDFData()
     {
         $config = ConfigProvider::getInstance();
-        $cache = ServiceFactory::getInstance($config->get('cache.provider.name'), 'Alpha\Util\Cache\CacheProviderInterface');
+        $cache = ServiceFactory::getInstance('Alpha\Util\Cache\CacheProviderFile', 'Alpha\Util\Cache\CacheProviderInterface');
 
         return $cache->get($this->PDFCacheKey);
     }

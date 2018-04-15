@@ -89,15 +89,15 @@ class MarkdownFacade
     public function __construct($record, $useCache = true)
     {
         $config = ConfigProvider::getInstance();
-        $cache = ServiceFactory::getInstance($config->get('cache.provider.name'), 'Alpha\Util\Cache\CacheProviderInterface');
+        $cache = ServiceFactory::getInstance('Alpha\Util\Cache\CacheProviderFile', 'Alpha\Util\Cache\CacheProviderInterface');
 
         $this->record = $record;
 
         if ($this->record instanceof \Alpha\Model\Article && $this->record->isLoadedFromFile()) {
             $underscoreTimeStamp = str_replace(array('-', ' ', ':'), '_', $this->record->getContentFileDate());
-            $this->cacheKey = 'html_'.get_class($this->record).'_'.$this->record->get('title').'_'.$underscoreTimeStamp;
+            $this->cacheKey = 'html_'.$this->record->getFriendlyClassName().'_'.$this->record->get('title').'_'.$underscoreTimeStamp;
         } else {
-            $this->cacheKey = 'html_'.get_class($this->record).'_'.$this->record->getID().'_'.$this->record->getVersion();
+            $this->cacheKey = 'html_'.$this->record->getFriendlyClassName().'_'.$this->record->getID().'_'.$this->record->getVersion();
         }
 
         if (!$useCache) {
