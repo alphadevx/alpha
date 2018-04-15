@@ -388,9 +388,8 @@ class InstallController extends Controller implements ControllerInterface
          * Create the cache directory and sub-directories
          */
         $cacheDir = $config->get('app.file.store.dir').'cache';
-        $htmlDir = $config->get('app.file.store.dir').'cache/html';
+        $filesDir = $config->get('app.file.store.dir').'cache/files';
         $imagesDir = $config->get('app.file.store.dir').'cache/images';
-        $pdfDir = $config->get('app.file.store.dir').'cache/pdf';
         $xlsDir = $config->get('app.file.store.dir').'cache/xls';
 
         // cache
@@ -402,14 +401,14 @@ class InstallController extends Controller implements ControllerInterface
         self::$logger->info('Cache directory ['.$cacheDir.'] successfully created');
         $body .= View::displayUpdateMessage('Cache directory ['.$cacheDir.'] successfully created');
 
-        // cache/html
-        $body .= '<p>Attempting to create the HTML cache directory <em>'.$htmlDir.'</em>...';
-        if (!file_exists($htmlDir)) {
-            mkdir($htmlDir, 0774);
+        // cache/files
+        $body .= '<p>Attempting to create the files cache directory <em>'.$filesDir.'</em>...';
+        if (!file_exists($filesDir)) {
+            mkdir($filesDir, 0774);
         }
 
-        self::$logger->info('Cache directory ['.$htmlDir.'] successfully created');
-        $body .= View::displayUpdateMessage('Cache directory ['.$htmlDir.'] successfully created');
+        self::$logger->info('Cache directory ['.$filesDir.'] successfully created');
+        $body .= View::displayUpdateMessage('Cache directory ['.$filesDir.'] successfully created');
 
         // cache/images
         $body .= '<p>Attempting to create the cache directory <em>'.$imagesDir.'</em>...';
@@ -419,15 +418,6 @@ class InstallController extends Controller implements ControllerInterface
 
         self::$logger->info('Cache directory ['.$imagesDir.'] successfully created');
         $body .= View::displayUpdateMessage('Cache directory ['.$imagesDir.'] successfully created');
-
-        // cache/pdf
-        $body .= '<p>Attempting to create the cache directory <em>'.$pdfDir.'</em>...';
-        if (!file_exists($pdfDir)) {
-            mkdir($pdfDir, 0774);
-        }
-
-        self::$logger->info('Cache directory ['.$pdfDir.'] successfully created');
-        $body .= View::displayUpdateMessage('Cache directory ['.$pdfDir.'] successfully created');
 
         // cache/xls
         $body .= '<p>Attempting to create the cache directory <em>'.$xlsDir.'</em>...';

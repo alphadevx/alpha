@@ -1,13 +1,15 @@
 <?php
 
-namespace Alpha\Test\Util\Cache;
+namespace Alpha\Util\Cache;
 
-use Alpha\Util\Service\ServiceFactory;
+use Alpha\Util\Logging\Logger;
+use Alpha\Util\Config\ConfigProvider;
 
 /**
- * Test cases for the CacheProviderInterface implementations.
+ * An implementation of the CacheProviderInterface interface that uses the
+ * file system (app.file.store.dir) as the target store.
  *
- * @since 2.0
+ * @since 3.0.0
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
@@ -46,50 +48,69 @@ use Alpha\Util\Service\ServiceFactory;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class CacheProviderTest extends \PHPUnit_Framework_TestCase
+class CacheProviderFile implements CacheProviderInterface
 {
     /**
-     * Returns an array of cache providers.
+     * Trace logger.
      *
-     * @return array
+     * @var \Alpha\Util\Logging\Logger
      *
-     * @since 2.0
+     * @since 3.0.0
      */
-    public function getCacheProviders()
+    private static $logger = null;
+
+    /**
+     * Constructor.
+     *
+     * @since 3.0.0
+     */
+    public function __construct()
     {
-        return array(
-            array('Alpha\Util\Cache\CacheProviderArray'),
-            array('Alpha\Util\Cache\CacheProviderMemcache'),
-            array('Alpha\Util\Cache\CacheProviderRedis'),
-            array('Alpha\Util\Cache\CacheProviderAPC'),
-            array('Alpha\Util\Cache\CacheProviderFile')
-        );
+        self::$logger = new Logger('CacheProviderFile');
     }
 
     /**
-     * Testing the set()/get()/delete() methods.
-     *
-     * @since 2.0
-     * @dataProvider getCacheProviders
+     * {@inheritdoc}
      */
-    public function testSetGetDelete($provider)
+    public function get($key)
     {
-        $cache = ServiceFactory::getInstance($provider, 'Alpha\Util\Cache\CacheProviderInterface');
+        self::$logger->debug('>>get(key=['.$key.'])');
 
-        $cached = array('value' => 5);
+        self::$logger->debug('Getting value for key ['.$key.']');
 
-        $cache->set('cached', $cached);
+        $config = ConfigProvider::getInstance();
+        $filepath = $config->get('app.file.store.dir').'/cache/files/'.$key;
 
-        $this->assertEquals(5, $cache->get('cached')['value'], 'Testing the set/get methods');
+        if (file_exists($filepath)) {
+            return unserialize(file_get_contents($filepath));
+        } else {
+            return false;
+        }
+    }
 
-        $cached = array('value' => 'five');
+    /**
+     * {@inheritdoc}
+     */
+    public function set($key, $value, $expiry = 0)
+    {
+        self::$logger->debug('Setting value for key ['.$key.']');
 
-        $cache->set('cached', $cached);
+        $config = ConfigProvider::getInstance();
+        $filepath = $config->get('app.file.store.dir').'/cache/files/'.$key;
 
-        $this->assertEquals('five', $cache->get('cached')['value'], 'Testing the set/get methods');
+        file_put_contents($filepath, serialize($value));
+    }
 
-        $cache->delete('cached');
+    /**
+     * {@inheritdoc}
+     */
+    public function delete($key)
+    {
+        self::$logger->debug('Removing value for key ['.$key.']');
 
-        $this->assertFalse($cache->get('cached'), 'Testing the delete method');
+        $config = ConfigProvider::getInstance();
+        $filepath = $config->get('app.file.store.dir').'/cache/files/'.$key;
+
+        unlink($filepath);
     }
 }

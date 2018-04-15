@@ -113,9 +113,8 @@ class InstallControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(file_exists($testInstallDir.'/logs'));
         $this->assertTrue(file_exists($testInstallDir.'/attachments'));
         $this->assertTrue(file_exists($testInstallDir.'/cache'));
-        $this->assertTrue(file_exists($testInstallDir.'/cache/html'));
+        $this->assertTrue(file_exists($testInstallDir.'/cache/files'));
         $this->assertTrue(file_exists($testInstallDir.'/cache/images'));
-        $this->assertTrue(file_exists($testInstallDir.'/cache/pdf'));
         $this->assertTrue(file_exists($testInstallDir.'/cache/xls'));
 
         $person = new Person();
@@ -151,9 +150,8 @@ class InstallControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(file_exists($testInstallDir.'/store/logs'));
         $this->assertTrue(file_exists($testInstallDir.'/store/attachments'));
         $this->assertTrue(file_exists($testInstallDir.'/store/cache'));
-        $this->assertTrue(file_exists($testInstallDir.'/store/cache/html'));
+        $this->assertTrue(file_exists($testInstallDir.'/store/cache/files'));
         $this->assertTrue(file_exists($testInstallDir.'/store/cache/images'));
-        $this->assertTrue(file_exists($testInstallDir.'/store/cache/pdf'));
         $this->assertTrue(file_exists($testInstallDir.'/store/cache/xls'));
     }
 }

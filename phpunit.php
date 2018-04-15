@@ -11,9 +11,8 @@ $config = ConfigProvider::getInstance();
 $dirs = array(
     $config->get('app.file.store.dir').'logs',
     $config->get('app.file.store.dir').'cache',
-    $config->get('app.file.store.dir').'cache/html',
+    $config->get('app.file.store.dir').'cache/files',
     $config->get('app.file.store.dir').'cache/images',
-    $config->get('app.file.store.dir').'cache/pdf',
     $config->get('app.file.store.dir').'cache/xls',
     $config->get('app.file.store.dir').'attachments',
     );
@@ -25,5 +24,3 @@ foreach ($dirs as $dir) {
 }
 
 ini_set('max_execution_time', 600);
-
-?>
