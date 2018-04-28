@@ -16,7 +16,7 @@ use RecursiveDirectoryIterator;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -569,6 +569,37 @@ class FileUtils
             }
 
             return $fileCount;
+        } catch (\Exception $e) {
+            throw new AlphaException('Failed list files in the ['.$sourceDir.'] directory, error is ['.$e->getMessage().']');
+        }
+    }
+
+    /**
+     * Gets the contents of the directory recursively as a nested hash array (dirname => file1, file2, file3...).
+     *
+     * @param string $sourceDir    The path to the source directory.
+     * @param array $fileList      The list of files generated (pass by reference).
+     *
+     * @return array
+     *
+     * @throws \Alpha\Exception\AlphaException
+     *
+     * @since 3.0
+     */
+    public static function getDirectoryContents($sourceDir, &$fileList = array())
+    {
+        try {
+            $dir = new DirectoryIterator($sourceDir);
+
+            foreach ($dir as $file) {
+                if ($file->isDir() && !$file->isDot()) {
+                    self::getDirectoryContents($file->getPathname(), $fileList);
+                } elseif (!$file->isDot()) {
+                    $fileList[$sourceDir][] = $file->getFilename();
+                }
+            }
+
+            return $fileList;
         } catch (\Exception $e) {
             throw new AlphaException('Failed list files in the ['.$sourceDir.'] directory, error is ['.$e->getMessage().']');
         }

@@ -2,14 +2,16 @@
 
 namespace Alpha\Util\Code\Metric;
 
+use \Alpha\Util\File\FileUtils;
+
 /**
- * Utility class for calcualting some software metrics related to a project.
+ * Utility class for calculating some software metrics related to a project.
  *
  * @since 1.0
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -147,7 +149,7 @@ class Inspector
     public function __construct($rootDir = '.')
     {
         $this->rootDir = $rootDir;
-        $this->files = scandir($rootDir);
+        $this->files = FileUtils::getDirectoryContents($rootDir, $this->files);
     }
 
     /**
@@ -157,28 +159,30 @@ class Inspector
      */
     public function calculateLOC()
     {
-        foreach ($this->files as $file) {
-            $file = $this->rootDir.'/'.$file;
-            $file_type = mb_substr($file, mb_strrpos($file, '.'));
-            if (in_array($file_type, $this->includeFileTypes)) {
-                $exclude = false;
-                foreach ($this->excludeSubDirectories as $dir) {
-                    if (preg_match('/'.$dir.'/i', $file)) {
-                        $exclude = true;
+        foreach ($this->files as $dir => $fileArray) {
+            foreach ($fileArray as $file) {
+                $file = $dir.'/'.$file;
+                $fileType = mb_substr($file, mb_strrpos($file, '.'));
+                if (in_array($fileType, $this->includeFileTypes)) {
+                    $exclude = false;
+                    foreach ($this->excludeSubDirectories as $excludedDir) {
+                        if (preg_match('/'.$excludedDir.'/i', $file)) {
+                            $exclude = true;
+                        }
                     }
-                }
 
-                if (!$exclude) {
-                    $current_file = file($file);
+                    if (!$exclude) {
+                        $currentFile = file($file);
 
-                    $LOC = count($current_file);
-                    $this->filesLOCResult[$file] = $LOC;
-                    $LOC_less_comments = $this->disregardCommentsLOC($file);
-                    $this->filesLOCNoCommentsResult[$file] = $LOC_less_comments;
+                        $LOC = count($currentFile);
+                        $this->filesLOCResult[$file] = $LOC;
+                        $LOCLessComments = $this->disregardCommentsLOC($file);
+                        $this->filesLOCNoCommentsResult[$file] = $LOCLessComments;
 
-                    $this->TLOC += $LOC;
-                    $this->TLOCLessComments += $LOC_less_comments;
-                    ++$this->fileCount;
+                        $this->TLOC += $LOC;
+                        $this->TLOCLessComments += $LOCLessComments;
+                        ++$this->fileCount;
+                    }
                 }
             }
         }
